@@ -10,6 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-export { clamp } from './clamp';
-export { random, randomInt } from './random';
-export { round } from './round'
+import { describe, it, expect } from 'vitest';
+import { round } from './';
+
+const value = 1.2345;
+
+describe('round', () => {
+  it('rounds to precision', () => {
+    const a = round(value, 1);
+    const b = round(value, 2);
+    const c = round(value, 3);
+    const d = round(value, 4);
+
+    expect(a).toEqual(1.2);
+    expect(b).toEqual(1.23);
+    expect(c).toEqual(1.235);
+    expect(d).toEqual(1.2345);
+  });
+
+  it('throws if precision is not integer', () => {
+    expect(() => round(1, 1.1)).toThrow(Error);
+  });
+});

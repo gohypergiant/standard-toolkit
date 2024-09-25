@@ -11,8 +11,17 @@
  */
 
 /**
- * Returns the value nearest to value which is within the closed range [min,max].
+ * Clamps a number within the specified bounds.
  *
+ * @throws {RangeError} Throws an error if min > max.
+ *
+ * @example
+ * ```javascript
+ * const value = clamp(10, 5, 15); // 10
+ * const value = clamp(2, 5, 15); // 5
+ * const value = clamp(20, 5, 15); // 15
+ * const value = clamp(10, 15, 5); // RangeError
+ * ```
  */
 export function clamp<T extends number, Min extends number, Max extends number>(
   value: T,
