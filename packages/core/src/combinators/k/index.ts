@@ -1,9 +1,6 @@
 /**
  * Corresponds to the encoding of `true` in the lambda calculus.
- *
- * Symbol: `K`
- *
- * AKA: `constant`
+ * Takes two arguments and always returns the first.
  *
  * Bird: `Kestrel`
  *
@@ -11,9 +8,16 @@
  *
  * Lambda: `λab.a`
  *
- * Combinator: `K`
+ * @example
+ * K(1)(2);
+ * // 1
  */
 export const K =
-  <A>(x: A) =>
+  <A>(a: A) =>
   <B>(_: B): A =>
-    x;
+    a;
+
+/**
+ * @alias K
+ */
+export const constant = K;

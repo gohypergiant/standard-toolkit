@@ -1,7 +1,6 @@
 /**
- * Symbol: `I`
- *
- * AKA: `identity`
+ * Mathematic identity function. A function that always returns the value
+ * that was used as its argument, unchanged.
  *
  * Bird: `Idiot`
  *
@@ -9,10 +8,13 @@
  *
  * Lambda: `λa.a`
  *
- * Combinator: `SKK`
- *
  * @example
  * I(4);
- * >> 4
+ * // 4
  */
 export const I = <A>(x: A) => x;
+
+/**
+ * @alias I
+ */
+export const identity = I;

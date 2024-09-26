@@ -1,21 +1,24 @@
 /**
- * Pass a value through two different functions to another function of 2-arity.
- *
- * Symbol:
- *
- * AKA: `Fork`
+ * Pass a value through two different functions and the results to a function that takes two arguments.
  *
  * Bird: `Phoenix`
  *
- * Signature: (Big) Phi :: (b → c → d) → (a → b) → (a → c) → a → d
+ * Signature: (Big) Phi :: (a → b → c) → (d → a) → (d → b) → d → c
  *
- * Lambda:
+ * Lambda: λabcd.a(bd)(cd)
  *
- * Combinator:
+ * @example
+ * Phi((x) => (y) => x + y)(x => x + 3)(x => x - 2)(9)
+ * // 19
  */
 export const Phi =
-  <B, C, D>(h: (b: B) => (c: C) => D) =>
-  <A>(f: (x: A) => B) =>
-  (g: (x: A) => C) =>
-  (x: A) =>
-    h(f(x))(g(x));
+  <A, B, C>(a: (x: A) => (y: B) => C) =>
+  <D>(b: (x: D) => A) =>
+  (c: (x: D) => B) =>
+  (d: D) =>
+    a(b(d))(c(d));
+
+/**
+ * @alias Phi
+ */
+export const fork = Phi;

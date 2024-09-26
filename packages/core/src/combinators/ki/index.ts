@@ -1,10 +1,7 @@
 /**
  * Corresponds to the encoding of `false` in the lambda calculus.
- * Inverse of constant (K)
- *
- * Symbol: `KI`
- *
- * AKA: `--`
+ * Takes two arguments and always returns the second.
+ * Inverse of `constant` (`K`).
  *
  * Bird: `Kite`
  *
@@ -12,9 +9,11 @@
  *
  * Lambda: `λab.b`
  *
- * Combinator: `KI`
+ * @example
+ * KI(1)(2);
+ * // 2
  */
 export const KI =
-  <A>(x: A) =>
-  <B>(y: B): B =>
-    y;
+  <A>(_: A) =>
+  <B>(b: B): B =>
+    b;

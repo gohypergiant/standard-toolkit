@@ -1,19 +1,20 @@
 /**
- * One param to a function of 1-arity
- *
- * AKA: `apply`
- *
- * Bird: `--`
+ * Takes an unary function and applies it to the given argument.
  *
  * Signature: `A :: (a → b) → a → b`
  *
- * Lambda: `λfa.fa`
+ * Lambda: `λab.ab`
  *
  * @example
  * A((a) => a + 6)(3);
- * >> 9
+ * // 9
  */
 export const A =
   <A, B>(f: (x: A) => B) =>
   (x: A) =>
     f(x);
+
+/**
+ * @alias A
+ */
+export const apply = A;

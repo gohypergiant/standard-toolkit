@@ -1,21 +1,17 @@
 /**
  * Pass two values through the same function and pass the results to another function of 2-arity
  *
- * Symbol:
+ * Signature: `Psi :: (a → a → b) → (c → a) → c → c → b`
  *
- * AKA:
+ * Lambda: `λabcd.a(bc)(bd)`
  *
- * Bird:
- *
- * Signature: `Psi :: (b → b → c) → (a → b) → a → a → c`
- *
- * Lambda: `λfgab.f(gab)`
- *
- * Combinator:
+ * @example
+ * Psi((x) => (y) => x + y)(x => x + 3)(3)(5)
+ * // 14
  */
 export const Psi =
-  <B, C>(f: (x: B) => (y: B) => C) =>
-  <A>(g: (x: A) => B) =>
-  (x: A) =>
-  (y: A) =>
-    f(g(x))(g(y));
+  <A, B>(a: (x: A) => (y: A) => B) =>
+  <C>(b: (x: C) => A) =>
+  (c: C) =>
+  (d: C) =>
+    a(b(c))(b(d));
