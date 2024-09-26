@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { UnaryFunction } from '@/functions/types';
+import type { UnaryFunction } from "@/types";
 
 // https://stackoverflow.com/questions/49310886/typing-compose-function-in-typescript-flow-compose#answer-73082627
 

@@ -1,4 +1,4 @@
-import type { Predicate } from '@/functions/types';
+import type { Predicate } from "@/types";
 
 export const filter =
   <T>(predicate: Predicate<T>) =>

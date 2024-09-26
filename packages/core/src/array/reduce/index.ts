@@ -1,4 +1,4 @@
-import type { Accumulator } from '@/functions/types';
+import type { Accumulator } from "@/types";
 
 export const reduce =
   <T, R>(fn: Accumulator<T, R>) =>

@@ -1,4 +1,4 @@
-import type { Accumulator } from '@/functions/types';
+import type { Accumulator } from "@/types";
 
 export const reduceRight =
   <T, R>(fn: Accumulator<T, R>) =>
@@ -13,5 +13,3 @@ export const reduceRight =
 
     return acc;
   };
-
-

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { UnaryFunction } from '@/functions/types';
+import type { UnaryFunction } from "@/types";
 
 // If its a list of functions, last being Unary
 type PipeParams<Fns> = Fns extends readonly [
