@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import mitt, { type Emitter } from 'mitt';
+import mitt from 'mitt';
+import type { Emitter } from 'mitt';
 
 let i = 0;
 

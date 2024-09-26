@@ -1,0 +1,27 @@
+{
+  "name": "@hypergiant/core",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist/**"],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "pnpm tsc --watch",
+    "lint": "pnpm biome lint ./"
+  },
+  "devDependencies": {
+    "@hypergiant/typescript-config": "workspace:*",
+    "@hypergiant/vitest-config": "workspace:*",
+    "@vitest/coverage-istanbul": "^1.6.0",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "typescript": "^5.4.5"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "author": "https://hypergiant.com",
+  "sideEffects": false
+}

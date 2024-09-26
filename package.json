@@ -21,6 +21,7 @@
     "dev": "turbo dev",
     "format": "pnpm biome format . --write",
     "license": "pnpm zx scripts/license.mjs",
+    "indexer": "pnpm zx scripts/indexer.mjs",
     "lint": "turbo lint",
     "test": "turbo test"
   },
@@ -30,6 +31,7 @@
     "@changesets/cli": "^2.27.8",
     "@hypergiant/biome-config": "workspace:*",
     "@ls-lint/ls-lint": "^2.2.3",
+    "@swc/core": "^1.7.28",
     "rimraf": "^5.0.10",
     "syncpack": "^13.0.0",
     "taze": "^0.16.9",
