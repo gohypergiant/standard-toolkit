@@ -5,6 +5,10 @@
  *
  * @link https://en.wikipedia.org/wiki/Logical_equality
  * @link https://en.wikipedia.org/wiki/Logical_biconditional
+ *
+ * @example
+ * equality(4)(8);
+ * // false
  */
 export const equality = (a: unknown) => (b: unknown) => a === b;
 
@@ -13,6 +17,10 @@ export const equality = (a: unknown) => (b: unknown) => a === b;
  *
  * @link https://en.wikipedia.org/wiki/Logical_equality
  * @link https://en.wikipedia.org/wiki/Logical_biconditional
+ *
+ * @example
+ * equalityFn(s => s.trim())(s => s.trimEnd())('foo bar ');
+ * // true
  */
 export const equalityFn =
   <T>(a: (x: T) => unknown) =>

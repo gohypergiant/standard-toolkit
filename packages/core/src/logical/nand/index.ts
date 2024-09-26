@@ -1,5 +1,5 @@
-import { and, andFn } from '../and';
-import { not } from '../not';
+import { and, andFn } from "../and";
+import { not } from "../not";
 
 /**
  * Logical `!(a && b)`
@@ -7,6 +7,10 @@ import { not } from '../not';
  * Logical Non-conjunction
  *
  * @link https://en.wikipedia.org/wiki/Sheffer_stroke
+ *
+ * @example
+ * nand(true)(0);
+ * // true
  */
 export const nand =
   <A>(a: A) =>
@@ -19,6 +23,10 @@ export const nand =
  * Logical (Function Result) Non-conjunction
  *
  * @link https://en.wikipedia.org/wiki/Sheffer_stroke
+ *
+ * @example
+ * nandFn(s => s.trim())(s => s.trimEnd())('foo bar ');
+ * // false
  */
 export const nandFn =
   <T, A>(a: (x: T) => A) =>

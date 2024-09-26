@@ -4,6 +4,10 @@
  * Logical Conjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_conjunction
+ *
+ * @example
+ * and(true)(0);
+ * // false
  */
 export const and =
   <A>(a: A) =>
@@ -16,6 +20,10 @@ export const and =
  * Logical (Function Result) Conjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_conjunction
+ *
+ * @example
+ * andFn(s => s.trim())(s => s.trimEnd())('foo bar ');
+ * // true
  */
 export const andFn =
   <T, A>(a: (x: T) => A) =>

@@ -1,5 +1,5 @@
-import { or, orFn } from '../or';
-import { not } from '../not';
+import { or, orFn } from "../or";
+import { not } from "../not";
 
 /**
  * Logical `!(a || b)`
@@ -7,6 +7,10 @@ import { not } from '../not';
  * Logical Non-disjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_NOR
+ *
+ * @example
+ * nor(true)(0);
+ * // false
  */
 export const nor =
   <A>(a: A) =>
@@ -19,6 +23,10 @@ export const nor =
  * Logical (Function Result) Non-disjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_NOR
+ *
+ * @example
+ * norFn(s => s.trim())(s => s.trimEnd())('foo bar ');
+ * // false
  */
 export const norFn =
   <T, A>(a: (x: T) => A) =>

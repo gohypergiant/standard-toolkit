@@ -1,12 +1,13 @@
-// Strictly speaking, these should probably use the OR combinator. But given the common use
-// I have opted for a looser conditional check.
-
 /**
  * Logical `(a || b)`
  *
  * Logical Disjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_disjunction
+ *
+ * @example
+ * or(true)(0);
+ * // true
  */
 export const or =
   <A>(a: A) =>
@@ -19,6 +20,10 @@ export const or =
  * Logical (Function Result) Disjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_disjunction
+ *
+ * @example
+ * orFn(s => s.trim())(s => s.trimEnd())('foo bar ');
+ * // true
  */
 export const orFn =
   <T, A>(a: (x: T) => A) =>
@@ -26,19 +31,16 @@ export const orFn =
   (c: T) =>
     Boolean(a(c)) || Boolean(b(c));
 
-// const isEven = (x: number) => (x & 1) === 0;
-// const multTwo = (x: number) => x * 2;
-
-// const a = orFn(isEven);
-// const b = a(multTwo);
-// const c = b(54);
-
 /**
  * Swapped Logical Or: `(b || a)`
  *
  * Swapped Logical Disjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_disjunction
+ *
+ * @example
+ * swappedOr(0)(true);
+ * // true
  */
 export const swappedOr =
   <A>(a: A) =>
@@ -51,14 +53,13 @@ export const swappedOr =
  * Swapped Logical (Function Result) Disjunction
  *
  * @link https://en.wikipedia.org/wiki/Logical_disjunction
+ *
+ * @example
+ * swappedOrFn(s => s.trimEnd())(s => s.trim())('foo bar ');
+ * // true
  */
 export const swappedOrFn =
   <T, A>(a: (x: T) => A) =>
   <B>(b: (y: T) => B) =>
   (c: T) =>
     Boolean(b(c)) || Boolean(a(c));
-
-// Swapped Or is good for logical defaults
-// const orZero = swappedOr(0);
-// const res1 = orZero(5);
-// const res2 = orZero(null);
