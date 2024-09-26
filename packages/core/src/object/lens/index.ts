@@ -1,5 +1,5 @@
-import { property, optionalProperty } from '../property';
-import { associateDeep } from '../associate';
+import { associateDeep } from "../associate";
+import { property, optionalProperty } from "../property";
 
 type LenseGet<T, V> = (source: T) => V;
 type LenseSet<T, V> = (source: T) => (value: V) => T;
@@ -10,6 +10,7 @@ export type Lens<T, V> = {
 };
 
 /**
+ * Focus on and manipulate a specific property or substructure within an object.
  *
  * @example
  * const nameLens = lens(
@@ -34,8 +35,26 @@ export const lens = <T, V>(
   set: setter,
 });
 
-// Need to expand on this so that it functions like a normal `compose` (or `pipe` rather)
-// so one can just give it a list of lens to hop-skotch through
+// * NOTE: Need to expand on this so that it functions like a normal `compose` (or `pipe` rather)
+// * so one can just give it a list of lens to hop-skotch through
+
+/**
+ * Compose two lenses together.
+ *
+ * Given a lens `A ⭢ B` and a lens `B ⭢ C`, produces a lens `A ⭢ C`.
+ *
+ * @example
+ * const addressLens = lens(
+ *   (person: Person) => property(person)('address'),
+ *   (person) => (addr) => associateDeep(person)('address')(addr)
+ * );
+ * const cityLens = lens(
+ *   (address?: Address) => optionalProperty(address)('city'),
+ *   (address) => (city) => associateDeep(address)('city')(city)
+ * );
+ *
+ * const personCityLens = composeLens(addressLens, cityLens);
+ */
 export const composeLens = <A, B, C>(
   ab: Lens<A, B>,
   bc: Lens<B, C>
@@ -46,21 +65,40 @@ export const composeLens = <A, B, C>(
 
 // Helpers
 
+/**
+ * A simple warpper function to access the `get` of a lens and the given object.
+ *
+ * @example
+ * get(nameLens)(personStore);
+ */
 export const get =
-  <T, V>(lens: Lens<T, V>) =>
+  <T, V>(lensVal: Lens<T, V>) =>
   (obj: T) =>
-    lens.get(obj);
+    lensVal.get(obj);
 
+/**
+ * A simple warpper function to access the `set` of a lens and the given object..
+ *
+ * @example
+ * set(nameLens)('Fred')(personStore);
+ */
 export const set =
-  <T, V>(lens: Lens<T, V>) =>
+  <T, V>(lensVal: Lens<T, V>) =>
   (value: V) =>
   (obj: T) =>
-    lens.set(obj)(value);
+    lensVal.set(obj)(value);
 
 // * NOTE: It hurts my head that I have to do a factory-like empty call just to get TS to play nicely.
 // * Doing <T, K extends keyof T = keyof T>(prop: K) causes it to not be able to correctly infer the return value
-// * And just doing <T, K extends keyof T> requires you to type out the prop in the generic and the call.
+// * And just doing <T, K extends keyof T>(prop: K) requires you to type out the prop in the generic and the function call.
 // * Neither of which are ideal. So I guess this is the less of the three evils.
+
+/**
+ * Short-hand to create is simplistic get/set lens.
+ *
+ * @example
+ * const { get, set } = lensProp<Person>()('name');
+ */
 export const lensProp =
   <T>() =>
   <K extends keyof T>(prop: K) =>
@@ -69,6 +107,12 @@ export const lensProp =
       (obj) => (value) => associateDeep(obj)(prop)(value)
     );
 
+/**
+ * Short-hand to create is simplistic, optional, get/set lens.
+ *
+ * @example
+ * const { get, set } = lensOptionalProp<Person>()('name');
+ */
 export const lensOptionalProp =
   <T>() =>
   <K extends keyof T>(prop: K) =>
