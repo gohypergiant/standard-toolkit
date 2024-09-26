@@ -1,3 +1,11 @@
+/**
+ * Determines whether the given array includes and element.
+ * Uses strict equality.
+ *
+ * @example
+ * includes(3)([[1, 2, 3, 4, 5]])
+ * // true
+ */
 export const includes =
   <T>(x: T) =>
   <C extends T[]>(arr: C) => {
@@ -5,7 +13,6 @@ export const includes =
 
     for (let i = 0; i < len; i++) {
       if (arr[i] === x) {
-        // should probably be a better equal() fn call
         return true;
       }
     }

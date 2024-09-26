@@ -1,5 +1,13 @@
 import type { Predicate } from "@/types";
 
+/**
+ * Returns the last index of the given array that satisfies the predicate.
+ * Returns `-1` otherwise.
+ *
+ * @example
+ * findLastIndex(x => !(x & 1))([1, 2, 3, 4, 5]);
+ * // 3
+ */
 export const findLastIndex =
   <T>(predicate: Predicate<T>) =>
   <C extends T[]>(arr: C) => {

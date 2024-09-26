@@ -1,5 +1,13 @@
 import type { Accumulator } from "@/types";
 
+/**
+ * Calls the accumulator with each element of the given array, starting with the last element.
+ * Returns the final result.
+ *
+ * @example
+ * reduceRight((total, n) => total - n)(0)([1, 2, 3, 4, 5]);
+ * // -5
+ */
 export const reduceRight =
   <T, R>(fn: Accumulator<T, R>) =>
   (x0: R) =>

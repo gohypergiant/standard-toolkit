@@ -1,5 +1,13 @@
 import type { Predicate } from "@/types";
 
+/**
+ * Returns the last element of the given array that satisfies the predicate.
+ * Returns `null` otherwise.
+ *
+ * @example
+ * findLast(x => !(x & 1))([1, 2, 3, 4, 5]);
+ * // 4
+ */
 export const findLast =
   <T>(predicate: Predicate<T>) =>
   <C extends T[]>(arr: C) => {

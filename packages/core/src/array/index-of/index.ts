@@ -1,3 +1,11 @@
+/**
+ * Returns the first index as which a given element can be found in the array.
+ * Returns `-1` otherwise.
+ *
+ * @example
+ * indexOf(3)([[1, 2, 3, 4, 5]])
+ * // 2
+ */
 export const indexOf =
   <T>(x: T) =>
   <C extends T[]>(arr: C) => {
@@ -5,7 +13,6 @@ export const indexOf =
 
     for (let i = 0; i < len; i++) {
       if (arr[i] === x) {
-        // should probably be a better equal() fn call
         return i;
       }
     }
