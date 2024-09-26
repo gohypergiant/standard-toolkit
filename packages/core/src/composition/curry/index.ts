@@ -9,6 +9,16 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
     : Curried<Args, R>
   : never;
 
+/**
+ * Curries the given function. Allowing it to be accept one or more arguments at a time.
+ *
+ * @example
+ * const curried = autoCurry((a, b, c) => (a + b) * c);
+ * curried(2)(3)(4);
+ * curried(2, 3)(4);
+ * curried(2)(3, 4);
+ * curried(2, 3, 4);
+ */
 export function autoCurry<T extends (...args: any[]) => any>(
   fn: T,
   _args = [] as any[]

@@ -32,6 +32,19 @@ type Pipeable<Fn> =
       readonly [...Pipeable<Head>, (arg: PipeReturn<Head>) => any]
     : never;
 
+/**
+ * Allows you combine two or more functions to create a new function, which passes the results from one
+ * function to the next until all have be called. Has a left-to-right call order.
+ *
+ * @example
+ * const getActiveUsers = page => pipe(
+ *   filterActive,
+ *   sortUserNames,
+ *   displayPage,
+ * );
+ *
+ * const activeUsers = getActiveUsersByPage(users);
+ */
 export const pipe =
   <Fns extends readonly UnaryFunction[]>(...fns: Pipeable<Fns>) =>
   (arg: PipeParams<Fns>): PipeReturn<Fns> => {

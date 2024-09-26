@@ -29,6 +29,9 @@ type Composable<Fn> =
     : never;
 
 /**
+ * Allows you combine two or more functions to create a new function, which passes the results from one
+ * function to the next until all have be called. Has a rigth-to-left call order.
+ *
  * @example
  * const getActiveUsers = page => compose(
  *   displayPage,
