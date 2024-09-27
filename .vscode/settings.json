@@ -8,5 +8,8 @@
   },
   "search.exclude": {
     "pnpm-lock.yaml": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }
