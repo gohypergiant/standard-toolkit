@@ -6,8 +6,8 @@
   "scripts": {
     "bench": "turbo bench",
     "build": "turbo build",
-    "changeset": "pnpm changeset",
-    "changeset:version": "pnpm changeset version",
+    "changeset": "pnpm exec changeset",
+    "changeset:version": "pnpm exec changeset version",
     "clean": "pnpm run clean:dist && pnpm run clean:turbo && pnpm run clean:pnpm && pnpm run clean:deps",
     "clean:deps": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
     "clean:dist": "pnpm -r exec rimraf dist",
