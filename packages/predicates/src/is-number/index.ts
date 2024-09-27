@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { isString } from '../is-string';
+import { isString } from "../is-string";
 
 /**
- * Test if value is a number.
+ * Determine if the given value is a number.
  *
  * Includes Infinities and NaN, does not include strings that look like numbers
  *
@@ -24,11 +24,11 @@ import { isString } from '../is-string';
  * isNumber('1.23') // false
  */
 export function isNumber(val: unknown) {
-  return typeof val === 'number' || val instanceof Number;
+  return typeof val === "number" || val instanceof Number;
 }
 
 /**
- * Test if value is a finite number.
+ * Determine if the given value is a finite number.
  *
  * Does not include infinities, NaN, or strings that look like numbers.
  *
@@ -43,7 +43,7 @@ export function isFiniteNumber(val: unknown) {
 }
 
 /**
- * Test if value is a finite number, or string that parses to a finite number.
+ * Determine if given value is a finite number, or string that parses to a finite number.
  *
  * Does not include infinities, NaN.
  *
@@ -61,7 +61,7 @@ export function isFiniteNumeric(val: unknown) {
 }
 
 /**
- * Test if value is a number, or string that parses to a number. Includes infinities and NaN.
+ * Determine if given value is a number, or string that parses to a number. Includes infinities and NaN.
  *
  * Non-finite strings are: 'Infinity', '-Infinity', and 'NaN'.
  *
@@ -75,9 +75,9 @@ export function isFiniteNumeric(val: unknown) {
 export function isNumeric(val: unknown) {
   if (isString(val)) {
     return (
-      val === 'Infinity' ||
-      val === '-Infinity' ||
-      val === 'NaN' ||
+      val === "Infinity" ||
+      val === "-Infinity" ||
+      val === "NaN" ||
       isFiniteNumeric(val)
     );
   }

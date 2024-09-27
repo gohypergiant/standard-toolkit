@@ -16,7 +16,7 @@ const MIN_LATITUDE = -90;
 const MAX_LATITUDE = 90;
 
 /**
- * Test if value is a valid latitude range.
+ * Determines if given value is a valid latitude range.
  *
  * Assumes degrees as the unit of measure.
  *

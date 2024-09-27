@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { isFiniteNumber } from '../is-number';
+import { isFiniteNumber } from "../is-number";
 
 const MIN_LONGITUDE = -180;
 const MAX_LONGITUDE = 180;
 
 /**
- * Test if value is a valid longitude range.
+ * Determines if given value is a valid longitude range.
  *
  * Assumes degrees as the unit of measure.
  *

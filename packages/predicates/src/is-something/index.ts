@@ -1,5 +1,4 @@
-import { compose } from "../../composition/compose";
-import { not } from "../../logical/not";
+import { compose, not } from "@hypergiant/core";
 import { isNothing } from "../is-nothing";
 
 /**

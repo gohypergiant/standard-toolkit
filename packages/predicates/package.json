@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js"
@@ -23,6 +25,7 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
+    "@hypergiant/core": "workspace:*",
     "typescript": "^5.4.5"
   },
   "$schema": "https://json.schemastore.org/package",

@@ -11,14 +11,14 @@
  */
 
 /**
- * Test if value is a Worker.
+ * Determines if given value is a Worker.
  */
 export function isWorker(val: unknown) {
   return val instanceof Worker;
 }
 
 /**
- * Test if value is a SharedWorker.
+ * Determine if the given value is a SharedWorker.
  */
 export function isSharedWorker(val: unknown) {
   return val instanceof SharedWorker;

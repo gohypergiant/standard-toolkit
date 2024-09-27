@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { isFiniteNumber } from '../is-number';
+import { isFiniteNumber } from "../is-number";
 
 /**
- * Test if value is a valid bounding box.
+ * Determines if the given value is a valid bounding box.
  *
  * Does not currently validate the lon/lat pairs.
  */
