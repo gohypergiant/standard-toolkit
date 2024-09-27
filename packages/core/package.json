@@ -9,8 +9,10 @@
     ".": "./dist/index.js"
   },
   "scripts": {
+    "build": "pnpm tsc",
     "dev": "pnpm tsc --watch",
-    "lint": "pnpm biome lint ./"
+    "lint": "pnpm biome lint ./",
+    "test": "pnpm vitest --run --dir src"
   },
   "devDependencies": {
     "@hypergiant/typescript-config": "workspace:*",

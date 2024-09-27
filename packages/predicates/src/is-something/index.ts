@@ -1,5 +1,5 @@
-import { compose, not } from "@hypergiant/core";
-import { isNothing } from "../is-nothing";
+import { compose, not } from '@hypergiant/core';
+import { isNothing } from '../is-nothing';
 
 /**
  * Determines if the given value is **not** undefined or null.
