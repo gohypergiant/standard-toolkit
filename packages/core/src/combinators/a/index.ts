@@ -10,9 +10,10 @@
  * // 9
  */
 export const A =
-  <A, B>(f: (x: A) => B) =>
-  (x: A) =>
-    f(x);
+  // Types renamed to avoid confusion with the combinator
+    <T, R>(f: (x: T) => R) =>
+    (x: T) =>
+      f(x);
 
 /**
  * @alias A
