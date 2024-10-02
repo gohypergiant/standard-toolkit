@@ -6,4 +6,4 @@
  *   // error path...
  * }
  */
-export const isNothing = (val: unknown) => val === undefined || val === null;
+export const isNothing = (val: unknown) => val == null;
