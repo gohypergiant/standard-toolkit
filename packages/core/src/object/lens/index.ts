@@ -100,7 +100,7 @@ export const set =
  * const { get, set } = lensProp<Person>()('name');
  */
 export const lensProp =
-  <T>() =>
+  <T extends object>() =>
   <K extends keyof T>(prop: K) =>
     lens(
       (obj: T) => property(obj)(prop),
@@ -114,7 +114,7 @@ export const lensProp =
  * const { get, set } = lensOptionalProp<Person>()('name');
  */
 export const lensOptionalProp =
-  <T>() =>
+  <T extends object>() =>
   <K extends keyof T>(prop: K) =>
     lens(
       (obj: T) => optionalProperty(obj)(prop),
