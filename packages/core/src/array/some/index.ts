@@ -1,4 +1,4 @@
-import type { Comparator } from "@/types";
+import type { Comparator } from '@/types';
 
 /**
  * Tests whether any elements in the array pass the given comparator.
@@ -9,11 +9,11 @@ import type { Comparator } from "@/types";
  */
 export const some =
   <T>(comparator: Comparator<T>) =>
-  <C extends T[]>(arr: C) => {
+  (arr: T[]) => {
     const len = arr.length;
 
     for (let i = 0; i < len; i++) {
-      if (comparator(arr[i])) {
+      if (comparator(arr[i] as T)) {
         return true;
       }
     }

@@ -1,4 +1,4 @@
-import type { Accumulator } from "@/types";
+import type { Accumulator } from '@/types';
 
 /**
  * Calls the accumulator with each element of the given array, starting with the last element.
@@ -11,12 +11,12 @@ import type { Accumulator } from "@/types";
 export const reduceRight =
   <T, R>(fn: Accumulator<T, R>) =>
   (x0: R) =>
-  <C extends T[]>(arr: C) => {
+  (arr: T[]) => {
     const len = arr.length;
     let acc = x0;
 
     for (let i = len - 1; i >= 0; i--) {
-      acc = fn(acc, arr[i]);
+      acc = fn(acc, arr[i] as T);
     }
 
     return acc;

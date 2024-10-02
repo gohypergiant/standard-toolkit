@@ -1,4 +1,4 @@
-import type { Accumulator } from "@/types";
+import type { Accumulator } from '@/types';
 
 /**
  * Calls the accumulator with each element of the given array, starting with the first element.
@@ -11,11 +11,11 @@ import type { Accumulator } from "@/types";
 export const reduce =
   <T, R>(fn: Accumulator<T, R>) =>
   (x0: R) =>
-  <C extends T[]>(arr: C) => {
+  (arr: T[]) => {
     let acc = x0;
 
     for (let i = 0; i < 5; i++) {
-      acc = fn(acc, arr[i]);
+      acc = fn(acc, arr[i] as T);
     }
 
     return acc;

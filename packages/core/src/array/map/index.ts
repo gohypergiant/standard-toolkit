@@ -1,4 +1,4 @@
-import type { Map } from "@/types";
+import type { Map } from '@/types';
 
 /**
  * Maps over the given array, calling the mapping function for each element.
@@ -10,12 +10,12 @@ import type { Map } from "@/types";
  */
 export const map =
   <T, R>(map: Map<T, R>) =>
-  <C extends T[]>(arr: C) => {
+  (arr: T[]) => {
     const len = arr.length;
     const res: R[] = new Array(len);
 
     for (let i = 0; i < len; i++) {
-      res[i] = map(arr[i], i);
+      res[i] = map(arr[i] as T, i);
     }
 
     return res;

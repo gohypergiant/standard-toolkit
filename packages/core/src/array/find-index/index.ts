@@ -1,4 +1,4 @@
-import type { Predicate } from "@/types";
+import type { Predicate } from '@/types';
 
 /**
  * Returns the first index of the given array that satisfies the predicate.
@@ -10,11 +10,11 @@ import type { Predicate } from "@/types";
  */
 export const findIndex =
   <T>(predicate: Predicate<T>) =>
-  <C extends T[]>(arr: C) => {
+  (arr: T[]) => {
     const len = arr.length;
 
     for (let i = 0; i < len; i++) {
-      if (predicate(arr[i], i)) {
+      if (predicate(arr[i] as T, i)) {
         return i;
       }
     }

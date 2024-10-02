@@ -8,7 +8,7 @@
  */
 export const includes =
   <T>(x: T) =>
-  <C extends T[]>(arr: C) => {
+  (arr: T[]) => {
     const len = arr.length;
 
     for (let i = 0; i < len; i++) {

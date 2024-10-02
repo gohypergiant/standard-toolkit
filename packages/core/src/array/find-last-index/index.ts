@@ -1,4 +1,4 @@
-import type { Predicate } from "@/types";
+import type { Predicate } from '@/types';
 
 /**
  * Returns the last index of the given array that satisfies the predicate.
@@ -10,11 +10,11 @@ import type { Predicate } from "@/types";
  */
 export const findLastIndex =
   <T>(predicate: Predicate<T>) =>
-  <C extends T[]>(arr: C) => {
+  (arr: T[]) => {
     const len = arr.length;
 
     for (let i = len - 1; i >= 0; i--) {
-      if (predicate(arr[i], i)) {
+      if (predicate(arr[i] as T, i)) {
         return i;
       }
     }
