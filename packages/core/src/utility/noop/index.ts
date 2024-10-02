@@ -1,3 +1,3 @@
 /** A no operation function */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+// biome-ignore lint/suspicious/noEmptyBlockStatements: It is intentional
 export const noop = (_x?: unknown) => {};

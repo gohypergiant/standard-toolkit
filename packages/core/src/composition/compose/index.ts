@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { UnaryFunction } from "@/types";
+import type { UnaryFunction } from '@/types';
 
 // https://stackoverflow.com/questions/49310886/typing-compose-function-in-typescript-flow-compose#answer-73082627
 
 // If its a list of functions, last being Unary
 type ComposeParams<Fns> = Fns extends readonly [
   ...any[],
-  infer Last extends UnaryFunction
+  infer Last extends UnaryFunction,
 ]
   ? // Get Params of the last, which returns [...argTypes], so get the first one [0]
     // so that we have the true type of the arg
@@ -21,12 +21,12 @@ type Composable<Fn> =
   Fn extends readonly [UnaryFunction]
     ? Fn
     : // if its a list of Unary funcs (ignoring the first)
-    Fn extends readonly [any, ...infer Rest extends readonly UnaryFunction[]]
-    ? // Start building the list of func type by using the return type of the first in Rest
-      // as the arg of the next in line and recursively spread the rest (doing the same thing)
-      // The first is ignored but handled by the top level ComposeReturn
-      readonly [(arg: ComposeReturn<Rest>) => any, ...Composable<Rest>]
-    : never;
+      Fn extends readonly [any, ...infer Rest extends readonly UnaryFunction[]]
+      ? // Start building the list of func type by using the return type of the first in Rest
+        // as the arg of the next in line and recursively spread the rest (doing the same thing)
+        // The first is ignored but handled by the top level ComposeReturn
+        readonly [(arg: ComposeReturn<Rest>) => any, ...Composable<Rest>]
+      : never;
 
 /**
  * Allows you combine two or more functions to create a new function, which passes the results from one

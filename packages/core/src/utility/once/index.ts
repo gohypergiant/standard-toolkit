@@ -9,5 +9,7 @@ export const once = <T extends SomeFunction>(fn: T) => {
 
   // TODO: Better types, since it can return void?
   return (...args: Parameters<T>): ReturnType<T> =>
+    // biome-ignore lint/suspicious/noAssignInExpressions: Shhhh
+    // biome-ignore lint/style/noCommaOperator: Shhh
     done ? void 0 : ((done = true), fn(args));
 };
