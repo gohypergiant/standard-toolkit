@@ -38,7 +38,15 @@
           "level": "error",
           "options": {
             "strictCase": true,
-            "requireAscii": true
+            "requireAscii": true,
+            "conventions": [
+              {
+                "selector": {
+                  "kind": "objectLiteralProperty"
+                },
+                "formats": ["CONSTANT_CASE", "camelCase"]
+              }
+            ]
           }
         }
       },

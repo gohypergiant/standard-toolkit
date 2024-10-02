@@ -9,15 +9,10 @@ const defaultVal =
     val ?? x;
 
 const colorTable = {
-  // biome-ignore lint/style/useNamingConvention: This will be an issue with Biome
   FOO: [0, 0, 255, 155] as Color,
-  // biome-ignore lint/style/useNamingConvention: This will be an issue with Biome
   BAR: [255, 0, 255, 155] as Color,
-  // biome-ignore lint/style/useNamingConvention: This will be an issue with Biome
   FIZZ: [230, 0, 0, 155] as Color,
-  // biome-ignore lint/style/useNamingConvention: This will be an issue with Biome
   BUZZ: [0, 128, 0, 155] as Color,
-  // biome-ignore lint/style/useNamingConvention: This will be an issue with Biome
   TEST: null as unknown as Color,
 };
 
