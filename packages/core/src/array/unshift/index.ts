@@ -6,15 +6,15 @@
  * // [0, 1, 2, 3, 4]
  */
 export const unshift =
-  <T extends unknown[]>(arr: T) =>
-  (x: T[number]) => {
+  <T>(arr: T[]) =>
+  (x: T) => {
     const len = arr.length;
-    const res = new Array(len + 1) as T;
+    const res = new Array<T>(len + 1);
 
     res[0] = x;
 
     for (let i = 0; i < len; i++) {
-      res[i + 1] = arr[i];
+      res[i + 1] = arr[i] as T;
     }
 
     return res;

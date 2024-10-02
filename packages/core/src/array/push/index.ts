@@ -6,13 +6,13 @@
  * // [1, 2, 3, 4, 5]
  */
 export const push =
-  <T extends unknown[]>(arr: T) =>
-  (x: T[number]) => {
+  <T>(arr: T[]) =>
+  (x: T) => {
     const len = arr.length;
-    const res = new Array(len + 1) as T;
+    const res = new Array<T>(len + 1);
 
     for (let i = 0; i < len; i++) {
-      res[i] = arr[i];
+      res[i] = arr[i] as T;
     }
 
     res[len] = x;

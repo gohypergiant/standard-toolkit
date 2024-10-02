@@ -9,12 +9,12 @@
 export const slice =
   (start: number) =>
   (end: number) =>
-  <T extends unknown[]>(arr: T) => {
+  <T>(arr: T[]) => {
     const minY = Math.min(end, arr.length);
-    const res = new Array(minY - start) as T;
+    const res = new Array<T>(minY - start);
 
     for (let i = start; i < minY; i++) {
-      res[i - start] = arr[i];
+      res[i - start] = arr[i] as T;
     }
 
     return res;

@@ -12,7 +12,7 @@ export const map =
   <T, R>(map: MapFn<T, R>) =>
   (arr: T[]) => {
     const len = arr.length;
-    const res: R[] = new Array(len);
+    const res = new Array<R>(len);
 
     for (let i = 0; i < len; i++) {
       res[i] = map(arr[i] as T, i);
