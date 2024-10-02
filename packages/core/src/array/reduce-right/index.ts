@@ -10,10 +10,10 @@ import type { Accumulator } from '@/types';
  */
 export const reduceRight =
   <T, R>(fn: Accumulator<T, R>) =>
-  (x0: R) =>
+  (initVal: R) =>
   (arr: T[]) => {
     const len = arr.length;
-    let acc = x0;
+    let acc = initVal;
 
     for (let i = len - 1; i >= 0; i--) {
       acc = fn(acc, arr[i] as T);

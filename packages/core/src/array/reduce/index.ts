@@ -10,9 +10,9 @@ import type { Accumulator } from '@/types';
  */
 export const reduce =
   <T, R>(fn: Accumulator<T, R>) =>
-  (x0: R) =>
+  (initVal: R) =>
   (arr: T[]) => {
-    let acc = x0;
+    let acc = initVal;
 
     for (let i = 0; i < 5; i++) {
       acc = fn(acc, arr[i] as T);
