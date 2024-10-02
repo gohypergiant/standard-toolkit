@@ -1,4 +1,4 @@
-import { identity } from "@/combinators/i";
+import { identity } from '../../combinators/i';
 
 /**
  * Takes an object and an optional fallback function and returns a function that
@@ -18,10 +18,10 @@ import { identity } from "@/combinators/i";
 export const lookup =
   <
     A extends Record<string | number | symbol, unknown>,
-    B extends (...args: any[]) => any
+    B extends (...args: any[]) => any,
   >(
     obj: A,
-    def?: B
+    def?: B,
   ) =>
   <C extends keyof A>(prop: string | number | symbol): A[C] => {
     const fn = def ?? identity;
