@@ -10,4 +10,68 @@
  * governing permissions and limitations under the License.
  */
 
-// TODO
+const TWO_DIGIT_DEFAULT = '--';
+const FOUR_DIGIT_DEFAULT = '----';
+
+/**
+ * A 2-digit octal code that identifies the aircraft's mission or type.
+ * This mode is only used by the military.
+ */
+export function formatM1(value?: string | number): string {
+  if (value) {
+    return `${value}`.padStart(2, '0');
+  }
+
+  return TWO_DIGIT_DEFAULT;
+}
+
+/**
+ * A 4-digit octal code that identifies the aircraft's unit code or tail number.
+ * This mode is only used by the military.
+ */
+export function formatM2(value?: string | number): string {
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
+}
+
+/**
+ * A 4-digit octal code that identifies the aircraft. This mode is used by both the
+ * military and civilians, and is often called a squawk code. Air traffic controllers
+ * assign these codes.
+ */
+export function formatM3A(value?: string | number): string {
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
+}
+
+/**
+ * ⚠️ We don't actually know the format of M4
+ * A 3-pulse reply that uses an encrypted challenge to determine the delay.
+ * This mode is only used by the military.
+ */
+export function formatM4(value: string | number): string {
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
+}
+
+/**
+ * ⚠️ We don't actually know the format of M5
+ * A cryptographically secured version of Mode S and ADS-B GPS position.
+ * This mode is only used by the military.
+ */
+export function formatM5(value: string | number): string {
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
+}

@@ -1,20 +1,20 @@
-name: CI
+name: Release
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    types: [opened, synchronize]
+    branches:
+      - main
 env:
   TURBO_TELEMETRY_DISABLED: 1
   RUNNER_NODE_VERSION: 18
   RUNNER_PNPM_VERSION: 9.11.0 # specified in root package.json
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: true
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  checks:
-    name: Install, Build, Lint, and Test
+  release:
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,7 +34,10 @@ jobs:
           node-version: ${{ env.RUNNER_NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm run build
-      - run: pnpm run lint
-      - run: pnpm run test
-
+      - uses: changesets/action@v1
+        with:
+          publish: false
+          commit: "build: version packages"
+          title: "Changeset Action: Version Packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

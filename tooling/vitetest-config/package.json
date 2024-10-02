@@ -11,9 +11,9 @@
     "lint": "pnpm biome lint ./"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.3.0",
-    "@vitest/coverage-istanbul": "^1.6.0",
-    "vitest": "^1.6.0"
+    "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-istanbul": "^2.1.1",
+    "vitest": "^2.1.1"
   },
   "$schema": "https://json.schemastore.org/package",
   "author": "https://hypergiant.com",

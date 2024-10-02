@@ -7,10 +7,16 @@
   "exclude": [
     "node_modules",
     "**/*.bench.ts",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "**/*.test-d.ts"
   ],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   }
 }
