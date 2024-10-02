@@ -6,9 +6,14 @@
  *   city: 'Austin',
  *   street: '987 Sample St',
  * });
+ * // {
+ * //   // ...,
+ * //   city: 'Austin',
+ * //   street: '987 Sample St',
+ * // }
  */
 export const associate =
-  <T>(obj: T) =>
+  <T extends object>(obj: T) =>
   <K extends keyof T = keyof T>(prop: K) =>
   (val: T[K]): T => ({ ...obj, [prop]: val });
 
@@ -25,9 +30,14 @@ export const assoc = associate;
  *   city: 'Austin',
  *   street: '987 Sample St',
  * });
+ * // {
+ * //   // ...,
+ * //   city: 'Austin',
+ * //   street: '987 Sample St',
+ * // }
  */
 export const associateDeep =
-  <T>(obj: T) =>
+  <T extends object>(obj: T) =>
   <K extends keyof T>(prop: K) =>
   (val: T[K]): T => {
     const x = structuredClone(obj);

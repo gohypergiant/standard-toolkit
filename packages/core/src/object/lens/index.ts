@@ -1,5 +1,5 @@
-import { associateDeep } from "../associate";
-import { property, optionalProperty } from "../property";
+import { associateDeep } from '../associate';
+import { property, optionalProperty } from '../property';
 
 type LenseGet<T, V> = (source: T) => V;
 type LenseSet<T, V> = (source: T) => (value: V) => T;
@@ -29,13 +29,13 @@ export type Lens<T, V> = {
  */
 export const lens = <T, V>(
   getter: LenseGet<T, V>,
-  setter: LenseSet<T, V>
+  setter: LenseSet<T, V>,
 ): Lens<T, V> => ({
   get: getter,
   set: setter,
 });
 
-// * NOTE: Need to expand on this so that it functions like a normal `compose` (or `pipe` rather)
+// * TODO: Need to expand on this so that it functions like a normal `compose` (or `pipe` rather)
 // * so one can just give it a list of lens to hop-skotch through
 
 /**
@@ -57,7 +57,7 @@ export const lens = <T, V>(
  */
 export const composeLens = <A, B, C>(
   ab: Lens<A, B>,
-  bc: Lens<B, C>
+  bc: Lens<B, C>,
 ): Lens<A, C> => ({
   get: (a) => bc.get(ab.get(a)),
   set: (a) => (c) => ab.set(a)(bc.set(ab.get(a))(c)),
@@ -104,7 +104,7 @@ export const lensProp =
   <K extends keyof T>(prop: K) =>
     lens(
       (obj: T) => property(obj)(prop),
-      (obj) => (value) => associateDeep(obj)(prop)(value)
+      (obj) => (value) => associateDeep(obj)(prop)(value),
     );
 
 /**
@@ -118,5 +118,5 @@ export const lensOptionalProp =
   <K extends keyof T>(prop: K) =>
     lens(
       (obj: T) => optionalProperty(obj)(prop),
-      (obj) => (value) => associateDeep(obj)(prop)(value as T[K])
+      (obj) => (value) => associateDeep(obj)(prop)(value as T[K]),
     );

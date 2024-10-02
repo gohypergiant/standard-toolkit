@@ -9,7 +9,7 @@
  * // userStore.profile.at(0)
  */
 export const property =
-  <T>(obj: T) =>
+  <T extends object>(obj: T) =>
   <K extends keyof T>(prop: K) =>
     Array.isArray(obj) && Number.isFinite(Number.parseInt(prop as string, 10))
       ? (obj.at(Number.parseInt(prop as string, 10)) as T[K])
@@ -31,7 +31,7 @@ export const prop = property;
  * // userStore?.profile?.at(0)
  */
 export const optionalProperty =
-  <T>(obj?: T) =>
+  <T extends object>(obj?: T) =>
   <K extends keyof T>(prop: K): T[K] | undefined =>
     Array.isArray(obj) && Number.isFinite(Number.parseInt(prop as string, 10))
       ? (obj?.at(Number.parseInt(prop as string, 10)) as T[K])
