@@ -8,7 +8,8 @@ export const once = <T extends SomeFunction>(fn: T) => {
   let done = false;
 
   // TODO: Better types, since it can return void?
-  return (...args: Parameters<T>): ReturnType<T> =>
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+  return (...args: Parameters<T>): ReturnType<T> | void =>
     // biome-ignore lint/suspicious/noAssignInExpressions: Shhhh
     // biome-ignore lint/style/noCommaOperator: Shhh
     done ? void 0 : ((done = true), fn(args));
