@@ -1,4 +1,4 @@
-import type { AsType } from '@/types';
+import type { AsType } from '../../types';
 import type {
   InputRenderProps as RACInputRenderProps,
   InputProps as RACInputProps,

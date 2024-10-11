@@ -1,11 +1,14 @@
-import type { AsType } from '@/types';
 import type {
   PopoverProps as RACPopoverProps,
   PopoverRenderProps as RACPopoverRenderProps,
 } from 'react-aria-components';
 import type { OverlayTriggerState } from 'react-stately';
 import type { PartialDeep } from 'type-fest';
-import type { OmitProtectedProps, RenderPropsChildren } from '../../types';
+import type {
+  AsType,
+  OmitProtectedProps,
+  RenderPropsChildren,
+} from '../../types';
 import type { ButtonProps } from '../button/types';
 import type { GroupProps } from '../group/types';
 

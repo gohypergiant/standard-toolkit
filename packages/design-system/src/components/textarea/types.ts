@@ -1,4 +1,4 @@
-import type { AsType } from '@/types';
+import type { AsType } from '../../types';
 import type { FormEventHandler } from 'react';
 import type {
   InputRenderProps as RACInputRenderProps,

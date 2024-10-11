@@ -19,6 +19,7 @@ export default mergeConfig(
   defineConfig({
     plugins: [vanillaExtractPlugin()],
     test: {
+      globals: true,
       setupFiles: './src/test/setup.ts',
       environment: 'jsdom',
     },

@@ -1,4 +1,3 @@
-import type { AsType } from '@/types';
 import type { AriaLabelingProps } from '@react-types/shared';
 import type { ReactNode } from 'react';
 import type {
@@ -13,6 +12,7 @@ import type {
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
 import type {
+  AsType,
   OmitProtectedProps,
   RenderPropsChildren,
   TreeGroupNode,

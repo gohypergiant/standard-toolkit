@@ -1,4 +1,4 @@
-import type { AsType } from '@/types';
+import type { AsType } from '../../types';
 import type { PropsWithChildren } from 'react';
 import type { Orientation, PressEvents } from 'react-aria';
 import type {

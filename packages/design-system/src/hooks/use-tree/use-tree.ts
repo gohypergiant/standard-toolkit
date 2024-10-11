@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { useCallback, useId, useMemo, useRef } from 'react';
 import { type Key, useTreeData } from 'react-stately';
-import { useUpdateEffect } from '@/hooks';
+import { useUpdateEffect } from '../use-update-effect';
 import type {
   TreeActions,
   TreeNode,

@@ -1,4 +1,3 @@
-import type { AsType } from '@/types';
 import type { ComponentType, ReactElement } from 'react';
 import type {
   QueryBuilderProps as RQBProps,
@@ -12,7 +11,11 @@ import type {
   useRuleGroup,
 } from 'react-querybuilder';
 import type { LiteralUnion, PartialDeep } from 'type-fest';
-import type { RenderPropsChildren, OmitProtectedProps } from '../../types';
+import type {
+  AsType,
+  RenderPropsChildren,
+  OmitProtectedProps,
+} from '../../types';
 import type { ButtonClassNames, ButtonProps } from '../button/types';
 import type {
   CheckboxClassNames,

@@ -1,10 +1,9 @@
-import type { AsType } from '@/types';
 import type {
   SelectProps as RACSelectProps,
   SelectRenderProps as RACSelectRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { OmitProtectedProps } from '../../types';
+import type { AsType, OmitProtectedProps } from '../../types';
 import type { ButtonClassNames, ButtonProps } from '../button/types';
 import type { OptionsClassNames } from '../options/types';
 

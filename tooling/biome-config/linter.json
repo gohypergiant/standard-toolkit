@@ -37,7 +37,7 @@
         "useNamingConvention": {
           "level": "error",
           "options": {
-            "strictCase": true,
+            "strictCase": false,
             "requireAscii": true
           }
         }

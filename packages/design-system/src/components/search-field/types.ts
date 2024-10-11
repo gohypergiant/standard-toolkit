@@ -1,10 +1,9 @@
-import type { AsType } from '@/types';
 import type {
   SearchFieldProps as RACSearchFieldProps,
   SearchFieldRenderProps as RACSearchFieldRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { OmitProtectedProps } from '../../types';
+import type { AsType, OmitProtectedProps } from '../../types';
 import type { ButtonClassNames, ButtonProps } from '../button/types';
 import type { IconClassNames, IconProps } from '../icon/types';
 import type { InputClassNames, InputSize } from '../input/types';

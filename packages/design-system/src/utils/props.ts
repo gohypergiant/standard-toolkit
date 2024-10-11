@@ -1,4 +1,3 @@
-import type { AsType } from '@cbc2/types';
 import { clsx } from 'clsx';
 import { mergeWith } from 'lodash';
 import type { CSSProperties } from 'react';
@@ -10,6 +9,7 @@ import type {
   ClassNames,
   RenderProps,
   StylePropRenderProps,
+  AsType,
 } from '../types';
 
 type Props<T extends object> = AsType<T> | null | undefined;

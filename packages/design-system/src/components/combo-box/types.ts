@@ -1,10 +1,9 @@
-import type { AsType } from '@/types';
 import type {
   ComboBoxProps as RACComboBoxProps,
   ComboBoxRenderProps as RACComboBoxRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { OmitProtectedProps } from '../../types';
+import type { AsType, OmitProtectedProps } from '../../types';
 import type { ButtonClassNames, ButtonProps } from '../button/types';
 import type { InputClassNames } from '../input/types';
 import type { OptionsClassNames } from '../options/types';
