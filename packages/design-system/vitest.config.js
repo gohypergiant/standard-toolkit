@@ -10,6 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@hypergiant/vitest-config/no-dom';
+import baseConfig from '@hypergiant/vitest-config/dom';
 
 export default baseConfig;

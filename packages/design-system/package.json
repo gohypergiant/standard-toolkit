@@ -3,9 +3,26 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
-  "files": ["dist/**"],
-  "module": "./dist/index.js",
+  "files": [
+    "dist/**"
+  ],
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js",
+      "module": "./dist/index.js"
+    },
+    "./styles": {
+      "default": "./dist/styles.css",
+      "module": "./dist/styles.css"
+    },
+    "./vanilla": {
+      "types": "./dist/vanilla.d.ts",
+      "default": "./dist/vanilla.js",
+      "module": "./dist/vanilla.js"
+    }
+  },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsc",
@@ -13,13 +30,39 @@
     "lint": "pnpm biome lint ./"
   },
   "devDependencies": {
+    "@fontsource/roboto-flex": "^5.1.0",
+    "@fontsource/roboto-mono": "^5.1.0",
     "@hypergiant/typescript-config": "workspace:*",
     "@hypergiant/vitest-config": "workspace:*",
+    "@ladle/react": "^4.1.2",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/lodash": "^4.17.10",
+    "@types/react": "^18.3.11",
+    "@vanilla-extract/vite-plugin": "^4.0.16",
     "@vitest/coverage-istanbul": "^2.1.1",
+    "react-test-renderer": "^18.3.1",
     "vitest": "^2.1.1"
   },
   "dependencies": {
-    "typescript": "^5.6.2"
+    "@react-aria/collections": "3.0.0-alpha.5",
+    "@react-aria/ssr": "^3.9.6",
+    "@react-aria/utils": "^3.25.3",
+    "@react-stately/utils": "^3.10.4",
+    "@react-types/shared": "^3.25.0",
+    "@vanilla-extract/css": "^1.16.0",
+    "@vanilla-extract/dynamic": "^2.1.2",
+    "clsx": "^2.1.1",
+    "lodash": "^4.17.21",
+    "react": "^18.3.1",
+    "react-aria": "^3.35.0",
+    "react-aria-components": "^1.4.0",
+    "react-stately": "^3.33.0",
+    "type-fest": "^4.26.1",
+    "typescript": "^5.6.2",
+    "zod": "^3.23.8"
   },
   "$schema": "https://json.schemastore.org/package",
   "author": "https://hypergiant.com",
