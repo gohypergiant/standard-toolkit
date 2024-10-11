@@ -1,13 +1,13 @@
 import { isEqual } from 'lodash';
 import { useCallback, useId, useMemo, useRef } from 'react';
 import { type Key, useTreeData } from 'react-stately';
-import { useUpdateEffect } from 'react-use';
-import {
-  type TreeActions,
-  type TreeNode,
-  type TreeNodes,
-  type UseTreeOptions,
-  type UseTreeResult,
+import { useUpdateEffect } from '@/hooks';
+import type {
+  TreeActions,
+  TreeNode,
+  TreeNodes,
+  UseTreeOptions,
+  UseTreeResult,
 } from '../../types';
 import { getChildren, getKey, mapTree, toggleVisibility } from './utils';
 

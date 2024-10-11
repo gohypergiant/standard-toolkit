@@ -16,3 +16,4 @@ export {
   type ThemeVars,
 } from './use-theme';
 export { useTree } from './use-tree';
+export { useUpdateEffect } from './use-update-effect';
