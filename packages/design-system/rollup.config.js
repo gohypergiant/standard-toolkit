@@ -80,12 +80,14 @@ function bundleVanilla() {
   return {
     name: 'bundle-vanilla-emits',
     generateBundle(_, bundle) {
-      const ext = bundle['index.d.ts'] ? 'd.ts' : 'js';
+      const def = !!bundle['index.d.ts'];
+      const ext = def ? 'd.ts' : 'js';
+      const source = bundle[`index.${ext}`][def ? 'source' : 'code'];
 
       this.emitFile({
         type: 'asset',
         fileName: `vanilla.${ext}`,
-        source: bundle[`index.${ext}`].code
+        source: source
           .replace(/\/\/# sourceMappingURL.+/gi, '')
           .split('\n')
           .filter(
