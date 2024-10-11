@@ -6,7 +6,7 @@ import { Icon } from '../icon';
 import { Input } from '../input';
 import { Options, OptionsItem, OptionsList } from '../options';
 import { ComboBox } from './combo-box';
-import { type ComboBoxProps } from './types';
+import type { ComboBoxProps } from './types';
 
 function setup({
   children = (

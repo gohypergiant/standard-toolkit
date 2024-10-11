@@ -1,10 +1,10 @@
-import {
-  type Field,
-  type Option,
-  type OptionGroup,
-  type RuleType,
-  type ValidationResult,
-  type ValueEditorType,
+import type {
+  Field,
+  Option,
+  OptionGroup,
+  RuleType,
+  ValidationResult,
+  ValueEditorType,
 } from 'react-querybuilder';
 import { z } from 'zod';
 

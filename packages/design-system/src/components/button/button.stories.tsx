@@ -1,11 +1,11 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './button';
-import {
-  type ButtonProps,
-  type LinkButtonProps,
-  type ToggleButtonProps,
+import type {
+  ButtonProps,
+  LinkButtonProps,
+  ToggleButtonProps,
 } from './types';
 
 export default {

@@ -1,6 +1,6 @@
 import { render, renderHook, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { type ThemeContext } from './types';
+import type { ThemeContext } from './types';
 import { ThemeProvider, useTheme } from './use-theme';
 
 describe('ThemeProvider', () => {

@@ -1,10 +1,10 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle';
 import { AriaText } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip, ChipGroup, ChipItem, ChipList } from './chip';
-import { type ChipGroupProps, type ChipProps } from './types';
+import type { ChipGroupProps, ChipProps } from './types';
 
 export default {
   title: 'Components',

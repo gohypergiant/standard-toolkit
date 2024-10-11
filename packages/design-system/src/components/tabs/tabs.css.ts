@@ -6,12 +6,12 @@ import {
 } from '@vanilla-extract/css';
 import { label, layers, radiusVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import {
-  type TabsClassNames,
-  type TabListState,
-  type TabPanelsState,
-  type TabPanelState,
-  type TabState,
+import type {
+  TabsClassNames,
+  TabListState,
+  TabPanelsState,
+  TabPanelState,
+  TabState,
 } from './types';
 
 export const tabsContainers = {

@@ -6,9 +6,9 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import {
-  type QueryBuilderGroupState,
-  type QueryBuilderClassNames,
+import type {
+  QueryBuilderGroupState,
+  QueryBuilderClassNames,
 } from './types';
 
 export const queryBuilderContainers = {

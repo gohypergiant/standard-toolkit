@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
-import { type PressEvent } from 'react-aria';
+import type { PressEvent } from 'react-aria';
 import { Button } from '../button';
-import { type ActionProps } from './types';
+import type { ActionProps } from './types';
 import { pressToMouseEvent } from './utils';
 
 export function ActionElement({

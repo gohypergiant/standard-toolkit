@@ -5,7 +5,7 @@ import {
   style,
 } from '@vanilla-extract/css';
 import { layers, radiusVars, surfaces } from '../../styles';
-import { type PopoverClassNames } from './types';
+import type { PopoverClassNames } from './types';
 
 export const popoverContainer = createContainer();
 

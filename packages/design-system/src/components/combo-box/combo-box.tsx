@@ -28,7 +28,7 @@ import { ButtonContext, type ButtonProps } from '../button';
 import { InputContext, type InputProps } from '../input';
 import { OptionsContext, type OptionsProps } from '../options';
 import { comboBoxClassNames, comboBoxStateVars } from './combo-box.css';
-import { type ComboBoxMapping, type ComboBoxProps } from './types';
+import type { ComboBoxMapping, ComboBoxProps } from './types';
 
 const defaultMapping: ComboBoxMapping = {
   description: {

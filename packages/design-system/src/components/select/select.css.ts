@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { label, layers, typographyVars } from '../../styles';
 import { inputColorVars } from '../input';
-import { type SelectClassNames } from './types';
+import type { SelectClassNames } from './types';
 
 export const selectContainer = createContainer();
 

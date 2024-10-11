@@ -1,13 +1,13 @@
 import type { AsType } from '@/types';
-import { type PropsWithChildren } from 'react';
-import {
-  type TagGroupProps,
-  type TagListProps,
-  type TagProps,
-  type TagRenderProps,
+import type { PropsWithChildren } from 'react';
+import type {
+  TagGroupProps,
+  TagListProps,
+  TagProps,
+  TagRenderProps,
 } from 'react-aria-components';
-import { type OmitProtectedProps, type RenderPropsChildren } from '../../types';
-import { type ButtonProps } from '../button/types';
+import type { OmitProtectedProps, RenderPropsChildren } from '../../types';
+import type { ButtonProps } from '../button/types';
 
 export type ChipClassNames = Partial<{
   group: string;

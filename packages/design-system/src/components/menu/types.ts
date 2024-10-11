@@ -1,13 +1,13 @@
 import type { AsType } from '@/types';
-import {
-  type PopoverRenderProps,
-  type MenuItemProps as RACMenuItemProps,
-  type MenuItemRenderProps as RACMenuItemRenderProps,
-  type MenuProps as RACMenuProps,
-  type PopoverProps as RACPopoverProps,
+import type {
+  PopoverRenderProps,
+  MenuItemProps as RACMenuItemProps,
+  MenuItemRenderProps as RACMenuItemRenderProps,
+  MenuProps as RACMenuProps,
+  PopoverProps as RACPopoverProps,
 } from 'react-aria-components';
-import { type PartialDeep } from 'type-fest';
-import { type IconClassNames } from '../icon/types';
+import type { PartialDeep } from 'type-fest';
+import type { IconClassNames } from '../icon/types';
 
 export type MenuClassNames = PartialDeep<{
   menu: {

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { TooltipTrigger } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
 import { Tooltip } from './tooltip';
-import { type TooltipProps } from './types';
+import type { TooltipProps } from './types';
 
 function setup({
   children = 'Foo',

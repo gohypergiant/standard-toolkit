@@ -5,7 +5,7 @@ import { Button, ToggleButton } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Tree, TreeGroup } from './tree';
-import { type TreeProps, type TreeRenderProps } from './types';
+import type { TreeProps, TreeRenderProps } from './types';
 
 function Node() {
   return (

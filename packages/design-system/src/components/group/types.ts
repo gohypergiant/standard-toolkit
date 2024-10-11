@@ -1,6 +1,6 @@
-import { type Context, type ReactElement } from 'react';
-import { type Orientation } from 'react-aria';
-import { type ContextValue, type SlotProps } from 'react-aria-components';
+import type { Context, ReactElement } from 'react';
+import type { Orientation } from 'react-aria';
+import type { ContextValue, SlotProps } from 'react-aria-components';
 
 export type GroupClassNames = Partial<{
   container: string;

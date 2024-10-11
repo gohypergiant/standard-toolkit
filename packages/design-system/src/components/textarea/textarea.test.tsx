@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { TextArea } from './textarea';
-import { type TextAreaProps } from './types';
+import type { TextAreaProps } from './types';
 
 function setup(props: Partial<TextAreaProps> = {}) {
   render(<TextArea {...props} />);

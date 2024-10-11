@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Picker, PickerItem } from './picker';
-import { type PickerProps } from './types';
+import type { PickerProps } from './types';
 
 function setup({
   ['aria-label']: ariaLabel = 'Test',

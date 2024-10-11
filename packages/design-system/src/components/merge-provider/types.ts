@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type PropsWithChildren } from 'react';
-import { type ProviderValues } from '../../types';
+import type { PropsWithChildren } from 'react';
+import type { ProviderValues } from '../../types';
 
 export type MergeProviderProps<
   A = any,

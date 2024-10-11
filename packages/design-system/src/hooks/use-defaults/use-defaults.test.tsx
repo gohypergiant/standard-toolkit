@@ -1,6 +1,6 @@
 import { render, renderHook, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { type DefaultsContext } from './types';
+import type { DefaultsContext } from './types';
 import { DefaultsProvider, useDefaults } from './use-defaults';
 
 describe('DefaultsProvider', () => {

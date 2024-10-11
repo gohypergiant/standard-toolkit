@@ -6,10 +6,10 @@ import {
 } from '@vanilla-extract/css';
 import { layers, label, radiusVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import {
-  type CheckboxGroupState,
-  type CheckboxClassNames,
-  type CheckboxState,
+import type {
+  CheckboxGroupState,
+  CheckboxClassNames,
+  CheckboxState,
 } from './types';
 
 export const checkboxContainer = createContainer();

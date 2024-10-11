@@ -1,11 +1,11 @@
-import {
-  type RadioGroupProps as RACRadioGroupProps,
-  type RadioGroupRenderProps as RACRadioGroupRenderProps,
-  type RadioProps as RACRadioProps,
-  type RadioRenderProps as RACRadioRenderProps,
+import type {
+  RadioGroupProps as RACRadioGroupProps,
+  RadioGroupRenderProps as RACRadioGroupRenderProps,
+  RadioProps as RACRadioProps,
+  RadioRenderProps as RACRadioRenderProps,
 } from 'react-aria-components';
-import { type PartialDeep } from 'type-fest';
-import { type RenderPropsChildren } from '../../types';
+import type { PartialDeep } from 'type-fest';
+import type { RenderPropsChildren } from '../../types';
 
 export type RadioAlignment = 'start' | 'end';
 

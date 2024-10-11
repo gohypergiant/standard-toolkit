@@ -1,8 +1,8 @@
 import type { AsType } from '@/types';
-import { type FormEventHandler } from 'react';
-import {
-  type InputRenderProps as RACInputRenderProps,
-  type TextAreaProps as RACTextAreaProps,
+import type { FormEventHandler } from 'react';
+import type {
+  InputRenderProps as RACInputRenderProps,
+  TextAreaProps as RACTextAreaProps,
 } from 'react-aria-components';
 
 export type TextAreaClassNames = Partial<{

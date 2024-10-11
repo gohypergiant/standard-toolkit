@@ -1,13 +1,13 @@
-import {
-  type LinkProps,
-  type LinkRenderProps,
-  type ButtonProps as RACButtonProps,
-  type ButtonRenderProps as RACButtonRenderProps,
-  type ToggleButtonProps as RACToggleButtonProps,
-  type ToggleButtonRenderProps,
+import type {
+  LinkProps,
+  LinkRenderProps,
+  ButtonProps as RACButtonProps,
+  ButtonRenderProps as RACButtonRenderProps,
+  ToggleButtonProps as RACToggleButtonProps,
+  ToggleButtonRenderProps,
 } from 'react-aria-components';
-import { type OmitProtectedProps, type RenderPropsChildren } from '../../types';
-import { type IconProps } from '../icon/types';
+import type { OmitProtectedProps, RenderPropsChildren } from '../../types';
+import type { IconProps } from '../icon/types';
 
 export type ButtonClassNames = Partial<{
   container: string;

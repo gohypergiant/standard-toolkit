@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { type TreeGroupNode, type UseTreeOptions } from '../../types';
+import type { TreeGroupNode, UseTreeOptions } from '../../types';
 import { useTree } from './use-tree';
 
 function setup({

@@ -43,11 +43,11 @@ import {
 import { createCollectionRenderer } from '../collection';
 import { IconContext, type IconProps } from '../icon';
 import { menuClassNames, menuItemStateVars, menuStateVars } from './menu.css';
-import {
-  type MenuItemProps,
-  type MenuListProps,
-  type MenuMapping,
-  type MenuProps,
+import type {
+  MenuItemProps,
+  MenuListProps,
+  MenuMapping,
+  MenuProps,
 } from './types';
 
 const defaultMapping: MenuMapping = {

@@ -22,7 +22,7 @@ import {
   searchFieldClassNames,
   searchFieldStateVars,
 } from './search-field.css';
-import { type SearchFieldMapping, type SearchFieldProps } from './types';
+import type { SearchFieldMapping, SearchFieldProps } from './types';
 
 const defaultMapping: SearchFieldMapping = {
   icon: {

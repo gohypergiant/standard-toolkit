@@ -13,7 +13,7 @@ import {
 import { inlineVars } from '../../utils';
 import { QueryBuilderContext } from './constants';
 import { queryBuilderGroupStateVars } from './query-builder.css';
-import { type RuleGroupElementsProps } from './types';
+import type { RuleGroupElementsProps } from './types';
 
 /**
  * Rules have 5 non-optional functional pieces:

@@ -1,4 +1,4 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { headings, bodies } from './typography.css';
 
 export default {

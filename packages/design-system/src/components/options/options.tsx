@@ -47,11 +47,11 @@ import {
   optionsItemStateVars,
   optionsStateVars,
 } from './options.css';
-import {
-  type OptionsItemProps,
-  type OptionsListProps,
-  type OptionsMapping,
-  type OptionsProps,
+import type {
+  OptionsItemProps,
+  OptionsListProps,
+  OptionsMapping,
+  OptionsProps,
 } from './types';
 
 const defaultMapping: OptionsMapping = {

@@ -1,9 +1,9 @@
 import { type ForwardedRef, createContext, forwardRef, useMemo } from 'react';
-import { type ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components';
 import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { inlineVars, mergeClassNames } from '../../utils';
 import { iconClassNames, iconStateVars } from './icon.css';
-import { type IconProps } from './types';
+import type { IconProps } from './types';
 
 export const IconContext =
   createContext<ContextValue<IconProps, HTMLDivElement>>(null);

@@ -6,7 +6,7 @@ import {
   style,
 } from '@vanilla-extract/css';
 import { layers } from '../../styles';
-import { type IconClassNames } from './types';
+import type { IconClassNames } from './types';
 
 export const iconContainer = createContainer();
 

@@ -6,12 +6,12 @@ import {
   type ForwardedRef,
   type ReactElement,
 } from 'react';
-import { type ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components';
 import { useContextProps, useTheme } from '../../hooks';
 import { inlineVars, mergeClassNames } from '../../utils';
 import { MergeProvider } from '../merge-provider';
 import { groupClassNames, groupStateVars } from './group.css';
-import { type GroupProps } from './types';
+import type { GroupProps } from './types';
 
 export const GroupContext =
   // Unforunately, using "unknown" or "object" here creates complex type issues with <Provider />

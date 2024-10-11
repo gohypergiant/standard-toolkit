@@ -1,6 +1,6 @@
 import { action, type StoryDefault, type Story } from '@ladle/react';
 import { Switch } from './switch';
-import { type SwitchProps } from './types';
+import type { SwitchProps } from './types';
 
 export default {
   title: 'Components',

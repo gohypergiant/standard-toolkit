@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars, surfaces } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type OptionsClassNames, type OptionsItemState } from './types';
+import type { OptionsClassNames, OptionsItemState } from './types';
 
 export const optionsContainers = {
   options: createContainer(),

@@ -24,10 +24,10 @@ import {
   queryBuilderStateVars,
 } from './query-builder.css';
 import { Rule } from './rule';
-import {
-  type QueryBuilderContextValue,
-  type QueryBuilderMapping,
-  type QueryBuilderProps,
+import type {
+  QueryBuilderContextValue,
+  QueryBuilderMapping,
+  QueryBuilderProps,
 } from './types';
 import { defaultValueEditors, ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';

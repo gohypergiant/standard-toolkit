@@ -6,10 +6,10 @@ import {
 } from '@vanilla-extract/css';
 import { layers } from '../../styles';
 import { containerQueries } from '../../utils';
-import {
-  type PickerItemState,
-  type PickerClassNames,
-  type PickerState,
+import type {
+  PickerItemState,
+  PickerClassNames,
+  PickerState,
 } from './types';
 
 export const pickerContainers = {

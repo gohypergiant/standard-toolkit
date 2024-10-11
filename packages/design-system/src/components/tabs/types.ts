@@ -1,15 +1,15 @@
 import type { AsType } from '@/types';
-import { type PropsWithChildren } from 'react';
-import { type Orientation, type PressEvents } from 'react-aria';
-import {
-  type TabListProps as RACTabListProps,
-  type TabPanelProps as RACTabPanelProps,
-  type TabPanelRenderProps as RACTabPanelRenderProps,
-  type TabProps as RACTabProps,
-  type TabRenderProps as RACTabRenderProps,
-  type TabsProps as RACTabsProps,
+import type { PropsWithChildren } from 'react';
+import type { Orientation, PressEvents } from 'react-aria';
+import type {
+  TabListProps as RACTabListProps,
+  TabPanelProps as RACTabPanelProps,
+  TabPanelRenderProps as RACTabPanelRenderProps,
+  TabProps as RACTabProps,
+  TabRenderProps as RACTabRenderProps,
+  TabsProps as RACTabsProps,
 } from 'react-aria-components';
-import { type PartialDeep } from 'type-fest';
+import type { PartialDeep } from 'type-fest';
 
 export type TabsClassNames = PartialDeep<{
   tabs: string;

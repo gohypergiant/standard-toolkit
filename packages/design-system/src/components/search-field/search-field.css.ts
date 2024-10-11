@@ -7,7 +7,7 @@ import {
 import { focusOutlineStyle, layers, radiusVars } from '../../styles';
 import { containerQueries } from '../../utils';
 import { inputColorVars } from '../input';
-import { type SearchFieldClassNames, type SearchFieldState } from './types';
+import type { SearchFieldClassNames, SearchFieldState } from './types';
 
 export const searchFieldContainer = createContainer();
 

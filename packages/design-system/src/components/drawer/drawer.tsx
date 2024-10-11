@@ -46,13 +46,13 @@ import {
   drawerDialogStateVars,
   drawerStateVars,
 } from './drawer.css';
-import {
-  type DrawerContextValue,
-  type DrawerDialogProps,
-  type DrawerMapping,
-  type DrawerProps,
-  type DrawerTabListProps,
-  type DrawerTabProps,
+import type {
+  DrawerContextValue,
+  DrawerDialogProps,
+  DrawerMapping,
+  DrawerProps,
+  DrawerTabListProps,
+  DrawerTabProps,
 } from './types';
 
 const DrawerContext = createContext<DrawerContextValue>({

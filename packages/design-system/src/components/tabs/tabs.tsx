@@ -16,7 +16,7 @@ import {
   type SlotProps,
   useContextProps,
 } from 'react-aria-components';
-import { type RequiredDeep } from 'type-fest';
+import type { RequiredDeep } from 'type-fest';
 import { useDefaultProps, usePropagatingPress, useTheme } from '../../hooks';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import {
@@ -26,15 +26,15 @@ import {
   tabsClassNames,
   tabStateVars,
 } from './tabs.css';
-import {
-  type TabsClassNames,
-  type TabListProps,
-  type TabPanelProps,
-  type TabPanelRenderProps,
-  type TabPanelsProps,
-  type TabProps,
-  type TabRenderProps,
-  type TabsProps,
+import type {
+  TabsClassNames,
+  TabListProps,
+  TabPanelProps,
+  TabPanelRenderProps,
+  TabPanelsProps,
+  TabProps,
+  TabRenderProps,
+  TabsProps,
 } from './types';
 
 export const TEST_IDS: RequiredDeep<TabsClassNames> = {

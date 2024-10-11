@@ -1,4 +1,4 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { Collection, DialogTrigger } from 'react-aria-components';
 import { actions } from '../../ladle';
 import {
@@ -11,7 +11,7 @@ import {
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Options, OptionsItem, OptionsList } from './options';
-import { type OptionsListProps } from './types';
+import type { OptionsListProps } from './types';
 
 type StoryProps = OptionsListProps<object>;
 

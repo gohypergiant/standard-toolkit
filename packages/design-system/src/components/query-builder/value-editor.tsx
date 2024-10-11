@@ -11,7 +11,7 @@ import { Radio, RadioGroup } from '../radio';
 import { Switch } from '../switch';
 import { TextArea } from '../textarea';
 import { multiValueOperators, QueryBuilderContext } from './constants';
-import { type QueryBuilderValueEditors } from './types';
+import type { QueryBuilderValueEditors } from './types';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
 

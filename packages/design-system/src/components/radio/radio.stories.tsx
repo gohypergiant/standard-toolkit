@@ -1,7 +1,7 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { AriaLabel } from '../aria';
 import { Radio, RadioGroup } from './radio';
-import { type RadioGroupProps } from './types';
+import type { RadioGroupProps } from './types';
 
 export default {
   title: 'Components / RadioGroup',

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { AriaHeading } from '../aria';
 import { Element } from '../element';
 import { Dialog } from './dialog';
-import { type DialogProps } from './types';
+import type { DialogProps } from './types';
 
 function setup({
   children = 'Foo',

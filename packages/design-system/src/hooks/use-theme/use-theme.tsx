@@ -12,9 +12,9 @@ import {
   defaultTypography,
   defaultZIndex,
 } from '../../styles';
-import { type Contract } from '../../types';
+import type { Contract } from '../../types';
 import { computeContract } from '../../utils';
-import { type ThemeContext, type ThemeProviderProps } from './types';
+import type { ThemeContext, ThemeProviderProps } from './types';
 import { root } from './use-theme.css';
 
 const defaultTheme: ThemeContext = {};

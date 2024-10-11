@@ -1,13 +1,13 @@
 import type { AsType } from '@/types';
-import {
-  type SearchFieldProps as RACSearchFieldProps,
-  type SearchFieldRenderProps as RACSearchFieldRenderProps,
+import type {
+  SearchFieldProps as RACSearchFieldProps,
+  SearchFieldRenderProps as RACSearchFieldRenderProps,
 } from 'react-aria-components';
-import { type PartialDeep } from 'type-fest';
-import { type OmitProtectedProps } from '../../types';
-import { type ButtonClassNames, type ButtonProps } from '../button/types';
-import { type IconClassNames, type IconProps } from '../icon/types';
-import { type InputClassNames, type InputSize } from '../input/types';
+import type { PartialDeep } from 'type-fest';
+import type { OmitProtectedProps } from '../../types';
+import type { ButtonClassNames, ButtonProps } from '../button/types';
+import type { IconClassNames, IconProps } from '../icon/types';
+import type { InputClassNames, InputSize } from '../input/types';
 
 export type SearchFieldClassNames = PartialDeep<{
   container: string;

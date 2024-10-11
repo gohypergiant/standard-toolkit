@@ -1,4 +1,4 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle';
 import { AriaFieldError, AriaGroup, AriaLabel, AriaText } from '../aria';
 import { Button } from '../button';
@@ -6,7 +6,7 @@ import { Icon } from '../icon';
 import { Input } from '../input';
 import { Options, OptionsItem, OptionsList } from '../options';
 import { ComboBox } from './combo-box';
-import { type ComboBoxProps } from './types';
+import type { ComboBoxProps } from './types';
 
 type StoryProps = ComboBoxProps<object> & {
   description?: string;

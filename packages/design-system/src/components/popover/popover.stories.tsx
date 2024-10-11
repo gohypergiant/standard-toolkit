@@ -7,7 +7,7 @@ import { Element } from '../element';
 import { Group } from '../group';
 import { Icon } from '../icon';
 import { Popover } from './popover';
-import { type PopoverProps } from './types';
+import type { PopoverProps } from './types';
 
 export default {
   title: 'Components / Popover',

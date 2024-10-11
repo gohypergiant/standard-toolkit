@@ -6,7 +6,7 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Options, OptionsItem, OptionsList } from '../options';
 import { Select } from './select';
-import { type SelectProps } from './types';
+import type { SelectProps } from './types';
 
 function setup({
   children = (

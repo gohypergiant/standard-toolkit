@@ -1,15 +1,15 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { type PressEvent } from 'react-aria';
-import { type RuleGroupType } from 'react-querybuilder';
+import type { PressEvent } from 'react-aria';
+import type { RuleGroupType } from 'react-querybuilder';
 import { Button } from '../button';
-import { type CheckboxRenderProps } from '../checkbox';
+import type { CheckboxRenderProps } from '../checkbox';
 import { Icon } from '../icon';
-import { type SelectRenderProps } from '../select';
+import type { SelectRenderProps } from '../select';
 import { QueryBuilderContext } from './constants';
 import { fields } from './dataset-sample';
 import { QueryBuilder } from './query-builder';
-import { type ActionProps, type QueryBuilderProps } from './types';
+import type { ActionProps, QueryBuilderProps } from './types';
 import { pressToMouseEvent } from './utils';
 
 export default {

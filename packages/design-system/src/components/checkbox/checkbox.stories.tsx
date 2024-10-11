@@ -7,7 +7,7 @@ import {
 import { AriaLabel, AriaText } from '../aria';
 import { Icon } from '../icon';
 import { Checkbox, CheckboxGroup } from './checkbox';
-import { type CheckboxGroupProps, type CheckboxProps } from './types';
+import type { CheckboxGroupProps, CheckboxProps } from './types';
 
 export default {
   title: 'Components / Checkbox',

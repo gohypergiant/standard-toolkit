@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { label, layers, radiusVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type SwitchClassNames, type SwitchState } from './types';
+import type { SwitchClassNames, SwitchState } from './types';
 
 export const switchContainer = createContainer();
 

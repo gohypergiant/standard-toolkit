@@ -1,7 +1,7 @@
 import { action, type StoryDefault, type Story } from '@ladle/react';
-import { type CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from './tabs';
-import { type TabListProps } from './types';
+import type { TabListProps } from './types';
 
 export default {
   title: 'Components/Tabs',

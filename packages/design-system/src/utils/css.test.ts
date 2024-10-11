@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { layers } from '../styles';
-import { type Contract } from '../types';
+import type { Contract } from '../types';
 import {
   applyThemeVars,
   assignPartialVars,

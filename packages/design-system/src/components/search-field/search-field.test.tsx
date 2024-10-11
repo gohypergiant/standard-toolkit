@@ -5,7 +5,7 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Input } from '../input';
 import { SearchField } from './search-field';
-import { type SearchFieldProps } from './types';
+import type { SearchFieldProps } from './types';
 
 function setup(props: Partial<SearchFieldProps> = {}) {
   render(

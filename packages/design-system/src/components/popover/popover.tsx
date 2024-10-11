@@ -23,7 +23,7 @@ import { ButtonContext, type ButtonProps } from '../button';
 import { ElementContext, type ElementProps } from '../element';
 import { GroupContext, type GroupProps } from '../group';
 import { popoverClassNames, popoverStateVars } from './popover.css';
-import { type PopoverMapping, type PopoverProps } from './types';
+import type { PopoverMapping, PopoverProps } from './types';
 
 const defaultMapping: PopoverMapping = {
   heading: headings.v4,

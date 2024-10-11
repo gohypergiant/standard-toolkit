@@ -20,12 +20,12 @@ import {
   radioGroupStateVars,
   radioStateVars,
 } from './radio.css';
-import {
-  type RadioGroupRenderProps,
-  type RadioGroupProps,
-  type RadioProps,
-  type RadioRenderProps,
-  type RadioContextProps,
+import type {
+  RadioGroupRenderProps,
+  RadioGroupProps,
+  RadioProps,
+  RadioRenderProps,
+  RadioContextProps,
 } from './types';
 
 export const RadioContext =

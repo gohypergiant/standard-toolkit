@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars, surfaces } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type MenuClassNames, type MenuItemState } from './types';
+import type { MenuClassNames, MenuItemState } from './types';
 
 export const menuContainers = {
   menu: createContainer(),

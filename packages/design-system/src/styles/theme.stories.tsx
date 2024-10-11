@@ -1,7 +1,7 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { startCase } from 'lodash';
-import { type ReactNode } from 'react';
-import { type MapLeafNodes } from '../types';
+import type { ReactNode } from 'react';
+import type { MapLeafNodes } from '../types';
 import {
   genericColorVars,
   semanticColorVars,

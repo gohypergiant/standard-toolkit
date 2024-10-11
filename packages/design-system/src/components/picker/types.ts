@@ -1,10 +1,10 @@
-import {
-  type ListBoxProps,
-  type ListBoxItemProps,
-  type ListBoxItemRenderProps,
-  type ListBoxRenderProps,
+import type {
+  ListBoxProps,
+  ListBoxItemProps,
+  ListBoxItemRenderProps,
+  ListBoxRenderProps,
 } from 'react-aria-components';
-import { type PartialDeep } from 'type-fest';
+import type { PartialDeep } from 'type-fest';
 
 export type PickerClassNames = PartialDeep<{
   list: {

@@ -1,7 +1,7 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle';
 import { Input } from './input';
-import { type InputProps } from './types';
+import type { InputProps } from './types';
 
 export default {
   title: 'Components/Input',

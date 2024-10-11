@@ -5,8 +5,8 @@ import {
   type TextDropItem,
   isTextDropItem,
 } from 'react-aria';
-import { type DragAndDropOptions } from 'react-aria-components';
-import { type TreeNode, type UseTreeResult } from '../../types';
+import type { DragAndDropOptions } from 'react-aria-components';
+import type { TreeNode, UseTreeResult } from '../../types';
 
 export function createDragAndDropHandlers<T>(
   id: Key,

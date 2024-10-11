@@ -1,4 +1,4 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { ColorSwatch } from 'react-aria-components';
 import { actions } from '../../ladle';
 import { Icon } from '../icon';
@@ -8,7 +8,7 @@ import {
   colorSwatch,
   iconPickerItem,
 } from './picker.stories.css';
-import { type PickerProps } from './types';
+import type { PickerProps } from './types';
 
 export default {
   title: 'Components/Picker',

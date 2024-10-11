@@ -1,5 +1,5 @@
-import { type Key } from 'react-aria';
-import { type TreeNode, type TreeNodes } from '../../types';
+import type { Key } from 'react-aria';
+import type { TreeNode, TreeNodes } from '../../types';
 
 export function getChildren<T>(node: TreeNodes<T>) {
   return 'nodes' in node ? node.nodes : [];

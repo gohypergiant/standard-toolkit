@@ -1,6 +1,6 @@
 import { useCallback, useContext, useMemo } from 'react';
-import { type Key } from 'react-aria';
-import { type Selection } from 'react-aria-components';
+import type { Key } from 'react-aria';
+import type { Selection } from 'react-aria-components';
 import {
   type FullOption,
   isOptionGroupArray,

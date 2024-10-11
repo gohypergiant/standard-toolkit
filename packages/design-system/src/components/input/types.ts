@@ -1,7 +1,7 @@
 import type { AsType } from '@/types';
-import {
-  type InputRenderProps as RACInputRenderProps,
-  type InputProps as RACInputProps,
+import type {
+  InputRenderProps as RACInputRenderProps,
+  InputProps as RACInputProps,
 } from 'react-aria-components';
 
 export type InputClassNames = Partial<{

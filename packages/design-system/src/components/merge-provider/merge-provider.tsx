@@ -1,6 +1,6 @@
-import { type Context, type ReactNode } from 'react';
+import type { Context, ReactNode } from 'react';
 import { mergeProps } from '../../utils';
-import { type MergeProviderProps } from './types';
+import type { MergeProviderProps } from './types';
 
 function merge<T>(context: Context<T>, next: T, children: ReactNode) {
   return function Consumer(prev: T) {

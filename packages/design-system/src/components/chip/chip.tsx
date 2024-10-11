@@ -21,12 +21,12 @@ import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import { AriaTextContext } from '../aria';
 import { ButtonContext, type ButtonProps } from '../button';
 import { chipClassNames, chipStateVars } from './chip.css';
-import {
-  type ChipGroupProps,
-  type ChipItemProps,
-  type ChipListProps,
-  type ChipMapping,
-  type ChipProps,
+import type {
+  ChipGroupProps,
+  ChipItemProps,
+  ChipListProps,
+  ChipMapping,
+  ChipProps,
 } from './types';
 
 const defaults: Required<Pick<ChipProps, 'color' | 'size'>> = {

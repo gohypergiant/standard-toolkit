@@ -6,7 +6,7 @@ import { Checkbox } from '../checkbox';
 import { Group } from '../group';
 import { Icon } from '../icon';
 import { Tree, TreeGroup } from './tree';
-import { type TreeProps, type TreeRenderProps } from './types';
+import type { TreeProps, TreeRenderProps } from './types';
 
 export default {
   title: 'Components/Tree',

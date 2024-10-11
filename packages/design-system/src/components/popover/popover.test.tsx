@@ -7,7 +7,7 @@ import { Button } from '../button';
 import { Element } from '../element';
 import { Icon } from '../icon';
 import { Popover } from './popover';
-import { type PopoverProps } from './types';
+import type { PopoverProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<PopoverProps> = {}) {
   render(

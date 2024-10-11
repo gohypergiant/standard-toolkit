@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { layers } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type GroupClassNames, type GroupState } from './types';
+import type { GroupClassNames, GroupState } from './types';
 
 export const groupContainer = createContainer();
 

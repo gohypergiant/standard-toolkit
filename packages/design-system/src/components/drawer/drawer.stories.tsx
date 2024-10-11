@@ -1,4 +1,4 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { useState } from 'react';
 import { TooltipTrigger } from 'react-aria-components';
 import { actions } from '../../ladle';
@@ -9,7 +9,7 @@ import { Icon } from '../icon';
 import { TabPanel, TabPanels } from '../tabs';
 import { Tooltip, TooltipTarget } from '../tooltip';
 import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './drawer';
-import { type DrawerProps } from './types';
+import type { DrawerProps } from './types';
 
 export default {
   title: 'Components/Drawer',

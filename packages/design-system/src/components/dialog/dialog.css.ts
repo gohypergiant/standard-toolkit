@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars, surfaces, zIndexVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type DialogClassNames, type DialogState } from './types';
+import type { DialogClassNames, DialogState } from './types';
 
 export const dialogContainer = createContainer();
 

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { fields } from './dataset-sample';
 import { QueryBuilder } from './query-builder';
-import { type QueryBuilderProps } from './types';
+import type { QueryBuilderProps } from './types';
 
 function setup(props: Partial<QueryBuilderProps> = {}) {
   render(<QueryBuilder {...props} />);

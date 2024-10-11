@@ -1,5 +1,5 @@
-import { type CSSProperties, type PropsWithChildren } from 'react';
-import { type SlotProps } from 'react-aria-components';
+import type { CSSProperties, PropsWithChildren } from 'react';
+import type { SlotProps } from 'react-aria-components';
 
 export type IconClassNames = Partial<{
   container: string;

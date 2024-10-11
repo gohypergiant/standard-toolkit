@@ -1,7 +1,7 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle';
 import { TextArea } from './textarea';
-import { type TextAreaProps } from './types';
+import type { TextAreaProps } from './types';
 
 export default {
   title: 'Components/TextArea',

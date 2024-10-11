@@ -23,7 +23,7 @@ import {
   pickerItemStateVars,
   pickerStateVars,
 } from './picker.css';
-import { type PickerItemProps, type PickerProps } from './types';
+import type { PickerItemProps, PickerProps } from './types';
 
 export const PickerContext =
   createContext<ContextValue<PickerProps<unknown>, HTMLDivElement>>(null);

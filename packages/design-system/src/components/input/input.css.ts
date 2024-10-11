@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars, typographyVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type InputClassNames, type InputState } from './types';
+import type { InputClassNames, InputState } from './types';
 
 export const inputContainer = createContainer();
 

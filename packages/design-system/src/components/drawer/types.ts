@@ -1,19 +1,19 @@
-import { type AriaLabelingProps as RACLabelingProps } from '@react-types/shared';
-import { type PropsWithChildren } from 'react';
-import { type AriaOverlayProps as RACOverlayProps } from 'react-aria';
-import {
-  type OverlayTriggerProps,
-  type OverlayTriggerState,
+import type { AriaLabelingProps as RACLabelingProps } from '@react-types/shared';
+import type { PropsWithChildren } from 'react';
+import type { AriaOverlayProps as RACOverlayProps } from 'react-aria';
+import type {
+  OverlayTriggerProps,
+  OverlayTriggerState,
 } from 'react-stately';
-import { type PartialDeep } from 'type-fest';
-import { type OmitProtectedProps, type RenderPropsChildren } from '../../types';
-import { type ButtonClassNames, type ButtonProps } from '../button/types';
-import {
-  type TabListProps,
-  type TabProps,
-  type TabRenderProps,
-  type TabsClassNames,
-  type TabsProps,
+import type { PartialDeep } from 'type-fest';
+import type { OmitProtectedProps, RenderPropsChildren } from '../../types';
+import type { ButtonClassNames, ButtonProps } from '../button/types';
+import type {
+  TabListProps,
+  TabProps,
+  TabRenderProps,
+  TabsClassNames,
+  TabsProps,
 } from '../tabs/types';
 
 export type DrawerClassNames = PartialDeep<{

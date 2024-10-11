@@ -38,13 +38,13 @@ import {
   treeItemStateVars,
   treeStateVars,
 } from './tree.css';
-import {
-  type TreeGroupProps,
-  type TreeIndicatorRenderProps,
-  type TreeItemProps,
-  type TreeMapping,
-  type TreeProps,
-  type TreeStateContextValue,
+import type {
+  TreeGroupProps,
+  TreeIndicatorRenderProps,
+  TreeItemProps,
+  TreeMapping,
+  TreeProps,
+  TreeStateContextValue,
 } from './types';
 import { createDragAndDropHandlers } from './utils';
 

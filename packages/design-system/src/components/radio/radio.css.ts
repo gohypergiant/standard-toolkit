@@ -6,10 +6,10 @@ import {
 } from '@vanilla-extract/css';
 import { label, layers, radiusVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import {
-  type RadioState,
-  type RadioClassNames,
-  type RadioGroupState,
+import type {
+  RadioState,
+  RadioClassNames,
+  RadioGroupState,
 } from './types';
 
 export const radioContainer = createContainer();

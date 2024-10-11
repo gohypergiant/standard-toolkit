@@ -1,32 +1,32 @@
 import type { AsType } from '@/types';
-import { type ComponentType, type ReactElement } from 'react';
-import {
-  type QueryBuilderProps as RQBProps,
-  type FullField,
-  type FullOperator,
-  type FullCombinator,
-  type ActionProps as RQBActionProps,
-  type RuleGroupProps,
-  type RuleGroupType,
-  type ValueEditorProps,
-  type useRuleGroup,
+import type { ComponentType, ReactElement } from 'react';
+import type {
+  QueryBuilderProps as RQBProps,
+  FullField,
+  FullOperator,
+  FullCombinator,
+  ActionProps as RQBActionProps,
+  RuleGroupProps,
+  RuleGroupType,
+  ValueEditorProps,
+  useRuleGroup,
 } from 'react-querybuilder';
-import { type LiteralUnion, type PartialDeep } from 'type-fest';
-import { type RenderPropsChildren, type OmitProtectedProps } from '../../types';
-import { type ButtonClassNames, type ButtonProps } from '../button/types';
-import {
-  type CheckboxClassNames,
-  type CheckboxRenderProps,
+import type { LiteralUnion, PartialDeep } from 'type-fest';
+import type { RenderPropsChildren, OmitProtectedProps } from '../../types';
+import type { ButtonClassNames, ButtonProps } from '../button/types';
+import type {
+  CheckboxClassNames,
+  CheckboxRenderProps,
 } from '../checkbox/types';
-import { type InputClassNames, type InputProps } from '../input/types';
-import { type RadioClassNames } from '../radio/types';
-import {
-  type SelectClassNames,
-  type SelectProps,
-  type SelectRenderProps,
+import type { InputClassNames, InputProps } from '../input/types';
+import type { RadioClassNames } from '../radio/types';
+import type {
+  SelectClassNames,
+  SelectProps,
+  SelectRenderProps,
 } from '../select/types';
-import { type SwitchClassNames } from '../switch/types';
-import { type TextAreaProps, type TextAreaClassNames } from '../textarea/types';
+import type { SwitchClassNames } from '../switch/types';
+import type { TextAreaProps, TextAreaClassNames } from '../textarea/types';
 
 type DefaultRQBProps = RQBProps<
   RuleGroupType,

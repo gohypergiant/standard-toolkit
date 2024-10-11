@@ -19,7 +19,7 @@ import { useDefaultProps, useTheme } from '../../hooks';
 import { inputs } from '../../styles';
 import { inlineVars, mergeClassNames, mergeProps } from '../../utils';
 import { textAreaClassNames, textAreaStateVars } from './textarea.css';
-import { type TextAreaMapping, type TextAreaProps } from './types';
+import type { TextAreaMapping, TextAreaProps } from './types';
 
 const defaultMapping: TextAreaMapping = {
   font: inputs,

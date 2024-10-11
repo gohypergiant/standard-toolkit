@@ -1,5 +1,5 @@
-import { type Story, type StoryDefault } from '@ladle/react';
-import { type ReactNode } from 'react';
+import type { Story, StoryDefault } from '@ladle/react';
+import type { ReactNode } from 'react';
 import { Collection, MenuTrigger, SubmenuTrigger } from 'react-aria-components';
 import { actions } from '../../ladle';
 import {
@@ -12,7 +12,7 @@ import {
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu, MenuItem, MenuList } from './menu';
-import { type MenuListProps, type MenuProps } from './types';
+import type { MenuListProps, MenuProps } from './types';
 
 export default {
   title: 'Components/Menu',

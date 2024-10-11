@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type ReactHTML } from 'react';
-import { type SlotProps } from 'react-aria-components';
-import { type ProviderValues } from '../../types';
+import type { ReactHTML } from 'react';
+import type { SlotProps } from 'react-aria-components';
+import type { ProviderValues } from '../../types';
 
 export type ElementProps<
   A = any,

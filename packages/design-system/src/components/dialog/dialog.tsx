@@ -25,17 +25,17 @@ import {
   useTheme,
 } from '../../hooks';
 import { headings } from '../../styles';
-import { type OmitProtectedProps } from '../../types';
+import type { OmitProtectedProps } from '../../types';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import { AriaHeadingContext } from '../aria';
 import { ButtonContext, type ButtonProps } from '../button';
 import { ElementContext, type ElementProps } from '../element';
 import { GroupContext, type GroupProps } from '../group';
 import { dialogClassNames, dialogStateVars } from './dialog.css';
-import {
-  type DialogMapping,
-  type DialogProps,
-  type DialogSizes,
+import type {
+  DialogMapping,
+  DialogProps,
+  DialogSizes,
 } from './types';
 
 const dialogSizes: DialogSizes[] = ['sm', 'lg'];

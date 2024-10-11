@@ -27,7 +27,7 @@ import {
 import { ButtonContext, type ButtonProps } from '../button';
 import { OptionsContext, type OptionsProps } from '../options';
 import { selectClassNames, selectStateVars } from './select.css';
-import { type SelectMapping, type SelectProps } from './types';
+import type { SelectMapping, SelectProps } from './types';
 
 const defaultMapping: SelectMapping = {
   description: {

@@ -1,8 +1,8 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { TooltipTrigger } from 'react-aria-components';
 import { Button } from '../button';
 import { Tooltip } from './tooltip';
-import { type TooltipProps } from './types';
+import type { TooltipProps } from './types';
 
 export default {
   title: 'Components / Tooltip',

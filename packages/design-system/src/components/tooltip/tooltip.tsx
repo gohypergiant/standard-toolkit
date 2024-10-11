@@ -20,10 +20,10 @@ import {
   tooltipStateVars,
   tooltipTargetStateVars,
 } from './tooltip.css';
-import {
-  type TooltipMapping,
-  type TooltipProps,
-  type TooltipTargetProps,
+import type {
+  TooltipMapping,
+  TooltipProps,
+  TooltipTargetProps,
 } from './types';
 
 const defaultMapping: TooltipMapping = {

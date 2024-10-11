@@ -17,7 +17,7 @@ import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { inputs } from '../../styles';
 import { inlineVars, mergeClassNames, mergeProps } from '../../utils';
 import { inputClassNames, inputStateVars } from './input.css';
-import { type InputMapping, type InputProps } from './types';
+import type { InputMapping, InputProps } from './types';
 
 const defaultMapping: InputMapping = {
   sizer: {

@@ -1,59 +1,59 @@
-import { type PropsWithChildren } from 'react';
-import {
-  type ButtonProps,
-  type LinkButtonProps,
-  type ToggleButtonProps,
+import type { PropsWithChildren } from 'react';
+import type {
+  ButtonProps,
+  LinkButtonProps,
+  ToggleButtonProps,
 } from '../../components/button/types';
-import {
-  type CheckboxGroupProps,
-  type CheckboxProps,
+import type {
+  CheckboxGroupProps,
+  CheckboxProps,
 } from '../../components/checkbox/types';
-import {
-  type ChipGroupProps,
-  type ChipProps,
+import type {
+  ChipGroupProps,
+  ChipProps,
 } from '../../components/chip/types';
-import { type ComboBoxProps } from '../../components/combo-box/types';
-import { type DialogProps } from '../../components/dialog/types';
-import {
-  type DrawerProps,
-  type DrawerTabListProps,
-  type DrawerTabProps,
+import type { ComboBoxProps } from '../../components/combo-box/types';
+import type { DialogProps } from '../../components/dialog/types';
+import type {
+  DrawerProps,
+  DrawerTabListProps,
+  DrawerTabProps,
 } from '../../components/drawer/types';
-import { type IconProps } from '../../components/icon/types';
-import { type InputProps } from '../../components/input/types';
-import {
-  type MenuItemProps,
-  type MenuListProps,
-  type MenuProps,
+import type { IconProps } from '../../components/icon/types';
+import type { InputProps } from '../../components/input/types';
+import type {
+  MenuItemProps,
+  MenuListProps,
+  MenuProps,
 } from '../../components/menu/types';
-import {
-  type OptionsItemProps,
-  type OptionsListProps,
-  type OptionsProps,
+import type {
+  OptionsItemProps,
+  OptionsListProps,
+  OptionsProps,
 } from '../../components/options/types';
-import { type PickerProps } from '../../components/picker/types';
-import { type PopoverProps } from '../../components/popover/types';
-import {
-  type RadioGroupProps,
-  type RadioProps,
+import type { PickerProps } from '../../components/picker/types';
+import type { PopoverProps } from '../../components/popover/types';
+import type {
+  RadioGroupProps,
+  RadioProps,
 } from '../../components/radio/types';
-import { type SearchFieldProps } from '../../components/search-field/types';
-import { type SelectProps } from '../../components/select/types';
-import { type SwitchProps } from '../../components/switch/types';
-import {
-  type TabListProps,
-  type TabPanelProps,
-  type TabPanelsProps,
-  type TabProps,
-  type TabsProps,
+import type { SearchFieldProps } from '../../components/search-field/types';
+import type { SelectProps } from '../../components/select/types';
+import type { SwitchProps } from '../../components/switch/types';
+import type {
+  TabListProps,
+  TabPanelProps,
+  TabPanelsProps,
+  TabProps,
+  TabsProps,
 } from '../../components/tabs/types';
-import { type TextAreaProps } from '../../components/textarea/types';
-import {
-  type TooltipProps,
-  type TooltipTargetProps,
+import type { TextAreaProps } from '../../components/textarea/types';
+import type {
+  TooltipProps,
+  TooltipTargetProps,
 } from '../../components/tooltip/types';
-import { type TreeProps } from '../../components/tree/types';
-import { type OmitProtectedProps } from '../../types';
+import type { TreeProps } from '../../components/tree/types';
+import type { OmitProtectedProps } from '../../types';
 
 type DefaultsOf<T extends Record<string, object>> = {
   [K in keyof T]?: OmitProtectedProps<T[K]>;

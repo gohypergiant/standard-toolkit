@@ -1,6 +1,6 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { Icon } from '../icon';
-import { type IconProps } from './types';
+import type { IconProps } from './types';
 
 export default {
   title: 'Components / Icon',

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { type ClassNames } from '../../types';
+import type { ClassNames } from '../../types';
 import { TEST_IDS, Tab, TabList, TabPanel, TabPanels, Tabs } from './tabs';
-import { type TabsProps } from './types';
+import type { TabsProps } from './types';
 
 function setup(props: Partial<TabsProps> = {}) {
   render(

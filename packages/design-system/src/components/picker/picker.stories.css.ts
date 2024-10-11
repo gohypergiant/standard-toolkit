@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { semanticColorVars, sizeVars } from '../../styles';
 import { assignPartialVars, containerQueries } from '../../utils';
 import { pickerItemColorVars, pickerItemStateVars } from './picker.css';
-import { type PickerItemState } from './types';
+import type { PickerItemState } from './types';
 
 export const colorPickerItem = style({
   width: 16,

@@ -1,4 +1,4 @@
-import { type RuleType } from 'react-querybuilder';
+import type { RuleType } from 'react-querybuilder';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { getValidationResult } from './utils';

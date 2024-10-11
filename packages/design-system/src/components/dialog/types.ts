@@ -1,13 +1,13 @@
-import { type RefObject } from 'react';
-import {
-  type HeadingProps,
-  type ModalOverlayProps,
-  type ModalRenderProps,
-  type DialogProps as RACDialogProps,
+import type { RefObject } from 'react';
+import type {
+  HeadingProps,
+  ModalOverlayProps,
+  ModalRenderProps,
+  DialogProps as RACDialogProps,
 } from 'react-aria-components';
-import { type OmitProtectedProps, type RenderPropsChildren } from '../../types';
-import { type ButtonProps } from '../button/types';
-import { type GroupProps } from '../group/types';
+import type { OmitProtectedProps, RenderPropsChildren } from '../../types';
+import type { ButtonProps } from '../button/types';
+import type { GroupProps } from '../group/types';
 
 export type DialogClassNames = Partial<{
   portal: string;

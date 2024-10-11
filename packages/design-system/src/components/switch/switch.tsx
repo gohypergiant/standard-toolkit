@@ -9,7 +9,7 @@ import { type ContextValue, Switch as RACSwitch } from 'react-aria-components';
 import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import { switchClassNames, switchStateVars } from './switch.css';
-import { type SwitchProps, type SwitchRenderProps } from './types';
+import type { SwitchProps, SwitchRenderProps } from './types';
 
 export const SwitchContext =
   createContext<ContextValue<SwitchProps, HTMLLabelElement>>(null);

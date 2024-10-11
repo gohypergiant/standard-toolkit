@@ -1,4 +1,4 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { surfaces } from './surfaces.css';
 import { genericColorVars } from './theme.css';
 

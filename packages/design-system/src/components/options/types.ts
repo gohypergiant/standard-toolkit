@@ -1,14 +1,14 @@
 import type { AsType } from '@/types';
-import {
-  type ListBoxItemProps,
-  type ListBoxItemRenderProps,
-  type ListBoxProps,
-  type ListBoxRenderProps,
-  type PopoverProps,
-  type PopoverRenderProps,
+import type {
+  ListBoxItemProps,
+  ListBoxItemRenderProps,
+  ListBoxProps,
+  ListBoxRenderProps,
+  PopoverProps,
+  PopoverRenderProps,
 } from 'react-aria-components';
-import { type PartialDeep } from 'type-fest';
-import { type IconClassNames } from '../icon/types';
+import type { PartialDeep } from 'type-fest';
+import type { IconClassNames } from '../icon/types';
 
 export type OptionsClassNames = PartialDeep<{
   options: {

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Button, ButtonContext, type ButtonProps } from '../button';
 import { Group } from './group';
-import { type GroupProps } from './types';
+import type { GroupProps } from './types';
 
 function setup(
   props: Partial<GroupProps<ButtonProps, HTMLButtonElement>> = {},

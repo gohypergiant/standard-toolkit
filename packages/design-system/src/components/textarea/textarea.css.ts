@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars, typographyVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type TextAreaClassNames, type TextAreaState } from './types';
+import type { TextAreaClassNames, TextAreaState } from './types';
 
 export const textAreaContainer = createContainer();
 

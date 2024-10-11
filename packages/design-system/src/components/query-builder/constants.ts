@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { type QueryBuilderContextValue } from './types';
+import type { QueryBuilderContextValue } from './types';
 
 export const defaultSize = 'sm';
 

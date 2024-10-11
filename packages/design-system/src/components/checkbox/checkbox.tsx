@@ -28,11 +28,11 @@ import {
   checkboxGroupStateVars,
   checkboxStateVars,
 } from './checkbox.css';
-import {
-  type CheckboxGroupProps,
-  type CheckboxGroupRenderProps,
-  type CheckboxProps,
-  type CheckboxRenderProps,
+import type {
+  CheckboxGroupProps,
+  CheckboxGroupRenderProps,
+  CheckboxProps,
+  CheckboxRenderProps,
 } from './types';
 
 export const CheckboxContext =

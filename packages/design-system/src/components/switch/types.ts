@@ -1,8 +1,8 @@
-import {
-  type SwitchProps as RACSwitchProps,
-  type SwitchRenderProps as RACSwitchRenderProps,
+import type {
+  SwitchProps as RACSwitchProps,
+  SwitchRenderProps as RACSwitchRenderProps,
 } from 'react-aria-components';
-import { type RenderPropsChildren } from '../../types';
+import type { RenderPropsChildren } from '../../types';
 
 export type SwitchClassNames = Partial<{
   container: string;

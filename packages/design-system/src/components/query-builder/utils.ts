@@ -1,10 +1,10 @@
 import { noop } from 'lodash';
-import { type MouseEvent } from 'react';
-import { type PressEvent } from 'react-aria';
-import {
-  type RuleType,
-  type RuleValidator,
-  type ValidationResult,
+import type { MouseEvent } from 'react';
+import type { PressEvent } from 'react-aria';
+import type {
+  RuleType,
+  RuleValidator,
+  ValidationResult,
 } from 'react-querybuilder';
 
 /**

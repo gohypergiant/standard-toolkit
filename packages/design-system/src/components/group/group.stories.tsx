@@ -1,7 +1,7 @@
-import { type Story, type StoryDefault } from '@ladle/react';
+import type { Story, StoryDefault } from '@ladle/react';
 import { Button, ButtonContext, type ButtonProps } from '../button';
 import { Group } from './group';
-import { type GroupProps } from './types';
+import type { GroupProps } from './types';
 
 export default {
   title: 'Components / Group',

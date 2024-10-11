@@ -6,10 +6,10 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars, surfaces, zIndexVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import {
-  type TooltipClassNames,
-  type TooltipState,
-  type TooltipTargetState,
+import type {
+  TooltipClassNames,
+  TooltipState,
+  TooltipTargetState,
 } from './types';
 
 export const tooltipContainers = {

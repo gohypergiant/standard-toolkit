@@ -5,7 +5,7 @@ import { Button } from '../button';
 import { Element } from '../element';
 import { TabPanel, TabPanels } from '../tabs';
 import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './drawer';
-import { type DrawerProps } from './types';
+import type { DrawerProps } from './types';
 
 function setup(props: Partial<DrawerProps> = {}) {
   render(

@@ -7,7 +7,7 @@ import { Button } from '../button';
 import { Element } from '../element';
 import { Group } from '../group';
 import { Dialog } from './dialog';
-import { type DialogProps } from './types';
+import type { DialogProps } from './types';
 
 export default {
   title: 'Components / Dialog',

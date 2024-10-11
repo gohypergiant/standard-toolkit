@@ -1,6 +1,6 @@
-import { type Key } from 'react-aria';
+import type { Key } from 'react-aria';
 import { describe, expect, it, vi } from 'vitest';
-import { type TreeNode, type UseTreeResult } from '../../types';
+import type { TreeNode, UseTreeResult } from '../../types';
 import {
   createDragAndDropHandlers,
   getDroppedItemPayload,

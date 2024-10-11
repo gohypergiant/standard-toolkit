@@ -3,7 +3,7 @@ import { createContext, forwardRef, type ForwardedRef } from 'react';
 import { type ContextValue, Provider } from 'react-aria-components';
 import { useContextProps } from '../../hooks';
 import { MergeProvider } from '../merge-provider';
-import { type ElementProps } from './types';
+import type { ElementProps } from './types';
 
 export const ElementContext =
   createContext<

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Element } from './element';
-import { type ElementProps } from './types';
+import type { ElementProps } from './types';
 
 function setup({ as = 'div', ref: _, ...rest }: Partial<ElementProps> = {}) {
   render(<Element {...rest} as={as} />);

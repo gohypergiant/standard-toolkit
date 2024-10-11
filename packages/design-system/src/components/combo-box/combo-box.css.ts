@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { focusOutlineStyle, label, layers, radiusVars } from '../../styles';
 import { inputColorVars } from '../input';
-import { type ComboBoxClassNames } from './types';
+import type { ComboBoxClassNames } from './types';
 
 export const comboBoxContainer = createContainer();
 
