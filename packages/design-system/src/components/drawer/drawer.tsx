@@ -1,4 +1,4 @@
-import { toBool } from '@cbc2/utils';
+import { toBoolean } from '@hypergiant/converters';
 import { useIsSSR } from '@react-aria/ssr';
 import { noop } from 'lodash';
 import {
@@ -245,7 +245,7 @@ export function DrawerTab(props: DrawerTabProps) {
     (event: PressEvent) => {
       const { selected } = event.target.parentElement?.dataset ?? {};
 
-      if (toBool(selected)) {
+      if (toBoolean(selected)) {
         toggle();
       } else {
         open();
