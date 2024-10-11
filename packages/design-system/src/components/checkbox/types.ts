@@ -1,13 +1,13 @@
-import { type Orientation } from 'react-aria';
-import {
-  type CheckboxGroupProps as RACCheckboxGroupProps,
-  type CheckboxGroupRenderProps as RACCheckboxGroupRenderProps,
-  type CheckboxProps as RACCheckboxProps,
-  type CheckboxRenderProps as RACCheckboxRenderProps,
+import type { Orientation } from 'react-aria';
+import type {
+  CheckboxGroupProps as RACCheckboxGroupProps,
+  CheckboxGroupRenderProps as RACCheckboxGroupRenderProps,
+  CheckboxProps as RACCheckboxProps,
+  CheckboxRenderProps as RACCheckboxRenderProps,
 } from 'react-aria-components';
-import { type PartialDeep } from 'type-fest';
-import { type RenderPropsChildren } from '../../types';
-import { type IconClassNames } from '../icon/types';
+import type { PartialDeep } from 'type-fest';
+import type { RenderPropsChildren } from '../../types';
+import type { IconClassNames } from '../icon/types';
 
 export type CheckboxClassNames = PartialDeep<{
   group: {

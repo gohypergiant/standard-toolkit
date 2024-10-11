@@ -6,7 +6,7 @@ import {
 } from '@vanilla-extract/css';
 import { layers, radiusVars } from '../../styles';
 import { containerQueries } from '../../utils';
-import { type ChipClassNames, type ChipState } from './types';
+import type { ChipClassNames, ChipState } from './types';
 
 export const chipContainer = createContainer();
 

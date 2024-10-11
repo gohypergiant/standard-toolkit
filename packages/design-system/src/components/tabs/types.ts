@@ -1,4 +1,4 @@
-import { type AsType } from '@cbc2/types';
+import type { AsType } from '@/types';
 import { type PropsWithChildren } from 'react';
 import { type Orientation, type PressEvents } from 'react-aria';
 import {

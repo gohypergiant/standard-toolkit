@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -27,7 +25,8 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsc",
     "dev": "pnpm tsc --watch",
-    "lint": "pnpm biome lint ./"
+    "lint": "pnpm biome lint ./",
+    "test": "pnpm vitest --run --dir src"
   },
   "devDependencies": {
     "@fontsource/roboto-flex": "^5.1.0",
@@ -43,7 +42,9 @@
     "@types/react": "^18.3.11",
     "@vanilla-extract/vite-plugin": "^4.0.16",
     "@vitest/coverage-istanbul": "^2.1.1",
+    "jsdom": "^25.0.1",
     "react-test-renderer": "^18.3.1",
+    "vite": "^5.4.8",
     "vitest": "^2.1.1"
   },
   "dependencies": {
@@ -59,6 +60,7 @@
     "react": "^18.3.1",
     "react-aria": "^3.35.0",
     "react-aria-components": "^1.4.0",
+    "react-dom": "^18.3.1",
     "react-stately": "^3.33.0",
     "type-fest": "^4.26.1",
     "typescript": "^5.6.2",

@@ -1,4 +1,4 @@
-import { type AsType } from '@cbc2/types';
+import type { AsType } from '@/types';
 import {
   type InputRenderProps as RACInputRenderProps,
   type InputProps as RACInputProps,

@@ -1,4 +1,5 @@
 export type { RGBA } from './deckgl';
+export type { AsType } from './generic';
 export type { ClassNames, OmitProtectedProps } from './props';
 export type {
   ChildrenRenderProps,
