@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -20,9 +18,7 @@
       "module": "./dist/vanilla.js"
     }
   },
-  "sideEffects": [
-    "./src/styles/**"
-  ],
+  "sideEffects": false,
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm rollup --config rollup.config.js",
