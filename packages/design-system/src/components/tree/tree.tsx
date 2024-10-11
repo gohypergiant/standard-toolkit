@@ -352,7 +352,7 @@ export function TreeGroup<T>({
     >
       {(item) => (
         <TreeItem
-          index={indices[item.key]}
+          index={indices[item.key] ?? -1}
           node={item}
           isFirstChild={indices[item.key] === 0}
           isLastChild={indices[item.key] === nodes.length - 1}

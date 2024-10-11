@@ -125,6 +125,7 @@ function useButton<
           {callRenderProps(childrenProp, {
             state: noopToggleState,
             isCurrent: false,
+            isPending: false,
             isSelected: false,
             ...renderProps,
           })}

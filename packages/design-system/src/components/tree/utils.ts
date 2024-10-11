@@ -19,7 +19,12 @@ export function createDragAndDropHandlers<T>(
     getDropOperation,
     getItems: (keys: Set<Key>) =>
       [...keys].map((key) => {
-        const node = lookup[key].value;
+        const node = lookup[key]?.value;
+
+        if (!node) {
+          return {};
+        }
+
         const payload = JSON.stringify(node);
 
         return [
@@ -54,7 +59,15 @@ export function createDragAndDropHandlers<T>(
       })();
     },
     onReorder({ keys, target }) {
-      const values = Array.from(keys).map((key) => lookup[key].value);
+      const values = Array.from(keys).flatMap((key) => {
+        const value = lookup[key]?.value;
+
+        if (value) {
+          return [value];
+        }
+
+        return [];
+      });
 
       actions.remove(...keys);
 

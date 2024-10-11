@@ -41,6 +41,7 @@ export const buttonStateVars = createThemeContract({
   isFocused: '',
   isFocusVisible: '',
   isHovered: '',
+  isPending: '',
   isPressed: '',
   isSelected: '',
 });

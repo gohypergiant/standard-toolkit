@@ -215,7 +215,7 @@ export function DrawerTabList<T extends object>(props: DrawerTabListProps<T>) {
 
   return (
     <Provider values={values}>
-      <TabList
+      <TabList<T>
         classNames={classNames?.tabs}
         align='center'
         anchor={anchor === 'left' ? 'start' : 'end'}

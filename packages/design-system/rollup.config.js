@@ -1,13 +1,12 @@
 import path from 'node:path';
 import json from '@rollup/plugin-json';
+import typescript from '@rollup/plugin-typescript';
 import { vanillaExtractPlugin } from '@vanilla-extract/rollup-plugin';
-import { dts } from 'rollup-plugin-dts';
+// import { dts } from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import { default as depsExternal } from 'rollup-plugin-node-externals';
 // import { typescriptPaths } from 'rollup-plugin-typescript-paths';
 import ts from 'typescript';
-
-const CSS_IMPORT_REGEX = /^import '.+\.css';$/gm;
 
 function loadCompilerOptions(tsconfig) {
   if (!tsconfig) {
@@ -26,20 +25,6 @@ function loadCompilerOptions(tsconfig) {
 }
 
 const emittedCSSFiles = new Set();
-
-function removeCssImports() {
-  return {
-    name: 'remove-css-imports',
-    renderChunk(code, chunkInfo) {
-      const output = code.replaceAll(CSS_IMPORT_REGEX, '');
-
-      return {
-        code: output,
-        map: chunkInfo.map ?? null,
-      };
-    },
-  };
-}
 
 // Bundle all of the .css files into a single "styles.css" file
 function bundleCss() {
@@ -130,12 +115,7 @@ export default [
   // Main processing and bundling
   {
     input: 'src/index.ts',
-    plugins: [
-      ...commonPlugins,
-      removeCssImports(),
-      bundleCss(),
-      bundleVanilla(),
-    ],
+    plugins: [...commonPlugins, bundleCss(), bundleVanilla()],
     output: [
       {
         banner: `'use client';`,
@@ -168,7 +148,7 @@ export default [
     input: 'src/index.ts',
     plugins: [
       ...commonPlugins,
-      dts({
+      typescript({
         compilerOptions: {
           ...compilerOptions,
           baseUrl: path.resolve(compilerOptions.baseUrl || '.'),

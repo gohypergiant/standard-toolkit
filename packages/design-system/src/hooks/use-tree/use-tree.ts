@@ -113,7 +113,15 @@ export function useTree<T>({
           ...node,
           value: {
             ...node.value,
-            nodes: node.children.map((child) => lookup[child.key].value),
+            nodes: node.children.flatMap((child) => {
+              const value = lookup[child.key]?.value;
+
+              if (value) {
+                return [value];
+              }
+
+              return [];
+            }),
           },
         };
       }
@@ -131,7 +139,15 @@ export function useTree<T>({
           ...node.value,
           ...patch,
           // Disallow a parent update to change child values
-          nodes: node.children.map((child) => lookup[child.key].value),
+          nodes: node.children.flatMap((child) => {
+            const value = lookup[child.key]?.value;
+
+            if (value) {
+              return [value];
+            }
+
+            return [];
+          }),
         };
       } else {
         value = {

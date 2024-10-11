@@ -2,7 +2,6 @@ import {
   createContext,
   forwardRef,
   type ForwardedRef,
-  type ReactElement,
   type RefAttributes,
   type ReactNode,
 } from 'react';
@@ -30,15 +29,12 @@ import { useContextProps } from '../../hooks';
  * a wrapped version along with the new context for the C2DS to use
  */
 function wrap<P extends object, E extends HTMLElement>(
-  Component: (props: P & RefAttributes<E>) => ReactElement | null,
+  Component: (props: P & RefAttributes<E>) => ReactNode,
 ) {
   const Context = createContext<ContextValue<P, E>>(null);
 
   return {
-    Component: forwardRef(function WrappedComponent(
-      props: P,
-      ref: ForwardedRef<E>,
-    ) {
+    Component: forwardRef<E, P>(function WrappedComponent(props, ref) {
       [props, ref] = useContextProps(props, ref, Context);
 
       return <Component {...props} ref={ref} />;

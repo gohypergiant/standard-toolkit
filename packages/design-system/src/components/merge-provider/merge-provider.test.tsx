@@ -16,6 +16,7 @@ const renderProps = {
   isFocused: false,
   isFocusVisible: false,
   isHovered: false,
+  isPending: false,
   isPressed: false,
 };
 
@@ -61,7 +62,7 @@ describe('MergeProvider', () => {
             {(context) =>
               context && 'slots' in context
                 ? callRenderProps(
-                    context?.slots?.[DEFAULT_SLOT].className,
+                    context?.slots?.[DEFAULT_SLOT]?.className,
                     renderProps,
                   )
                 : null
@@ -99,11 +100,11 @@ describe('MergeProvider', () => {
               context && 'slots' in context
                 ? clsx(
                     callRenderProps(
-                      context?.slots?.[DEFAULT_SLOT].className,
+                      context?.slots?.[DEFAULT_SLOT]?.className,
                       renderProps,
                     ),
                     callRenderProps(
-                      context?.slots?.myCustomSlot.className,
+                      context?.slots?.myCustomSlot?.className,
                       renderProps,
                     ),
                   )
@@ -146,7 +147,7 @@ describe('MergeProvider', () => {
             {(context) =>
               context && 'slots' in context
                 ? callRenderProps(
-                    context?.slots?.[DEFAULT_SLOT].className,
+                    context?.slots?.[DEFAULT_SLOT]?.className,
                     renderProps,
                   )
                 : null

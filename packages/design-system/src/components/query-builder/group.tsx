@@ -348,9 +348,10 @@ export function RuleGroupBodyComponents(
       {(ruleGroup.ruleGroup.rules as RuleGroupICArray | RuleGroupArray).map(
         (rule, idx, { length: ruleArrayLength }) => {
           const thisPathMemo = ruleGroup.pathsMemo[idx];
-          const thisPath = thisPathMemo.path;
+          const thisPath = thisPathMemo?.path ?? [];
 
           const thisPathDisabled =
+            !thisPathMemo ||
             thisPathMemo.disabled ||
             (typeof rule !== 'string' && rule.disabled);
 
