@@ -67,13 +67,13 @@ describe('useTree', () => {
       children: [],
     });
 
-    rerender({ nodes: [options.nodes[0]] });
+    rerender({ nodes: [options.nodes[0]!] });
 
     expect(result.current.tree).toEqual({
       key: expect.any(String),
       children: [
         {
-          key: options.nodes[0].id,
+          key: options.nodes[0]!.id,
           parentKey: null,
           value: options.nodes[0],
           children: [],
@@ -101,14 +101,14 @@ describe('useTree', () => {
     act(() => result.current.actions.toggleIsExpanded());
 
     expect(
-      (result.current.tree.children[0].value as TreeGroupNode<unknown>)
+      (result.current.tree.children[0]!.value as TreeGroupNode<unknown>)
         .isExpanded,
     ).toBe(true);
 
     // Not really a group, but casting to access property
     expect(
       (
-        result.current.tree.children[0].children[0]
+        result.current.tree.children[0]!.children[0]!
           .value as TreeGroupNode<unknown>
       ).isExpanded,
     ).toBeFalsy();
@@ -131,14 +131,14 @@ describe('useTree', () => {
     );
 
     expect(
-      (result.current.tree.children[0].value as TreeGroupNode<unknown>)
+      (result.current.tree.children[0]!.value as TreeGroupNode<unknown>)
         .isExpanded,
     ).toBe(false);
 
     act(() => result.current.actions.revertIsExpanded());
 
     expect(
-      (result.current.tree.children[0].value as TreeGroupNode<unknown>)
+      (result.current.tree.children[0]!.value as TreeGroupNode<unknown>)
         .isExpanded,
     ).toBe(true);
   });
@@ -230,12 +230,12 @@ describe('useTree', () => {
 
     act(() => result.current.actions.toggleIsViewable(new Set(['foo']), true));
 
-    expect(result.current.tree.children[0].value).toHaveProperty(
+    expect(result.current.tree.children[0]!.value).toHaveProperty(
       'isViewable',
       true,
     );
 
-    expect(result.current.tree.children[0].value).toHaveProperty(
+    expect(result.current.tree.children[0]!.value).toHaveProperty(
       'isVisible',
       true,
     );

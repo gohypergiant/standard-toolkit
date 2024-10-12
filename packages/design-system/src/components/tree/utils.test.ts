@@ -97,16 +97,16 @@ describe('tree/utils', () => {
       const { handlers, lookup } = setup();
 
       expect(handlers.getItems?.(new Set(['foo']))).toEqual([
-        { 'tree-all': JSON.stringify(lookup.foo.value) },
+        { 'tree-all': JSON.stringify(lookup.foo?.value) },
       ]);
 
-      const bar = JSON.stringify(lookup.bar.value);
+      const bar = JSON.stringify(lookup.bar?.value);
 
       expect(handlers.getItems?.(new Set(['bar']))).toEqual([
         { 'tree-all': bar, 'tree-bar': bar },
       ]);
 
-      const foobar = JSON.stringify(lookup.foobar.value);
+      const foobar = JSON.stringify(lookup.foobar?.value);
 
       expect(handlers.getItems?.(new Set(['foobar']))).toEqual([
         { 'tree-all': foobar, 'tree-foo': foobar, 'tree-bar': foobar },

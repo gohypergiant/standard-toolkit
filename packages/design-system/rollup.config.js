@@ -2,7 +2,6 @@ import path from 'node:path';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import { vanillaExtractPlugin } from '@vanilla-extract/rollup-plugin';
-// import { dts } from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import { default as depsExternal } from 'rollup-plugin-node-externals';
 // import { typescriptPaths } from 'rollup-plugin-typescript-paths';
@@ -25,6 +24,23 @@ function loadCompilerOptions(tsconfig) {
 }
 
 const emittedCSSFiles = new Set();
+
+function removeSideEffects() {
+  return {
+    name: 'remove-side-effects',
+    renderChunk(code, chunkInfo) {
+      return {
+        code: code
+          .split('\n')
+          .filter(
+            (line) => !(line.startsWith('import') && !line.includes(' from ')),
+          )
+          .join('\n'),
+        map: chunkInfo.map ?? null,
+      };
+    },
+  };
+}
 
 // Bundle all of the .css files into a single "styles.css" file
 function bundleCss() {
@@ -76,13 +92,11 @@ function bundleCss() {
 }
 
 // Bundle all of the .vanilla files into a single "vanilla" file
-function bundleVanilla() {
+function bundleVanilla(ext) {
   return {
     name: 'bundle-vanilla-emits',
     generateBundle(_, bundle) {
-      const def = !!bundle['index.d.ts'];
-      const ext = def ? 'd.ts' : 'js';
-      const source = bundle[`index.${ext}`][def ? 'source' : 'code'];
+      const source = bundle['index.js'].code;
 
       this.emitFile({
         type: 'asset',
@@ -117,7 +131,12 @@ export default [
   // Main processing and bundling
   {
     input: 'src/index.ts',
-    plugins: [...commonPlugins, bundleCss(), bundleVanilla()],
+    plugins: [
+      ...commonPlugins,
+      removeSideEffects(),
+      bundleCss(),
+      bundleVanilla('js'),
+    ],
     output: [
       {
         banner: `'use client';`,
@@ -158,10 +177,13 @@ export default [
           emitDeclarationOnly: true,
           noEmit: false,
           noEmitOnError: true,
+          sourceMap: false,
           target: ts.ScriptTarget.ESNext,
         },
+        exclude: ['**/*.{stories,test}.{ts,tsx}'],
       }),
-      bundleVanilla(),
+      removeSideEffects(),
+      bundleVanilla('d.ts'),
     ],
     output: [
       {
@@ -171,7 +193,7 @@ export default [
         preserveModulesRoot: 'src',
         // Change .css.js files to vanilla.js so that they don't get re-processed by consumer's setup
         entryFileNames({ name }) {
-          return `${name.replace(/\.css$/, '.vanilla')}.d.ts`;
+          return `${name.replace(/\.css$/, '.vanilla')}.js`;
         },
       },
     ],

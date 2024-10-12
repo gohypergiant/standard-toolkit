@@ -1,13 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@hypergiant/typescript-config/tsc/dom/library",
-  "include": ["./src"],
-  "exclude": [
-    "node_modules",
-    "**/*.bench.ts",
-    "**/*.test.ts",
-    "**/*.test-d.ts"
-  ],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "rootDir": "src",
