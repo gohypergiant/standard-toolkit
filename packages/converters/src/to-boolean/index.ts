@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { isString } from '@hypergiant/validators';
+import { isTrue } from '@hypergiant/predicates';
 
 /**
  * Compare the given value against a custom list of `truthy` values.
@@ -35,15 +35,5 @@ import { isString } from '@hypergiant/validators';
  * // false
  */
 export function toBoolean(val: unknown) {
-  // Account for casing variety
-  const normalized = isString(val) ? (val as string).toLowerCase() : val;
-
-  return (
-    normalized === 1 ||
-    normalized === '1' ||
-    normalized === 'on' ||
-    normalized === 'true' ||
-    normalized === 'yes' ||
-    normalized === true
-  );
+  return isTrue(val);
 }

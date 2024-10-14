@@ -33,7 +33,7 @@ Documentation | Package
 [Math](#link-to-docs)              | `@hypergiant/math`
 [Prettier Config](#link-to-docs)   | `@hypergiant/prettier-config`
 [Typescript Config](#link-to-docs) | `@hypergiant/typescript-config`
-[Validators](#link-to-docs)        | `@hypergiant/validators`
+[Predicates](#link-to-docs)        | `@hypergiant/predicates`
 [Vitest Config](#link-to-docs)     | `@hypergiant/vitest-config`
 [Web Worker](#link-to-docs)        | `@hypergiant/web-worker`
 [Websocket](#link-to-docs)         | `@hypergiant/websocket`

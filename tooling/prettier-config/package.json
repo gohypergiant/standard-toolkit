@@ -1,0 +1,12 @@
+{
+  "name": "@hypergiant/prettier-config",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "lint": "pnpm biome lint ./"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "author": "https://hypergiant.com",
+  "sideEffects": false
+}

@@ -10,6 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@hypergiant/vitest-config/no-dom';
+import baseConfig from '@hypergiant/vitest-config/dom';
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default baseConfig;
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    plugins: [vanillaExtractPlugin()],
+    test: {
+      globals: true,
+      setupFiles: './src/test/setup.ts',
+      environment: 'jsdom',
+    },
+  }),
+);

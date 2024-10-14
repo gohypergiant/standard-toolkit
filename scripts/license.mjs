@@ -52,6 +52,7 @@ const files = await glob(['**/*.{js,ts,tsx,mjs,mdx,md,css}'], {
     '**/dist/**',
     '**/README.md',
     '**/LICENSE.md',
+    '**/CHANGELOG.md',
     '**/.github/**/*.md',
   ],
 });

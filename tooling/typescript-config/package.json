@@ -1,0 +1,32 @@
+{
+  "name": "@hypergiant/typescript-config",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    "./tsc": "./tsc/dom/app.json",
+    "./tsc/dom": "./tsc/dom/app.json",
+    "./tsc/dom/app": "./tsc/dom/app.json",
+    "./tsc/dom/library": "./tsc/dom/library.json",
+    "./tsc/dom/library-monorepo": "./tsc/dom/library-monorepo.json",
+    "./tsc/no-dom": "./tsc/no-dom/app.json",
+    "./tsc/no-dom/app": "./tsc/no-dom/app.json",
+    "./tsc/no-dom/library": "./tsc/no-dom/library.json",
+    "./tsc/no-dom/library-monorepo": "./tsc/no-dom/library-monorepo.json",
+    "./bundler": "./bundler/dom.json",
+    "./bundler/dom": "./bundler/dom.json",
+    "./bundler/dom/app": "./bundler/dom.json",
+    "./bundler/dom/library": "./bundler/dom.json",
+    "./bundler/dom/library-monorepo": "./bundler/dom.json",
+    "./bundler/no-dom": "./bundler/no-dom.json",
+    "./bundler/no-dom/app": "./bundler/no-dom.json",
+    "./bundler/no-dom/library": "./bundler/no-dom.json",
+    "./bundler/no-dom/library-monorepo": "./bundler/no-dom.json"
+  },
+  "scripts": {
+    "lint": "pnpm biome lint ./"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "author": "https://hypergiant.com",
+  "sideEffects": false
+}
