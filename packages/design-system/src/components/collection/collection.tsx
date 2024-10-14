@@ -15,6 +15,7 @@ export function createCollectionRenderer<
   V extends MergeProviderProps['values'],
 >(context: Context<C>, values: V): CollectionRenderer {
   return {
+    // biome-ignore lint/style/useNamingConvention: intentional
     CollectionRoot: ({ renderDropIndicator }) => (
       <MergeProvider values={values}>
         {useCollectionRender(
@@ -24,6 +25,7 @@ export function createCollectionRenderer<
         )}
       </MergeProvider>
     ),
+    // biome-ignore lint/style/useNamingConvention: intentional
     CollectionBranch: ({ collection, parent, renderDropIndicator }) => (
       <MergeProvider values={values}>
         {useCollectionRender(collection, parent, renderDropIndicator)}

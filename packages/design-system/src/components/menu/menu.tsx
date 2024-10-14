@@ -191,8 +191,8 @@ export const MenuList = forwardRef(function MenuList<T extends object>(
     mapping: mappingProp,
     selectionMode = 'single',
     size = defaultSize,
-    ['aria-label']: ariaLabel,
-    ['aria-labelledby']: ariaLabelledBy,
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledBy,
     ...rest
   } = props;
 
@@ -225,7 +225,7 @@ export const MenuList = forwardRef(function MenuList<T extends object>(
   );
 
   const children = useMemo(() => {
-    if (!childrenProp && !items) {
+    if (!(childrenProp || items)) {
       return null;
     }
 

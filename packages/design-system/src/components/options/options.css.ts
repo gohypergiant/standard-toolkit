@@ -173,8 +173,8 @@ export const optionsClassNames: OptionsClassNames = {
           display: 'grid',
           gridTemplateAreas:
             '"icon label space action" "icon description space action"',
-          gridTemplateColumns: `auto auto 1fr auto`,
-          gridTemplateRows: `auto auto`,
+          gridTemplateColumns: 'auto auto 1fr auto',
+          gridTemplateRows: 'auto auto',
           alignItems: 'center',
           gap: optionsSpaceVars.item.gap,
           padding: `${fallbackVar(optionsSpaceVars.item.y, '0')} ${fallbackVar(optionsSpaceVars.item.x, '0')}`,

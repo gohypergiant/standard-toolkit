@@ -28,6 +28,7 @@
     "test": "pnpm vitest --run --dir src"
   },
   "devDependencies": {
+    "@hypergiant/biome-config": "workspace:*",
     "@fontsource/roboto-flex": "^5.1.0",
     "@fontsource/roboto-mono": "^5.1.0",
     "@hypergiant/typescript-config": "workspace:*",

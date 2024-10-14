@@ -19,6 +19,7 @@ function Defaults({ children }: PropsWithChildren) {
 
   const defaults = useMemo<DefaultsContext>(
     () => ({
+      // biome-ignore lint/style/useNamingConvention: intentional
       Tooltip: {
         containerPadding: pixelValueAsNumberValidator
           .catch(0)

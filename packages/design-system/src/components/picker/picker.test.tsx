@@ -4,14 +4,14 @@ import { Picker, PickerItem } from './picker';
 import type { PickerProps } from './types';
 
 function setup({
-  ['aria-label']: ariaLabel = 'Test',
+  'aria-label': ariaLabel = 'Test',
   ...rest
 }: Partial<PickerProps<object>> = {}) {
   render(<Picker {...rest} aria-label={ariaLabel} />);
 
   return {
     ...rest,
-    ['aria-label']: ariaLabel,
+    'aria-label': ariaLabel,
   };
 }
 

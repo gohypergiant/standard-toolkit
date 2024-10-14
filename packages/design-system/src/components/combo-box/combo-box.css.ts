@@ -103,6 +103,7 @@ export const comboBoxClassNames: ComboBoxClassNames = {
           background: 'none',
           selectors: {
             '&::-webkit-search-cancel-button, &::-webkit-search-decoration': {
+              // biome-ignore lint/style/useNamingConvention: intentional
               WebkitAppearance: 'none',
             },
             '&:focus-visible': {

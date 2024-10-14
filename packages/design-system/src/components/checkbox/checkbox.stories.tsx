@@ -64,12 +64,14 @@ const indeterminateSvg = (
     fill='none'
     strokeWidth={3}
   >
+    <title>Ladle</title>
     <line x1='6' y1='12' x2='18' y2='12' />
   </svg>
 );
 
 const checkedSvg = (
   <svg viewBox='0 0 18 18' aria-hidden='true' strokeWidth={3} fill='none'>
+    <title>Ladle</title>
     <polyline points='1 9 7 14 15 4' />
   </svg>
 );

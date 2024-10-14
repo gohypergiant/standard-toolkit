@@ -44,6 +44,7 @@ describe('Menu', () => {
                       <AriaText slot='label'>{item.name}</AriaText>
                       <Icon size='sm' slot='more'>
                         <svg className='chevron' viewBox='0 0 24 24'>
+                          <title>Ladle</title>
                           <path d='m9 18 6-6-6-6' />
                         </svg>
                       </Icon>

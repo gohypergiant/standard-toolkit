@@ -34,6 +34,7 @@ function wrap<P extends object, E extends HTMLElement>(
   const Context = createContext<ContextValue<P, E>>(null);
 
   return {
+    // biome-ignore lint/style/useNamingConvention: intentional
     Component: forwardRef<E, P>(function WrappedComponent(props, ref) {
       [props, ref] = useContextProps(props, ref, Context);
 

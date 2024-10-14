@@ -53,8 +53,8 @@ export const Picker = forwardRef(function Picker<T extends object>(
     layout = 'stack',
     orientation = 'horizontal',
     selectionMode = 'single',
-    ['aria-label']: ariaLabel,
-    ['aria-labelledby']: ariaLabelledBy,
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledBy,
     ...rest
   } = props;
 
@@ -86,7 +86,7 @@ export const Picker = forwardRef(function Picker<T extends object>(
   );
 
   const children = useMemo(() => {
-    if (!childrenProp && !items) {
+    if (!(childrenProp || items)) {
       return null;
     }
 

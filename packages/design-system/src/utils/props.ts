@@ -81,7 +81,7 @@ function mergeClassNameProps<T extends RenderProps<object>>(
     (props) => typeof props?.className === 'string',
   );
 
-  if (!anyFunctions && !anyPrimitives) {
+  if (!(anyFunctions || anyPrimitives)) {
     return undefined;
   }
 
@@ -211,7 +211,7 @@ function mergeStyleProps<T extends RenderProps<object>>(
     (props) => typeof props?.style === 'object' && props.style != null,
   );
 
-  if (!anyFunctions && !anyObjects) {
+  if (!(anyFunctions || anyObjects)) {
     return undefined;
   }
 

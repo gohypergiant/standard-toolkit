@@ -152,6 +152,9 @@ importers:
       '@fontsource/roboto-mono':
         specifier: ^5.1.0
         version: 5.1.0
+      '@hypergiant/biome-config':
+        specifier: workspace:*
+        version: link:../../tooling/biome-config
       '@hypergiant/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config

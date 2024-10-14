@@ -405,6 +405,7 @@ export const DrawerDialog = forwardRef(function DrawerDialog(
     ],
   );
 
+  // biome-ignore lint/complexity/useSimplifiedLogicExpression: intentional
   if (!ariaLabel && !ariaLabelledBy && !hasTitle) {
     console.warn(
       'If a Drawer does not contain a <Heading slot="title">, it must have an aria-label or aria-labelledby attribute for accessibility.',

@@ -168,8 +168,8 @@ export const menuClassNames: MenuClassNames = {
           display: 'grid',
           gridTemplateAreas:
             '"icon label space action" "icon description space action"',
-          gridTemplateColumns: `auto auto 1fr auto`,
-          gridTemplateRows: `auto auto`,
+          gridTemplateColumns: 'auto auto 1fr auto',
+          gridTemplateRows: 'auto auto',
           alignItems: 'center',
           gap: menuSpaceVars.item.gap,
           padding: `${fallbackVar(menuSpaceVars.item.y, '0')} ${fallbackVar(menuSpaceVars.item.x, '0')}`,
