@@ -17,10 +17,10 @@ const value = 1.2345;
 
 describe('round', () => {
   it('rounds to precision', () => {
-    const a = round(value, 1);
-    const b = round(value, 2);
-    const c = round(value, 3);
-    const d = round(value, 4);
+    const a = round(1, value);
+    const b = round(2, value);
+    const c = round(3, value);
+    const d = round(4, value);
 
     expect(a).toEqual(1.2);
     expect(b).toEqual(1.23);
@@ -29,6 +29,6 @@ describe('round', () => {
   });
 
   it('throws if precision is not integer', () => {
-    expect(() => round(1, 1.1)).toThrow(Error);
+    expect(() => round(1.1, 1)).toThrow(Error);
   });
 });
