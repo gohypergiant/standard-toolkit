@@ -24,6 +24,7 @@
     "build": "pnpm rollup --config rollup.config.js",
     "dev": "pnpm tsc --watch",
     "lint": "pnpm biome lint ./",
+    "preview": "pnpm ladle serve",
     "test": "pnpm vitest --run --dir src"
   },
   "devDependencies": {
