@@ -2,8 +2,6 @@
 
 import { createRequire } from 'node:module';
 import { URL } from 'node:url';
-import { createReadStream } from 'node:fs';
-import { createInterface } from 'node:readline';
 import { parseFileSync } from '@swc/core';
 import { $, argv, chalk, echo, fs, glob, path, spinner } from 'zx';
 
@@ -37,19 +35,6 @@ const sortByName = (p1, p2) =>
 const hasNodeModules = (dirPath, pathSegs) =>
   fs.existsSync(dirPath) && !pathSegs.includes('node_modules');
 
-async function getFirstLine(pathToFile) {
-  const readable = createReadStream(pathToFile);
-  const reader = createInterface({ input: readable });
-  const line = await new Promise((resolve) => {
-    reader.on('line', (line) => {
-      reader.close();
-      resolve(line);
-    });
-  });
-  readable.close();
-  return line;
-}
-
 function getProjectRoot(pathSegs) {
   if (!pathSegs.length) {
     throw Error('Could not find project root.');
@@ -74,14 +59,14 @@ async function getWorkspaceGlob(root) {
 /** Generates an AST from the given file */
 // biome-ignore lint/style/useNamingConvention: it's okay
 async function getAST(filePath) {
-  const firstLine = await getFirstLine(filePath);
+  const contents = await fs.readFile(filePath, 'utf-8');
 
   // We want to ignore any file that starts with `// __private-exports` so that the
   // developer has the autonomy to either bubble up barrels or skip that step.
   // or to just ignore code files altogether.
   // * NOTE: This will probably supercede the need for the "ignore" flag
-  if (firstLine.match(PRIVATE_REGEX)) {
-    return parseFileSync('', baseParserOpt);
+  if (contents.match(PRIVATE_REGEX)) {
+    return;
   }
 
   return parseFileSync(filePath, baseParserOpt);
@@ -112,6 +97,11 @@ function getTypeExports(ast) {
 /** Get all of the exports from the given *code* file. Split between code and type */
 async function codeFileExports(filePath) {
   const ast = await getAST(filePath);
+
+  if (!ast) {
+    return { code: [], types: [] };
+  }
+
   // ---------------- Code Exports -------------------------
   const codeExports = getExports(ast);
 
@@ -141,6 +131,11 @@ async function codeFileExports(filePath) {
 /** Get all of the exports from the given *barrel* file. Split between code and type */
 async function barrelFileExports(filePath) {
   const ast = await getAST(filePath);
+
+  if (!ast) {
+    return { code: [], types: [] };
+  }
+
   // ---------------- Code Exports -------------------------
   const codeExports = getExports(ast);
 
@@ -313,9 +308,6 @@ async function writeAllIndexes(indexes, ext, client) {
       const body = (client ? [CLIENT_DIRECTIVE] : [])
         .concat([HEADER_MSG, ...content])
         .join('\n');
-
-      echo(chalk.dim('Will add export(s):\n'), chalk.blue(`${body}`));
-      echo('\n');
 
       fs.writeFile(newFile, body, 'utf-8');
 
