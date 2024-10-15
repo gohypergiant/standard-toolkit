@@ -405,6 +405,7 @@ export {
   useSlot,
   useTheme,
   useTree,
+  useUpdateEffect,
 } from './hooks';
 export type {
   DefaultsContext,
@@ -450,6 +451,7 @@ export {
   zIndexVars,
 } from './styles';
 export type {
+  AsType,
   ChildrenRenderProps,
   ClassNameRenderProps,
   ClassNames,

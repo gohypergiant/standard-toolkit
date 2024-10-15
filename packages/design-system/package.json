@@ -26,7 +26,7 @@
     "lint:todo": "pnpm biome lint ./",
     "preview": "pnpm ladle serve",
     "test": "pnpm vitest --run --dir src",
-    "index:todo": "pnpm zx ../../scripts/indexer.mjs packages/design-system --barrels"
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/design-system --barrels"
   },
   "devDependencies": {
     "@hypergiant/biome-config": "workspace:*",
