@@ -1,13 +1,19 @@
 #!/usr/bin/env zx
 
-import { glob, path, chalk } from 'zx';
+import { createRequire } from 'node:module';
+import { URL } from 'node:url';
+import { createReadStream } from 'node:fs';
+import { createInterface } from 'node:readline';
 import { parseFileSync } from '@swc/core';
-
-const HEADER_MSG =
-  '/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n\n';
+import { $, argv, chalk, echo, fs, glob, path, spinner } from 'zx';
 
 const INDEX_REGEX = /[\\/]index\.[tj]sx?$/;
 const EXT_REGEX = /\.[tj]sx?$/;
+const PRIVATE_REGEX = /^\/\/ __private-exports\n/;
+const CLIENT_DIRECTIVE = `'use client';\n`;
+
+const HEADER_MSG =
+  '/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n';
 
 const IGNORE_LIST = [
   '**/node_modules',
@@ -17,14 +23,70 @@ const IGNORE_LIST = [
   '**/examples.*',
 ];
 
-function parse(file) {
-  return parseFileSync(file, {
-    syntax: 'typescript',
-    target: 'es2022',
-    tsx: true,
+const require = createRequire(import.meta.url);
+
+const baseParserOpt = {
+  syntax: 'typescript',
+  target: 'es2022',
+  tsx: true,
+};
+
+const sortByName = (p1, p2) =>
+  p1.name > p2.name ? 1 : p1.name < p2.name ? -1 : 0;
+
+const hasNodeModules = (dirPath, pathSegs) =>
+  fs.existsSync(dirPath) && !pathSegs.includes('node_modules');
+
+async function getFirstLine(pathToFile) {
+  const readable = createReadStream(pathToFile);
+  const reader = createInterface({ input: readable });
+  const line = await new Promise((resolve) => {
+    reader.on('line', (line) => {
+      reader.close();
+      resolve(line);
+    });
   });
+  readable.close();
+  return line;
 }
 
+function getProjectRoot(pathSegs) {
+  if (!pathSegs.length) {
+    throw Error('Could not find project root.');
+  }
+
+  const nodeModulesPath = pathSegs.concat(['node_modules']).join('/');
+
+  return hasNodeModules(nodeModulesPath, pathSegs)
+    ? pathSegs.join('/')
+    : getProjectRoot(pathSegs.slice(0, -1));
+}
+
+async function getWorkspaceGlob(root) {
+  const packageFile = require(`${root}/package.json`);
+  const workspaces = packageFile.workspaces.map((w) => w.replace('/*', ''));
+
+  return workspaces.length > 1
+    ? `{${workspaces.join(',')}}/**`
+    : `${workspaces[0]}/**`;
+}
+
+/** Generates an AST from the given file */
+async function getAST(filePath) {
+  const firstLine = await getFirstLine(filePath);
+
+  // We want to ignore any file that starts with `// __private-exports` so that the
+  // developer has the autonomy to either bubble up barrels or skip that step.
+  // or to just ignore code files altogether.
+  // * NOTE: This will probably supercede the need for the "ignore" flag
+  if (firstLine.match(PRIVATE_REGEX)) {
+    return parseFileSync('', baseParserOpt);
+  }
+
+  return parseFileSync(filePath, baseParserOpt);
+}
+
+/** Filters the AST body to just code export nodes */
 function getExports(ast) {
   return ast.body.filter((node) => {
     return (
@@ -35,6 +97,7 @@ function getExports(ast) {
   });
 }
 
+/** Filters the AST body to just type export nodes */
 function getTypeExports(ast) {
   return ast.body.filter((node) => {
     return (
@@ -45,99 +108,289 @@ function getTypeExports(ast) {
   });
 }
 
-function isOnlyExports(ast) {
-  return ast.body.every((node) => {
-    return node.type === 'ExportNamedDeclaration' && node?.specifiers?.length;
-  });
-}
+/** Get all of the exports from the given *code* file. Split between code and type */
+async function codeFileExports(filePath) {
+  const ast = await getAST(filePath);
+  // ---------------- Code Exports -------------------------
+  const codeExports = getExports(ast);
 
-function extractExportName(node) {
-  switch (node.declaration.type) {
-    case 'VariableDeclaration':
-    case 'ExportDeclaration':
-      return node.declaration.declarations.map((decl) => decl.id.value);
-    case 'FunctionDeclaration':
-      return node.declaration.identifier.value;
-    case 'TsTypeAliasDeclaration':
-    case 'TsInterfaceDeclaration':
-      return node.declaration.id.value;
-  }
-}
-
-function createExportNames(nodes) {
-  return nodes
-    .flatMap(extractExportName)
+  // If it doesnt have `declaration` it is probably a re-export
+  const codeNames = codeExports
+    .flatMap((node) =>
+      node.declaration?.type === 'TSEnumDeclaration' ||
+      node.declaration?.type === 'FunctionDeclaration'
+        ? [node.declaration?.identifier.value]
+        : node.declaration?.declarations?.map((dec) => dec.id.value),
+    )
     .filter(Boolean)
-    .sort(nameSortFn)
-    .join(', ');
-}
+    .sort();
 
-function nameSortFn(a, b) {
-  return a > b ? 1 : a < b ? -1 : 0;
-}
-
-// Scan for all index.{ts,js} files recursively
-const potentialNotJustExports = await glob(
-  ['packages/**/src/index.{ts,js}', 'packages/**/src/**/index.{ts,js}'],
-  {
-    ignore: IGNORE_LIST,
-  },
-);
-
-// Collect existing export only index.ts files to include in ignore list
-const additionalIgnores = potentialNotJustExports.filter((file) => {
-  const ast = parse(file);
-
-  return isOnlyExports(ast);
-});
-
-// We now add an additional list of files to ignore
-const filesToScan = await glob(['packages/**/src/**/*.{ts,tsx,js,jsx}'], {
-  ignore: [...IGNORE_LIST, ...additionalIgnores],
-});
-
-const insertions = new Map();
-
-for (const file of filesToScan) {
-  const ast = parse(file);
-
-  // Split regular exports from type exports
-  const regularExports = getExports(ast);
+  // ---------------- Type Exports -------------------------
   const typeExports = getTypeExports(ast);
 
-  // Find nearest parent index.ts
-  const ascendent = path.join(`${path.dirname(file)}/../index.ts`);
-  const importPath = path
-    .relative(ascendent, file)
-    .replace(INDEX_REGEX, '')
-    .replace(EXT_REGEX, '')
-    .replace('..', '.');
+  // If it doesnt have `declaration` it is probably a re-export
+  const typeNames = typeExports
+    .map((node) => node.declaration?.id.value)
+    .filter(Boolean)
+    .sort();
 
-  const regularExportNames = createExportNames(regularExports);
-  const typeExportNames = createExportNames(typeExports);
-
-  const priorInsertions = insertions.get(ascendent) ?? '';
-  const updates = [priorInsertions];
-
-  if (regularExportNames.length) {
-    const exportInsertions = `export { ${regularExportNames} } from '${importPath}';`;
-    updates.push(exportInsertions);
-  }
-
-  if (typeExportNames.length) {
-    const exportTypeInsertions = `export type { ${typeExportNames} } from '${importPath}';`;
-    updates.push(exportTypeInsertions);
-  }
-
-  insertions.set(ascendent, updates.join('\n'));
+  return { code: codeNames, types: typeNames };
 }
 
-// NOTE: Staging the theoretical output
-// TODO: run files through biome
-for (const [key, value] of insertions) {
-  console.log(chalk.dim('Will write to:'), chalk.blue(key));
-  console.log(chalk.dim('Will add export(s):\n'), chalk.blue(`${HEADER_MSG}${value}`));
-  console.log('\n');
+/** Get all of the exports from the given *barrel* file. Split between code and type */
+async function barrelFileExports(filePath) {
+  const ast = await getAST(filePath);
+  // ---------------- Code Exports -------------------------
+  const codeExports = getExports(ast);
+
+  const codeNames = codeExports
+    .flatMap((node) =>
+      node.specifiers.map((spec) =>
+        spec.exportKind === 'type'
+          ? `type ${spec.exported.name}`
+          : spec.exported.name,
+      ),
+    )
+    .filter(Boolean)
+    .sort();
+
+  // ---------------- Type Exports -------------------------
+  const typeExports = getTypeExports(ast);
+
+  const typeNames = typeExports
+    .flatMap((node) => node.specifiers.map((spec) => spec.exported.name))
+    .filter(Boolean)
+    .sort();
+
+  // Since there might be some `{ type SomeType }`s in the code array, we want to
+  // swap thos into the type array.
+  const typeFromCode = codeNames
+    .filter((e) => e.startsWith('type '))
+    .map((e) => e.replace('type ', ''));
+
+  const filteredCodeNames = codeNames.filter((e) => !e.startsWith('type '));
+
+  typeNames.push(...typeFromCode);
+
+  return { code: filteredCodeNames, types: typeNames };
 }
 
-insertions.clear();
+/** Get a tree structure of the files with their exports */
+async function getFileTree(root, assets, parserFn) {
+  const tree = { root: {} };
+
+  for (const assetPath of assets) {
+    const parts = assetPath.split('/');
+    const file = parts.pop();
+
+    let branch = tree;
+    let partPath = '';
+
+    for (const part of parts) {
+      partPath += `${part}/`;
+
+      if (partPath === `${part}/`) {
+        tree.root[partPath] = tree[partPath] ??= { name: part, children: [] };
+      } else if (tree[partPath] === undefined) {
+        tree[partPath] = { name: part, type: 'dir', children: [] };
+        branch.children.push(tree[partPath]);
+      }
+
+      branch = tree[partPath];
+    }
+
+    const exports = await parserFn(path.resolve(root, assetPath));
+
+    branch.children.push({
+      name: file,
+      type: 'file',
+      path: assetPath,
+      exports,
+    });
+  }
+
+  return Object.values(tree.root);
+}
+
+/** Convert the leave exports into ESM export statements */
+function aggregateExports(children, packageRoot) {
+  const exports = [];
+  const sortedChildren = [...children].sort(sortByName);
+
+  // Loop through the children and collect the code export and type exports
+  // while converting them into an export statement.
+  for (const child of sortedChildren) {
+    if (child.type === 'file') {
+      const shortenedPath = child.path
+        .replace(packageRoot, '.')
+        .replace(INDEX_REGEX, '')
+        .replace(EXT_REGEX, '')
+        .replaceAll('\\', '/');
+
+      if (child.exports.code.length) {
+        exports.push(
+          `export { ${child.exports.code.join(', ')} } from '${shortenedPath}';`,
+        );
+      }
+
+      if (child.exports.types.length) {
+        exports.push(
+          `export type { ${child.exports.types.join(
+            ', ',
+          )} } from '${shortenedPath}';`,
+        );
+      }
+    } else if (child.type === 'dir') {
+      exports.push(...aggregateExports(child.children, packageRoot));
+    }
+  }
+
+  return exports;
+}
+
+/** Get a list of *code* files */
+async function getCodeFiles(root, workspace, ignores) {
+  const ignoreList = ignores
+    ? ignores.split(',').map((f) => `**/${f.trim()}`)
+    : [];
+
+  const workspaceGlob = workspace ? workspace : await getWorkspaceGlob(root);
+  const globPattern = `${workspaceGlob}/src/**/*.{ts,tsx,js,jsx}`;
+  const ignorePattern = [...IGNORE_LIST, ...ignoreList];
+
+  return glob(globPattern, { ignore: ignorePattern, cwd: root });
+}
+
+/** Get a list of *barrel* files */
+async function getBarrelFiles(root, workspace) {
+  const workspaceGlob = workspace ? workspace : await getWorkspaceGlob(root);
+  const globPattern = `${workspaceGlob}/src/**/index.{ts,tsx,js,jsx}`;
+
+  return glob(globPattern, { ignore: IGNORE_LIST, cwd: root });
+}
+
+/** Get all of the export statements for all of the workspaces */
+function getNewExportList(root, tree) {
+  const indexes = [];
+
+  for (const workspace of tree) {
+    for (const wsPackage of workspace.children) {
+      // path.join will use path.sep as the join character. Thats not needed in this case
+      // and ends of breaking the script (Windows). So replace all path.sep with just '/'
+      const packageDir = path
+        .join(workspace.name, wsPackage.name, 'src')
+        .replaceAll(path.sep, '/');
+
+      const absOutDir = path.join(root, packageDir).replaceAll(path.sep, '/');
+
+      const outFile = path
+        .join(absOutDir, 'index.ts')
+        .replaceAll(path.sep, '/');
+
+      // If this was a multi-project, general use script we would loop again.
+      // Skip to the `src` folder's children
+      const exportList = aggregateExports(
+        wsPackage.children.at(0).children,
+        packageDir,
+      );
+
+      indexes.push([outFile, exportList]);
+    }
+  }
+
+  return indexes;
+}
+
+/** Write the index files for all of the workspaces */
+async function writeAllIndexes(indexes, ext, client) {
+  return Promise.all(
+    indexes.map(([file, content]) => {
+      const newFile = file.replace(EXT_REGEX, ext);
+
+      echo(chalk.green(`Writing ${content.length} exports in ${newFile}...`));
+
+      const body = (client ? [CLIENT_DIRECTIVE] : [])
+        .concat([HEADER_MSG, ...content])
+        .join('\n');
+
+      echo(chalk.dim('Will add export(s):\n'), chalk.blue(`${body}`));
+      echo('\n');
+
+      return;
+
+      return fs.writeFile(newFile, body, 'utf-8');
+    }),
+  );
+}
+
+/** Build the index files for the workspaces */
+async function buildIndexFiles(root, ext, files, parserFn, client) {
+  const tree = await getFileTree(root, files, parserFn);
+
+  const indexes = getNewExportList(root, tree);
+
+  await writeAllIndexes(indexes, ext, client);
+
+  // await $`pnpm run format`;
+}
+
+function outputHelp() {
+  return console.log(`build-index []
+
+  If the workspace is not provided then the script will attempt to get all workspaces from the root package.json.
+
+  The ignore list should be a comma separated list of files to ignore. They are split and then added to Glob's ignore list. ("**/<file>, **/<file>, ...")
+
+  The --barrels flag denotes that the script should only look for barrel files and hoist just those to the root index file.
+
+  The --js flag denotes that the script should write the index file as .js instead of the default .ts
+
+  The --client flag denotes that the root index file should include the 'use client' directive`);
+}
+
+await spinner(chalk.green('Generating index file...'), async () => {
+  if (argv.h || argv.help) {
+    return outputHelp();
+  }
+
+  // Normal __dirname is not in ESM context. This mimics it.
+  let __dirname = new URL('.', import.meta.url).pathname;
+
+  // The result of the above has a leading `/`. Works fine as is in *nix systems
+  // but fails under Windows. And removing causes it to fail under *nix.
+  // Check OS and remove if needed.
+  if (process.platform.match(/^win/)) {
+    __dirname = __dirname.replace(/^\//, '');
+  }
+
+  // __dirname will always use '/' (URL) even on Windows
+  const root = getProjectRoot(__dirname.split('/'));
+
+  // Change to the project root in case it was called from a package folder
+  // Which is the case when being called from a packages package.json
+  process.chdir(root);
+
+  const [workspace, ignores] = argv._;
+  const ext = argv.js ? '.js' : '.ts';
+
+  // Get a list of the files for the given workspace
+  const files = argv.barrels
+    ? await getBarrelFiles(root, workspace)
+    : await getCodeFiles(root, workspace, ignores);
+
+  if (!files.length) {
+    return echo(chalk.red('No files found. Exiting.'));
+  }
+
+  const filteredFiles = files.filter(
+    (f) => !f.startsWith(`${workspace}/src/index`),
+  );
+
+  return buildIndexFiles(
+    root,
+    ext,
+    filteredFiles,
+    argv.barrels ? barrelFileExports : codeFileExports,
+    argv.client,
+  );
+});

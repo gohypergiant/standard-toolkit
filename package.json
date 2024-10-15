@@ -21,7 +21,7 @@
     "dev": "turbo dev",
     "format": "pnpm biome format . --write",
     "license": "pnpm zx scripts/license.mjs",
-    "indexer": "pnpm zx scripts/indexer.mjs",
+    "indexer": "turbo index",
     "lint": "turbo lint",
     "test": "turbo test"
   },
