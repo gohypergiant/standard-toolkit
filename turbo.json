@@ -4,7 +4,8 @@
   "tasks": {
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["index"]
     },
     "lint": {},
     "bench": {},
@@ -13,11 +14,11 @@
       "outputs": ["coverage"]
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["index", "^build"],
       "outputs": ["dist"]
     },
     "index": {
-      "cache": false
+      "outputs": ["src/index.ts"]
     }
   }
 }
