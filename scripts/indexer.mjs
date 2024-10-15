@@ -316,8 +316,6 @@ async function writeAllIndexes(indexes, ext, client) {
       echo(chalk.dim('Will add export(s):\n'), chalk.blue(`${body}`));
       echo('\n');
 
-      return;
-
       return fs.writeFile(newFile, body, 'utf-8');
     }),
   );
@@ -331,7 +329,7 @@ async function buildIndexFiles(root, ext, files, parserFn, client) {
 
   await writeAllIndexes(indexes, ext, client);
 
-  // await $`pnpm run format`;
+  await $`pnpm run format`;
 }
 
 function outputHelp() {
