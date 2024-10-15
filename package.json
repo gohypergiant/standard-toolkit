@@ -26,6 +26,7 @@
     "test": "turbo test"
   },
   "dependencies": {
+    "@babel/parser": "^7.25.8",
     "@biomejs/biome": "^1.9.2",
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/cli": "^2.27.8",

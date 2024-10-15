@@ -2,7 +2,7 @@
 
 import { createRequire } from 'node:module';
 import { URL } from 'node:url';
-import { parseFileSync } from '@swc/core';
+import { default as babelParser } from '@babel/parser';
 import { $, argv, chalk, echo, fs, glob, path, spinner } from 'zx';
 
 const INDEX_REGEX = /[\\/]index\.[tj]sx?$/;
@@ -23,10 +23,9 @@ const IGNORE_LIST = [
 
 const require = createRequire(import.meta.url);
 
-const baseParserOpt = {
-  syntax: 'typescript',
-  target: 'es2022',
-  tsx: true,
+const baseBabelOpt = {
+  sourceType: 'module',
+  plugins: ['jsx', 'typescript'],
 };
 
 const sortByName = (p1, p2) =>
@@ -69,30 +68,25 @@ async function getAST(filePath) {
     return;
   }
 
-  return parseFileSync(filePath, baseParserOpt);
+  return babelParser.parse(contents, {
+    ...baseBabelOpt,
+    sourceFilename: filePath,
+  });
 }
 
 /** Filters the AST body to just code export nodes */
-function getExports(ast) {
-  return ast.body.filter((node) => {
-    return (
-      node.type === 'ExportDeclaration' &&
-      node.declaration.type !== 'TsTypeAliasDeclaration' &&
-      node.declaration.type !== 'TsInterfaceDeclaration'
-    );
-  });
-}
+const getCodeExports = (ast) =>
+  ast.program.body.filter(
+    (node) =>
+      node.type === 'ExportNamedDeclaration' && node.exportKind !== 'type',
+  );
 
 /** Filters the AST body to just type export nodes */
-function getTypeExports(ast) {
-  return ast.body.filter((node) => {
-    return (
-      node.type === 'ExportDeclaration' &&
-      (node.declaration.type === 'TsTypeAliasDeclaration' ||
-        node.declaration.type === 'TsInterfaceDeclaration')
-    );
-  });
-}
+const getTypeExports = (ast) =>
+  ast.program.body.filter(
+    (node) =>
+      node.type === 'ExportNamedDeclaration' && node.exportKind === 'type',
+  );
 
 /** Get all of the exports from the given *code* file. Split between code and type */
 async function codeFileExports(filePath) {
@@ -103,15 +97,15 @@ async function codeFileExports(filePath) {
   }
 
   // ---------------- Code Exports -------------------------
-  const codeExports = getExports(ast);
+  const codeExports = getCodeExports(ast);
 
   // If it doesnt have `declaration` it is probably a re-export
   const codeNames = codeExports
     .flatMap((node) =>
       node.declaration?.type === 'TSEnumDeclaration' ||
       node.declaration?.type === 'FunctionDeclaration'
-        ? [node.declaration?.identifier.value]
-        : node.declaration?.declarations?.map((dec) => dec.id.value),
+        ? [node.declaration?.id.name]
+        : node.declaration?.declarations?.map((dec) => dec.id.name),
     )
     .filter(Boolean)
     .sort();
@@ -121,7 +115,7 @@ async function codeFileExports(filePath) {
 
   // If it doesnt have `declaration` it is probably a re-export
   const typeNames = typeExports
-    .map((node) => node.declaration?.id.value)
+    .map((node) => node.declaration?.id.name)
     .filter(Boolean)
     .sort();
 
@@ -137,7 +131,7 @@ async function barrelFileExports(filePath) {
   }
 
   // ---------------- Code Exports -------------------------
-  const codeExports = getExports(ast);
+  const codeExports = getCodeExports(ast);
 
   const codeNames = codeExports
     .flatMap((node) =>
