@@ -23,10 +23,10 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm rollup --config rollup.config.js",
     "dev": "pnpm tsc --watch",
-    "lint:dev": "pnpm biome lint ./",
+    "lint:todo": "pnpm biome lint ./",
     "preview": "pnpm ladle serve",
     "test": "pnpm vitest --run --dir src",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/design-system --barrels"
+    "index:todo": "pnpm zx ../../scripts/indexer.mjs packages/design-system --barrels"
   },
   "devDependencies": {
     "@hypergiant/biome-config": "workspace:*",
