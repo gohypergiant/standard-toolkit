@@ -12,7 +12,8 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsc",
     "dev": "pnpm tsc --watch",
-    "lint": "pnpm biome lint ./"
+    "lint": "pnpm biome lint ./",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/constants"
   },
   "devDependencies": {
     "@hypergiant/typescript-config": "workspace:*",

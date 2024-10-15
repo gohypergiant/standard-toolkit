@@ -13,7 +13,8 @@
     "build": "pnpm tsc",
     "dev": "pnpm tsc --watch",
     "lint": "pnpm biome lint ./",
-    "test": "pnpm vitest --run --dir src"
+    "test": "pnpm vitest --run --dir src",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/geo"
   },
   "devDependencies": {
     "@hypergiant/typescript-config": "workspace:*",
