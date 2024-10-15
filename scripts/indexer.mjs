@@ -72,6 +72,7 @@ async function getWorkspaceGlob(root) {
 }
 
 /** Generates an AST from the given file */
+// biome-ignore lint/style/useNamingConvention: it's okay
 async function getAST(filePath) {
   const firstLine = await getFirstLine(filePath);
 
@@ -316,7 +317,9 @@ async function writeAllIndexes(indexes, ext, client) {
       echo(chalk.dim('Will add export(s):\n'), chalk.blue(`${body}`));
       echo('\n');
 
-      return fs.writeFile(newFile, body, 'utf-8');
+      fs.writeFile(newFile, body, 'utf-8');
+
+      return $`pnpm biome format ${newFile} --write`;
     }),
   );
 }
@@ -328,8 +331,6 @@ async function buildIndexFiles(root, ext, files, parserFn, client) {
   const indexes = getNewExportList(root, tree);
 
   await writeAllIndexes(indexes, ext, client);
-
-  await $`pnpm run format`;
 }
 
 function outputHelp() {
