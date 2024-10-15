@@ -11,14 +11,17 @@
  */
 
 /**
- * Returns the value nearest to value which is within the closed range [min,max].
+ * Clamps a number within the specified bounds.
  *
+ * @throws {RangeError} Throws an error if min > max.
+ *
+ * @example
+ * const value = clamp(5, 15, 10); // 10
+ * const value = clamp(5, 15, 2); // 5
+ * const value = clamp(5, 15, 20); // 15
+ * const value = clamp(15, 5, 10); // RangeError
  */
-export function clamp<T extends number, Min extends number, Max extends number>(
-  value: T,
-  min: Min,
-  max: Max,
-): T | Min | Max {
+export function clamp(min: number, max: number, value: number) {
   // TODO: do we want to handle this differently? A range error is quite explicit
   if (min > max) {
     throw new RangeError('min exceeded max');

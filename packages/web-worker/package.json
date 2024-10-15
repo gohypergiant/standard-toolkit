@@ -1,7 +1,7 @@
 {
   "name": "@hypergiant/worker",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "files": ["dist/**"],
   "module": "./dist/index.js",

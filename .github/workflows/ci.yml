@@ -6,8 +6,8 @@ on:
     types: [opened, synchronize]
 env:
   TURBO_TELEMETRY_DISABLED: 1
-  RUNNER_NODE_VERSION: 18
-  RUNNER_PNPM_VERSION: 9.11.0 # specified in root package.json
+  RUNNER_NODE_VERSION: 22
+  RUNNER_PNPM_VERSION: 9.12.1 # specified in root package.json
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true

@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/syncpack/dist/schema.json",
   "dependencyTypes": [
     "dev",
     "prod",
@@ -9,6 +10,13 @@
     "package.json",
     "packages/*/package.json",
     "tooling/*/package.json"
+  ],
+  "semverGroups": [
+    {
+      "range": "^",
+      "dependencies": ["**"],
+      "packages": ["**"]
+    }
   ],
   "versionGroups": [
     {

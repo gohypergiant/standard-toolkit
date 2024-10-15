@@ -1,7 +1,7 @@
 {
   "name": "@hypergiant/eslint-config",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {
     "lint": "pnpm biome lint ./"

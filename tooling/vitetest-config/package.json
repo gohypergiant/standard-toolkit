@@ -1,7 +1,7 @@
 {
   "name": "@hypergiant/vitest-config",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     "./dom": "./dom.js",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-istanbul": "^2.1.1",
+    "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.1.1"
   },
   "$schema": "https://json.schemastore.org/package",

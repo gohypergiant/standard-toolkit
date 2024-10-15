@@ -1,0 +1,223 @@
+import type { Story, StoryDefault } from '@ladle/react';
+import { actions } from '../../ladle';
+import { AriaFieldError, AriaGroup, AriaLabel, AriaText } from '../aria';
+import { Button } from '../button';
+import { Icon } from '../icon';
+import { Input } from '../input';
+import { Options, OptionsItem, OptionsList } from '../options';
+import { ComboBox } from './combo-box';
+import type { ComboBoxProps } from './types';
+
+type StoryProps = ComboBoxProps<object> & {
+  description?: string;
+  errorMessage?: string;
+  label?: string;
+  showLabel?: boolean;
+};
+
+export default {
+  title: 'Components/ComboBox',
+  argTypes: {
+    description: {
+      control: {
+        type: 'text',
+      },
+    },
+    errorMessage: {
+      control: {
+        type: 'text',
+      },
+    },
+    label: {
+      control: {
+        type: 'text',
+      },
+      defaultValue: 'Favorite animals',
+    },
+    showLabel: {
+      control: {
+        type: 'boolean',
+      },
+      defaultValue: true,
+    },
+    size: {
+      control: {
+        type: 'select',
+      },
+      options: ['sm', 'lg'],
+      defaultValue: 'sm',
+    },
+    isInvalid: {
+      control: {
+        type: 'boolean',
+      },
+    },
+    isDisabled: {
+      control: {
+        type: 'boolean',
+      },
+    },
+  },
+} satisfies StoryDefault<StoryProps>;
+
+export const ControlledExample: Story<StoryProps> = ({
+  description,
+  errorMessage,
+  label,
+  showLabel,
+  ...rest
+}) => (
+  <ComboBox
+    {...rest}
+    {...actions<ComboBoxProps<object>>(
+      'onBlur',
+      'onFocus',
+      'onFocusChange',
+      'onInputChange',
+      'onOpenChange',
+      'onSelectionChange',
+    )}
+    aria-label={label}
+  >
+    {({ isOpen }) => (
+      <>
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
+        <AriaGroup>
+          <Input />
+          <Button>
+            <Icon>
+              {isOpen ? (
+                <svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+                  <title>Ladle</title>
+                  <path d='M17.6577 15.6996L12.0008 10.0427L6.34391 15.6996L4.92969 14.2855L10.5867 8.62855C10.5867 8.62855 12.0009 7.21436 13.415 8.62847C14.8291 10.0426 19.0718 14.2854 19.0718 14.2854L17.6577 15.6996Z' />
+                </svg>
+              ) : (
+                <svg viewBox='0 0 24 25' xmlns='http://www.w3.org/2000/svg'>
+                  <title>Ladle</title>
+                  <path d='M6.41417 8.94775L12.0711 14.6046L17.7279 8.94775L19.1421 10.3618L13.4852 16.0188C13.4852 16.0188 12.071 17.433 10.6569 16.0189C9.24274 14.6047 5 10.362 5 10.362L6.41417 8.94775Z' />
+                </svg>
+              )}
+            </Icon>
+          </Button>
+        </AriaGroup>
+        {description && <AriaText slot='description'>{description}</AriaText>}
+        <AriaFieldError>{errorMessage}</AriaFieldError>
+        <Options>
+          <OptionsList>
+            <OptionsItem textValue='Aardvark'>
+              <AriaText slot='label'>Aardvark</AriaText>
+              <AriaText slot='description'>snooty tank-ball</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Cat'>
+              <AriaText slot='label'>Cat</AriaText>
+              <AriaText slot='description'>perfection itself</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Dog'>
+              <AriaText slot='label'>Dog</AriaText>
+              <AriaText slot='description'>slobber wolf</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Kangaroo'>
+              <AriaText slot='label'>Kangaroo</AriaText>
+              <AriaText slot='description'>kicky jumpah</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Red Panda'>
+              <AriaText slot='label'>Red Panda</AriaText>
+              <AriaText slot='description'>disguised Mario</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Snake'>
+              <AriaText slot='label'>Snake</AriaText>
+              <AriaText slot='description'>murder worm</AriaText>
+            </OptionsItem>
+          </OptionsList>
+        </Options>
+      </>
+    )}
+  </ComboBox>
+);
+
+ControlledExample.storyName = 'Controlled';
+ControlledExample.argTypes = {
+  selectedKey: {
+    control: {
+      type: 'text',
+    },
+    defaultValue: 'Red Panda',
+  },
+};
+
+export const UncontrolledExample: Story<StoryProps> = ({
+  description,
+  errorMessage,
+  label,
+  showLabel,
+  ...rest
+}) => (
+  <ComboBox
+    {...rest}
+    {...actions<ComboBoxProps<object>>(
+      'onBlur',
+      'onFocus',
+      'onFocusChange',
+      'onInputChange',
+      'onOpenChange',
+      'onSelectionChange',
+    )}
+    aria-label={label}
+  >
+    {({ isOpen }) => (
+      <>
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
+        <AriaGroup>
+          <Input />
+          <Button>
+            <Icon>
+              {isOpen ? (
+                <svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+                  <title>Ladle</title>
+                  <path d='M17.6577 15.6996L12.0008 10.0427L6.34391 15.6996L4.92969 14.2855L10.5867 8.62855C10.5867 8.62855 12.0009 7.21436 13.415 8.62847C14.8291 10.0426 19.0718 14.2854 19.0718 14.2854L17.6577 15.6996Z' />
+                </svg>
+              ) : (
+                <svg viewBox='0 0 24 25' xmlns='http://www.w3.org/2000/svg'>
+                  <title>Ladle</title>
+                  <path d='M6.41417 8.94775L12.0711 14.6046L17.7279 8.94775L19.1421 10.3618L13.4852 16.0188C13.4852 16.0188 12.071 17.433 10.6569 16.0189C9.24274 14.6047 5 10.362 5 10.362L6.41417 8.94775Z' />
+                </svg>
+              )}
+            </Icon>
+          </Button>
+        </AriaGroup>
+        {description && <AriaText slot='description'>{description}</AriaText>}
+        <AriaFieldError>{errorMessage}</AriaFieldError>
+        <Options>
+          <OptionsList>
+            <OptionsItem textValue='Aardvark'>
+              <AriaText slot='label'>Aardvark</AriaText>
+              <AriaText slot='description'>snooty tank-ball</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Cat'>
+              <AriaText slot='label'>Cat</AriaText>
+              <AriaText slot='description'>perfection itself</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Dog'>
+              <AriaText slot='label'>Dog</AriaText>
+              <AriaText slot='description'>slobber wolf</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Kangaroo'>
+              <AriaText slot='label'>Kangaroo</AriaText>
+              <AriaText slot='description'>kicky jumpah</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Red Panda'>
+              <AriaText slot='label'>Red Panda</AriaText>
+              <AriaText slot='description'>disguised Mario</AriaText>
+            </OptionsItem>
+            <OptionsItem textValue='Snake'>
+              <AriaText slot='label'>Snake</AriaText>
+              <AriaText slot='description'>murder worm</AriaText>
+            </OptionsItem>
+          </OptionsList>
+        </Options>
+      </>
+    )}
+  </ComboBox>
+);
+
+UncontrolledExample.storyName = 'Uncontrolled';
