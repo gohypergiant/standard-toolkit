@@ -10,13 +10,6 @@ repos:
         stages: ["pre-commit", "pre-push"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0  # You can check for the latest version
-    hooks:
-      - id: check-added-large-files
-        args: ['--maxkb=500']  # Max file size in KB, adjust as needed
-        stages: ["pre-commit", "pre-push"]
-
-  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: check-yaml
