@@ -30,7 +30,7 @@ We also want to establish a common platform for multiple similar, but stylistica
 
 C2DS is a semi-headless, themeless collection of components that express minimal opinions about layout and baked-in styles with an API of props for each component that strives to suit many common use cases. The design guidelines are established within [Figma](https://www.figma.com/design/CoNlAMPL0u5DCVYRPQKhki/N2X-Design-System?node-id=30742-76715&m=dev).
 
-While C2DS is based on theme of the Jeric2o application, the vast majority of spacing and color theming to left up to the implementer to define. For every element of this system, the priority has been flexibility over rigid requirements and an "escape hatch" for overriding style and behavior if necessary.
+The vast majority of spacing and color theming is left up to the implementer to define. For every element of this system, the priority has been flexibility over rigid requirements and an "escape hatch" for overriding style and behavior if necessary.
 
 ## Why isn't there a theme or icons?
 
