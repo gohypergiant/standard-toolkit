@@ -6,7 +6,7 @@ repos:
       - id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
         exclude: ^tests/  # Exclude tests directory if needed
-        files: \.(py|js|yaml|yml|sh|txt|env)$  # Customize file types to scan
+        files: \.(py|js|yaml|yml|sh|txt|env|jsx|ts|tsx|md)$  # Customize file types to scan
         stages: ["pre-commit", "pre-push"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
