@@ -1,5 +1,6 @@
 /** @type {import('@ladle/react').UserConfig} */
 export default {
+  base: '/standard-toolkit/',
   addons: {
     theme: {
       defaultState: 'dark',

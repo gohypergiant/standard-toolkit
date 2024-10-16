@@ -53,12 +53,6 @@ The Standard Toolkit project is sponsored by:
 <a href="https://accelint.com" target="_blank"><img src="assets/accelint.png" height="48" /></a>
 <a href="https://hypergiant.com" target="_blank"><img src="assets/hypergiant.png" height="48" /></a>
 
-<br />
-
-The Standard Toolkit project is used by:
-
-<img src="assets/air-force.png" height="48" />
-
 ---
 
 > [Accelint](https://accelint.com) &nbsp;&middot;&nbsp;

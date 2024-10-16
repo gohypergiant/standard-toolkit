@@ -1,0 +1,28 @@
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0  # You can check for the latest version
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: ^tests/  # Exclude tests directory if needed
+        files: \.(py|js|yaml|yml|sh|txt|env|jsx|ts|tsx|md)$  # Customize file types to scan
+        stages: ["pre-commit", "pre-push"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+        args: ['--allow-multiple-documents']
+        stages: ["pre-commit", "pre-push"]
+
+  # Optional: Use truffleHog for deeper scans (truffleHog is another secrets scanning tool)
+  - repo: local
+    hooks:
+      - id: trufflehog
+        name: TruffleHog
+        description: Detect secrets in your data.
+        entry: docker run -v "$(pwd):/workdir" --rm us-docker.pkg.dev/thog-artifacts/public/scanner:latest git main HEAD /workdir
+        language: system
+        pass_filenames: false
+        stages: ["pre-commit", "pre-push"]
