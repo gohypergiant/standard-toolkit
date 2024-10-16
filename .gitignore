@@ -22,3 +22,8 @@ dist
 # Environment variables
 .env
 
+# ide files
+*.iml
+.idea
+
+
