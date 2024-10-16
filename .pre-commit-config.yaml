@@ -1,11 +1,33 @@
+# .pre-commit-config.yaml
 repos:
-  - repo: local
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0  # You can check for the latest version
     hooks:
-      - id: trufflehog
-        name: TruffleHog
-        description: Detect secrets in your data.
-        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail'
-        # For running trufflehog in docker, use the following entry instead:
-        # entry: bash -c 'docker run --rm -v "$(pwd):/workdir" -i --rm trufflesecurity/trufflehog:latest git file:///workdir --since-commit HEAD --only-verified --fail'
-        language: system
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: ^tests/  # Exclude tests directory if needed
+        files: \.(py|js|yaml|yml|sh|txt|env)$  # Customize file types to scan
+        stages: ["commit", "push"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0  # You can check for the latest version
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=500']  # Max file size in KB, adjust as needed
+        stages: ["commit", "push"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-yaml
+        args: ['--allow-multiple-documents']
+        stages: ["commit", "push"]
+
+  # Optional: Use truffleHog for deeper scans (truffleHog is another secrets scanning tool)
+  - repo: https://github.com/trufflesecurity/truffleHog
+    rev: v3.11.0  # Check for the latest version
+    hooks:
+      - id: truffleHog
+        args: ['--entropy=True']
+        files: \.(py|js|yaml|yml|sh|txt|env)$
         stages: ["commit", "push"]
