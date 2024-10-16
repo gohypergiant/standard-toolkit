@@ -1,0 +1,55 @@
+name: Github Pages Deploy
+on:
+  push:
+    branches:
+      - main
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+  RUNNER_NODE_VERSION: 22
+  RUNNER_PNPM_VERSION: 9.12.1 # specified in root package.json
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.RUNNER_PNPM_VERSION }}
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          registry-url: "https://registry.npmjs.org"
+          node-version: ${{ env.RUNNER_NODE_VERSION }}
+          cache: "pnpm"
+      - run: pnpm install
+      - run: pnpm run build
+      - name: Ladle
+        id: build
+        run: pnpm --filter=@accelint/design-system exec ladle build
+      - name: Upload
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/design-system/build
+  deploy:
+    needs: build
+    permissions:
+      pages: write # deploy to Pages
+      id-token: write # verify the deployment originates from an appropriate source
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
