@@ -1,5 +1,5 @@
 ---
-"@accelint/design-system": minor
+"@accelint/design-system": patch
 ---
 
-patch: fix small bug where classnames didn't propagate
+Fixed bug where classnames didn't propagate for query builder component.
