@@ -7,8 +7,18 @@
   "files": [
     "dist/**"
   ],
-  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js",
+      "module": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsc",

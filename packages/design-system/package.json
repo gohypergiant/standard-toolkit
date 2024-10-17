@@ -10,14 +10,26 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js",
       "module": "./dist/index.js"
     },
     "./styles": {
+      "import": {
+        "default": "./dist/styles.css"
+      },
+      "default": "./dist/styles.css",
       "module": "./dist/styles.css"
     },
     "./vanilla": {
-      "types": "./dist/vanilla.d.ts",
+      "import": {
+        "types": "./dist/vanilla.d.ts",
+        "default": "./dist/vanilla.js"
+      },
+      "default": "./dist/vanilla.js",
       "module": "./dist/vanilla.js"
     }
   },
@@ -31,11 +43,11 @@
     "test": "pnpm vitest --run --dir src"
   },
   "devDependencies": {
-    "@fontsource/roboto-flex": "^5.1.0",
-    "@fontsource/roboto-mono": "^5.1.0",
     "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
+    "@fontsource/roboto-flex": "^5.1.0",
+    "@fontsource/roboto-mono": "^5.1.0",
     "@ladle/react": "^4.1.2",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-typescript": "^12.1.0",
