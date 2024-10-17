@@ -124,11 +124,12 @@ export const optionsClassNames: OptionsClassNames = {
     }),
     list: style({
       '@layer': {
-        [layers.components.l1]: {
+        [layers.components.l2]: {
           display: 'flex',
           flexDirection: 'column',
           background: optionsColorVars.list.background,
           border: `1px solid ${fallbackVar(optionsColorVars.list.border, 'transparent')}`,
+          padding: `${fallbackVar(optionsSpaceVars.options.y, sizeVars.v03)} ${fallbackVar(optionsSpaceVars.options.x, '0')}`,
           borderRadius: radiusVars.sm,
         },
       },
@@ -136,7 +137,7 @@ export const optionsClassNames: OptionsClassNames = {
     section: style({
       '@layer': {
         [layers.components.l1]: {
-          padding: `${fallbackVar(optionsSpaceVars.section.y, sizeVars.v03)} ${fallbackVar(optionsSpaceVars.section.x, '0')}`,
+          padding: `${fallbackVar(optionsSpaceVars.section.y, '0')} ${fallbackVar(optionsSpaceVars.section.x, '0')}`,
         },
       },
     }),

@@ -119,11 +119,12 @@ export const menuClassNames: MenuClassNames = {
     }),
     list: style({
       '@layer': {
-        [layers.components.l1]: {
+        [layers.components.l2]: {
           display: 'flex',
           flexDirection: 'column',
           background: menuColorVars.list.background,
           border: `1px solid ${fallbackVar(menuColorVars.list.border, 'transparent')}`,
+          padding: `${fallbackVar(menuSpaceVars.menu.y, sizeVars.v03)} ${fallbackVar(menuSpaceVars.menu.x, '0')}`,
           borderRadius: radiusVars.sm,
         },
       },
@@ -131,7 +132,7 @@ export const menuClassNames: MenuClassNames = {
     section: style({
       '@layer': {
         [layers.components.l1]: {
-          padding: `${fallbackVar(menuSpaceVars.section.y, sizeVars.v03)} ${fallbackVar(menuSpaceVars.section.x, '0')}`,
+          padding: `${fallbackVar(menuSpaceVars.section.y, '0')} ${fallbackVar(menuSpaceVars.section.x, '0')}`,
         },
       },
     }),
