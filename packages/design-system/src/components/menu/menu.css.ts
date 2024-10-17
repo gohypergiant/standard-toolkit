@@ -4,8 +4,8 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import {layers, radiusVars, sizeVars, surfaces} from '@/styles';
-import { containerQueries } from '@/utils';
+import {layers, radiusVars, sizeVars, surfaces} from '../../styles';
+import { containerQueries } from '../../utils';
 import type { MenuClassNames, MenuItemState } from './types';
 
 export const menuContainers = {

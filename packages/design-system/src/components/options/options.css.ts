@@ -4,8 +4,8 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, radiusVars, surfaces } from '@/styles';
-import { containerQueries } from '@/utils';
+import {layers, radiusVars, sizeVars, surfaces} from '../../styles';
+import { containerQueries } from '../../utils';
 import type { OptionsClassNames, OptionsItemState } from './types';
 
 export const optionsContainers = {
@@ -136,7 +136,7 @@ export const optionsClassNames: OptionsClassNames = {
     section: style({
       '@layer': {
         [layers.components.l1]: {
-          padding: `${fallbackVar(optionsSpaceVars.section.y, '0')} ${fallbackVar(optionsSpaceVars.section.x, '0')}`,
+          padding: `${fallbackVar(optionsSpaceVars.section.y, sizeVars.v03)} ${fallbackVar(optionsSpaceVars.section.x, '0')}`,
         },
       },
     }),
