@@ -4,8 +4,8 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, radiusVars, surfaces } from '../../styles';
-import { containerQueries } from '../../utils';
+import { layers, radiusVars, surfaces } from '@/styles';
+import { containerQueries } from '@/utils';
 import type { OptionsClassNames, OptionsItemState } from './types';
 
 export const optionsContainers = {
@@ -107,6 +107,7 @@ export const optionsClassNames: OptionsClassNames = {
               'var(--trigger-width)', // Provided by React Aria Popover: https://react-spectrum.adobe.com/react-aria/Select.html
             ),
             padding: `${fallbackVar(optionsSpaceVars.options.y, '0')} ${fallbackVar(optionsSpaceVars.options.x, '0')}`,
+            borderRadius: radiusVars.sm,
           },
         },
       },

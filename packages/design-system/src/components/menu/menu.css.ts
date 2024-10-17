@@ -4,8 +4,8 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, radiusVars, surfaces } from '../../styles';
-import { containerQueries } from '../../utils';
+import {layers, radiusVars, sizeVars, surfaces} from '@/styles';
+import { containerQueries } from '@/utils';
 import type { MenuClassNames, MenuItemState } from './types';
 
 export const menuContainers = {
@@ -102,6 +102,7 @@ export const menuClassNames: MenuClassNames = {
               'var(--trigger-width)', // Provided by React Aria Menu: https://react-spectrum.adobe.com/react-aria/Menu.html
             ),
             padding: `${fallbackVar(menuSpaceVars.menu.y, '0')} ${fallbackVar(menuSpaceVars.menu.x, '0')}`,
+            borderRadius: radiusVars.sm,
           },
         },
       },
@@ -130,7 +131,7 @@ export const menuClassNames: MenuClassNames = {
     section: style({
       '@layer': {
         [layers.components.l1]: {
-          padding: `${fallbackVar(menuSpaceVars.section.y, '0')} ${fallbackVar(menuSpaceVars.section.x, '0')}`,
+          padding: `${fallbackVar(menuSpaceVars.section.y, sizeVars.v03)} ${fallbackVar(menuSpaceVars.section.x, '0')}`,
         },
       },
     }),
