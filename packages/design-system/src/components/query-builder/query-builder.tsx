@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { Provider } from 'react-aria-components';
 import { QueryBuilder as RQBuilder } from 'react-querybuilder';
-import { useTheme } from '@/hooks';
-import { bodies } from '@/styles';
-import { inlineVars, mergeClassNames } from '@/utils';
+import { useTheme } from '../../hooks';
+import { bodies } from '../../styles';
+import { inlineVars, mergeClassNames } from '../../utils';
 import { ButtonContext, type ButtonProps } from '../button';
 import { CheckboxContext, type CheckboxProps } from '../checkbox';
 import { InputContext, type InputProps } from '../input';

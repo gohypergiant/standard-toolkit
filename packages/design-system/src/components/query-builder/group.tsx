@@ -10,7 +10,7 @@ import {
   useRuleGroup,
   useStopEventPropagation,
 } from 'react-querybuilder';
-import { inlineVars } from '@/utils';
+import { inlineVars } from '../../utils';
 import { QueryBuilderContext } from './constants';
 import { queryBuilderGroupStateVars } from './query-builder.css';
 import type { RuleGroupElementsProps } from './types';
