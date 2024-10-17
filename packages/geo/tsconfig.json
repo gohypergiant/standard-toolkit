@@ -4,6 +4,8 @@
   "include": ["./src"],
   "exclude": [
     "node_modules",
+    "**/__fixtures__",
+    "**/__snapshots__",
     "**/*.bench.ts",
     "**/*.test.ts",
     "**/*.test-d.ts"

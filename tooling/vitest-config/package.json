@@ -6,7 +6,8 @@
   "type": "module",
   "exports": {
     "./dom": "./dom.js",
-    "./no-dom": "./no-dom.js"
+    "./no-dom": "./no-dom.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "lint": "pnpm biome lint ./"

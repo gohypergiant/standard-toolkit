@@ -22,7 +22,8 @@
     "./bundler/no-dom": "./bundler/no-dom.json",
     "./bundler/no-dom/app": "./bundler/no-dom.json",
     "./bundler/no-dom/library": "./bundler/no-dom.json",
-    "./bundler/no-dom/library-monorepo": "./bundler/no-dom.json"
+    "./bundler/no-dom/library-monorepo": "./bundler/no-dom.json",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "lint": "pnpm biome lint ./"

@@ -28,11 +28,11 @@
     "test": "turbo test"
   },
   "dependencies": {
+    "@accelint/biome-config": "workspace:*",
     "@babel/parser": "^7.25.8",
     "@biomejs/biome": "^1.9.3",
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/cli": "^2.27.9",
-    "@accelint/biome-config": "workspace:*",
     "@ls-lint/ls-lint": "^2.2.3",
     "@swc/core": "^1.7.36",
     "rimraf": "^5.0.10",

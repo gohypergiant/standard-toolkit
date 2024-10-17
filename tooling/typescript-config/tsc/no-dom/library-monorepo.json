@@ -12,11 +12,12 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "module": "NodeNext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "sourceMap": true,
     "declaration": true,
     "composite": true,
     "declarationMap": true,
-    "lib": ["es2022"]
+    "lib": ["es2023"]
   }
 }
