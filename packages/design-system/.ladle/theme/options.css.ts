@@ -46,9 +46,6 @@ export const Options: ThemeContext['Options'] = {
                   x: `calc(${sizeVars.v03} + ${sizeVars.v03})`,
                   y: sizeVars.v03,
                 },
-                section: {
-                  y: sizeVars.v03,
-                },
               },
             },
           ),
