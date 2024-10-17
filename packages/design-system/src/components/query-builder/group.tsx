@@ -115,7 +115,6 @@ export function RuleGroup(props: RuleGroupProps) {
       <div
         ref={group.previewRef}
         className={group.outerClassName}
-        title={group.accessibleDescription}
         data-dragmonitorid={group.dragMonitorId}
         data-dropmonitorid={group.dropMonitorId}
         data-level={group.path.length}

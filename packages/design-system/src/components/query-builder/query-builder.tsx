@@ -56,6 +56,7 @@ const defaultMapping: QueryBuilderMapping = {
 };
 
 export function QueryBuilder({
+  classNames: classNamesProp,
   consistentColumns = true,
   controlElements: controlElementsProp,
   disabled,
@@ -77,10 +78,15 @@ export function QueryBuilder({
 
   const classNames = useMemo(
     () =>
-      mergeClassNames(queryBuilderClassNames, theme.QueryBuilder, {
-        rule: { error: mapping?.error?.[size] },
-      }),
-    [mapping?.error, size, theme.QueryBuilder],
+      mergeClassNames(
+        queryBuilderClassNames,
+        theme.QueryBuilder,
+        classNamesProp,
+        {
+          rule: { error: mapping?.error?.[size] },
+        }
+      ),
+    [mapping?.error, size, theme.QueryBuilder, classNamesProp]
   );
 
   const controlClassNames = useMemo(() => {
