@@ -1,5 +1,13 @@
 # @accelint/predicates
 
+## 0.1.2
+
+### Patch Changes
+
+- 2c661d3: Standardized package.json "exports" field
+- Updated dependencies [2c661d3]
+  - @accelint/core@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

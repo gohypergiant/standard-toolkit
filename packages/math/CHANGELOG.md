@@ -1,5 +1,11 @@
 # @accelint/math
 
+## 0.1.2
+
+### Patch Changes
+
+- 2c661d3: Standardized package.json "exports" field
+
 ## 0.1.1
 
 ### Patch Changes
