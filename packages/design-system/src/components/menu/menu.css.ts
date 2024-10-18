@@ -4,7 +4,7 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import {layers, radiusVars, sizeVars, surfaces} from '../../styles';
+import { layers, radiusVars, sizeVars, surfaces } from '../../styles';
 import { containerQueries } from '../../utils';
 import type { MenuClassNames, MenuItemState } from './types';
 
@@ -60,6 +60,10 @@ export const menuColorVars = createThemeContract({
 export const menuSpaceVars = createThemeContract({
   menu: {
     minWidth: '',
+    x: '',
+    y: '',
+  },
+  list: {
     x: '',
     y: '',
   },
@@ -123,8 +127,8 @@ export const menuClassNames: MenuClassNames = {
           display: 'flex',
           flexDirection: 'column',
           background: menuColorVars.list.background,
+          padding: `${fallbackVar(menuSpaceVars.list.y, sizeVars.v03)} ${fallbackVar(menuSpaceVars.list.x, '0')}`,
           border: `1px solid ${fallbackVar(menuColorVars.list.border, 'transparent')}`,
-          padding: `${fallbackVar(menuSpaceVars.menu.y, sizeVars.v03)} ${fallbackVar(menuSpaceVars.menu.x, '0')}`,
           borderRadius: radiusVars.sm,
         },
       },
