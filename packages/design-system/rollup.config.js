@@ -96,7 +96,7 @@ function bundleVanilla(ext) {
   return {
     name: 'bundle-vanilla-emits',
     generateBundle(_, bundle) {
-      const source = bundle['index.js'].code;
+      const source = `${bundle['index.js'].code}\n${bundle['index.d.ts']?.source}`;
 
       this.emitFile({
         type: 'asset',
@@ -106,6 +106,7 @@ function bundleVanilla(ext) {
           .split('\n')
           .filter(
             (line) =>
+              line.startsWith('export type') ||
               line.endsWith(`.vanilla.js';`) ||
               line.endsWith(`/types.js';`) ||
               line.endsWith(`'./utils/css.js';`) ||
