@@ -14,23 +14,20 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       },
-      "default": "./dist/index.js",
-      "module": "./dist/index.js"
+      "default": "./dist/index.js"
     },
     "./styles": {
       "import": {
         "default": "./dist/styles.css"
       },
-      "default": "./dist/styles.css",
-      "module": "./dist/styles.css"
+      "default": "./dist/styles.css"
     },
     "./vanilla": {
       "import": {
         "types": "./dist/vanilla.d.ts",
         "default": "./dist/vanilla.js"
       },
-      "default": "./dist/vanilla.js",
-      "module": "./dist/vanilla.js"
+      "default": "./dist/vanilla.js"
     }
   },
   "scripts": {

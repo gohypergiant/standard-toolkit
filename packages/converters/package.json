@@ -12,7 +12,6 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
       },
-      "module": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
