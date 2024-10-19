@@ -7,7 +7,11 @@ export default defineConfig({
       esmExtension: 'js',
     }),
   ],
-  entry: ['src/**/*.{ts,tsx}', '!src/**/*.{d,stories,test,bench}.{ts,tsx}'],
+  entry: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
+    '!**/__fixture__',
+  ],
   bundle: true,
   clean: true,
   dts: true,
