@@ -88,6 +88,9 @@ importers:
       '@vitest/coverage-istanbul':
         specifier: ^2.1.3
         version: 2.1.3(vitest@2.1.3(@types/node@22.7.5)(jsdom@25.0.1)(msw@2.4.11(typescript@5.6.3)))
+      esbuild-plugin-file-path-extensions:
+        specifier: ^2.1.3
+        version: 2.1.3
       tsup:
         specifier: ^8.3.0
         version: 8.3.0(@swc/core@1.7.36(@swc/helpers@0.5.13))(jiti@2.3.3)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.6.3)
@@ -2492,6 +2495,10 @@ packages:
 
   es-module-lexer@1.5.4:
     resolution: {integrity: sha512-MVNK56NiMrOwitFB7cqDwq0CQutbw+0BvLshJSse0MUNU+y1FC3bUS/AQg7oUng+/wKrrki7JfmwtVHkVfPLlw==}
+
+  esbuild-plugin-file-path-extensions@2.1.3:
+    resolution: {integrity: sha512-yLriKqLz32F0zGDqrfuTx8aENTVnf0l0HZ6qAgPhQpxFIcrZRNc4DfXjZs8pq0VPeBazzpb3WJ05B0S6s3ucSQ==}
+    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   esbuild@0.21.5:
     resolution: {integrity: sha512-mg3OPMV4hXywwpoDxu3Qda5xCKQi+vCTZq8S9J/EpkhB2HzKXq4SNFZE3+NK93JYxc8VMSep+lOUSC/RVKaBqw==}
@@ -6957,6 +6964,8 @@ snapshots:
       is-arrayish: 0.2.1
 
   es-module-lexer@1.5.4: {}
+
+  esbuild-plugin-file-path-extensions@2.1.3: {}
 
   esbuild@0.21.5:
     optionalDependencies:
