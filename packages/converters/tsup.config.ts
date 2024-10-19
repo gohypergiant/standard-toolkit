@@ -8,6 +8,7 @@ export default defineConfig({
     }),
   ],
   entry: ['src/**/*.{ts,tsx}', '!src/**/*.{d,stories,test}.{ts,tsx}'],
+  bundle: true,
   clean: true,
   dts: true,
   format: 'esm',
