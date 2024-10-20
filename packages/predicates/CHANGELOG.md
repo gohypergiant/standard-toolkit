@@ -1,5 +1,15 @@
 # @accelint/predicates
 
+## 0.1.3
+
+### Patch Changes
+
+- f117ea6: Converted build step to use `tsup`.
+- d39c5d8: Added explicit file extensions to relative path imports via esbuild plugin for tsup.
+- Updated dependencies [f117ea6]
+- Updated dependencies [d39c5d8]
+  - @accelint/core@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

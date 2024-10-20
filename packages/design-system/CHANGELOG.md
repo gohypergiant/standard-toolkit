@@ -1,5 +1,14 @@
 # @accelint/design-system
 
+## 0.2.1
+
+### Patch Changes
+
+- f117ea6: Converted build step to use `tsup`.
+- Updated dependencies [f117ea6]
+- Updated dependencies [d39c5d8]
+  - @accelint/converters@0.1.3
+
 ## 0.2.0
 
 ### Minor Changes
