@@ -4,11 +4,9 @@ import { default as postcss } from 'postcss';
 import { defineConfig } from 'tsup';
 
 async function processCss(css: string) {
-  const result = await postcss([autoprefixer]).process(css, {
+  return await postcss([autoprefixer]).process(css, {
     from: undefined /* suppress source map warning */,
-  });
-
-  return result.css;
+  }).css;
 }
 
 export default defineConfig({
