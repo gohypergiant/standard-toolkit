@@ -15,10 +15,7 @@ export default defineConfig({
       processCss,
     }),
   ],
-  entry: {
-    index: 'src/index.ts',
-    vanilla: 'src/vanilla.ts',
-  },
+  entry: ['src/*.ts'],
   dts: true,
   format: 'esm',
   sourcemap: true,
