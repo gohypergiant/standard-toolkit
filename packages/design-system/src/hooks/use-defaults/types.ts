@@ -23,6 +23,7 @@ import type {
   MenuListProps,
   MenuProps,
 } from '../../components/menu/types';
+import type { NumberFieldProps } from '../../components/number-field';
 import type {
   OptionsItemProps,
   OptionsListProps,
@@ -41,6 +42,7 @@ import type {
   TabProps,
   TabsProps,
 } from '../../components/tabs/types';
+import type { TextFieldProps } from '../../components/text-field/types';
 import type { TextAreaProps } from '../../components/textarea/types';
 import type {
   TooltipProps,
@@ -68,12 +70,13 @@ export type DefaultsContext = DefaultsOf<{
   Icon: IconProps;
   Input: InputProps;
   LinkButton: LinkButtonProps;
-  Options: OptionsProps;
-  OptionsList: OptionsListProps<object>;
-  OptionsItem: OptionsItemProps<object>;
   Menu: MenuProps;
   MenuList: MenuListProps<unknown>;
   MenuItem: MenuItemProps<unknown>;
+  NumberField: NumberFieldProps;
+  Options: OptionsProps;
+  OptionsList: OptionsListProps<object>;
+  OptionsItem: OptionsItemProps<object>;
   Picker: PickerProps<unknown>;
   Popover: PopoverProps;
   Radio: RadioProps;
@@ -87,6 +90,7 @@ export type DefaultsContext = DefaultsOf<{
   TabPanels: TabPanelsProps;
   Tabs: TabsProps;
   TextArea: TextAreaProps;
+  TextField: TextFieldProps;
   ToggleButton: ToggleButtonProps;
   Tooltip: TooltipProps;
   TooltipTarget: TooltipTargetProps;

@@ -84,9 +84,9 @@ export function QueryBuilder({
         classNamesProp,
         {
           rule: { error: mapping?.error?.[size] },
-        }
+        },
       ),
-    [mapping?.error, size, theme.QueryBuilder, classNamesProp]
+    [mapping?.error, size, theme.QueryBuilder, classNamesProp],
   );
 
   const controlClassNames = useMemo(() => {

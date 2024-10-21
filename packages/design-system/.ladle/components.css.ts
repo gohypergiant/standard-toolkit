@@ -2,10 +2,10 @@ import '@fontsource/roboto-flex';
 import '@fontsource/roboto-mono';
 import { createTheme, globalStyle } from '@vanilla-extract/css';
 import {
-  defaultTypographyVarValues,
-  typographyVars,
   type ThemeContext,
   type ThemeVars,
+  defaultTypographyVarValues,
+  typographyVars,
 } from '../src';
 import {
   Button,
@@ -18,6 +18,7 @@ import {
   Icon,
   Input,
   Menu,
+  NumberField,
   Options,
   Picker,
   Popover,
@@ -28,6 +29,7 @@ import {
   Switch,
   Tabs,
   TextArea,
+  TextField,
   Tooltip,
   Tree,
 } from './theme';
@@ -65,8 +67,9 @@ export const theme: ThemeContext = {
   Group,
   Icon,
   Input,
-  Options,
   Menu,
+  NumberField,
+  Options,
   Picker,
   Popover,
   QueryBuilder,
@@ -76,6 +79,7 @@ export const theme: ThemeContext = {
   Switch,
   Tabs,
   TextArea,
+  TextField,
   Tooltip,
   Tree,
 };

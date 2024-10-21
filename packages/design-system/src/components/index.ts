@@ -203,6 +203,20 @@ export {
 } from './menu';
 export { MergeProvider, type MergeProviderProps } from './merge-provider';
 export {
+  NumberField,
+  NumberFieldContext,
+  numberFieldClassNames,
+  numberFieldContainer,
+  numberFieldColorVars,
+  numberFieldSpaceVars,
+  numberFieldStateVars,
+  type NumberFieldClassNames,
+  type NumberFieldMapping,
+  type NumberFieldProps,
+  type NumberFieldSizes,
+  type NumberFieldState,
+} from './number-field';
+export {
   Options,
   OptionsContext,
   OptionsItem,
@@ -382,6 +396,20 @@ export {
   type TextAreaRenderProps,
   type TextAreaState,
 } from './textarea';
+export {
+  TextField,
+  TextFieldContext,
+  textFieldClassNames,
+  textFieldContainer,
+  textFieldColorVars,
+  textFieldSpaceVars,
+  textFieldStateVars,
+  type TextFieldClassNames,
+  type TextFieldMapping,
+  type TextFieldProps,
+  type TextFieldSizes,
+  type TextFieldState,
+} from './text-field';
 export {
   Tooltip,
   TooltipContext,
