@@ -4,7 +4,7 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, radiusVars, surfaces } from '../../styles';
+import { layers, radiusVars, sizeVars, surfaces } from '../../styles';
 import { containerQueries } from '../../utils';
 import type { OptionsClassNames, OptionsItemState } from './types';
 
@@ -68,6 +68,10 @@ export const optionsSpaceVars = createThemeContract({
     x: '',
     y: '',
   },
+  list: {
+    x: '',
+    y: '',
+  },
   section: {
     x: '',
     y: '',
@@ -107,6 +111,7 @@ export const optionsClassNames: OptionsClassNames = {
               'var(--trigger-width)', // Provided by React Aria Popover: https://react-spectrum.adobe.com/react-aria/Select.html
             ),
             padding: `${fallbackVar(optionsSpaceVars.options.y, '0')} ${fallbackVar(optionsSpaceVars.options.x, '0')}`,
+            borderRadius: radiusVars.sm,
           },
         },
       },
@@ -123,10 +128,11 @@ export const optionsClassNames: OptionsClassNames = {
     }),
     list: style({
       '@layer': {
-        [layers.components.l1]: {
+        [layers.components.l2]: {
           display: 'flex',
           flexDirection: 'column',
           background: optionsColorVars.list.background,
+          padding: `${fallbackVar(optionsSpaceVars.list.y, sizeVars.v03)} ${fallbackVar(optionsSpaceVars.list.x, '0')}`,
           border: `1px solid ${fallbackVar(optionsColorVars.list.border, 'transparent')}`,
           borderRadius: radiusVars.sm,
         },

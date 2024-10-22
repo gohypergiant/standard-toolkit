@@ -1,5 +1,18 @@
 # @accelint/worker
 
+## 0.1.3
+
+### Patch Changes
+
+- f117ea6: Converted build step to use `tsup`.
+- d39c5d8: Added explicit file extensions to relative path imports via esbuild plugin for tsup.
+
+## 0.1.2
+
+### Patch Changes
+
+- 2c661d3: Standardized package.json "exports" field
+
 ## 0.1.1
 
 ### Patch Changes

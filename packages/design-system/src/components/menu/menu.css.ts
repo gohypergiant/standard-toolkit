@@ -4,7 +4,7 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, radiusVars, surfaces } from '../../styles';
+import { layers, radiusVars, sizeVars, surfaces } from '../../styles';
 import { containerQueries } from '../../utils';
 import type { MenuClassNames, MenuItemState } from './types';
 
@@ -63,6 +63,10 @@ export const menuSpaceVars = createThemeContract({
     x: '',
     y: '',
   },
+  list: {
+    x: '',
+    y: '',
+  },
   section: {
     x: '',
     y: '',
@@ -102,6 +106,7 @@ export const menuClassNames: MenuClassNames = {
               'var(--trigger-width)', // Provided by React Aria Menu: https://react-spectrum.adobe.com/react-aria/Menu.html
             ),
             padding: `${fallbackVar(menuSpaceVars.menu.y, '0')} ${fallbackVar(menuSpaceVars.menu.x, '0')}`,
+            borderRadius: radiusVars.sm,
           },
         },
       },
@@ -118,10 +123,11 @@ export const menuClassNames: MenuClassNames = {
     }),
     list: style({
       '@layer': {
-        [layers.components.l1]: {
+        [layers.components.l2]: {
           display: 'flex',
           flexDirection: 'column',
           background: menuColorVars.list.background,
+          padding: `${fallbackVar(menuSpaceVars.list.y, sizeVars.v03)} ${fallbackVar(menuSpaceVars.list.x, '0')}`,
           border: `1px solid ${fallbackVar(menuColorVars.list.border, 'transparent')}`,
           borderRadius: radiusVars.sm,
         },
