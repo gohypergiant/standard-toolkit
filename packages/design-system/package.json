@@ -35,7 +35,7 @@
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-system --barrels",
     "lint:todo": "pnpm biome lint ./",
     "preview": "pnpm ladle serve",
-    "test": "pnpm vitest --run --dir src"
+    "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
