@@ -1,5 +1,16 @@
 # @accelint/design-system
 
+## 0.3.0
+
+### Minor Changes
+
+- 79752fa: Adds TextField and NumberField components to the design system
+
+### Patch Changes
+
+- 3dfc12a: Replaced Rollup with TSup for bundling
+  - @accelint/converters@0.1.3
+
 ## 0.2.1
 
 ### Patch Changes
