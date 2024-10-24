@@ -9,6 +9,7 @@ import type { GroupClassNames } from '../../components/group/types';
 import type { IconClassNames } from '../../components/icon/types';
 import type { InputClassNames } from '../../components/input/types';
 import type { MenuClassNames } from '../../components/menu/types';
+import type { NumberFieldClassNames } from '../../components/number-field/types';
 import type { OptionsClassNames } from '../../components/options/types';
 import type { PickerClassNames } from '../../components/picker/types';
 import type { PopoverClassNames } from '../../components/popover/types';
@@ -18,6 +19,7 @@ import type { SearchFieldClassNames } from '../../components/search-field/types'
 import type { SelectClassNames } from '../../components/select/types';
 import type { SwitchClassNames } from '../../components/switch/types';
 import type { TabsClassNames } from '../../components/tabs/types';
+import type { TextFieldClassNames } from '../../components/text-field/types';
 import type { TextAreaClassNames } from '../../components/textarea/types';
 import type { TooltipClassNames } from '../../components/tooltip/types';
 import type { TreeClassNames } from '../../components/tree/types';
@@ -43,8 +45,9 @@ export type ThemeContext = {
   Group?: GroupClassNames;
   Icon?: IconClassNames;
   Input?: InputClassNames;
-  Options?: OptionsClassNames;
   Menu?: MenuClassNames;
+  NumberField?: NumberFieldClassNames;
+  Options?: OptionsClassNames;
   Picker?: PickerClassNames;
   Popover?: PopoverClassNames;
   QueryBuilder?: QueryBuilderClassNames;
@@ -54,6 +57,7 @@ export type ThemeContext = {
   Switch?: SwitchClassNames;
   Tabs?: TabsClassNames;
   TextArea?: TextAreaClassNames;
+  TextField?: TextFieldClassNames;
   Tooltip?: TooltipClassNames;
   Tree?: TreeClassNames;
 };

@@ -24,7 +24,7 @@
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/math",
     "lint": "pnpm biome lint ./",
-    "test": "pnpm vitest --run --dir src"
+    "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",

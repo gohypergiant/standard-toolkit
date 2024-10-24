@@ -5,16 +5,16 @@ export {
   buttonSpaceVars,
   buttonStateVars,
 } from './components/button/button.css';
-export {
-  type ButtonClassNames,
-  type ButtonColors,
-  type ButtonMapping,
-  type ButtonProps,
-  type ButtonRenderProps,
-  type ButtonSizes,
-  type ButtonState,
-  type LinkButtonProps,
-  type ToggleButtonProps,
+export type {
+  ButtonClassNames,
+  ButtonColors,
+  ButtonMapping,
+  ButtonProps,
+  ButtonRenderProps,
+  ButtonSizes,
+  ButtonState,
+  LinkButtonProps,
+  ToggleButtonProps,
 } from './components/button/types';
 export {
   checkboxClassNames,
@@ -24,15 +24,15 @@ export {
   checkboxSpaceVars,
   checkboxStateVars,
 } from './components/checkbox/checkbox.css';
-export {
-  type CheckboxAlignment,
-  type CheckboxClassNames,
-  type CheckboxGroupProps,
-  type CheckboxGroupRenderProps,
-  type CheckboxGroupState,
-  type CheckboxProps,
-  type CheckboxRenderProps,
-  type CheckboxState,
+export type {
+  CheckboxAlignment,
+  CheckboxClassNames,
+  CheckboxGroupProps,
+  CheckboxGroupRenderProps,
+  CheckboxGroupState,
+  CheckboxProps,
+  CheckboxRenderProps,
+  CheckboxState,
 } from './components/checkbox/types';
 export {
   chipClassNames,
@@ -41,17 +41,17 @@ export {
   chipSpaceVars,
   chipStateVars,
 } from './components/chip/chip.css';
-export {
-  type ChipClassNames,
-  type ChipColors,
-  type ChipGroupProps,
-  type ChipItemProps,
-  type ChipListProps,
-  type ChipMapping,
-  type ChipProps,
-  type ChipRenderProps,
-  type ChipSizes,
-  type ChipState,
+export type {
+  ChipClassNames,
+  ChipColors,
+  ChipGroupProps,
+  ChipItemProps,
+  ChipListProps,
+  ChipMapping,
+  ChipProps,
+  ChipRenderProps,
+  ChipSizes,
+  ChipState,
 } from './components/chip/types';
 export {
   comboBoxColorVars,
@@ -59,13 +59,13 @@ export {
   comboBoxSpaceVars,
   comboBoxStateVars,
 } from './components/combo-box/combo-box.css';
-export {
-  type ComboBoxClassNames,
-  type ComboBoxMapping,
-  type ComboBoxProps,
-  type ComboBoxRenderProps,
-  type ComboBoxSizes,
-  type ComboBoxState,
+export type {
+  ComboBoxClassNames,
+  ComboBoxMapping,
+  ComboBoxProps,
+  ComboBoxRenderProps,
+  ComboBoxSizes,
+  ComboBoxState,
 } from './components/combo-box/types';
 export {
   dialogClassNames,
@@ -74,13 +74,13 @@ export {
   dialogSpaceVars,
   dialogStateVars,
 } from './components/dialog/dialog.css';
-export {
-  type DialogClassNames,
-  type DialogMapping,
-  type DialogProps,
-  type DialogRenderProps,
-  type DialogSizes,
-  type DialogState,
+export type {
+  DialogClassNames,
+  DialogMapping,
+  DialogProps,
+  DialogRenderProps,
+  DialogSizes,
+  DialogState,
 } from './components/dialog/types';
 export {
   drawerAnimationVars,
@@ -91,18 +91,18 @@ export {
   drawerSpaceVars,
   drawerStateVars,
 } from './components/drawer/drawer.css';
-export {
-  type DrawerAnchor,
-  type DrawerClassNames,
-  type DrawerDialogProps,
-  type DrawerDialogState,
-  type DrawerMapping,
-  type DrawerProps,
-  type DrawerRenderProps,
-  type DrawerState,
-  type DrawerTabListProps,
-  type DrawerTabProps,
-  type DrawerTabRenderProps,
+export type {
+  DrawerAnchor,
+  DrawerClassNames,
+  DrawerDialogProps,
+  DrawerDialogState,
+  DrawerMapping,
+  DrawerProps,
+  DrawerRenderProps,
+  DrawerState,
+  DrawerTabListProps,
+  DrawerTabProps,
+  DrawerTabRenderProps,
 } from './components/drawer/types';
 export {
   groupClassNames,
@@ -110,10 +110,10 @@ export {
   groupSpaceVars,
   groupStateVars,
 } from './components/group/group.css';
-export {
-  type GroupClassNames,
-  type GroupProps,
-  type GroupState,
+export type {
+  GroupClassNames,
+  GroupProps,
+  GroupState,
 } from './components/group/types';
 export {
   iconClassNames,
@@ -122,11 +122,11 @@ export {
   iconSpaceVars,
   iconStateVars,
 } from './components/icon/icon.css';
-export {
-  type IconClassNames,
-  type IconProps,
-  type IconSizes,
-  type IconState,
+export type {
+  IconClassNames,
+  IconProps,
+  IconSizes,
+  IconState,
 } from './components/icon/types';
 export {
   inputClassNames,
@@ -135,13 +135,13 @@ export {
   inputSpaceVars,
   inputStateVars,
 } from './components/input/input.css';
-export {
-  type InputClassNames,
-  type InputMapping,
-  type InputProps,
-  type InputRenderProps,
-  type InputState,
-  type InputType,
+export type {
+  InputClassNames,
+  InputMapping,
+  InputProps,
+  InputRenderProps,
+  InputState,
+  InputType,
 } from './components/input/types';
 export {
   menuColorVars,
@@ -149,17 +149,31 @@ export {
   menuSpaceVars,
   menuStateVars,
 } from './components/menu/menu.css';
-export {
-  type MenuClassNames,
-  type MenuItemProps,
-  type MenuItemRenderProps,
-  type MenuItemState,
-  type MenuListProps,
-  type MenuMapping,
-  type MenuProps,
-  type MenuSizes,
-  type MenuState,
+export type {
+  MenuClassNames,
+  MenuItemProps,
+  MenuItemRenderProps,
+  MenuItemState,
+  MenuListProps,
+  MenuMapping,
+  MenuProps,
+  MenuSizes,
+  MenuState,
 } from './components/menu/types';
+export {
+  numberFieldClassNames,
+  numberFieldColorVars,
+  numberFieldContainer,
+  numberFieldSpaceVars,
+  numberFieldStateVars,
+} from './components/number-field/number-field.css';
+export type {
+  NumberFieldClassNames,
+  NumberFieldProps,
+  NumberFieldMapping,
+  NumberFieldSizes,
+  NumberFieldState,
+} from './components/number-field/types';
 export {
   optionsClassNames,
   optionsColorVars,
@@ -169,16 +183,16 @@ export {
   optionsSpaceVars,
   optionsStateVars,
 } from './components/options/options.css';
-export {
-  type OptionsClassNames,
-  type OptionsItemProps,
-  type OptionsItemState,
-  type OptionsListProps,
-  type OptionsListState,
-  type OptionsMapping,
-  type OptionsProps,
-  type OptionsSizes,
-  type OptionsState,
+export type {
+  OptionsClassNames,
+  OptionsItemProps,
+  OptionsItemState,
+  OptionsListProps,
+  OptionsListState,
+  OptionsMapping,
+  OptionsProps,
+  OptionsSizes,
+  OptionsState,
 } from './components/options/types';
 export {
   pickerClassNames,
@@ -188,13 +202,13 @@ export {
   pickerSpaceVars,
   pickerStateVars,
 } from './components/picker/picker.css';
-export {
-  type PickerClassNames,
-  type PickerItemProps,
-  type PickerItemRenderProps,
-  type PickerItemState,
-  type PickerProps,
-  type PickerState,
+export type {
+  PickerClassNames,
+  PickerItemProps,
+  PickerItemRenderProps,
+  PickerItemState,
+  PickerProps,
+  PickerState,
 } from './components/picker/types';
 export {
   popoverClassNames,
@@ -202,10 +216,10 @@ export {
   popoverSpaceVars,
   popoverStateVars,
 } from './components/popover/popover.css';
-export {
-  type PopoverClassNames,
-  type PopoverProps,
-  type PopoverState,
+export type {
+  PopoverClassNames,
+  PopoverProps,
+  PopoverState,
 } from './components/popover/types';
 export {
   queryBuilderClassNames,
@@ -216,16 +230,16 @@ export {
   queryBuilderSpaceVars,
   queryBuilderStateVars,
 } from './components/query-builder/query-builder.css';
-export {
-  type QueryBuilderClassNames,
-  type QueryBuilderContextValue,
-  type QueryBuilderGroupState,
-  type QueryBuilderMapping,
-  type QueryBuilderProps,
-  type QueryBuilderRuleState,
-  type QueryBuilderSizes,
-  type QueryBuilderState,
-  type QueryBuilderValueEditors,
+export type {
+  QueryBuilderClassNames,
+  QueryBuilderContextValue,
+  QueryBuilderGroupState,
+  QueryBuilderMapping,
+  QueryBuilderProps,
+  QueryBuilderRuleState,
+  QueryBuilderSizes,
+  QueryBuilderState,
+  QueryBuilderValueEditors,
 } from './components/query-builder/types';
 export {
   radioClassNames,
@@ -234,13 +248,13 @@ export {
   radioSpaceVars,
   radioStateVars,
 } from './components/radio/radio.css';
-export {
-  type RadioAlignment,
-  type RadioClassNames,
-  type RadioGroupProps,
-  type RadioGroupState,
-  type RadioProps,
-  type RadioState,
+export type {
+  RadioAlignment,
+  RadioClassNames,
+  RadioGroupProps,
+  RadioGroupState,
+  RadioProps,
+  RadioState,
 } from './components/radio/types';
 export {
   searchFieldClassNames,
@@ -248,12 +262,12 @@ export {
   searchFieldSpaceVars,
   searchFieldStateVars,
 } from './components/search-field/search-field.css';
-export {
-  type SearchFieldClassNames,
-  type SearchFieldMapping,
-  type SearchFieldProps,
-  type SearchFieldRenderProps,
-  type SearchFieldState,
+export type {
+  SearchFieldClassNames,
+  SearchFieldMapping,
+  SearchFieldProps,
+  SearchFieldRenderProps,
+  SearchFieldState,
 } from './components/search-field/types';
 export {
   selectClassNames,
@@ -262,12 +276,12 @@ export {
   selectSpaceVars,
   selectStateVars,
 } from './components/select/select.css';
-export {
-  type SelectClassNames,
-  type SelectMapping,
-  type SelectProps,
-  type SelectRenderProps,
-  type SelectState,
+export type {
+  SelectClassNames,
+  SelectMapping,
+  SelectProps,
+  SelectRenderProps,
+  SelectState,
 } from './components/select/types';
 export {
   switchClassNames,
@@ -276,12 +290,12 @@ export {
   switchSpaceVars,
   switchStateVars,
 } from './components/switch/switch.css';
-export {
-  type SwitchAlignment,
-  type SwitchClassNames,
-  type SwitchProps,
-  type SwitchRenderProps,
-  type SwitchState,
+export type {
+  SwitchAlignment,
+  SwitchClassNames,
+  SwitchProps,
+  SwitchRenderProps,
+  SwitchState,
 } from './components/switch/types';
 export {
   tabColorVars,
@@ -293,22 +307,22 @@ export {
   tabsClassNames,
   tabsContainers,
 } from './components/tabs/tabs.css';
-export {
-  type TabListAlignment,
-  type TabListAnchor,
-  type TabListProps,
-  type TabListState,
-  type TabListVariants,
-  type TabPanelProps,
-  type TabPanelRenderProps,
-  type TabPanelState,
-  type TabPanelsProps,
-  type TabPanelsState,
-  type TabProps,
-  type TabRenderProps,
-  type TabState,
-  type TabsClassNames,
-  type TabsProps,
+export type {
+  TabListAlignment,
+  TabListAnchor,
+  TabListProps,
+  TabListState,
+  TabListVariants,
+  TabPanelProps,
+  TabPanelRenderProps,
+  TabPanelState,
+  TabPanelsProps,
+  TabPanelsState,
+  TabProps,
+  TabRenderProps,
+  TabState,
+  TabsClassNames,
+  TabsProps,
 } from './components/tabs/types';
 export {
   textAreaClassNames,
@@ -317,12 +331,26 @@ export {
   textAreaSpaceVars,
   textAreaStateVars,
 } from './components/textarea/textarea.css';
-export {
-  type TextAreaClassNames,
-  type TextAreaProps,
-  type TextAreaRenderProps,
-  type TextAreaState,
+export type {
+  TextAreaClassNames,
+  TextAreaProps,
+  TextAreaRenderProps,
+  TextAreaState,
 } from './components/textarea/types';
+export {
+  textFieldClassNames,
+  textFieldColorVars,
+  textFieldContainer,
+  textFieldSpaceVars,
+  textFieldStateVars,
+} from './components/text-field/text-field.css';
+export type {
+  TextFieldClassNames,
+  TextFieldProps,
+  TextFieldMapping,
+  TextFieldSizes,
+  TextFieldState,
+} from './components/text-field/types';
 export {
   tooltipClassNames,
   tooltipContainers,
@@ -330,14 +358,14 @@ export {
   tooltipStateVars,
   tooltipTargetStateVars,
 } from './components/tooltip/tooltip.css';
-export {
-  type TooltipClassNames,
-  type TooltipMapping,
-  type TooltipProps,
-  type TooltipRenderProps,
-  type TooltipState,
-  type TooltipTargetProps,
-  type TooltipTargetState,
+export type {
+  TooltipClassNames,
+  TooltipMapping,
+  TooltipProps,
+  TooltipRenderProps,
+  TooltipState,
+  TooltipTargetProps,
+  TooltipTargetState,
 } from './components/tooltip/types';
 export {
   treeClassNames,
@@ -349,22 +377,22 @@ export {
   treeSpaceVars,
   treeStateVars,
 } from './components/tree/tree.css';
-export {
-  type TreeClassNames,
-  type TreeGroupProps,
-  type TreeGroupRenderProps,
-  type TreeGroupState,
-  type TreeIndicatorRenderProps,
-  type TreeIndicatorState,
-  type TreeItemProps,
-  type TreeItemRenderProps,
-  type TreeItemState,
-  type TreeMapping,
-  type TreeProps,
-  type TreeRenderProps,
-  type TreeSizes,
-  type TreeState,
-  type TreeStateContextValue,
+export type {
+  TreeClassNames,
+  TreeGroupProps,
+  TreeGroupRenderProps,
+  TreeGroupState,
+  TreeIndicatorRenderProps,
+  TreeIndicatorState,
+  TreeItemProps,
+  TreeItemRenderProps,
+  TreeItemState,
+  TreeMapping,
+  TreeProps,
+  TreeRenderProps,
+  TreeSizes,
+  TreeState,
+  TreeStateContextValue,
 } from './components/tree/types';
 export {
   bodies,

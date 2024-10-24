@@ -59,6 +59,7 @@ export const inputClassNames: InputClassNames = {
         minWidth: fallbackVar(inputSpaceVars.minWidth, 'auto'),
         width: fallbackVar(inputSpaceVars.width, '100%'),
         maxWidth: fallbackVar(inputSpaceVars.maxWidth, '100%'),
+        fontFamily: typographyVars.mono,
       },
     },
   }),
