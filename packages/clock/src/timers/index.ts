@@ -13,15 +13,21 @@ export function setClockInterval(cb: () => void, ms: number) {
   }
 
   callNextSecond(repeat);
+
+  return timeout;
 }
 
 /**
  *
  */
 export function setClockTimeout(cb: () => void, ms: number) {
+  let timeout: number | undefined;
+
   function execute() {
-    setTimeout(cb, ms);
+    timeout = setTimeout(cb, ms);
   }
 
   callNextSecond(execute);
+
+  return timeout;
 }
