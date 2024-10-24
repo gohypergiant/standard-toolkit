@@ -1,6 +1,6 @@
 # Working on the Project
 
-Better the be explicit/specific on topics than to wait for avoidable confusion due to ambiguity.
+Better to be explicit/specific on topics than to wait for avoidable confusion due to ambiguity.
 
 ## Principles
 
