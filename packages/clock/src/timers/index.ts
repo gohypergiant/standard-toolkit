@@ -14,7 +14,7 @@ export function setClockInterval(cb: () => void, ms: number) {
 
   callNextSecond(repeat);
 
-  return timeout;
+  return () => timeout;
 }
 
 /**
@@ -29,5 +29,5 @@ export function setClockTimeout(cb: () => void, ms: number) {
 
   callNextSecond(execute);
 
-  return timeout;
+  return () => timeout;
 }

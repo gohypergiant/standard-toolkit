@@ -14,8 +14,7 @@ describe('timers', () => {
 
   it('setClockInterval', () => {
     const callback = vi.fn();
-
-    setClockInterval(callback, ms);
+    const cleanup = setClockInterval(callback, ms);
 
     // Tick to next second
     vi.advanceTimersByTime(ms);
@@ -23,12 +22,12 @@ describe('timers', () => {
     vi.advanceTimersByTime(ms);
 
     expect(callback).toHaveBeenCalled();
+    expect(cleanup()).toBeDefined();
   });
 
   it('setClockTimeout', () => {
     const callback = vi.fn();
-
-    setClockTimeout(callback, ms);
+    const cleanup = setClockTimeout(callback, ms);
 
     // Tick to next second
     vi.advanceTimersByTime(ms);
@@ -36,5 +35,6 @@ describe('timers', () => {
     vi.advanceTimersByTime(ms);
 
     expect(callback).toHaveBeenCalled();
+    expect(cleanup()).toBeDefined();
   });
 });
