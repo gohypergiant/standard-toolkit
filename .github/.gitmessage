@@ -1,0 +1,20 @@
+# Title: Summary, imperative, start upper case, don't end with a period
+# No more than 50
+Replace this title line with an appropriate title
+# _______________ 50  characters _______________ #
+# Pick one (below) and use it (remove "#") and change: feat/fix, scope, description
+# feat: description
+# feat[scope]: description
+# fix: description
+# fix[scope]: description
+# _______________ 50  characters _______________ #
+# BLANK LINE BELOW
+
+# Wrap at 72 chars. ################################## which is here:  #
+# Body: Explain *what* and *why* (not *how*).
+# __________________________ 72  characters __________________________ #
+# BLANK LINE BELOW
+
+# Pick one (below) and use it (remove "#") and change: number
+# closes #number
+# fixes #number
