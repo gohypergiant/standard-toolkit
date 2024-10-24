@@ -19,7 +19,7 @@ Better the be explicit/specific on topics than to wait for avoidable confusion d
 
 1. Pick a task from the issues/project
     - Ask the team if anyone is working on the task
-    - Assign yourself to the taks
+    - Assign yourself to the task
 2. Create a branch off of the target receiving branch (i.e. `main`)
     - `feat/#-___` - for feature work
     - `fix/#-___` - for hotfix work
