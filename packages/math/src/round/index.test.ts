@@ -13,22 +13,41 @@
 import { describe, it, expect } from 'vitest';
 import { round } from './';
 
-const value = 1.2345;
-
 describe('round', () => {
-  it('rounds to precision', () => {
-    const a = round(1, value);
-    const b = round(2, value);
-    const c = round(3, value);
-    const d = round(4, value);
+  describe('positive rounding; decimal position', () => {
+    const value = 1.2345;
 
-    expect(a).toEqual(1.2);
-    expect(b).toEqual(1.23);
-    expect(c).toEqual(1.235);
-    expect(d).toEqual(1.2345);
+    it.each`
+      precision | expected
+      ${1}      | ${1.2}
+      ${2}      | ${1.23}
+      ${3}      | ${1.235}
+      ${4}      | ${1.2345}
+      ${5}      | ${1.2345}
+      ${0}      | ${1}
+      ${-1}     | ${0}
+    `('rounds to precision', ({ expected, precision }) => {
+      expect(round(precision, value)).toEqual(expected);
+    });
+  });
+
+  describe('negative rounding; rounding from right to left truncating all decimal value', () => {
+    const value = 12345.6789;
+
+    it.each`
+      precision | expected
+      ${0}      | ${12346}
+      ${-1}     | ${12350}
+      ${-2}     | ${12300}
+      ${-3}     | ${12000}
+      ${-4}     | ${10000}
+      ${-5}     | ${0}
+    `('rounds to precision', ({ expected, precision }) => {
+      expect(round(precision, value)).toEqual(expected);
+    });
   });
 
   it('throws if precision is not integer', () => {
-    expect(() => round(1.1, 1)).toThrow(Error);
+    expect(() => round(1.1, 1)).toThrow('Precision must be an integer.');
   });
 });
