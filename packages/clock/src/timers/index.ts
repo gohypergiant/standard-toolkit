@@ -1,7 +1,11 @@
 import { callNextSecond } from './utils';
 
 /**
+ * Works the same way as setInterval but will wait to fire until next clock second.
  *
+ * @example
+ * const cleanup = setClockInterval(() => console.log('hi'), 250);
+ * // will log hi every 250ms starting on next clock second
  */
 export function setClockInterval(cb: () => void, ms: number) {
   let timeout: number | undefined;
@@ -18,7 +22,11 @@ export function setClockInterval(cb: () => void, ms: number) {
 }
 
 /**
+ * Works the same way as setTimeout but will wait to fire until next clock second.
  *
+ * @example
+ * const cleanup = setClockTimeout(() => console.log('hi'), 250);
+ * // will log hi after 250ms starting on next clock second
  */
 export function setClockTimeout(cb: () => void, ms: number) {
   let timeout: number | undefined;
