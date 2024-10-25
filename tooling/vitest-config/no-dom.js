@@ -16,6 +16,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
+    watch: false,
     coverage: {
       provider: 'istanbul',
       reporter: ['json', 'lcov'],
