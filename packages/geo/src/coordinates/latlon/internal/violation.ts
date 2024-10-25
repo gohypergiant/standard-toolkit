@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,15 +11,4 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * TODOs:
- *
- * - Auto detect lon/lat ordering?
- *  - Some tricks we can
- *    - Regex for NS as first few chars
- *    - Regex for 3 digits
- *    - Regex for first digit > 90
- */
-
-export { matchDD, matchDMS } from './match';
-export { normalizeDecimalDegree } from './normalize';
+export const violation = (s: string) => `[ERROR] ${s}`;

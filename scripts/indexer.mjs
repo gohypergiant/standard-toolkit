@@ -103,7 +103,8 @@ async function codeFileExports(filePath) {
   const codeNames = codeExports
     .flatMap((node) =>
       node.declaration?.type === 'TSEnumDeclaration' ||
-      node.declaration?.type === 'FunctionDeclaration'
+      node.declaration?.type === 'FunctionDeclaration' ||
+      node.declaration?.type === 'ClassDeclaration'
         ? [node.declaration?.id.name]
         : node.declaration?.declarations?.map((dec) => dec.id.name),
     )
