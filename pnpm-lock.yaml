@@ -134,6 +134,9 @@ importers:
       '@accelint/converters':
         specifier: workspace:*
         version: link:../converters
+      '@internationalized/date':
+        specifier: ^3.5.6
+        version: 3.5.6
       '@react-aria/collections':
         specifier: 3.0.0-alpha.5
         version: 3.0.0-alpha.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

@@ -1,4 +1,7 @@
 import type { PropsWithChildren } from 'react';
+import type { TimeValue } from 'react-aria';
+import type { DateValue } from 'react-aria-components';
+import type { DateFieldProps, TimeFieldProps } from '../../components';
 import type {
   ButtonProps,
   LinkButtonProps,
@@ -10,6 +13,7 @@ import type {
 } from '../../components/checkbox/types';
 import type { ChipGroupProps, ChipProps } from '../../components/chip/types';
 import type { ComboBoxProps } from '../../components/combo-box/types';
+import type { DateInputProps } from '../../components/date-input/types';
 import type { DialogProps } from '../../components/dialog/types';
 import type {
   DrawerProps,
@@ -63,6 +67,8 @@ export type DefaultsContext = DefaultsOf<{
   Chip: ChipProps;
   ChipGroup: ChipGroupProps;
   ComboBox: ComboBoxProps<object>;
+  DateField: DateFieldProps<DateValue>;
+  DateInput: DateInputProps;
   Dialog: DialogProps;
   Drawer: DrawerProps;
   DrawerTab: DrawerTabProps;
@@ -91,6 +97,7 @@ export type DefaultsContext = DefaultsOf<{
   Tabs: TabsProps;
   TextArea: TextAreaProps;
   TextField: TextFieldProps;
+  TimeField: TimeFieldProps<TimeValue>;
   ToggleButton: ToggleButtonProps;
   Tooltip: TooltipProps;
   TooltipTarget: TooltipTargetProps;

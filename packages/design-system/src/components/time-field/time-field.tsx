@@ -11,24 +11,26 @@ import {
   LabelContext,
   type LabelProps,
   Provider,
-  TextField as RACTextField,
-  type TextFieldRenderProps,
+  TimeField as RACTimeField,
   type TextProps,
 } from 'react-aria-components';
+import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import {
   AriaFieldErrorContext,
   type AriaLabelContext,
   AriaTextContext,
-  InputContext,
-  type InputProps,
-} from '../../components';
+} from '../aria';
+import type { TimeFieldProps, TimeFieldRenderProps } from './types';
+
+import type { TimeValue } from 'react-aria';
 import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { bodies } from '../../styles';
-import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
-import { textFieldClassNames, textFieldStateVars } from './text-field.css';
-import type { TextFieldMapping, TextFieldProps } from './types';
+import type { DateFieldRenderProps } from '../date-field';
+import { DateInputContext } from '../date-input/date-input';
+import type { DateInputProps } from '../date-input/types';
+import { timeFieldClassNames, timeFieldStateVars } from './time-field.css';
 
-const defaultMapping: TextFieldMapping = {
+const defaultMapping = {
   description: {
     sm: bodies.xs,
     lg: bodies.xs,
@@ -41,22 +43,22 @@ const defaultMapping: TextFieldMapping = {
 
 const defaultSize = 'lg';
 
-export const TextFieldContext =
-  createContext<ContextValue<TextFieldProps, HTMLDivElement>>(null);
+export const TimeFieldContext =
+  createContext<ContextValue<TimeFieldProps<TimeValue>, HTMLDivElement>>(null);
 
-export const TextField = forwardRef(function TextField(
-  props: TextFieldProps,
+export const TimeField = forwardRef(function TimeField<T extends TimeValue>(
+  props: TimeFieldProps<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TextFieldContext);
-
-  props = useDefaultProps(props, 'TextField');
+  [props, ref] = useContextProps(props, ref, TimeFieldContext);
+  props = useDefaultProps(props, 'TimeField'); // TODO
 
   const {
     children: childrenProp,
     classNames: classNamesProp,
     mapping: mappingProp,
     size = defaultSize,
+    value,
     ...rest
   } = props;
 
@@ -72,24 +74,25 @@ export const TextField = forwardRef(function TextField(
 
   const classNames = useMemo(
     () =>
-      mergeClassNames(textFieldClassNames, theme.TextField, classNamesProp, {
+      mergeClassNames(timeFieldClassNames, theme.TimeField, classNamesProp, {
         description: mapping.description[size],
         error: mapping.error[size],
       }),
-    [theme.TextField, classNamesProp, mapping, size],
+    [theme.TimeField, classNamesProp, mapping, size],
   );
 
   const style = useCallback(
-    (renderProps: TextFieldRenderProps) =>
-      inlineVars(textFieldStateVars, {
+    (renderProps: DateFieldRenderProps) =>
+      inlineVars(timeFieldStateVars, {
         ...renderProps,
         size,
       }),
     [size],
   );
+
   const values = useMemo<
     [
-      [typeof InputContext, ContextValue<InputProps, HTMLInputElement>],
+      [typeof DateInputContext, ContextValue<DateInputProps, HTMLDivElement>],
       [typeof AriaLabelContext, ContextValue<LabelProps, HTMLLabelElement>],
       [typeof AriaTextContext, ContextValue<TextProps, HTMLElement>],
       [
@@ -99,7 +102,7 @@ export const TextField = forwardRef(function TextField(
     ]
   >(
     () => [
-      [InputContext, { classNames: classNames?.input, size }],
+      [DateInputContext, { classNames: classNames?.dateInput }],
       [LabelContext, { className: classNames?.label }],
       [
         AriaTextContext,
@@ -111,30 +114,34 @@ export const TextField = forwardRef(function TextField(
       ],
       [AriaFieldErrorContext, { className: classNames?.error }],
     ],
-    [classNames, size],
+    [classNames],
   );
 
   const children = useCallback(
-    (renderProps: TextFieldRenderProps) => (
-      <Provider values={values}>
-        <div className={classNames?.textField}>
-          {callRenderProps(childrenProp, {
-            ...renderProps,
-            defaultChildren: null,
-          })}
-        </div>
-      </Provider>
-    ),
-    [childrenProp, classNames?.textField, values],
+    (renderProps: TimeFieldRenderProps) => {
+      return (
+        <Provider values={values}>
+          <div className={classNames?.timeField}>
+            {callRenderProps(childrenProp, {
+              ...renderProps,
+              defaultChildren: null,
+            })}
+          </div>
+        </Provider>
+      );
+    },
+    [childrenProp, values, classNames],
   );
+
   return (
-    <RACTextField
+    <RACTimeField
       {...rest}
       ref={ref}
       className={classNames?.container}
       style={style}
+      value={value}
     >
       {children}
-    </RACTextField>
+    </RACTimeField>
   );
 });

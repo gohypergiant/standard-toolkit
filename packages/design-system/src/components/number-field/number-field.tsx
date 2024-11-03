@@ -54,6 +54,8 @@ const defaultMapping: NumberFieldMapping = {
   },
 };
 
+const defaultSize = 'lg';
+
 export const NumberFieldContext =
   createContext<ContextValue<NumberFieldProps, HTMLDivElement>>(null);
 
@@ -69,7 +71,7 @@ export const NumberField = forwardRef(function NumberField(
     children: childrenProp,
     classNames: classNamesProp,
     mapping: mappingProp,
-    size = 'lg',
+    size = defaultSize,
     ...rest
   } = props;
 

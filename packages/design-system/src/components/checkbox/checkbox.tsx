@@ -1,17 +1,17 @@
 import {
+  type ForwardedRef,
   createContext,
   forwardRef,
   useCallback,
   useMemo,
-  type ForwardedRef,
 } from 'react';
 import {
+  type ContextValue,
+  type LabelProps,
   Provider,
   Checkbox as RACCheckbox,
   CheckboxGroup as RACCheckboxGroup,
   TextContext,
-  type ContextValue,
-  type LabelProps,
   type TextProps,
 } from 'react-aria-components';
 import {
@@ -62,7 +62,7 @@ export const Checkbox = forwardRef(function Checkbox(
   );
 
   const style = useCallback(
-    ({ ...renderProps }: CheckboxRenderProps) =>
+    (renderProps: CheckboxRenderProps) =>
       inlineVars(checkboxStateVars, {
         ...renderProps,
         alignInput,

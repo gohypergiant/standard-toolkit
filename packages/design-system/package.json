@@ -65,6 +65,7 @@
   },
   "dependencies": {
     "@accelint/converters": "workspace:*",
+    "@internationalized/date": "^3.5.6",
     "@react-aria/collections": "3.0.0-alpha.5",
     "@react-aria/ssr": "^3.9.6",
     "@react-aria/utils": "^3.25.3",

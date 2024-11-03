@@ -1,11 +1,13 @@
 import {
+  type ForwardedRef,
+  type ReactNode,
+  type RefAttributes,
   createContext,
   forwardRef,
-  type ForwardedRef,
-  type RefAttributes,
-  type ReactNode,
 } from 'react';
 import {
+  type ContextValue,
+  DateInput,
   FieldError,
   Group,
   Header,
@@ -13,12 +15,11 @@ import {
   Keyboard,
   Label,
   Section,
+  type SectionProps,
   SelectValue,
+  type SelectValueProps,
   Separator,
   Text,
-  type ContextValue,
-  type SectionProps,
-  type SelectValueProps,
 } from 'react-aria-components';
 import { useContextProps } from '../../hooks';
 
@@ -43,6 +44,9 @@ function wrap<P extends object, E extends HTMLElement>(
     Context,
   };
 }
+
+export const { Component: AriaDateInput, Context: AriaDateInputContext } =
+  wrap(DateInput);
 
 export const { Component: AriaFieldError, Context: AriaFieldErrorContext } =
   wrap(FieldError);

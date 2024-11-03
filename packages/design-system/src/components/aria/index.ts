@@ -1,5 +1,7 @@
 // __private-exports
 export {
+  AriaDateInput,
+  AriaDateInputContext,
   AriaFieldError,
   AriaFieldErrorContext,
   AriaGroup,

@@ -3,6 +3,7 @@ import type { ButtonClassNames } from '../../components/button/types';
 import type { CheckboxClassNames } from '../../components/checkbox/types';
 import type { ChipClassNames } from '../../components/chip/types';
 import type { ComboBoxClassNames } from '../../components/combo-box/types';
+import type { DateFieldClassNames } from '../../components/date-field';
 import type { DialogClassNames } from '../../components/dialog/types';
 import type { DrawerClassNames } from '../../components/drawer/types';
 import type { GroupClassNames } from '../../components/group/types';
@@ -21,6 +22,7 @@ import type { SwitchClassNames } from '../../components/switch/types';
 import type { TabsClassNames } from '../../components/tabs/types';
 import type { TextFieldClassNames } from '../../components/text-field/types';
 import type { TextAreaClassNames } from '../../components/textarea/types';
+import type { TimeFieldClassNames } from '../../components/time-field';
 import type { TooltipClassNames } from '../../components/tooltip/types';
 import type { TreeClassNames } from '../../components/tree/types';
 
@@ -40,6 +42,7 @@ export type ThemeContext = {
   Checkbox?: CheckboxClassNames;
   Chip?: ChipClassNames;
   ComboBox?: ComboBoxClassNames;
+  DateField?: DateFieldClassNames;
   Dialog?: DialogClassNames;
   Drawer?: DrawerClassNames;
   Group?: GroupClassNames;
@@ -58,6 +61,7 @@ export type ThemeContext = {
   Tabs?: TabsClassNames;
   TextArea?: TextAreaClassNames;
   TextField?: TextFieldClassNames;
+  TimeField?: TimeFieldClassNames;
   Tooltip?: TooltipClassNames;
   Tree?: TreeClassNames;
 };

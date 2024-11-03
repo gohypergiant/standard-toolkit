@@ -12,6 +12,7 @@ import {
   Checkbox,
   Chip,
   ComboBox,
+  DateField,
   Dialog,
   Drawer,
   Group,
@@ -30,6 +31,7 @@ import {
   Tabs,
   TextArea,
   TextField,
+  TimeField,
   Tooltip,
   Tree,
 } from './theme';
@@ -62,6 +64,7 @@ export const theme: ThemeContext = {
   Checkbox,
   Chip,
   ComboBox,
+  DateField,
   Dialog,
   Drawer,
   Group,
@@ -80,6 +83,7 @@ export const theme: ThemeContext = {
   Tabs,
   TextArea,
   TextField,
+  TimeField,
   Tooltip,
   Tree,
 };
