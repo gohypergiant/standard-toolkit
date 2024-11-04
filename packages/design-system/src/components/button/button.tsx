@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { noop } from 'lodash';
+import { noop } from '@accelint/core';
 import {
   createContext,
   forwardRef,

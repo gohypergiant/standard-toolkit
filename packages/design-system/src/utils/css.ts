@@ -1,5 +1,5 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic';
-import { kebabCase } from 'lodash';
+import kebabCase from 'lodash/kebabCase';
 import { layers } from '../styles';
 import type { GlobalStyleRule, StyleRule } from '@vanilla-extract/css';
 import type {

@@ -1,5 +1,5 @@
 import type { Story, StoryDefault } from '@ladle/react';
-import { startCase } from 'lodash';
+import startCase from 'lodash/startCase';
 import type { ReactNode } from 'react';
 import type { MapLeafNodes } from '../types';
 import {

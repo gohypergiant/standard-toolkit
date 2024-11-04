@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useCallback, useId, useMemo, useRef } from 'react';
 import { type Key, useTreeData } from 'react-stately';
 import { useUpdateEffect } from '../use-update-effect';
