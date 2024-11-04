@@ -435,6 +435,7 @@ export type {
   DefaultsContext,
   DefaultsProviderProps,
   ThemeContext,
+  ThemeProviderProps,
   ThemeVars,
 } from './hooks';
 export {

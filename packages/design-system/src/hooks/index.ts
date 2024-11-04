@@ -13,6 +13,7 @@ export {
   ThemeProvider,
   useTheme,
   type ThemeContext,
+  type ThemeProviderProps,
   type ThemeVars,
 } from './use-theme';
 export { useTree } from './use-tree';
