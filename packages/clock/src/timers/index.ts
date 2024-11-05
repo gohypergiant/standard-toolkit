@@ -1,4 +1,4 @@
-import { callNextSecond } from './utils';
+import { callNextSecond, remainder } from './utils';
 
 /**
  * Works the same way as setInterval but will wait to fire until next clock second.
@@ -13,12 +13,16 @@ export function setClockInterval(cb: () => void, ms: number) {
   function repeat() {
     cb();
     clearTimeout(timeout);
-    timeout = setTimeout(repeat, ms);
+
+    // Catch any potential drift and correct it for next setTimeout call
+    const adjustedMs = remainder(ms);
+
+    timeout = setTimeout(repeat, adjustedMs);
   }
 
   callNextSecond(repeat);
 
-  return () => timeout;
+  return () => clearTimeout(timeout);
 }
 
 /**
@@ -37,5 +41,5 @@ export function setClockTimeout(cb: () => void, ms: number) {
 
   callNextSecond(execute);
 
-  return () => timeout;
+  return () => clearTimeout(timeout);
 }

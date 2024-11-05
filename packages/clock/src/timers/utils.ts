@@ -2,7 +2,7 @@
 
 const SECOND = 1000;
 
-function remainder(interval: number) {
+export function remainder(interval: number) {
   return interval - (Date.now() % interval);
 }
 

@@ -22,7 +22,7 @@ describe('timers', () => {
     vi.advanceTimersByTime(ms);
 
     expect(callback).toHaveBeenCalled();
-    expect(cleanup()).toBeDefined();
+    expect(cleanup).toBeTypeOf('function');
   });
 
   it('setClockTimeout', () => {
@@ -35,6 +35,6 @@ describe('timers', () => {
     vi.advanceTimersByTime(ms);
 
     expect(callback).toHaveBeenCalled();
-    expect(cleanup()).toBeDefined();
+    expect(cleanup).toBeTypeOf('function');
   });
 });
