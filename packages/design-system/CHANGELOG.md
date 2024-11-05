@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.3.2
+
+### Patch Changes
+
+- c2ac31b: Fix lodash imports to not use named exports
+
 ## 0.3.1
 
 ### Patch Changes
