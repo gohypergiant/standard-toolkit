@@ -1,5 +1,5 @@
 ---
-"@accelint/clock": minor
+"@accelint/temporal": minor
 ---
 
-Initial release of @accelint/clock package.
+Initial release of @accelint/temporal package.

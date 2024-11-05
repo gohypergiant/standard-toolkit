@@ -1,5 +1,5 @@
 {
-  "name": "@accelint/clock",
+  "name": "@accelint/temporal",
   "version": "0.0.0",
   "private": false,
   "license": "Apache-2.0",
