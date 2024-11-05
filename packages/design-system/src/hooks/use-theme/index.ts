@@ -1,3 +1,7 @@
 // __private-exports
-export { type ThemeContext, type ThemeVars } from './types';
+export {
+  type ThemeContext,
+  type ThemeProviderProps,
+  type ThemeVars,
+} from './types';
 export { ThemeProvider, useTheme } from './use-theme';

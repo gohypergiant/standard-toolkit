@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import { noop } from '@accelint/core';
 import { createContext, useCallback, useContext, useMemo } from 'react';
 import { usePress, type Key } from 'react-aria';
 import {

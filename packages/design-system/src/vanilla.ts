@@ -394,6 +394,15 @@ export type {
   TreeState,
   TreeStateContextValue,
 } from './components/tree/types';
+export type {
+  DefaultsContext,
+  DefaultsProviderProps,
+} from './hooks/use-defaults/types';
+export type {
+  ThemeContext,
+  ThemeProviderProps,
+  ThemeVars,
+} from './hooks/use-theme/types';
 export {
   bodies,
   defaultElevationVarValues,

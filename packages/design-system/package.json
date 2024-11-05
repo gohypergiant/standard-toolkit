@@ -1,10 +1,12 @@
 {
   "name": "@accelint/design-system",
-  "version": "0.2.1",
+  "version": "0.3.2",
   "private": false,
   "license": "Apache-2.0",
   "type": "module",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -63,6 +65,7 @@
   },
   "dependencies": {
     "@accelint/converters": "workspace:*",
+    "@accelint/core": "workspace:*",
     "@react-aria/collections": "3.0.0-alpha.5",
     "@react-aria/ssr": "^3.9.6",
     "@react-aria/utils": "^3.25.3",

@@ -1,6 +1,6 @@
 import { toBoolean } from '@accelint/converters';
 import { useIsSSR } from '@react-aria/ssr';
-import { noop } from 'lodash';
+import { noop } from '@accelint/core';
 import {
   type ForwardedRef,
   type HTMLAttributes,
