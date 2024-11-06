@@ -25,6 +25,7 @@
     "indexer": "turbo index",
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
+    "lint:fs": "pnpm ls-lint",
     "test": "turbo test"
   },
   "dependencies": {

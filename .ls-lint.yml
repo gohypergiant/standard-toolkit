@@ -25,6 +25,8 @@ ignore:
   - __snapshots__
   - node_modules
   - build
+  - dist
+  - coverage
   - '**/*/.turbo'
   - '**/*/.ladle'
   - '**/*/__fixtures__'
@@ -33,3 +35,4 @@ ignore:
   - '**/*/coverage'
   - '**/*/dist'
   - '**/*/build'
+
