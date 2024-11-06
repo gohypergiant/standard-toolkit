@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from 'vitest';
-import { personStore, type Person } from './__fixture__/lens-objects';
+import { personStore, type Person } from './__fixtures__/lens-objects';
 import { property } from '../property';
 import { associateDeep } from '../associate';
 import { lens } from '.';

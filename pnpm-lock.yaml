@@ -24,8 +24,8 @@ importers:
         specifier: ^2.27.9
         version: 2.27.9
       '@ls-lint/ls-lint':
-        specifier: ^2.2.3
-        version: 2.2.3
+        specifier: 2.3.0-beta.1
+        version: 2.3.0-beta.1
       '@swc/core':
         specifier: ^1.7.36
         version: 1.7.39(@swc/helpers@0.5.13)
@@ -1081,8 +1081,9 @@ packages:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
 
-  '@ls-lint/ls-lint@2.2.3':
-    resolution: {integrity: sha512-ekM12jNm/7O2I/hsRv9HvYkRdfrHpiV1epVuI2NP+eTIcEgdIdKkKCs9KgQydu/8R5YXTov9aHdOgplmCHLupw==}
+  '@ls-lint/ls-lint@2.3.0-beta.1':
+    resolution: {integrity: sha512-NmujBNFslP4GhFsB92zh1evSSBadcg+RMsQ5FM70OrU36C3AbQYaVXDn4reC28GM6DFoOtiETRdKV6ie1TfP7g==}
+    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -5084,7 +5085,7 @@ snapshots:
       - terser
       - typescript
 
-  '@ls-lint/ls-lint@2.2.3': {}
+  '@ls-lint/ls-lint@2.3.0-beta.1': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:
