@@ -26,10 +26,10 @@ Additionally, while feature planning and execution are underway, if a component 
 This is the process for contribution:
 
 - First, make sure that there isn't already a component or a component on the roadmap to avoid duplicating efforts.
-- Create a JIRA ticket and schedule a review from a designer and a member of Core to ensure design consistency standards.
-- Once the requirements and the general design are settled, have fun! The Core team is available for questions or pairing.
+- Create an issue and schedule a review to ensure design consistency standards. Designers and a dev from the technical steering committee will review the proposal.
+- Once the requirements and the general design are settled, have fun! A TSC dev is available for questions or pairing.
 
-> **Note:** The MR will need review and approval by at least one Core team member in order to be merged.
+> **Note:** The PR will need review and approval by at least one TSC member in order to be merged.
 
 ### Component File Elements and Export/Import
 
@@ -78,10 +78,15 @@ For any specific components, contracts and styles that are essential for the cor
 
 For example, in the component we might define a property that references the color as defined in a contract, which will only have a concrete CSS var assigned to it when the application theme is initialized.
 
-```css
+```ts
 button: style(
-  {'@layer': {[layers.components.l1]: {color: buttonColorVars.color,
-  }}}
+  {
+    '@layer': {
+      [layers.components.l1]: {
+        color: buttonColorVars.color,
+      }
+    }
+  }
 );
 ```
 

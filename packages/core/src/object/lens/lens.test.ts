@@ -7,7 +7,7 @@ import {
   type Address,
   type Profile,
   type User,
-} from './__fixture__/lens-objects';
+} from './__fixtures__/lens-objects';
 import { property, optionalProperty } from '../property';
 import { associateDeep } from '../associate';
 import { lens, composeLens, get, set, lensProp, lensOptionalProp } from '.';

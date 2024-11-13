@@ -1,6 +1,7 @@
 import { noop } from '@accelint/core';
+import { usePress } from '@react-aria/interactions';
+import type { Key } from '@react-types/shared';
 import { createContext, useCallback, useContext, useMemo } from 'react';
-import { usePress, type Key } from 'react-aria';
 import {
   DEFAULT_SLOT,
   DropIndicator,
@@ -116,6 +117,13 @@ function defaultRenderEmptyState({ isDropTarget }: GridListRenderProps) {
   return isDropTarget ? 'Add to this group' : 'Nothing to see here';
 }
 
+/**
+ * By default Tree only works as an uncontrolled input. However, if you need to use the Tree
+ * as a controlled input (passing state changes to the "nodes" props), you will need to add a
+ * "key" prop that is a hash of the "nodes" prop to trigger a rerender of the component and
+ * abandon it's previous state. Unfortunately, the underlying hooks don't provide a good way
+ * to update the internal state of the Tree onces it's been initialized.
+ */
 export function Tree<T>(props: TreeProps<T>) {
   props = useDefaultProps(props as TreeProps<unknown>, 'Tree') as TreeProps<T>;
 

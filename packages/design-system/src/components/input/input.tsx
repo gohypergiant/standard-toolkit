@@ -1,4 +1,6 @@
 import { useControlledState } from '@react-stately/utils';
+import { useFocusRing } from '@react-aria/focus';
+import { useHover } from '@react-aria/interactions';
 import {
   type ChangeEvent,
   type ForwardedRef,
@@ -7,7 +9,6 @@ import {
   useCallback,
   useMemo,
 } from 'react';
-import { useFocusRing, useHover } from 'react-aria';
 import {
   type ContextValue,
   InputContext as RACInputContext,

@@ -1,8 +1,8 @@
+import type { OverlayTriggerState } from '@react-stately/overlays';
 import type {
   PopoverProps as RACPopoverProps,
   PopoverRenderProps as RACPopoverRenderProps,
 } from 'react-aria-components';
-import type { OverlayTriggerState } from 'react-stately';
 import type { PartialDeep } from 'type-fest';
 import type {
   AsType,

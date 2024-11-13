@@ -1,3 +1,5 @@
+import { useFocusRing } from '@react-aria/focus';
+import { useHover } from '@react-aria/interactions';
 import { useControlledState } from '@react-stately/utils';
 import {
   type FormEvent,
@@ -8,7 +10,6 @@ import {
   useCallback,
   useEffect,
 } from 'react';
-import { useFocusRing, useHover } from 'react-aria';
 import {
   type ContextValue,
   TextAreaContext as RACTextAreaContext,

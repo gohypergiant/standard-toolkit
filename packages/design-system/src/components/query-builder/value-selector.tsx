@@ -1,5 +1,5 @@
+import type { Key } from '@react-types/shared';
 import { useCallback, useContext, useMemo } from 'react';
-import type { Key } from 'react-aria';
 import type { Selection } from 'react-aria-components';
 import {
   type FullOption,

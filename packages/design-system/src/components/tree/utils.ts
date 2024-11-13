@@ -1,10 +1,10 @@
-import {
-  type DropItem,
-  type DropOperation,
-  type Key,
-  type TextDropItem,
-  isTextDropItem,
-} from 'react-aria';
+import type {
+  DropItem,
+  DropOperation,
+  Key,
+  TextDropItem,
+} from '@react-types/shared';
+import { isTextDropItem } from '@react-aria/dnd';
 import type { DragAndDropOptions } from 'react-aria-components';
 import type { TreeNode, UseTreeResult } from '../../types';
 

@@ -1,4 +1,4 @@
-import type { Orientation } from 'react-aria';
+import type { Orientation } from '@react-types/shared';
 import type {
   CheckboxGroupProps as RACCheckboxGroupProps,
   CheckboxGroupRenderProps as RACCheckboxGroupRenderProps,

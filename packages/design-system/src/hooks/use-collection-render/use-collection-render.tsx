@@ -1,7 +1,6 @@
 import { useCachedChildren } from '@react-aria/collections';
-import type { ItemDropTarget } from '@react-types/shared';
+import type { Collection, ItemDropTarget, Node } from '@react-types/shared';
 import type { ReactNode } from 'react';
-import type { Collection, Node } from 'react-stately';
 
 /**
  * Copied from RAC, unexported hook: https://github.com/adobe/react-spectrum/blob/main/packages/react-aria-components/src/Collection.tsx#L148

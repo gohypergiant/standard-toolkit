@@ -1,4 +1,4 @@
-import { type PressHookProps, usePress } from 'react-aria';
+import { type PressHookProps, usePress } from '@react-aria/interactions';
 import { continuePropagation, mergeProps } from '../../utils';
 
 /**

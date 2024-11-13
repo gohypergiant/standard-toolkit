@@ -1,6 +1,6 @@
+import type { Collection, Node } from '@react-types/shared';
 import { useContext, type Context } from 'react';
 import type { CollectionRenderer } from 'react-aria-components';
-import type { Collection, Node } from 'react-stately';
 import { useCollectionRender } from '../../hooks';
 import { MergeProvider, type MergeProviderProps } from '../merge-provider';
 

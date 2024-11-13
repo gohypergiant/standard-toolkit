@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import { mergeWith } from 'lodash';
 import type { CSSProperties } from 'react';
-import { mergeProps as mergePropsWithoutStyles } from 'react-aria';
+import { mergeProps as mergePropsWithoutStyles } from '@react-aria/utils';
 import { composeRenderProps } from 'react-aria-components';
 import { z } from 'zod';
 import type {

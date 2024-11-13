@@ -1,6 +1,6 @@
 import { noop } from '@accelint/core';
+import type { PressEvent } from '@react-types/shared';
 import type { MouseEvent } from 'react';
-import type { PressEvent } from 'react-aria';
 import type {
   RuleType,
   RuleValidator,

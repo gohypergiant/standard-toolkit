@@ -1,17 +1,38 @@
 ls:
-  .dir: kebab-case | snakecase
-  .js: kebab-case | pointcase
-  .mjs: kebab-case | pointcase
-  .ts: kebab-case | pointcase
-  .tsx: kebab-case | pointcase
-  .d.ts: kebab-case | pointcase
+  .dir: kebabcase | screamingsnakecase
+  .md: kebabcase | screamingsnakecase
+  .js: kebabcase
+  .jsx: kebabcase
+  .mjs: kebabcase
+  .cjs: kebabcase
+  .ts: kebabcase
+  .tsx: kebabcase
+  .*.js: kebabcase
+  .*.jsx: kebabcase
+  .*.mjs: kebabcase
+  .*.cjs: kebabcase
+  .*.ts: kebabcase
+  .*.tsx: kebabcase
 
 ignore:
   - .git
+  - .ladle
   - .turbo
   - .vscode
+  - .changeset
+  - .github
+  - __fixtures__
+  - __snapshots__
   - node_modules
+  - build
+  - dist
+  - coverage
   - '**/*/.turbo'
+  - '**/*/.ladle'
+  - '**/*/__fixtures__'
+  - '**/*/__snapshots__'
   - '**/*/node_modules'
   - '**/*/coverage'
   - '**/*/dist'
+  - '**/*/build'
+

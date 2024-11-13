@@ -20,7 +20,7 @@ For the most part, once theming has been established in an application, using th
 
 ### Previewing components with stories
 
-The simplest way to familiarize yourself with the available components and their usage is to run the stories in [Ladle](https://ladle.dev/), which is similar to Storybook. It uses mocked props to demonstrate how to theme, compose and use C2DS components. It serves as a way to explore functionality and to document capabilities.
+The simplest way to familiarize yourself with the available components and their usage is to review the [C2DS Stories](https://gohypergiant.github.io/standard-toolkit). You can also [run the stories locally](../README.md#getting-started) in [Ladle](https://ladle.dev/), which is similar to Storybook. It uses mocked props to demonstrate how to theme, compose and use C2DS components. It serves as a way to explore functionality and to document capabilities.
 
 To run the stories from the command line, run the following to start the preview:
 
@@ -30,7 +30,7 @@ npm run preview -w @cbc2/c2-design-system
 
 ### Props and source code spelunking
 
-After running the preview command, a local browser tab should open with the stories to preview. There is a main stage that renders the story and a menu to the right for navigation. The stories demonstrate and catalog design tokens, primitives (like typography), hooks and components. These sections will grow as resources are added to C2DS.
+The ladle stories render a story in the main stage and a menu to the right for navigation. The stories demonstrate and catalog design tokens, primitives (like typography), hooks and components. These sections will grow as resources are added to C2DS.
 
 Clicking on any child in the
 `Components` list and hovering over the icons at the bottom of your screen will show additional tools. The left-most icon opens a control panel demonstrating some characteristic properties a component can receive. Editing the props in the control panel will change the props passed into the components.
@@ -42,7 +42,7 @@ Reviewing the source code for the story will also provide a handy example for co
 `packages/c2-design-system`.
 
 Components and the source for their stories are in their own folders in the [
-`packages/c2-design-system/src/components`](/packages/c2-design-system/src/components). Stories will have a
+`packages/design-system/src/components`](../src/components). Stories will have a
 `.stories.tsx` extension.
 
 ### Import and Composition
@@ -80,7 +80,7 @@ Styles are defined in typescript files that have a
 
 ```tsx
 // component.tsx
-import { shout } from './styles.css';
+import {shout} from './styles.css';
 
 export function Component() {
   return <div className={shout}>Foo! Bar!</div>;
@@ -101,8 +101,8 @@ For example, the `Menu` component exports a
 
 ```tsx
 // exampleMenu.css.ts
-import { style } from '@vanilla-extract/css';
-import { menuColorVars } from '@cbc2/c2-design-system';
+import {style} from '@vanilla-extract/css';
+import {menuColorVars} from '@cbc2/c2-design-system';
 
 export const menuClassNames = {
   item: {
@@ -118,9 +118,9 @@ export const menuClassNames = {
 
 ```tsx
 // menu.tsx
-import { Button, Menu, MenuItem, MenuList } from '@cbc2/c2-design-system';
-import { MenuTrigger } from 'react-aria-components';
-import { menuClassNames } from './exampleMenu.css';
+import {Button, Menu, MenuItem, MenuList} from '@cbc2/c2-design-system';
+import {MenuTrigger} from 'react-aria-components';
+import {menuClassNames} from './exampleMenu.css';
 
 export function Menu() {
   return (
@@ -189,7 +189,7 @@ For C2DS, we rarely assign a one-off style like this unless it is required by a 
 exampleClassName: style(
   applyThemeVars<ExampleState>(ExampleStateVars, [
     {
-      query: { isSelected: true },
+      query: {isSelected: true},
       vars: assignPartialVars(exampleColorVars, {
         border: genericColorVars.neutral.v01,
         background: genericColorVars.neutral.v10,
@@ -200,7 +200,7 @@ exampleClassName: style(
 ```
 
 Here, we are building a style object via the [
-`applyThemeVars()`](/packages/c2-design-system/src/utils/css.ts#L387) utility that takes a theme contract and an array of styles to be built. The styles can either assign CSS vars globally or build a container query to assign vars under specific conditions. The [
+`applyThemeVars()`](../src/utils/css.ts#L387) utility that takes a theme contract and an array of styles to be built. The styles can either assign CSS vars globally or build a container query to assign vars under specific conditions. The [
 `assignPartialVars()`](../src/utils/css.ts#L143) utility takes a theme contract and a collection of CSS vars and reduces them into VE-friendly var assignments.
 
 ### Design Tokens

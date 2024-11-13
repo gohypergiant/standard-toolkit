@@ -48,40 +48,6 @@ describe('useTree', () => {
     });
   });
 
-  it('should not update data if new nodes are equal', () => {
-    const { options, rerender, result } = setup();
-    const prev = { ...result.current.tree };
-
-    rerender({ nodes: [...options.nodes] });
-
-    expect(result.current.tree).toEqual(prev);
-  });
-
-  it('should allow new nodes to update data', () => {
-    const { options, rerender, result } = setup();
-
-    rerender({ nodes: [] });
-
-    expect(result.current.tree).toEqual({
-      key: expect.any(String),
-      children: [],
-    });
-
-    rerender({ nodes: [options.nodes[0]!] });
-
-    expect(result.current.tree).toEqual({
-      key: expect.any(String),
-      children: [
-        {
-          key: options.nodes[0]!.id,
-          parentKey: null,
-          value: options.nodes[0],
-          children: [],
-        },
-      ],
-    });
-  });
-
   it('should compute initial visibility, if enabled', () => {
     const { result } = setup({
       allowsVisibility: true,

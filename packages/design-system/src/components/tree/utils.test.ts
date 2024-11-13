@@ -1,4 +1,4 @@
-import type { Key } from 'react-aria';
+import type { Key } from '@react-types/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { TreeNode, UseTreeResult } from '../../types';
 import {

@@ -1,5 +1,5 @@
+import type { PressEvent } from '@react-types/shared';
 import { useCallback, useMemo } from 'react';
-import type { PressEvent } from 'react-aria';
 import { Button } from '../button';
 import type { ActionProps } from './types';
 import { pressToMouseEvent } from './utils';

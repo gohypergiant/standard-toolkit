@@ -1,5 +1,5 @@
+import type { Orientation } from '@react-types/shared';
 import type { Context, ReactElement } from 'react';
-import type { Orientation } from 'react-aria';
 import type { ContextValue, SlotProps } from 'react-aria-components';
 
 export type GroupClassNames = Partial<{

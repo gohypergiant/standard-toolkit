@@ -1,5 +1,13 @@
 # @accelint/design-system
 
+## 0.3.3
+
+### Patch Changes
+
+- 67fc606: Switched to using peer dependencies
+- caa626d: Update deps to pull from deps of react stately directly
+- b27ccd7: Fixed issue with Tree causing duplicate keys on state update
+
 ## 0.3.2
 
 ### Patch Changes

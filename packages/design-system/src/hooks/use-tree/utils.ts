@@ -1,4 +1,4 @@
-import type { Key } from 'react-aria';
+import type { Key } from '@react-types/shared';
 import type { TreeNode, TreeNodes } from '../../types';
 
 export function getChildren<T>(node: TreeNodes<T>) {

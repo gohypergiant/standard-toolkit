@@ -12,13 +12,13 @@ This design system, which we've designated C2DS for simplicity, was born of thre
 
 From an engineering perspective, we also want to future-proof our investment by switching to an approach more natively compatible with React Server Components. This is the future of React and getting out ahead of that transition is valuable before it becomes a significant pain point inhibiting rapid feature development.
 
-Developed by the Core team, C2DS is a shared platform that all engineers can -- and are encouraged -- to contribute to. Eventually, this system will be published as open source to invite collaboration across our partners and the engineering community in general.
+Developed by the Core team at Accelint, C2DS is a shared platform that all engineers can -- and are encouraged -- to contribute to. This system is published as open source to invite collaboration across our partners and the engineering community in general.
 
 ### Performance
 
 The runtime performance of our applications is an enduring central concern. Our applications place a high performance demand on the browser client, primarily due to the sheer data throughput and intensive rendering requirements. Therefore, it makes sense to move away from a runtime CSS-in-JS solution in favor of a build/compile time styling solution.
 
-[Advantages >](./documentation/concepts.md#build-&-runtime)
+[Advantages >](./documentation/concepts.md#build-and-runtime)
 
 ### Flexibility and control
 
@@ -44,19 +44,23 @@ This design system is built on a number of concepts with which you may not be fa
 
 ## Getting started
 
-Check out what exists:
+Check out what exists. You can review the components, tokens and primitives available in the system using the Ladle stories for each element: [C2DS Stories](https://gohypergiant.github.io/standard-toolkit).
+
+From the root of the standard toolkit project, run:
 
 ```bash
-npm i
+pnpm i
 
-npm run preview -w @accelint/design-system
+pnpm --filter=@accelint/design-system preview
 ```
+
+If you run into errors, try running
+`pnpm build` after you install the dependencies and then run the preview command again. If you don't have pnpm enabled then you can enable it with the command
+[`corepack enable pnpm`](https://pnpm.io/installation#using-corepack) .
 
 ### Implementation
 
 [Learn](./documentation/implementation.md) how to get your app up and running.
-
-<!-- TODO - documentation around build systems -->
 
 ### Contribution
 

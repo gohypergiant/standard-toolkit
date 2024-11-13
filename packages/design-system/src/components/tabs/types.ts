@@ -1,6 +1,6 @@
 import type { AsType } from '../../types';
 import type { PropsWithChildren } from 'react';
-import type { Orientation, PressEvents } from 'react-aria';
+import type { Orientation, PressEvents } from '@react-types/shared';
 import type {
   TabListProps as RACTabListProps,
   TabPanelProps as RACTabPanelProps,

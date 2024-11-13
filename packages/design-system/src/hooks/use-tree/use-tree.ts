@@ -1,6 +1,7 @@
+import { useTreeData } from '@react-stately/data';
+import type { Key } from '@react-types/shared';
 import { isEqual } from 'lodash';
 import { useCallback, useId, useMemo, useRef } from 'react';
-import { type Key, useTreeData } from 'react-stately';
 import { useUpdateEffect } from '../use-update-effect';
 import type {
   TreeActions,
@@ -20,26 +21,12 @@ export function useTree<T>({
   onUpdate,
 }: UseTreeOptions<T>): UseTreeResult<T> {
   const rootKey = useId();
-  const nodesRef = useRef(nodes);
 
   const list = useTreeData({
     initialItems: nodes,
     getChildren,
     getKey,
   });
-
-  // Allow nodes prop to override list items
-  useUpdateEffect(() => {
-    if (isEqual(nodesRef.current, nodes)) return;
-
-    nodesRef.current = nodes;
-
-    list.remove(...list.items.map(({ key }) => key));
-
-    if (nodes.length) {
-      list.append(null, ...nodes);
-    }
-  }, [nodes]);
 
   useUpdateEffect(() => {
     if (selectionMode === 'none' && list.selectedKeys.size) {
@@ -77,7 +64,9 @@ export function useTree<T>({
         children: list.items,
       } as TreeNode<T>,
       (node) => {
-        if (node.key === rootKey) return;
+        if (node.key === rootKey) {
+          return;
+        }
 
         node = lookup[node.key] = getItem(node.key);
 
@@ -92,7 +81,9 @@ export function useTree<T>({
           children: toggleVisibility(tree.children),
         } as TreeNode<T>,
         (node) => {
-          if (node.key === rootKey) return;
+          if (node.key === rootKey) {
+            return;
+          }
 
           lookup[node.key] = node;
 
@@ -104,7 +95,9 @@ export function useTree<T>({
     function getItem(key: Key): TreeNode<T> {
       let node = lookup[key];
 
-      if (node) return node;
+      if (node) {
+        return node;
+      }
 
       node = list.getItem(key);
 
@@ -182,7 +175,9 @@ export function useTree<T>({
    * state updates
    */
   useUpdateEffect(() => {
-    if (isEqual(treeRef.current, tree)) return;
+    if (isEqual(treeRef.current, tree)) {
+      return;
+    }
 
     treeRef.current = tree;
 
@@ -197,25 +192,31 @@ export function useTree<T>({
   >([]);
 
   const revertIsExpanded = useCallback(() => {
-    if (!previousExpansionValuesRef.current.length) return;
+    if (!previousExpansionValuesRef.current.length) {
+      return;
+    }
 
-    previousExpansionValuesRef.current.forEach(({ key, patch }) =>
-      update(key, patch),
-    );
+    for (const { key, patch } of previousExpansionValuesRef.current) {
+      update(key, patch);
+    }
 
     previousExpansionValuesRef.current = [];
   }, [update]);
 
   const toggleIsExpanded = useCallback<TreeActions<T>['toggleIsExpanded']>(
     (selection = 'all', isExpanded = undefined, isRevertable = false) => {
-      if (!allowsExpansion && !isRevertable) return;
+      if (!(allowsExpansion || isRevertable)) {
+        return;
+      }
 
       if (!isRevertable) {
         previousExpansionValuesRef.current = [];
       }
 
       function toggle({ key, value }: TreeNode<T>) {
-        if (key === rootKey || !('nodes' in value)) return;
+        if (key === rootKey || !('nodes' in value)) {
+          return;
+        }
 
         if (isRevertable) {
           previousExpansionValuesRef.current.push({
@@ -232,7 +233,9 @@ export function useTree<T>({
       }
 
       mapTree(tree, (node) => {
-        if (!selection.has(node.key)) return;
+        if (!selection.has(node.key)) {
+          return;
+        }
 
         toggle(node);
       });
@@ -287,11 +290,15 @@ export function useTree<T>({
 
   const toggleIsViewable = useCallback<TreeActions<T>['toggleIsViewable']>(
     (selection = 'all', isViewable = undefined) => {
-      if (!allowsVisibility) return;
+      if (!allowsVisibility) {
+        return;
+      }
 
       if (selection === 'all') {
         return mapTree(tree, ({ key, value }) => {
-          if (key === rootKey) return;
+          if (key === rootKey) {
+            return;
+          }
 
           update(key, {
             isViewable: isViewable ?? !value.isViewable,
@@ -308,7 +315,9 @@ export function useTree<T>({
           ),
         } as TreeNode<T>,
         ({ key, value }) => {
-          if (key === rootKey) return;
+          if (key === rootKey) {
+            return;
+          }
 
           update(key, { isViewable: value.isViewable });
         },

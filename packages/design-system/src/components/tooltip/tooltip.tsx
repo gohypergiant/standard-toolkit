@@ -5,7 +5,7 @@ import {
   useCallback,
   useMemo,
 } from 'react';
-import { useFocusable } from 'react-aria';
+import { useFocusable } from '@react-aria/focus';
 import {
   type ContextValue,
   Tooltip as RACTooltip,

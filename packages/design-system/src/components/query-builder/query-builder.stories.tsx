@@ -1,6 +1,6 @@
 import type { Story, StoryDefault } from '@ladle/react';
+import type { PressEvent } from '@react-types/shared';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import type { PressEvent } from 'react-aria';
 import type { RuleGroupType } from 'react-querybuilder';
 import { Button } from '../button';
 import type { CheckboxRenderProps } from '../checkbox';
