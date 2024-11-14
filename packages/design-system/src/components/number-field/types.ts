@@ -37,7 +37,10 @@ type BaseNumberFieldProps = {
   size?: NumberFieldSizes;
 };
 
-export type NumberFieldRenderProps = AsType<RACNumberFieldRenderProps>;
+export type NumberFieldRenderProps = Omit<
+  AsType<RACNumberFieldRenderProps>,
+  'state'
+>;
 
 export type NumberFieldProps = AsType<
   Omit<AriaNumberFieldProps, 'className' | 'style'>
