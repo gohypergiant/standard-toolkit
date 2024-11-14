@@ -8,7 +8,7 @@ import type {
   ButtonProps,
   InputClassNames,
 } from '../../components';
-import type { AsType, OmitProtectedProps } from '../../types';
+import type { OmitProtectedProps } from '../../types';
 
 export type NumberFieldClassNames = PartialDeep<{
   container: string;
@@ -37,13 +37,11 @@ type BaseNumberFieldProps = {
   size?: NumberFieldSizes;
 };
 
-export type NumberFieldRenderProps = Omit<
-  AsType<RACNumberFieldRenderProps>,
-  'state'
->;
+export type NumberFieldRenderProps = Omit<RACNumberFieldRenderProps, 'state'>;
 
-export type NumberFieldProps = AsType<
-  Omit<AriaNumberFieldProps, 'className' | 'style'>
+export type NumberFieldProps = Omit<
+  AriaNumberFieldProps,
+  'className' | 'style'
 > &
   BaseNumberFieldProps;
 
