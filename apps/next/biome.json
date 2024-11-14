@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "@accelint/biome-config/analyzer",
+    "@accelint/biome-config/formatter",
+    "@accelint/biome-config/linter"
+  ],
+  "files": {
+    "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
+    "ignore": ["node_modules", ".turbo", "dist", "coverage"]
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": false,
+            "requireAscii": true
+          }
+        },
+        "noParameterAssign": {
+          "level": "warn"
+        }
+      }
+    }
+  }
+}

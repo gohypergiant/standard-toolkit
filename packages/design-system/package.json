@@ -10,9 +10,7 @@
   "private": false,
   "sideEffects": false,
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -58,6 +56,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/lodash": "^4.17.10",
     "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
     "@vanilla-extract/esbuild-plugin": "^2.3.11",
     "@vanilla-extract/vite-plugin": "^4.0.16",
     "@vitest/coverage-istanbul": "^2.1.3",
