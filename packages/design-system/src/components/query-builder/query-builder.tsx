@@ -12,11 +12,7 @@ import { SelectContext, type SelectProps } from '../select';
 import { SwitchContext, type SwitchProps } from '../switch';
 import { TextAreaContext, type TextAreaProps } from '../textarea';
 import { ActionElement } from './action-element';
-import {
-  defaultSize,
-  defaultOrientation,
-  QueryBuilderContext,
-} from './constants';
+import { defaultSize, QueryBuilderContext } from './constants';
 import {
   RuleGroup,
   RuleGroupBodyComponents,
@@ -66,7 +62,6 @@ export function QueryBuilder({
   disabled,
   icons,
   mapping: mappingProp,
-  orientation = defaultOrientation,
   size = defaultSize,
   valueEditors: valueEditorsProp,
   ...rest
@@ -173,7 +168,6 @@ export function QueryBuilder({
           },
           icons,
           mapping,
-          orientation,
           size,
           valueEditors,
         },
@@ -198,15 +192,7 @@ export function QueryBuilder({
         { ...mapping?.textarea?.[size], classNames: classNames?.textarea },
       ],
     ],
-    [
-      classNames,
-      consistentColumns,
-      icons,
-      mapping,
-      orientation,
-      size,
-      valueEditors,
-    ],
+    [classNames, consistentColumns, icons, mapping, size, valueEditors],
   );
 
   const style = useMemo(

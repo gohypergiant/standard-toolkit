@@ -23,9 +23,7 @@ import type { RuleGroupElementsProps } from './types';
  * - Value (conditional)
  * - Remove
  */
-const HORZ_CORE_COLUMNS_COUNT = 5;
-// When layout == column, Field, Operator, Value Source & Value are grouped into a single column
-const VERT_CORE_COLUMNS_COUNT = 2;
+const CORE_FUNCTIONS_COUNT = 5;
 
 export function RuleGroup(props: RuleGroupProps) {
   const {
@@ -35,7 +33,6 @@ export function RuleGroup(props: RuleGroupProps) {
       ruleGroupFooterElements: RuleGroupFooterElements,
       ruleGroupHeaderElements: RuleGroupHeaderElements,
     },
-    orientation,
   } = useContext(QueryBuilderContext);
 
   const {
@@ -66,13 +63,8 @@ export function RuleGroup(props: RuleGroupProps) {
   );
 
   const columns = useMemo(
-    () =>
-      (orientation === 'horizontal'
-        ? HORZ_CORE_COLUMNS_COUNT
-        : VERT_CORE_COLUMNS_COUNT) +
-      before +
-      after,
-    [orientation, after, before],
+    () => CORE_FUNCTIONS_COUNT + before + after,
+    [after, before],
   );
 
   const style = useMemo(
@@ -81,10 +73,9 @@ export function RuleGroup(props: RuleGroupProps) {
         after,
         before,
         columns,
-        orientation,
         isDisabled: false,
       }),
-    [after, before, columns, orientation],
+    [after, before, columns],
   );
 
   const group = useRuleGroup(props);

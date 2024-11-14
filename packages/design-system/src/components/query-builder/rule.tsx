@@ -12,7 +12,7 @@ import { queryBuilderRuleStateVars } from './query-builder.css';
 import { getValidationResult } from './utils';
 
 export function Rule(props: RuleProps) {
-  const { classNames, orientation } = useContext(QueryBuilderContext);
+  const { classNames } = useContext(QueryBuilderContext);
   const rule = useRule(props);
   const cloneRule = useStopEventPropagation(rule.cloneRule);
   const toggleLockRule = useStopEventPropagation(rule.toggleLockRule);
@@ -28,12 +28,11 @@ export function Rule(props: RuleProps) {
   const style = useMemo(
     () =>
       inlineVars(queryBuilderRuleStateVars, {
-        orientation,
         isDisabled: rule.disabled,
         isDragging: rule.isDragging,
         isDropTarget: rule.isOver,
       }),
-    [rule.disabled, rule.isDragging, rule.isOver, orientation],
+    [rule.disabled, rule.isDragging, rule.isOver],
   );
 
   return (
@@ -96,8 +95,7 @@ export function RuleComponents({
   valueSources,
   values,
 }: RuleProps & ReturnType<typeof useRule>) {
-  const { classNames, consistentColumns, orientation } =
-    useContext(QueryBuilderContext);
+  const { classNames, consistentColumns } = useContext(QueryBuilderContext);
 
   const {
     controls: {
@@ -162,9 +160,7 @@ export function RuleComponents({
       );
     }
 
-    return !renderOperator &&
-      consistentColumns &&
-      orientation === 'horizontal' ? (
+    return !renderOperator && consistentColumns ? (
       <div className={classNames?.rule?.operator} />
     ) : null;
   }, [
@@ -183,7 +179,6 @@ export function RuleComponents({
     schema,
     translations.operators.title,
     validationResult,
-    orientation,
   ]);
 
   const renderValue =
@@ -224,7 +219,7 @@ export function RuleComponents({
       );
     }
 
-    return !renderValue && consistentColumns && orientation === 'horizontal' ? (
+    return !renderValue && consistentColumns ? (
       <div className={classNames?.rule?.values} />
     ) : null;
   }, [
@@ -246,7 +241,6 @@ export function RuleComponents({
     valueEditorSeparator,
     valueEditorType,
     values,
-    orientation,
   ]);
 
   const renderValueSources =
@@ -279,9 +273,7 @@ export function RuleComponents({
       );
     }
 
-    return !renderValueSources &&
-      consistentColumns &&
-      orientation === 'horizontal' ? (
+    return !renderValueSources && consistentColumns ? (
       <div className={classNames?.rule?.source} />
     ) : null;
   }, [
@@ -300,59 +292,6 @@ export function RuleComponents({
     translations.valueSourceSelector.title,
     validationResult,
     valueSourceOptions,
-    orientation,
-  ]);
-
-  const core = useMemo(() => {
-    const controls = (
-      <>
-        <div className={classNames?.rule?.field}>
-          <FieldSelectorControlElement
-            testID={TestID.fields}
-            options={schema.fields}
-            title={translations.fields.title}
-            value={rule.field}
-            operator={rule.operator}
-            className={classNamesProp.fields}
-            handleOnChange={generateOnChangeHandler('field')}
-            level={path.length}
-            path={path}
-            disabled={disabled}
-            context={context}
-            validation={validationResult}
-            schema={schema}
-            rule={rule}
-          />
-        </div>
-        {operator}
-        {sources}
-        {value}
-      </>
-    );
-
-    return orientation === 'horizontal' ? (
-      controls
-    ) : (
-      <div className={classNames?.rule?.core}>{controls}</div>
-    );
-  }, [
-    FieldSelectorControlElement,
-    classNames?.rule?.core,
-    classNames?.rule?.field,
-    schema.fields,
-    translations.fields.title,
-    classNamesProp.fields,
-    generateOnChangeHandler,
-    path,
-    disabled,
-    context,
-    validationResult,
-    schema,
-    rule,
-    operator,
-    sources,
-    value,
-    orientation,
   ]);
 
   return (
@@ -396,7 +335,27 @@ export function RuleComponents({
           />
         </div>
       )}
-      {core}
+      <div className={classNames?.rule?.field}>
+        <FieldSelectorControlElement
+          testID={TestID.fields}
+          options={schema.fields}
+          title={translations.fields.title}
+          value={rule.field}
+          operator={rule.operator}
+          className={classNamesProp.fields}
+          handleOnChange={generateOnChangeHandler('field')}
+          level={path.length}
+          path={path}
+          disabled={disabled}
+          context={context}
+          validation={validationResult}
+          schema={schema}
+          rule={rule}
+        />
+      </div>
+      {operator}
+      {sources}
+      {value}
       {showCloneButtons && (
         <div className={classNames?.rule?.clone}>
           <CloneRuleActionControlElement
