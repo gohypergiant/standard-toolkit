@@ -6,7 +6,6 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "lint": "next lint",
     "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {
