@@ -1,5 +1,15 @@
 # @accelint/design-system
 
+## 0.4.0
+
+### Minor Changes
+
+- 0fbebb8: Added orientation prop to QueryBuilder component
+
+### Patch Changes
+
+- 6d3aeb3: Refactored design system build to not bundle all JS, added testbed application to validate implementation and protect against breaking changes
+
 ## 0.3.3
 
 ### Patch Changes
