@@ -17,6 +17,7 @@ ls:
 ignore:
   - .git
   - .ladle
+  - .next
   - .turbo
   - .vscode
   - .changeset
