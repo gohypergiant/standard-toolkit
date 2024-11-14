@@ -30,7 +30,7 @@ export const Input: ThemeContext['Input'] = {
       {
         query: { size: 'sm' },
         vars: assignPartialVars(inputSpaceVars, {
-          maxWidth: '200px',
+          maxWidth: 'min(200px, 100%)',
           x: sizeVars.v03,
           y: sizeVars.v02,
         }),
@@ -38,7 +38,7 @@ export const Input: ThemeContext['Input'] = {
       {
         query: { size: 'lg' },
         vars: assignPartialVars(inputSpaceVars, {
-          maxWidth: '400px',
+          maxWidth: 'min(400px, 100%)',
           x: sizeVars.v04,
           y: sizeVars.v03,
         }),
