@@ -15,25 +15,17 @@ ls:
   .*.tsx: kebabcase
 
 ignore:
+  - .changeset
   - .git
-  - .ladle
-  - .next
+  - .github
   - .turbo
   - .vscode
-  - .changeset
-  - .github
-  - __fixtures__
-  - __snapshots__
-  - node_modules
-  - build
-  - dist
-  - coverage
-  - '**/*/.turbo'
-  - '**/*/.ladle'
-  - '**/*/__fixtures__'
-  - '**/*/__snapshots__'
-  - '**/*/node_modules'
-  - '**/*/coverage'
-  - '**/*/dist'
-  - '**/*/build'
-
+  - '**/.next'
+  - '**/.ladle'
+  - '**/.turbo'
+  - '**/__fixtures__'
+  - '**/__snapshots__'
+  - '**/build'
+  - '**/coverage'
+  - '**/dist'
+  - '**/node_modules'
