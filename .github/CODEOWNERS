@@ -1,0 +1,13 @@
+# Order matters; the last matching pattern takes the most precedence.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#example-of-a-codeowners-file
+
+# Starting off simple and broad.
+
+# Catch all
+* @brandonjpierce @ArrayKnight @belsrc
+
+# Core pacakge
+/packages/core @brandonjpierce @belsrc
+
+# Design system pacakge
+/packages/core @ArrayKnight @switzerb
