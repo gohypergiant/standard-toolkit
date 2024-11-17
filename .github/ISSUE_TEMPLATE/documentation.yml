@@ -1,0 +1,29 @@
+name: 📚 Documentation
+description: Have an issue or improvement for the documentation?
+body:
+  - type: markdown
+    attributes:
+      value: "#### Thanks for filing an issue! Before you submit, search open/closed [issues](https://github.com/gohypergiant/standard-toolkit/issues) before submitting."
+
+  - type: markdown
+    attributes:
+      value: "# 📚 Documentation Change/Addition"
+
+  - type: textarea
+    id: general-summary
+    attributes:
+      label: Provide a general summary of the documentation request here
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Participation
+      options:
+        - label: I am willing to submit a pull request for this change.
+          required: false
+
+  - type: markdown
+    attributes:
+      value: "<small>Please **do not** open a pull request until this issue has been accepted by the team.</small>"
+
