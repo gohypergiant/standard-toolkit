@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { toDigits } from '@accelint/converters';
+import { round } from '@accelint/math';
 import { matchDD } from './match';
 import { isPositiveDirection, normalizeDirection, negate } from './utils';
 
@@ -23,15 +23,9 @@ export function normalizeDD(val: string) {
   const latPositive = isPositiveDirection(latDirection, matches[1]);
   const lonPositive = isPositiveDirection(lonDirection, matches[6]);
 
-  const latParsed = toDigits(
-    Number.parseFloat(`${matches[2]}${matches[3]}`),
-    6,
-  );
+  const latParsed = round(Number.parseFloat(`${matches[2]}${matches[3]}`), 6);
 
-  const lonParsed = toDigits(
-    Number.parseFloat(`${matches[7]}${matches[8]}`),
-    6,
-  );
+  const lonParsed = round(Number.parseFloat(`${matches[7]}${matches[8]}`), 6);
 
   const latValue = latPositive ? latParsed : negate(latParsed);
   const lonValue = lonPositive ? lonParsed : negate(lonParsed);

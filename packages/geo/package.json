@@ -35,7 +35,7 @@
     "vitest": "^2.1.3"
   },
   "dependencies": {
-    "@accelint/converters": "workspace:*",
+    "@accelint/math": "workspace:*",
     "@accelint/predicates": "workspace:*",
     "typescript": "^5.6.3"
   },
