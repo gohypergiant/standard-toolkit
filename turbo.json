@@ -19,6 +19,10 @@
     },
     "index": {
       "outputs": ["src/index.ts"]
+    },
+    "docs": {
+      "dependsOn": ["index"],
+      "outputs": ["documentation"]
     }
   }
 }

@@ -21,6 +21,7 @@
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",
     "dev": "turbo dev",
+    "docs": "turbo docs",
     "format": "pnpm biome format . --write",
     "indexer": "turbo index",
     "license": "pnpm zx scripts/license.mjs",
