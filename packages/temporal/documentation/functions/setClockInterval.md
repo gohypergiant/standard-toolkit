@@ -33,4 +33,4 @@ const cleanup = setClockInterval(() => console.log('hi'), 250);
 
 ## Defined in
 
-[index.ts:10](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/temporal/src/timers/index.ts#L10)
+[index.ts:10](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/temporal/src/timers/index.ts#L10)

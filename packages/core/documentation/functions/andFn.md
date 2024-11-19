@@ -59,4 +59,4 @@ andFn(s => s.trim())(s => s.trimEnd())('foo bar ');
 
 ## Defined in
 
-[logical/and/index.ts:29](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/logical/and/index.ts#L29)
+[logical/and/index.ts:29](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/logical/and/index.ts#L29)

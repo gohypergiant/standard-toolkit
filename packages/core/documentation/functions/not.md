@@ -37,4 +37,4 @@ not(2);
 
 ## Defined in
 
-[logical/not/index.ts:12](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/logical/not/index.ts#L12)
+[logical/not/index.ts:12](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/logical/not/index.ts#L12)

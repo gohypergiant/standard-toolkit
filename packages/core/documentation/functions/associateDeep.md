@@ -58,4 +58,4 @@ associateDeep(personStore)('address')({
 
 ## Defined in
 
-[object/associate/index.ts:40](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/object/associate/index.ts#L40)
+[object/associate/index.ts:40](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/object/associate/index.ts#L40)

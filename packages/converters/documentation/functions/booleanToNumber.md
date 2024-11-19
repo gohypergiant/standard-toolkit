@@ -32,4 +32,4 @@ booleanToNumber(false);
 
 ## Defined in
 
-[boolean-to-number/index.ts:25](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/converters/src/boolean-to-number/index.ts#L25)
+[boolean-to-number/index.ts:25](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/converters/src/boolean-to-number/index.ts#L25)

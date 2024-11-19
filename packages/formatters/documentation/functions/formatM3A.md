@@ -22,4 +22,4 @@ assign these codes.
 
 ## Defined in
 
-[index.ts:45](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/formatters/src/iff/index.ts#L45)
+[index.ts:45](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/formatters/src/iff/index.ts#L45)

@@ -13,15 +13,15 @@
       "dependsOn": ["^build"],
       "outputs": ["coverage"]
     },
+    "index": {
+      "outputs": ["src/index.ts"]
+    },
     "build": {
       "dependsOn": ["index", "^build"],
       "outputs": ["dist"]
     },
-    "index": {
-      "outputs": ["src/index.ts"]
-    },
     "docs": {
-      "dependsOn": ["index"],
+      "dependsOn": ["index", "^build"],
       "outputs": ["documentation"]
     }
   }

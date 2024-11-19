@@ -45,4 +45,4 @@ K(1)(2);
 
 ## Defined in
 
-[combinators/k/index.ts:23](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/combinators/k/index.ts#L23)
+[combinators/k/index.ts:23](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/combinators/k/index.ts#L23)

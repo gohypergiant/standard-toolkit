@@ -36,4 +36,4 @@ curried(2, 3, 4);
 
 ## Defined in
 
-[composition/curry/index.ts:22](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/composition/curry/index.ts#L22)
+[composition/curry/index.ts:22](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/composition/curry/index.ts#L22)

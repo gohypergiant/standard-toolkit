@@ -35,4 +35,4 @@ const value = round(3.1, 1.2345); // Error
 
 ## Defined in
 
-[round/index.ts:24](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/math/src/round/index.ts#L24)
+[round/index.ts:24](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/math/src/round/index.ts#L24)

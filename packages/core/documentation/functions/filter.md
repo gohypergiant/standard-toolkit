@@ -39,4 +39,4 @@ filter(x => !(x & 1))([1, 2, 3, 4, 5]);
 
 ## Defined in
 
-[array/filter/index.ts:11](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/array/filter/index.ts#L11)
+[array/filter/index.ts:11](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/array/filter/index.ts#L11)

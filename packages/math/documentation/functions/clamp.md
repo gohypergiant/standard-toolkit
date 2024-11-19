@@ -37,4 +37,4 @@ const value = clamp(15, 5, 10); // RangeError
 
 ## Defined in
 
-[clamp/index.ts:24](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/math/src/clamp/index.ts#L24)
+[clamp/index.ts:24](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/math/src/clamp/index.ts#L24)
