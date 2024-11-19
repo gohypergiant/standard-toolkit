@@ -21,4 +21,4 @@
  */
 
 export { matchDD, matchDMS } from './match';
-export { normalizeDD } from './normalize';
+export { normalizeDecimalDegree } from './normalize';

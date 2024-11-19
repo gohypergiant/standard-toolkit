@@ -50,4 +50,4 @@ reduce((total, n) => total - n)(0)([1, 2, 3, 4, 5]);
 
 ## Defined in
 
-[array/reduce/index.ts:12](https://github.com/gohypergiant/standard-toolkit/blob/87ae5060c82d212b75a10cafb0030b08916e90f1/packages/core/src/array/reduce/index.ts#L12)
+[array/reduce/index.ts:12](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/array/reduce/index.ts#L12)

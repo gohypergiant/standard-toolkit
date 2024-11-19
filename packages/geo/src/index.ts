@@ -3,4 +3,4 @@
  */
 
 export { matchDD, matchDMS } from './coordinates/match';
-export { normalizeDD } from './coordinates/normalize';
+export { normalizeDecimalDegree } from './coordinates/normalize';

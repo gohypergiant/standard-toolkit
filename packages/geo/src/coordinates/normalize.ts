@@ -14,8 +14,7 @@ import { toDigits } from '@accelint/converters';
 import { matchDD } from './match';
 import { isPositiveDirection, normalizeDirection, negate } from './utils';
 
-// biome-ignore lint/style/useNamingConvention: <explanation>
-export function normalizeDD(val: string) {
+export function normalizeDecimalDegree(val: string) {
   const matches = matchDD(val);
 
   const latDirection = normalizeDirection(matches[0] || matches[4]);

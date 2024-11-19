@@ -48,4 +48,4 @@ slice(0)(4)([1, 2, 3, 4, 5, 6]);
 
 ## Defined in
 
-[array/slice/index.ts:10](https://github.com/gohypergiant/standard-toolkit/blob/87ae5060c82d212b75a10cafb0030b08916e90f1/packages/core/src/array/slice/index.ts#L10)
+[array/slice/index.ts:10](https://github.com/gohypergiant/standard-toolkit/blob/424b88fd48a5bcc02ed99ee27fd64cd73349aa30/packages/core/src/array/slice/index.ts#L10)
