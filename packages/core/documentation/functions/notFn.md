@@ -1,0 +1,48 @@
+[**@accelint/core**](../README.md) • **Docs**
+
+***
+
+[@accelint/core](../README.md) / notFn
+
+# Function: notFn()
+
+> **notFn**\<`T`\>(`a`): (`b`) => `boolean`
+
+Logical `(!a(b))`
+
+Logical (Function Result) Not (Negation)
+
+## Type Parameters
+
+• **T**
+
+## Parameters
+
+• **a**
+
+## Returns
+
+`Function`
+
+### Parameters
+
+• **b**: `T`
+
+### Returns
+
+`boolean`
+
+## Link
+
+https://en.wikipedia.org/wiki/Negation
+
+## Example
+
+```ts
+notFn(x => x & 1)(4);
+// true
+```
+
+## Defined in
+
+[logical/not/index.ts:26](https://github.com/gohypergiant/standard-toolkit/blob/87ae5060c82d212b75a10cafb0030b08916e90f1/packages/core/src/logical/not/index.ts#L26)

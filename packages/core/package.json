@@ -21,6 +21,7 @@
   "scripts": {
     "build": "pnpm tsup",
     "dev": "pnpm tsc --watch",
+    "docs": "pnpm typedoc --logLevel Error --entryPoints src/index.ts --out documentation --readme none --plugin typedoc-plugin-markdown",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/core",
     "lint": "pnpm biome lint ./",
     "test": "pnpm vitest --dir=src"
