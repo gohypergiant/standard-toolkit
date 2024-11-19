@@ -48,4 +48,4 @@ optionalProperty(userStore.profile)(0);
 
 ## Defined in
 
-[object/property/index.ts:43](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/object/property/index.ts#L43)
+[object/property/index.ts:43](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/object/property/index.ts#L43)

@@ -42,4 +42,4 @@ toBoolean('no');
 
 ## Defined in
 
-[to-boolean/index.ts:37](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/converters/src/to-boolean/index.ts#L37)
+[to-boolean/index.ts:37](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/converters/src/to-boolean/index.ts#L37)

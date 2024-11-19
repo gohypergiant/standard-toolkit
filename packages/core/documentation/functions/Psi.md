@@ -65,4 +65,4 @@ Psi((x) => (y) => x + y)(x => x + 3)(3)(5)
 
 ## Defined in
 
-[combinators/psi/index.ts:13](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/core/src/combinators/psi/index.ts#L13)
+[combinators/psi/index.ts:13](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/combinators/psi/index.ts#L13)

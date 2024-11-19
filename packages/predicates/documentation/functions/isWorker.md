@@ -20,4 +20,4 @@ Determines if given value is a Worker.
 
 ## Defined in
 
-[predicates/src/is-worker/index.ts:16](https://github.com/gohypergiant/standard-toolkit/blob/7f574e64e57e697a3e2daabb1b78393aca67cb22/packages/predicates/src/is-worker/index.ts#L16)
+[predicates/src/is-worker/index.ts:16](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/predicates/src/is-worker/index.ts#L16)
