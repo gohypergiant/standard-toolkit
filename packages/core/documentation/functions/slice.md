@@ -45,7 +45,3 @@ from the original array.
 slice(0)(4)([1, 2, 3, 4, 5, 6]);
 // [1, 2, 3, 4]
 ```
-
-## Defined in
-
-[array/slice/index.ts:10](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/array/slice/index.ts#L10)

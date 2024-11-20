@@ -42,7 +42,3 @@ const getActiveUsers = page => pipe(
 
 const activeUsers = getActiveUsersByPage(users);
 ```
-
-## Defined in
-
-[composition/pipe/index.ts:49](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/composition/pipe/index.ts#L49)

@@ -56,7 +56,3 @@ https://en.wikipedia.org/wiki/Logical_conjunction
 andFn(s => s.trim())(s => s.trimEnd())('foo bar ');
 // true
 ```
-
-## Defined in
-
-[logical/and/index.ts:29](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/and/index.ts#L29)

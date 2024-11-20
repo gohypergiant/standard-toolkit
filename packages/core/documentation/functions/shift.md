@@ -29,7 +29,3 @@ the remaining elements of the array (tail).
 shift([1, 2, 3, 4]);
 // [1, [2, 3, 4, 5]]
 ```
-
-## Defined in
-
-[array/shift/index.ts:9](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/array/shift/index.ts#L9)

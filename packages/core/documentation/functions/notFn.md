@@ -42,7 +42,3 @@ https://en.wikipedia.org/wiki/Negation
 notFn(x => x & 1)(4);
 // true
 ```
-
-## Defined in
-
-[logical/not/index.ts:26](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/not/index.ts#L26)

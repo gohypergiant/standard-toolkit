@@ -26,7 +26,3 @@ Converts a Tile (x, y, z) to a Bounding Box (west, south, east, north).
 xyzToBbox([71, 96, 8]);
 // [-80.15625, 39.909736234537185, -78.75, 40.97989806962013]
 ```
-
-## Defined in
-
-[xyz-to-bbox/index.ts:45](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/converters/src/xyz-to-bbox/index.ts#L45)

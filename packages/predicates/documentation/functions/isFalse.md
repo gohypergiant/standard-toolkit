@@ -39,7 +39,3 @@ isFalse('off');
 isFalse('no');
 // true
 ```
-
-## Defined in
-
-[predicates/src/is-noyes/index.ts:98](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/predicates/src/is-noyes/index.ts#L98)

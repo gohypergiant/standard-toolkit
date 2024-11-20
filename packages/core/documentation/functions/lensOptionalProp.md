@@ -35,7 +35,3 @@ Short-hand to create is simplistic, optional, get/set lens.
 ```ts
 const { get, set } = lensOptionalProp<Person>()('name');
 ```
-
-## Defined in
-
-[object/lens/index.ts:117](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/object/lens/index.ts#L117)

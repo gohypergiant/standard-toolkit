@@ -36,7 +36,3 @@ Concatenate the two given arrays together.
 concat([1, 2, 3])([4, 5, 6]);
 // [1, 2, 3, 4, 5, 6]
 ```
-
-## Defined in
-
-[array/concat/index.ts:9](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/array/concat/index.ts#L9)

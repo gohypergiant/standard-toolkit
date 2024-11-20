@@ -37,7 +37,3 @@ Uses strict equality.
 includes(3)([[1, 2, 3, 4, 5]])
 // true
 ```
-
-## Defined in
-
-[array/includes/index.ts:10](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/array/includes/index.ts#L10)

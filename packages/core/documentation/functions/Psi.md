@@ -62,7 +62,3 @@ Lambda: `λabcd.a(bc)(bd)`
 Psi((x) => (y) => x + y)(x => x + 3)(3)(5)
 // 14
 ```
-
-## Defined in
-
-[combinators/psi/index.ts:13](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/combinators/psi/index.ts#L13)

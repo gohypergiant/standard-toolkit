@@ -37,7 +37,3 @@ Returns `null` otherwise.
 find(x => !(x & 1))([1, 2, 3, 4, 5]);
 // 2
 ```
-
-## Defined in
-
-[array/find/index.ts:12](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/array/find/index.ts#L12)

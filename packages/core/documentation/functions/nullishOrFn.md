@@ -50,7 +50,3 @@ Nullish Coalescing `(a(x) ?? b(x))`
 nullishOrFn(x => x.foo)(x => x.bar)({ bar: 4 });
 // 4
 ```
-
-## Defined in
-
-[logical/nullish-or/index.ts:21](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/nullish-or/index.ts#L21)

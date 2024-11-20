@@ -47,7 +47,3 @@ Returns the final result.
 reduceRight((total, n) => total - n)(0)([1, 2, 3, 4, 5]);
 // -5
 ```
-
-## Defined in
-
-[array/reduce-right/index.ts:12](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/array/reduce-right/index.ts#L12)

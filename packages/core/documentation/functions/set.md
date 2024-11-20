@@ -45,7 +45,3 @@ A simple warpper function to access the `set` of a lens and the given object..
 ```ts
 set(nameLens)('Fred')(personStore);
 ```
-
-## Defined in
-
-[object/lens/index.ts:86](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/object/lens/index.ts#L86)

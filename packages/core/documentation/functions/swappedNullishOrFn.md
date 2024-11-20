@@ -50,7 +50,3 @@ Swapped Nullish Coalescing: `b(x) ?? a(x)`
 swappedNullishOrFn(x => x.bar)(x => x.foo)({ bar: 4 });
 // 4
 ```
-
-## Defined in
-
-[logical/nullish-or/index.ts:46](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/nullish-or/index.ts#L46)

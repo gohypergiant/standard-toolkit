@@ -19,7 +19,3 @@ This mode is only used by the military.
 ## Returns
 
 `string`
-
-## Defined in
-
-[index.ts:58](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/formatters/src/iff/index.ts#L58)

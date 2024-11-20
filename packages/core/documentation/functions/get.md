@@ -37,7 +37,3 @@ A simple warpper function to access the `get` of a lens and the given object.
 ```ts
 get(nameLens)(personStore);
 ```
-
-## Defined in
-
-[object/lens/index.ts:75](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/object/lens/index.ts#L75)

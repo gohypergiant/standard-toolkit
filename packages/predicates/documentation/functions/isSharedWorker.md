@@ -17,7 +17,3 @@ Determine if the given value is a SharedWorker.
 ## Returns
 
 `val is SharedWorker`
-
-## Defined in
-
-[predicates/src/is-worker/index.ts:23](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/predicates/src/is-worker/index.ts#L23)

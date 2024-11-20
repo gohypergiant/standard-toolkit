@@ -36,7 +36,3 @@ Returns a copy of the given array of elements that satisfy the predicate.
 filter(x => !(x & 1))([1, 2, 3, 4, 5]);
 // [2, 4]
 ```
-
-## Defined in
-
-[array/filter/index.ts:11](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/array/filter/index.ts#L11)

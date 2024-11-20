@@ -29,7 +29,3 @@ isNumeric(NaN) // true
 isNumeric('1.23') // true
 isNumeric('hi') // false
 ```
-
-## Defined in
-
-[predicates/src/is-number/index.ts:75](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/predicates/src/is-number/index.ts#L75)

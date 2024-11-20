@@ -56,7 +56,3 @@ https://en.wikipedia.org/wiki/Logical_NOR
 norFn(s => s.trim())(s => s.trimEnd())('foo bar ');
 // false
 ```
-
-## Defined in
-
-[logical/nor/index.ts:32](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/nor/index.ts#L32)

@@ -50,7 +50,3 @@ https://en.wikipedia.org/wiki/Exclusive_or
 xorFn(s => s.trim())(s => s.trimEnd())('foo bar ');
 // false
 ```
-
-## Defined in
-
-[logical/xor/index.ts:27](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/xor/index.ts#L27)

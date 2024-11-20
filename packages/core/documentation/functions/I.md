@@ -35,7 +35,3 @@ Lambda: `λa.a`
 I(4);
 // 4
 ```
-
-## Defined in
-
-[combinators/i/index.ts:15](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/combinators/i/index.ts#L15)

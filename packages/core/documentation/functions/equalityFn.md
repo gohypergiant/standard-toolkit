@@ -52,7 +52,3 @@ https://en.wikipedia.org/wiki/Logical_biconditional
 equalityFn(s => s.trim())(s => s.trimEnd())('foo bar ');
 // true
 ```
-
-## Defined in
-
-[logical/equality/index.ts:26](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/equality/index.ts#L26)

@@ -43,7 +43,3 @@ optionalProperty(personStore)('address');
 optionalProperty(userStore.profile)(0);
 // userStore?.profile?.at(0)
 ```
-
-## Defined in
-
-[object/property/index.ts:34](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/object/property/index.ts#L34)

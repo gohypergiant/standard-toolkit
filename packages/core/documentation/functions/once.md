@@ -29,7 +29,3 @@ Ensures that the given function is only called once.
 ### Returns
 
 `void` \| `ReturnType`\<`T`\>
-
-## Defined in
-
-[utility/once/index.ts:7](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/utility/once/index.ts#L7)

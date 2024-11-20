@@ -28,7 +28,3 @@ isNumber(Infinity) // true
 isNumber(NaN) // true
 isNumber('1.23') // false
 ```
-
-## Defined in
-
-[predicates/src/is-number/index.ts:26](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/predicates/src/is-number/index.ts#L26)

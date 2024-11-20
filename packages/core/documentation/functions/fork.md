@@ -62,7 +62,3 @@ Phi
 Phi((x) => (y) => x + y)(x => x + 3)(x => x - 2)(9)
 // 19
 ```
-
-## Defined in
-
-[combinators/phi/index.ts:24](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/combinators/phi/index.ts#L24)

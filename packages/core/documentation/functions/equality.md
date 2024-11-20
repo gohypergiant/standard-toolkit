@@ -42,7 +42,3 @@ https://en.wikipedia.org/wiki/Logical_biconditional
 equality(4)(8);
 // false
 ```
-
-## Defined in
-
-[logical/equality/index.ts:13](https://github.com/gohypergiant/standard-toolkit/blob/258694cea8ed8bbd956b3cf5da47c2c9debcf127/packages/core/src/logical/equality/index.ts#L13)
