@@ -10,15 +10,37 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, it } from 'vitest';
-import { booleanToNumber } from './';
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type Callable = (...a: any[]) => any;
+type Fixture = [string, boolean, Callable, Values][];
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type Values = any[];
 
-describe('bool to number', () => {
-  it('should convert true to 1', () => {
-    expect(booleanToNumber(true)).toEqual(1);
-  });
+export const truthy: Values = [
+  1,
+  '1',
+  'on',
+  'true',
+  'yes',
+  true,
+  'ON',
+  'YES',
+  'TRUE',
+];
+export const falsey: Values = [
+  '',
+  0,
+  '0',
+  'off',
+  'false',
+  'no',
+  false,
+  [],
+  {},
+  'OFF',
+  'NO',
+  'FALSE',
+];
 
-  it('should convert false to 0', () => {
-    expect(booleanToNumber(false)).toEqual(0);
-  });
-});
+export const createFixture = (bool: boolean, ...rest: [Values, Callable][]) =>
+  rest.map(([values, fn]) => [fn.name, bool, fn, values]) as Fixture;

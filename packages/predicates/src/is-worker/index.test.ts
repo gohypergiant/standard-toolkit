@@ -14,34 +14,18 @@ import '@vitest/web-worker';
 import { describe, it, expect } from 'vitest';
 import { isSharedWorker, isWorker } from './';
 
-const nonWorkerPairs = [
-  ['array', []],
-  ['object', {}],
-  [
-    'function',
-    () => {
-      // noop
-    },
-  ],
-] as const;
-
 const workerUrl = new URL('./__fixtures__/worker.ts', import.meta.url);
-const sharedWorker = new SharedWorker(workerUrl);
-const worker = new Worker(workerUrl);
 
 describe('worker validators', () => {
-  expect(isSharedWorker(sharedWorker)).toBeTruthy();
-  expect(isSharedWorker(worker)).toBeFalsy();
-  expect(isWorker(worker)).toBeTruthy();
-  expect(isWorker(sharedWorker)).toBeFalsy();
-
-  for (const pair of nonWorkerPairs) {
-    it(`isSharedWorker: ${pair[0]}`, () => {
-      expect(isSharedWorker(pair[1])).toBeFalsy();
-    });
-
-    it(`isWorker: ${pair[0]}`, () => {
-      expect(isWorker(pair[1])).toBeFalsy();
-    });
-  }
+  it.each`
+    label             | value                          | isShared | isWorker
+    ${'array'}        | ${[]}                          | ${false} | ${false}
+    ${'object'}       | ${{}}                          | ${false} | ${false}
+    ${'function'}     | ${() => void 0}                | ${false} | ${false}
+    ${'SharedWorker'} | ${new SharedWorker(workerUrl)} | ${true}  | ${false}
+    ${'Worker'}       | ${new Worker(workerUrl)}       | ${false} | ${true}
+  `('$label', ({ value, ...expected }) => {
+    expect(isSharedWorker(value)).toBe(expected.isShared);
+    expect(isWorker(value)).toBe(expected.isWorker);
+  });
 });
