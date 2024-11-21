@@ -10,15 +10,85 @@
  * governing permissions and limitations under the License.
  */
 
-const trueRegex = /^(?:y|yes|true|1|on)$/i;
-const falseRegex = /^(?:n|no|false|0|off)$/i;
+// const trueRegex = /^(?:y|yes|true|1|on)$/i;
+// const falseRegex = /^(?:n|no|false|0|off)$/i;
+
+// const test = (r: RegExp, val: unknown) => r.test(`${val}`.trim());
+
+const falseValues = ['0', 'false', 'n', 'no', 'off'];
+const trueValues = ['1', 'true', 'y', 'yes', 'on'];
+
+const test = (list: string[], val: unknown) =>
+  list.includes(`${val}`.trim().toLowerCase());
 
 /**
- * Ensures value is cast as string and trimmed
+ * Compare the given value against a custom list of `falsey` values.
+ *
+ * String values are not case sensitive.
+ *
+ * _0, '0', 'n', 'no', 'off', 'false', false_
+ *
+ * @pure
+ *
+ * @example
+ * isFalse('on');
+ * // false
+ *
+ * isFalse('yes');
+ * // false
+ *
+ * isFalse('off');
+ * // true
+ *
+ * isFalse('no');
  */
-function normalize(val: unknown) {
-  return `${val}`.trim();
-}
+export const isFalse = (val: unknown) => test(falseValues, val);
+
+/**
+ * Compare the given value against a custom list of `falsey` values.
+ *
+ * String values are not case sensitive.
+ *
+ * _0, '0', 'n', 'no', 'off', 'false', false_
+ *
+ * @pure
+ *
+ * @example
+ * isNo('on');
+ * // false
+ *
+ * isNo('yes');
+ * // false
+ *
+ * isNo('off');
+ * // true
+ *
+ * isNo('no');
+ */
+export const isNo = isFalse;
+
+/**
+ * Compare the given value against a custom list of `falsey` values.
+ *
+ * String values are not case sensitive.
+ *
+ * _0, '0', 'n', 'no', 'off', 'false', false_
+ *
+ * @pure
+ *
+ * @example
+ * isOff('on');
+ * // false
+ *
+ * isOff('yes');
+ * // false
+ *
+ * isOff('off');
+ * // true
+ *
+ * isOff('no');
+ */
+export const isOff = isFalse;
 
 /**
  * Compare the given value against a custom list of `truthy` values.
@@ -42,10 +112,31 @@ function normalize(val: unknown) {
  * isTrue('no');
  * // false
  */
-export function isTrue(val: unknown) {
-  const normalized = normalize(val);
-  return trueRegex.test(normalized);
-}
+export const isTrue = (val: unknown) => test(trueValues, val);
+
+/**
+ * Compare the given value against a custom list of `truthy` values.
+ *
+ * String values are not case sensitive.
+ *
+ * _1, '1', 'y', 'yes', 'on', 'true', true_
+ *
+ * @pure
+ *
+ * @example
+ * isOn('on');
+ * // true
+ *
+ * isOn('yes');
+ * // true
+ *
+ * isOn('off');
+ * // false
+ *
+ * isOn('no');
+ * // false
+ */
+export const isOn = isTrue;
 
 /**
  * Compare the given value against a custom list of `truthy` values.
@@ -69,58 +160,4 @@ export function isTrue(val: unknown) {
  * isYes('no');
  * // false
  */
-export function isYes(val: unknown) {
-  return isTrue(val);
-}
-
-/**
- * Compare the given value against a custom list of `falsey` values.
- *
- * String values are not case sensitive.
- *
- * _0, '0', 'n', 'no', 'off', 'false', false_
- *
- * @pure
- *
- * @example
- * isFalse('on');
- * // false
- *
- * isFalse('yes');
- * // false
- *
- * isFalse('off');
- * // true
- *
- * isFalse('no');
- * // true
- */
-export function isFalse(val: unknown) {
-  const normalized = normalize(val);
-  return falseRegex.test(normalized);
-}
-
-/**
- * Compare the given value against a custom list of `falsey` values.
- *
- * String values are not case sensitive.
- *
- * _0, '0', 'n', 'no', 'off', 'false', false_
- *
- * @pure
- *
- * @example
- * isNo('on');
- * // false
- *
- * isNo('yes');
- * // false
- *
- * isNo('off');
- * // true
- *
- * isNo('no');
- */
-export function isNo(val: unknown) {
-  return isFalse(val);
-}
+export const isYes = isTrue;

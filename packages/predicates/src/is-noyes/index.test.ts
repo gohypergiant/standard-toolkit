@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { isTrue, isYes, isFalse, isNo } from './';
+import { isTrue, isYes, isFalse, isNo, isOn, isOff } from './';
 
 const truthy = [1, '1', 'on', 'true', 'yes', true, 'ON', 'YES', 'TRUE'];
 const falsey = [0, '0', 'off', 'false', 'no', false, 'OFF', 'NO', 'FALSE'];
@@ -19,6 +19,7 @@ const falsey = [0, '0', 'off', 'false', 'no', false, 'OFF', 'NO', 'FALSE'];
 describe('boolean validators', () => {
   for (const item of truthy) {
     it(`should return true for ${item}`, () => {
+      expect(isOn(item)).toBeTruthy();
       expect(isTrue(item)).toBeTruthy();
       expect(isYes(item)).toBeTruthy();
     });
@@ -27,6 +28,7 @@ describe('boolean validators', () => {
   for (const item of falsey) {
     it(`should return false for ${item}`, () => {
       expect(isFalse(item)).toBeTruthy();
+      expect(isOff(item)).toBeTruthy();
       expect(isNo(item)).toBeTruthy();
     });
   }
