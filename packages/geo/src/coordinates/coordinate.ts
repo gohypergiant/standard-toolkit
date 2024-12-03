@@ -29,7 +29,6 @@ import type { Tokens } from './latlon/internal/lexer';
 import { systemMGRS } from './mgrs/system';
 import { systemUTM } from './utm/system';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type MinLengthArray = [any, any];
 
 type AnySystem = CoordinateSystem<MinLengthArray>;
