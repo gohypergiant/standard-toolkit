@@ -1,12 +1,10 @@
 // https://github.com/type-challenges/type-challenges/issues/15988
 
-import type { ExplicitAny } from '@/types';
+import type { Callable } from '@/types';
 
 export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
   ...args: P
-) => ((...args: T) => ExplicitAny) extends (
-  ...args: [...P, ...infer Args]
-) => ExplicitAny
+) => ((...args: T) => any) extends (...args: [...P, ...infer Args]) => any
   ? Args extends []
     ? R
     : Curried<Args, R>
@@ -22,9 +20,9 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  * curried(2)(3, 4);
  * curried(2, 3, 4);
  */
-export function autoCurry<T extends (...args: ExplicitAny[]) => ExplicitAny>(
+export function autoCurry<T extends Callable>(
   fn: T,
-  _args = [] as ExplicitAny[],
+  _args = [] as any[],
 ): Curried<Parameters<T>, ReturnType<T>> {
   return (...__args) =>
     ((rest) => (rest.length >= fn.length ? fn(...rest) : autoCurry(fn, rest)))([

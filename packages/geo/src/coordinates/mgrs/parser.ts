@@ -59,7 +59,6 @@ function detailedErrors(input: string) {
 }
 
 // biome-ignore lint/style/useNamingConvention: <explanation>
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function parseMGRS(_format: any, input: string) {
   try {
     const point = MGRS.parse(input).toPoint();

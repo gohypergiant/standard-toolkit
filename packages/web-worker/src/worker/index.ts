@@ -17,13 +17,10 @@ let i = 0;
 
 const uuid = (namespace: string) => `${namespace}_${++i}`;
 
-// biome-ignore lint/suspicious/noExplicitAny: Figure out type hinting for "any" values
 type Actions = Record<string, (...args: any[]) => any>;
 
-// biome-ignore lint/suspicious/noExplicitAny: Figure out type hinting for "any" values
 type MessageData<T> = { id: string; type: T; args: any[] };
 
-// biome-ignore lint/suspicious/noExplicitAny: Figure out type hinting for "any" values
 type MessageDataResult = { id: string; ok?: any; error?: any };
 
 type Events = Record<string, MessageDataResult>;

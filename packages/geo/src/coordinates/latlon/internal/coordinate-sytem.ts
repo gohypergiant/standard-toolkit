@@ -16,7 +16,6 @@ import type { ParseResults } from './parse';
 
 // NOTE: isolated CoordinateSystem type so that it could be a private-export
 
-// biome-ignore lint/suspicious/noExplicitAny: there must be a better way???
 export type CoordinateSystem<F = any> = {
   name: string;
   parse: (format: Format, input: string) => ParseResults;
