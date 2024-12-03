@@ -1,3 +1,15 @@
+/*
+ * Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UnaryFunction } from '@/types';
 
@@ -5,6 +17,7 @@ import type { UnaryFunction } from '@/types';
 
 // If its a list of functions, last being Unary
 type ComposeParams<Fns> = Fns extends readonly [
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   ...any[],
   infer Last extends UnaryFunction,
 ]
@@ -21,10 +34,12 @@ type Composable<Fn> =
   Fn extends readonly [UnaryFunction]
     ? Fn
     : // if its a list of Unary funcs (ignoring the first)
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       Fn extends readonly [any, ...infer Rest extends readonly UnaryFunction[]]
       ? // Start building the list of func type by using the return type of the first in Rest
         // as the arg of the next in line and recursively spread the rest (doing the same thing)
         // The first is ignored but handled by the top level ComposeReturn
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         readonly [(arg: ComposeReturn<Rest>) => any, ...Composable<Rest>]
       : never;
 
