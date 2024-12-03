@@ -1,3 +1,4 @@
+import type { ExplicitAny } from '@/types';
 import { identity } from '../../combinators/i';
 
 /**
@@ -18,7 +19,7 @@ import { identity } from '../../combinators/i';
 export const lookup =
   <
     A extends Record<string | number | symbol, unknown>,
-    B extends (...args: any[]) => any,
+    B extends (...args: ExplicitAny[]) => ExplicitAny,
   >(
     obj: A,
     def?: B,

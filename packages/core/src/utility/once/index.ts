@@ -1,5 +1,7 @@
+import type { ExplicitAny } from '@/types';
+
 // TS' `Function` type only models the object side of it, not whether it is callable.
-type SomeFunction = (...args: any[]) => any;
+type SomeFunction = (...args: ExplicitAny[]) => ExplicitAny;
 
 /**
  * Ensures that the given function is only called once.
