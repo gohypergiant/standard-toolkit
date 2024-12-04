@@ -57,7 +57,7 @@
         "noArrayIndexKey": "warn",
         "noEmptyBlockStatements": "error",
         "useAwait": "error",
-        "noExplicitAny": "warn"
+        "noExplicitAny": "off"
       },
       "nursery": {
         "noDuplicateElseIf": "error"

@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UnaryFunction } from '@/types';
 
 // https://stackoverflow.com/questions/49310886/typing-compose-function-in-typescript-flow-compose#answer-73082627
 
 // If its a list of functions, last being Unary
 type ComposeParams<Fns> = Fns extends readonly [
-  ...any[],
+  ...any,
   infer Last extends UnaryFunction,
 ]
   ? // Get Params of the last, which returns [...argTypes], so get the first one [0]

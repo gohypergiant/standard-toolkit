@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UnaryFunction } from '@/types';
 
 // If its a list of functions, last being Unary
 type PipeParams<Fns> = Fns extends readonly [
   infer First extends UnaryFunction,
-  ...any[],
+  ...any,
 ]
   ? // Get Params of the first, which returns [...argTypes], so get the first one [0]
     // so that we have the true type of the arg
@@ -15,9 +14,7 @@ type PipeParams<Fns> = Fns extends readonly [
 // have to spread and infer last so that it gets the right type for the last one
 // [-1] no bueno
 type PipeReturn<Fns> = ReturnType<
-  Fns extends readonly [...any[], infer Last extends UnaryFunction]
-    ? Last
-    : never
+  Fns extends readonly [...any, infer Last extends UnaryFunction] ? Last : never
 >;
 
 type Pipeable<Fn> =
