@@ -10,26 +10,43 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect } from 'vitest';
-import { isTrue, isYes, isFalse, isNo, isOn, isOff } from './';
+import { describe, expect, it } from 'vitest';
+import {
+  isAnyFalsy,
+  isAnyTruthy,
+  isFalse,
+  isNo,
+  isOff,
+  isOn,
+  isTrue,
+  isYes,
+} from './';
 
-const truthy = [1, '1', 'on', 'true', 'yes', true, 'ON', 'YES', 'TRUE'];
-const falsey = [0, '0', 'off', 'false', 'no', false, 'OFF', 'NO', 'FALSE'];
+type Config = {
+  negative: unknown[];
+  positive: unknown[];
+  predicate: (a: unknown) => boolean;
+};
 
-describe('boolean validators', () => {
-  for (const item of truthy) {
-    it(`should return true for ${item}`, () => {
-      expect(isOn(item)).toBeTruthy();
-      expect(isTrue(item)).toBeTruthy();
-      expect(isYes(item)).toBeTruthy();
+const falsy = [0, '', false, ' false ', null, undefined, Number.NaN];
+const truthy = [1, true, ' true '];
+
+describe('boolean predicates', () => {
+  describe.each`
+    predicate      | positive                              | negative
+    ${isAnyFalsy}  | ${[...falsy, 'no', 'off']}            | ${[...truthy, 'on', 'yes']}
+    ${isAnyTruthy} | ${[...truthy, 'on', 'yes']}           | ${[...falsy, 'no', 'off']}
+    ${isFalse}     | ${[...falsy, ' false', '0']}          | ${[...truthy, 'o', 'O', 'true', 'string with false', '0.00']}
+    ${isNo}        | ${[...falsy, ' n', 'N ', 'no', 'NO']} | ${[...truthy, 'yes', 'string with no']}
+    ${isOff}       | ${[...falsy, ' off', 'OFF ']}         | ${[...truthy, 'on', 'string with off', 'of']}
+    ${isOn}        | ${[...truthy, ' on', 'ON ']}          | ${[...falsy, 'of', 'string with on', 'o']}
+    ${isTrue}      | ${[...truthy, ' true']}               | ${[...falsy, 'any string', {}, [], /abc/]}
+    ${isYes}       | ${[...truthy, ' yes', 'YeS ', 'y']}   | ${[...falsy, 'no', 'string with yes', 2]}
+  `('$predicate.name', ({ predicate, ...lists }: Config) => {
+    describe.each(['positive', 'negative'])('%s matches', (list) => {
+      it.each(lists[list] as unknown[])('%j', (val) => {
+        expect(predicate(val)).toBe(list === 'positive');
+      });
     });
-  }
-
-  for (const item of falsey) {
-    it(`should return false for ${item}`, () => {
-      expect(isFalse(item)).toBeTruthy();
-      expect(isOff(item)).toBeTruthy();
-      expect(isNo(item)).toBeTruthy();
-    });
-  }
+  });
 });

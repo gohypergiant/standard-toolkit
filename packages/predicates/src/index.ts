@@ -6,7 +6,16 @@ export { isBbox } from './is-bbox';
 export { isLatitude } from './is-latitude';
 export { isLongitude } from './is-longitude';
 export { isNothing } from './is-nothing';
-export { isFalse, isNo, isOff, isOn, isTrue, isYes } from './is-noyes';
+export {
+  isAnyFalsy,
+  isAnyTruthy,
+  isFalse,
+  isNo,
+  isOff,
+  isOn,
+  isTrue,
+  isYes,
+} from './is-noyes';
 export {
   isFiniteNumber,
   isFiniteNumeric,
