@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.4.1
+
+### Patch Changes
+
+- @accelint/converters@0.1.4
+
 ## 0.4.0
 
 ### Minor Changes
