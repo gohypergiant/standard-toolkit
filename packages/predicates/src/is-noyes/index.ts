@@ -10,28 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-// const trueRegex = /^(?:y|yes|true|1|on)$/i;
-// const falseRegex = /^(?:n|no|false|0|off)$/i;
-
-// const test = (r: RegExp, val: unknown) => r.test(`${val}`.trim());
-
-const falseValues = ['0', 'false', 'n', 'no', 'off'];
-const trueValues = ['1', 'true', 'y', 'yes', 'on'];
+import { toBoolean } from '@accelint/converters';
 
 const test = (list: string[], val: unknown) =>
   list.includes(`${val}`.trim().toLowerCase());
 
 /**
- * Compare the given value against a custom list of `falsey` values.
+ * Check the given value against "false-values" and returns true if found to be
+ * false. String values are not case sensitive.
  *
- * String values are not case sensitive.
- *
- * _0, '0', 'n', 'no', 'off', 'false', false_
+ * @see toBoolean
  *
  * @pure
  *
  * @example
- * isFalse('on');
+ * isFalse('  falSE');
  * // false
  *
  * isFalse('yes');
@@ -41,15 +34,13 @@ const test = (list: string[], val: unknown) =>
  * // true
  *
  * isFalse('no');
+ * // false
  */
-export const isFalse = (val: unknown) => test(falseValues, val);
+export const isFalse = (val: unknown) => toBoolean(val) === false;
 
 /**
- * Compare the given value against a custom list of `falsey` values.
- *
- * String values are not case sensitive.
- *
- * _0, '0', 'n', 'no', 'off', 'false', false_
+ * Compare the given value against a custom list of 'No' values. String values
+ * are not case sensitive.
  *
  * @pure
  *
@@ -61,18 +52,19 @@ export const isFalse = (val: unknown) => test(falseValues, val);
  * // false
  *
  * isNo('off');
- * // true
+ * // false
  *
  * isNo('no');
+ * // true
+ *
+ * isNo('N');
+ * // true
  */
-export const isNo = isFalse;
+export const isNo = (val: unknown) => !val || test(['n', 'no'], val);
 
 /**
- * Compare the given value against a custom list of `falsey` values.
- *
- * String values are not case sensitive.
- *
- * _0, '0', 'n', 'no', 'off', 'false', false_
+ * Compare the given value against a custom list of 'Off' values. String values
+ * are not case sensitive.
  *
  * @pure
  *
@@ -87,39 +79,42 @@ export const isNo = isFalse;
  * // true
  *
  * isOff('no');
+ * // false
  */
-export const isOff = isFalse;
+export const isOff = (val: unknown) => !val || test(['off'], val);
 
 /**
- * Compare the given value against a custom list of `truthy` values.
+ * Check the given value against "false-values" and returns true if found to
+ * be ***NOT*** false. String values are not case sensitive.
  *
- * String values are not case sensitive.
- *
- * _1, '1', 'y', 'yes', 'on', 'true', true_
+ * @see toBoolean
  *
  * @pure
  *
  * @example
- * isTrue('on');
+ * isTrue(' TrUe');
  * // true
  *
  * isTrue('yes');
  * // true
  *
- * isTrue('off');
+ * isTrue('any string');
+ * // true
+ *
+ * isTrue({});
+ * // true
+ *
+ * isTrue(false);
  * // false
  *
- * isTrue('no');
+ * isTrue('');
  * // false
  */
-export const isTrue = (val: unknown) => test(trueValues, val);
+export const isTrue = (val: unknown) => !isFalse(val);
 
 /**
- * Compare the given value against a custom list of `truthy` values.
- *
- * String values are not case sensitive.
- *
- * _1, '1', 'y', 'yes', 'on', 'true', true_
+ * Compare the given value against a custom list of 'On' values. String values
+ * are not case sensitive.
  *
  * @pure
  *
@@ -128,7 +123,7 @@ export const isTrue = (val: unknown) => test(trueValues, val);
  * // true
  *
  * isOn('yes');
- * // true
+ * // false
  *
  * isOn('off');
  * // false
@@ -136,22 +131,22 @@ export const isTrue = (val: unknown) => test(trueValues, val);
  * isOn('no');
  * // false
  */
-export const isOn = isTrue;
+export const isOn = (val: unknown) => val === true || test(['on'], val);
 
 /**
- * Compare the given value against a custom list of `truthy` values.
- *
- * String values are not case sensitive.
- *
- * _1, '1', 'y', 'yes', 'on', 'true', true_
+ * Compare the given value against a custom list of 'Yes' values. String values
+ * are not case sensitive.
  *
  * @pure
  *
  * @example
  * isYes('on');
- * // true
+ * // false
  *
  * isYes('yes');
+ * // true
+ *
+ * isYes('Y');
  * // true
  *
  * isYes('off');
@@ -160,4 +155,4 @@ export const isOn = isTrue;
  * isYes('no');
  * // false
  */
-export const isYes = isTrue;
+export const isYes = (val: unknown) => val === true || test(['y', 'yes'], val);

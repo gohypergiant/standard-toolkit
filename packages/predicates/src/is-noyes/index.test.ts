@@ -10,26 +10,31 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect } from 'vitest';
-import { isTrue, isYes, isFalse, isNo, isOn, isOff } from './';
+import { describe, expect, it } from 'vitest';
+import { isFalse, isNo, isOff, isOn, isTrue, isYes } from './';
 
-const truthy = [1, '1', 'on', 'true', 'yes', true, 'ON', 'YES', 'TRUE'];
-const falsey = [0, '0', 'off', 'false', 'no', false, 'OFF', 'NO', 'FALSE'];
+type Config = {
+  negative: unknown[];
+  positive: unknown[];
+  predicate: (a: unknown) => boolean;
+};
 
-describe('boolean validators', () => {
-  for (const item of truthy) {
-    it(`should return true for ${item}`, () => {
-      expect(isOn(item)).toBeTruthy();
-      expect(isTrue(item)).toBeTruthy();
-      expect(isYes(item)).toBeTruthy();
+describe('boolean predicates', () => {
+  describe.each`
+    predicate  | positive                                        | negative
+    ${isFalse} | ${[false, ' false', '0', '0.00']}               | ${[true, 'o', 'O', 'true', 'string with false']}
+    ${isNo}    | ${[false, ' n', 'N ', 'no', 'NO']}              | ${[true, 'yes', 'string with no']}
+    ${isOff}   | ${[false, ' off', 'OFF ']}                      | ${[true, 'on', 'string with off', 'of']}
+    ${isOn}    | ${[true, ' on', 'ON ']}                         | ${[false, 'of', 'string with on', 'o']}
+    ${isTrue}  | ${[true, ' true', 'any string', {}, [], /abc/]} | ${[false, '']}
+    ${isYes}   | ${[true, ' yes', 'YeS ', 'y']}                  | ${[false, 'no', 'string with yes']}
+  `('$predicate.name', ({ negative, positive, predicate }: Config) => {
+    it.each(positive)('%s', (val) => {
+      expect(predicate(val)).toBe(true);
     });
-  }
 
-  for (const item of falsey) {
-    it(`should return false for ${item}`, () => {
-      expect(isFalse(item)).toBeTruthy();
-      expect(isOff(item)).toBeTruthy();
-      expect(isNo(item)).toBeTruthy();
+    it.each(negative)('%s', (val) => {
+      expect(predicate(val)).toBe(false);
     });
-  }
+  });
 });

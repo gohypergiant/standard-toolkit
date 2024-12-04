@@ -13,31 +13,55 @@
 import { expect, it, describe } from 'vitest';
 import { toBoolean } from './';
 
-const truthy = [1, '1', 'on', 'true', 'yes', true, 'ON', 'YES', 'TRUE'];
-const falsey = [
-  0,
-  '0',
-  'off',
-  'false',
-  'no',
-  false,
+// biome-ignore lint/style/useNumberNamespace: testing value
+const INFINITY = Infinity;
+
+const truthy = [
+  // 'on', 'yes', 'ON', 'YES'
   [],
+  1,
+  '1',
+  true,
+  'true',
+  'Yes',
   {},
-  'OFF',
-  'NO',
-  'FALSE',
+  'anything at all',
+  ' on',
+  'off ',
+  'no',
+  'Y',
+  INFINITY,
+  -INFINITY,
+  Number.POSITIVE_INFINITY,
+  Number.NEGATIVE_INFINITY,
+  /abc/,
+  new Date(),
+  new Error('Fun times.'),
+  () => void 0,
+];
+const falsey = [
+  // 'off', 'no', 'OFF', 'NO',
+  '',
+  0,
+  0.0,
+  '0',
+  '0.000',
+  '0000.000',
+  false,
+  'false',
+  '  FaLsE ',
+  void 0,
+  Number.NaN,
+  null,
+  undefined,
 ];
 
 describe('toBoolean', () => {
-  for (const item of truthy) {
-    it(`should return true for ${item}`, () => {
-      expect(toBoolean(item)).toBeTruthy();
-    });
-  }
+  it.each(falsey)('%s', (val) => {
+    expect(toBoolean(val)).toBe(false);
+  });
 
-  for (const item of falsey) {
-    it(`should return false for ${item}`, () => {
-      expect(toBoolean(item)).not.toBeTruthy();
-    });
-  }
+  it.each(truthy)('%s', (val) => {
+    expect(toBoolean(val)).toBe(true);
+  });
 });
