@@ -1,5 +1,11 @@
 # @accelint/predicates
 
+## 0.1.4
+
+### Patch Changes
+
+- 4ceec7e: Improve performance of is-noyes.
+
 ## 0.1.3
 
 ### Patch Changes
