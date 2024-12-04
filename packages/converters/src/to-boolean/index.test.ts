@@ -10,34 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import { expect, it, describe } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
+import {
+  createFixture,
+  falsey,
+  truthy,
+} from '../../../constants/src/__fixtures__/boolean';
+
 import { toBoolean } from './';
 
-const truthy = [1, '1', 'on', 'true', 'yes', true, 'ON', 'YES', 'TRUE'];
-const falsey = [
-  0,
-  '0',
-  'off',
-  'false',
-  'no',
-  false,
-  [],
-  {},
-  'OFF',
-  'NO',
-  'FALSE',
-];
-
 describe('toBoolean', () => {
-  for (const item of truthy) {
-    it(`should return true for ${item}`, () => {
-      expect(toBoolean(item)).toBeTruthy();
+  describe.each([
+    // positive cases
+    ...createFixture(true, [truthy, toBoolean]),
+    // negative cases
+    ...createFixture(false, [falsey, toBoolean]),
+  ])('%s', (_name, expected, fn, values) => {
+    it.each(values)(`should return "${expected}" for %j`, (value) => {
+      expect(fn(value)).toBe(expected);
     });
-  }
-
-  for (const item of falsey) {
-    it(`should return false for ${item}`, () => {
-      expect(toBoolean(item)).not.toBeTruthy();
-    });
-  }
+  });
 });

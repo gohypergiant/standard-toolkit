@@ -10,26 +10,41 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect } from 'vitest';
-import { isTrue, isYes, isFalse, isNo, isOn, isOff } from './';
+import { describe, expect, it } from 'vitest';
 
-const truthy = [1, '1', 'on', 'true', 'yes', true, 'ON', 'YES', 'TRUE'];
-const falsey = [0, '0', 'off', 'false', 'no', false, 'OFF', 'NO', 'FALSE'];
+import {
+  createFixture,
+  falsey,
+  truthy,
+} from '../../../constants/src/__fixtures__/boolean';
+
+import { isFalse, isNo, isOff, isOn, isTrue, isYes } from './';
 
 describe('boolean validators', () => {
-  for (const item of truthy) {
-    it(`should return true for ${item}`, () => {
-      expect(isOn(item)).toBeTruthy();
-      expect(isTrue(item)).toBeTruthy();
-      expect(isYes(item)).toBeTruthy();
+  describe.each([
+    // positive cases
+    ...createFixture(
+      true,
+      [falsey, isFalse],
+      [falsey, isNo],
+      [falsey, isOff],
+      [truthy, isOn],
+      [truthy, isTrue],
+      [truthy, isYes],
+    ),
+    // negative cases
+    ...createFixture(
+      false,
+      [truthy, isFalse],
+      [truthy, isNo],
+      [truthy, isOff],
+      [falsey, isOn],
+      [falsey, isTrue],
+      [falsey, isYes],
+    ),
+  ])('%s', (_name, expected, fn, values) => {
+    it.each(values)(`should return "${expected}" for %j`, (value) => {
+      expect(fn(value)).toBe(expected);
     });
-  }
-
-  for (const item of falsey) {
-    it(`should return false for ${item}`, () => {
-      expect(isFalse(item)).toBeTruthy();
-      expect(isOff(item)).toBeTruthy();
-      expect(isNo(item)).toBeTruthy();
-    });
-  }
+  });
 });

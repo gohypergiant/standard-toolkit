@@ -10,12 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-// const trueRegex = /^(?:y|yes|true|1|on)$/i;
-// const falseRegex = /^(?:n|no|false|0|off)$/i;
-
-// const test = (r: RegExp, val: unknown) => r.test(`${val}`.trim());
-
-const falseValues = ['0', 'false', 'n', 'no', 'off'];
+// NOTE: a stringify'd empty array will result in ''; a stringify'd object will
+// result in '[object Object]' which would then need to be lower cased as below
+const falseValues = ['', '0', 'false', 'n', 'no', 'off', '[object object]'];
 const trueValues = ['1', 'true', 'y', 'yes', 'on'];
 
 const test = (list: string[], val: unknown) =>
