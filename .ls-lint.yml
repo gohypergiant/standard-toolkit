@@ -28,5 +28,6 @@ ignore:
   - '**/build'
   - '**/coverage'
   - '**/dist'
+  - '**/docs'
   - '**/documentation'
   - '**/node_modules'
