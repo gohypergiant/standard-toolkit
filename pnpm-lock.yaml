@@ -490,9 +490,6 @@ importers:
 
   packages/predicates:
     dependencies:
-      '@accelint/converters':
-        specifier: workspace:^0.1.3
-        version: link:../converters
       '@accelint/core':
         specifier: workspace:0.1.3
         version: link:../core

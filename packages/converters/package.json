@@ -4,7 +4,9 @@
   "private": false,
   "license": "Apache-2.0",
   "type": "module",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {

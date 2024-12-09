@@ -16,31 +16,7 @@ import { toBoolean } from './';
 // biome-ignore lint/style/useNumberNamespace: testing value
 const INFINITY = Infinity;
 
-const truthy = [
-  // 'on', 'yes', 'ON', 'YES'
-  [],
-  1,
-  '1',
-  true,
-  'true',
-  'Yes',
-  {},
-  'anything at all',
-  ' on',
-  'off ',
-  'no',
-  'Y',
-  INFINITY,
-  -INFINITY,
-  Number.POSITIVE_INFINITY,
-  Number.NEGATIVE_INFINITY,
-  /abc/,
-  new Date(),
-  new Error('Fun times.'),
-  () => void 0,
-];
-const falsey = [
-  // 'off', 'no', 'OFF', 'NO',
+const falsy = [
   '',
   0,
   0.0,
@@ -55,9 +31,35 @@ const falsey = [
   null,
   undefined,
 ];
+const truthy = [
+  [],
+  1,
+  '1',
+  true,
+  'true',
+  {},
+  'any non-empty string',
+  // 'Yes',
+  // 'yes',
+  // 'No',
+  // 'no',
+  // 'off',
+  // 'Off',
+  // 'OFF',
+  // 'On',
+  // 'on',
+  INFINITY,
+  -INFINITY,
+  Number.POSITIVE_INFINITY,
+  Number.NEGATIVE_INFINITY,
+  /abc/,
+  new Date(),
+  new Error('Fun times.'),
+  () => void 0,
+];
 
 describe('toBoolean', () => {
-  it.each(falsey)('%s', (val) => {
+  it.each(falsy)('%s', (val) => {
     expect(toBoolean(val)).toBe(false);
   });
 

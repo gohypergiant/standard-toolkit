@@ -11,32 +11,28 @@
  */
 
 /**
- * Will consider any non "false-value" to be true. String values are not case sensitive.
+ * Returns true for any value not found to be a "false" value.
  *
- * **"false-values"**
+ * **"false" values**
  *   - inherently false values: '' (empty string), 0, false, undefined, null, NaN
  *   - numeric zero: '0.000' - any number of leading or trailing zeros
  *   - string literal: 'false' - any capitalizations or space-padding
  *
+ * For more restrictive comparisons against: true, false, on, off, yes, no; see
+ * the predicates package (\@accelint/predicates).
+ *
  * @pure
  *
  * @example
- * toBoolean(1);
- * // true
- *
- * toBoolean(' FaLsE ');
- * // false
- *
- * toBoolean('  true');
- * // true
- *
- * toBoolean('000.000');
- * // false
+ * toBoolean(1);          // true
+ * toBoolean(' FaLsE ');  // false
+ * toBoolean('  true');   // true
+ * toBoolean('000.000');  // false
  */
 export function toBoolean(val: unknown) {
   return !(
     !val ||
     `${val}`.trim().toLowerCase() === 'false' ||
-    Number.parseFloat(val as string) === 0
+    Number.parseFloat(`${val}`) === 0
   );
 }

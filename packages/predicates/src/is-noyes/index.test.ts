@@ -19,22 +19,23 @@ type Config = {
   predicate: (a: unknown) => boolean;
 };
 
+const falsy = [0, '', false, ' false ', null, undefined, Number.NaN];
+const truthy = [1, true, ' true '];
+
 describe('boolean predicates', () => {
   describe.each`
-    predicate  | positive                                        | negative
-    ${isFalse} | ${[false, ' false', '0', '0.00']}               | ${[true, 'o', 'O', 'true', 'string with false']}
-    ${isNo}    | ${[false, ' n', 'N ', 'no', 'NO']}              | ${[true, 'yes', 'string with no']}
-    ${isOff}   | ${[false, ' off', 'OFF ']}                      | ${[true, 'on', 'string with off', 'of']}
-    ${isOn}    | ${[true, ' on', 'ON ']}                         | ${[false, 'of', 'string with on', 'o']}
-    ${isTrue}  | ${[true, ' true', 'any string', {}, [], /abc/]} | ${[false, '']}
-    ${isYes}   | ${[true, ' yes', 'YeS ', 'y']}                  | ${[false, 'no', 'string with yes']}
-  `('$predicate.name', ({ negative, positive, predicate }: Config) => {
-    it.each(positive)('%s', (val) => {
-      expect(predicate(val)).toBe(true);
-    });
-
-    it.each(negative)('%s', (val) => {
-      expect(predicate(val)).toBe(false);
+    predicate  | positive                              | negative
+    ${isFalse} | ${[...falsy, ' false', '0']}          | ${[...truthy, 'o', 'O', 'true', 'string with false', '0.00']}
+    ${isNo}    | ${[...falsy, ' n', 'N ', 'no', 'NO']} | ${[...truthy, 'yes', 'string with no']}
+    ${isOff}   | ${[...falsy, ' off', 'OFF ']}         | ${[...truthy, 'on', 'string with off', 'of']}
+    ${isOn}    | ${[...truthy, ' on', 'ON ']}          | ${[...falsy, 'of', 'string with on', 'o']}
+    ${isTrue}  | ${[...truthy, ' true']}               | ${[...falsy, 'any string', {}, [], /abc/]}
+    ${isYes}   | ${[...truthy, ' yes', 'YeS ', 'y']}   | ${[...falsy, 'no', 'string with yes', 2]}
+  `('$predicate.name', ({ predicate, ...lists }: Config) => {
+    describe.each(['positive', 'negative'])('%s matches', (list) => {
+      it.each(lists[list] as unknown[])('%j', (val) => {
+        expect(predicate(val)).toBe(list === 'positive');
+      });
     });
   });
 });
