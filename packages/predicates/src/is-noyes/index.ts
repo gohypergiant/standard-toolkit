@@ -10,154 +10,148 @@
  * governing permissions and limitations under the License.
  */
 
-// const trueRegex = /^(?:y|yes|true|1|on)$/i;
-// const falseRegex = /^(?:n|no|false|0|off)$/i;
+// NOTE: There is some overlap between these functions and toBoolean from
+// @accelint/converters. The purposes of these two packages are different; the
+// converter is intended to be liberal and convert any value these functions
+// are intended to be fairly specific.
 
-// const test = (r: RegExp, val: unknown) => r.test(`${val}`.trim());
+const listFalse = ['', '0', 'false', 'nan', 'null', 'undefined'];
+const listTrue = ['1', 'true'];
 
-const falseValues = ['0', 'false', 'n', 'no', 'off'];
-const trueValues = ['1', 'true', 'y', 'yes', 'on'];
+const listNo = ['n', 'no', ...listFalse];
+const listOff = ['off', ...listFalse];
+const listOn = ['on', ...listTrue];
+const listYes = ['y', 'yes', ...listTrue];
 
 const test = (list: string[], val: unknown) =>
   list.includes(`${val}`.trim().toLowerCase());
 
 /**
- * Compare the given value against a custom list of `falsey` values.
+ * Returns true if the given value is found in a case-insensitive list of
+ * "false" values.
  *
- * String values are not case sensitive.
+ * False values: ['', '0', 'false', 'nan', 'null', 'undefined']
  *
- * _0, '0', 'n', 'no', 'off', 'false', false_
+ * For a more liberal comparison/coercion to true or false see the converters
+ * package (\@accelint/converters).
  *
  * @pure
  *
  * @example
- * isFalse('on');
- * // false
- *
- * isFalse('yes');
- * // false
- *
- * isFalse('off');
- * // true
- *
- * isFalse('no');
+ * isFalse('');        // true
+ * isFalse(0);         // true
+ * isFalse(1);         // false
+ * isFalse(true);      // false
  */
-export const isFalse = (val: unknown) => test(falseValues, val);
+export const isFalse = (val: unknown) => test(listFalse, val);
 
 /**
- * Compare the given value against a custom list of `falsey` values.
+ * Returns true if the given value is found in a case-insensitive list of
+ * "no" values.
  *
- * String values are not case sensitive.
+ * False values: ['', '0', 'false', 'nan', 'null', 'undefined']
  *
- * _0, '0', 'n', 'no', 'off', 'false', false_
+ * Additional values: ['n', 'no']
+ *
+ * For a more liberal comparison/coercion to true or false see the converters
+ * package (\@accelint/converters).
  *
  * @pure
  *
  * @example
- * isNo('on');
- * // false
- *
- * isNo('yes');
- * // false
- *
- * isNo('off');
- * // true
- *
- * isNo('no');
+ * isNo('n');       // true
+ * isNo('');        // true
+ * isNo(0);         // true
+ * isNo(1);         // false
+ * isNo(true);      // false
+ * isNo('yes');     // false
  */
-export const isNo = isFalse;
+export const isNo = (val: unknown) => test(listNo, val);
 
 /**
- * Compare the given value against a custom list of `falsey` values.
+ * Returns true if the given value is found in a case-insensitive list of
+ * "off" values.
  *
- * String values are not case sensitive.
+ * False values: ['', '0', 'false', 'nan', 'null', 'undefined']
  *
- * _0, '0', 'n', 'no', 'off', 'false', false_
+ * Additional values: ['off']
+ *
+ * For a more liberal comparison/coercion to true or false see the converters
+ * package (\@accelint/converters).
  *
  * @pure
  *
  * @example
- * isOff('on');
- * // false
- *
- * isOff('yes');
- * // false
- *
- * isOff('off');
- * // true
- *
- * isOff('no');
+ * isOff('off');     // true
+ * isOff('');        // true
+ * isOff(0);         // true
+ * isOff(1);         // false
+ * isOff(true);      // false
+ * isOff('on');      // false
  */
-export const isOff = isFalse;
+export const isOff = (val: unknown) => test(listOff, val);
 
 /**
- * Compare the given value against a custom list of `truthy` values.
+ * Returns true if the given value is found in a case-insensitive list of
+ * "on" values.
  *
- * String values are not case sensitive.
+ * True values: ['1', 'true']
  *
- * _1, '1', 'y', 'yes', 'on', 'true', true_
+ * Additional values: ['on']
+ *
+ * For a more liberal comparison/coercion to true or false see the converters
+ * package (\@accelint/converters).
  *
  * @pure
  *
  * @example
- * isTrue('on');
- * // true
- *
- * isTrue('yes');
- * // true
- *
- * isTrue('off');
- * // false
- *
- * isTrue('no');
- * // false
+ * isOn('off');     // false
+ * isOn('');        // false
+ * isOn(0);         // false
+ * isOn(1);         // true
+ * isOn(true);      // true
+ * isOn('on');      // true
  */
-export const isTrue = (val: unknown) => test(trueValues, val);
+export const isOn = (val: unknown) => test(listOn, val);
 
 /**
- * Compare the given value against a custom list of `truthy` values.
+ * Returns true if the given value is found in a case-insensitive list of
+ * "true" values.
  *
- * String values are not case sensitive.
+ * True values: ['1', 'true']
  *
- * _1, '1', 'y', 'yes', 'on', 'true', true_
+ * For a more liberal comparison/coercion to true or false see the converters
+ * package (\@accelint/converters).
  *
  * @pure
  *
  * @example
- * isOn('on');
- * // true
- *
- * isOn('yes');
- * // true
- *
- * isOn('off');
- * // false
- *
- * isOn('no');
- * // false
+ * isOn('no');      // false
+ * isOn('');        // false
+ * isOn(0);         // false
+ * isOn(1);         // true
+ * isOn(true);      // true
+ * isOn('yes');     // true
  */
-export const isOn = isTrue;
+export const isTrue = (val: unknown) => test(listTrue, val);
 
 /**
- * Compare the given value against a custom list of `truthy` values.
+ * Returns true if the given value is found in a case-insensitive list of
+ * "yes" values.
  *
- * String values are not case sensitive.
+ * True values: ['1', 'true']
  *
- * _1, '1', 'y', 'yes', 'on', 'true', true_
+ * Additional values: ['y', 'yes']
+ *
+ * For a more liberal comparison/coercion to true or false see the converters
+ * package (\@accelint/converters).
  *
  * @pure
  *
  * @example
- * isYes('on');
- * // true
- *
- * isYes('yes');
- * // true
- *
- * isYes('off');
- * // false
- *
- * isYes('no');
- * // false
+ * isTrue('');        // false
+ * isTrue(0);         // false
+ * isTrue(1);         // true
+ * isTrue(true);      // true
  */
-export const isYes = isTrue;
+export const isYes = (val: unknown) => test(listYes, val);

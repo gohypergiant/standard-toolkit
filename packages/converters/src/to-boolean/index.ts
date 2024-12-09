@@ -10,30 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-import { isTrue } from '@accelint/predicates';
-
 /**
- * Compare the given value against a custom list of `truthy` values.
+ * Returns true for any value not found to be a "false" value.
  *
- * String values are not case sensitive.
+ * **"false" values**
+ *   - inherently false values: '' (empty string), 0, false, undefined, null, NaN
+ *   - numeric zero: '0.000' - any number of leading or trailing zeros
+ *   - string literal: 'false' - any capitalizations or space-padding
  *
- * _1, '1', 'on', 'true', 'yes', true_
+ * For more restrictive comparisons against: true, false, on, off, yes, no; see
+ * the predicates package (\@accelint/predicates).
  *
  * @pure
  *
  * @example
- * toBoolean('on');
- * // true
- *
- * toBoolean('yes');
- * // true
- *
- * toBoolean('off');
- * // false
- *
- * toBoolean('no');
- * // false
+ * toBoolean(1);          // true
+ * toBoolean(' FaLsE ');  // false
+ * toBoolean('  true');   // true
+ * toBoolean('000.000');  // false
  */
 export function toBoolean(val: unknown) {
-  return isTrue(val);
+  return !(
+    !val ||
+    `${val}`.trim().toLowerCase() === 'false' ||
+    Number.parseFloat(`${val}`) === 0
+  );
 }
