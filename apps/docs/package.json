@@ -1,0 +1,20 @@
+{
+  "name": "@accelint/docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "rspress build",
+    "check": "biome check --write",
+    "dev": "rspress dev",
+    "format": "biome format --write",
+    "preview": "rspress preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "rspress": "^1.37.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.3",
+    "@types/node": "^18.11.17"
+  }
+}
