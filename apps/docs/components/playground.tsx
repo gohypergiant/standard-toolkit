@@ -1,55 +1,27 @@
-// biome-ignore lint/correctness/noUnusedImports: not sure what else to do
-import React, { type PropsWithChildren, useState } from 'react';
+import MonacoEditor from '@monaco-editor/react';
+import type React from 'react';
+import type { PropsWithChildren } from 'react';
 
-export function Playground(props) {
-  // const [value, setValue] = useState('');
+type Props = PropsWithChildren<{
+  context: object;
+}>;
 
-  return (
-    <div>
-      {props.children}
-      {/* <textarea
-        id='editor'
-        name='editor'
-        onChange={({ target }) => setValue(target.value)}
-        style={{
-          display: 'flex',
-          margin: 0,
-          padding: '1em',
-          width: '-webkit-fill-available',
-        }}
-        value={value}
-      /> */}
-    </div>
-  );
-}
+export default function Playground({ children }: Props) {
+  // props.context
+  const code = (children as React.ReactElement).props.children.props.children;
 
-export function Run({
-  children,
-  context,
-}: PropsWithChildren<{ context: CallableFunction }>) {
-  const lines = children.map((child) => child.props.children);
-  const code = [...lines.slice(0, -1), `return ${lines.at(-1)}`].join('\n');
-  const result = new Function('context', `with(context){${code}}`)(context);
+  // const [value, setValue] = useState(code);
 
   return (
-    <>
-      <strong>Result</strong>
-      <div className='language-ts'>
-        <div className='rspress-code-content rspress-scrollbar'>
-          <div>
-            <pre>
-              <code
-                style={{
-                  display: 'block',
-                  padding: '0px 1.25rem',
-                }}
-              >
-                {`// ${JSON.stringify(result)}`}
-              </code>
-            </pre>
-          </div>
-        </div>
-      </div>
-    </>
+    <figure>
+      {children}
+
+      <MonacoEditor
+        defaultLanguage='typescript'
+        defaultValue={code}
+        height='24em'
+        theme='vs-dark'
+      />
+    </figure>
   );
 }
