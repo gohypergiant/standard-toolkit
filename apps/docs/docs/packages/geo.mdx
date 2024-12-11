@@ -3,7 +3,9 @@
 import Playground from '../../components/playground';
 import { coordinateSystems, createCoordinate } from '../../../../packages/geo/src';
 
-<Playground context={{ coordinateSystems, createCoordinate }}>
+<Playground files={{
+  '@accelint/geo': { coordinateSystems, createCoordinate },
+}}>
 ```ts
 import { coordinateSystems, createCoordinate } from '@accelint/geo';
 
