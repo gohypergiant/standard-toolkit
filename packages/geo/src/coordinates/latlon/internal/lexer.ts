@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import * as Patterning from '../../../patterning';
+import * as Patterning from '@/patterning';
 
 import { SYMBOL_PATTERNS, SYMBOLS } from '.';
 

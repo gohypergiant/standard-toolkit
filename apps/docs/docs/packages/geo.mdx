@@ -1,11 +1,5 @@
 ## Coordinate Parsing
 
-import Playground from '../../components/playground';
-import { coordinateSystems, createCoordinate } from '../../../../packages/geo/src';
-
-<Playground files={{
-  '@accelint/geo': { coordinateSystems, createCoordinate },
-}}>
 ```ts
 import { coordinateSystems, createCoordinate } from '@accelint/geo';
 
@@ -13,4 +7,3 @@ const coordinate = createCoordinate(coordinateSystems.dd, 'LATLON');
 
 coordinate('32.1 54.321').dms();
 ```
-</Playground>
