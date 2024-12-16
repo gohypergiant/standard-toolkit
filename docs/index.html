@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <title>Documentation - Accelint Standard Toolkit</title>
+
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+  <meta content="Description" name="description" />
+  <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0" name="viewport" />
+
+  <link href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css" rel="stylesheet" />
+
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    import { parse } from 'https://cdn.jsdelivr.net/npm/comment-parser@1.4.1/+esm';
+    import { parse as marked } from 'https://cdn.jsdelivr.net/npm/marked@15.0.3/+esm';
+
+    class Playground extends HTMLElement {
+      static #root = 'https://raw.githubusercontent.com/gohypergiant/standard-toolkit/refs/heads/main';
+
+      #config;
+
+      constructor() {
+        super();
+
+        this.#config = JSON.parse(this.innerText)
+
+        this.classList.add('code-playground')
+      }
+
+      connectedCallback() {
+        fetch(`${Playground.#root}/${this.#config.module}`)
+          .then((r) => r.text())
+          .then(this.#render.bind(this));
+      }
+
+      #render(body) {
+        let source = body;
+        const comments = parse(source)[0];
+
+        this.innerHTML = '';
+
+        if (comments) {
+          let content = comments.description ?? '';
+
+          const examples = comments.tags
+            .filter(({tag}) => tag === 'example')
+            .map(({ source }) => source.slice(1, -1).map(({tokens}) => tokens.description).join('\n'))
+            .join('\n');
+
+          if (examples) {
+            content += [
+              '',
+              '### Example',
+              '```typescript',
+              examples,
+              '```',
+            ].join('\n');
+          }
+
+          this.innerHTML = marked([
+              content,
+              '### Source',
+            ].join('\n'));
+        }
+
+
+        if (this.#config.render) {
+          this.innerHTML += '<figure style="border: 1px solid gainsboro; margin: 0; padding: 1em;">Demo rendering... [TBD]</figure>'
+        }
+
+        if (body.includes('Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved')) {
+          source = source.replace(/\/\*[\w\W]+?\*\/\W+/m, '')
+        }
+
+        this.innerHTML += `<pre style="margin: 0; max-height: 36em;"><code class="lang-typescript">${source}</code></pre>`
+
+        Array.from(this.querySelectorAll('code')).forEach((el) => {
+          Prism.highlightElement(el);
+        })
+      }
+    }
+
+    customElements.define('code-playground', Playground);
+
+    window.$docsify = {
+      loadSidebar: true,
+      markdown: {
+        smartypants: true,
+        renderer: {
+          code(block, lang) {
+            return block && lang === 'playground'
+              ? `<code-playground>${block}</code-playground>`
+              : block;
+          }
+        }
+      },
+      name: 'Accelint Standard Toolkit',
+      repo: 'https://github.com/gohypergiant/standard-toolkit',
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.js"></script>
+</body>
+</html>
