@@ -55,6 +55,14 @@ _            |           |           |              |       |       |     |
   - Ext - will require an extension/plugin
 - __Setup__ - ease of getting it running: easy, or hard
 
+### Notes
+
+#### RSPress / Vocs
+
+These tools are robust and fairly mature. Getting up and running with the basics is straightforward. Their offerings are very similar and their limitations are also similar.
+
+RSPress lacks the ability to display a sandbox for a typescript module (and its dependencies) natively; however, there is support for displaying an interactive React.js component preview. A typescript solution is not too far off, with some work, using something like StackBlitz or Sandpack SDKs; it will take a fair amount of effort to get up and running and then long-term maintenance.
+
 [Docsify]: https://docsify.js.org/#/
 [Docusaurus]: https://docusaurus.io/
 [Docz]: https://www.docz.site/
