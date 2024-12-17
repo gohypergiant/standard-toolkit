@@ -4,8 +4,7 @@
     "dev",
     "prod",
     "peer",
-    "overrides",
-    "local"
+    "overrides"
   ],
   "source": [
     "package.json",
