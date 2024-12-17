@@ -13,10 +13,10 @@
     "lint": "pnpm biome lint ./"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.3.2",
-    "@vitest/coverage-istanbul": "^2.1.3",
-    "vite-tsconfig-paths": "^5.0.1",
-    "vitest": "^2.1.3"
+    "@vitejs/plugin-react": "4.3.2",
+    "@vitest/coverage-istanbul": "2.1.3",
+    "vite-tsconfig-paths": "5.0.1",
+    "vitest": "2.1.3"
   },
   "$schema": "https://json.schemastore.org/package",
   "author": "https://hypergiant.com",

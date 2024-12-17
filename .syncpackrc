@@ -4,16 +4,18 @@
     "dev",
     "prod",
     "peer",
-    "overrides"
+    "overrides",
+    "local"
   ],
   "source": [
     "package.json",
+    "apps/*/package.json",
     "packages/*/package.json",
     "tooling/*/package.json"
   ],
   "semverGroups": [
     {
-      "range": "^",
+      "range": "",
       "dependencies": ["**"],
       "packages": ["**"]
     }
