@@ -21,22 +21,30 @@
 
 Libraries are exposed via individual packages. Refer to each package documentation for available utilities.
 
-Documentation | Package
---------------|-------------
-[Biome Config](#link-to-docs)      | `@accelint/biome-config`
-[Constants](#link-to-docs)         | `@accelint/constants`
-[Converters](#link-to-docs)        | `@accelint/converters`
-[Design System](#link-to-docs)     | `@accelint/design-system`
-[Eslint Config](#link-to-docs)     | `@accelint/eslint-config`
-[Formatters](#link-to-docs)        | `@accelint/formatters`
-[Geo](#link-to-docs)               | `@accelint/geo`
-[Math](#link-to-docs)              | `@accelint/math`
-[Prettier Config](#link-to-docs)   | `@accelint/prettier-config`
-[Typescript Config](#link-to-docs) | `@accelint/typescript-config`
-[Predicates](#link-to-docs)        | `@accelint/predicates`
-[Vitest Config](#link-to-docs)     | `@accelint/vitest-config`
-[Web Worker](#link-to-docs)        | `@accelint/web-worker`
-[Websocket](#link-to-docs)         | `@accelint/websocket`
+| Documentation                                            | Package                     |
+| ---------------------------------------------------------|---------------------------- |
+| [Constants](./packages/constants/documentation)          | `@accelint/constants`       |
+| [Converters](./packages/converters/documentation)        | `@accelint/converters`      |
+| [Design System](./packages/design-system/documentation)  | `@accelint/design-system`   |
+| [Formatters](./packages/formatters/documentation)        | `@accelint/formatters`      |
+| [Geo](./packages/geo/documentation)                      | `@accelint/geo`             |
+| [Math](./packages/math/documentation)                    | `@accelint/math`            |
+| [Predicates](./packages/predicates/documentation)        | `@accelint/predicates`      |
+| [Predicates](./packages/temporal/documentation)          | `@accelint/temporal`        |
+| [Web Worker](./packages/web-worker/documentation)        | `@accelint/web-worker`      |
+| [Websocket](./packages/websocket/documentation)          | `@accelint/websocket`       |
+
+
+
+We also export configurations for common tooling in our applications.
+
+| Package                       |
+| ----------------------------- |
+| `@accelint/biome-config`      |
+| `@accelint/eslint-config`     |
+| `@accelint/prettier-config`   |
+| `@accelint/typescript-config` |
+| `@accelint/vitest-config`     |
 
 ## 💡 Contributing
 

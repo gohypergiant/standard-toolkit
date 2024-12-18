@@ -36,5 +36,6 @@ Developer Toolkit development is governed by the Technical Steering Committee (T
 - [Brandon Pierce](https://github.com/brandonjpierce)
 - [Brenna Switzer](https://github.com/switzerb)
 - [Josh Kalis](https://github.com/kalisjoshua)
+- [Teddy Ortega](https://github.com/orteth01)
 
 Maintainers of the Developer Toolkit have write access to this GitHub repository, and take part in the decision making process.
