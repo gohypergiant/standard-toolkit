@@ -1,5 +1,26 @@
 # @accelint/predicates
 
+## 0.2.0
+
+### Minor Changes
+
+- 13f0d6c: With the changes to `toBoolean` (packages/converters) the predicate functions
+  (packages/predicates/src/is-noyes) are able to be more specific in what they compare against;
+  rather than them simply being alias names to broad validation. The available predicates are now:
+
+  - `isAnyFalsy`
+  - `isAnyTruthy`
+  - `isFalse`
+  - `isTrue`
+  - `isOn`
+  - `isOff`
+  - `isNo`
+  - `isYes`
+
+### Patch Changes
+
+- 4ceec7e: Improve performance of is-noyes.
+
 ## 0.1.3
 
 ### Patch Changes

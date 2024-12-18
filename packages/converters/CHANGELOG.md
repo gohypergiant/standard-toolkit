@@ -1,5 +1,13 @@
 # @accelint/converters
 
+## 0.2.0
+
+### Minor Changes
+
+- 13f0d6c: The `toBoolean` function centralizes the logic for converting a value to a boolean.
+  Specifically honoring anything that is considered a falsy value by the language itself will
+  be converted to `false` and any other value will be considered truthy and converted to `true`.
+
 ## 0.1.3
 
 ### Patch Changes
