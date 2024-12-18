@@ -41,7 +41,7 @@
     "test": "pnpm vitest --dir=src"
   },
   "peerDependencies": {
-    "@react-aria/collections": "^3.0.0-alpha.5",
+    "@react-aria/collections": "3.0.0-alpha.5",
     "@react-aria/dnd": "3.7.4",
     "@react-aria/focus": "3.18.4",
     "@react-aria/interactions": "3.22.4",
@@ -52,9 +52,9 @@
     "@react-stately/overlays": "3.6.11",
     "@react-stately/utils": "3.10.4",
     "@react-types/shared": "3.25.0",
-    "react": "^18.3.1 || ^19.0.0-rc-69d4b800-20241021",
+    "react": "18.3.1",
     "react-aria-components": "1.4.1",
-    "react-dom": "^18.3.1 || ^19.0.0-rc-69d4b800-20241021",
+    "react-dom": "18.3.1",
     "react-querybuilder": "7.7.0"
   },
   "devDependencies": {
