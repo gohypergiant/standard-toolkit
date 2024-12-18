@@ -15,9 +15,10 @@ import { isString } from './';
 import { nonStringPairs } from './__fixtures__';
 
 describe('string validators', () => {
-  for (const pair of nonStringPairs) {
-    it(`isString: ${pair[0]}`, () => {
-      expect(isString(pair[1])).toBeFalsy();
-    });
-  }
+  it.each(nonStringPairs)(
+    'isString(%s) should be false',
+    (_expected, value) => {
+      expect(isString(value)).toBeFalsy();
+    },
+  );
 });

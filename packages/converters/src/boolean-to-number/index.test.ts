@@ -13,15 +13,12 @@
 import { describe, expect, it } from 'vitest';
 import { booleanToNumber } from './';
 
-const testPairs: [boolean, number][] = [
-  [true, 1],
-  [false, 0],
-];
-
 describe('bool to number', () => {
-  for (const [input, result] of testPairs) {
-    it(`should convert ${input} to ${result}`, () => {
-      expect(booleanToNumber(input)).toEqual(result);
-    });
-  }
+  it('should convert true to 1', () => {
+    expect(booleanToNumber(true)).toEqual(1);
+  });
+
+  it('should convert false to 0', () => {
+    expect(booleanToNumber(false)).toEqual(0);
+  });
 });

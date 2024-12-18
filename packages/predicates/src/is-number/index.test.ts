@@ -12,152 +12,69 @@
 
 import { expect, it, describe } from 'vitest';
 import { isFiniteNumber, isFiniteNumeric, isNumber, isNumeric } from './';
-import {
-  floatingPointPairs,
-  floatingPointStringPairs,
-  nonFinitePairs,
-  nonFiniteStringPairs,
-  nonNumericPairs,
-  numberLikeStringPairs,
-  numberLiteralPairs,
-} from './__fixtures__';
+
+// biome-ignore lint/style/useNumberNamespace: want to diff against Number.NEGATIVE_INFINITY
+const INFINITY = Infinity;
+const { POSITIVE_INFINITY, NEGATIVE_INFINITY } = Number;
 
 describe('number validators', () => {
-  for (const pairs of numberLiteralPairs) {
-    it(`isFiniteNumber: ${pairs[0]}`, () => {
-      expect(isFiniteNumber(pairs[1])).toBeTruthy();
-    });
+  it.each`
+    label                                      | value                | isFiniteNumber | isFiniteNumeric | isNumber | isNumeric
+    ${'integer literal: negative'}             | ${-1}                | ${true}        | ${true}         | ${true}  | ${true}
+    ${'integer literal: zero'}                 | ${0}                 | ${true}        | ${true}         | ${true}  | ${true}
+    ${'integer literal: positive'}             | ${1}                 | ${true}        | ${true}         | ${true}  | ${true}
+    ${'integer literal: octal'}                | ${0o0144}            | ${true}        | ${true}         | ${true}  | ${true}
+    ${'integer literal: hexadecimal'}          | ${0xfff}             | ${true}        | ${true}         | ${true}  | ${true}
+    ${'floating point: nagative'}              | ${-1.1234}           | ${true}        | ${true}         | ${true}  | ${true}
+    ${'floating point: positive'}              | ${1.1234}            | ${true}        | ${true}         | ${true}  | ${true}
+    ${'floating point: exponential notation'}  | ${8e5}               | ${true}        | ${true}         | ${true}  | ${true}
+    ${'number-like string: negative'}          | ${'-1'}              | ${false}       | ${true}         | ${false} | ${true}
+    ${'number-like string: zero'}              | ${'0'}               | ${false}       | ${true}         | ${false} | ${true}
+    ${'number-like string: positive'}          | ${'1'}               | ${false}       | ${true}         | ${false} | ${true}
+    ${'number-like string: octal'}             | ${'040'}             | ${false}       | ${true}         | ${false} | ${true}
+    ${'number-like string: hexadecimal'}       | ${'0xFF'}            | ${false}       | ${true}         | ${false} | ${true}
+    ${'number-like string: zero padded'}       | ${'05'}              | ${false}       | ${true}         | ${false} | ${true}
+    ${'float string: negative'}                | ${'-1.1234'}         | ${false}       | ${true}         | ${false} | ${true}
+    ${'float string: positive'}                | ${'1.1234'}          | ${false}       | ${true}         | ${false} | ${true}
+    ${'float string: exponential notation'}    | ${'123e-2'}          | ${false}       | ${true}         | ${false} | ${true}
+    ${'float string: zero padded'}             | ${'01.1234'}         | ${false}       | ${true}         | ${false} | ${true}
+    ${'non-finite number: NaN'}                | ${Number.NaN}        | ${false}       | ${false}        | ${true}  | ${true}
+    ${'non-finite number: positive'}           | ${POSITIVE_INFINITY} | ${false}       | ${false}        | ${true}  | ${true}
+    ${'non-finite number: negative'}           | ${NEGATIVE_INFINITY} | ${false}       | ${false}        | ${true}  | ${true}
+    ${'non-finite number: positive primitive'} | ${INFINITY}          | ${false}       | ${false}        | ${true}  | ${true}
+    ${'non-finite number: negative primitive'} | ${-INFINITY}         | ${false}       | ${false}        | ${true}  | ${true}
+    ${'non-finite string: NaN string'}         | ${'NaN'}             | ${false}       | ${false}        | ${false} | ${true}
+    ${'non-finite string: positive'}           | ${'Infinity'}        | ${false}       | ${false}        | ${false} | ${true}
+    ${'non-finite string: negative'}           | ${'-Infinity'}       | ${false}       | ${false}        | ${false} | ${true}
+    ${'non-numeric: empty'}                    | ${''}                | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: whitespace character'}     | ${'   '}             | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: tab character'}            | ${'\t\t'}            | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: alphanumeric '}            | ${'abcdefghi123456'} | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: non-numeric '}             | ${'xabcdefx'}        | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: preceding non-numeric'}    | ${'bcfed5.2'}        | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: literal true'}             | ${true}              | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: literal false'}            | ${false}             | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: undefined'}                | ${undefined}         | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: null'}                     | ${null}              | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: date object'}              | ${new Date()}        | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: object'}                   | ${{}}                | ${false}       | ${false}        | ${false} | ${false}
+    ${'non-numeric: function instance'}        | ${() => void 0}      | ${false}       | ${false}        | ${false} | ${false}
+  `('$label', ({ value, ...expected }) => {
+    expect(isFiniteNumber(value)).toBe(expected.isFiniteNumber);
+    expect(isFiniteNumeric(value)).toBe(expected.isFiniteNumeric);
+    expect(isNumber(value)).toBe(expected.isNumber);
+    expect(isNumeric(value)).toBe(expected.isNumeric);
+  });
 
-    it(`isFiniteNumeric: ${pairs[0]}`, () => {
-      expect(isFiniteNumeric(pairs[1])).toBeTruthy();
-    });
+  it('should be different for number with trailing non-numeric characters', () => {
+    const value = '7.2abcdef';
 
-    it(`isNumber: ${pairs[0]}`, () => {
-      expect(isNumber(pairs[1])).toBeTruthy();
-    });
+    expect(isFiniteNumber(value)).toBe(false);
+    expect(isNumber(value)).toBe(false);
 
-    it(`isNumeric: ${pairs[0]}`, () => {
-      expect(isNumeric(pairs[1])).toBeTruthy();
-    });
-  }
-
-  for (const pairs of floatingPointPairs) {
-    it(`isFiniteNumber: ${pairs[0]}`, () => {
-      expect(isFiniteNumber(pairs[1])).toBeTruthy();
-    });
-
-    it(`isFiniteNumeric: ${pairs[0]}`, () => {
-      expect(isFiniteNumeric(pairs[1])).toBeTruthy();
-    });
-
-    it(`isNumber: ${pairs[0]}`, () => {
-      expect(isNumber(pairs[1])).toBeTruthy();
-    });
-
-    it(`isNumeric: ${pairs[0]}`, () => {
-      expect(isNumeric(pairs[1])).toBeTruthy();
-    });
-  }
-
-  for (const pairs of numberLikeStringPairs) {
-    it(`isFiniteNumber: ${pairs[0]}`, () => {
-      expect(isFiniteNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isFiniteNumeric: ${pairs[0]}`, () => {
-      expect(isFiniteNumeric(pairs[1])).toBeTruthy();
-    });
-
-    it(`isNumber: ${pairs[0]}`, () => {
-      expect(isNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isNumeric: ${pairs[0]}`, () => {
-      expect(isNumeric(pairs[1])).toBeTruthy();
-    });
-  }
-
-  for (const pairs of floatingPointStringPairs) {
-    it(`isFiniteNumber: ${pairs[0]}`, () => {
-      expect(isFiniteNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isFiniteNumeric: ${pairs[0]}`, () => {
-      expect(isFiniteNumeric(pairs[1])).toBeTruthy();
-    });
-
-    it(`isNumber: ${pairs[0]}`, () => {
-      expect(isNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isNumeric: ${pairs[0]}`, () => {
-      expect(isNumeric(pairs[1])).toBeTruthy();
-    });
-  }
-
-  for (const pairs of nonFinitePairs) {
-    it(`isFiniteNumber: ${pairs[0]}`, () => {
-      expect(isFiniteNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isFiniteNumeric: ${pairs[0]}`, () => {
-      expect(isFiniteNumeric(pairs[1])).toBeFalsy();
-    });
-
-    it(`isNumber: ${pairs[0]}`, () => {
-      expect(isNumber(pairs[1])).toBeTruthy();
-    });
-
-    it(`isNumeric: ${pairs[0]}`, () => {
-      expect(isNumeric(pairs[1])).toBeTruthy();
-    });
-  }
-
-  for (const pairs of nonFiniteStringPairs) {
-    it(`isFiniteNumber: ${pairs[0]}`, () => {
-      expect(isFiniteNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isFiniteNumeric: ${pairs[0]}`, () => {
-      expect(isFiniteNumeric(pairs[1])).toBeFalsy();
-    });
-
-    it(`isNumber: ${pairs[0]}`, () => {
-      expect(isNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isNumeric: ${pairs[0]}`, () => {
-      expect(isNumeric(pairs[1])).toBeTruthy();
-    });
-  }
-
-  for (const pairs of nonNumericPairs) {
-    it(`isFiniteNumber: ${pairs[0]}`, () => {
-      expect(isFiniteNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isFiniteNumeric: ${pairs[0]}`, () => {
-      // TODO: find a cleaner way to do this
-      // NOTE: parseFloat will convert 7.2acdgs to 7.2
-      if (pairs[0].includes('trailing non-numeric')) {
-        expect(isFiniteNumeric(pairs[1])).toBeTruthy();
-      } else {
-        expect(isFiniteNumeric(pairs[1])).toBeFalsy();
-      }
-    });
-
-    it(`isNumber: ${pairs[0]}`, () => {
-      expect(isNumber(pairs[1])).toBeFalsy();
-    });
-
-    it(`isNumeric: ${pairs[0]}`, () => {
-      // TODO: find a cleaner way to do this
-      // NOTE: parseFloat will convert 7.2acdgs to 7.2
-      if (pairs[0].includes('trailing non-numeric')) {
-        expect(isFiniteNumeric(pairs[1])).toBeTruthy();
-      } else {
-        expect(isFiniteNumeric(pairs[1])).toBeFalsy();
-      }
-    });
-  }
+    // NOTE: these differ from it.each testing above
+    // parseFloat will convert value to 7.2 just fine
+    expect(isFiniteNumeric(value)).toBe(true);
+    expect(isNumeric(value)).toBe(true);
+  });
 });
