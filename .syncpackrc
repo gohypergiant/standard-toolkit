@@ -6,12 +6,6 @@
     "peer",
     "overrides"
   ],
-  "source": [
-    "package.json",
-    "apps/*/package.json",
-    "packages/*/package.json",
-    "tooling/*/package.json"
-  ],
   "semverGroups": [
     {
       "range": "",
