@@ -4,10 +4,9 @@
 
 ### Minor Changes
 
-- 13f0d6c: The `toBoolean` function (packages/converters) centralizes the logic for coercing a value
-  to a boolean which enables the predicate functions (packages/predicates/src/is-noyes) to
-  be more specific in what they compare against rather than them simply being alias names
-  to broad validation. The available predicates are now:
+- 13f0d6c: With the changes to `toBoolean` (packages/converters) the predicate functions
+  (packages/predicates/src/is-noyes) are able to be more specific in what they compare against;
+  rather than them simply being alias names to broad validation. The available predicates are now:
 
   - `isAnyFalsy`
   - `isAnyTruthy`
