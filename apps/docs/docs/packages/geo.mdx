@@ -1,0 +1,9 @@
+## Coordinate Parsing
+
+```ts
+import { coordinateSystems, createCoordinate } from '@accelint/geo';
+
+const coordinate = createCoordinate(coordinateSystems.dd, 'LATLON');
+
+coordinate('32.1 54.321').dms();
+```
