@@ -4,9 +4,7 @@
   "private": false,
   "license": "Apache-2.0",
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -39,7 +37,6 @@
   },
   "dependencies": {
     "@accelint/constants": "workspace:*",
-    "@accelint/predicates": "workspace:*",
     "typescript": "5.6.3"
   },
   "$schema": "https://json.schemastore.org/package",
