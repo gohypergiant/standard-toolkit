@@ -12,7 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { fs, glob, path } from 'zx';
+import { fs, glob, path, argv } from 'zx';
 
 const HEADER = `Copyright ${new Date().getFullYear()} Hypergiant Galactic Systems Inc. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -54,9 +54,11 @@ function getFormattedHeader(fileExtension) {
   );
 }
 
-const filesToParse = process.argv.slice(2);
+const filesToParse = argv.files?.split(' ');
 const files = await glob(
-  filesToParse.length > 0 ? filesToParse : ['**/*.{js,ts,tsx,mjs,mdx,md,css}'],
+  filesToParse && filesToParse.length > 0
+    ? filesToParse
+    : ['**/*.{js,ts,tsx,mjs,mdx,md,css}'],
   {
     ignore: [
       '**/node_modules/**',
