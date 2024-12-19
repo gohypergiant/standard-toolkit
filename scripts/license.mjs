@@ -12,7 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { fs, glob, path } from 'zx';
+import { fs, glob, path, argv } from 'zx';
 
 const HEADER = `Copyright ${new Date().getFullYear()} Hypergiant Galactic Systems Inc. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -46,28 +46,46 @@ const COMMENT_STYLES = {
   '.mdx': HTML_COMMENT_STYLE,
 };
 
-const files = await glob(['**/*.{js,ts,tsx,mjs,mdx,md,css}'], {
-  ignore: [
-    '**/node_modules/**',
-    '**/dist/**',
-    '**/README.md',
-    '**/LICENSE.md',
-    '**/CHANGELOG.md',
-    '**/.github/**/*.md',
-  ],
-});
+function getFormattedHeader(fileExtension) {
+  const style = COMMENT_STYLES[fileExtension];
+  return `${style.start}${HEADER.split('\n').join(`\n${style.middle}`)}${style.end}`.replace(
+    /\s+\n/g,
+    '\n',
+  );
+}
+
+const filesToParse = argv.files?.split(' ');
+const files = await glob(
+  filesToParse && filesToParse.length > 0
+    ? filesToParse
+    : ['**/*.{js,ts,tsx,mjs,mdx,md,css}'],
+  {
+    ignore: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/README.md',
+      '**/LICENSE.md',
+      '**/CHANGELOG.md',
+      '**/.github/**/*.md',
+      '**/*.yml',
+    ],
+  },
+);
 
 for (const file of files) {
-  const style = COMMENT_STYLES[path.extname(file)];
+  const header = getFormattedHeader(path.extname(file));
+
   let contents = fs.readFileSync(file, 'utf8');
-  let header =
-    style.start + HEADER.split('\n').join(`\n${style.middle}`) + style.end;
-
-  header = header.replace(/\s+\n/g, '\n');
-
   if (!/Copyright \d+ Hypergiant/.test(contents)) {
-    // TODO: check for hashbang for things like zx scripts
-    contents = `${header}\n${contents}`;
+    const interpreterDirective = contents.match(/^#!.*$/m)?.[0];
+
+    if (interpreterDirective) {
+      contents = contents.replace(interpreterDirective, '').trimStart();
+      contents = `${interpreterDirective}\n\n${header}\n${contents}`;
+    } else {
+      contents = `${header}\n${contents}`;
+    }
+
     fs.writeFileSync(file, contents);
   }
 }
