@@ -12,7 +12,6 @@
 
 import { bench, describe } from 'vitest';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type Callable = (...a: any[]) => any;
 
 const TEST_VALUES = [

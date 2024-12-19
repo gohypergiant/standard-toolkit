@@ -1,4 +1,7 @@
+import type { Callable } from '@/types';
 import { identity } from '../../combinators/i';
+
+type Cache = Record<string | number | symbol, unknown>;
 
 /**
  * Takes an object and an optional fallback function and returns a function that
@@ -16,15 +19,6 @@ import { identity } from '../../combinators/i';
  * colorLookup(data.value);
  */
 export const lookup =
-  <
-    A extends Record<string | number | symbol, unknown>,
-    B extends (...args: any[]) => any,
-  >(
-    obj: A,
-    def?: B,
-  ) =>
-  <C extends keyof A>(prop: string | number | symbol): A[C] => {
-    const fn = def ?? identity;
-
-    return fn(obj[prop]);
-  };
+  <A extends Cache, B extends Callable>(obj: A, def?: B) =>
+  <C extends keyof A>(prop: string | number | symbol): A[C] =>
+    (def ?? identity)(obj[prop]);
