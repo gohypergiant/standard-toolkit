@@ -54,16 +54,21 @@ function getFormattedHeader(fileExtension) {
   );
 }
 
-const files = await glob(['**/*.{js,ts,tsx,mjs,mdx,md,css}'], {
-  ignore: [
-    '**/node_modules/**',
-    '**/dist/**',
-    '**/README.md',
-    '**/LICENSE.md',
-    '**/CHANGELOG.md',
-    '**/.github/**/*.md',
-  ],
-});
+const filesToParse = process.argv.slice(2);
+const files = await glob(
+  filesToParse.length > 0 ? filesToParse : ['**/*.{js,ts,tsx,mjs,mdx,md,css}'],
+  {
+    ignore: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/README.md',
+      '**/LICENSE.md',
+      '**/CHANGELOG.md',
+      '**/.github/**/*.md',
+      '**/*.yml',
+    ],
+  },
+);
 
 for (const file of files) {
   const header = getFormattedHeader(path.extname(file));
@@ -73,8 +78,8 @@ for (const file of files) {
     const interpreterDirective = contents.match(/^#!.*$/m)?.[0];
 
     if (interpreterDirective) {
-      contents = contents.replace(interpreterDirective, '');
-      contents = `${interpreterDirective}\n\n${header}\n${contents.trimStart()}`;
+      contents = contents.replace(interpreterDirective, '').trimStart();
+      contents = `${interpreterDirective}\n\n${header}\n${contents}`;
     } else {
       contents = `${header}\n${contents}`;
     }

@@ -2,4 +2,5 @@ pre-commit:
   parallel: true
   commands:
     generate-license:
-      run: pnpm run license
+      run: pnpm run license {staged_files}
+      stage_fixed: true
