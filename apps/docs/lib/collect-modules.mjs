@@ -1,58 +1,38 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import * as ts from 'typescript';
 
-const PATTERN_EXCLUDE = /node_modules|\.(?:bench|css|d|stories|test)\./;
+const PATTERN_EXCLUDE =
+  /__fixtures__|coverage|dist|documentation|ladle|node_modules|styles|test|types|\.(?:bench|config|css|d|ladle|stories|test|turbo)/;
 
-function walk(directory, callback) {
-  const files = fs.readdirSync(directory);
+const getPaths = (dir, root = dir, depth = 3) =>
+  Array.from(getPathsGen(dir, root, depth));
 
-  for (const file of files) {
-    const fullPath = path.join(directory, file);
-    const stat = fs.statSync(fullPath);
+// sourced from: https://exploringjs.com/impatient-js/ch_sync-generators.html#reusing-traversals
+function* getPathsGen(dir, root, depth) {
+  for (const fileName of fs.readdirSync(dir)) {
+    const filePath = path.resolve(dir, fileName);
 
-    if (!PATTERN_EXCLUDE.test(fullPath)) {
-      if (stat.isDirectory()) {
-        walk(fullPath, callback);
-      } else if (file.endsWith('.ts') || file.endsWith('.tsx')) {
-        callback(fullPath);
-      }
+    if (
+      fs.statSync(filePath).isDirectory() &&
+      !PATTERN_EXCLUDE.test(filePath)
+    ) {
+      const current = filePath.replace(root, '').replace('/src', '');
+      const next = () => getPaths(filePath, root, depth - 1);
+
+      yield* filePath.endsWith('src')
+        ? next()
+        : depth < 1
+          ? [current]
+          : [current, next()].filter((item) => item.length);
     }
   }
 }
 
-function collectModules(dir) {
-  const modules = [];
+const tree = getPaths(
+  path.join(process.cwd(), 'packages'),
+  undefined,
+  2,
+).flat();
 
-  walk(dir, (filePath) => {
-    const sourceFile = ts.createSourceFile(
-      filePath,
-      fs.readFileSync(filePath, 'utf8'),
-      ts.ScriptTarget.Latest,
-      true,
-    );
-
-    const exports = [];
-
-    ts.forEachChild(sourceFile, (node) => {
-      if (ts.isExportDeclaration(node) && node.exportClause) {
-        if (node.exportClause.elements) {
-          for (const element of node.exportClause.elements) {
-            exports.push(element.name.getText());
-          }
-        }
-      } else if (ts.isExportAssignment(node)) {
-        exports.push('default');
-      }
-    });
-
-    modules.push({ filePath, exports });
-  });
-
-  return modules;
-}
-
-// Example usage:
-const monorepoPath = path.join(process.cwd(), 'packages');
-const modules = collectModules(monorepoPath);
-console.log(modules);
+// run: node ./apps/docs/lib/collect-modules.mjs
+console.log(JSON.stringify(tree, null, 4));
