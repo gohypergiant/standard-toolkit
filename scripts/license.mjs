@@ -46,6 +46,14 @@ const COMMENT_STYLES = {
   '.mdx': HTML_COMMENT_STYLE,
 };
 
+function getFormattedHeader(fileExtension) {
+  const style = COMMENT_STYLES[fileExtension];
+  return `${style.start}${HEADER.split('\n').join(`\n${style.middle}`)}${style.end}`.replace(
+    /\s+\n/g,
+    '\n',
+  );
+}
+
 const files = await glob(['**/*.{js,ts,tsx,mjs,mdx,md,css}'], {
   ignore: [
     '**/node_modules/**',
@@ -58,13 +66,9 @@ const files = await glob(['**/*.{js,ts,tsx,mjs,mdx,md,css}'], {
 });
 
 for (const file of files) {
-  const style = COMMENT_STYLES[path.extname(file)];
+  const header = getFormattedHeader(path.extname(file));
+
   let contents = fs.readFileSync(file, 'utf8');
-  let header =
-    style.start + HEADER.split('\n').join(`\n${style.middle}`) + style.end;
-
-  header = header.replace(/\s+\n/g, '\n');
-
   if (!/Copyright \d+ Hypergiant/.test(contents)) {
     // TODO: check for hashbang for things like zx scripts
     contents = `${header}\n${contents}`;
