@@ -70,8 +70,15 @@ for (const file of files) {
 
   let contents = fs.readFileSync(file, 'utf8');
   if (!/Copyright \d+ Hypergiant/.test(contents)) {
-    // TODO: check for hashbang for things like zx scripts
-    contents = `${header}\n${contents}`;
+    const interpreterDirective = contents.match(/^#!.*$/m)?.[0];
+
+    if (interpreterDirective) {
+      contents = contents.replace(interpreterDirective, '');
+      contents = `${interpreterDirective}\n\n${header}\n${contents.trimStart()}`;
+    } else {
+      contents = `${header}\n${contents}`;
+    }
+
     fs.writeFileSync(file, contents);
   }
 }
