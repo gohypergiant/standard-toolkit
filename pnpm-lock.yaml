@@ -34,7 +34,7 @@ importers:
         version: 5.0.10
       syncpack:
         specifier: ^13.0.0
-        version: 13.0.0(typescript@5.6.3)
+        version: 13.0.0(typescript@5.7.2)
       taze:
         specifier: ^0.17.2
         version: 0.17.2
@@ -50,19 +50,22 @@ importers:
 
   apps/docs:
     dependencies:
+      '@types/node':
+        specifier: ^18.19.67
+        version: 18.19.67
       react:
         specifier: ^18.3.1
         version: 18.3.1
       rspress:
         specifier: ^1.37.3
         version: 1.37.4(webpack@5.96.1(@swc/core@1.9.2(@swc/helpers@0.5.15))(esbuild@0.23.1))
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.9.3
         version: 1.9.4
-      '@types/node':
-        specifier: ^18.11.17
-        version: 18.19.67
 
   apps/next:
     dependencies:
@@ -649,13 +652,13 @@ importers:
         version: 4.3.3(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0))
       '@vitest/coverage-istanbul':
         specifier: ^2.1.3
-        version: 2.1.5(vitest@2.1.5(@types/node@20.17.6)(jsdom@25.0.1)(msw@2.6.4(@types/node@20.17.6)(typescript@5.6.3))(sass-embedded@1.82.0)(terser@5.36.0))
+        version: 2.1.5(vitest@2.1.5(@types/node@20.17.6)(jsdom@25.0.1)(msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2))(sass-embedded@1.82.0)(terser@5.36.0))
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.1.2(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0))
+        version: 5.1.2(typescript@5.7.2)(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.5(@types/node@20.17.6)(jsdom@25.0.1)(msw@2.6.4(@types/node@20.17.6)(typescript@5.6.3))(sass-embedded@1.82.0)(terser@5.36.0)
+        version: 2.1.5(@types/node@20.17.6)(jsdom@25.0.1)(msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2))(sass-embedded@1.82.0)(terser@5.36.0)
 
 packages:
 
@@ -5864,6 +5867,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@5.7.2:
+    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
 
@@ -8871,6 +8879,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@vitest/coverage-istanbul@2.1.5(vitest@2.1.5(@types/node@20.17.6)(jsdom@25.0.1)(msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2))(sass-embedded@1.82.0)(terser@5.36.0))':
+    dependencies:
+      '@istanbuljs/schema': 0.1.3
+      debug: 4.3.7
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-instrument: 6.0.3
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 5.0.6
+      istanbul-reports: 3.1.7
+      magicast: 0.3.5
+      test-exclude: 7.0.1
+      tinyrainbow: 1.2.0
+      vitest: 2.1.5(@types/node@20.17.6)(jsdom@25.0.1)(msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2))(sass-embedded@1.82.0)(terser@5.36.0)
+    transitivePeerDependencies:
+      - supports-color
+
   '@vitest/expect@2.1.5':
     dependencies:
       '@vitest/spy': 2.1.5
@@ -8885,6 +8909,15 @@ snapshots:
       magic-string: 0.30.12
     optionalDependencies:
       msw: 2.6.4(@types/node@20.17.6)(typescript@5.6.3)
+      vite: 5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0)
+
+  '@vitest/mocker@2.1.5(msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2))(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0))':
+    dependencies:
+      '@vitest/spy': 2.1.5
+      estree-walker: 3.0.3
+      magic-string: 0.30.12
+    optionalDependencies:
+      msw: 2.6.4(@types/node@20.17.6)(typescript@5.7.2)
       vite: 5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0)
 
   '@vitest/pretty-format@2.1.5':
@@ -9316,14 +9349,14 @@ snapshots:
 
   core-js@3.39.0: {}
 
-  cosmiconfig@9.0.0(typescript@5.6.3):
+  cosmiconfig@9.0.0(typescript@5.7.2):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.7.2
 
   cross-spawn@5.1.0:
     dependencies:
@@ -11467,6 +11500,32 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
+  msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2):
+    dependencies:
+      '@bundled-es-modules/cookie': 2.0.1
+      '@bundled-es-modules/statuses': 1.0.1
+      '@bundled-es-modules/tough-cookie': 0.1.6
+      '@inquirer/confirm': 5.0.2(@types/node@20.17.6)
+      '@mswjs/interceptors': 0.36.10
+      '@open-draft/deferred-promise': 2.2.0
+      '@open-draft/until': 2.1.0
+      '@types/cookie': 0.6.0
+      '@types/statuses': 2.0.5
+      chalk: 4.1.2
+      graphql: 16.9.0
+      headers-polyfill: 4.0.3
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      path-to-regexp: 6.3.0
+      strict-event-emitter: 0.5.1
+      type-fest: 4.26.1
+      yargs: 17.7.2
+    optionalDependencies:
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - '@types/node'
+    optional: true
+
   mute-stream@2.0.0: {}
 
   mz@2.7.0:
@@ -12598,13 +12657,13 @@ snapshots:
 
   sync-message-port@1.1.3: {}
 
-  syncpack@13.0.0(typescript@5.6.3):
+  syncpack@13.0.0(typescript@5.7.2):
     dependencies:
       '@effect/schema': 0.71.1(effect@3.6.5)
       chalk: 5.3.0
       chalk-template: 1.1.0
       commander: 12.1.0
-      cosmiconfig: 9.0.0(typescript@5.6.3)
+      cosmiconfig: 9.0.0(typescript@5.7.2)
       effect: 3.6.5
       enquirer: 2.4.1
       fast-check: 3.21.0
@@ -12740,6 +12799,10 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.3
 
+  tsconfck@3.1.4(typescript@5.7.2):
+    optionalDependencies:
+      typescript: 5.7.2
+
   tslib@2.8.1: {}
 
   tsscmp@1.0.6: {}
@@ -12833,6 +12896,8 @@ snapshots:
       yaml: 2.6.1
 
   typescript@5.6.3: {}
+
+  typescript@5.7.2: {}
 
   uc.micro@2.1.0: {}
 
@@ -13049,11 +13114,11 @@ snapshots:
       - supports-color
       - typescript
 
-  vite-tsconfig-paths@5.1.2(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0)):
+  vite-tsconfig-paths@5.1.2(typescript@5.7.2)(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
-      tsconfck: 3.1.4(typescript@5.6.3)
+      tsconfck: 3.1.4(typescript@5.7.2)
     optionalDependencies:
       vite: 5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0)
     transitivePeerDependencies:
@@ -13075,6 +13140,42 @@ snapshots:
     dependencies:
       '@vitest/expect': 2.1.5
       '@vitest/mocker': 2.1.5(msw@2.6.4(@types/node@20.17.6)(typescript@5.6.3))(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0))
+      '@vitest/pretty-format': 2.1.5
+      '@vitest/runner': 2.1.5
+      '@vitest/snapshot': 2.1.5
+      '@vitest/spy': 2.1.5
+      '@vitest/utils': 2.1.5
+      chai: 5.1.2
+      debug: 4.3.7
+      expect-type: 1.1.0
+      magic-string: 0.30.12
+      pathe: 1.1.2
+      std-env: 3.8.0
+      tinybench: 2.9.0
+      tinyexec: 0.3.1
+      tinypool: 1.0.1
+      tinyrainbow: 1.2.0
+      vite: 5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0)
+      vite-node: 2.1.5(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 20.17.6
+      jsdom: 25.0.1
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  vitest@2.1.5(@types/node@20.17.6)(jsdom@25.0.1)(msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2))(sass-embedded@1.82.0)(terser@5.36.0):
+    dependencies:
+      '@vitest/expect': 2.1.5
+      '@vitest/mocker': 2.1.5(msw@2.6.4(@types/node@20.17.6)(typescript@5.7.2))(vite@5.4.11(@types/node@20.17.6)(sass-embedded@1.82.0)(terser@5.36.0))
       '@vitest/pretty-format': 2.1.5
       '@vitest/runner': 2.1.5
       '@vitest/snapshot': 2.1.5

@@ -6,6 +6,6 @@ export default defineConfig({
     mdxRs: false,
     showLineNumbers: true,
   },
-  root: path.join(__dirname, 'docs'),
+  root: path.join(__dirname, 'src'),
   title: 'DevTK',
 });
