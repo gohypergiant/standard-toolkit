@@ -4,6 +4,15 @@ import * as path from 'node:path';
 const PATTERN_EXCLUDE =
   /__fixtures__|coverage|dist|documentation|ladle|node_modules|styles|test|types|\.(?:bench|config|css|d|ladle|stories|test|turbo)/;
 
+/**
+ * Recursively gather the filesystem directories (folders) into an array of strings
+ * filtering out specific entries as they aren't necessary for the intended use case.
+ *
+ * @param dir the starting point to read from
+ * @param root the top-most level of the recursion; used to trim full path
+ * @param depth how deep of a structure to return back
+ * @returns a string array of directories
+ */
 export const getPaths = (dir, root = dir, depth = 3) =>
   Array.from(getPathsGen(dir, root, depth));
 
