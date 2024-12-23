@@ -17,6 +17,7 @@ import type { QueryBuilderClassNames } from '../../components/query-builder/type
 import type { RadioClassNames } from '../../components/radio/types';
 import type { SearchFieldClassNames } from '../../components/search-field/types';
 import type { SelectClassNames } from '../../components/select/types';
+import type { SliderClassNames } from '@/components/slider';
 import type { SwitchClassNames } from '../../components/switch/types';
 import type { TabsClassNames } from '../../components/tabs/types';
 import type { TextFieldClassNames } from '../../components/text-field/types';
@@ -54,6 +55,7 @@ export type ThemeContext = {
   Radio?: RadioClassNames;
   SearchField?: SearchFieldClassNames;
   Select?: SelectClassNames;
+  Slider?: SliderClassNames;
   Switch?: SwitchClassNames;
   Tabs?: TabsClassNames;
   TextArea?: TextAreaClassNames;
