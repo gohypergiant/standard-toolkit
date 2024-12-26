@@ -6,7 +6,6 @@
 # Dist
 node_modules
 dist/
-doc_build/
 src/typedocs-output
 
 # IDE
