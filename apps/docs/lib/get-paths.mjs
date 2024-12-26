@@ -1,8 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-const PATTERN_EXCLUDE =
-  /__fixtures__|coverage|dist|documentation|ladle|node_modules|styles|test|types|\.(?:bench|config|css|d|ladle|stories|test|turbo)/;
+import { PATTERN_EXCLUDE } from './exclude.mjs';
 
 /**
  * Recursively gather the filesystem directories (folders) into an array of strings

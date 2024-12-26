@@ -16,7 +16,7 @@ export default function Component({ pack }: { pack: string }) {
 
 function tab(label: string, command: string, pack: string) {
   return (
-    <Tab label={label}>
+    <Tab key={label} label={label}>
       <div aria-label={label} className='rounded px-2'>
         <div className='language-bash'>
           <div className='rspress-code-content rspress-scrollbar'>
