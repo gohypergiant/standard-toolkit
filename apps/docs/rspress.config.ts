@@ -37,6 +37,7 @@ export default defineConfig({
       outDir: 'typedocs-output',
     }),
   ],
+  outDir: path.join(__dirname, 'dist'),
   root: path.join(__dirname, 'src'),
   title: 'DevTK',
 });
