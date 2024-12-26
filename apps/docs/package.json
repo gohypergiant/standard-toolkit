@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "rspress build",
+    "build": "rspress build && pnpm run build-ladle",
+    "build-ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/dist/ladle --base ladle",
     "check": "biome check --write",
     "dev": "rspress dev",
     "format": "biome format --write",
