@@ -15,7 +15,7 @@ import { getPaths } from './get-paths.mjs';
  * // will print "All expected files exist." if all expected documentation pages exist
  *
  * @example
- * node ./apps/docs/lib/audit-modules.mjs
+ * node ./apps/docs/lib/audit-modules.mjs --stubMissing
  * // will create "stub" files for missing documentation pages; ready for editing
  */
 
