@@ -6,7 +6,7 @@ const config = {
   packageOptions: {
     entryPoints: ['src/index.ts'],
   },
-  out: 'typedoc',
+  out: 'src/public/typedoc',
 
   // properties taken from plugin-typedoc https://github.com/web-infra-dev/rspress/blob/main/packages/plugin-typedoc/src/index.ts#L40-L53
   theme: 'markdown',

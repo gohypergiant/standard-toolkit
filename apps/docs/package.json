@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "pnpm run build:deps && rspress dev",
     "build:deps": "pnpm run build:ladle && pnpm run build:typedoc",
-    "build:ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/ladle --base ladle",
+    "build:ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/src/public/ladle --base ladle",
     "build:typedoc": "typedoc",
     "build": "pnpm run build:deps && rspress build",
     "preview": "rspress preview",
