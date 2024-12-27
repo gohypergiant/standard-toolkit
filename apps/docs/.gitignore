@@ -6,6 +6,8 @@
 # Dist
 node_modules
 dist/
+typedoc/
+ladle/
 
 # IDE
 .vscode/*

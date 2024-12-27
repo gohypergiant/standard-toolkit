@@ -3,18 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "rspress build && pnpm run build-ladle",
-    "build-ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/dist/ladle --base ladle",
+    "dev": "pnpm run build:deps && rspress dev",
+    "build:deps": "pnpm run build:ladle && pnpm run build:typedoc",
+    "build:ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/ladle --base ladle",
+    "build:typedoc": "typedoc",
+    "build": "pnpm run build:deps && rspress build",
+    "preview": "rspress preview",
     "check": "biome check --write",
-    "dev": "rspress dev",
-    "format": "biome format --write",
-    "preview": "rspress preview"
+    "format": "biome format --write"
   },
   "dependencies": {
     "@rspress/plugin-playground": "^1.38.0",
     "@types/node": "^18.19.67",
     "react": "^18.3.1",
     "rspress": "^1.37.3",
+    "typedoc": "0.27.6",
+    "typedoc-plugin-markdown": "4.3.3",
     "typescript": "^5.7.2"
   },
   "devDependencies": {
