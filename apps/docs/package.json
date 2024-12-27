@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@rspress/plugin-playground": "^1.38.0",
-    "@rspress/plugin-typedoc": "^1.38.0",
     "@types/node": "^18.19.67",
     "react": "^18.3.1",
     "rspress": "^1.37.3",

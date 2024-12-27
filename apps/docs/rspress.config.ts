@@ -1,13 +1,9 @@
 import * as path from 'node:path';
 
 import { pluginPlayground } from '@rspress/plugin-playground';
-import { pluginTypeDoc } from '@rspress/plugin-typedoc';
 import { defineConfig } from 'rspress/config';
 
 // import customInstallBlock from './lib/plugin-remark-custom-install.ts';
-
-const module = (...parts: string[]) =>
-  path.join(__dirname, '..', '..', 'packages', ...parts);
 
 export default defineConfig({
   markdown: {
@@ -26,15 +22,6 @@ export default defineConfig({
     pluginPlayground({
       defaultDirection: 'vertical',
       defaultRenderMode: 'pure', // or 'playground'
-    }),
-    pluginTypeDoc({
-      entryPoints: [
-        // TODO: auto-generate these entries
-        module('converters', 'src', 'to-boolean', 'index.ts'),
-      ],
-      // NOTE: haven't gotten this working yet; the output of typedoc outside of the src/ dir
-      // outDir: '../typedoc',
-      outDir: 'typedocs-output',
     }),
   ],
   outDir: path.join(__dirname, 'dist'),

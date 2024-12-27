@@ -25,7 +25,6 @@ ignore:
   - '**/.turbo'
   - '**/__fixtures__'
   - '**/__snapshots__'
-  - '**/apps/docs/**/typedocs-output'
   - '**/build'
   - '**/coverage'
   - '**/dist'
