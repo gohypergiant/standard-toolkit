@@ -2,9 +2,15 @@
 export {
   Slider,
   SliderContext,
+  SliderOutput,
+  // SliderNumberField,
+  SliderThumb,
+  SliderTrack,
 } from './slider';
 export {
-  type SliderAlignment,
+  type LabelAlignment,
   type SliderClassNames,
   type SliderProps,
+  type SliderRenderProps,
+  type SliderThumbProps
 } from './types';

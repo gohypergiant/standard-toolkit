@@ -3,10 +3,14 @@ import {
     type Story,
     type StoryDefault
 } from "@ladle/react";
-import { Slider, type SliderProps } from ".";
+import {
+  Slider,
+  SliderOutput,
+  SliderThumb,
+  SliderTrack,
+  SliderNumberField,
+  type SliderProps } from ".";
 import { AriaLabel } from "../aria";
-import { SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
-import { TextField } from "../text-field";
 
 
 export default {
@@ -64,7 +68,10 @@ const args: ArgTypes<SliderProps> = {
 export const SliderExample: Story<SliderProps> = ({ label, ...rest }) => (
   <Slider {...rest} defaultValue={50}>
     <AriaLabel>{label}</AriaLabel>
-    <SliderOutput />
+    <SliderOutput>
+      {({ state }) => state.getThumbValueLabel(0)}
+    </SliderOutput>
+    {/* <SliderNumberField /> */}
     <SliderTrack>
       <SliderThumb />
     </SliderTrack>
@@ -75,4 +82,29 @@ SliderExample.storyName = 'Slider';
 
 SliderExample.argTypes = {
   ...args,
+};
+
+export const RangeSliderExample: Story<SliderProps> = ({ label, thumbLabels, ...rest }) => (
+  <Slider {...rest} defaultValue={[25, 75]} thumbLabels={['Min', 'Max']}>
+    <AriaLabel>{label}</AriaLabel>
+    <SliderOutput>
+    {({ state }) =>
+          state.values.map((_, i: number) => state.getThumbValueLabel(i)).join(' - ')}
+    </SliderOutput>
+    <SliderTrack>
+      {({ state }) => state.values.map((_, i: number) => (
+        <SliderThumb key={i} index={i} aria-label={thumbLabels?.[i]} />
+      ))}
+    </SliderTrack>
+  </Slider>
+)
+
+RangeSliderExample.storyName = 'Range Slider';
+
+RangeSliderExample.argTypes = {
+  ...args,
+  label: {
+    ...args.label,
+    defaultValue: 'Range slider label',
+  }
 };

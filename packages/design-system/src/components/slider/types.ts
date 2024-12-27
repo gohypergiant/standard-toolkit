@@ -1,4 +1,11 @@
-import type { SliderRenderProps as RACSliderRenderProps, SliderProps as RACSliderProps } from "react-aria-components";
+import type { 
+  SliderRenderProps as RACSliderRenderProps, 
+  SliderProps as RACSliderProps, 
+  SliderThumbProps as RACSliderThumbProps,
+  SliderThumbRenderProps as RACSliderThumbRenderProps,
+  SliderTrackRenderProps as RACSliderTrackRenderProps,
+  SliderTrackProps as RACSliderTrackProps
+} from "react-aria-components";
 import type { RenderPropsChildren } from '../../types';
 import type { PartialDeep } from 'type-fest';
 
@@ -7,6 +14,9 @@ export type SliderClassNames = PartialDeep<{
     container: string;
     slider: string;
     label: string;
+    track: string;
+    thumb: string;
+    output: string;
   },
   rangeSlider: {
     container: string;
@@ -17,6 +27,8 @@ export type SliderClassNames = PartialDeep<{
 export type LabelAlignment = 'top' | 'left';
 
 export type SliderRenderProps = RACSliderRenderProps;
+export type SliderThumbRenderProps = RACSliderThumbRenderProps;
+export type SliderTrackRenderProps = RACSliderTrackRenderProps;
 
 type BaseSliderProps = {
   children?: RenderPropsChildren<SliderRenderProps>;
@@ -25,6 +37,7 @@ type BaseSliderProps = {
   alignLabel?: LabelAlignment;
   includeTextField?: boolean;
   includeRangeLabel?: boolean;
+  thumbLabels?: string[];
 }
 
 export type SliderState = Omit<RACSliderProps, 'state'> &
@@ -36,3 +49,23 @@ export type SliderProps = Omit<
 > & 
   BaseSliderProps;
 
+type BaseSliderThumbProps = {
+  children?: RenderPropsChildren<SliderRenderProps>;
+  classNames?: SliderClassNames;
+}
+
+export type SliderThumbProps = Omit<RACSliderThumbProps, 'className' | 'style'> & BaseSliderThumbProps;
+
+type BaseSliderTrackProps = {
+  children?: RenderPropsChildren<SliderRenderProps>;
+  classNames?: SliderClassNames;
+}
+
+export type SliderTrackProps = Omit<RACSliderThumbProps, 'className' | 'style'> & BaseSliderTrackProps;
+
+type BaseSliderOutputProps = {
+  children?: RenderPropsChildren<SliderRenderProps>;
+  classNames?: SliderClassNames;
+}
+
+export type SliderOutputProps = Omit<RACSliderThumbProps, 'className' | 'style'> & BaseSliderOutputProps;
