@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ES2020"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2020",
+    "useDefineForClassFields": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.bench.ts",
+    "**/*.test.ts",
+    "**/*.test-d.ts"
+  ],
+  "include": [
+    "../../packages/converters",
+    "docs",
+    "theme",
+    "rspress.config.ts"
+  ],
+  "mdx": {
+    "checkMdx": true
+  }
+}

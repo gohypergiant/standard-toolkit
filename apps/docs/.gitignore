@@ -1,0 +1,14 @@
+# Local
+.DS_Store
+*.local
+*.log*
+
+# Dist
+node_modules
+dist/
+src/typedocs-output
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea

@@ -1,0 +1,24 @@
+{
+  "name": "@accelint/docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "rspress build && pnpm run build-ladle",
+    "build-ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/dist/ladle --base ladle",
+    "check": "biome check --write",
+    "dev": "rspress dev",
+    "format": "biome format --write",
+    "preview": "rspress preview"
+  },
+  "dependencies": {
+    "@rspress/plugin-playground": "^1.38.0",
+    "@rspress/plugin-typedoc": "^1.38.0",
+    "@types/node": "^18.19.67",
+    "react": "^18.3.1",
+    "rspress": "^1.37.3",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.3"
+  }
+}
