@@ -27,7 +27,10 @@ export default defineConfig({
       defaultRenderMode: 'pure', // or 'playground'
     }),
     pluginTypeDoc({
-      entryPoints: [...getFiles(path.resolve('../../packages'))],
+      entryPoints: [
+        // '../../packages',
+        ...getFiles(path.resolve('../../packages')),
+      ],
       // NOTE: haven't gotten this working yet; the output of typedoc outside of the src/ dir
       // outDir: '../typedoc',
       outDir: 'typedocs-output',

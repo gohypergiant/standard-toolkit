@@ -72,6 +72,9 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
     devDependencies:
+      '@accelint/biome-config':
+        specifier: workspace:*
+        version: link:../../tooling/biome-config
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config

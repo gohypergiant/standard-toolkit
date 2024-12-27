@@ -18,6 +18,7 @@
     "typescript": "5.6.3"
   },
   "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@biomejs/biome": "1.9.3"
   }
