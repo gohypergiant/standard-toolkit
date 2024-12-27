@@ -8,7 +8,6 @@ import {
   SliderOutput,
   SliderThumb,
   SliderTrack,
-  SliderNumberField,
   type SliderProps } from ".";
 import { AriaLabel } from "../aria";
 
@@ -89,10 +88,10 @@ export const RangeSliderExample: Story<SliderProps> = ({ label, thumbLabels, ...
     <AriaLabel>{label}</AriaLabel>
     <SliderOutput>
     {({ state }) =>
-          state.values.map((_, i: number) => state.getThumbValueLabel(i)).join(' - ')}
+          state.values.map((_value: number, i: number) => state.getThumbValueLabel(i)).join(' - ')}
     </SliderOutput>
     <SliderTrack>
-      {({ state }) => state.values.map((_, i: number) => (
+      {({ state }) => state.values.map((_value: number, i: number) => (
         <SliderThumb key={i} index={i} aria-label={thumbLabels?.[i]} />
       ))}
     </SliderTrack>

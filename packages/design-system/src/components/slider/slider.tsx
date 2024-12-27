@@ -33,6 +33,7 @@ import type {
 } from './types';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import { sliderClassNames, sliderStateVars } from './slider.css';
+import { semanticColorVars } from '../../styles';
 
 /**
  * SliderOutput must be used as a child of Slider
@@ -103,7 +104,8 @@ export const SliderTrack = forwardRef(function SliderTrack(
     [theme.Slider, classNamesProp]
   );
 
-  const style = useCallback(({...renderProps}: SliderTrackRenderProps) => inlineVars(sliderStateVars, renderProps), []);
+  const style = useCallback(
+    ({...renderProps}: SliderTrackRenderProps) => inlineVars(sliderStateVars, renderProps), []);
 
   const values = useMemo<[
     [typeof SliderContext, ContextValue<SliderProps, HTMLDivElement>],
@@ -127,7 +129,26 @@ export const SliderTrack = forwardRef(function SliderTrack(
       {...rest}
       ref={ref}
       className={classNames?.slider?.track}
-      style={style}>
+      style={(state) => ({
+          ...style(state),
+          // handles coloration for track values
+          background:  state?.state?.values[0] && state?.state?.values[1] ?`linear-gradient(
+            to right,
+            ${semanticColorVars.background.surface.overlay} 0%, 
+            ${semanticColorVars.background.surface.overlay} ${state?.state?.values[0] - 1}%, 
+            ${semanticColorVars.background.highlight.bold } ${state?.state?.values[0]}%, 
+            ${semanticColorVars.background.highlight.bold} ${state?.state?.values[1]}%, 
+            ${semanticColorVars.background.surface.overlay} ${state?.state?.values[1] + 1}%, 
+            ${semanticColorVars.background.surface.overlay} 100%
+          )` : `linear-gradient(
+            to right,
+            ${semanticColorVars.background.highlight.bold} 0%,
+            ${semanticColorVars.background.highlight.bold} ${state?.state?.values[0]}%, 
+            ${semanticColorVars.background.surface.overlay} ${state?.state?.values[0] + 1}%, 
+            ${semanticColorVars.background.surface.overlay} 100%
+          )` 
+        })
+      }>
         {children}
     </RACSliderTrack>
   )
@@ -243,8 +264,7 @@ export const Slider = forwardRef(function Slider(
       {...rest}
       ref={ref}
       className={classNames?.slider?.container}
-      style={style}
-    >
+      style={style}>
       {children}
     </RACSlider>
   )

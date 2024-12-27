@@ -1,8 +1,6 @@
 import { createContainer, createThemeContract, style } from '@vanilla-extract/css';
-import type { SliderClassNames } from './types';
+import { type SliderClassNames } from './types';
 import { genericColorVars, layers, semanticColorVars } from '../../styles';
-
-export const sliderContainer = createContainer();
 
 export const sliderColorVars = createThemeContract({
   color: '',
@@ -73,7 +71,7 @@ export const sliderClassNames: SliderClassNames = {
         },
       },
     }),
-    numberField: style({
+    output: style({
       '@layer': {
         [layers.components.l1]: {
           gridArea: 'output',
