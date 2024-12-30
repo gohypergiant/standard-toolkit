@@ -5,15 +5,16 @@ import {
 } from "@ladle/react";
 import {
   Slider,
-  SliderOutput,
+  SliderInput,
   SliderThumb,
   SliderTrack,
   type SliderProps } from ".";
-import { AriaLabel } from "../aria";
+import { AriaLabel, AriaText } from "../aria";
+import { Input } from "../input";
 
 
 export default {
-  title: 'Components / Slider',
+  title: 'Components/Slider',
   argTypes: {
     isDisabled: {
       control: {
@@ -47,7 +48,7 @@ const args: ArgTypes<SliderProps> = {
     control: {
       type: 'select',
     },
-    options: ['top', 'bottom'],
+    options: ['top', 'left'],
     defaultValue: 'top',
   },
   includeTextField: {
@@ -61,19 +62,34 @@ const args: ArgTypes<SliderProps> = {
       type: 'boolean'
     },
     defaultValue: true,
+  },
+  min: {
+    control: {
+      type: 'number',
+    },
+    defaultValue: 0,
+  },
+  max: {
+    control: {
+      type: 'number',
+    },
+    defaultValue: 100
   }
 };
 
-export const SliderExample: Story<SliderProps> = ({ label, ...rest }) => (
+export const SliderExample: Story<SliderProps> = ({ label, min, max, includeTextField, ...rest }) => (
   <Slider {...rest} defaultValue={50}>
     <AriaLabel>{label}</AriaLabel>
-    <SliderOutput>
-      {({ state }) => state.getThumbValueLabel(0)}
-    </SliderOutput>
-    {/* <SliderNumberField /> */}
+    {includeTextField && (
+      <SliderInput>
+        <Input />
+      </SliderInput>
+    )}
     <SliderTrack>
       <SliderThumb />
     </SliderTrack>
+    <AriaText slot='min'>{min || 0}</AriaText>
+    <AriaText slot='max'>{max || 100}</AriaText>
   </Slider>
 )
 
@@ -83,18 +99,22 @@ SliderExample.argTypes = {
   ...args,
 };
 
-export const RangeSliderExample: Story<SliderProps> = ({ label, thumbLabels, ...rest }) => (
-  <Slider {...rest} defaultValue={[25, 75]} thumbLabels={['Min', 'Max']}>
+export const RangeSliderExample: Story<SliderProps> = ({ label, min, max, includeTextField, ...rest }) => (
+  <Slider {...rest} defaultValue={[25, 75]}>
     <AriaLabel>{label}</AriaLabel>
-    <SliderOutput>
-    {({ state }) =>
-          state.values.map((_value: number, i: number) => state.getThumbValueLabel(i)).join(' - ')}
-    </SliderOutput>
+    {includeTextField && (
+      <SliderInput>
+        <Input />
+        <Input />
+      </SliderInput>
+    )}
     <SliderTrack>
       {({ state }) => state.values.map((_value: number, i: number) => (
-        <SliderThumb key={i} index={i} aria-label={thumbLabels?.[i]} />
+        <SliderThumb key={i} index={i} />
       ))}
     </SliderTrack>
+    <AriaText slot='min'>{min || 0}</AriaText>
+    <AriaText slot='max'>{max || 100}</AriaText>
   </Slider>
 )
 

@@ -4,6 +4,7 @@ import {
   useCallback,
   useMemo,
   type ForwardedRef,
+  type ReactElement,
 } from 'react';
 import { Provider,
   Slider as RACSlider,
@@ -12,10 +13,16 @@ import { Provider,
   SliderTrack as RACSliderTrack,
   LabelContext,
   type ContextValue,
+  type LabelProps,
   type TextProps,
+  DEFAULT_SLOT,
+  type InputRenderProps,
 } from 'react-aria-components';
 import {
+  AriaTextContext,
+  InputContext,
   type AriaLabelContext,
+  type InputProps,
 } from '../../components';
 import {
   useContextProps,
@@ -24,63 +31,68 @@ import {
 } from '../../hooks';
 import type {
   SliderProps,
-  SliderOutputProps,
   SliderRenderProps,
   SliderThumbProps,
   SliderThumbRenderProps,
   SliderTrackProps,
   SliderTrackRenderProps,
+  SliderInputProps,
+  SliderInputRenderProps,
 } from './types';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import { sliderClassNames, sliderStateVars } from './slider.css';
 import { semanticColorVars } from '../../styles';
 
 /**
- * SliderOutput must be used as a child of Slider
+ * SliderInput must be used as a child of Slider
  */
 
-export const SliderOutputContext = createContext<ContextValue<TextProps, HTMLOutputElement>>(null);
+export const SliderInputContext = createContext<ContextValue<SliderInputProps, HTMLOutputElement>>(null);
 
-export const SliderOutput = forwardRef(function SliderOutput(
-  props: SliderOutputProps,
-  ref: ForwardedRef<HTMLOutputElement>) {
-    [props, ref] = useContextProps(props, ref, SliderOutputContext);
+export const SliderInput = forwardRef(function SliderInput(
+  props: SliderInputProps,
+  ref: ForwardedRef<HTMLOutputElement>
+) {
+  [props, ref] = useContextProps(props, ref, SliderInputContext);
 
-    props = useDefaultProps(props, 'SliderOutput');
+  props = useDefaultProps(props, 'SliderInput');
 
-    const { children: childrenProp, classNames: classNamesProp, ...rest } = props;
+  const { children: childrenProp, classNames: classNamesProp, ...rest } = props;
 
-    const theme = useTheme();
+  const theme = useTheme();
 
-    const classNames = useMemo(
-      () => mergeClassNames(sliderClassNames, theme.Slider, classNamesProp),
-      [theme.Slider, classNamesProp]
-    );
+  const classNames = useMemo(
+    () => mergeClassNames(sliderClassNames, theme.Slider, classNamesProp),
+    [theme.Slider, props.classNames]
+  );
 
-    const style = useCallback(({...renderProps}: SliderRenderProps) => inlineVars(sliderStateVars, renderProps), []);
+  const style = useCallback(
+    (renderProps: SliderInputRenderProps) =>
+      inlineVars(sliderStateVars, renderProps)
+  , []);
 
-    const values = useMemo<[
-      [typeof AriaLabelContext, ContextValue<TextProps, HTMLLabelElement>],
-    ]>(() => [
-      [LabelContext, { className: classNames?.slider?.output }],
-    ], [classNames]);
+  const values = useMemo<[
+    [typeof InputContext, ContextValue<InputProps, HTMLInputElement>]
+  ]>(() => [
+    [InputContext, { className: classNames?.slider?.input, size: 'sm' }]
+  ], [classNames?.slider?.input]);
 
-    const children = useCallback((renderProps: SliderRenderProps) => (
-      <Provider values={values}>
-        {callRenderProps(childrenProp, renderProps)}
-      </Provider>
-    ), [childrenProp, values]);
+  const children = useCallback((renderProps: SliderInputRenderProps) => (
+    <Provider values={values}>
+      {callRenderProps(childrenProp, renderProps)}
+    </Provider>
+  ), [props, ref, classNames]);
 
-    return (
-      <RACSliderOutput
-        {...rest}
-        ref={ref}
-        className={classNames?.slider?.output}
-        style={style}>
-          {children}
-      </RACSliderOutput>
-    )
-  });
+  return (
+    <RACSliderOutput
+      {...rest}
+      ref={ref}
+      className={classNames?.slider?.input}
+      style={style}>
+      {children}
+    </RACSliderOutput>
+  )
+});
 
 /**
  * SliderTrack must be used as a child of Slider, and a parent of SliderThumb
@@ -105,7 +117,7 @@ export const SliderTrack = forwardRef(function SliderTrack(
   );
 
   const style = useCallback(
-    ({...renderProps}: SliderTrackRenderProps) => inlineVars(sliderStateVars, renderProps), []);
+    (renderProps: SliderTrackRenderProps) => inlineVars(sliderStateVars, renderProps), []);
 
   const values = useMemo<[
     [typeof SliderContext, ContextValue<SliderProps, HTMLDivElement>],
@@ -131,7 +143,8 @@ export const SliderTrack = forwardRef(function SliderTrack(
       className={classNames?.slider?.track}
       style={(state) => ({
           ...style(state),
-          // handles coloration for track values
+          // handles coloration for track values:
+          // v1 && v2 ? rangeStyles : singleValueStyles
           background:  state?.state?.values[0] && state?.state?.values[1] ?`linear-gradient(
             to right,
             ${semanticColorVars.background.surface.overlay} 0%, 
@@ -222,6 +235,8 @@ export const Slider = forwardRef(function Slider(
     children: childrenProp,
     classNames: classNamesProp,
     alignLabel = 'top',
+    min = 0,
+    max = 100,
     ...rest
   } = props;
 
@@ -242,10 +257,19 @@ export const Slider = forwardRef(function Slider(
 
   const values = useMemo<[
     [typeof SliderContext, ContextValue<SliderProps, HTMLDivElement>],
-    [typeof AriaLabelContext, ContextValue<TextProps, HTMLLabelElement>],
+    [typeof AriaLabelContext, ContextValue<LabelProps, HTMLLabelElement>],
+    [typeof AriaTextContext, ContextValue<TextProps, HTMLElement>],
   ]>(() => [
     [SliderContext, { classNames, alignLabel}],
     [LabelContext, { className: classNames?.slider?.label }],
+    [AriaTextContext, {
+        slots: {
+          [DEFAULT_SLOT]: {},
+          min: { className: classNames?.slider?.min },
+          max: { className: classNames?.slider?.max },
+        } 
+      }
+    ],
   ], [
     classNames?.slider?.label,
     classNames,

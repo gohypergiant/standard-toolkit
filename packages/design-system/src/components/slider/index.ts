@@ -2,8 +2,7 @@
 export {
   Slider,
   SliderContext,
-  SliderOutput,
-  // SliderNumberField,
+  SliderInput,
   SliderThumb,
   SliderTrack,
 } from './slider';
