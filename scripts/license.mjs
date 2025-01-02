@@ -67,16 +67,17 @@ const files = await glob(
       '**/LICENSE.md',
       '**/CHANGELOG.md',
       '**/.github/**/*.md',
-      '**/*.yml',
     ],
   },
 );
 
 for (const file of files) {
-  const header = getFormattedHeader(path.extname(file));
+  const fileExtension = path.extname(file);
+  const isFileExtensionSupported = fileExtension in COMMENT_STYLES;
 
   let contents = fs.readFileSync(file, 'utf8');
-  if (!/Copyright \d+ Hypergiant/.test(contents)) {
+  if (isFileExtensionSupported && !/Copyright \d+ Hypergiant/.test(contents)) {
+    const header = getFormattedHeader(fileExtension);
     const interpreterDirective = contents.match(/^#!.*$/m)?.[0];
 
     if (interpreterDirective) {
