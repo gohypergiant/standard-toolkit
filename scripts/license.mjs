@@ -58,7 +58,7 @@ const filesToParse = argv.files?.split(' ');
 const files = await glob(
   filesToParse && filesToParse.length > 0
     ? filesToParse
-    : ['**/*.{js,ts,tsx,mjs,mdx,md,css}'],
+    : [`**/*{${Object.keys(COMMENT_STYLES).join(',')}}`],
   {
     ignore: [
       '**/node_modules/**',
