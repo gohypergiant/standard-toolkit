@@ -39,7 +39,9 @@ const HTML_COMMENT_STYLE = {
 const COMMENT_STYLES = {
   '.js': JS_COMMENT_STYLE,
   '.ts': JS_COMMENT_STYLE,
+  '.mts': JS_COMMENT_STYLE,
   '.tsx': JS_COMMENT_STYLE,
+  '.jsx': JS_COMMENT_STYLE,
   '.mjs': JS_COMMENT_STYLE,
   '.css': JS_COMMENT_STYLE,
   '.md': HTML_COMMENT_STYLE,
