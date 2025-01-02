@@ -73,7 +73,7 @@ const files = await glob(
 
 for (const file of files) {
   const fileExtension = path.extname(file);
-  const isFileExtensionSupported = fileExtension in COMMENT_STYLES;
+  const isFileExtensionSupported = fileExtension in COMMENT_STYLES; // check extension for the case where specific files are passed to the script
 
   let contents = fs.readFileSync(file, 'utf8');
   if (isFileExtensionSupported && !/Copyright \d+ Hypergiant/.test(contents)) {
