@@ -30,3 +30,4 @@ ignore:
   - '**/dist'
   - '**/documentation'
   - '**/node_modules'
+  - 'apps/docs/src/public'
