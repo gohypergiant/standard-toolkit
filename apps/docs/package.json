@@ -13,6 +13,7 @@
     "preview": "rspress preview"
   },
   "dependencies": {
+    "@accelint/design-system": "workspace:*",
     "@rspress/plugin-playground": "^1.38.0",
     "@types/node": "^18.19.67",
     "react": "^18.3.1",
