@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm run build:deps && rspress dev",
     "build:deps": "pnpm run build:ladle && pnpm run build:typedoc",
     "build:ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/src/public/ladle --base ladle",
     "build:typedoc": "typedoc",
     "build": "pnpm run build:deps && rspress build",
-    "preview": "rspress preview",
     "check": "biome check --write",
-    "format": "biome format --write"
+    "dev": "pnpm run build:deps && rspress dev",
+    "format": "biome format --write",
+    "preview": "rspress preview"
   },
   "dependencies": {
     "@rspress/plugin-playground": "^1.38.0",
