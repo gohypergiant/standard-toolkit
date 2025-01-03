@@ -15,6 +15,7 @@ const config = {
   githubPages: false,
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
   hideBreadcrumbs: true,
+  hidePageHeader: true,
 };
 
 export default config;
