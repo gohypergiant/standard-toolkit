@@ -1,0 +1,13 @@
+{
+  "name": "@accelint/docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "typedoc",
+    "serve": "http-server ./dist -p 3000"
+  },
+  "dependencies": {
+    "http-server": "14.1.1",
+    "typedoc": "0.26.11"
+  }
+}
