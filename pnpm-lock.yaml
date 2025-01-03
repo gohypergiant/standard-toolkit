@@ -53,6 +53,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@accelint/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design-system
       '@rspress/plugin-playground':
         specifier: ^1.38.0
         version: 1.39.3(@rspress/core@1.39.3(webpack@5.97.1(@swc/core@1.7.36(@swc/helpers@0.5.15))(esbuild@0.24.2)))(monaco-editor@0.52.2)(react-dom@18.3.1(react@18.3.1))(react-router-dom@6.28.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
