@@ -6,7 +6,9 @@
 # Dist
 node_modules
 dist/
-src/typedocs-output
+
+# generated files
+src/public/
 
 # IDE
 .vscode/*
