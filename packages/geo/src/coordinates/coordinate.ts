@@ -41,7 +41,8 @@ type AnySystem = CoordinateSystem<MinLengthArray>;
  * rounding errors. All alternative values are computed from a common
  * internal value to reduce complexity.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * const create = createCoordinate(coordinateSystems.dd, 'LATLON')
@@ -58,15 +59,15 @@ type AnySystem = CoordinateSystem<MinLengthArray>;
 type Formatter = (f?: Format) => string;
 
 type Coordinate = {
-  /** @see {@link Formatter} */
+  /** {@inheritDoc Formatter} */
   dd: Formatter;
-  /** @see {@link Formatter} */
+  /** {@inheritDoc Formatter} */
   ddm: Formatter;
-  /** @see {@link Formatter} */
+  /** {@inheritDoc Formatter} */
   dms: Formatter;
-  /** @see {@link Formatter} */
+  /** {@inheritDoc Formatter} */
   mgrs: Formatter;
-  /** @see {@link Formatter} */
+  /** {@inheritDoc Formatter} */
   utm: Formatter;
   errors: string[];
   raw: CoordinateInternalValue;
@@ -112,7 +113,8 @@ const freezeCoordinate = (
  *
  * @param initSystem dd, ddm, or dms
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * const create = createCoordinate(coordinateSystems.dd, 'LATLON')
@@ -188,7 +190,8 @@ export function createCoordinate(
  * ease of computation; all systems expect to start from a common starting
  * point to reduce complexity.
  *
- * @pure
+ * @remarks
+ * pure function
  */
 function internalRepresentation(
   initFormat: Format,

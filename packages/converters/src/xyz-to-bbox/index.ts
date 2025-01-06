@@ -36,7 +36,8 @@ function tileToLat(y: number, z: number) {
 /**
  * Converts a Tile (x, y, z) to a Bounding Box (west, south, east, north).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * xyzToBbox([71, 96, 8]);

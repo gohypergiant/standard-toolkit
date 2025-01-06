@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "pnpm run gen && pnpm run build:ladle",
     "build:ladle": "pnpm --filter=@accelint/design-system exec ladle build -o ../../apps/docs/dist/ladle --base ladle",
-    "build": "typedoc && pnpm run build:ladle",
+    "gen": "typedoc",
     "serve": "http-server ./dist -p 3000"
   },
   "dependencies": {

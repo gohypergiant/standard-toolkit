@@ -32,7 +32,8 @@ const test = (list: string[], val: unknown) =>
  * - `isNo(val)`
  * - `isOff(val)`
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isAnyFalsy('');        // true
@@ -53,7 +54,8 @@ export const isAnyFalsy = (val: unknown) =>
  * - `isYes(val)`
  * - `isOn(val)`
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isAnyTruthy('');        // false
@@ -77,7 +79,8 @@ export const isAnyTruthy = (val: unknown) =>
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isFalse('');        // true
@@ -98,7 +101,8 @@ export const isFalse = (val: unknown) => test(listFalse, val);
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isNo('n');       // true
@@ -121,7 +125,8 @@ export const isNo = (val: unknown) => test(listNo, val);
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isOff('off');     // true
@@ -144,7 +149,8 @@ export const isOff = (val: unknown) => test(listOff, val);
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isOn('off');     // false
@@ -165,7 +171,8 @@ export const isOn = (val: unknown) => test(listOn, val);
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isOn('no');      // false
@@ -188,7 +195,8 @@ export const isTrue = (val: unknown) => test(listTrue, val);
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * isTrue('');        // false
