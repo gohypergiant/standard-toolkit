@@ -183,6 +183,7 @@ export const TextArea = forwardRef(function TextArea(
 
   return (
     <div className={classNames?.container} style={style}>
+      {/* biome-ignore lint/a11y/useFocusableInteractive: TODO: refactor */}
       <span
         {...mergedProps}
         {...hoverProps}

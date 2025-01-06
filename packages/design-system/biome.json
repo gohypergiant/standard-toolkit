@@ -10,10 +10,6 @@
   },
   "linter": {
     "rules": {
-      "a11y": {
-        "noSvgWithoutTitle": "warn",
-        "useFocusableInteractive": "warn"
-      },
       "style": {
         "useNamingConvention": {
           "level": "error",
