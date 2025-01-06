@@ -12,14 +12,19 @@
 
 /** @type {Partial<import("typedoc").TypeDocOptions>} */
 export default {
-  entryPointStrategy: 'packages',
+  customCss: './custom.css',
+  disableSources: true,
   entryPoints: ['../../packages/*'],
+  entryPointStrategy: 'packages',
+  githubPages: false, // false === do not emit the file `.nojekyll`
+  name: 'Accelint Standard Toolkit (DevTK)',
+  navigationLinks: {
+    // biome-ignore lint/style/useNamingConvention: proper capitalization
+    GitHub: 'https://github.com/gohypergiant/standard-toolkit',
+  },
+  out: 'dist/',
   packageOptions: {
     entryPoints: ['src/index.ts'],
     projectDocuments: ['src/**/*.md'],
   },
-  out: 'dist/',
-  disableSources: true,
-  githubPages: false, // false === do not emit the file `.nojekyll`
-  // requiredToBeDocumented: ['Class', 'Function', 'Interface'],
 };
