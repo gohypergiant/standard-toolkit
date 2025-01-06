@@ -16,6 +16,7 @@ export default {
   entryPoints: ['../../packages/*'],
   packageOptions: {
     entryPoints: ['src/index.ts'],
+    projectDocuments: ['src/**/*.md'],
   },
   out: 'dist/',
   disableSources: true,
