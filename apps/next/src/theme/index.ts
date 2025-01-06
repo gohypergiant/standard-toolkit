@@ -16,6 +16,7 @@ export { QueryBuilder } from './query-builder.css';
 export { Radio } from './radio.css';
 export { SearchField } from './search-field.css';
 export { Select } from './select.css';
+export { Slider } from './slider.css';
 export { Switch } from './switch.css';
 export { Tabs } from './tabs.css';
 export { TextArea } from './textarea.css';

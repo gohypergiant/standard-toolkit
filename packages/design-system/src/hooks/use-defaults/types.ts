@@ -34,7 +34,12 @@ import type { PopoverProps } from '../../components/popover/types';
 import type { RadioGroupProps, RadioProps } from '../../components/radio/types';
 import type { SearchFieldProps } from '../../components/search-field/types';
 import type { SelectProps } from '../../components/select/types';
-import type { SliderProps, SliderOutputProps, SliderThumbProps, SliderTrackProps } from '../../components/slider/types';
+import type {
+  SliderProps,
+  SliderInputProps,
+  SliderThumbProps,
+  SliderTrackProps,
+} from '../../components/slider/types';
 import type { SwitchProps } from '../../components/switch/types';
 import type {
   TabListProps,
@@ -85,7 +90,8 @@ export type DefaultsContext = DefaultsOf<{
   SearchField: SearchFieldProps;
   Select: SelectProps<object>;
   Slider: SliderProps;
-  SliderOutput: SliderOutputProps;
+  SliderBar: SliderProps;
+  SliderInput: SliderInputProps;
   SliderThumb: SliderThumbProps;
   SliderTrack: SliderTrackProps;
   Switch: SwitchProps;

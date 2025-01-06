@@ -335,6 +335,22 @@ export {
   type SelectState,
 } from './select';
 export {
+  Slider,
+  SliderContext,
+  SliderInput,
+  SliderThumb,
+  SliderTrack,
+  sliderColorVars,
+  sliderSpaceVars,
+  sliderStateVars,
+  type LabelAlignment,
+  type SliderClassNames,
+  type SliderProps,
+  type SliderRenderProps,
+  type SliderState,
+  type SliderThumbProps
+} from './slider';
+export {
   Switch,
   SwitchContext,
   switchClassNames,
