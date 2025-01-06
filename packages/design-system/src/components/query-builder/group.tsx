@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { Fragment, useContext, useMemo } from 'react';
 import {
   type RuleGroupArray,
@@ -229,27 +241,29 @@ export function RuleGroupHeaderComponents(
           />
         </div>
       )}
-      {!ruleGroup.schema.showCombinatorsBetweenRules &&
-        !ruleGroup.schema.independentCombinators && (
-          <div className={classNames?.group?.combinator}>
-            <CombinatorSelectorControlElement
-              key={TestID.combinators}
-              testID={TestID.combinators}
-              options={ruleGroup.schema.combinators}
-              value={ruleGroup.combinator}
-              title={ruleGroup.translations.combinators.title}
-              className={ruleGroup.classNames.combinators}
-              handleOnChange={ruleGroup.onCombinatorChange}
-              rules={ruleGroup.ruleGroup.rules}
-              level={ruleGroup.path.length}
-              path={ruleGroup.path}
-              disabled={ruleGroup.disabled}
-              context={ruleGroup.context}
-              validation={ruleGroup.validationResult}
-              schema={ruleGroup.schema}
-            />
-          </div>
-        )}
+      {!(
+        ruleGroup.schema.showCombinatorsBetweenRules ||
+        ruleGroup.schema.independentCombinators
+      ) && (
+        <div className={classNames?.group?.combinator}>
+          <CombinatorSelectorControlElement
+            key={TestID.combinators}
+            testID={TestID.combinators}
+            options={ruleGroup.schema.combinators}
+            value={ruleGroup.combinator}
+            title={ruleGroup.translations.combinators.title}
+            className={ruleGroup.classNames.combinators}
+            handleOnChange={ruleGroup.onCombinatorChange}
+            rules={ruleGroup.ruleGroup.rules}
+            level={ruleGroup.path.length}
+            path={ruleGroup.path}
+            disabled={ruleGroup.disabled}
+            context={ruleGroup.context}
+            validation={ruleGroup.validationResult}
+            schema={ruleGroup.schema}
+          />
+        </div>
+      )}
       {ruleGroup.schema.showNotToggle && (
         <div className={classNames?.group?.toggle}>
           <NotToggleControlElement
@@ -399,6 +413,7 @@ export function RuleGroupBodyComponents(
               {typeof rule !== 'string' && !isRuleGroup(rule) && (
                 <RuleControlElement
                   key={TestID.rule}
+                  // biome-ignore lint/style/noNonNullAssertion: intentional
                   id={rule.id!}
                   rule={rule}
                   field={rule.field}

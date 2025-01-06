@@ -34,7 +34,7 @@
     "dev": "pnpm tsc --watch",
     "docs": "pnpm typedoc --logLevel Error --entryPoints src/index.ts --out documentation/api --readme none --disableSources --plugin typedoc-plugin-markdown",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-system --barrels",
-    "lint:todo": "pnpm biome lint ./",
+    "lint": "pnpm biome lint ./",
     "preview": "pnpm ladle serve",
     "test": "pnpm vitest --dir=src"
   },

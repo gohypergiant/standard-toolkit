@@ -6,10 +6,14 @@
   ],
   "files": {
     "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
-    "ignore": ["node_modules", ".turbo", "dist", "coverage"]
+    "ignore": ["node_modules", ".turbo", "dist", "coverage", "build"]
   },
   "linter": {
     "rules": {
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "useFocusableInteractive": "warn"
+      },
       "style": {
         "useNamingConvention": {
           "level": "error",

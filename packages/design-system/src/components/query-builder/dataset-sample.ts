@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import type {
   Field,
   Option,
@@ -207,21 +219,21 @@ export const fields = [
     name: 'AK_HIGH',
     label: 'AK High',
     type: 'i32',
-    ...typeMap['i32'],
+    ...typeMap.i32,
   },
   {
     id: 'AK_LOW',
     name: 'AK_LOW',
     label: 'AK Low',
     type: 'i32',
-    ...typeMap['i32'],
+    ...typeMap.i32,
   },
   {
     id: 'COUNTRY',
     name: 'COUNTRY',
     label: 'Country',
     type: 'str',
-    ...typeMap['str'],
+    ...typeMap.str,
   },
   {
     id: 'ELEVATION',
@@ -236,7 +248,7 @@ export const fields = [
     type: 'str',
     defaultValue: false,
     operators: [{ name: '=', value: '=', label: 'is' } as const],
-    ...typeMap['bool'],
+    ...typeMap.bool,
   },
   {
     id: 'PRIVATEUSE',
@@ -290,27 +302,27 @@ export const fields = [
     name: 'NICKNAME',
     label: 'Airport Nickname',
     type: 'str',
-    ...typeMap['str'],
+    ...typeMap.str,
   },
   {
     id: 'ESTABLISHED',
     name: 'ESTABLISHED',
     label: 'Established',
     type: 'date',
-    ...typeMap['date'],
+    ...typeMap.date,
   },
   {
     id: 'MAINTENANCE',
     name: 'MAINTENANCE',
     label: 'Maintenance',
     type: 'datetime',
-    ...typeMap['datetime'],
+    ...typeMap.datetime,
   },
   {
     id: 'PEAK_TRAFFIC',
     name: 'PEAK_TRAFFIC',
     label: 'Peak Traffic',
     type: 'time',
-    ...typeMap['time'],
+    ...typeMap.time,
   },
 ] satisfies Field[];

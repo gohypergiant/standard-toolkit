@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { TreeGroupNode, UseTreeOptions } from '../../types';
@@ -67,15 +79,15 @@ describe('useTree', () => {
     act(() => result.current.actions.toggleIsExpanded());
 
     expect(
-      (result.current.tree.children[0]!.value as TreeGroupNode<unknown>)
+      (result.current.tree.children[0]?.value as TreeGroupNode<unknown>)
         .isExpanded,
     ).toBe(true);
 
     // Not really a group, but casting to access property
     expect(
       (
-        result.current.tree.children[0]!.children[0]!
-          .value as TreeGroupNode<unknown>
+        result.current.tree.children[0]?.children[0]
+          ?.value as TreeGroupNode<unknown>
       ).isExpanded,
     ).toBeFalsy();
   });
@@ -97,14 +109,14 @@ describe('useTree', () => {
     );
 
     expect(
-      (result.current.tree.children[0]!.value as TreeGroupNode<unknown>)
+      (result.current.tree.children[0]?.value as TreeGroupNode<unknown>)
         .isExpanded,
     ).toBe(false);
 
     act(() => result.current.actions.revertIsExpanded());
 
     expect(
-      (result.current.tree.children[0]!.value as TreeGroupNode<unknown>)
+      (result.current.tree.children[0]?.value as TreeGroupNode<unknown>)
         .isExpanded,
     ).toBe(true);
   });
@@ -196,12 +208,12 @@ describe('useTree', () => {
 
     act(() => result.current.actions.toggleIsViewable(new Set(['foo']), true));
 
-    expect(result.current.tree.children[0]!.value).toHaveProperty(
+    expect(result.current.tree.children[0]?.value).toHaveProperty(
       'isViewable',
       true,
     );
 
-    expect(result.current.tree.children[0]!.value).toHaveProperty(
+    expect(result.current.tree.children[0]?.value).toHaveProperty(
       'isVisible',
       true,
     );
