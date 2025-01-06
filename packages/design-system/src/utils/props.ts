@@ -74,8 +74,9 @@ function mergeStaticClassName<T extends RenderProps<object>>(
         return acc;
       }
 
-      // biome-ignore lint/performance/noAccumulatingSpread: we can discuss refactoring separately
-      return [...acc, props.className];
+      acc.push(props.className);
+
+      return acc;
     }, []),
   );
 }
@@ -203,11 +204,9 @@ function mergeStaticStyle<T extends RenderProps<object>>(
       return acc;
     }
 
-    return {
-      // biome-ignore lint/performance/noAccumulatingSpread: we can discuss refactoring separately
-      ...acc,
-      ...props.style,
-    };
+    Object.assign(acc, props.style);
+
+    return acc;
   }, {});
 }
 
