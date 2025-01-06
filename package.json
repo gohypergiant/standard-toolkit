@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "repository": "gohypergiant/standard-toolkit.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "bench": "turbo bench",
     "build": "turbo build",
