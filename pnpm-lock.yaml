@@ -56,6 +56,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@accelint/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design-system
       http-server:
         specifier: 14.1.1
         version: 14.1.1

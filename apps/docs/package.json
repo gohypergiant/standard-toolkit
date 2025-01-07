@@ -9,6 +9,7 @@
     "serve": "http-server ./dist -p 3000"
   },
   "dependencies": {
+    "@accelint/design-system": "workspace:*",
     "http-server": "14.1.1",
     "typedoc": "0.26.11"
   }
