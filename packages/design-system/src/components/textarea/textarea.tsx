@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { useFocusRing } from '@react-aria/focus';
 import { useHover } from '@react-aria/interactions';
 import { useControlledState } from '@react-stately/utils';
@@ -47,8 +59,8 @@ export const TextArea = forwardRef(function TextArea(
 
   // Disallow props possibly provided by React Aria context
   // could be render props functions we don't want to support
-  delete (props as RACTextAreaProps).className;
-  delete (props as RACTextAreaProps).style;
+  (props as RACTextAreaProps).className = undefined;
+  (props as RACTextAreaProps).style = undefined;
 
   // Duplicate context prop merging to support React Aria's context
   // and our own which establishes a superset type for the props
@@ -171,12 +183,13 @@ export const TextArea = forwardRef(function TextArea(
 
   return (
     <div className={classNames?.container} style={style}>
+      {/* biome-ignore lint/a11y/useFocusableInteractive: TODO: refactor */}
       <span
         {...mergedProps}
         {...hoverProps}
         ref={ref}
         className={classNames?.textarea}
-        contentEditable={!isDisabled && !isReadOnly}
+        contentEditable={!(isDisabled || isReadOnly)}
         role='textbox'
         suppressContentEditableWarning
         onInput={handleChange}

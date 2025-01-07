@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { kebabCase } from 'lodash';
 import { layers } from '../styles';
@@ -107,7 +119,8 @@ export function reduceContract<T extends Contract, U>(
 
   const vars: Record<CssVarFunction, U> = {};
 
-  for (let node of nodes) {
+  for (const node of nodes) {
+    // biome-ignore lint/complexity/noForEach: TODO: refactor. converting to for...of results in breaking complexity rule limit 🫠
     Object.entries(node.values).forEach(([key, value]: [string, U]) => {
       const cssVarOrSubContract = node.contract[key];
 
@@ -397,13 +410,13 @@ export function applyThemeVars<T extends CssVarValues = CssVarValues>(
   const [style, ...rest] = styles;
 
   const stylesWithQueries = (
-    !style.query ? rest : styles
+    style.query ? styles : rest
   ) as VarsOnlyContainerQuery<T>[];
 
   return {
     '@layer': {
       [layer]: {
-        ...(!style.query ? { vars: style.vars } : {}),
+        ...(style.query ? {} : { vars: style.vars }),
         ...(stylesWithQueries.length
           ? {
               '@container': containerQueries<T>(contract, ...stylesWithQueries),
@@ -431,8 +444,9 @@ export function inlineVars<T extends Contract>(
   values?: PartialMapLeafNodes<T, Primitive>,
 ): Record<string, string> {
   return assignInlineVars(
-    !values
-      ? Object.entries(varsOrContract).reduce<Record<string, string>>(
+    values
+      ? assignPartialVars(varsOrContract as T, values)
+      : Object.entries(varsOrContract).reduce<Record<string, string>>(
           (acc, [key, value]) => {
             if (value != null) {
               acc[key] = `${value}`;
@@ -441,7 +455,6 @@ export function inlineVars<T extends Contract>(
             return acc;
           },
           {},
-        )
-      : assignPartialVars(varsOrContract as T, values),
+        ),
   );
 }
