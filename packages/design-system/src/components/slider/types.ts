@@ -6,7 +6,6 @@ import type {
   SliderThumbRenderProps as RACSliderThumbRenderProps,
   SliderTrackRenderProps as RACSliderTrackRenderProps,
   SliderTrackProps as RACSliderTrackProps,
-  SliderOutputProps as RACSliderOutputProps,
 } from 'react-aria-components';
 import type { RenderPropsChildren } from '../../types';
 import type { PartialDeep } from 'type-fest';
@@ -35,7 +34,6 @@ export type LabelAlignment = 'top' | 'left';
 export type SliderRenderProps = RACSliderRenderProps;
 export type SliderThumbRenderProps = RACSliderThumbRenderProps;
 export type SliderTrackRenderProps = RACSliderTrackRenderProps;
-export type SliderInputRenderProps = RACSliderOutputProps;
 
 type BaseSliderProps = {
   children?: RenderPropsChildren<SliderRenderProps>;
@@ -89,3 +87,10 @@ export type SliderInputProps = Omit<
   'className' | 'style'
 > &
   BaseSliderInputProps;
+
+export type BaseSliderBarProps = {
+  minValue?: number;
+  maxValue?: number;
+};
+
+export type SliderBarProps = BaseSliderBarProps & BaseSliderTrackProps;

@@ -103,6 +103,9 @@ export const sliderClassNames: SliderClassNames = {
           borderRadius: sliderSpaceVars.borderRadius,
           backgroundColor: sliderColorVars.color,
           zIndex: 2,
+          ' input': {
+            width: '1px',
+          },
           '@container': containerQueries(sliderStateVars, {
             query: { isHovered: true },
             boxShadow: sliderColorVars.shadow,

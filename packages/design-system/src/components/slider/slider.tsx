@@ -22,6 +22,7 @@ import {
   InputContext,
   type AriaLabelContext,
   type InputProps,
+  type InputRenderProps,
 } from '../../components';
 import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import type {
@@ -32,27 +33,27 @@ import type {
   SliderTrackProps,
   SliderTrackRenderProps,
   SliderInputProps,
-  SliderInputRenderProps,
+  SliderBarProps,
 } from './types';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import { sliderClassNames, sliderStateVars } from './slider.css';
 
 /**
- * SliderBar must be used as a child of Slider
+ * SliderBar must be used as a child of SliderTrack
  */
 
 export const SliderBarContext =
-  createContext<ContextValue<SliderProps, HTMLDivElement>>(null);
+  createContext<ContextValue<SliderBarProps, HTMLDivElement>>(null);
 
 export const SliderBar = forwardRef(function SliderBar(
-  props: SliderProps,
+  props: SliderBarProps,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   [props, ref] = useContextProps(props, ref, SliderBarContext);
 
   props = useDefaultProps(props, 'SliderBar');
 
-  const { children: childrenProp, classNames: classNamesProp, ...rest } = props;
+  const { classNames: classNamesProp } = props;
 
   const theme = useTheme();
 
@@ -61,11 +62,8 @@ export const SliderBar = forwardRef(function SliderBar(
     [theme.Slider, classNamesProp],
   );
 
-  console.log(props);
-
   return (
     <div
-      {...rest}
       ref={ref}
       className={classNames?.slider?.bar}
       style={{
@@ -84,11 +82,11 @@ export const SliderBar = forwardRef(function SliderBar(
  */
 
 export const SliderInputContext =
-  createContext<ContextValue<SliderInputProps, HTMLOutputElement>>(null);
+  createContext<ContextValue<SliderInputProps, HTMLInputElement>>(null);
 
 export const SliderInput = forwardRef(function SliderInput(
   props: SliderInputProps,
-  ref: ForwardedRef<HTMLOutputElement>,
+  ref: ForwardedRef<HTMLInputElement>,
 ) {
   [props, ref] = useContextProps(props, ref, SliderInputContext);
 
@@ -104,8 +102,7 @@ export const SliderInput = forwardRef(function SliderInput(
   );
 
   const style = useCallback(
-    (renderProps: SliderInputRenderProps) =>
-      inlineVars(sliderStateVars, renderProps),
+    (renderProps: SliderInputProps) => inlineVars(sliderStateVars, renderProps),
     [],
   );
 
@@ -119,12 +116,12 @@ export const SliderInput = forwardRef(function SliderInput(
   );
 
   const children = useCallback(
-    (renderProps: SliderInputRenderProps) => (
+    (renderProps: InputRenderProps) => (
       <Provider values={values}>
         {callRenderProps(childrenProp, renderProps)}
       </Provider>
     ),
-    [props, ref, classNames],
+    [values, childrenProp],
   );
 
   return (
@@ -189,10 +186,7 @@ export const SliderTrack = forwardRef(function SliderTrack(
   const children = useCallback(
     (renderProps: SliderTrackRenderProps) => (
       <Provider values={values}>
-        {callRenderProps(childrenProp, {
-          ...renderProps,
-          // defaultChildren: null,
-        })}
+        {callRenderProps(childrenProp, renderProps)}
       </Provider>
     ),
     [childrenProp, values],
