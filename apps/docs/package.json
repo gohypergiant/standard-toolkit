@@ -3,15 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "docusaurus": "docusaurus",
-    "start": "docusaurus start",
-    "build": "docusaurus build",
-    "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "build:docusaurus": "docusaurus build",
+    "build:typedoc": "typedoc",
+    "build": "pnpm run build:typedoc && npm run build:docusaurus",
     "clear": "docusaurus clear",
+    "dev": "docusaurus start",
+    "docusaurus": "docusaurus",
     "serve": "docusaurus serve",
-    "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -25,12 +23,14 @@
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/design-system": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@biomejs/biome": "1.9.3",
     "@docusaurus/module-type-aliases": "3.7.0",
     "@docusaurus/tsconfig": "3.7.0",
     "@docusaurus/types": "3.7.0",
-    "@types/react": "^19.0.0",
+    "typedoc": "0.27.6",
+    "typedoc-plugin-markdown": "4.3.3",
     "typescript": "~5.6.2"
   },
   "browserslist": {
