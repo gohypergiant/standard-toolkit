@@ -22,9 +22,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://gohypergiant.github.io',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/standard-toolkit', // TODO
+  baseUrl: '/standard-toolkit',
 
   // GitHub pages deployment config.
   organizationName: 'gohypergiant',
@@ -32,6 +30,7 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+  onBrokenAnchors: 'ignore', // for now
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -48,7 +47,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/facebook/docusaurus/tree/main/docs/',
+          // editUrl: 'https://github.com/facebook/docusaurus/tree/main/docs/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -58,16 +57,21 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
     image: 'img/banner.jpg',
     navbar: {
       title: 'Accelint Standard Toolkit (DevTK)',
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'docsSidebar',
+          sidebarId: 'packagesSidebar',
           position: 'left',
-          label: 'Docs',
+          label: 'Packages',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'apiSidebar',
+          position: 'left',
+          label: 'API',
         },
         {
           href: 'https://github.com/gohypergiant/standard-toolkit',
