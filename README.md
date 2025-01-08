@@ -11,8 +11,8 @@
 <br />
 
 > [!IMPORTANT]
-> Standard Toolkit is currently only intended for usage within the Accelint family of systems.<br>
-> Contributions are more than welcome but please consider that this project may not fit your needs.<br>
+> Standard Toolkit is currently only intended for usage within the Accelint family of systems.<br />
+> Contributions are more than welcome but please consider that this project may not fit your needs.<br />
 > Please read the [contributing guidelines](CONTRIBUTING.md) and the [roadmap](#roadmap-link) of our Technical Steering Committee (TSC).
 
 <br />
