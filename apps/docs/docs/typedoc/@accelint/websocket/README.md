@@ -1,3 +1,0 @@
-# @accelint/websocket
-
-⚠️ Under Construction ⚠️

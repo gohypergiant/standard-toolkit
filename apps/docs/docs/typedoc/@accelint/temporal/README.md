@@ -1,3 +1,0 @@
-# @accelint/temporal
-
-⚠️ Under Construction ⚠️

@@ -1,3 +1,0 @@
-# Type Alias: QueryBuilderMapping
-
-> **QueryBuilderMapping**: `Partial`\<\{ `button`: `Record`\<[`QueryBuilderSizes`](QueryBuilderSizes.md), [`OmitProtectedProps`](OmitProtectedProps.md)\<[`ButtonProps`](ButtonProps.md)\>\>; `error`: `Record`\<[`QueryBuilderSizes`](QueryBuilderSizes.md), `string`\>; `input`: `Record`\<[`QueryBuilderSizes`](QueryBuilderSizes.md), [`OmitProtectedProps`](OmitProtectedProps.md)\<[`InputProps`](InputProps.md)\>\>; `select`: `Record`\<[`QueryBuilderSizes`](QueryBuilderSizes.md), [`OmitProtectedProps`](OmitProtectedProps.md)\<[`SelectProps`](SelectProps.md)\<`object`\>\>\>; `textarea`: `Record`\<[`QueryBuilderSizes`](QueryBuilderSizes.md), [`OmitProtectedProps`](OmitProtectedProps.md)\<[`TextAreaProps`](TextAreaProps.md)\>\>; \}\>

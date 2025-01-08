@@ -1,3 +1,0 @@
-# @accelint/math
-
-⚠️ Under Construction ⚠️

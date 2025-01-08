@@ -1,3 +1,0 @@
-# @accelint/predicates
-
-⚠️ Under Construction ⚠️
