@@ -1,3 +1,0 @@
-# @accelint/core
-
-⚠️ Under Construction ⚠️

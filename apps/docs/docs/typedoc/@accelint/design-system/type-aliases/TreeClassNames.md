@@ -1,3 +1,0 @@
-# Type Alias: TreeClassNames
-
-> **TreeClassNames**: `PartialDeep`\<\{ `empty`: `string`; `group`: `string`; `indicator`: \{ `container`: `string`; `indicator`: `string`; \}; `item`: \{ `actions`: [`GroupClassNames`](GroupClassNames.md); `bar`: `string`; `container`: `string`; `description`: `string`; `drag`: [`ButtonClassNames`](ButtonClassNames.md); `expansion`: [`ButtonClassNames`](ButtonClassNames.md); `item`: `string`; `lines`: [`ButtonClassNames`](ButtonClassNames.md); `selection`: [`CheckboxClassNames`](CheckboxClassNames.md); `visibility`: [`ButtonClassNames`](ButtonClassNames.md); \}; `tree`: \{ `container`: `string`; `tree`: `string`; \}; \}\>

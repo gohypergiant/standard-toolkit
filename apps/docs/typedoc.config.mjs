@@ -15,12 +15,14 @@ const config = {
   disableSources: true,
   entryPoints: ['../../packages/*'],
   entryPointStrategy: 'packages',
+  // outputFileStrategy: 'modules', a flatter option. works well for smaller modules IMO
   githubPages: false,
   hideBreadcrumbs: true,
   hidePageHeader: true,
   out: 'docs/typedoc',
   packageOptions: {
     entryPoints: ['src/index.ts'],
+    readme: 'none',
   },
   plugin: ['typedoc-plugin-markdown'],
   readme: 'none',
