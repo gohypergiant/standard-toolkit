@@ -22,11 +22,12 @@ const config = {
   out: 'docs/typedoc',
   packageOptions: {
     entryPoints: ['src/index.ts'],
+    groupOrder: ['Functions', 'Variables', 'Type Aliases', '*'],
   },
   mergeReadme: true,
+  theme: 'markdown',
   plugin: ['typedoc-plugin-markdown'],
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
-  theme: 'markdown',
 };
 
 export default config;

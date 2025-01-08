@@ -1,4 +1,4 @@
-# Design System (C2DS)
+# @accelint/design-system
 
 Welcome to the C2 Design System (C2DS)! This library is a collection of UI components and tools for engineers to build specialized, precise user experiences for Command and Control (C2) systems.
 
