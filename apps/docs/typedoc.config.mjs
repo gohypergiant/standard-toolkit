@@ -22,10 +22,9 @@ const config = {
   out: 'docs/typedoc',
   packageOptions: {
     entryPoints: ['src/index.ts'],
-    readme: 'none',
   },
+  mergeReadme: true,
   plugin: ['typedoc-plugin-markdown'],
-  readme: 'none',
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
   theme: 'markdown',
 };
