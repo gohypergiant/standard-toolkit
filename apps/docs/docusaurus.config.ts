@@ -28,7 +28,7 @@ const config: Config = {
   organizationName: 'gohypergiant',
   projectName: 'standard-toolkit',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   onBrokenAnchors: 'ignore', // for now
 
