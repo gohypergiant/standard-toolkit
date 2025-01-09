@@ -10,9 +10,9 @@ import { AriaLabel, AriaText } from '../aria';
 import { Input } from '../input';
 import { TooltipTrigger } from 'react-aria-components';
 import { Tooltip } from '../tooltip';
-import { SliderBar } from './slider';
 import type { SliderRenderProps } from './types';
 import { useState } from 'react';
+import { sliderBar } from './slider.stories.css';
 
 export default {
   title: 'Components/Slider',
@@ -64,13 +64,13 @@ const args: ArgTypes<SliderProps> = {
     },
     defaultValue: true,
   },
-  min: {
+  minValue: {
     control: {
       type: 'number',
     },
     defaultValue: 0,
   },
-  max: {
+  maxValue: {
     control: {
       type: 'number',
     },
@@ -80,8 +80,8 @@ const args: ArgTypes<SliderProps> = {
 
 export const SliderExample: Story<SliderProps> = ({
   label,
-  min,
-  max,
+  minValue,
+  maxValue,
   includeRangeLabel,
   includeTextField,
   ...rest
@@ -99,14 +99,23 @@ export const SliderExample: Story<SliderProps> = ({
       <SliderTrack>
         {({ state }: SliderRenderProps) => (
           <TooltipTrigger isOpen={open}>
-            <SliderBar minValue={state.values[0]} />
+            <div
+              className={sliderBar}
+              style={{
+                position: 'absolute',
+                left: state.getThumbValue(1) ? `${state.getThumbValue(0)}%` : 0,
+                width: state.getThumbValue(1)
+                  ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                  : `${state.getThumbValue(0)}%`,
+              }}
+            />
             <SliderThumb onHoverChange={(isHovered) => setOpen(isHovered)} />
             <Tooltip>{state.values[0]}</Tooltip>
           </TooltipTrigger>
         )}
       </SliderTrack>
-      <AriaText slot='min'>{min || 0}</AriaText>
-      <AriaText slot='max'>{max || 100}</AriaText>
+      <AriaText slot='min'>{minValue || 0}</AriaText>
+      <AriaText slot='max'>{maxValue || 100}</AriaText>
     </Slider>
   );
 };
@@ -119,8 +128,8 @@ SliderExample.argTypes = {
 
 export const ControlledSliderExample: Story<SliderProps> = ({
   label,
-  min,
-  max,
+  minValue,
+  maxValue,
   includeRangeLabel,
   includeTextField,
   value,
@@ -129,7 +138,7 @@ export const ControlledSliderExample: Story<SliderProps> = ({
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Slider {...rest} value={value} minValue={min} maxValue={max}>
+    <Slider {...rest} value={value} minValue={minValue} maxValue={maxValue}>
       {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
       {includeTextField && (
         <SliderInput>
@@ -139,7 +148,16 @@ export const ControlledSliderExample: Story<SliderProps> = ({
       <SliderTrack>
         {({ state }: SliderRenderProps) => (
           <>
-            <SliderBar minValue={state.values[0]} />
+            <div
+              className={sliderBar}
+              style={{
+                position: 'absolute',
+                left: state.getThumbValue(1) ? `${state.getThumbValue(0)}%` : 0,
+                width: state.getThumbValue(1)
+                  ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                  : `${state.getThumbValue(0)}%`,
+              }}
+            />
             <TooltipTrigger isOpen={open}>
               <SliderThumb onHoverChange={(isHovered) => setOpen(isHovered)} />
               <Tooltip>{state.values[0]}</Tooltip>
@@ -147,8 +165,8 @@ export const ControlledSliderExample: Story<SliderProps> = ({
           </>
         )}
       </SliderTrack>
-      <AriaText slot='min'>{min || 0}</AriaText>
-      <AriaText slot='max'>{max || 100}</AriaText>
+      <AriaText slot='min'>{minValue || 0}</AriaText>
+      <AriaText slot='max'>{maxValue || 100}</AriaText>
     </Slider>
   );
 };
@@ -157,6 +175,12 @@ ControlledSliderExample.storyName = 'Controlled Slider';
 
 ControlledSliderExample.argTypes = {
   ...args,
+  label: {
+    control: {
+      type: 'text',
+    },
+    defaultValue: 'Controlled slider label',
+  },
   value: {
     control: {
       type: 'number',
@@ -167,8 +191,8 @@ ControlledSliderExample.argTypes = {
 
 export const RangeSliderExample: Story<SliderProps> = ({
   label,
-  min,
-  max,
+  minValue,
+  maxValue,
   includeRangeLabel,
   includeTextField,
   value,
@@ -189,9 +213,17 @@ export const RangeSliderExample: Story<SliderProps> = ({
         {({ state }: SliderRenderProps) =>
           state.values.map((_value: number, i: number) => (
             <div key={i}>
-              <SliderBar
-                minValue={state.values[0]}
-                maxValue={state.values[1]}
+              <div
+                className={sliderBar}
+                style={{
+                  position: 'absolute',
+                  left: state.getThumbValue(1)
+                    ? `${state.getThumbValue(0)}%`
+                    : 0,
+                  width: state.getThumbValue(1)
+                    ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                    : `${state.getThumbValue(0)}%`,
+                }}
               />
               <TooltipTrigger isOpen={open}>
                 <SliderThumb
@@ -204,8 +236,8 @@ export const RangeSliderExample: Story<SliderProps> = ({
           ))
         }
       </SliderTrack>
-      <AriaText slot='min'>{min || 0}</AriaText>
-      <AriaText slot='max'>{max || 100}</AriaText>
+      <AriaText slot='min'>{minValue || 0}</AriaText>
+      <AriaText slot='max'>{maxValue || 100}</AriaText>
     </Slider>
   );
 };
@@ -220,40 +252,57 @@ RangeSliderExample.argTypes = {
   },
 };
 
-export const ControlledRangeSliderExample: Story<SliderProps> = ({
+// added inputValues to make Ladle controls easier to use
+export const ControlledRangeSliderExample: Story<
+  SliderProps & {
+    inputValueMin: number;
+    inputValueMax: number;
+  }
+> = ({
   label,
-  min,
-  max,
+  value,
   minValue,
   maxValue,
+  inputValueMin,
+  inputValueMax,
   includeRangeLabel,
   includeTextField,
   ...rest
 }) => {
-  const [open, setOpen] = useState<{ [index: number]: boolean }>(false);
+  const [open, setOpen] = useState<{ [index: number]: boolean }>({
+    0: false,
+    1: false,
+  });
 
   return (
     <Slider
       {...rest}
-      value={[minValue, maxValue]}
-      minValue={min}
-      maxValue={max}
+      value={[inputValueMin, inputValueMax]}
+      minValue={minValue}
+      maxValue={maxValue}
     >
       {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
       {includeTextField && (
         <SliderInput>
-          <Input value={minValue} />
-          <Input value={maxValue} />
+          <Input value={inputValueMin} />
+          <Input value={inputValueMax} />
         </SliderInput>
       )}
       <SliderTrack>
         {({ state }: SliderRenderProps) =>
           state.values.map((_value: number, i: number) => (
             <div key={i}>
-              <SliderBar
-                minValue={state.values[0]}
-                maxValue={state.values[1]}
-                key={`bar-${i}`}
+              <div
+                className={sliderBar}
+                style={{
+                  position: 'absolute',
+                  left: state.getThumbValue(1)
+                    ? `${state.getThumbValue(0)}%`
+                    : 0,
+                  width: state.getThumbValue(1)
+                    ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                    : `${state.getThumbValue(0)}%`,
+                }}
               />
               <TooltipTrigger isOpen={open[i] ?? false}>
                 <SliderThumb
@@ -267,8 +316,8 @@ export const ControlledRangeSliderExample: Story<SliderProps> = ({
           ))
         }
       </SliderTrack>
-      <AriaText slot='min'>{min || 0}</AriaText>
-      <AriaText slot='max'>{max || 100}</AriaText>
+      <AriaText slot='min'>{minValue || 0}</AriaText>
+      <AriaText slot='max'>{maxValue || 100}</AriaText>
     </Slider>
   );
 };
@@ -281,16 +330,16 @@ ControlledRangeSliderExample.argTypes = {
     ...args.label,
     defaultValue: 'Controlled range slider label',
   },
-  minValue: {
+  inputValueMin: {
     control: {
       type: 'number',
     },
     defaultValue: 0,
   },
-  maxValue: {
+  inputValueMax: {
     control: {
       type: 'number',
     },
-    defaultValue: 0,
+    defaultValue: 50,
   },
 };

@@ -3,7 +3,7 @@ import {
   createThemeContract,
   style,
 } from '@vanilla-extract/css';
-import type { SliderClassNames } from './types';
+import type { SliderClassNames, SliderThumbState } from './types';
 import { layers, typographyVars } from '../../styles';
 import { containerQueries } from '@/utils';
 
@@ -33,8 +33,23 @@ export const sliderStateVars = createThemeContract({
   alignLabel: '',
   orientation: '',
   isDisabled: '',
+});
+
+export const sliderThumbStateVars = createThemeContract({
+  isDisabled: '',
   isFocused: '',
   isHovered: '',
+  isDragging: '',
+  isFocusVisible: '',
+  alignLabel: '',
+  orientation: '',
+});
+
+export const sliderTrackStateVars = createThemeContract({
+  alignLabel: '',
+  isDisabled: '',
+  isHovered: '',
+  orientation: '',
 });
 
 export const sliderClassNames: SliderClassNames = {
@@ -58,69 +73,10 @@ export const sliderClassNames: SliderClassNames = {
         },
       },
     }),
-    slider: style({
-      '@layer': {
-        [layers.components.l1]: {
-          // position: 'relative',
-          // color: sliderColorVars.color,
-        },
-      },
-    }),
     label: style({
       '@layer': {
         [layers.components.l1]: {
           gridArea: 'label',
-        },
-      },
-    }),
-    track: style({
-      '@layer': {
-        [layers.components.l1]: {
-          gridArea: 'track',
-          background: sliderColorVars.color,
-          height: sliderSpaceVars.trackHeight,
-          margin: sliderSpaceVars.trackMargin,
-          '@container': containerQueries(sliderStateVars, {
-            query: { alignLabel: 'left' },
-            margin: 'auto 0',
-          }),
-        },
-      },
-    }),
-    bar: style({
-      '@layer': {
-        [layers.components.l1]: {
-          backgroundColor: sliderColorVars.color,
-          height: sliderSpaceVars.height,
-        },
-      },
-    }),
-    thumb: style({
-      '@layer': {
-        [layers.components.l1]: {
-          width: sliderSpaceVars.width,
-          height: sliderSpaceVars.height,
-          borderRadius: sliderSpaceVars.borderRadius,
-          backgroundColor: sliderColorVars.color,
-          zIndex: 2,
-          ' input': {
-            width: '1px',
-          },
-          '@container': containerQueries(sliderStateVars, {
-            query: { isHovered: true },
-            boxShadow: sliderColorVars.shadow,
-          }),
-        },
-      },
-    }),
-    input: style({
-      '@layer': {
-        [layers.components.l1]: {
-          containerName: sliderContainers.input,
-          gridArea: 'input',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: sliderSpaceVars.gap,
         },
       },
     }),
@@ -148,6 +104,57 @@ export const sliderClassNames: SliderClassNames = {
             query: { alignLabel: 'left' },
             margin: sliderSpaceVars.margin,
           }),
+        },
+      },
+    }),
+  },
+  track: {
+    container: style({
+      '@layer': {
+        [layers.components.l1]: {
+          gridArea: 'track',
+          background: sliderColorVars.color,
+          height: sliderSpaceVars.trackHeight,
+          margin: sliderSpaceVars.trackMargin,
+          '@container': containerQueries(sliderTrackStateVars, {
+            query: { alignLabel: 'left' },
+            margin: 'auto 0',
+          }),
+        },
+      },
+    }),
+  },
+  thumb: {
+    container: style({
+      '@layer': {
+        [layers.components.l1]: {
+          width: sliderSpaceVars.width,
+          height: sliderSpaceVars.height,
+          borderRadius: sliderSpaceVars.borderRadius,
+          backgroundColor: sliderColorVars.color,
+          ' input': {
+            width: sliderSpaceVars.width,
+          },
+          '@container': containerQueries<SliderThumbState>(
+            sliderThumbStateVars,
+            {
+              query: { isHovered: true },
+              boxShadow: sliderColorVars.shadow,
+            },
+          ),
+        },
+      },
+    }),
+  },
+  input: {
+    container: style({
+      '@layer': {
+        [layers.components.l1]: {
+          containerName: sliderContainers.input,
+          gridArea: 'input',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: sliderSpaceVars.gap,
         },
       },
     }),

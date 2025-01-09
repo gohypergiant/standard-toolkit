@@ -214,6 +214,8 @@ export {
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
+  sliderThumbStateVars,
+  sliderTrackStateVars,
   switchClassNames,
   switchColorVars,
   switchContainer,

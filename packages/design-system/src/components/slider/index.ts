@@ -10,12 +10,14 @@ export {
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
-} from './slider.css'
+  sliderThumbStateVars,
+  sliderTrackStateVars,
+} from './slider.css';
 export {
   type LabelAlignment,
   type SliderClassNames,
   type SliderProps,
   type SliderRenderProps,
   type SliderState,
-  type SliderThumbProps
+  type SliderThumbProps,
 } from './types';

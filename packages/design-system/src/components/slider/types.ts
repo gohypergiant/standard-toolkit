@@ -6,26 +6,32 @@ import type {
   SliderThumbRenderProps as RACSliderThumbRenderProps,
   SliderTrackRenderProps as RACSliderTrackRenderProps,
   SliderTrackProps as RACSliderTrackProps,
+  SliderOutputProps as RACSliderOutputProps,
 } from 'react-aria-components';
 import type { RenderPropsChildren } from '../../types';
 import type { PartialDeep } from 'type-fest';
-import type { InputRenderProps } from '../input';
+import type { InputClassNames, InputRenderProps } from '../input';
 
 export type SliderClassNames = PartialDeep<{
   slider: {
     container: string;
-    slider: string;
     label: string;
-    track: string;
-    thumb: string;
     min: string;
     max: string;
-    input: string;
+  };
+  track: {
+    container: string;
     bar: string;
   };
-  rangeSlider: {
+  thumb: {
     container: string;
-    rangeSlider: string;
+  };
+  input: {
+    container: string;
+    input: InputClassNames;
+  };
+  output: {
+    container: string;
   };
 }>;
 
@@ -42,8 +48,8 @@ type BaseSliderProps = {
   alignLabel?: LabelAlignment;
   includeTextField?: boolean;
   includeRangeLabel?: boolean;
-  min?: number;
-  max?: number;
+  minValue?: number;
+  maxValue?: number;
 };
 
 export type SliderState = Omit<RACSliderRenderProps, 'state'> &
@@ -65,6 +71,8 @@ export type SliderThumbProps = Omit<
   'className' | 'style'
 > &
   BaseSliderThumbProps;
+
+export type SliderThumbState = Omit<RACSliderThumbRenderProps, 'state'>;
 
 type BaseSliderTrackProps = {
   children?: RenderPropsChildren<SliderRenderProps>;
@@ -88,9 +96,13 @@ export type SliderInputProps = Omit<
 > &
   BaseSliderInputProps;
 
-export type BaseSliderBarProps = {
-  minValue?: number;
-  maxValue?: number;
+type BaseSliderOutputProps = {
+  children?: RenderPropsChildren<SliderRenderProps>;
+  classNames?: SliderClassNames;
 };
 
-export type SliderBarProps = BaseSliderBarProps & BaseSliderTrackProps;
+export type SliderOutputProps = Omit<
+  RACSliderOutputProps,
+  'className' | 'style'
+> &
+  BaseSliderOutputProps;

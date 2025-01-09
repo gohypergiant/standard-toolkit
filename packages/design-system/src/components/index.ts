@@ -343,12 +343,14 @@ export {
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
+  sliderThumbStateVars,
+  sliderTrackStateVars,
   type LabelAlignment,
   type SliderClassNames,
   type SliderProps,
   type SliderRenderProps,
   type SliderState,
-  type SliderThumbProps
+  type SliderThumbProps,
 } from './slider';
 export {
   Switch,

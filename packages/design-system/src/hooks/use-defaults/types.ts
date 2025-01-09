@@ -39,6 +39,7 @@ import type {
   SliderInputProps,
   SliderThumbProps,
   SliderTrackProps,
+  SliderOutputProps,
 } from '../../components/slider/types';
 import type { SwitchProps } from '../../components/switch/types';
 import type {
@@ -92,6 +93,7 @@ export type DefaultsContext = DefaultsOf<{
   Slider: SliderProps;
   SliderBar: SliderProps;
   SliderInput: SliderInputProps;
+  SliderOutput: SliderOutputProps;
   SliderThumb: SliderThumbProps;
   SliderTrack: SliderTrackProps;
   Switch: SwitchProps;
