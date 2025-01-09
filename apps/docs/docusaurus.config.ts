@@ -63,21 +63,15 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'packagesSidebar',
-          position: 'left',
-          label: 'Packages',
-        },
-        {
-          type: 'docSidebar',
-          sidebarId: 'configSidebar',
-          position: 'left',
-          label: 'Config',
-        },
-        {
-          type: 'docSidebar',
           sidebarId: 'apiSidebar',
           position: 'left',
           label: 'API',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'demoSidebar',
+          position: 'left',
+          label: 'Demo',
         },
         {
           href: 'https://github.com/gohypergiant/standard-toolkit',

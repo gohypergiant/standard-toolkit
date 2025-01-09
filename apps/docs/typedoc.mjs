@@ -15,24 +15,23 @@ const config = {
   disableSources: true,
   entryPoints: ['../../packages/*'],
   entryPointStrategy: 'packages',
-  // outputFileStrategy: 'modules', a flatter option. works well for smaller modules IMO
   githubPages: false,
   hideBreadcrumbs: true,
   hidePageHeader: true,
-  pageTitleTemplates: {
-    member: (args) => args.name, // simpler page titles for member pages
-  },
+  mergeReadme: true,
   out: 'docs/typedoc',
   packageOptions: {
     entryPoints: ['src/index.ts'],
     groupOrder: ['Functions', 'Variables', 'Type Aliases', '*'],
-    projectDocuments: ['src/**/*.md'],
+    projectDocuments: ['src/documentation/**/*.md'], // open to other patterns here
   },
-  mergeReadme: true,
-  readme: 'none', // don't bring in global monorepo readme
-  theme: 'markdown',
+  pageTitleTemplates: {
+    member: (args) => args.name, // simpler page titles for member pages
+  },
   plugin: ['typedoc-plugin-markdown'],
+  readme: 'none', // don't bring in global monorepo readme
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
+  theme: 'markdown',
 };
 
 export default config;
