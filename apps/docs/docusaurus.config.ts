@@ -49,6 +49,7 @@ const config: Config = {
           // Add this to enable the "edit this page" links.
           // editUrl: 'https://github.com/facebook/docusaurus/tree/main/docs/',
         },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
