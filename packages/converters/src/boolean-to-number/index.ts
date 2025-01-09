@@ -13,7 +13,8 @@
 /**
  * Convert a boolean to an integer
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * booleanToNumber(true);
