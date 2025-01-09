@@ -19,12 +19,17 @@ const config = {
   githubPages: false,
   hideBreadcrumbs: true,
   hidePageHeader: true,
+  pageTitleTemplates: {
+    member: (args) => args.name, // simpler page titles for member pages
+  },
   out: 'docs/typedoc',
   packageOptions: {
     entryPoints: ['src/index.ts'],
     groupOrder: ['Functions', 'Variables', 'Type Aliases', '*'],
+    projectDocuments: ['src/**/*.md'],
   },
   mergeReadme: true,
+  readme: 'none', // don't bring in global monorepo readme
   theme: 'markdown',
   plugin: ['typedoc-plugin-markdown'],
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
