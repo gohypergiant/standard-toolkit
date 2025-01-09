@@ -5,34 +5,31 @@
   "scripts": {
     "build:docusaurus": "docusaurus build",
     "build:typedoc": "typedoc",
-    "build": "pnpm run build:typedoc && npm run build:docusaurus",
+    "build": "pnpm run build:typedoc && pnpm run build:docusaurus",
     "clear": "docusaurus clear",
     "dev": "docusaurus start",
     "docusaurus": "docusaurus",
-    "serve": "docusaurus serve",
-    "typecheck": "tsc"
+    "serve": "docusaurus serve"
   },
   "dependencies": {
-    "@docusaurus/core": "3.7.0",
-    "@docusaurus/preset-classic": "3.7.0",
-    "@mdx-js/react": "^3.0.0",
-    "clsx": "^2.0.0",
-    "prism-react-renderer": "^2.3.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/design-system": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@biomejs/biome": "1.9.3",
+    "@docusaurus/core": "3.7.0",
     "@docusaurus/module-type-aliases": "3.7.0",
+    "@docusaurus/preset-classic": "3.7.0",
     "@docusaurus/theme-live-codeblock": "3.7.0",
     "@docusaurus/tsconfig": "3.7.0",
     "@docusaurus/types": "3.7.0",
     "@easyops-cn/docusaurus-search-local": "0.47.0",
-    "typedoc": "0.27.6",
+    "@mdx-js/react": "^3.0.0",
+    "clsx": "^2.0.0",
+    "prism-react-renderer": "^2.3.0",
+    "react-dom": "^19.0.0",
+    "react": "^19.0.0",
     "typedoc-plugin-markdown": "4.3.3",
+    "typedoc": "0.27.6",
     "typescript": "~5.6.2"
   },
   "browserslist": {
