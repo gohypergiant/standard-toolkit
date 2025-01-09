@@ -30,7 +30,7 @@ const config: Config = {
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
-  onBrokenAnchors: 'ignore', // for now
+  onBrokenAnchors: 'warn', // for now
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -83,15 +83,6 @@ const config: Config = {
     footer: {
       style: 'dark',
       links: [
-        // {
-        //   title: 'Docs',
-        //   items: [
-        //     {
-        //       label: 'Home',
-        //       to: '/',
-        //     },
-        //   ],
-        // },
         {
           title: 'More',
           items: [
