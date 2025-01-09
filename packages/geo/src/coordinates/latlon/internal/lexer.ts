@@ -81,7 +81,8 @@ function fixLeadingAndTrailing(t: string) {
  *
  * NOTE: No validation is done at this level to keep it simple as agnostic.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * lexer('N 55,E 44') === ['N' '55', '/', 'E', '44']
