@@ -14,7 +14,7 @@ import type { StoryObj, Meta } from '@storybook/react';
 import { headings, bodies } from './typography.css';
 
 const meta: Meta = {
-  title: 'Primitives/Typography',
+  title: 'Typography',
 };
 
 export default meta;

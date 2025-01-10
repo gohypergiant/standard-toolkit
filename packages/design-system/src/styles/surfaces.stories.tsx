@@ -15,7 +15,7 @@ import { surfaces } from './surfaces.css';
 import { genericColorVars } from './theme.css';
 
 const meta: Meta = {
-  title: 'Primitives/Surfaces',
+  title: 'Surfaces',
 };
 
 export default meta;
