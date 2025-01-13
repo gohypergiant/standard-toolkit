@@ -31,4 +31,4 @@ ignore:
   - '**/documentation'
   - '**/node_modules'
   - 'apps/docs/.docusaurus'
-  - 'apps/docs/docs/typedoc'
+  - 'apps/docs/content/api'

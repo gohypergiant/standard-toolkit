@@ -1,14 +1,15 @@
 {
   "name": "@accelint/docs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:docusaurus": "docusaurus build",
-    "build:typedoc": "typedoc",
     "build": "pnpm run build:typedoc && pnpm run build:docusaurus",
+    "build:docusaurus": "docusaurus build",
+    "build:contributing": "mv ./content/api/_media/CONTRIBUTING.md ./content/CONTRIBUTING.md",
+    "build:license": "mv ./content/api/_media/LICENSE ./content/LICENSE.md",
+    "build:typedoc": "typedoc && pnpm run build:contributing && pnpm run build:license",
     "clear": "docusaurus clear",
-    "dev": "docusaurus start",
-    "docusaurus": "docusaurus",
+    "dev": "pnpm run build && docusaurus start",
     "serve": "docusaurus serve"
   },
   "dependencies": {

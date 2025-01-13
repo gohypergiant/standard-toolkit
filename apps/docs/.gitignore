@@ -7,7 +7,9 @@
 # Generated files
 .docusaurus
 .cache-loader
-docs/typedoc
+content/api
+content/CONTRIBUTING.md
+content/LICENSE.md
 
 # Misc
 .DS_Store

@@ -11,15 +11,14 @@
  */
 
 /** @type {Partial<import("typedoc").TypeDocOptions>} */
-const config = {
+export default {
   disableSources: true,
   entryPoints: ['../../packages/*'],
   entryPointStrategy: 'packages',
-  githubPages: false,
   hideBreadcrumbs: true,
   hidePageHeader: true,
   mergeReadme: true,
-  out: 'docs/typedoc',
+  out: 'content/api',
   packageOptions: {
     entryPoints: ['src/index.ts'],
     groupOrder: ['Functions', 'Variables', 'Type Aliases', '*'],
@@ -28,10 +27,7 @@ const config = {
   pageTitleTemplates: {
     member: (args) => args.name, // simpler page titles for member pages
   },
-  plugin: ['typedoc-plugin-markdown'],
-  readme: 'none', // don't bring in global monorepo readme
+  plugin: ['typedoc-plugin-markdown', './lib/typedoc-plugin-hypergiant.mjs'],
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
   theme: 'markdown',
 };
-
-export default config;
