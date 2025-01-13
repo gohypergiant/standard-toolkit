@@ -98,8 +98,7 @@ export const SliderOutput = forwardRef(function SliderOutput(
 });
 
 /**
- * SliderTrack must be used as a child of Slider,
- * a parent of SliderThumb and, if used, a parent of SliderBar
+ * SliderTrack must be used as a child of Slider and a parent of SliderThumb
  */
 
 export const SliderTrackContext =
