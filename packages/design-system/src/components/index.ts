@@ -337,7 +337,6 @@ export {
 export {
   Slider,
   SliderContext,
-  SliderInput,
   SliderThumb,
   SliderTrack,
   sliderColorVars,

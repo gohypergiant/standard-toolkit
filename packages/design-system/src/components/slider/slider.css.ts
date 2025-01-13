@@ -3,7 +3,7 @@ import {
   createThemeContract,
   style,
 } from '@vanilla-extract/css';
-import type { SliderClassNames, SliderThumbState } from './types';
+import type { SliderClassNames } from './types';
 import { layers, typographyVars } from '../../styles';
 import { containerQueries } from '@/utils';
 
@@ -13,9 +13,9 @@ const sliderContainers = {
 
 export const sliderColorVars = createThemeContract({
   color: '',
-  shadow: '',
   thumb: '',
   fontColor: '',
+  boxShadow: '',
 });
 
 export const sliderSpaceVars = createThemeContract({
@@ -126,22 +126,18 @@ export const sliderClassNames: SliderClassNames = {
   },
   thumb: {
     container: style({
+      ' input': {
+        width: sliderSpaceVars.width,
+      },
+    }),
+    thumb: style({
       '@layer': {
         [layers.components.l1]: {
           width: sliderSpaceVars.width,
           height: sliderSpaceVars.height,
           borderRadius: sliderSpaceVars.borderRadius,
           backgroundColor: sliderColorVars.color,
-          ' input': {
-            width: sliderSpaceVars.width,
-          },
-          '@container': containerQueries<SliderThumbState>(
-            sliderThumbStateVars,
-            {
-              query: { isHovered: true },
-              boxShadow: sliderColorVars.shadow,
-            },
-          ),
+          boxShadow: sliderColorVars.boxShadow,
         },
       },
     }),
@@ -155,6 +151,15 @@ export const sliderClassNames: SliderClassNames = {
           display: 'flex',
           flexDirection: 'row',
           gap: sliderSpaceVars.gap,
+        },
+      },
+    }),
+  },
+  group: {
+    container: style({
+      '@layer': {
+        [layers.components.l1]: {
+          gridArea: 'input',
         },
       },
     }),

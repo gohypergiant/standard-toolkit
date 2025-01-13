@@ -11,6 +11,7 @@ import type {
 import type { RenderPropsChildren } from '../../types';
 import type { PartialDeep } from 'type-fest';
 import type { InputClassNames, InputRenderProps } from '../input';
+import type { GroupClassNames } from '../group';
 
 export type SliderClassNames = PartialDeep<{
   slider: {
@@ -21,18 +22,17 @@ export type SliderClassNames = PartialDeep<{
   };
   track: {
     container: string;
-    bar: string;
+    track: string; // TODO: adjust the styles to use this class
   };
   thumb: {
     container: string;
+    thumb: string;
   };
-  input: {
-    container: string;
-    input: InputClassNames;
-  };
+  input: InputClassNames;
   output: {
     container: string;
   };
+  group: GroupClassNames;
 }>;
 
 export type LabelAlignment = 'top' | 'left';
@@ -48,6 +48,7 @@ type BaseSliderProps = {
   alignLabel?: LabelAlignment;
   includeTextField?: boolean;
   includeRangeLabel?: boolean;
+  includeOutputField?: boolean;
   minValue?: number;
   maxValue?: number;
 };

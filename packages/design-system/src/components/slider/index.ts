@@ -2,7 +2,6 @@
 export {
   Slider,
   SliderContext,
-  SliderInput,
   SliderThumb,
   SliderTrack,
 } from './slider';

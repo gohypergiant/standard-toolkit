@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import {
   type SliderState,
+  // type SliderThumbState,
   applyThemeVars,
   assignPartialVars,
   defaultRadiusVarValues,
@@ -14,6 +15,7 @@ import {
   sliderTrackStateVars,
   type ThemeContext,
 } from '../../src';
+import type { SliderThumbState } from '../../src/components/slider/types';
 
 export const Slider: ThemeContext['Slider'] = {
   slider: {
@@ -69,7 +71,16 @@ export const Slider: ThemeContext['Slider'] = {
   },
   thumb: {
     container: style(
-      applyThemeVars<SliderState>(sliderThumbStateVars, [
+      applyThemeVars<SliderThumbState>(sliderThumbStateVars, [
+        {
+          vars: assignPartialVars(sliderSpaceVars, {
+            width: defaultSizesVarValues.v05,
+          }),
+        },
+      ]),
+    ),
+    thumb: style(
+      applyThemeVars<SliderThumbState>(sliderThumbStateVars, [
         {
           vars: assignPartialVars(
             {
@@ -79,7 +90,6 @@ export const Slider: ThemeContext['Slider'] = {
             {
               color: {
                 color: semanticColorVars.background.highlight.bold,
-                shadow: `0px 0px 0 4px rgb(from ${semanticColorVars.background.highlight.bold} r g b / 0.2)`,
               },
               space: {
                 height: defaultSizesVarValues.v05,
@@ -88,6 +98,12 @@ export const Slider: ThemeContext['Slider'] = {
               },
             },
           ),
+        },
+        {
+          query: { isHovered: true },
+          vars: assignPartialVars(sliderColorVars, {
+            boxShadow: `0px 0px 0 6px rgb(from ${semanticColorVars.background.highlight.bold} r g b / 0.25)`,
+          }),
         },
       ]),
     ),

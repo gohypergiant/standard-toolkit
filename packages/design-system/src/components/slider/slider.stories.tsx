@@ -1,11 +1,5 @@
 import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
-import {
-  Slider,
-  SliderInput,
-  SliderThumb,
-  SliderTrack,
-  type SliderProps,
-} from '.';
+import { Slider, SliderThumb, SliderTrack, type SliderProps } from '.';
 import { AriaLabel, AriaText } from '../aria';
 import { Input } from '../input';
 import { TooltipTrigger } from 'react-aria-components';
@@ -13,6 +7,8 @@ import { Tooltip } from '../tooltip';
 import type { SliderRenderProps } from './types';
 import { useState } from 'react';
 import { sliderBar } from './slider.stories.css';
+import { Group } from '../group';
+import { NumberField } from '../number-field';
 
 export default {
   title: 'Components/Slider',
@@ -64,6 +60,12 @@ const args: ArgTypes<SliderProps> = {
     },
     defaultValue: true,
   },
+  includeOutputField: {
+    control: {
+      type: 'boolean',
+    },
+    defaultValue: false,
+  },
   minValue: {
     control: {
       type: 'number',
@@ -84,46 +86,122 @@ export const SliderExample: Story<SliderProps> = ({
   maxValue,
   includeRangeLabel,
   includeTextField,
+  includeOutputField,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Slider {...rest}>
-      {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
-      {includeTextField && (
-        <SliderInput>
-          <Input value='' />
-        </SliderInput>
+      {({ state }) => (
+        <>
+          {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+          {includeOutputField && <AriaText>{state.values.join(',')}</AriaText>}
+          {includeTextField && (
+            <NumberField
+              value={state.values[0]}
+              onChange={(v) => state.setThumbValue(0, v)}
+            >
+              <Input />
+            </NumberField>
+          )}
+          <SliderTrack>
+            {({ state }: SliderRenderProps) => (
+              <>
+                <div
+                  className={sliderBar}
+                  style={{
+                    position: 'absolute',
+                    left: state.getThumbValue(1)
+                      ? `${state.getThumbValue(0)}%`
+                      : 0,
+                    width: state.getThumbValue(1)
+                      ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                      : `${state.getThumbValue(0)}%`,
+                  }}
+                />
+                <TooltipTrigger isOpen={open}>
+                  <SliderThumb
+                    onHoverChange={(isHovered) => setOpen(isHovered)}
+                  />
+                  <Tooltip>{state.values[0]}</Tooltip>
+                </TooltipTrigger>
+              </>
+            )}
+          </SliderTrack>
+          <AriaText slot='min'>{minValue || 0}</AriaText>
+          <AriaText slot='max'>{maxValue || 100}</AriaText>
+        </>
       )}
-      <SliderTrack>
-        {({ state }: SliderRenderProps) => (
-          <TooltipTrigger isOpen={open}>
-            <div
-              className={sliderBar}
-              style={{
-                position: 'absolute',
-                left: state.getThumbValue(1) ? `${state.getThumbValue(0)}%` : 0,
-                width: state.getThumbValue(1)
-                  ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                  : `${state.getThumbValue(0)}%`,
-              }}
-            />
-            <SliderThumb onHoverChange={(isHovered) => setOpen(isHovered)} />
-            <Tooltip>{state.values[0]}</Tooltip>
-          </TooltipTrigger>
-        )}
-      </SliderTrack>
-      <AriaText slot='min'>{minValue || 0}</AriaText>
-      <AriaText slot='max'>{maxValue || 100}</AriaText>
     </Slider>
   );
 };
 
-SliderExample.storyName = 'Slider';
+SliderExample.storyName = 'Slider with input';
 
 SliderExample.argTypes = {
   ...args,
+};
+
+export const SliderExampleWithOutput: Story<SliderProps> = ({
+  label,
+  minValue,
+  maxValue,
+  includeRangeLabel,
+  includeTextField,
+  includeOutputField,
+  ...rest
+}) => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  return (
+    <Slider {...rest}>
+      {({ state }) => (
+        <>
+          {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+          {includeOutputField && <AriaText>{state.values.join(',')}</AriaText>}
+          <SliderTrack>
+            {({ state }: SliderRenderProps) => (
+              <>
+                <div
+                  className={sliderBar}
+                  style={{
+                    position: 'absolute',
+                    left: state.getThumbValue(1)
+                      ? `${state.getThumbValue(0)}%`
+                      : 0,
+                    width: state.getThumbValue(1)
+                      ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                      : `${state.getThumbValue(0)}%`,
+                  }}
+                />
+                <TooltipTrigger isOpen={open}>
+                  <SliderThumb
+                    onHoverChange={(isHovered) => setOpen(isHovered)}
+                  />
+                  <Tooltip>{state.values[0]}</Tooltip>
+                </TooltipTrigger>
+              </>
+            )}
+          </SliderTrack>
+          <AriaText slot='min'>{minValue || 0}</AriaText>
+          <AriaText slot='max'>{maxValue || 100}</AriaText>
+        </>
+      )}
+    </Slider>
+  );
+};
+
+SliderExampleWithOutput.storyName = 'Slider with output';
+
+SliderExampleWithOutput.argTypes = {
+  ...args,
+  includeOutputField: {
+    control: {
+      type: 'boolean',
+    },
+    defaultValue: true,
+  },
 };
 
 export const ControlledSliderExample: Story<SliderProps> = ({
@@ -132,6 +210,7 @@ export const ControlledSliderExample: Story<SliderProps> = ({
   maxValue,
   includeRangeLabel,
   includeTextField,
+  includeOutputField,
   value,
   ...rest
 }) => {
@@ -139,34 +218,48 @@ export const ControlledSliderExample: Story<SliderProps> = ({
 
   return (
     <Slider {...rest} value={value} minValue={minValue} maxValue={maxValue}>
-      {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
-      {includeTextField && (
-        <SliderInput>
-          <Input value={value} />
-        </SliderInput>
+      {({ state }) => (
+        <>
+          {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+          {includeOutputField && (
+            <AriaText>{state.values.join(' - ')}</AriaText>
+          )}
+          {includeTextField && (
+            <NumberField
+              value={state.values[0]}
+              onChange={(v) => state.setThumbValue(0, v)}
+            >
+              <Input />
+            </NumberField>
+          )}
+          <SliderTrack>
+            {({ state }: SliderRenderProps) => (
+              <>
+                <div
+                  className={sliderBar}
+                  style={{
+                    position: 'absolute',
+                    left: state.getThumbValue(1)
+                      ? `${state.getThumbValue(0)}%`
+                      : 0,
+                    width: state.getThumbValue(1)
+                      ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                      : `${state.getThumbValue(0)}%`,
+                  }}
+                />
+                <TooltipTrigger isOpen={open}>
+                  <SliderThumb
+                    onHoverChange={(isHovered) => setOpen(isHovered)}
+                  />
+                  <Tooltip>{state.values[0]}</Tooltip>
+                </TooltipTrigger>
+              </>
+            )}
+          </SliderTrack>
+          <AriaText slot='min'>{minValue || 0}</AriaText>
+          <AriaText slot='max'>{maxValue || 100}</AriaText>
+        </>
       )}
-      <SliderTrack>
-        {({ state }: SliderRenderProps) => (
-          <>
-            <div
-              className={sliderBar}
-              style={{
-                position: 'absolute',
-                left: state.getThumbValue(1) ? `${state.getThumbValue(0)}%` : 0,
-                width: state.getThumbValue(1)
-                  ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                  : `${state.getThumbValue(0)}%`,
-              }}
-            />
-            <TooltipTrigger isOpen={open}>
-              <SliderThumb onHoverChange={(isHovered) => setOpen(isHovered)} />
-              <Tooltip>{state.values[0]}</Tooltip>
-            </TooltipTrigger>
-          </>
-        )}
-      </SliderTrack>
-      <AriaText slot='min'>{minValue || 0}</AriaText>
-      <AriaText slot='max'>{maxValue || 100}</AriaText>
     </Slider>
   );
 };
@@ -194,50 +287,76 @@ export const RangeSliderExample: Story<SliderProps> = ({
   minValue,
   maxValue,
   includeRangeLabel,
+  includeOutputField,
   includeTextField,
   value,
   ...rest
 }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<{ [index: number]: boolean }>({
+    0: false,
+    1: false,
+  });
 
   return (
-    <Slider {...rest} defaultValue={[0, 0]} value={value}>
-      {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
-      {includeTextField && (
-        <SliderInput>
-          <Input />
-          <Input />
-        </SliderInput>
-      )}
-      <SliderTrack>
-        {({ state }: SliderRenderProps) =>
-          state.values.map((_value: number, i: number) => (
-            <div key={i}>
-              <div
-                className={sliderBar}
-                style={{
-                  position: 'absolute',
-                  left: state.getThumbValue(1)
-                    ? `${state.getThumbValue(0)}%`
-                    : 0,
-                  width: state.getThumbValue(1)
-                    ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                    : `${state.getThumbValue(0)}%`,
-                }}
-              />
-              <TooltipTrigger isOpen={open}>
-                <SliderThumb
-                  index={i}
-                  onHoverChange={(isHovered) => setOpen(isHovered)}
-                />
-                <Tooltip>{state.values[i]}</Tooltip>
-              </TooltipTrigger>
-            </div>
-          ))
-        }
-      </SliderTrack>
-      <AriaText slot='min'>{minValue || 0}</AriaText>
-      <AriaText slot='max'>{maxValue || 100}</AriaText>
+    <Slider {...rest} defaultValue={[25, 75]}>
+      {({ state }) => {
+        return (
+          <>
+            {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+            {includeOutputField && (
+              <AriaText>{state.values.join(' - ')}</AriaText>
+            )}
+            {includeTextField && (
+              <Group orientation='horizontal'>
+                <NumberField
+                  value={state.values[0]}
+                  onChange={(v) => state.setThumbValue(0, v)}
+                >
+                  <Input />
+                </NumberField>
+                <NumberField
+                  value={state.values[1]}
+                  onChange={(v) => state.setThumbValue(1, v)}
+                >
+                  <Input />
+                </NumberField>
+              </Group>
+            )}
+            <SliderTrack>
+              {({ state }: SliderRenderProps) =>
+                state.values.map((_value: number, i: number) => (
+                  <div key={i}>
+                    <div
+                      className={sliderBar}
+                      style={{
+                        position: 'absolute',
+                        left: state.getThumbValue(1)
+                          ? `${state.getThumbValue(0)}%`
+                          : 0,
+                        width: state.getThumbValue(1)
+                          ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                          : `${state.getThumbValue(0)}%`,
+                      }}
+                    />
+                    <TooltipTrigger isOpen={open[i]} key={i}>
+                      <SliderThumb
+                        index={i}
+                        key={i}
+                        onHoverChange={(isHovered) =>
+                          setOpen({ [i]: isHovered })
+                        }
+                      />
+                      <Tooltip>{state.values[i]}</Tooltip>
+                    </TooltipTrigger>
+                  </div>
+                ))
+              }
+            </SliderTrack>
+            <AriaText slot='min'>{minValue || 0}</AriaText>
+            <AriaText slot='max'>{maxValue || 100}</AriaText>
+          </>
+        );
+      }}
     </Slider>
   );
 };
@@ -267,6 +386,7 @@ export const ControlledRangeSliderExample: Story<
   inputValueMax,
   includeRangeLabel,
   includeTextField,
+  includeOutputField,
   ...rest
 }) => {
   const [open, setOpen] = useState<{ [index: number]: boolean }>({
@@ -281,48 +401,73 @@ export const ControlledRangeSliderExample: Story<
       minValue={minValue}
       maxValue={maxValue}
     >
-      {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
-      {includeTextField && (
-        <SliderInput>
-          <Input value={inputValueMin} />
-          <Input value={inputValueMax} />
-        </SliderInput>
-      )}
-      <SliderTrack>
-        {({ state }: SliderRenderProps) =>
-          state.values.map((_value: number, i: number) => (
-            <div key={i}>
-              <div
-                className={sliderBar}
-                style={{
-                  position: 'absolute',
-                  left: state.getThumbValue(1)
-                    ? `${state.getThumbValue(0)}%`
-                    : 0,
-                  width: state.getThumbValue(1)
-                    ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                    : `${state.getThumbValue(0)}%`,
-                }}
-              />
-              <TooltipTrigger isOpen={open[i] ?? false}>
-                <SliderThumb
-                  key={i}
-                  index={i}
-                  onHoverChange={(isHovered) => setOpen({ [i]: isHovered })}
+      {({ state }) => (
+        <>
+          {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+          {includeOutputField && (
+            <AriaText>{state.values.join(' - ')}</AriaText>
+          )}
+          {includeTextField && (
+            <Group orientation='horizontal'>
+              <NumberField
+                value={state.values[0]}
+                onChange={(v) => state.setThumbValue(0, v)}
+              >
+                <Input
+                  onChange={(e) =>
+                    state.setThumbValue(0, Number(e.target.value))
+                  }
                 />
-                <Tooltip>{state.values[i]}</Tooltip>
-              </TooltipTrigger>
-            </div>
-          ))
-        }
-      </SliderTrack>
-      <AriaText slot='min'>{minValue || 0}</AriaText>
-      <AriaText slot='max'>{maxValue || 100}</AriaText>
+              </NumberField>
+              <NumberField
+                value={state.values[1]}
+                onChange={(v) => state.setThumbValue(1, v)}
+              >
+                <Input
+                  onChange={(e) =>
+                    state.setThumbValue(1, Number(e.target.value))
+                  }
+                />
+              </NumberField>
+            </Group>
+          )}
+          <SliderTrack>
+            {({ state }: SliderRenderProps) =>
+              state.values.map((_value: number, i: number) => (
+                <div key={i}>
+                  <div
+                    className={sliderBar}
+                    style={{
+                      position: 'absolute',
+                      left: state.getThumbValue(1)
+                        ? `${state.getThumbValue(0)}%`
+                        : 0,
+                      width: state.getThumbValue(1)
+                        ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
+                        : `${state.getThumbValue(0)}%`,
+                    }}
+                  />
+                  <TooltipTrigger isOpen={open[i]}>
+                    <SliderThumb
+                      key={i}
+                      index={i}
+                      onHoverChange={(isHovered) => setOpen({ [i]: isHovered })}
+                    />
+                    <Tooltip>{state.values[i]}</Tooltip>
+                  </TooltipTrigger>
+                </div>
+              ))
+            }
+          </SliderTrack>
+          <AriaText slot='min'>{minValue || 0}</AriaText>
+          <AriaText slot='max'>{maxValue || 100}</AriaText>
+        </>
+      )}
     </Slider>
   );
 };
 
-ControlledRangeSliderExample.storyName = 'Controlled range Slider';
+ControlledRangeSliderExample.storyName = 'Controlled range';
 
 ControlledRangeSliderExample.argTypes = {
   ...args,

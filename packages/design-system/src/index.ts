@@ -86,7 +86,6 @@ export {
   SelectContext,
   Slider,
   SliderContext,
-  SliderInput,
   SliderThumb,
   SliderTrack,
   Switch,
