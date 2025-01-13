@@ -3,6 +3,10 @@
   "version": "0.1.2",
   "private": false,
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "type": "module",
   "exports": {
     "./analyzer": "./analyzer.json",

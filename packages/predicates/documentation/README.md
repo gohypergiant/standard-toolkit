@@ -6,6 +6,8 @@
 
 ## Functions
 
+- [isAnyFalsy](functions/isAnyFalsy.md)
+- [isAnyTruthy](functions/isAnyTruthy.md)
 - [isBbox](functions/isBbox.md)
 - [isFalse](functions/isFalse.md)
 - [isFiniteNumber](functions/isFiniteNumber.md)
@@ -16,6 +18,8 @@
 - [isNothing](functions/isNothing.md)
 - [isNumber](functions/isNumber.md)
 - [isNumeric](functions/isNumeric.md)
+- [isOff](functions/isOff.md)
+- [isOn](functions/isOn.md)
 - [isSharedWorker](functions/isSharedWorker.md)
 - [isSomething](functions/isSomething.md)
 - [isString](functions/isString.md)

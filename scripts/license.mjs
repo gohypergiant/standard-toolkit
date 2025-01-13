@@ -12,7 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { fs, glob, path } from 'zx';
+import { fs, glob, path, argv } from 'zx';
 
 const HEADER = `Copyright ${new Date().getFullYear()} Hypergiant Galactic Systems Inc. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -39,35 +39,56 @@ const HTML_COMMENT_STYLE = {
 const COMMENT_STYLES = {
   '.js': JS_COMMENT_STYLE,
   '.ts': JS_COMMENT_STYLE,
+  '.mts': JS_COMMENT_STYLE,
   '.tsx': JS_COMMENT_STYLE,
+  '.jsx': JS_COMMENT_STYLE,
   '.mjs': JS_COMMENT_STYLE,
   '.css': JS_COMMENT_STYLE,
   '.md': HTML_COMMENT_STYLE,
   '.mdx': HTML_COMMENT_STYLE,
 };
 
-const files = await glob(['**/*.{js,ts,tsx,mjs,mdx,md,css}'], {
-  ignore: [
-    '**/node_modules/**',
-    '**/dist/**',
-    '**/README.md',
-    '**/LICENSE.md',
-    '**/CHANGELOG.md',
-    '**/.github/**/*.md',
-  ],
-});
+function getFormattedHeader(fileExtension) {
+  const style = COMMENT_STYLES[fileExtension];
+  return `${style.start}${HEADER.split('\n').join(`\n${style.middle}`)}${style.end}`.replace(
+    /\s+\n/g,
+    '\n',
+  );
+}
+
+const filesToParse = argv.files?.split(' ');
+const files = await glob(
+  filesToParse && filesToParse.length > 0
+    ? filesToParse
+    : [`**/*{${Object.keys(COMMENT_STYLES).join(',')}}`],
+  {
+    ignore: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/README.md',
+      '**/LICENSE.md',
+      '**/CHANGELOG.md',
+      '**/.github/**/*.md',
+    ],
+  },
+);
 
 for (const file of files) {
-  const style = COMMENT_STYLES[path.extname(file)];
+  const fileExtension = path.extname(file);
+  const isFileExtensionSupported = fileExtension in COMMENT_STYLES; // check extension for the case where specific files are passed to the script
+
   let contents = fs.readFileSync(file, 'utf8');
-  let header =
-    style.start + HEADER.split('\n').join(`\n${style.middle}`) + style.end;
+  if (isFileExtensionSupported && !/Copyright \d+ Hypergiant/.test(contents)) {
+    const header = getFormattedHeader(fileExtension);
+    const interpreterDirective = contents.match(/^#!.*$/m)?.[0];
 
-  header = header.replace(/\s+\n/g, '\n');
+    if (interpreterDirective) {
+      contents = contents.replace(interpreterDirective, '').trimStart();
+      contents = `${interpreterDirective}\n\n${header}\n${contents}`;
+    } else {
+      contents = `${header}\n${contents}`;
+    }
 
-  if (!/Copyright \d+ Hypergiant/.test(contents)) {
-    // TODO: check for hashbang for things like zx scripts
-    contents = `${header}\n${contents}`;
     fs.writeFileSync(file, contents);
   }
 }

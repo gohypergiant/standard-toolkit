@@ -13,5 +13,4 @@
 
 - [booleanToNumber](functions/booleanToNumber.md)
 - [toBoolean](functions/toBoolean.md)
-- [toDigits](functions/toDigits.md)
 - [xyzToBbox](functions/xyzToBbox.md)
