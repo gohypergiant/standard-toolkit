@@ -12,7 +12,7 @@
 
 import '@fontsource/roboto-flex';
 import '@fontsource/roboto-mono';
-import { createTheme, globalStyle } from '@vanilla-extract/css';
+import { createTheme } from '@vanilla-extract/css';
 import {
   type ThemeContext,
   type ThemeVars,
@@ -45,21 +45,6 @@ import {
   Tooltip,
   Tree,
 } from './component-css';
-
-// Maintain a consistent layout whether in fullscreen mode or not
-globalStyle('body, #ladle-root, .ladle-main', {
-  height: '100vh',
-  padding: 0,
-  overflow: 'hidden',
-});
-
-globalStyle('[data-testid="ladle-dialog-overlay"]', {
-  pointerEvents: 'none',
-});
-
-globalStyle('[data-testid="ladle-dialog-overlay"] > div', {
-  pointerEvents: 'auto',
-});
 
 export const vars: ThemeVars = {
   typography: createTheme(typographyVars, {
