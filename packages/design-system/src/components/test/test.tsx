@@ -10,15 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-// biome-ignore lint/correctness/noUnusedImports: TODO: fix this
-import React from 'react';
-import type { Preview } from '@storybook/react';
-import { GlobalThemeProvider } from './theme-setup/global-theme-provider';
+import type { ReactNode } from 'react';
 
-export const decorators: Preview['decorators'] = [
-  (Story) => (
-    <GlobalThemeProvider>
-      <Story />
-    </GlobalThemeProvider>
-  ),
-];
+export function Test({ children }: { children: ReactNode }) {
+  return <div>hi heasdfa {children}</div>;
+}

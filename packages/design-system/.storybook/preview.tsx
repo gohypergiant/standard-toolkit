@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { decorators } from './decorators';
-import type { Preview } from '@storybook/react';
+// biome-ignore lint/correctness/noUnusedImports: for now...
+import React from 'react';
+import type { Decorator, Preview } from '@storybook/react';
+import { GlobalThemeProvider } from './theme-setup/global-theme-provider';
 
 const preview: Preview = {
   parameters: {
@@ -30,7 +32,14 @@ const preview: Preview = {
   initialGlobals: {
     backgrounds: { value: 'dark' },
   },
-  decorators,
 };
 
 export default preview;
+
+export const decorators: Decorator[] = [
+  (Story) => (
+    <GlobalThemeProvider>
+      <Story />
+    </GlobalThemeProvider>
+  ),
+];
