@@ -3,6 +3,7 @@
   "exclude": [
     ".ladle/*",
     "./src/**/*.stories.tsx",
+    "./src/**/*.stories.old.tsx",
     "./src/**/*.test.ts",
     "./src/**/*.test.tsx"
   ]
