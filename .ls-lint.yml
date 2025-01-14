@@ -21,7 +21,7 @@ ignore:
   - .turbo
   - .vscode
   - '**/.next'
-  - '**/.ladle'
+  - '**/.storybook'
   - '**/.turbo'
   - '**/__fixtures__'
   - '**/__snapshots__'
