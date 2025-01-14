@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { TextArea } from './textarea';
 import type { TextAreaProps } from './types';
 
@@ -20,6 +21,14 @@ const meta: Meta = {
   tags: ['autodocs'],
   args: {
     resize: 'both',
+    ...actions<TextAreaProps>(
+      'onChange',
+      'onHoverChange',
+      'onHoverEnd',
+      'onHoverStart',
+      'onBlur',
+      'onFocus',
+    ),
   },
   argTypes: {
     disabled: {

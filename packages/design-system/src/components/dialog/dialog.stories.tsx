@@ -19,6 +19,7 @@ import { Element } from '../element';
 import { Group } from '../group';
 import { Dialog } from './dialog';
 import type { DialogProps } from './types';
+import { action } from '@storybook/addon-actions';
 
 const meta: Meta = {
   title: 'Components/Dialog',
@@ -67,7 +68,7 @@ export const Default: StoryObj<
     const ref = useRef(null);
 
     return (
-      <DialogTrigger>
+      <DialogTrigger onOpenChange={action('onOpenChange')}>
         <Button>Press me</Button>
         <Dialog {...rest} parentRef={isGlobal ? undefined : ref}>
           {({ state }) => (

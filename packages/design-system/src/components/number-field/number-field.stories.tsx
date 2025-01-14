@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { AriaGroup, Button, Input } from '..';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { NumberField } from './number-field';
@@ -40,6 +41,12 @@ export const Default: StoryObj<StoryProps> = {
     label: 'Counter',
     size: 'sm',
     step: 1,
+    ...actions<NumberFieldProps>(
+      'onBlur',
+      'onFocus',
+      'onFocusChange',
+      'onChange',
+    ),
   },
   argTypes: {
     isDisabled: {

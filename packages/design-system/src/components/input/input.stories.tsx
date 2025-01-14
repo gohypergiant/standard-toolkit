@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { Input } from './input';
 import type { InputProps } from './types';
 
@@ -26,6 +27,14 @@ export const Default: StoryObj<InputProps> = {
   args: {
     placeholder: 'Placeholder text',
     size: 'sm',
+    ...actions<InputProps>(
+      'onChange',
+      'onHoverChange',
+      'onHoverEnd',
+      'onHoverStart',
+      'onBlur',
+      'onFocus',
+    ),
   },
   argTypes: {
     'aria-invalid': {

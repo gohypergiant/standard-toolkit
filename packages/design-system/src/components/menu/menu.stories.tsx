@@ -13,6 +13,7 @@
 import type { StoryObj, Meta } from '@storybook/react';
 import type { ReactNode } from 'react';
 import { Collection, MenuTrigger, SubmenuTrigger } from 'react-aria-components';
+import { actions } from '../../storybook';
 import {
   AriaHeader,
   AriaKeyboard,
@@ -41,6 +42,12 @@ const meta: Meta = {
   ],
   args: {
     size: 'lg',
+    ...actions<MenuListProps<object>>(
+      'onAction',
+      'onClose',
+      'onScroll',
+      'onSelectionChange',
+    ),
   },
   argTypes: {
     size: {

@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { AriaLabel, AriaText } from '../aria';
 import { Icon } from '../icon';
 import { Checkbox, CheckboxGroup } from './checkbox';
@@ -52,6 +53,7 @@ export const Single: StoryObj<CheckboxProps> = {
     isReadOnly: false,
     isInvalid: false,
     alignInput: 'end',
+    ...actions<CheckboxProps>('onChange'),
   },
   argTypes: {
     isDisabled: {
@@ -90,6 +92,7 @@ export const Single: StoryObj<CheckboxProps> = {
 export const Group: StoryObj<CheckboxGroupProps> = {
   args: {
     label: 'Checkbox Group',
+    ...actions<CheckboxGroupProps>('onChange'),
   },
   render: ({ label, ...rest }) => (
     <CheckboxGroup {...rest}>
@@ -109,134 +112,3 @@ export const Group: StoryObj<CheckboxGroupProps> = {
     </CheckboxGroup>
   ),
 };
-
-// export default {
-//   title: 'Components / Checkbox',
-
-// } satisfies StoryDefault;
-
-// const args: ArgTypes<CheckboxProps> = {
-//   label: {
-//     control: {
-//       type: 'text',
-//     },
-//     defaultValue: 'Checkbox text',
-//   },
-//   alignInput: {
-//     control: {
-//       type: 'select',
-//     },
-//     options: ['start', 'end'],
-//     defaultValue: 'end',
-//   },
-//   isIndeterminate: {
-//     control: {
-//       type: 'boolean',
-//     },
-//     defaultValue: false,
-//   },
-// };
-
-// export const CheckboxGroupExample: Story<CheckboxGroupProps> = ({
-//   label,
-//   ...rest
-// }) => (
-//   <CheckboxGroup {...rest}>
-//     <AriaLabel>{label}</AriaLabel>
-//     <Checkbox value='foo'>
-//       <Icon stroke='currentcolor'>{checkedSvg}</Icon>
-//       <AriaText>Checkbox text</AriaText>
-//     </Checkbox>
-//     <Checkbox value='bar'>
-//       <Icon stroke='currentcolor'>{checkedSvg}</Icon>
-//       <AriaText>Checkbox text</AriaText>
-//     </Checkbox>
-//     <Checkbox value='baz'>
-//       <Icon stroke='currentcolor'>{checkedSvg}</Icon>
-//       <AriaText>Checkbox text</AriaText>
-//     </Checkbox>
-//   </CheckboxGroup>
-// );
-
-// CheckboxGroupExample.storyName = 'Checkbox Group';
-
-// CheckboxGroupExample.argTypes = {
-//   label: {
-//     control: {
-//       type: 'text',
-//     },
-//     defaultValue: 'Group label',
-//   },
-//   alignInput: {
-//     control: {
-//       type: 'select',
-//     },
-//     options: ['start', 'end'],
-//     defaultValue: 'end',
-//   },
-//   orientation: {
-//     control: {
-//       type: 'select',
-//     },
-//     options: ['vertical', 'horizontal'],
-//     defaultValue: 'vertical',
-//   },
-// };
-
-// export const ControlledExample: Story<CheckboxProps> = ({ label, ...rest }) => (
-//   <Checkbox {...rest} onChange={action('onChange')}>
-//     {({ isIndeterminate }) => (
-//       <>
-//         <Icon stroke='currentcolor'>
-//           {isIndeterminate ? indeterminateSvg : checkedSvg}
-//         </Icon>
-//         {label && <AriaText>{label}</AriaText>}
-//       </>
-//     )}
-//   </Checkbox>
-// );
-
-// ControlledExample.storyName = 'Controlled';
-
-// ControlledExample.argTypes = {
-//   ...args,
-//   isSelected: {
-//     control: {
-//       type: 'boolean',
-//     },
-//     defaultValue: false,
-//   },
-// };
-
-// export const UncontrolledExample: Story<CheckboxProps> = ({
-//   label,
-//   ...rest
-// }) => (
-//   <Checkbox {...rest} defaultSelected={false} onChange={action('onChange')}>
-//     {({ isIndeterminate }) => (
-//       <>
-//         <Icon stroke='currentcolor'>
-//           {isIndeterminate ? indeterminateSvg : checkedSvg}
-//         </Icon>
-//         {label && <AriaText>{label}</AriaText>}
-//       </>
-//     )}
-//   </Checkbox>
-// );
-
-// UncontrolledExample.storyName = 'Uncontrolled';
-
-// UncontrolledExample.argTypes = { ...args };
-
-// export const WithoutIconExample: Story<CheckboxProps> = ({
-//   label,
-//   ...rest
-// }) => (
-//   <Checkbox {...rest} defaultSelected={false} onChange={action('onChange')}>
-//     {label && <AriaText>{label as string}</AriaText>}
-//   </Checkbox>
-// );
-
-// WithoutIconExample.storyName = 'Without Icon';
-
-// WithoutIconExample.argTypes = { ...args };

@@ -12,6 +12,7 @@
 
 import type { StoryObj, Meta } from '@storybook/react';
 import { useState } from 'react';
+import { actions } from '../../storybook';
 import { TooltipTrigger } from 'react-aria-components';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
@@ -35,6 +36,7 @@ const meta: Meta = {
     shouldCloseOnBlur: false,
     isDismissable: true,
     isKeyboardDismissDisabled: false,
+    ...actions<DrawerProps>('onOpenChange', 'onSelectionChange'),
   },
   argTypes: {
     anchor: {

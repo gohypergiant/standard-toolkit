@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { AriaFieldError, AriaLabel, AriaSelectValue, AriaText } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -28,6 +29,13 @@ const meta: Meta = {
     size: 'sm',
     isDisabled: false,
     isInvalid: false,
+    ...actions<SelectProps<object>>(
+      'onBlur',
+      'onFocus',
+      'onFocusChange',
+      'onOpenChange',
+      'onSelectionChange',
+    ),
   },
   argTypes: {
     description: {

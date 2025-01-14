@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { Input } from '..';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { TextField } from './text-field';
@@ -23,6 +24,7 @@ const meta: Meta = {
   args: {
     label: 'Name',
     size: 'sm',
+    ...actions<TextFieldProps>('onBlur', 'onFocus', 'onFocusChange'),
   },
   argTypes: {
     isDisabled: {

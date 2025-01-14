@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { AriaGroup } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -25,6 +26,14 @@ const meta: Meta = {
   args: {
     variant: 'solid',
     size: 'lg',
+    ...actions<SearchFieldProps>(
+      'onBlur',
+      'onFocus',
+      'onFocusChange',
+      'onChange',
+      'onClear',
+      'onSubmit',
+    ),
   },
   argTypes: {
     variant: {

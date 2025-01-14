@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { AriaText } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -44,6 +45,7 @@ export const Group: StoryObj<ChipGroupProps> = {
     selectionBehavior: 'toggle',
     selectionMode: 'multiple',
     size: 'sm',
+    ...actions<ChipGroupProps>('onRemove', 'onSelectionChange'),
   },
   argTypes: {
     color: {

@@ -10,23 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StorybookConfig } from '@storybook/react-vite';
+import { action } from '@storybook/addon-actions';
 
-import { join, dirname } from 'node:path';
+export function actions<T>(...keys: (keyof T)[]): Partial<T> {
+  return keys.reduce<Partial<T>>((acc, key) => {
+    acc[key] = action(key as string) as T[keyof T];
 
-/**
- * This function is used to resolve the absolute path of a package.
- * It is needed in projects that use Yarn PnP or are set up within a monorepo.
- */
-function getAbsolutePath(packageName: string): string {
-  return dirname(require.resolve(join(packageName, 'package.json')));
+    return acc;
+  }, {});
 }
-const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: [getAbsolutePath('@storybook/addon-essentials')],
-  framework: {
-    name: '@storybook/react-vite',
-    options: {},
-  },
-};
-export default config;

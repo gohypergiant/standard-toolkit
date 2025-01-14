@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import type { CSSProperties } from 'react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from './tabs';
 import type { TabListProps } from './types';
@@ -76,7 +77,7 @@ export const Stacked: StoryObj<TabListProps<object>> = {
     const direction: CSSProperties['flexDirection'] = `${axis}${props.anchor === 'start' ? '-reverse' : ''}`;
 
     return (
-      <Tabs>
+      <Tabs onSelectionChange={action('onSelectionChange')}>
         <div style={{ display: 'flex', flexDirection: direction }}>
           <TabList {...props}>
             <Tab id='a'>Hello</Tab>
@@ -123,7 +124,7 @@ export const Solo: StoryObj<TabListProps<object>> = {
     const direction: CSSProperties['flexDirection'] = `${axis}${props.anchor === 'start' ? '-reverse' : ''}`;
 
     return (
-      <Tabs>
+      <Tabs onSelectionChange={action('onSelectionChange')}>
         <div style={{ display: 'flex', flexDirection: direction }}>
           <TabList {...props}>
             <Tab id='a'>Hello</Tab>

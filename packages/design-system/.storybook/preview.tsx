@@ -13,6 +13,7 @@
 // biome-ignore lint/correctness/noUnusedImports: for now...
 import React from 'react';
 import type { Preview } from '@storybook/react';
+import { withActions } from '@storybook/addon-actions/decorator';
 import { GlobalThemeProvider } from './theme-setup/global-theme-provider';
 
 const preview: Preview = {
@@ -28,8 +29,10 @@ const preview: Preview = {
       values: [{ name: 'dark', value: 'rgb(11,11,11)' }],
     },
     layout: 'centered',
+    actions: { argTypesRegex: '^on.*' },
   },
   decorators: [
+    withActions,
     (Story) => (
       <GlobalThemeProvider>
         <Story />

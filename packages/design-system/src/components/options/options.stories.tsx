@@ -12,6 +12,7 @@
 
 import type { StoryObj, Meta } from '@storybook/react';
 import { Collection, DialogTrigger } from 'react-aria-components';
+import { actions } from '../../storybook';
 import {
   AriaHeader,
   AriaKeyboard,
@@ -30,6 +31,9 @@ const meta: Meta = {
   title: 'Components/Options',
   component: Options,
   tags: ['autodocs'],
+  args: {
+    ...actions<OptionsListProps<object>>('onSelectionChange'),
+  },
 };
 
 export default meta;

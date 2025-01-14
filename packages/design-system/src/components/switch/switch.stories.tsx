@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { Switch } from './switch';
 import type { SwitchProps } from './types';
 
@@ -23,6 +24,7 @@ const meta: Meta = {
     alignInput: 'end',
     isDisabled: false,
     isReadOnly: false,
+    onChange: action('onChange'),
   },
   argTypes: {
     children: {

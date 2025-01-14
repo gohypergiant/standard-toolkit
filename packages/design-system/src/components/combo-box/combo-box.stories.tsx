@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { AriaFieldError, AriaGroup, AriaLabel, AriaText } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -23,6 +24,16 @@ const meta: Meta = {
   title: 'Components/ComboBox',
   component: ComboBox,
   tags: ['autodocs'],
+  args: {
+    ...actions<ComboBoxProps<object>>(
+      'onBlur',
+      'onFocus',
+      'onFocusChange',
+      'onInputChange',
+      'onOpenChange',
+      'onSelectionChange',
+    ),
+  },
 };
 
 export default meta;
@@ -41,7 +52,6 @@ export const Default: StoryObj<
     isDisabled: false,
     isInvalid: false,
     label: 'Favorite animals',
-    selectedKey: 'Red Panda',
     showLabel: true,
     size: 'lg',
   },

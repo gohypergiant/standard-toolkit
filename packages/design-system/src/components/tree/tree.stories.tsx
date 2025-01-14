@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { AriaText } from '../aria';
 import { Button, ButtonContext, ToggleButton } from '../button';
 import { Checkbox } from '../checkbox';
@@ -31,6 +32,12 @@ const meta: Meta = {
     selectionMode: 'multiple',
     showTreeLines: true,
     size: 'lg',
+    ...actions<TreeProps<unknown>>(
+      'onAction',
+      'onScroll',
+      'onSelectionChange',
+      'onUpdate',
+    ),
   },
   argTypes: {
     allowsDragging: {

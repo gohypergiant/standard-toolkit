@@ -11,6 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
+import { actions } from '../../storybook';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './button';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
@@ -21,6 +22,21 @@ const meta: Meta = {
   tags: ['autodocs'],
   args: {
     children: 'Hello',
+    ...actions<ButtonProps>(
+      'onBlur',
+      'onFocus',
+      'onFocusChange',
+      'onHoverChange',
+      'onHoverEnd',
+      'onHoverStart',
+      'onKeyDown',
+      'onKeyUp',
+      'onPress',
+      'onPressChange',
+      'onPressEnd',
+      'onPressStart',
+      'onPressUp',
+    ),
   },
 };
 

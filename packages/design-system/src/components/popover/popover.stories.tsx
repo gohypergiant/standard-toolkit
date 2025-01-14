@@ -12,6 +12,7 @@
 
 import type { StoryObj, Meta } from '@storybook/react';
 import { DialogTrigger } from 'react-aria-components';
+import { action } from '@storybook/addon-actions';
 import { genericColorVars } from '../../styles';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
@@ -48,7 +49,7 @@ export default meta;
 
 export const TitleTextButtons: StoryObj<PopoverProps> = {
   render: (props) => (
-    <DialogTrigger>
+    <DialogTrigger onOpenChange={action('onOpenChange')}>
       <Button variant='icon'>
         <Icon>
           <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'>
@@ -84,7 +85,7 @@ export const TitleTextButtons: StoryObj<PopoverProps> = {
 
 export const TitleAndText: StoryObj<PopoverProps> = {
   render: (props) => (
-    <DialogTrigger>
+    <DialogTrigger onOpenChange={action('onOpenChange')}>
       <Button variant='icon'>
         <Icon>
           <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
@@ -122,7 +123,7 @@ export const TitleAndText: StoryObj<PopoverProps> = {
 
 export const Text: StoryObj<PopoverProps> = {
   render: (props) => (
-    <DialogTrigger>
+    <DialogTrigger onOpenChange={action('onOpenChange')}>
       <Button variant='icon'>
         <Icon>
           <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
