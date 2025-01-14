@@ -39,7 +39,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/design-system/build
+          path: packages/design-system/storybook-static
   deploy:
     needs: build
     permissions:

@@ -26,6 +26,5 @@ dist
 *.iml
 .idea
 
-
-
 *storybook.log
+packages/design-system/storybook-static
