@@ -27,11 +27,7 @@ export default defineConfig({
       esmExtension: 'js',
     }),
   ],
-  entry: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.{stories,test}.{ts,tsx}',
-    '!src/**/*.{stories,test}.old.{ts,tsx}',
-  ],
+  entry: ['src/**/*.{ts,tsx}', '!src/**/*.{stories,test}.{ts,tsx}'],
   dts: true,
   format: 'esm',
   sourcemap: true,
