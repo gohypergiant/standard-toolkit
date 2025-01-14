@@ -11,7 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import { AriaGroup, Button, Input } from '..';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { NumberField } from './number-field';

@@ -11,7 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import { AriaText } from '../aria';
 import { Button, ButtonContext, ToggleButton } from '../button';
 import { Checkbox } from '../checkbox';

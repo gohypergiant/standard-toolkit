@@ -13,7 +13,7 @@
 import type { StoryObj, Meta } from '@storybook/react';
 import type { ReactNode } from 'react';
 import { Collection, MenuTrigger, SubmenuTrigger } from 'react-aria-components';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import {
   AriaHeader,
   AriaKeyboard,

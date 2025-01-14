@@ -12,7 +12,7 @@
 
 import type { StoryObj, Meta } from '@storybook/react';
 import { Collection, DialogTrigger } from 'react-aria-components';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import {
   AriaHeader,
   AriaKeyboard,

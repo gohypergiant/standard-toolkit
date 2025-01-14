@@ -11,7 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import { TextArea } from './textarea';
 import type { TextAreaProps } from './types';
 

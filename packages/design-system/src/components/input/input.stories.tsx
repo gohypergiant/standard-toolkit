@@ -11,7 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import { Input } from './input';
 import type { InputProps } from './types';
 

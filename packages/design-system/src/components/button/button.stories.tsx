@@ -11,7 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './button';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';

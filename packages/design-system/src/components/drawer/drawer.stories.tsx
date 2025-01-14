@@ -12,7 +12,7 @@
 
 import type { StoryObj, Meta } from '@storybook/react';
 import { useState } from 'react';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import { TooltipTrigger } from 'react-aria-components';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';

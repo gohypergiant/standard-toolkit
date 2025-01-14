@@ -11,7 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
-import { actions } from '../../storybook';
+import { actions } from '../../storybook/actions';
 import { AriaGroup } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
