@@ -10,26 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-import { action } from '@storybook/addon-actions';
-import { describe, expect, it, vi } from 'vitest';
-import { actions } from './actions';
+import { style } from '@vanilla-extract/css';
+import {
+  type ThemeContext,
+  type TooltipState,
+  applyThemeVars,
+  assignPartialVars,
+  sizeVars,
+  tooltipSpaceVars,
+  tooltipStateVars,
+} from '../../src';
 
-vi.mock('@storybook/addon-actions', () => ({
-  action: vi.fn(() => () => {
-    return undefined;
-  }),
-}));
-
-describe('actions', () => {
-  it('should return action handler props', () => {
-    const props = actions<{ onChange: () => void }>('onChange');
-
-    expect(props).toEqual({
-      onChange: expect.any(Function),
-    });
-
-    props.onChange?.();
-
-    expect(action).toHaveBeenCalledWith('onChange');
-  });
-});
+export const Tooltip: ThemeContext['Tooltip'] = {
+  tooltip: {
+    tooltip: style(
+      applyThemeVars<TooltipState>(tooltipStateVars, [
+        {
+          vars: assignPartialVars(tooltipSpaceVars, {
+            x: sizeVars.v03,
+            y: sizeVars.v02,
+          }),
+        },
+      ]),
+    ),
+  },
+};

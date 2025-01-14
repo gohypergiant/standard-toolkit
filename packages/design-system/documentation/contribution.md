@@ -1,3 +1,12 @@
+<!-- Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy
+of the License at https://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+OF ANY KIND, either express or implied. See the License for the specific language
+governing permissions and limitations under the License. -->
+
 # Contributing to the C2 Design System (C2DS)
 
 ## Overview
@@ -36,12 +45,12 @@ This is the process for contribution:
 Each new component should be encapsulated in a folder named for that component inside the `src/components` folder. Each component should have, at a minimum:
 
 - file that publishes the component -- `my-component.tsx`
-- Ladle story to demonstrate usage of relavant variants, props and styles -- `my-component.stories.tsx`
+- Storybook story to demonstrate usage of relavant variants, props and styles -- `my-component.stories.tsx`
 - tests to ensure coverage -- `my-component.test.tsx`
 - `types.ts` file
 - exports in the root `my-component/index.ts` file decorated with the `// __private-exports` so that it is not double imported when the index generation runs
 - exports in the root of the `src/components` folder, alphabetically listed
-- a theming example in the `.ladle/theme` folder to demonstrate how the component might be themed for an application
+- a theming example in the `.storybook/theme` folder to demonstrate how the component might be themed for an application
 
 ### Generate index barrel file
 
@@ -49,16 +58,13 @@ In order to keep the imports clean, all the components and their related configu
 
 `npm run index -w @cbc2/c2-design-system`
 
-### Ladle as development environment
+### Storybook as development environment
 
-[Ladle](https://ladle.dev/) provides a convenient platform in which to develop new components. It is very similar to Storybook but has better performance and is built on Vite. For the most part, Ladle is self-explanatory but there are a few gotchas:
+[Storybook](https://storybook.js.org/) provides a convenient platform in which to develop new components. 
 
-- The `storyName`, `title`, and `meta` values need to be serializable and also need to be unique.
-- Additionally, while the library provides hot module reload, it can sometimes fail to compile changes completely, so restarting can address that issue.
+To run Storybook: `npm run storybook`.
 
-To run Ladle: `npm run preview -w @cbc2/ds-design-system`.
-
-If you choose to develop a new component outside of Ladle and then port it in later, you must also provide a Ladle story to demonstrate usage.
+If you choose to develop a new component outside of Storybook and then port it in later, you must also provide a Storybook story to demonstrate usage.
 
 ## Building Concepts
 

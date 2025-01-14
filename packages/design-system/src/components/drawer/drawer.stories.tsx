@@ -127,7 +127,7 @@ export const SingleTabbed: StoryObj<DrawerProps> = {
                     strokeLinecap='round'
                     strokeLinejoin='round'
                   >
-                    <title>Ladle</title>
+                    <title>Close Icon</title>
                     <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                     <path d='M18 6l-12 12' />
                     <path d='M6 6l12 12' />
@@ -193,7 +193,7 @@ export const MultiTabbed: StoryObj<DrawerProps> = {
                 <TooltipTarget>
                   <Icon size='md'>
                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                      <title>Ladle</title>
+                      <title>Person Icon</title>
                       <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                       <path d='M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.051 6.844a1 1 0 0 0 -1.152 -.663l-.113 .03l-2.684 .895l-2.684 -.895l-.113 -.03a1 1 0 0 0 -.628 1.884l.109 .044l2.316 .771v.976l-1.832 2.75l-.06 .1a1 1 0 0 0 .237 1.21l.1 .076l.101 .06a1 1 0 0 0 1.21 -.237l.076 -.1l1.168 -1.752l1.168 1.752l.07 .093a1 1 0 0 0 1.653 -1.102l-.059 -.1l-1.832 -2.75v-.977l2.316 -.771l.109 -.044a1 1 0 0 0 .524 -1.221zm-3.949 -4.184a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0 -3z' />
                     </svg>
@@ -207,7 +207,7 @@ export const MultiTabbed: StoryObj<DrawerProps> = {
                 <TooltipTarget>
                   <Icon size='md'>
                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                      <title>Ladle</title>
+                      <title>Clock Icon</title>
                       <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                       <path d='M16 6.072a8 8 0 1 1 -11.995 7.213l-.005 -.285l.005 -.285a8 8 0 0 1 11.995 -6.643zm-4 2.928a1 1 0 0 0 -1 1v3l.007 .117a1 1 0 0 0 .993 .883h2l.117 -.007a1 1 0 0 0 .883 -.993l-.007 -.117a1 1 0 0 0 -.993 -.883h-1v-2l-.007 -.117a1 1 0 0 0 -.993 -.883z' />
                       <path d='M6.412 3.191a1 1 0 0 1 1.273 1.539l-.097 .08l-2.75 2a1 1 0 0 1 -1.273 -1.54l.097 -.08l2.75 -2z' />
@@ -223,7 +223,7 @@ export const MultiTabbed: StoryObj<DrawerProps> = {
                 <TooltipTarget>
                   <Icon size='md'>
                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                      <title>Ladle</title>
+                      <title>Nut Icon</title>
                       <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                       <path d='M13.666 1.429l6.75 3.98q .1 .06 .18 .133l.009 .008l.106 .075a3.22 3.22 0 0 1 1.284 2.39l.005 .203v7.284c0 1.175 -.643 2.256 -1.623 2.793l-6.804 4.302c-.98 .538 -2.166 .538 -3.2 -.032l-6.695 -4.237a3.23 3.23 0 0 1 -1.678 -2.826v-7.285a3.21 3.21 0 0 1 1.65 -2.808l6.775 -3.995a3.34 3.34 0 0 1 3.24 .015m-.64 5.343a2.03 2.03 0 0 0 -2 -.014l-3.023 1.804a1.99 1.99 0 0 0 -1.002 1.736v3.278a2 2 0 0 0 1.03 1.75l2.946 1.89c.657 .367 1.39 .367 1.994 .033l3.054 -1.955c.582 -.322 .976 -.992 .976 -1.719v-3.277l-.005 -.164a2 2 0 0 0 -.725 -1.391l-.092 -.07l-.056 -.047a1 1 0 0 0 -.096 -.064z' />
                     </svg>
@@ -237,7 +237,7 @@ export const MultiTabbed: StoryObj<DrawerProps> = {
                 <TooltipTarget>
                   <Icon size='md'>
                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                      <title>Ladle</title>
+                      <title>Book Icon</title>
                       <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                       <path d='M12.088 4.82a10 10 0 0 1 9.412 .314a1 1 0 0 1 .493 .748l.007 .118v13a1 1 0 0 1 -1.5 .866a8 8 0 0 0 -8 0a1 1 0 0 1 -1 0a8 8 0 0 0 -7.733 -.148l-.327 .18l-.103 .044l-.049 .016l-.11 .026l-.061 .01l-.117 .006h-.042l-.11 -.012l-.077 -.014l-.108 -.032l-.126 -.056l-.095 -.056l-.089 -.067l-.06 -.056l-.073 -.082l-.064 -.089l-.022 -.036l-.032 -.06l-.044 -.103l-.016 -.049l-.026 -.11l-.01 -.061l-.004 -.049l-.002 -.068v-13a1 1 0 0 1 .5 -.866a10 10 0 0 1 9.412 -.314l.088 .044l.088 -.044z' />
                     </svg>
@@ -259,7 +259,7 @@ export const MultiTabbed: StoryObj<DrawerProps> = {
                       strokeLinecap='round'
                       strokeLinejoin='round'
                     >
-                      <title>Ladle</title>
+                      <title>Chevron Left Icon</title>
                       <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                       <path d='M15 6l-6 6l6 6' fill='none' />
                     </svg>
@@ -278,7 +278,7 @@ export const MultiTabbed: StoryObj<DrawerProps> = {
                     strokeLinecap='round'
                     strokeLinejoin='round'
                   >
-                    <title>Ladle</title>
+                    <title>Close Icon</title>
                     <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                     <path d='M18 6l-12 12' />
                     <path d='M6 6l12 12' />

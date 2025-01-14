@@ -10,28 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-// biome-ignore lint/correctness/noUnusedImports: fix later
-import React from 'react';
-import type { Preview } from '@storybook/react';
-import { withActions } from '@storybook/addon-actions/decorator';
-import { ThemeProviderDecorator } from './components';
+import { style } from '@vanilla-extract/css';
+import {
+  type GroupState,
+  type ThemeContext,
+  applyThemeVars,
+  assignPartialVars,
+  groupSpaceVars,
+  groupStateVars,
+  sizeVars,
+} from '../../src';
 
-const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
+export const Group: ThemeContext['Group'] = {
+  group: style(
+    applyThemeVars<GroupState>(groupStateVars, [
+      {
+        vars: assignPartialVars(groupSpaceVars, {
+          gap: sizeVars.v04,
+        }),
       },
-    },
-    backgrounds: {
-      default: 'dark',
-      values: [{ name: 'dark', value: 'rgb(11,11,11)' }],
-    },
-    layout: 'centered',
-    actions: { argTypesRegex: '^on.*' },
-  },
-  decorators: [withActions, ThemeProviderDecorator],
+    ]),
+  ),
 };
-
-export default preview;

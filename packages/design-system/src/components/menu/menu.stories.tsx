@@ -69,34 +69,19 @@ export const BasicMenu: StoryObj<MenuProps> = {
       <Menu>
         <MenuList {...props} aria-label='Action Menu'>
           <MenuItem textValue='DL1234'>
-            <Icon size='md'>
-              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                <title>Ladle</title>
-                <path d='M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z' />
-              </svg>
-            </Icon>
+            <Icon size='md'>{icon}</Icon>
             <AriaText slot='label'>DL1234</AriaText>
             <AriaText slot='description'>Recommended</AriaText>
             <AriaKeyboard>⌘X</AriaKeyboard>
           </MenuItem>
           <MenuItem textValue='AA123'>
-            <Icon size='md'>
-              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                <title>Ladle</title>
-                <path d='M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z' />
-              </svg>
-            </Icon>
+            <Icon size='md'>{icon}</Icon>
             <AriaText slot='label'>AA123</AriaText>
             <AriaText slot='description'>Arriving</AriaText>
             <AriaKeyboard>⌘V</AriaKeyboard>
           </MenuItem>
           <MenuItem textValue='DL5678' isDisabled>
-            <Icon size='md'>
-              <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                <title>Ladle</title>
-                <path d='M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z' />
-              </svg>
-            </Icon>
+            <Icon size='md'>{icon}</Icon>
             <AriaText slot='label'>DL5678</AriaText>
           </MenuItem>
         </MenuList>
@@ -115,7 +100,7 @@ type NavItem = {
 
 const icon = (
   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-    <title>Ladle</title>
+    <title>Airplane Icon</title>
     <path d='M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z' />
   </svg>
 );
@@ -152,7 +137,7 @@ export const Dynamic: StoryObj<MenuListProps<NavItem>> = {
                     <AriaText slot='label'>{item.name}</AriaText>
                     <Icon size='sm' slot='more'>
                       <svg className='chevron' viewBox='0 0 24 24'>
-                        <title>Ladle</title>
+                        <title>Triangle Right Icon</title>
                         <path d='m9 18 6-6-6-6' />
                       </svg>
                     </Icon>
@@ -221,7 +206,7 @@ export const WithSections: StoryObj<MenuProps> = {
                     <AriaText slot='label'>{item.name}</AriaText>
                     <Icon size='sm' slot='more'>
                       <svg className='chevron' viewBox='0 0 24 24'>
-                        <title>Ladle</title>
+                        <title>Triangle Right Icon</title>
                         <path d='m9 18 6-6-6-6' />
                       </svg>
                     </Icon>
