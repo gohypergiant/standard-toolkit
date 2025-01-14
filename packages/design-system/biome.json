@@ -6,7 +6,7 @@
   ],
   "files": {
     "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
-    "ignore": ["node_modules", ".turbo", "dist", "coverage", "build"]
+    "ignore": ["node_modules", ".turbo", "dist", "coverage", "storybook-static"]
   },
   "linter": {
     "rules": {

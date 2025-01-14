@@ -12,7 +12,7 @@
 
 import '@fontsource/roboto-flex';
 import '@fontsource/roboto-mono';
-import { createTheme, globalStyle } from '@vanilla-extract/css';
+import { createTheme } from '@vanilla-extract/css';
 import {
   type ThemeContext,
   type ThemeVars,
