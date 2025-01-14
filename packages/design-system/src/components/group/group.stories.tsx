@@ -10,13 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
+import type { StoryObj, Meta } from '@storybook/react';
 import { Button, ButtonContext, type ButtonProps } from '../button';
 import { Group } from './group';
 import type { GroupProps } from './types';
 
-export default {
-  title: 'Components / Group',
+const meta: Meta = {
+  title: 'Components/Group',
+  component: Group,
+  tags: ['autodocs'],
+};
+
+export default meta;
+
+export const Default: StoryObj<GroupProps<ButtonProps, HTMLButtonElement>> = {
+  args: {
+    orientation: 'horizontal',
+    reverse: false,
+  },
   argTypes: {
     orientation: {
       control: {
@@ -31,17 +42,14 @@ export default {
       },
     },
   },
-} satisfies StoryDefault<GroupProps<ButtonProps, HTMLButtonElement>>;
-
-export const Example: Story<GroupProps<ButtonProps, HTMLButtonElement>> = (
-  props,
-) => (
-  <Group<ButtonProps, HTMLButtonElement>
-    {...props}
-    context={ButtonContext}
-    values={{ size: 'sm', variant: 'bare' }}
-  >
-    <Button>Foo</Button>
-    <Button>Bar</Button>
-  </Group>
-);
+  render: (props) => (
+    <Group<ButtonProps, HTMLButtonElement>
+      {...props}
+      context={ButtonContext}
+      values={{ size: 'sm', variant: 'bare' }}
+    >
+      <Button>Foo</Button>
+      <Button>Bar</Button>
+    </Group>
+  ),
+};
