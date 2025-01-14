@@ -19,8 +19,9 @@ import rehypeKatex from 'rehype-katex';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Accelint Standard Toolkit (DevTK)',
-  tagline: 'The web "standard library" for the Accelint family of systems.',
+  title: 'Development Toolkit (DevTK)',
+  tagline:
+    'A "standard library" for web applications in the Accelint family of systems.',
   favicon: 'img/favicon.ico',
 
   url: 'https://gohypergiant.github.io',
@@ -30,9 +31,11 @@ const config: Config = {
   organizationName: 'gohypergiant',
   projectName: 'standard-toolkit',
 
-  onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
-  onBrokenAnchors: 'warn', // for now
+  // TODO: change "ignore" to "warn" or "error" when the site is more complete.
+  // "ignore" for now to make the output during build less noisy.
+  onBrokenLinks: 'ignore',
+  onBrokenMarkdownLinks: 'ignore',
+  onBrokenAnchors: 'ignore',
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -47,9 +50,12 @@ const config: Config = {
       'classic',
       {
         docs: {
-          sidebarPath: './sidebars.ts',
-          remarkPlugins: [remarkMath],
+          breadcrumbs: false,
+          path: './content',
           rehypePlugins: [rehypeKatex],
+          remarkPlugins: [remarkMath],
+          routeBasePath: '/',
+          sidebarPath: './sidebars.ts',
           // Add this to enable the "edit this page" links.
           // editUrl: 'https://github.com/facebook/docusaurus/tree/main/docs/',
         },
@@ -64,7 +70,7 @@ const config: Config = {
   themeConfig: {
     image: 'img/banner.jpg',
     navbar: {
-      title: 'Accelint Standard Toolkit (DevTK)',
+      title: 'Development Toolkit (DevTK)',
       items: [
         {
           type: 'docSidebar',
