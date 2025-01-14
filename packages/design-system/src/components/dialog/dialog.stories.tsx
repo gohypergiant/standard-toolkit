@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { action, type Story, type StoryDefault } from '@ladle/react';
+import type { StoryObj, Meta } from '@storybook/react';
 import { useRef } from 'react';
 import { DialogTrigger } from 'react-aria-components';
-import { genericColorVars, radiusVars, sizeVars } from '../../styles';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
 import { Element } from '../element';
@@ -21,58 +20,54 @@ import { Group } from '../group';
 import { Dialog } from './dialog';
 import type { DialogProps } from './types';
 
-export default {
-  title: 'Components / Dialog',
+const meta: Meta = {
+  title: 'Components/Dialog',
+  component: Dialog,
+  tags: ['autodocs'],
+};
+
+export default meta;
+
+export const Default: StoryObj<
+  DialogProps & {
+    isGlobal: boolean;
+  }
+> = {
+  args: {
+    size: 'lg',
+    isDismissable: false,
+    isKeyboardDismissDisabled: false,
+    isGlobal: true,
+  },
   argTypes: {
     size: {
       control: {
         type: 'select',
       },
       options: ['sm', 'lg'],
-      defaultValue: 'lg',
     },
     isDismissable: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     isKeyboardDismissDisabled: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     isGlobal: {
       control: {
         type: 'boolean',
       },
-      defaultValue: true,
       description: 'Not a component prop, see story for implementation details',
     },
   },
-} satisfies StoryDefault;
+  render: ({ isDismissable, isKeyboardDismissDisabled, isGlobal, ...rest }) => {
+    const ref = useRef(null);
 
-export const Example: Story<
-  DialogProps & {
-    isGlobal: boolean;
-  }
-> = ({ isDismissable, isKeyboardDismissDisabled, isGlobal, ...rest }) => {
-  const ref = useRef(null);
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        position: 'relative',
-        width: 600,
-        height: 800,
-        padding: sizeVars.v05,
-        border: `1px solid ${genericColorVars.neutral.v08}`,
-        borderRadius: radiusVars.lg,
-      }}
-    >
-      <DialogTrigger onOpenChange={action('onOpenChange')}>
+    return (
+      <DialogTrigger>
         <Button>Press me</Button>
         <Dialog {...rest} parentRef={isGlobal ? undefined : ref}>
           {({ state }) => (
@@ -95,6 +90,6 @@ export const Example: Story<
           )}
         </Dialog>
       </DialogTrigger>
-    </div>
-  );
+    );
+  },
 };
