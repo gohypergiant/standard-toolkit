@@ -10,13 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
-import { actions } from '../../ladle';
+import type { StoryObj, Meta } from '@storybook/react';
 import { TextArea } from './textarea';
 import type { TextAreaProps } from './types';
 
-export default {
+const meta: Meta = {
   title: 'Components/TextArea',
+  component: TextArea,
+  tags: ['autodocs'],
+  args: {
+    resize: 'both',
+  },
   argTypes: {
     disabled: {
       control: {
@@ -44,49 +48,12 @@ export default {
         type: 'select',
       },
       options: ['both', 'horizontal', 'vertical', 'none'],
-      defaultValue: 'none',
     },
-  },
-} satisfies StoryDefault<TextAreaProps>;
-
-export const ControlledExample: Story<TextAreaProps> = (props) => (
-  <TextArea
-    {...props}
-    {...actions<TextAreaProps>(
-      'onChange',
-      'onHoverChange',
-      'onHoverEnd',
-      'onHoverStart',
-      'onBlur',
-      'onFocus',
-    )}
-  />
-);
-
-ControlledExample.storyName = 'Controlled';
-
-ControlledExample.argTypes = {
-  value: {
-    control: {
-      type: 'text',
-    },
-    defaultValue: '',
   },
 };
 
-export const UncontrolledExample: Story<TextAreaProps> = (props) => (
-  <TextArea
-    {...props}
-    defaultValue=''
-    {...actions<TextAreaProps>(
-      'onChange',
-      'onHoverChange',
-      'onHoverEnd',
-      'onHoverStart',
-      'onBlur',
-      'onFocus',
-    )}
-  />
-);
+export default meta;
 
-UncontrolledExample.storyName = 'Uncontrolled';
+// TODO: pressing enter and trying to type on a new line is buggy
+// this existed in the Uncontrolled example in the ladle version too 😓
+export const Default: StoryObj<TextAreaProps> = {};
