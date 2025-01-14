@@ -47,7 +47,6 @@ function Defaults({ children }: PropsWithChildren) {
 const style = {
   height: '100%',
   display: 'block',
-  padding: sizeVars.v08,
 };
 
 export const GlobalThemeProvider = ({ children }) => (

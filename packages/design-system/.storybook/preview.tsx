@@ -24,10 +24,10 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      options: {
-        dark: { name: 'dark', value: 'rgb(11,11,11)' },
-      },
+      default: 'dark',
+      values: [{ name: 'dark', value: 'rgb(11,11,11)' }],
     },
+    layout: 'centered',
   },
   decorators: [
     (Story) => (
