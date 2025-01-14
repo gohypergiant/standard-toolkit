@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
+import type { StoryObj, Meta } from '@storybook/react';
 import type { PressEvent } from '@react-types/shared';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import type { RuleGroupType } from 'react-querybuilder';
@@ -24,61 +24,67 @@ import { QueryBuilder } from './query-builder';
 import type { ActionProps, QueryBuilderProps } from './types';
 import { pressToMouseEvent } from './utils';
 
-export default {
-  title: 'Components / Query Builder',
+const meta: Meta = {
+  title: 'Components/QueryBuilder',
+  component: QueryBuilder,
+  tags: ['autodocs'],
+  args: {
+    consistentColumns: true,
+    disabled: false,
+    orientation: 'horizontal',
+    showCloneButtons: false,
+    showLockButtons: false,
+    showNotToggle: false,
+    showShiftActions: false,
+    size: 'sm',
+  },
   argTypes: {
     consistentColumns: {
       control: {
         type: 'boolean',
       },
-      defaultValue: true,
     },
     disabled: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     orientation: {
       control: {
         type: 'select',
       },
       options: ['horizontal', 'vertical'],
-      defaultValue: 'horizontal',
     },
     showCloneButtons: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     showLockButtons: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     showNotToggle: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     showShiftActions: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     size: {
       control: {
         type: 'select',
       },
       options: ['sm', 'lg'],
-      defaultValue: 'sm',
     },
   },
-} satisfies StoryDefault<QueryBuilderProps>;
+};
+
+export default meta;
 
 function RemoveRuleAction(props: ActionProps) {
   const { mapping, size } = useContext(QueryBuilderContext);
@@ -128,65 +134,67 @@ const icons = {
   ),
 };
 
-export const Example: Story<QueryBuilderProps> = (props) => {
-  const [query, setQuery] = useState<RuleGroupType>({
-    combinator: 'and',
-    rules: [
-      { field: 'AK_HIGH', operator: '>', value: '10000' }, // i32
-      { field: 'AK_LOW', operator: 'between', value: ['1000', '5000'] }, // between
-      { field: 'PRIVATEUSE', operator: 'in', value: ['Mixed', 'Private'] }, // options
-      { field: 'SERVCITY', operator: 'like', value: 'Anchorage' }, // options with headers
-      { field: 'OPERSTATUS', operator: '=', value: true }, // bool
-      { field: 'DONUTS', operator: '=', value: true }, // switch
-      { field: 'TYPE_CODE', operator: '=', value: 'Aerodrome' }, // radio
-      { field: 'NOTES', operator: 'contains', value: 'Clear skies...' }, // textarea
-      { field: 'NICKNAME', operator: 'like', value: 'Old Bumpy' }, // text
-      {
-        field: 'ESTABLISHED',
-        operator: 'during',
-        value: ['2024-10-01', '2024-11-01'],
-      }, // date
-      {
-        field: 'MAINTENANCE',
-        operator: 'overlapped',
-        value: ['2024-10-01T18:22:54', '2024-11-01T18:22:54'],
-      }, // datetime
-      {
-        field: 'PEAK_TRAFFIC',
-        operator: 'overlaps',
-        value: ['18:22:54', '19:22:54'],
-      }, // time
-    ],
-  });
+export const Example: StoryObj<QueryBuilderProps> = {
+  render: (props) => {
+    const [query, setQuery] = useState<RuleGroupType>({
+      combinator: 'and',
+      rules: [
+        { field: 'AK_HIGH', operator: '>', value: '10000' }, // i32
+        { field: 'AK_LOW', operator: 'between', value: ['1000', '5000'] }, // between
+        { field: 'PRIVATEUSE', operator: 'in', value: ['Mixed', 'Private'] }, // options
+        { field: 'SERVCITY', operator: 'like', value: 'Anchorage' }, // options with headers
+        { field: 'OPERSTATUS', operator: '=', value: true }, // bool
+        { field: 'DONUTS', operator: '=', value: true }, // switch
+        { field: 'TYPE_CODE', operator: '=', value: 'Aerodrome' }, // radio
+        { field: 'NOTES', operator: 'contains', value: 'Clear skies...' }, // textarea
+        { field: 'NICKNAME', operator: 'like', value: 'Old Bumpy' }, // text
+        {
+          field: 'ESTABLISHED',
+          operator: 'during',
+          value: ['2024-10-01', '2024-11-01'],
+        }, // date
+        {
+          field: 'MAINTENANCE',
+          operator: 'overlapped',
+          value: ['2024-10-01T18:22:54', '2024-11-01T18:22:54'],
+        }, // datetime
+        {
+          field: 'PEAK_TRAFFIC',
+          operator: 'overlaps',
+          value: ['18:22:54', '19:22:54'],
+        }, // time
+      ],
+    });
 
-  const controlElements = useMemo(
-    () => ({
-      removeRuleAction: RemoveRuleAction,
-      addGroupAction: () => null, // locks out ability to add groups
-    }),
-    [],
-  );
+    const controlElements = useMemo(
+      () => ({
+        removeRuleAction: RemoveRuleAction,
+        addGroupAction: () => null, // locks out ability to add groups
+      }),
+      [],
+    );
 
-  const mapping = {
-    button: {
-      sm: { size: 'sm' as const, variant: 'hollow' as const },
-      lg: { size: 'md' as const, variant: 'hollow' as const },
-    },
-  };
+    const mapping = {
+      button: {
+        sm: { size: 'sm' as const, variant: 'hollow' as const },
+        lg: { size: 'md' as const, variant: 'hollow' as const },
+      },
+    };
 
-  useEffect(() => {
-    console.log({ query });
-  }, [query]);
+    useEffect(() => {
+      console.log({ query });
+    }, [query]);
 
-  return (
-    <QueryBuilder
-      {...props}
-      controlElements={controlElements}
-      fields={fields}
-      icons={icons}
-      mapping={mapping}
-      query={query}
-      onQueryChange={setQuery}
-    />
-  );
+    return (
+      <QueryBuilder
+        {...props}
+        controlElements={controlElements}
+        fields={fields}
+        icons={icons}
+        mapping={mapping}
+        query={query}
+        onQueryChange={setQuery}
+      />
+    );
+  },
 };
