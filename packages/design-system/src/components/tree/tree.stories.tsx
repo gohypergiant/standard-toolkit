@@ -10,8 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type Story, type StoryDefault, action } from '@ladle/react';
-import { actions } from '../../ladle';
+import type { StoryObj, Meta } from '@storybook/react';
 import { AriaText } from '../aria';
 import { Button, ButtonContext, ToggleButton } from '../button';
 import { Checkbox } from '../checkbox';
@@ -20,56 +19,62 @@ import { Icon } from '../icon';
 import { Tree, TreeGroup } from './tree';
 import type { TreeProps, TreeRenderProps } from './types';
 
-export default {
+const meta: Meta = {
   title: 'Components/Tree',
+  component: Tree,
+  tags: ['autodocs'],
+  args: {
+    allowsDragging: true,
+    allowsExpansion: true,
+    allowsVisibility: true,
+    selectionBehavior: 'replace',
+    selectionMode: 'multiple',
+    showTreeLines: true,
+    size: 'lg',
+  },
   argTypes: {
     allowsDragging: {
       control: {
         type: 'boolean',
       },
-      defaultValue: true,
     },
     allowsExpansion: {
       control: {
         type: 'boolean',
       },
-      defaultValue: true,
     },
     allowsVisibility: {
       control: {
         type: 'boolean',
       },
-      defaultValue: true,
     },
     selectionBehavior: {
       control: {
         type: 'select',
       },
       options: ['replace', 'toggle'],
-      defaultValue: 'replace',
     },
     selectionMode: {
       control: {
         type: 'select',
       },
       options: ['multiple', 'none', 'single'],
-      defaultValue: 'multiple',
     },
     showTreeLines: {
       control: {
         type: 'boolean',
       },
-      defaultValue: true,
     },
     size: {
       control: {
         type: 'select',
       },
       options: ['sm', 'lg'],
-      defaultValue: 'lg',
     },
   },
-} satisfies StoryDefault<TreeProps<unknown>>;
+};
+
+export default meta;
 
 function Node() {
   return (
@@ -183,95 +188,85 @@ function Node() {
 }
 
 // NOTE: Passing provider={false} is only necessary because of the spread of props and TS doesn't know which mode the Tree is in
-export const BasicExample: Story<TreeProps<unknown>> = (props) => (
-  <Tree
-    {...props}
-    {...actions<TreeProps<unknown>>(
-      'onAction',
-      'onScroll',
-      'onSelectionChange',
-      'onUpdate',
-    )}
-    provider={false}
-    nodes={nodes}
-    onUpdate={action('onUpdate')}
-    aria-label='Tree'
-  >
-    <Node />
-  </Tree>
-);
+export const Basic: StoryObj<TreeProps<unknown>> = {
+  render: (props: TreeProps<unknown>) => (
+    <Tree {...props} provider={false} nodes={nodes} aria-label='Tree'>
+      <Node />
+    </Tree>
+  ),
+};
 
-BasicExample.storyName = 'Basic';
-
-export const ProviderExample: Story<TreeProps<unknown>> = (props) => (
-  <Tree
-    {...props}
-    {...actions<TreeProps<unknown>>(
-      'onAction',
-      'onScroll',
-      'onSelectionChange',
-      'onUpdate',
-    )}
-    provider // NOTE: Pass provider to enable Tree renderProps children with access to state context
-    nodes={nodes}
-    onUpdate={action('onUpdate')}
-    aria-label='Tree'
-  >
-    {({
-      actions: actionsProp,
-      allowsExpansion,
-      allowsVisibility,
-      selectionMode,
-      treeGroupProps,
-    }: TreeRenderProps<unknown>) => (
-      <>
-        <Group context={ButtonContext} values={{ size: 'sm', variant: 'bare' }}>
-          {allowsExpansion && (
-            <>
-              <Button onPress={() => actionsProp.toggleIsExpanded('all', true)}>
-                Expand All
-              </Button>
-              <Button
-                onPress={() => actionsProp.toggleIsExpanded('all', false)}
-              >
-                Collapse All
-              </Button>
-            </>
-          )}
-          {allowsVisibility && (
-            <>
-              <Button onPress={() => actionsProp.toggleIsViewable('all', true)}>
-                Show All
-              </Button>
-              <Button
-                onPress={() => actionsProp.toggleIsViewable('all', false)}
-              >
-                Hide All
-              </Button>
-            </>
-          )}
-          {selectionMode === 'multiple' && (
-            <>
-              <Button onPress={() => actionsProp.toggleIsSelected('all', true)}>
-                Select All
-              </Button>
-              <Button
-                onPress={() => actionsProp.toggleIsSelected('all', false)}
-              >
-                Select None
-              </Button>
-            </>
-          )}
-        </Group>
-        <TreeGroup {...treeGroupProps}>
-          <Node />
-        </TreeGroup>
-      </>
-    )}
-  </Tree>
-);
-
-ProviderExample.storyName = 'Provider';
+export const Provider: StoryObj<TreeProps<unknown>> = {
+  render: (props: TreeProps<unknown>) => (
+    <Tree
+      {...props}
+      provider // NOTE: Pass provider to enable Tree renderProps children with access to state context
+      nodes={nodes}
+      aria-label='Tree'
+    >
+      {({
+        actions: actionsProp,
+        allowsExpansion,
+        allowsVisibility,
+        selectionMode,
+        treeGroupProps,
+      }: TreeRenderProps<unknown>) => (
+        <>
+          <Group
+            context={ButtonContext}
+            values={{ size: 'sm', variant: 'bare' }}
+          >
+            {allowsExpansion && (
+              <>
+                <Button
+                  onPress={() => actionsProp.toggleIsExpanded('all', true)}
+                >
+                  Expand All
+                </Button>
+                <Button
+                  onPress={() => actionsProp.toggleIsExpanded('all', false)}
+                >
+                  Collapse All
+                </Button>
+              </>
+            )}
+            {allowsVisibility && (
+              <>
+                <Button
+                  onPress={() => actionsProp.toggleIsViewable('all', true)}
+                >
+                  Show All
+                </Button>
+                <Button
+                  onPress={() => actionsProp.toggleIsViewable('all', false)}
+                >
+                  Hide All
+                </Button>
+              </>
+            )}
+            {selectionMode === 'multiple' && (
+              <>
+                <Button
+                  onPress={() => actionsProp.toggleIsSelected('all', true)}
+                >
+                  Select All
+                </Button>
+                <Button
+                  onPress={() => actionsProp.toggleIsSelected('all', false)}
+                >
+                  Select None
+                </Button>
+              </>
+            )}
+          </Group>
+          <TreeGroup {...treeGroupProps}>
+            <Node />
+          </TreeGroup>
+        </>
+      )}
+    </Tree>
+  ),
+};
 
 const nodes = [
   {
