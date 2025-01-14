@@ -10,20 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
+import type { StoryObj, Meta } from '@storybook/react';
 import { TooltipTrigger } from 'react-aria-components';
 import { Button } from '../button';
 import { Tooltip } from './tooltip';
 import type { TooltipProps } from './types';
 
-export default {
-  title: 'Components / Tooltip',
+const meta: Meta = {
+  title: 'Components/Tooltip',
+  component: Tooltip,
+  tags: ['autodocs'],
+  args: {
+    children: 'Hello World',
+    placement: 'top',
+    shouldFlip: true,
+  },
   argTypes: {
     children: {
       control: {
         type: 'text',
       },
-      defaultValue: 'Hello World',
     },
     containerPadding: {
       control: {
@@ -45,20 +51,22 @@ export default {
         type: 'select',
       },
       options: ['top', 'right', 'bottom', 'left'],
-      defaultValue: 'top',
     },
     shouldFlip: {
       control: {
         type: 'boolean',
       },
-      defaulValue: true,
     },
   },
-} satisfies StoryDefault<TooltipProps>;
+};
 
-export const Example: Story<TooltipProps> = (props) => (
-  <TooltipTrigger>
-    <Button>Hover me</Button>
-    <Tooltip {...props} />
-  </TooltipTrigger>
-);
+export default meta;
+
+export const Default: StoryObj<TooltipProps> = {
+  render: (props) => (
+    <TooltipTrigger>
+      <Button>Hover me</Button>
+      <Tooltip {...props} />
+    </TooltipTrigger>
+  ),
+};
