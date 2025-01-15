@@ -20,6 +20,7 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+      exclude: /^on.*/g,
     },
     backgrounds: {
       default: 'dark',
