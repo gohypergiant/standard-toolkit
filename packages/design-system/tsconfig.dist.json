@@ -5,5 +5,9 @@
     "./src/**/*.stories.tsx",
     "./src/**/*.test.ts",
     "./src/**/*.test.tsx"
-  ]
+  ],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  }
 }

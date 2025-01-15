@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-// biome-ignore lint/correctness/noUnusedImports: fix later
-import React from 'react';
 import type { Preview } from '@storybook/react';
 import { Provider } from './components';
 

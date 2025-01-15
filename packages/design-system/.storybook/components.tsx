@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-// biome-ignore lint/correctness/noUnusedImports: fix later
-import React from 'react';
 import { clsx } from 'clsx';
 import { type PropsWithChildren, useMemo } from 'react';
 import {
@@ -50,7 +48,7 @@ const style = {
   display: 'block',
 };
 
-export const Provider = ({ children }) => (
+export const Provider = ({ children }: PropsWithChildren) => (
   <ThemeProvider
     className={clsx(families.sans, bodies.md)}
     theme={themeConfig}
