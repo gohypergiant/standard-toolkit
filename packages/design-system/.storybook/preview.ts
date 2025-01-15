@@ -10,10 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-// biome-ignore lint/correctness/noUnusedImports: fix later
-import React from 'react';
 import type { Preview } from '@storybook/react';
-import { withActions } from '@storybook/addon-actions/decorator';
 import { ThemeProviderDecorator } from './components';
 
 const preview: Preview = {
@@ -29,9 +26,8 @@ const preview: Preview = {
       values: [{ name: 'dark', value: 'rgb(11,11,11)' }],
     },
     layout: 'centered',
-    actions: { argTypesRegex: '^on.*' },
   },
-  decorators: [withActions, ThemeProviderDecorator],
+  decorators: [ThemeProviderDecorator],
 };
 
 export default preview;
