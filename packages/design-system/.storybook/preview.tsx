@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+// biome-ignore lint/correctness/noUnusedImports: fix later
+import React from 'react';
 import type { Preview } from '@storybook/react';
-import { ThemeProviderDecorator } from './components';
+import { Provider } from './components';
 
 const preview: Preview = {
   parameters: {
@@ -27,7 +29,13 @@ const preview: Preview = {
     },
     layout: 'centered',
   },
-  decorators: [ThemeProviderDecorator],
+  decorators: [
+    (Story) => (
+      <Provider>
+        <Story />
+      </Provider>
+    ),
+  ],
 };
 
 export default preview;

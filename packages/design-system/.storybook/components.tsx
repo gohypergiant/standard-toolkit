@@ -14,7 +14,6 @@
 import React from 'react';
 import { clsx } from 'clsx';
 import { type PropsWithChildren, useMemo } from 'react';
-import type { Decorator } from '@storybook/react';
 import {
   type DefaultsContext,
   DefaultsProvider,
@@ -51,7 +50,7 @@ const style = {
   display: 'block',
 };
 
-export const ThemeProviderDecorator: Decorator = (Story) => (
+export const Provider = ({ children }) => (
   <ThemeProvider
     className={clsx(families.sans, bodies.md)}
     theme={themeConfig}
@@ -59,7 +58,7 @@ export const ThemeProviderDecorator: Decorator = (Story) => (
   >
     <Defaults>
       <div className={surfaces.default.flush} style={style}>
-        <Story />
+        {children}
       </div>
     </Defaults>
   </ThemeProvider>
