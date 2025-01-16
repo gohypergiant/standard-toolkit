@@ -10,15 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UnaryFunction } from '@/types';
 
 // https://stackoverflow.com/questions/49310886/typing-compose-function-in-typescript-flow-compose#answer-73082627
 
 // If its a list of functions, last being Unary
 type ComposeParams<Fns> = Fns extends readonly [
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  ...any[],
+  ...unknown[],
   infer Last extends UnaryFunction,
 ]
   ? // Get Params of the last, which returns [...argTypes], so get the first one [0]
@@ -34,13 +32,14 @@ type Composable<Fn> =
   Fn extends readonly [UnaryFunction]
     ? Fn
     : // if its a list of Unary funcs (ignoring the first)
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      Fn extends readonly [any, ...infer Rest extends readonly UnaryFunction[]]
+      Fn extends readonly [
+          unknown[],
+          ...infer Rest extends readonly UnaryFunction[],
+        ]
       ? // Start building the list of func type by using the return type of the first in Rest
         // as the arg of the next in line and recursively spread the rest (doing the same thing)
         // The first is ignored but handled by the top level ComposeReturn
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        readonly [(arg: ComposeReturn<Rest>) => any, ...Composable<Rest>]
+        readonly [(arg: ComposeReturn<Rest>) => unknown, ...Composable<Rest>]
       : never;
 
 /**

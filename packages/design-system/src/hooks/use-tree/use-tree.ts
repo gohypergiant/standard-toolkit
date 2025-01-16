@@ -75,7 +75,9 @@ export function useTree<T>({
         key: rootKey,
         children: list.items,
       } as TreeNode<T>,
-      (node) => {
+      (nodeOriginal) => {
+        let node = nodeOriginal;
+
         if (node.key === rootKey) {
           return;
         }

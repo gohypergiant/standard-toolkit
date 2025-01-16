@@ -58,9 +58,8 @@ function detailedErrors(input: string) {
   return error('Uncaught error condition.');
 }
 
-// biome-ignore lint/style/useNamingConvention: <explanation>
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export function parseMGRS(_format: any, input: string) {
+// biome-ignore lint/style/useNamingConvention: Acronym
+export function parseMGRS(_format: unknown, input: string) {
   try {
     const point = MGRS.parse(input).toPoint();
 

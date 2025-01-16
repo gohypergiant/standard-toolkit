@@ -14,8 +14,7 @@ export type Accumulator<T, R> = (acc: R, x: T) => R;
 
 export type ArrayElementType<T> = T extends (infer E)[] ? E : T;
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export type Callable = (...all: any) => any;
+export type Callable = (...all: unknown[]) => unknown;
 
 export type Comparator<T> = (x: T) => boolean;
 
@@ -23,5 +22,5 @@ export type MapFn<T, R> = (x: T, idx?: number) => R;
 
 export type Predicate<T> = (x: T, idx?: number) => boolean;
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: unknown can not be assigned to a specific type e.g. UnaryFunction
 export type UnaryFunction = (x: any) => any;

@@ -22,11 +22,12 @@ export function getKey<T>(node: TreeNodes<T>) {
 }
 
 export function mapTree<T>(
-  node: TreeNode<T>,
+  nodeOriginal: TreeNode<T>,
   // biome-ignore lint/suspicious/noConfusingVoidType: void is being used in a return type here. seems like a biome issue
   callback: (node: TreeNode<T>) => void | TreeNode<T> | undefined,
 ): TreeNode<T> {
   let changed = false;
+  let node = nodeOriginal;
 
   const children = node.children.map((child) => {
     const update = mapTree(child, callback);
@@ -59,9 +60,10 @@ type VisibilityUpdateContext = {
 
 export function toggleVisibility<T>(
   nodes: TreeNode<T>[],
-  target: Key = '',
+  targetOriginal: Key = '',
   isViewable?: boolean,
 ): TreeNode<T>[] {
+  let target = targetOriginal;
   const toggle: Key[] = [];
 
   let result = toggleVisibilityInternal(nodes, target, isViewable, {

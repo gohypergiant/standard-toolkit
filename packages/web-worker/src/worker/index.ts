@@ -17,13 +17,12 @@ let i = 0;
 
 const uuid = (namespace: string) => `${namespace}_${++i}`;
 
-// biome-ignore lint/suspicious/noExplicitAny: Figure out type hinting for "any" values
-type Actions = Record<string, (...args: any[]) => any>;
+// biome-ignore lint/suspicious/noExplicitAny: values can not be destructured out of unknown
+type Actions = Record<string, (...all: unknown[]) => any>;
 
-// biome-ignore lint/suspicious/noExplicitAny: Figure out type hinting for "any" values
-type MessageData<T> = { id: string; type: T; args: any[] };
+type MessageData<T> = { id: string; type: T; args: unknown[] };
 
-// biome-ignore lint/suspicious/noExplicitAny: Figure out type hinting for "any" values
+// biome-ignore lint/suspicious/noExplicitAny: an unknown value can not be assigned to a specific type
 type MessageDataResult = { id: string; ok?: any; error?: any };
 
 type Events = Record<string, MessageDataResult>;

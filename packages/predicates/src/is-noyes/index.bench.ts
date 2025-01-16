@@ -12,9 +12,6 @@
 
 import { bench, describe } from 'vitest';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-type Callable = (...a: any[]) => any;
-
 const TEST_VALUES = [
   1,
   0,
@@ -32,7 +29,8 @@ const TEST_VALUES = [
   'TRUE',
 ] as const;
 
-const runTestValues = (fn: Callable) => TEST_VALUES.forEach(fn);
+const runTestValues = (fn: (...a: unknown[]) => unknown) =>
+  TEST_VALUES.forEach(fn);
 
 // NOTE: doing a bench() inside of the for/of loop causes heap allocation errors
 describe('variations on isFalse|isNo|isOff|isOn|isTrue|isYes implementation', () => {
