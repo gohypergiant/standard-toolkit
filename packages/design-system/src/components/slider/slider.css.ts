@@ -80,8 +80,8 @@ export const sliderClassNames: SliderClassNames = {
             {
               query: { orientation: 'vertical' },
               gridTemplateAreas: `'label track max'
-            'input track .'
-            '. track min'`,
+              'input track .'
+              '. track min'`,
               gap: sliderSpaceVars.gap,
               gridTemplateRows: '1fr 1fr 3fr',
               height: '100%',
@@ -140,6 +140,22 @@ export const sliderClassNames: SliderClassNames = {
       '@layer': {
         [layers.components.l1]: {
           gridArea: 'track',
+          boxSizing: 'border-box',
+          zIndex: 'auto',
+          inlineSize: 'calc(100% - calc(calc(12px / 2)))',
+          minBlockSize: '12px',
+          verticalAlign: 'top',
+          marginInlineStart: 'calc(12px / 2)',
+          display: 'inline-block',
+          width: 'calc(100% - calc(calc(12px / 2) ) * 2)',
+          ':after': {
+            right: 'calc(calc(12px / 2) * -1)',
+            content: '',
+            inlineSize: 'calc(12px / 2)',
+            blockSize: '100%',
+            display: 'block',
+            position: 'absolute',
+          },
         },
       },
     }),
@@ -148,6 +164,8 @@ export const sliderClassNames: SliderClassNames = {
       height: sliderSpaceVars.track.height,
       margin: sliderSpaceVars.track.margin,
       right: 'auto',
+      marginInlineStart: 'calc(calc(12px / 2)* -1)',
+      marginInlineEnd: 'calc(calc(12px / 2)* -1)', // causes a clipping issue
       '@container': containerQueries<SliderState>(
         sliderStateVars,
         {
