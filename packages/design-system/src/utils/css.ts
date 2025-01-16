@@ -263,7 +263,7 @@ function isMultiQuery<T extends CssVarValues>(
  * To provide type safety and ease of use, this function accepts a generic and a contract
  * The generic type defines the possible values for the parameters defined within the contract
  *
- * Ex: containerQuery<{ foo: boolean }>({ foo: 'var(--foo)' }, { foo: true })
+ * Ex: `containerQuery<{ foo: boolean }>({ foo: 'var(--foo)' }, { foo: true })`
  *
  * By providing the type constraint and contract, the query parameters will have intellisense
  * on which parameters exist and what their possible values can be

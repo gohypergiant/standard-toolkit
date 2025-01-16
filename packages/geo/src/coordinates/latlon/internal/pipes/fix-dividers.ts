@@ -36,7 +36,8 @@ const insertDivider = (tokens: Tokens, index: number): PipeResult => [
  * __safe__ location to add a divider based on the existing formatting of the
  * coordinate: numbers, number positions, and number indicators.
  *
- * @pure
+ * @remarks
+ * pure function
  */
 export function fixDivider(original: Tokens, _format?: Format): PipeResult {
   // if there is already a divider then there is nothing to do

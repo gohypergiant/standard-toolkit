@@ -24,7 +24,6 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
     "dev": "pnpm tsc --watch",
-    "docs": "pnpm typedoc --logLevel Error --entryPoints src/index.ts --out documentation --readme none --disableSources --plugin typedoc-plugin-markdown",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/clock",
     "lint": "pnpm biome lint ./",
     "test": "pnpm vitest --dir=src"
@@ -34,8 +33,6 @@
     "@accelint/vitest-config": "workspace:*",
     "esbuild-plugin-file-path-extensions": "2.1.3",
     "tsup": "8.3.0",
-    "typedoc": "0.26.11",
-    "typedoc-plugin-markdown": "4.2.10",
     "vitest": "2.1.3"
   },
   "dependencies": {

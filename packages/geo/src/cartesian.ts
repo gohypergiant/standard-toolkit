@@ -22,7 +22,8 @@
  * An array containing all possible combinations of elements from the input
  * arrays, where each combination is represented as an array.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * const result = cartesian([1, 2], ['a', 'b']);

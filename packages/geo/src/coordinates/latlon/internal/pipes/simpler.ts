@@ -17,7 +17,8 @@ import type { Tokens } from '../lexer';
  * Create a simplified pattern string - numbers = 'N', bearings = 'B' - to
  * allow for simpler pattern matching.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * simplify(tokens); // 'NNNBNNNB' or similar

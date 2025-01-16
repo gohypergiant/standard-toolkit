@@ -30,3 +30,5 @@ ignore:
   - '**/dist'
   - '**/documentation'
   - '**/node_modules'
+  - 'apps/docs/.docusaurus'
+  - 'apps/docs/content/api'

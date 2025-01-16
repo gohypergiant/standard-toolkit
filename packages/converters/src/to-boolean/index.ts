@@ -21,7 +21,8 @@
  * For more restrictive comparisons against: true, false, on, off, yes, no; see
  * the predicates package (\@accelint/predicates).
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * toBoolean(1);          // true

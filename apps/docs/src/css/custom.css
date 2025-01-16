@@ -1,0 +1,131 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --hg-navy: #122836;
+  --hg-blue: #2D629F;
+  --hg-teal: #02B6A2;
+  --hg-yellow: #FDF051;
+
+  --ifm-color-primary: var(--hg-blue);
+  --ifm-color-primary-dark: #29588f;
+  --ifm-color-primary-darker: #265387;
+  --ifm-color-primary-darkest: #20456f;
+  --ifm-color-primary-light: #326caf;
+  --ifm-color-primary-lighter: #3471b7;
+  --ifm-color-primary-lightest: #4080c9;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme='dark'] {
+  /* yellow theme; higher contrast than teal */
+  --ifm-color-primary: var(--hg-yellow);
+  --ifm-color-primary-dark: #fded30;
+  --ifm-color-primary-darker: #fcec1f;
+  --ifm-color-primary-darkest: #e7d603;
+  --ifm-color-primary-light: #fdf372;
+  --ifm-color-primary-lighter: #fef483;
+  --ifm-color-primary-lightest: #fef9b4;
+
+  --ifm-background-color: var(--hg-navy);
+
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+
+  .footer:after {
+    border: 1px solid var(--hg-navy);
+  }
+
+  .navbar--fixed-top {
+    :after {
+      background: linear-gradient(
+        to right,
+        black 1%,
+        var(--hg-navy),
+        var(--hg-blue),
+        transparent
+      );
+    }
+  }
+}
+
+.footer {
+  --ifm-footer-background-color: var(--hg-teal);
+
+  background: linear-gradient(
+      to right,
+      var(--hg-yellow),
+      var(--hg-teal),
+      var(--hg-blue)
+    );
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+
+  &:after {
+    --space: 10px;
+
+    background: linear-gradient(
+      to left,
+      var(--hg-teal),
+      var(--hg-blue)
+    );
+    border-radius: 50px 0 0 0;
+    border: 1px solid white;
+    content: '';
+    height: 100%;
+    left: var(--space);
+    position: absolute;
+    top: var(--space);
+    width: 100%;
+    z-index: -1;
+  }
+}
+
+.markdown h2.anchor + ul {
+  columns: 3;
+}
+
+.navbar--fixed-top {
+  background: linear-gradient(
+    to right,
+    var(--hg-yellow),
+    var(--hg-teal),
+    var(--hg-blue)
+  );
+
+  :after {
+    --space: 5px;
+
+    background: linear-gradient(
+      to left,
+      white,
+      transparent
+    );
+    content: '';
+    height: calc(100% - var(--space) * 2);
+    left: 0;
+    opacity: 0.123;
+    position: absolute;
+    top: var(--space);
+    width: 100%;
+    z-index: -1;
+  }
+}

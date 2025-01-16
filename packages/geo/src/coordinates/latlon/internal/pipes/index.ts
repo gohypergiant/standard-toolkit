@@ -33,7 +33,8 @@ const makeGlobal = (k: keyof typeof SYMBOL_PATTERNS) =>
  *
  * @param e true = has error, false = no error
  *
- * @pure
+ * @remarks
+ * pure function
  */
 export const pipesResult = (t: Tokens, e: boolean | string): PipeResult => [
   // if there are errors do NOT return the tokens

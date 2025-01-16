@@ -31,7 +31,8 @@ export type ParseResults = [Tokens, Errors];
  * @returns
  * tuple with two values: tokens, and errors
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * const input = '1 2 3 / 4 5 6'
