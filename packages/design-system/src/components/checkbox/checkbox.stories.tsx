@@ -46,7 +46,7 @@ const meta: Meta = {
 
 export default meta;
 
-export const Single: StoryObj<CheckboxProps> = {
+export const Uncontrolled: StoryObj<CheckboxProps> = {
   args: {
     label: 'Checkbox Label',
     isDisabled: false,
@@ -55,25 +55,30 @@ export const Single: StoryObj<CheckboxProps> = {
     alignInput: 'end',
     ...actions<CheckboxProps>('onChange'),
   },
-  argTypes: {
-    isDisabled: {
-      control: {
-        type: 'boolean',
-      },
-      defaultValue: false,
-    },
-    isReadOnly: {
-      control: {
-        type: 'boolean',
-      },
-      defaultValue: false,
-    },
-    isInvalid: {
-      control: {
-        type: 'boolean',
-      },
-      defaultValue: false,
-    },
+  render: ({ label, ...rest }) => (
+    <Checkbox {...rest}>
+      {({ isIndeterminate }) => (
+        <>
+          <Icon stroke='currentcolor'>
+            {isIndeterminate ? indeterminateSvg : checkedSvg}
+          </Icon>
+          {label && <AriaText>{label}</AriaText>}
+        </>
+      )}
+    </Checkbox>
+  ),
+};
+
+/** Control via the `isSelected` prop */
+export const Controlled: StoryObj<CheckboxProps> = {
+  args: {
+    label: 'Checkbox Label',
+    isSelected: false,
+    isDisabled: false,
+    isReadOnly: false,
+    isInvalid: false,
+    alignInput: 'end',
+    ...actions<CheckboxProps>('onChange'),
   },
   render: ({ label, ...rest }) => (
     <Checkbox {...rest}>

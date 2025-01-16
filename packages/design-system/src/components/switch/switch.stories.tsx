@@ -53,4 +53,11 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: StoryObj<SwitchProps> = {};
+export const Uncontrolled: StoryObj<SwitchProps> = {};
+
+/** Controlled via the `isSelected` prop */
+export const Controlled: StoryObj<SwitchProps> = {
+  args: {
+    isSelected: false,
+  },
+};

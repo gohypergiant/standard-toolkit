@@ -75,21 +75,9 @@ const meta: Meta = {
       },
     },
   },
-};
-
-export default meta;
-
-type StoryProps = SelectProps<object> & {
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  showLabel?: boolean;
-};
-
-export const Default: StoryObj<StoryProps> = {
   render: ({ description, errorMessage, label, showLabel, ...rest }) => (
     <Select {...rest} aria-label={label}>
-      {({ isOpen }) => (
+      {({ isOpen }: { isOpen: boolean }) => (
         <>
           {showLabel && <AriaLabel>{label}</AriaLabel>}
           <Button>
@@ -144,4 +132,30 @@ export const Default: StoryObj<StoryProps> = {
       )}
     </Select>
   ),
+};
+
+export default meta;
+
+type StoryProps = SelectProps<object> & {
+  description?: string;
+  errorMessage?: string;
+  label?: string;
+  showLabel?: boolean;
+};
+
+export const Uncontrolled: StoryObj<StoryProps> = {};
+
+/** Control via the `selectedKey` prop */
+export const Controlled: StoryObj<StoryProps> = {
+  args: {
+    selectedKey: 'Red Panda',
+  },
+  argTypes: {
+    selectedKey: {
+      control: {
+        type: 'select',
+      },
+      options: ['Aardvark', 'Cat', 'Dog', 'Kangaroo', 'Red Panda', 'Snake'],
+    },
+  },
 };

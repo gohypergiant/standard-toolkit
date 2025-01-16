@@ -19,22 +19,10 @@ const meta: Meta = {
   title: 'Components/Input',
   component: Input,
   tags: ['autodocs'],
-};
-
-export default meta;
-
-export const Default: StoryObj<InputProps> = {
   args: {
     placeholder: 'Placeholder text',
     size: 'sm',
-    ...actions<InputProps>(
-      'onChange',
-      'onHoverChange',
-      'onHoverEnd',
-      'onHoverStart',
-      'onBlur',
-      'onFocus',
-    ),
+    ...actions<InputProps>('onChange', 'onBlur', 'onFocus'),
   },
   argTypes: {
     'aria-invalid': {
@@ -75,5 +63,16 @@ export const Default: StoryObj<InputProps> = {
       },
       options: ['email', 'number', 'password', 'search', 'tel', 'text', 'url'],
     },
+  },
+};
+
+export default meta;
+
+export const Uncontrolled: StoryObj<InputProps> = {};
+
+/** Controlled via the `value` prop */
+export const Controlled: StoryObj<InputProps> = {
+  args: {
+    value: '',
   },
 };

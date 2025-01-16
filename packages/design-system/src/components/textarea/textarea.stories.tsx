@@ -21,14 +21,7 @@ const meta: Meta = {
   tags: ['autodocs'],
   args: {
     resize: 'both',
-    ...actions<TextAreaProps>(
-      'onChange',
-      'onHoverChange',
-      'onHoverEnd',
-      'onHoverStart',
-      'onBlur',
-      'onFocus',
-    ),
+    ...actions<TextAreaProps>('onChange', 'onBlur', 'onFocus'),
   },
   argTypes: {
     disabled: {
@@ -65,4 +58,11 @@ export default meta;
 
 // TODO: pressing enter and trying to type on a new line is buggy
 // this existed in the Uncontrolled example in the ladle version too 😓
-export const Default: StoryObj<TextAreaProps> = {};
+export const Uncontrolled: StoryObj<TextAreaProps> = {};
+
+/** Controlled via the `value` prop */
+export const Controlled: StoryObj<TextAreaProps> = {
+  args: {
+    value: '',
+  },
+};

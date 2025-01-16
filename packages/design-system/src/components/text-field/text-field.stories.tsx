@@ -64,6 +64,14 @@ const meta: Meta = {
       options: ['sm', 'lg'],
     },
   },
+  render: ({ description, errorMessage, label, ...rest }) => (
+    <TextField defaultValue='' {...rest}>
+      <AriaLabel>{label}</AriaLabel>
+      <Input placeholder='Placeholder text' />
+      {description && <AriaText slot='description'>{description}</AriaText>}
+      <AriaFieldError>{errorMessage}</AriaFieldError>
+    </TextField>
+  ),
 };
 
 export default meta;
@@ -74,13 +82,11 @@ type StoryProps = TextFieldProps & {
   label?: string;
 };
 
-export const Default: StoryObj<StoryProps> = {
-  render: ({ description, errorMessage, label, ...rest }) => (
-    <TextField defaultValue='' {...rest}>
-      <AriaLabel>{label}</AriaLabel>
-      <Input placeholder='Placeholder text' />
-      {description && <AriaText slot='description'>{description}</AriaText>}
-      <AriaFieldError>{errorMessage}</AriaFieldError>
-    </TextField>
-  ),
+export const Uncontrolled: StoryObj<StoryProps> = {};
+
+/** Controlled via the `value` prop */
+export const Controlled: StoryObj<StoryProps> = {
+  args: {
+    value: '',
+  },
 };

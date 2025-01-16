@@ -49,11 +49,6 @@ const meta: Meta = {
       options: ['sm', 'lg'],
     },
   },
-};
-
-export default meta;
-
-export const Default: StoryObj<SearchFieldProps> = {
   render: (props) => (
     <SearchField aria-label='SearchField' defaultValue='' {...props}>
       <AriaGroup>
@@ -85,4 +80,15 @@ export const Default: StoryObj<SearchFieldProps> = {
       </AriaGroup>
     </SearchField>
   ),
+};
+
+export default meta;
+
+export const Uncontrolled: StoryObj<SearchFieldProps> = {};
+
+/** Controled via the `value` prop */
+export const Controlled: StoryObj<SearchFieldProps> = {
+  args: {
+    value: '',
+  },
 };

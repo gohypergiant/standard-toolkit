@@ -27,11 +27,6 @@ const meta: Meta = {
   title: 'Components/NumberField',
   component: NumberField,
   tags: ['autodocs'],
-};
-
-export default meta;
-
-export const Default: StoryObj<StoryProps> = {
   args: {
     description: '',
     errorMessage: '',
@@ -103,4 +98,15 @@ export const Default: StoryObj<StoryProps> = {
       <AriaFieldError>{errorMessage}</AriaFieldError>
     </NumberField>
   ),
+};
+
+export default meta;
+
+export const Uncontrolled: StoryObj<StoryProps> = {};
+
+/** Controlled via the value prop */
+export const Controlled: StoryObj<StoryProps> = {
+  args: {
+    value: 0,
+  },
 };

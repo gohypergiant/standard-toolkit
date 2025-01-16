@@ -25,6 +25,13 @@ const meta: Meta = {
   component: ComboBox,
   tags: ['autodocs'],
   args: {
+    description: '',
+    errorMessage: '',
+    isDisabled: false,
+    isInvalid: false,
+    label: 'Favorite animals',
+    showLabel: true,
+    size: 'lg',
     ...actions<ComboBoxProps<object>>(
       'onBlur',
       'onFocus',
@@ -33,27 +40,6 @@ const meta: Meta = {
       'onOpenChange',
       'onSelectionChange',
     ),
-  },
-};
-
-export default meta;
-
-export const Default: StoryObj<
-  ComboBoxProps<object> & {
-    description?: string;
-    errorMessage?: string;
-    label?: string;
-    showLabel?: boolean;
-  }
-> = {
-  args: {
-    description: '',
-    errorMessage: '',
-    isDisabled: false,
-    isInvalid: false,
-    label: 'Favorite animals',
-    showLabel: true,
-    size: 'lg',
   },
   argTypes: {
     description: {
@@ -95,7 +81,7 @@ export const Default: StoryObj<
   },
   render: ({ description, errorMessage, label, showLabel, ...rest }) => (
     <ComboBox {...rest} aria-label={label}>
-      {({ isOpen }) => (
+      {({ isOpen }: { isOpen: boolean }) => (
         <>
           {showLabel && <AriaLabel>{label}</AriaLabel>}
           <AriaGroup>
@@ -150,4 +136,30 @@ export const Default: StoryObj<
       )}
     </ComboBox>
   ),
+};
+
+export default meta;
+
+type StoryProps = ComboBoxProps<object> & {
+  description?: string;
+  errorMessage?: string;
+  label?: string;
+  showLabel?: boolean;
+};
+
+export const Uncontrolled: StoryObj<StoryProps> = {};
+
+/** Controlled via the `selectedKey` prop */
+export const Controlled: StoryObj<StoryProps> = {
+  args: {
+    selectedKey: 'Red Panda',
+  },
+  argTypes: {
+    selectedKey: {
+      control: {
+        type: 'select',
+      },
+      options: ['Aardvark', 'Cat', 'Dog', 'Kangaroo', 'Red Panda', 'Snake'],
+    },
+  },
 };
