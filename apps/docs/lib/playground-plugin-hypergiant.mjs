@@ -16,10 +16,10 @@
  * @param {import('typedoc').Application} app
  */
 export function load(app) {
-  app.converter.on('createSignature', convertBlock);
+  app.converter.on('createSignature', convertPlaygroundBlockToComponent);
 }
 
-function convertBlock(context, reflection) {
+function convertPlaygroundBlockToComponent(context, reflection) {
   const playgroundTag = reflection?.comment?.blockTags?.find(
     ({ tag }) => tag === '@playground',
   );
