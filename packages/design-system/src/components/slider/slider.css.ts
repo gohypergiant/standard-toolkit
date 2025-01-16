@@ -69,7 +69,6 @@ export const sliderClassNames: SliderClassNames = {
           'track track'
           'min max'`,
           gridTemplateColumns: '1fr auto',
-          width: '200px', //remove
           '@container': containerQueries<SliderState>(
             sliderStateVars,
             {
