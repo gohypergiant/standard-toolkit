@@ -12,5 +12,5 @@
 
 /** @type {Partial<import("typedoc").TypeDocOptions>} */
 export default {
-  name: '@accelint/constants',
+  name: '@accelint/math',
 };
