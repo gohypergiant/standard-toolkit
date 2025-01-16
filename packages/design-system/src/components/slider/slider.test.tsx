@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { Slider, SliderThumb, SliderTrack } from './slider';
+import { Slider, SliderBar, SliderThumb, SliderTrack } from './slider';
 import { describe, expect, it } from 'vitest';
 import type { SliderProps } from './types';
 import { AriaLabel, AriaText } from '../aria';
@@ -11,7 +11,7 @@ function setup({
       <AriaLabel>Foo</AriaLabel>
       <Input />
       <SliderTrack>
-        <div /> {/* mimics slider bar */}
+        <SliderBar />
         <SliderThumb />
       </SliderTrack>
       <AriaText slot='min'>0</AriaText>

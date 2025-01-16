@@ -344,12 +344,13 @@ export {
   sliderStateVars,
   sliderThumbStateVars,
   sliderTrackStateVars,
-  type LabelAlignment,
+  type SliderLabelAlignment,
   type SliderClassNames,
   type SliderProps,
   type SliderRenderProps,
   type SliderState,
   type SliderThumbProps,
+  type SliderThumbState,
 } from './slider';
 export {
   Switch,

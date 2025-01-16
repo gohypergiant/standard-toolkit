@@ -1,29 +1,35 @@
 import { style } from '@vanilla-extract/css';
 import {
   type SliderState,
-  // type SliderThumbState,
+  type SliderThumbState,
   applyThemeVars,
   assignPartialVars,
-  defaultRadiusVarValues,
-  defaultSizesVarValues,
+  sizeVars,
   genericColorVars,
   semanticColorVars,
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
   sliderThumbStateVars,
-  sliderTrackStateVars,
   type ThemeContext,
+  radiusVars,
 } from '../../src';
-import type { SliderThumbState } from '../../src/components/slider/types';
 
 export const Slider: ThemeContext['Slider'] = {
   slider: {
-    container: style(
+    slider: style(
       applyThemeVars<SliderState>(sliderStateVars, [
         {
           vars: assignPartialVars(sliderSpaceVars, {
-            gridGap: defaultSizesVarValues.v04,
+            gap: sizeVars.v04,
+            thumb: {
+              height: sizeVars.v05,
+              width: sizeVars.v05,
+              borderRadius: radiusVars.round,
+            },
+            track: {
+              height: sizeVars.v02,
+            },
           }),
         },
       ]),
@@ -70,39 +76,17 @@ export const Slider: ThemeContext['Slider'] = {
     ),
   },
   thumb: {
-    container: style(
-      applyThemeVars<SliderThumbState>(sliderThumbStateVars, [
-        {
-          vars: assignPartialVars(sliderSpaceVars, {
-            width: defaultSizesVarValues.v05,
-          }),
-        },
-      ]),
-    ),
     thumb: style(
       applyThemeVars<SliderThumbState>(sliderThumbStateVars, [
         {
-          vars: assignPartialVars(
-            {
-              color: sliderColorVars,
-              space: sliderSpaceVars,
-            },
-            {
-              color: {
-                color: semanticColorVars.background.highlight.bold,
-              },
-              space: {
-                height: defaultSizesVarValues.v05,
-                width: defaultSizesVarValues.v05,
-                borderRadius: defaultRadiusVarValues.round,
-              },
-            },
-          ),
+          vars: assignPartialVars(sliderColorVars, {
+            background: semanticColorVars.background.highlight.bold,
+          }),
         },
         {
           query: { isHovered: true },
           vars: assignPartialVars(sliderColorVars, {
-            boxShadow: `0px 0px 0 6px rgb(from ${semanticColorVars.background.highlight.bold} r g b / 0.25)`,
+            boxShadow: `0 0 0 6px rgb(from ${semanticColorVars.background.highlight.bold} r g b / 0.25)`,
           }),
         },
       ]),
@@ -110,7 +94,15 @@ export const Slider: ThemeContext['Slider'] = {
   },
   track: {
     container: style(
-      applyThemeVars<SliderState>(sliderTrackStateVars, [
+      applyThemeVars<SliderState>(sliderStateVars, [
+        {
+          vars: assignPartialVars(sliderSpaceVars, {
+          }),
+        },
+      ]),
+    ),
+    track: style(
+      applyThemeVars<SliderState>(sliderStateVars, [
         {
           vars: assignPartialVars(
             {
@@ -119,11 +111,15 @@ export const Slider: ThemeContext['Slider'] = {
             },
             {
               color: {
-                color: semanticColorVars.background.surface.overlay,
+                track: {
+                  color: semanticColorVars.background.surface.overlay,
+                },
               },
               space: {
-                trackHeight: defaultSizesVarValues.v02,
-                trackMargin: `${defaultSizesVarValues.v04} 0`,
+                track: {
+                  height: sizeVars.v02,
+                  margin: `${sizeVars.v04} 0`,
+                },
               },
             },
           ),
@@ -131,12 +127,32 @@ export const Slider: ThemeContext['Slider'] = {
       ]),
     ),
   },
-  input: {
+  bar: {
     container: style(
       applyThemeVars<SliderState>(sliderStateVars, [
         {
+          vars: assignPartialVars(
+            { color: sliderColorVars, space: sliderSpaceVars },
+            {
+              color: {
+                bar: {
+                  color: semanticColorVars.background.highlight.bold,
+                },
+              },
+              space: {
+                bar: {
+                  height: sizeVars.v02,
+                },
+              },
+            },
+          ),
+        },
+        {
+          query: { orientation: 'vertical' },
           vars: assignPartialVars(sliderSpaceVars, {
-            gap: defaultSizesVarValues.v03,
+            bar: {
+              width: '2px',
+            },
           }),
         },
       ]),

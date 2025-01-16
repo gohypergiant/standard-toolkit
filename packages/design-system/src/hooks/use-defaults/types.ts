@@ -52,6 +52,7 @@ import type {
   SliderThumbProps,
   SliderTrackProps,
   SliderOutputProps,
+  SliderBarProps,
 } from '../../components/slider/types';
 import type { SwitchProps } from '../../components/switch/types';
 import type {
@@ -131,7 +132,7 @@ export type DefaultsContext = DefaultsOf<{
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Slider: SliderProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
-  SliderBar: SliderProps;
+  SliderBar: SliderBarProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   SliderInput: SliderInputProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase

@@ -20,7 +20,9 @@ import {
 import {
   AriaLabelContext,
   AriaTextContext,
+  GroupContext,
   InputContext,
+  type GroupProps,
   type InputProps,
 } from '../../components';
 import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
@@ -32,6 +34,7 @@ import type {
   SliderTrackProps,
   SliderTrackRenderProps,
   SliderOutputProps,
+  SliderBarProps,
 } from './types';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import {
@@ -39,7 +42,79 @@ import {
   sliderThumbStateVars,
   sliderTrackStateVars,
   sliderStateVars,
+  sliderBarStateVars,
 } from './slider.css';
+
+export const SliderBarContext =
+  createContext<ContextValue<SliderBarProps, HTMLDivElement>>(null);
+
+/**
+ * SliderBar is optional, but must be used as a child of SliderTrack
+ */
+export const SliderBar = forwardRef(function SliderBar(
+  props: SliderBarProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  [props, ref] = useContextProps(props, ref, SliderBarContext);
+
+  props = useDefaultProps(props, 'SliderBar');
+
+  const { classNames: classNamesProp, ...rest } = props;
+
+  const theme = useTheme();
+
+  const classNames = useMemo(
+    () => mergeClassNames(sliderClassNames, theme.Slider, classNamesProp),
+    [theme.Slider, classNamesProp],
+  );
+
+  const style = useCallback(
+    (renderProps: SliderTrackRenderProps) =>
+      inlineVars(sliderBarStateVars, renderProps),
+    [],
+  );
+
+  const children = useCallback(
+    (renderProps: SliderTrackRenderProps) => (
+      <div
+        className={classNames?.bar?.bar}
+        style={{
+          position: 'absolute',
+          ...renderProps.state.orientation === 'horizontal' && ({
+            left: renderProps.state.getThumbValue(1)
+            ? `${renderProps.state.getThumbValue(0)}%`
+            : 0,
+          width: renderProps.state.getThumbValue(1)
+            ? `${(renderProps.state.getThumbValue(1) || 0) - (renderProps.state.getThumbValue(0) || 0)}%`
+            : `${renderProps.state.getThumbValue(0)}%`,
+          }),
+          ...renderProps.state.orientation === 'vertical' && ({
+            bottom: renderProps.state.getThumbValue(1)
+            ? `${renderProps.state.getThumbValue(0)}%`
+            : 0,
+          height: renderProps.state.getThumbValue(1)
+          ? `${(renderProps.state.getThumbValue(1) || 0) - (renderProps.state.getThumbValue(0) || 0)}%`
+          : `${renderProps.state.getThumbValue(0)}%`,
+          }),
+        }}
+      >
+        {callRenderProps(undefined, renderProps)}
+      </div>
+    ),
+    [classNames?.bar?.bar],
+  );
+
+  return (
+    <RACSliderTrack
+      {...rest}
+      ref={ref}
+      style={style}
+      className={classNames?.bar?.container}
+    >
+      {children}
+    </RACSliderTrack>
+  );
+});
 
 export const SliderOutputContext =
   createContext<ContextValue<SliderOutputProps, HTMLOutputElement>>(null);
@@ -67,22 +142,16 @@ export const SliderOutput = forwardRef(function SliderOutput(
     [],
   );
 
-  const values = useMemo<
-    [
-      [
-        typeof SliderOutputContext,
-        ContextValue<SliderOutputProps, HTMLOutputElement>,
-      ],
-    ]
-  >(() => [[SliderOutputContext, { classNames }]], [classNames]);
-
   const children = useCallback(
     (renderProps: SliderRenderProps) => (
-      <Provider values={values}>
-        {callRenderProps(childrenProp, renderProps)}
-      </Provider>
+        <div className={classNames?.output?.output}>
+          {callRenderProps(childrenProp, {
+            ...renderProps,
+            defaultChildren: null 
+          })}
+        </div>
     ),
-    [childrenProp, values],
+    [childrenProp, classNames?.output?.output],
   );
 
   return (
@@ -97,13 +166,13 @@ export const SliderOutput = forwardRef(function SliderOutput(
   );
 });
 
-/**
- * SliderTrack must be used as a child of Slider and a parent of SliderThumb
- */
-
 export const SliderTrackContext =
-  createContext<ContextValue<SliderTrackProps, HTMLDivElement>>(null);
+createContext<ContextValue<SliderTrackProps, HTMLDivElement>>(null);
 
+/**
+ * SliderTrack must be used as a child of Slider, a parent of SliderThumb,
+ * and if used, a parent of SliderBar
+ */
 export const SliderTrack = forwardRef(function SliderTrack(
   props: SliderTrackProps,
   ref: ForwardedRef<HTMLDivElement>,
@@ -133,21 +202,33 @@ export const SliderTrack = forwardRef(function SliderTrack(
         typeof SliderThumbContext,
         ContextValue<SliderThumbProps, HTMLDivElement>,
       ],
+      [typeof SliderBarContext, ContextValue<SliderBarProps, HTMLDivElement>],
     ]
-  >(() => [[SliderThumbContext, { classNames }]], [classNames]);
+  >(
+    () => [
+      [SliderThumbContext, { classNames }],
+      [SliderBarContext, { classNames }],
+    ],
+    [classNames],
+  );
 
   const children = useCallback(
     (renderProps: SliderTrackRenderProps) => (
       <Provider values={values}>
-        {callRenderProps(childrenProp, renderProps)}
+        <div className={classNames?.track?.track}>
+          {callRenderProps(childrenProp, {
+            ...renderProps,
+            defaultChildren: null 
+          })}
+        </div>
       </Provider>
     ),
-    [childrenProp, values],
+    [childrenProp, values, classNames?.track?.track],
   );
 
   return (
     <RACSliderTrack
-      {...rest}
+      {...rest} 
       ref={ref}
       className={classNames?.track?.container}
       style={style}
@@ -157,13 +238,12 @@ export const SliderTrack = forwardRef(function SliderTrack(
   );
 });
 
+export const SliderThumbContext =
+createContext<ContextValue<SliderThumbProps, HTMLDivElement>>(null);
+
 /**
  * SliderThumb must be used as a child of SliderTrack
  */
-
-export const SliderThumbContext =
-  createContext<ContextValue<SliderThumbProps, HTMLDivElement>>(null);
-
 export const SliderThumb = forwardRef(function SliderThumb(
   props: SliderThumbProps,
   ref: ForwardedRef<HTMLDivElement>,
@@ -197,7 +277,7 @@ export const SliderThumb = forwardRef(function SliderThumb(
         <div className={classNames?.thumb?.thumb}>
           {callRenderProps(childrenProp, {
             ...renderProps,
-            orientation: 'horizontal',
+            defaultChildren: null 
           })}
         </div>
       </Provider>
@@ -231,9 +311,9 @@ export const Slider = forwardRef(function Slider(
   const {
     children: childrenProp,
     classNames: classNamesProp,
-    alignLabel = 'top',
-    minValue = 0,
-    maxValue = 100,
+    alignLabel,
+    minValue,
+    maxValue,
     ...rest
   } = props;
 
@@ -266,6 +346,7 @@ export const Slider = forwardRef(function Slider(
         typeof SliderTrackContext,
         ContextValue<SliderTrackProps, HTMLDivElement>,
       ],
+      [typeof GroupContext, ContextValue<GroupProps<InputProps, HTMLInputElement>, HTMLDivElement>],
     ]
   >(
     () => [
@@ -283,6 +364,7 @@ export const Slider = forwardRef(function Slider(
       [InputContext, { classNames: classNames?.input }],
       [SliderOutputContext, { classNames }],
       [SliderTrackContext, { classNames }],
+      [GroupContext, { classNames: classNames?.group }],
     ],
     [classNames],
   );
@@ -290,7 +372,7 @@ export const Slider = forwardRef(function Slider(
   const children = useCallback(
     (renderProps: SliderRenderProps) => (
       <Provider values={values}>
-        <div className={classNames?.slider?.container}>
+        <div className={classNames?.slider?.slider}>
           {callRenderProps(childrenProp, renderProps)}
         </div>
       </Provider>

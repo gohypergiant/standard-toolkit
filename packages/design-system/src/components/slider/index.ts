@@ -1,6 +1,7 @@
 // __private-exports
 export {
   Slider,
+  SliderBar,
   SliderContext,
   SliderThumb,
   SliderTrack,
@@ -13,10 +14,11 @@ export {
   sliderTrackStateVars,
 } from './slider.css';
 export {
-  type LabelAlignment,
+  type SliderLabelAlignment,
   type SliderClassNames,
   type SliderProps,
   type SliderRenderProps,
   type SliderState,
   type SliderThumbProps,
+  type SliderThumbState,
 } from './types';

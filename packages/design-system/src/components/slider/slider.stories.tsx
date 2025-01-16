@@ -1,12 +1,11 @@
 import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
-import { Slider, SliderThumb, SliderTrack, type SliderProps } from '.';
+import { Slider, SliderBar, SliderThumb, SliderTrack, type SliderProps } from '.';
 import { AriaLabel, AriaText } from '../aria';
 import { Input } from '../input';
 import { TooltipTrigger } from 'react-aria-components';
 import { Tooltip } from '../tooltip';
 import type { SliderRenderProps } from './types';
 import { useState } from 'react';
-import { sliderBar } from './slider.stories.css';
 import { Group } from '../group';
 import { NumberField } from '../number-field';
 
@@ -34,7 +33,14 @@ export default {
   },
 } satisfies StoryDefault;
 
-const args: ArgTypes<SliderProps> = {
+const args: ArgTypes<
+  SliderProps & {
+    label: string;
+    includeTextField: boolean;
+    includeRangeLabel: boolean;
+    includeOutputField: boolean;
+  }
+> = {
   label: {
     control: {
       type: 'text',
@@ -45,8 +51,15 @@ const args: ArgTypes<SliderProps> = {
     control: {
       type: 'select',
     },
-    options: ['top', 'left'],
-    defaultValue: 'top',
+    options: ['stacked', 'inline'],
+    defaultValue: 'stacked',
+  },
+  orientation: {
+    control: {
+      type: 'select',
+    },
+    options: ['horizontal', 'vertical'],
+    defaultValue: 'horizontal'
   },
   includeTextField: {
     control: {
@@ -80,13 +93,21 @@ const args: ArgTypes<SliderProps> = {
   },
 };
 
-export const SliderExample: Story<SliderProps> = ({
+export const SliderExample: Story<
+  SliderProps & {
+    label: string;
+    includeTextField: boolean;
+    includeRangeLabel: boolean;
+    includeOutputField: boolean;
+  }
+> = ({
   label,
   minValue,
   maxValue,
   includeRangeLabel,
   includeTextField,
   includeOutputField,
+  // orientation,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -108,18 +129,7 @@ export const SliderExample: Story<SliderProps> = ({
           <SliderTrack>
             {({ state }: SliderRenderProps) => (
               <>
-                <div
-                  className={sliderBar}
-                  style={{
-                    position: 'absolute',
-                    left: state.getThumbValue(1)
-                      ? `${state.getThumbValue(0)}%`
-                      : 0,
-                    width: state.getThumbValue(1)
-                      ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                      : `${state.getThumbValue(0)}%`,
-                  }}
-                />
+                <SliderBar />
                 <TooltipTrigger isOpen={open}>
                   <SliderThumb
                     onHoverChange={(isHovered) => setOpen(isHovered)}
@@ -143,7 +153,14 @@ SliderExample.argTypes = {
   ...args,
 };
 
-export const SliderExampleWithOutput: Story<SliderProps> = ({
+export const SliderExampleWithOutput: Story<
+  SliderProps & {
+    label: string;
+    includeTextField: boolean;
+    includeRangeLabel: boolean;
+    includeOutputField: boolean;
+  }
+> = ({
   label,
   minValue,
   maxValue,
@@ -163,18 +180,7 @@ export const SliderExampleWithOutput: Story<SliderProps> = ({
           <SliderTrack>
             {({ state }: SliderRenderProps) => (
               <>
-                <div
-                  className={sliderBar}
-                  style={{
-                    position: 'absolute',
-                    left: state.getThumbValue(1)
-                      ? `${state.getThumbValue(0)}%`
-                      : 0,
-                    width: state.getThumbValue(1)
-                      ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                      : `${state.getThumbValue(0)}%`,
-                  }}
-                />
+                <SliderBar />
                 <TooltipTrigger isOpen={open}>
                   <SliderThumb
                     onHoverChange={(isHovered) => setOpen(isHovered)}
@@ -204,7 +210,14 @@ SliderExampleWithOutput.argTypes = {
   },
 };
 
-export const ControlledSliderExample: Story<SliderProps> = ({
+export const ControlledSliderExample: Story<
+  SliderProps & {
+    label: string;
+    includeTextField: boolean;
+    includeRangeLabel: boolean;
+    includeOutputField: boolean;
+  }
+> = ({
   label,
   minValue,
   maxValue,
@@ -235,18 +248,7 @@ export const ControlledSliderExample: Story<SliderProps> = ({
           <SliderTrack>
             {({ state }: SliderRenderProps) => (
               <>
-                <div
-                  className={sliderBar}
-                  style={{
-                    position: 'absolute',
-                    left: state.getThumbValue(1)
-                      ? `${state.getThumbValue(0)}%`
-                      : 0,
-                    width: state.getThumbValue(1)
-                      ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                      : `${state.getThumbValue(0)}%`,
-                  }}
-                />
+                <SliderBar />
                 <TooltipTrigger isOpen={open}>
                   <SliderThumb
                     onHoverChange={(isHovered) => setOpen(isHovered)}
@@ -282,7 +284,14 @@ ControlledSliderExample.argTypes = {
   },
 };
 
-export const RangeSliderExample: Story<SliderProps> = ({
+export const RangeSliderExample: Story<
+  SliderProps & {
+    label: string;
+    includeTextField: boolean;
+    includeRangeLabel: boolean;
+    includeOutputField: boolean;
+  }
+> = ({
   label,
   minValue,
   maxValue,
@@ -324,20 +333,10 @@ export const RangeSliderExample: Story<SliderProps> = ({
             )}
             <SliderTrack>
               {({ state }: SliderRenderProps) =>
-                state.values.map((_value: number, i: number) => (
+              <>
+              <SliderBar />
+                {state.values.map((_value: number, i: number) => (
                   <div key={i}>
-                    <div
-                      className={sliderBar}
-                      style={{
-                        position: 'absolute',
-                        left: state.getThumbValue(1)
-                          ? `${state.getThumbValue(0)}%`
-                          : 0,
-                        width: state.getThumbValue(1)
-                          ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                          : `${state.getThumbValue(0)}%`,
-                      }}
-                    />
                     <TooltipTrigger isOpen={open[i]} key={i}>
                       <SliderThumb
                         index={i}
@@ -345,11 +344,12 @@ export const RangeSliderExample: Story<SliderProps> = ({
                         onHoverChange={(isHovered) =>
                           setOpen({ [i]: isHovered })
                         }
-                      />
+                        />
                       <Tooltip>{state.values[i]}</Tooltip>
                     </TooltipTrigger>
                   </div>
-                ))
+                ))}
+              </>
               }
             </SliderTrack>
             <AriaText slot='min'>{minValue || 0}</AriaText>
@@ -374,8 +374,12 @@ RangeSliderExample.argTypes = {
 // added inputValues to make Ladle controls easier to use
 export const ControlledRangeSliderExample: Story<
   SliderProps & {
+    label: string;
     inputValueMin: number;
     inputValueMax: number;
+    includeTextField: boolean;
+    includeRangeLabel: boolean;
+    includeOutputField: boolean;
   }
 > = ({
   label,
@@ -432,32 +436,25 @@ export const ControlledRangeSliderExample: Story<
             </Group>
           )}
           <SliderTrack>
-            {({ state }: SliderRenderProps) =>
-              state.values.map((_value: number, i: number) => (
-                <div key={i}>
-                  <div
-                    className={sliderBar}
-                    style={{
-                      position: 'absolute',
-                      left: state.getThumbValue(1)
-                        ? `${state.getThumbValue(0)}%`
-                        : 0,
-                      width: state.getThumbValue(1)
-                        ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-                        : `${state.getThumbValue(0)}%`,
-                    }}
-                  />
-                  <TooltipTrigger isOpen={open[i]}>
-                    <SliderThumb
-                      key={i}
-                      index={i}
-                      onHoverChange={(isHovered) => setOpen({ [i]: isHovered })}
-                    />
-                    <Tooltip>{state.values[i]}</Tooltip>
-                  </TooltipTrigger>
-                </div>
-              ))
-            }
+            {({ state }: SliderRenderProps) => (
+              <>
+                <SliderBar />
+                {state.values.map((_value: number, i: number) => (
+                  <div key={i}>
+                    <TooltipTrigger isOpen={open[i]}>
+                      <SliderThumb
+                        key={i}
+                        index={i}
+                        onHoverChange={(isHovered) =>
+                          setOpen({ [i]: isHovered })
+                        }
+                      />
+                      <Tooltip>{state.values[i]}</Tooltip>
+                    </TooltipTrigger>
+                  </div>
+                ))}
+              </>
+            )}
           </SliderTrack>
           <AriaText slot='min'>{minValue || 0}</AriaText>
           <AriaText slot='max'>{maxValue || 100}</AriaText>
