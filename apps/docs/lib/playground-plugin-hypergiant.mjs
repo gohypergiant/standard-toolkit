@@ -25,14 +25,14 @@ function convertPlaygroundBlockToComponent(context, reflection) {
   );
 
   if (playgroundTag) {
-    const code = playgroundTag.content[0].text;
+    const code = playgroundTag.content[0].text.trim();
     playgroundTag.content = [
       {
         kind: 'text',
         text: `import { Playground } from '@site/src/components/playground';
 
 <Playground
-  code={\`${code.trim()}\`}
+  code={\`${code}\`}
   dependencies={['${context.project.name}']}
 />
         `,
