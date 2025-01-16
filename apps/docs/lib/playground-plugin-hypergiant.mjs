@@ -19,6 +19,10 @@ export function load(app) {
   app.converter.on('createSignature', convertPlaygroundBlockToComponent);
 }
 
+/**
+ * @param {import('typedoc').Context>} context
+ * @param {import('typedoc').Models.SignatureReflection} reflection
+ */
 function convertPlaygroundBlockToComponent(context, reflection) {
   const playgroundTag = reflection?.comment?.blockTags?.find(
     ({ tag }) => tag === '@playground',
