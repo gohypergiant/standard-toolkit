@@ -104,7 +104,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Hypergiant Galactic Systems Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Hypergiant Galactic Systems Inc.`,
     },
     prism: {
       theme: prismThemes.github,
