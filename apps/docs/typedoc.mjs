@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { OptionDefaults } from 'typedoc';
+
 /** @type {Partial<import("typedoc").TypeDocOptions>} */
 export default {
   disableSources: true,
@@ -27,7 +29,12 @@ export default {
   pageTitleTemplates: {
     member: (args) => args.name, // simpler page titles for member pages
   },
-  plugin: ['typedoc-plugin-markdown', './lib/typedoc-plugin-hypergiant.mjs'],
+  plugin: [
+    'typedoc-plugin-markdown',
+    './lib/typedoc-plugin-hypergiant.mjs',
+    './lib/playground-plugin-hypergiant.mjs',
+  ],
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
   theme: 'markdown',
+  blockTags: [...OptionDefaults.blockTags, '@playground'], // https://typedoc.org/documents/Options.Comments.html#blocktags
 };
