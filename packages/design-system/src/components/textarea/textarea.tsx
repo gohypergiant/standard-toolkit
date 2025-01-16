@@ -52,10 +52,14 @@ export const TextAreaContext =
  * available, and must be substituted with `event.currentTarget.textContent`
  */
 export const TextArea = forwardRef(function TextArea(
-  props: TextAreaProps,
-  ref: ForwardedRef<HTMLTextAreaElement>,
+  propsOriginal: TextAreaProps,
+  refOriginal: ForwardedRef<HTMLTextAreaElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, RACTextAreaContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    RACTextAreaContext,
+  );
 
   // Disallow props possibly provided by React Aria context
   // could be render props functions we don't want to support

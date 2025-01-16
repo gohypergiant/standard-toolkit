@@ -1,9 +1,22 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import {
   createContext,
   forwardRef,
   useCallback,
   useMemo,
   type ForwardedRef,
+  type LegacyRef,
 } from 'react';
 import {
   Select as AriaSelect,
@@ -48,10 +61,11 @@ export const SelectContext =
   createContext<ContextValue<SelectProps<object>, HTMLDivElement>>(null);
 
 export const Select = forwardRef(function Select<T extends object>(
-  props: SelectProps<T>,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: SelectProps<T>,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, SelectContext);
+  let [props, ref] = useContextProps(propsOriginal, refOriginal, SelectContext);
+
   props = useDefaultProps(props, 'Select');
 
   const {
@@ -151,7 +165,7 @@ export const Select = forwardRef(function Select<T extends object>(
   return (
     <AriaSelect
       {...props}
-      ref={ref}
+      ref={ref as LegacyRef<HTMLDivElement> | undefined}
       className={classNames?.container}
       style={style}
     >

@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import {
   Children,
   createContext,
@@ -70,10 +82,11 @@ export const TabsContext =
  * this components children
  */
 export const Tabs = forwardRef(function Tabs(
-  props: TabsProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: TabsProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TabsContext);
+  let [props, ref] = useContextProps(propsOriginal, refOriginal, TabsContext);
+
   props = useDefaultProps(props, 'Tabs');
 
   const { classNames: classNamesProp, ...rest } = props;
@@ -119,10 +132,15 @@ export const TabListContext =
  * Parent of Tab
  */
 export const TabList = forwardRef(function TabList<T extends object>(
-  props: TabListProps<T>,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: TabListProps<T>,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TabListContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    TabListContext,
+  );
+
   props = useDefaultProps(props, 'TabList');
 
   const {
@@ -192,10 +210,11 @@ export const TabContext =
  * Must be a direct child of TabList
  */
 export const Tab = forwardRef(function Tab(
-  props: TabProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: TabProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TabContext);
+  let [props, ref] = useContextProps(propsOriginal, refOriginal, TabContext);
+
   props = useDefaultProps(props, 'Tab');
 
   const {
@@ -265,10 +284,15 @@ export const TabPanelsContext =
  * Parent of TabPanel, but only required if using shouldForceMount=true
  */
 export const TabPanels = forwardRef(function TabPanels(
-  props: TabPanelsProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: TabPanelsProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TabPanelsContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    TabPanelsContext,
+  );
+
   props = useDefaultProps(props, 'TabPanels');
 
   const {
@@ -330,10 +354,15 @@ export const TabPanelContext =
  * if theme implements any styles that adjust layout
  */
 export const TabPanel = forwardRef(function TabPanel(
-  props: TabPanelProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: TabPanelProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TabPanelContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    TabPanelContext,
+  );
+
   props = useDefaultProps(props, 'TabPanel');
 
   const {

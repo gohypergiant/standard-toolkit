@@ -1,9 +1,22 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import {
   createContext,
   type ForwardedRef,
   forwardRef,
   useMemo,
   useCallback,
+  type LegacyRef,
 } from 'react';
 import {
   RadioGroup as RACRadioGroup,
@@ -32,10 +45,11 @@ export const RadioContext =
   createContext<ContextValue<RadioContextProps, HTMLLabelElement>>(null);
 
 export const Radio = forwardRef(function Radio(
-  props: RadioProps,
-  ref: ForwardedRef<HTMLLabelElement>,
+  propsOriginal: RadioProps,
+  refOriginal: ForwardedRef<HTMLLabelElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, RadioContext);
+  let [props, ref] = useContextProps(propsOriginal, refOriginal, RadioContext);
+
   props = useDefaultProps(props, 'Radio');
 
   const {
@@ -76,7 +90,7 @@ export const Radio = forwardRef(function Radio(
   return (
     <RACRadio
       {...rest}
-      ref={ref}
+      ref={ref as LegacyRef<HTMLLabelElement> | undefined}
       style={style}
       className={classNames?.radio?.container}
     >
@@ -89,10 +103,14 @@ export const RadioGroupContext =
   createContext<ContextValue<RadioGroupProps, HTMLDivElement>>(null);
 
 export const RadioGroup = forwardRef(function RadioGroup(
-  props: RadioGroupProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: RadioGroupProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, RadioGroupContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    RadioGroupContext,
+  );
 
   props = useDefaultProps(props, 'RadioGroup');
 
@@ -162,7 +180,7 @@ export const RadioGroup = forwardRef(function RadioGroup(
   return (
     <RACRadioGroup
       {...rest}
-      ref={ref}
+      ref={ref as LegacyRef<HTMLDivElement> | undefined}
       className={classNames?.group?.container}
       style={style}
       orientation={orientation}

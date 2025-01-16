@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { noop } from '@accelint/core';
 import { usePress } from '@react-aria/interactions';
 import type { Key } from '@react-types/shared';
@@ -85,8 +97,7 @@ const defaultMapping: TreeMapping = {
 
 const defaultSize = 'lg';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const TreeStateContext = createContext<TreeStateContextValue<any>>({
+export const TreeStateContext = createContext<TreeStateContextValue<unknown>>({
   allowsDragging: true,
   allowsExpansion: true,
   allowsVisibility: false,
@@ -124,8 +135,11 @@ function defaultRenderEmptyState({ isDropTarget }: GridListRenderProps) {
  * abandon it's previous state. Unfortunately, the underlying hooks don't provide a good way
  * to update the internal state of the Tree onces it's been initialized.
  */
-export function Tree<T>(props: TreeProps<T>) {
-  props = useDefaultProps(props as TreeProps<unknown>, 'Tree') as TreeProps<T>;
+export function Tree<T>(propsOriginal: TreeProps<T>) {
+  const props = useDefaultProps(
+    propsOriginal as TreeProps<unknown>,
+    'Tree',
+  ) as TreeProps<T>;
 
   const {
     children: childrenProp,
@@ -303,7 +317,6 @@ export function TreeGroup<T>({
     (target: DropTarget) => (
       <DropIndicator
         className={classNames?.indicator?.container}
-        // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop, react/jsx-no-bind
         style={(renderProps: TreeIndicatorRenderProps) =>
           inlineVars(treeIndicatorStateVars, {
             ...renderProps,

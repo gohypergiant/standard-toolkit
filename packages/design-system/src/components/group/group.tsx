@@ -16,6 +16,7 @@ import {
   forwardRef,
   useMemo,
   type ForwardedRef,
+  type LegacyRef,
   type ReactElement,
 } from 'react';
 import type { ContextValue } from 'react-aria-components';
@@ -26,8 +27,7 @@ import { groupClassNames, groupStateVars } from './group.css';
 import type { GroupProps } from './types';
 
 export const GroupContext =
-  // Unforunately, using "unknown" or "object" here creates complex type issues with <Provider />
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: using "unknown" or "object" here creates complex type issues with <Provider />
   createContext<ContextValue<GroupProps<any, Element>, HTMLDivElement>>(null);
 
 /**
@@ -36,10 +36,14 @@ export const GroupContext =
  * @example A list of <Button />s and you want to control their size instead of passing the same props to each
  */
 export const Group = forwardRef(function Group<T, E extends Element>(
-  props: GroupProps<T, E>,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: GroupProps<T, E>,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, GroupContext);
+  const [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    GroupContext,
+  );
 
   const {
     children: childrenProp,
@@ -97,7 +101,11 @@ export const Group = forwardRef(function Group<T, E extends Element>(
 
   const children = useMemo(
     () => (
-      <div ref={ref} className={classNames?.container} style={style}>
+      <div
+        ref={ref as LegacyRef<HTMLDivElement> | undefined}
+        className={classNames?.container}
+        style={style}
+      >
         <div className={classNames?.group}>{childrenProp}</div>
       </div>
     ),

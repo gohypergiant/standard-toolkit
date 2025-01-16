@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import {
   createContext,
   forwardRef,
@@ -5,6 +17,7 @@ import {
   useMemo,
   type ForwardedRef,
   type HTMLAttributes,
+  type LegacyRef,
 } from 'react';
 import {
   Collection,
@@ -79,10 +92,15 @@ export const OptionsContext =
   createContext<ContextValue<OptionsProps, HTMLElement>>(null);
 
 export const Options = forwardRef(function Options(
-  props: OptionsProps,
-  ref: ForwardedRef<HTMLElement>,
+  propsOriginal: OptionsProps,
+  refOriginal: ForwardedRef<HTMLElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, OptionsContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    OptionsContext,
+  );
+
   props = useDefaultProps(props, 'Options');
 
   const {
@@ -154,7 +172,7 @@ export const Options = forwardRef(function Options(
   return (
     <Popover
       {...rest}
-      ref={ref}
+      ref={ref as LegacyRef<HTMLElement> | undefined}
       className={classNames?.options?.container}
       style={style}
     >
@@ -180,10 +198,15 @@ type OptionsListContexts = [
 ];
 
 export const OptionsList = forwardRef(function OptionList<T extends object>(
-  props: OptionsListProps<T>,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: OptionsListProps<T>,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, OptionsListContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    OptionsListContext,
+  );
+
   props = useDefaultProps(props, 'OptionsList');
 
   const {
@@ -258,7 +281,7 @@ export const OptionsList = forwardRef(function OptionList<T extends object>(
       <Provider values={values}>
         <ListBox<T>
           {...rest}
-          ref={ref}
+          ref={ref as LegacyRef<HTMLDivElement> | undefined}
           className={classNames?.list?.container}
           items={items}
           selectionMode={selectionMode}
@@ -277,10 +300,15 @@ export const OptionsItemContext =
   createContext<ContextValue<OptionsItemProps<object>, HTMLDivElement>>(null);
 
 export const OptionsItem = forwardRef(function OptionItem<T extends object>(
-  props: OptionsItemProps<T>,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: OptionsItemProps<T>,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, OptionsItemContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    OptionsItemContext,
+  );
+
   props = useDefaultProps(props, 'OptionsItem');
 
   const {

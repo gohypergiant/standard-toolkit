@@ -1,4 +1,19 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import type { Callable } from '@/types';
 import { identity } from '../../combinators/i';
+
+type Table = Record<string | number | symbol, unknown>;
 
 /**
  * Takes an object and an optional fallback function and returns a function that
@@ -16,15 +31,6 @@ import { identity } from '../../combinators/i';
  * colorLookup(data.value);
  */
 export const lookup =
-  <
-    A extends Record<string | number | symbol, unknown>,
-    B extends (...args: any[]) => any,
-  >(
-    obj: A,
-    def?: B,
-  ) =>
-  <C extends keyof A>(prop: string | number | symbol): A[C] => {
-    const fn = def ?? identity;
-
-    return fn(obj[prop]);
-  };
+  <A extends Table, B extends Callable>(obj: A, def?: B) =>
+  <C extends keyof A>(prop: string | number | symbol): A[C] =>
+    (def ?? identity)(obj[prop]);
