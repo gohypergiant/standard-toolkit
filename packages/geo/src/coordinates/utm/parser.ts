@@ -50,9 +50,8 @@ function detailedErrors(input: string) {
   return error('Uncaught error condition.');
 }
 
-// biome-ignore lint/style/useNamingConvention: <explanation>
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export function parseUTM(_format: any, input: string) {
+// biome-ignore lint/style/useNamingConvention: Acronym
+export function parseUTM(_format: unknown, input: string) {
   try {
     const point = UTM.parse(input).toPoint();
 

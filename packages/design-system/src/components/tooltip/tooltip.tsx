@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import {
   type ForwardedRef,
   createContext,
@@ -30,10 +42,14 @@ export const TooltipContext =
   createContext<ContextValue<TooltipProps, HTMLDivElement>>(null);
 
 export const Tooltip = forwardRef(function Tooltip(
-  props: TooltipProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: TooltipProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TooltipContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    TooltipContext,
+  );
 
   props = useDefaultProps(props, 'Tooltip');
 
@@ -114,10 +130,14 @@ export const TooltipTargetContext =
  * to a non-focusable element/component
  */
 export const TooltipTarget = forwardRef(function TooltipTarget(
-  props: TooltipTargetProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: TooltipTargetProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, TooltipTargetContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    TooltipTargetContext,
+  );
 
   props = useDefaultProps(props, 'TooltipTarget');
 
@@ -151,7 +171,6 @@ export const TooltipTarget = forwardRef(function TooltipTarget(
         {...focusableProps}
         ref={ref}
         className={classNames?.target?.target}
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         tabIndex={focusable ? 0 : undefined}
       >
         {children}

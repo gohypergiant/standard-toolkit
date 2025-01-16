@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { clsx } from 'clsx';
 import { noop } from '@accelint/core';
 import {
@@ -7,6 +19,7 @@ import {
   useMemo,
   type Context,
   type ForwardedRef,
+  type LegacyRef,
 } from 'react';
 import {
   Link,
@@ -51,12 +64,12 @@ function useButton<
   P extends ButtonProps | LinkButtonProps | ToggleButtonProps,
   E extends HTMLElement,
 >(
-  props: P,
-  ref: ForwardedRef<E>,
+  propsOriginal: P,
+  refOriginal: ForwardedRef<E>,
   context: Context<ContextValue<P, E>>,
   key: 'Button' | 'LinkButton' | 'ToggleButton',
 ) {
-  [props, ref] = useContextProps(props, ref, context);
+  let [props, ref] = useContextProps(propsOriginal, refOriginal, context);
 
   props = useDefaultProps(props, key);
 
@@ -145,39 +158,64 @@ export const ButtonContext =
   createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
 
 export const Button = forwardRef(function Button(
-  props: ButtonProps,
-  ref: ForwardedRef<HTMLButtonElement>,
+  propsOriginal: ButtonProps,
+  refOriginal: ForwardedRef<HTMLButtonElement>,
 ) {
-  const buttonProps = useButton(props, ref, ButtonContext, 'Button');
+  const { ref, ...buttonProps } = useButton(
+    propsOriginal,
+    refOriginal,
+    ButtonContext,
+    'Button',
+  );
 
-  return <RACButton {...buttonProps} />;
+  return (
+    <RACButton
+      {...buttonProps}
+      ref={ref as LegacyRef<HTMLButtonElement> | undefined}
+    />
+  );
 });
 
 export const LinkButtonContext =
   createContext<ContextValue<LinkButtonProps, HTMLAnchorElement>>(null);
 
 export const LinkButton = forwardRef(function LinkButton(
-  props: LinkButtonProps,
-  ref: ForwardedRef<HTMLAnchorElement>,
+  propsOriginal: LinkButtonProps,
+  refOriginal: ForwardedRef<HTMLAnchorElement>,
 ) {
-  const buttonProps = useButton(props, ref, LinkButtonContext, 'LinkButton');
+  const { ref, ...buttonProps } = useButton(
+    propsOriginal,
+    refOriginal,
+    LinkButtonContext,
+    'LinkButton',
+  );
 
-  return <Link {...buttonProps} />;
+  return (
+    <Link
+      {...buttonProps}
+      ref={ref as LegacyRef<HTMLAnchorElement> | undefined}
+    />
+  );
 });
 
 export const ToggleButtonContext =
   createContext<ContextValue<ToggleButtonProps, HTMLButtonElement>>(null);
 
 export const ToggleButton = forwardRef(function ToggleButton(
-  props: ToggleButtonProps,
-  ref: ForwardedRef<HTMLButtonElement>,
+  propsOriginal: ToggleButtonProps,
+  refOriginal: ForwardedRef<HTMLButtonElement>,
 ) {
-  const buttonProps = useButton(
-    props,
-    ref,
+  const { ref, ...buttonProps } = useButton(
+    propsOriginal,
+    refOriginal,
     ToggleButtonContext,
     'ToggleButton',
   );
 
-  return <RACToggleButton {...buttonProps} />;
+  return (
+    <RACToggleButton
+      {...buttonProps}
+      ref={ref as LegacyRef<HTMLButtonElement> | undefined}
+    />
+  );
 });

@@ -16,6 +16,7 @@ import { useHover } from '@react-aria/interactions';
 import {
   type ChangeEvent,
   type ForwardedRef,
+  type LegacyRef,
   createContext,
   forwardRef,
   useCallback,
@@ -51,10 +52,14 @@ export const InputContext =
  * Other more specific inputs should be handled by other components
  */
 export const Input = forwardRef(function Input(
-  props: InputProps,
-  ref: ForwardedRef<HTMLInputElement>,
+  propsOriginal: InputProps,
+  refOriginal: ForwardedRef<HTMLInputElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, RACInputContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    RACInputContext,
+  );
 
   // Disallow props possibly provided by React Aria context
   // could be render props functions we don't want to support
@@ -176,7 +181,7 @@ export const Input = forwardRef(function Input(
       <div className={classNames?.sizer}>
         <input
           {...mergedProps}
-          ref={ref}
+          ref={ref as LegacyRef<HTMLInputElement> | undefined}
           className={classNames?.input}
           disabled={isDisabled}
           placeholder={placeholder}

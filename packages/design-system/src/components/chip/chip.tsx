@@ -1,9 +1,22 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import {
   createContext,
   forwardRef,
   useCallback,
   useMemo,
   type ForwardedRef,
+  type LegacyRef,
 } from 'react';
 import {
   Provider,
@@ -45,8 +58,8 @@ const defaultMapping: ChipMapping = {
   },
 };
 
-export function Chip(props: ChipProps) {
-  props = useDefaultProps(props, 'Chip');
+export function Chip(propsOriginal: ChipProps) {
+  const props = useDefaultProps(propsOriginal, 'Chip');
 
   const {
     children,
@@ -126,10 +139,11 @@ export const ChipContext =
  * Instance of ChipItem
  */
 export const ChipItem = forwardRef(function ChipItem(
-  props: ChipItemProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: ChipItemProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, ChipContext);
+  let [props, ref] = useContextProps(propsOriginal, refOriginal, ChipContext);
+
   props = useDefaultProps(props, 'Chip');
 
   const {
@@ -209,7 +223,7 @@ export const ChipItem = forwardRef(function ChipItem(
   return (
     <Tag
       {...rest}
-      ref={ref}
+      ref={ref as LegacyRef<object> | undefined}
       id={id ?? textValue}
       className={classNames?.container}
       style={style}
@@ -246,10 +260,15 @@ export const ChipGroupContext =
  * on each component if desired
  */
 export const ChipGroup = forwardRef(function ChipGroup(
-  props: ChipGroupProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: ChipGroupProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, ChipGroupContext);
+  let [props, ref] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    ChipGroupContext,
+  );
+
   props = useDefaultProps(props, 'ChipGroup');
 
   const { children, classNames: classNamesProp, color, size, ...rest } = props;
@@ -268,7 +287,11 @@ export const ChipGroup = forwardRef(function ChipGroup(
   );
 
   return (
-    <TagGroup {...rest} ref={ref} className={classNames?.group}>
+    <TagGroup
+      {...rest}
+      ref={ref as LegacyRef<HTMLDivElement> | undefined}
+      className={classNames?.group}
+    >
       <Provider values={values}>{children}</Provider>
     </TagGroup>
   );

@@ -15,8 +15,9 @@ import type { Callable } from '@/types';
 // https://github.com/type-challenges/type-challenges/issues/15988
 export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
   ...args: P
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-) => ((...args: T) => any) extends (...args: [...P, ...infer Args]) => any
+) => ((...args: T) => unknown) extends (
+  ...args: [...P, ...infer Args]
+) => unknown
   ? Args extends []
     ? R
     : Curried<Args, R>
@@ -34,8 +35,7 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  */
 export function autoCurry<T extends Callable>(
   fn: T,
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  _args = [] as any[],
+  _args = [] as unknown[],
 ): Curried<Parameters<T>, ReturnType<T>> {
   return (...__args) =>
     ((rest) => (rest.length >= fn.length ? fn(...rest) : autoCurry(fn, rest)))([

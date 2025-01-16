@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { toBoolean } from '@accelint/converters';
 import { noop } from '@accelint/core';
 import { useIsSSR } from '@react-aria/ssr';
@@ -67,8 +79,8 @@ const DrawerContext = createContext<DrawerContextValue>({
   toggle: noop,
 });
 
-export function Drawer(props: DrawerProps) {
-  props = useDefaultProps(props, 'Drawer');
+export function Drawer(propsOriginal: DrawerProps) {
+  const props = useDefaultProps(propsOriginal, 'Drawer');
 
   const {
     children: childrenProp,
@@ -187,8 +199,10 @@ export function Drawer(props: DrawerProps) {
   );
 }
 
-export function DrawerTabList<T extends object>(props: DrawerTabListProps<T>) {
-  props = useDefaultProps(props, 'DrawerTabList');
+export function DrawerTabList<T extends object>(
+  propsOriginal: DrawerTabListProps<T>,
+) {
+  const props = useDefaultProps(propsOriginal, 'DrawerTabList');
 
   const { children, classNames: classNamesProp, variant = 'fill' } = props;
   const { anchor } = useContext(DrawerContext);
@@ -230,9 +244,8 @@ export function DrawerTabList<T extends object>(props: DrawerTabListProps<T>) {
   );
 }
 
-export function DrawerTab(props: DrawerTabProps) {
-  props = useDefaultProps(props, 'DrawerTab');
-
+export function DrawerTab(propsOriginal: DrawerTabProps) {
+  const props = useDefaultProps(propsOriginal, 'DrawerTab');
   const { children: childrenProp, classNames: classNamesProp, ...rest } = props;
   const { isOpen, open, toggle } = useContext(DrawerContext);
   const theme = useTheme();
@@ -290,10 +303,14 @@ export const DrawerDialogContext =
   createContext<ContextValue<DrawerDialogProps, HTMLDivElement>>(null);
 
 export const DrawerDialog = forwardRef(function DrawerDialog(
-  props: DrawerDialogProps,
-  ref: ForwardedRef<HTMLDivElement>,
+  propsOriginal: DrawerDialogProps,
+  refOriginal: ForwardedRef<HTMLDivElement>,
 ) {
-  [props, ref] = useContextProps(props, ref, DrawerDialogContext);
+  const [props] = useContextProps(
+    propsOriginal,
+    refOriginal,
+    DrawerDialogContext,
+  );
 
   const {
     children,
