@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { createThemeContract, globalStyle, style } from '@vanilla-extract/css';
 import type { SliderClassNames, SliderState } from './types';
 import { layers, typographyVars } from '../../styles';
@@ -22,8 +34,8 @@ export const sliderSpaceVars = createThemeContract({
   gap: '',
   margin: '',
   track: {
-    margin: '',
-    height: '',
+    minDimension: '', // width | height
+    thickness: '', // cross-axis dimension
   },
   thumb: {
     height: '',
@@ -57,35 +69,51 @@ export const sliderTrackStateVars = createThemeContract({
   isHovered: '',
 });
 
-export const sliderBarStateVars = createThemeContract({});
-
 export const sliderClassNames: SliderClassNames = {
   slider: {
+    container: style({
+      '@layer': {
+        [layers.components.l1]: {
+          display: 'contents',
+        },
+      },
+    }),
     slider: style({
       '@layer': {
         [layers.components.l1]: {
+          width: 'fit-content',
           display: 'grid',
-          gridTemplateAreas: `'label input' 
-          'track track'
-          'min max'`,
-          gridTemplateColumns: '1fr auto',
+          gridTemplateAreas: `'label . io'
+          'track track track'
+          'min . max'`,
+          gridTemplateColumns: 'auto 1fr auto',
+          gap: sliderSpaceVars.gap,
           '@container': containerQueries<SliderState>(
             sliderStateVars,
             {
-              query: { alignLabel: 'inline' },
-              gridTemplateAreas: `'label min track max input'`,
-              gridTemplateColumns: 'auto auto 1fr auto auto',
+              query: { orientation: 'horizontal', alignLabel: 'inline' },
+              gridTemplateAreas: `'label min track max io'`,
               gap: sliderSpaceVars.gap,
+              alignItems: 'center',
             },
             {
-              query: { orientation: 'vertical' },
-              gridTemplateAreas: `'label track max'
-              'input track .'
-              '. track min'`,
+              query: { orientation: 'vertical', alignLabel: 'stacked' },
+              width: 'fit-content',
+              gridTemplateAreas: `'label label label'
+              'max track .'
+              '. track .'
+              'min track io'`,
+              gridTemplateColumns: 'min-content min-content auto',
+              gridTemplateRows: 'auto auto 1fr auto',
+            },
+            {
+              query: { orientation: 'vertical', alignLabel: 'inline' },
+              gridTemplateAreas: `'label label label'
+              'max . .'
+              'track . .'
+              'min . .'
+              'io io .'`,
               gap: sliderSpaceVars.gap,
-              gridTemplateRows: '1fr 1fr 3fr',
-              height: '100%',
-              maxWidth: '150px',
             },
           ),
         },
@@ -98,22 +126,29 @@ export const sliderClassNames: SliderClassNames = {
         },
       },
     }),
+    tick: style({
+      '@layer': {
+        [layers.components.l1]: {
+          fontFamily: typographyVars.mono,
+          color: sliderColorVars.color,
+          lineHeight: '12px',
+        },
+      },
+    }),
     min: style({
       '@layer': {
         [layers.components.l1]: {
           gridArea: 'min',
-          fontFamily: typographyVars.mono,
-          color: sliderColorVars.color,
-          lineHeight: '12px',
           '@container': containerQueries<SliderState>(
             sliderStateVars,
             {
-              query: { alignLabel: 'inline' },
-              margin: sliderSpaceVars.margin,
+              query: { orientation: 'vertical', alignLabel: 'stacked' },
+              alignSelf: 'end',
+              justifySelf: 'end',
             },
             {
-              query: { orientation: 'vertical' },
-              marginTop: 'auto',
+              query: { orientation: 'vertical', alignLabel: 'inline' },
+              justifySelf: 'center',
             },
           ),
         },
@@ -123,13 +158,10 @@ export const sliderClassNames: SliderClassNames = {
       '@layer': {
         [layers.components.l1]: {
           gridArea: 'max',
-          fontFamily: typographyVars.mono,
-          marginLeft: 'auto',
-          lineHeight: '12px',
-          color: sliderColorVars.color,
-          '@container': containerQueries(sliderStateVars, {
-            query: { alignLabel: 'inline' },
-            margin: sliderSpaceVars.margin,
+          justifySelf: 'end',
+          '@container': containerQueries<SliderState>(sliderStateVars, {
+            query: { orientation: 'vertical', alignLabel: 'inline' },
+            justifySelf: 'center',
           }),
         },
       },
@@ -140,51 +172,76 @@ export const sliderClassNames: SliderClassNames = {
       '@layer': {
         [layers.components.l1]: {
           gridArea: 'track',
-          boxSizing: 'border-box',
-          zIndex: 'auto',
-          inlineSize: 'calc(100% - calc(calc(12px / 2)))',
-          minBlockSize: '12px',
-          verticalAlign: 'top',
-          marginInlineStart: 'calc(12px / 2)',
-          display: 'inline-block',
-          width: 'calc(100% - calc(calc(12px / 2) ) * 2)',
-          ':after': {
-            right: 'calc(calc(12px / 2) * -1)',
-            content: '',
-            inlineSize: 'calc(12px / 2)',
-            blockSize: '100%',
-            display: 'block',
-            position: 'absolute',
-          },
+          '@container': containerQueries<SliderState>(sliderStateVars, {
+            query: {
+              orientation: 'vertical',
+              alignLabel: 'inline',
+            },
+            justifySelf: 'center',
+          }),
         },
       },
     }),
     track: style({
-      background: sliderColorVars.track.color,
-      height: sliderSpaceVars.track.height,
-      margin: sliderSpaceVars.track.margin,
-      right: 'auto',
-      marginInlineStart: 'calc(calc(12px / 2)* -1)',
-      marginInlineEnd: 'calc(calc(12px / 2)* -1)', // causes a clipping issue
-      '@container': containerQueries<SliderState>(
-        sliderStateVars,
-        {
-          query: { alignLabel: 'inline' },
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+      '@layer': {
+        [layers.components.l1]: {
+          position: 'relative',
+          background: sliderColorVars.track.color,
+          '@container': containerQueries<SliderState>(
+            sliderStateVars,
+            {
+              query: { orientation: 'horizontal' },
+              minWidth: sliderSpaceVars.track.minDimension,
+              height: sliderSpaceVars.track.thickness,
+            },
+            {
+              query: { orientation: 'vertical' },
+              width: sliderSpaceVars.track.thickness,
+              minHeight: sliderSpaceVars.track.minDimension,
+            },
+          ),
         },
-        {
-          query: { orientation: 'vertical' },
-          height: '100%',
-          width: sliderSpaceVars.track.height,
-          margin: '0',
+      },
+    }),
+    bar: style({
+      '@layer': {
+        [layers.components.l1]: {
+          background: sliderColorVars.bar.color,
+          '@container': containerQueries<SliderState>(
+            sliderStateVars,
+            {
+              query: { orientation: 'horizontal' },
+              height: '100%',
+            },
+            {
+              query: { orientation: 'vertical' },
+              width: '100%',
+            },
+          ),
         },
-      ),
+      },
     }),
   },
   thumb: {
-    container: style({}),
+    container: style({
+      position: 'absolute',
+      transform: 'translate(-50%, -50%)',
+      '@layer': {
+        [layers.components.l1]: {
+          '@container': containerQueries<SliderState>(
+            sliderStateVars,
+            {
+              query: { orientation: 'horizontal' },
+              top: '50%',
+            },
+            {
+              query: { orientation: 'vertical' },
+              left: '50%',
+            },
+          ),
+        },
+      },
+    }),
     thumb: style({
       '@layer': {
         [layers.components.l1]: {
@@ -197,38 +254,24 @@ export const sliderClassNames: SliderClassNames = {
       },
     }),
   },
-  bar: {
-    container: style({
+  group: {
+    group: style({
       '@layer': {
         [layers.components.l1]: {
-          '@container': containerQueries<SliderState>(sliderStateVars, {
-            query: { orientation: 'vertical' },
-            height: '100%',
-          }),
-        },
-      },
-    }),
-    bar: style({
-      '@layer': {
-        [layers.components.l1]: {
-          height: sliderSpaceVars.bar.height,
-          backgroundColor: sliderColorVars.bar.color,
-          '@container': containerQueries<SliderState>(sliderStateVars, {
-            query: { orientation: 'vertical' },
-            width: sliderSpaceVars.bar.height,
-          }),
+          gridArea: 'io',
         },
       },
     }),
   },
-  group: {
+  output: {
     container: style({
       '@layer': {
         [layers.components.l1]: {
-          gridArea: 'input',
+          gridArea: 'io',
         },
       },
     }),
+    output: style({}),
   },
 };
 

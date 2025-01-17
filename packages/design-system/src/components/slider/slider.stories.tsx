@@ -1,13 +1,32 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
-import { Slider, SliderBar, SliderThumb, SliderTrack, type SliderProps } from '.';
+import { useState } from 'react';
+import { TooltipTrigger } from 'react-aria-components';
 import { AriaLabel, AriaText } from '../aria';
 import { Input } from '../input';
-import { TooltipTrigger } from 'react-aria-components';
-import { Tooltip } from '../tooltip';
-import type { SliderRenderProps } from './types';
-import { useState } from 'react';
 import { Group } from '../group';
 import { NumberField } from '../number-field';
+import { Tooltip } from '../tooltip';
+import type { SliderRenderProps } from './types';
+import {
+  Slider,
+  SliderBar,
+  SliderOutput,
+  SliderThumb,
+  SliderTrack,
+  type SliderProps,
+} from '.';
 
 export default {
   title: 'Components/Slider',
@@ -59,7 +78,7 @@ const args: ArgTypes<
       type: 'select',
     },
     options: ['horizontal', 'vertical'],
-    defaultValue: 'horizontal'
+    defaultValue: 'horizontal',
   },
   includeTextField: {
     control: {
@@ -313,10 +332,10 @@ export const RangeSliderExample: Story<
           <>
             {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
             {includeOutputField && (
-              <AriaText>{state.values.join(' - ')}</AriaText>
+              <SliderOutput>{state.values.join(' - ')}</SliderOutput>
             )}
             {includeTextField && (
-              <Group orientation='horizontal'>
+              <Group>
                 <NumberField
                   value={state.values[0]}
                   onChange={(v) => state.setThumbValue(0, v)}
@@ -332,25 +351,25 @@ export const RangeSliderExample: Story<
               </Group>
             )}
             <SliderTrack>
-              {({ state }: SliderRenderProps) =>
-              <>
-              <SliderBar />
-                {state.values.map((_value: number, i: number) => (
-                  <div key={i}>
-                    <TooltipTrigger isOpen={open[i]} key={i}>
-                      <SliderThumb
-                        index={i}
-                        key={i}
-                        onHoverChange={(isHovered) =>
-                          setOpen({ [i]: isHovered })
-                        }
+              {({ state }: SliderRenderProps) => (
+                <>
+                  <SliderBar />
+                  {state.values.map((_value: number, i: number) => (
+                    <div key={i}>
+                      <TooltipTrigger isOpen={open[i]} key={i}>
+                        <SliderThumb
+                          index={i}
+                          key={i}
+                          onHoverChange={(isHovered) =>
+                            setOpen({ [i]: isHovered })
+                          }
                         />
-                      <Tooltip>{state.values[i]}</Tooltip>
-                    </TooltipTrigger>
-                  </div>
-                ))}
-              </>
-              }
+                        <Tooltip>{state.values[i]}</Tooltip>
+                      </TooltipTrigger>
+                    </div>
+                  ))}
+                </>
+              )}
             </SliderTrack>
             <AriaText slot='min'>{minValue || 0}</AriaText>
             <AriaText slot='max'>{maxValue || 100}</AriaText>
@@ -409,29 +428,15 @@ export const ControlledRangeSliderExample: Story<
         <>
           {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
           {includeOutputField && (
-            <AriaText>{state.values.join(' - ')}</AriaText>
+            <SliderOutput>{state.values.join(' - ')}</SliderOutput>
           )}
           {includeTextField && (
-            <Group orientation='horizontal'>
-              <NumberField
-                value={state.values[0]}
-                onChange={(v) => state.setThumbValue(0, v)}
-              >
-                <Input
-                  onChange={(e) =>
-                    state.setThumbValue(0, Number(e.target.value))
-                  }
-                />
+            <Group>
+              <NumberField value={state.values[0]}>
+                <Input />
               </NumberField>
-              <NumberField
-                value={state.values[1]}
-                onChange={(v) => state.setThumbValue(1, v)}
-              >
-                <Input
-                  onChange={(e) =>
-                    state.setThumbValue(1, Number(e.target.value))
-                  }
-                />
+              <NumberField value={state.values[1]}>
+                <Input />
               </NumberField>
             </Group>
           )}
@@ -443,7 +448,6 @@ export const ControlledRangeSliderExample: Story<
                   <div key={i}>
                     <TooltipTrigger isOpen={open[i]}>
                       <SliderThumb
-                        key={i}
                         index={i}
                         onHoverChange={(isHovered) =>
                           setOpen({ [i]: isHovered })
