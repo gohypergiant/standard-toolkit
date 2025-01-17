@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StoryObj, Meta } from '@storybook/react';
-import { actions } from '../../storybook/actions';
+import type { Meta, StoryObj } from '@storybook/react';
 import { AriaGroup, Button, Input } from '..';
+import { actions } from '../../storybook/actions';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { NumberField } from './number-field';
 import type { NumberFieldProps } from './types';

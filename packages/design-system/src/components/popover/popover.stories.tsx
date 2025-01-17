@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StoryObj, Meta } from '@storybook/react';
-import { DialogTrigger } from 'react-aria-components';
 import { action } from '@storybook/addon-actions';
+import type { Meta, StoryObj } from '@storybook/react';
+import { DialogTrigger } from 'react-aria-components';
 import { genericColorVars } from '../../styles';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';

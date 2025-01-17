@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StoryObj, Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { bodies, headings } from './typography.css';
 
 const meta: Meta = {

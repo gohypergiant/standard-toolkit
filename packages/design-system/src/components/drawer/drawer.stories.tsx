@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StoryObj, Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { actions } from '../../storybook/actions';
 import { TooltipTrigger } from 'react-aria-components';
+import { actions } from '../../storybook/actions';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
 import { Element } from '../element';

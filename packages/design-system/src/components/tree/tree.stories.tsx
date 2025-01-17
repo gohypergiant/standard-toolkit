@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StoryObj, Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { actions } from '../../storybook/actions';
 import { AriaText } from '../aria';
 import { Button, ButtonContext, ToggleButton } from '../button';

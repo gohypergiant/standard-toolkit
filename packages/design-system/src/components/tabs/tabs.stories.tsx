@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StoryObj, Meta } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
+import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties } from 'react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from './tabs';
 import type { TabListProps } from './types';

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { StoryObj, Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { surfaces } from './surfaces.css';
 import { genericColorVars } from './theme.css';
 
