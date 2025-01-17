@@ -33,7 +33,7 @@ export default {
   plugin: [
     'typedoc-plugin-markdown',
     './lib/typedoc-plugin-hypergiant.mjs',
-    './lib/playground-plugin-hypergiant.mjs',
+    './lib/typedoc-plugin-playground.mjs',
   ],
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
   theme: 'markdown',
