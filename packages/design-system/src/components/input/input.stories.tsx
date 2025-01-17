@@ -1,10 +1,29 @@
-import type { Story, StoryDefault } from '@ladle/react';
-import { actions } from '../../ladle';
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import type { Meta, StoryObj } from '@storybook/react';
+import { actions } from '../../storybook/actions';
 import { Input } from './input';
 import type { InputProps } from './types';
 
-export default {
+const meta: Meta = {
   title: 'Components/Input',
+  component: Input,
+  tags: ['autodocs'],
+  args: {
+    placeholder: 'Placeholder text',
+    size: 'sm',
+    ...actions<InputProps>('onChange', 'onBlur', 'onFocus'),
+  },
   argTypes: {
     'aria-invalid': {
       control: {
@@ -21,7 +40,6 @@ export default {
       control: {
         type: 'text',
       },
-      defaultValue: 'Placeholder text',
     },
     readOnly: {
       control: {
@@ -38,7 +56,6 @@ export default {
         type: 'select',
       },
       options: ['sm', 'lg'],
-      defaultValue: 'sm',
     },
     type: {
       control: {
@@ -47,46 +64,15 @@ export default {
       options: ['email', 'number', 'password', 'search', 'tel', 'text', 'url'],
     },
   },
-} satisfies StoryDefault<InputProps>;
-
-export const ControlledExample: Story<InputProps> = (props) => (
-  <Input
-    {...props}
-    {...actions<InputProps>(
-      'onChange',
-      'onHoverChange',
-      'onHoverEnd',
-      'onHoverStart',
-      'onBlur',
-      'onFocus',
-    )}
-  />
-);
-
-ControlledExample.storyName = 'Controlled';
-
-ControlledExample.argTypes = {
-  value: {
-    control: {
-      type: 'text',
-    },
-    defaultValue: '',
-  },
 };
 
-export const UncontrolledExample: Story<InputProps> = (props) => (
-  <Input
-    {...props}
-    defaultValue=''
-    {...actions<InputProps>(
-      'onChange',
-      'onHoverChange',
-      'onHoverEnd',
-      'onHoverStart',
-      'onBlur',
-      'onFocus',
-    )}
-  />
-);
+export default meta;
 
-UncontrolledExample.storyName = 'Uncontrolled';
+export const Uncontrolled: StoryObj<InputProps> = {};
+
+/** Controlled via the `value` prop */
+export const Controlled: StoryObj<InputProps> = {
+  args: {
+    value: '',
+  },
+};

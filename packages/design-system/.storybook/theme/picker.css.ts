@@ -10,26 +10,27 @@
  * governing permissions and limitations under the License.
  */
 
-import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
-import { esbuildPluginFilePathExtensions as extensionsPlugin } from 'esbuild-plugin-file-path-extensions';
-import lodashPlugin from 'esbuild-plugin-lodash';
-import { defineConfig } from 'tsup';
+import { style } from '@vanilla-extract/css';
+import {
+  type PickerState,
+  type ThemeContext,
+  applyThemeVars,
+  assignPartialVars,
+  pickerSpaceVars,
+  pickerStateVars,
+  sizeVars,
+} from '../../src';
 
-export default defineConfig({
-  esbuildPlugins: [
-    vanillaExtractPlugin({
-      outputCss: false,
-    }),
-    // Must go after VE
-    lodashPlugin(),
-    extensionsPlugin({
-      esm: true,
-      esmExtension: 'js',
-    }),
-  ],
-  entry: ['src/**/*.{ts,tsx}', '!src/**/*.{stories,test}.{ts,tsx}'],
-  dts: true,
-  format: 'esm',
-  sourcemap: true,
-  treeshake: true,
-});
+export const Picker: ThemeContext['Picker'] = {
+  list: {
+    list: style(
+      applyThemeVars<PickerState>(pickerStateVars, [
+        {
+          vars: assignPartialVars(pickerSpaceVars, {
+            gap: sizeVars.v04,
+          }),
+        },
+      ]),
+    ),
+  },
+};
