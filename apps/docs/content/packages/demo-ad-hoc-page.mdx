@@ -1,3 +1,5 @@
+import { Playground } from '@site/src/components/playground';
+
 # Demo
 
 See the [docusaurus docs](https://docusaurus.io/docs/markdown-features) for full feature set.
@@ -25,7 +27,7 @@ type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturda
 // some other thing and stuff
 ```
 
-## live playground
+## Playground (React)
 
 ```jsx live
 function Clock(props) {
@@ -55,3 +57,18 @@ function Clock(props) {
 $$
 I = \int_0^{2\pi} \sin(x)\,dx
 $$
+
+
+## Playground (Non-React)
+
+<Playground
+  code={`import { booleanToNumber } from '@accelint/converters';
+
+console.log(booleanToNumber(true));
+// 1
+
+console.log(booleanToNumber(false));
+// 0`}
+  dependencies={['@accelint/converters']}
+/>
+

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,21 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * Convert a boolean to an integer
- *
- * @remarks
- * pure function
- *
- * @playground
- * import { booleanToNumber } from '@accelint/converters';
- *
- * console.log(booleanToNumber(true));
- * // 1
- *
- * console.log(booleanToNumber(false));
- * // 0
- */
-export function booleanToNumber(val: boolean) {
-  return (val as unknown as number) | 0;
+import { Sandpack } from '@codesandbox/sandpack-react';
+
+type PlaygroundProps = {
+  code: string;
+  dependencies?: string[];
+};
+
+export function Playground({ code, dependencies = [] }: PlaygroundProps) {
+  return (
+    <Sandpack
+      template='vanilla-ts'
+      customSetup={{
+        dependencies: Object.fromEntries(
+          dependencies.map((dep) => [dep, 'latest']),
+        ),
+      }}
+      files={{ 'index.ts': code }}
+      options={{
+        layout: 'console',
+      }}
+    />
+  );
 }
