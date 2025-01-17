@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { action } from '@storybook/addon-actions';
 import type { StoryObj, Meta } from '@storybook/react';
 import { useRef } from 'react';
 import { DialogTrigger } from 'react-aria-components';
@@ -19,7 +20,6 @@ import { Element } from '../element';
 import { Group } from '../group';
 import { Dialog } from './dialog';
 import type { DialogProps } from './types';
-import { action } from '@storybook/addon-actions';
 
 const meta: Meta = {
   title: 'Components/Dialog',

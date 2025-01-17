@@ -1,9 +1,21 @@
 #!/usr/bin/env zx
 
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { createRequire } from 'node:module';
 import { URL } from 'node:url';
 import { default as babelParser } from '@babel/parser';
-import { $, argv, chalk, echo, fs, glob, path, spinner } from 'zx';
+import { fs, path, $, argv, chalk, echo, glob, spinner } from 'zx';
 
 const INDEX_REGEX = /[\\/]index\.[tj]sx?$/;
 const EXT_REGEX = /\.[tj]sx?$/;

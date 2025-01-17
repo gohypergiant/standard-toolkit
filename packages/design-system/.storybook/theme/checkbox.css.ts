@@ -12,18 +12,18 @@
 
 import { style } from '@vanilla-extract/css';
 import {
+  type CheckboxGroupState,
   type CheckboxState,
   type ThemeContext,
-  type CheckboxGroupState,
   applyThemeVars,
   assignPartialVars,
-  genericColorVars,
   checkboxColorVars,
-  checkboxStateVars,
-  checkboxSpaceVars,
-  sizeVars,
   checkboxGroupStateVars,
+  checkboxSpaceVars,
+  checkboxStateVars,
+  genericColorVars,
   semanticColorVars,
+  sizeVars,
 } from '../../src';
 
 export const Checkbox: ThemeContext['Checkbox'] = {

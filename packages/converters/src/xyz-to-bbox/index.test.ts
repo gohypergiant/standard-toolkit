@@ -11,7 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { xyzToBbox, type XyzTuple, type BoundingBoxTuple } from './';
+import { type BoundingBoxTuple, type XyzTuple, xyzToBbox } from './';
 
 const one: BoundingBoxTuple = [
   -80.15625, 39.909736234537185, -78.75, 40.97989806962013,

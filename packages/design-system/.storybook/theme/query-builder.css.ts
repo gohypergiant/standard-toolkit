@@ -12,26 +12,26 @@
 
 import { style } from '@vanilla-extract/css';
 import {
+  type ButtonState,
+  type InputState,
+  type QueryBuilderGroupState,
+  type QueryBuilderRuleState,
+  type SelectState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   buttonSpaceVars,
   buttonStateVars,
   inputSpaceVars,
   inputStateVars,
+  queryBuilderColorVars,
   queryBuilderGroupStateVars,
+  queryBuilderRuleStateVars,
   queryBuilderSpaceVars,
   selectSpaceVars,
   selectStateVars,
-  sizeVars,
-  type ButtonState,
-  type InputState,
-  type QueryBuilderGroupState,
-  type SelectState,
-  type ThemeContext,
-  type QueryBuilderRuleState,
-  queryBuilderColorVars,
   semanticColorVars,
-  queryBuilderRuleStateVars,
+  sizeVars,
 } from '../../src';
 
 export const QueryBuilder: ThemeContext['QueryBuilder'] = {

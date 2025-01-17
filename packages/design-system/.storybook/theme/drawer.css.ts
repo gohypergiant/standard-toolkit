@@ -21,11 +21,11 @@ import {
   drawerSpaceVars,
   drawerStateVars,
   layers,
-  tabListStateVars,
-  tabColorVars,
-  tabStateVars,
   semanticColorVars,
   sizeVars,
+  tabColorVars,
+  tabListStateVars,
+  tabStateVars,
 } from '../../src';
 
 export const Drawer: ThemeContext['Drawer'] = {

@@ -12,6 +12,8 @@
 
 import { style } from '@vanilla-extract/css';
 import {
+  type MenuItemState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
@@ -20,8 +22,6 @@ import {
   menuSpaceVars,
   semanticColorVars,
   sizeVars,
-  type MenuItemState,
-  type ThemeContext,
 } from '../../src';
 
 export const Menu: ThemeContext['Menu'] = {

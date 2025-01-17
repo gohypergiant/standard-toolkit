@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+import type { GlobalStyleRule, StyleRule } from '@vanilla-extract/css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { kebabCase } from 'lodash';
 import { layers } from '../styles';
-import type { GlobalStyleRule, StyleRule } from '@vanilla-extract/css';
 import type {
   Contract,
   CssVarFunction,

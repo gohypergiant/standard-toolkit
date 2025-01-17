@@ -17,8 +17,8 @@ import type { ReactNode } from 'react';
 import type { MapLeafNodes } from '../types';
 import {
   genericColorVars,
-  semanticColorVars,
   radiusVars,
+  semanticColorVars,
   sizeVars,
 } from './theme.css';
 

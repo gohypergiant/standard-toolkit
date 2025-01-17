@@ -1,6 +1,16 @@
 pre-commit:
-  parallel: true
   commands:
     generate-license:
       run: pnpm run license "--files={staged_files}"
+      stage_fixed: true
+
+pre-push:
+  commands:
+    lint:
+      run: pnpm run lint
+    format:
+      run: pnpm run format
+      stage_fixed: true
+    sort-imports:
+      run: pnpm run sort-imports
       stage_fixed: true

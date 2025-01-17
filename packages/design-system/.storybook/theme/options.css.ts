@@ -12,6 +12,8 @@
 
 import { fallbackVar, style } from '@vanilla-extract/css';
 import {
+  type OptionsItemState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
@@ -20,8 +22,6 @@ import {
   optionsSpaceVars,
   semanticColorVars,
   sizeVars,
-  type OptionsItemState,
-  type ThemeContext,
 } from '../../src';
 
 export const Options: ThemeContext['Options'] = {

@@ -11,7 +11,7 @@
  */
 
 import type { StoryObj, Meta } from '@storybook/react';
-import { headings, bodies } from './typography.css';
+import { bodies, headings } from './typography.css';
 
 const meta: Meta = {
   title: 'Primitives/Typography',

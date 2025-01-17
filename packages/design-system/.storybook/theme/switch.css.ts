@@ -12,6 +12,8 @@
 
 import { style } from '@vanilla-extract/css';
 import {
+  type SwitchState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
@@ -19,8 +21,6 @@ import {
   switchColorVars,
   switchSpaceVars,
   switchStateVars,
-  type SwitchState,
-  type ThemeContext,
 } from '../../src';
 
 export const Switch: ThemeContext['Switch'] = {

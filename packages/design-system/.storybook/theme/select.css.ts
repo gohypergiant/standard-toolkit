@@ -12,6 +12,9 @@
 
 import { style } from '@vanilla-extract/css';
 import {
+  type InputState,
+  type SelectState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   buttonColorVars,
@@ -23,9 +26,6 @@ import {
   selectStateVars,
   semanticColorVars,
   sizeVars,
-  type InputState,
-  type SelectState,
-  type ThemeContext,
 } from '../../src';
 
 export const Select: ThemeContext['Select'] = {

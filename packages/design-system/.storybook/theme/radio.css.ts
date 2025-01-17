@@ -12,18 +12,18 @@
 
 import { style } from '@vanilla-extract/css';
 import {
+  type RadioGroupState,
+  type RadioState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
-  sizeVars,
-  type ThemeContext,
-  type RadioGroupState,
-  type RadioState,
-  radioStateVars,
   radioColorVars,
-  radioSpaceVars,
   radioGroupStateVars,
+  radioSpaceVars,
+  radioStateVars,
   semanticColorVars,
+  sizeVars,
 } from '../../src';
 
 export const Radio: ThemeContext['Radio'] = {

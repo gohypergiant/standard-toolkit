@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { SYMBOL_PATTERNS, SYMBOLS, type Format } from '..';
+import { type Format, SYMBOLS, SYMBOL_PATTERNS } from '..';
 import type { Tokens } from '../lexer';
 import { pipesResult } from '../pipes';
 
