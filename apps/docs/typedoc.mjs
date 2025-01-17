@@ -25,6 +25,7 @@ export default {
     entryPoints: ['src/index.ts'],
     groupOrder: ['Functions', 'Variables', 'Type Aliases', '*'],
     projectDocuments: ['src/documentation/**/*.md'], // open to other patterns here
+    blockTags: [...OptionDefaults.blockTags, '@playground'], // https://typedoc.org/documents/Options.Comments.html#blocktags
   },
   pageTitleTemplates: {
     member: (args) => args.name, // simpler page titles for member pages
@@ -36,5 +37,4 @@ export default {
   ],
   requiredToBeDocumented: ['Class', 'Function', 'Interface'],
   theme: 'markdown',
-  blockTags: [...OptionDefaults.blockTags, '@playground'], // https://typedoc.org/documents/Options.Comments.html#blocktags
 };
