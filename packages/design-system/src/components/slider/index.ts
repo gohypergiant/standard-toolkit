@@ -1,3 +1,5 @@
+// __private-exports
+
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,7 +12,6 @@
  * governing permissions and limitations under the License.
  */
 
-// __private-exports
 export {
   Slider,
   SliderBar,
