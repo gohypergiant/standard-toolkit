@@ -126,7 +126,6 @@ export const SliderExample: Story<
   includeRangeLabel,
   includeTextField,
   includeOutputField,
-  // orientation,
   ...rest
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -136,7 +135,7 @@ export const SliderExample: Story<
       {({ state }) => (
         <>
           {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
-          {includeOutputField && <AriaText>{state.values.join(',')}</AriaText>}
+          {includeOutputField && <SliderOutput>{state.values.join(' - ')}</SliderOutput>}
           {includeTextField && (
             <NumberField
               value={state.values[0]}
@@ -195,7 +194,9 @@ export const SliderExampleWithOutput: Story<
       {({ state }) => (
         <>
           {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
-          {includeOutputField && <AriaText>{state.values.join(',')}</AriaText>}
+          {includeOutputField && (
+            <SliderOutput>{state.values.join(' - ')}</SliderOutput>
+          )}
           <SliderTrack>
             {({ state }: SliderRenderProps) => (
               <>
@@ -254,13 +255,10 @@ export const ControlledSliderExample: Story<
         <>
           {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
           {includeOutputField && (
-            <AriaText>{state.values.join(' - ')}</AriaText>
+            <SliderOutput>{state.values.join(' - ')}</SliderOutput>
           )}
           {includeTextField && (
-            <NumberField
-              value={state.values[0]}
-              onChange={(v) => state.setThumbValue(0, v)}
-            >
+            <NumberField value={state.values[0]}>
               <Input />
             </NumberField>
           )}

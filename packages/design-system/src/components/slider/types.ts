@@ -20,7 +20,7 @@ import type {
   SliderTrackProps as RACSliderTrackProps,
   SliderOutputProps as RACSliderOutputProps,
 } from 'react-aria-components';
-import type { RenderPropsChildren } from '../../types';
+import type { AsType, RenderPropsChildren } from '../../types';
 import type { PartialDeep } from 'type-fest';
 import type { InputClassNames } from '../input';
 import type { GroupClassNames } from '../group';
@@ -53,9 +53,9 @@ export type SliderClassNames = PartialDeep<{
 
 export type SliderLabelAlignment = 'stacked' | 'inline';
 
-export type SliderRenderProps = RACSliderRenderProps;
-export type SliderThumbRenderProps = RACSliderThumbRenderProps;
-export type SliderTrackRenderProps = RACSliderTrackRenderProps;
+export type SliderRenderProps = AsType<RACSliderRenderProps>;
+export type SliderThumbRenderProps = AsType<RACSliderThumbRenderProps>;
+export type SliderTrackRenderProps = AsType<RACSliderTrackRenderProps>;
 
 type BaseSliderProps = {
   children?: RenderPropsChildren<SliderRenderProps>;
