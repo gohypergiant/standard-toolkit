@@ -222,13 +222,13 @@ export const sliderClassNames: SliderClassNames = {
               width: sliderSpaceVars.track.thickness,
               minHeight: sliderSpaceVars.track.minDimension,
               '::before': {
-                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                height: `calc(${sliderSpaceVars.thumb.width} / 2)`,
                 left: 0,
                 right: 0,
                 bottom: '100%',
               },
               '::after': {
-                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                height: `calc(${sliderSpaceVars.thumb.width} / 2)`,
                 left: 0,
                 right: 0,
                 top: '100%',
@@ -244,6 +244,11 @@ export const sliderClassNames: SliderClassNames = {
           position: 'relative',
           background: sliderColorVars.bar.color,
           '::before': {
+            content: '',
+            position: 'absolute',
+            background: sliderColorVars.bar.color,
+          },
+          '::after': {
             content: '',
             position: 'absolute',
             background: sliderColorVars.bar.color,
@@ -264,10 +269,17 @@ export const sliderClassNames: SliderClassNames = {
               query: { orientation: 'vertical' },
               width: '100%',
               '::before': {
-                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                height: `calc(${sliderSpaceVars.thumb.width} / 2)`,
                 left: 0,
                 right: 0,
                 bottom: '100%',
+              },
+              '::after': {
+                height: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                left: 0,
+                right: 0,
+                top: '100%',
+                zIndex: 1,
               },
             },
           ),
