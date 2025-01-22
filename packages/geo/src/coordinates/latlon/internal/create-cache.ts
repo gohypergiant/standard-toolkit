@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { FORMATS, SYMBOLS, type Format } from '.';
+import { FORMATS, type Format, SYMBOLS } from '.';
 
 export type CoordinateCache = Record<Format, string>;
 

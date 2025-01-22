@@ -10,18 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
+import { mergeProps as mergePropsWithoutStyles } from '@react-aria/utils';
 import { clsx } from 'clsx';
 import { mergeWith } from 'lodash';
 import type { CSSProperties } from 'react';
-import { mergeProps as mergePropsWithoutStyles } from '@react-aria/utils';
 import { composeRenderProps } from 'react-aria-components';
 import { z } from 'zod';
 import type {
+  AsType,
   ClassNameRenderProps,
   ClassNames,
   RenderProps,
   StylePropRenderProps,
-  AsType,
 } from '../types';
 
 type Props<T extends object> = AsType<T> | null | undefined;

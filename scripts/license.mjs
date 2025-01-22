@@ -12,7 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { fs, glob, path, argv } from 'zx';
+import { fs, path, argv, glob } from 'zx';
 
 const HEADER = `Copyright ${new Date().getFullYear()} Hypergiant Galactic Systems Inc. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");

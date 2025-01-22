@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { expect, it, describe } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
   createCoordinate,
@@ -22,8 +22,8 @@ import {
 } from '.';
 import { coordinateSystems } from './coordinates/coordinate';
 
-import { EXHAUSTIVE_ERRORS } from './coordinates/latlon/internal/exhaustive-errors';
 import type { Format } from './coordinates/latlon/internal';
+import { EXHAUSTIVE_ERRORS } from './coordinates/latlon/internal/exhaustive-errors';
 import { parseUTM } from './coordinates/utm/parser';
 
 describe('creating a coordinate object', () => {

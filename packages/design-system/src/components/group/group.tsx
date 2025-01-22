@@ -12,11 +12,11 @@
 
 import {
   Children,
+  type ForwardedRef,
+  type ReactElement,
   createContext,
   forwardRef,
   useMemo,
-  type ForwardedRef,
-  type ReactElement,
 } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import { useContextProps, useTheme } from '../../hooks';

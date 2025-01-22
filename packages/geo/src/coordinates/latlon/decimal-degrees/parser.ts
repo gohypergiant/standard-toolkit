@@ -14,14 +14,14 @@ import * as Patterning from '@/patterning';
 
 import {
   BEARINGS,
+  type Format,
   LIMITS,
   PARTIAL_PATTERNS,
-  SYMBOL_PATTERNS,
   SYMBOLS,
-  type Format,
+  SYMBOL_PATTERNS,
 } from '../internal';
-import { createParser } from '../internal/parse-format';
 import type { ParseResults } from '../internal/parse';
+import { createParser } from '../internal/parse-format';
 
 type DecimalDegrees = {
   bear: string;

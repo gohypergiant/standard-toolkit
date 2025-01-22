@@ -16,14 +16,14 @@ import { systemDegreesMinutesSeconds } from './latlon/degrees-minutes-seconds/sy
 import {
   type Axes,
   type Errors,
-  type Format,
   FORMATS_DEFAULT,
+  type Format,
   SYMBOLS,
 } from './latlon/internal';
 import type { CoordinateSystem } from './latlon/internal/coordinate-sytem';
 import {
-  createCache,
   type CoordinateCache,
+  createCache,
 } from './latlon/internal/create-cache';
 import type { Tokens } from './latlon/internal/lexer';
 import { systemMGRS } from './mgrs/system';

@@ -16,13 +16,13 @@ import {
   useCallback,
   useContext,
 } from 'react';
-import { useValueEditor, type ValueEditorProps } from 'react-querybuilder';
+import { type ValueEditorProps, useValueEditor } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
 import { Input, type InputType } from '../input';
 import { Radio, RadioGroup } from '../radio';
 import { Switch } from '../switch';
 import { TextArea } from '../textarea';
-import { multiValueOperators, QueryBuilderContext } from './constants';
+import { QueryBuilderContext, multiValueOperators } from './constants';
 import type { QueryBuilderValueEditors } from './types';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';

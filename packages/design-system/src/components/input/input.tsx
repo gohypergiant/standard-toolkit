@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { useControlledState } from '@react-stately/utils';
 import { useFocusRing } from '@react-aria/focus';
 import { useHover } from '@react-aria/interactions';
+import { useControlledState } from '@react-stately/utils';
 import {
   type ChangeEvent,
   type ForwardedRef,
