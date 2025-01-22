@@ -186,18 +186,53 @@ export const sliderClassNames: SliderClassNames = {
       '@layer': {
         [layers.components.l1]: {
           position: 'relative',
+          margin: `calc(${sliderSpaceVars.thumb.width} / 2)`,
           background: sliderColorVars.track.color,
+          '::before': {
+            content: '',
+            position: 'absolute',
+            background: sliderColorVars.track.color,
+          },
+          '::after': {
+            content: '',
+            position: 'absolute',
+            background: sliderColorVars.track.color,
+          },
           '@container': containerQueries<SliderState>(
             sliderStateVars,
             {
               query: { orientation: 'horizontal' },
               minWidth: sliderSpaceVars.track.minDimension,
               height: sliderSpaceVars.track.thickness,
+              '::before': {
+                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                top: 0,
+                bottom: 0,
+                right: '100%',
+              },
+              '::after': {
+                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                top: 0,
+                bottom: 0,
+                left: '100%',
+              },
             },
             {
               query: { orientation: 'vertical' },
               width: sliderSpaceVars.track.thickness,
               minHeight: sliderSpaceVars.track.minDimension,
+              '::before': {
+                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                left: 0,
+                right: 0,
+                bottom: '100%',
+              },
+              '::after': {
+                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                left: 0,
+                right: 0,
+                top: '100%',
+              },
             },
           ),
         },
@@ -206,16 +241,34 @@ export const sliderClassNames: SliderClassNames = {
     bar: style({
       '@layer': {
         [layers.components.l1]: {
+          position: 'relative',
           background: sliderColorVars.bar.color,
+          '::before': {
+            content: '',
+            position: 'absolute',
+            background: sliderColorVars.bar.color,
+          },
           '@container': containerQueries<SliderState>(
             sliderStateVars,
             {
               query: { orientation: 'horizontal' },
               height: '100%',
+              '::before': {
+                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                top: 0,
+                bottom: 0,
+                right: '100%',
+              },
             },
             {
               query: { orientation: 'vertical' },
               width: '100%',
+              '::before': {
+                width: `calc(${sliderSpaceVars.thumb.width} / 2)`,
+                left: 0,
+                right: 0,
+                bottom: '100%',
+              },
             },
           ),
         },
@@ -226,6 +279,7 @@ export const sliderClassNames: SliderClassNames = {
     container: style({
       position: 'absolute',
       transform: 'translate(-50%, -50%)',
+      zIndex: 1,
       '@layer': {
         [layers.components.l1]: {
           '@container': containerQueries<SliderState>(
