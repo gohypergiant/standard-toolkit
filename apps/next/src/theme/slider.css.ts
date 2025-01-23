@@ -14,6 +14,7 @@ import { style } from '@vanilla-extract/css';
 import {
   type SliderState,
   type SliderThumbState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   sizeVars,
@@ -23,7 +24,6 @@ import {
   sliderSpaceVars,
   sliderStateVars,
   sliderThumbStateVars,
-  type ThemeContext,
   radiusVars,
 } from '@accelint/design-system/vanilla';
 

@@ -295,6 +295,7 @@ export type {
   SliderProps,
   SliderRenderProps,
   SliderState,
+  SliderThumbState,
 } from './components/slider/types';
 export {
   switchClassNames,
