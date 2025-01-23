@@ -284,6 +284,19 @@ export type {
   SelectState,
 } from './components/select/types';
 export {
+  sliderClassNames,
+  sliderColorVars,
+  sliderSpaceVars,
+  sliderStateVars,
+} from './components/slider/slider.css';
+export type {
+  SliderClassNames,
+  SliderLabelAlignment,
+  SliderProps,
+  SliderRenderProps,
+  SliderState,
+} from './components/slider/types';
+export {
   switchClassNames,
   switchColorVars,
   switchContainer,
