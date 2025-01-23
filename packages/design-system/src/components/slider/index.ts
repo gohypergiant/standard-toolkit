@@ -29,7 +29,7 @@ export {
   sliderTrackStateVars,
 } from './slider.css';
 export {
-  type SliderLabelAlignment,
+  type SliderLayout,
   type SliderClassNames,
   type SliderProps,
   type SliderRenderProps,
