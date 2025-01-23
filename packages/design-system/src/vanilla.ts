@@ -288,6 +288,7 @@ export {
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
+  sliderThumbStateVars,
 } from './components/slider/slider.css';
 export type {
   SliderClassNames,
