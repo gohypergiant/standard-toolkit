@@ -66,7 +66,7 @@ const args: ArgTypes<
     },
     defaultValue: 'Slider label',
   },
-  alignLabel: {
+  layout: {
     control: {
       type: 'select',
     },
@@ -135,7 +135,9 @@ export const SliderExample: Story<
       {({ state }) => (
         <>
           {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
-          {includeOutputField && <SliderOutput>{state.values.join(' - ')}</SliderOutput>}
+          {includeOutputField && (
+            <SliderOutput>{state.values.join(' - ')}</SliderOutput>
+          )}
           {includeTextField && (
             <NumberField
               value={state.values[0]}

@@ -303,7 +303,7 @@ export const Slider = forwardRef(function Slider(
   const {
     children: childrenProp,
     classNames: classNamesProp,
-    alignLabel = 'stacked',
+    layout = 'stacked',
     minValue,
     maxValue,
     orientation = 'horizontal',
@@ -321,9 +321,9 @@ export const Slider = forwardRef(function Slider(
     ({ ...renderProps }: SliderRenderProps) =>
       inlineVars(sliderStateVars, {
         ...renderProps,
-        alignLabel,
+        layout,
       }),
-    [alignLabel],
+    [layout],
   );
 
   const values = useMemo<

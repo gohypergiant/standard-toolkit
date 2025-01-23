@@ -51,7 +51,7 @@ export type SliderClassNames = PartialDeep<{
   group: GroupClassNames;
 }>;
 
-export type SliderLabelAlignment = 'stacked' | 'inline';
+export type SliderLayout = 'stacked' | 'inline';
 
 export type SliderRenderProps = AsType<RACSliderRenderProps>;
 export type SliderThumbRenderProps = AsType<RACSliderThumbRenderProps>;
@@ -60,13 +60,13 @@ export type SliderTrackRenderProps = AsType<RACSliderTrackRenderProps>;
 type BaseSliderProps = {
   children?: RenderPropsChildren<SliderRenderProps>;
   classNames?: SliderClassNames;
-  alignLabel?: SliderLabelAlignment;
+  layout?: SliderLayout;
   minValue?: number;
   maxValue?: number;
 };
 
 export type SliderState = Omit<RACSliderRenderProps, 'state'> &
-  Required<Pick<BaseSliderProps, 'alignLabel'>>;
+  Required<Pick<BaseSliderProps, 'layout'>>;
 
 export type SliderProps = Omit<
   RACSliderProps,

@@ -292,7 +292,7 @@ export {
 } from './components/slider/slider.css';
 export type {
   SliderClassNames,
-  SliderLabelAlignment,
+  SliderLayout,
   SliderProps,
   SliderRenderProps,
   SliderState,

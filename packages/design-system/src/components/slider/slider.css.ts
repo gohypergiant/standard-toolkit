@@ -49,13 +49,13 @@ export const sliderSpaceVars = createThemeContract({
 });
 
 export const sliderStateVars = createThemeContract({
-  alignLabel: '',
+  layout: '',
   orientation: '',
   isDisabled: '',
 });
 
 export const sliderThumbStateVars = createThemeContract({
-  alignLabel: '',
+  layout: '',
   isDisabled: '',
   isDragging: '',
   isFocused: '',
@@ -64,7 +64,7 @@ export const sliderThumbStateVars = createThemeContract({
 });
 
 export const sliderTrackStateVars = createThemeContract({
-  alignLabel: '',
+  layout: '',
   isDisabled: '',
   isHovered: '',
 });
@@ -91,13 +91,13 @@ export const sliderClassNames: SliderClassNames = {
           '@container': containerQueries<SliderState>(
             sliderStateVars,
             {
-              query: { orientation: 'horizontal', alignLabel: 'inline' },
+              query: { orientation: 'horizontal', layout: 'inline' },
               gridTemplateAreas: `'label min track max io'`,
               gap: sliderSpaceVars.gap,
               alignItems: 'center',
             },
             {
-              query: { orientation: 'vertical', alignLabel: 'stacked' },
+              query: { orientation: 'vertical', layout: 'stacked' },
               width: 'fit-content',
               gridTemplateAreas: `'label label label'
               'max track .'
@@ -107,7 +107,7 @@ export const sliderClassNames: SliderClassNames = {
               gridTemplateRows: 'auto auto 1fr auto',
             },
             {
-              query: { orientation: 'vertical', alignLabel: 'inline' },
+              query: { orientation: 'vertical', layout: 'inline' },
               gridTemplateAreas: `'label label label'
               'max . .'
               'track . .'
@@ -142,12 +142,12 @@ export const sliderClassNames: SliderClassNames = {
           '@container': containerQueries<SliderState>(
             sliderStateVars,
             {
-              query: { orientation: 'vertical', alignLabel: 'stacked' },
+              query: { orientation: 'vertical', layout: 'stacked' },
               alignSelf: 'end',
               justifySelf: 'end',
             },
             {
-              query: { orientation: 'vertical', alignLabel: 'inline' },
+              query: { orientation: 'vertical', layout: 'inline' },
               justifySelf: 'center',
             },
           ),
@@ -160,7 +160,7 @@ export const sliderClassNames: SliderClassNames = {
           gridArea: 'max',
           justifySelf: 'end',
           '@container': containerQueries<SliderState>(sliderStateVars, {
-            query: { orientation: 'vertical', alignLabel: 'inline' },
+            query: { orientation: 'vertical', layout: 'inline' },
             justifySelf: 'center',
           }),
         },
@@ -175,7 +175,7 @@ export const sliderClassNames: SliderClassNames = {
           '@container': containerQueries<SliderState>(sliderStateVars, {
             query: {
               orientation: 'vertical',
-              alignLabel: 'inline',
+              layout: 'inline',
             },
             justifySelf: 'center',
           }),
