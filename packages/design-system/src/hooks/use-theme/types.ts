@@ -29,6 +29,7 @@ import type { QueryBuilderClassNames } from '../../components/query-builder/type
 import type { RadioClassNames } from '../../components/radio/types';
 import type { SearchFieldClassNames } from '../../components/search-field/types';
 import type { SelectClassNames } from '../../components/select/types';
+import type { SliderClassNames } from '@/components/slider';
 import type { SwitchClassNames } from '../../components/switch/types';
 import type { TabsClassNames } from '../../components/tabs/types';
 import type { TextFieldClassNames } from '../../components/text-field/types';
@@ -85,6 +86,8 @@ export type ThemeContext = {
   SearchField?: SearchFieldClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Select?: SelectClassNames;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  Slider?: SliderClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Switch?: SwitchClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
