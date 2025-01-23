@@ -375,7 +375,7 @@ export type {
   SelectRenderProps,
   SelectState,
   SliderClassNames,
-  SliderLabelAlignment,
+  SliderLayout,
   SliderProps,
   SliderRenderProps,
   SliderState,

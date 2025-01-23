@@ -344,7 +344,7 @@ export {
   sliderStateVars,
   sliderThumbStateVars,
   sliderTrackStateVars,
-  type SliderLabelAlignment,
+  type SliderLayout,
   type SliderClassNames,
   type SliderProps,
   type SliderRenderProps,
