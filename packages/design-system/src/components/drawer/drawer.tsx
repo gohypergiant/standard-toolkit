@@ -93,6 +93,7 @@ export function Drawer(props: DrawerProps) {
     isKeyboardDismissDisabled = false,
     isOpen: isOpenProp,
     onOpenChange,
+    ...rest
   } = props;
 
   const theme = useTheme();
@@ -193,7 +194,9 @@ export function Drawer(props: DrawerProps) {
         className={classNames?.container}
         style={style}
       >
-        <Tabs classNames={classNames?.tabs}>{children}</Tabs>
+        <Tabs classNames={classNames?.tabs} {...rest}>
+          {children}
+        </Tabs>
       </div>
     </Provider>
   );
