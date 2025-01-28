@@ -61,9 +61,7 @@ export const Slider: ThemeContext['Slider'] = {
       applyThemeVars<SliderState>(sliderStateVars, [
         {
           vars: assignPartialVars(sliderColorVars, {
-            color: {
-              color: genericColorVars.condition.base.v2,
-            },
+            color: genericColorVars.condition.base.v2,
           }),
         },
       ]),
@@ -72,9 +70,7 @@ export const Slider: ThemeContext['Slider'] = {
       applyThemeVars<SliderState>(sliderStateVars, [
         {
           vars: assignPartialVars(sliderColorVars, {
-            color: {
-              color: genericColorVars.condition.base.v2,
-            },
+            color: genericColorVars.condition.base.v2,
           }),
         },
       ]),
