@@ -37,8 +37,8 @@ import {
   AriaTextContext,
   GroupContext,
   type GroupProps,
-  InputContext,
-  type InputProps,
+  NumberFieldContext,
+  type NumberFieldProps,
 } from '../../components';
 import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
@@ -316,7 +316,7 @@ export const Slider = forwardRef(function Slider(
     () => mergeClassNames(sliderClassNames, theme.Slider, classNamesProp),
     [theme.Slider, classNamesProp],
   );
-
+  console.log({ classNames });
   const style = useCallback(
     ({ ...renderProps }: SliderRenderProps) =>
       inlineVars(sliderStateVars, {
@@ -330,7 +330,10 @@ export const Slider = forwardRef(function Slider(
     [
       [typeof AriaLabelContext, ContextValue<LabelProps, HTMLLabelElement>],
       [typeof AriaTextContext, ContextValue<TextProps, HTMLElement>],
-      [typeof InputContext, ContextValue<InputProps, HTMLInputElement>],
+      [
+        typeof NumberFieldContext,
+        ContextValue<NumberFieldProps, HTMLDivElement>,
+      ],
       [
         typeof SliderOutputContext,
         ContextValue<SliderOutputProps, HTMLOutputElement>,
@@ -341,7 +344,10 @@ export const Slider = forwardRef(function Slider(
       ],
       [
         typeof GroupContext,
-        ContextValue<GroupProps<InputProps, HTMLInputElement>, HTMLDivElement>,
+        ContextValue<
+          GroupProps<NumberFieldProps, HTMLDivElement>,
+          HTMLDivElement
+        >,
       ],
     ]
   >(
@@ -367,15 +373,17 @@ export const Slider = forwardRef(function Slider(
           },
         },
       ],
-      [InputContext, { classNames: classNames?.input }],
+      [NumberFieldContext, { classNames: classNames?.numberField }],
       [SliderOutputContext, { classNames }],
       [SliderTrackContext, { classNames }],
       [
         GroupContext,
         {
           classNames: classNames?.group,
+          context: NumberFieldContext,
           orientation,
           reverse: orientation === 'vertical',
+          values: { classNames: classNames?.group?.numberField },
         },
       ],
     ],

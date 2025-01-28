@@ -23,7 +23,7 @@ import type {
 import type { PartialDeep } from 'type-fest';
 import type { AsType, RenderPropsChildren } from '../../types';
 import type { GroupClassNames } from '../group';
-import type { InputClassNames } from '../input';
+import type { NumberFieldClassNames } from '../number-field';
 
 export type SliderClassNames = PartialDeep<{
   slider: {
@@ -43,12 +43,14 @@ export type SliderClassNames = PartialDeep<{
     container: string;
     thumb: string;
   };
-  input: InputClassNames;
+  numberField: NumberFieldClassNames;
   output: {
     container: string;
     output: string;
   };
-  group: GroupClassNames;
+  group: GroupClassNames & {
+    numberField: NumberFieldClassNames;
+  };
 }>;
 
 export type SliderLayout = 'stacked' | 'inline';
