@@ -10,26 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
-import { esbuildPluginFilePathExtensions as extensionsPlugin } from 'esbuild-plugin-file-path-extensions';
-import lodashPlugin from 'esbuild-plugin-lodash';
-import { defineConfig } from 'tsup';
+import { action } from '@storybook/addon-actions';
 
-export default defineConfig({
-  esbuildPlugins: [
-    vanillaExtractPlugin({
-      outputCss: false,
-    }),
-    // Must go after VE
-    lodashPlugin(),
-    extensionsPlugin({
-      esm: true,
-      esmExtension: 'js',
-    }),
-  ],
-  entry: ['src/**/*.{ts,tsx}', '!src/**/*.{stories,test}.{ts,tsx}'],
-  dts: true,
-  format: 'esm',
-  sourcemap: true,
-  treeshake: true,
-});
+export function actions<T>(...keys: (keyof T)[]): Partial<T> {
+  return keys.reduce<Partial<T>>((acc, key) => {
+    acc[key] = action(key as string) as T[keyof T];
+
+    return acc;
+  }, {});
+}

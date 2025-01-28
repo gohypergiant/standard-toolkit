@@ -1,7 +1,19 @@
-import type { Story, StoryDefault } from '@ladle/react';
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { TooltipTrigger } from 'react-aria-components';
-import { actions } from '../../ladle';
+import { actions } from '../../storybook/actions';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
 import { Element } from '../element';
@@ -11,15 +23,27 @@ import { Tooltip, TooltipTarget } from '../tooltip';
 import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './drawer';
 import type { DrawerProps } from './types';
 
-export default {
+const meta: Meta = {
   title: 'Components/Drawer',
+  component: Drawer,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen',
+  },
+  args: {
+    anchor: 'right',
+    layoutShift: false,
+    shouldCloseOnBlur: false,
+    isDismissable: true,
+    isKeyboardDismissDisabled: false,
+    ...actions<DrawerProps>('onOpenChange', 'onSelectionChange'),
+  },
   argTypes: {
     anchor: {
       control: {
         type: 'select',
       },
       options: ['left', 'right'],
-      defaultValue: 'right',
     },
     layoutShift: {
       control: {
@@ -35,7 +59,6 @@ export default {
       control: {
         type: 'boolean',
       },
-      defaultValue: true,
     },
     isKeyboardDismissDisabled: {
       control: {
@@ -43,192 +66,59 @@ export default {
       },
     },
   },
-} satisfies StoryDefault<DrawerProps>;
-
-export const SingleTabbedExample: Story<DrawerProps> = (props) => {
-  const caretRight = (
-    <Icon size='md'>
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-        <title>Ladle</title>
-        <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-        <path d='M9 6c0 -.852 .986 -1.297 1.623 -.783l.084 .076l6 6a1 1 0 0 1 .083 1.32l-.083 .094l-6 6l-.094 .083l-.077 .054l-.096 .054l-.036 .017l-.067 .027l-.108 .032l-.053 .01l-.06 .01l-.057 .004l-.059 .002l-.059 -.002l-.058 -.005l-.06 -.009l-.052 -.01l-.108 -.032l-.067 -.027l-.132 -.07l-.09 -.065l-.081 -.073l-.083 -.094l-.054 -.077l-.054 -.096l-.017 -.036l-.027 -.067l-.032 -.108l-.01 -.053l-.01 -.06l-.004 -.057l-.002 -12.059z' />
-      </svg>
-    </Icon>
-  );
-
-  const caretLeft = (
-    <Icon size='md'>
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-        <title>Ladle</title>
-        <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-        <path d='M13.883 5.007l.058 -.005h.118l.058 .005l.06 .009l.052 .01l.108 .032l.067 .027l.132 .07l.09 .065l.081 .073l.083 .094l.054 .077l.054 .096l.017 .036l.027 .067l.032 .108l.01 .053l.01 .06l.004 .057l.002 .059v12c0 .852 -.986 1.297 -1.623 .783l-.084 -.076l-6 -6a1 1 0 0 1 -.083 -1.32l.083 -.094l6 -6l.094 -.083l.077 -.054l.096 -.054l.036 -.017l.067 -.027l.108 -.032l.053 -.01l.06 -.01z' />
-      </svg>
-    </Icon>
-  );
-
-  const openCarent = props.anchor === 'left' ? caretLeft : caretRight;
-  const closeCaret = props.anchor === 'left' ? caretRight : caretLeft;
-
-  return (
-    <div style={{ height: '100%', display: 'flex' }}>
-      {props.anchor === 'right' && (
-        <div
-          style={{
-            padding: '24px',
-            flex: 1,
-            background: 'lightgray',
-            color: 'black',
-          }}
-        >
-          {content}
-        </div>
-      )}
-      <Drawer
-        {...props}
-        {...actions<DrawerProps>('onOpenChange', 'onSelectionChange')}
-      >
-        <DrawerTabList>
-          <DrawerTab id='a'>
-            {({ isOpen }) => (isOpen ? openCarent : closeCaret)}
-          </DrawerTab>
-        </DrawerTabList>
-        <DrawerDialog>
-          <Element slot='header'>
-            <AriaHeading slot='title'>Hello</AriaHeading>
-            <Button slot='close'>
-              <Icon fill='none' size='relative' stroke='currentcolor'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <title>Ladle</title>
-                  <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                  <path d='M18 6l-12 12' />
-                  <path d='M6 6l12 12' />
-                </svg>
-              </Icon>
-            </Button>
-          </Element>
-          <Element slot='content'>
-            <TabPanels>
-              <TabPanel id='a'>
-                <p>Some content</p>
-              </TabPanel>
-            </TabPanels>
-          </Element>
-          <Element slot='footer'>Footer</Element>
-        </DrawerDialog>
-      </Drawer>
-      {props.anchor === 'left' && (
-        <div
-          style={{
-            padding: '24px',
-            flex: 1,
-            background: 'lightgray',
-            color: 'black',
-          }}
-        />
-      )}
-    </div>
-  );
 };
 
-SingleTabbedExample.storyName = 'Single Tabbed';
+export default meta;
 
-export const MultiTabbedExample: Story<DrawerProps> = (props) => {
-  const [isChildPane, setIsChildPane] = useState(false);
+export const SingleTabbed: StoryObj<DrawerProps> = {
+  render: (props) => {
+    const caretRight = (
+      <Icon size='md'>
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+          <title>Caret Right Icon</title>
+          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+          <path d='M9 6c0 -.852 .986 -1.297 1.623 -.783l.084 .076l6 6a1 1 0 0 1 .083 1.32l-.083 .094l-6 6l-.094 .083l-.077 .054l-.096 .054l-.036 .017l-.067 .027l-.108 .032l-.053 .01l-.06 .01l-.057 .004l-.059 .002l-.059 -.002l-.058 -.005l-.06 -.009l-.052 -.01l-.108 -.032l-.067 -.027l-.132 -.07l-.09 -.065l-.081 -.073l-.083 -.094l-.054 -.077l-.054 -.096l-.017 -.036l-.027 -.067l-.032 -.108l-.01 -.053l-.01 -.06l-.004 -.057l-.002 -12.059z' />
+        </svg>
+      </Icon>
+    );
 
-  /**
-   * This story provides a very simplistic implementation of a
-   * Parent/Child content example to highlight the "back" button
-   * and how it affects the header style
-   */
+    const caretLeft = (
+      <Icon size='md'>
+        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+          <title>Caret Left Icon</title>
+          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+          <path d='M13.883 5.007l.058 -.005h.118l.058 .005l.06 .009l.052 .01l.108 .032l.067 .027l.132 .07l.09 .065l.081 .073l.083 .094l.054 .077l.054 .096l.017 .036l.027 .067l.032 .108l.01 .053l.01 .06l.004 .057l.002 .059v12c0 .852 -.986 1.297 -1.623 .783l-.084 -.076l-6 -6a1 1 0 0 1 -.083 -1.32l.083 -.094l6 -6l.094 -.083l.077 -.054l.096 -.054l.036 -.017l.067 -.027l.108 -.032l.053 -.01l.06 -.01z' />
+        </svg>
+      </Icon>
+    );
 
-  return (
-    <div style={{ height: '100%', display: 'flex' }}>
-      {props.anchor === 'right' && (
-        <div
-          style={{
-            padding: '24px',
-            flex: 1,
-            background: 'lightgray',
-            color: 'black',
-          }}
-        >
-          {content}
-        </div>
-      )}
-      <Drawer
-        {...props}
-        {...actions<DrawerProps>('onOpenChange', 'onSelectionChange')}
-      >
-        <DrawerTabList>
-          <DrawerTab id='a'>
-            <TooltipTrigger>
-              <TooltipTarget>
-                <Icon size='md'>
-                  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                    <title>Ladle</title>
-                    <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                    <path d='M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.051 6.844a1 1 0 0 0 -1.152 -.663l-.113 .03l-2.684 .895l-2.684 -.895l-.113 -.03a1 1 0 0 0 -.628 1.884l.109 .044l2.316 .771v.976l-1.832 2.75l-.06 .1a1 1 0 0 0 .237 1.21l.1 .076l.101 .06a1 1 0 0 0 1.21 -.237l.076 -.1l1.168 -1.752l1.168 1.752l.07 .093a1 1 0 0 0 1.653 -1.102l-.059 -.1l-1.832 -2.75v-.977l2.316 -.771l.109 -.044a1 1 0 0 0 .524 -1.221zm-3.949 -4.184a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0 -3z' />
-                  </svg>
-                </Icon>
-              </TooltipTarget>
-              <Tooltip>People</Tooltip>
-            </TooltipTrigger>
-          </DrawerTab>
-          <DrawerTab id='b'>
-            <TooltipTrigger>
-              <TooltipTarget>
-                <Icon size='md'>
-                  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                    <title>Ladle</title>
-                    <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                    <path d='M16 6.072a8 8 0 1 1 -11.995 7.213l-.005 -.285l.005 -.285a8 8 0 0 1 11.995 -6.643zm-4 2.928a1 1 0 0 0 -1 1v3l.007 .117a1 1 0 0 0 .993 .883h2l.117 -.007a1 1 0 0 0 .883 -.993l-.007 -.117a1 1 0 0 0 -.993 -.883h-1v-2l-.007 -.117a1 1 0 0 0 -.993 -.883z' />
-                    <path d='M6.412 3.191a1 1 0 0 1 1.273 1.539l-.097 .08l-2.75 2a1 1 0 0 1 -1.273 -1.54l.097 -.08l2.75 -2z' />
-                    <path d='M16.191 3.412a1 1 0 0 1 1.291 -.288l.106 .067l2.75 2a1 1 0 0 1 -1.07 1.685l-.106 -.067l-2.75 -2a1 1 0 0 1 -.22 -1.397z' />
-                  </svg>
-                </Icon>
-              </TooltipTarget>
-              <Tooltip>Alarms</Tooltip>
-            </TooltipTrigger>
-          </DrawerTab>
-          <DrawerTab id='c'>
-            <TooltipTrigger>
-              <TooltipTarget>
-                <Icon size='md'>
-                  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                    <title>Ladle</title>
-                    <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                    <path d='M13.666 1.429l6.75 3.98q .1 .06 .18 .133l.009 .008l.106 .075a3.22 3.22 0 0 1 1.284 2.39l.005 .203v7.284c0 1.175 -.643 2.256 -1.623 2.793l-6.804 4.302c-.98 .538 -2.166 .538 -3.2 -.032l-6.695 -4.237a3.23 3.23 0 0 1 -1.678 -2.826v-7.285a3.21 3.21 0 0 1 1.65 -2.808l6.775 -3.995a3.34 3.34 0 0 1 3.24 .015m-.64 5.343a2.03 2.03 0 0 0 -2 -.014l-3.023 1.804a1.99 1.99 0 0 0 -1.002 1.736v3.278a2 2 0 0 0 1.03 1.75l2.946 1.89c.657 .367 1.39 .367 1.994 .033l3.054 -1.955c.582 -.322 .976 -.992 .976 -1.719v-3.277l-.005 -.164a2 2 0 0 0 -.725 -1.391l-.092 -.07l-.056 -.047a1 1 0 0 0 -.096 -.064z' />
-                  </svg>
-                </Icon>
-              </TooltipTarget>
-              <Tooltip>Containers</Tooltip>
-            </TooltipTrigger>
-          </DrawerTab>
-          <DrawerTab id='d'>
-            <TooltipTrigger>
-              <TooltipTarget>
-                <Icon size='md'>
-                  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                    <title>Ladle</title>
-                    <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                    <path d='M12.088 4.82a10 10 0 0 1 9.412 .314a1 1 0 0 1 .493 .748l.007 .118v13a1 1 0 0 1 -1.5 .866a8 8 0 0 0 -8 0a1 1 0 0 1 -1 0a8 8 0 0 0 -7.733 -.148l-.327 .18l-.103 .044l-.049 .016l-.11 .026l-.061 .01l-.117 .006h-.042l-.11 -.012l-.077 -.014l-.108 -.032l-.126 -.056l-.095 -.056l-.089 -.067l-.06 -.056l-.073 -.082l-.064 -.089l-.022 -.036l-.032 -.06l-.044 -.103l-.016 -.049l-.026 -.11l-.01 -.061l-.004 -.049l-.002 -.068v-13a1 1 0 0 1 .5 -.866a10 10 0 0 1 9.412 -.314l.088 .044l.088 -.044z' />
-                  </svg>
-                </Icon>
-              </TooltipTarget>
-              <Tooltip>Books</Tooltip>
-            </TooltipTrigger>
-          </DrawerTab>
-        </DrawerTabList>
-        <DrawerDialog>
-          <Element slot='header'>
-            {isChildPane && (
-              <Button slot='back' onPress={() => setIsChildPane(false)}>
+    const openCaret = props.anchor === 'left' ? caretLeft : caretRight;
+    const closeCaret = props.anchor === 'left' ? caretRight : caretLeft;
+
+    return (
+      <div style={{ height: '100vh', display: 'flex' }}>
+        {props.anchor === 'right' && (
+          <div
+            style={{
+              padding: '24px',
+              flex: 1,
+              background: 'lightgray',
+              color: 'black',
+            }}
+          >
+            {content}
+          </div>
+        )}
+        <Drawer {...props}>
+          <DrawerTabList>
+            <DrawerTab id='a'>
+              {({ isOpen }) => (isOpen ? openCaret : closeCaret)}
+            </DrawerTab>
+          </DrawerTabList>
+          <DrawerDialog>
+            <Element slot='header'>
+              <AriaHeading slot='title'>Hello</AriaHeading>
+              <Button slot='close'>
                 <Icon fill='none' size='relative' stroke='currentcolor'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -237,73 +127,204 @@ export const MultiTabbedExample: Story<DrawerProps> = (props) => {
                     strokeLinecap='round'
                     strokeLinejoin='round'
                   >
-                    <title>Ladle</title>
+                    <title>Close Icon</title>
                     <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                    <path d='M15 6l-6 6l6 6' fill='none' />
+                    <path d='M18 6l-12 12' />
+                    <path d='M6 6l12 12' />
                   </svg>
                 </Icon>
               </Button>
-            )}
-            <AriaHeading slot='title'>
-              {isChildPane ? 'Child' : 'Parent'}
-            </AriaHeading>
-            <Button slot='close'>
-              <Icon fill='none' size='relative' stroke='currentcolor'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  viewBox='0 0 24 24'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <title>Ladle</title>
-                  <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                  <path d='M18 6l-12 12' />
-                  <path d='M6 6l12 12' />
-                </svg>
-              </Icon>
-            </Button>
-          </Element>
-          <Element slot='content'>
-            <TabPanels>
-              <TabPanel id='a'>
-                Panel A {isChildPane ? 'child' : 'content'}
-              </TabPanel>
-              <TabPanel id='b'>
-                Panel B {isChildPane ? 'child' : 'content'}
-              </TabPanel>
-              <TabPanel id='c'>
-                Panel C {isChildPane ? 'child' : 'content'}
-              </TabPanel>
-              <TabPanel id='d'>
-                Panel D {isChildPane ? 'child' : 'content'}
-              </TabPanel>
-            </TabPanels>
-          </Element>
-          <Element slot='footer'>
-            <Button size='sm' onPress={() => setIsChildPane(true)}>
-              Add new
-            </Button>
-          </Element>
-        </DrawerDialog>
-      </Drawer>
-      {props.anchor === 'left' && (
-        <div
-          style={{
-            padding: '24px',
-            flex: 1,
-            background: 'lightgray',
-            color: 'black',
-          }}
-        >
-          {content}
-        </div>
-      )}
-    </div>
-  );
+            </Element>
+            <Element slot='content'>
+              <TabPanels>
+                <TabPanel id='a'>
+                  <p>Some content</p>
+                </TabPanel>
+              </TabPanels>
+            </Element>
+            <Element slot='footer'>Footer</Element>
+          </DrawerDialog>
+        </Drawer>
+        {props.anchor === 'left' && (
+          <div
+            style={{
+              padding: '24px',
+              flex: 1,
+              background: 'lightgray',
+              color: 'black',
+            }}
+          >
+            {content}
+          </div>
+        )}
+      </div>
+    );
+  },
 };
 
-MultiTabbedExample.storyName = 'Multi Tabbed';
+export const MultiTabbed: StoryObj<DrawerProps> = {
+  render: (props) => {
+    const [isChildPane, setIsChildPane] = useState(false);
+
+    /**
+     * This story provides a very simplistic implementation of a
+     * Parent/Child content example to highlight the "back" button
+     * and how it affects the header style
+     */
+
+    return (
+      <div style={{ height: '100vh', display: 'flex' }}>
+        {props.anchor === 'right' && (
+          <div
+            style={{
+              padding: '24px',
+              flex: 1,
+              background: 'lightgray',
+              color: 'black',
+            }}
+          >
+            {content}
+          </div>
+        )}
+        <Drawer {...props}>
+          <DrawerTabList>
+            <DrawerTab id='a'>
+              <TooltipTrigger>
+                <TooltipTarget>
+                  <Icon size='md'>
+                    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+                      <title>Person Icon</title>
+                      <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                      <path d='M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.051 6.844a1 1 0 0 0 -1.152 -.663l-.113 .03l-2.684 .895l-2.684 -.895l-.113 -.03a1 1 0 0 0 -.628 1.884l.109 .044l2.316 .771v.976l-1.832 2.75l-.06 .1a1 1 0 0 0 .237 1.21l.1 .076l.101 .06a1 1 0 0 0 1.21 -.237l.076 -.1l1.168 -1.752l1.168 1.752l.07 .093a1 1 0 0 0 1.653 -1.102l-.059 -.1l-1.832 -2.75v-.977l2.316 -.771l.109 -.044a1 1 0 0 0 .524 -1.221zm-3.949 -4.184a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0 -3z' />
+                    </svg>
+                  </Icon>
+                </TooltipTarget>
+                <Tooltip>People</Tooltip>
+              </TooltipTrigger>
+            </DrawerTab>
+            <DrawerTab id='b'>
+              <TooltipTrigger>
+                <TooltipTarget>
+                  <Icon size='md'>
+                    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+                      <title>Clock Icon</title>
+                      <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                      <path d='M16 6.072a8 8 0 1 1 -11.995 7.213l-.005 -.285l.005 -.285a8 8 0 0 1 11.995 -6.643zm-4 2.928a1 1 0 0 0 -1 1v3l.007 .117a1 1 0 0 0 .993 .883h2l.117 -.007a1 1 0 0 0 .883 -.993l-.007 -.117a1 1 0 0 0 -.993 -.883h-1v-2l-.007 -.117a1 1 0 0 0 -.993 -.883z' />
+                      <path d='M6.412 3.191a1 1 0 0 1 1.273 1.539l-.097 .08l-2.75 2a1 1 0 0 1 -1.273 -1.54l.097 -.08l2.75 -2z' />
+                      <path d='M16.191 3.412a1 1 0 0 1 1.291 -.288l.106 .067l2.75 2a1 1 0 0 1 -1.07 1.685l-.106 -.067l-2.75 -2a1 1 0 0 1 -.22 -1.397z' />
+                    </svg>
+                  </Icon>
+                </TooltipTarget>
+                <Tooltip>Alarms</Tooltip>
+              </TooltipTrigger>
+            </DrawerTab>
+            <DrawerTab id='c'>
+              <TooltipTrigger>
+                <TooltipTarget>
+                  <Icon size='md'>
+                    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+                      <title>Nut Icon</title>
+                      <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                      <path d='M13.666 1.429l6.75 3.98q .1 .06 .18 .133l.009 .008l.106 .075a3.22 3.22 0 0 1 1.284 2.39l.005 .203v7.284c0 1.175 -.643 2.256 -1.623 2.793l-6.804 4.302c-.98 .538 -2.166 .538 -3.2 -.032l-6.695 -4.237a3.23 3.23 0 0 1 -1.678 -2.826v-7.285a3.21 3.21 0 0 1 1.65 -2.808l6.775 -3.995a3.34 3.34 0 0 1 3.24 .015m-.64 5.343a2.03 2.03 0 0 0 -2 -.014l-3.023 1.804a1.99 1.99 0 0 0 -1.002 1.736v3.278a2 2 0 0 0 1.03 1.75l2.946 1.89c.657 .367 1.39 .367 1.994 .033l3.054 -1.955c.582 -.322 .976 -.992 .976 -1.719v-3.277l-.005 -.164a2 2 0 0 0 -.725 -1.391l-.092 -.07l-.056 -.047a1 1 0 0 0 -.096 -.064z' />
+                    </svg>
+                  </Icon>
+                </TooltipTarget>
+                <Tooltip>Containers</Tooltip>
+              </TooltipTrigger>
+            </DrawerTab>
+            <DrawerTab id='d'>
+              <TooltipTrigger>
+                <TooltipTarget>
+                  <Icon size='md'>
+                    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+                      <title>Book Icon</title>
+                      <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                      <path d='M12.088 4.82a10 10 0 0 1 9.412 .314a1 1 0 0 1 .493 .748l.007 .118v13a1 1 0 0 1 -1.5 .866a8 8 0 0 0 -8 0a1 1 0 0 1 -1 0a8 8 0 0 0 -7.733 -.148l-.327 .18l-.103 .044l-.049 .016l-.11 .026l-.061 .01l-.117 .006h-.042l-.11 -.012l-.077 -.014l-.108 -.032l-.126 -.056l-.095 -.056l-.089 -.067l-.06 -.056l-.073 -.082l-.064 -.089l-.022 -.036l-.032 -.06l-.044 -.103l-.016 -.049l-.026 -.11l-.01 -.061l-.004 -.049l-.002 -.068v-13a1 1 0 0 1 .5 -.866a10 10 0 0 1 9.412 -.314l.088 .044l.088 -.044z' />
+                    </svg>
+                  </Icon>
+                </TooltipTarget>
+                <Tooltip>Books</Tooltip>
+              </TooltipTrigger>
+            </DrawerTab>
+          </DrawerTabList>
+          <DrawerDialog>
+            <Element slot='header'>
+              {isChildPane && (
+                <Button slot='back' onPress={() => setIsChildPane(false)}>
+                  <Icon fill='none' size='relative' stroke='currentcolor'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      viewBox='0 0 24 24'
+                      strokeWidth='2'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    >
+                      <title>Chevron Left Icon</title>
+                      <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                      <path d='M15 6l-6 6l6 6' fill='none' />
+                    </svg>
+                  </Icon>
+                </Button>
+              )}
+              <AriaHeading slot='title'>
+                {isChildPane ? 'Child' : 'Parent'}
+              </AriaHeading>
+              <Button slot='close'>
+                <Icon fill='none' size='relative' stroke='currentcolor'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    strokeWidth='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  >
+                    <title>Close Icon</title>
+                    <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                    <path d='M18 6l-12 12' />
+                    <path d='M6 6l12 12' />
+                  </svg>
+                </Icon>
+              </Button>
+            </Element>
+            <Element slot='content'>
+              <TabPanels>
+                <TabPanel id='a'>
+                  Panel A {isChildPane ? 'child' : 'content'}
+                </TabPanel>
+                <TabPanel id='b'>
+                  Panel B {isChildPane ? 'child' : 'content'}
+                </TabPanel>
+                <TabPanel id='c'>
+                  Panel C {isChildPane ? 'child' : 'content'}
+                </TabPanel>
+                <TabPanel id='d'>
+                  Panel D {isChildPane ? 'child' : 'content'}
+                </TabPanel>
+              </TabPanels>
+            </Element>
+            <Element slot='footer'>
+              <Button size='sm' onPress={() => setIsChildPane(true)}>
+                Add new
+              </Button>
+            </Element>
+          </DrawerDialog>
+        </Drawer>
+        {props.anchor === 'left' && (
+          <div
+            style={{
+              padding: '24px',
+              flex: 1,
+              background: 'lightgray',
+              color: 'black',
+            }}
+          >
+            {content}
+          </div>
+        )}
+      </div>
+    );
+  },
+};
 
 const content = (
   <>

@@ -10,58 +10,54 @@
  * governing permissions and limitations under the License.
  */
 
-import { type Story, type StoryDefault, action } from '@ladle/react';
+import { action } from '@storybook/addon-actions';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Switch } from './switch';
 import type { SwitchProps } from './types';
 
-export default {
-  title: 'Components',
+const meta: Meta = {
+  title: 'Components/Switch',
+  component: Switch,
+  tags: ['autodocs'],
+  args: {
+    children: 'Hello',
+    alignInput: 'end',
+    isDisabled: false,
+    isReadOnly: false,
+    onChange: action('onChange'),
+  },
   argTypes: {
     children: {
       control: {
         type: 'text',
       },
-      defaultValue: 'Hello',
     },
     alignInput: {
       control: {
         type: 'select',
       },
       options: ['start', 'end'],
-      defaultValue: 'end',
     },
     isDisabled: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
     isReadOnly: {
       control: {
         type: 'boolean',
       },
-      defaultValue: false,
     },
-  },
-} satisfies StoryDefault;
-
-export const ControlledExample: Story<SwitchProps> = (props) => (
-  <Switch {...props} onChange={action('onChange')} />
-);
-
-ControlledExample.storyName = 'Switch / Controlled';
-
-ControlledExample.argTypes = {
-  isSelected: {
-    control: {
-      type: 'boolean',
-    },
-    defaultValue: false,
   },
 };
 
-export const UncontrolledExample: Story<SwitchProps> = (props) => (
-  <Switch {...props} defaultSelected={false} onChange={action('onChange')} />
-);
+export default meta;
 
-UncontrolledExample.storyName = 'Switch / Uncontrolled';
+export const Uncontrolled: StoryObj<SwitchProps> = {};
+
+/** Controlled via the `isSelected` prop */
+export const Controlled: StoryObj<SwitchProps> = {
+  args: {
+    isSelected: false,
+  },
+};

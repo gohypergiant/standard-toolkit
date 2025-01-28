@@ -10,26 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
-import { esbuildPluginFilePathExtensions as extensionsPlugin } from 'esbuild-plugin-file-path-extensions';
-import lodashPlugin from 'esbuild-plugin-lodash';
-import { defineConfig } from 'tsup';
+import { style } from '@vanilla-extract/css';
+import {
+  type ThemeContext,
+  type TooltipState,
+  applyThemeVars,
+  assignPartialVars,
+  sizeVars,
+  tooltipSpaceVars,
+  tooltipStateVars,
+} from '../../src';
 
-export default defineConfig({
-  esbuildPlugins: [
-    vanillaExtractPlugin({
-      outputCss: false,
-    }),
-    // Must go after VE
-    lodashPlugin(),
-    extensionsPlugin({
-      esm: true,
-      esmExtension: 'js',
-    }),
-  ],
-  entry: ['src/**/*.{ts,tsx}', '!src/**/*.{stories,test}.{ts,tsx}'],
-  dts: true,
-  format: 'esm',
-  sourcemap: true,
-  treeshake: true,
-});
+export const Tooltip: ThemeContext['Tooltip'] = {
+  tooltip: {
+    tooltip: style(
+      applyThemeVars<TooltipState>(tooltipStateVars, [
+        {
+          vars: assignPartialVars(tooltipSpaceVars, {
+            x: sizeVars.v03,
+            y: sizeVars.v02,
+          }),
+        },
+      ]),
+    ),
+  },
+};

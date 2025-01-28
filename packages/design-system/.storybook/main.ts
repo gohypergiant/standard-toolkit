@@ -10,26 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
-import { esbuildPluginFilePathExtensions as extensionsPlugin } from 'esbuild-plugin-file-path-extensions';
-import lodashPlugin from 'esbuild-plugin-lodash';
-import { defineConfig } from 'tsup';
+import type { StorybookConfig } from '@storybook/react-vite';
 
-export default defineConfig({
-  esbuildPlugins: [
-    vanillaExtractPlugin({
-      outputCss: false,
-    }),
-    // Must go after VE
-    lodashPlugin(),
-    extensionsPlugin({
-      esm: true,
-      esmExtension: 'js',
-    }),
-  ],
-  entry: ['src/**/*.{ts,tsx}', '!src/**/*.{stories,test}.{ts,tsx}'],
-  dts: true,
-  format: 'esm',
-  sourcemap: true,
-  treeshake: true,
-});
+import { dirname, join } from 'node:path';
+
+/**
+ * This function is used to resolve the absolute path of a package.
+ * It is needed in projects that use Yarn PnP or are set up within a monorepo.
+ */
+function getAbsolutePath(packageName: string): string {
+  return dirname(require.resolve(join(packageName, 'package.json')));
+}
+const config: StorybookConfig = {
+  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  addons: [getAbsolutePath('@storybook/addon-essentials')],
+  framework: {
+    name: '@storybook/react-vite',
+    options: {},
+  },
+};
+export default config;
