@@ -322,10 +322,19 @@ export const sliderClassNames: SliderClassNames = {
       },
     }),
   },
+  numberField: {
+    container: style({
+      '@layer': {
+        [layers.components.l2]: {
+          gridArea: 'io',
+        },
+      },
+    }),
+  },
   group: {
     group: style({
       '@layer': {
-        [layers.components.l1]: {
+        [layers.components.l2]: {
           gridArea: 'io',
         },
       },
