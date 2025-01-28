@@ -12,8 +12,8 @@
 
 import { useFocusable } from '@react-aria/focus';
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -22,9 +22,8 @@ import {
   type ContextValue,
   Tooltip as RACTooltip,
   type TooltipRenderProps,
-  useContextProps,
 } from 'react-aria-components';
-import { useDefaultProps, useTheme } from '../../hooks';
+import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { bodies } from '../../styles';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import {

@@ -11,23 +11,27 @@
  */
 
 import {
-  type ForwardedRef,
-  type HTMLAttributes,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   useCallback,
   useMemo,
 } from 'react';
 import {
   type ContextValue,
   DEFAULT_SLOT,
-  Provider,
   Dialog as RACDialog,
   Popover as RACPopover,
   type PopoverRenderProps as RACPopoverRenderProps,
-  useContextProps,
+  Provider,
 } from 'react-aria-components';
-import { useDefaultProps, useSlot, useTheme } from '../../hooks';
+import {
+  useContextProps,
+  useDefaultProps,
+  useSlot,
+  useTheme,
+} from '../../hooks';
 import { headings } from '../../styles';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import { AriaHeadingContext } from '../aria';

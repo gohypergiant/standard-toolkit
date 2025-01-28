@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -26,9 +26,8 @@ import {
   type ListBoxRenderProps,
   Provider,
   Section,
-  useContextProps,
 } from 'react-aria-components';
-import { useDefaultProps, useTheme } from '../../hooks';
+import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
 import {
   pickerClassNames,
