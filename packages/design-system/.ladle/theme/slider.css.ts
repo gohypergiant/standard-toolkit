@@ -14,17 +14,17 @@ import { style } from '@vanilla-extract/css';
 import {
   type SliderState,
   type SliderThumbState,
+  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
-  sizeVars,
   genericColorVars,
+  radiusVars,
   semanticColorVars,
+  sizeVars,
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
   sliderThumbStateVars,
-  type ThemeContext,
-  radiusVars,
 } from '../../src';
 
 export const Slider: ThemeContext['Slider'] = {

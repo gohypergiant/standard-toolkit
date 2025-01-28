@@ -12,52 +12,52 @@
 
 import { clsx } from 'clsx';
 import {
+  type ForwardedRef,
   createContext,
   forwardRef,
   useCallback,
   useContext,
   useMemo,
-  type ForwardedRef,
 } from 'react';
 import {
+  type ContextValue,
+  DEFAULT_SLOT,
+  LabelContext,
+  type LabelProps,
   Provider,
   Slider as RACSlider,
   SliderOutput as RACSliderOutput,
   SliderThumb as RACSliderThumb,
   SliderTrack as RACSliderTrack,
-  LabelContext,
-  type ContextValue,
-  type LabelProps,
-  type TextProps,
-  DEFAULT_SLOT,
   SliderStateContext,
+  type TextProps,
 } from 'react-aria-components';
 import {
   AriaLabelContext,
   AriaTextContext,
   GroupContext,
-  InputContext,
   type GroupProps,
+  InputContext,
   type InputProps,
 } from '../../components';
 import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
+import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
+import {
+  sliderClassNames,
+  sliderStateVars,
+  sliderThumbStateVars,
+  sliderTrackStateVars,
+} from './slider.css';
 import type {
+  SliderBarProps,
+  SliderOutputProps,
   SliderProps,
   SliderRenderProps,
   SliderThumbProps,
   SliderThumbRenderProps,
   SliderTrackProps,
   SliderTrackRenderProps,
-  SliderOutputProps,
-  SliderBarProps,
 } from './types';
-import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
-import {
-  sliderClassNames,
-  sliderThumbStateVars,
-  sliderTrackStateVars,
-  sliderStateVars,
-} from './slider.css';
 
 export const SliderBarContext =
   createContext<ContextValue<SliderBarProps, HTMLDivElement>>(null);

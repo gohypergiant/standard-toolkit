@@ -13,20 +13,20 @@
 import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
 import { useState } from 'react';
 import { TooltipTrigger } from 'react-aria-components';
-import { AriaLabel, AriaText } from '../aria';
-import { Input } from '../input';
-import { Group } from '../group';
-import { NumberField } from '../number-field';
-import { Tooltip } from '../tooltip';
-import type { SliderRenderProps } from './types';
 import {
   Slider,
   SliderBar,
   SliderOutput,
+  type SliderProps,
   SliderThumb,
   SliderTrack,
-  type SliderProps,
 } from '.';
+import { AriaLabel, AriaText } from '../aria';
+import { Group } from '../group';
+import { Input } from '../input';
+import { NumberField } from '../number-field';
+import { Tooltip } from '../tooltip';
+import type { SliderRenderProps } from './types';
 
 export default {
   title: 'Components/Slider',

@@ -47,12 +47,12 @@ import type { RadioGroupProps, RadioProps } from '../../components/radio/types';
 import type { SearchFieldProps } from '../../components/search-field/types';
 import type { SelectProps } from '../../components/select/types';
 import type {
-  SliderProps,
+  SliderBarProps,
   SliderInputProps,
+  SliderOutputProps,
+  SliderProps,
   SliderThumbProps,
   SliderTrackProps,
-  SliderOutputProps,
-  SliderBarProps,
 } from '../../components/slider/types';
 import type { SwitchProps } from '../../components/switch/types';
 import type {

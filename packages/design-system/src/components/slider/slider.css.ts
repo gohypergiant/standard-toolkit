@@ -11,9 +11,9 @@
  */
 
 import { createThemeContract, globalStyle, style } from '@vanilla-extract/css';
-import type { SliderClassNames, SliderState } from './types';
 import { layers, typographyVars } from '../../styles';
 import { containerQueries } from '../../utils';
+import type { SliderClassNames, SliderState } from './types';
 
 export const sliderColorVars = createThemeContract({
   color: '',

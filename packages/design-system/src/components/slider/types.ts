@@ -12,18 +12,18 @@
 
 import type {
   NumberFieldProps as AriaNumberFieldProps,
-  SliderRenderProps as RACSliderRenderProps,
+  SliderOutputProps as RACSliderOutputProps,
   SliderProps as RACSliderProps,
+  SliderRenderProps as RACSliderRenderProps,
   SliderThumbProps as RACSliderThumbProps,
   SliderThumbRenderProps as RACSliderThumbRenderProps,
-  SliderTrackRenderProps as RACSliderTrackRenderProps,
   SliderTrackProps as RACSliderTrackProps,
-  SliderOutputProps as RACSliderOutputProps,
+  SliderTrackRenderProps as RACSliderTrackRenderProps,
 } from 'react-aria-components';
-import type { AsType, RenderPropsChildren } from '../../types';
 import type { PartialDeep } from 'type-fest';
-import type { InputClassNames } from '../input';
+import type { AsType, RenderPropsChildren } from '../../types';
 import type { GroupClassNames } from '../group';
+import type { InputClassNames } from '../input';
 
 export type SliderClassNames = PartialDeep<{
   slider: {

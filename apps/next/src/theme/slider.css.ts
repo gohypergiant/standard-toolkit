@@ -10,22 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-import { style } from '@vanilla-extract/css';
 import {
   type SliderState,
   type SliderThumbState,
   type ThemeContext,
   applyThemeVars,
   assignPartialVars,
-  sizeVars,
   genericColorVars,
+  radiusVars,
   semanticColorVars,
+  sizeVars,
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
   sliderThumbStateVars,
-  radiusVars,
 } from '@accelint/design-system/vanilla';
+import { style } from '@vanilla-extract/css';
 
 export const Slider: ThemeContext['Slider'] = {
   slider: {
