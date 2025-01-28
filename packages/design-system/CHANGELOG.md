@@ -1,5 +1,14 @@
 # @accelint/design-system
 
+## 0.4.1
+
+### Patch Changes
+
+- 67b134a: Added support in Drawer component for controlled tab open and onSelectionChange event
+- e9b8f66: Changes import to use design system useContextProps hook
+- Updated dependencies [13f0d6c]
+  - @accelint/converters@0.2.0
+
 ## 0.4.0
 
 ### Minor Changes
