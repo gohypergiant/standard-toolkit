@@ -60,40 +60,22 @@ export const Slider: ThemeContext['Slider'] = {
     min: style(
       applyThemeVars<SliderState>(sliderStateVars, [
         {
-          vars: assignPartialVars(
-            {
-              color: sliderColorVars,
-              space: sliderSpaceVars,
+          vars: assignPartialVars(sliderColorVars, {
+            color: {
+              color: genericColorVars.condition.base.v2,
             },
-            {
-              color: {
-                color: genericColorVars.condition.base.v2,
-              },
-              space: {
-                margin: 'auto 0',
-              },
-            },
-          ),
+          }),
         },
       ]),
     ),
     max: style(
       applyThemeVars<SliderState>(sliderStateVars, [
         {
-          vars: assignPartialVars(
-            {
-              color: sliderColorVars,
-              space: sliderSpaceVars,
+          vars: assignPartialVars(sliderColorVars, {
+            color: {
+              color: genericColorVars.condition.base.v2,
             },
-            {
-              color: {
-                color: genericColorVars.condition.base.v2,
-              },
-              space: {
-                margin: 'auto 0',
-              },
-            },
-          ),
+          }),
         },
       ]),
     ),

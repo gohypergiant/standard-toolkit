@@ -93,6 +93,7 @@ export const sliderClassNames: SliderClassNames = {
             {
               query: { orientation: 'horizontal', layout: 'inline' },
               gridTemplateAreas: `'label min track max io'`,
+              gridTemplateColumns: 'auto auto 1fr auto auto',
               gap: sliderSpaceVars.gap,
               alignItems: 'center',
             },
@@ -114,6 +115,7 @@ export const sliderClassNames: SliderClassNames = {
               'min . .'
               'io io .'`,
               gap: sliderSpaceVars.gap,
+              gridTemplateRows: 'auto auto 1fr auto auto',
             },
           ),
         },
@@ -131,7 +133,6 @@ export const sliderClassNames: SliderClassNames = {
         [layers.components.l1]: {
           fontFamily: typographyVars.mono,
           color: sliderColorVars.color,
-          lineHeight: '12px',
         },
       },
     }),
@@ -221,6 +222,7 @@ export const sliderClassNames: SliderClassNames = {
               query: { orientation: 'vertical' },
               width: sliderSpaceVars.track.thickness,
               minHeight: sliderSpaceVars.track.minDimension,
+              height: `calc(100% - 2 * ${sliderSpaceVars.thumb.width})`,
               '::before': {
                 height: `calc(${sliderSpaceVars.thumb.width} / 2)`,
                 left: 0,
