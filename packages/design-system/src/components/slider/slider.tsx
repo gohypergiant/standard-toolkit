@@ -316,7 +316,7 @@ export const Slider = forwardRef(function Slider(
     () => mergeClassNames(sliderClassNames, theme.Slider, classNamesProp),
     [theme.Slider, classNamesProp],
   );
-  console.log({ classNames });
+
   const style = useCallback(
     ({ ...renderProps }: SliderRenderProps) =>
       inlineVars(sliderStateVars, {
