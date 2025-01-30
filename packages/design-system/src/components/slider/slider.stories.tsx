@@ -11,7 +11,6 @@
  */
 
 import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
-import { useState } from 'react';
 import {
   Slider,
   SliderBar,
