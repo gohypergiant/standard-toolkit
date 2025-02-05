@@ -156,8 +156,7 @@ type BaseQueryBuilderProps = {
  * Omitted props are currently unsupported functionality
  */
 export type QueryBuilderProps = Partial<
-  Omit<DefaultRQBProps, 'showCombinatorsBetweenRules'> &
-  BaseQueryBuilderProps
+  Omit<DefaultRQBProps, 'showCombinatorsBetweenRules'> & BaseQueryBuilderProps
 >;
 
 export type ActionProps = AsType<RQBActionProps>;

@@ -81,8 +81,8 @@ export default {
       control: {
         type: 'boolean',
       },
-      defaultValue: true
-    }
+      defaultValue: true,
+    },
   },
 } satisfies StoryDefault<QueryBuilderProps>;
 
