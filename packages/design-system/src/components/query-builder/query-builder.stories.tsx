@@ -77,6 +77,12 @@ export default {
       options: ['sm', 'lg'],
       defaultValue: 'sm',
     },
+    listsAsArrays: {
+      control: {
+        type: 'boolean',
+      },
+      defaultValue: true
+    }
   },
 } satisfies StoryDefault<QueryBuilderProps>;
 

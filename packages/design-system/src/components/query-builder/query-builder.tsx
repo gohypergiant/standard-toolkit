@@ -237,7 +237,6 @@ export function QueryBuilder({
           controlElements={controlElements}
           controlClassnames={controlClassNames}
           disabled={disabled}
-          listsAsArrays
         />
       </div>
     </Provider>
