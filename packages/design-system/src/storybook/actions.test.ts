@@ -10,26 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import { vanillaExtractPlugin } from '@vanilla-extract/esbuild-plugin';
-import { esbuildPluginFilePathExtensions as extensionsPlugin } from 'esbuild-plugin-file-path-extensions';
-import lodashPlugin from 'esbuild-plugin-lodash';
-import { defineConfig } from 'tsup';
+import { action } from '@storybook/addon-actions';
+import { describe, expect, it, vi } from 'vitest';
+import { actions } from './actions';
 
-export default defineConfig({
-  esbuildPlugins: [
-    vanillaExtractPlugin({
-      outputCss: false,
-    }),
-    // Must go after VE
-    lodashPlugin(),
-    extensionsPlugin({
-      esm: true,
-      esmExtension: 'js',
-    }),
-  ],
-  entry: ['src/**/*.{ts,tsx}', '!src/**/*.{stories,test}.{ts,tsx}'],
-  dts: true,
-  format: 'esm',
-  sourcemap: true,
-  treeshake: true,
+vi.mock('@storybook/addon-actions', () => ({
+  action: vi.fn(() => () => {
+    return undefined;
+  }),
+}));
+
+describe('actions', () => {
+  it('should return action handler props', () => {
+    const props = actions<{ onChange: () => void }>('onChange');
+
+    expect(props).toEqual({
+      onChange: expect.any(Function),
+    });
+
+    props.onChange?.();
+
+    expect(action).toHaveBeenCalledWith('onChange');
+  });
 });

@@ -10,26 +10,31 @@
  * governing permissions and limitations under the License.
  */
 
-import { action } from '@ladle/react';
-import { describe, expect, it, vi } from 'vitest';
-import { actions } from './actions';
+import type { Preview } from '@storybook/react';
+import { Provider } from './components';
 
-vi.mock('@ladle/react', () => ({
-  action: vi.fn(() => () => {
-    return undefined;
-  }),
-}));
+const preview: Preview = {
+  parameters: {
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+      exclude: /^on.*/g,
+    },
+    backgrounds: {
+      default: 'dark',
+      values: [{ name: 'dark', value: 'rgb(11,11,11)' }],
+    },
+    layout: 'centered',
+  },
+  decorators: [
+    (Story) => (
+      <Provider>
+        <Story />
+      </Provider>
+    ),
+  ],
+};
 
-describe('actions', () => {
-  it('should return action handler props', () => {
-    const props = actions<{ onChange: () => void }>('onChange');
-
-    expect(props).toEqual({
-      onChange: expect.any(Function),
-    });
-
-    props.onChange?.();
-
-    expect(action).toHaveBeenCalledWith('onChange');
-  });
-});
+export default preview;
