@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { SliderClassNames } from '@/components/slider';
 import type { CSSProperties, PropsWithChildren } from 'react';
 import type { ButtonClassNames } from '../../components/button/types';
 import type { CheckboxClassNames } from '../../components/checkbox/types';
@@ -85,6 +86,8 @@ export type ThemeContext = {
   SearchField?: SearchFieldClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Select?: SelectClassNames;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  Slider?: SliderClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Switch?: SwitchClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
