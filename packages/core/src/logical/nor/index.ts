@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { or, orFn } from '../or';
 import { not } from '../not';
+import { or, orFn } from '../or';
 
 /**
  * Logical `!(a || b)`

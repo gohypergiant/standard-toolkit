@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { SYMBOLS, type Format } from '..';
+import { type Format, SYMBOLS } from '..';
 import type { Tokens } from '../lexer';
 import type { PipeResult } from '../pipes';
 import { getGenomeIndex } from './genome';

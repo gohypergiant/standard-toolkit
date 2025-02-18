@@ -12,7 +12,7 @@
  */
 
 import type { Errors, Format } from '.';
-import { lexer, type Tokens } from './lexer';
+import { type Tokens, lexer } from './lexer';
 import { pipesRunner } from './pipes';
 import { violation } from './violation';
 

@@ -14,21 +14,20 @@ import { useFocusRing } from '@react-aria/focus';
 import { useHover } from '@react-aria/interactions';
 import { useControlledState } from '@react-stately/utils';
 import {
+  createContext,
   type FormEvent,
   type ForwardedRef,
-  createContext,
   forwardRef,
-  useMemo,
   useCallback,
   useEffect,
+  useMemo,
 } from 'react';
 import {
   type ContextValue,
   TextAreaContext as RACTextAreaContext,
   type TextAreaProps as RACTextAreaProps,
-  useContextProps,
 } from 'react-aria-components';
-import { useDefaultProps, useTheme } from '../../hooks';
+import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
 import { inputs } from '../../styles';
 import { inlineVars, mergeClassNames, mergeProps } from '../../utils';
 import { textAreaClassNames, textAreaStateVars } from './textarea.css';

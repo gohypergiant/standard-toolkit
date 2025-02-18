@@ -11,7 +11,7 @@
  */
 
 import '@vitest/web-worker';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { isSharedWorker, isWorker } from './';
 
 const workerUrl = new URL('./__fixtures__/worker.ts', import.meta.url);

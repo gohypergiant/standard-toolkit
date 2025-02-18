@@ -12,7 +12,7 @@
 
 import { UTM } from '@ngageoint/mgrs-js';
 
-import { parse, type ParseResults } from '../latlon/internal/parse';
+import { type ParseResults, parse } from '../latlon/internal/parse';
 import { violation } from '../latlon/internal/violation';
 
 type Match = [string, string, string, string];

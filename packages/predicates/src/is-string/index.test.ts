@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { isString } from './';
 import { nonStringPairs } from './__fixtures__';
 

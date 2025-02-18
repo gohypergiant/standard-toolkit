@@ -15,8 +15,8 @@ import {
   BEARINGS,
   type Compass,
   type Format,
-  SYMBOL_PATTERNS,
   SYMBOLS,
+  SYMBOL_PATTERNS,
 } from '../internal';
 import type { CoordinateSystem } from '../internal/coordinate-sytem';
 

@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { SYMBOL_PATTERNS, type Format } from '..';
+import { type Format, SYMBOL_PATTERNS } from '..';
 import type { Tokens } from '../lexer';
 
 import { checkAmbiguousGrouping } from './check-ambiguous';

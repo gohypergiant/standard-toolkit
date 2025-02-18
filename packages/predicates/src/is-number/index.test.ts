@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { expect, it, describe } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { isFiniteNumber, isFiniteNumeric, isNumber, isNumeric } from './';
 
 // biome-ignore lint/style/useNumberNamespace: want to diff against Number.NEGATIVE_INFINITY
