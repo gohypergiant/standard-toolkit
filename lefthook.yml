@@ -3,11 +3,6 @@ pre-commit:
     generate-license:
       run: pnpm run license "--files={staged_files}"
       stage_fixed: true
-
-pre-push:
-  commands:
-    lint:
-      run: pnpm run lint
     format:
       run: pnpm run format
       stage_fixed: true
