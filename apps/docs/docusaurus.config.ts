@@ -24,8 +24,8 @@ const config: Config = {
     'A "standard library" for web applications in the Accelint family of systems.',
   favicon: 'img/favicon.ico',
 
-  url: 'https://gohypergiant.github.io',
-  baseUrl: '/standard-toolkit',
+  url: 'https://standard-toolkit-next.vercel.app',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   organizationName: 'gohypergiant',
