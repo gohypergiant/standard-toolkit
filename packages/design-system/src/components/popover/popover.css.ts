@@ -10,9 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import {createContainer, createThemeContract, fallbackVar, style,} from '@vanilla-extract/css';
-import {layers, radiusVars, surfaces, zIndexVars} from '../../styles';
-import type {PopoverClassNames} from './types';
+import {
+  createContainer,
+  createThemeContract,
+  fallbackVar,
+  style,
+} from '@vanilla-extract/css';
+import { layers, radiusVars, surfaces, zIndexVars } from '../../styles';
+import type { PopoverClassNames } from './types';
 
 export const popoverContainer = createContainer();
 

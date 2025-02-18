@@ -10,10 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import {createContainer, createThemeContract, fallbackVar, style,} from '@vanilla-extract/css';
-import {layers, radiusVars, sizeVars, surfaces, zIndexVars,} from '../../styles';
-import {containerQueries} from '../../utils';
-import type {OptionsClassNames, OptionsItemState} from './types';
+import {
+  createContainer,
+  createThemeContract,
+  fallbackVar,
+  style,
+} from '@vanilla-extract/css';
+import {
+  layers,
+  radiusVars,
+  sizeVars,
+  surfaces,
+  zIndexVars,
+} from '../../styles';
+import { containerQueries } from '../../utils';
+import type { OptionsClassNames, OptionsItemState } from './types';
 
 export const optionsContainers = {
   options: createContainer(),
@@ -199,7 +210,7 @@ export const optionsClassNames: OptionsClassNames = {
           '@container': containerQueries<OptionsItemState>(
             optionsItemStateVars,
             {
-              query: {isDisabled: true},
+              query: { isDisabled: true },
               cursor: 'not-allowed',
             },
           ),
@@ -223,7 +234,7 @@ export const optionsClassNames: OptionsClassNames = {
           '@container': containerQueries<OptionsItemState>(
             optionsItemStateVars,
             {
-              query: {hasDescription: false},
+              query: { hasDescription: false },
               gridRowStart: 'label',
               gridRowEnd: 'description',
             },

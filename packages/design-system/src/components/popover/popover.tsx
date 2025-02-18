@@ -11,20 +11,20 @@
  */
 
 import {
-  createContext,
   type ForwardedRef,
-  forwardRef,
   type HTMLAttributes,
+  createContext,
+  forwardRef,
   useCallback,
   useMemo,
 } from 'react';
 import {
   type ContextValue,
   DEFAULT_SLOT,
+  Provider,
   Dialog as RACDialog,
   Popover as RACPopover,
   type PopoverRenderProps as RACPopoverRenderProps,
-  Provider,
 } from 'react-aria-components';
 import {
   useContextProps,
