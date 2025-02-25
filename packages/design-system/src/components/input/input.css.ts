@@ -72,6 +72,7 @@ export const inputClassNames: InputClassNames = {
         borderRadius: radiusVars.md,
         background: inputColorVars.background,
         fontFamily: typographyVars.mono,
+        outline: 'none',
         color: inputColorVars.color,
         '::-webkit-inner-spin-button': {
           display: 'none',

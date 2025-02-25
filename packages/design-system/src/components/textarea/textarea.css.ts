@@ -67,6 +67,7 @@ export const textAreaClassNames: TextAreaClassNames = {
         fontFamily: typographyVars.mono,
         color: textAreaColorVars.color,
         overflow: 'auto',
+        outline: 'none',
         resize: textAreaStateVars.resize,
         selectors: {
           '&[contenteditable]:empty::before': {
