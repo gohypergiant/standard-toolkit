@@ -20,7 +20,6 @@ import {
   type Format,
   SYMBOLS,
 } from './latlon/internal';
-import type { CoordinateSystem } from './latlon/internal/coordinate-sytem';
 import {
   type CoordinateCache,
   createCache,
@@ -29,10 +28,31 @@ import type { Tokens } from './latlon/internal/lexer';
 import { systemMGRS } from './mgrs/system';
 import { systemUTM } from './utm/system';
 
-// biome-ignore lint/suspicious/noExplicitAny: a specific type can not be assigned to unknown
-type MinLengthArray = [any, any];
+type AnySystem =
+  | typeof systemDecimalDegrees
+  | typeof systemDegreesDecimalMinutes
+  | typeof systemDegreesMinutesSeconds
+  | typeof systemMGRS
+  | typeof systemUTM;
 
-type AnySystem = CoordinateSystem<MinLengthArray>;
+type Coordinate = {
+  /** {@interitDoc Formatter} */
+  dd: Formatter;
+  /** {@interitDoc Formatter} */
+  ddm: Formatter;
+  /** {@interitDoc Formatter} */
+  dms: Formatter;
+  /** {@interitDoc Formatter} */
+  mgrs: Formatter;
+  /** {@interitDoc Formatter} */
+  utm: Formatter;
+  errors: string[];
+  raw: CoordinateInternalValue;
+  valid: boolean;
+};
+
+// biome-ignore lint/style/useNamingConvention: consistency
+type CoordinateInternalValue = { LAT: number; LON: number };
 
 /**
  * Output a string value of a coordinate using an available system. The
@@ -58,25 +78,6 @@ type AnySystem = CoordinateSystem<MinLengthArray>;
  */
 type Formatter = (f?: Format) => string;
 
-type Coordinate = {
-  /** {@interitDoc Formatter} */
-  dd: Formatter;
-  /** {@interitDoc Formatter} */
-  ddm: Formatter;
-  /** {@interitDoc Formatter} */
-  dms: Formatter;
-  /** {@interitDoc Formatter} */
-  mgrs: Formatter;
-  /** {@interitDoc Formatter} */
-  utm: Formatter;
-  errors: string[];
-  raw: CoordinateInternalValue;
-  valid: boolean;
-};
-
-// biome-ignore lint/style/useNamingConvention: consistency
-type CoordinateInternalValue = { LAT: number; LON: number };
-
 type OutputCache = Record<keyof typeof coordinateSystems, CoordinateCache>;
 
 export const coordinateSystems = Object.freeze({
@@ -91,7 +92,7 @@ const DEFAULT_SYSTEM = coordinateSystems.dd;
 
 const freezeCoordinate = (
   errors: Coordinate['errors'],
-  to: (s?: CoordinateSystem, f?: Format) => string,
+  to: (s?: AnySystem, f?: Format) => string,
   raw: CoordinateInternalValue,
   valid: Coordinate['valid'],
 ) =>
@@ -195,21 +196,19 @@ export function createCoordinate(
  */
 function internalRepresentation(
   initFormat: Format,
-  { toFloat }: AnySystem,
+  sys: AnySystem,
   tokens: Tokens,
 ) {
+  const index = tokens.indexOf(SYMBOLS.DIVIDER);
+  const [first, second] = [
+    tokens.slice(0, index) as Parameters<(typeof sys)['toFloat']>,
+    tokens.slice(1 + index) as Parameters<(typeof sys)['toFloat']>,
+  ];
+
   return Object.fromEntries([
-    [
-      initFormat.slice(0, 3),
-      toFloat(
-        tokens.slice(0, tokens.indexOf(SYMBOLS.DIVIDER)) as MinLengthArray,
-      ),
-    ],
-    [
-      initFormat.slice(3),
-      toFloat(
-        tokens.slice(1 + tokens.indexOf(SYMBOLS.DIVIDER)) as MinLengthArray,
-      ),
-    ],
+    // @ts-ignore
+    [initFormat.slice(0, 3), sys.toFloat(...first)],
+    // @ts-ignore
+    [initFormat.slice(3), sys.toFloat(...second)],
   ]) as CoordinateInternalValue;
 }

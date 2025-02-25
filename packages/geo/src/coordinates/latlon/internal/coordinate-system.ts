@@ -16,9 +16,9 @@ import type { ParseResults } from './parse';
 
 // NOTE: isolated CoordinateSystem type so that it could be a private-export
 
-export type CoordinateSystem<F> = {
+export type CoordinateSystem<T> = {
   name: string;
   parse: (format: Format, input: string) => ParseResults;
-  toFloat: (a: F) => number;
+  toFloat: T;
   toFormat: (f: Format, a: [number, number]) => string;
 };

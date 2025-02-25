@@ -30,7 +30,12 @@ type Table = Record<string | number | symbol, unknown>;
  * const colorLookup = tableLookup(colorTable, x => x ?? [128, 128, 128, 155]);
  * colorLookup(data.value);
  */
+// export const lookup =
+//   <A extends Table, B extends Callable>(obj: A, def?: B) =>
+//   <C extends keyof A>(prop: string | number | symbol): A[C] =>
+//     (def ?? identity)(obj[prop]);
+
 export const lookup =
   <A extends Table, B extends Callable>(obj: A, def?: B) =>
-  <C extends keyof A>(prop: string | number | symbol): A[C] =>
-    (def ?? identity)(obj[prop]);
+  <C extends keyof A>(prop: C) =>
+    (def ?? identity)(obj[prop]) as A[C];

@@ -14,10 +14,14 @@
 import { Point } from '@ngageoint/grid-js';
 import { MGRS } from '@ngageoint/mgrs-js';
 
-import { type Format, SYMBOL_PATTERNS } from '../latlon/internal';
-import type { CoordinateSystem } from '../latlon/internal/coordinate-sytem';
+import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
+import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
 import { parseMGRS } from './parser';
+
+const toFloat = (num: string, bear: Compass) =>
+  Number.parseFloat(num) *
+  (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1);
 
 function toFormat([lat, lon]: [number, number]) {
   const point3 = Point.point(lon, lat);
@@ -25,15 +29,13 @@ function toFormat([lat, lon]: [number, number]) {
   return MGRS.from(point3).toString();
 }
 
-// biome-ignore lint/style/useNamingConvention: <explanation>
-export const systemMGRS: CoordinateSystem = {
+// biome-ignore lint/style/useNamingConvention: acronym
+export const systemMGRS: CoordinateSystem<typeof toFloat> = {
   name: 'Military Grid Reference System',
 
   parse: parseMGRS,
 
-  toFloat: ([num, bear]) =>
-    Number.parseFloat(num) *
-    (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1),
+  toFloat,
 
   toFormat: (format: Format, [left, right]: [number, number]) => {
     const { LAT, LON } = Object.fromEntries([

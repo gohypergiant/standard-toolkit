@@ -35,11 +35,12 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  */
 export function autoCurry<T extends Callable>(
   fn: T,
-  _args = [] as unknown[],
+  _args: Partial<Parameters<T>> = [] as unknown as Partial<Parameters<T>>,
 ): Curried<Parameters<T>, ReturnType<T>> {
-  return (...__args) =>
-    ((rest) => (rest.length >= fn.length ? fn(...rest) : autoCurry(fn, rest)))([
-      ..._args,
-      ...__args,
-    ]);
+  return ((...__args: Partial<Parameters<T>>) => {
+    const rest = [..._args, ...__args] as Parameters<T>;
+    return rest.length >= fn.length
+      ? (fn(...rest) as ReturnType<T>)
+      : (autoCurry(fn, rest) as Curried<Parameters<T>, ReturnType<T>>);
+  }) as Curried<Parameters<T>, ReturnType<T>>;
 }

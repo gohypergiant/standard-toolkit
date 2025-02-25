@@ -18,24 +18,24 @@ import {
   SYMBOLS,
   SYMBOL_PATTERNS,
 } from '../internal';
-import type { CoordinateSystem } from '../internal/coordinate-sytem';
+import type { CoordinateSystem } from '../internal/coordinate-system';
 
 import { parseDegreesDecimalMinutes } from './parser';
 
-type ToFloat = [string, string, Compass];
+const toFloat = (degrees: string, minutes: string, bear: Compass) =>
+  Number.parseFloat(
+    (
+      (Number.parseFloat(degrees) + Number.parseFloat(minutes) / 60) *
+      (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1)
+    ).toFixed(9),
+  );
 
-export const systemDegreesDecimalMinutes: CoordinateSystem<ToFloat> = {
+export const systemDegreesDecimalMinutes: CoordinateSystem<typeof toFloat> = {
   name: 'Degrees Decimal Minutes',
 
   parse: parseDegreesDecimalMinutes,
 
-  toFloat: ([degrees, minutes, bear]) =>
-    Number.parseFloat(
-      (
-        (Number.parseFloat(degrees) + Number.parseFloat(minutes) / 60) *
-        (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1)
-      ).toFixed(9),
-    ),
+  toFloat,
 
   toFormat: (format: Format, [left, right]: [number, number]) => {
     return [left, right]

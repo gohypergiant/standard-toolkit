@@ -18,20 +18,20 @@ import {
   SYMBOLS,
   SYMBOL_PATTERNS,
 } from '../internal';
-import type { CoordinateSystem } from '../internal/coordinate-sytem';
+import type { CoordinateSystem } from '../internal/coordinate-system';
 
 import { parseDecimalDegrees } from './parser';
 
-type ToFloat = [string, Compass];
+const toFloat = (num: string, bear: Compass) =>
+  Number.parseFloat(num) *
+  (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1);
 
-export const systemDecimalDegrees: CoordinateSystem<ToFloat> = {
+export const systemDecimalDegrees: CoordinateSystem<typeof toFloat> = {
   name: 'Decimal Degrees',
 
   parse: parseDecimalDegrees,
 
-  toFloat: ([num, bear]) =>
-    Number.parseFloat(num) *
-    (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1),
+  toFloat,
 
   toFormat: (format: Format, [left, right]: [number, number]) =>
     [left, right]

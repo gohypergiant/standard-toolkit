@@ -18,26 +18,31 @@ import {
   SYMBOLS,
   SYMBOL_PATTERNS,
 } from '../internal';
-import type { CoordinateSystem } from '../internal/coordinate-sytem';
+import type { CoordinateSystem } from '../internal/coordinate-system';
 
 import { parseDegreesMinutesSeconds } from './parser';
 
-type ToFloat = [string, string, string, Compass];
+const toFloat = (
+  degrees: string,
+  minutes: string,
+  seconds: string,
+  bear: Compass,
+) =>
+  Number.parseFloat(
+    (
+      (Number.parseFloat(degrees) +
+        Number.parseFloat(minutes) / 60 +
+        Number.parseFloat(seconds) / 3600) *
+      (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1)
+    ).toFixed(9),
+  );
 
-export const systemDegreesMinutesSeconds: CoordinateSystem<ToFloat> = {
+export const systemDegreesMinutesSeconds: CoordinateSystem<typeof toFloat> = {
   name: 'Degrees Minutes Seconds',
 
   parse: parseDegreesMinutesSeconds,
 
-  toFloat: ([degrees, minutes, seconds, bear]) =>
-    Number.parseFloat(
-      (
-        (Number.parseFloat(degrees) +
-          Number.parseFloat(minutes) / 60 +
-          Number.parseFloat(seconds) / 3600) *
-        (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1)
-      ).toFixed(9),
-    ),
+  toFloat,
 
   toFormat: (format: Format, [left, right]: [number, number]) => {
     return [left, right]
