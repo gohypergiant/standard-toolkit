@@ -11,15 +11,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Format } from '.';
+import type { Compass, Format } from '.';
 import type { ParseResults } from './parse';
 
 // NOTE: isolated CoordinateSystem type so that it could be a private-export
 
-// biome-ignore lint/suspicious/noExplicitAny: there must be a better way???
-export type CoordinateSystem<F = any> = {
+export type CoordinateSystem = {
   name: string;
   parse: (format: Format, input: string) => ParseResults;
-  toFloat: (a: F) => number;
+  toFloat: (a: [string, ...string[], Compass]) => number;
   toFormat: (f: Format, a: [number, number]) => string;
 };

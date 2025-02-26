@@ -22,22 +22,26 @@ import type { CoordinateSystem } from '../internal/coordinate-system';
 
 import { parseDecimalDegrees } from './parser';
 
-type ToFloat = [string, Compass];
-
-export const systemDecimalDegrees: CoordinateSystem<ToFloat> = {
+export const systemDecimalDegrees: CoordinateSystem = {
   name: 'Decimal Degrees',
 
   parse: parseDecimalDegrees,
 
-  toFloat: ([num, bear]) =>
-    Number.parseFloat(num) *
-    (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1),
+  toFloat(arg) {
+    const [num, bear] = arg as [string, Compass];
 
-  toFormat: (format: Format, [left, right]: [number, number]) =>
-    [left, right]
+    return (
+      Number.parseFloat(num) *
+      (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1)
+    );
+  },
+
+  toFormat(format: Format, [left, right]: [number, number]) {
+    return [left, right]
       .map(
         (num, index) =>
           `${Math.abs(num)} ${BEARINGS[format][index as 0 | 1][+(num < 0)]}`,
       )
-      .join(` ${SYMBOLS.DIVIDER} `),
+      .join(` ${SYMBOLS.DIVIDER} `);
+  },
 };

@@ -29,10 +29,24 @@ import type { Tokens } from './latlon/internal/lexer';
 import { systemMGRS } from './mgrs/system';
 import { systemUTM } from './utm/system';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-type MinLengthArray = [any, any];
+type Coordinate = {
+  /** {@interitDoc Formatter} */
+  dd: Formatter;
+  /** {@interitDoc Formatter} */
+  ddm: Formatter;
+  /** {@interitDoc Formatter} */
+  dms: Formatter;
+  /** {@interitDoc Formatter} */
+  mgrs: Formatter;
+  /** {@interitDoc Formatter} */
+  utm: Formatter;
+  errors: string[];
+  raw: CoordinateInternalValue;
+  valid: boolean;
+};
 
-type AnySystem = CoordinateSystem<MinLengthArray>;
+// biome-ignore lint/style/useNamingConvention: consistency with Axes type
+type CoordinateInternalValue = { LAT: number; LON: number };
 
 /**
  * Output a string value of a coordinate using an available system. The
@@ -58,24 +72,7 @@ type AnySystem = CoordinateSystem<MinLengthArray>;
  */
 type Formatter = (f?: Format) => string;
 
-type Coordinate = {
-  /** {@inheritDoc Formatter} */
-  dd: Formatter;
-  /** {@inheritDoc Formatter} */
-  ddm: Formatter;
-  /** {@inheritDoc Formatter} */
-  dms: Formatter;
-  /** {@inheritDoc Formatter} */
-  mgrs: Formatter;
-  /** {@inheritDoc Formatter} */
-  utm: Formatter;
-  errors: string[];
-  raw: CoordinateInternalValue;
-  valid: boolean;
-};
-
-// biome-ignore lint/style/useNamingConvention: consistency
-type CoordinateInternalValue = { LAT: number; LON: number };
+type ToFloatArg = Parameters<CoordinateSystem['toFloat']>[0];
 
 type OutputCache = Record<keyof typeof coordinateSystems, CoordinateCache>;
 
@@ -86,8 +83,6 @@ export const coordinateSystems = Object.freeze({
   mgrs: systemMGRS,
   utm: systemUTM,
 } as const);
-
-const DEFAULT_SYSTEM = coordinateSystems.dd;
 
 const freezeCoordinate = (
   errors: Coordinate['errors'],
@@ -111,7 +106,7 @@ const freezeCoordinate = (
  * used for validation and eventually for output as defaults if no alternatives
  * are provided.
  *
- * @param initSystem dd, ddm, or dms
+ * @param initSystem dd, ddm, dms, mgrs, or utm of coordinateSystems
  *
  * @remarks
  * pure function
@@ -121,7 +116,7 @@ const freezeCoordinate = (
  * const create = createCoordinate(coordinateSystems.ddm, 'LONLAT')
  */
 export function createCoordinate(
-  initSystem: AnySystem = DEFAULT_SYSTEM,
+  initSystem: CoordinateSystem = coordinateSystems.dd,
   initFormat: Format = FORMATS_DEFAULT,
 ) {
   return (input: string) => {
@@ -153,12 +148,28 @@ export function createCoordinate(
       ),
     } as OutputCache;
 
-    const raw = internalRepresentation(initFormat, initSystem, tokens);
+    // Create the "internal" representation - Decimal Degrees - for
+    // consistency and ease of computation; all systems expect to
+    // start from a common starting point to reduce complexity.
+    const raw = Object.fromEntries([
+      [
+        initFormat.slice(0, 3),
+        initSystem.toFloat(
+          tokens.slice(0, tokens.indexOf(SYMBOLS.DIVIDER)) as ToFloatArg,
+        ),
+      ],
+      [
+        initFormat.slice(3),
+        initSystem.toFloat(
+          tokens.slice(1 + tokens.indexOf(SYMBOLS.DIVIDER)) as ToFloatArg,
+        ),
+      ],
+    ]) as CoordinateInternalValue;
 
-    const to = (
-      system: AnySystem = initSystem,
+    function to(
+      system: CoordinateSystem = initSystem,
       format: Format = initFormat,
-    ) => {
+    ) {
       const key = system.name as keyof typeof coordinateSystems;
 
       if (!cachedValues[key]?.[format]) {
@@ -179,37 +190,8 @@ export function createCoordinate(
       }
 
       return cachedValues[key][format];
-    };
+    }
 
     return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
   };
-}
-
-/**
- * Create the "internal" representation - Decimal Degrees - for consistency and
- * ease of computation; all systems expect to start from a common starting
- * point to reduce complexity.
- *
- * @remarks
- * pure function
- */
-function internalRepresentation(
-  initFormat: Format,
-  { toFloat }: AnySystem,
-  tokens: Tokens,
-) {
-  return Object.fromEntries([
-    [
-      initFormat.slice(0, 3),
-      toFloat(
-        tokens.slice(0, tokens.indexOf(SYMBOLS.DIVIDER)) as MinLengthArray,
-      ),
-    ],
-    [
-      initFormat.slice(3),
-      toFloat(
-        tokens.slice(1 + tokens.indexOf(SYMBOLS.DIVIDER)) as MinLengthArray,
-      ),
-    ],
-  ]) as CoordinateInternalValue;
 }

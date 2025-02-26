@@ -22,24 +22,30 @@ import type { CoordinateSystem } from '../internal/coordinate-system';
 
 import { parseDegreesMinutesSeconds } from './parser';
 
-type ToFloat = [string, string, string, Compass];
-
-export const systemDegreesMinutesSeconds: CoordinateSystem<ToFloat> = {
+export const systemDegreesMinutesSeconds: CoordinateSystem = {
   name: 'Degrees Minutes Seconds',
 
   parse: parseDegreesMinutesSeconds,
 
-  toFloat: ([degrees, minutes, seconds, bear]) =>
-    Number.parseFloat(
+  toFloat(arg) {
+    const [degrees, minutes, seconds, bear] = arg as [
+      string,
+      string,
+      string,
+      Compass,
+    ];
+
+    return Number.parseFloat(
       (
         (Number.parseFloat(degrees) +
           Number.parseFloat(minutes) / 60 +
           Number.parseFloat(seconds) / 3600) *
         (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1)
       ).toFixed(9),
-    ),
+    );
+  },
 
-  toFormat: (format: Format, [left, right]: [number, number]) => {
+  toFormat(format: Format, [left, right]: [number, number]) {
     return [left, right]
       .map((num, index) => {
         const abs = Math.abs(num);

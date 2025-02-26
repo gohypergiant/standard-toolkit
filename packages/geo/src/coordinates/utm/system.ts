@@ -14,33 +14,32 @@
 import { Point } from '@ngageoint/grid-js';
 import { UTM } from '@ngageoint/mgrs-js';
 
-import { type Format, SYMBOL_PATTERNS } from '../latlon/internal';
+import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
 import { parseUTM } from './parser';
 
-function toFormat([lat, lon]: [number, number]) {
-  const point3 = Point.point(lon, lat);
-
-  return UTM.from(point3).toString();
-}
-
-// biome-ignore lint/style/useNamingConvention: <explanation>
+// biome-ignore lint/style/useNamingConvention: acronym
 export const systemUTM: CoordinateSystem = {
   name: 'Military Grid Reference System',
 
   parse: parseUTM,
 
-  toFloat: ([num, bear]) =>
-    Number.parseFloat(num) *
-    (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1),
+  toFloat(arg) {
+    const [num, bear] = arg as [string, Compass];
 
-  toFormat: (format: Format, [left, right]: [number, number]) => {
+    return (
+      Number.parseFloat(num) *
+      (SYMBOL_PATTERNS.NEGATIVE_BEARINGS.test(bear) ? -1 : 1)
+    );
+  },
+
+  toFormat(format: Format, [left, right]: [number, number]) {
     const { LAT, LON } = Object.fromEntries([
       [format.slice(0, 3), left],
       [format.slice(3), right],
     ]) as Record<'LAT' | 'LON', number>;
 
-    return toFormat([LAT, LON]);
+    return UTM.from(Point.point(LON, LAT)).toString();
   },
 };
