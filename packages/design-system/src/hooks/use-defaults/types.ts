@@ -46,6 +46,14 @@ import type { PopoverProps } from '../../components/popover/types';
 import type { RadioGroupProps, RadioProps } from '../../components/radio/types';
 import type { SearchFieldProps } from '../../components/search-field/types';
 import type { SelectProps } from '../../components/select/types';
+import type {
+  SliderBarProps,
+  SliderInputProps,
+  SliderOutputProps,
+  SliderProps,
+  SliderThumbProps,
+  SliderTrackProps,
+} from '../../components/slider/types';
 import type { SwitchProps } from '../../components/switch/types';
 import type {
   TabListProps,
@@ -121,6 +129,18 @@ export type DefaultsContext = DefaultsOf<{
   SearchField: SearchFieldProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Select: SelectProps<object>;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  Slider: SliderProps;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  SliderBar: SliderBarProps;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  SliderInput: SliderInputProps;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  SliderOutput: SliderOutputProps;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  SliderThumb: SliderThumbProps;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  SliderTrack: SliderTrackProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Switch: SwitchProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
