@@ -18,7 +18,7 @@ Developed by the Core team at Accelint, C2DS is a shared platform that all engin
 
 The runtime performance of our applications is an enduring central concern. Our applications place a high performance demand on the browser client, primarily due to the sheer data throughput and intensive rendering requirements. Therefore, it makes sense to move away from a runtime CSS-in-JS solution in favor of a build/compile time styling solution.
 
-[Advantages >](./documentation/concepts.md#build-and-runtime)
+[Advantages >](./documents/concepts#build-and-runtime)
 
 ### Flexibility and control
 
@@ -28,19 +28,19 @@ We also want to establish a common platform for multiple similar, but stylistica
 
 ## What does C2DS consist of?
 
-C2DS is a semi-headless, themeless collection of components that express minimal opinions about layout and baked-in styles with an API of props for each component that strives to suit many common use cases. The design guidelines are established within [Figma](https://www.figma.com/design/CoNlAMPL0u5DCVYRPQKhki/N2X-Design-System?node-id=30742-76715&m=dev).
+C2DS is a semi-headless, themeless collection of components that express minimal opinions about layout and baked-in styles with an API of props for each component that strives to suit many common use cases.
 
 The vast majority of spacing and color theming is left up to the implementer to define. For every element of this system, the priority has been flexibility over rigid requirements and an "escape hatch" for overriding style and behavior if necessary.
 
 ## Why isn't there a theme or icons?
 
-While the exported modules of this package do not include a theme, the Ladle stories for each component utilize a theme established within the `./.ladle/theme` folder for documentation purposes. You can feel free to use this as a starting point for your app's implementation and customize it to suit your needs.
+While the exported modules of this package do not include a theme, the Ladle stories for each component utilize a theme established within the `.ladle/theme` folder for documentation purposes. You can feel free to use this as a starting point for your app's implementation and customize it to suit your needs.
 
 The icons are also missing because we're trying to avoid locking this design system into a specific design language -- they are considered a part of the theming and an application-level concern. Each component that supports icons expects them to be implemented through composition. This enables maximum flexibility and freedom for the implementing app.
 
 ## Concepts
 
-This design system is built on a number of concepts with which you may not be familiar. [Learn](./documentation/concepts.md) about the technologies, packages, abstractions and patterns that power this design system.
+This design system is built on a number of concepts with which you may not be familiar. [Learn](./documents/concepts) about the technologies, packages, abstractions and patterns that power this design system.
 
 ## Getting started
 
@@ -60,8 +60,8 @@ If you run into errors, try running
 
 ### Implementation
 
-[Learn](./documentation/implementation.md) how to get your app up and running.
+[Learn](./documents/implementation) how to get your app up and running.
 
 ### Contribution
 
-[Learn](./documentation/contribution.md) how to craft components for this design system.
+[Learn](./documents/contribution) how to craft components for this design system.

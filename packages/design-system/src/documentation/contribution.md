@@ -101,13 +101,13 @@ button: style(
 
 Note that Vanilla Extract provides a [utility for creating a fallBack var](https://vanilla-extract.style/documentation/api/fallback-var/) if one is not assigned, for example `minWidth: fallbackVar(buttonSpaceVars.minWidth, 'auto')`.
 
-[Learn](./theming.md) more about theming.
+[Learn](./theming) more about theming.
 
 ### Layers
 
 When we create a core style for a component, it is essential to assign it to a layer so that it has the correct precedence and can be overridden if necessary. If we miss this detail, then application engineers won't be able to theme the component correctly.
 
-[Learn](./concepts.md#layers) more about layers.
+[Learn](./concepts#layers) more about layers.
 
 ### Container queries
 

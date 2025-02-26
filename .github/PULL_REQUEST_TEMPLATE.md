@@ -7,6 +7,7 @@ Closes <!-- Github issue # here -->
 - [ ] Added/updated unit tests and storybook for this change (for bug fixes / features).
 - [ ] Added/updated documentation (for bug fixes / features)
 - [ ] Filled out test instructions.
+- [ ] Added changeset (for bug fixes / features).
 
 ## 📝 Test Instructions:
 

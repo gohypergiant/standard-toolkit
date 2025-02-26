@@ -15,7 +15,7 @@ Components that implement a Vanilla Extract [container](https://vanilla-extract.
 
 ## Writing
 
-While there are multiple utility functions throughout the code that utilize container queries, they are not all documented here. For consistency, they all use the same general pattern of accepting a type and contract pair, which provides a type safe query syntax.
+While there are multiple utility functions throughout the code that utilize container queries, they are not all documented here. For consistency, they all use the same general pattern of accepting a type and contract pair, which provides a type safe query syntax. The [source has some usage examples](https://github.com/gohypergiant/standard-toolkit/blob/1312ec7202129f64d82f8186dc4b261474f337c3/packages/design-system/src/utils/css.ts#L260) that can guide you.
 
 #### Using `containerQueries()` for Multiple Rules
 

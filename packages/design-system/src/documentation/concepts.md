@@ -17,7 +17,7 @@ C2DS is built on top of two core packages:
 
 Vanilla Extract (VE) is the style engine. It provides an API of utilities that create build/compile time CSS styles. It is fairly generic and unopinionated so we built our style-based tooling on their API. Being a Typescript-based package means that we have type safety and a single consistent language across our codebase.
 
-[Learn](./theming.md) more about how we use theming with VE.
+[Learn](./theming) more about how we use theming with VE.
 
 ### [React Aria](https://react-spectrum.adobe.com/react-aria/getting-started.html) and [React Stately](https://react-spectrum.adobe.com/react-stately/index.html)
 
@@ -57,7 +57,7 @@ We utilize these contracts in multiple ways:
 
 ### Layers
 
-[CSS @layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) provides a structured approach to manage style cascading, avoiding the complexities of selector specificity. The layers hierarchy is established up front in C2DS within [layers.css.ts](../src/styles/layers.css.ts).
+[CSS @layer](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) provides a structured approach to manage style cascading, avoiding the complexities of selector specificity. The layers hierarchy is established up front in C2DS within [layers.css.ts](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-system/src/styles/layers.css.ts).
 
 The layers here are ordered, with the lowest precedence to highest.
 
@@ -112,8 +112,8 @@ flowchart TD
 
 Theming in C2DS consists primarily of writing styles with container queries in order to populate/fulfill the token contracts of a given component. The values that are being passed into component contracts can either be hardcoded or references to values from global contracts. The global contracts that define domains of style, such as color, space, and typography, are pre-populated with default values but can be completely or partially customized with styles passed to the `<ThemeProvider/>`.
 
-[Read](./implementation.md) more about implementation.
-[Learn](./theming.md) more in-depth about how to establish a theme.
+[Read](./implementation) more about implementation.
+[Learn](./theming) more in-depth about how to establish a theme.
 
 ## React
 
@@ -152,7 +152,7 @@ Context props is a pattern established by RAC which is used widely for compositi
 
 RAC establishes a pattern of [slots](https://react-spectrum.adobe.com/react-aria/advanced.html#slots), where a parent provides props on a given context with multiple named slots. Then when a component that consumes the matching context and includes the slot prop with a matching value (to the one of the slot names), then that component will receive the provided props on that slot. This is a means to disambiguate different context values for composed children when there are multiple children of the same component type composed together.
 
-[Learn](./implementation.md#slots) how this applies in an implementation.
+[Learn](./implementation#slots) how this applies in an implementation.
 
 ##### Composition
 
