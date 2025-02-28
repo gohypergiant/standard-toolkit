@@ -12,8 +12,8 @@
 
 import type { PropsWithChildren } from 'react';
 import type {
-  TooltipProps as RACTooltipProps,
-  TooltipRenderProps as RACTooltipRenderProps,
+  TooltipProps as RacTooltipProps,
+  TooltipRenderProps as RacTooltipRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
 import type { RenderPropsChildren } from '../../types';
@@ -33,7 +33,7 @@ export type TooltipMapping = {
   font: string;
 };
 
-export type TooltipRenderProps = RACTooltipRenderProps & {
+export type TooltipRenderProps = RacTooltipRenderProps & {
   /**
    * If the tooltip is visible
    */
@@ -56,7 +56,7 @@ type BaseTooltipTargetProps = BaseProps & {
 
 export type TooltipState = Omit<TooltipRenderProps, 'state'> &
   Required<
-    Pick<RACTooltipProps, 'containerPadding' | 'crossOffset' | 'offset'>
+    Pick<RacTooltipProps, 'containerPadding' | 'crossOffset' | 'offset'>
   >;
 
 export type TooltipTargetState = Required<
@@ -64,7 +64,7 @@ export type TooltipTargetState = Required<
 >;
 
 export type TooltipProps = Omit<
-  RACTooltipProps,
+  RacTooltipProps,
   'children' | 'className' | 'style' | 'UNSTABLE_portalContainer'
 > &
   BaseTooltipProps;
