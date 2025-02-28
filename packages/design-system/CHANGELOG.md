@@ -1,5 +1,12 @@
 # @accelint/design-system
 
+## 0.5.1
+
+### Patch Changes
+
+- 0187bac: Remove selection highlight from closed drawer component in ladle theme
+- 2749f52: use correct type for Tooltip component children
+
 ## 0.5.0
 
 ### Minor Changes
