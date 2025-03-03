@@ -20,6 +20,9 @@ import { not } from '../not';
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
  *
+ * @remarks
+ * pure function
+ *
  * @example
  * nand(true)(0);
  * // true
@@ -35,6 +38,9 @@ export const nand =
  * Logical (Function Result) Non-conjunction
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * nandFn(s => s.trim())(s => s.trimEnd())('foo bar ');
