@@ -17,9 +17,17 @@
  *
  * @see https://en.wikipedia.org/wiki/Logical_conjunction
  *
- * @example
- * and(true)(0);
+ * @remarks
+ * pure function
+ *
+ * @playground
+ * import { and } from '@accelint/core';
+ *
+ * console.log(and(true)(0));
  * // false
+ *
+ * console.log(and(true)(1));
+ * // true
  */
 export const and =
   <A>(a: A) =>
@@ -33,8 +41,13 @@ export const and =
  *
  * @see https://en.wikipedia.org/wiki/Logical_conjunction
  *
- * @example
- * andFn(s => s.trim())(s => s.trimEnd())('foo bar ');
+ * @remarks
+ * pure function
+ *
+ * @playground
+ * import { andFn } from '@accelint/core';
+ *
+ * console.log(andFn((x) => x > 0)((x) => x < 10)(5));
  * // true
  */
 export const andFn =
