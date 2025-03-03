@@ -20,13 +20,11 @@
  * @remarks
  * pure function
  *
- * @playground
- * import { and } from '@accelint/core';
- *
- * console.log(and(true)(0));
+ * @example
+ * and(true)(0);
  * // false
  *
- * console.log(and(true)(1));
+ * and(true)(1);
  * // true
  */
 export const and =
@@ -44,10 +42,8 @@ export const and =
  * @remarks
  * pure function
  *
- * @playground
- * import { andFn } from '@accelint/core';
- *
- * console.log(andFn((x) => x > 0)((x) => x < 10)(5));
+ * @example
+ * andFn((x) => x > 0)((x) => x < 10)(5);
  * // true
  */
 export const andFn =
