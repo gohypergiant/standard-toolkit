@@ -17,6 +17,9 @@
  *
  * @see https://en.wikipedia.org/wiki/Negation
  *
+ * @remarks
+ * pure function
+ *
  * @example
  * not(2);
  * // false
@@ -29,6 +32,9 @@ export const not = <T>(x: T) => !x;
  * Logical (Function Result) Not (Negation)
  *
  * @see https://en.wikipedia.org/wiki/Negation
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * notFn(x => x & 1)(4);
