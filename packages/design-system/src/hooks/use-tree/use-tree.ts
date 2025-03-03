@@ -313,9 +313,11 @@ export function useTree<T>({
             return;
           }
 
-          update(key, {
-            isViewable: isViewable ?? !value.isViewable,
-          });
+          if (!value.isReadOnly) {
+            update(key, {
+              isViewable: isViewable ?? !value.isViewable,
+            });
+          }
         });
       }
 
@@ -332,7 +334,9 @@ export function useTree<T>({
             return;
           }
 
-          update(key, { isViewable: value.isViewable });
+          if (!value.isReadOnly) {
+            update(key, { isViewable: value.isViewable });
+          }
         },
       );
     },

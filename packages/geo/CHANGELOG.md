@@ -1,5 +1,19 @@
 # @accelint/geo
 
+## 0.2.0
+
+### Minor Changes
+
+- 6c23f31: Add coordinate parsing capability; parse string into object with conversion
+  options: MGRS, UTM, and lat/lon DD, DDM, DMS. Some error messaging is included
+  to be helpful for users and debuggers.
+
+### Patch Changes
+
+- Updated dependencies [4ceec7e]
+- Updated dependencies [13f0d6c]
+  - @accelint/predicates@0.2.0
+
 ## 0.1.3
 
 ### Patch Changes

@@ -19,10 +19,6 @@
     "build": {
       "dependsOn": ["index", "^build"],
       "outputs": ["dist"]
-    },
-    "docs": {
-      "dependsOn": ["index", "^build"],
-      "outputs": ["documentation"]
     }
   }
 }

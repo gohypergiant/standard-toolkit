@@ -20,6 +20,7 @@ export type TreeItemNode<T> = {
   value?: T;
   isViewable?: boolean; // mutable
   isVisible?: boolean; // computed
+  isReadOnly?: boolean;
 };
 
 export type TreeGroupNode<T> = TreeItemNode<T> & {

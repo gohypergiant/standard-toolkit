@@ -1,69 +1,46 @@
-<br />
+![Hypergiant an Accelint company](assets/banner.jpg)
 
-<p align="center">
-  <img src="assets/banner.jpg" />
-</p>
+# Development Toolkit (DevTK)
 
-<h1 align="center">Accelint Standard Toolkit</h1>
-
-<p align="center">The web "standard library" for the <a href="https://accelint.com">Accelint</a> family of systems.</p>
-
-<br />
-
-> [!IMPORTANT]
-> Standard Toolkit is currently only intended for usage within the Accelint family of systems.<br>
-> Contributions are more than welcome but please consider that this project may not fit your needs.<br>
-> Please read the [contributing guidelines](CONTRIBUTING.md) and the [roadmap](#roadmap-link) of our Technical Steering Committee (TSC).
-
-<br />
+A "standard library" for web applications in the [Accelint] family of systems.
 
 ## 📦 Libraries
 
-Libraries are exposed via individual packages. Refer to each package documentation for available utilities.
-
-| Documentation                                            | Package                     |
-| ---------------------------------------------------------|---------------------------- |
-| [Constants](./packages/constants/documentation)          | `@accelint/constants`       |
-| [Converters](./packages/converters/documentation)        | `@accelint/converters`      |
-| [Design System](./packages/design-system/documentation)  | `@accelint/design-system`   |
-| [Formatters](./packages/formatters/documentation)        | `@accelint/formatters`      |
-| [Geo](./packages/geo/documentation)                      | `@accelint/geo`             |
-| [Math](./packages/math/documentation)                    | `@accelint/math`            |
-| [Predicates](./packages/predicates/documentation)        | `@accelint/predicates`      |
-| [Predicates](./packages/temporal/documentation)          | `@accelint/temporal`        |
-| [Web Worker](./packages/web-worker/documentation)        | `@accelint/web-worker`      |
-| [Websocket](./packages/websocket/documentation)          | `@accelint/websocket`       |
-
-
-
-We also export configurations for common tooling in our applications.
-
-| Package                       |
-| ----------------------------- |
-| `@accelint/biome-config`      |
-| `@accelint/eslint-config`     |
-| `@accelint/prettier-config`   |
-| `@accelint/typescript-config` |
-| `@accelint/vitest-config`     |
+Libraries are exposed via individual packages. Refer to the [documentation site][docs] for detailed information.
 
 ## 💡 Contributing
 
-Read the [contributing guidelines](CONTRIBUTING.md) file if you are interested in contributing.
+Read the [contributing](CONTRIBUTING.md) guidelines file if you are interested in contributing.
+
+## ✨ Versioning
+
+DevTK follows [Semver](https://semver.org/) for versioning of packages to enable consumers to trust what is changing between versions.
+
+Given a version number MAJOR.MINOR.PATCH, the meanings of each number changing follows these guidelines:
+
+- __MAJOR__
+  - Any "breaking" changes; something used to work one way - and therefor consumers might be using a package in that way and thus relying on that functionality - and in the next available version that something now works in a different way
+- __MINOR__
+  - Additional changes; adding functionality, enhancing/extending (without changing) existing functionality
+- __PATCH__
+  - Fixing problems; making something work that should have worked but don't
+  - Adding documentation to better explain what is available
+  - Improved testing to make the expectations more explicit and automatically tested
 
 ## 🔍 License
 
-Published under the [Apache License v2.0](https://www.apache.org/licenses/LICENSE-2.0) license. Read the [license instructions](LICENSE) if you are interested in contributing or using the Standard Toolkit.
+Licensed under [Apache] License v2.0. Read the [license instructions](LICENSE) if you are interested in contributing or using any of the packages.
 
 ## 🚀 Attributions
 
-The Standard Toolkit project is sponsored by:
+Development Toolkit (DevTK) is sponsored by: [Hypergiant] (GitHub [@gohypergiant][go]) an [Accelint] company.
 
-<a href="https://accelint.com" target="_blank"><img src="assets/accelint.png" height="48" /></a>
-<a href="https://hypergiant.com" target="_blank"><img src="assets/hypergiant.png" height="48" /></a>
+## 🔔 Disclaimer
 
----
+Standard Toolkit is currently only intended for usage within the Accelint family of systems. Contributions are more than welcome but please consider that this project may not fit your needs.
 
-> [Accelint](https://accelint.com) &nbsp;&middot;&nbsp;
-> [Hypergiant](https://hypergiant.com) &nbsp;&middot;&nbsp;
-> GitHub [@Gohypergiant](https://github.com/gohypergiant) &nbsp;&middot;&nbsp;
-
+[Accelint]: https://accelint.com
+[Apache]: https://www.apache.org/licenses/LICENSE-2.0
+[docs]: https://gohypergiant.github.io/standard-toolkit
+[go]: https://github.com/gohypergiant
+[Hypergiant]: https://hypergiant.com

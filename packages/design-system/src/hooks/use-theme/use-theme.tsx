@@ -38,6 +38,23 @@ const themeCssContext = createContext<CSSStyleDeclaration | null>(null);
  *
  * This function allows for the reuse of CSS contract tokens within React context for non-CSS
  * use cases. This ensures synchronized theming across the entire rendering stack
+ *
+ * @example
+ * ```
+ * import { genericColorVars, useTheme, type RGBA } from '@accelint/design-system';
+ *
+ *   const theme = useTheme({
+ *     colors: {
+ *       generic: genericColorVars,
+ *     },
+ *   });
+ *
+ *   new ArrowPathLayer({
+ *     id: 'layer-id',
+ *     // ...
+ *     getColor: theme.contract?.colors.generic.neutral.v01 as RGBA,
+ *   }),
+ * ```
  */
 export function useTheme<T extends Contract>(
   contract?: T,

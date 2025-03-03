@@ -13,13 +13,16 @@
 /**
  * Convert a boolean to an integer
  *
- * @pure
+ * @remarks
+ * pure function
  *
- * @example
- * booleanToNumber(true);
+ * @playground
+ * import { booleanToNumber } from '@accelint/converters';
+ *
+ * console.log(booleanToNumber(true));
  * // 1
  *
- * booleanToNumber(false);
+ * console.log(booleanToNumber(false));
  * // 0
  */
 export function booleanToNumber(val: boolean) {

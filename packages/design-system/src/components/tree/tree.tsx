@@ -465,6 +465,7 @@ export function TreeItem<T>({
         isLastChild,
         isViewable: !!node.value.isViewable,
         isVisible: !!node.value.isVisible,
+        isReadOnly: !!node.value.isReadOnly,
       }),
     [node.children.length, node.value, index, isFirstChild, isLastChild],
   );
@@ -492,6 +493,7 @@ export function TreeItem<T>({
               ...mapping.visibility[size],
               classNames: classNames?.item?.visibility,
               isSelected: !!node.value.isViewable,
+              isDisabled: !!node.value.isReadOnly,
               onPress: handleToggleVisibility,
             },
           },
@@ -625,6 +627,7 @@ export function TreeItem<T>({
   return (
     <GridListItem
       {...rest}
+      isDisabled={!!node.value.isReadOnly}
       className={classNames?.item?.container}
       style={style}
       textValue={node.value.label}

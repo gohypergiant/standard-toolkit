@@ -68,8 +68,16 @@ export const Drawer: ThemeContext['Drawer'] = {
     },
     tab: {
       tab: style(
-        applyThemeVars<{ list: TabListState; tab: TabState }>(
-          { list: tabListStateVars, tab: tabStateVars },
+        applyThemeVars<{
+          list: TabListState;
+          tab: TabState;
+          drawer: DrawerState;
+        }>(
+          {
+            list: tabListStateVars,
+            tab: tabStateVars,
+            drawer: drawerStateVars,
+          },
           [
             {
               query: { list: { count: 1 }, tab: { isSelected: true } },
@@ -86,6 +94,16 @@ export const Drawer: ThemeContext['Drawer'] = {
               vars: assignPartialVars(tabColorVars, {
                 background: 'none',
                 color: semanticColorVars.foreground.interactive.primary.bold,
+              }),
+            },
+            {
+              query: {
+                tab: { isSelected: true },
+                drawer: { isOpen: false },
+              },
+              vars: assignPartialVars(tabColorVars, {
+                background: 'none',
+                color: semanticColorVars.foreground.interactive.primary.subtle,
               }),
             },
           ],

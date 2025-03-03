@@ -1,5 +1,21 @@
 # @accelint/design-system
 
+## 0.5.0
+
+### Minor Changes
+
+- 49e188d: - Adds read-only tree node concept
+  - Updated design system documentation links
+  - Updated PR template
+
+### Patch Changes
+
+- 302b3c9: Enforces design system theme z-index ordering for popover component
+- 67b134a: Added support in Drawer component for controlled tab open and onSelectionChange event
+- e9b8f66: Changes import to use design system useContextProps hook
+- Updated dependencies [13f0d6c]
+  - @accelint/converters@0.2.0
+
 ## 0.4.0
 
 ### Minor Changes

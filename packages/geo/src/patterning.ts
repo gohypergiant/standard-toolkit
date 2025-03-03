@@ -15,7 +15,8 @@
  * Create a "capturing" group with the pattern provided by all arguments
  * merged into a single regex.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * capture(/a/, /b/, /c/) === /(abc)/
@@ -31,7 +32,8 @@ export const capture = (...p: RegExp[]) =>
  * @param template the definition of the pattern to build using the dict(ionary)
  * patterns
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * fromTemplate({ a: /alpha/, b: /beta/, ' ': / / }, 'a b') === /^alpha beta$/
@@ -50,7 +52,8 @@ export const fromTemplate = (dict: Record<string, RegExp>, template: string) =>
  * Create a "non-capturing" group with the pattern provided by all arguments
  * merged into a single regex.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * capture(/a/, /b/, /c/) === /(?:abc)/
@@ -63,7 +66,8 @@ export const group = (...p: RegExp[]) =>
  * subsequent argument is joined with the previous with no "qualifier" between
  * them.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * merge(/a/, /b/, /c/) === /abc/
@@ -75,7 +79,8 @@ export const merge = (...all: RegExp[]) =>
  * Create an "optional" "non-capturing" group with the pattern provided by all
  * arguments merged into a single regex.
  *
- * @pure
+ * @remarks
+ * pure function
  *
  * @example
  * capture(/a/, /b/, /c/) === /(?:abc)?/

@@ -37,8 +37,8 @@ import { useContextProps } from '../../hooks';
 /**
  * To better align with the guidance from RAC about establishing a unique
  * context for components to avoid conflict of props being provided by RAC
- * and C2DS components, this wrapping utility accepts an RAC and returns
- * a wrapped version along with the new context for the C2DS to use
+ * and design system components, this wrapping utility accepts an RAC and returns
+ * a wrapped version along with the new context for the design system to use
  */
 function wrap<P extends object, E extends HTMLElement>(
   Component: (props: P & RefAttributes<E>) => ReactNode,

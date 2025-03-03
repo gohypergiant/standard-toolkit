@@ -218,4 +218,28 @@ describe('useTree', () => {
       true,
     );
   });
+
+  it('should not toggle visibility if read-only node', () => {
+    const { result } = setup({
+      allowsVisibility: true,
+      nodes: [
+        { id: 'foo', label: 'Foo', isViewable: true, isReadOnly: true }, //
+        { id: 'bar', label: 'Bar', isViewable: true, isReadOnly: false },
+      ],
+    });
+
+    act(() =>
+      result.current.actions.toggleIsViewable(new Set(['foo', 'bar']), false),
+    );
+
+    expect(result.current.tree.children[0]?.value).toHaveProperty(
+      'isViewable',
+      true,
+    );
+
+    expect(result.current.tree.children[1]?.value).toHaveProperty(
+      'isViewable',
+      false,
+    );
+  });
 });

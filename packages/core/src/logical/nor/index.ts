@@ -18,7 +18,10 @@ import { or, orFn } from '../or';
  *
  * Logical Non-disjunction
  *
- * @link https://en.wikipedia.org/wiki/Logical_NOR
+ * @see https://en.wikipedia.org/wiki/Logical_NOR
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * nor(true)(0);
@@ -34,7 +37,10 @@ export const nor =
  *
  * Logical (Function Result) Non-disjunction
  *
- * @link https://en.wikipedia.org/wiki/Logical_NOR
+ * @see https://en.wikipedia.org/wiki/Logical_NOR
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * norFn(s => s.trim())(s => s.trimEnd())('foo bar ');
