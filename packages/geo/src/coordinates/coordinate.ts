@@ -112,8 +112,10 @@ const freezeCoordinate = (
  * pure function
  *
  * @example
+ * // Hello from demo.
  * const create = createCoordinate(coordinateSystems.dd, 'LATLON')
  * const create = createCoordinate(coordinateSystems.ddm, 'LONLAT')
+ *
  */
 export function createCoordinate(
   initSystem: CoordinateSystem = coordinateSystems.dd,
