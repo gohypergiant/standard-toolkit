@@ -13,10 +13,13 @@
 /**
  * Logical `(a === b)`
  *
- * XNOR
+ * Logical Equality (XNOR)
  *
  * @see https://en.wikipedia.org/wiki/Logical_equality
  * @see https://en.wikipedia.org/wiki/Logical_biconditional
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * equality(4)(8);
@@ -27,11 +30,16 @@ export const equality = (a: unknown) => (b: unknown) => a === b;
 /**
  * Logical `(a(x) === b(x))`
  *
+ * Logical (Function Result) Equality (XNOR)
+ *
  * @see https://en.wikipedia.org/wiki/Logical_equality
  * @see https://en.wikipedia.org/wiki/Logical_biconditional
  *
+ * @remarks
+ * pure function
+ *
  * @example
- * equalityFn(s => s.trim())(s => s.trimEnd())('foo bar ');
+ * equalityFn(x => x % 2)(x => x % 3)(6);
  * // true
  */
 export const equalityFn =
