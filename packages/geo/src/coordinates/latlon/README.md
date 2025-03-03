@@ -21,3 +21,7 @@ During this phase, certain disqualifying errors are detected to halt further pro
 ### Format/Specific Parsing
 
 This is the primary interface for library users. Specific parsing targets well-known coordinate formats, delivering results that are useful and relevant to most applications, rather than focusing on lower-level parsing details.
+
+# Demo
+
+This is some documentation content for a pipeline demo.
