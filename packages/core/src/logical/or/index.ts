@@ -17,6 +17,9 @@
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
+ * @remarks
+ * pure function
+ *
  * @example
  * or(true)(0);
  * // true
@@ -32,6 +35,9 @@ export const or =
  * Logical (Function Result) Disjunction
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * orFn(s => s.trim())(s => s.trimEnd())('foo bar ');
@@ -50,6 +56,9 @@ export const orFn =
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
+ * @remarks
+ * pure function
+ *
  * @example
  * swappedOr(0)(true);
  * // true
@@ -65,6 +74,9 @@ export const swappedOr =
  * Swapped Logical (Function Result) Disjunction
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * swappedOrFn(s => s.trimEnd())(s => s.trim())('foo bar ');
