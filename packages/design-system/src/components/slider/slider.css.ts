@@ -348,7 +348,9 @@ export const sliderClassNames: SliderClassNames = {
         },
       },
     }),
-    output: style({}),
+    output: style({
+      display: 'flex',
+    }),
   },
 };
 

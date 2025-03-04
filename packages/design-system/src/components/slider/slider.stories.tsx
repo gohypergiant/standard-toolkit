@@ -130,7 +130,9 @@ export const SliderExample: Story<
       <>
         {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
-          <SliderOutput>{state.values.join(' - ')}</SliderOutput>
+          <SliderOutput>
+            <span>{state.values[0]}</span>
+          </SliderOutput>
         )}
         {includeTextField && (
           <NumberField
@@ -188,7 +190,9 @@ export const SliderExampleWithOutput: Story<
       <>
         {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
-          <SliderOutput>{state.getThumbValueLabel(0)}</SliderOutput>
+          <SliderOutput>
+            <span>{state.values[0]}</span>
+          </SliderOutput>
         )}
         <SliderTrack>
           {() => (
@@ -239,7 +243,9 @@ export const ControlledSliderExample: Story<
       <>
         {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
-          <SliderOutput>{state.values.join(' - ')}</SliderOutput>
+          <SliderOutput>
+            <span>{state.values[0]}</span>
+          </SliderOutput>
         )}
         {includeTextField && (
           <NumberField value={state.values[0]}>
@@ -307,7 +313,11 @@ export const RangeSliderExample: Story<
         <>
           {showLabel && <AriaLabel>{label}</AriaLabel>}
           {includeOutputField && (
-            <SliderOutput>{state.values.join(' - ')}</SliderOutput>
+            <SliderOutput>
+              <span>{state.values[0]}</span>
+              {' - '}
+              <span>{state.values[1]}</span>
+            </SliderOutput>
           )}
           {includeTextField && (
             <Group>
@@ -385,7 +395,11 @@ export const ControlledRangeSliderExample: Story<
       <>
         {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
-          <SliderOutput>{state.values.join(' - ')}</SliderOutput>
+          <SliderOutput>
+            <span>{state.values[0]}</span>
+            {' - '}
+            <span>{state.values[1]}</span>
+          </SliderOutput>
         )}
         {includeTextField && (
           <Group>
