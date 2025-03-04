@@ -84,6 +84,9 @@ export const SliderBar = forwardRef(function SliderBar(
 
   const state = useContext(SliderStateContext);
 
+  const min = state.getThumbPercent(0);
+  const max = state.getThumbPercent(1);
+
   return (
     <div
       {...rest}
@@ -92,16 +95,16 @@ export const SliderBar = forwardRef(function SliderBar(
       style={{
         position: 'absolute',
         ...(state.orientation === 'horizontal' && {
-          left: state.getThumbValue(1) ? `${state.getThumbValue(0)}%` : 0,
-          width: state.getThumbValue(1)
-            ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-            : `${state.getThumbValue(0)}%`,
+          left: max ? `${min * 100}%` : 0,
+          width: max
+            ? `${(max * 100 || 0) - (min * 100 || 0)}%`
+            : `${min * 100}%`,
         }),
         ...(state.orientation === 'vertical' && {
-          bottom: state.getThumbValue(1) ? `${state.getThumbValue(0)}%` : 0,
-          height: state.getThumbValue(1)
-            ? `${(state.getThumbValue(1) || 0) - (state.getThumbValue(0) || 0)}%`
-            : `${state.getThumbValue(0)}%`,
+          bottom: max ? `${min * 100}%` : 0,
+          height: max
+            ? `${(max * 100 || 0) - (min * 100 || 0)}%`
+            : `${min * 100}%`,
         }),
       }}
     />
@@ -304,8 +307,6 @@ export const Slider = forwardRef(function Slider(
     children: childrenProp,
     classNames: classNamesProp,
     layout = 'stacked',
-    minValue,
-    maxValue,
     orientation = 'horizontal',
     ...rest
   } = props;
