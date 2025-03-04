@@ -20,6 +20,9 @@
  *
  * Lamda: `λab.ba`
  *
+ * @remarks
+ * pure function
+ *
  * @example
  * Th(6)(x => x * 2);
  * // 12
