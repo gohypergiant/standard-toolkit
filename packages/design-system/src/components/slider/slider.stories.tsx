@@ -53,7 +53,7 @@ const args: ArgTypes<
   SliderProps & {
     label: string;
     includeTextField: boolean;
-    includeRangeLabel: boolean;
+    showLabel: boolean;
     includeOutputField: boolean;
   }
 > = {
@@ -83,7 +83,7 @@ const args: ArgTypes<
     },
     defaultValue: true,
   },
-  includeRangeLabel: {
+  showLabel: {
     control: {
       type: 'boolean',
     },
@@ -113,22 +113,22 @@ export const SliderExample: Story<
   SliderProps & {
     label: string;
     includeTextField: boolean;
-    includeRangeLabel: boolean;
+    showLabel: boolean;
     includeOutputField: boolean;
   }
 > = ({
   label,
   minValue,
   maxValue,
-  includeRangeLabel,
+  showLabel,
   includeTextField,
   includeOutputField,
   ...rest
 }) => (
-  <Slider {...rest}>
+  <Slider minValue={minValue} maxValue={maxValue} {...rest}>
     {({ state }) => (
       <>
-        {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
           <SliderOutput>{state.values.join(' - ')}</SliderOutput>
         )}
@@ -166,24 +166,29 @@ export const SliderExampleWithOutput: Story<
   SliderProps & {
     label: string;
     includeTextField: boolean;
-    includeRangeLabel: boolean;
+    showLabel: boolean;
     includeOutputField: boolean;
   }
 > = ({
   label,
   minValue,
   maxValue,
-  includeRangeLabel,
+  showLabel,
   includeTextField,
   includeOutputField,
   ...rest
 }) => (
-  <Slider {...rest}>
+  <Slider
+    minValue={minValue}
+    maxValue={maxValue}
+    formatOptions={{ style: 'decimal' }}
+    {...rest}
+  >
     {({ state }) => (
       <>
-        {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
-          <SliderOutput>{state.values.join(' - ')}</SliderOutput>
+          <SliderOutput>{state.getThumbValueLabel(0)}</SliderOutput>
         )}
         <SliderTrack>
           {() => (
@@ -216,14 +221,14 @@ export const ControlledSliderExample: Story<
   SliderProps & {
     label: string;
     includeTextField: boolean;
-    includeRangeLabel: boolean;
+    showLabel: boolean;
     includeOutputField: boolean;
   }
 > = ({
   label,
   minValue,
   maxValue,
-  includeRangeLabel,
+  showLabel,
   includeTextField,
   includeOutputField,
   value,
@@ -232,7 +237,7 @@ export const ControlledSliderExample: Story<
   <Slider {...rest} value={value} minValue={minValue} maxValue={maxValue}>
     {({ state }) => (
       <>
-        {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
           <SliderOutput>{state.values.join(' - ')}</SliderOutput>
         )}
@@ -278,24 +283,29 @@ export const RangeSliderExample: Story<
   SliderProps & {
     label: string;
     includeTextField: boolean;
-    includeRangeLabel: boolean;
+    showLabel: boolean;
     includeOutputField: boolean;
   }
 > = ({
   label,
   minValue,
   maxValue,
-  includeRangeLabel,
+  showLabel,
   includeOutputField,
   includeTextField,
   value,
   ...rest
 }) => (
-  <Slider {...rest} defaultValue={[25, 75]}>
+  <Slider
+    minValue={minValue}
+    maxValue={maxValue}
+    defaultValue={[25, 75]}
+    {...rest}
+  >
     {({ state }) => {
       return (
         <>
-          {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+          {showLabel && <AriaLabel>{label}</AriaLabel>}
           {includeOutputField && (
             <SliderOutput>{state.values.join(' - ')}</SliderOutput>
           )}
@@ -350,7 +360,7 @@ export const ControlledRangeSliderExample: Story<
     inputValueMin: number;
     inputValueMax: number;
     includeTextField: boolean;
-    includeRangeLabel: boolean;
+    showLabel: boolean;
     includeOutputField: boolean;
   }
 > = ({
@@ -360,7 +370,7 @@ export const ControlledRangeSliderExample: Story<
   maxValue,
   inputValueMin,
   inputValueMax,
-  includeRangeLabel,
+  showLabel,
   includeTextField,
   includeOutputField,
   ...rest
@@ -373,7 +383,7 @@ export const ControlledRangeSliderExample: Story<
   >
     {({ state }) => (
       <>
-        {includeRangeLabel && <AriaLabel>{label}</AriaLabel>}
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
         {includeOutputField && (
           <SliderOutput>{state.values.join(' - ')}</SliderOutput>
         )}

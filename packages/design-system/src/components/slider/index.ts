@@ -14,12 +14,15 @@
 
 export {
   Slider,
-  SliderBar,
   SliderContext,
+  SliderBar,
+  SliderBarContext,
   SliderOutput,
   SliderOutputContext,
   SliderThumb,
+  SliderThumbContext,
   SliderTrack,
+  SliderTrackContext,
 } from './slider';
 export {
   sliderColorVars,
