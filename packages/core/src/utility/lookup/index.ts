@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { identity } from '../../combinators/i';
+import { identity } from '../../combinators/identity';
 
 /**
  * Takes an object and an optional fallback function and returns a function that
