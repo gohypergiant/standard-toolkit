@@ -26,6 +26,9 @@
  * @remark
  * `λab.b`
  *
+ * @remark
+ * pure function
+ *
  * @example
  * inverseConstant(1)(2);
  * // 2

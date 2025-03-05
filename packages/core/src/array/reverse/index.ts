@@ -14,6 +14,9 @@
  * Returns a new array with the order of the elements reversed.
  * @param arr The array to reverse the order of.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * reverse([1, 2, 3, 4, 5])
  * // [5, 4, 3, 2, 1]

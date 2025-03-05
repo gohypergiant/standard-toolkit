@@ -15,6 +15,9 @@
  * the remaining elements of the array (tail).
  * @param arr The element to get the `head`/`tail` of.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * shift([1, 2, 3, 4]);
  * // [1, [2, 3, 4, 5]]

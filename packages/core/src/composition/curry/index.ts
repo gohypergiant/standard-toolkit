@@ -25,6 +25,9 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  * Curries the given function. Allowing it to be accept one or more arguments at a time.
  * @param fn The function to convert to a curried version of.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * const curried = autoCurry((a, b, c) => (a + b) * c);
  * curried(2)(3)(4);

@@ -20,6 +20,9 @@ import { not } from '../not';
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
  *
+ * @remark
+ * pure function
+ *
  * @example
  * nand(true)(0);
  * // true
@@ -36,6 +39,9 @@ export const nand =
  * @param c The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
+ *
+ * @remark
+ * pure function
  *
  * @example
  * nandFn(s => s.trim())(s => s.trimEnd())('foo bar ');

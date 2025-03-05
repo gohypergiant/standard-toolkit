@@ -24,6 +24,9 @@
  * @remark
  * `λa.a`
  *
+ * @remark
+ * pure function
+ *
  * @example
  * identity(4);
  * // 4

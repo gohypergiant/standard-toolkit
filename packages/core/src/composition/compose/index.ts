@@ -46,6 +46,9 @@ type Composable<Fn> =
  * @param fns The functions to compose.
  * @param arg The argument to give to the first function in the composition.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * const getActiveUsers = page => compose(
  *   displayPage,

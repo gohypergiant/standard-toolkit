@@ -15,6 +15,9 @@
  * @param a The possible null value.
  * @param b The value to fallback to.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * nullishOr(null)(4);
  * // 4
@@ -29,6 +32,9 @@ export const nullishOr =
  * @param a The function to get the, possibly null, return of.
  * @param b The function to get the fallback return of.
  * @param c The value to pass to both `a` and `b`.
+ *
+ * @remark
+ * pure function
  *
  * @example
  * nullishOrFn(x => x.foo)(x => x.bar)({ bar: 4 });
@@ -45,6 +51,9 @@ export const nullishOrFn =
  * @param a The value to fallback to.
  * @param b The possible null value.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * swappedNullishOr(4)(null);
  * // 4
@@ -59,6 +68,9 @@ export const swappedNullishOr =
  * @param a The function to get the fallback return of.
  * @param b The function to get the, possibly null, return of.
  * @param c The value to pass to both `a` and `b`.
+ *
+ * @remark
+ * pure function
  *
  * @example
  * swappedNullishOrFn(x => x.bar)(x => x.foo)({ bar: 4 });

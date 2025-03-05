@@ -17,6 +17,9 @@
  * @param end The index to end on (exclusive).
  * @param arr The array to get a slice from.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * slice(0)(4)([1, 2, 3, 4, 5, 6]);
  * // [1, 2, 3, 4]

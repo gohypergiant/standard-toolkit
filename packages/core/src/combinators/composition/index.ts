@@ -25,6 +25,9 @@
  * @remark
  * `λabc.a(bc)`
  *
+ * @remark
+ * pure function
+ *
  * @example
  * composition((x) => x + 8)((x) => x * 3)(4);
  * // 20

@@ -24,6 +24,9 @@
  * @remark
  * `λab.ab`
  *
+ * @remark
+ * pure function
+ *
  * @example
  * apply((a) => a + 6)(3);
  * // 9

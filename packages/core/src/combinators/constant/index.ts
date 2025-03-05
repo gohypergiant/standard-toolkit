@@ -25,6 +25,9 @@
  * @remark
  * `λab.a`
  *
+ * @remark
+ * pure function
+ *
  * @example
  * constant(1)(2);
  * // 1

@@ -43,6 +43,9 @@ export const assoc = associate;
  * @param prop The property to set the value to.
  * @param val The new value.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * associateDeep(personStore)('address')({
  *   city: 'Austin',

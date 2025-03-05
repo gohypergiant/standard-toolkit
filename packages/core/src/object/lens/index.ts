@@ -29,6 +29,9 @@ export type Lens<T, V> = {
  * @param getter The lens get function to use.
  * @param setter The lens set function to use.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * const nameLens = lens(
  *   (person: Person) => person.name,
@@ -62,6 +65,9 @@ export const lens = <T, V>(
  * @param ab The lens from A ⭢ B.
  * @param bc The lens from B ⭢ C.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * const addressLens = lens(
  *   (person: Person) => property(person)('address'),
@@ -89,6 +95,9 @@ export const composeLens = <A, B, C>(
  * @param lensVal The Lens to get the getter of.
  * @param obj The object to focus the lens on.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * get(nameLens)(personStore);
  */
@@ -102,6 +111,9 @@ export const get =
  * @param lensVal The Lens to get the setter of.
  * @param value The new value to set.
  * @param obj The object to focus the lens on.
+ *
+ * @remark
+ * pure function
  *
  * @example
  * set(nameLens)('Fred')(personStore);
@@ -121,6 +133,9 @@ export const set =
  * Short-hand to create a simplistic get/set lens.
  * @param prop The prop on the focused object to access.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * const { get, set } = lensProp<Person>()('name');
  */
@@ -135,6 +150,9 @@ export const lensProp =
 /**
  * Short-hand to create is simplistic, optional, get/set lens.
  * @param prop The prop on the focused object to access.
+ *
+ * @remark
+ * pure function
  *
  * @example
  * const { get, set } = lensOptionalProp<Person>()('name');

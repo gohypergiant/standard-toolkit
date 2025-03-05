@@ -26,6 +26,9 @@
  * @remark
  * `λabcd.a(bd)(cd)`
  *
+ * @remark
+ * pure function
+ *
  * @example
  * fork((x) => (y) => x + y)(x => x + 3)(x => x - 2)(9)
  * // 19

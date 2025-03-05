@@ -15,6 +15,9 @@
  * @param arr The array to add an item to.
  * @param x The value to add to the end of the array.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * push([1, 2, 3, 4])(5);
  * // [1, 2, 3, 4, 5]

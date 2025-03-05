@@ -15,6 +15,9 @@
  * @param x The value to find in the array.
  * @param arr The array to search for the element in.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * includes(3)([[1, 2, 3, 4, 5]])
  * // true

@@ -18,6 +18,9 @@ import type { Accumulator } from '@/types';
  * @param initVal The initial value of the reduction.
  * @param arr The array to fold over.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * reduceRight((total, n) => total - n)(0)([1, 2, 3, 4, 5]);
  * // -5

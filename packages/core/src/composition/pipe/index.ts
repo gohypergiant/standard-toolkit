@@ -50,6 +50,9 @@ type Pipeable<Fn> =
  * @param fns The functions to pipe.
  * @param arg The argument to give to the first function in the pipe.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * const getActiveUsers = page => pipe(
  *   filterActive,

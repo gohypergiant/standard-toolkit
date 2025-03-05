@@ -17,6 +17,9 @@ import type { Comparator } from '@/types';
  * @param comparator The comparator function to apply to each element of the array.
  * @param arr The array to check each element of.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * every(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // false

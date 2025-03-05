@@ -17,6 +17,9 @@ import type { MapFn } from '@/types';
  * @param map The mapping function to apply to each element of the array.
  * @param arr The array to map over.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * map(x => x * 2)([1, 2, 3, 4, 5]);
  * // [2, 4, 6, 8, 10]
