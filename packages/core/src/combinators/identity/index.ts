@@ -11,25 +11,21 @@
  */
 
 /**
- * Corresponds to the encoding of `true` in the lambda calculus.
- * Takes two arguments and always returns the first.
+ * Mathematic identity function. A function that always returns the value
+ * that was used as its argument, unchanged.
+ * @param x The value to return.
  *
- * Bird: `Kestrel`
+ * @remark
+ * I combinator
  *
- * Signature: `K :: a → b → a`
+ * @remark
+ * `identity :: a → a`
  *
- * Lambda: `λab.a`
+ * @remark
+ * `λa.a`
  *
  * @example
- * K(1)(2);
- * // 1
+ * identity(4);
+ * // 4
  */
-export const K =
-  <A>(a: A) =>
-  <B>(_: B): A =>
-    a;
-
-/**
- * {@inheritDoc K}
- */
-export const constant = K;
+export const identity = <A>(x: A) => x;

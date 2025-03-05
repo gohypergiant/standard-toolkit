@@ -11,25 +11,25 @@
  */
 
 /**
- * Pass a value to a function and then the result to another function.
+ * Corresponds to the encoding of `true` in the lambda calculus.
+ * Takes two arguments and always returns the first.
+ * @param a The value to return.
+ * @param b The value to ignore.
  *
- * Bird: `Bluebird`
+ * @remark
+ * K combinator
  *
- * Signature: `B :: (a → b) → (c → a) → c → b`
+ * @remark
+ * `constant :: a → b → a`
  *
- * Lambda: `λabc.a(bc)`
+ * @remark
+ * `λab.a`
  *
  * @example
- * B((x) => x + 8)((x) => x * 3)(4);
- * // 20
+ * constant(1)(2);
+ * // 1
  */
-export const B =
-  <A, B>(f: (z: A) => B) =>
-  <C>(g: (y: C) => A) =>
-  (x: C) =>
-    f(g(x));
-
-/**
- * {@inheritDoc B}
- */
-export const composition = B;
+export const constant =
+  <A>(a: A) =>
+  <B>(_: B): A =>
+    a;

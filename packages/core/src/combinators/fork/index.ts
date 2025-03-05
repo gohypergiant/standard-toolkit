@@ -11,28 +11,28 @@
  */
 
 /**
- * Takes an argument and an unary function and then applies the function to the argument.
- * Inverse of `apply` (`A`)
- * @param a The value to pass to the function.
- * @param b The function to apply to the value.
+ * Pass a value through two different functions and the results to a function that takes two arguments.
+ * @param a The final curried, binary function that receives the results from `b` and `c`.
+ * @param b The first function to pass the value to.
+ * @param c The second function to pass the value to.
+ * @param d The value to pass to `b` and `c`.
  *
  * @remark
- * Th combinator
+ * Phi combinator
  *
  * @remark
- * `applyTo :: a → (a → b) → b`
+ * 'fork :: (a → b → c) → (d → a) → (d → b) → d → c'
  *
  * @remark
- * `λab.ba`
- *
- * @remarks
- * pure function
+ * `λabcd.a(bd)(cd)`
  *
  * @example
- * applyTo(6)(x => x * 2);
- * // 12
+ * fork((x) => (y) => x + y)(x => x + 3)(x => x - 2)(9)
+ * // 19
  */
-export const applyTo =
-  <A>(a: A) =>
-  <B>(b: (x: A) => B) =>
-    b(a);
+export const fork =
+  <A, B, C>(a: (x: A) => (y: B) => C) =>
+  <D>(b: (x: D) => A) =>
+  (c: (x: D) => B) =>
+  (d: D) =>
+    a(b(d))(c(d));

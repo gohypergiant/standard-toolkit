@@ -11,22 +11,25 @@
  */
 
 /**
- * Mathematic identity function. A function that always returns the value
- * that was used as its argument, unchanged.
+ * Takes an unary function and applies it to the given argument.
+ * @param f The function to apply to the value.
+ * @param x The value to pass to the function.
  *
- * Bird: `Idiot`
+ * @remark
+ * A combinator
  *
- * Signature: `I :: a → a`
+ * @remark
+ * `apply :: (a → b) → a → b`
  *
- * Lambda: `λa.a`
+ * @remark
+ * `λab.ab`
  *
  * @example
- * I(4);
- * // 4
+ * apply((a) => a + 6)(3);
+ * // 9
  */
-export const I = <A>(x: A) => x;
-
-/**
- * {@inheritDoc I}
- */
-export const identity = I;
+export const apply =
+  // Types renamed to avoid confusion with the combinator
+    <T, R>(f: (x: T) => R) =>
+    (x: T) =>
+      f(x);

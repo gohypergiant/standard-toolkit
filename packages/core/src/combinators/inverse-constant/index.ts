@@ -11,23 +11,26 @@
  */
 
 /**
- * Takes an unary function and applies it to the given argument.
+ * Corresponds to the encoding of `false` in the lambda calculus.
+ * Takes two arguments and always returns the second.
+ * Inverse of `constant` (`K`).
+ * @param a The value to ignore.
+ * @param b The value to return.
  *
- * Signature: `A :: (a → b) → a → b`
+ * @remark
+ * KI combinator
  *
- * Lambda: `λab.ab`
+ * @remark
+ * `inverseConstant :: a → b → b`
+ *
+ * @remark
+ * `λab.b`
  *
  * @example
- * A((a) => a + 6)(3);
- * // 9
+ * inverseConstant(1)(2);
+ * // 2
  */
-export const A =
-  // Types renamed to avoid confusion with the combinator
-    <T, R>(f: (x: T) => R) =>
-    (x: T) =>
-      f(x);
-
-/**
- * {@inheritDoc A}
- */
-export const apply = A;
+export const inverseConstant =
+  <A>(_: A) =>
+  <B>(b: B): B =>
+    b;
