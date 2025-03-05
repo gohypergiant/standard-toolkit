@@ -31,6 +31,9 @@ export const xor = (a: unknown) => (b: unknown) =>
  *
  * @see https://en.wikipedia.org/wiki/Exclusive_or
  *
+ * @remarks
+ * pure function
+ *
  * @example
  * xorFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // false
