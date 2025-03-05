@@ -4,6 +4,9 @@ import { identity } from '../../combinators/i';
  * Takes an object and an optional fallback function and returns a function that
  * takes a string and returns the lookup value or the result default fallback.
  *
+ * @remark
+ * pure function
+ *
  * @example
  * const colorTable = {
  *  FOO: [0, 0, 255, 155],
