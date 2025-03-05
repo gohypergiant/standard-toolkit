@@ -12,6 +12,8 @@
 
 /**
  * Gets the value of `prop` in `obj`. Array index support.
+ * @param obj The object to get the value from.
+ * @param prop The property to get the value of.
  *
  * @example
  * property(personStore)('address');
@@ -34,6 +36,8 @@ export const prop = property;
 
 /**
  * Gets the optional value of `prop` in `obj`. Array index support.
+ * @param obj The object to get the value from.
+ * @param prop The property to get the value of.
  *
  * @example
  * optionalProperty(personStore)('address');

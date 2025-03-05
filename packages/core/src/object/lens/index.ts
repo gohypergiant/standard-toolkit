@@ -16,6 +16,9 @@ import { optionalProperty, property } from '../property';
 type LenseGet<T, V> = (source: T) => V;
 type LenseSet<T, V> = (source: T) => (value: V) => T;
 
+/**
+ * A functional lense.
+ */
 export type Lens<T, V> = {
   get: LenseGet<T, V>;
   set: LenseSet<T, V>;
@@ -23,6 +26,8 @@ export type Lens<T, V> = {
 
 /**
  * Focus on and manipulate a specific property or substructure within an object.
+ * @param getter The lens get function to use.
+ * @param setter The lens set function to use.
  *
  * @example
  * const nameLens = lens(
@@ -54,6 +59,8 @@ export const lens = <T, V>(
  * Compose two lenses together.
  *
  * Given a lens `A ⭢ B` and a lens `B ⭢ C`, produces a lens `A ⭢ C`.
+ * @param ab The lens from A ⭢ B.
+ * @param bc The lens from B ⭢ C.
  *
  * @example
  * const addressLens = lens(
@@ -79,6 +86,8 @@ export const composeLens = <A, B, C>(
 
 /**
  * A simple warpper function to access the `get` of a lens and the given object.
+ * @param lensVal The Lens to get the getter of.
+ * @param obj The object to focus the lens on.
  *
  * @example
  * get(nameLens)(personStore);
@@ -90,6 +99,9 @@ export const get =
 
 /**
  * A simple warpper function to access the `set` of a lens and the given object..
+ * @param lensVal The Lens to get the setter of.
+ * @param value The new value to set.
+ * @param obj The object to focus the lens on.
  *
  * @example
  * set(nameLens)('Fred')(personStore);
@@ -106,7 +118,8 @@ export const set =
 // * Neither of which are ideal. So I guess this is the less of the three evils.
 
 /**
- * Short-hand to create is simplistic get/set lens.
+ * Short-hand to create a simplistic get/set lens.
+ * @param prop The prop on the focused object to access.
  *
  * @example
  * const { get, set } = lensProp<Person>()('name');
@@ -121,6 +134,7 @@ export const lensProp =
 
 /**
  * Short-hand to create is simplistic, optional, get/set lens.
+ * @param prop The prop on the focused object to access.
  *
  * @example
  * const { get, set } = lensOptionalProp<Person>()('name');
