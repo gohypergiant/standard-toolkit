@@ -1,5 +1,12 @@
 # @accelint/core
 
+## 0.2.0
+
+### Minor Changes
+
+- d2ed24c: Clean up some of the functions and flesh out code documentation.
+- 50ed3fd: Added a function to create an iterable and added a `range` iterable.
+
 ## 0.1.3
 
 ### Patch Changes
