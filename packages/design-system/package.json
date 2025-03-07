@@ -8,9 +8,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -55,9 +53,9 @@
     "@react-stately/overlays": "3.6.11",
     "@react-stately/utils": "3.10.4",
     "@react-types/shared": "3.25.0",
-    "react": "18.3.1",
+    "react": "^18.0.0",
     "react-aria-components": "1.4.1",
-    "react-dom": "18.3.1",
+    "react-dom": "^18.0.0",
     "react-querybuilder": "7.7.0"
   },
   "devDependencies": {
