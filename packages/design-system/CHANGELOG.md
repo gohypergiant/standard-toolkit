@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.5.2
+
+### Patch Changes
+
+- dc6b485: Loosen strictness of peer dependencies
+
 ## 0.5.1
 
 ### Patch Changes
