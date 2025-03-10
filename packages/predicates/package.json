@@ -33,8 +33,8 @@
     "@accelint/vitest-config": "workspace:*",
     "@vitest/web-worker": "2.1.3",
     "esbuild-plugin-file-path-extensions": "2.1.3",
-    "tsup": "8.3.0",
-    "vitest": "2.1.3"
+    "tsup": "8.3.5",
+    "vitest": "2.1.9"
   },
   "dependencies": {
     "@accelint/core": "workspace:*",
