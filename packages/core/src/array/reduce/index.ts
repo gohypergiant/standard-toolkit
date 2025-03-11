@@ -29,9 +29,10 @@ export const reduce =
   <T, R>(fn: Accumulator<T, R>) =>
   (initVal: R) =>
   (arr: T[]) => {
+    const len = arr.length;
     let acc = initVal;
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < len; i++) {
       acc = fn(acc, arr[i] as T);
     }
 
