@@ -20,7 +20,7 @@ import { not } from '../not';
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
