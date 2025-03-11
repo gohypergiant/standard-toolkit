@@ -12,6 +12,7 @@
 
 /**
  * Concatenate the two given arrays together.
+ * I have to test this.
  * @param newValue The first array to append to.
  * @param concatable The second array to add to the end of the first.
  *
