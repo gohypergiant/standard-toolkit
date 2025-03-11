@@ -33,6 +33,7 @@ export type Lens<T, V> = {
  * pure function
  *
  * @example
+ * // hello from josh
  * const nameLens = lens(
  *   (person: Person) => person.name,
  *   (person, name) => ({ ...person, name })
