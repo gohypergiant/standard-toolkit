@@ -15,6 +15,8 @@
  * @param newValue The first array to append to.
  * @param concatable The second array to add to the end of the first.
  *
+ * This is an additional comment
+ *
  * @remark
  * pure function
  *
