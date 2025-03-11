@@ -40,7 +40,7 @@ export const nand =
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
