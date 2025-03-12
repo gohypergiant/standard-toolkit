@@ -1,5 +1,11 @@
 # @accelint/geo
 
+## 0.2.2
+
+### Patch Changes
+
+- @accelint/predicates@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @apps/next
 
+## 0.2.4
+
+### Patch Changes
+
+- @accelint/design-system@0.5.3
+
 ## 0.2.3
 
 ### Patch Changes

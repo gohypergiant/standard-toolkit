@@ -1,5 +1,11 @@
 # @accelint/core
 
+## 0.2.1
+
+### Patch Changes
+
+- f1073bf: Fix a copy paste typo in the reduce call
+
 ## 0.2.0
 
 ### Minor Changes

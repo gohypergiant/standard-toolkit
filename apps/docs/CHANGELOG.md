@@ -1,5 +1,11 @@
 # @accelint/docs
 
+## 0.1.4
+
+### Patch Changes
+
+- @accelint/design-system@0.5.3
+
 ## 0.1.3
 
 ### Patch Changes
