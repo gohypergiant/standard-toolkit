@@ -59,9 +59,30 @@ importers:
       '@accelint/biome-config':
         specifier: workspace:*
         version: link:../../tooling/biome-config
+      '@accelint/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
+      '@accelint/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@accelint/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
+      '@accelint/formatters':
+        specifier: workspace:*
+        version: link:../../packages/formatters
+      '@accelint/geo':
+        specifier: workspace:*
+        version: link:../../packages/geo
+      '@accelint/math':
+        specifier: workspace:*
+        version: link:../../packages/math
+      '@accelint/predicates':
+        specifier: workspace:*
+        version: link:../../packages/predicates
+      '@accelint/temporal':
+        specifier: workspace:*
+        version: link:../../packages/temporal
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -2610,7 +2631,6 @@ packages:
 
   '@ls-lint/ls-lint@2.3.0-beta.1':
     resolution: {integrity: sha512-NmujBNFslP4GhFsB92zh1evSSBadcg+RMsQ5FM70OrU36C3AbQYaVXDn4reC28GM6DFoOtiETRdKV6ie1TfP7g==}
-    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
