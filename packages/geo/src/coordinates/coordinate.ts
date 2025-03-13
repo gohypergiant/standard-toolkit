@@ -55,6 +55,8 @@ type CoordinateInternalValue = { LAT: number; LON: number };
  * rounding errors. All alternative values are computed from a common
  * internal value to reduce complexity.
  *
+ * @link https://en.wikipedia.org/wiki/Coordinate_system
+ *
  * @remarks
  * pure function
  *
