@@ -14,7 +14,14 @@
   },
   "dependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/constants": "workspace:*",
+    "@accelint/core": "workspace:*",
     "@accelint/design-system": "workspace:*",
+    "@accelint/fortmatters": "workspace:*",
+    "@accelint/geo": "workspace:*",
+    "@accelint/math": "workspace:*",
+    "@accelint/predicates": "workspace:*",
+    "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@biomejs/biome": "1.9.3",
     "@codesandbox/sandpack-react": "2.19.10",
@@ -37,11 +44,7 @@
     "typescript": "5.6.2"
   },
   "browserslist": {
-    "production": [
-      ">0.5%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.5%", "not dead", "not op_mini all"],
     "development": [
       "last 3 chrome version",
       "last 3 firefox version",
