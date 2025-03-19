@@ -141,7 +141,7 @@ export const optionsClassNames: OptionsClassNames = {
       '@layer': {
         [layers.components.l1]: {
           containerName: optionsContainers.list,
-          display: 'contents',
+          display: 'block',
         },
       },
     }),
