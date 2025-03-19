@@ -10,6 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Default, empty coordinate. `[0,0]` as a default value is incorrect as
+ * that is a point in the Atlantic Ocean, specifically in the Gulf of Guinea,
+ * and is also known as "Null Island"
+ */
 export const DEFAULT_COORDINATE = [Number.NaN, Number.NaN];
-
-// TODO: could add in regex constants here for coordinate parsing
