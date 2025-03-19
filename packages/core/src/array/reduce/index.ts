@@ -25,7 +25,7 @@ import type { Accumulator } from '@/types';
  * @playground
  * import { reduce } from '@accelint/core';
  *
- * reduce((total, n) => total + n)(0)([1, 2, 3, 4, 5]);
+ * console.log(reduce((total, n) => total + n)(0)([1, 2, 3, 4, 5]));
  * // 15
  */
 export const reduce =

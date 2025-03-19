@@ -23,7 +23,7 @@
  * @playground
  * import { indexOf } from '@accelint/core';
  *
- * indexOf(3)([1, 2, 3, 4, 5])
+ * console.log(indexOf(3)([1, 2, 3, 4, 5]));
  * // 2
  */
 export const indexOf =

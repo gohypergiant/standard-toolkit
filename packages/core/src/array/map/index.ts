@@ -25,7 +25,7 @@ import type { MapFn } from '@/types';
  * @playground
  * import { map } from '@accelint/core';
  *
- * map(x => x * 2)([1, 2, 3, 4, 5]);
+ * console.log(map(x => x * 2)([1, 2, 3, 4, 5]));
  * // [2, 4, 6, 8, 10]
  */
 export const map =

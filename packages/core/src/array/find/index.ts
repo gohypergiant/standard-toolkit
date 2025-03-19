@@ -25,7 +25,7 @@ import type { Predicate } from '@/types';
  * @playground
  * import { find } from '@accelint/core';
  *
- * find(x => !(x & 1))([1, 2, 3, 4, 5]);
+ * console.log(find(x => !(x & 1))([1, 2, 3, 4, 5]));
  * // 2
  */
 export const find =

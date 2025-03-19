@@ -24,7 +24,7 @@ import type { Comparator } from '@/types';
  * @playground
  * import { every } from '@accelint/core';
  *
- * every(x => !(x & 1))([1, 2, 3, 4, 5]);
+ * console.log(every(x => !(x & 1))([1, 2, 3, 4, 5]));
  * // false
  */
 export const every =

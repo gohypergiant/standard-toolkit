@@ -22,7 +22,7 @@
  * @playground
  * import { shift } from '@accelint/core';
  *
- * shift([1, 2, 3, 4]);
+ * console.log(shift([1, 2, 3, 4]));
  * // [1, [2, 3, 4, 5]]
  */
 export const shift = <T>(arr: T[]): [T, T[]] => {

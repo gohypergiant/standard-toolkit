@@ -27,10 +27,10 @@
  * @playground
  * import { toBoolean } from '@accelint/converters';
  *
- * toBoolean(1);          // true
- * toBoolean(' FaLsE ');  // false
- * toBoolean('  true');   // true
- * toBoolean('000.000');  // false
+ * console.log(toBoolean(1));          // true
+ * console.log(toBoolean(' FaLsE '));  // false
+ * console.log(toBoolean('  true'));   // true
+ * console.log(toBoolean('000.000'));  // false
  */
 export function toBoolean(val: unknown) {
   return !(

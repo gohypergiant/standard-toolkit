@@ -44,8 +44,8 @@ function tileToLat(y: number, z: number) {
  * @playground
  * import { zxyToBbox } from '@accelint/converters';
  *
- * zxyToBbox([71, 96, 8]);
- * // [-80.15625, 39.909736234537185, -78.75, 40.97989806962013]
+ * console.log(zxyToBbox([71, 96, 8]));
+ * // [-80.15625, 39.9zxyToBbox09736234537185, -78.75, 40.97989806962013]
  */
 export const zxyToBbox = (tile: ZxyTuple): BoundingBoxTuple => {
   const [x, y, z] = tile;

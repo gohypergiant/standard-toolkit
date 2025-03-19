@@ -25,7 +25,7 @@ import type { Accumulator } from '@/types';
  * @playground
  * import { reduceRight } from '@accelint/core';
  *
- * reduceRight((base, s) => `${base}${s}`)('')(['a', 'b', 'c', 'd', 'e']);
+ * console.log(reduceRight((base, s) => `${base}${s}`)('')(['a', 'b', 'c', 'd', 'e']));
  * // 'edcba'
  */
 export const reduceRight =

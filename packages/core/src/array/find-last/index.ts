@@ -25,7 +25,7 @@ import type { Predicate } from '@/types';
  * @playground
  * import { findLast } from '@accelint/core';
  *
- * findLast(x => !(x & 1))([1, 2, 3, 4, 5]);
+ * console.log(findLast(x => !(x & 1))([1, 2, 3, 4, 5]));
  * // 4
  */
 export const findLast =

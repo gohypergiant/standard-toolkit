@@ -22,7 +22,7 @@
  * @playground
  * import { push } from '@accelint/core';
  *
- * push([1, 2, 3, 4])(5);
+ * console.log(push([1, 2, 3, 4])(5));
  * // [1, 2, 3, 4, 5]
  */
 export const push =

@@ -22,7 +22,7 @@
  * @playground
  * import { includes } from '@accelint/core';
  *
- * includes(3)([1, 2, 3, 4, 5])
+ * console.log(includes(3)([1, 2, 3, 4, 5]));
  * // true
  */
 export const includes =
