@@ -15,6 +15,7 @@
   "dependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/constants": "workspace:*",
+    "@accelint/converters": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/design-system": "workspace:*",
     "@accelint/formatters": "workspace:*",

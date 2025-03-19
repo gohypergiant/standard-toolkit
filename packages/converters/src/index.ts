@@ -16,5 +16,5 @@
 
 export { booleanToNumber } from './boolean-to-number';
 export { toBoolean } from './to-boolean';
-export { zxyToBbox } from './xyz-to-bbox';
-export type { BoundingBoxTuple, ZxyTuple } from './xyz-to-bbox';
+export { zxyToBbox } from './zxy-to-bbox';
+export type { BoundingBoxTuple, ZxyTuple } from './zxy-to-bbox';
