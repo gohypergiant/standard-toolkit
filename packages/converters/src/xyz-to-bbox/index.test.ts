@@ -11,7 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { type BoundingBoxTuple, type XyzTuple, xyzToBbox } from './';
+import { type BoundingBoxTuple, type ZxyTuple, zxyToBbox } from './';
 
 const one: BoundingBoxTuple = [
   -80.15625, 39.909736234537185, -78.75, 40.97989806962013,
@@ -37,7 +37,7 @@ const six: BoundingBoxTuple = [
   -78.75, 38.82259097617712, -77.34375, 39.909736234537185,
 ];
 
-const tilePairs: [XyzTuple, BoundingBoxTuple][] = [
+const tilePairs: [ZxyTuple, BoundingBoxTuple][] = [
   [[71, 96, 8], one],
   [[71, 97, 8], two],
   [[71, 98, 8], three],
@@ -48,7 +48,7 @@ const tilePairs: [XyzTuple, BoundingBoxTuple][] = [
 
 describe('tile-to-bbox', () => {
   it.each(tilePairs)('should correctly convert %s', (input, expected) => {
-    const bbox = xyzToBbox(input);
+    const bbox = zxyToBbox(input);
 
     expect(bbox).toStrictEqual(expected);
   });
