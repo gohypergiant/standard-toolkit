@@ -19,13 +19,13 @@ import type { Predicate } from '@/types';
  * @param predicate A predicate function to apply to each element of the array.
  * @param arr The array to find against based on the predicate.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { findIndex } from '@accelint/core';
  *
- * console.log(findIndex(x => !(x & 1))([1, 2, 3, 4, 5]));
+ * findIndex(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // 1
  */
 export const findIndex =

@@ -18,13 +18,13 @@ import type { Predicate } from '@/types';
  * @param predicate A predicate function to apply to each element of the array.
  * @param arr The array to filter on based on the predicate.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { filter } from '@accelint/core';
  *
- * console.log(filter(x => !(x & 1))([1, 2, 3, 4, 5]));
+ * filter(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // [2, 4]
  */
 export const filter =

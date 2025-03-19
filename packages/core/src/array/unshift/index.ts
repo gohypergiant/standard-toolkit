@@ -16,13 +16,13 @@
  * @param arr The array to add an item to.
  * @param x The value to add to the start of the array.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { unshift } from '@accelint/core';
  *
- * console.log(push([1, 2, 3, 4])(0));
+ * push([1, 2, 3, 4])(0);
  * // [0, 1, 2, 3, 4]
  */
 export const unshift =

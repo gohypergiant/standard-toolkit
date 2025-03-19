@@ -16,13 +16,13 @@
  * @param concatable The second array to add to the end of the first.
  * @param newValue The first array to append to.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { concat } from '@accelint/core';
  *
- * console.log(concat([1, 2, 3])([4, 5, 6]));
+ * concat([1, 2, 3])([4, 5, 6]);
  * // [1, 2, 3, 4, 5, 6]
  */
 export const concat =

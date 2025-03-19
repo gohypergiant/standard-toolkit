@@ -15,13 +15,13 @@
  *
  * @param arr The array to reverse the order of.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { reverse } from '@accelint/core';
  *
- * console.log(reverse([1, 2, 3, 4, 5]));
+ * reverse([1, 2, 3, 4, 5]);
  * // [5, 4, 3, 2, 1]
  */
 export const reverse = <T>(arr: T[]) => {

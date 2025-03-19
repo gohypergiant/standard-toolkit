@@ -16,13 +16,13 @@
  * @param x The value to find in the array.
  * @param arr The array to search for the element in.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { includes } from '@accelint/core';
  *
- * console.log(includes(3)([1, 2, 3, 4, 5]));
+ * includes(3)([1, 2, 3, 4, 5]);
  * // true
  */
 export const includes =

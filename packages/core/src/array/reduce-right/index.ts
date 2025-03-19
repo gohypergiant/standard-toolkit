@@ -19,13 +19,13 @@ import type { Accumulator } from '@/types';
  * @param initVal The initial value of the reduction.
  * @param arr The array to fold over.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { reduceRight } from '@accelint/core';
  *
- * console.log(reduceRight((base, s) => `${base}${s}`)('')(['a', 'b', 'c', 'd', 'e']));
+ * reduceRight((base, s) => `${base}${s}`)('')(['a', 'b', 'c', 'd', 'e']);
  * // 'edcba'
  */
 export const reduceRight =

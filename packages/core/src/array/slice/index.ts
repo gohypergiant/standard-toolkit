@@ -18,13 +18,13 @@
  * @param end The index to end on (exclusive).
  * @param arr The array to get a slice from.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { slice } from '@accelint/core';
  *
- * console.log(slice(0)(4)([1, 2, 3, 4, 5, 6]));
+ * slice(0)(4)([1, 2, 3, 4, 5, 6]);
  * // [1, 2, 3, 4]
  */
 export const slice =

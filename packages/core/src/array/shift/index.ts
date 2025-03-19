@@ -16,13 +16,13 @@
  *
  * @param arr The element to get the `head`/`tail` of.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { shift } from '@accelint/core';
  *
- * console.log(shift([1, 2, 3, 4]));
+ * shift([1, 2, 3, 4]);
  * // [1, [2, 3, 4, 5]]
  */
 export const shift = <T>(arr: T[]): [T, T[]] => {

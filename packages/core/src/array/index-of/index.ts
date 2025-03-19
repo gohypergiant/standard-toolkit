@@ -17,13 +17,13 @@
  * @param x The value to find in the array.
  * @param arr The array to search for the element in.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { indexOf } from '@accelint/core';
  *
- * console.log(indexOf(3)([1, 2, 3, 4, 5]));
+ * indexOf(3)([1, 2, 3, 4, 5]);
  * // 2
  */
 export const indexOf =

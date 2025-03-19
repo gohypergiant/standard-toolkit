@@ -19,13 +19,13 @@ import type { Accumulator } from '@/types';
  * @param initVal The initial value of the reduction.
  * @param arr The array to fold over.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { reduce } from '@accelint/core';
  *
- * console.log(reduce((total, n) => total + n)(0)([1, 2, 3, 4, 5]));
+ * reduce((total, n) => total + n)(0)([1, 2, 3, 4, 5]);
  * // 15
  */
 export const reduce =

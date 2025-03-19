@@ -18,13 +18,13 @@ import type { Comparator } from '@/types';
  * @param comparator The comparator function to apply to each element of the array.
  * @param arr The array to check each element of.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @playground
+ * @example
  * import { some } from '@accelint/core';
  *
- * console.log(every(x => !(x & 1))([1, 2, 3, 4, 5]));
+ * every(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // true
  */
 export const some =
