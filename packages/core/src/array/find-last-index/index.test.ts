@@ -10,22 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { expectTypeOf, test } from 'vitest';
-import { every } from '.';
+import { expect, it } from 'vitest';
+import { findLastIndex } from './';
 
 const isEven = (x: number) => !(x & 1);
-const arr = [1, 2, 3, 4];
+const is100 = (x: number) => x === 100;
+const arr = [1, 2, 3, 4, 5];
 
-test('it should have the correct curried types', () => {
-  expectTypeOf(every).toBeFunction();
-  expectTypeOf(every).toBeCallableWith(Boolean);
-  expectTypeOf(every<number>).toBeCallableWith(isEven);
-
-  expectTypeOf(every(isEven)).toBeFunction();
-  expectTypeOf(every(isEven)).toBeCallableWith([]);
-  expectTypeOf(every(isEven)).toBeCallableWith(arr);
+it('should return the first match of the predicate', () => {
+  expect(findLastIndex(isEven)(arr)).toEqual(3);
 });
 
-test('it should have the correct return types', () => {
-  expectTypeOf(every(isEven)(arr)).toBeBoolean();
+it('should return `-1` if no matches are found', () => {
+  expect(findLastIndex(is100)(arr)).toEqual(-1);
 });

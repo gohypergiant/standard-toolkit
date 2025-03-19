@@ -11,15 +11,19 @@
  */
 
 /**
- * Returns the first index as which a given element can be found in the array. Returns `-1` otherwise.
+ * Returns the first index at which a given element can be found in the array.
+ * Returns `-1` otherwise.
+ *
  * @param x The value to find in the array.
  * @param arr The array to search for the element in.
  *
  * @remark
  * pure function
  *
- * @example
- * indexOf(3)([[1, 2, 3, 4, 5]])
+ * @playground
+ * import { indexOf } from '@accelint/core';
+ *
+ * indexOf(3)([1, 2, 3, 4, 5])
  * // 2
  */
 export const indexOf =

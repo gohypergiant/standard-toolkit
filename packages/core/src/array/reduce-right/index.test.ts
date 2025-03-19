@@ -10,22 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { expectTypeOf, test } from 'vitest';
-import { every } from '.';
+import { expect, test } from 'vitest';
+import { reduceRight } from './';
 
-const isEven = (x: number) => !(x & 1);
-const arr = [1, 2, 3, 4];
+const concatStr = (base: string, add: string) => `${base}${add}`;
+const arr = ['a', 'b', 'c', 'd', 'e'];
 
-test('it should have the correct curried types', () => {
-  expectTypeOf(every).toBeFunction();
-  expectTypeOf(every).toBeCallableWith(Boolean);
-  expectTypeOf(every<number>).toBeCallableWith(isEven);
+test('it should correctly reduce the array from the right', () => {
+  const sumItems = reduceRight(concatStr)('');
 
-  expectTypeOf(every(isEven)).toBeFunction();
-  expectTypeOf(every(isEven)).toBeCallableWith([]);
-  expectTypeOf(every(isEven)).toBeCallableWith(arr);
-});
-
-test('it should have the correct return types', () => {
-  expectTypeOf(every(isEven)(arr)).toBeBoolean();
+  expect(sumItems(arr)).toStrictEqual('edcba');
 });

@@ -10,22 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { expectTypeOf, test } from 'vitest';
-import { every } from '.';
+import { expect, test } from 'vitest';
+import { shift } from './';
 
-const isEven = (x: number) => !(x & 1);
-const arr = [1, 2, 3, 4];
+const input = [1, 2, 3, 4, 5];
+const expected = [1, [2, 3, 4, 5]];
 
-test('it should have the correct curried types', () => {
-  expectTypeOf(every).toBeFunction();
-  expectTypeOf(every).toBeCallableWith(Boolean);
-  expectTypeOf(every<number>).toBeCallableWith(isEven);
-
-  expectTypeOf(every(isEven)).toBeFunction();
-  expectTypeOf(every(isEven)).toBeCallableWith([]);
-  expectTypeOf(every(isEven)).toBeCallableWith(arr);
-});
-
-test('it should have the correct return types', () => {
-  expectTypeOf(every(isEven)(arr)).toBeBoolean();
+test('it should return the head and tail of the array', () => {
+  expect(shift(input)).toStrictEqual(expected);
 });
