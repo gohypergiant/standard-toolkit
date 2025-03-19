@@ -36,11 +36,15 @@ function tileToLat(y: number, z: number) {
 /**
  * Converts a Tile (z, x, y) to a Bounding Box (west, south, east, north).
  *
+ * @param tile A tuple containing an [z, x, y] value.
+ *
  * @remarks
  * pure function
  *
- * @example
- * xyzToBbox([71, 96, 8]);
+ * @playground
+ * import { zxyToBbox } from '@accelint/converters';
+ *
+ * zxyToBbox([71, 96, 8]);
  * // [-80.15625, 39.909736234537185, -78.75, 40.97989806962013]
  */
 export const zxyToBbox = (tile: ZxyTuple): BoundingBoxTuple => {

@@ -24,7 +24,9 @@
  * @remarks
  * pure function
  *
- * @example
+ * @playground
+ * import { toBoolean } from '@accelint/converters';
+ *
  * toBoolean(1);          // true
  * toBoolean(' FaLsE ');  // false
  * toBoolean('  true');   // true
