@@ -14,7 +14,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "lint": "pnpm biome lint ./"
+    "lint": "pnpm biome lint"
   },
   "dependencies": {
     "@vitejs/plugin-react": "4.3.2",

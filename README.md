@@ -41,6 +41,6 @@ Standard Toolkit is currently only intended for usage within the Accelint family
 
 [Accelint]: https://accelint.com
 [Apache]: https://www.apache.org/licenses/LICENSE-2.0
-[docs]: https://gohypergiant.github.io/standard-toolkit
+[docs]: https://standard-toolkit.accelint.dev/ 
 [go]: https://github.com/gohypergiant
 [Hypergiant]: https://hypergiant.com

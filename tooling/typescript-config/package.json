@@ -30,7 +30,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "lint": "pnpm biome lint ./"
+    "lint": "pnpm biome lint"
   },
   "$schema": "https://json.schemastore.org/package",
   "author": "https://hypergiant.com",

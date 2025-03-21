@@ -14,9 +14,9 @@ import { not } from '../not';
 import { or, orFn } from '../or';
 
 /**
- * Logical `!(a || b)`
- *
- * Logical Non-disjunction
+ * Logical `!(a || b)`. Logical Non-disjunction
+ * @param a The first value to compare.
+ * @param b The second value to compare.
  *
  * @see https://en.wikipedia.org/wiki/Logical_NOR
  *
@@ -33,9 +33,10 @@ export const nor =
     not(or(a)(b));
 
 /**
- * Logical `!(a(x) || b(x))`
- *
- * Logical (Function Result) Non-disjunction
+ * Logical `!(a(x) || b(x))`. Logical (Function Result) Non-disjunction
+ * @param a The first function to compare the return of.
+ * @param b The second function to compare the return of.
+ * @param c The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Logical_NOR
  *

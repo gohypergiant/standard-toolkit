@@ -31,6 +31,7 @@ const falsy = [
   null,
   undefined,
 ];
+
 const truthy = [
   [],
   1,
@@ -39,15 +40,6 @@ const truthy = [
   'true',
   {},
   'any non-empty string',
-  // 'Yes',
-  // 'yes',
-  // 'No',
-  // 'no',
-  // 'off',
-  // 'Off',
-  // 'OFF',
-  // 'On',
-  // 'on',
   INFINITY,
   -INFINITY,
   Number.POSITIVE_INFINITY,

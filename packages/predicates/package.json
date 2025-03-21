@@ -1,6 +1,6 @@
 {
   "name": "@accelint/predicates",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -8,9 +8,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -27,7 +25,7 @@
     "build": "pnpm tsup",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/predicates",
-    "lint": "pnpm biome lint ./",
+    "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {

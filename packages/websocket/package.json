@@ -25,7 +25,7 @@
     "build": "pnpm tsup",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/websocket",
-    "lint": "pnpm biome lint ./"
+    "lint": "pnpm biome lint"
   },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",

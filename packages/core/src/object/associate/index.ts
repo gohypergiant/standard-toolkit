@@ -12,6 +12,9 @@
 
 /**
  * Sets the `val` of `prop` in `obj`. Returning a new, shallow copy of the object.
+ * @param obj The object to set the value on.
+ * @param prop The property to set the value to.
+ * @param val The new value.
  *
  * @example
  * associate(personStore)('address')({
@@ -36,6 +39,12 @@ export const assoc = associate;
 
 /**
  * Sets the `val` of `prop` in `obj`. Returning a new, deep copy of the object.
+ * @param obj The object to set the value on.
+ * @param prop The property to set the value to.
+ * @param val The new value.
+ *
+ * @remark
+ * pure function
  *
  * @example
  * associateDeep(personStore)('address')({

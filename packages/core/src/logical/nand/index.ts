@@ -14,11 +14,14 @@ import { and, andFn } from '../and';
 import { not } from '../not';
 
 /**
- * Logical `!(a && b)`
- *
- * Logical Non-conjunction
+ * Logical `!(a && b)`. Logical Non-conjunction
+ * @param a The first value to compare.
+ * @param b The second value to compare.
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
+ *
+ * @remarks
+ * pure function
  *
  * @example
  * nand(true)(0);
@@ -30,11 +33,15 @@ export const nand =
     not(and(a)(b));
 
 /**
- * Logical `!(a(x) && b(x))`
- *
- * Logical (Function Result) Non-conjunction
+ * Logical `!(a(x) && b(x))`. Logical (Function Result) Non-conjunction
+ * @param a The first function to compare the return of.
+ * @param b The second function to compare the return of.
+ * @param c The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
+ *
+ * @remark
+ * pure function
  *
  * @example
  * nandFn(s => s.trim())(s => s.trimEnd())('foo bar ');

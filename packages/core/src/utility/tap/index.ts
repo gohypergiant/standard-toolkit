@@ -12,8 +12,11 @@
 
 /**
  * Calls the given function with the passed value and returns the value unchanged.
+ * @param fn The function to call, passing the given value.
+ * @param val The value to pass to the function and then return.
  *
- * Signature tap :: (a -> b) -> a -> a
+ * @remark
+ * ap :: (a -> b) -> a -> a
  *
  * @example
  * tap(console.log)('foobar');

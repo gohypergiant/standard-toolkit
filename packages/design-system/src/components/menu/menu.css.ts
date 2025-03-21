@@ -136,7 +136,7 @@ export const menuClassNames: MenuClassNames = {
       '@layer': {
         [layers.components.l1]: {
           containerName: menuContainers.list,
-          display: 'contents',
+          display: 'block',
         },
       },
     }),

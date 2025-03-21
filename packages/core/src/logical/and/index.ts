@@ -11,9 +11,9 @@
  */
 
 /**
- * Logical `(a && b)`
- *
- * Logical Conjunction
+ * Logical `(a && b)`. Logical Conjunction.
+ * @param a The first value to compare.
+ * @param b The second value to compare.
  *
  * @see https://en.wikipedia.org/wiki/Logical_conjunction
  *
@@ -33,9 +33,10 @@ export const and =
     Boolean(a) && Boolean(b);
 
 /**
- * Logical `(a(x) && b(x))`
- *
- * Logical (Function Result) Conjunction
+ * Logical `(a(x) && b(x))`.  Logical (Function Result) Conjunction
+ * @param a The first function to compare the return of.
+ * @param b The second function to compare the return of.
+ * @param c The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Logical_conjunction
  *

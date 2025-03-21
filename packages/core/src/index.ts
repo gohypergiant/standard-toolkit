@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -20,18 +32,19 @@ export { shift } from './array/shift';
 export { slice } from './array/slice';
 export { some } from './array/some';
 export { unshift } from './array/unshift';
-export { A, apply } from './combinators/a';
-export { B, composition } from './combinators/b';
-export { I, identity } from './combinators/i';
-export { K, constant } from './combinators/k';
-export { KI } from './combinators/ki';
-export { Phi, fork } from './combinators/phi';
-export { Psi } from './combinators/psi';
-export { Th, applyTo } from './combinators/th';
+export { apply } from './combinators/apply';
+export { applyTo } from './combinators/apply-to';
+export { composition } from './combinators/composition';
+export { constant } from './combinators/constant';
+export { fork } from './combinators/fork';
+export { identity } from './combinators/identity';
+export { inverseConstant } from './combinators/inverse-constant';
 export { compose } from './composition/compose';
 export { autoCurry } from './composition/curry';
 export type { Curried } from './composition/curry';
 export { pipe } from './composition/pipe';
+export { createIterable } from './iterable/create-iterable';
+export { range } from './iterable/range';
 export { and, andFn } from './logical/and';
 export { equality, equalityFn } from './logical/equality';
 export { nand, nandFn } from './logical/nand';

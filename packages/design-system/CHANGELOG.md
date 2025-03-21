@@ -1,5 +1,28 @@
 # @accelint/design-system
 
+## 0.5.3
+
+### Patch Changes
+
+- Updated dependencies [f1073bf]
+  - @accelint/core@0.2.1
+
+## 0.5.2
+
+### Patch Changes
+
+- dc6b485: Loosen strictness of peer dependencies
+
+## 0.5.1
+
+### Patch Changes
+
+- 0187bac: Remove selection highlight from closed drawer component in ladle theme
+- 2749f52: use correct type for Tooltip component children
+- Updated dependencies [d2ed24c]
+- Updated dependencies [50ed3fd]
+  - @accelint/core@0.2.0
+
 ## 0.5.0
 
 ### Minor Changes

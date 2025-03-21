@@ -8,5 +8,34 @@
   "files": {
     "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
     "ignore": ["node_modules", ".turbo", "dist", "build", "coverage"]
-  }
+  },
+  "overrides": [
+    {
+      "include": ["apps/docs/**"],
+      "ignore": [".docusaurus"]
+    },
+    {
+      "include": ["apps/next/**"],
+      "ignore": [".next"]
+    },
+    {
+      "include": ["packages/design-system/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": {
+              "level": "error",
+              "options": {
+                "strictCase": false,
+                "requireAscii": true
+              }
+            },
+            "noParameterAssign": {
+              "level": "warn"
+            }
+          }
+        }
+      }
+    }
+  ]
 }
