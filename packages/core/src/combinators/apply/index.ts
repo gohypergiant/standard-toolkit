@@ -12,19 +12,17 @@
 
 /**
  * Takes an unary function and applies it to the given argument.
+ *
  * @param f The function to apply to the value.
  * @param x The value to pass to the function.
  *
- * @remark
+ * @remarks
  * A combinator
  *
- * @remark
- * `apply :: (a → b) → a → b`
- *
- * @remark
  * `λab.ab`
  *
- * @remark
+ * `apply :: (a → b) → a → b`
+ *
  * pure function
  *
  * @example

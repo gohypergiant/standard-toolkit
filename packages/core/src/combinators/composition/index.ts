@@ -12,20 +12,18 @@
 
 /**
  * Pass a value to a function and then the result to another function.
+ *
  * @param f The second function in the composition.
  * @param g The first function in the composition.
  * @param x The value to pass to `g`.
  *
- * @remark
+ * @remarks
  * B combinator
  *
- * @remark
- * `composition :: (a → b) → (c → a) → c → b`
- *
- * @remark
  * `λabc.a(bc)`
  *
- * @remark
+ * `composition :: (a → b) → (c → a) → c → b`
+ *
  * pure function
  *
  * @example

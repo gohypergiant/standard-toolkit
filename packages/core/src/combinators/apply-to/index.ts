@@ -13,19 +13,17 @@
 /**
  * Takes an argument and an unary function and then applies the function to the argument.
  * Inverse of `apply` (`A`)
+ *
  * @param a The value to pass to the function.
  * @param b The function to apply to the value.
  *
- * @remark
+ * @remarks
  * Th combinator
  *
- * @remark
- * `applyTo :: a → (a → b) → b`
- *
- * @remark
  * `λab.ba`
  *
- * @remarks
+ * `applyTo :: a → (a → b) → b`
+ *
  * pure function
  *
  * @example
