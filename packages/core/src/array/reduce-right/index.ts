@@ -14,16 +14,19 @@ import type { Accumulator } from '@/types';
 
 /**
  * Calls the accumulator with each element of the given array, starting with the last element. Returns the final result.
+ *
  * @param fn The accumulator function to apply to each element of the array.
  * @param initVal The initial value of the reduction.
  * @param arr The array to fold over.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
- * reduceRight((total, n) => total - n)(0)([1, 2, 3, 4, 5]);
- * // -5
+ * import { reduceRight } from '@accelint/core';
+ *
+ * reduceRight((base, s) => `${base}${s}`)('')(['a', 'b', 'c', 'd', 'e']);
+ * // 'edcba'
  */
 export const reduceRight =
   <T, R>(fn: Accumulator<T, R>) =>

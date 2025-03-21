@@ -12,14 +12,17 @@
 
 /**
  * Determines whether the given array includes and element. Uses strict equality.
+ *
  * @param x The value to find in the array.
  * @param arr The array to search for the element in.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
- * includes(3)([[1, 2, 3, 4, 5]])
+ * import { includes } from '@accelint/core';
+ *
+ * includes(3)([1, 2, 3, 4, 5]);
  * // true
  */
 export const includes =

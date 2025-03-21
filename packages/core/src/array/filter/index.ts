@@ -14,13 +14,16 @@ import type { Predicate } from '@/types';
 
 /**
  * Returns a copy of the given array of elements that satisfy the predicate.
+ *
  * @param predicate A predicate function to apply to each element of the array.
  * @param arr The array to filter on based on the predicate.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
+ * import { filter } from '@accelint/core';
+ *
  * filter(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // [2, 4]
  */

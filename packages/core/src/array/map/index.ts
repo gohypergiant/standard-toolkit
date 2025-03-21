@@ -13,14 +13,18 @@
 import type { MapFn } from '@/types';
 
 /**
- * Maps over the given array, calling the mapping function for each element. Returns a new array of the results.
+ * Maps over the given array, calling the mapping function for each element.
+ * Returns a new array of the results.
+ *
  * @param map The mapping function to apply to each element of the array.
  * @param arr The array to map over.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
+ * import { map } from '@accelint/core';
+ *
  * map(x => x * 2)([1, 2, 3, 4, 5]);
  * // [2, 4, 6, 8, 10]
  */

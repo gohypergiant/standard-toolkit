@@ -13,14 +13,18 @@
 import type { Predicate } from '@/types';
 
 /**
- * Returns the last index of the given array that satisfies the predicate. Returns `-1` otherwise.
+ * Returns the last index of the given array that satisfies the predicate.
+ * Returns `-1` otherwise.
+ *
  * @param predicate A predicate function to apply to each element of the array.
  * @param arr The array to find against based on the predicate.
  *
- * @remark
+ * @remarks
  * pure function
  *
- * @example
+ * @playground
+ * import { findLastIndex } from '@accelint/core';
+ *
  * findLastIndex(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // 3
  */

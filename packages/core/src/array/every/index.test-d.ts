@@ -13,7 +13,7 @@
 import { expectTypeOf, test } from 'vitest';
 import { every } from '.';
 
-const isEven = (x: number) => (x & 1) === 0;
+const isEven = (x: number) => !(x & 1);
 const arr = [1, 2, 3, 4];
 
 test('it should have the correct curried types', () => {

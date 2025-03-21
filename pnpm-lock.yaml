@@ -62,6 +62,9 @@ importers:
       '@accelint/constants':
         specifier: workspace:*
         version: link:../../packages/constants
+      '@accelint/converters':
+        specifier: workspace:*
+        version: link:../../packages/converters
       '@accelint/core':
         specifier: workspace:*
         version: link:../../packages/core

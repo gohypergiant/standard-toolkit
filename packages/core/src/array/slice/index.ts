@@ -13,14 +13,17 @@
 /**
  * Returns a new array containing elements between `start` and `end` (exclusive)
  * from the original array.
+ *
  * @param start The index to start at (inclusive).
  * @param end The index to end on (exclusive).
  * @param arr The array to get a slice from.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
+ * import { slice } from '@accelint/core';
+ *
  * slice(0)(4)([1, 2, 3, 4, 5, 6]);
  * // [1, 2, 3, 4]
  */

@@ -13,7 +13,7 @@
 import { describe, expect, test } from 'vitest';
 import { xor, xorFn } from '.';
 
-const isEven = (x: number) => (x & 1) === 0;
+const isEven = (x: number) => !(x & 1);
 const isOdd = (x: number) => !isEven(x);
 
 describe('xor', () => {

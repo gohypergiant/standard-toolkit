@@ -11,15 +11,11 @@
  */
 
 /**
- * @module: converters
- */
-
-/**
  * @see: https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
  */
 
 /** [z, x, y] */
-export type XyzTuple = [number, number, number];
+export type ZxyTuple = [number, number, number];
 
 /** [left, bottom, right, top] */
 export type BoundingBoxTuple = [number, number, number, number];
@@ -38,16 +34,20 @@ function tileToLat(y: number, z: number) {
 }
 
 /**
- * Converts a Tile (x, y, z) to a Bounding Box (west, south, east, north).
+ * Converts a Tile (z, x, y) to a Bounding Box (west, south, east, north).
+ *
+ * @param tile A tuple containing an [z, x, y] value.
  *
  * @remarks
  * pure function
  *
- * @example
- * xyzToBbox([71, 96, 8]);
- * // [-80.15625, 39.909736234537185, -78.75, 40.97989806962013]
+ * @playground
+ * import { zxyToBbox } from '@accelint/converters';
+ *
+ * console.log(zxyToBbox([71, 96, 8]));
+ * // [-80.15625, 39.9zxyToBbox09736234537185, -78.75, 40.97989806962013]
  */
-export const xyzToBbox = (tile: XyzTuple): BoundingBoxTuple => {
+export const zxyToBbox = (tile: ZxyTuple): BoundingBoxTuple => {
   const [x, y, z] = tile;
 
   const w = tileToLon(x, z);

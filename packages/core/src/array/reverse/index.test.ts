@@ -10,32 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * Returns the first index at which a given element can be found in the array.
- * Returns `-1` otherwise.
- *
- * @param x The value to find in the array.
- * @param arr The array to search for the element in.
- *
- * @remarks
- * pure function
- *
- * @example
- * import { indexOf } from '@accelint/core';
- *
- * indexOf(3)([1, 2, 3, 4, 5]);
- * // 2
- */
-export const indexOf =
-  <T>(x: T) =>
-  (arr: T[]) => {
-    const len = arr.length;
+import { expect, test } from 'vitest';
+import { reverse } from './';
 
-    for (let i = 0; i < len; i++) {
-      if (arr[i] === x) {
-        return i;
-      }
-    }
+const input = [1, 2, 3, 4, 5];
+const expected = [5, 4, 3, 2, 1];
 
-    return -1;
-  };
+test('it should correctly reverse the array', () => {
+  expect(reverse(input)).toStrictEqual(expected);
+});

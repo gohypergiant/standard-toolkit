@@ -12,17 +12,20 @@
 
 /**
  * Concatenate the two given arrays together.
- * @param newValue The first array to append to.
- * @param concatable The second array to add to the end of the first.
  *
- * @remark
+ * @param concatable The second array to add to the end of the first.
+ * @param newValue The first array to append to.
+ *
+ * @remarks
  * pure function
  *
  * @example
+ * import { concat } from '@accelint/core';
+ *
  * concat([1, 2, 3])([4, 5, 6]);
  * // [1, 2, 3, 4, 5, 6]
  */
 export const concat =
-  <T>(newValue: T[]) =>
-  (concatable: T[]) =>
+  <T>(concatable: T[]) =>
+  (newValue: T[]) =>
     concatable.concat(newValue);

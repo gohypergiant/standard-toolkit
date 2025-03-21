@@ -12,13 +12,16 @@
 
 /**
  * Returns a new array with the given value added to the start.
+ *
  * @param arr The array to add an item to.
  * @param x The value to add to the start of the array.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
+ * import { unshift } from '@accelint/core';
+ *
  * push([1, 2, 3, 4])(0);
  * // [0, 1, 2, 3, 4]
  */

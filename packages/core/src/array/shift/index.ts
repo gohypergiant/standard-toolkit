@@ -13,12 +13,15 @@
 /**
  * Returns a tuple containing the first element (head) of the given array and
  * the remaining elements of the array (tail).
+ *
  * @param arr The element to get the `head`/`tail` of.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
+ * import { shift } from '@accelint/core';
+ *
  * shift([1, 2, 3, 4]);
  * // [1, [2, 3, 4, 5]]
  */
