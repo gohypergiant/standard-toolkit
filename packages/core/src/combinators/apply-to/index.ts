@@ -12,7 +12,7 @@
 
 /**
  * Takes an argument and an unary function and then applies the function to the argument.
- * Inverse of `apply` (`A`)
+ * Inverse of `apply`.
  *
  * @param a The value to pass to the function.
  * @param b The function to apply to the value.

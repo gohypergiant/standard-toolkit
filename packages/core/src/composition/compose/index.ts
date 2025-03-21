@@ -45,7 +45,7 @@ type Composable<Fn> =
 
 /**
  * Allows you combine two or more functions to create a new function, which passes the results from one
- * function to the next until all have be called. Has a rigth-to-left call order.
+ * function to the next until all have be called. Has a right-to-left call order.
  *
  * @param fns The functions to compose.
  * @param arg The argument to give to the first function in the composition.

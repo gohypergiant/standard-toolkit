@@ -14,6 +14,7 @@ import { createIterable } from '../create-iterable';
 
 /**
  * Create an Iterator that goes from `start` to `end`.
+ *
  * @param start The start of the number range (inclusive)
  * @param end The end of the number range (inclusive)
  *
@@ -23,7 +24,6 @@ import { createIterable } from '../create-iterable';
  * }
  * // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
  *
- * @example
  * const rangeArr = [...range(1, 10)];
  * // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
  */
