@@ -58,6 +58,12 @@ export default {
       },
       defaultValue: false,
     },
+    showRuleLines: {
+      control: {
+        type: 'boolean',
+      },
+      defaultValue: true,
+    },
     showNotToggle: {
       control: {
         type: 'boolean',
@@ -128,7 +134,7 @@ const icons = {
   ),
 };
 
-export const Example: Story<QueryBuilderProps> = (props) => {
+export const BasicExample: Story<QueryBuilderProps> = (props) => {
   const [query, setQuery] = useState<RuleGroupType>({
     combinator: 'and',
     rules: [
@@ -190,3 +196,69 @@ export const Example: Story<QueryBuilderProps> = (props) => {
     />
   );
 };
+
+BasicExample.storyName = 'Basic Example';
+
+export const WithGroupsEnabled: Story<QueryBuilderProps> = (props) => {
+  const [query, setQuery] = useState<RuleGroupType>({
+    combinator: 'and',
+    rules: [
+      { field: 'AK_HIGH', operator: '>', value: '10000' }, // i32
+      { field: 'AK_LOW', operator: 'between', value: ['1000', '5000'] }, // between
+      { field: 'PRIVATEUSE', operator: 'in', value: ['Mixed', 'Private'] }, // options
+      { field: 'SERVCITY', operator: 'like', value: 'Anchorage' }, // options with headers
+      { field: 'OPERSTATUS', operator: '=', value: true }, // bool
+      { field: 'DONUTS', operator: '=', value: true }, // switch
+      { field: 'TYPE_CODE', operator: '=', value: 'Aerodrome' }, // radio
+      { field: 'NOTES', operator: 'contains', value: 'Clear skies...' }, // textarea
+      { field: 'NICKNAME', operator: 'like', value: 'Old Bumpy' }, // text
+      {
+        field: 'ESTABLISHED',
+        operator: 'during',
+        value: ['2024-10-01', '2024-11-01'],
+      }, // date
+      {
+        field: 'MAINTENANCE',
+        operator: 'overlapped',
+        value: ['2024-10-01T18:22:54', '2024-11-01T18:22:54'],
+      }, // datetime
+      {
+        field: 'PEAK_TRAFFIC',
+        operator: 'overlaps',
+        value: ['18:22:54', '19:22:54'],
+      }, // time
+    ],
+  });
+
+  const controlElements = useMemo(
+    () => ({
+      removeRuleAction: RemoveRuleAction,
+    }),
+    [],
+  );
+
+  const mapping = {
+    button: {
+      sm: { size: 'sm' as const, variant: 'hollow' as const },
+      lg: { size: 'md' as const, variant: 'hollow' as const },
+    },
+  };
+
+  useEffect(() => {
+    console.log({ query });
+  }, [query]);
+
+  return (
+    <QueryBuilder
+      {...props}
+      controlElements={controlElements}
+      fields={fields}
+      icons={icons}
+      mapping={mapping}
+      query={query}
+      onQueryChange={setQuery}
+    />
+  );
+};
+
+WithGroupsEnabled.storyName = 'Groups Enabled';

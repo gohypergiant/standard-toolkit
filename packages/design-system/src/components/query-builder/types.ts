@@ -148,6 +148,7 @@ type BaseQueryBuilderProps = {
   };
   mapping?: QueryBuilderMapping;
   orientation?: Orientation;
+  showRuleLines?: boolean;
   size?: QueryBuilderSizes;
   valueEditors?: QueryBuilderValueEditors;
 };

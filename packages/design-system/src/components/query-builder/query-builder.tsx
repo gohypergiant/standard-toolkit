@@ -79,6 +79,7 @@ export function QueryBuilder({
   icons,
   mapping: mappingProp,
   orientation = defaultOrientation,
+  showRuleLines = true,
   size = defaultSize,
   valueEditors: valueEditorsProp,
   ...rest
@@ -186,6 +187,7 @@ export function QueryBuilder({
           icons,
           mapping,
           orientation,
+          showRuleLines,
           size,
           valueEditors,
         },
@@ -216,6 +218,7 @@ export function QueryBuilder({
       icons,
       mapping,
       orientation,
+      showRuleLines,
       size,
       valueEditors,
     ],
@@ -225,8 +228,9 @@ export function QueryBuilder({
     () =>
       inlineVars(queryBuilderStateVars, {
         isDisabled: typeof disabled === 'boolean' ? disabled : false,
+        showRuleLines,
       }),
-    [disabled],
+    [disabled, showRuleLines],
   );
 
   return (

@@ -41,11 +41,13 @@ export const queryBuilderColorVars = createThemeContract({
     background: '',
     border: '',
     color: '',
+    lineColor: '',
   },
   rule: {
     background: '',
     border: '',
     color: '',
+    lineColor: '',
   },
   error: {
     color: '',
@@ -61,6 +63,7 @@ export const queryBuilderSpaceVars = createThemeContract({
     gap: '',
     x: '',
     y: '',
+    lineIndent: '',
   },
   header: {
     x: '',
@@ -74,6 +77,7 @@ export const queryBuilderSpaceVars = createThemeContract({
   rule: {
     x: '',
     y: '',
+    lineIndent: '',
   },
   core: {
     gap: '',
@@ -107,6 +111,7 @@ export const queryBuilderSpaceVars = createThemeContract({
 
 export const queryBuilderStateVars = createThemeContract({
   isDisabled: '',
+  showRuleLines: '',
 });
 
 export const queryBuilderGroupStateVars = createThemeContract({
@@ -146,6 +151,15 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
     }),
   },
   group: {
+    container: style({
+      '@layer': {
+        [layers.components.l1]: {
+          containerName: queryBuilderContainers.group,
+          position: 'relative',
+          gridColumn: '1/-1',
+        },
+      },
+    }),
     group: style({
       '@layer': {
         [layers.components.l1]: {
@@ -158,6 +172,80 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
           gap: queryBuilderSpaceVars.group.gap,
           padding: `${fallbackVar(queryBuilderSpaceVars.group.y, '0')} ${fallbackVar(queryBuilderSpaceVars.group.x, '0')}`,
           width: 'fit-content',
+          position: 'relative',
+          marginLeft: fallbackVar(
+            queryBuilderSpaceVars.group.lineIndent,
+            '10px',
+          ),
+          borderColor: fallbackVar(
+            queryBuilderColorVars.group.lineColor,
+            'rgb(89,89,89)',
+          ),
+          '::before': {
+            content: '',
+            position: 'absolute',
+            top: `calc(${queryBuilderSpaceVars.body.gap} * -1)`,
+            left: `calc(${fallbackVar(queryBuilderSpaceVars.group.lineIndent, '10px')} * -1)`,
+            width: fallbackVar(queryBuilderSpaceVars.group.lineIndent, '10px'),
+            borderWidth: '0 0 1px 1px',
+            borderRadius: radiusVars.sm,
+            borderColor: fallbackVar(
+              queryBuilderColorVars.group.lineColor,
+              'rgb(89,89,89)',
+            ),
+            borderStyle: 'solid',
+            height: `calc(50% + ${queryBuilderSpaceVars.body.gap})`,
+          },
+          '::after': {
+            content: '',
+            position: 'absolute',
+            width: 1,
+            left: `calc(${fallbackVar(queryBuilderSpaceVars.group.lineIndent, '10px')} * -1)`,
+            borderRadius: radiusVars.sm,
+            top: '50%',
+            height: `calc(50% + ${queryBuilderSpaceVars.body.gap})`,
+            borderWidth: '0 0 1px 1px',
+            borderColor: fallbackVar(
+              queryBuilderColorVars.group.lineColor,
+              'rgb(89,89,89)',
+            ),
+            borderStyle: 'solid',
+          },
+          get selectors() {
+            return {
+              [`${queryBuilderClassNames?.queryBuilder?.queryBuilder} > ${queryBuilderClassNames.group?.container} > &`]:
+                {
+                  border: 'none',
+                  padding: 0,
+                  margin: 0,
+                },
+              [`${queryBuilderClassNames.queryBuilder?.queryBuilder} > ${queryBuilderClassNames.group?.container} > &::before`]:
+                {
+                  display: 'none',
+                },
+              [`${queryBuilderClassNames.queryBuilder?.queryBuilder} > ${queryBuilderClassNames.group?.container} > &::after`]:
+                {
+                  display: 'none',
+                },
+              ':last-child > &::before': {
+                borderBottomLeftRadius: radiusVars.md,
+              },
+              ':last-child > &::after': {
+                display: 'none',
+              },
+            };
+          },
+          '@container': containerQueries(queryBuilderStateVars, {
+            query: {
+              showRuleLines: false,
+            },
+            '::before': {
+              display: 'none',
+            },
+            '::after': {
+              display: 'none',
+            },
+          }),
         },
       },
     }),
@@ -166,6 +254,7 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
         [layers.components.l1]: {
           display: 'flex',
           padding: `${fallbackVar(queryBuilderSpaceVars.header.y, '0')} ${fallbackVar(queryBuilderSpaceVars.header.x, '0')}`,
+          justifyContent: 'space-between',
         },
       },
     }),
@@ -232,7 +321,7 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
       '@layer': {
         [layers.components.l1]: {
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'flex-start',
           padding: `${fallbackVar(queryBuilderSpaceVars.footer.y, '0')} ${fallbackVar(queryBuilderSpaceVars.footer.x, '0')}`,
         },
       },
@@ -251,6 +340,7 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
       '@layer': {
         [layers.components.l1]: {
           display: 'grid',
+          alignItems: 'center',
           gridTemplateColumns: 'subgrid',
           gridColumnStart: 1,
           gridColumnEnd: -1,
@@ -259,6 +349,61 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
           borderRadius: radiusVars.sm,
           background: queryBuilderColorVars.rule.background,
           color: queryBuilderColorVars.rule.color,
+          marginLeft: fallbackVar(
+            queryBuilderSpaceVars.rule.lineIndent,
+            '10px',
+          ),
+          position: 'relative',
+          '::before': {
+            content: '',
+            position: 'absolute',
+            top: `calc(${queryBuilderSpaceVars.body.gap} * -1)`,
+            left: `calc(${fallbackVar(queryBuilderSpaceVars.rule.lineIndent, '10px')} * -1)`,
+            width: fallbackVar(queryBuilderSpaceVars.rule.lineIndent, '10px'),
+            borderRadius: radiusVars.sm,
+            height: `calc(50% + ${queryBuilderSpaceVars.body.gap})`,
+            borderWidth: '0 0 1px 1px',
+            borderColor: fallbackVar(
+              queryBuilderColorVars.rule.lineColor,
+              'rgb(89,89,89)',
+            ), // TODO
+            borderStyle: 'solid',
+          },
+          '::after': {
+            content: '',
+            position: 'absolute',
+            width: 1,
+            left: `calc(${fallbackVar(queryBuilderSpaceVars.rule.lineIndent, '10px')} * -1)`,
+            borderRadius: radiusVars.sm,
+            top: '50%',
+            height: `calc(50% + ${queryBuilderSpaceVars.body.gap})`,
+            borderWidth: '0 0 1px 1px',
+            borderColor: fallbackVar(
+              queryBuilderColorVars.rule.lineColor,
+              'rgb(89,89,89)',
+            ), // TODO
+            borderStyle: 'solid',
+          },
+          selectors: {
+            ':last-child > &::before': {
+              borderBottomLeftRadius: radiusVars.md,
+            },
+            ':last-child > &::after': {
+              display: 'none',
+            },
+          },
+          '@container': containerQueries(queryBuilderStateVars, {
+            query: {
+              showRuleLines: false,
+            },
+            marginLeft: 0,
+            '::before': {
+              display: 'none',
+            },
+            '::after': {
+              display: 'none',
+            },
+          }),
         },
       },
     }),
