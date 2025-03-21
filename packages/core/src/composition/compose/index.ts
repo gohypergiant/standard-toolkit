@@ -17,6 +17,7 @@ import type { UnaryFunction } from '@/types';
 
 // If its a list of functions, last being Unary
 type ComposeParams<Fns> = Fns extends readonly [
+  // biome-ignore lint/suspicious/noExplicitAny: This is intended
   ...any[],
   infer Last extends UnaryFunction,
 ]
@@ -33,20 +34,23 @@ type Composable<Fn> =
   Fn extends readonly [UnaryFunction]
     ? Fn
     : // if its a list of Unary funcs (ignoring the first)
+      // biome-ignore lint/suspicious/noExplicitAny: This is intended
       Fn extends readonly [any, ...infer Rest extends readonly UnaryFunction[]]
       ? // Start building the list of func type by using the return type of the first in Rest
         // as the arg of the next in line and recursively spread the rest (doing the same thing)
         // The first is ignored but handled by the top level ComposeReturn
+        // biome-ignore lint/suspicious/noExplicitAny: This is intended
         readonly [(arg: ComposeReturn<Rest>) => any, ...Composable<Rest>]
       : never;
 
 /**
  * Allows you combine two or more functions to create a new function, which passes the results from one
  * function to the next until all have be called. Has a rigth-to-left call order.
+ *
  * @param fns The functions to compose.
  * @param arg The argument to give to the first function in the composition.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
