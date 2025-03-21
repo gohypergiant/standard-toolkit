@@ -19,7 +19,9 @@ import {
 } from './';
 
 const isEven = (x: number) => !(x & 1);
-const nullVal = (x: any) => null;
+
+// biome-ignore lint/suspicious/noExplicitAny: For testing
+const nullVal = (_x: any) => null;
 
 describe('nullishOr', () => {
   it('should return true for true ?? true', () => {
