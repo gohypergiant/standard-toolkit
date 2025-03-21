@@ -61,7 +61,7 @@ const args: ArgTypes<
     control: {
       type: 'text',
     },
-    defaultValue: 'Slider label',
+    defaultValue: 'Opacity',
   },
   layout: {
     control: {
@@ -158,7 +158,7 @@ export const SliderExample: Story<
   </Slider>
 );
 
-SliderExample.storyName = 'Slider with input';
+SliderExample.storyName = 'Slider / With input';
 
 SliderExample.argTypes = {
   ...args,
@@ -209,7 +209,7 @@ export const SliderExampleWithOutput: Story<
   </Slider>
 );
 
-SliderExampleWithOutput.storyName = 'Slider with output';
+SliderExampleWithOutput.storyName = 'Slider / With output';
 
 SliderExampleWithOutput.argTypes = {
   ...args,
@@ -267,7 +267,7 @@ export const ControlledSliderExample: Story<
   </Slider>
 );
 
-ControlledSliderExample.storyName = 'Controlled Slider';
+ControlledSliderExample.storyName = 'Slider / Controlled';
 
 ControlledSliderExample.argTypes = {
   ...args,
@@ -275,7 +275,7 @@ ControlledSliderExample.argTypes = {
     control: {
       type: 'text',
     },
-    defaultValue: 'Controlled slider label',
+    defaultValue: 'Opacity',
   },
   value: {
     control: {
@@ -353,13 +353,13 @@ export const RangeSliderExample: Story<
   </Slider>
 );
 
-RangeSliderExample.storyName = 'Range Slider';
+RangeSliderExample.storyName = 'Range / Uncontrolled';
 
 RangeSliderExample.argTypes = {
   ...args,
   label: {
     ...args.label,
-    defaultValue: 'Range slider label',
+    defaultValue: 'Range',
   },
 };
 
@@ -428,13 +428,13 @@ export const ControlledRangeSliderExample: Story<
   </Slider>
 );
 
-ControlledRangeSliderExample.storyName = 'Controlled range';
+ControlledRangeSliderExample.storyName = 'Range / Controlled';
 
 ControlledRangeSliderExample.argTypes = {
   ...args,
   label: {
     ...args.label,
-    defaultValue: 'Controlled range slider label',
+    defaultValue: 'Range',
   },
   inputValueMin: {
     control: {
