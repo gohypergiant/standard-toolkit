@@ -11,7 +11,8 @@
  */
 
 /**
- * Logical `(a || b)`. Logical Disjunction.
+ * Logical Disjunction `(a || b)`.
+ *
  * @param a The possible falsey value.
  * @param b The value to fallback to.
  *
@@ -30,7 +31,8 @@ export const or =
     Boolean(a) || Boolean(b);
 
 /**
- * Logical `(a(x) || b(x))`. Logical (Function Result) Disjunction.
+ * Logical (Function Result) Disjunction `(a(x) || b(x))`.
+ *
  * @param a The function to get the, possibly falsey, return of.
  * @param b The function to get the fallback return of.
  * @param c The value to pass to both `a` and `b`.
@@ -51,7 +53,8 @@ export const orFn =
     Boolean(a(c)) || Boolean(b(c));
 
 /**
- * Swapped Logical Or: `(b || a)`. Swapped Logical Disjunction.
+ * Swapped Logical Disjunction: `(b || a)`.
+ *
  * @param a The value to fallback to.
  * @param b The possible falsey value.
  *
@@ -70,7 +73,8 @@ export const swappedOr =
     Boolean(b) || Boolean(a);
 
 /**
- * Swapped Logical Or(): `(b(x) || a(x))`. Swapped Logical (Function Result) Disjunction.
+ * Swapped Logical (Function Result) Disjunction: `(b(x) || a(x))`.
+ *
  * @param a The function to get the fallback return of.
  * @param b The function to get the, possibly falsey, return of.
  * @param c The value to pass to both `a` and `b`.

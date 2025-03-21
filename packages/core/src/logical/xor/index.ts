@@ -11,7 +11,8 @@
  */
 
 /**
- * Logical `(a ^ b)`. Exclusive Disjunction.
+ * Logical Exclusive Disjunction `(a ^ b)`.
+ *
  * @param a The first value in the bitwise XOR.
  * @param b The second value in the bitwise XOR.
  *
@@ -28,7 +29,8 @@ export const xor = (a: unknown) => (b: unknown) =>
   Boolean((a ? 1 : 0) ^ (b ? 1 : 0));
 
 /**
- * Logical `(a(x) ^ b(x))`. Exclusive (Function Result) Disjunction.
+ * Logical Exclusive (Function Result) Disjunction `(a(x) ^ b(x))`.
+ *
  * @param a The first function to bitwise XOR the return of.
  * @param b The second function to bitwise XOR the return of.
  * @param c The value to pass to both `a` and `b`.

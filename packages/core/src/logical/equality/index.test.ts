@@ -10,52 +10,44 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, test } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { equality, equalityFn } from '.';
 
-const a = 5;
-const b = 5;
-const c = 8;
-
-const addTwo = (val: number) => val + 2;
-const subThree = (val: number) => val - 3;
+const isEven = (x: number) => !(x & 1);
+const isOdd = (x: number) => !isEven(x);
 
 describe('equality', () => {
-  test('it should return true for a === b', () => {
-    const actual = equality(a)(b);
-
-    expect(actual).toBe(true);
+  it('should return true for true === true', () => {
+    expect(equality(true)(true)).toEqual(true);
   });
 
-  test('it should return false for a === c', () => {
-    const actual = equality(a)(c);
-
-    expect(actual).toBe(false);
+  it('should return false for true === false', () => {
+    expect(equality(true)(false)).toEqual(false);
   });
 
-  test('it should return false for c === b', () => {
-    const actual = equality(c)(a);
+  it('should return false for false === true', () => {
+    expect(equality(false)(true)).toEqual(false);
+  });
 
-    expect(actual).toBe(false);
+  it('should return false for false === true', () => {
+    expect(equality(false)(false)).toEqual(true);
   });
 });
 
 describe('equalityFn', () => {
-  test('it should return true for addTwo(a) === addTwo(a)', () => {
-    const actual = equalityFn(addTwo)(addTwo)(a);
-
-    expect(actual).toBe(true);
+  it('should return true for true === true', () => {
+    expect(equalityFn(isEven)(isEven)(6)).toEqual(true);
   });
 
-  test('it should return false for addTwo(b) === subThree(b)', () => {
-    const actual = equalityFn(addTwo)(subThree)(b);
-
-    expect(actual).toBe(false);
+  it('should return false for false === true', () => {
+    expect(equalityFn(isOdd)(isEven)(6)).toEqual(false);
   });
 
-  test('it should return false for subThree(b) === addTwo(b)', () => {
-    const actual = equalityFn(subThree)(addTwo)(b);
+  it('should return false for true === false', () => {
+    expect(equalityFn(isEven)(isOdd)(6)).toEqual(false);
+  });
 
-    expect(actual).toBe(false);
+  it('should return false for false === true', () => {
+    expect(equalityFn(isOdd)(isOdd)(6)).toEqual(true);
   });
 });

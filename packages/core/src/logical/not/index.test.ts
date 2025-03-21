@@ -10,38 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * Logical Not (Negation) `(!a)`.
- *
- * @param x The value to negate.
- *
- * @see https://en.wikipedia.org/wiki/Negation
- *
- * @remarks
- * pure function
- *
- * @example
- * not(2);
- * // false
- */
-export const not = <T>(x: T) => !x;
+import { describe, expect, it } from 'vitest';
+import { not, notFn } from './';
 
-/**
- * Logical (Function Result) Not (Negation) `(!a(b))`.
- *
- * @param a The function to negate the return of.
- * @param b The value to pass to the given function.
- *
- * @see https://en.wikipedia.org/wiki/Negation
- *
- * @remarks
- * pure function
- *
- * @example
- * notFn(x => x & 1)(4);
- * // true
- */
-export const notFn =
-  <T>(a: (x: T) => unknown) =>
-  (b: T) =>
-    !a(b);
+const isEven = (x: number) => !(x & 1);
+const isOdd = (x: number) => !isEven(x);
+
+describe('not', () => {
+  it('should return false for !true', () => {
+    expect(not(true)).toEqual(false);
+  });
+
+  it('should return true for !false', () => {
+    expect(not(false)).toEqual(true);
+  });
+});
+
+describe('notFn', () => {
+  it('should return false for !true', () => {
+    expect(notFn(isEven)(6)).toEqual(false);
+  });
+
+  it('should return true for !false', () => {
+    expect(notFn(isOdd)(6)).toEqual(true);
+  });
+});
