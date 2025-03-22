@@ -25,6 +25,13 @@ import { Input } from '../input';
 import { NumberField } from '../number-field';
 import type { SliderRenderProps } from './types';
 
+type SliderStoryProps = SliderProps & {
+  label: string;
+  showInput: boolean;
+  showLabel: boolean;
+  showOutput: boolean;
+};
+
 export default {
   title: 'Components/Slider',
   argTypes: {
@@ -37,14 +44,7 @@ export default {
   },
 } satisfies StoryDefault;
 
-const args: ArgTypes<
-  SliderProps & {
-    label: string;
-    includeTextField: boolean;
-    showLabel: boolean;
-    includeOutputField: boolean;
-  }
-> = {
+const args: ArgTypes<SliderStoryProps> = {
   label: {
     control: {
       type: 'text',
@@ -65,7 +65,7 @@ const args: ArgTypes<
     options: ['horizontal', 'vertical'],
     defaultValue: 'horizontal',
   },
-  includeTextField: {
+  showInput: {
     control: {
       type: 'boolean',
     },
@@ -76,12 +76,6 @@ const args: ArgTypes<
       type: 'boolean',
     },
     defaultValue: true,
-  },
-  includeOutputField: {
-    control: {
-      type: 'boolean',
-    },
-    defaultValue: false,
   },
   minValue: {
     control: {
@@ -97,195 +91,13 @@ const args: ArgTypes<
   },
 };
 
-export const SliderExample: Story<
-  SliderProps & {
-    label: string;
-    includeTextField: boolean;
-    showLabel: boolean;
-    includeOutputField: boolean;
-  }
-> = ({
+export const RangeSliderExample: Story<SliderStoryProps> = ({
   label,
   minValue,
   maxValue,
   showLabel,
-  includeTextField,
-  includeOutputField,
-  ...rest
-}) => (
-  <Slider minValue={minValue} maxValue={maxValue} {...rest}>
-    {({ state }) => (
-      <>
-        {showLabel && <AriaLabel>{label}</AriaLabel>}
-        {includeOutputField && (
-          <SliderOutput>
-            <span>{state.values[0]}</span>
-          </SliderOutput>
-        )}
-        {includeTextField && (
-          <NumberField
-            value={state.values[0]}
-            onChange={(v) => state.setThumbValue(0, v)}
-          >
-            <Input />
-          </NumberField>
-        )}
-        <SliderTrack>
-          {() => (
-            <>
-              <SliderBar />
-              <SliderThumb />
-            </>
-          )}
-        </SliderTrack>
-        <AriaText slot='min'>{minValue || 0}</AriaText>
-        <AriaText slot='max'>{maxValue || 100}</AriaText>
-      </>
-    )}
-  </Slider>
-);
-
-SliderExample.storyName = 'Slider / With input';
-
-SliderExample.argTypes = {
-  ...args,
-};
-
-export const SliderExampleWithOutput: Story<
-  SliderProps & {
-    label: string;
-    includeTextField: boolean;
-    showLabel: boolean;
-    includeOutputField: boolean;
-  }
-> = ({
-  label,
-  minValue,
-  maxValue,
-  showLabel,
-  includeTextField,
-  includeOutputField,
-  ...rest
-}) => (
-  <Slider
-    minValue={minValue}
-    maxValue={maxValue}
-    formatOptions={{ style: 'decimal' }}
-    {...rest}
-  >
-    {({ state }) => (
-      <>
-        {showLabel && <AriaLabel>{label}</AriaLabel>}
-        {includeOutputField && (
-          <SliderOutput>
-            <span>{state.values[0]}</span>
-          </SliderOutput>
-        )}
-        <SliderTrack>
-          {() => (
-            <>
-              <SliderBar />
-              <SliderThumb />
-            </>
-          )}
-        </SliderTrack>
-        <AriaText slot='min'>{minValue || 0}</AriaText>
-        <AriaText slot='max'>{maxValue || 100}</AriaText>
-      </>
-    )}
-  </Slider>
-);
-
-SliderExampleWithOutput.storyName = 'Slider / With output';
-
-SliderExampleWithOutput.argTypes = {
-  ...args,
-  includeOutputField: {
-    control: {
-      type: 'boolean',
-    },
-    defaultValue: true,
-  },
-};
-
-export const ControlledSliderExample: Story<
-  SliderProps & {
-    label: string;
-    includeTextField: boolean;
-    showLabel: boolean;
-    includeOutputField: boolean;
-  }
-> = ({
-  label,
-  minValue,
-  maxValue,
-  showLabel,
-  includeTextField,
-  includeOutputField,
-  value,
-  ...rest
-}) => (
-  <Slider {...rest} value={value} minValue={minValue} maxValue={maxValue}>
-    {({ state }) => (
-      <>
-        {showLabel && <AriaLabel>{label}</AriaLabel>}
-        {includeOutputField && (
-          <SliderOutput>
-            <span>{state.values[0]}</span>
-          </SliderOutput>
-        )}
-        {includeTextField && (
-          <NumberField value={state.values[0]}>
-            <Input />
-          </NumberField>
-        )}
-        <SliderTrack>
-          {() => (
-            <>
-              <SliderBar />
-              <SliderThumb />
-            </>
-          )}
-        </SliderTrack>
-        <AriaText slot='min'>{minValue || 0}</AriaText>
-        <AriaText slot='max'>{maxValue || 100}</AriaText>
-      </>
-    )}
-  </Slider>
-);
-
-ControlledSliderExample.storyName = 'Slider / Controlled';
-
-ControlledSliderExample.argTypes = {
-  ...args,
-  label: {
-    control: {
-      type: 'text',
-    },
-    defaultValue: 'Opacity',
-  },
-  value: {
-    control: {
-      type: 'number',
-    },
-    defaultValue: 0,
-  },
-};
-
-export const RangeSliderExample: Story<
-  SliderProps & {
-    label: string;
-    includeTextField: boolean;
-    showLabel: boolean;
-    includeOutputField: boolean;
-  }
-> = ({
-  label,
-  minValue,
-  maxValue,
-  showLabel,
-  includeOutputField,
-  includeTextField,
+  showInput,
+  showOutput,
   value,
   ...rest
 }) => (
@@ -299,14 +111,14 @@ export const RangeSliderExample: Story<
       return (
         <>
           {showLabel && <AriaLabel>{label}</AriaLabel>}
-          {includeOutputField && (
+          {showOutput && (
             <SliderOutput>
               <span>{state.values[0]}</span>
               {' - '}
               <span>{state.values[1]}</span>
             </SliderOutput>
           )}
-          {includeTextField && (
+          {showInput && (
             <Group>
               <NumberField
                 value={state.values[0]}
@@ -352,43 +164,40 @@ RangeSliderExample.argTypes = {
 
 // added inputValues to make Ladle controls easier to use
 export const ControlledRangeSliderExample: Story<
-  SliderProps & {
+  SliderStoryProps & {
     label: string;
-    inputValueMin: number;
-    inputValueMax: number;
-    includeTextField: boolean;
-    showLabel: boolean;
-    includeOutputField: boolean;
+    inputLow: number;
+    inputHigh: number;
   }
 > = ({
   label,
   value,
   minValue,
   maxValue,
-  inputValueMin,
-  inputValueMax,
+  inputLow,
+  inputHigh,
   showLabel,
-  includeTextField,
-  includeOutputField,
+  showInput,
+  showOutput,
   ...rest
 }) => (
   <Slider
     {...rest}
-    value={[inputValueMin, inputValueMax]}
+    value={[inputLow, inputHigh]}
     minValue={minValue}
     maxValue={maxValue}
   >
     {({ state }) => (
       <>
         {showLabel && <AriaLabel>{label}</AriaLabel>}
-        {includeOutputField && (
+        {showOutput && (
           <SliderOutput>
             <span>{state.values[0]}</span>
             {' - '}
             <span>{state.values[1]}</span>
           </SliderOutput>
         )}
-        {includeTextField && (
+        {showInput && (
           <Group>
             <NumberField value={state.values[0]}>
               <Input />
@@ -423,16 +232,181 @@ ControlledRangeSliderExample.argTypes = {
     ...args.label,
     defaultValue: 'Range',
   },
-  inputValueMin: {
+  inputLow: {
     control: {
       type: 'number',
     },
     defaultValue: 0,
   },
-  inputValueMax: {
+  inputHigh: {
     control: {
       type: 'number',
     },
     defaultValue: 50,
+  },
+  showOutput: {
+    control: {
+      type: 'boolean',
+    },
+    defaultValue: false,
+  },
+};
+
+export const SliderExample: Story<SliderStoryProps> = ({
+  label,
+  minValue,
+  maxValue,
+  showLabel,
+  showInput,
+  showOutput,
+  ...rest
+}) => (
+  <Slider minValue={minValue} maxValue={maxValue} {...rest}>
+    {({ state }) => (
+      <>
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
+        {showOutput && (
+          <SliderOutput>
+            <span>{state.values[0]}</span>
+          </SliderOutput>
+        )}
+        {showInput && (
+          <NumberField
+            value={state.values[0]}
+            onChange={(v) => state.setThumbValue(0, v)}
+          >
+            <Input />
+          </NumberField>
+        )}
+        <SliderTrack>
+          {() => (
+            <>
+              <SliderBar />
+              <SliderThumb />
+            </>
+          )}
+        </SliderTrack>
+        <AriaText slot='min'>{minValue || 0}</AriaText>
+        <AriaText slot='max'>{maxValue || 100}</AriaText>
+      </>
+    )}
+  </Slider>
+);
+
+SliderExample.storyName = 'Slider / With input';
+
+SliderExample.argTypes = {
+  ...args,
+  showOutput: {
+    control: {
+      type: 'boolean',
+    },
+    defaultValue: false,
+  },
+};
+
+export const SliderExampleWithOutput: Story<SliderStoryProps> = ({
+  label,
+  minValue,
+  maxValue,
+  showLabel,
+  showInput,
+  ...rest
+}) => (
+  <Slider
+    minValue={minValue}
+    maxValue={maxValue}
+    formatOptions={{ style: 'decimal' }}
+    {...rest}
+  >
+    {({ state }) => (
+      <>
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
+        {showInput && (
+          <SliderOutput>
+            <span>{state.values[0]}</span>
+          </SliderOutput>
+        )}
+        <SliderTrack>
+          {() => (
+            <>
+              <SliderBar />
+              <SliderThumb />
+            </>
+          )}
+        </SliderTrack>
+        <AriaText slot='min'>{minValue || 0}</AriaText>
+        <AriaText slot='max'>{maxValue || 100}</AriaText>
+      </>
+    )}
+  </Slider>
+);
+
+SliderExampleWithOutput.storyName = 'Slider / With output';
+
+SliderExampleWithOutput.argTypes = {
+  ...args,
+  showOutput: {
+    control: {
+      type: 'boolean',
+    },
+    defaultValue: true,
+  },
+};
+
+export const ControlledSliderExample: Story<SliderStoryProps> = ({
+  label,
+  minValue,
+  maxValue,
+  showLabel,
+  showInput,
+  showOutput,
+  value,
+  ...rest
+}) => (
+  <Slider {...rest} value={value} minValue={minValue} maxValue={maxValue}>
+    {({ state }) => (
+      <>
+        {showLabel && <AriaLabel>{label}</AriaLabel>}
+        {showInput && (
+          <NumberField value={state.values[0]}>
+            <Input />
+          </NumberField>
+        )}
+        {showOutput && (
+          <SliderOutput>
+            <span>{state.values[0]}</span>
+          </SliderOutput>
+        )}
+        <SliderTrack>
+          {() => (
+            <>
+              <SliderBar />
+              <SliderThumb />
+            </>
+          )}
+        </SliderTrack>
+        <AriaText slot='min'>{minValue || 0}</AriaText>
+        <AriaText slot='max'>{maxValue || 100}</AriaText>
+      </>
+    )}
+  </Slider>
+);
+
+ControlledSliderExample.storyName = 'Slider / Controlled';
+
+ControlledSliderExample.argTypes = {
+  ...args,
+  label: {
+    control: {
+      type: 'text',
+    },
+    defaultValue: 'Opacity',
+  },
+  value: {
+    control: {
+      type: 'number',
+    },
+    defaultValue: 0,
   },
 };
