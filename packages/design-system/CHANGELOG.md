@@ -1,5 +1,13 @@
 # @accelint/design-system
 
+## 0.5.4
+
+### Patch Changes
+
+- 929997e: OptionList enable popover behavior
+- Updated dependencies [ef11767]
+  - @accelint/converters@0.3.0
+
 ## 0.5.3
 
 ### Patch Changes
