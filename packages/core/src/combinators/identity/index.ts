@@ -13,18 +13,16 @@
 /**
  * Mathematic identity function. A function that always returns the value
  * that was used as its argument, unchanged.
+ *
  * @param x The value to return.
  *
- * @remark
+ * @remarks
  * I combinator
  *
- * @remark
- * `identity :: a → a`
- *
- * @remark
  * `λa.a`
  *
- * @remark
+ * `identity :: a → a`
+ *
  * pure function
  *
  * @example

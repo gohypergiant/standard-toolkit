@@ -15,6 +15,7 @@
 
 export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
   ...args: P
+  // biome-ignore lint/suspicious/noExplicitAny: This is intended
 ) => ((...args: T) => any) extends (...args: [...P, ...infer Args]) => any
   ? Args extends []
     ? R
@@ -22,7 +23,8 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
   : never;
 
 /**
- * Curries the given function. Allowing it to be accept one or more arguments at a time.
+ * Curries the given function. Allowing it to accept one or more arguments at a time.
+ *
  * @param fn The function to convert to a curried version of.
  *
  * @remark
@@ -35,8 +37,10 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  * curried(2)(3, 4);
  * curried(2, 3, 4);
  */
+// biome-ignore lint/suspicious/noExplicitAny: This is intended
 export function autoCurry<T extends (...args: any[]) => any>(
   fn: T,
+  // biome-ignore lint/suspicious/noExplicitAny: This is intended
   _args = [] as any[],
 ): Curried<Parameters<T>, ReturnType<T>> {
   return (...__args) =>

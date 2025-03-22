@@ -11,7 +11,8 @@
  */
 
 /**
- * Logical `(!a)`. Logical Not (Negation)
+ * Logical Not (Negation) `(!a)`.
+ *
  * @param x The value to negate.
  *
  * @see https://en.wikipedia.org/wiki/Negation
@@ -26,7 +27,8 @@
 export const not = <T>(x: T) => !x;
 
 /**
- * Logical `(!a(b))`. Logical (Function Result) Not (Negation)
+ * Logical (Function Result) Not (Negation) `(!a(b))`.
+ *
  * @param a The function to negate the return of.
  * @param b The value to pass to the given function.
  *

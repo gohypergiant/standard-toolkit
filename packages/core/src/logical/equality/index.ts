@@ -11,11 +11,13 @@
  */
 
 /**
- * Logical `(a === b)`. Logical Equality (XNOR)
+ * Logical Equality (XNOR) `(a === b)`.
+ *
  * @param a The first value to compare.
  * @param b The second value to compare.
  *
  * @see https://en.wikipedia.org/wiki/Logical_equality
+ *
  * @see https://en.wikipedia.org/wiki/Logical_biconditional
  *
  * @remarks
@@ -28,12 +30,14 @@
 export const equality = (a: unknown) => (b: unknown) => a === b;
 
 /**
- * Logical `(a(x) === b(x))`. Logical (Function Result) Equality (XNOR)
+ * Logical (Function Result) Equality (XNOR) `(a(x) === b(x))`.
+ *
  * @param a The first function to compare the return of.
  * @param b The second function to compare the return of.
  * @param c The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Logical_equality
+ *
  * @see https://en.wikipedia.org/wiki/Logical_biconditional
  *
  * @remarks

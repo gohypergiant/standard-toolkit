@@ -10,27 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * Corresponds to the encoding of `true` in the lambda calculus.
- * Takes two arguments and always returns the first.
- *
- * @param a The value to return.
- * @param b The value to ignore.
- *
- * @remarks
- * K combinator
- *
- * `λab.a`
- *
- * `constant :: a → b → a`
- *
- * pure function
- *
- * @example
- * constant(1)(2);
- * // 1
- */
-export const constant =
-  <A>(a: A) =>
-  <B>(_: B): A =>
-    a;
+import { expect, it } from 'vitest';
+import { fork } from './';
+
+const add = (a: number) => (b: number) => a + b;
+const addThree = (a: number) => a + 3;
+const minusTwo = (a: number) => a - 2;
+
+it('should correctly compose the two unary functions and the binary function', () => {
+  expect(fork(add)(addThree)(minusTwo)(9)).toEqual(19);
+});

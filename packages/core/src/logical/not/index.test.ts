@@ -10,27 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * Corresponds to the encoding of `true` in the lambda calculus.
- * Takes two arguments and always returns the first.
- *
- * @param a The value to return.
- * @param b The value to ignore.
- *
- * @remarks
- * K combinator
- *
- * `λab.a`
- *
- * `constant :: a → b → a`
- *
- * pure function
- *
- * @example
- * constant(1)(2);
- * // 1
- */
-export const constant =
-  <A>(a: A) =>
-  <B>(_: B): A =>
-    a;
+import { describe, expect, it } from 'vitest';
+import { not, notFn } from './';
+
+const isEven = (x: number) => !(x & 1);
+const isOdd = (x: number) => !isEven(x);
+
+describe('not', () => {
+  it('should return false for !true', () => {
+    expect(not(true)).toEqual(false);
+  });
+
+  it('should return true for !false', () => {
+    expect(not(false)).toEqual(true);
+  });
+});
+
+describe('notFn', () => {
+  it('should return false for !true', () => {
+    expect(notFn(isEven)(6)).toEqual(false);
+  });
+
+  it('should return true for !false', () => {
+    expect(notFn(isOdd)(6)).toEqual(true);
+  });
+});

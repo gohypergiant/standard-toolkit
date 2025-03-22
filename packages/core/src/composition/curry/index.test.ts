@@ -10,27 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * Corresponds to the encoding of `true` in the lambda calculus.
- * Takes two arguments and always returns the first.
- *
- * @param a The value to return.
- * @param b The value to ignore.
- *
- * @remarks
- * K combinator
- *
- * `λab.a`
- *
- * `constant :: a → b → a`
- *
- * pure function
- *
- * @example
- * constant(1)(2);
- * // 1
- */
-export const constant =
-  <A>(a: A) =>
-  <B>(_: B): A =>
-    a;
+import { expect, it } from 'vitest';
+import { autoCurry } from './';
+
+const addAndMultiply = (a: number, b: number, c: number) => (a + b) * c;
+const curriedFn = autoCurry(addAndMultiply);
+
+it('should correctly allow any combination of parameters', () => {
+  expect(curriedFn(2)(3)(4)).toEqual(20);
+  expect(curriedFn(2, 3)(4)).toEqual(20);
+  expect(curriedFn(2)(3, 4)).toEqual(20);
+  expect(curriedFn(2, 3, 4)).toEqual(20);
+});

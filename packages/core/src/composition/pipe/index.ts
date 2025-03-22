@@ -16,6 +16,7 @@ import type { UnaryFunction } from '@/types';
 // If its a list of functions, last being Unary
 type PipeParams<Fns> = Fns extends readonly [
   infer First extends UnaryFunction,
+  // biome-ignore lint/suspicious/noExplicitAny: This is intended
   ...any[],
 ]
   ? // Get Params of the first, which returns [...argTypes], so get the first one [0]
@@ -27,6 +28,7 @@ type PipeParams<Fns> = Fns extends readonly [
 // have to spread and infer last so that it gets the right type for the last one
 // [-1] no bueno
 type PipeReturn<Fns> = ReturnType<
+  // biome-ignore lint/suspicious/noExplicitAny: This is intended
   Fns extends readonly [...any[], infer Last extends UnaryFunction]
     ? Last
     : never
@@ -37,20 +39,23 @@ type Pipeable<Fn> =
   Fn extends readonly [UnaryFunction]
     ? Fn
     : // if its a list of Unary funcs (ignoring the last)
+      // biome-ignore lint/suspicious/noExplicitAny: This is intended
       Fn extends readonly [...infer Head extends readonly UnaryFunction[], any]
       ? // Start building the list of func type by using the return type of the last in Head
         // as the arg of the previous in line and recursively spread the rest (doing the same thing)
         // The last is ignored but handled by the top level FlowReturn
+        // biome-ignore lint/suspicious/noExplicitAny: This is intended
         readonly [...Pipeable<Head>, (arg: PipeReturn<Head>) => any]
       : never;
 
 /**
  * Allows you combine two or more functions to create a new function, which passes the results from one
  * function to the next until all have be called. Has a left-to-right call order.
+ *
  * @param fns The functions to pipe.
  * @param arg The argument to give to the first function in the pipe.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example

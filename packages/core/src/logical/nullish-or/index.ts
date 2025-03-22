@@ -12,6 +12,7 @@
 
 /**
  * Nullish Coalescing `(a ?? b)`.
+ *
  * @param a The possible null value.
  * @param b The value to fallback to.
  *
@@ -29,6 +30,7 @@ export const nullishOr =
 
 /**
  * Nullish Coalescing `(a(x) ?? b(x))`.
+ *
  * @param a The function to get the, possibly null, return of.
  * @param b The function to get the fallback return of.
  * @param c The value to pass to both `a` and `b`.
@@ -47,7 +49,8 @@ export const nullishOrFn =
     a(c) ?? b(c);
 
 /**
- * Swapped Nullish Coalescing: `(b ?? a)`.
+ * Swapped Nullish Coalescing `(b ?? a)`.
+ *
  * @param a The value to fallback to.
  * @param b The possible null value.
  *
@@ -64,7 +67,8 @@ export const swappedNullishOr =
     b ?? a;
 
 /**
- * Swapped Nullish Coalescing: `(b(x) ?? a(x))`.
+ * Swapped Nullish Coalescing `(b(x) ?? a(x))`.
+ *
  * @param a The function to get the fallback return of.
  * @param b The function to get the, possibly null, return of.
  * @param c The value to pass to both `a` and `b`.

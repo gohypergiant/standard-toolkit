@@ -14,19 +14,17 @@
  * Corresponds to the encoding of `false` in the lambda calculus.
  * Takes two arguments and always returns the second.
  * Inverse of `constant` (`K`).
+ *
  * @param a The value to ignore.
  * @param b The value to return.
  *
- * @remark
+ * @remarks
  * KI combinator
  *
- * @remark
- * `inverseConstant :: a → b → b`
- *
- * @remark
  * `λab.b`
  *
- * @remark
+ * `inverseConstant :: a → b → b`
+ *
  * pure function
  *
  * @example

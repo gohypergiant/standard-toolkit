@@ -12,21 +12,19 @@
 
 /**
  * Pass a value through two different functions and the results to a function that takes two arguments.
+ *
  * @param a The final curried, binary function that receives the results from `b` and `c`.
  * @param b The first function to pass the value to.
  * @param c The second function to pass the value to.
  * @param d The value to pass to `b` and `c`.
  *
- * @remark
+ * @remarks
  * Phi combinator
  *
- * @remark
- * 'fork :: (a → b → c) → (d → a) → (d → b) → d → c'
- *
- * @remark
  * `λabcd.a(bd)(cd)`
  *
- * @remark
+ * 'fork :: (a → b → c) → (d → a) → (d → b) → d → c'
+ *
  * pure function
  *
  * @example
