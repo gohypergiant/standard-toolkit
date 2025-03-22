@@ -33,7 +33,7 @@ import {
   type TextProps,
 } from 'react-aria-components';
 import {
-  AriaLabelContext,
+  type AriaLabelContext,
   AriaTextContext,
   GroupContext,
   type GroupProps,
@@ -262,22 +262,16 @@ export const SliderThumb = forwardRef(function SliderThumb(
     [],
   );
 
-  const values = useMemo<
-    [[typeof AriaLabelContext, ContextValue<LabelProps, HTMLLabelElement>]]
-  >(() => [[AriaLabelContext, {}]], []);
-
   const children = useCallback(
     (renderProps: SliderThumbRenderProps) => (
-      <Provider values={values}>
-        <div className={classNames?.thumb?.thumb}>
-          {callRenderProps(childrenProp, {
-            ...renderProps,
-            defaultChildren: null,
-          })}
-        </div>
-      </Provider>
+      <div className={classNames?.thumb?.thumb}>
+        {callRenderProps(childrenProp, {
+          ...renderProps,
+          defaultChildren: null,
+        })}
+      </div>
     ),
-    [childrenProp, values, classNames?.thumb?.thumb],
+    [childrenProp, classNames?.thumb?.thumb],
   );
 
   return (

@@ -134,7 +134,6 @@ export const SliderExample: Story<
           {() => (
             <>
               <SliderBar />
-
               <SliderThumb />
             </>
           )}
