@@ -94,13 +94,6 @@ export const Slider: ThemeContext['Slider'] = {
     ),
   },
   track: {
-    container: style(
-      applyThemeVars<SliderState>(sliderStateVars, [
-        {
-          vars: assignPartialVars(sliderSpaceVars, {}),
-        },
-      ]),
-    ),
     track: style(
       applyThemeVars<SliderState>(sliderStateVars, [
         {
