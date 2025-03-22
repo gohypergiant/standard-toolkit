@@ -117,6 +117,10 @@ export const sliderClassNames: SliderClassNames = {
               gap: sliderSpaceVars.gap,
               gridTemplateRows: 'auto auto 1fr auto auto',
             },
+            {
+              query: { isDisabled: true },
+              cursor: 'not-allowed',
+            },
           ),
         },
       },

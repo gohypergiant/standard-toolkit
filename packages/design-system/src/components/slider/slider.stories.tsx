@@ -34,18 +34,6 @@ export default {
       },
       defaultValue: false,
     },
-    isReadOnly: {
-      control: {
-        type: 'boolean',
-      },
-      defaultValue: false,
-    },
-    isInvalid: {
-      control: {
-        type: 'boolean',
-      },
-      defaultValue: false,
-    },
   },
 } satisfies StoryDefault;
 

@@ -308,6 +308,7 @@ export const Slider = forwardRef(function Slider(
     classNames: classNamesProp,
     layout = 'stacked',
     orientation = 'horizontal',
+    isDisabled,
     ...rest
   } = props;
 
@@ -374,7 +375,7 @@ export const Slider = forwardRef(function Slider(
           },
         },
       ],
-      [NumberFieldContext, { classNames: classNames?.numberField }],
+      [NumberFieldContext, { classNames: classNames?.numberField, isDisabled }],
       [SliderOutputContext, { classNames }],
       [SliderTrackContext, { classNames }],
       [
@@ -388,7 +389,7 @@ export const Slider = forwardRef(function Slider(
         },
       ],
     ],
-    [classNames, orientation],
+    [classNames, orientation, isDisabled],
   );
 
   const children = useCallback(
@@ -409,6 +410,7 @@ export const Slider = forwardRef(function Slider(
       className={classNames?.slider?.container}
       orientation={orientation}
       style={style}
+      isDisabled={isDisabled}
     >
       {children}
     </RACSlider>
