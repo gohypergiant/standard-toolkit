@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import type { Story, StoryDefault } from '@ladle/react';
 import { useState } from 'react';
 import { TooltipTrigger } from 'react-aria-components';
@@ -304,6 +316,97 @@ export const MultiTabbedExample: Story<DrawerProps> = (props) => {
 };
 
 MultiTabbedExample.storyName = 'Multi Tabbed';
+
+export const OverflowedExample: Story<DrawerProps> = (props) => {
+  const caretRight = (
+    <Icon size='md'>
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+        <title>Ladle</title>
+        <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+        <path d='M9 6c0 -.852 .986 -1.297 1.623 -.783l.084 .076l6 6a1 1 0 0 1 .083 1.32l-.083 .094l-6 6l-.094 .083l-.077 .054l-.096 .054l-.036 .017l-.067 .027l-.108 .032l-.053 .01l-.06 .01l-.057 .004l-.059 .002l-.059 -.002l-.058 -.005l-.06 -.009l-.052 -.01l-.108 -.032l-.067 -.027l-.132 -.07l-.09 -.065l-.081 -.073l-.083 -.094l-.054 -.077l-.054 -.096l-.017 -.036l-.027 -.067l-.032 -.108l-.01 -.053l-.01 -.06l-.004 -.057l-.002 -12.059z' />
+      </svg>
+    </Icon>
+  );
+
+  const caretLeft = (
+    <Icon size='md'>
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+        <title>Ladle</title>
+        <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+        <path d='M13.883 5.007l.058 -.005h.118l.058 .005l.06 .009l.052 .01l.108 .032l.067 .027l.132 .07l.09 .065l.081 .073l.083 .094l.054 .077l.054 .096l.017 .036l.027 .067l.032 .108l.01 .053l.01 .06l.004 .057l.002 .059v12c0 .852 -.986 1.297 -1.623 .783l-.084 -.076l-6 -6a1 1 0 0 1 -.083 -1.32l.083 -.094l6 -6l.094 -.083l.077 -.054l.096 -.054l.036 -.017l.067 -.027l.108 -.032l.053 -.01l.06 -.01z' />
+      </svg>
+    </Icon>
+  );
+
+  const openCarent = props.anchor === 'left' ? caretLeft : caretRight;
+  const closeCaret = props.anchor === 'left' ? caretRight : caretLeft;
+
+  return (
+    <div style={{ height: '100%', display: 'flex' }}>
+      {props.anchor === 'right' && (
+        <div
+          style={{
+            padding: '24px',
+            flex: 1,
+            background: 'lightgray',
+            color: 'black',
+          }}
+        >
+          {content}
+        </div>
+      )}
+      <Drawer
+        {...props}
+        {...actions<DrawerProps>('onOpenChange', 'onSelectionChange')}
+      >
+        <DrawerTabList>
+          <DrawerTab id='a'>
+            {({ isOpen }) => (isOpen ? openCarent : closeCaret)}
+          </DrawerTab>
+        </DrawerTabList>
+        <DrawerDialog>
+          <Element slot='header'>
+            <AriaHeading slot='title'>Hello</AriaHeading>
+            <Button slot='close'>
+              <Icon fill='none' size='relative' stroke='currentcolor'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  strokeWidth='2'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                >
+                  <title>Ladle</title>
+                  <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                  <path d='M18 6l-12 12' />
+                  <path d='M6 6l12 12' />
+                </svg>
+              </Icon>
+            </Button>
+          </Element>
+          <Element slot='content'>
+            <TabPanels>
+              <TabPanel id='a'>{content}</TabPanel>
+            </TabPanels>
+          </Element>
+          <Element slot='footer'>Footer</Element>
+        </DrawerDialog>
+      </Drawer>
+      {props.anchor === 'left' && (
+        <div
+          style={{
+            padding: '24px',
+            flex: 1,
+            background: 'lightgray',
+            color: 'black',
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+OverflowedExample.storyName = 'Overflowed';
 
 const content = (
   <>
