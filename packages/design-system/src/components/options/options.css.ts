@@ -117,6 +117,7 @@ export const optionsClassNames: OptionsClassNames = {
           containerName: optionsContainers.options,
           display: 'block',
           zIndex: `${zIndexVars.popover} !important`, // Need to override inline style set by React Aria
+          overflowY: 'auto',
         },
       },
     }),
