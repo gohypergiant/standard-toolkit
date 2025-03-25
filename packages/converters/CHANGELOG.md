@@ -1,5 +1,11 @@
 # @accelint/converters
 
+## 0.3.0
+
+### Minor Changes
+
+- ef11767: Adjust name for bounding box conversion
+
 ## 0.2.0
 
 ### Minor Changes

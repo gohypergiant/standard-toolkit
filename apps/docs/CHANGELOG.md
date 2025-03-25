@@ -1,5 +1,16 @@
 # @accelint/docs
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [929997e]
+- Updated dependencies [ef11767]
+- Updated dependencies [571a2dc]
+- Updated dependencies [ee5733e]
+  - @accelint/design-system@0.6.0
+  - @accelint/converters@0.3.0
+
 ## 0.1.4
 
 ### Patch Changes

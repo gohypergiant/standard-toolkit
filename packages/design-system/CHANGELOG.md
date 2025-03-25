@@ -1,5 +1,18 @@
 # @accelint/design-system
 
+## 0.6.0
+
+### Minor Changes
+
+- 571a2dc: Add in a new slider and range component
+
+### Patch Changes
+
+- 929997e: OptionList enable popover behavior
+- ee5733e: Add overflow auto to the drawer and option
+- Updated dependencies [ef11767]
+  - @accelint/converters@0.3.0
+
 ## 0.5.3
 
 ### Patch Changes
