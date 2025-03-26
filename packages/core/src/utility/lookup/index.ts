@@ -15,10 +15,11 @@ import { identity } from '../../combinators/identity';
 /**
  * Takes an object and an optional fallback function and returns a function that
  * takes a string and returns the lookup value or the result default fallback.
+ *
  * @param obj The table lookup object.
  * @param def The function used to handle the default value if the lookup returns `undefined`.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
@@ -35,6 +36,7 @@ import { identity } from '../../combinators/identity';
 export const lookup =
   <
     A extends Record<string | number | symbol, unknown>,
+    // biome-ignore lint/suspicious/noExplicitAny: This is intended
     B extends (...args: any[]) => any,
   >(
     obj: A,

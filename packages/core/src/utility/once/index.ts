@@ -11,19 +11,31 @@
  */
 
 // TS' `Function` type only models the object side of it, not whether it is callable.
+// biome-ignore lint/suspicious/noExplicitAny: This is intended
 type SomeFunction = (...args: any[]) => any;
 
 /**
  * Ensures that the given function is only called once.
+ *
  * @param fn The function to call once.
+ *
+ * @example
+ * let globalVal = 10;
+ * const addGlobal = (n: number) => {
+ *   globalVal = globalVal + n;
+ * }
+ * const onceAdd = once(addGlobal);
+ *
+ * onceAdd(5); // 15
+ * onceAdd(5); // 15
  */
 export const once = <T extends SomeFunction>(fn: T) => {
   let done = false;
 
-  // TODO: Better types, since it can return void?
-  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
-  return (...args: Parameters<T>): ReturnType<T> | void =>
-    // biome-ignore lint/suspicious/noAssignInExpressions: Shhhh
-    // biome-ignore lint/style/noCommaOperator: Shhh
-    done ? void 0 : ((done = true), fn(args));
+  return (...args: Parameters<T>) => {
+    if (!done) {
+      fn(...args);
+      done = true;
+    }
+  };
 };
