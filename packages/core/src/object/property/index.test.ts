@@ -35,7 +35,10 @@ const person: Person = {
   projects: ['unit', 'tests'],
 };
 
-const personTwo = undefined as unknown as Person;
+const personTwo: Person = {
+  name: 'Tess',
+  projects: ['more', 'tests'],
+};
 
 describe('property', () => {
   it('should correctly return the request value', () => {
@@ -71,7 +74,7 @@ describe('optionalProperty', () => {
   });
 
   it('should correctly return undefined when given a bad object', () => {
-    const actual = optionalProperty(personTwo)('name');
+    const actual = optionalProperty(personTwo.address)('street');
 
     expect(actual).toBeUndefined();
   });
