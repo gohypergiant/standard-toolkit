@@ -28,23 +28,28 @@ const nameLens = lens(
   (person: Person) => property(person)('name'),
   (person) => (name) => associateDeep(person)('name')(name),
 ); // -> string
+
 const addressLens = lens(
   (person: Person) => property(person)('address'),
   (person) => (addr) => associateDeep(person)('address')(addr),
 ); // -> Address
+
 const cityLens = lens(
   (address?: Address) => optionalProperty(address)('city'),
   (address) => (city) =>
     associateDeep(address as Address)('city')(city as City),
 ); // -> City
+
 const profilesLens = lens(
   (user: User) => property(user)('profile'),
   (user) => (profile) => associateDeep(user)('profile')(profile),
 ); // -> Profile[]
+
 const firstProfileLens = lens(
   (profiles: Profile[]) => property(profiles)(0),
   (profiles) => (profile) => associateDeep(profiles)(0)(profile),
 ); // -> Profile
+
 const infoLens = lens(
   (profile: Profile) => property(profile)('info'),
   (profile) => (info) => associateDeep(profile)('info')(info),

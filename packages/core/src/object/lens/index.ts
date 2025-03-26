@@ -26,10 +26,11 @@ export type Lens<T, V> = {
 
 /**
  * Focus on and manipulate a specific property or substructure within an object.
+ *
  * @param getter The lens get function to use.
  * @param setter The lens set function to use.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
@@ -62,10 +63,11 @@ export const lens = <T, V>(
  * Compose two lenses together.
  *
  * Given a lens `A ⭢ B` and a lens `B ⭢ C`, produces a lens `A ⭢ C`.
+ *
  * @param ab The lens from A ⭢ B.
  * @param bc The lens from B ⭢ C.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
@@ -92,10 +94,11 @@ export const composeLens = <A, B, C>(
 
 /**
  * A simple warpper function to access the `get` of a lens and the given object.
+ *
  * @param lensVal The Lens to get the getter of.
  * @param obj The object to focus the lens on.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
@@ -108,11 +111,12 @@ export const get =
 
 /**
  * A simple warpper function to access the `set` of a lens and the given object..
+ *
  * @param lensVal The Lens to get the setter of.
  * @param value The new value to set.
  * @param obj The object to focus the lens on.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
@@ -131,9 +135,10 @@ export const set =
 
 /**
  * Short-hand to create a simplistic get/set lens.
+ *
  * @param prop The prop on the focused object to access.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
@@ -149,9 +154,10 @@ export const lensProp =
 
 /**
  * Short-hand to create is simplistic, optional, get/set lens.
+ *
  * @param prop The prop on the focused object to access.
  *
- * @remark
+ * @remarks
  * pure function
  *
  * @example
