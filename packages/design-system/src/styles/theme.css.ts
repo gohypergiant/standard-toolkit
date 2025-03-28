@@ -301,8 +301,8 @@ export const defaultSemanticColorVarValues: MapLeafNodes<
       active: genericColorVars.neutral.v07,
     },
     transparent: {
-      black: genericColorVars.alpha.black.v3,
-      white: genericColorVars.alpha.white.v3,
+      black: genericColorVars.alpha.black.v2,
+      white: genericColorVars.alpha.white.v2,
     },
     highlight: {
       bold: genericColorVars.highlight.primary.v3,
