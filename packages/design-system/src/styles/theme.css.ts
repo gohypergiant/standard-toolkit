@@ -218,6 +218,10 @@ export const semanticColorVars = createThemeContract({
       disabled: '',
       active: '',
     },
+    transparent: {
+      black: '',
+      white: '',
+    },
     highlight: {
       bold: '',
       subtle: '',
@@ -295,6 +299,10 @@ export const defaultSemanticColorVarValues: MapLeafNodes<
       default: genericColorVars.neutral.v01,
       disabled: genericColorVars.neutral.v08,
       active: genericColorVars.neutral.v07,
+    },
+    transparent: {
+      black: genericColorVars.alpha.black.v3,
+      white: genericColorVars.alpha.white.v3,
     },
     highlight: {
       bold: genericColorVars.highlight.primary.v3,
