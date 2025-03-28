@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.7.0
+
+### Minor Changes
+
+- 961628a: Add alpha palette to the color tokens
+
 ## 0.6.0
 
 ### Minor Changes
