@@ -70,7 +70,7 @@ export const genericColorVars = createThemeContract({
     },
   },
   condition: {
-    base: {
+    info: {
       v1: '',
       v2: '',
       v3: '',
@@ -84,7 +84,7 @@ export const genericColorVars = createThemeContract({
       v4: '',
       v5: '',
     },
-    affirmative: {
+    normal: {
       v1: '',
       v2: '',
       v3: '',
@@ -160,7 +160,7 @@ export const defaultGenericColorVarValues: MapLeafNodes<
     },
   },
   condition: {
-    base: {
+    info: {
       v1: genericColorVars.neutral.v02,
       v2: genericColorVars.neutral.v03,
       v3: genericColorVars.neutral.v04,
@@ -174,7 +174,7 @@ export const defaultGenericColorVarValues: MapLeafNodes<
       v4: 'rgba(58, 100, 153, 1)',
       v5: 'rgba(20, 33, 51, 1)',
     },
-    affirmative: {
+    normal: {
       v1: 'rgba(214, 246, 229, 1)',
       v2: 'rgba(130, 228, 178, 1)',
       v3: 'rgba(48, 210, 126, 1)',
@@ -216,70 +216,77 @@ export const semanticColorVars = createThemeContract({
     interactive: {
       default: '',
       disabled: '',
-      active: '',
+      hover: {
+        dark: '',
+        light: '',
+      },
     },
     transparent: {
-      black: '',
-      white: '',
+      dark: '',
+      light: '',
     },
     highlight: {
       bold: '',
+      hover: '',
       subtle: '',
     },
     info: {
       bold: '',
+      hover: '',
       subtle: '',
     },
     advisory: {
       bold: '',
+      hover: '',
       subtle: '',
     },
-    affirmative: {
+    normal: {
       bold: '',
+      hover: '',
       subtle: '',
     },
     serious: {
       bold: '',
+      hover: '',
       subtle: '',
     },
     critical: {
       bold: '',
+      hover: '',
       subtle: '',
     },
   },
   foreground: {
-    interactive: {
-      primary: {
-        bold: '',
-        subtle: '',
-      },
-      secondary: {
-        bold: '',
-        subtle: '',
-      },
-      disabled: '',
-      highlight: '',
+    default: {
+      dark: '',
+      light: '',
     },
+    inverse: {
+      dark: '',
+      light: '',
+    },
+    disabled: '',
+    highlight: '',
     info: '',
     advisory: '',
-    affirmative: '',
+    normal: '',
     serious: '',
     critical: '',
   },
   border: {
     static: {
-      exterior: '',
-      interior: '',
+      dark: '',
+      light: '',
     },
     interactive: {
       default: '',
       hover: '',
       disabled: '',
-      highlight: '',
     },
+    highlight: '',
     info: '',
     advisory: '',
-    affirmative: '',
+    normal: '',
     serious: '',
     critical: '',
   },
@@ -297,71 +304,78 @@ export const defaultSemanticColorVarValues: MapLeafNodes<
     },
     interactive: {
       default: genericColorVars.neutral.v01,
-      disabled: genericColorVars.neutral.v08,
-      active: genericColorVars.neutral.v07,
+      disabled: genericColorVars.neutral.v07,
+      hover: {
+        dark: genericColorVars.neutral.v08,
+        light: genericColorVars.neutral.v03,
+      },
     },
     transparent: {
-      black: genericColorVars.alpha.black.v2,
-      white: genericColorVars.alpha.white.v1,
+      dark: genericColorVars.alpha.black.v2,
+      light: genericColorVars.alpha.white.v1,
     },
     highlight: {
       bold: genericColorVars.highlight.primary.v3,
+      hover: genericColorVars.highlight.primary.v4,
       subtle: genericColorVars.highlight.primary.v5,
     },
     info: {
-      bold: genericColorVars.condition.base.v3,
-      subtle: genericColorVars.condition.base.v5,
+      bold: genericColorVars.condition.info.v3,
+      hover: genericColorVars.condition.info.v4,
+      subtle: genericColorVars.condition.info.v5,
     },
     advisory: {
       bold: genericColorVars.condition.advisory.v3,
+      hover: genericColorVars.condition.advisory.v4,
       subtle: genericColorVars.condition.advisory.v5,
     },
-    affirmative: {
-      bold: genericColorVars.condition.affirmative.v3,
-      subtle: genericColorVars.condition.affirmative.v5,
+    normal: {
+      bold: genericColorVars.condition.normal.v3,
+      hover: genericColorVars.condition.normal.v4,
+      subtle: genericColorVars.condition.normal.v5,
     },
     serious: {
       bold: genericColorVars.condition.serious.v3,
+      hover: genericColorVars.condition.serious.v4,
       subtle: genericColorVars.condition.serious.v5,
     },
     critical: {
       bold: genericColorVars.condition.critical.v3,
+      hover: genericColorVars.condition.critical.v4,
       subtle: genericColorVars.condition.critical.v5,
     },
   },
   foreground: {
-    interactive: {
-      primary: {
-        bold: genericColorVars.neutral.v01,
-        subtle: genericColorVars.neutral.v02,
-      },
-      secondary: {
-        bold: genericColorVars.neutral.v09,
-        subtle: genericColorVars.neutral.v08,
-      },
-      disabled: genericColorVars.neutral.v04,
-      highlight: genericColorVars.highlight.primary.v3,
+    default: {
+      dark: genericColorVars.neutral.v03,
+      light: genericColorVars.neutral.v01,
     },
-    info: genericColorVars.condition.base.v3,
+    inverse: {
+      dark: genericColorVars.neutral.v09,
+      light: genericColorVars.neutral.v07,
+    },
+    disabled: genericColorVars.neutral.v05,
+    highlight: genericColorVars.highlight.primary.v3,
+    info: genericColorVars.condition.info.v3,
     advisory: genericColorVars.condition.advisory.v3,
-    affirmative: genericColorVars.condition.affirmative.v3,
+    normal: genericColorVars.condition.normal.v3,
     serious: genericColorVars.condition.serious.v3,
     critical: genericColorVars.condition.critical.v3,
   },
   border: {
     static: {
-      exterior: genericColorVars.neutral.v07,
-      interior: genericColorVars.neutral.v09,
+      dark: genericColorVars.neutral.v09,
+      light: genericColorVars.neutral.v07,
     },
     interactive: {
-      default: genericColorVars.neutral.v06,
+      default: genericColorVars.neutral.v05,
       hover: genericColorVars.neutral.v01,
       disabled: genericColorVars.neutral.v07,
-      highlight: genericColorVars.highlight.primary.v3,
     },
-    info: genericColorVars.condition.base.v3,
+    highlight: genericColorVars.highlight.primary.v3,
+    info: genericColorVars.condition.info.v3,
     advisory: genericColorVars.condition.advisory.v3,
-    affirmative: genericColorVars.condition.affirmative.v3,
+    normal: genericColorVars.condition.normal.v3,
     serious: genericColorVars.condition.serious.v3,
     critical: genericColorVars.condition.critical.v3,
   },
