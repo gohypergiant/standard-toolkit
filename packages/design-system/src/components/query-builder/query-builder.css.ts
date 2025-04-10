@@ -366,7 +366,7 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
             borderColor: fallbackVar(
               queryBuilderColorVars.rule.lineColor,
               'rgb(89,89,89)',
-            ), // TODO
+            ),
             borderStyle: 'solid',
           },
           '::after': {
@@ -381,7 +381,7 @@ export const queryBuilderClassNames: QueryBuilderClassNames = {
             borderColor: fallbackVar(
               queryBuilderColorVars.rule.lineColor,
               'rgb(89,89,89)',
-            ), // TODO
+            ),
             borderStyle: 'solid',
           },
           selectors: {
