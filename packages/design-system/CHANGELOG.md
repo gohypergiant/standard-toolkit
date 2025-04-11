@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.8.0
+
+### Minor Changes
+
+- a5197bd: adds optional rule lines to querybuilder rules
+
 ## 0.7.0
 
 ### Minor Changes
