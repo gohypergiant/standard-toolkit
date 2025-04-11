@@ -1,5 +1,12 @@
 # @accelint/docs
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [a5197bd]
+  - @accelint/design-system@0.8.0
+
 ## 0.1.6
 
 ### Patch Changes
