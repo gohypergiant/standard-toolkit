@@ -68,6 +68,7 @@ const files = await glob(
       '**/README.md',
       '**/LICENSE.md',
       '**/CHANGELOG.md',
+      '**/.changeset/**/*.md',
       '**/.github/**/*.md',
       '**/docs/**/*.md',
       '**/docs/**/*.mdx',
