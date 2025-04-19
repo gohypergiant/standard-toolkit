@@ -25,7 +25,7 @@
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@biomejs/biome": "1.9.3",
-    "@codesandbox/sandpack-react": "2.19.10",
+    "@codesandbox/sandpack-react": "2.20.0",
     "@docusaurus/core": "3.7.0",
     "@docusaurus/module-type-aliases": "3.7.0",
     "@docusaurus/preset-classic": "3.7.0",

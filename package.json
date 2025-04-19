@@ -58,7 +58,8 @@
   "packageManager": "pnpm@9.12.1",
   "pnpm": {
     "overrides": {
-      "@react-types/shared": "3.25.0"
+      "@react-types/shared": "3.25.0",
+      "@docusaurus/plugin-debug@3.7.0>react-json-view-lite": "^2.0.0"
     }
   }
 }
