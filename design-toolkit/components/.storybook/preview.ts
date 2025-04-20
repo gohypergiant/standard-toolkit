@@ -10,14 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+import type { Preview } from '@storybook/react';
+import '../src/index.css';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
-}
+const preview: Preview = {
+  parameters: {
+    backgrounds: {
+      values: [{ name: 'Dark', value: '#0b0b0b' }],
+      default: 'dark',
+    },
+  },
+  initialGlobals: {
+    // 👇 Set the initial background color
+    backgrounds: { value: 'dark' },
+  },
+};
+
+export default preview;

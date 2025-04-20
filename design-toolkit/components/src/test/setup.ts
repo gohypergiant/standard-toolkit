@@ -10,14 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+import * as matchers from '@testing-library/jest-dom/matchers';
+import { cleanup } from '@testing-library/react';
+import { afterEach, expect } from 'vitest';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
-}
+expect.extend(matchers);
+
+afterEach(() => {
+  cleanup();
+});

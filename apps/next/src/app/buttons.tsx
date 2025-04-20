@@ -10,14 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+'use client';
+import { Button } from '@accelint/design-toolkit';
 
-export default function Home() {
+export function Buttons() {
   return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
+    <div>
+      <Button variant='primary'>Primary Button</Button>
+      <Button variant='critical'>Critical Button</Button>
+      <Button variant='primary' className='bg-sky-700 text-2xl text-white'>
+        Custom Button
+      </Button>
+    </div>
   );
 }

@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { Avatar } from './index';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
-}
+describe('Avatar', () => {
+  it('should render', () => {
+    render(<Avatar />);
+
+    expect(screen.getByRole('img')).toBeInTheDocument();
+  });
+});

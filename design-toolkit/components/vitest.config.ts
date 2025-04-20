@@ -10,14 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+import baseConfig from '@accelint/vitest-config/dom';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
-}
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    plugins: [],
+    test: {
+      globals: true,
+      setupFiles: './src/test/setup.ts',
+      environment: 'jsdom',
+    },
+  }),
+);

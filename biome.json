@@ -19,7 +19,7 @@
       "ignore": [".next"]
     },
     {
-      "include": ["packages/design-system/**"],
+      "include": ["packages/design-system/**", "design-toolkit/components/**"],
       "linter": {
         "rules": {
           "style": {

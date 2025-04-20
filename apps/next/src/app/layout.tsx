@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 import { Defaults } from './defaults';
 import { Theme } from './theme';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Next App',

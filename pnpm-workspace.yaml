@@ -2,3 +2,6 @@ packages:
   - "apps/*"
   - "packages/*"
   - "tooling/*"
+  - "design-toolkit/*"
+publicHoistPattern:
+  - "*storybook*"

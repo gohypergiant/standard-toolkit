@@ -10,14 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
-}
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [tailwindcss()],
+});

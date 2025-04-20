@@ -10,14 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
-
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
-}
+/** @type {Partial<import("design-toolkit/components/typedoc.mjs").TypeDocOptions>} */
+export default {
+  name: '@accelint/design-toolkit',
+};

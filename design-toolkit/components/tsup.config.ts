@@ -10,14 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions';
+import { defineConfig } from 'tsup';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
-}
+export default defineConfig({
+  esbuildPlugins: [
+    esbuildPluginFilePathExtensions({
+      esmExtension: 'js',
+    }),
+  ],
+  entry: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
+    '!**/__fixture__',
+  ],
+  bundle: true,
+  clean: true,
+  dts: true,
+  format: 'esm',
+  sourcemap: true,
+  splitting: true,
+  treeshake: true,
+});

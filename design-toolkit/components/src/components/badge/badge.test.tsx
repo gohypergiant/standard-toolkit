@@ -10,14 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from './buttons';
-import { Nav } from './nav';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { Badge, type BadgeProps } from './index';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <Buttons />
-    </>
-  );
+function setup({ children = 'Foo', ...rest }: Partial<BadgeProps> = {}) {
+  render(<Badge {...rest}>{children}</Badge>);
+
+  return {
+    ...rest,
+    children,
+  };
 }
+
+describe('Badge', () => {
+  it('should render', () => {
+    const { children } = setup();
+
+    expect(screen.getByText(`${children}`)).toBeInTheDocument();
+  });
+});
