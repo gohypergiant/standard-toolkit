@@ -11,6 +11,8 @@
  */
 
 import type { PropsWithChildren } from 'react';
+import type { DateValue, TimeValue } from 'react-aria-components';
+import type { DateFieldProps, TimeFieldProps } from '../../components';
 import type {
   ButtonProps,
   LinkButtonProps,
@@ -22,6 +24,7 @@ import type {
 } from '../../components/checkbox/types';
 import type { ChipGroupProps, ChipProps } from '../../components/chip/types';
 import type { ComboBoxProps } from '../../components/combo-box/types';
+import type { DateInputProps } from '../../components/date-input/types';
 import type { DialogProps } from '../../components/dialog/types';
 import type {
   DrawerProps,
@@ -90,6 +93,10 @@ export type DefaultsContext = DefaultsOf<{
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   ComboBox: ComboBoxProps<object>;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  DateField: DateFieldProps<DateValue>;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  DateInput: DateInputProps;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Dialog: DialogProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Drawer: DrawerProps;
@@ -157,6 +164,8 @@ export type DefaultsContext = DefaultsOf<{
   TextArea: TextAreaProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   TextField: TextFieldProps;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  TimeField: TimeFieldProps<TimeValue>;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   ToggleButton: ToggleButtonProps;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase

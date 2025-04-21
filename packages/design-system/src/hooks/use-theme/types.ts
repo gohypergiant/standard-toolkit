@@ -16,6 +16,8 @@ import type { ButtonClassNames } from '../../components/button/types';
 import type { CheckboxClassNames } from '../../components/checkbox/types';
 import type { ChipClassNames } from '../../components/chip/types';
 import type { ComboBoxClassNames } from '../../components/combo-box/types';
+import type { DateFieldClassNames } from '../../components/date-field/types';
+import type { DateInputClassNames } from '../../components/date-input/types';
 import type { DialogClassNames } from '../../components/dialog/types';
 import type { DrawerClassNames } from '../../components/drawer/types';
 import type { GroupClassNames } from '../../components/group/types';
@@ -34,6 +36,7 @@ import type { SwitchClassNames } from '../../components/switch/types';
 import type { TabsClassNames } from '../../components/tabs/types';
 import type { TextFieldClassNames } from '../../components/text-field/types';
 import type { TextAreaClassNames } from '../../components/textarea/types';
+import type { TimeFieldClassNames } from '../../components/time-field';
 import type { TooltipClassNames } from '../../components/tooltip/types';
 import type { TreeClassNames } from '../../components/tree/types';
 
@@ -58,6 +61,10 @@ export type ThemeContext = {
   Chip?: ChipClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   ComboBox?: ComboBoxClassNames;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  DateField?: DateFieldClassNames;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  DateInput?: DateInputClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Dialog?: DialogClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
@@ -96,6 +103,8 @@ export type ThemeContext = {
   TextArea?: TextAreaClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   TextField?: TextFieldClassNames;
+  // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
+  TimeField?: TimeFieldClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase
   Tooltip?: TooltipClassNames;
   // biome-ignore lint/style/useNamingConvention: component name should be PascalCase

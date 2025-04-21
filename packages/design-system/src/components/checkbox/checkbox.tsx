@@ -74,7 +74,7 @@ export const Checkbox = forwardRef(function Checkbox(
   );
 
   const style = useCallback(
-    ({ ...renderProps }: CheckboxRenderProps) =>
+    (renderProps: CheckboxRenderProps) =>
       inlineVars(checkboxStateVars, {
         ...renderProps,
         alignInput,
