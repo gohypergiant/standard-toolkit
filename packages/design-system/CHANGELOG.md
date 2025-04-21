@@ -1,5 +1,13 @@
 # @accelint/design-system
 
+## 0.8.0
+
+### Minor Changes
+
+- ac09864: add date, datetime and time components
+- d3a1543: allow react 19 as a valid peer dependency
+- a5197bd: adds optional rule lines to querybuilder rules
+
 ## 0.7.0
 
 ### Minor Changes
