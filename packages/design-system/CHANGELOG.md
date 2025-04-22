@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.8.1
+
+### Patch Changes
+
+- 111fa5f: change design-system semver range for react peer dependency
+
 ## 0.8.0
 
 ### Minor Changes
