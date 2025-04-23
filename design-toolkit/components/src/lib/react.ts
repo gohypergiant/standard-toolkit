@@ -32,6 +32,7 @@ export function containsExactChildren({
 
   const restrictionResults = childrenComponents.reduce(
     (acc, child) => ({
+      // biome-ignore lint/performance/noAccumulatingSpread: this is fine.
       ...acc,
       [child.type.displayName]: acc[child.type.displayName] - 1,
     }),
