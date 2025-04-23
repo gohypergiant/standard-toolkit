@@ -13,11 +13,11 @@
 import { type VariantProps, cva } from 'cva';
 import type * as React from 'react';
 import {
+  Tooltip as AriaTooltip,
+  type TooltipProps as AriaTooltipProps,
+  TooltipTrigger as AriaTooltipTrigger,
+  type TooltipTriggerComponentProps as AriaTooltipTriggerComponentProps,
   Focusable,
-  Tooltip as RACTooltip,
-  type TooltipProps as RACTooltipProps,
-  TooltipTrigger as RACTooltipTrigger,
-  type TooltipTriggerComponentProps as RACTooltipTriggerComponentProps,
 } from 'react-aria-components';
 import { containsExactChildren } from '../../lib/react';
 import { cn } from '../../lib/utils';
@@ -26,8 +26,8 @@ const tooltipStyles = cva(
   'flex max-w-[160px] items-center justify-center rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs break-words text-default-light shadow-elevation-overlay',
 );
 
-export type TooltipProps = RACTooltipProps;
-export type TooltipTriggerComponentProps = RACTooltipTriggerComponentProps;
+export type TooltipProps = AriaTooltipProps;
+export type TooltipTriggerComponentProps = AriaTooltipTriggerComponentProps;
 
 function Tooltip({ children, ...props }: TooltipTriggerComponentProps) {
   containsExactChildren({
@@ -40,9 +40,9 @@ function Tooltip({ children, ...props }: TooltipTriggerComponentProps) {
   });
 
   return (
-    <RACTooltipTrigger {...props}>
+    <AriaTooltipTrigger {...props}>
       <div>{children}</div>
-    </RACTooltipTrigger>
+    </AriaTooltipTrigger>
   );
 }
 Tooltip.displayName = 'Tooltip';
@@ -65,13 +65,13 @@ const TooltipBody = ({
   ...props
 }: TooltipProps) => {
   return (
-    <RACTooltip
+    <AriaTooltip
       {...props}
       className={cn(tooltipStyles({ className }))}
       offset={offset}
     >
       {children}
-    </RACTooltip>
+    </AriaTooltip>
   );
 };
 TooltipBody.displayName = 'Tooltip.Body';

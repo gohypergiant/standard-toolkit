@@ -58,7 +58,7 @@ export const Default: Story = {
 
 export const Link: Story = {
   render: (args) => (
-    <a className={Button.as(args)} href='#'>
+    <a className={Button.as(args)} href='/'>
       Link
     </a>
   ),
