@@ -14,6 +14,17 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Placeholder } from '../../icons/placeholder';
 import { Button } from './';
 
+function withRenderProps<T extends object, R>(
+  value: R | ((renderProps: T) => R),
+  values: T,
+) {
+  if (typeof value === 'function') {
+    return (value as (renderProps: T) => R)(values);
+  }
+
+  return value;
+}
+
 const meta: Meta<typeof Button> = {
   title: 'Design Toolkit/Components/Button',
   component: Button,
@@ -67,8 +78,12 @@ export const Link: Story = {
 export const ButtonWithLeftIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
-      <Placeholder />
-      {children}
+      {(renderProps) => (
+        <>
+          <Placeholder />
+          {withRenderProps(children, renderProps)}
+        </>
+      )}
     </Button>
   ),
 };
@@ -76,18 +91,12 @@ export const ButtonWithLeftIcon: Story = {
 export const ButtonWithRightIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
-      {children}
-      <Placeholder />
-    </Button>
-  ),
-};
-
-export const ButtonWithBothIcons: Story = {
-  render: ({ children, ...args }) => (
-    <Button {...args}>
-      <Placeholder />
-      {children}
-      <Placeholder />
+      {(renderProps) => (
+        <>
+          {withRenderProps(children, renderProps)}
+          <Placeholder />
+        </>
+      )}
     </Button>
   ),
 };
