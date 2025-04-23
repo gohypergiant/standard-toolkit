@@ -3,5 +3,3 @@ packages:
   - "packages/*"
   - "tooling/*"
   - "design-toolkit/*"
-publicHoistPattern:
-  - "*storybook*"
