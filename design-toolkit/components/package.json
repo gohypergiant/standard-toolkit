@@ -27,7 +27,7 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "rm -rf dist && NODE_OPTIONS=--max_old_space_size=8192 pnpm tsup && pnpm build:css --external react,react-dom",
+    "build": "pnpm tsup && pnpm build:css",
     "build:css": "npx @tailwindcss/cli -i ./src/index.css -o ./dist/styles.css",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
