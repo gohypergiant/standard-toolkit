@@ -12,11 +12,14 @@
 
 'use client';
 import { Button } from '@accelint/design-toolkit/button';
+import { Placeholder } from '@accelint/design-toolkit/icons';
 
 export function Buttons() {
   return (
-    <div>
-      <Button variant='primary'>Primary Button</Button>
+    <div className='p-m flex gap-m items-center'>
+      <Button variant='primary'>
+        <Placeholder /> Primary Button
+      </Button>
       <Button variant='critical'>Critical Button</Button>
       <Button
         variant='primary'

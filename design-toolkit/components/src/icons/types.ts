@@ -9,5 +9,5 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
-export type IconProps = React.HTMLProps<SVGSVGElement>;
+import type React from 'react';
+export interface IconProps extends React.HTMLProps<SVGSVGElement> {}

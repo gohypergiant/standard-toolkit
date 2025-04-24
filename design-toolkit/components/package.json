@@ -74,6 +74,13 @@
       },
       "default": "./dist/components/tooltip/index.js"
     },
+    "./icons": {
+      "import": {
+        "types": "./dist/icons/index.d.ts",
+        "default": "./dist/icons/index.js"
+      },
+      "default": "./dist/icons/index.js"
+    },
     "./styles": {
       "import": {
         "default": "./dist/index.css"
