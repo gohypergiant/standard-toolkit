@@ -6,9 +6,16 @@
     "@accelint/biome-config/linter"
   ],
   "files": {
-    "maxSize": 5242880,
     "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
-    "ignore": ["node_modules", ".turbo", "dist", "build", "coverage", ".next"]
+    "ignore": [
+      "node_modules",
+      ".turbo",
+      "dist",
+      "build",
+      "coverage",
+      ".next",
+      "storybook-static"
+    ]
   },
   "overrides": [
     {
@@ -21,7 +28,6 @@
     },
     {
       "include": ["packages/design-system/**", "design-toolkit/components/**"],
-      "ignore": ["storybook-static"],
       "linter": {
         "rules": {
           "style": {
