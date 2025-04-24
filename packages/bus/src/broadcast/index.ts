@@ -22,8 +22,7 @@ function noop() {}
  */
 export class Broadcaster {
   #channelName: string;
-  #sender: BroadcastChannel | null = null;
-  #receiver: BroadcastChannel | null = null;
+  #channel: BroadcastChannel | null = null;
   #listeners: Record<string, Listener[]> = {};
   #listenerCounter = 0;
 
@@ -57,10 +56,9 @@ export class Broadcaster {
       return;
     }
 
-    this.#sender = new BroadcastChannel(this.#channelName);
-    this.#receiver = new BroadcastChannel(this.#channelName);
-    this.#receiver.onmessage = this.#onMessage.bind(this);
-    this.#receiver.onmessageerror = this.#onError.bind(this);
+    this.#channel = new BroadcastChannel(this.#channelName);
+    this.#channel.onmessage = this.#onMessage.bind(this);
+    this.#channel.onmessageerror = this.#onError.bind(this);
   }
 
   /**
@@ -215,14 +213,18 @@ export class Broadcaster {
    * @param {T} payload - The event payload.
    */
   emit<T>(type: string, payload: T) {
-    if (!this.#sender) {
+    if (!this.#channel) {
       console.warn('Cannot emit: BroadcastChannel is not initialized.');
       return;
     }
 
     const message = { type, payload };
 
-    this.#sender.postMessage(message);
+    this.#channel.postMessage(message);
+
+    // NOTE: this allows the context that emitted the event to also listen for it
+    // @ts-expect-error
+    this.#channel.onmessage({ data: message });
   }
 
   /**
@@ -238,14 +240,9 @@ export class Broadcaster {
    * After calling this, no further messages will be received.
    */
   destroy() {
-    if (this.#sender) {
-      this.#sender.close();
-      this.#sender = null;
-    }
-
-    if (this.#receiver) {
-      this.#receiver.close();
-      this.#receiver = null;
+    if (this.#channel) {
+      this.#channel.close();
+      this.#channel = null;
     }
 
     Broadcaster.instance = null;
