@@ -1,11 +1,11 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+    "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
   "files": ["dist/**"],
