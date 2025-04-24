@@ -18,7 +18,7 @@ import {
 } from 'react-aria-components';
 import { cn } from '../../lib/utils';
 
-export const buttonStyles = cva(
+const buttonStyles = cva(
   'inline-flex cursor-pointer items-center justify-center font-bold whitespace-nowrap outline-none [--icon-size:20px]',
   {
     variants: {
@@ -76,7 +76,7 @@ export interface ButtonProps
   disabled?: boolean;
 }
 
-export const Button = ({
+const Button = ({
   className,
   variant,
   size,
@@ -103,3 +103,5 @@ Button.as = (
   props: VariantProps<typeof buttonStyles>,
   className?: string | string[],
 ) => cn(buttonStyles({ ...props, className }));
+
+export { Button };

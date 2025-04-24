@@ -13,7 +13,7 @@
 import { cn } from '../lib/utils';
 import type { IconProps } from './types';
 
-export const Placeholder = ({ className, ref, ...props }: IconProps) => (
+export const Add = ({ className, ref, ...props }: IconProps) => (
   <svg
     viewBox='0 0 24 24'
     fill='none'
@@ -27,9 +27,7 @@ export const Placeholder = ({ className, ref, ...props }: IconProps) => (
     ref={ref}
   >
     <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M2 17.7143V20C2 21.1046 2.89543 22 4 22H6.28571V20H4L4 17.7143H2ZM6.28571 2H4C2.89543 2 2 2.89543 2 4V6.28571H4V4L6.28571 4V2ZM2 14.2857H4V9.71429H2V14.2857ZM9.71429 2V4H14.2857V2H9.71429ZM17.7143 2V4H20V6.28571H22V4C22 2.89543 21.1046 2 20 2H17.7143ZM22 9.71429H20V14.2857H22V9.71429ZM22 17.7143H20V20H17.7143V22H20C21.1046 22 22 21.1046 22 20V17.7143ZM14.2857 22V20H9.71429V22H14.2857Z'
+      d='M20 10.9999C19 10.9999 13 11 13 11C13 11 13 4.99999 13 3.99999L11 3.99988C11 4.99988 11 11 11 11C11 11 4.99988 10.9999 3.99988 10.9999L3.99999 13C4.99999 13 11 13 11 13C11 13 11 18.9999 11 19.9999H13C13 18.9999 13 13 13 13C13 13 19 13 20 13V10.9999Z'
       fill='currentColor'
     />
   </svg>

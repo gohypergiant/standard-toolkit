@@ -10,4 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-export type IconProps = React.HTMLProps<SVGSVGElement>;
+import { cn } from '../lib/utils';
+import type { IconProps } from './types';
+
+export const Remove = ({ className, ref, ...props }: IconProps) => (
+  <svg
+    viewBox='0 0 24 24'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    aria-hidden='true'
+    className={cn(
+      '[height:var(--icon-size,--spacing-xl)] [width:var(--icon-size,--spacing-xl)] [color:var(--icon-color,currentColor)]',
+      className,
+    )}
+    {...props}
+    ref={ref}
+  >
+    <path d='M4.0001 11H19.9999V13H3.99989L4.0001 11Z' fill='currentColor' />
+  </svg>
+);

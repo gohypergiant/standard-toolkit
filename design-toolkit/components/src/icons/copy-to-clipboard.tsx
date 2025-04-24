@@ -13,7 +13,7 @@
 import { cn } from '../lib/utils';
 import type { IconProps } from './types';
 
-export const Placeholder = ({ className, ref, ...props }: IconProps) => (
+export const CopyToClipboard = ({ className, ref, ...props }: IconProps) => (
   <svg
     viewBox='0 0 24 24'
     fill='none'
@@ -27,9 +27,7 @@ export const Placeholder = ({ className, ref, ...props }: IconProps) => (
     ref={ref}
   >
     <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M2 17.7143V20C2 21.1046 2.89543 22 4 22H6.28571V20H4L4 17.7143H2ZM6.28571 2H4C2.89543 2 2 2.89543 2 4V6.28571H4V4L6.28571 4V2ZM2 14.2857H4V9.71429H2V14.2857ZM9.71429 2V4H14.2857V2H9.71429ZM17.7143 2V4H20V6.28571H22V4C22 2.89543 21.1046 2 20 2H17.7143ZM22 9.71429H20V14.2857H22V9.71429ZM22 17.7143H20V20H17.7143V22H20C21.1046 22 22 21.1046 22 20V17.7143ZM14.2857 22V20H9.71429V22H14.2857Z'
+      d='M14.626 3L5.37598 3C4.27598 3 3.62598 3.65 3.62598 4.75L3.62598 16H5.12598L5.12598 4.5L14.626 4.5V3ZM19.876 6L8.37598 6C7.27598 6 6.62598 6.65 6.62598 7.75L6.62598 19.25C6.62598 20.35 7.27598 21 8.37598 21L19.876 21C20.976 21 21.626 20.35 21.626 19.25L21.626 7.75C21.626 6.65 20.976 6 19.876 6ZM20.126 19.5L8.12598 19.5L8.12598 7.5L20.126 7.5L20.126 19.5Z'
       fill='currentColor'
     />
   </svg>

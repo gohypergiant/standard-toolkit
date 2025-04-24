@@ -9,5 +9,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { ToggleIconButton, type ToggleIconButtonProps } from './index';
 
-export type IconProps = React.HTMLProps<SVGSVGElement>;
+function setup({
+  children = 'Foo',
+  ...rest
+}: Partial<ToggleIconButtonProps> = {}) {
+  render(<ToggleIconButton {...rest}>{children}</ToggleIconButton>);
+
+  return {
+    ...rest,
+    children,
+  };
+}
+
+describe('Toggle Button', () => {
+  it('should render', () => {
+    const { children } = setup();
+
+    expect(screen.getByText(`${children}`)).toBeInTheDocument();
+  });
+});

@@ -12,23 +12,20 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { Placeholder } from '../../icons/placeholder';
-import { Button } from './index';
+import { Tooltip } from '../tooltip';
+import { ToggleIconButton } from './index';
 
-const meta: Meta<typeof Button> = {
-  title: 'Design System/Components/Button',
-  component: Button,
+const meta: Meta<typeof ToggleIconButton> = {
+  title: 'Design Toolkit/Components/Button/ToggleIconButton',
+  component: ToggleIconButton,
   args: {
     className: '',
-    children: 'Button',
+    children: 'ToggleIconButton',
     disabled: false,
     size: 'medium',
     variant: 'primary',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['primary', 'outline', 'flat', 'destructive', 'critical'],
-    },
     className: {
       control: 'text',
     },
@@ -37,50 +34,41 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
+      options: ['medium', 'small'],
+    },
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary'],
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof ToggleIconButton>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Button {...args}>{children}</Button>,
-};
-
-export const Link: Story = {
   render: (args) => (
-    <a className={Button.as(args)} href='#'>
-      Link
-    </a>
+    <ToggleIconButton {...args}>
+      <Placeholder />
+    </ToggleIconButton>
   ),
 };
 
-export const ButtonWithLeftIcon: Story = {
+export const WithText: Story = {
   render: ({ children, ...args }) => (
-    <Button {...args}>
-      <Placeholder />
-      {children}
-    </Button>
+    <ToggleIconButton {...args}>{children}</ToggleIconButton>
   ),
 };
 
-export const ButtonWithRightIcon: Story = {
-  render: ({ children, ...args }) => (
-    <Button {...args}>
-      {children}
-      <Placeholder />
-    </Button>
-  ),
-};
-
-export const ButtonWithBothIcons: Story = {
-  render: ({ children, ...args }) => (
-    <Button {...args}>
-      <Placeholder />
-      {children}
-      <Placeholder />
-    </Button>
+export const WithTooltip: Story = {
+  render: (args) => (
+    <Tooltip>
+      <Tooltip.Trigger>
+        <ToggleIconButton {...args}>
+          <Placeholder />
+        </ToggleIconButton>
+      </Tooltip.Trigger>
+      <Tooltip.Body>Tool label</Tooltip.Body>
+    </Tooltip>
   ),
 };

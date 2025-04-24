@@ -13,7 +13,7 @@
 import { cn } from '../lib/utils';
 import type { IconProps } from './types';
 
-export const Placeholder = ({ className, ref, ...props }: IconProps) => (
+export const Condense = ({ className, ref, ...props }: IconProps) => (
   <svg
     viewBox='0 0 24 24'
     fill='none'
@@ -26,11 +26,9 @@ export const Placeholder = ({ className, ref, ...props }: IconProps) => (
     {...props}
     ref={ref}
   >
-    <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M2 17.7143V20C2 21.1046 2.89543 22 4 22H6.28571V20H4L4 17.7143H2ZM6.28571 2H4C2.89543 2 2 2.89543 2 4V6.28571H4V4L6.28571 4V2ZM2 14.2857H4V9.71429H2V14.2857ZM9.71429 2V4H14.2857V2H9.71429ZM17.7143 2V4H20V6.28571H22V4C22 2.89543 21.1046 2 20 2H17.7143ZM22 9.71429H20V14.2857H22V9.71429ZM22 17.7143H20V20H17.7143V22H20C21.1046 22 22 21.1046 22 20V17.7143ZM14.2857 22V20H9.71429V22H14.2857Z'
-      fill='currentColor'
-    />
+    <path d='M15 5L15 19H13L13 5L15 5Z' fill='currentColor' />
+    <path d='M11 5L11 19H9L9 5L11 5Z' fill='currentColor' />
+    <path d='M7 5L7 19H5L5 5L7 5Z' fill='currentColor' />
+    <path d='M19 5L19 19H17L17 5L19 5Z' fill='currentColor' />
   </svg>
 );

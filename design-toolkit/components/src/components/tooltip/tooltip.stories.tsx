@@ -10,13 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+// Replace your-framework with the name of your framework
 import type { Meta, StoryObj } from '@storybook/react';
 import { Lasso } from '../../icons/lasso';
 import { Button } from '../button';
-import { Tooltip } from './';
+import { Tooltip } from './index';
 
 const meta: Meta<typeof Tooltip> = {
-  title: 'Design Toolkit/Components/Tooltip',
+  title: 'Design System/Components/Tooltip',
 };
 
 export default meta;

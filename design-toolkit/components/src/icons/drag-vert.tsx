@@ -13,7 +13,7 @@
 import { cn } from '../lib/utils';
 import type { IconProps } from './types';
 
-export const Placeholder = ({ className, ref, ...props }: IconProps) => (
+export const DragVert = ({ className, ref, ...props }: IconProps) => (
   <svg
     viewBox='0 0 24 24'
     fill='none'
@@ -27,9 +27,7 @@ export const Placeholder = ({ className, ref, ...props }: IconProps) => (
     ref={ref}
   >
     <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M2 17.7143V20C2 21.1046 2.89543 22 4 22H6.28571V20H4L4 17.7143H2ZM6.28571 2H4C2.89543 2 2 2.89543 2 4V6.28571H4V4L6.28571 4V2ZM2 14.2857H4V9.71429H2V14.2857ZM9.71429 2V4H14.2857V2H9.71429ZM17.7143 2V4H20V6.28571H22V4C22 2.89543 21.1046 2 20 2H17.7143ZM22 9.71429H20V14.2857H22V9.71429ZM22 17.7143H20V20H17.7143V22H20C21.1046 22 22 21.1046 22 20V17.7143ZM14.2857 22V20H9.71429V22H14.2857Z'
+      d='M11 19C11 20.1 10.1 21 9 21C7.9 21 7 20.1 7 19C7 17.9 7.9 17 9 17C10.1 17 11 17.9 11 19ZM9 10C7.9 10 7 10.9 7 12C7 13.1 7.9 14 9 14C10.1 14 11 13.1 11 12C11 10.9 10.1 10 9 10ZM9 3C7.9 3 7 3.9 7 5C7 6.1 7.9 7 9 7C10.1 7 11 6.1 11 5C11 3.9 10.1 3 9 3ZM15 7C16.1 7 17 6.1 17 5C17 3.9 16.1 3 15 3C13.9 3 13 3.9 13 5C13 6.1 13.9 7 15 7ZM15 10C13.9 10 13 10.9 13 12C13 13.1 13.9 14 15 14C16.1 14 17 13.1 17 12C17 10.9 16.1 10 15 10ZM15 17C13.9 17 13 17.9 13 19C13 20.1 13.9 21 15 21C16.1 21 17 20.1 17 19C17 17.9 16.1 17 15 17Z'
       fill='currentColor'
     />
   </svg>

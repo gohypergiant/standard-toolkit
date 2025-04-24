@@ -14,7 +14,7 @@
 
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { type VariantProps, cva } from 'cva';
-import type * as React from 'react';
+import * as React from 'react';
 import { Person } from '../../icons/person';
 import { cn } from '../../lib/utils';
 
@@ -56,7 +56,6 @@ const Avatar = ({
     ])}
   >
     <AvatarPrimitive.Root
-      role='img'
       className={cn(
         'pointer-events-none inline-block',
         avatarStyles({ size, className }),

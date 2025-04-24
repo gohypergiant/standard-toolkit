@@ -13,7 +13,7 @@
 import { cn } from '../lib/utils';
 import type { IconProps } from './types';
 
-export const Placeholder = ({ className, ref, ...props }: IconProps) => (
+export const PopBackIn = ({ className, ref, ...props }: IconProps) => (
   <svg
     viewBox='0 0 24 24'
     fill='none'
@@ -27,9 +27,11 @@ export const Placeholder = ({ className, ref, ...props }: IconProps) => (
     ref={ref}
   >
     <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M2 17.7143V20C2 21.1046 2.89543 22 4 22H6.28571V20H4L4 17.7143H2ZM6.28571 2H4C2.89543 2 2 2.89543 2 4V6.28571H4V4L6.28571 4V2ZM2 14.2857H4V9.71429H2V14.2857ZM9.71429 2V4H14.2857V2H9.71429ZM17.7143 2V4H20V6.28571H22V4C22 2.89543 21.1046 2 20 2H17.7143ZM22 9.71429H20V14.2857H22V9.71429ZM22 17.7143H20V20H17.7143V22H20C21.1046 22 22 21.1046 22 20V17.7143ZM14.2857 22V20H9.71429V22H14.2857Z'
+      d='M17.5 13V5.5H5.5V17.5H13V19H5.5C4 19 4 17.5 4 17.5V5.5C4 4 5.5 4 5.5 4H17.5C19 4 19 5.5 19 5.5V13H17.5Z'
+      fill='currentColor'
+    />
+    <path
+      d='M17.5 19.0001C17.1389 19.0001 15.3373 19.0092 15 19V17.5C15.5 17.4991 16.8642 17.5 17.5 17.5C17.5 17.1448 17.4921 15.3369 17.5 15H19C19 15.5 19 16.8147 19 17.5C19.3317 17.5 21.1685 17.4911 21.5 17.5V19C21.1732 19.0071 19.3428 19.0001 19.0001 19.0001C18.9782 19.3243 19.0042 21.1668 19 21.5H17.5C17.4987 21.1882 17.5 19.3349 17.5 19.0001Z'
       fill='currentColor'
     />
   </svg>

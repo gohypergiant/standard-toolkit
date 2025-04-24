@@ -10,53 +10,43 @@
  * governing permissions and limitations under the License.
  */
 
+// Replace your-framework with the name of your framework
 import type { Meta, StoryObj } from '@storybook/react';
+import { Link as LinkIcon } from '../../icons/link';
 import { Placeholder } from '../../icons/placeholder';
 import { Tooltip } from '../tooltip';
-import { ToggleButton } from './';
+import { FloatingButton } from './index';
 
-const meta: Meta<typeof ToggleButton> = {
-  title: 'Design Toolkit/Components/Button/ToggleButton',
-  component: ToggleButton,
+const meta: Meta<typeof FloatingButton> = {
+  title: 'Design System/Components/Button/Floating',
+  component: FloatingButton,
   args: {
     className: '',
-    children: 'ToggleIconButton',
-    disabled: false,
-    size: 'medium',
-    variant: 'primary',
+    isDisabled: false,
   },
   argTypes: {
     className: {
       control: 'text',
     },
-    children: {
-      control: 'text',
-    },
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
-    variant: {
-      control: 'select',
-      options: ['primary', 'secondary'],
-    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof ToggleButton>;
+type Story = StoryObj<typeof FloatingButton>;
 
 export const Default: Story = {
   render: (args) => (
-    <ToggleButton {...args}>
+    <FloatingButton {...args}>
       <Placeholder />
-    </ToggleButton>
+    </FloatingButton>
   ),
 };
 
-export const WithText: Story = {
-  render: ({ children, ...args }) => (
-    <ToggleButton {...args}>{children}</ToggleButton>
+export const Link: Story = {
+  render: (args) => (
+    <a className={FloatingButton.as(args)} href='#'>
+      <LinkIcon />
+    </a>
   ),
 };
 
@@ -64,9 +54,9 @@ export const WithTooltip: Story = {
   render: (args) => (
     <Tooltip>
       <Tooltip.Trigger>
-        <ToggleButton {...args}>
+        <FloatingButton {...args}>
           <Placeholder />
-        </ToggleButton>
+        </FloatingButton>
       </Tooltip.Trigger>
       <Tooltip.Body>Tool label</Tooltip.Body>
     </Tooltip>

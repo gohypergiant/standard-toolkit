@@ -13,7 +13,7 @@
 import { cn } from '../lib/utils';
 import type { IconProps } from './types';
 
-export const Placeholder = ({ className, ref, ...props }: IconProps) => (
+export const Loop = ({ className, ref, ...props }: IconProps) => (
   <svg
     viewBox='0 0 24 24'
     fill='none'
@@ -27,9 +27,19 @@ export const Placeholder = ({ className, ref, ...props }: IconProps) => (
     ref={ref}
   >
     <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M2 17.7143V20C2 21.1046 2.89543 22 4 22H6.28571V20H4L4 17.7143H2ZM6.28571 2H4C2.89543 2 2 2.89543 2 4V6.28571H4V4L6.28571 4V2ZM2 14.2857H4V9.71429H2V14.2857ZM9.71429 2V4H14.2857V2H9.71429ZM17.7143 2V4H20V6.28571H22V4C22 2.89543 21.1046 2 20 2H17.7143ZM22 9.71429H20V14.2857H22V9.71429ZM22 17.7143H20V20H17.7143V22H20C21.1046 22 22 21.1046 22 20V17.7143ZM14.2857 22V20H9.71429V22H14.2857Z'
+      d='M11.9958 1.90625L8.99727 4.36988L11.9958 6.83351L11.9958 1.90625Z'
+      fill='currentColor'
+    />
+    <path
+      d='M18.9999 11.9931C18.9999 8.21532 15.8879 5.11673 12.0041 5.11672V3.61672C16.6962 3.61673 20.4999 7.36694 20.4999 11.9931C20.4999 14.3062 19.5489 16.4003 18.0115 17.9161L16.9432 16.8628C18.2156 15.6148 18.9999 13.8895 18.9999 11.9931Z'
+      fill='currentColor'
+    />
+    <path
+      d='M12.0041 22.0937L15.0026 19.6674L12.0041 17.2411L12.0041 22.0937Z'
+      fill='currentColor'
+    />
+    <path
+      d='M5 12.1597C5 15.846 8.09022 18.9092 11.9958 18.9092V20.4092C7.30369 20.4092 3.5 16.7158 3.5 12.1597C3.5 9.8815 4.45104 7.81901 5.98865 6.32612L7.06533 7.37159C5.78565 8.60066 5 10.3009 5 12.1597Z'
       fill='currentColor'
     />
   </svg>

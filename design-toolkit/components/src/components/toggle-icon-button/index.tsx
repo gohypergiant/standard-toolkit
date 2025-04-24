@@ -18,7 +18,7 @@ import {
 } from 'react-aria-components';
 import { cn } from '../../lib/utils';
 
-const toggleButtonStyles = cva(
+const toggleIconButtonStyles = cva(
   'inline-flex cursor-pointer items-center justify-center bg-transparent outline-none hover:bg-interactive-hover-dark',
   {
     variants: {
@@ -45,23 +45,23 @@ const toggleButtonStyles = cva(
   },
 );
 
-export interface ToggleButtonProps
+export interface ToggleIconButtonProps
   extends Omit<AriaToggleButtonProps, 'disabled'>,
-    VariantProps<typeof toggleButtonStyles> {
+    VariantProps<typeof toggleIconButtonStyles> {
   disabled?: boolean;
 }
 
-const ToggleButton = ({
+const ToggleIconButton = ({
   className,
   size,
   variant,
   disabled = false,
   ...props
-}: ToggleButtonProps) => (
+}: ToggleIconButtonProps) => (
   <AriaToggleButton
     className={composeRenderProps(className, (className) =>
       cn(
-        toggleButtonStyles({
+        toggleIconButtonStyles({
           disabled,
           size,
           variant,
@@ -72,10 +72,10 @@ const ToggleButton = ({
     {...props}
   />
 );
-ToggleButton.displayName = 'ToggleIconButton';
-ToggleButton.as = (
-  props: VariantProps<typeof toggleButtonStyles>,
+ToggleIconButton.displayName = 'ToggleIconButton';
+ToggleIconButton.as = (
+  props: VariantProps<typeof toggleIconButtonStyles>,
   className?: string | string[],
-) => cn(toggleButtonStyles({ ...props, className }));
+) => cn(toggleIconButtonStyles({ ...props, className }));
 
-export { ToggleButton };
+export { ToggleIconButton };

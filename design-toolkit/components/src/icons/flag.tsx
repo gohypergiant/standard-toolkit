@@ -9,23 +9,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { ToggleButton, type ToggleButtonProps } from './';
 
-function setup({ children = 'Foo', ...rest }: Partial<ToggleButtonProps> = {}) {
-  render(<ToggleButton {...rest}>{children}</ToggleButton>);
+import { cn } from '../lib/utils';
+import type { IconProps } from './types';
 
-  return {
-    ...rest,
-    children,
-  };
-}
-
-describe('Toggle Button', () => {
-  it('should render', () => {
-    const { children } = setup();
-
-    expect(screen.getByText(`${children}`)).toBeInTheDocument();
-  });
-});
+export const Flag = ({ className, ref, ...props }: IconProps) => (
+  <svg
+    viewBox='0 0 24 24'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    aria-hidden='true'
+    className={cn(
+      '[height:var(--icon-size,--spacing-xl)] [width:var(--icon-size,--spacing-xl)] [color:var(--icon-color,currentColor)]',
+      className,
+    )}
+    {...props}
+    ref={ref}
+  >
+    <path
+      d='M7.00003 20H5.00006V5C5.00006 5 5.00006 4 6.00006 4C7.00006 4 19 4 19 4L15 9L19 14H7.00003V20Z'
+      fill='currentColor'
+    />
+  </svg>
+);

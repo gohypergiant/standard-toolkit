@@ -11,10 +11,9 @@
  */
 
 import { type VariantProps, cva } from 'cva';
-import type * as React from 'react';
 import { cn } from '../../lib/utils';
 
-export const badgeStyles = cva(
+const badgeStyles = cva(
   cn([
     'inline-flex h-l min-w-l items-center justify-center rounded-full border px-xs text-body-xs text-default-light empty:size-s empty:min-w-none empty:px-none',
     '[position:var(--badge-position,initial)] [inset:var(--badge-inset,initial)] empty:[inset:var(--badge-empty-inset,initial)]',
@@ -40,7 +39,7 @@ export type BadgeProps = VariantProps<typeof badgeStyles> &
     className?: string;
   };
 
-export const Badge = ({ className, variant, ...props }: BadgeProps) => (
+const Badge = ({ className, variant, ...props }: BadgeProps) => (
   <span
     className={cn(
       badgeStyles({
@@ -56,3 +55,5 @@ Badge.as = (
   props: VariantProps<typeof badgeStyles>,
   className?: string | string[],
 ) => cn(badgeStyles({ ...props, className }));
+
+export { Badge };

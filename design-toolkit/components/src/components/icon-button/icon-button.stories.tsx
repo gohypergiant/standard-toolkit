@@ -14,10 +14,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Link as LinkIcon } from '../../icons/link';
 import { Placeholder } from '../../icons/placeholder';
 import { Tooltip } from '../tooltip';
-import { IconButton } from './';
+import { IconButton } from './index';
 
 const meta: Meta<typeof IconButton> = {
-  title: 'Design Toolkit/Components/Button/Icon',
+  title: 'Design System/Components/Button/Icon',
   component: IconButton,
   args: {
     className: '',
@@ -57,7 +57,7 @@ export const Default: Story = {
 
 export const Link: Story = {
   render: (args) => (
-    <a className={IconButton.as(args)} href='/'>
+    <a className={IconButton.as(args)} href='#'>
       <LinkIcon />
     </a>
   ),
