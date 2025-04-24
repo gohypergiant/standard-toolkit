@@ -30,4 +30,32 @@ To demonstrate usage in a Nextjs app:
 pnpm --filter "*apps/next" run dev
 ```
 
+## Helpful extensions for VSCode
+If you use Visual Studio Code, there are some helpful extensions you can install when working with Tailwind and Biome.
 
+- [`Biome`](https://marketplace.visualstudio.com/items/?itemName=biomejs.biome)
+- [`Tailwind CSS Intellisense`](https://marketplace.visualstudio.com/items/?itemName=bradlc.vscode-tailwindcss)
+- [`Class Collapse`](https://marketplace.visualstudio.com/items/?itemName=Etsi0.class-collapse)
+
+Also add the following to your `settings.json` file for VSCode:
+```json
+    "editor.codeActionsOnSave": {
+        "quickfix.biome": "explicit"
+    },
+    "tailwindCSS.includeLanguages": {
+        "javascript": "javascript",
+        "javascriptreact": "javascriptreact",
+        "typescript": "typescript",
+        "typescriptreact": "typescriptreact",
+        "html": "html"
+    },
+    "tailwindCSS.experimental.classRegex": [
+        ["/\\*tw\\*/ '([^']*)'"],
+        ["cva\\(((?:[^()]|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+        ["cx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+        ["className\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+    ],
+    "files.associations": {
+        "*.css": "tailwindcss"
+    }
+```

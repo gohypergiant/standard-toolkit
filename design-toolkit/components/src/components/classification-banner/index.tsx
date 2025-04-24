@@ -15,7 +15,7 @@ import { type VariantProps, cva } from 'cva';
 import type { ReactNode } from 'react';
 
 const classificationBanner = cva(
-  'flex items-center justify-center text-header-m font-medium uppercase select-none',
+  'flex select-none items-center justify-center font-medium text-header-m uppercase',
   {
     variants: {
       variant: {
