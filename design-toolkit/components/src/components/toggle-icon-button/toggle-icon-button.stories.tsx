@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { Placeholder } from '@/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Placeholder } from '../../icons/placeholder';
 import { Tooltip } from '../tooltip';
 import { ToggleIconButton } from './index';
 

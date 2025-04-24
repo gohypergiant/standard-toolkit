@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
 import type { ReactNode } from 'react';
-import { cn } from '../../lib/utils';
 
 const classificationBanner = cva(
   'flex items-center justify-center text-header-m font-medium uppercase select-none',

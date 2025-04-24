@@ -9,14 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
+import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
   composeRenderProps,
 } from 'react-aria-components';
-import { cn } from '../../lib/utils';
 
 const buttonStyles = cva(
   'inline-flex cursor-pointer items-center justify-center font-bold whitespace-nowrap outline-none [--icon-size:20px]',
@@ -43,7 +42,7 @@ const buttonStyles = cva(
         xsmall:
           'min-h-[20px] gap-xxs px-s py-xs text-button-xs tracking-[0.5px] [--icon-size:10px]',
       },
-      disabled: {
+      isDisabled: {
         true: 'cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
         false: '',
       },
@@ -51,19 +50,19 @@ const buttonStyles = cva(
     compoundVariants: [
       {
         variant: 'outline',
-        disabled: true,
+        isDisabled: true,
         className:
           'cursor-not-allowed border-interactive-disabled bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
       },
       {
         variant: 'flat',
-        disabled: true,
+        isDisabled: true,
         className:
           'cursor-not-allowed bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
       },
     ],
     defaultVariants: {
-      disabled: false,
+      isDisabled: false,
       variant: 'primary',
       size: 'medium',
     },
@@ -71,16 +70,14 @@ const buttonStyles = cva(
 );
 
 export interface ButtonProps
-  extends Omit<AriaButtonProps, 'disabled'>,
-    VariantProps<typeof buttonStyles> {
-  disabled?: boolean;
-}
+  extends Omit<AriaButtonProps, 'isDisabled'>,
+    VariantProps<typeof buttonStyles> {}
 
 const Button = ({
   className,
+  isDisabled,
   variant,
   size,
-  disabled = false,
   ...props
 }: ButtonProps) => (
   <AriaButton
@@ -88,13 +85,14 @@ const Button = ({
       cn(
         'w-content',
         buttonStyles({
-          disabled,
+          isDisabled,
           variant,
           size,
           className,
         }),
       ),
     )}
+    isDisabled
     {...props}
   />
 );

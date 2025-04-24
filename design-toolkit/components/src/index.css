@@ -12,8 +12,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
-@plugin 'tailwindcss-react-aria-components';
-
+@plugin 'tailwindcss-react-aria-components' {
+  prefix: 'ai';
+}
 :root {
   --neutral-01: #ffffff;
   --neutral-02: #e6e6e6;
@@ -25,6 +26,8 @@
   --neutral-08: #2f2f31;
   --neutral-09: #222222;
   --neutral-10: #0b0b0b;
+
+  --neutral-11: #FF0000;
 
   --alpha-black-01: rgba(0, 0, 0, 0.08);
   --alpha-black-02: rgba(0, 0, 0, 0.4);

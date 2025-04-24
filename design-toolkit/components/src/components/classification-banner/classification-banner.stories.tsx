@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ClassificationBanner } from './index';
 
 const meta: Meta<typeof ClassificationBanner> = {
-  title: 'Design System/Components/ClassificationBanner',
+  title: 'Design Toolkit/Components/ClassificationBanner',
   component: ClassificationBanner,
   args: {
     className: '',

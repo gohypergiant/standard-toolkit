@@ -36,7 +36,7 @@ type Story = StoryObj<typeof Avatar>;
 export const Default: Story = {
   render: ({ children, ...args }) => (
     <Avatar
-      source='/avatar-example.jpeg'
+      source='/static/avatar-example.jpeg'
       alt='Colm Tuite'
       {...args}
       className='brightness-150 saturate-200 sepia-50'
@@ -48,7 +48,7 @@ export const WithBadge: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
       <Avatar
-        source='/avatar-example.jpeg'
+        source='/static/avatar-example.jpeg'
         alt='Colm Tuite'
         {...args}
         className='brightness-150 saturate-200 sepia-50'
@@ -57,7 +57,7 @@ export const WithBadge: Story = {
       </Avatar>
 
       <Avatar
-        source='/avatar-example.jpeg'
+        source='/static/avatar-example.jpeg'
         alt='Colm Tuite'
         {...args}
         className='brightness-150 saturate-200 sepia-50'
@@ -72,7 +72,7 @@ export const WithFallback: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
       <Avatar alt='Colm Tuite' {...args} />
-      <Avatar source='/avatar-example.jpeg' alt='Colm Tuite' {...args} />
+      <Avatar source='/static/avatar-example.jpeg' alt='Colm Tuite' {...args} />
       <Avatar alt='Colm Tuite' source={<>PX</>} {...args}>
         <Badge variant={'info'} />
       </Avatar>

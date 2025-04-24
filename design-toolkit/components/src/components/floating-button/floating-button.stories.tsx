@@ -10,15 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import { Link as LinkIcon } from '@/icons/link';
+import { Placeholder } from '@/icons/placeholder';
 // Replace your-framework with the name of your framework
 import type { Meta, StoryObj } from '@storybook/react';
-import { Link as LinkIcon } from '../../icons/link';
-import { Placeholder } from '../../icons/placeholder';
 import { Tooltip } from '../tooltip';
 import { FloatingButton } from './index';
 
 const meta: Meta<typeof FloatingButton> = {
-  title: 'Design System/Components/Button/Floating',
+  title: 'Design Toolkit/Components/Button/FloatingButton',
   component: FloatingButton,
   args: {
     className: '',
@@ -44,7 +44,7 @@ export const Default: Story = {
 
 export const Link: Story = {
   render: (args) => (
-    <a className={FloatingButton.as(args)} href='#'>
+    <a className={FloatingButton.as(args)} href='/'>
       <LinkIcon />
     </a>
   ),

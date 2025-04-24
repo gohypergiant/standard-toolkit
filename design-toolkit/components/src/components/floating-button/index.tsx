@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
   composeRenderProps,
 } from 'react-aria-components';
-import { cn } from '../../lib/utils';
 
 const floatingButtonStyles = cva([
   'absolute right-[20px] bottom-[20px] inline-flex size-[32px] cursor-pointer items-center justify-center rounded-full border border-interactive-default bg-transparent shadow-elevation-overlay outline-none',
@@ -25,7 +25,7 @@ const floatingButtonStyles = cva([
   'disabled:cursor-not-allowed disabled:border-interactive-disabled disabled:bg-interactive-disabled disabled:icon-color-disabled',
 ]);
 
-export type FloatingButtonProps = AriaButtonProps;
+export interface FloatingButtonProps extends AriaButtonProps {}
 
 const FloatingButton = ({ className, ...props }: FloatingButtonProps) => (
   <AriaButton

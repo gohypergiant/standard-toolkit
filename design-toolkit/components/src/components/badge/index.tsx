@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
-import { cn } from '../../lib/utils';
+import type React from 'react';
 
 const badgeStyles = cva(
   cn([
@@ -34,10 +35,11 @@ const badgeStyles = cva(
   },
 );
 
-export type BadgeProps = VariantProps<typeof badgeStyles> &
-  React.HTMLProps<HTMLSpanElement> & {
-    className?: string;
-  };
+export interface BadgeProps
+  extends VariantProps<typeof badgeStyles>,
+    React.HTMLProps<HTMLSpanElement> {
+  className?: string;
+}
 
 const Badge = ({ className, variant, ...props }: BadgeProps) => (
   <span

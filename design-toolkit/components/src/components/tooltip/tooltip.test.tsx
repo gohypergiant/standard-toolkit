@@ -12,13 +12,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { Tooltip, type TooltipProps } from './';
+import type { TooltipTriggerComponentProps } from 'react-aria-components';
+import { Tooltip } from './';
 
 function setup({
   children = 'Foo',
   isOpen = true,
   ...rest
-}: Partial<TooltipProps> = {}) {
+}: Partial<TooltipTriggerComponentProps> = {}) {
   render(
     <Tooltip isOpen={isOpen}>
       <Tooltip.Body>My tooltip</Tooltip.Body>

@@ -10,17 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+import { Placeholder } from '@/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Placeholder } from '../../icons/placeholder';
 import { Button } from './index';
 
 const meta: Meta<typeof Button> = {
-  title: 'Design System/Components/Button',
+  title: 'Design Toolkit/Components/Button',
   component: Button,
   args: {
     className: '',
     children: 'Button',
-    disabled: false,
+    isDisabled: false,
     size: 'medium',
     variant: 'primary',
   },
@@ -51,7 +51,7 @@ export const Default: Story = {
 
 export const Link: Story = {
   render: (args) => (
-    <a className={Button.as(args)} href='#'>
+    <a className={Button.as(args)} href='/'>
       Link
     </a>
   ),

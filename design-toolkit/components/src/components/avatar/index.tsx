@@ -11,12 +11,11 @@
  */
 
 'use client';
-
+import { Person } from '@/icons/person';
+import { cn } from '@/lib/utils';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { type VariantProps, cva } from 'cva';
-import * as React from 'react';
-import { Person } from '../../icons/person';
-import { cn } from '../../lib/utils';
+import type React from 'react';
 
 const avatarStyles = cva(
   'flex items-center justify-center overflow-hidden rounded-full bg-surface-overlay text-default-dark',
@@ -33,12 +32,13 @@ const avatarStyles = cva(
   },
 );
 
-type AvatarProps = React.ComponentProps<typeof AvatarPrimitive.Image> &
-  VariantProps<typeof avatarStyles> & {
-    fallback?: React.ReactNode;
-    fallbackDelay?: number;
-    source?: string | React.ReactNode;
-  };
+interface AvatarProps
+  extends React.ComponentProps<typeof AvatarPrimitive.Image>,
+    VariantProps<typeof avatarStyles> {
+  fallback?: React.ReactNode;
+  fallbackDelay?: number;
+  source?: string | React.ReactNode;
+}
 
 const Avatar = ({
   className,
