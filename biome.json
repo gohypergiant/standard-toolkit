@@ -21,6 +21,7 @@
     },
     {
       "include": ["packages/design-system/**", "design-toolkit/components/**"],
+      "ignore": ["storybook-static"],
       "linter": {
         "rules": {
           "style": {
