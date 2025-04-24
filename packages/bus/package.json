@@ -1,6 +1,6 @@
 {
-  "name": "@accelint/temporal",
-  "version": "0.1.0",
+  "name": "@accelint/bus",
+  "version": "0.0.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -24,7 +24,7 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
     "dev": "pnpm tsc --watch",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/temporal",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/bus",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
