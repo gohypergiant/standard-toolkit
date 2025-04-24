@@ -11,14 +11,17 @@
  */
 
 'use client';
-import { Button } from '@accelint/design-toolkit';
+import { Button } from '@accelint/design-toolkit/button';
 
 export function Buttons() {
   return (
     <div>
       <Button variant='primary'>Primary Button</Button>
       <Button variant='critical'>Critical Button</Button>
-      <Button variant='primary' className='bg-sky-700 text-2xl text-white'>
+      <Button
+        variant='primary'
+        className='bg-advisory-bold hover:bg-advisory-hover text-interactive-default'
+      >
         Custom Button
       </Button>
     </div>

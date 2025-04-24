@@ -16,8 +16,8 @@ import type React from 'react';
 import {
   Focusable,
   Tooltip as RACTooltip,
+  type TooltipProps as RACTooltipProps,
   TooltipTrigger as RACTooltipTrigger,
-  type TooltipProps,
   type TooltipTriggerComponentProps,
 } from 'react-aria-components';
 
@@ -25,7 +25,9 @@ const tooltipStyles = cva(
   'flex max-w-[160px] items-center justify-center rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs break-words text-default-light shadow-elevation-overlay',
 );
 
-function Tooltip({ children, ...props }: TooltipTriggerComponentProps) {
+export interface TooltipProps extends TooltipTriggerComponentProps {}
+
+export function Tooltip({ children, ...props }: TooltipProps) {
   containsExactChildren({
     children,
     componentName: Tooltip.displayName,
@@ -47,19 +49,22 @@ Tooltip.as = (
   className?: string | string[],
 ) => cn(tooltipStyles({ ...props, className }));
 
-const TooltipTrigger = ({
-  children,
-}: React.ComponentProps<typeof Focusable>) => {
-  return <Focusable>{children}</Focusable>;
+export interface TooltipTriggerProps
+  extends React.ComponentProps<typeof Focusable> {}
+
+export const TooltipTrigger = ({ children, ...props }: TooltipTriggerProps) => {
+  return <Focusable {...props}>{children}</Focusable>;
 };
 TooltipTrigger.displayName = 'Tooltip.Trigger';
 
-const TooltipBody = ({
+export interface TooltipBodyProps extends RACTooltipProps {}
+
+export const TooltipBody = ({
   children,
   className,
   offset = 5,
   ...props
-}: TooltipProps) => {
+}: TooltipBodyProps) => {
   return (
     <RACTooltip
       {...props}
@@ -74,5 +79,3 @@ TooltipBody.displayName = 'Tooltip.Body';
 
 Tooltip.Trigger = TooltipTrigger;
 Tooltip.Body = TooltipBody;
-
-export { Tooltip };

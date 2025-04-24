@@ -51,7 +51,7 @@ export interface ToggleIconButtonProps
   disabled?: boolean;
 }
 
-const ToggleIconButton = ({
+export const ToggleIconButton = ({
   className,
   size,
   variant,
@@ -77,5 +77,3 @@ ToggleIconButton.as = (
   props: VariantProps<typeof toggleIconButtonStyles>,
   className?: string | string[],
 ) => cn(toggleIconButtonStyles({ ...props, className }));
-
-export { ToggleIconButton };

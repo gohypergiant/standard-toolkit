@@ -41,7 +41,7 @@ export interface BadgeProps
   className?: string;
 }
 
-const Badge = ({ className, variant, ...props }: BadgeProps) => (
+export const Badge = ({ className, variant, ...props }: BadgeProps) => (
   <span
     className={cn(
       badgeStyles({
@@ -57,5 +57,3 @@ Badge.as = (
   props: VariantProps<typeof badgeStyles>,
   className?: string | string[],
 ) => cn(badgeStyles({ ...props, className }));
-
-export { Badge };

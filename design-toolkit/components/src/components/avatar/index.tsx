@@ -32,7 +32,7 @@ const avatarStyles = cva(
   },
 );
 
-interface AvatarProps
+export interface AvatarProps
   extends React.ComponentProps<typeof AvatarPrimitive.Image>,
     VariantProps<typeof avatarStyles> {
   fallback?: React.ReactNode;
@@ -40,7 +40,7 @@ interface AvatarProps
   source?: string | React.ReactNode;
 }
 
-const Avatar = ({
+export const Avatar = ({
   className,
   children,
   fallback,
@@ -84,5 +84,3 @@ Avatar.as = (
   props: VariantProps<typeof avatarStyles>,
   className?: string | string[],
 ) => cn(avatarStyles({ ...props, className }));
-
-export { Avatar };

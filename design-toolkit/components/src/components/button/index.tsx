@@ -73,7 +73,7 @@ export interface ButtonProps
   extends Omit<AriaButtonProps, 'isDisabled'>,
     VariantProps<typeof buttonStyles> {}
 
-const Button = ({
+export const Button = ({
   className,
   isDisabled,
   variant,
@@ -101,5 +101,3 @@ Button.as = (
   props: VariantProps<typeof buttonStyles>,
   className?: string | string[],
 ) => cn(buttonStyles({ ...props, className }));
-
-export { Button };

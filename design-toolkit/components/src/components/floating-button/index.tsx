@@ -27,7 +27,10 @@ const floatingButtonStyles = cva([
 
 export interface FloatingButtonProps extends AriaButtonProps {}
 
-const FloatingButton = ({ className, ...props }: FloatingButtonProps) => (
+export const FloatingButton = ({
+  className,
+  ...props
+}: FloatingButtonProps) => (
   <AriaButton
     className={composeRenderProps(className, (className) =>
       cn(
@@ -44,5 +47,3 @@ FloatingButton.as = (
   props: VariantProps<typeof floatingButtonStyles>,
   className?: string | string[],
 ) => cn(floatingButtonStyles({ ...props, className }));
-
-export { FloatingButton };

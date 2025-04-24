@@ -49,7 +49,7 @@ export interface IconButtonProps
   disabled?: boolean;
 }
 
-const IconButton = ({
+export const IconButton = ({
   className,
   size,
   variant,
@@ -75,5 +75,3 @@ IconButton.as = (
   props: VariantProps<typeof iconButtonStyles>,
   className?: string | string[],
 ) => cn(iconButtonStyles({ ...props, className }));
-
-export { IconButton };

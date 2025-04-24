@@ -44,7 +44,7 @@ export interface ClassificationBannerProps
   children?: ReactNode;
 }
 
-const ClassificationBanner = ({
+export const ClassificationBanner = ({
   className,
   variant,
   ...props
@@ -64,5 +64,3 @@ ClassificationBanner.as = (
   props: VariantProps<typeof classificationBanner>,
   className?: string | string[],
 ) => cn(classificationBanner({ ...props, className }));
-
-export { ClassificationBanner };
