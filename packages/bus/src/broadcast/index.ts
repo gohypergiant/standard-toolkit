@@ -13,20 +13,13 @@
 import { DEFAULT_CONFIG } from './constants';
 import type { BroadcastConfig, Listener, Payload } from './types';
 
-function noop() {}
-
-/**
- * Broadcaster class built off of the TabsBroadcast npm package.
- * Provides a singleton event manager using BroadcastChannel,
- * supports targeted messages and strongly typed event payloads.
- */
-export class Broadcaster {
+export class Broadcast {
   #channelName: string;
   #channel: BroadcastChannel | null = null;
   #listeners: Record<string, Listener[]> = {};
   #listenerCounter = 0;
 
-  private static instance: Broadcaster | null = null;
+  private static instance: Broadcast | null = null;
 
   constructor(config?: BroadcastConfig) {
     this.#channelName = config?.channelName ?? DEFAULT_CONFIG.channelName;
@@ -40,11 +33,11 @@ export class Broadcaster {
    * @returns Singleton instance of Broadcaster.
    */
   static getInstance(config?: BroadcastConfig) {
-    if (!Broadcaster.instance) {
-      Broadcaster.instance = new Broadcaster(config);
+    if (!Broadcast.instance) {
+      Broadcast.instance = new Broadcast(config);
     }
 
-    return Broadcaster.instance;
+    return Broadcast.instance;
   }
 
   /**
@@ -52,10 +45,6 @@ export class Broadcaster {
    * @private
    */
   #init() {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
     this.#channel = new BroadcastChannel(this.#channelName);
     this.#channel.onmessage = this.#onMessage.bind(this);
     this.#channel.onmessageerror = this.#onError.bind(this);
@@ -122,16 +111,12 @@ export class Broadcaster {
    * @returns {Listener[]} The listeners for said event.
    * @private
    */
-  #checkOrAddListener(type: string) {
-    const handler = this.#listeners[type];
-
-    if (!handler) {
+  #addListener<T>(type: string, args: Listener<T>) {
+    if (!this.#listeners[type]) {
       this.#listeners[type] = [];
-
-      return this.#listeners[type];
     }
 
-    return handler;
+    this.#listeners[type].push(args);
   }
   /**
    * Register a callback to be executed when a message of the specified event type is received.
@@ -142,26 +127,8 @@ export class Broadcaster {
   on<T>(type: string, callback: (data: Payload<T>) => void) {
     const id = this.#listenerCounter++;
 
-    this.#checkOrAddListener(type).push({ callback, id, once: false });
+    this.#addListener(type, { callback, id, once: false });
     return () => this.#removeListener(type, id);
-  }
-
-  /**
-   * Register multiple callbacks for specified event types.
-   * @param {[string, (data: Payload<T>) => void][]} list
-   * @returns {() => void[]} Array of unsubscribe functions.
-   */
-  onList<T>(list: [string, (data: Payload<T>) => void][]) {
-    return list.map(([type, callback]) => {
-      if (!type || !callback) {
-        return noop;
-      }
-
-      const id = this.#listenerCounter++;
-
-      this.#checkOrAddListener(type).push({ callback, id, once: false });
-      return () => this.#removeListener(type, id);
-    });
   }
 
   /**
@@ -173,26 +140,8 @@ export class Broadcaster {
   once<T>(type: string, callback: (data: Payload<T>) => void) {
     const id = this.#listenerCounter++;
 
-    this.#checkOrAddListener(type).push({ callback, id, once: true });
+    this.#addListener(type, { callback, id, once: true });
     return () => this.#removeListener(type, id);
-  }
-
-  /**
-   * Register multiple one-time callbacks for specified event types.
-   * @param {[string, (data: Payload<T>) => void][]} list - Array of tuples [event type, callback].
-   * @returns {() => void[]} Array of unsubscribe functions.
-   */
-  onceList<T>(list: [string, (data: Payload<T>) => void][]) {
-    return list.map(([type, callback]) => {
-      if (!type || !callback) {
-        return noop;
-      }
-
-      const id = this.#listenerCounter++;
-
-      this.#checkOrAddListener(type).push({ callback, id, once: true });
-      return () => this.#removeListener(type, id);
-    });
   }
 
   /**
@@ -245,7 +194,9 @@ export class Broadcaster {
       this.#channel = null;
     }
 
-    Broadcaster.instance = null;
+    this.#listeners = {};
+    this.#listenerCounter = 0;
+    Broadcast.instance = null;
   }
 
   /**
