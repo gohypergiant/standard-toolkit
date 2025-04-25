@@ -12,7 +12,6 @@
 
 'use client';
 
-import '@accelint/design-system/styles';
 import { ThemeProvider, bodies, families } from '@accelint/design-system';
 import { clsx } from 'clsx';
 import type { PropsWithChildren } from 'react';
