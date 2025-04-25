@@ -10,14 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { BusExample } from './bus';
-import { Nav } from './nav';
+import { BusExample } from '../bus';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <BusExample />
-    </>
-  );
+export default function Page() {
+  return <BusExample />;
 }

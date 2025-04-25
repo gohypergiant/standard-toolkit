@@ -10,14 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import { BusExample } from './bus';
-import { Nav } from './nav';
+import { Broadcast } from '@accelint/bus';
 
-export default function Home() {
-  return (
-    <>
-      <Nav />
-      <BusExample />
-    </>
-  );
+const bus = Broadcast.getInstance();
+
+let value = 0;
+
+function inc() {
+  value++;
+
+  console.log('value: ', value);
 }
+
+bus.on('inc', inc);
