@@ -32,13 +32,13 @@ const toggleIconButtonStyles = cva(
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
-      disabled: {
+      isDisabled: {
         true: 'icon-color-disabled cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
         false: '',
       },
     },
     defaultVariants: {
-      disabled: false,
+      isDisabled: false,
       size: 'medium',
       variant: 'primary',
     },
@@ -46,29 +46,30 @@ const toggleIconButtonStyles = cva(
 );
 
 export interface ToggleIconButtonProps
-  extends Omit<AriaToggleButtonProps, 'disabled'>,
+  extends Omit<AriaToggleButtonProps, 'isDisabled'>,
     VariantProps<typeof toggleIconButtonStyles> {
-  disabled?: boolean;
+  isDisabled?: boolean;
 }
 
 export const ToggleIconButton = ({
   className,
   size,
   variant,
-  disabled = false,
+  isDisabled = false,
   ...props
 }: ToggleIconButtonProps) => (
   <AriaToggleButton
     className={composeRenderProps(className, (className) =>
       cn(
         toggleIconButtonStyles({
-          disabled,
+          isDisabled,
           size,
           variant,
           className,
         }),
       ),
     )}
+    isDisabled={isDisabled}
     {...props}
   />
 );

@@ -11,10 +11,16 @@
  */
 
 import { type ClassValue, clsx } from 'clsx';
-import { extendTailwindMerge } from 'tailwind-merge';
+import { extendTailwindMerge, validators } from 'tailwind-merge';
 
-export const twMerge = extendTailwindMerge({
+type AdditionalClassGroupIds = 'icon-color' | 'icon-size';
+
+export const twMerge = extendTailwindMerge<AdditionalClassGroupIds>({
   extend: {
+    classGroups: {
+      'icon-color': [{ 'icon-color': ['', validators.isAny] }],
+      'icon-size': [{ 'icon-size': ['', validators.isAny] }],
+    },
     theme: {
       color: [
         'current',

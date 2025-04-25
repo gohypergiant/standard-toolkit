@@ -19,24 +19,25 @@ import {
 import { cn } from '../../lib/utils';
 
 const iconButtonStyles = cva(
-  'inline-flex cursor-pointer items-center justify-center bg-transparent outline-none hover:bg-interactive-hover-dark',
+  'inline-flex cursor-pointer items-center justify-center ai-pressed:bg-interactive-hover-dark bg-transparent outline-none hover:bg-interactive-hover-dark',
   {
     variants: {
       variant: {
         primary: 'icon-color-default-light',
-        secondary: 'icon-color-default-dark hover:icon-color-default-light',
+        secondary:
+          'icon-color-default-dark hover:icon-color-default-light ai-pressed:icon-color-default-light',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
-      disabled: {
-        true: 'icon-color-disabled cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
+      isDisabled: {
+        true: 'icon-color-disabled cursor-not-allowed ai-pressed:bg-transparent bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
         false: '',
       },
     },
     defaultVariants: {
-      disabled: false,
+      isDisabled: false,
       size: 'medium',
       variant: 'primary',
     },
@@ -44,29 +45,30 @@ const iconButtonStyles = cva(
 );
 
 export interface IconButtonProps
-  extends Omit<AriaButtonProps, 'disabled'>,
+  extends Omit<AriaButtonProps, 'isDisabled'>,
     VariantProps<typeof iconButtonStyles> {
-  disabled?: boolean;
+  isDisabled?: boolean;
 }
 
 export const IconButton = ({
   className,
   size,
   variant,
-  disabled = false,
+  isDisabled = false,
   ...props
 }: IconButtonProps) => (
   <AriaButton
     className={composeRenderProps(className, (className) =>
       cn(
         iconButtonStyles({
-          disabled,
+          isDisabled,
           size,
           variant,
           className,
         }),
       ),
     )}
+    isDisabled={isDisabled}
     {...props}
   />
 );

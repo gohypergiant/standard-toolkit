@@ -22,7 +22,7 @@ const meta: Meta<typeof IconButton> = {
   args: {
     className: '',
     children: 'IconButton',
-    disabled: false,
+    isDisabled: false,
     size: 'medium',
     variant: 'primary',
   },

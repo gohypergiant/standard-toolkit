@@ -18,17 +18,34 @@ import {
   composeRenderProps,
 } from 'react-aria-components';
 
-const floatingButtonStyles = cva([
-  'absolute right-[20px] bottom-[20px] inline-flex size-[32px] cursor-pointer items-center justify-center rounded-full border border-interactive-default bg-transparent shadow-elevation-overlay outline-none',
-  'icon-color-interactive-default [--icon-size:var(--spacing-xl)]',
-  'hover:icon-color-interactive-hover hover:border-interactive-hover hover:bg-interactive-hover-dark',
-  'disabled:icon-color-disabled disabled:cursor-not-allowed disabled:border-interactive-disabled disabled:bg-interactive-disabled',
-]);
+const floatingButtonStyles = cva(
+  [
+    'absolute right-[20px] bottom-[20px] inline-flex size-[32px] cursor-pointer items-center justify-center rounded-full border border-interactive-default bg-transparent shadow-elevation-overlay outline-none',
+    'icon-color-interactive-default [--icon-size:var(--spacing-xl)]',
+    'hover:icon-color-interactive-hover hover:border-interactive-hover hover:bg-interactive-hover-dark',
+    '',
+  ],
+  {
+    variants: {
+      isDisabled: {
+        true: 'icon-color-disabled hover:icon-color-disabled cursor-not-allowed border-interactive-disabled bg-interactive-disabled hover:border-interactive-disabled hover:bg-interactive-disabled',
+        false: '',
+      },
+    },
+    defaultVariants: {
+      isDisabled: false,
+    },
+  },
+);
 
-export interface FloatingButtonProps extends AriaButtonProps {}
+export interface FloatingButtonProps
+  extends Omit<AriaButtonProps, 'isDisabled'> {
+  isDisabled: boolean;
+}
 
 export const FloatingButton = ({
   className,
+  isDisabled,
   ...props
 }: FloatingButtonProps) => (
   <AriaButton
@@ -36,9 +53,11 @@ export const FloatingButton = ({
       cn(
         floatingButtonStyles({
           className,
+          isDisabled,
         }),
       ),
     )}
+    isDisabled={isDisabled}
     {...props}
   />
 );

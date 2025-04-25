@@ -21,7 +21,7 @@ const meta: Meta<typeof ToggleIconButton> = {
   args: {
     className: '',
     children: 'ToggleIconButton',
-    disabled: false,
+    isDisabled: false,
     size: 'medium',
     variant: 'primary',
   },
