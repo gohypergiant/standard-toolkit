@@ -60,6 +60,7 @@ export const Avatar = ({
         'pointer-events-none inline-block',
         avatarStyles({ size, className }),
       )}
+      role='img'
     >
       {typeof source === 'string' && (
         <AvatarPrimitive.Image
