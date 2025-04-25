@@ -27,7 +27,12 @@ const tooltipStyles = cva(
 
 export interface TooltipProps extends TooltipTriggerComponentProps {}
 
-export function Tooltip({ children, ...props }: TooltipProps) {
+export function Tooltip({
+  children,
+  closeDelay = 0,
+  delay = 400,
+  ...props
+}: TooltipProps) {
   containsExactChildren({
     children,
     componentName: Tooltip.displayName,
@@ -38,7 +43,7 @@ export function Tooltip({ children, ...props }: TooltipProps) {
   });
 
   return (
-    <RACTooltipTrigger {...props}>
+    <RACTooltipTrigger closeDelay={closeDelay} delay={delay} {...props}>
       <div>{children}</div>
     </RACTooltipTrigger>
   );

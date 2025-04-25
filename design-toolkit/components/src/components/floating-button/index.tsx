@@ -21,8 +21,8 @@ import {
 const floatingButtonStyles = cva(
   [
     'absolute right-[20px] bottom-[20px] inline-flex size-[32px] cursor-pointer items-center justify-center rounded-full border border-interactive-default bg-transparent shadow-elevation-overlay outline-none',
-    'icon-color-interactive-default [--icon-size:var(--spacing-xl)]',
-    'hover:icon-color-interactive-hover hover:border-interactive-hover hover:bg-interactive-hover-dark',
+    'icon-color-default-dark [--icon-size:var(--spacing-xl)]',
+    'hover:icon-color-default-light hover:border-interactive-hover hover:bg-interactive-hover-dark',
     '',
   ],
   {

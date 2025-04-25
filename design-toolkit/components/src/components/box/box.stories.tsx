@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Box } from './index';
 
 const meta: Meta<typeof Box> = {
-  title: 'Layout/Box',
+  title: 'Layout [IN PROGRESS]/Box',
   component: Box,
 };
 
