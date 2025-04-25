@@ -16,8 +16,19 @@ import '../src/index.css';
 const preview: Preview = {
   parameters: {
     backgrounds: {
-      values: [{ name: 'Dark', value: '#0b0b0b' }],
+      values: [
+        { name: 'Dark', value: '#0b0b0b' },
+        { name: 'Black', value: '#000000' },
+      ],
       default: 'dark',
+    },
+    layout: 'centered',
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: ['Foundation', 'Layout', 'Components'],
+        locales: 'en-US',
+      },
     },
   },
   initialGlobals: {

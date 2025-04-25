@@ -18,7 +18,7 @@ import {
 } from 'react-aria-components';
 
 const buttonStyles = cva(
-  'inline-flex cursor-pointer items-center justify-center whitespace-nowrap font-bold outline-none [--icon-size:20px]',
+  'inline-flex cursor-pointer items-center justify-center whitespace-nowrap outline-none [--icon-size:20px]',
   {
     variants: {
       variant: {

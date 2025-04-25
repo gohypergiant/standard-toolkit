@@ -24,9 +24,9 @@ const toggleIconButtonStyles = cva(
     variants: {
       variant: {
         primary:
-          'icon-color-default-light selected:icon-color-highlight selected:hover:bg-highlight-subtle',
+          'icon-color-default-light ai-selected:icon-color-highlight ai-selected:hover:bg-highlight-subtle',
         secondary:
-          'icon-color-default-dark hover:icon-color-default-light selected:icon-color-highlight selected:hover:bg-highlight-subtle',
+          'icon-color-default-dark hover:icon-color-default-light ai-selected:icon-color-highlight ai-selected:hover:bg-highlight-subtle',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',

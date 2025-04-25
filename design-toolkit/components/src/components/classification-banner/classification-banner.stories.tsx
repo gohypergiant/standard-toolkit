@@ -14,11 +14,14 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ClassificationBanner } from './index';
 
 const meta: Meta<typeof ClassificationBanner> = {
-  title: 'Design Toolkit/Components/ClassificationBanner',
+  title: 'Components/ClassificationBanner',
   component: ClassificationBanner,
   args: {
     className: '',
     children: '',
+  },
+  parameters: {
+    layout: 'fullscreen',
   },
 };
 
@@ -27,11 +30,7 @@ type Story = StoryObj<typeof ClassificationBanner>;
 
 export const Missing: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner
-      variant='missing'
-      {...args}
-      className='bg-advisory-bold p-oversized text-advisory-hover'
-    >
+    <ClassificationBanner variant='missing' {...args}>
       {children}
     </ClassificationBanner>
   ),

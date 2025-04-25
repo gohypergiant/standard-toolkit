@@ -18,7 +18,7 @@ import { Tooltip } from '../tooltip';
 import { FloatingButton } from './index';
 
 const meta: Meta<typeof FloatingButton> = {
-  title: 'Design Toolkit/Components/Button/FloatingButton',
+  title: 'Components/Button/FloatingButton',
   component: FloatingButton,
   args: {
     className: '',

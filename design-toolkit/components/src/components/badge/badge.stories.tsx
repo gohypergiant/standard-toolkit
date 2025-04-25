@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from './index';
 
 const meta: Meta<typeof Badge> = {
-  title: 'Design Toolkit/Components/Badge',
+  title: 'Components/Badge',
   component: Badge,
   args: {
     className: '',

@@ -16,7 +16,7 @@ import { Tooltip } from '../tooltip';
 import { ToggleIconButton } from './index';
 
 const meta: Meta<typeof ToggleIconButton> = {
-  title: 'Design Toolkit/Components/Button/ToggleIconButton',
+  title: 'Components/Button/ToggleIconButton',
   component: ToggleIconButton,
   args: {
     className: '',
@@ -51,12 +51,6 @@ export const Default: Story = {
     <ToggleIconButton {...args}>
       <Placeholder />
     </ToggleIconButton>
-  ),
-};
-
-export const WithText: Story = {
-  render: ({ children, ...args }) => (
-    <ToggleIconButton {...args}>{children}</ToggleIconButton>
   ),
 };
 

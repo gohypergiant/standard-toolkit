@@ -14,13 +14,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Box } from './index';
 
 const meta: Meta<typeof Box> = {
-  title: 'Design System/Layout/Box',
+  title: 'Layout/Box',
   component: Box,
 };
 
 export default meta;
 type Story = StoryObj<typeof Box>;
 
-export const FirstStory: Story = {
+export const Default: Story = {
   render: (args) => <Box {...args}>This is a simple box.</Box>,
 };

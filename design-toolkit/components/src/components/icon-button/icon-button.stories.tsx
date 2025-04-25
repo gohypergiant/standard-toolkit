@@ -17,7 +17,7 @@ import { Tooltip } from '../tooltip';
 import { IconButton } from './index';
 
 const meta: Meta<typeof IconButton> = {
-  title: 'Design Toolkit/Components/Button/Icon',
+  title: 'Components/Button/Icon',
   component: IconButton,
   args: {
     className: '',

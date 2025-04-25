@@ -10,11 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'); */
+@import '@fontsource/roboto-flex';
+@import '@fontsource/roboto-mono';
 @import 'tailwindcss';
 @plugin 'tailwindcss-react-aria-components' {
   prefix: 'ai'
 }
+@source './components/foundation';
 
 :root {
   --neutral-01: #ffffff;
@@ -136,8 +139,8 @@
   --text-*: initial;
 
   /** Fonts **/
-  --font-primary: Roboto, sans-serif;
-  --font-display: Roboto Mono, monospace;
+  --font-primary: "Roboto Flex", sans-serif;
+  --font-display: "Roboto Mono", monospace;
 
   /** Colors **/
   --color-current: currentColor;
@@ -286,26 +289,31 @@
 
 @utility text-button-xl {
   font-size: var(--button-xl-size);
+  font-weight: bold;
   line-height: var(--button-xl-height);
 }
 
 @utility text-button-l {
   font-size: var(--button-l-size);
+  font-weight: bold;
   line-height: var(--button-l-height);
 }
 
 @utility text-button-m {
   font-size: var(--button-m-size);
+  font-weight: bold;
   line-height: var(--button-m-height);
 }
 
 @utility text-button-s {
   font-size: var(--button-s-size);
+  font-weight: bold;
   line-height: var(--button-s-height);
 }
 
 @utility text-button-xs {
   font-size: var(--button-xs-size);
+  font-weight: bold;
   line-height: var(--button-xs-height);
 }
 

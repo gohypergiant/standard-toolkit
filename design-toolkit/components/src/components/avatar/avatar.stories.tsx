@@ -15,7 +15,7 @@ import { Badge } from '../badge';
 import { Avatar } from './';
 
 const meta: Meta<typeof Avatar> = {
-  title: 'Design Toolkit/Components/Avatar',
+  title: 'Components/Avatar',
   component: Avatar,
   args: {
     className: '',

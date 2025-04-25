@@ -17,7 +17,7 @@ import { Button } from '../button';
 import { Tooltip } from './index';
 
 const meta: Meta<typeof Tooltip> = {
-  title: 'Design Toolkit/Components/Tooltip',
+  title: 'Components/Tooltip',
 };
 
 export default meta;

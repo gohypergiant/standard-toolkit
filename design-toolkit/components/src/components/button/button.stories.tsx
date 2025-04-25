@@ -15,7 +15,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './index';
 
 const meta: Meta<typeof Button> = {
-  title: 'Design Toolkit/Components/Button',
+  title: 'Components/Button',
   component: Button,
   args: {
     className: '',
@@ -69,16 +69,6 @@ export const ButtonWithLeftIcon: Story = {
 export const ButtonWithRightIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
-      {children}
-      <Placeholder />
-    </Button>
-  ),
-};
-
-export const ButtonWithBothIcons: Story = {
-  render: ({ children, ...args }) => (
-    <Button {...args}>
-      <Placeholder />
       {children}
       <Placeholder />
     </Button>
