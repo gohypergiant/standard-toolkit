@@ -1,28 +1,23 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Nav } from './nav';
 
 describe('Nav', () => {
-  it('should render', async () => {
-    const onAction = vi.fn();
+  it('should render', () => {
+    render(<Nav />);
 
-    render(<Nav onAction={onAction} />);
-
-    const button = screen.getByText('Click me');
-
-    expect(button).toBeInTheDocument();
-
-    await userEvent.click(button);
-
-    const option = screen.getByText('Foo');
-
-    expect(option).toBeInTheDocument();
-
-    await userEvent.click(option);
-
-    expect(onAction).toHaveBeenCalled();
-
-    expect(option).not.toBeInTheDocument();
+    expect(screen.getAllByText(/Example/gi).length).not.toBe(0);
   });
 });
