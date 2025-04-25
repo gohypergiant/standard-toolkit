@@ -1,5 +1,12 @@
 # @apps/next
 
+## 0.2.9
+
+### Patch Changes
+
+- Updated dependencies [b022126]
+  - @accelint/bus@0.1.0
+
 ## 0.2.8
 
 ### Patch Changes
