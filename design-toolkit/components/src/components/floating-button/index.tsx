@@ -40,7 +40,7 @@ const floatingButtonStyles = cva(
 
 export interface FloatingButtonProps
   extends Omit<AriaButtonProps, 'isDisabled'> {
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
 export const FloatingButton = ({

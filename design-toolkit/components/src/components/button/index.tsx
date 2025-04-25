@@ -72,7 +72,7 @@ const buttonStyles = cva(
 export interface ButtonProps
   extends Omit<AriaButtonProps, 'isDisabled'>,
     VariantProps<typeof buttonStyles> {
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
 export const Button = ({
