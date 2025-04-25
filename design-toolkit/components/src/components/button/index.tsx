@@ -23,14 +23,14 @@ const buttonStyles = cva(
     variants: {
       variant: {
         primary:
-          'rounded-medium bg-interactive-default pressed:bg-interactive-hover-light text-inverse-light hover:bg-interactive-hover-light',
+          'rounded-medium ai-pressed:bg-interactive-hover-light bg-interactive-default text-inverse-light hover:bg-interactive-hover-light',
         outline:
-          'rounded-medium border border-interactive pressed:border-interactive-hover text-default-light hover:border-interactive-hover',
-        flat: 'rounded-medium bg-transparent pressed:bg-interactive-hover-dark text-default-light hover:bg-interactive-hover-dark',
+          'rounded-medium border ai-pressed:border-interactive-hover border-interactive text-default-light hover:border-interactive-hover',
+        flat: 'rounded-medium ai-pressed:bg-interactive-hover-dark bg-transparent text-default-light hover:bg-interactive-hover-dark',
         destructive:
-          'rounded-medium bg-serious-bold pressed:bg-serious-hover text-inverse-light hover:bg-serious-hover',
+          'rounded-medium ai-pressed:bg-serious-hover bg-serious-bold text-inverse-light hover:bg-serious-hover',
         critical:
-          'rounded-medium bg-critical-bold pressed:bg-critical-hover text-default-light hover:bg-critical-hover',
+          'rounded-medium ai-pressed:bg-critical-hover bg-critical-bold text-default-light hover:bg-critical-hover',
       },
       size: {
         large:
@@ -92,7 +92,7 @@ export const Button = ({
         }),
       ),
     )}
-    isDisabled
+    isDisabled={isDisabled}
     {...props}
   />
 );

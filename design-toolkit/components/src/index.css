@@ -13,7 +13,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 @plugin 'tailwindcss-react-aria-components' {
-  prefix: 'ai';
+  prefix: 'ai'
 }
 
 :root {
@@ -326,3 +326,6 @@
   --icon-size: --value([ *]);
   --icon-size: --value(--spacing- *);
 }
+
+@custom-variant pressed (&:where([data-pressed] *));
+@custom-variant ai-hovered (&:where([data-hovered] *));
