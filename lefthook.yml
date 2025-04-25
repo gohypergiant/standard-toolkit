@@ -3,13 +3,17 @@ pre-commit:
     index-files:
       run: pnpm run indexer
       stage_fixed: true
+      priority: 1
     generate-license:
       run: pnpm run license "--files={staged_files}"
       stage_fixed: true
+      priority: 2
     format:
       run: pnpm run format
       stage_fixed: true
+      priority: 3
     sort-imports:
       run: pnpm run sort-imports
       stage_fixed: true
+      priority: 4
 
