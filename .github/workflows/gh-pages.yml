@@ -32,9 +32,9 @@ jobs:
           cache: "pnpm"
       - run: pnpm install
       - run: pnpm run build
-      - name: Ladle
+      - name: Ladle/Storybook
         id: build
-        run: pnpm --filter=@accelint/design-system exec ladle build
+        run: pnpm build:design-preview
       - name: Upload
         id: deployment
         uses: actions/upload-pages-artifact@v3
