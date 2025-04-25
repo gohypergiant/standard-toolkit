@@ -1,5 +1,8 @@
 pre-commit:
   commands:
+    index-files:
+      run: pnpm run indexer
+      stage_fixed: true
     generate-license:
       run: pnpm run license "--files={staged_files}"
       stage_fixed: true
