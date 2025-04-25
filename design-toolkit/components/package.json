@@ -90,7 +90,7 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm index && pnpm tsup && pnpm build:css && pnpm build-storybook",
+    "build": "pnpm index && pnpm tsup && pnpm build:css",
     "build:css": "npx @tailwindcss/cli -i ./src/index.css -o ./dist/styles.css",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
