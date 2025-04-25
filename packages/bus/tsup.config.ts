@@ -10,28 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Metadata } from 'next';
-import type { PropsWithChildren } from 'react';
-import { Defaults } from './defaults';
-import './globals.css';
-import { Nav } from './nav';
-import { Theme } from './theme';
+import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions';
+import { defineConfig } from 'tsup';
 
-export const metadata: Metadata = {
-  title: 'Next App',
-};
-
-export default function RootLayout({ children }: PropsWithChildren) {
-  return (
-    <html lang='en' className='bg-surface-raised font-primary w-full h-full'>
-      <body className='w-full h-full'>
-        <Theme>
-          <Defaults>
-            <Nav />
-            {children}
-          </Defaults>
-        </Theme>
-      </body>
-    </html>
-  );
-}
+export default defineConfig({
+  esbuildPlugins: [
+    esbuildPluginFilePathExtensions({
+      esmExtension: 'js',
+    }),
+  ],
+  entry: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
+    '!**/__fixture__',
+  ],
+  bundle: true,
+  clean: true,
+  dts: true,
+  format: 'esm',
+  sourcemap: true,
+  splitting: true,
+  treeshake: true,
+  metafile: true,
+});

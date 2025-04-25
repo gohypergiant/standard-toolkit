@@ -10,28 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Metadata } from 'next';
-import type { PropsWithChildren } from 'react';
-import { Defaults } from './defaults';
-import './globals.css';
-import { Nav } from './nav';
-import { Theme } from './theme';
-
-export const metadata: Metadata = {
-  title: 'Next App',
+/** @type {Partial<import("typedoc").TypeDocOptions>} */
+export default {
+  name: '@accelint/bus',
 };
-
-export default function RootLayout({ children }: PropsWithChildren) {
-  return (
-    <html lang='en' className='bg-surface-raised font-primary w-full h-full'>
-      <body className='w-full h-full'>
-        <Theme>
-          <Defaults>
-            <Nav />
-            {children}
-          </Defaults>
-        </Theme>
-      </body>
-    </html>
-  );
-}

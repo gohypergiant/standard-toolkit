@@ -10,28 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Metadata } from 'next';
-import type { PropsWithChildren } from 'react';
-import { Defaults } from './defaults';
-import './globals.css';
-import { Nav } from './nav';
-import { Theme } from './theme';
+import { Buttons } from '../buttons';
 
-export const metadata: Metadata = {
-  title: 'Next App',
-};
-
-export default function RootLayout({ children }: PropsWithChildren) {
+export default function ButtonsPage() {
   return (
-    <html lang='en' className='bg-surface-raised font-primary w-full h-full'>
-      <body className='w-full h-full'>
-        <Theme>
-          <Defaults>
-            <Nav />
-            {children}
-          </Defaults>
-        </Theme>
-      </body>
-    </html>
+    <div className='flex flex-col items-center justify-center w-full h-full'>
+      <Buttons />
+    </div>
   );
 }

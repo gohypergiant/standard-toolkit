@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,28 +11,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Metadata } from 'next';
-import type { PropsWithChildren } from 'react';
-import { Defaults } from './defaults';
-import './globals.css';
-import { Nav } from './nav';
-import { Theme } from './theme';
+import type { BroadcastConfig } from './types';
 
-export const metadata: Metadata = {
-  title: 'Next App',
+export const DEFAULT_CONFIG: BroadcastConfig = {
+  channelName: '@accelint/bus',
+  // TODO: implement logger
+  debug: false,
 };
-
-export default function RootLayout({ children }: PropsWithChildren) {
-  return (
-    <html lang='en' className='bg-surface-raised font-primary w-full h-full'>
-      <body className='w-full h-full'>
-        <Theme>
-          <Defaults>
-            <Nav />
-            {children}
-          </Defaults>
-        </Theme>
-      </body>
-    </html>
-  );
-}

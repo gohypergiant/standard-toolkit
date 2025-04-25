@@ -10,28 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Metadata } from 'next';
-import type { PropsWithChildren } from 'react';
-import { Defaults } from './defaults';
-import './globals.css';
-import { Nav } from './nav';
-import { Theme } from './theme';
-
-export const metadata: Metadata = {
-  title: 'Next App',
+export type BroadcastConfig = {
+  channelName: string;
+  debug?: boolean;
 };
 
-export default function RootLayout({ children }: PropsWithChildren) {
-  return (
-    <html lang='en' className='bg-surface-raised font-primary w-full h-full'>
-      <body className='w-full h-full'>
-        <Theme>
-          <Defaults>
-            <Nav />
-            {children}
-          </Defaults>
-        </Theme>
-      </body>
-    </html>
-  );
-}
+export type Listener<T = any> = {
+  callback: (data: Payload<T>) => void;
+  once?: boolean;
+  id: number;
+};
+
+export type Payload<T> = {
+  type: string;
+  payload: T;
+};

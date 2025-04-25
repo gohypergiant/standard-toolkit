@@ -12,26 +12,30 @@
 
 'use client';
 
-import { Button, Menu, MenuItem, MenuList } from '@accelint/design-system';
-import { MenuTrigger } from 'react-aria-components';
-import { classNames } from './nav.css';
+import { Button } from '@accelint/design-toolkit/button';
+import Link from 'next/link';
 
-export type NavProps = {
-  onAction?: () => void;
-};
-
-export function Nav({ onAction }: NavProps) {
+export function Nav() {
   return (
-    <div className={classNames.container}>
-      <MenuTrigger>
-        <Button classNames={classNames.trigger}>Click me</Button>
-        <Menu>
-          <MenuList onAction={onAction}>
-            <MenuItem>Foo</MenuItem>
-            <MenuItem>Bar</MenuItem>
-          </MenuList>
-        </Menu>
-      </MenuTrigger>
+    <div className='w-full bg-surface-default p-m flex items-center gap-m'>
+      <Link
+        className={Button.as(
+          { variant: 'flat', size: 'xsmall' },
+          'rounded-none',
+        )}
+        href='/'
+      >
+        Bus Example
+      </Link>
+      <Link
+        className={Button.as(
+          { variant: 'flat', size: 'xsmall' },
+          'rounded-none',
+        )}
+        href='/buttons'
+      >
+        Button Example
+      </Link>
     </div>
   );
 }

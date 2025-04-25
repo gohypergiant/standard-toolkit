@@ -28,6 +28,7 @@
     "vitest": "2.1.3"
   },
   "dependencies": {
+    "@accelint/bus": "workspace:*",
     "@accelint/design-system": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@tailwindcss/postcss": "4.1.4",
