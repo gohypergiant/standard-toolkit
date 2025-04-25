@@ -20,7 +20,7 @@ export const DragHorz = ({ className, ref, ...props }: IconProps) => (
     xmlns='http://www.w3.org/2000/svg'
     aria-hidden='true'
     className={cn(
-      '[height:var(--icon-size,--spacing-xl)] [width:var(--icon-size,--spacing-xl)] [color:var(--icon-color,currentColor)]',
+      '[color:var(--icon-color,currentColor)] [height:var(--icon-size,--spacing-xl)] [width:var(--icon-size,--spacing-xl)]',
       className,
     )}
     {...props}

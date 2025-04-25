@@ -17,7 +17,7 @@ import type React from 'react';
 const badgeStyles = cva(
   cn([
     'inline-flex h-l min-w-l items-center justify-center rounded-full border px-xs text-body-xs text-default-light empty:size-s empty:min-w-none empty:px-none',
-    '[position:var(--badge-position,initial)] [inset:var(--badge-inset,initial)] empty:[inset:var(--badge-empty-inset,initial)]',
+    '[inset:var(--badge-inset,initial)] [position:var(--badge-position,initial)] empty:[inset:var(--badge-empty-inset,initial)]',
   ]),
   {
     variants: {

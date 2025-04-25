@@ -22,7 +22,7 @@ import {
 } from 'react-aria-components';
 
 const tooltipStyles = cva(
-  'flex max-w-[160px] items-center justify-center rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs break-words text-default-light shadow-elevation-overlay',
+  'flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs text-default-light shadow-elevation-overlay',
 );
 
 export interface TooltipProps extends TooltipTriggerComponentProps {}

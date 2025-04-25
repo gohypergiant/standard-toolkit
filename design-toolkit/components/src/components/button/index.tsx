@@ -18,19 +18,19 @@ import {
 } from 'react-aria-components';
 
 const buttonStyles = cva(
-  'inline-flex cursor-pointer items-center justify-center font-bold whitespace-nowrap outline-none [--icon-size:20px]',
+  'inline-flex cursor-pointer items-center justify-center whitespace-nowrap font-bold outline-none [--icon-size:20px]',
   {
     variants: {
       variant: {
         primary:
-          'rounded-medium bg-interactive-default text-inverse-light hover:bg-interactive-hover-light pressed:bg-interactive-hover-light',
+          'rounded-medium bg-interactive-default pressed:bg-interactive-hover-light text-inverse-light hover:bg-interactive-hover-light',
         outline:
-          'rounded-medium border border-interactive text-default-light hover:border-interactive-hover pressed:border-interactive-hover',
-        flat: 'rounded-medium bg-transparent text-default-light hover:bg-interactive-hover-dark pressed:bg-interactive-hover-dark',
+          'rounded-medium border border-interactive pressed:border-interactive-hover text-default-light hover:border-interactive-hover',
+        flat: 'rounded-medium bg-transparent pressed:bg-interactive-hover-dark text-default-light hover:bg-interactive-hover-dark',
         destructive:
-          'rounded-medium bg-serious-bold text-inverse-light hover:bg-serious-hover pressed:bg-serious-hover',
+          'rounded-medium bg-serious-bold pressed:bg-serious-hover text-inverse-light hover:bg-serious-hover',
         critical:
-          'rounded-medium bg-critical-bold text-default-light hover:bg-critical-hover pressed:bg-critical-hover',
+          'rounded-medium bg-critical-bold pressed:bg-critical-hover text-default-light hover:bg-critical-hover',
       },
       size: {
         large:
