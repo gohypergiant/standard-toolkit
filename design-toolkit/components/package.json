@@ -90,7 +90,7 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm index && pnpm tsup && pnpm build:css",
+    "build": "pnpm tsup && pnpm build:css",
     "build:css": "npx @tailwindcss/cli -i ./src/index.css -o ./dist/styles.css",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
@@ -98,6 +98,11 @@
     "preview": "storybook dev -p 6006",
     "test": "pnpm vitest --dir=src",
     "build-storybook": "storybook build"
+  },
+  "peerDependencies": {
+    "@react-types/shared": "3.25.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.4",
