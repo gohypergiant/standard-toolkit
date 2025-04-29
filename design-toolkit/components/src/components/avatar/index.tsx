@@ -32,6 +32,11 @@ const avatarStyles = cva(
   },
 );
 
+const avatarWrapperStyles = cn([
+  'relative inline-block',
+  '[--badge-empty-inset:0_0_auto_auto] [--badge-inset:calc(var(--spacing-xxs)*-1)_calc(var(--spacing-xxs)*-1)_auto_auto] [--badge-position:absolute]',
+]);
+
 export interface AvatarProps
   extends React.ComponentProps<typeof AvatarPrimitive.Image>,
     VariantProps<typeof avatarStyles> {
@@ -49,12 +54,7 @@ export const Avatar = ({
   size,
   ...props
 }: AvatarProps) => (
-  <div
-    className={cn([
-      'relative inline-block',
-      '[--badge-empty-inset:0_0_auto_auto] [--badge-inset:calc(var(--spacing-xxs)*-1)_calc(var(--spacing-xxs)*-1)_auto_auto] [--badge-position:absolute]',
-    ])}
-  >
+  <div className={avatarWrapperStyles}>
     <AvatarPrimitive.Root
       className={cn(
         'pointer-events-none inline-block',
