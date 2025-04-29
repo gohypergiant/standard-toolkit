@@ -39,6 +39,13 @@
       },
       "default": "./dist/components/button/index.js"
     },
+    "./classification-badge": {
+      "import": {
+        "types": "./dist/components/classification-badge/index.d.ts",
+        "default": "./dist/components/classification-badge/index.js"
+      },
+      "default": "./dist/components/classification-badge/index.js"
+    },
     "./classification-banner": {
       "import": {
         "types": "./dist/components/classification-banner/index.d.ts",

@@ -231,31 +231,37 @@
 
 @utility text-header-xxl {
   font-size: var(--header-xxl-size);
+  font-weight: 500;
   line-height: var(--header-xxl-height);
 }
 
 @utility text-header-xl {
   font-size: var(--header-xl-size);
+  font-weight: 500;
   line-height: var(--header-xl-height);
 }
 
 @utility text-header-l {
   font-size: var(--header-l-size);
+  font-weight: 500;
   line-height: var(--header-l-height);
 }
 
 @utility text-header-m {
   font-size: var(--header-m-size);
+  font-weight: 500;
   line-height: var(--header-m-height);
 }
 
 @utility text-header-s {
   font-size: var(--header-s-size);
+  font-weight: 500;
   line-height: var(--header-s-height);
 }
 
 @utility text-header-xs {
   font-size: var(--header-xs-size);
+  font-weight: 500;
   line-height: var(--header-xs-height);
 }
 
