@@ -95,9 +95,9 @@
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
     "lint": "pnpm biome lint",
-    "preview": "storybook dev -p 6006",
+    "preview": "pnpm storybook dev -p 6006",
     "test": "pnpm vitest --dir=src",
-    "build-storybook": "storybook build"
+    "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
     "@radix-ui/react-avatar": "^1.1.4",
