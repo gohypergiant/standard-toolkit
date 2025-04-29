@@ -22,6 +22,8 @@ export { Box } from './components/box';
 export type { BoxProps } from './components/box';
 export { Button } from './components/button';
 export type { ButtonProps } from './components/button';
+export { ClassificationBadge } from './components/classification-badge';
+export type { ClassificationBadgeProps } from './components/classification-badge';
 export { ClassificationBanner } from './components/classification-banner';
 export type { ClassificationBannerProps } from './components/classification-banner';
 export { FloatingButton } from './components/floating-button';
