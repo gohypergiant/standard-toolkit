@@ -75,3 +75,11 @@ export const TopSecret: Story = {
     </ClassificationBanner>
   ),
 };
+
+export const TopSecretSCI: Story = {
+  render: ({ children, ...args }) => (
+    <ClassificationBanner variant='top-secret-sci' {...args}>
+      {children}
+    </ClassificationBanner>
+  ),
+};

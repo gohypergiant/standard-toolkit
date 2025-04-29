@@ -89,11 +89,12 @@
   --utility-critical-04: #7f1511;
   --utility-critical-05: #2a0706;
 
-  --classification-unclass: #009c28;
+  --classification-unclass: #007A33;
   --classification-cui: #502b85;
-  --classification-confidential: #1745a9;
-  --classification-secret: #cd2641;
+  --classification-confidential: #0033a0;
+  --classification-secret: #c8102e;
   --classification-top-secret: #ff8c00;
+  --classification-top-secret-sci: #fce83a;
 
   --header-xxl-size: 32px;
   --header-xxl-height: 40px;
@@ -197,6 +198,7 @@
   --color-classification-confidential: var(--classification-confidential);
   --color-classification-secret: var(--classification-secret);
   --color-classification-top-secret: var(--classification-top-secret);
+  --color-classification-top-secret-sci: var(--classification-top-secret-sci);
 
   /** Radius **/
   --radius-none: 0px;
