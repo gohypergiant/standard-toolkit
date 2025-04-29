@@ -91,7 +91,7 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup && pnpm build:css",
-    "build:css": "npx @tailwindcss/cli -i ./src/index.css -o ./dist/styles.css",
+    "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
     "lint": "pnpm biome lint",
