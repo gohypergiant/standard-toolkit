@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
 import { Person } from '@/icons/person';
 import { cn } from '@/lib/utils';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
+import 'client-only';
 import { type VariantProps, cva } from 'cva';
 import type React from 'react';
 
