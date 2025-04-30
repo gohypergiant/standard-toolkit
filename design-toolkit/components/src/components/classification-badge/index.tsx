@@ -20,7 +20,7 @@ const classificationBadge = cva(
     variants: {
       variant: {
         missing:
-          "bg-classification-missing text-critical [&:empty]:before:content-['Missing_Classification']",
+          "bg-classification-missing text-critical [&:empty]:before:content-['Missing']",
         unclassified:
           "bg-classification-unclass text-default-light [&:empty]:before:content-['Unclassified']",
         cui: "bg-classification-cui text-default-light [&:empty]:before:content-['CUI']",
