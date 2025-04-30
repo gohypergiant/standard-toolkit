@@ -67,10 +67,10 @@ const SpacingDisplay = (space: SpacingInfo) => {
       <div
         className={`border border-[#E8178A] bg-[#E8178A]/40 ${space.size}`}
       />
-      <div className='flex flex-col gap-s font-display text-body-xs text-interactive-default'>
+      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
         <span className='inline-flex gap-s'>
           {space.size}
-          <span className='text-body-xxs text-disabled'>
+          <span className='fg-disabled text-body-xxs'>
             (
             {getComputedStyle(rootElement).getPropertyValue(
               `--${space.name.replace('/', '-')}`,
@@ -78,7 +78,7 @@ const SpacingDisplay = (space: SpacingInfo) => {
             )
           </span>
         </span>
-        <span className='text-default-dark'>Figma: {space.name}</span>
+        <span className='fg-default-dark'>Figma: {space.name}</span>
       </div>
     </div>
   );
@@ -88,8 +88,8 @@ export const Spacing: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>Spacing</h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <h1 className='fg-interactive-default text-header-xl'>Spacing</h1>
+        <p className='fg-interactive-hover-light text-body-s'>
           These are the contextualized spacing values available for use in any
           Figma design file. It can be applied to components/elements as padding
           and/or gap for listing patterns.

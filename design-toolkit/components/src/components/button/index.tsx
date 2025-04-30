@@ -23,14 +23,14 @@ const buttonStyles = cva(
     variants: {
       variant: {
         primary:
-          'rounded-medium ai-pressed:bg-interactive-hover-light bg-interactive-default text-inverse-light hover:bg-interactive-hover-light',
+          'fg-inverse-light rounded-medium ai-pressed:bg-interactive-hover-light bg-interactive-default hover:bg-interactive-hover-light',
         outline:
-          'rounded-medium border ai-pressed:border-interactive-hover border-interactive text-default-light hover:border-interactive-hover',
-        flat: 'rounded-medium ai-pressed:bg-interactive-hover-dark bg-transparent text-default-light hover:bg-interactive-hover-dark',
+          'fg-default-light rounded-medium border ai-pressed:border-interactive-hover border-interactive hover:border-interactive-hover',
+        flat: 'fg-default-light rounded-medium ai-pressed:bg-interactive-hover-dark bg-transparent hover:bg-interactive-hover-dark',
         destructive:
-          'rounded-medium ai-pressed:bg-serious-hover bg-serious-bold text-inverse-light hover:bg-serious-hover',
+          'fg-inverse-light rounded-medium ai-pressed:bg-serious-hover bg-serious-bold hover:bg-serious-hover',
         critical:
-          'rounded-medium ai-pressed:bg-critical-hover bg-critical-bold text-default-light hover:bg-critical-hover',
+          'fg-default-light rounded-medium ai-pressed:bg-critical-hover bg-critical-bold hover:bg-critical-hover',
       },
       size: {
         large:
@@ -42,7 +42,7 @@ const buttonStyles = cva(
           'min-h-[20px] gap-xxs px-s py-xs text-button-xs [--icon-size:12px]',
       },
       isDisabled: {
-        true: 'cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
+        true: 'fg-disabled hover:fg-disabled cursor-not-allowed bg-interactive-disabled hover:bg-interactive-disabled',
         false: '',
       },
     },
@@ -51,13 +51,13 @@ const buttonStyles = cva(
         variant: 'outline',
         isDisabled: true,
         className:
-          'cursor-not-allowed border-interactive-disabled bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
+          'fg-disabled hover:fg-disabled cursor-not-allowed border-interactive-disabled bg-transparent hover:bg-transparent',
       },
       {
         variant: 'flat',
         isDisabled: true,
         className:
-          'cursor-not-allowed bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
+          'fg-disabled hover:fg-disabled cursor-not-allowed bg-transparent hover:bg-transparent',
       },
     ],
     defaultVariants: {

@@ -114,12 +114,12 @@ const button: TypographyInfo[] = [
 
 const TypographyDisplay = (typo: TypographyInfo) => (
   <React.Fragment key={typo.name}>
-    <div className={`text-right text-interactive-default ${typo.text}`}>
+    <div className={`fg-interactive-default text-right ${typo.text}`}>
       {typo.name}
     </div>
-    <div className='flex flex-col gap-s font-display text-body-xs text-interactive-default'>
+    <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
       <span className='inline-flex gap-s'>{typo.text}</span>
-      <span className='text-default-dark'>Figma: {typo.name}</span>
+      <span className='fg-default-dark'>Figma: {typo.name}</span>
     </div>
   </React.Fragment>
 );
@@ -128,13 +128,13 @@ export const Fonts: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>Fonts</h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <h1 className='fg-interactive-default text-header-xl'>Fonts</h1>
+        <p className='fg-interactive-hover-light text-body-s'>
           We use the Roboto and Roboto Mono fonts as the basis for this design
           system.
         </p>
       </div>
-      <div className='flex flex-col gap-y-oversized text-interactive-default'>
+      <div className='fg-interactive-default flex flex-col gap-y-oversized'>
         <div className='flex flex-col font-primary'>
           <h1 className='font-medium text-[48px] leading-[64px]'>Roboto</h1>
           <p className='font-normal text-[24px] leading-[32px]'>
@@ -166,19 +166,19 @@ export const PrimaryHeader: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>Headers</h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <h1 className='fg-interactive-default text-header-xl'>Headers</h1>
+        <p className='fg-interactive-hover-light text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />
           <br />
           The following includes the{' '}
-          <span className='font-display text-highlight'>font-primary</span>{' '}
-          class as well.
+          <span className='fg-highlight font-display'>font-primary</span> class
+          as well.
           <br />
           <br />
           If you would like to make your headers uppercase, please use the{' '}
-          <span className='font-display text-highlight'>uppercase</span> class
+          <span className='fg-highlight font-display'>uppercase</span> class
           name instead of uppercase letters.
         </p>
       </div>
@@ -193,15 +193,15 @@ export const PrimaryBody: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>Body</h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <h1 className='fg-interactive-default text-header-xl'>Body</h1>
+        <p className='fg-interactive-hover-light text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />
           <br />
           The following includes the{' '}
-          <span className='font-display text-highlight'>font-primary</span>{' '}
-          class as well.
+          <span className='fg-highlight font-display'>font-primary</span> class
+          as well.
         </p>
       </div>
       <div className='grid grid-cols-2 items-center gap-x-xxl gap-y-xxl'>

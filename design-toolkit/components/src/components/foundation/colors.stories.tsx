@@ -256,14 +256,14 @@ const BackgroundColorDisplay = (color: ColorInfo) => {
   return (
     <div className='flex items-center gap-l' key={color.name}>
       <div className={`h-[90px] w-[120px] rounded-large ${color.bg}`} />
-      <div className='flex flex-col gap-s font-display text-body-xs text-interactive-default'>
+      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
         <span>{color.bg}</span>
         <span>
           {getComputedStyle(rootElement)
             .getPropertyValue(`--color-${color.name}`)
             .toLocaleUpperCase()}
         </span>
-        <span className='text-default-dark'>Figma: {color.name}</span>
+        <span className='fg-default-dark'>Figma: {color.name}</span>
       </div>
     </div>
   );
@@ -274,7 +274,7 @@ const ForegroundColorDisplay = (color: ColorInfo) => {
   return (
     <div className='flex items-center gap-l' key={color.name}>
       <div className={`h-[90px] w-[120px] rounded-large ${color.bg}`} />
-      <div className='flex flex-col gap-s font-display text-body-xs text-interactive-default'>
+      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
         <span>{color.fg}</span>
         <span>
           {getComputedStyle(rootElement)
@@ -294,14 +294,14 @@ const BorderDisplay = (border: BorderInfo) => {
       <div
         className={`h-[90px] w-[120px] rounded-large border ${border.border}`}
       />
-      <div className='flex flex-col gap-s font-display text-body-xs text-interactive-default'>
+      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
         <span>{border.border}</span>
         <span>
           {getComputedStyle(rootElement)
             .getPropertyValue(`--color-${border.name}`)
             .toLocaleUpperCase()}
         </span>
-        <span className='text-default-dark'>Figma: {border.name}</span>
+        <span className='fg-default-dark'>Figma: {border.name}</span>
       </div>
     </div>
   );
@@ -314,10 +314,10 @@ export const SemanticBackground: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>
+        <h1 className='fg-interactive-default text-header-xl'>
           Semantic Background
         </h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <p className='fg-interactive-hover-light text-body-s'>
           These are tokens primarily used as backgrounds for any element or
           component that contains content such as containers, sections, headers,
           buttons, etc.
@@ -340,10 +340,10 @@ export const SemanticForeground: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>
+        <h1 className='fg-interactive-default text-header-xl'>
           Semantic Foreground
         </h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <p className='fg-interactive-hover-light text-body-s'>
           These are tokens primarily used as fill for elements like text, icons,
           vectors, and other things that sit above a background.
         </p>
@@ -362,10 +362,10 @@ export const SemanticBorder: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>
+        <h1 className='fg-interactive-default text-header-xl'>
           Semantic Border
         </h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <p className='fg-interactive-hover-light text-body-s'>
           These are tokens primarily used as stroke colors for components and
           elements.
         </p>

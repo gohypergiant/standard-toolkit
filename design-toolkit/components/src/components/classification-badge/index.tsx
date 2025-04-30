@@ -20,18 +20,18 @@ const classificationBadge = cva(
     variants: {
       variant: {
         missing:
-          "bg-classification-missing text-critical [&:empty]:before:content-['Missing']",
+          "fg-critical bg-classification-missing [&:empty]:before:content-['Missing']",
         unclassified:
-          "bg-classification-unclass text-default-light [&:empty]:before:content-['Unclassified']",
-        cui: "bg-classification-cui text-default-light [&:empty]:before:content-['CUI']",
+          "fg-default-light bg-classification-unclass [&:empty]:before:content-['Unclassified']",
+        cui: "fg-default-light bg-classification-cui [&:empty]:before:content-['CUI']",
         confidential:
-          "bg-classification-confidential text-default-light [&:empty]:before:content-['Confidential']",
+          "fg-default-light bg-classification-confidential [&:empty]:before:content-['Confidential']",
         secret:
-          "bg-classification-secret text-default-light [&:empty]:before:content-['Secret']",
+          "fg-default-light bg-classification-secret [&:empty]:before:content-['Secret']",
         'top-secret':
-          "bg-classification-top-secret text-inverse-light [&:empty]:before:content-['Top_Secret']",
+          "fg-inverse-light bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
         'top-secret-sci':
-          "bg-classification-top-secret-sci text-inverse-light [&:empty]:before:content-['TS//SCI']",
+          "fg-inverse-light bg-classification-top-secret-sci [&:empty]:before:content-['TS/SCI']",
       },
       size: {
         medium: 'px-s py-xs text-header-s',
@@ -39,7 +39,7 @@ const classificationBadge = cva(
       },
     },
     defaultVariants: {
-      variant: 'unclassified',
+      variant: 'missing',
       size: 'medium',
     },
   },

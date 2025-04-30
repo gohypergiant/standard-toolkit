@@ -18,7 +18,7 @@ import { type VariantProps, cva } from 'cva';
 import type React from 'react';
 
 const avatarStyles = cva(
-  'flex items-center justify-center overflow-hidden rounded-full bg-surface-overlay text-default-dark',
+  'fg-default-dark flex items-center justify-center overflow-hidden rounded-full bg-surface-overlay',
   {
     variants: {
       size: {

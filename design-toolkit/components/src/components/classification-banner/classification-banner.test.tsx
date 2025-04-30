@@ -34,7 +34,7 @@ describe('Classification Banner', () => {
     const component = screen.getByText(`${children}`);
 
     expect(component).toBeInTheDocument();
-    expect(component).toHaveClass('text-critical', 'bg-classification-missing');
+    expect(component).toHaveClass('fg-critical', 'bg-classification-missing');
   });
 
   it('should render unclassified variant', () => {

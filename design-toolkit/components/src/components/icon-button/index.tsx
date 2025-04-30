@@ -32,7 +32,7 @@ const iconButtonStyles = cva(
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'icon-disabled cursor-not-allowed ai-pressed:bg-transparent bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
+        true: 'icon-disabled fg-disabled hover:fg-disabled cursor-not-allowed ai-pressed:bg-transparent bg-transparent hover:bg-transparent',
         false: '',
       },
     },

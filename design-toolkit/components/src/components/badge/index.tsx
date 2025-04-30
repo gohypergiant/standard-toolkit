@@ -16,7 +16,7 @@ import type React from 'react';
 
 const badgeStyles = cva(
   cn([
-    'inline-flex h-l min-w-l items-center justify-center rounded-full border px-xs text-body-xs text-default-light empty:size-s empty:min-w-none empty:px-none',
+    'fg-default-light inline-flex h-l min-w-l items-center justify-center rounded-full border px-xs text-body-xs empty:size-s empty:min-w-none empty:px-none',
     '[inset:var(--badge-inset,initial)] [position:var(--badge-position,initial)] empty:[inset:var(--badge-empty-inset,initial)]',
   ]),
   {
