@@ -68,6 +68,7 @@ export const TooltipBody = ({
   children,
   className,
   offset = 5,
+  placement = 'bottom',
   ...props
 }: TooltipBodyProps) => {
   return (
@@ -75,6 +76,7 @@ export const TooltipBody = ({
       {...props}
       className={cn(tooltipStyles({ className }))}
       offset={offset}
+      placement={placement}
     >
       {children}
     </RACTooltip>
