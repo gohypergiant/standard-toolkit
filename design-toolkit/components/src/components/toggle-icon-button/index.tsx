@@ -33,7 +33,7 @@ const toggleIconButtonStyles = cva(
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'icon-disabled cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
+        true: 'not-ai-selected:icon-disabled ai-selected:cursor-default not-ai-selected:cursor-not-allowed not-ai-selected:bg-interactive-disabled ai-selected:hover:bg-transparent not-ai-selected:hover:bg-interactive-disabled',
         false: '',
       },
     },
