@@ -19,12 +19,12 @@ const meta: Meta<typeof Badge> = {
   args: {
     className: '',
     children: '',
-    variant: 'default',
+    variant: 'info',
   },
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'default'],
+      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
     },
   },
 };

@@ -38,9 +38,9 @@ const buttonStyles = cva(
         medium:
           'min-h-[32px] gap-xs rounded-medium px-l py-xs text-button-m tracking-[0.25px] [--icon-size:20px]',
         small:
-          'min-h-xl gap-xxs p-s text-button-s tracking-[0.4px] [--icon-size:14px]',
+          'min-h-xl gap-xxs p-s text-button-s tracking-[0.4px] [--icon-size:16px]',
         xsmall:
-          'min-h-[20px] gap-xxs px-s py-xs text-button-xs tracking-[0.5px] [--icon-size:10px]',
+          'min-h-[20px] gap-xxs px-s py-xs text-button-xs tracking-[0.5px] [--icon-size:12px]',
       },
       isDisabled: {
         true: 'cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',

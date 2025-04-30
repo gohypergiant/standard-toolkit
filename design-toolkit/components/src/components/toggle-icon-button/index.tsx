@@ -24,16 +24,16 @@ const toggleIconButtonStyles = cva(
     variants: {
       variant: {
         primary:
-          'icon-color-default-light ai-selected:icon-color-highlight ai-selected:hover:bg-highlight-subtle',
+          'icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle',
         secondary:
-          'icon-color-default-dark hover:icon-color-default-light ai-selected:icon-color-highlight ai-selected:hover:bg-highlight-subtle',
+          'icon-default-dark hover:icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'icon-color-disabled cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
+        true: 'icon-disabled cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
         false: '',
       },
     },

@@ -23,16 +23,16 @@ const iconButtonStyles = cva(
   {
     variants: {
       variant: {
-        primary: 'icon-color-default-light',
+        primary: 'icon-default-light',
         secondary:
-          'icon-color-default-dark hover:icon-color-default-light ai-pressed:icon-color-default-light',
+          'icon-default-dark hover:icon-default-light ai-pressed:icon-default-light',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'icon-color-disabled cursor-not-allowed ai-pressed:bg-transparent bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
+        true: 'icon-disabled cursor-not-allowed ai-pressed:bg-transparent bg-transparent text-disabled hover:bg-transparent hover:text-disabled',
         false: '',
       },
     },

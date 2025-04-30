@@ -22,15 +22,15 @@ const badgeStyles = cva(
   {
     variants: {
       variant: {
-        default: 'border-info bg-info-subtle',
+        advisory: 'border-advisory-bold bg-advisory-subtle',
         critical: 'border-critical bg-critical-subtle',
         serious: 'border-serious bg-serious-subtle',
         normal: 'border-normal bg-normal-subtle',
-        info: 'border-advisory-bold bg-advisory-subtle',
+        info: 'border-info-bold bg-info-subtle',
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'info',
     },
   },
 );

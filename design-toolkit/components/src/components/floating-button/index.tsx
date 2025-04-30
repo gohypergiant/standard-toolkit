@@ -21,14 +21,14 @@ import {
 const floatingButtonStyles = cva(
   [
     'absolute right-[20px] bottom-[20px] inline-flex size-[32px] cursor-pointer items-center justify-center rounded-full border border-interactive-default bg-transparent shadow-elevation-overlay outline-none',
-    'icon-color-default-dark [--icon-size:var(--spacing-xl)]',
-    'hover:icon-color-default-light hover:border-interactive-hover hover:bg-interactive-hover-dark',
+    'icon-default-dark [--icon-size:var(--spacing-xl)]',
+    'hover:icon-default-light hover:border-interactive-hover hover:bg-interactive-hover-dark',
     '',
   ],
   {
     variants: {
       isDisabled: {
-        true: 'icon-color-disabled hover:icon-color-disabled cursor-not-allowed border-interactive-disabled bg-interactive-disabled hover:border-interactive-disabled hover:bg-interactive-disabled',
+        true: 'icon-disabled hover:icon-disabled cursor-not-allowed border-interactive-disabled bg-interactive-disabled hover:border-interactive-disabled hover:bg-interactive-disabled',
         false: '',
       },
     },

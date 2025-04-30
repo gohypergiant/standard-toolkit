@@ -67,7 +67,7 @@ export const TooltipWithIcon: Story = {
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
-          <Lasso className='icon-color-interactive-default icon-size-xl' />
+          <Lasso className='icon-interactive-default icon-size-xl' />
         </Tooltip.Trigger>
         <Tooltip.Body>Lasso Selection</Tooltip.Body>
       </Tooltip>
