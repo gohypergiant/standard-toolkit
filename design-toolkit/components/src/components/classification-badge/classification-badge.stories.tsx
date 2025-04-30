@@ -35,6 +35,14 @@ const meta: Meta<typeof ClassificationBadge> = {
 export default meta;
 type Story = StoryObj<typeof ClassificationBadge>;
 
+export const Missing: Story = {
+  render: ({ children, ...args }) => (
+    <ClassificationBadge variant='missing' {...args}>
+      {children}
+    </ClassificationBadge>
+  ),
+};
+
 export const Unclassified: Story = {
   render: ({ children, ...args }) => (
     <ClassificationBadge variant='unclassified' {...args}>

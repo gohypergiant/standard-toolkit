@@ -15,10 +15,12 @@ import { type VariantProps, cva } from 'cva';
 import type { ReactNode } from 'react';
 
 const classificationBadge = cva(
-  'inline-flex items-center justify-center rounded-full',
+  'inline-flex items-center justify-center rounded-full uppercase',
   {
     variants: {
       variant: {
+        missing:
+          "bg-classification-missing text-critical [&:empty]:before:content-['Missing_Classification']",
         unclassified:
           "bg-classification-unclass text-default-light [&:empty]:before:content-['Unclassified']",
         cui: "bg-classification-cui text-default-light [&:empty]:before:content-['CUI']",
