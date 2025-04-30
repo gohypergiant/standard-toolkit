@@ -34,13 +34,12 @@ const buttonStyles = cva(
       },
       size: {
         large:
-          'min-h-xxl gap-m rounded-medium px-l py-s text-button-l tracking-[0.5px] [--icon-size:22px]',
+          'min-h-xxl gap-xs rounded-medium px-l py-s text-button-l [--icon-size:24px]',
         medium:
-          'min-h-[32px] gap-xs rounded-medium px-l py-xs text-button-m tracking-[0.25px] [--icon-size:20px]',
-        small:
-          'min-h-xl gap-xxs p-s text-button-s tracking-[0.4px] [--icon-size:16px]',
+          'min-h-[32px] gap-xs rounded-medium px-l py-xs text-button-m [--icon-size:20px]',
+        small: 'min-h-xl gap-xxs p-s text-button-s [--icon-size:16px]',
         xsmall:
-          'min-h-[20px] gap-xxs px-s py-xs text-button-xs tracking-[0.5px] [--icon-size:12px]',
+          'min-h-[20px] gap-xxs px-s py-xs text-button-xs [--icon-size:12px]',
       },
       isDisabled: {
         true: 'cursor-not-allowed bg-interactive-disabled text-disabled hover:bg-interactive-disabled hover:text-disabled',
