@@ -47,7 +47,7 @@ describe('Classification Banner', () => {
 
     expect(component).toBeInTheDocument();
     expect(component).toHaveClass(
-      'text-default-light',
+      'fg-default-light',
       'bg-classification-unclass',
     );
   });
