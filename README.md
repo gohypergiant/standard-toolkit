@@ -40,7 +40,7 @@ Development Toolkit (DevTK) is sponsored by: [Hypergiant] (GitHub [@gohypergiant
 Standard Toolkit is currently only intended for usage within the Accelint family of systems. Contributions are more than welcome but please consider that this project may not fit your needs.
 
 [Accelint]: https://accelint.com
-[Apache]: https://www.apache.org/licenses/LICENSE-2.0
-[docs]: https://standard-toolkit.accelint.dev/ 
-[go]: https://github.com/gohypergiant
+[Apache 2]: https://www.apache.org/licenses/LICENSE-2.0
+[Docs]: https://standard-toolkit.accelint.dev/ 
+[Github]: https://github.com/gohypergiant
 [Hypergiant]: https://hypergiant.com
