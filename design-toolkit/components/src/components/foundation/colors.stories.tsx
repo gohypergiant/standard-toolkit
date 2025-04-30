@@ -327,7 +327,7 @@ export const SemanticBackground: Story = {
         {colors.semanticBackgroundBase?.map(BackgroundColorDisplay)}
       </div>
       <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-        {colors.semanticBackgroundColor?.map(ForegroundColorDisplay)}
+        {colors.semanticBackgroundColor?.map(BackgroundColorDisplay)}
       </div>
     </div>
   ),
