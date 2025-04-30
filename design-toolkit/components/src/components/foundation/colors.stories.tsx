@@ -147,46 +147,57 @@ const colors: Record<string, ColorInfo[]> = {
     {
       name: 'default-light',
       fg: 'text-default-light',
+      bg: 'bg-default-light',
     },
     {
       name: 'info',
       fg: 'text-info',
+      bg: 'bg-info',
     },
     {
       name: 'default-dark',
       fg: 'text-default-dark',
+      bg: 'bg-default-dark',
     },
     {
       name: 'advisory',
       fg: 'text-advisory',
+      bg: 'bg-advisory',
     },
     {
       name: 'inverse-light',
       fg: 'text-inverse-light',
+      bg: 'bg-inverse-light',
     },
     {
       name: 'normal',
       fg: 'text-normal',
+      bg: 'bg-normal',
     },
     {
       name: 'inverse-dark',
       fg: 'text-inverse-dark',
+      bg: 'bg-inverse-dark',
     },
     {
       name: 'serious',
       fg: 'text-serious',
+      bg: 'bg-serious',
     },
     {
       name: 'disabled',
       fg: 'text-disabled',
+      bg: 'bg-disabled',
     },
     {
       name: 'critical',
       fg: 'text-critical',
+      bg: 'bg-critical',
     },
     {
       name: 'highlight',
       fg: 'text-highlight',
+      bg: 'bg-highlight',
     },
   ],
 };
@@ -240,16 +251,31 @@ const borders: Record<string, BorderInfo[]> = {
   ],
 };
 
-const ColorDisplay = (color: ColorInfo) => {
+const BackgroundColorDisplay = (color: ColorInfo) => {
   const rootElement = document.documentElement;
   return (
     <div className='flex items-center gap-l' key={color.name}>
-      <div
-        className={`h-[90px] w-[120px] rounded-large ${color.bg ?? color.fg?.replace('text', 'bg')}`}
-      />
+      <div className={`h-[90px] w-[120px] rounded-large ${color.bg}`} />
       <div className='flex flex-col gap-s font-display text-body-xs text-interactive-default'>
-        {color.bg && <span>{color.bg}</span>}
-        {color.fg && <span>{color.fg}</span>}
+        <span>{color.bg}</span>
+        <span>
+          {getComputedStyle(rootElement)
+            .getPropertyValue(`--color-${color.name}`)
+            .toLocaleUpperCase()}
+        </span>
+        <span className='text-default-dark'>Figma: {color.name}</span>
+      </div>
+    </div>
+  );
+};
+
+const ForegroundColorDisplay = (color: ColorInfo) => {
+  const rootElement = document.documentElement;
+  return (
+    <div className='flex items-center gap-l' key={color.name}>
+      <div className={`h-[90px] w-[120px] rounded-large ${color.bg}`} />
+      <div className='flex flex-col gap-s font-display text-body-xs text-interactive-default'>
+        <span>{color.fg}</span>
         <span>
           {getComputedStyle(rootElement)
             .getPropertyValue(`--color-${color.name}`)
@@ -298,10 +324,10 @@ export const SemanticBackground: Story = {
         </p>
       </div>
       <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-        {colors.semanticBackgroundBase?.map(ColorDisplay)}
+        {colors.semanticBackgroundBase?.map(BackgroundColorDisplay)}
       </div>
       <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-        {colors.semanticBackgroundColor?.map(ColorDisplay)}
+        {colors.semanticBackgroundColor?.map(ForegroundColorDisplay)}
       </div>
     </div>
   ),
@@ -323,7 +349,7 @@ export const SemanticForeground: Story = {
         </p>
       </div>
       <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-        {colors.semanticForeground?.map(ColorDisplay)}
+        {colors.semanticForeground?.map(ForegroundColorDisplay)}
       </div>
     </div>
   ),
