@@ -145,60 +145,60 @@
 
   /** Colors **/
   --color-current: currentColor;
-  --color-surface-default: var(--neutral-10);
-  --color-surface-raised: var(--neutral-09);
-  --color-surface-overlay: var(--neutral-08);
-  --color-transparent-dark: var(--alpha-black-02);
-  --color-transparent-light: var(--alpha-white-01);
+  --color-surface-default: var(--neutral-10, #0b0b0b);
+  --color-surface-raised: var(--neutral-09, #222222);
+  --color-surface-overlay: var(--neutral-08, #2f2f31);
+  --color-transparent-dark: var(--alpha-black-02, rgba(0, 0, 0, 0.4));
+  --color-transparent-light: var(--alpha-white-01, rgba(255, 255, 255, 0.08));
 
-  --color-interactive-default: var(--neutral-02);
-  --color-interactive-hover-light: var(--neutral-03);
-  --color-interactive-hover-dark: var(--neutral-08);
-  --color-interactive-disabled: var(--neutral-07);
+  --color-interactive-default: var(--neutral-02, #e6e6e6);
+  --color-interactive-hover-light: var(--neutral-03, #898989);
+  --color-interactive-hover-dark: var(--neutral-08, #2f2f31);
+  --color-interactive-disabled: var(--neutral-07, #383838);
 
-  --color-static-light: var(--neutral-07);
-  --color-static-dark: var(--neutral-09);
-  --color-interactive: var(--neutral-05);
-  --color-interactive-hover: var(--neutral-01);
+  --color-static-light: var(--neutral-07, #383838);
+  --color-static-dark: var(--neutral-09, #222222);
+  --color-interactive: var(--neutral-05, #565656);
+  --color-interactive-hover: var(--neutral-01, #ffffff);
 
-  --color-highlight-bold: var(--highlight-primary-03);
-  --color-highlight-hover: var(--highlight-primary-04);
-  --color-highlight-subtle: var(--highlight-primary-05);
-  --color-info-bold: var(--utility-info-03);
-  --color-info-hover: var(--utility-info-04);
-  --color-info-subtle: var(--utility-info-05);
-  --color-advisory-bold: var(--utility-advisory-03);
-  --color-advisory-hover: var(--utility-advisory-04);
-  --color-advisory-subtle: var(--utility-advisory-05);
-  --color-normal-bold: var(--utility-normal-03);
-  --color-normal-hover: var(--utility-normal-04);
-  --color-normal-subtle: var(--utility-normal-05);
-  --color-serious-bold: var(--utility-serious-03);
-  --color-serious-hover: var(--utility-serious-04);
-  --color-serious-subtle: var(--utility-serious-05);
-  --color-critical-bold: var(--utility-critical-03);
-  --color-critical-hover: var(--utility-critical-04);
-  --color-critical-subtle: var(--utility-critical-05);
+  --color-highlight-bold: var(--highlight-primary-03, #28f5be);
+  --color-highlight-hover: var(--highlight-primary-04, #189372);
+  --color-highlight-subtle: var(--highlight-primary-05, #0a3d30);
+  --color-info-bold: var(--utility-info-03, #686868);
+  --color-info-hover: var(--utility-info-04, #424244);
+  --color-info-subtle: var(--utility-info-05, #222222);
+  --color-advisory-bold: var(--utility-advisory-03, #62a6ff);
+  --color-advisory-hover: var(--utility-advisory-04, #3a6499);
+  --color-advisory-subtle: var(--utility-advisory-05, #142133);
+  --color-normal-bold: var(--utility-normal-03, #30d27e);
+  --color-normal-hover: var(--utility-normal-04, #1c7e4c);
+  --color-normal-subtle: var(--utility-normal-05, #0a2a19);
+  --color-serious-bold: var(--utility-serious-03, #fca400);
+  --color-serious-hover: var(--utility-serious-04, #976201);
+  --color-serious-subtle: var(--utility-serious-05, #322100);
+  --color-critical-bold: var(--utility-critical-03, #d4231d);
+  --color-critical-hover: var(--utility-critical-04, #7f1511);
+  --color-critical-subtle: var(--utility-critical-05, #2a0706);
 
-  --color-default-light: var(--neutral-01);
-  --color-default-dark: var(--neutral-03);
-  --color-inverse-dark: var(--neutral-09);
-  --color-inverse-light: var(--neutral-07);
-  --color-disabled: var(--neutral-05);
-  --color-highlight: var(--highlight-primary-03);
-  --color-info: var(--neutral-04);
-  --color-advisory: var(--utility-advisory-03);
-  --color-normal: var(--utility-normal-03);
-  --color-serious: var(--utility-serious-03);
-  --color-critical: var(--utility-critical-03);
+  --color-default-light: var(--neutral-01, #ffffff);
+  --color-default-dark: var(--neutral-03, #898989);
+  --color-inverse-dark: var(--neutral-09, #222222);
+  --color-inverse-light: var(--neutral-07, #383838);
+  --color-disabled: var(--neutral-05, #565656);
+  --color-highlight: var(--highlight-primary-03, #28f5be);
+  --color-info: var(--neutral-04, #686868);
+  --color-advisory: var(--utility-advisory-03, #62a6ff);
+  --color-normal: var(--utility-normal-03, #30d27e);
+  --color-serious: var(--utility-serious-03, #fca400);
+  --color-critical: var(--utility-critical-03, #d4231d);
 
-  --color-classification-missing: var(--neutral-10);
-  --color-classification-unclass: var(--classification-unclass);
-  --color-classification-cui: var(--classification-cui);
-  --color-classification-confidential: var(--classification-confidential);
-  --color-classification-secret: var(--classification-secret);
-  --color-classification-top-secret: var(--classification-top-secret);
-  --color-classification-top-secret-sci: var(--classification-top-secret-sci);
+  --color-classification-missing: var(--neutral-10, #0b0b0b);
+  --color-classification-unclass: var(--classification-unclass, #007A33);
+  --color-classification-cui: var(--classification-cui, #502b85);
+  --color-classification-confidential: var(--classification-confidential, #0033a0);
+  --color-classification-secret: var(--classification-secret, #c8102e);
+  --color-classification-top-secret: var(--classification-top-secret, #ff8c00);
+  --color-classification-top-secret-sci: var(--classification-top-secret-sci, #fce83a);
 
   /** Radius **/
   --radius-none: 0px;
@@ -333,7 +333,7 @@
   height: fit-content;
 }
 
-@utility icon-color-* {
+@utility icon-* {
   --icon-color: --value([ *]);
   --icon-color: --value(--color- *);
 }
@@ -341,6 +341,13 @@
 @utility icon-size-* {
   --icon-size: --value([ *]);
   --icon-size: --value(--spacing- *);
+}
+
+@utility fg-* {
+  color: --value([ *]);
+  color: --value(--color- *);
+  --icon-color: --value([ *]);
+  --icon-color: --value(--color- *);
 }
 
 @custom-variant pressed (&:where([data-pressed] *));

@@ -13,13 +13,17 @@
 import { type ClassValue, clsx } from 'clsx';
 import { extendTailwindMerge, validators } from 'tailwind-merge';
 
-type AdditionalClassGroupIds = 'icon-color' | 'icon-size';
+type AdditionalClassGroupIds = 'icon' | 'icon-size' | 'fg';
 
 export const twMerge = extendTailwindMerge<AdditionalClassGroupIds>({
   extend: {
     classGroups: {
-      'icon-color': [{ 'icon-color': ['', validators.isAny] }],
+      icon: [{ icon: ['', validators.isAny] }],
       'icon-size': [{ 'icon-size': ['', validators.isAny] }],
+      fg: [{ fg: ['', validators.isAny] }],
+    },
+    conflictingClassGroups: {
+      fg: ['icon', 'text-color'],
     },
     theme: {
       color: [

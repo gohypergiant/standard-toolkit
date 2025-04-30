@@ -146,57 +146,57 @@ const colors: Record<string, ColorInfo[]> = {
   semanticForeground: [
     {
       name: 'default-light',
-      fg: 'text-default-light',
+      fg: 'fg-default-light',
       bg: 'bg-default-light',
     },
     {
       name: 'info',
-      fg: 'text-info',
+      fg: 'fg-info',
       bg: 'bg-info',
     },
     {
       name: 'default-dark',
-      fg: 'text-default-dark',
+      fg: 'fg-default-dark',
       bg: 'bg-default-dark',
     },
     {
       name: 'advisory',
-      fg: 'text-advisory',
+      fg: 'fg-advisory',
       bg: 'bg-advisory',
     },
     {
       name: 'inverse-light',
-      fg: 'text-inverse-light',
+      fg: 'fg-inverse-light',
       bg: 'bg-inverse-light',
     },
     {
       name: 'normal',
-      fg: 'text-normal',
+      fg: 'fg-normal',
       bg: 'bg-normal',
     },
     {
       name: 'inverse-dark',
-      fg: 'text-inverse-dark',
+      fg: 'fg-inverse-dark',
       bg: 'bg-inverse-dark',
     },
     {
       name: 'serious',
-      fg: 'text-serious',
+      fg: 'fg-serious',
       bg: 'bg-serious',
     },
     {
       name: 'disabled',
-      fg: 'text-disabled',
+      fg: 'fg-disabled',
       bg: 'bg-disabled',
     },
     {
       name: 'critical',
-      fg: 'text-critical',
+      fg: 'fg-critical',
       bg: 'bg-critical',
     },
     {
       name: 'highlight',
-      fg: 'text-highlight',
+      fg: 'fg-highlight',
       bg: 'bg-highlight',
     },
   ],
