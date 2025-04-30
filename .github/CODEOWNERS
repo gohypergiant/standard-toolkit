@@ -8,6 +8,7 @@
 
 # Design system
 /packages/design-system @shadyendless @switzerb @brandonjpierce
+/design-toolkit @shadyendless @switzerb @brandonjpierce
 
 # Geo package
 /packages/geo @kalisjoshua @brandonjpierce
