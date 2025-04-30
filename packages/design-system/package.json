@@ -42,7 +42,7 @@
     "test": "pnpm vitest --dir=src"
   },
   "peerDependencies": {
-    "@internationalized/date": "3.7.0",
+    "@internationalized/date": "3.8.0",
     "@react-aria/collections": "3.0.0-alpha.5",
     "@react-aria/datepicker": "3.14.1",
     "@react-aria/dnd": "3.7.4",
