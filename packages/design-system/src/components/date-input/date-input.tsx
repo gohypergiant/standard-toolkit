@@ -11,6 +11,7 @@
  */
 
 import {
+  type FC,
   type ForwardedRef,
   Fragment,
   createContext,
@@ -166,53 +167,59 @@ export const DateSegments = forwardRef(
 export const DateSegmentContext =
   createContext<ContextValue<SlotProps, HTMLDivElement>>(null);
 
-export const DateSegment = forwardRef(function DateSegment(
-  props: DateSegmentProps,
-  ref: ForwardedRef<HTMLDivElement>,
-) {
-  [props, ref] = useContextProps(props, ref, DateSegmentContext);
+export const DateSegment: FC<DateSegmentProps> = forwardRef(
+  function DateSegment(
+    props: DateSegmentProps,
+    ref: ForwardedRef<HTMLDivElement>,
+  ) {
+    [props, ref] = useContextProps(props, ref, DateSegmentContext);
 
-  const { classNames: classNamesProp, children: childrenProp, ...rest } = props;
+    const {
+      classNames: classNamesProp,
+      children: childrenProp,
+      ...rest
+    } = props;
 
-  const classNames = useMemo(
-    () => mergeClassNames(dateInputClassNames, classNamesProp),
-    [classNamesProp],
-  );
+    const classNames = useMemo(
+      () => mergeClassNames(dateInputClassNames, classNamesProp),
+      [classNamesProp],
+    );
 
-  const style = useCallback(
-    (renderProps: DateSegmentRenderProps) =>
-      inlineVars(dateSegmentStateVars, {
-        ...renderProps,
-      }),
-    [],
-  );
+    const style = useCallback(
+      (renderProps: DateSegmentRenderProps) =>
+        inlineVars(dateSegmentStateVars, {
+          ...renderProps,
+        }),
+      [],
+    );
 
-  const children = useCallback(
-    (renderProps: DateSegmentRenderProps) => {
-      const { isPlaceholder, placeholder, text, value } = renderProps;
-      if (typeof childrenProp === 'function') {
-        return childrenProp({ ...renderProps, defaultChildren: null });
-      }
+    const children = useCallback(
+      (renderProps: DateSegmentRenderProps) => {
+        const { isPlaceholder, placeholder, text, value } = renderProps;
+        if (typeof childrenProp === 'function') {
+          return childrenProp({ ...renderProps, defaultChildren: null });
+        }
 
-      if (isPlaceholder) {
-        return placeholder;
-      }
+        if (isPlaceholder) {
+          return placeholder;
+        }
 
-      return (
-        <div className={classNames?.segment?.segment}>{value ?? text}</div>
-      );
-    },
-    [childrenProp, classNames],
-  );
+        return (
+          <div className={classNames?.segment?.segment}>{value ?? text}</div>
+        );
+      },
+      [childrenProp, classNames],
+    );
 
-  return (
-    <RACDateSegment
-      ref={ref}
-      {...rest}
-      style={style}
-      className={classNames?.segment?.container}
-    >
-      {children}
-    </RACDateSegment>
-  );
-});
+    return (
+      <RACDateSegment
+        ref={ref}
+        {...rest}
+        style={style}
+        className={classNames?.segment?.container}
+      >
+        {children}
+      </RACDateSegment>
+    );
+  },
+);
