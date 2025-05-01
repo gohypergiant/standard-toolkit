@@ -34,5 +34,8 @@ const config: StorybookConfig = {
   docs: {
     defaultName: 'Playground',
   },
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+  },
 };
 export default config;
