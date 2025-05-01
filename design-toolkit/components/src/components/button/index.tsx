@@ -75,7 +75,7 @@ export interface ButtonProps
    * Used to add text to the badge, such as the number of unread notifications.
    *
    * Can also receive a function which will be called with the parameters mentioned
-   * <a target="_blank" href="https://react-spectrum.adobe.com/react-aria/Button.html#styling:~:text=are%20documented%20below.-,Name,-CSS%20Selector">here</a>.
+   * {@link https://react-spectrum.adobe.com/react-aria/Button.html#styling:~:text=are%20documented%20below.-,Name,-CSS%20Selector here}
    */
   children?: AriaButtonProps['children'];
   isDisabled?: boolean;
