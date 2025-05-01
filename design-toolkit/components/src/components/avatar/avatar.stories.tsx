@@ -44,7 +44,7 @@ export const Default: Story = {
   render: ({ children, ...args }) => (
     <Avatar
       source='https://placedog.net/100x100?id=144'
-      alt='Colm Tuite'
+      alt='Cute Doggie'
       {...args}
     />
   ),
@@ -55,7 +55,7 @@ export const WithBadge: Story = {
     <div className='flex items-center gap-m'>
       <Avatar
         source='https://placedog.net/100x100?id=144'
-        alt='Colm Tuite'
+        alt='Cute Doggie'
         {...args}
       >
         <Badge variant='serious'>9</Badge>
@@ -63,7 +63,7 @@ export const WithBadge: Story = {
 
       <Avatar
         source='https://placedog.net/100x100?id=144'
-        alt='Colm Tuite'
+        alt='Cute Doggie'
         {...args}
       >
         <Badge variant='serious' />
@@ -75,13 +75,13 @@ export const WithBadge: Story = {
 export const WithFallback: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
-      <Avatar {...args} source='http://not-here' alt='Colm Tuite' />
+      <Avatar {...args} source='http://not-here' alt='Cute Doggie' />
       <Avatar
         source='https://placedog.net/100x100?id=144'
-        alt='Colm Tuite'
+        alt='Cute Doggie'
         {...args}
       />
-      <Avatar {...args} alt='Colm Tuite' source={<>PX</>}>
+      <Avatar {...args} alt='Cute Doggie' source={<>PX</>}>
         <Badge variant={'info'} />
       </Avatar>
     </div>
