@@ -1,5 +1,12 @@
 # @apps/next
 
+## 0.2.10
+
+### Patch Changes
+
+- Updated dependencies [4047209]
+  - @accelint/design-toolkit@0.0.1
+
 ## 0.2.9
 
 ### Patch Changes
