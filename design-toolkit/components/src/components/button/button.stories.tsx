@@ -18,7 +18,7 @@ const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   args: {
-    className: '',
+    className: undefined,
     children: 'Button',
     isDisabled: false,
     size: 'medium',
@@ -28,9 +28,15 @@ const meta: Meta<typeof Button> = {
     variant: {
       control: 'select',
       options: ['primary', 'outline', 'flat', 'destructive', 'critical'],
+      table: {
+        defaultValue: {
+          summary: 'primary',
+        },
+      },
     },
     className: {
       control: 'text',
+      type: 'string',
     },
     children: {
       control: 'text',

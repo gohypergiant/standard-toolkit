@@ -22,7 +22,6 @@ function getAbsolutePath(packageName: string): string {
 }
 
 const config: StorybookConfig = {
-  staticDirs: ['../static'],
   stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [getAbsolutePath('@storybook/addon-essentials')],
   framework: {
@@ -31,6 +30,9 @@ const config: StorybookConfig = {
   },
   core: {
     builder: '@storybook/builder-vite', // 👈 The builder enabled here.
+  },
+  docs: {
+    defaultName: 'Playground',
   },
 };
 export default config;

@@ -18,14 +18,41 @@ const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
   component: Avatar,
   args: {
-    className: '',
+    className: undefined,
     children: '',
+    source: 'https://placedog.net/100x100?id=144',
     size: 'medium',
   },
   argTypes: {
+    className: {
+      type: 'string',
+    },
+    fallback: {
+      description:
+        'The fallback that the avatar will render if it cannot load the provided `source`.\n\nAccepts any React component.',
+    },
+    fallbackDelay: {
+      description:
+        'How long the system should wait before it shows the fallback component. By default there is no delay.',
+      table: {
+        defaultValue: {
+          summary: '0',
+        },
+      },
+    },
     size: {
       control: 'select',
       options: ['medium', 'small'],
+      table: {
+        defaultValue: {
+          summary: 'medium',
+        },
+      },
+    },
+    source: {
+      control: 'text',
+      description:
+        'The source of an avatar can either be a URL representing an image or a React component (such as an SVG or an icon from a library).',
     },
   },
 };
@@ -36,10 +63,9 @@ type Story = StoryObj<typeof Avatar>;
 export const Default: Story = {
   render: ({ children, ...args }) => (
     <Avatar
-      source='/static/avatar-example.jpeg'
+      source='https://placedog.net/100x100?id=144'
       alt='Colm Tuite'
       {...args}
-      className='brightness-150 saturate-200 sepia-50'
     />
   ),
 };
@@ -48,19 +74,17 @@ export const WithBadge: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
       <Avatar
-        source='/static/avatar-example.jpeg'
+        source='https://placedog.net/100x100?id=144'
         alt='Colm Tuite'
         {...args}
-        className='brightness-150 saturate-200 sepia-50'
       >
         <Badge variant='serious'>9</Badge>
       </Avatar>
 
       <Avatar
-        source='/static/avatar-example.jpeg'
+        source='https://placedog.net/100x100?id=144'
         alt='Colm Tuite'
         {...args}
-        className='brightness-150 saturate-200 sepia-50'
       >
         <Badge variant='serious' />
       </Avatar>
@@ -71,9 +95,13 @@ export const WithBadge: Story = {
 export const WithFallback: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
-      <Avatar alt='Colm Tuite' {...args} />
-      <Avatar source='/static/avatar-example.jpeg' alt='Colm Tuite' {...args} />
-      <Avatar alt='Colm Tuite' source={<>PX</>} {...args}>
+      <Avatar {...args} source='http://not-here' alt='Colm Tuite' />
+      <Avatar
+        source='https://placedog.net/100x100?id=144'
+        alt='Colm Tuite'
+        {...args}
+      />
+      <Avatar {...args} alt='Colm Tuite' source={<>PX</>}>
         <Badge variant={'info'} />
       </Avatar>
     </div>

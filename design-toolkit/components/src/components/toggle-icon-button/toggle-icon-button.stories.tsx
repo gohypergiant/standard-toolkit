@@ -16,11 +16,10 @@ import { Tooltip } from '../tooltip';
 import { ToggleIconButton } from './index';
 
 const meta: Meta<typeof ToggleIconButton> = {
-  title: 'Components/Button/ToggleIconButton',
+  title: 'Components/ToggleIconButton',
   component: ToggleIconButton,
   args: {
-    className: '',
-    children: 'ToggleIconButton',
+    className: undefined,
     isDisabled: false,
     size: 'medium',
     variant: 'primary',
@@ -28,17 +27,25 @@ const meta: Meta<typeof ToggleIconButton> = {
   argTypes: {
     className: {
       control: 'text',
-    },
-    children: {
-      control: 'text',
+      type: 'string',
     },
     size: {
       control: 'select',
       options: ['medium', 'small'],
+      table: {
+        defaultValue: {
+          summary: 'medium',
+        },
+      },
     },
     variant: {
       control: 'select',
       options: ['primary', 'secondary'],
+      table: {
+        defaultValue: {
+          summary: 'primary',
+        },
+      },
     },
   },
 };

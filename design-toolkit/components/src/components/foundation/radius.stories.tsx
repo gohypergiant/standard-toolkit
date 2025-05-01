@@ -14,6 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Radius',
+  tags: ['!autodocs'],
 };
 
 export default meta;
@@ -75,7 +76,7 @@ const RadiusDisplay = (radius: RadiusInfo) => {
 
 export const Radius: Story = {
   globals: {
-    backgrounds: { value: 'black' },
+    backgrounds: { value: 'Black' },
   },
   render: () => (
     <div className='flex flex-col gap-xl'>

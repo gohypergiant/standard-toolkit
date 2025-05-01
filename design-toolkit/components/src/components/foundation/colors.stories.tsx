@@ -14,6 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Colors',
+  tags: ['!autodocs'],
 };
 
 export default meta;
@@ -309,7 +310,7 @@ const BorderDisplay = (border: BorderInfo) => {
 
 export const SemanticBackground: Story = {
   globals: {
-    backgrounds: { value: 'black' },
+    backgrounds: { value: 'Black' },
   },
   render: () => (
     <div className='flex flex-col gap-xl'>
@@ -335,7 +336,7 @@ export const SemanticBackground: Story = {
 
 export const SemanticForeground: Story = {
   globals: {
-    backgrounds: { value: 'black' },
+    backgrounds: { value: 'Black' },
   },
   render: () => (
     <div className='flex flex-col gap-xl'>
@@ -357,7 +358,7 @@ export const SemanticForeground: Story = {
 
 export const SemanticBorder: Story = {
   globals: {
-    backgrounds: { value: 'black' },
+    backgrounds: { value: 'Black' },
   },
   render: () => (
     <div className='flex flex-col gap-xl'>

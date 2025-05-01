@@ -17,17 +17,42 @@ const meta: Meta<typeof ClassificationBadge> = {
   title: 'Components/ClassificationBadge',
   component: ClassificationBadge,
   args: {
-    className: '',
+    className: undefined,
     children: '',
     size: 'medium',
+    variant: 'missing',
   },
   argTypes: {
     children: {
       control: 'text',
+      description:
+        'If no text is provided, the system will fallback to safe defaults. You can override the text with children.',
+    },
+    variant: {
+      control: 'select',
+      options: [
+        'missing',
+        'unclassified',
+        'cui',
+        'confidential',
+        'secret',
+        'top-secret',
+        'top-secret-sci',
+      ],
+      table: {
+        defaultValue: {
+          summary: 'missing',
+        },
+      },
     },
     size: {
       control: 'select',
       options: ['medium', 'small'],
+      table: {
+        defaultValue: {
+          summary: 'medium',
+        },
+      },
     },
   },
 };

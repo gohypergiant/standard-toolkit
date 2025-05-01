@@ -14,6 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Elevation',
+  tags: ['!autodocs'],
 };
 
 export default meta;

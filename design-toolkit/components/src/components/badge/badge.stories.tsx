@@ -17,14 +17,24 @@ const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
   component: Badge,
   args: {
-    className: '',
-    children: '',
+    className: undefined,
+    children: undefined,
     variant: 'info',
   },
   argTypes: {
+    children: {
+      control: 'text',
+      description:
+        'Used to add text to the badge, such as the number of unread notifications.',
+    },
     variant: {
       control: 'select',
       options: ['info', 'normal', 'serious', 'critical', 'advisory'],
+      table: {
+        defaultValue: {
+          summary: 'info',
+        },
+      },
     },
   },
 };
