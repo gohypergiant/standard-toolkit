@@ -32,20 +32,10 @@ const meta: Meta<typeof ToggleIconButton> = {
     size: {
       control: 'select',
       options: ['medium', 'small'],
-      table: {
-        defaultValue: {
-          summary: 'medium',
-        },
-      },
     },
     variant: {
       control: 'select',
       options: ['primary', 'secondary'],
-      table: {
-        defaultValue: {
-          summary: 'primary',
-        },
-      },
     },
   },
 };

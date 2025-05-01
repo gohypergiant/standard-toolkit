@@ -69,16 +69,23 @@ const buttonStyles = cva(
 );
 
 export interface ButtonProps
-  extends Omit<AriaButtonProps, 'isDisabled'>,
+  extends Omit<AriaButtonProps, 'children' | 'isDisabled'>,
     VariantProps<typeof buttonStyles> {
+  /**
+   * Used to add text to the badge, such as the number of unread notifications.
+   *
+   * Can also receive a function which will be called with the parameters mentioned
+   * <a target="_blank" href="https://react-spectrum.adobe.com/react-aria/Button.html#styling:~:text=are%20documented%20below.-,Name,-CSS%20Selector">here</a>.
+   */
+  children?: AriaButtonProps['children'];
   isDisabled?: boolean;
 }
 
 export const Button = ({
   className,
   isDisabled,
-  variant,
-  size,
+  variant = 'primary',
+  size = 'medium',
   ...props
 }: ButtonProps) => (
   <AriaButton

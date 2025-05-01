@@ -37,11 +37,17 @@ const badgeStyles = cva(
 
 export interface BadgeProps
   extends VariantProps<typeof badgeStyles>,
-    React.HTMLProps<HTMLSpanElement> {
+    Omit<React.HTMLProps<HTMLSpanElement>, 'children'> {
   className?: string;
+  /** Used to add text to the badge, such as the number of unread notifications. */
+  children?: string;
 }
 
-export const Badge = ({ className, variant, ...props }: BadgeProps) => (
+export const Badge = ({
+  className,
+  variant = 'info',
+  ...props
+}: BadgeProps) => (
   <span
     className={cn(
       badgeStyles({

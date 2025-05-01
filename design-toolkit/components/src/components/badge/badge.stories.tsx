@@ -24,17 +24,10 @@ const meta: Meta<typeof Badge> = {
   argTypes: {
     children: {
       control: 'text',
-      description:
-        'Used to add text to the badge, such as the number of unread notifications.',
     },
     variant: {
       control: 'select',
       options: ['info', 'normal', 'serious', 'critical', 'advisory'],
-      table: {
-        defaultValue: {
-          summary: 'info',
-        },
-      },
     },
   },
 };

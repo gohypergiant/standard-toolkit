@@ -28,11 +28,6 @@ const meta: Meta<typeof Button> = {
     variant: {
       control: 'select',
       options: ['primary', 'outline', 'flat', 'destructive', 'critical'],
-      table: {
-        defaultValue: {
-          summary: 'primary',
-        },
-      },
     },
     className: {
       control: 'text',
@@ -62,6 +57,8 @@ export const Link: Story = {
     </a>
   ),
 };
+
+Button.as({ variant: '' });
 
 export const ButtonWithLeftIcon: Story = {
   render: ({ children, ...args }) => (

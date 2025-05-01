@@ -24,8 +24,6 @@ const meta: Meta<typeof ClassificationBanner> = {
   argTypes: {
     children: {
       control: 'text',
-      description:
-        'If no text is provided, the system will fallback to safe defaults. You can override the text with children.',
     },
     variant: {
       control: 'select',
@@ -38,11 +36,6 @@ const meta: Meta<typeof ClassificationBanner> = {
         'top-secret',
         'top-secret-sci',
       ],
-      table: {
-        defaultValue: {
-          summary: 'missing',
-        },
-      },
     },
   },
   parameters: {

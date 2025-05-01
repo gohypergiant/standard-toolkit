@@ -27,32 +27,12 @@ const meta: Meta<typeof Avatar> = {
     className: {
       type: 'string',
     },
-    fallback: {
-      description:
-        'The fallback that the avatar will render if it cannot load the provided `source`.\n\nAccepts any React component.',
-    },
-    fallbackDelay: {
-      description:
-        'How long the system should wait before it shows the fallback component. By default there is no delay.',
-      table: {
-        defaultValue: {
-          summary: '0',
-        },
-      },
-    },
     size: {
       control: 'select',
       options: ['medium', 'small'],
-      table: {
-        defaultValue: {
-          summary: 'medium',
-        },
-      },
     },
     source: {
       control: 'text',
-      description:
-        'The source of an avatar can either be a URL representing an image or a React component (such as an SVG or an icon from a library).',
     },
   },
 };
