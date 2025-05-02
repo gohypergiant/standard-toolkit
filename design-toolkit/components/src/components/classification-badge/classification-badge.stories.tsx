@@ -35,7 +35,7 @@ const meta: Meta<typeof ClassificationBadge> = {
         'confidential',
         'secret',
         'top-secret',
-        'top-secret-sci',
+        'ts-sci',
       ],
     },
     size: {
@@ -90,7 +90,7 @@ export const Secret: Story = {
 
 export const TopSecret: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='{...args} top-secret'>
+    <ClassificationBadge {...args} variant='top-secret'>
       {children}
     </ClassificationBadge>
   ),
@@ -98,7 +98,7 @@ export const TopSecret: Story = {
 
 export const TopSecretSCI: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='top-{...args} secret-sci'>
+    <ClassificationBadge {...args} variant='ts-sci'>
       {children}
     </ClassificationBadge>
   ),

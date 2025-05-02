@@ -1,7 +1,31 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+export {
+  Accordion,
+  AccordionGroup,
+  AccordionHeader,
+  AccordionPanel,
+} from './components/accordion';
+export type {
+  AccordionGroupProps,
+  AccordionHeaderProps,
+  AccordionPanelProps,
+  AccordionProps,
+} from './components/accordion';
 export { Avatar } from './components/avatar';
 export type { AvatarProps } from './components/avatar';
 export { Badge } from './components/badge';
@@ -35,6 +59,7 @@ export { CancelFill } from './icons/cancel-fill';
 export { Cancel } from './icons/cancel';
 export { CenterOn } from './icons/center-on';
 export { Check } from './icons/check';
+export { ChevronDown } from './icons/chevron-down';
 export { CollapseAll } from './icons/collapse-all';
 export { CollapseWindow } from './icons/collapse-window';
 export { Condense } from './icons/condense';
@@ -60,6 +85,7 @@ export { Hide } from './icons/hide';
 export { Import } from './icons/import';
 export { InsertChart } from './icons/insert-chart';
 export { JumpTo } from './icons/jump-to';
+export { Kebab } from './icons/kebab';
 export { Lasso } from './icons/lasso';
 export { Link } from './icons/link';
 export { LockFill } from './icons/lock-fill';

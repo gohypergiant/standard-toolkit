@@ -21,6 +21,7 @@ import {
   type DisclosurePanelProps as AriaDisclosurePanelProps,
   type DisclosureProps as AriaDisclosureProps,
   Button,
+  ButtonContext,
   type ButtonProps,
   Heading,
   composeRenderProps,
@@ -29,7 +30,7 @@ import {
 import { ChevronDown, Kebab } from '@/icons';
 import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
-import { Children, cloneElement, isValidElement } from 'react';
+import { createContext, useContext } from 'react';
 import { IconButton } from '../icon-button';
 
 const accordionStyles = cva('group flex flex-col bg-transparent', {
@@ -44,6 +45,16 @@ const accordionStyles = cva('group flex flex-col bg-transparent', {
   },
 });
 
+interface AccordionContextType
+  extends Pick<VariantProps<typeof accordionStyles>, 'variant'> {
+  options?: boolean;
+}
+
+const AccordionContext = createContext<AccordionContextType>({
+  options: false,
+  variant: 'cozy',
+});
+
 export interface AccordionProps
   extends AriaDisclosureProps,
     VariantProps<typeof accordionStyles> {
@@ -54,29 +65,26 @@ export interface AccordionProps
 export function Accordion({
   children,
   className,
+  isDisabled = false,
   options = false,
   variant,
   ...props
 }: AccordionProps) {
-  const childrenWithProps = Children.map(children, (child) => {
-    if (isValidElement(child)) {
-      return cloneElement(child, { options, variant } as AccordionProps);
-    }
-    return child;
-  });
-
   return (
-    <AriaDisclosure
-      {...props}
-      className={composeRenderProps(className, (className) =>
-        cn(
-          `group w-full ${options ? 'has-options' : ''}`,
-          accordionStyles({ variant, className }),
-        ),
-      )}
-    >
-      {childrenWithProps}
-    </AriaDisclosure>
+    <AccordionContext.Provider value={{ options, variant }}>
+      <AriaDisclosure
+        {...props}
+        isDisabled={isDisabled}
+        className={composeRenderProps(className, (className) =>
+          cn(
+            `group w-full ${options ? 'has-options' : ''}`,
+            accordionStyles({ variant, className }),
+          ),
+        )}
+      >
+        {children}
+      </AriaDisclosure>
+    </AccordionContext.Provider>
   );
 }
 
@@ -84,39 +92,56 @@ export interface AccordionHeaderProps
   extends Pick<AccordionProps, 'options' | 'variant'> {
   children: React.ReactNode;
   className?: ButtonProps['className'];
+  isDisabled?: boolean;
 }
 
-export function AccordionHeader({
-  children,
-  options,
-  variant,
-}: AccordionHeaderProps) {
+export function AccordionHeader({ children }: AccordionHeaderProps) {
+  const context = useContext(ButtonContext);
+  const isDisabled = context?.slots?.trigger.isDisabled;
+  const { options, variant } = useContext(AccordionContext);
+
   return (
-    <Heading>
+    <Heading
+      className={cn([
+        'fg-default-light flex w-full cursor-pointer items-center rounded-medium hover:bg-interactive-hover-dark',
+        isDisabled && 'fg-disabled cursor-default hover:bg-transparent',
+      ])}
+      data-variant={variant}
+    >
       <Button
         slot='trigger'
-        className='fg-default-light group-[.is-cozy]:icon-size-xl group-[.is-compact]:icon-size-l flex w-full cursor-pointer items-center rounded-medium transition-colors hover:bg-interactive-hover-dark group-[.is-compact]:gap-xs group-[.is-cozy]:gap-s group-[.is-compact]:p-s group-[.is-cozy]:p-s group-[.is-compact]:text-header-s group-[.is-cozy]:text-header-m'
+        className={cn([
+          'flex w-full cursor-pointer items-center rounded-medium',
+          'data-[variant=cozy]:icon-size-xl data-[variant=cozy]:gap-s data-[variant=cozy]:p-s data-[variant=cozy]:text-header-m',
+          'data-[variant=compact]:icon-size-l data-[variant=compact]:gap-xs data-[variant=compact]:p-s data-[variant=compact]:text-header-s',
+          'ai-disabled:cursor-default',
+        ])}
+        data-variant={variant}
       >
         <span
           className={IconButton.as({
+            isDisabled,
             size: variant === 'cozy' ? 'medium' : 'small',
+            variant: 'child',
           })}
+          aria-hidden
         >
           <ChevronDown
-            aria-hidden
             className={cn('transform group-ai-expanded:rotate-180')}
           />
         </span>
         {children}
-        {options && (
-          <IconButton
-            size={variant === 'cozy' ? 'medium' : 'small'}
-            className='ml-auto'
-          >
-            <Kebab />
-          </IconButton>
-        )}
       </Button>
+      {options && (
+        <IconButton
+          className='ml-auto'
+          isDisabled={isDisabled}
+          size={variant === 'cozy' ? 'medium' : 'small'}
+          variant='child'
+        >
+          <Kebab />
+        </IconButton>
+      )}
     </Heading>
   );
 }
@@ -141,10 +166,13 @@ export function AccordionPanel({
 }
 
 export interface AccordionGroupProps extends AriaDisclosureGroupProps {
+  /** Whether multiple items can be expanded at the same time. */
+  allowsMultipleExpanded?: boolean;
   children: React.ReactNode;
 }
 
 export function AccordionGroup({
+  allowsMultipleExpanded = false,
   children,
   className,
   ...props
@@ -152,6 +180,7 @@ export function AccordionGroup({
   return (
     <AriaDisclosureGroup
       {...props}
+      allowsMultipleExpanded={allowsMultipleExpanded}
       className={composeRenderProps(className, (className) =>
         cn('flex w-full flex-col', className),
       )}

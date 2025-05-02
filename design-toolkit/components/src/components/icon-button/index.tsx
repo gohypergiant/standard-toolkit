@@ -26,6 +26,7 @@ const iconButtonStyles = cva(
         primary: 'icon-default-light',
         secondary:
           'icon-default-dark hover:icon-default-light ai-pressed:icon-default-light',
+        child: 'ai-pressed:bg-transparent bg-transparent hover:bg-transparent',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
@@ -36,6 +37,13 @@ const iconButtonStyles = cva(
         false: '',
       },
     },
+    compoundVariants: [
+      {
+        isDisabled: true,
+        variant: 'child',
+        className: 'cursor-default',
+      },
+    ],
     defaultVariants: {
       isDisabled: false,
       size: 'medium',

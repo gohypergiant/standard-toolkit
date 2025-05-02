@@ -34,7 +34,7 @@ const meta: Meta<typeof ClassificationBanner> = {
         'confidential',
         'secret',
         'top-secret',
-        'top-secret-sci',
+        'ts-sci',
       ],
     },
   },
@@ -96,7 +96,7 @@ export const TopSecret: Story = {
 
 export const TopSecretSCI: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner {...args} variant='top-secret-sci'>
+    <ClassificationBanner {...args} variant='ts-sci'>
       {children}
     </ClassificationBanner>
   ),

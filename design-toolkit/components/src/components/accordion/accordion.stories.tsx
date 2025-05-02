@@ -12,12 +12,16 @@
 
 import { Placeholder } from '@/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Accordion, AccordionGroup, AccordionHeader, AccordionPanel } from './';
+import { Accordion, AccordionHeader, AccordionPanel } from './';
 
+/**
+ * The accordion will stretch to fill the entire width of its parent container.
+ */
 const meta: Meta<typeof Accordion> = {
   title: 'Components/Accordion',
   component: Accordion,
   args: {
+    isDisabled: false,
     options: false,
     variant: 'cozy',
   },
@@ -25,6 +29,11 @@ const meta: Meta<typeof Accordion> = {
     variant: {
       control: 'select',
       options: ['cozy', 'compact'],
+    },
+  },
+  parameters: {
+    docs: {
+      subtitle: 'Content that can expand and collapse.',
     },
   },
 };
@@ -46,48 +55,6 @@ export const Default: Story = {
           </p>
         </AccordionPanel>
       </Accordion>
-    </div>
-  ),
-};
-
-export const MultipleAccordions: Story = {
-  render: ({ children, ...args }) => (
-    <div className='w-[280px]'>
-      <AccordionGroup>
-        <Accordion {...args}>
-          <AccordionHeader>
-            <Placeholder /> Accordion one{' '}
-          </AccordionHeader>
-          <AccordionPanel>
-            <p className='fg-default-dark text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </AccordionPanel>
-        </Accordion>
-        <Accordion {...args}>
-          <AccordionHeader>
-            <Placeholder /> Accordion two{' '}
-          </AccordionHeader>
-          <AccordionPanel>
-            <p className='fg-default-dark text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </AccordionPanel>
-        </Accordion>
-        <Accordion {...args}>
-          <AccordionHeader>
-            <Placeholder /> Accordion three{' '}
-          </AccordionHeader>
-          <AccordionPanel>
-            <p className='fg-default-dark text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </AccordionPanel>
-        </Accordion>
-      </AccordionGroup>
     </div>
   ),
 };
