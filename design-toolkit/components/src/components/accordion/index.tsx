@@ -103,7 +103,7 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
   return (
     <Heading
       className={cn([
-        'fg-default-light flex w-full cursor-pointer items-center rounded-medium hover:bg-interactive-hover-dark',
+        'fg-default-light flex w-full cursor-pointer items-center rounded-medium p-s hover:bg-interactive-hover-dark',
         isDisabled && 'fg-disabled cursor-default hover:bg-transparent',
       ])}
       data-variant={variant}
@@ -112,8 +112,8 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
         slot='trigger'
         className={cn([
           'flex w-full cursor-pointer items-center rounded-medium',
-          'data-[variant=cozy]:icon-size-xl data-[variant=cozy]:gap-s data-[variant=cozy]:p-s data-[variant=cozy]:text-header-m',
-          'data-[variant=compact]:icon-size-l data-[variant=compact]:gap-xs data-[variant=compact]:p-s data-[variant=compact]:text-header-s',
+          'data-[variant=cozy]:icon-size-xl data-[variant=cozy]:gap-s data-[variant=cozy]:text-header-m',
+          'data-[variant=compact]:icon-size-l data-[variant=compact]:gap-xs data-[variant=compact]:text-header-s',
           'ai-disabled:cursor-default',
         ])}
         data-variant={variant}
