@@ -58,7 +58,7 @@ export const Missing: Story = {
 
 export const Unclassified: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='unclassified' {...args}>
+    <ClassificationBadge {...args} variant='unclassified'>
       {children}
     </ClassificationBadge>
   ),
@@ -66,7 +66,7 @@ export const Unclassified: Story = {
 
 export const CUI: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='cui' {...args}>
+    <ClassificationBadge {...args} variant='cui'>
       {children}
     </ClassificationBadge>
   ),
@@ -74,7 +74,7 @@ export const CUI: Story = {
 
 export const Confidential: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='confidential' {...args}>
+    <ClassificationBadge {...args} variant='confidential'>
       {children}
     </ClassificationBadge>
   ),
@@ -82,7 +82,7 @@ export const Confidential: Story = {
 
 export const Secret: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='secret' {...args}>
+    <ClassificationBadge {...args} variant='secret'>
       {children}
     </ClassificationBadge>
   ),
@@ -90,7 +90,7 @@ export const Secret: Story = {
 
 export const TopSecret: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='top-secret' {...args}>
+    <ClassificationBadge variant='{...args} top-secret'>
       {children}
     </ClassificationBadge>
   ),
@@ -98,7 +98,7 @@ export const TopSecret: Story = {
 
 export const TopSecretSCI: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='top-secret-sci' {...args}>
+    <ClassificationBadge variant='top-{...args} secret-sci'>
       {children}
     </ClassificationBadge>
   ),
