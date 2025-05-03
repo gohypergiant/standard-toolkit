@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -10,6 +22,8 @@ export { Box } from './components/box';
 export type { BoxProps } from './components/box';
 export { Button } from './components/button';
 export type { ButtonProps } from './components/button';
+export { Checkbox } from './components/checkbox';
+export type { CheckboxGroupProps, CheckboxProps } from './components/checkbox';
 export { ClassificationBadge } from './components/classification-badge';
 export type { ClassificationBadgeProps } from './components/classification-badge';
 export { ClassificationBanner } from './components/classification-banner';
@@ -67,6 +81,7 @@ export { LockOutline } from './icons/lock-outline';
 export { Login } from './icons/login';
 export { Logout } from './icons/logout';
 export { Loop } from './icons/loop';
+export { Minus } from './icons/minus';
 export { Move } from './icons/move';
 export { Mute } from './icons/mute';
 export { OpenContainer } from './icons/open-container';
