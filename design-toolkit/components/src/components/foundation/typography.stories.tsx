@@ -235,6 +235,7 @@ export const DisplayBody: Story = {
 };
 
 export const PrimaryButton: Story = {
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>

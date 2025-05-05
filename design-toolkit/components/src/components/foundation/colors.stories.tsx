@@ -309,9 +309,7 @@ const BorderDisplay = (border: BorderInfo) => {
 };
 
 export const SemanticBackground: Story = {
-  globals: {
-    backgrounds: { value: 'Black' },
-  },
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
@@ -335,9 +333,7 @@ export const SemanticBackground: Story = {
 };
 
 export const SemanticForeground: Story = {
-  globals: {
-    backgrounds: { value: 'Black' },
-  },
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
@@ -357,9 +353,7 @@ export const SemanticForeground: Story = {
 };
 
 export const SemanticBorder: Story = {
-  globals: {
-    backgrounds: { value: 'Black' },
-  },
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
