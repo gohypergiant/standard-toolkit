@@ -52,9 +52,9 @@ export interface IconButtonProps
 
 export const IconButton = ({
   className,
-  size,
-  variant,
-  isDisabled = false,
+  size = 'medium',
+  variant = 'primary',
+  isDisabled,
   ...props
 }: IconButtonProps) => (
   <AriaButton

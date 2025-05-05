@@ -18,7 +18,7 @@ const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   args: {
-    className: '',
+    className: undefined,
     children: 'Button',
     isDisabled: false,
     size: 'medium',
@@ -31,6 +31,7 @@ const meta: Meta<typeof Button> = {
     },
     className: {
       control: 'text',
+      type: 'string',
     },
     children: {
       control: 'text',
@@ -56,6 +57,8 @@ export const Link: Story = {
     </a>
   ),
 };
+
+Button.as({ variant: '' });
 
 export const ButtonWithLeftIcon: Story = {
   render: ({ children, ...args }) => (

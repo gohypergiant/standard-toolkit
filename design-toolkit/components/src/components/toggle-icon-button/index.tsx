@@ -53,9 +53,9 @@ export interface ToggleIconButtonProps
 
 export const ToggleIconButton = ({
   className,
-  size,
-  variant,
-  isDisabled = false,
+  size = 'medium',
+  variant = 'secondary',
+  isDisabled,
   ...props
 }: ToggleIconButtonProps) => (
   <AriaToggleButton

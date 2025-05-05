@@ -40,8 +40,15 @@ const avatarWrapperStyles = cn([
 export interface AvatarProps
   extends React.ComponentProps<typeof AvatarPrimitive.Image>,
     VariantProps<typeof avatarStyles> {
+  /**
+   * The fallback that the avatar will render if it cannot load the provided source.
+   *
+   * Accepts any React component.
+   */
   fallback?: React.ReactNode;
+  /** How long the system should wait before it shows the fallback component. By default there is no delay. */
   fallbackDelay?: number;
+  /** The source of an avatar can either be a URL representing an image or a React component (such as an SVG or an icon from a library). */
   source?: string | React.ReactNode;
 }
 
@@ -49,9 +56,9 @@ export const Avatar = ({
   className,
   children,
   fallback,
-  fallbackDelay,
+  fallbackDelay = 0,
   source,
-  size,
+  size = 'medium',
   ...props
 }: AvatarProps) => (
   <div className={avatarWrapperStyles}>

@@ -14,6 +14,7 @@ import React from 'react';
 
 const meta: Meta = {
   title: 'Foundation/Typography',
+  tags: ['!autodocs'],
 };
 
 export default meta;

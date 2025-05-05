@@ -295,15 +295,24 @@ importers:
       '@storybook/addon-essentials':
         specifier: ^8.6.12
         version: 8.6.12(@types/react@19.1.2)(storybook@8.6.12(prettier@2.8.8))
+      '@storybook/blocks':
+        specifier: 8.6.12
+        version: 8.6.12(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.12(prettier@2.8.8))
       '@storybook/builder-vite':
         specifier: 8.6.12
         version: 8.6.12(storybook@8.6.12(prettier@2.8.8))(vite@5.4.18(@types/node@20.17.32)(lightningcss@1.29.2)(terser@5.39.0))
+      '@storybook/manager-api':
+        specifier: 8.6.12
+        version: 8.6.12(storybook@8.6.12(prettier@2.8.8))
       '@storybook/react':
         specifier: ^8.6.12
         version: 8.6.12(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.12(prettier@2.8.8))(typescript@5.7.3)
       '@storybook/react-vite':
         specifier: ^8.6.12
         version: 8.6.12(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.40.1)(storybook@8.6.12(prettier@2.8.8))(typescript@5.7.3)(vite@5.4.18(@types/node@20.17.32)(lightningcss@1.29.2)(terser@5.39.0))
+      '@storybook/theming':
+        specifier: 8.6.12
+        version: 8.6.12(storybook@8.6.12(prettier@2.8.8))
       '@tailwindcss/cli':
         specifier: 4.1.4
         version: 4.1.4
