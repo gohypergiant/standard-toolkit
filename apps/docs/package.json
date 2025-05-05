@@ -3,13 +3,13 @@
   "version": "0.1.8",
   "private": true,
   "scripts": {
-    "build": "pnpm run build:typedoc && pnpm run build:docusaurus",
+    "docs": "pnpm run build:typedoc && pnpm run build:docusaurus",
     "build:docusaurus": "docusaurus build",
     "build:contributing": "mv ./content/api/_media/CONTRIBUTING.md ./content/CONTRIBUTING.md",
     "build:license": "mv ./content/api/_media/LICENSE ./content/LICENSE.md",
     "build:typedoc": "typedoc && pnpm run build:contributing && pnpm run build:license",
     "clear": "docusaurus clear",
-    "dev": "pnpm run build && docusaurus start",
+    "dev": "pnpm run docs && docusaurus start",
     "serve": "docusaurus serve"
   },
   "dependencies": {
@@ -53,6 +53,6 @@
     ]
   },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=20.0"
   }
 }
