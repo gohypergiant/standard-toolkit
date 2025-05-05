@@ -26,7 +26,7 @@ const preview: Preview = {
         { name: 'Dark', value: '#0b0b0b' },
         { name: 'Black', value: '#000000' },
       ],
-      default: 'Dark',
+      default: '#0b0b0b',
     },
     docs: {
       theme: themes.dark,

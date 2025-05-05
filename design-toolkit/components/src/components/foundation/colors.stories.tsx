@@ -335,9 +335,7 @@ export const SemanticBackground: Story = {
 };
 
 export const SemanticForeground: Story = {
-  globals: {
-    backgrounds: { value: 'Black' },
-  },
+  globals: { backgrounds: { value: '#0b0b0b' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>

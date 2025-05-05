@@ -13,6 +13,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from './index';
 
+/**
+ * The `<Checkbox>` component is a direct wrapper around the equiavalent component from
+ * `react-aria-components`.
+ *
+ * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/Checkbox.html">here</a>.
+ */
 const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox',
   component: Checkbox,
@@ -30,15 +36,4 @@ type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
-};
-
-export const CheckboxGroup: Story = {
-  render: () => (
-    <Checkbox.Group defaultValue={['value1', 'value3']} label='Header'>
-      <Checkbox value='value1'>Checkbox text</Checkbox>
-      <Checkbox value='value2'>Checkbox text</Checkbox>
-      <Checkbox value='value3'>Checkbox text</Checkbox>
-      <Checkbox value='value4'>Checkbox text</Checkbox>
-    </Checkbox.Group>
-  ),
 };

@@ -58,6 +58,9 @@ const checkboxStyles = cva('fg-inverse-light size-l rounded-small border', {
   },
 });
 
+/**
+ * This is a checkbox.
+ */
 export interface CheckboxProps extends AriaCheckboxProps {}
 
 export function Checkbox({ className, children, ...args }: CheckboxProps) {
