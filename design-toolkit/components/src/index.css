@@ -151,7 +151,7 @@
   --color-transparent-dark: var(--alpha-black-02, rgba(0, 0, 0, 0.4));
   --color-transparent-light: var(--alpha-white-01, rgba(255, 255, 255, 0.08));
 
-  --color-interactive-default: var(--neutral-02, #e6e6e6);
+  --color-interactive-default: var(--neutral-05, #565656);
   --color-interactive-hover-light: var(--neutral-03, #898989);
   --color-interactive-hover-dark: var(--neutral-08, #2f2f31);
   --color-interactive-disabled: var(--neutral-07, #383838);
