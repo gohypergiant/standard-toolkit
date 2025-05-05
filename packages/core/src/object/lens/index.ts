@@ -27,8 +27,11 @@ export type Lens<T, V> = {
 /**
  * Focus on and manipulate a specific property or substructure within an object.
  *
- * @param getter The lens get function to use.
- * @param setter The lens set function to use.
+ * @template T - The type of the object being inspected.
+ * @template V - The type of the property value.
+ *
+ * @param getter - The lens get function to use.
+ * @param setter - The lens set function to use.
  *
  * @remarks
  * pure function
@@ -64,8 +67,11 @@ export const lens = <T, V>(
  *
  * Given a lens `A ⭢ B` and a lens `B ⭢ C`, produces a lens `A ⭢ C`.
  *
- * @param ab The lens from A ⭢ B.
- * @param bc The lens from B ⭢ C.
+ * @template A - The type of the first object being inspected.
+ * @template B - The type of the second object being inspected.
+ * @template C - The type of the property value on the second lens.
+ * @param ab - The lens from A ⭢ B.
+ * @param bc - The lens from B ⭢ C.
  *
  * @remarks
  * pure function
