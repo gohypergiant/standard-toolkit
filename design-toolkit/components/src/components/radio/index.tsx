@@ -27,7 +27,7 @@ const radioStyles = cva(
     variants: {
       isHovered: {
         true: 'border-interactive-hover',
-        false: 'border-interactive-default',
+        false: 'border-interactive',
       },
       isSelected: {
         true: 'border-highlight before:bg-highlight hover:border-highlight',
