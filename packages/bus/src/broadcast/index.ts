@@ -66,8 +66,8 @@ export class Broadcast {
   /**
    * Handle errors from the BroadcastChannel.
    *
-   * @param error - Error event.
    * @private
+   * @param error - Error event.
    */
   #onError(error: MessageEvent) {
     console.error('BroadcastChannel message error', error);
@@ -134,6 +134,13 @@ export class Broadcast {
    * @template T - The type of the Payload data.
    * @param type - The event type.
    * @param callback - The callback function.
+   *
+   * @example
+   * bus.on(EVENTS.MAP_CLICK, (e) => {
+   *   if (!e.payload.picked) {
+   *     setSelected(null);
+   *   }
+   * });
    */
   on<T>(type: string, callback: (data: Payload<T>) => void) {
     const id = this.#listenerCounter++;
@@ -177,6 +184,17 @@ export class Broadcast {
    * @template T - The type of the Payload data.
    * @param type - The event type.
    * @param payload - The event payload.
+   *
+   * @example
+   * bus.emit(
+   *   EVENTS.LAYER_CLICK,
+   *   {
+   *     worldSpace: pickInfo.coordinate,
+   *     screenSpace: pickInfo.pixel,
+   *     index: pickInfo.index,
+   *     object: pickInfo.object,
+   *   },
+   * );
    */
   emit<T>(type: string, payload: T) {
     if (!this.#channel) {

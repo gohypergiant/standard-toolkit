@@ -14,7 +14,8 @@
  * Mathematic identity function. A function that always returns the value
  * that was used as its argument, unchanged.
  *
- * @param x The value to return.
+ * @template A - The type of the input value.
+ * @param x - The value to return.
  *
  * @remarks
  * I combinator

@@ -14,8 +14,10 @@
  * Corresponds to the encoding of `true` in the lambda calculus.
  * Takes two arguments and always returns the first.
  *
- * @param a The value to return.
- * @param b The value to ignore.
+ * @template A - The type of the first input value.
+ * @template B - The type of the second input value.
+ * @param a - The value to return.
+ * @param b - The value to ignore.
  *
  * @remarks
  * K combinator
