@@ -26,7 +26,7 @@ const checkboxStyles = cva('fg-inverse-light size-l rounded-small border', {
   variants: {
     isHovered: {
       true: 'border-interactive-hover',
-      false: 'border-interactive-default',
+      false: 'border-interactive',
     },
     isIndeterminate: {
       true: 'border-highlight bg-highlight hover:border-highlight',
