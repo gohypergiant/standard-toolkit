@@ -86,6 +86,7 @@ const SpacingDisplay = (space: SpacingInfo) => {
 };
 
 export const Spacing: Story = {
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
