@@ -28,11 +28,15 @@ const checkboxStyles = cva('fg-inverse-light size-l rounded-small border', {
       true: 'border-interactive-hover',
       false: 'border-interactive',
     },
+    isFocused: {
+      true: 'border-interactive-hover',
+      false: 'border-interactive',
+    },
     isIndeterminate: {
-      true: 'border-highlight bg-highlight hover:border-highlight',
+      true: 'border-highlight bg-highlight hover:border-highlight focus:border-highlight',
     },
     isSelected: {
-      true: 'border-highlight bg-highlight hover:border-highlight',
+      true: 'border-highlight bg-highlight hover:border-highlight focus:border-interactive-hover',
     },
     isDisabled: {
       true: 'border-interactive-disabled',
@@ -43,13 +47,13 @@ const checkboxStyles = cva('fg-inverse-light size-l rounded-small border', {
       isDisabled: true,
       isSelected: true,
       className:
-        'icon-inverse-light hover:interactive-disabled bg-interactive-disabled',
+        'icon-inverse-light hover:interactive-disabled focus:interactive-disabled bg-interactive-disabled',
     },
     {
       isDisabled: true,
       isIndeterminate: true,
       className:
-        'icon-inverse-light hover:interactive-disabled bg-interactive-disabled',
+        'icon-inverse-light hover:interactive-disabled focus:interactive-disabled bg-interactive-disabled',
     },
   ],
   defaultVariants: {
@@ -72,12 +76,13 @@ export function Checkbox({ className, children, ...args }: CheckboxProps) {
         className,
       )}
     >
-      {({ isDisabled, isHovered, isIndeterminate, isSelected }) => (
+      {({ isDisabled, isFocused, isHovered, isIndeterminate, isSelected }) => (
         <>
           <div
             className={cn(
               checkboxStyles({
                 isDisabled,
+                isFocused,
                 isHovered,
                 isIndeterminate,
                 isSelected,
