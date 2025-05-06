@@ -13,7 +13,10 @@
 /**
  * Generate a random number within the given bounds.
  *
- * @throws {RangeError} Throws an error if min > max.
+ * @param min - The minimum value in the range (inclusive).
+ * @param max - The maximum value in the range (inclusive).
+ *
+ * @throws {RangeError} Throws if min > max.
  *
  * @example
  * const value = random(0, 10);
@@ -23,18 +26,20 @@
  * // RangeError
  */
 export function random(min: number, max: number) {
-  // TODO: do we want to handle this differently? A range error is quite explicit
   if (min > max) {
     throw new RangeError('Min exceeded max');
   }
 
-  return Math.random() * (max - min) + min;
+  return Math.random() * (max - min + 1) + min;
 }
 
 /**
  * Generate a random integer within the given bounds.
  *
- * @throws {RangeError} Throws an error if min > max.
+ * @param min - The minimum value in the range (inclusive).
+ * @param max - The maximum value in the range (inclusive).
+ *
+ * @throws {RangeError} Throws if min > max.
  *
  * @example
  * const value = randomInt(0, 10);

@@ -17,7 +17,7 @@
  * @param max - The upper bound to clamp to.
  * @param value - The number value to clamp to the given range.
  *
- * @throws {RangeError} Throws an error if min > max.
+ * @throws {RangeError} Throws if min > max.
  *
  * @example
  * const value = clamp(5, 15, 10); // 10
