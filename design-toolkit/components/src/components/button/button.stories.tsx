@@ -58,13 +58,11 @@ export const Link: Story = {
   ),
 };
 
-Button.as({ variant: '' });
-
 export const ButtonWithLeftIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
       <Placeholder />
-      {children}
+      {typeof children !== 'function' && children}
     </Button>
   ),
 };
@@ -72,7 +70,7 @@ export const ButtonWithLeftIcon: Story = {
 export const ButtonWithRightIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
-      {children}
+      {typeof children !== 'function' && children}
       <Placeholder />
     </Button>
   ),
