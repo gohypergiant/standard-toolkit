@@ -27,7 +27,7 @@ import {
 
 const chipStyles = cva(
   cn([
-    'fg-default-light inline-flex items-center justify-center rounded-full border',
+    'fg-default-light inline-flex w-content items-center justify-center rounded-full border outline-none',
   ]),
   {
     variants: {
@@ -118,13 +118,13 @@ Chip.List = ChipList;
 
 const selectableChipStyles = cva(
   cn([
-    'fg-default-light inline-flex items-center justify-center rounded-full border border-interactive hover:border-interactive-hover',
+    'fg-default-light inline-flex w-content items-center justify-center rounded-full border border-interactive outline-none hover:border-interactive-hover focus:border-interactive-hover',
     'ai-selected:border-highlight ai-selected:bg-highlight-subtle',
   ]),
   {
     variants: {
       isDisabled: {
-        true: 'fg-disabled ai-selected:border-interactive-disabled border-interactive-disabled ai-selected:bg-transparent hover:border-interactive-disabled',
+        true: 'fg-disabled ai-selected:border-interactive-disabled border-interactive-disabled ai-selected:bg-transparent hover:border-interactive-disabled focus:border-interactive-disabled',
         false: 'cursor-pointer',
       },
       size: {
@@ -165,7 +165,7 @@ Chip.Selectable = SelectableChip;
 
 const deletableChipStyles = cva(
   cn([
-    'fg-default-light group inline-flex items-center justify-center gap-xs rounded-full border border-interactive hover:border-interactive-hover',
+    'fg-default-light group inline-flex w-content items-center justify-center gap-xs rounded-full border border-interactive outline-none hover:border-interactive-hover focus:border-interactive-hover',
   ]),
   {
     variants: {
@@ -227,7 +227,7 @@ export const DeletableChip = ({
             <Button
               slot='remove'
               className={cn([
-                'icon-size-[15px] icon-default-dark group-hover:icon-default-light cursor-pointer',
+                'icon-size-[15px] icon-default-dark group-hover:icon-default-light group-focus:icon-default-light cursor-pointer',
                 isDisabled &&
                   'icon-disabled group-hover:icon-disabled cursor-not-allowed',
               ])}

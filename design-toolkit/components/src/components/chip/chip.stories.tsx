@@ -20,7 +20,7 @@ const meta: Meta<typeof Chip> = {
   component: Chip,
   args: {
     className: undefined,
-    children: 'Badge text',
+    children: 'Chip text',
     size: 'medium',
     variant: 'info',
   },
@@ -50,9 +50,11 @@ export const Default: Story = {
 export const List: Story = {
   render: () => (
     <Chip.List>
-      <Chip variant='critical'>Out of gas</Chip>
-      <Chip variant='advisory'>Convoy</Chip>
-      <Chip variant='advisory'>Priority</Chip>
+      {meta.argTypes?.variant?.options?.map((option) => (
+        <Chip key={option} variant={option} size='small' className='capitalize'>
+          {option}
+        </Chip>
+      ))}
     </Chip.List>
   ),
 };
@@ -60,17 +62,14 @@ export const List: Story = {
 const selectableData = [
   {
     id: 'chip-1',
-    isDisabled: false,
     name: 'Selectable chip',
   },
   {
     id: 'chip-2',
-    isDisabled: true,
     name: 'Selectable chip',
   },
   {
     id: 'chip-3',
-    isDisabled: false,
     name: 'Selectable chip',
   },
 ];
@@ -78,11 +77,7 @@ const selectableData = [
 export const SelectableChipList: Story = {
   render: () => (
     <Chip.List items={selectableData} selectionMode='multiple'>
-      {(item) => (
-        <Chip.Selectable id={item.id} isDisabled={item.isDisabled}>
-          {item.name}
-        </Chip.Selectable>
-      )}
+      {(item) => <Chip.Selectable id={item.id}>{item.name}</Chip.Selectable>}
     </Chip.List>
   ),
 };
