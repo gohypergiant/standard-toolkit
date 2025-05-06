@@ -13,6 +13,7 @@
 import { DEFAULT_CONFIG } from './constants';
 import type { BroadcastConfig, Listener, Payload } from './types';
 
+/** Broadcast even class. Allows for emitting events across contexts. */
 export class Broadcast {
   #channelName: string;
   #channel: BroadcastChannel | null = null;
@@ -21,6 +22,7 @@ export class Broadcast {
 
   private static instance: Broadcast | null = null;
 
+  /** Broadcast class constructor. */
   constructor(config?: BroadcastConfig) {
     this.#channelName = config?.channelName ?? DEFAULT_CONFIG.channelName;
 
@@ -29,8 +31,8 @@ export class Broadcast {
 
   /**
    * Get the singleton instance of Broadcaster.
+   *
    * @param config - Optional custom configuration.
-   * @returns Singleton instance of Broadcaster.
    */
   static getInstance(config?: BroadcastConfig) {
     if (!Broadcast.instance) {
@@ -52,8 +54,10 @@ export class Broadcast {
 
   /**
    * Process incoming messages.
-   * @param {MessageEvent<Payload<T>>} event - Incoming message event.
+   *
    * @private
+   * @template T - The type of the Payload data.
+   * @param event - Incoming message event.
    */
   #onMessage<T>(event: MessageEvent<Payload<T>>) {
     this.#handleListeners(event.data);
@@ -61,8 +65,9 @@ export class Broadcast {
 
   /**
    * Handle errors from the BroadcastChannel.
-   * @param {MessageEvent<any>} error - Error event.
+   *
    * @private
+   * @param error - Error event.
    */
   #onError(error: MessageEvent) {
     console.error('BroadcastChannel message error', error);
@@ -70,8 +75,10 @@ export class Broadcast {
 
   /**
    * Iterate through listeners for the given topic and invoke callbacks if criteria match.
-   * @param {Payload<T>} payload - The event payload containing type, payload, targets, and topic.
+   *
    * @private
+   * @template T - The type of the Payload data.
+   * @param payload - The event payload containing type, payload, targets, and topic.
    */
   #handleListeners<T>({ type, payload }: Payload<T>) {
     const handler = this.#listeners[type];
@@ -90,12 +97,13 @@ export class Broadcast {
       }
     }
   }
+
   /**
    * Removes a listener by id.
-   * @param {string} topic - The event topic.
-   * @param {number} listenerId - id of the listener.
-   * @returns {void}.
+   *
    * @private
+   * @param topic - The event topic.
+   * @param listenerId - id of the listener.
    */
   #removeListener(type: string, id: number) {
     if (this.#listeners[type]) {
@@ -107,9 +115,10 @@ export class Broadcast {
 
   /**
    * Check for the existence of a event type and create it if missing.
-   * @param {string} type - The event type.
-   * @returns {Listener[]} The listeners for said event.
+   *
    * @private
+   * @template T - The type of the Payload data.
+   * @param type - The event type.
    */
   #addListener<T>(type: string, args: Listener<T>) {
     if (!this.#listeners[type]) {
@@ -118,24 +127,35 @@ export class Broadcast {
 
     this.#listeners[type].push(args);
   }
+
   /**
    * Register a callback to be executed when a message of the specified event type is received.
-   * @param {string} type - The event type.
-   * @param {(data: Payload<T>) => void} callback - The callback function.
-   * @returns {() => void} Unsubscribe function.
+   *
+   * @template T - The type of the Payload data.
+   * @param type - The event type.
+   * @param callback - The callback function.
+   *
+   * @example
+   * bus.on(EVENTS.MAP_CLICK, (e) => {
+   *   if (!e.payload.picked) {
+   *     setSelected(null);
+   *   }
+   * });
    */
   on<T>(type: string, callback: (data: Payload<T>) => void) {
     const id = this.#listenerCounter++;
 
     this.#addListener(type, { callback, id, once: false });
+
     return () => this.#removeListener(type, id);
   }
 
   /**
    * Register a callback to be executed only once for a specified event type.
-   * @param {string} type - The event type.
-   * @param {(data: Payload<T>) => void} callback - The callback function.
-   * @returns {() => void} Unsubscribe function.
+   *
+   * @template T - The type of the Payload data.
+   * @param type - The event type.
+   * @param callback - The callback function.
    */
   once<T>(type: string, callback: (data: Payload<T>) => void) {
     const id = this.#listenerCounter++;
@@ -146,7 +166,9 @@ export class Broadcast {
 
   /**
    * Unregister all callbacks for the specified event type.
-   * @param {string} type - The event type.
+   *
+   * @template T - The type of the Payload data.
+   * @param type - The event type.
    */
   off<T>(type: string, callback: (data: Payload<T>) => void) {
     if (this.#listeners[type]) {
@@ -158,8 +180,21 @@ export class Broadcast {
 
   /**
    * Emit an event to all listening contexts.
-   * @param {string} type - The event type.
-   * @param {T} payload - The event payload.
+   *
+   * @template T - The type of the Payload data.
+   * @param type - The event type.
+   * @param payload - The event payload.
+   *
+   * @example
+   * bus.emit(
+   *   EVENTS.LAYER_CLICK,
+   *   {
+   *     worldSpace: pickInfo.coordinate,
+   *     screenSpace: pickInfo.pixel,
+   *     index: pickInfo.index,
+   *     object: pickInfo.object,
+   *   },
+   * );
    */
   emit<T>(type: string, payload: T) {
     if (!this.#channel) {
@@ -178,7 +213,8 @@ export class Broadcast {
 
   /**
    * Delete an even and unregister all callbacks associated with it.
-   * @param {string} type - The event to delete.
+   *
+   * @param type - The event to delete.
    */
   deleteEvent(type: string) {
     delete this.#listeners[type];
@@ -201,7 +237,6 @@ export class Broadcast {
 
   /**
    * Get a list of all available events.
-   * @returns {string[]} Array of event names.
    */
   getEvents(): string[] {
     return Object.keys(this.#listeners);

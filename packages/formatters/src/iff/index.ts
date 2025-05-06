@@ -16,6 +16,8 @@ const FOUR_DIGIT_DEFAULT = '----';
 /**
  * A 2-digit octal code that identifies the aircraft's mission or type.
  * This mode is only used by the military.
+ *
+ * @param value - The value to format.
  */
 export function formatM1(value?: string | number): string {
   if (value) {
@@ -28,6 +30,8 @@ export function formatM1(value?: string | number): string {
 /**
  * A 4-digit octal code that identifies the aircraft's unit code or tail number.
  * This mode is only used by the military.
+ *
+ * @param value - The value to format.
  */
 export function formatM2(value?: string | number): string {
   if (value) {
@@ -41,6 +45,8 @@ export function formatM2(value?: string | number): string {
  * A 4-digit octal code that identifies the aircraft. This mode is used by both the
  * military and civilians, and is often called a squawk code. Air traffic controllers
  * assign these codes.
+ *
+ * @param value - The value to format.
  */
 export function formatM3A(value?: string | number): string {
   if (value) {
@@ -51,9 +57,11 @@ export function formatM3A(value?: string | number): string {
 }
 
 /**
- * ⚠️ We don't actually know the format of M4
+ * We don't actually know the format of M4
  * A 3-pulse reply that uses an encrypted challenge to determine the delay.
  * This mode is only used by the military.
+ *
+ * @param value - The value to format.
  */
 export function formatM4(value: string | number): string {
   if (value) {
@@ -64,9 +72,11 @@ export function formatM4(value: string | number): string {
 }
 
 /**
- * ⚠️ We don't actually know the format of M5
+ * We don't actually know the format of M5
  * A cryptographically secured version of Mode S and ADS-B GPS position.
  * This mode is only used by the military.
+ *
+ * @param value - The value to format.
  */
 export function formatM5(value: string | number): string {
   if (value) {

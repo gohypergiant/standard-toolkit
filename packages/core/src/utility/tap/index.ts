@@ -13,8 +13,10 @@
 /**
  * Calls the given function with the passed value and returns the value unchanged.
  *
- * @param fn The function to call, passing the given value.
- * @param val The value to pass to the function and then return.
+ * @template T - The type of the input given to the function.
+ * @template R - The return type of the given function.
+ * @param fn - The function to call, passing the given value.
+ * @param val - The value to pass to the function and then return.
  *
  * @remarks
  * tap :: (a -> b) -> a -> a

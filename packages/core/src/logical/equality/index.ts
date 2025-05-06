@@ -13,8 +13,8 @@
 /**
  * Logical Equality (XNOR) `(a === b)`.
  *
- * @param a The first value to compare.
- * @param b The second value to compare.
+ * @param a - The first value to compare.
+ * @param b - The second value to compare.
  *
  * @see https://en.wikipedia.org/wiki/Logical_equality
  *
@@ -32,9 +32,10 @@ export const equality = (a: unknown) => (b: unknown) => a === b;
 /**
  * Logical (Function Result) Equality (XNOR) `(a(x) === b(x))`.
  *
- * @param a The first function to compare the return of.
- * @param b The second function to compare the return of.
- * @param c The value to pass to both `a` and `b`.
+ * @template T - The type of the input value of the functions.
+ * @param a - The first function to compare the return of.
+ * @param b - The second function to compare the return of.
+ * @param c - The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Logical_equality
  *

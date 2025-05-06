@@ -13,8 +13,9 @@
 /**
  * Determines whether the given array includes and element. Uses strict equality.
  *
- * @param x The value to find in the array.
- * @param arr The array to search for the element in.
+ * @template T - The type of array elements.
+ * @param x - The value to find in the array.
+ * @param arr - The array to search for the element in.
  *
  * @remarks
  * pure function

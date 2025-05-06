@@ -14,8 +14,10 @@
  * Takes an argument and an unary function and then applies the function to the argument.
  * Inverse of `apply`.
  *
- * @param a The value to pass to the function.
- * @param b The function to apply to the value.
+ * @template A - The type of input value.
+ * @template B - The return type of given function.
+ * @param a - The value to pass to the function.
+ * @param b - The function to apply to the value.
  *
  * @remarks
  * Th combinator

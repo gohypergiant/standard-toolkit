@@ -15,9 +15,11 @@ import type { Accumulator } from '@/types';
 /**
  * Calls the accumulator with each element of the given array, starting with the last element. Returns the final result.
  *
- * @param fn The accumulator function to apply to each element of the array.
- * @param initVal The initial value of the reduction.
- * @param arr The array to fold over.
+ * @template T - The type of array elements.
+ * @template R - The result type of the folder function.
+ * @param fn - The accumulator function to apply to each element of the array.
+ * @param initVal - The initial value of the reduction.
+ * @param arr - The array to fold over.
  *
  * @remarks
  * pure function

@@ -13,8 +13,10 @@
 /**
  * Takes an unary function and applies it to the given argument.
  *
- * @param f The function to apply to the value.
- * @param x The value to pass to the function.
+ * @template T - The type of input value.
+ * @template R - The return type of given function.
+ * @param f - The function to apply to the value.
+ * @param x - The value to pass to the function.
  *
  * @remarks
  * A combinator

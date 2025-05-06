@@ -16,8 +16,9 @@ const MAX_ABSOLUTE_VALUE = 90;
 
 /**
  * Determines if given value is a valid latitude range.
- *
  * Assumes degrees as the unit of measure.
+ *
+ * @param val - The value to check whether or not it is a latitude.
  *
  * @example
  * isLatitude(-90) // true

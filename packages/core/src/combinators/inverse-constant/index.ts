@@ -15,8 +15,10 @@
  * Takes two arguments and always returns the second.
  * Inverse of `constant` (`K`).
  *
- * @param a The value to ignore.
- * @param b The value to return.
+ * @template A - The type of the first input value.
+ * @template B - The type of the second input value.
+ * @param a - The value to ignore.
+ * @param b - The value to return.
  *
  * @remarks
  * KI combinator

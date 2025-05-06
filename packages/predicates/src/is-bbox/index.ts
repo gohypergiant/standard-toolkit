@@ -14,8 +14,9 @@ import { isFiniteNumber } from '../is-number';
 
 /**
  * Determines if the given value is a valid bounding box.
- *
  * Does not currently validate the lon/lat pairs.
+ *
+ * @param bbox - The value to check whether or not it is a bbox.
  */
 export function isBbox(bbox: unknown) {
   if (!bbox) {

@@ -16,8 +16,9 @@ const MAX_ABSOLUTE_VALUE = 180;
 
 /**
  * Determines if given value is a valid longitude range.
- *
  * Assumes degrees as the unit of measure.
+ *
+ * @param val - The value to check whether or not it is a longitude.
  *
  * @example
  * isLongitude(-180) // true

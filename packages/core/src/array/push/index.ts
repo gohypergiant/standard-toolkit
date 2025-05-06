@@ -13,8 +13,9 @@
 /**
  * Returns a new array with the given value added to the end.
  *
- * @param arr The array to add an item to.
- * @param x The value to add to the end of the array.
+ * @template T - The type of array elements.
+ * @param arr - The array to add an item to.
+ * @param x - The value to add to the end of the array.
  *
  * @remarks
  * pure function

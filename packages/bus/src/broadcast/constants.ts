@@ -13,6 +13,7 @@
 
 import type { BroadcastConfig } from './types';
 
+/** The default broadcast configuration. */
 export const DEFAULT_CONFIG: BroadcastConfig = {
   channelName: '@accelint/bus',
   // TODO: implement logger

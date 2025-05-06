@@ -14,7 +14,9 @@ type IteratorCallback<T> = () => IteratorResult<T>;
 
 /**
  * Creates an iterable Iterator object with the given callback as the `next` method.
- * @param iterCb The `next` callback for an Iterator.
+ *
+ * @template T - The type of IteratorCallback.
+ * @param iterCb - The `next` callback for an Iterator.
  */
 export function createIterable<T>(
   iterCb: IteratorCallback<T>,

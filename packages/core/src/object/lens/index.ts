@@ -18,6 +18,9 @@ type LenseSet<T, V> = (source: T) => (value: V) => T;
 
 /**
  * A functional lense.
+ *
+ * @template T - The type of the object being inspected.
+ * @template V - The type of the property value.
  */
 export type Lens<T, V> = {
   get: LenseGet<T, V>;
@@ -27,8 +30,11 @@ export type Lens<T, V> = {
 /**
  * Focus on and manipulate a specific property or substructure within an object.
  *
- * @param getter The lens get function to use.
- * @param setter The lens set function to use.
+ * @template T - The type of the object being inspected.
+ * @template V - The type of the property value.
+ *
+ * @param getter - The lens get function to use.
+ * @param setter - The lens set function to use.
  *
  * @remarks
  * pure function
@@ -64,8 +70,11 @@ export const lens = <T, V>(
  *
  * Given a lens `A ⭢ B` and a lens `B ⭢ C`, produces a lens `A ⭢ C`.
  *
- * @param ab The lens from A ⭢ B.
- * @param bc The lens from B ⭢ C.
+ * @template A - The type of the first object being inspected.
+ * @template B - The type of the second object being inspected.
+ * @template C - The type of the property value on the second lens.
+ * @param ab - The lens from A ⭢ B.
+ * @param bc - The lens from B ⭢ C.
  *
  * @remarks
  * pure function
@@ -95,8 +104,10 @@ export const composeLens = <A, B, C>(
 /**
  * A simple warpper function to access the `get` of a lens and the given object.
  *
- * @param lensVal The Lens to get the getter of.
- * @param obj The object to focus the lens on.
+ * @template T - The type of the object being inspected.
+ * @template V - The type of the property value.
+ * @param lensVal - The Lens to get the getter of.
+ * @param obj - The object to focus the lens on.
  *
  * @remarks
  * pure function
@@ -112,9 +123,11 @@ export const get =
 /**
  * A simple warpper function to access the `set` of a lens and the given object..
  *
- * @param lensVal The Lens to get the setter of.
- * @param value The new value to set.
- * @param obj The object to focus the lens on.
+ * @template T - The type of the object being inspected.
+ * @template V - The type of the property value.
+ * @param lensVal - The Lens to get the setter of.
+ * @param value - The new value to set.
+ * @param obj - The object to focus the lens on.
  *
  * @remarks
  * pure function
@@ -136,7 +149,9 @@ export const set =
 /**
  * Short-hand to create a simplistic get/set lens.
  *
- * @param prop The prop on the focused object to access.
+ * @template T - The type of the object being inspected.
+ * @template K - The string template of property name of T.
+ * @param prop - The prop on the focused object to access.
  *
  * @remarks
  * pure function
@@ -155,7 +170,9 @@ export const lensProp =
 /**
  * Short-hand to create is simplistic, optional, get/set lens.
  *
- * @param prop The prop on the focused object to access.
+ * @template T - The type of the object being inspected.
+ * @template K - The string template of property name of T.
+ * @param prop - The prop on the focused object to access.
  *
  * @remarks
  * pure function

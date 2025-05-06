@@ -38,7 +38,7 @@ import type {
   MenuListProps,
   MenuProps,
 } from '../../components/menu/types';
-import type { NumberFieldProps } from '../../components/number-field';
+import type { NumberFieldProps } from '../../components/number-field/types';
 import type {
   OptionsItemProps,
   OptionsListProps,

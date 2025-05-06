@@ -16,8 +16,10 @@ import type { MapFn } from '@/types';
  * Maps over the given array, calling the mapping function for each element.
  * Returns a new array of the results.
  *
- * @param map The mapping function to apply to each element of the array.
- * @param arr The array to map over.
+ * @template T - The type of array elements.
+ * @template R - The return type of the mapping function.
+ * @param map - The mapping function to apply to each element of the array.
+ * @param arr - The array to map over.
  *
  * @remarks
  * pure function

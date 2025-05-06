@@ -13,8 +13,10 @@
 /**
  * Gets the value of `prop` in `obj`. Array index support.
  *
- * @param obj The object to get the value from.
- * @param prop The property to get the value of.
+ * @template T - The type of the input object.
+ * @template K - The string template of property name of T.
+ * @param obj - The object to get the value from.
+ * @param prop - The property to get the value of.
  *
  * @remarks
  * pure function
@@ -41,8 +43,10 @@ export const prop = property;
 /**
  * Gets the optional value of `prop` in `obj`. Array index support.
  *
- * @param obj The object to get the value from.
- * @param prop The property to get the value of.
+ * @template T - The type of the input object.
+ * @template K - The string template of property name of T.
+ * @param obj - The object to get the value from.
+ * @param prop - The property to get the value of.
  *
  * @remarks
  * pure function

@@ -13,6 +13,8 @@
 /**
  * Convert a boolean to an integer
  *
+ * @param val - The boolean value to convert to a number.
+ *
  * @remarks
  * pure function
  *

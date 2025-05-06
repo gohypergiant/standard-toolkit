@@ -13,9 +13,12 @@
 /**
  * Pass a value to a function and then the result to another function.
  *
- * @param f The second function in the composition.
- * @param g The first function in the composition.
- * @param x The value to pass to `g`.
+ * @template A - The type of the first function's input value. Corresponds to the return type of the second function.
+ * @template B - The return type of first function.
+ * @template C - The type of the input value.
+ * @param f - The second function in the composition.
+ * @param g - The first function in the composition.
+ * @param x - The value to pass to `g`.
  *
  * @remarks
  * B combinator

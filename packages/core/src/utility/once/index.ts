@@ -17,7 +17,8 @@ type SomeFunction = (...args: any[]) => any;
 /**
  * Ensures that the given function is only called once.
  *
- * @param fn The function to call once.
+ * @template T - The type of the function to call once.
+ * @param fn - The function to call once.
  *
  * @example
  * let globalVal = 10;

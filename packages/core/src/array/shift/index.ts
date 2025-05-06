@@ -14,7 +14,8 @@
  * Returns a tuple containing the first element (head) of the given array and
  * the remaining elements of the array (tail).
  *
- * @param arr The element to get the `head`/`tail` of.
+ * @template T - The type of array elements.
+ * @param arr - The element to get the `head`/`tail` of.
  *
  * @remarks
  * pure function

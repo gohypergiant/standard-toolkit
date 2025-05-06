@@ -13,8 +13,9 @@
 /**
  * Concatenate the two given arrays together.
  *
- * @param concatable The second array to add to the end of the first.
- * @param newValue The first array to append to.
+ * @template T - The type of array elements.
+ * @param concatable - The second array to add to the end of the first.
+ * @param newValue - The first array to append to.
  *
  * @remarks
  * pure function

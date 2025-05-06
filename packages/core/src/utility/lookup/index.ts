@@ -16,8 +16,11 @@ import { identity } from '../../combinators/identity';
  * Takes an object and an optional fallback function and returns a function that
  * takes a string and returns the lookup value or the result default fallback.
  *
- * @param obj The table lookup object.
- * @param def The function used to handle the default value if the lookup returns `undefined`.
+ * @template A - The type of the record to use as a lookup.
+ * @template B - The type of the default function.
+ * @template C - The string template of property name of A.
+ * @param obj - The table lookup object.
+ * @param def - The function used to handle the default value if the lookup returns `undefined`.
  *
  * @remarks
  * pure function

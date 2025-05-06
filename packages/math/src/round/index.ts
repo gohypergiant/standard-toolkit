@@ -13,7 +13,10 @@
 /**
  * Rounds a number to a specified precision.
  *
- * @throws {Error} Throws an error if precision is not integer.
+ * @param value - The value to round.
+ * @param precision - The precision of the rounded output.
+ *
+ * @throws {Error} Throws if precision is not an integer.
  *
  * @example
  * const value = round(1, 1.2345); // 1.2

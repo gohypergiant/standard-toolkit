@@ -13,6 +13,8 @@
 /**
  * Returns true for any value not found to be a "false" value.
  *
+ * @param val - The value to convert to a boolean.
+ *
  * **"false" values**
  *   - inherently false values: '' (empty string), 0, false, undefined, null, NaN
  *   - numeric zero: '0.000' - any number of leading or trailing zeros
