@@ -22,12 +22,14 @@ import {
 } from 'react-aria-components';
 
 const radioStyles = cva(
-  'fg-default-light flex size-l items-center justify-center rounded-round border before:block before:size-s before:rounded-round before:bg-transparent',
+  'fg-default-light flex size-l items-center justify-center rounded-round border border-interactive before:block before:size-s before:rounded-round before:bg-transparent',
   {
     variants: {
+      isFocused: {
+        true: 'border-interactive-hover',
+      },
       isHovered: {
         true: 'border-interactive-hover',
-        false: 'border-interactive',
       },
       isSelected: {
         true: 'border-highlight before:bg-highlight hover:border-highlight',
@@ -49,6 +51,9 @@ const radioStyles = cva(
       },
     ],
     defaultVariants: {
+      isDisabled: false,
+      isFocused: false,
+      isHovered: false,
       isSelected: false,
     },
   },
@@ -71,6 +76,7 @@ export function Radio({ className, children, ...args }: RadioProps) {
             className={cn(
               radioStyles({
                 isDisabled: props.isDisabled,
+                isFocused: props.isFocused,
                 isHovered: props.isHovered,
                 isSelected: props.isSelected,
               }),
