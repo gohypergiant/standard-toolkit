@@ -14,8 +14,10 @@ import { isString } from '../is-string';
 
 /**
  * Determine if the given value is a number.
- *
  * Includes Infinities and NaN, does not include strings that look like numbers
+ *
+ * @param val - The value to check whether or not it is a number value.
+ *
  *
  * @example
  * isNumber(1.23) // true
@@ -29,8 +31,9 @@ export function isNumber(val: unknown): val is number {
 
 /**
  * Determine if the given value is a finite number.
- *
  * Does not include infinities, NaN, or strings that look like numbers.
+ *
+ * @param val - The value to check whether or not it is a finite number value.
  *
  * @example
  * isFiniteNumber(1.23) // true
@@ -44,8 +47,9 @@ export function isFiniteNumber(val: unknown): val is number {
 
 /**
  * Determine if given value is a finite number, or string that parses to a finite number.
- *
  * Does not include infinities, NaN.
+ *
+ * @param val - The value to check whether or not it is a finite numberic value.
  *
  * @example
  * isFiniteNumeric(1.23) // true
@@ -62,8 +66,9 @@ export function isFiniteNumeric(val: unknown): val is number {
 
 /**
  * Determine if given value is a number, or string that parses to a number. Includes infinities and NaN.
- *
  * Non-finite strings are: 'Infinity', '-Infinity', and 'NaN'.
+ *
+ * @param val - The value to check whether or not it is a numberic value.
  *
  * @example
  * isNumeric(1.23) // true
