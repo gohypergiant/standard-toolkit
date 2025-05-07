@@ -1,0 +1,213 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import 'client-only';
+import {
+  Input as AriaInput,
+  type InputProps as AriaInputProps,
+  Text as AriaText,
+  TextField as AriaTextField,
+  type TextFieldProps as AriaTextFieldProps,
+  Button,
+  InputContext,
+  useContextProps,
+} from 'react-aria-components';
+
+import { CancelFill } from '@/icons';
+import { cn } from '@/lib/utils';
+import { type VariantProps, cva } from 'cva';
+import { type ChangeEvent, type ForwardedRef, useEffect } from 'react';
+import { Label } from '../label';
+
+const textFieldStyles = cva(
+  ['rounded-medium px-s py-xs font-display outline outline-interactive'],
+  {
+    variants: {
+      isDisabled: {
+        true: 'text-disabled outline-interactive-disabled placeholder:text-disabled',
+        false:
+          'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus:outline-highlight',
+      },
+      isInvalid: {
+        true: 'outline-serious',
+      },
+      isReadOnly: {
+        true: 'rounded-none p-0 outline-none',
+      },
+      size: {
+        medium: 'pr-xl text-body-s',
+        small: 'text-body-xs',
+      },
+    },
+    compoundVariants: [
+      {
+        isDisabled: true,
+        isInvalid: true,
+        className: 'outline-interactive-disabled',
+      },
+    ],
+    defaultVariants: {
+      size: 'medium',
+    },
+  },
+);
+
+interface InputProps
+  extends VariantProps<typeof textFieldStyles>,
+    Omit<AriaInputProps, 'size'> {
+  ref?: ForwardedRef<HTMLInputElement>;
+}
+
+const clearInputEvent = {
+  target: { value: '' },
+} as ChangeEvent<HTMLInputElement>;
+
+const Input = ({ className, size, ref = null, ...props }: InputProps) => {
+  [props, ref] = useContextProps(props, ref, InputContext);
+
+  useEffect(() => {
+    const removeListener = ref.current?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        props.onChange?.(clearInputEvent);
+      }
+    });
+
+    return removeListener;
+  }, [props.onChange, ref]);
+
+  const shouldShowClearButton =
+    !props.readOnly && props.value && size !== 'small';
+
+  if (props.readOnly) {
+    return (
+      <span
+        className={cn(
+          textFieldStyles({
+            isDisabled: false,
+            isReadOnly: props.readOnly,
+            size,
+            className,
+          }),
+        )}
+      >
+        {props.value}
+      </span>
+    );
+  }
+
+  return (
+    <div className='relative flex items-center'>
+      <AriaInput
+        {...props}
+        onFocus={(e) => {
+          ref.current?.select();
+          props.onFocus?.(e);
+        }}
+        ref={ref}
+        className={({ isDisabled, isInvalid }) =>
+          cn(
+            textFieldStyles({
+              isDisabled,
+              isInvalid,
+              isReadOnly: props.readOnly,
+              size,
+              className,
+            }),
+          )
+        }
+      />
+      {shouldShowClearButton && (
+        <Button
+          className='fg-default-dark icon-size-m hover:fg-interactive-hover absolute right-[5px] cursor-pointer'
+          excludeFromTabOrder
+          onPress={() => {
+            props.onChange?.(clearInputEvent);
+            ref.current?.focus();
+          }}
+        >
+          <CancelFill />
+        </Button>
+      )}
+    </div>
+  );
+};
+
+export interface TextFieldProps
+  extends Omit<
+      VariantProps<typeof textFieldStyles>,
+      'isDisabled' | 'isInvalid' | 'isReadOnly'
+    >,
+    Omit<AriaTextFieldProps, 'className'> {
+  className?: string;
+  description?: string;
+  errorMessage?: string;
+  label?: string;
+  placeholder?: string;
+}
+
+export function TextField({
+  className,
+  description,
+  errorMessage,
+  isDisabled,
+  isInvalid,
+  isReadOnly,
+  label,
+  placeholder,
+  size,
+  ...props
+}: TextFieldProps) {
+  const isSmall = size === 'small';
+  const shouldShowDescription =
+    !(isSmall || isInvalid || isReadOnly) || isDisabled;
+  const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
+
+  return (
+    <AriaTextField
+      {...props}
+      isDisabled={isDisabled}
+      isInvalid={isInvalid}
+      isReadOnly={isReadOnly}
+      className={'flex flex-col gap-xs'}
+    >
+      {!isSmall && (
+        <Label
+          className='empty:hidden'
+          isDisabled={isDisabled}
+          isOptional={!props.isRequired}
+        >
+          {label}
+        </Label>
+      )}
+      <Input className={className} placeholder={placeholder} size={size} />
+      {shouldShowDescription && (
+        <AriaText
+          className={cn([
+            'fg-default-dark text-body-xs empty:hidden',
+            isDisabled && 'fg-disabled',
+          ])}
+          slot='description'
+        >
+          {description}
+        </AriaText>
+      )}
+      {shouldShowError && (
+        <AriaText
+          className='fg-serious text-body-xs empty:hidden'
+          slot='errorMessage'
+        >
+          {errorMessage}
+        </AriaText>
+      )}
+    </AriaTextField>
+  );
+}
