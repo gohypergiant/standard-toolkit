@@ -56,9 +56,8 @@ const AccordionContext = createContext<AccordionContextType>({
 });
 
 export interface AccordionProps
-  extends AriaDisclosureProps,
-    VariantProps<typeof accordionStyles> {
-  children: React.ReactNode;
+  extends VariantProps<typeof accordionStyles>,
+    AriaDisclosureProps {
   options?: boolean;
 }
 
@@ -67,7 +66,7 @@ export function Accordion({
   className,
   isDisabled = false,
   options = false,
-  variant,
+  variant = 'cozy',
   ...props
 }: AccordionProps) {
   return (
@@ -82,11 +81,14 @@ export function Accordion({
           ),
         )}
       >
-        {children}
+        {(props) =>
+          typeof children === 'function' ? children(props) : children
+        }
       </AriaDisclosure>
     </AccordionContext.Provider>
   );
 }
+Accordion.displayName = 'Accordion';
 
 export interface AccordionHeaderProps
   extends Pick<AccordionProps, 'options' | 'variant'> {
@@ -103,15 +105,16 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
   return (
     <Heading
       className={cn([
-        'fg-default-light flex w-full cursor-pointer items-center rounded-medium p-s hover:bg-interactive-hover-dark',
-        isDisabled && 'fg-disabled cursor-default hover:bg-transparent',
+        'fg-default-light flex w-full cursor-pointer items-center rounded-medium p-s outline-none focus-within:bg-interactive-hover-dark hover:bg-interactive-hover-dark',
+        isDisabled &&
+          'fg-disabled cursor-default focus-within:bg-transparent hover:bg-transparent',
       ])}
       data-variant={variant}
     >
       <Button
         slot='trigger'
         className={cn([
-          'flex w-full cursor-pointer items-center rounded-medium',
+          'flex w-full cursor-pointer items-center rounded-medium outline-none',
           'data-[variant=cozy]:icon-size-xl data-[variant=cozy]:gap-s data-[variant=cozy]:text-header-m',
           'data-[variant=compact]:icon-size-l data-[variant=compact]:gap-xs data-[variant=compact]:text-header-s',
           'ai-disabled:cursor-default',
@@ -145,10 +148,9 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
     </Heading>
   );
 }
+AccordionHeader.displayName = 'AccordionHeader';
 
-export interface AccordionPanelProps extends AriaDisclosurePanelProps {
-  children: React.ReactNode;
-}
+export interface AccordionPanelProps extends AriaDisclosurePanelProps {}
 
 export function AccordionPanel({
   children,
@@ -164,11 +166,11 @@ export function AccordionPanel({
     </AriaDisclosurePanel>
   );
 }
+AccordionPanel.displayName = 'AccordionPanel';
 
 export interface AccordionGroupProps extends AriaDisclosureGroupProps {
   /** Whether multiple items can be expanded at the same time. */
   allowsMultipleExpanded?: boolean;
-  children: React.ReactNode;
 }
 
 export function AccordionGroup({
@@ -185,7 +187,8 @@ export function AccordionGroup({
         cn('flex w-full flex-col', className),
       )}
     >
-      {children}
+      {(props) => (typeof children === 'function' ? children(props) : children)}
     </AriaDisclosureGroup>
   );
 }
+AccordionGroup.displayName = 'AccordionGroup';

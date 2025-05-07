@@ -42,6 +42,7 @@ export { FloatingButton } from './components/floating-button';
 export type { FloatingButtonProps } from './components/floating-button';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
+export { Label } from './components/label';
 export { ToggleIconButton } from './components/toggle-icon-button';
 export type { ToggleIconButtonProps } from './components/toggle-icon-button';
 export { Tooltip, TooltipBody, TooltipTrigger } from './components/tooltip';
