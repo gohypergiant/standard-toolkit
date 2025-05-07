@@ -44,8 +44,12 @@ const textFieldStyles = cva(
         true: 'rounded-none p-0 outline-none',
       },
       size: {
-        medium: 'pr-xl text-body-s',
+        medium: 'text-body-s',
         small: 'text-body-xs',
+      },
+      isClearable: {
+        true: '',
+        false: '',
       },
     },
     compoundVariants: [
@@ -54,8 +58,15 @@ const textFieldStyles = cva(
         isInvalid: true,
         className: 'outline-interactive-disabled',
       },
+      {
+        isClearable: true,
+        isDisabled: false,
+        size: 'medium',
+        className: 'pr-xl',
+      },
     ],
     defaultVariants: {
+      isClearable: false,
       size: 'medium',
     },
   },
@@ -64,6 +75,7 @@ const textFieldStyles = cva(
 interface InputProps
   extends VariantProps<typeof textFieldStyles>,
     Omit<AriaInputProps, 'size'> {
+  isClearable?: boolean;
   ref?: ForwardedRef<HTMLInputElement>;
 }
 
@@ -71,7 +83,13 @@ const clearInputEvent = {
   target: { value: '' },
 } as ChangeEvent<HTMLInputElement>;
 
-const Input = ({ className, size, ref = null, ...props }: InputProps) => {
+const Input = ({
+  className,
+  isClearable = true,
+  size = 'medium',
+  ref = null,
+  ...props
+}: InputProps) => {
   [props, ref] = useContextProps(props, ref, InputContext);
 
   useEffect(() => {
@@ -85,13 +103,18 @@ const Input = ({ className, size, ref = null, ...props }: InputProps) => {
   }, [props.onChange, ref]);
 
   const shouldShowClearButton =
-    !props.readOnly && props.value && size !== 'small';
+    !props.readOnly &&
+    props.value &&
+    size !== 'small' &&
+    isClearable &&
+    !props.disabled;
 
   if (props.readOnly) {
     return (
       <span
         className={cn(
           textFieldStyles({
+            isClearable: false,
             isDisabled: false,
             isReadOnly: props.readOnly,
             size,
@@ -116,6 +139,7 @@ const Input = ({ className, size, ref = null, ...props }: InputProps) => {
         className={({ isDisabled, isInvalid }) =>
           cn(
             textFieldStyles({
+              isClearable,
               isDisabled,
               isInvalid,
               isReadOnly: props.readOnly,
@@ -148,6 +172,7 @@ export interface TextFieldProps
     >,
     Omit<AriaTextFieldProps, 'className'> {
   className?: string;
+  isClearable?: boolean;
   description?: string;
   errorMessage?: string;
   label?: string;
@@ -156,6 +181,7 @@ export interface TextFieldProps
 
 export function TextField({
   className,
+  isClearable = true,
   description,
   errorMessage,
   isDisabled,
@@ -163,7 +189,7 @@ export function TextField({
   isReadOnly,
   label,
   placeholder,
-  size,
+  size = 'medium',
   ...props
 }: TextFieldProps) {
   const isSmall = size === 'small';
@@ -188,7 +214,12 @@ export function TextField({
           {label}
         </Label>
       )}
-      <Input className={className} placeholder={placeholder} size={size} />
+      <Input
+        className={className}
+        isClearable={isClearable}
+        placeholder={placeholder}
+        size={size}
+      />
       {shouldShowDescription && (
         <AriaText
           className={cn([

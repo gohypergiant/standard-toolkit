@@ -20,6 +20,7 @@ const meta: Meta<typeof TextField> = {
     className: '',
     description: 'Helper text',
     errorMessage: 'Error description',
+    isClearable: true,
     isDisabled: false,
     isInvalid: false,
     isReadOnly: false,
