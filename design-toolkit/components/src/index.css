@@ -343,6 +343,10 @@
   height: fit-content;
 }
 
+@utility w-* {
+  width: --value([ *]);
+}
+
 @utility icon-* {
   --icon-color: --value([ *]);
   --icon-color: --value(--color- *);
