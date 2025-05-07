@@ -14,6 +14,18 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+export {
+  Accordion,
+  AccordionGroup,
+  AccordionHeader,
+  AccordionPanel,
+} from './components/accordion';
+export type {
+  AccordionGroupProps,
+  AccordionHeaderProps,
+  AccordionPanelProps,
+  AccordionProps,
+} from './components/accordion';
 export { Avatar } from './components/avatar';
 export type { AvatarProps } from './components/avatar';
 export { Badge } from './components/badge';
@@ -54,6 +66,7 @@ export { CancelFill } from './icons/cancel-fill';
 export { Cancel } from './icons/cancel';
 export { CenterOn } from './icons/center-on';
 export { Check } from './icons/check';
+export { ChevronDown } from './icons/chevron-down';
 export { CollapseAll } from './icons/collapse-all';
 export { CollapseWindow } from './icons/collapse-window';
 export { Condense } from './icons/condense';
@@ -79,6 +92,7 @@ export { Hide } from './icons/hide';
 export { Import } from './icons/import';
 export { InsertChart } from './icons/insert-chart';
 export { JumpTo } from './icons/jump-to';
+export { Kebab } from './icons/kebab';
 export { Lasso } from './icons/lasso';
 export { Link } from './icons/link';
 export { LockFill } from './icons/lock-fill';
