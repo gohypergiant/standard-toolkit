@@ -21,8 +21,7 @@
   },
   "scripts": {
     "build": "pnpm generate:icons && pnpm tsup",
-    "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg"
   },
   "keywords": [],
   "$schema": "https://json.schemastore.org/package",
