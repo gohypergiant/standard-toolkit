@@ -18,7 +18,7 @@ import { Docs } from './docs';
 const preview: Preview = {
   initialGlobals: {
     // 👇 Set the initial background color
-    backgrounds: { value: 'Dark' },
+    backgrounds: { value: '#0b0b0b' },
   },
   parameters: {
     backgrounds: {
