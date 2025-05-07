@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { Placeholder } from '@/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Button } from '../button';
@@ -44,7 +45,12 @@ export default meta;
 type Story = StoryObj<typeof Chip>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Chip {...args}>{children}</Chip>,
+  render: ({ children, ...args }) => (
+    <Chip {...args}>
+      <Placeholder />
+      {children}
+    </Chip>
+  ),
 };
 
 export const List: Story = {

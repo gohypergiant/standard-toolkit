@@ -14,7 +14,7 @@ import { CancelFill } from '@/icons';
 import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
 import type React from 'react';
-import { createContext, useContext } from 'react';
+import { type ReactNode, createContext, useContext } from 'react';
 import {
   Tag as AriaTag,
   TagGroup as AriaTagGroup,
@@ -27,20 +27,20 @@ import {
 
 const chipStyles = cva(
   cn([
-    'fg-default-light inline-flex w-content items-center justify-center rounded-full border outline-none',
+    'fg-default-light inline-flex w-content items-center justify-center gap-xxs rounded-full outline',
   ]),
   {
     variants: {
       variant: {
-        advisory: 'border-advisory-bold bg-advisory-subtle',
-        critical: 'border-critical bg-critical-subtle',
-        serious: 'border-serious bg-serious-subtle',
-        normal: 'border-normal bg-normal-subtle',
-        info: 'border-info-bold bg-info-subtle',
+        advisory: 'bg-advisory-subtle outline-advisory-bold',
+        critical: 'bg-critical-subtle outline-critical',
+        serious: 'bg-serious-subtle outline-serious',
+        normal: 'bg-normal-subtle outline-normal',
+        info: 'bg-info-subtle outline-info-bold',
       },
       size: {
-        medium: 'px-s py-xs text-body-s',
-        small: 'px-s py-xs text-body-xs',
+        medium: 'icon-size-l px-s py-xs text-body-s',
+        small: 'icon-size-m px-s py-xs text-body-xs',
       },
     },
     defaultVariants: {
@@ -55,7 +55,7 @@ export interface ChipProps
     Omit<React.HTMLProps<HTMLSpanElement>, 'children' | 'size'> {
   className?: string;
   /** Used to add text to the badge, such as the number of unread notifications. */
-  children?: string;
+  children?: ReactNode;
 }
 
 const Coordinator = createContext(false);
@@ -70,6 +70,7 @@ export const Chip = ({
   const Component = context ? AriaTag : 'span';
 
   return (
+    // @ts-expect-error we are intentionally omitting children.
     <Component
       className={cn(
         chipStyles({
@@ -118,13 +119,13 @@ Chip.List = ChipList;
 
 const selectableChipStyles = cva(
   cn([
-    'fg-default-light inline-flex w-content items-center justify-center rounded-full border border-interactive outline-none hover:border-interactive-hover focus:border-interactive-hover',
-    'ai-selected:border-highlight ai-selected:bg-highlight-subtle',
+    'fg-default-light inline-flex w-content items-center justify-center rounded-full outline outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
+    'ai-selected:bg-highlight-subtle ai-selected:outline-highlight',
   ]),
   {
     variants: {
       isDisabled: {
-        true: 'fg-disabled ai-selected:border-interactive-disabled border-interactive-disabled ai-selected:bg-transparent hover:border-interactive-disabled focus:border-interactive-disabled',
+        true: 'fg-disabled ai-selected:bg-transparent ai-selected:outline-interactive-disabled outline-interactive-disabled hover:outline-interactive-disabled focus:outline-interactive-disabled',
         false: 'cursor-pointer',
       },
       size: {
@@ -165,12 +166,12 @@ Chip.Selectable = SelectableChip;
 
 const deletableChipStyles = cva(
   cn([
-    'fg-default-light group inline-flex w-content items-center justify-center gap-xs rounded-full border border-interactive outline-none hover:border-interactive-hover focus:border-interactive-hover',
+    'fg-default-light group inline-flex w-content items-center justify-center gap-xs rounded-full outline outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
   ]),
   {
     variants: {
       isDisabled: {
-        true: 'fg-disabled border-interactive-disabled hover:border-interactive-disabled',
+        true: 'fg-disabled outline-interactive-disabled hover:outline-interactive-disabled',
         false: '',
       },
       size: {
