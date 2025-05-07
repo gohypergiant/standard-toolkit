@@ -27,6 +27,7 @@ const meta: Meta<typeof Checkbox> = {
     children: 'Checkbox',
     isDisabled: false,
     isIndeterminate: false,
+    isReadOnly: false,
   },
   argTypes: {},
 };

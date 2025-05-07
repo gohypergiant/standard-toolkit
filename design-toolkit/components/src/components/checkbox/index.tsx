@@ -22,45 +22,57 @@ import {
   Label as AriaLabel,
 } from 'react-aria-components';
 
-const checkboxStyles = cva('fg-inverse-light size-l rounded-small border', {
-  variants: {
-    isHovered: {
-      true: 'border-interactive-hover',
-      false: 'border-interactive',
+const checkboxStyles = cva(
+  'fg-inverse-light size-l rounded-small outline outline-interactive',
+  {
+    variants: {
+      isIndeterminate: {
+        true: 'bg-highlight outline-highlight hover:outline-interactive-hover focus:outline-interactive-hover',
+      },
+      isSelected: {
+        true: 'bg-highlight outline-highlight hover:outline-interactive-hover focus:outline-interactive-hover',
+      },
+      isHovered: {
+        true: 'outline-interactive-hover',
+      },
+      isFocused: {
+        true: 'outline-interactive-hover',
+      },
+      isDisabled: {
+        true: 'outline-interactive-disabled hover:outline-interactive-disabled',
+      },
+      isReadOnly: {
+        true: 'outline-interactive-disabled hover:outline-interactive-disabled',
+      },
     },
-    isFocused: {
-      true: 'border-interactive-hover',
-      false: 'border-interactive',
-    },
-    isIndeterminate: {
-      true: 'border-highlight bg-highlight hover:border-highlight focus:border-highlight',
-    },
-    isSelected: {
-      true: 'border-highlight bg-highlight hover:border-highlight focus:border-interactive-hover',
-    },
-    isDisabled: {
-      true: 'border-interactive-disabled',
+    compoundVariants: [
+      {
+        isDisabled: true,
+        isSelected: true,
+        className: 'icon-inverse-light bg-interactive-disabled',
+      },
+      {
+        isDisabled: true,
+        isIndeterminate: true,
+        className: 'icon-inverse-light bg-interactive-disabled',
+      },
+      {
+        isReadOnly: true,
+        isSelected: true,
+        className: 'icon-inverse-light bg-interactive-disabled',
+      },
+      {
+        isReadOnly: true,
+        isIndeterminate: true,
+        className: 'icon-inverse-light bg-interactive-disabled',
+      },
+    ],
+    defaultVariants: {
+      isIndeterminate: false,
+      isSelected: false,
     },
   },
-  compoundVariants: [
-    {
-      isDisabled: true,
-      isSelected: true,
-      className:
-        'icon-inverse-light hover:interactive-disabled focus:interactive-disabled bg-interactive-disabled',
-    },
-    {
-      isDisabled: true,
-      isIndeterminate: true,
-      className:
-        'icon-inverse-light hover:interactive-disabled focus:interactive-disabled bg-interactive-disabled',
-    },
-  ],
-  defaultVariants: {
-    isIndeterminate: false,
-    isSelected: false,
-  },
-});
+);
 
 /**
  * This is a checkbox.
@@ -76,26 +88,45 @@ export function Checkbox({ className, children, ...args }: CheckboxProps) {
         className,
       )}
     >
-      {({ isDisabled, isFocused, isHovered, isIndeterminate, isSelected }) => (
-        <>
-          <div
-            className={cn(
-              checkboxStyles({
-                isDisabled,
-                isFocused,
-                isHovered,
-                isIndeterminate,
-                isSelected,
-              }),
-            )}
-            aria-hidden
-          >
-            {isIndeterminate && !isSelected && <Minus />}
-            {isSelected && !isIndeterminate && <Check />}
-          </div>
-          {children}
-        </>
-      )}
+      {({
+        isDisabled,
+        isFocused,
+        isHovered,
+        isIndeterminate,
+        isReadOnly,
+        isSelected,
+      }) => {
+        console.log({
+          isDisabled,
+          isFocused,
+          isHovered,
+          isIndeterminate,
+          isReadOnly,
+          isSelected,
+        });
+
+        return (
+          <>
+            <div
+              className={cn(
+                checkboxStyles({
+                  isDisabled,
+                  isFocused,
+                  isHovered,
+                  isIndeterminate,
+                  isReadOnly,
+                  isSelected,
+                }),
+              )}
+              aria-hidden
+            >
+              {isIndeterminate && !isSelected && <Minus />}
+              {isSelected && !isIndeterminate && <Check />}
+            </div>
+            {children}
+          </>
+        );
+      }}
     </AriaCheckbox>
   );
 }
