@@ -19,8 +19,8 @@ import {
   CheckboxGroup as AriaCheckboxGroup,
   type CheckboxGroupProps as AriaCheckboxGroupProps,
   type CheckboxProps as AriaCheckboxProps,
-  Label as AriaLabel,
 } from 'react-aria-components';
+import { Label } from '../label';
 
 const checkboxStyles = cva(
   'fg-inverse-light size-l rounded-small outline outline-interactive',
@@ -146,13 +146,13 @@ function CheckboxGroup({
     <AriaCheckboxGroup
       {...props}
       className={cn(
-        'fg-default-light flex flex-col gap-m text-header-m',
+        'fg-default-light flex flex-col gap-m text-body-s',
         className,
       )}
     >
       {(props) => (
         <>
-          {label ? <AriaLabel>{label}</AriaLabel> : undefined}
+          {label ? <Label>{label}</Label> : undefined}
           {typeof children === 'function' ? children(props) : children}
         </>
       )}
