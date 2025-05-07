@@ -44,7 +44,7 @@ export function Tooltip({
 
   return (
     <RACTooltipTrigger closeDelay={closeDelay} delay={delay} {...props}>
-      <div>{children}</div>
+      {children}
     </RACTooltipTrigger>
   );
 }
