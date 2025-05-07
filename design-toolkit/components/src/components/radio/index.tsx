@@ -22,20 +22,20 @@ import {
 } from 'react-aria-components';
 
 const radioStyles = cva(
-  'fg-default-light flex size-l items-center justify-center rounded-round border border-interactive before:block before:size-s before:rounded-round before:bg-transparent',
+  'fg-default-light flex size-l items-center justify-center rounded-round outline outline-interactive before:block before:size-s before:rounded-round before:bg-transparent',
   {
     variants: {
+      isSelected: {
+        true: 'outline-highlight before:bg-highlight',
+      },
       isFocused: {
-        true: 'border-interactive-hover',
+        true: 'outline-interactive-hover hover:outline-interactive-hover',
       },
       isHovered: {
-        true: 'border-interactive-hover',
-      },
-      isSelected: {
-        true: 'border-highlight before:bg-highlight hover:border-highlight',
+        true: 'outline-interactive-hover hover:outline-interactive-hover',
       },
       isDisabled: {
-        true: 'border-interactive-disabled',
+        true: 'outline-interactive-disabled',
       },
     },
     compoundVariants: [
@@ -43,11 +43,11 @@ const radioStyles = cva(
         isDisabled: true,
         isSelected: true,
         className:
-          'hover:interactive-disabled border-interactive-disabled before:bg-interactive-disabled',
+          'hover:interactive-disabled outline-interactive-disabled before:bg-interactive-disabled',
       },
       {
         isDisabled: true,
-        className: 'hover:interactive-disabled border-interactive-disabled',
+        className: 'hover:interactive-disabled outline-interactive-disabled',
       },
     ],
     defaultVariants: {
@@ -100,13 +100,15 @@ function RadioGroup({ children, className, label, ...props }: RadioGroupProps) {
     <AriaRadioGroup
       {...props}
       className={cn(
-        'fg-default-light flex flex-col gap-m text-header-m',
+        'fg-default-light flex flex-col gap-m text-body-s',
         className,
       )}
     >
       {(props) => (
         <>
-          {label ? <AriaLabel>{label}</AriaLabel> : undefined}
+          {label ? (
+            <AriaLabel className='text-header-s'>{label}</AriaLabel>
+          ) : undefined}
           {typeof children === 'function' ? children(props) : children}
         </>
       )}
