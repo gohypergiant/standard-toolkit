@@ -29,7 +29,9 @@ import { type ChangeEvent, type ForwardedRef, useEffect } from 'react';
 import { Label } from '../label';
 
 const textFieldStyles = cva(
-  ['rounded-medium px-s py-xs font-display outline outline-interactive'],
+  [
+    'block w-full rounded-medium px-s py-xs font-display outline outline-interactive',
+  ],
   {
     variants: {
       isDisabled: {
@@ -122,7 +124,7 @@ const Input = ({
           }),
         )}
       >
-        {props.value}
+        {props.value || '\u00A0'}
       </span>
     );
   }
