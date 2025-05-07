@@ -14,12 +14,12 @@ import { cn } from '@/lib/utils';
 import { cva } from 'cva';
 import type React from 'react';
 import {
-  Label as AriaLabel,
   Radio as AriaRadio,
   RadioGroup as AriaRadioGroup,
   type RadioGroupProps as AriaRadioGroupProps,
   type RadioProps as AriaRadioProps,
 } from 'react-aria-components';
+import { Label } from '../label';
 
 const radioStyles = cva(
   'fg-default-light flex size-l items-center justify-center rounded-round outline outline-interactive before:block before:size-s before:rounded-round before:bg-transparent',
@@ -66,7 +66,7 @@ export function Radio({ className, children, ...args }: RadioProps) {
     <AriaRadio
       {...args}
       className={cn(
-        'fg-default-light flex items-center gap-m ai-disabled:text-interactive-disabled text-body-s',
+        'fg-default-light flex items-center gap-m ai-disabled:text-interactive-disabled',
         className,
       )}
     >
@@ -106,9 +106,7 @@ function RadioGroup({ children, className, label, ...props }: RadioGroupProps) {
     >
       {(props) => (
         <>
-          {label ? (
-            <AriaLabel className='text-header-s'>{label}</AriaLabel>
-          ) : undefined}
+          {label ? <Label>{label}</Label> : undefined}
           {typeof children === 'function' ? children(props) : children}
         </>
       )}
