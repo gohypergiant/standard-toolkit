@@ -54,7 +54,10 @@ export interface SwitchProps extends Omit<AriaSwitchProps, 'children'> {
 
 export function Switch({ children, className, ...props }: SwitchProps) {
   return (
-    <AriaSwitch {...props} className='group flex items-center gap-s'>
+    <AriaSwitch
+      {...props}
+      className='group flex ai-disabled:cursor-not-allowed items-center gap-s'
+    >
       {({ isDisabled, isSelected }) => (
         <>
           <div
