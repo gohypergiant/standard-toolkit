@@ -232,102 +232,107 @@
 @utility text-header-xxl {
   font-size: var(--header-xxl-size);
   font-weight: 500;
-  line-height: var(--header-xxl-height);
   letter-spacing: 0px;
+  line-height: var(--header-xxl-height);
 }
 
 @utility text-header-xl {
   font-size: var(--header-xl-size);
   font-weight: 500;
-  line-height: var(--header-xl-height);
   letter-spacing: 0.18px;
+  line-height: var(--header-xl-height);
 }
 
 @utility text-header-l {
   font-size: var(--header-l-size);
   font-weight: 500;
-  line-height: var(--header-l-height);
   letter-spacing: 0.18px;
+  line-height: var(--header-l-height);
 }
 
 @utility text-header-m {
   font-size: var(--header-m-size);
   font-weight: 500;
-  line-height: var(--header-m-height);
   letter-spacing: 0.25px;
+  line-height: var(--header-m-height);
 }
 
 @utility text-header-s {
   font-size: var(--header-s-size);
   font-weight: 500;
-  line-height: var(--header-s-height);
   letter-spacing: 0.4px;
+  line-height: var(--header-s-height);
 }
 
 @utility text-header-xs {
   font-size: var(--header-xs-size);
   font-weight: 500;
-  line-height: var(--header-xs-height);
   letter-spacing: 0.25px;
+  line-height: var(--header-xs-height);
 }
 
 
 @utility text-body-l {
   font-size: var(--body-l-size);
-  line-height: var(--body-l-height);
+  font-weight: 400;
   letter-spacing: 0.5px;
+  line-height: var(--body-l-height);
 }
 
 @utility text-body-m {
   font-size: var(--body-m-size);
-  line-height: var(--body-m-height);
+  font-weight: 400;
   letter-spacing: 0.25px;
+  line-height: var(--body-m-height);
 }
 
 @utility text-body-s {
   font-size: var(--body-s-size);
-  line-height: var(--body-s-height);
+  font-weight: 400;
   letter-spacing: 0.4px;
+  line-height: var(--body-s-height);
 }
 
 @utility text-body-xs {
   font-size: var(--body-xs-size);
-  line-height: var(--body-xs-height);
+  font-weight: 400;
   letter-spacing: 0.5px;
+  line-height: var(--body-xs-height);
 }
 
 @utility text-body-xxs {
   font-size: var(--body-xxs-size);
-  line-height: var(--body-xxs-height);
+  font-weight: 400;
   letter-spacing: 0.25px;
+  line-height: var(--body-xxs-height);
 }
 
 @utility text-button-l {
   font-size: var(--button-l-size);
   font-weight: bold;
-  line-height: var(--button-l-height);
   letter-spacing: 0.5px;
+  line-height: var(--button-l-height);
 }
 
 @utility text-button-m {
   font-size: var(--button-m-size);
   font-weight: bold;
-  line-height: var(--button-m-height);
   letter-spacing: 0.25px;
+  line-height: var(--button-m-height);
 }
 
 @utility text-button-s {
   font-size: var(--button-s-size);
   font-weight: bold;
-  line-height: var(--button-s-height);
   letter-spacing: 0.4px;
+  line-height: var(--button-s-height);
 }
 
 @utility text-button-xs {
   font-size: var(--button-xs-size);
   font-weight: bold;
-  line-height: var(--button-xs-height);
   letter-spacing: 0.5px;
+  line-height: var(--button-xs-height);
 }
 
 @utility w-content {
