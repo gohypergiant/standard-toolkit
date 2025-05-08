@@ -74,6 +74,13 @@
       },
       "default": "./dist/components/label/index.js"
     },
+    "./switch": {
+      "import": {
+        "types": "./dist/components/switch/index.d.ts",
+        "default": "./dist/components/switch/index.js"
+      },
+      "default": "./dist/components/switch/index.js"
+    },
     "./toggle-icon-button": {
       "import": {
         "types": "./dist/components/toggle-icon-button/index.d.ts",
