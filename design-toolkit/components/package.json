@@ -18,6 +18,13 @@
       },
       "default": "./dist/index.js"
     },
+    "./accordion": {
+      "import": {
+        "types": "./dist/components/accordion/index.d.ts",
+        "default": "./dist/components/accordion/index.js"
+      },
+      "default": "./dist/components/accordion/index.js"
+    },
     "./avatar": {
       "import": {
         "types": "./dist/components/avatar/index.d.ts",
