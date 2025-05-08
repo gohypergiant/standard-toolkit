@@ -74,6 +74,13 @@
       },
       "default": "./dist/components/label/index.js"
     },
+    "./radio": {
+      "import": {
+        "types": "./dist/components/radio/index.d.ts",
+        "default": "./dist/components/radio/index.js"
+      },
+      "default": "./dist/components/radio/index.js"
+    },
     "./toggle-icon-button": {
       "import": {
         "types": "./dist/components/toggle-icon-button/index.d.ts",
