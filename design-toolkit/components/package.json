@@ -39,6 +39,13 @@
       },
       "default": "./dist/components/button/index.js"
     },
+    "./chip": {
+      "import": {
+        "types": "./dist/components/chip/index.d.ts",
+        "default": "./dist/components/chip/index.js"
+      },
+      "default": "./dist/components/chip/index.js"
+    },
     "./classification-badge": {
       "import": {
         "types": "./dist/components/classification-badge/index.d.ts",
