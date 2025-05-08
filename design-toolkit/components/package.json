@@ -39,6 +39,13 @@
       },
       "default": "./dist/components/button/index.js"
     },
+    "./checkbox": {
+      "import": {
+        "types": "./dist/components/checkbox/index.d.ts",
+        "default": "./dist/components/checkbox/index.js"
+      },
+      "default": "./dist/components/checkbox/index.js"
+    },
     "./classification-badge": {
       "import": {
         "types": "./dist/components/classification-badge/index.d.ts",
