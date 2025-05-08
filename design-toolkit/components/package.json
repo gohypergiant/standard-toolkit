@@ -67,6 +67,20 @@
       },
       "default": "./dist/components/icon-button/index.js"
     },
+    "./label": {
+      "import": {
+        "types": "./dist/components/label/index.d.ts",
+        "default": "./dist/components/label/index.js"
+      },
+      "default": "./dist/components/label/index.js"
+    },
+    "./text-field": {
+      "import": {
+        "types": "./dist/components/text-field/index.d.ts",
+        "default": "./dist/components/text-field/index.js"
+      },
+      "default": "./dist/components/text-field/index.js"
+    },
     "./toggle-icon-button": {
       "import": {
         "types": "./dist/components/toggle-icon-button/index.d.ts",
