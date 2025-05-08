@@ -95,14 +95,16 @@ const Input = ({
   [props, ref] = useContextProps(props, ref, InputContext);
 
   useEffect(() => {
-    const removeListener = ref.current?.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+    function handleKeyPressed(e: KeyboardEvent) {
+      if (isClearable && e.key === 'Escape') {
         props.onChange?.(clearInputEvent);
       }
-    });
+    }
 
-    return removeListener;
-  }, [props.onChange, ref]);
+    ref.current?.addEventListener('keydown', handleKeyPressed);
+
+    return () => ref.current?.removeEventListener('keydown', handleKeyPressed);
+  }, [isClearable, props.onChange, ref]);
 
   const shouldShowClearButton =
     !props.readOnly &&
