@@ -153,7 +153,7 @@
 
   --color-interactive-default: var(--neutral-02, #e6e6e6);
   --color-interactive-hover-light: var(--neutral-03, #898989);
-  --color-interactive-hover-dark: var(--neutral-08, #2f2f31);
+  --color-interactive-hover-dark: var(--neutral-07, #383838);
   --color-interactive-disabled: var(--neutral-07, #383838);
 
   --color-static-light: var(--neutral-07, #383838);
@@ -362,3 +362,8 @@
 
 @custom-variant pressed (&:where([data-pressed] *));
 @custom-variant ai-hovered (&:where([data-hovered] *));
+
+@utility icon-size-* {
+  --icon-size: --value([ *]);
+  --icon-size: --value(--spacing- *);
+}

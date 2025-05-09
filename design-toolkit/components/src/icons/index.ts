@@ -19,6 +19,8 @@ export { Cancel } from './cancel';
 export { CancelFill } from './cancel-fill';
 export { CenterOn } from './center-on';
 export { Check } from './check';
+export { ChevronDown } from './chevron-down';
+export { ChevronFillDown } from './chevron-fill-down';
 export { CollapseAll } from './collapse-all';
 export { CollapseWindow } from './collapse-window';
 export { Condense } from './condense';
