@@ -164,6 +164,7 @@ export const Fonts: Story = {
 };
 
 export const PrimaryHeader: Story = {
+  globals: { backgrounds: { value: '#0b0b0b' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
@@ -191,6 +192,7 @@ export const PrimaryHeader: Story = {
 };
 
 export const PrimaryBody: Story = {
+  globals: { backgrounds: { value: '#0b0b0b' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
@@ -213,6 +215,7 @@ export const PrimaryBody: Story = {
 };
 
 export const DisplayBody: Story = {
+  globals: { backgrounds: { value: '#0b0b0b' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
