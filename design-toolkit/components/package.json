@@ -53,6 +53,13 @@
       },
       "default": "./dist/components/classification-banner/index.js"
     },
+    "./combobox": {
+      "import": {
+        "types": "./dist/components/combobox/index.d.ts",
+        "default": "./dist/components/combobox/index.js"
+      },
+      "default": "./dist/components/combobox/index.js"
+    },
     "./floating-button": {
       "import": {
         "types": "./dist/components/floating-button/index.d.ts",
