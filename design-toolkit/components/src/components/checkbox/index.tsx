@@ -95,38 +95,27 @@ export function Checkbox({ className, children, ...args }: CheckboxProps) {
         isIndeterminate,
         isReadOnly,
         isSelected,
-      }) => {
-        console.log({
-          isDisabled,
-          isFocused,
-          isHovered,
-          isIndeterminate,
-          isReadOnly,
-          isSelected,
-        });
-
-        return (
-          <>
-            <div
-              className={cn(
-                checkboxStyles({
-                  isDisabled,
-                  isFocused,
-                  isHovered,
-                  isIndeterminate,
-                  isReadOnly,
-                  isSelected,
-                }),
-              )}
-              aria-hidden
-            >
-              {isIndeterminate && !isSelected && <Minus />}
-              {isSelected && !isIndeterminate && <Check />}
-            </div>
-            {children}
-          </>
-        );
-      }}
+      }) => (
+        <>
+          <div
+            className={cn(
+              checkboxStyles({
+                isDisabled,
+                isFocused,
+                isHovered,
+                isIndeterminate,
+                isReadOnly,
+                isSelected,
+              }),
+            )}
+            aria-hidden
+          >
+            {isIndeterminate && !isSelected && <Minus />}
+            {isSelected && !isIndeterminate && <Check />}
+          </div>
+          {children}
+        </>
+      )}
     </AriaCheckbox>
   );
 }
