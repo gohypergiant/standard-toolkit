@@ -182,8 +182,8 @@
 
   --color-default-light: var(--neutral-01, #ffffff);
   --color-default-dark: var(--neutral-03, #898989);
-  --color-inverse-dark: var(--neutral-09, #222222);
-  --color-inverse-light: var(--neutral-07, #383838);
+  --color-inverse-dark: var(--neutral-07,#383838);
+  --color-inverse-light: var(--neutral-09, #222222);
   --color-disabled: var(--neutral-05, #565656);
   --color-highlight: var(--highlight-primary-03, #28f5be);
   --color-info: var(--neutral-04, #686868);
