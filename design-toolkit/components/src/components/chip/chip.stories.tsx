@@ -54,10 +54,20 @@ export const Default: Story = {
 };
 
 export const List: Story = {
-  render: () => (
+  parameters: {
+    controls: {
+      exclude: ['children', 'className', 'variant'],
+    },
+  },
+  render: (args) => (
     <Chip.List>
       {meta.argTypes?.variant?.options?.map((option) => (
-        <Chip key={option} variant={option} size='small' className='capitalize'>
+        <Chip
+          key={option}
+          variant={option}
+          className='capitalize'
+          size={args.size}
+        >
           {option}
         </Chip>
       ))}
@@ -81,9 +91,18 @@ const selectableData = [
 ];
 
 export const SelectableChipList: Story = {
-  render: () => (
+  parameters: {
+    controls: {
+      exclude: ['children', 'className', 'variant'],
+    },
+  },
+  render: (args) => (
     <Chip.List items={selectableData} selectionMode='multiple'>
-      {(item) => <Chip.Selectable id={item.id}>{item.name}</Chip.Selectable>}
+      {(item) => (
+        <Chip.Selectable id={item.id} size={args.size}>
+          {item.name}
+        </Chip.Selectable>
+      )}
     </Chip.List>
   ),
 };
@@ -104,7 +123,12 @@ const deletableData = [
 ];
 
 export const DeletableChipList: Story = {
-  render: () => {
+  parameters: {
+    controls: {
+      exclude: ['children', 'className', 'variant'],
+    },
+  },
+  render: (args) => {
     const [items, setItems] = useState(deletableData);
 
     return (
@@ -117,7 +141,7 @@ export const DeletableChipList: Story = {
           }
         >
           {(item) => (
-            <Chip.Deletable id={item.id} size='small'>
+            <Chip.Deletable id={item.id} size={args.size}>
               {item.name}
             </Chip.Deletable>
           )}
