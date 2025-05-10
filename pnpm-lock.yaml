@@ -262,8 +262,8 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0
       react-aria-components:
-        specifier: 1.7.1
-        version: 1.7.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: 1.8.0
+        version: 1.8.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
@@ -388,7 +388,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.3.0
-        version: 8.3.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.3.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -413,7 +413,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -438,7 +438,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -460,7 +460,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -639,7 +639,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -673,7 +673,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -695,7 +695,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -723,7 +723,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -745,7 +745,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -770,7 +770,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -792,7 +792,7 @@ importers:
         version: 2.1.3
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
+        version: 8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1)
       vitest:
         specifier: 2.1.3
         version: 2.1.3(@types/node@20.17.32)(jsdom@25.0.1)(lightningcss@1.29.2)(msw@2.7.5(@types/node@20.17.32)(typescript@5.6.3))(terser@5.39.0)
@@ -3225,8 +3225,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
 
-  '@react-aria/autocomplete@3.0.0-beta.1':
-    resolution: {integrity: sha512-ZeVR1tKJOZK5/RTuN8eprlP1lyeihdDfDYPBkdg2iT5h775LSZyOingPux9aLtdqt/uj6JIS5amK9ErI7+axug==}
+  '@react-aria/autocomplete@3.0.0-beta.2':
+    resolution: {integrity: sha512-oxsFCIGj5yooQkZzdqjvsdfr9fOlmAq4v6njIOAyQFsta3H0yQiv+YU3XnrnCBxVX+Mz/mZtZgfhAA9JBDukHg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -3261,8 +3261,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
 
-  '@react-aria/collections@3.0.0-beta.1':
-    resolution: {integrity: sha512-udrHajGknkDioGbuqOdWjQ2P7J6fYGlkVGuIJwLxML+WgrroC+i76A4BBOD4ifJKxVAZ8TMyGSztt4RUdn+jDA==}
+  '@react-aria/collections@3.0.0-rc.0':
+    resolution: {integrity: sha512-WcRcE3wKtbprOJlBaMbdYS5Suu2KIGq1gVT2fLXVbmDY0CjGemqp2m5aDblQOO8pxvsAqHV8pyznkhANTnK1CQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -3536,12 +3536,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
 
-  '@react-aria/toolbar@3.0.0-beta.14':
-    resolution: {integrity: sha512-F9wFYhcbVUveo6+JfAjKyz19BnBaXBYG7YyZdGurhn5E1bD+Zrwz/ZCTrrx40xJsbofciCiiwnKiXmzB20Kl5Q==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
   '@react-aria/toolbar@3.0.0-beta.15':
     resolution: {integrity: sha512-PNGpNIKIsCW8rxI9XXSADlLrSpikILJKKECyTRw9KwvXDRc44pezvdjGHCNinQcKsQoy5BtkK5cTSAyVqzzTXQ==}
     peerDependencies:
@@ -3599,8 +3593,8 @@ packages:
     peerDependencies:
       react: '>=16.8'
 
-  '@react-stately/autocomplete@3.0.0-beta.0':
-    resolution: {integrity: sha512-nWRbDzqHzdZySIqwoEBMIdineoQxR1Wzmb86r+NICBX9cNv0tZBLNnHywHsul/MN61/TthdOpay1QwZUoQSrXw==}
+  '@react-stately/autocomplete@3.0.0-beta.1':
+    resolution: {integrity: sha512-ohs6QOtJouQ+Y1+zRKiCzv57QogSTRuOA1QfrnIS1YPwKO1EDQXSqFkq2htK5+bN9GCm94yo6r4iX++SZKmLXA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -3779,8 +3773,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
 
-  '@react-types/autocomplete@3.0.0-alpha.29':
-    resolution: {integrity: sha512-brP6fb7RAdfu/liaE4gFZIZQJLXksgtOzdu/I5cmcHfpqScAFmgedZHkJoeutK9wTWtNnfuKAFQ2w9KKlIBj9w==}
+  '@react-types/autocomplete@3.0.0-alpha.30':
+    resolution: {integrity: sha512-9neGygI+stJqiEFHzoc1jMySj6lOc4MUmBmu0uGn2zdOG2zxaAZSjh1pd9AJkHNyZ4j/n5rVXMo+v3RNkUntNw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -8659,6 +8653,10 @@ packages:
     resolution: {integrity: sha512-56rxCq7G/XfB4EkXq9Egn5GCqugWvDFjafDOThIdMBsI15iqPqR5r15TfSr1YPYeEI19YeaXMCbY6u88Y76GLQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postcss@8.4.49:
+    resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
+    engines: {node: ^10 || ^12 || >=14}
+
   prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
@@ -8790,8 +8788,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
 
-  react-aria-components@1.7.1:
-    resolution: {integrity: sha512-kTAlrxcW7n+rQDwlZSz5+o+HknjPGv/pn0OQ1FF92WsjoTaqQMJtWbEAHXrhrQaiW/3T4CANTpdR1soai4uK6g==}
+  react-aria-components@1.8.0:
+    resolution: {integrity: sha512-qNJ/Z4opj1/NKFf1ch/V8rNYar5MXu4J8YVAt2pFgnBRLjVlIlfnENN8Oa5OFiYFCzMPRFdq5mI8RuYIEnvZfg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -13697,7 +13695,7 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@react-aria/autocomplete@3.0.0-beta.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@react-aria/autocomplete@3.0.0-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@react-aria/combobox': 3.12.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/focus': 3.20.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -13707,9 +13705,9 @@ snapshots:
       '@react-aria/searchfield': 3.8.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/textfield': 3.17.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/utils': 3.28.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-stately/autocomplete': 3.0.0-beta.0(react@19.0.0)
+      '@react-stately/autocomplete': 3.0.0-beta.1(react@19.0.0)
       '@react-stately/combobox': 3.10.4(react@19.0.0)
-      '@react-types/autocomplete': 3.0.0-alpha.29(react@19.0.0)
+      '@react-types/autocomplete': 3.0.0-alpha.30(react@19.0.0)
       '@react-types/button': 3.12.0(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -13780,7 +13778,7 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
       use-sync-external-store: 1.5.0(react@19.0.0)
 
-  '@react-aria/collections@3.0.0-beta.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@react-aria/collections@3.0.0-rc.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@react-aria/interactions': 3.25.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/ssr': 3.9.8(react@19.0.0)
@@ -14390,16 +14388,6 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@react-aria/toolbar@3.0.0-beta.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
-    dependencies:
-      '@react-aria/focus': 3.20.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/i18n': 3.12.8(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/utils': 3.28.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-types/shared': 3.25.0(react@19.0.0)
-      '@swc/helpers': 0.5.17
-      react: 19.0.0
-      react-dom: 19.0.0(react@19.0.0)
-
   '@react-aria/toolbar@3.0.0-beta.15(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@react-aria/focus': 3.20.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -14497,7 +14485,7 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  '@react-stately/autocomplete@3.0.0-beta.0(react@19.0.0)':
+  '@react-stately/autocomplete@3.0.0-beta.1(react@19.0.0)':
     dependencies:
       '@react-stately/utils': 3.10.6(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -14785,7 +14773,7 @@ snapshots:
       '@react-types/shared': 3.25.0(react@19.0.0)
       react: 19.0.0
 
-  '@react-types/autocomplete@3.0.0-alpha.29(react@19.0.0)':
+  '@react-types/autocomplete@3.0.0-alpha.30(react@19.0.0)':
     dependencies:
       '@react-types/combobox': 3.13.4(react@19.0.0)
       '@react-types/searchfield': 3.6.1(react@19.0.0)
@@ -20139,6 +20127,15 @@ snapshots:
       tsx: 4.19.4
       yaml: 2.7.1
 
+  postcss-load-config@6.0.1(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(yaml@2.7.1):
+    dependencies:
+      lilconfig: 3.1.3
+    optionalDependencies:
+      jiti: 2.4.2
+      postcss: 8.4.49
+      tsx: 4.19.4
+      yaml: 2.7.1
+
   postcss-loader@7.3.4(postcss@8.4.47)(typescript@5.6.2)(webpack@5.99.7(@swc/core@1.7.36(@swc/helpers@0.5.17))(esbuild@0.25.3)):
     dependencies:
       cosmiconfig: 8.3.6(typescript@5.6.2)
@@ -20436,6 +20433,13 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  postcss@8.4.49:
+    dependencies:
+      nanoid: 3.3.11
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+    optional: true
+
   prettier@2.8.8: {}
 
   pretty-error@4.0.0:
@@ -20590,20 +20594,22 @@ snapshots:
       react-stately: 3.37.0(react@19.0.0)
       use-sync-external-store: 1.5.0(react@19.0.0)
 
-  react-aria-components@1.7.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  react-aria-components@1.8.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@internationalized/date': 3.8.0
       '@internationalized/string': 3.2.6
-      '@react-aria/autocomplete': 3.0.0-beta.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/collections': 3.0.0-beta.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/autocomplete': 3.0.0-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/collections': 3.0.0-rc.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/dnd': 3.9.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/focus': 3.20.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/interactions': 3.25.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/live-announcer': 3.4.2
-      '@react-aria/toolbar': 3.0.0-beta.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/overlays': 3.27.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/toolbar': 3.0.0-beta.15(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/utils': 3.28.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/virtualizer': 4.1.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-stately/autocomplete': 3.0.0-beta.0(react@19.0.0)
+      '@react-stately/autocomplete': 3.0.0-beta.1(react@19.0.0)
       '@react-stately/layout': 4.2.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/selection': 3.20.1(react@19.0.0)
       '@react-stately/table': 3.14.1(react@19.0.0)
@@ -21861,7 +21867,7 @@ snapshots:
 
   tstl@2.5.16: {}
 
-  tsup@8.3.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1):
+  tsup@8.3.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -21872,7 +21878,7 @@ snapshots:
       execa: 5.1.1
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(yaml@2.7.1)
+      postcss-load-config: 6.0.1(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(yaml@2.7.1)
       resolve-from: 5.0.0
       rollup: 4.40.1
       source-map: 0.8.0-beta.0
@@ -21881,7 +21887,7 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       '@swc/core': 1.11.24(@swc/helpers@0.5.17)
-      postcss: 8.4.47
+      postcss: 8.4.49
       typescript: 5.6.3
     transitivePeerDependencies:
       - jiti
@@ -21939,6 +21945,34 @@ snapshots:
       '@swc/core': 1.11.24(@swc/helpers@0.5.17)
       postcss: 8.4.47
       typescript: 5.7.3
+    transitivePeerDependencies:
+      - jiti
+      - supports-color
+      - tsx
+      - yaml
+
+  tsup@8.4.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(typescript@5.6.3)(yaml@2.7.1):
+    dependencies:
+      bundle-require: 5.1.0(esbuild@0.25.3)
+      cac: 6.7.14
+      chokidar: 4.0.3
+      consola: 3.4.2
+      debug: 4.4.0
+      esbuild: 0.25.3
+      joycon: 3.1.1
+      picocolors: 1.1.1
+      postcss-load-config: 6.0.1(jiti@2.4.2)(postcss@8.4.49)(tsx@4.19.4)(yaml@2.7.1)
+      resolve-from: 5.0.0
+      rollup: 4.40.1
+      source-map: 0.8.0-beta.0
+      sucrase: 3.35.0
+      tinyexec: 0.3.2
+      tinyglobby: 0.2.13
+      tree-kill: 1.2.2
+    optionalDependencies:
+      '@swc/core': 1.11.24(@swc/helpers@0.5.17)
+      postcss: 8.4.49
+      typescript: 5.6.3
     transitivePeerDependencies:
       - jiti
       - supports-color
