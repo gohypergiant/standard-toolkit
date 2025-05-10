@@ -126,7 +126,7 @@ const Input = ({
           }),
         )}
       >
-        {props.value || '\u00A0'}
+        {props.value}
       </span>
     );
   }
@@ -197,8 +197,7 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const isSmall = size === 'small';
-  const shouldShowDescription =
-    !(isSmall || isInvalid || isReadOnly) || isDisabled;
+  const shouldShowDescription = !(isSmall || isInvalid) || isDisabled;
   const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
 
   return (
