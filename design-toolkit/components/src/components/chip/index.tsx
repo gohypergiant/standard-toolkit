@@ -58,6 +58,10 @@ export interface ChipProps
   children?: ReactNode;
 }
 
+// This coordinator is used as a way for the `<Chip>` component to understand
+// whether or not it is being rendered inside of a `<Chip.List>`. This allows
+// us to opt-into using an `<AriaTag>` or a `<span>` to ensure standalone
+// functionality.
 const Coordinator = createContext(false);
 
 export const Chip = ({
@@ -67,6 +71,10 @@ export const Chip = ({
   ...props
 }: ChipProps) => {
   const context = useContext(Coordinator);
+
+  // If any context was returned from the `Coordinator` context, then
+  // we are being rendered inside of a `Chip.List` and need to render
+  // an `<AriaTag>`.
   const Component = context ? AriaTag : 'span';
 
   return (
