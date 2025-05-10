@@ -153,8 +153,7 @@ export function TextArea({
   ...props
 }: TextAreaProps) {
   const isSmall = size === 'small';
-  const shouldShowDescription =
-    !(isSmall || isInvalid || isReadOnly) || isDisabled;
+  const shouldShowDescription = !(isSmall || isInvalid) || isDisabled;
   const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
 
   return (
