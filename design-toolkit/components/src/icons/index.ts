@@ -51,6 +51,7 @@ export { LockOutline } from './lock-outline';
 export { Login } from './login';
 export { Logout } from './logout';
 export { Loop } from './loop';
+export { Minus } from './minus';
 export { Move } from './move';
 export { Mute } from './mute';
 export { OpenContainer } from './open-container';
