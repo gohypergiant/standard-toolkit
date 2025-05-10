@@ -34,7 +34,7 @@ import { Label } from '../label';
 const textFieldStyles = cva(
   [
     'block w-full rounded-medium py-xs pr-[32px] pl-s font-display outline outline-interactive',
-    'read-only:rounded-none read-only:p-0 read-only:outline-transparent read-only:hover:outline-transparent read-only:focus:outline-transparent',
+    'not-disabled:read-only:rounded-none not-disabled:read-only:p-0 not-disabled:read-only:outline-transparent not-disabled:read-only:hover:outline-transparent not-disabled:read-only:focus:outline-transparent',
   ],
   {
     variants: {
@@ -122,8 +122,7 @@ export function ComboBox<T extends MenuItem>({
   ...props
 }: ComboBoxProps<T>) {
   const isSmall = size === 'small';
-  const shouldShowDescription =
-    !(isSmall || isInvalid || isReadOnly) || isDisabled;
+  const shouldShowDescription = !(isSmall || isInvalid) || isDisabled;
   const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
 
   return (
