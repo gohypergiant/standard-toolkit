@@ -19,6 +19,8 @@ import {
 } from 'react-aria-components';
 import { Label } from '../label';
 
+const labelStyles = Label.as();
+
 const switchStyles = cva(
   [
     'relative flex h-l w-[32px] items-center rounded-round bg-transparent outline outline-interactive',
@@ -63,7 +65,7 @@ export function Switch({ children, className, ...props }: SwitchProps) {
           <div
             className={cn(switchStyles({ className, isDisabled, isSelected }))}
           />
-          <span className={Label.as()}>{children}</span>
+          <span className={labelStyles}>{children}</span>
         </>
       )}
     </AriaSwitch>
