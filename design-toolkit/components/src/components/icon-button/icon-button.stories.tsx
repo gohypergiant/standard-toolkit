@@ -36,7 +36,7 @@ const meta: Meta<typeof IconButton> = {
     },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary'],
+      options: ['primary', 'secondary', 'child'],
     },
   },
 };

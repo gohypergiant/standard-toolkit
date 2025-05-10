@@ -18,6 +18,13 @@
       },
       "default": "./dist/index.js"
     },
+    "./accordion": {
+      "import": {
+        "types": "./dist/components/accordion/index.d.ts",
+        "default": "./dist/components/accordion/index.js"
+      },
+      "default": "./dist/components/accordion/index.js"
+    },
     "./avatar": {
       "import": {
         "types": "./dist/components/avatar/index.d.ts",
@@ -138,6 +145,7 @@
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
     "lint": "pnpm biome lint",
     "preview": "pnpm storybook dev -p 6006",
+    "preview:docs": "pnpm storybook dev --docs -p 6006",
     "test": "pnpm vitest --dir=src",
     "build-storybook": "pnpm storybook build"
   },

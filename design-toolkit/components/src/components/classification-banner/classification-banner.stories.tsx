@@ -34,7 +34,7 @@ const meta: Meta<typeof ClassificationBanner> = {
         'confidential',
         'secret',
         'top-secret',
-        'top-secret-sci',
+        'ts-sci',
       ],
     },
   },
@@ -56,7 +56,7 @@ export const Missing: Story = {
 
 export const Unclassified: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner variant='unclassified' {...args}>
+    <ClassificationBanner {...args} variant='unclassified'>
       {children}
     </ClassificationBanner>
   ),
@@ -64,7 +64,7 @@ export const Unclassified: Story = {
 
 export const CUI: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner variant='cui' {...args}>
+    <ClassificationBanner {...args} variant='cui'>
       {children}
     </ClassificationBanner>
   ),
@@ -72,7 +72,7 @@ export const CUI: Story = {
 
 export const Confidential: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner variant='confidential' {...args}>
+    <ClassificationBanner {...args} variant='confidential'>
       {children}
     </ClassificationBanner>
   ),
@@ -80,7 +80,7 @@ export const Confidential: Story = {
 
 export const Secret: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner variant='secret' {...args}>
+    <ClassificationBanner {...args} variant='secret'>
       {children}
     </ClassificationBanner>
   ),
@@ -88,7 +88,7 @@ export const Secret: Story = {
 
 export const TopSecret: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner variant='top-secret' {...args}>
+    <ClassificationBanner {...args} variant='top-secret'>
       {children}
     </ClassificationBanner>
   ),
@@ -96,7 +96,7 @@ export const TopSecret: Story = {
 
 export const TopSecretSCI: Story = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner variant='top-secret-sci' {...args}>
+    <ClassificationBanner {...args} variant='ts-sci'>
       {children}
     </ClassificationBanner>
   ),
