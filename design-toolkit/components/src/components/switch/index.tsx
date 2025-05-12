@@ -51,7 +51,7 @@ const switchStyles = cva(
 );
 
 export interface SwitchProps extends Omit<AriaSwitchProps, 'children'> {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export function Switch({ children, className, ...props }: SwitchProps) {
@@ -65,7 +65,7 @@ export function Switch({ children, className, ...props }: SwitchProps) {
           <div
             className={cn(switchStyles({ className, isDisabled, isSelected }))}
           />
-          <span className={labelStyles}>{children}</span>
+          {children && <span className={labelStyles}>{children}</span>}
         </>
       )}
     </AriaSwitch>

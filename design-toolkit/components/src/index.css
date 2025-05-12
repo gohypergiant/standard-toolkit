@@ -14,10 +14,12 @@
 @import '@fontsource/roboto-flex';
 @import '@fontsource/roboto-mono';
 @import 'tailwindcss';
+
 @plugin 'tailwindcss-react-aria-components' {
   prefix: 'ai'
 }
 @source './components/foundation';
+
 
 :root {
   --neutral-01: #ffffff;
@@ -362,4 +364,57 @@
   color: --value(--color- *);
   --icon-color: --value([ *]);
   --icon-color: --value(--color- *);
+}
+
+@custom-variant pressed (&:where([data-pressed] *));
+@custom-variant ai-hovered (&:where([data-hovered] *));
+
+@utility icon-size-* {
+  --icon-size: --value([ *]);
+  --icon-size: --value(--spacing- *);
+}
+
+.rule-lines::before {
+  content: '';
+  width: 10px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  background-image:
+    repeating-linear-gradient(to bottom, var(--neutral-04), var(--neutral-04)),
+    repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+  background-position: left -1px, center;
+  background-repeat: repeat-y, repeat-x;
+  background-size: 1px 4px, 4px 1px;
+}
+
+.group > span.rule-lines:last-of-type::before {
+  content: '';
+  width: 10px;
+  position: absolute;
+  top: 0;
+  bottom: 50%;
+  left: 50%;
+  background-image:
+    repeating-linear-gradient(to bottom,var(--neutral-04), var(--neutral-04)),
+    repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+  background-position: left -1px, bottom;
+  background-repeat: repeat-y, repeat-x;
+  background-size: 1px 4px, 4px 1px;
+}
+
+.rule-lines:has(~ div.group)::before {
+  content: '';
+  width: 10px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  background-image:
+    repeating-linear-gradient(to bottom, var(--neutral-04), var(--neutral-04)),
+    repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+  background-position: left -1px, center;
+  background-repeat: repeat-y, repeat-x;
+  background-size: 1px 4px, 4px 1px;
 }

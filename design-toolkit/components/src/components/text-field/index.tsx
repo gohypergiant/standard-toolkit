@@ -41,7 +41,7 @@ const textFieldStyles = cva(
           'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus:outline-highlight',
       },
       isInvalid: {
-        true: 'outline-serious',
+        true: 'outline-serious focus:outline-serious',
       },
       isReadOnly: {
         true: 'rounded-none p-0 outline-none',
