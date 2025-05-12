@@ -14,6 +14,7 @@ import template from './src/template.js';
 
 export default {
   expandProps: true,
+  filenameCase: 'kebab',
   icon: 24,
   jsxRuntime: 'automatic',
   outDir: 'src/icons',
