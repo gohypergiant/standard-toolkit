@@ -18,7 +18,7 @@ const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   args: {
-    className: '',
+    className: undefined,
     children: 'Button',
     isDisabled: false,
     size: 'medium',
@@ -31,6 +31,7 @@ const meta: Meta<typeof Button> = {
     },
     className: {
       control: 'text',
+      type: 'string',
     },
     children: {
       control: 'text',
@@ -61,7 +62,7 @@ export const ButtonWithLeftIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
       <Placeholder />
-      {children}
+      {typeof children !== 'function' && children}
     </Button>
   ),
 };
@@ -69,7 +70,7 @@ export const ButtonWithLeftIcon: Story = {
 export const ButtonWithRightIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
-      {children}
+      {typeof children !== 'function' && children}
       <Placeholder />
     </Button>
   ),

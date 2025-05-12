@@ -14,6 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Colors',
+  tags: ['!autodocs'],
 };
 
 export default meta;
@@ -33,39 +34,39 @@ type BorderInfo = {
 const colors: Record<string, ColorInfo[]> = {
   semanticBackgroundBase: [
     {
-      name: 'surface-default',
+      name: 'bg-surface-default',
       bg: 'bg-surface-default',
     },
     {
-      name: 'interactive-default',
+      name: 'bg-interactive-default',
       bg: 'bg-interactive-default',
     },
     {
-      name: 'surface-raised',
+      name: 'bg-surface-raised',
       bg: 'bg-surface-raised',
     },
     {
-      name: 'interactive-hover-light',
+      name: 'bg-interactive-hover-light',
       bg: 'bg-interactive-hover-light',
     },
     {
-      name: 'surface-overlay',
+      name: 'bg-surface-overlay',
       bg: 'bg-surface-overlay',
     },
     {
-      name: 'interactive-hover-dark',
+      name: 'bg-interactive-hover-dark',
       bg: 'bg-interactive-hover-dark',
     },
     {
-      name: 'transparent-dark',
+      name: 'bg-transparent-dark',
       bg: 'bg-transparent-dark',
     },
     {
-      name: 'interactive-disabled',
+      name: 'bg-interactive-disabled',
       bg: 'bg-interactive-disabled',
     },
     {
-      name: 'transparent-light',
+      name: 'bg-transparent-light',
       bg: 'bg-transparent-light',
     },
   ],
@@ -145,57 +146,57 @@ const colors: Record<string, ColorInfo[]> = {
   ],
   semanticForeground: [
     {
-      name: 'default-light',
+      name: 'fg-default-light',
       fg: 'fg-default-light',
       bg: 'bg-default-light',
     },
     {
-      name: 'info',
+      name: 'fg-info',
       fg: 'fg-info',
       bg: 'bg-info',
     },
     {
-      name: 'default-dark',
+      name: 'fg-default-dark',
       fg: 'fg-default-dark',
       bg: 'bg-default-dark',
     },
     {
-      name: 'advisory',
+      name: 'fg-advisory',
       fg: 'fg-advisory',
       bg: 'bg-advisory',
     },
     {
-      name: 'inverse-light',
+      name: 'fg-inverse-light',
       fg: 'fg-inverse-light',
       bg: 'bg-inverse-light',
     },
     {
-      name: 'normal',
+      name: 'fg-normal',
       fg: 'fg-normal',
       bg: 'bg-normal',
     },
     {
-      name: 'inverse-dark',
+      name: 'fg-inverse-dark',
       fg: 'fg-inverse-dark',
       bg: 'bg-inverse-dark',
     },
     {
-      name: 'serious',
+      name: 'fg-serious',
       fg: 'fg-serious',
       bg: 'bg-serious',
     },
     {
-      name: 'disabled',
+      name: 'fg-disabled',
       fg: 'fg-disabled',
       bg: 'bg-disabled',
     },
     {
-      name: 'critical',
+      name: 'fg-critical',
       fg: 'fg-critical',
       bg: 'bg-critical',
     },
     {
-      name: 'highlight',
+      name: 'fg-highlight',
       fg: 'fg-highlight',
       bg: 'bg-highlight',
     },
@@ -205,7 +206,7 @@ const colors: Record<string, ColorInfo[]> = {
 const borders: Record<string, BorderInfo[]> = {
   semanticBorder: [
     {
-      name: 'static-light',
+      name: 'border-static-light',
       border: 'border-static-light',
     },
     {
@@ -222,7 +223,7 @@ const borders: Record<string, BorderInfo[]> = {
     },
     {
       name: 'interactive-default',
-      border: 'border-interactive-default',
+      border: 'border-interactive',
     },
     {
       name: 'normal',
@@ -260,7 +261,7 @@ const BackgroundColorDisplay = (color: ColorInfo) => {
         <span>{color.bg}</span>
         <span>
           {getComputedStyle(rootElement)
-            .getPropertyValue(`--color-${color.name}`)
+            .getPropertyValue(`--color-${color.name.replace('bg-', '')}`)
             .toLocaleUpperCase()}
         </span>
         <span className='fg-default-dark'>Figma: {color.name}</span>
@@ -278,7 +279,7 @@ const ForegroundColorDisplay = (color: ColorInfo) => {
         <span>{color.fg}</span>
         <span>
           {getComputedStyle(rootElement)
-            .getPropertyValue(`--color-${color.name}`)
+            .getPropertyValue(`--color-${color.name.replace('fg-', '')}`)
             .toLocaleUpperCase()}
         </span>
         <span className='text-default-dark'>Figma: {color.name}</span>
@@ -298,7 +299,7 @@ const BorderDisplay = (border: BorderInfo) => {
         <span>{border.border}</span>
         <span>
           {getComputedStyle(rootElement)
-            .getPropertyValue(`--color-${border.name}`)
+            .getPropertyValue(`--color-${border.name.replace('border-', '')}`)
             .toLocaleUpperCase()}
         </span>
         <span className='fg-default-dark'>Figma: {border.name}</span>
@@ -308,9 +309,7 @@ const BorderDisplay = (border: BorderInfo) => {
 };
 
 export const SemanticBackground: Story = {
-  globals: {
-    backgrounds: { value: 'black' },
-  },
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
@@ -334,9 +333,7 @@ export const SemanticBackground: Story = {
 };
 
 export const SemanticForeground: Story = {
-  globals: {
-    backgrounds: { value: 'black' },
-  },
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
@@ -356,9 +353,7 @@ export const SemanticForeground: Story = {
 };
 
 export const SemanticBorder: Story = {
-  globals: {
-    backgrounds: { value: 'black' },
-  },
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>

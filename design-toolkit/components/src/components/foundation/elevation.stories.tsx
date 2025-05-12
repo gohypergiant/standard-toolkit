@@ -14,6 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Elevation',
+  tags: ['!autodocs'],
 };
 
 export default meta;
@@ -52,9 +53,7 @@ const ElevationDisplay = (elevation: ElevationInfo) => (
 );
 
 export const Elevation: Story = {
-  globals: {
-    backgrounds: { value: '#222222' },
-  },
+  globals: { backgrounds: { value: '#222222' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>

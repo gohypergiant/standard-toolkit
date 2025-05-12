@@ -11,36 +11,25 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge } from './index';
+import { Switch } from './index';
 
-const meta: Meta<typeof Badge> = {
-  title: 'Components/Badge',
-  component: Badge,
+const meta: Meta<typeof Switch> = {
+  title: 'Components/Switch',
+  component: Switch,
   args: {
     className: undefined,
-    children: undefined,
-    variant: 'info',
+    children: 'Label',
+    isDisabled: false,
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
-    },
+    className: { type: 'string' },
+    children: { type: 'string' },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Badge>;
+type Story = StoryObj<typeof Switch>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Badge {...args}>{children}</Badge>,
-};
-
-export const WithText: Story = {
-  render: ({ children, ...args }) => (
-    <Badge {...args}>{children || '99+'}</Badge>
-  ),
+  render: ({ children, ...args }) => <Switch {...args}>{children}</Switch>,
 };

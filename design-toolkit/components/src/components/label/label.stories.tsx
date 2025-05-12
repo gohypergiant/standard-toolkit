@@ -11,36 +11,25 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge } from './index';
+import { Label } from './index';
 
-const meta: Meta<typeof Badge> = {
-  title: 'Components/Badge',
-  component: Badge,
+const meta: Meta<typeof Label> = {
+  title: 'Components/Label',
+  component: Label,
   args: {
     className: undefined,
-    children: undefined,
-    variant: 'info',
+    children: 'Label',
+    isOptional: false,
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
-    },
+    className: { type: 'string' },
+    children: { type: 'string' },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Badge>;
+type Story = StoryObj<typeof Label>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Badge {...args}>{children}</Badge>,
-};
-
-export const WithText: Story = {
-  render: ({ children, ...args }) => (
-    <Badge {...args}>{children || '99+'}</Badge>
-  ),
+  render: ({ children, ...args }) => <Label {...args}>{children}</Label>,
 };

@@ -11,36 +11,37 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge } from './index';
+import { Radio } from './index';
 
-const meta: Meta<typeof Badge> = {
-  title: 'Components/Badge',
-  component: Badge,
+/**
+ * The `<Radio.Group>` component is a direct wrapper around the equiavalent component from
+ * `react-aria-components`.
+ *
+ * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/RadioGroup.html">here</a>.
+ */
+const meta: Meta<typeof Radio.Group> = {
+  title: 'Components/Radio.Group',
+  component: Radio.Group,
   args: {
     className: undefined,
-    children: undefined,
-    variant: 'info',
+    isDisabled: false,
+    label: 'Header',
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
-    },
+    className: { type: 'string' },
+    label: { type: 'string' },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Badge>;
+type Story = StoryObj<typeof Radio.Group>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Badge {...args}>{children}</Badge>,
-};
-
-export const WithText: Story = {
-  render: ({ children, ...args }) => (
-    <Badge {...args}>{children || '99+'}</Badge>
+  render: ({ children, label, ...args }) => (
+    <Radio.Group label={label} {...args}>
+      <Radio value='1'>Radio text</Radio>
+      <Radio value='2'>Radio text</Radio>
+      <Radio value='3'>Radio text</Radio>
+    </Radio.Group>
   ),
 };

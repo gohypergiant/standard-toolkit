@@ -17,8 +17,26 @@ const meta: Meta<typeof ClassificationBanner> = {
   title: 'Components/ClassificationBanner',
   component: ClassificationBanner,
   args: {
-    className: '',
+    className: undefined,
     children: '',
+    variant: 'missing',
+  },
+  argTypes: {
+    children: {
+      control: 'text',
+    },
+    variant: {
+      control: 'select',
+      options: [
+        'missing',
+        'unclassified',
+        'cui',
+        'confidential',
+        'secret',
+        'top-secret',
+        'top-secret-sci',
+      ],
+    },
   },
   parameters: {
     layout: 'fullscreen',

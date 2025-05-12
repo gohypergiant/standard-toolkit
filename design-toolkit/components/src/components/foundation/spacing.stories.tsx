@@ -14,6 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Spacing',
+  tags: ['!autodocs'],
 };
 
 export default meta;
@@ -85,6 +86,7 @@ const SpacingDisplay = (space: SpacingInfo) => {
 };
 
 export const Spacing: Story = {
+  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>

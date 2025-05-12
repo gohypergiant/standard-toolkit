@@ -27,10 +27,10 @@ export const Default: Story = {
   render: () => (
     <div className='p-m'>
       <Tooltip>
-        <Tooltip.Body>My tooltip</Tooltip.Body>
         <Tooltip.Trigger>
           <span className='fg-interactive-default'>Test</span>
         </Tooltip.Trigger>
+        <Tooltip.Body>My tooltip</Tooltip.Body>
       </Tooltip>
     </div>
   ),

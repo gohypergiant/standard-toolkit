@@ -11,36 +11,30 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Badge } from './index';
+import { Checkbox } from './index';
 
-const meta: Meta<typeof Badge> = {
-  title: 'Components/Badge',
-  component: Badge,
+/**
+ * The `<Checkbox>` component is a direct wrapper around the equiavalent component from
+ * `react-aria-components`.
+ *
+ * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/Checkbox.html">here</a>.
+ */
+const meta: Meta<typeof Checkbox> = {
+  title: 'Components/Checkbox',
+  component: Checkbox,
   args: {
-    className: undefined,
-    children: undefined,
-    variant: 'info',
+    className: '',
+    children: 'Checkbox',
+    isDisabled: false,
+    isIndeterminate: false,
+    isReadOnly: false,
   },
-  argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
-    },
-  },
+  argTypes: {},
 };
 
 export default meta;
-type Story = StoryObj<typeof Badge>;
+type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Badge {...args}>{children}</Badge>,
-};
-
-export const WithText: Story = {
-  render: ({ children, ...args }) => (
-    <Badge {...args}>{children || '99+'}</Badge>
-  ),
+  render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
 };
