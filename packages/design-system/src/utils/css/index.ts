@@ -13,19 +13,19 @@
 import type { GlobalStyleRule, StyleRule } from '@vanilla-extract/css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { kebabCase } from 'lodash';
-import { layers } from '../styles';
+import { layers } from '../../styles/layers.css';
+import type { RGBA } from '../../types/deckgl';
 import type {
   Contract,
   CssVarFunction,
   MapLeafNodes,
   PartialMapLeafNodes,
   Primitive,
-  RGBA,
-} from '../types';
+} from '../../types/vanilla-extract';
 import {
   pixelValueAsStringValidator,
   rgbaAsStringValidator,
-} from './validators';
+} from '../validators';
 
 /**
  * Parse out CSS var name from CSS var implementation

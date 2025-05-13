@@ -16,13 +16,13 @@ import { mergeWith } from 'lodash';
 import type { CSSProperties } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { z } from 'zod';
+import type { AsType } from '../../types/generic';
+import type { ClassNames } from '../../types/props';
 import type {
-  AsType,
   ClassNameRenderProps,
-  ClassNames,
   RenderProps,
   StylePropRenderProps,
-} from '../types';
+} from '../../types/react-aria';
 
 type Props<T extends object> = AsType<T> | null | undefined;
 

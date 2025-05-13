@@ -12,7 +12,7 @@
 
 import { clamp } from 'lodash';
 import { z } from 'zod';
-import type { RGBA } from '../types';
+import type { RGBA } from '../../types/deckgl';
 
 /**
  * Test for any safe number that could represent a pixel value
