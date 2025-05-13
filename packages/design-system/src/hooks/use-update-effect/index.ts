@@ -10,27 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-export { useCollectionRender } from './use-collection-render';
-export { useContextProps } from './use-context-props';
-export {
-  DefaultsProvider,
-  useDefaultProps,
-  useDefaults,
-} from './use-defaults';
-export type {
-  DefaultsContext,
-  DefaultsProviderProps,
-} from './use-defaults/types';
-export { usePropagatingPress } from './use-propagating-press';
-export { useSlot } from './use-slot';
-export {
-  ThemeProvider,
-  useTheme,
-} from './use-theme';
-export type {
-  ThemeContext,
-  ThemeProviderProps,
-  ThemeVars,
-} from './use-theme/types';
-export { useTree } from './use-tree';
-export { useUpdateEffect } from './use-update-effect';
+import { useEffect, useRef } from 'react';
+
+function useIsFirstMount(): boolean {
+  const isFirst = useRef(true);
+
+  if (isFirst.current) {
+    isFirst.current = false;
+
+    return true;
+  }
+
+  return isFirst.current;
+}
+
+export function useUpdateEffect(effect: () => void, deps: any) {
+  const isFirstMount = useIsFirstMount();
+
+  useEffect(() => {
+    if (!isFirstMount) {
+      return effect();
+    }
+  }, deps);
+}
