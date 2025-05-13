@@ -21,7 +21,7 @@ import type {
   UseTreeOptions,
   UseTreeResult,
 } from '../../types';
-import { useUpdateEffect } from '../use-update-effect';
+import { useUpdateEffect } from '../use-update-effect/use-update-effect';
 import { getChildren, getKey, mapTree, toggleVisibility } from './utils';
 
 export function useTree<T>({

@@ -36,7 +36,7 @@ import type { SwitchClassNames } from '../../components/switch/types';
 import type { TabsClassNames } from '../../components/tabs/types';
 import type { TextFieldClassNames } from '../../components/text-field/types';
 import type { TextAreaClassNames } from '../../components/textarea/types';
-import type { TimeFieldClassNames } from '../../components/time-field';
+import type { TimeFieldClassNames } from '../../components/time-field/types';
 import type { TooltipClassNames } from '../../components/tooltip/types';
 import type { TreeClassNames } from '../../components/tree/types';
 
