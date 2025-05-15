@@ -32,6 +32,8 @@ export { ClassificationBanner } from './components/classification-banner';
 export type { ClassificationBannerProps } from './components/classification-banner';
 export { FloatingButton } from './components/floating-button';
 export type { FloatingButtonProps } from './components/floating-button';
+export { Icon } from './components/icon';
+export type { IconProps } from './components/icon';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
