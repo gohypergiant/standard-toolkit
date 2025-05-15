@@ -32,7 +32,7 @@ const SvgAdd = ({
     {...props}
   >
     {title ? <title id={titleId}>{title}</title> : null}
-    <path fill='currentColor' d='M16 7H9V0H7v7H0v2h7v7h2V9h7z' />
+    <path fill='currentColor' d='M20 11h-7V4h-2v7H4v2h7v7h2v-7h7z' />
   </svg>
 );
 export default SvgAdd;
