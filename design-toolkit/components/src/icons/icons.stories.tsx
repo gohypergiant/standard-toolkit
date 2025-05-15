@@ -32,7 +32,7 @@ export const UIIcons: Story = {
             <p className='fg-interactive-hover-light text-body-s'>
               {meta.description}
             </p>
-            <div className='fg-interactive-default grid auto-cols-max grid-cols-5 justify-center gap-l font-display text-body-xs'>
+            <div className='fg-interactive-default grid auto-cols-max grid-cols-2 justify-center gap-l font-display text-body-xs md:grid-cols-4'>
               {meta.icons.map((icon) => {
                 return (
                   <div className='flex items-center gap-l' key={icon.name}>
