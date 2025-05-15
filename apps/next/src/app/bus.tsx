@@ -13,8 +13,9 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
+import { Icon } from '@accelint/design-system';
 import { Button } from '@accelint/design-toolkit/button';
-import { Add, ExpandWindow } from '@accelint/design-toolkit/icons';
+import { Add, ExpandWindow } from '@accelint/icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const bus = Broadcast.getInstance();
@@ -57,12 +58,18 @@ export function BusExample() {
       <div className='font-display text-s'>Value: {value}</div>
       <div>
         <Button variant='outline' size='small' onPress={doInc}>
-          Increment <Add />
+          Increment{' '}
+          <Icon>
+            <Add />
+          </Icon>
         </Button>
       </div>
       <div>
         <Button variant='outline' size='small' onPress={openWindow}>
-          New Window <ExpandWindow />
+          New Window{' '}
+          <Icon>
+            <ExpandWindow />
+          </Icon>
         </Button>
       </div>
     </div>
