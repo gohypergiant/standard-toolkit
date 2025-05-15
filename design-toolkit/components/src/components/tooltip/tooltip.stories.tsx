@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { Lasso } from '@/icons/lasso';
-// Replace your-framework with the name of your framework
+import { Lasso } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../button';
+import { Icon } from '../icon';
 import { Tooltip } from './index';
 
 const meta: Meta<typeof Tooltip> = {
@@ -67,7 +67,9 @@ export const TooltipWithIcon: Story = {
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
-          <Lasso className='fg-interactive-default icon-size-xl' />
+          <Icon className='fg-interactive-default h-xl w-xl'>
+            <Lasso />
+          </Icon>
         </Tooltip.Trigger>
         <Tooltip.Body>Lasso Selection</Tooltip.Body>
       </Tooltip>

@@ -10,31 +10,36 @@
  * governing permissions and limitations under the License.
  */
 
+import { Add } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Checkbox } from './';
+import { Icon } from './';
 
-/**
- * The `<Checkbox>` component is a direct wrapper around the equiavalent component from
- * `react-aria-components`.
- *
- * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/Checkbox.html">here</a>.
- */
-const meta: Meta<typeof Checkbox> = {
-  title: 'Components/Checkbox',
-  component: Checkbox,
+const meta: Meta<typeof Icon> = {
+  title: 'Components/Icon',
+  component: Icon,
   args: {
-    className: '',
-    children: 'Checkbox',
-    isDisabled: false,
-    isIndeterminate: false,
-    isReadOnly: false,
+    className: 'fg-default-light',
+    children: '',
+    size: 'medium',
   },
-  argTypes: {},
+  argTypes: {
+    className: {
+      type: 'string',
+    },
+    size: {
+      control: 'select',
+      options: ['large', 'medium', 'small', 'xsmall'],
+    },
+  },
 };
 
 export default meta;
-type Story = StoryObj<typeof Checkbox>;
+type Story = StoryObj<typeof Icon>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
+  render: (args) => (
+    <Icon {...args}>
+      <Add />
+    </Icon>
+  ),
 };
