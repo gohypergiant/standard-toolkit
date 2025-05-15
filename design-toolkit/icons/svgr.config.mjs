@@ -12,6 +12,9 @@
 
 import template from './src/template.js';
 
+/**
+ * SVGO preset list contains the following optimizations: https://svgo.dev/docs/preset-default/#plugins-list
+ */
 export default {
   expandProps: true,
   filenameCase: 'kebab',
@@ -21,10 +24,36 @@ export default {
   replaceAttrValues: {
     '#898989': 'currentColor',
   },
-  svgoConfig: 'svgo.config.mjs',
+  svgoConfig: {
+    plugins: [
+      {
+        name: 'preset-default',
+        params: {
+          overrides: {
+            removeViewBox: false,
+          },
+        },
+      },
+      {
+        name: 'removeUnknownsAndDefaults',
+        params: {
+          unknownContent: true,
+          unknownAttrs: true,
+          defaultAttrs: false,
+          defaultMarkupDeclarations: true,
+          uselessOverrides: true,
+          keepDataAttrs: true,
+          keepAriaAttrs: true,
+          keepRoleAttr: false,
+        },
+      },
+    ],
+  },
   svgProps: {
     fill: 'none',
+    viewBox: '0 0 24 24',
   },
+  dimensions: false,
   template: template,
   titleProp: true,
   typescript: true,
