@@ -74,6 +74,13 @@
       },
       "default": "./dist/components/floating-button/index.js"
     },
+    "./icon": {
+      "import": {
+        "types": "./dist/components/icon/index.d.ts",
+        "default": "./dist/components/icon/index.js"
+      },
+      "default": "./dist/components/icon/index.js"
+    },
     "./icon-button": {
       "import": {
         "types": "./dist/components/icon-button/index.d.ts",
