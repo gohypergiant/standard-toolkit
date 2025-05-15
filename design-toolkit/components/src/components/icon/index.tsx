@@ -36,7 +36,6 @@ export interface IconProps extends VariantProps<typeof iconStyles> {
   children: ReactNode;
 }
 
-// TODO: color
 export const Icon = ({ children, className, size, ...rest }: IconProps) => {
   return (
     <div
