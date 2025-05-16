@@ -30,7 +30,7 @@ export function random(min: number, max: number) {
     throw new RangeError('Min exceeded max');
   }
 
-  return Math.random() * (max - min + 1) + min;
+  return Math.random() * (max - min + Number.EPSILON) + min;
 }
 
 /**
@@ -49,5 +49,12 @@ export function random(min: number, max: number) {
  * // RangeError
  */
 export function randomInt(min: number, max: number) {
-  return Math.floor(random(min, max));
+  if (min > max) {
+    throw new RangeError('Min exceeded max');
+  }
+
+  const minCeil = Math.ceil(min);
+  const maxFloor = Math.floor(max);
+
+  return Math.floor(Math.random() * (maxFloor - minCeil + 1) + minCeil);
 }
