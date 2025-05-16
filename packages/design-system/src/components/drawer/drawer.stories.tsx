@@ -16,10 +16,10 @@ import { TooltipTrigger } from 'react-aria-components';
 import { actions } from '../../ladle';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
-import { Element } from '../element';
-import { Icon } from '../icon';
-import { TabPanel, TabPanels } from '../tabs';
-import { Tooltip, TooltipTarget } from '../tooltip';
+import { Element } from '../element/element';
+import { Icon } from '../icon/icon';
+import { TabPanel, TabPanels } from '../tabs/tabs';
+import { Tooltip, TooltipTarget } from '../tooltip/tooltip';
 import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './drawer';
 import type { DrawerProps } from './types';
 

@@ -32,16 +32,16 @@ import {
   SliderStateContext,
   type TextProps,
 } from 'react-aria-components';
-import {
-  type AriaLabelContext,
-  AriaTextContext,
-  GroupContext,
-  type GroupProps,
-  NumberFieldContext,
-  type NumberFieldProps,
-} from '../../components';
-import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
-import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
+import { type AriaLabelContext, AriaTextContext } from '../../components/aria';
+import { GroupContext } from '../../components/group';
+import type { GroupProps } from '../../components/group/types';
+import { NumberFieldContext } from '../../components/number-field';
+import type { NumberFieldProps } from '../../components/number-field/types';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useDefaultProps } from '../../hooks/use-defaults';
+import { useTheme } from '../../hooks/use-theme';
+import { inlineVars } from '../../utils/css';
+import { callRenderProps, mergeClassNames } from '../../utils/props';
 import {
   sliderClassNames,
   sliderStateVars,

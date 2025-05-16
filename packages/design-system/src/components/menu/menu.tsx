@@ -35,14 +35,13 @@ import {
   type TextProps,
   UNSTABLE_CollectionRendererContext,
 } from 'react-aria-components';
-import {
-  useContextProps,
-  useDefaultProps,
-  useSlot,
-  useTheme,
-} from '../../hooks';
-import { bodies, headings } from '../../styles';
-import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useDefaultProps } from '../../hooks/use-defaults';
+import { useSlot } from '../../hooks/use-slot';
+import { useTheme } from '../../hooks/use-theme';
+import { bodies, headings } from '../../styles/typography.css';
+import { inlineVars } from '../../utils/css';
+import { callRenderProps, mergeClassNames } from '../../utils/props';
 import {
   AriaHeaderContext,
   AriaKeyboardContext,
@@ -52,8 +51,9 @@ import {
   AriaText,
   AriaTextContext,
 } from '../aria';
-import { createCollectionRenderer } from '../collection';
-import { IconContext, type IconProps } from '../icon';
+import { createCollectionRenderer } from '../collection/collection';
+import { IconContext } from '../icon/icon';
+import type { IconProps } from '../icon/types';
 import { menuClassNames, menuItemStateVars, menuStateVars } from './menu.css';
 import type {
   MenuItemProps,

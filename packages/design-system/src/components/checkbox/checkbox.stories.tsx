@@ -16,9 +16,9 @@ import {
   type StoryDefault,
   action,
 } from '@ladle/react';
+import { Checkbox, CheckboxGroup } from '.';
 import { AriaLabel, AriaText } from '../aria';
 import { Icon } from '../icon';
-import { Checkbox, CheckboxGroup } from './checkbox';
 import type { CheckboxGroupProps, CheckboxProps } from './types';
 
 export default {

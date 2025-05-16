@@ -13,11 +13,11 @@
 import { type Story, type StoryDefault, action } from '@ladle/react';
 import { useRef } from 'react';
 import { DialogTrigger } from 'react-aria-components';
-import { genericColorVars, radiusVars, sizeVars } from '../../styles';
+import { genericColorVars, radiusVars, sizeVars } from '../../styles/theme.css';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
-import { Element } from '../element';
-import { Group } from '../group';
+import { Element } from '../element/element';
+import { Group } from '../group/group';
 import { Dialog } from './dialog';
 import type { DialogProps } from './types';
 

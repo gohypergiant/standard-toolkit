@@ -24,11 +24,9 @@ import type {
   useRuleGroup,
 } from 'react-querybuilder';
 import type { LiteralUnion, PartialDeep } from 'type-fest';
-import type {
-  AsType,
-  OmitProtectedProps,
-  RenderPropsChildren,
-} from '../../types';
+import type { AsType } from '../../types/generic';
+import type { OmitProtectedProps } from '../../types/props';
+import type { RenderPropsChildren } from '../../types/react-aria';
 import type { ButtonClassNames, ButtonProps } from '../button/types';
 import type {
   CheckboxClassNames,

@@ -23,7 +23,7 @@ import {
   surfaces,
   zIndexVars,
 } from '../../styles';
-import { containerQueries } from '../../utils';
+import { containerQueries } from '../../utils/css';
 import type { MenuClassNames, MenuItemState } from './types';
 
 export const menuContainers = {

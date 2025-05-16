@@ -15,7 +15,7 @@ import { describe, expect, it } from 'vitest';
 import { AriaText } from '../aria';
 import { Button, ToggleButton } from '../button';
 import { Checkbox } from '../checkbox';
-import { Icon } from '../icon';
+import { Icon } from '../icon/icon';
 import { Tree, TreeGroup } from './tree';
 import type { TreeProps, TreeRenderProps } from './types';
 

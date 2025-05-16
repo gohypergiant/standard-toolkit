@@ -21,8 +21,9 @@ import type {
   SliderTrackRenderProps as RACSliderTrackRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { AsType, RenderPropsChildren } from '../../types';
-import type { GroupClassNames } from '../group';
+import type { AsType } from '../../types/generic';
+import type { RenderPropsChildren } from '../../types/react-aria';
+import type { GroupClassNames } from '../group/types';
 import type { NumberFieldClassNames } from '../number-field/types';
 
 export type SliderClassNames = PartialDeep<{

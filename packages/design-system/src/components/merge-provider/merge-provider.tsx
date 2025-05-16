@@ -11,7 +11,7 @@
  */
 
 import type { Context, ReactNode } from 'react';
-import { mergeProps } from '../../utils';
+import { mergeProps } from '../../utils/props';
 import type { MergeProviderProps } from './types';
 
 function merge<T>(context: Context<T>, next: T, children: ReactNode) {

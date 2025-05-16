@@ -19,9 +19,11 @@ import {
   useMemo,
 } from 'react';
 import type { ContextValue } from 'react-aria-components';
-import { useContextProps, useTheme } from '../../hooks';
-import { inlineVars, mergeClassNames } from '../../utils';
-import { MergeProvider } from '../merge-provider';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useTheme } from '../../hooks/use-theme';
+import { inlineVars } from '../../utils/css';
+import { mergeClassNames } from '../../utils/props';
+import { MergeProvider } from '../merge-provider/merge-provider';
 import { groupClassNames, groupStateVars } from './group.css';
 import type { GroupProps } from './types';
 

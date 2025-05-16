@@ -11,12 +11,12 @@
  */
 
 import { type Story, type StoryDefault, action } from '@ladle/react';
-import { actions } from '../../ladle';
+import { actions } from '../../ladle/actions';
 import { AriaText } from '../aria';
 import { Button, ButtonContext, ToggleButton } from '../button';
 import { Checkbox } from '../checkbox';
-import { Group } from '../group';
-import { Icon } from '../icon';
+import { Group } from '../group/group';
+import { Icon } from '../icon/icon';
 import { Tree, TreeGroup } from './tree';
 import type { TreeProps, TreeRenderProps } from './types';
 

@@ -32,7 +32,7 @@ import {
   Separator,
   Text,
 } from 'react-aria-components';
-import { useContextProps } from '../../hooks';
+import { useContextProps } from '../../hooks/use-context-props';
 
 /**
  * To better align with the guidance from RAC about establishing a unique

@@ -14,8 +14,8 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { AriaGroup } from '../aria';
 import { Button } from '../button';
-import { Icon } from '../icon';
-import { Input } from '../input';
+import { Icon } from '../icon/icon';
+import { Input } from '../input/input';
 import { SearchField } from './search-field';
 import type { SearchFieldProps } from './types';
 

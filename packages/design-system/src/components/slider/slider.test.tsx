@@ -13,7 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { AriaLabel, AriaText } from '../aria';
-import { Input } from '../input';
+import { Input } from '../input/input';
 import { Slider, SliderBar, SliderThumb, SliderTrack } from './slider';
 import type { SliderProps } from './types';
 

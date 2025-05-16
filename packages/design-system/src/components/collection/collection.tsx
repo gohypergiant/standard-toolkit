@@ -13,8 +13,9 @@
 import type { Collection, Node } from '@react-types/shared';
 import { type Context, useContext } from 'react';
 import type { CollectionRenderer } from 'react-aria-components';
-import { useCollectionRender } from '../../hooks';
-import { MergeProvider, type MergeProviderProps } from '../merge-provider';
+import { useCollectionRender } from '../../hooks/use-collection-render';
+import { MergeProvider } from '../merge-provider/merge-provider';
+import type { MergeProviderProps } from '../merge-provider/types';
 
 /**
  * Replace the default collection renderer to allow for injection of

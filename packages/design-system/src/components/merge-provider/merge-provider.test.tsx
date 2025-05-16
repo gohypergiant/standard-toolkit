@@ -19,7 +19,7 @@ import {
   type ButtonProps as RACButtonProps,
 } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
-import { callRenderProps } from '../../utils';
+import { callRenderProps } from '../../utils/props';
 import { MergeProvider } from './merge-provider';
 
 const renderProps = {

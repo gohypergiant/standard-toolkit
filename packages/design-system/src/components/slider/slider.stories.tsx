@@ -20,9 +20,9 @@ import {
   SliderTrack,
 } from '.';
 import { AriaLabel, AriaText } from '../aria';
-import { Group } from '../group';
-import { Input } from '../input';
-import { NumberField } from '../number-field';
+import { Group } from '../group/group';
+import { Input } from '../input/input';
+import { NumberField } from '../number-field/number-field';
 import type { SliderRenderProps } from './types';
 
 type SliderStoryProps = SliderProps & {

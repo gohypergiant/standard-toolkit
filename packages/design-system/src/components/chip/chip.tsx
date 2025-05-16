@@ -27,11 +27,15 @@ import {
   type TagRenderProps,
   type TextProps,
 } from 'react-aria-components';
-import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
-import { bodies } from '../../styles';
-import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useDefaultProps } from '../../hooks/use-defaults';
+import { useTheme } from '../../hooks/use-theme';
+import { bodies } from '../../styles/typography.css';
+import { inlineVars } from '../../utils/css';
+import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaTextContext } from '../aria';
-import { ButtonContext, type ButtonProps } from '../button';
+import { ButtonContext } from '../button';
+import type { ButtonProps } from '../button/types';
 import { chipClassNames, chipStateVars } from './chip.css';
 import type {
   ChipGroupProps,

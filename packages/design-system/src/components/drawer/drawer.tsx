@@ -32,13 +32,11 @@ import {
   DEFAULT_SLOT,
   Provider,
 } from 'react-aria-components';
-import {
-  useContextProps,
-  useDefaultProps,
-  useSlot,
-  useTheme,
-} from '../../hooks';
-import { headings } from '../../styles';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useDefaultProps } from '../../hooks/use-defaults';
+import { useSlot } from '../../hooks/use-slot';
+import { useTheme } from '../../hooks/use-theme';
+import { headings } from '../../styles/typography.css';
 import {
   callRenderProps,
   inlineVars,
@@ -46,15 +44,14 @@ import {
   mergeProps,
 } from '../../utils';
 import { AriaHeadingContext } from '../aria';
-import { ButtonContext, type ButtonProps } from '../button';
-import { ElementContext, type ElementProps } from '../element';
-import { Tab, TabList, type TabRenderProps, Tabs } from '../tabs';
-import {
-  TooltipContext,
-  type TooltipProps,
-  TooltipTargetContext,
-  type TooltipTargetProps,
-} from '../tooltip';
+import { ButtonContext } from '../button';
+import type { ButtonProps } from '../button/types';
+import { ElementContext } from '../element/element';
+import type { ElementProps } from '../element/types.ts';
+import { Tab, TabList, Tabs } from '../tabs/tabs';
+import type { TabRenderProps } from '../tabs/types';
+import { TooltipContext, TooltipTargetContext } from '../tooltip/tooltip';
+import type { TooltipProps, TooltipTargetProps } from '../tooltip/types';
 import {
   drawerClassNames,
   drawerDialogStateVars,

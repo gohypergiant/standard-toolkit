@@ -27,16 +27,19 @@ import {
   type TextFieldRenderProps,
   type TextProps,
 } from 'react-aria-components';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useDefaultProps } from '../../hooks/use-defaults';
+import { useTheme } from '../../hooks/use-theme';
+import { bodies } from '../../styles/typography.css';
+import { inlineVars } from '../../utils/css';
+import { callRenderProps, mergeClassNames } from '../../utils/props';
 import {
   AriaFieldErrorContext,
   type AriaLabelContext,
   AriaTextContext,
-  InputContext,
-  type InputProps,
-} from '../../components';
-import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
-import { bodies } from '../../styles';
-import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
+} from '../aria';
+import { InputContext } from '../input';
+import type { InputProps } from '../input/types';
 import { textFieldClassNames, textFieldStateVars } from './text-field.css';
 import type { TextFieldMapping, TextFieldProps } from './types';
 

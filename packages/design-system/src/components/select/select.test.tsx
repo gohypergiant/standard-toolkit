@@ -15,8 +15,8 @@ import { SelectValue } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { Button } from '../button';
-import { Icon } from '../icon';
-import { Options, OptionsItem, OptionsList } from '../options';
+import { Icon } from '../icon/icon';
+import { Options, OptionsItem, OptionsList } from '../options/options';
 import { Select } from './select';
 import type { SelectProps } from './types';
 

@@ -26,18 +26,20 @@ import {
   Popover as RACPopover,
   type PopoverRenderProps as RACPopoverRenderProps,
 } from 'react-aria-components';
-import {
-  useContextProps,
-  useDefaultProps,
-  useSlot,
-  useTheme,
-} from '../../hooks';
-import { headings } from '../../styles';
-import { callRenderProps, inlineVars, mergeClassNames } from '../../utils';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useDefaultProps } from '../../hooks/use-defaults';
+import { useSlot } from '../../hooks/use-slot';
+import { useTheme } from '../../hooks/use-theme';
+import { headings } from '../../styles/typography.css';
+import { inlineVars } from '../../utils/css';
+import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaHeadingContext } from '../aria';
-import { ButtonContext, type ButtonProps } from '../button';
-import { ElementContext, type ElementProps } from '../element';
-import { GroupContext, type GroupProps } from '../group';
+import { ButtonContext } from '../button';
+import type { ButtonProps } from '../button/types';
+import { ElementContext } from '../element/element';
+import type { ElementProps } from '../element/types';
+import { GroupContext } from '../group/group';
+import type { GroupProps } from '../group/types';
 import { popoverClassNames, popoverStateVars } from './popover.css';
 import type { PopoverMapping, PopoverProps } from './types';
 

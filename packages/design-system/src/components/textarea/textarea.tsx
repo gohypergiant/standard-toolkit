@@ -27,9 +27,12 @@ import {
   TextAreaContext as RACTextAreaContext,
   type TextAreaProps as RACTextAreaProps,
 } from 'react-aria-components';
-import { useContextProps, useDefaultProps, useTheme } from '../../hooks';
-import { inputs } from '../../styles';
-import { inlineVars, mergeClassNames, mergeProps } from '../../utils';
+import { useContextProps } from '../../hooks/use-context-props';
+import { useDefaultProps } from '../../hooks/use-defaults';
+import { useTheme } from '../../hooks/use-theme';
+import { inputs } from '../../styles/typography.css';
+import { inlineVars } from '../../utils/css';
+import { mergeClassNames, mergeProps } from '../../utils/props';
 import { textAreaClassNames, textAreaStateVars } from './textarea.css';
 import type { TextAreaMapping, TextAreaProps } from './types';
 

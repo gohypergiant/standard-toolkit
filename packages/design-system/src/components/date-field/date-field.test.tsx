@@ -21,7 +21,7 @@ import { render, screen } from '@testing-library/react';
 import type { DateValue } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
-import { DateInput, DateSegment, DateSegments } from '../date-input';
+import { DateInput, DateSegment, DateSegments } from '../date-input/date-input';
 import { DateField } from './date-field';
 import type { DateFieldProps } from './types';
 
