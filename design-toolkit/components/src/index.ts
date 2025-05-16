@@ -49,5 +49,5 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
-export { containsExactChildren } from './lib/react';
+export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';
