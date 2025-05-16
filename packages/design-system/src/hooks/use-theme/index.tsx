@@ -24,8 +24,8 @@ import {
   defaultTypography,
   defaultZIndex,
 } from '../../styles';
-import type { Contract } from '../../types';
-import { computeContract } from '../../utils';
+import type { Contract } from '../../types/vanilla-extract';
+import { computeContract } from '../../utils/css';
 import type { ThemeContext, ThemeProviderProps } from './types';
 import { root } from './use-theme.css';
 

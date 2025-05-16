@@ -20,8 +20,8 @@ import type {
   TreeNodes,
   UseTreeOptions,
   UseTreeResult,
-} from '../../types';
-import { useUpdateEffect } from '../use-update-effect/use-update-effect';
+} from '../../types/use-tree';
+import { useUpdateEffect } from '../use-update-effect';
 import { getChildren, getKey, mapTree, toggleVisibility } from './utils';
 
 export function useTree<T>({

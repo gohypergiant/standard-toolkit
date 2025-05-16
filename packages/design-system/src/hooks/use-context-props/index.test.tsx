@@ -14,7 +14,7 @@ import { renderHook } from '@testing-library/react';
 import { type CSSProperties, createContext, createRef } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
-import { useContextProps } from './use-context-props';
+import { useContextProps } from './';
 
 type Props = {
   className?: string;
