@@ -20,8 +20,10 @@
     }
   },
   "scripts": {
-    "build": "pnpm generate:icons && pnpm tsup",
-    "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg"
+    "build": "pnpm generate:icons && pnpm license && pnpm format && pnpm tsup",
+    "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
+    "format": "pnpm biome format . --write",
+    "license": "pnpm zx ../../scripts/license.mjs --files src/icons"
   },
   "keywords": [],
   "$schema": "https://json.schemastore.org/package",
