@@ -11,18 +11,12 @@
  */
 
 import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
-import {
-  Slider,
-  SliderBar,
-  SliderOutput,
-  type SliderProps,
-  SliderThumb,
-  SliderTrack,
-} from '.';
 import { AriaLabel, AriaText } from '../aria';
 import { Group } from '../group';
 import { Input } from '../input';
 import { NumberField } from '../number-field';
+import { Slider, SliderBar, SliderOutput, SliderThumb, SliderTrack } from './';
+import type { SliderProps } from './types';
 import type { SliderRenderProps } from './types';
 
 type SliderStoryProps = SliderProps & {

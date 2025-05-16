@@ -16,7 +16,7 @@ import type {
   TooltipRenderProps as RACTooltipRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { RenderPropsChildren } from '../../types';
+import type { RenderPropsChildren } from '../../types/react-aria';
 
 export type TooltipClassNames = PartialDeep<{
   tooltip: {

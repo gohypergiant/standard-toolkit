@@ -12,13 +12,13 @@
 
 import { type Story, type StoryDefault, action } from '@ladle/react';
 import { DialogTrigger } from 'react-aria-components';
-import { genericColorVars } from '../../styles';
+import { genericColorVars } from '../../styles/theme.css';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
 import { Element } from '../element';
 import { Group } from '../group';
 import { Icon } from '../icon';
-import { Popover } from './popover';
+import { Popover } from './';
 import type { PopoverProps } from './types';
 
 export default {

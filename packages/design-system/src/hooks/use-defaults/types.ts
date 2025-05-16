@@ -12,7 +12,6 @@
 
 import type { PropsWithChildren } from 'react';
 import type { DateValue, TimeValue } from 'react-aria-components';
-import type { DateFieldProps, TimeFieldProps } from '../../components';
 import type {
   ButtonProps,
   LinkButtonProps,
@@ -24,6 +23,7 @@ import type {
 } from '../../components/checkbox/types';
 import type { ChipGroupProps, ChipProps } from '../../components/chip/types';
 import type { ComboBoxProps } from '../../components/combo-box/types';
+import type { DateFieldProps } from '../../components/date-field/types';
 import type { DateInputProps } from '../../components/date-input/types';
 import type { DialogProps } from '../../components/dialog/types';
 import type {
@@ -67,6 +67,7 @@ import type {
 } from '../../components/tabs/types';
 import type { TextFieldProps } from '../../components/text-field/types';
 import type { TextAreaProps } from '../../components/textarea/types';
+import type { TimeFieldProps } from '../../components/time-field/types';
 import type {
   TooltipProps,
   TooltipTargetProps,

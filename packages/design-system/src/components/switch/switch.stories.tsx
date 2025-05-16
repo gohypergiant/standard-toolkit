@@ -11,7 +11,7 @@
  */
 
 import { type Story, type StoryDefault, action } from '@ladle/react';
-import { Switch } from './switch';
+import { Switch } from './';
 import type { SwitchProps } from './types';
 
 export default {
