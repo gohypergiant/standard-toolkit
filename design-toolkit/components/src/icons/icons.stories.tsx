@@ -15,7 +15,7 @@ import { Icon } from '../components/icon';
 import { default as catalog } from './catalog';
 
 const meta: Meta = {
-  title: 'Icons',
+  title: 'Foundation/Icons',
 };
 
 export default meta;
@@ -40,9 +40,12 @@ export const UIIcons: Story = {
                     <Icon className='fg-default-light flex-none'>
                       {icon.icon}
                     </Icon>
-                    <span className='flex-none' key={icon.name}>
-                      {startCase(icon.name).replaceAll(' ', '')}
-                    </span>
+                    <div className='flex flex-col'>
+                      <span className='flex-none'>
+                        {startCase(icon.name).replaceAll(' ', '')}
+                      </span>
+                      <span className='fg-interactive'>{icon.name}</span>
+                    </div>
                   </div>
                 );
               })}
