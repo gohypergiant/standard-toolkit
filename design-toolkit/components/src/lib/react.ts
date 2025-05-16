@@ -78,7 +78,7 @@ export function expectsIconWrapper({ children, componentName }) {
   childrenComponents.map((child) => {
     if (isValidElement(child)) {
       // icons should never be a direct child of the parent
-      if (child.type.name.startsWith('Svg')) {
+      if (child.type.name?.startsWith('Svg')) {
         throw new Error(
           `${componentName} is using an icon without the required Icon wrapper`,
         );
