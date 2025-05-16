@@ -24,9 +24,9 @@ import { I18nProvider } from '@react-aria/i18n';
 import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import type { DateSegmentRenderProps, DateValue } from 'react-aria-components';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
-import { DateInput, DateSegment, DateSegments } from '../date-input/date-input';
-import { Icon } from '../icon/icon';
-import { DateField } from './date-field';
+import { DateInput, DateSegment, DateSegments } from '../date-input';
+import { Icon } from '../icon';
+import { DateField } from './';
 import type { DateFieldProps } from './types';
 
 type DateFieldStoryProps<T extends DateValue> = DateFieldProps<T> & {

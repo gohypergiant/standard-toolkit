@@ -14,7 +14,7 @@ import type { Story, StoryDefault } from '@ladle/react';
 import { AriaGroup, Button, Input } from '../../components';
 import { actions } from '../../ladle/actions';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
-import { NumberField } from './number-field';
+import { NumberField } from './';
 import type { NumberFieldProps } from './types';
 
 type StoryProps = NumberFieldProps & {

@@ -23,7 +23,7 @@ import {
   defaultSpace,
   defaultTypography,
   defaultZIndex,
-} from '../../styles';
+} from '../../styles/theme.css';
 import type { Contract } from '../../types/vanilla-extract';
 import { computeContract } from '../../utils/css';
 import type { ThemeContext, ThemeProviderProps } from './types';

@@ -16,8 +16,10 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { label, layers, radiusVars } from '../../styles';
-import { containerQueries } from '../../utils';
+import { layers } from '../../styles/layers.css';
+import { radiusVars } from '../../styles/theme.css';
+import { label } from '../../styles/typography.css';
+import { containerQueries } from '../../utils/css';
 import type {
   CheckboxClassNames,
   CheckboxGroupState,

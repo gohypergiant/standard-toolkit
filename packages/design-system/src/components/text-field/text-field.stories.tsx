@@ -13,8 +13,8 @@
 import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle/actions';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
-import { Input } from '../input/input';
-import { TextField } from './text-field';
+import { Input } from '../input';
+import { TextField } from './';
 import type { TextFieldProps } from './types';
 
 type StoryProps = TextFieldProps & {

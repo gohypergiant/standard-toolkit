@@ -11,13 +11,13 @@
  */
 
 import type { Story, StoryDefault } from '@ladle/react';
-import { actions } from '../../ladle';
+import { actions } from '../../ladle/actions';
 import { AriaFieldError, AriaGroup, AriaLabel, AriaText } from '../aria';
 import { Button } from '../button';
-import { Icon } from '../icon/icon';
-import { Input } from '../input/input';
-import { Options, OptionsItem, OptionsList } from '../options/options';
-import { ComboBox } from './combo-box';
+import { Icon } from '../icon';
+import { Input } from '../input';
+import { Options, OptionsItem, OptionsList } from '../options';
+import { ComboBox } from './';
 import type { ComboBoxProps } from './types';
 
 type StoryProps = ComboBoxProps<object> & {

@@ -22,8 +22,8 @@ import {
 import { callRenderProps } from '../../utils/props';
 import { AriaHeader, AriaSection, AriaSelectValue } from '../aria';
 import { Button } from '../button';
-import { Options, OptionsItem, OptionsList } from '../options/options';
-import { Select } from '../select/select';
+import { Options, OptionsItem, OptionsList } from '../options';
+import { Select } from '../select';
 import { QueryBuilderContext } from './constants';
 
 export function ValueSelector<T extends FullOption = FullOption>({

@@ -18,9 +18,9 @@ import { Button } from '../button';
 import type { CheckboxRenderProps } from '../checkbox/types';
 import { Icon } from '../icon';
 import type { SelectRenderProps } from '../select/types';
+import { QueryBuilder } from './';
 import { QueryBuilderContext } from './constants';
 import { fields } from './dataset-sample';
-import { QueryBuilder } from './query-builder';
 import type { ActionProps, QueryBuilderProps } from './types';
 import { pressToMouseEvent } from './utils';
 

@@ -12,7 +12,7 @@
 
 import { type Story, type StoryDefault, action } from '@ladle/react';
 import type { CSSProperties } from 'react';
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from './tabs';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from './';
 import type { TabListProps } from './types';
 
 export default {

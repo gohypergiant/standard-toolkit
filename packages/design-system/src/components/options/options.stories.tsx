@@ -21,8 +21,8 @@ import {
   AriaText,
 } from '../aria';
 import { Button } from '../button';
-import { Icon } from '../icon/icon';
-import { Options, OptionsItem, OptionsList } from './options';
+import { Icon } from '../icon';
+import { Options, OptionsItem, OptionsList } from './';
 import type { OptionsListProps } from './types';
 
 type StoryProps = OptionsListProps<object>;

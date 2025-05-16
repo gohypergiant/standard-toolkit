@@ -16,9 +16,9 @@ import { DialogTrigger } from 'react-aria-components';
 import { genericColorVars, radiusVars, sizeVars } from '../../styles/theme.css';
 import { AriaHeading } from '../aria';
 import { Button } from '../button';
-import { Element } from '../element/element';
-import { Group } from '../group/group';
-import { Dialog } from './dialog';
+import { Element } from '../element';
+import { Group } from '../group';
+import { Dialog } from './';
 import type { DialogProps } from './types';
 
 export default {

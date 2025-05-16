@@ -16,13 +16,9 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import {
-  layers,
-  radiusVars,
-  sizeVars,
-  surfaces,
-  zIndexVars,
-} from '../../styles';
+import { layers } from '../../styles/layers.css';
+import { surfaces } from '../../styles/surfaces.css';
+import { radiusVars, sizeVars, zIndexVars } from '../../styles/theme.css';
 import { containerQueries } from '../../utils/css';
 import type { MenuClassNames, MenuItemState } from './types';
 

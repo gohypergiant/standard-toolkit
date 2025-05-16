@@ -14,9 +14,9 @@ import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle/actions';
 import { AriaFieldError, AriaLabel, AriaSelectValue, AriaText } from '../aria';
 import { Button } from '../button';
-import { Icon } from '../icon/icon';
-import { Options, OptionsItem, OptionsList } from '../options/options';
-import { Select } from './select';
+import { Icon } from '../icon';
+import { Options, OptionsItem, OptionsList } from '../options';
+import { Select } from './';
 import type { SelectProps } from './types';
 
 type StoryProps = SelectProps<object> & {

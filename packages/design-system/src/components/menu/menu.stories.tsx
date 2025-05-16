@@ -22,8 +22,8 @@ import {
   AriaText,
 } from '../aria';
 import { Button } from '../button';
-import { Icon } from '../icon/icon';
-import { Menu, MenuItem, MenuList } from './menu';
+import { Icon } from '../icon';
+import { Menu, MenuItem, MenuList } from './';
 import type { MenuListProps, MenuProps } from './types';
 
 export default {

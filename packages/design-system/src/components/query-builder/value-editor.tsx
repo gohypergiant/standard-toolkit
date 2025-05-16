@@ -18,11 +18,11 @@ import {
 } from 'react';
 import { type ValueEditorProps, useValueEditor } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
-import { Input } from '../input/input';
+import { Input } from '../input';
 import type { InputType } from '../input/types';
-import { Radio, RadioGroup } from '../radio/radio';
-import { Switch } from '../switch/switch';
-import { TextArea } from '../textarea/textarea';
+import { Radio, RadioGroup } from '../radio';
+import { Switch } from '../switch';
+import { TextArea } from '../textarea';
 import { QueryBuilderContext, multiValueOperators } from './constants';
 import type { QueryBuilderValueEditors } from './types';
 import { getValidationResult } from './utils';

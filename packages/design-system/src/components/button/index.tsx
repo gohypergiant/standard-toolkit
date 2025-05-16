@@ -38,7 +38,7 @@ import { bodies } from '../../styles/typography.css';
 import type { OmitProtectedProps } from '../../types/props';
 import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
-import { IconContext } from '../icon/icon';
+import { IconContext } from '../icon';
 import type { IconProps } from '../icon/types';
 import { buttonClassNames, buttonStateVars } from './button.css';
 import type {

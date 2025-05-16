@@ -11,8 +11,8 @@
  */
 
 import type { Story, StoryDefault } from '@ladle/react';
+import { TextArea } from '.';
 import { actions } from '../../ladle/actions';
-import { TextArea } from './textarea';
 import type { TextAreaProps } from './types';
 
 export default {

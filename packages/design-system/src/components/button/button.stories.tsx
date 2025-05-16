@@ -11,8 +11,8 @@
  */
 
 import type { Story, StoryDefault } from '@ladle/react';
-import { actions } from '../../ladle';
-import { Icon } from '../icon/icon';
+import { actions } from '../../ladle/actions';
+import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
