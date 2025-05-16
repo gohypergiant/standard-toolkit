@@ -126,7 +126,7 @@ const Input = ({
           }),
         )}
       >
-        {props.value}
+        {props.value || '\u00A0'}
       </span>
     );
   }
@@ -197,8 +197,10 @@ export function TextField({
   ...props
 }: TextFieldProps) {
   const isSmall = size === 'small';
-  const shouldShowDescription = !(isSmall || isInvalid) || isDisabled;
-  const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
+  const shouldShowDescription =
+    description && (!(isSmall || isInvalid) || isDisabled);
+  const shouldShowError =
+    errorMessage && isInvalid && !isDisabled && !isReadOnly;
 
   return (
     <AriaTextField
