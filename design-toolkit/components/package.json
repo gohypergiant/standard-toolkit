@@ -8,9 +8,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -41,6 +39,20 @@
       },
       "default": "./dist/components/button/index.js"
     },
+    "./checkbox": {
+      "import": {
+        "types": "./dist/components/checkbox/index.d.ts",
+        "default": "./dist/components/checkbox/index.js"
+      },
+      "default": "./dist/components/checkbox/index.js"
+    },
+    "./chip": {
+      "import": {
+        "types": "./dist/components/chip/index.d.ts",
+        "default": "./dist/components/chip/index.js"
+      },
+      "default": "./dist/components/chip/index.js"
+    },
     "./classification-badge": {
       "import": {
         "types": "./dist/components/classification-badge/index.d.ts",
@@ -68,6 +80,27 @@
         "default": "./dist/components/icon-button/index.js"
       },
       "default": "./dist/components/icon-button/index.js"
+    },
+    "./label": {
+      "import": {
+        "types": "./dist/components/label/index.d.ts",
+        "default": "./dist/components/label/index.js"
+      },
+      "default": "./dist/components/label/index.js"
+    },
+    "./radio": {
+      "import": {
+        "types": "./dist/components/radio/index.d.ts",
+        "default": "./dist/components/radio/index.js"
+      },
+      "default": "./dist/components/radio/index.js"
+    },
+    "./switch": {
+      "import": {
+        "types": "./dist/components/switch/index.d.ts",
+        "default": "./dist/components/switch/index.js"
+      },
+      "default": "./dist/components/switch/index.js"
     },
     "./toggle-icon-button": {
       "import": {
@@ -111,9 +144,9 @@
   "peerDependencies": {
     "@radix-ui/react-avatar": "^1.1.4",
     "@react-types/shared": "3.25.0",
-    "react": "^18.0.0 || ^19.0.0",
-    "react-aria-components": "1.7.1",
-    "react-dom": "^18.0.0 || ^19.0.0",
+    "react": "^19.0.0",
+    "react-aria-components": "1.8.0",
+    "react-dom": "^19.0.0",
     "tailwindcss": "^4.1.3"
   },
   "dependencies": {
@@ -132,9 +165,12 @@
     "@fontsource/roboto-flex": "5.1.0",
     "@fontsource/roboto-mono": "5.1.0",
     "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/blocks": "8.6.12",
     "@storybook/builder-vite": "8.6.12",
+    "@storybook/manager-api": "8.6.12",
     "@storybook/react": "^8.6.12",
     "@storybook/react-vite": "^8.6.12",
+    "@storybook/theming": "8.6.12",
     "@tailwindcss/cli": "4.1.4",
     "@tailwindcss/vite": "^4.1.4",
     "@testing-library/dom": "10.4.0",

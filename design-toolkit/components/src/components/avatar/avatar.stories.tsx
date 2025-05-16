@@ -18,14 +18,21 @@ const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
   component: Avatar,
   args: {
-    className: '',
+    className: undefined,
     children: '',
+    source: 'https://placedog.net/100x100?id=144',
     size: 'medium',
   },
   argTypes: {
+    className: {
+      type: 'string',
+    },
     size: {
       control: 'select',
       options: ['medium', 'small'],
+    },
+    source: {
+      control: 'text',
     },
   },
 };
@@ -36,10 +43,9 @@ type Story = StoryObj<typeof Avatar>;
 export const Default: Story = {
   render: ({ children, ...args }) => (
     <Avatar
-      source='/static/avatar-example.jpeg'
-      alt='Colm Tuite'
+      source='https://placedog.net/100x100?id=144'
+      alt='Cute Doggie'
       {...args}
-      className='brightness-150 saturate-200 sepia-50'
     />
   ),
 };
@@ -48,19 +54,17 @@ export const WithBadge: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
       <Avatar
-        source='/static/avatar-example.jpeg'
-        alt='Colm Tuite'
+        source='https://placedog.net/100x100?id=144'
+        alt='Cute Doggie'
         {...args}
-        className='brightness-150 saturate-200 sepia-50'
       >
         <Badge variant='serious'>9</Badge>
       </Avatar>
 
       <Avatar
-        source='/static/avatar-example.jpeg'
-        alt='Colm Tuite'
+        source='https://placedog.net/100x100?id=144'
+        alt='Cute Doggie'
         {...args}
-        className='brightness-150 saturate-200 sepia-50'
       >
         <Badge variant='serious' />
       </Avatar>
@@ -71,9 +75,13 @@ export const WithBadge: Story = {
 export const WithFallback: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
-      <Avatar alt='Colm Tuite' {...args} />
-      <Avatar source='/static/avatar-example.jpeg' alt='Colm Tuite' {...args} />
-      <Avatar alt='Colm Tuite' source={<>PX</>} {...args}>
+      <Avatar {...args} source='http://not-here' alt='Cute Doggie' />
+      <Avatar
+        source='https://placedog.net/100x100?id=144'
+        alt='Cute Doggie'
+        {...args}
+      />
+      <Avatar {...args} alt='Cute Doggie' source={<>PX</>}>
         <Badge variant={'info'} />
       </Avatar>
     </div>

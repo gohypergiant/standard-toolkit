@@ -13,7 +13,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { JSX, ReactHTML } from 'react';
 import type { SlotProps } from 'react-aria-components';
-import type { ProviderValues } from '../../types';
+import type { ProviderValues } from '../../types/react-aria';
 
 export type ElementProps<
   A = any,

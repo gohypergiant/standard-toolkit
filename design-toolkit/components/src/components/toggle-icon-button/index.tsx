@@ -19,21 +19,21 @@ import {
 } from 'react-aria-components';
 
 const toggleIconButtonStyles = cva(
-  'inline-flex cursor-pointer items-center justify-center bg-transparent outline-none hover:bg-interactive-hover-dark',
+  'inline-flex cursor-pointer items-center justify-center bg-transparent outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
   {
     variants: {
       variant: {
         primary:
-          'icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle',
+          'icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle ai-selected:focus:bg-highlight-subtle',
         secondary:
-          'icon-default-dark hover:icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle',
+          'icon-default-dark hover:icon-default-light focus:icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle ai-selected:focus:bg-highlight-subtle',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'not-ai-selected:icon-disabled ai-selected:cursor-default not-ai-selected:cursor-not-allowed not-ai-selected:bg-interactive-disabled ai-selected:hover:bg-transparent not-ai-selected:hover:bg-interactive-disabled',
+        true: 'not-ai-selected:icon-disabled ai-selected:cursor-default not-ai-selected:cursor-not-allowed not-ai-selected:bg-interactive-disabled ai-selected:hover:bg-transparent not-ai-selected:hover:bg-interactive-disabled ai-selected:focus:bg-transparent not-ai-selected:focus:bg-interactive-disabled',
         false: '',
       },
     },
@@ -53,9 +53,9 @@ export interface ToggleIconButtonProps
 
 export const ToggleIconButton = ({
   className,
-  size,
-  variant,
-  isDisabled = false,
+  size = 'medium',
+  variant = 'secondary',
+  isDisabled,
   ...props
 }: ToggleIconButtonProps) => (
   <AriaToggleButton

@@ -18,15 +18,16 @@ import { Tooltip } from '../tooltip';
 import { FloatingButton } from './index';
 
 const meta: Meta<typeof FloatingButton> = {
-  title: 'Components/Button/FloatingButton',
+  title: 'Components/FloatingButton',
   component: FloatingButton,
   args: {
-    className: '',
+    className: undefined,
     isDisabled: false,
   },
   argTypes: {
     className: {
       control: 'text',
+      type: 'string',
     },
   },
 };
@@ -36,29 +37,35 @@ type Story = StoryObj<typeof FloatingButton>;
 
 export const Default: Story = {
   render: (args) => (
-    <FloatingButton {...args}>
-      <Placeholder />
-    </FloatingButton>
+    <div className='relative bg-surface-raised p-oversized'>
+      <FloatingButton {...args}>
+        <Placeholder />
+      </FloatingButton>
+    </div>
   ),
 };
 
 export const Link: Story = {
   render: (args) => (
-    <a className={FloatingButton.as(args)} href='/'>
-      <LinkIcon />
-    </a>
+    <div className='relative bg-surface-raised p-oversized'>
+      <a className={FloatingButton.as(args)} href='/'>
+        <LinkIcon />
+      </a>
+    </div>
   ),
 };
 
 export const WithTooltip: Story = {
   render: (args) => (
-    <Tooltip>
-      <Tooltip.Trigger>
-        <FloatingButton {...args}>
-          <Placeholder />
-        </FloatingButton>
-      </Tooltip.Trigger>
-      <Tooltip.Body>Tool label</Tooltip.Body>
-    </Tooltip>
+    <div className='relative bg-surface-raised p-oversized'>
+      <Tooltip>
+        <Tooltip.Trigger>
+          <FloatingButton {...args}>
+            <Placeholder />
+          </FloatingButton>
+        </Tooltip.Trigger>
+        <Tooltip.Body>Tool label</Tooltip.Body>
+      </Tooltip>
+    </div>
   ),
 };

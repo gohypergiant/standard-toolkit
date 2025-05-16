@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { SliderClassNames } from '@/components/slider';
 import type { CSSProperties, PropsWithChildren } from 'react';
 import type { ButtonClassNames } from '../../components/button/types';
 import type { CheckboxClassNames } from '../../components/checkbox/types';
@@ -32,11 +31,12 @@ import type { QueryBuilderClassNames } from '../../components/query-builder/type
 import type { RadioClassNames } from '../../components/radio/types';
 import type { SearchFieldClassNames } from '../../components/search-field/types';
 import type { SelectClassNames } from '../../components/select/types';
+import type { SliderClassNames } from '../../components/slider/types';
 import type { SwitchClassNames } from '../../components/switch/types';
 import type { TabsClassNames } from '../../components/tabs/types';
 import type { TextFieldClassNames } from '../../components/text-field/types';
 import type { TextAreaClassNames } from '../../components/textarea/types';
-import type { TimeFieldClassNames } from '../../components/time-field';
+import type { TimeFieldClassNames } from '../../components/time-field/types';
 import type { TooltipClassNames } from '../../components/tooltip/types';
 import type { TreeClassNames } from '../../components/tree/types';
 

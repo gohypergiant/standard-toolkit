@@ -18,19 +18,19 @@ import {
 } from 'react-aria-components';
 
 const buttonStyles = cva(
-  'inline-flex cursor-pointer items-center justify-center whitespace-nowrap outline-none [--icon-size:20px]',
+  'inline-flex cursor-pointer items-center justify-center whitespace-nowrap [--icon-size:20px]',
   {
     variants: {
       variant: {
         primary:
-          'fg-inverse-light rounded-medium ai-pressed:bg-interactive-hover-light bg-interactive-default hover:bg-interactive-hover-light',
+          'fg-inverse-light rounded-medium ai-pressed:bg-interactive-hover-light bg-interactive-default outline-none hover:bg-interactive-hover-light focus:bg-interactive-hover-light',
         outline:
-          'fg-default-light rounded-medium border ai-pressed:border-interactive-hover border-interactive hover:border-interactive-hover',
-        flat: 'fg-default-light rounded-medium ai-pressed:bg-interactive-hover-dark bg-transparent hover:bg-interactive-hover-dark',
+          'fg-default-light rounded-medium outline ai-pressed:outline-interactive-hover outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
+        flat: 'fg-default-light rounded-medium ai-pressed:bg-interactive-hover-dark bg-transparent outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
         destructive:
-          'fg-inverse-light rounded-medium ai-pressed:bg-serious-hover bg-serious-bold hover:bg-serious-hover',
+          'fg-inverse-light rounded-medium ai-pressed:bg-serious-hover bg-serious-bold outline-none hover:bg-serious-hover focus:bg-serious-hover',
         critical:
-          'fg-default-light rounded-medium ai-pressed:bg-critical-hover bg-critical-bold hover:bg-critical-hover',
+          'fg-default-light rounded-medium ai-pressed:bg-critical-hover bg-critical-bold outline-none hover:bg-critical-hover focus:bg-critical-hover',
       },
       size: {
         large:
@@ -42,7 +42,7 @@ const buttonStyles = cva(
           'min-h-[20px] gap-xxs px-s py-xs text-button-xs [--icon-size:12px]',
       },
       isDisabled: {
-        true: 'fg-disabled hover:fg-disabled cursor-not-allowed bg-interactive-disabled hover:bg-interactive-disabled',
+        true: 'fg-disabled hover:fg-disabled cursor-not-allowed bg-interactive-disabled hover:bg-interactive-disabled focus:bg-interactive-disabled',
         false: '',
       },
     },
@@ -51,13 +51,13 @@ const buttonStyles = cva(
         variant: 'outline',
         isDisabled: true,
         className:
-          'fg-disabled hover:fg-disabled cursor-not-allowed border-interactive-disabled bg-transparent hover:bg-transparent',
+          'fg-disabled hover:fg-disabled focus:fg-disabled cursor-not-allowed bg-transparent outline outline-interactive-disabled hover:bg-transparent focus:bg-transparent',
       },
       {
         variant: 'flat',
         isDisabled: true,
         className:
-          'fg-disabled hover:fg-disabled cursor-not-allowed bg-transparent hover:bg-transparent',
+          'fg-disabled hover:fg-disabled focus:fg-disabled cursor-not-allowed bg-transparent hover:bg-transparent focus:bg-transparent',
       },
     ],
     defaultVariants: {
@@ -69,16 +69,23 @@ const buttonStyles = cva(
 );
 
 export interface ButtonProps
-  extends Omit<AriaButtonProps, 'isDisabled'>,
+  extends Omit<AriaButtonProps, 'children' | 'isDisabled'>,
     VariantProps<typeof buttonStyles> {
+  /**
+   * Used to add text to the badge, such as the number of unread notifications.
+   *
+   * Can also receive a function which will be called with the parameters mentioned
+   * {@link https://react-spectrum.adobe.com/react-aria/Button.html#styling:~:text=are%20documented%20below.-,Name,-CSS%20Selector here}
+   */
+  children?: AriaButtonProps['children'];
   isDisabled?: boolean;
 }
 
 export const Button = ({
   className,
   isDisabled,
-  variant,
-  size,
+  variant = 'primary',
+  size = 'medium',
   ...props
 }: ButtonProps) => (
   <AriaButton

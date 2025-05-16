@@ -17,11 +17,10 @@ import { Tooltip } from '../tooltip';
 import { IconButton } from './index';
 
 const meta: Meta<typeof IconButton> = {
-  title: 'Components/Button/Icon',
+  title: 'Components/IconButton',
   component: IconButton,
   args: {
-    className: '',
-    children: 'IconButton',
+    className: undefined,
     isDisabled: false,
     size: 'medium',
     variant: 'primary',
@@ -29,9 +28,7 @@ const meta: Meta<typeof IconButton> = {
   argTypes: {
     className: {
       control: 'text',
-    },
-    children: {
-      control: 'text',
+      type: 'string',
     },
     size: {
       control: 'select',

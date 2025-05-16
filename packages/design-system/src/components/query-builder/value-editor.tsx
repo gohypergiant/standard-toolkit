@@ -18,7 +18,8 @@ import {
 } from 'react';
 import { type ValueEditorProps, useValueEditor } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
-import { Input, type InputType } from '../input';
+import { Input } from '../input';
+import type { InputType } from '../input/types';
 import { Radio, RadioGroup } from '../radio';
 import { Switch } from '../switch';
 import { TextArea } from '../textarea';

@@ -23,15 +23,15 @@ import type {
   SlotProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
+import type { AsType } from '../../types/generic';
+import type { OmitProtectedProps } from '../../types/props';
+import type { RenderPropsChildren } from '../../types/react-aria';
 import type {
-  AsType,
-  OmitProtectedProps,
-  RenderPropsChildren,
   TreeGroupNode,
   TreeNode,
   UseTreeOptions,
   UseTreeResult,
-} from '../../types';
+} from '../../types/use-tree';
 import type { ButtonClassNames, ButtonProps } from '../button/types';
 import type { CheckboxClassNames } from '../checkbox/types';
 import type { GroupClassNames } from '../group/types';

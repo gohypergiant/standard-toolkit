@@ -17,8 +17,8 @@ import {
   style,
 } from '@vanilla-extract/css';
 import { focusOutlineStyle, layers, radiusVars } from '../../styles';
-import { containerQueries } from '../../utils';
-import { inputColorVars } from '../input';
+import { containerQueries } from '../../utils/css';
+import { inputColorVars } from '../input/input.css';
 import type { SearchFieldClassNames, SearchFieldState } from './types';
 
 export const searchFieldContainer = createContainer();

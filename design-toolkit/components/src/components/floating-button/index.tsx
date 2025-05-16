@@ -20,15 +20,15 @@ import {
 
 const floatingButtonStyles = cva(
   [
-    'absolute right-[20px] bottom-[20px] inline-flex size-[32px] cursor-pointer items-center justify-center rounded-full border border-interactive-default bg-transparent shadow-elevation-overlay outline-none',
+    'absolute right-[20px] bottom-[20px] inline-flex size-[32px] cursor-pointer items-center justify-center rounded-full bg-transparent shadow-elevation-overlay outline outline-interactive-default',
     'icon-default-dark [--icon-size:var(--spacing-xl)]',
-    'hover:icon-default-light hover:border-interactive-hover hover:bg-interactive-hover-dark',
-    '',
+    'hover:icon-default-light hover:bg-interactive-hover-dark hover:outline-interactive-hover',
+    'focus:icon-default-light focus:bg-interactive-hover-dark focus:outline-interactive-hover',
   ],
   {
     variants: {
       isDisabled: {
-        true: 'icon-disabled hover:icon-disabled cursor-not-allowed border-interactive-disabled bg-interactive-disabled hover:border-interactive-disabled hover:bg-interactive-disabled',
+        true: 'icon-disabled hover:icon-disabled cursor-not-allowed bg-interactive-disabled outline-interactive-disabled hover:bg-interactive-disabled hover:outline-interactive-disabled focus:bg-interactive-disabled focus:outline-interactive-disabled',
         false: '',
       },
     },

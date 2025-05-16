@@ -16,17 +16,17 @@ import type React from 'react';
 
 const badgeStyles = cva(
   cn([
-    'fg-default-light inline-flex h-l min-w-l items-center justify-center rounded-full border px-xs text-body-xs empty:size-s empty:min-w-none empty:px-none',
+    'fg-default-light inline-flex h-l min-w-l items-center justify-center rounded-full px-xs text-body-xs outline empty:size-s empty:min-w-none empty:px-none',
     '[inset:var(--badge-inset,initial)] [position:var(--badge-position,initial)] empty:[inset:var(--badge-empty-inset,initial)]',
   ]),
   {
     variants: {
       variant: {
-        advisory: 'border-advisory-bold bg-advisory-subtle',
-        critical: 'border-critical bg-critical-subtle',
-        serious: 'border-serious bg-serious-subtle',
-        normal: 'border-normal bg-normal-subtle',
-        info: 'border-info-bold bg-info-subtle',
+        advisory: 'bg-advisory-subtle outline-advisory-bold',
+        critical: 'bg-critical-subtle outline-critical',
+        serious: 'bg-serious-subtle outline-serious',
+        normal: 'bg-normal-subtle outline-normal',
+        info: 'bg-info-subtle outline-info-bold',
       },
     },
     defaultVariants: {
@@ -37,11 +37,17 @@ const badgeStyles = cva(
 
 export interface BadgeProps
   extends VariantProps<typeof badgeStyles>,
-    React.HTMLProps<HTMLSpanElement> {
+    Omit<React.HTMLProps<HTMLSpanElement>, 'children'> {
   className?: string;
+  /** Used to add text to the badge, such as the number of unread notifications. */
+  children?: string;
 }
 
-export const Badge = ({ className, variant, ...props }: BadgeProps) => (
+export const Badge = ({
+  className,
+  variant = 'info',
+  ...props
+}: BadgeProps) => (
   <span
     className={cn(
       badgeStyles({

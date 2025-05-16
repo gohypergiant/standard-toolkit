@@ -15,12 +15,9 @@ import type {
   NumberFieldRenderProps as RACNumberFieldRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type {
-  ButtonClassNames,
-  ButtonProps,
-  InputClassNames,
-} from '../../components';
 import type { OmitProtectedProps } from '../../types/props';
+import type { ButtonClassNames, ButtonProps } from '../button/types';
+import type { InputClassNames } from '../input/types';
 
 export type NumberFieldClassNames = PartialDeep<{
   container: string;

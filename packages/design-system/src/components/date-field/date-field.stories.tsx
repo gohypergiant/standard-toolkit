@@ -26,7 +26,7 @@ import type { DateSegmentRenderProps, DateValue } from 'react-aria-components';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { DateInput, DateSegment, DateSegments } from '../date-input';
 import { Icon } from '../icon';
-import { DateField } from './date-field';
+import { DateField } from './';
 import type { DateFieldProps } from './types';
 
 type DateFieldStoryProps<T extends DateValue> = DateFieldProps<T> & {

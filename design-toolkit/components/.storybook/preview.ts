@@ -11,16 +11,26 @@
  */
 
 import type { Preview } from '@storybook/react';
+import { themes } from '@storybook/theming';
 import '../src/index.css';
+import { Docs } from './docs';
 
 const preview: Preview = {
+  initialGlobals: {
+    // 👇 Set the initial background color
+    backgrounds: { value: '#0b0b0b' },
+  },
   parameters: {
     backgrounds: {
       values: [
         { name: 'Dark', value: '#0b0b0b' },
         { name: 'Black', value: '#000000' },
       ],
-      default: 'dark',
+      default: '#0b0b0b',
+    },
+    docs: {
+      theme: themes.dark,
+      page: Docs,
     },
     layout: 'centered',
     options: {
@@ -31,10 +41,7 @@ const preview: Preview = {
       },
     },
   },
-  initialGlobals: {
-    // 👇 Set the initial background color
-    backgrounds: { value: 'dark' },
-  },
+  tags: ['autodocs'],
 };
 
 export default preview;

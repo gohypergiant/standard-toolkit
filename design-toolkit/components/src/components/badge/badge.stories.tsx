@@ -17,11 +17,14 @@ const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
   component: Badge,
   args: {
-    className: '',
-    children: '',
+    className: undefined,
+    children: undefined,
     variant: 'info',
   },
   argTypes: {
+    children: {
+      control: 'text',
+    },
     variant: {
       control: 'select',
       options: ['info', 'normal', 'serious', 'critical', 'advisory'],

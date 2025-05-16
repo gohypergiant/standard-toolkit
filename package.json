@@ -53,7 +53,7 @@
   "author": "https://hypergiant.com",
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "engines": {
-    "node": ">=22",
+    "node": ">=18",
     "pnpm": ">=9"
   },
   "packageManager": "pnpm@10.9.0",

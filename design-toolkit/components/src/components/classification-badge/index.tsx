@@ -12,7 +12,6 @@
 
 import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
-import type { ReactNode } from 'react';
 
 const classificationBadge = cva(
   'inline-flex items-center justify-center rounded-full uppercase',
@@ -48,13 +47,14 @@ const classificationBadge = cva(
 export interface ClassificationBadgeProps
   extends VariantProps<typeof classificationBadge> {
   className?: string;
-  children?: ReactNode;
+  /** If no text is provided, the system will fallback to safe defaults. You can override the text with children. */
+  children?: string;
 }
 
 export const ClassificationBadge = ({
   className,
-  size,
-  variant,
+  size = 'medium',
+  variant = 'missing',
   ...props
 }: ClassificationBadgeProps) => (
   <span

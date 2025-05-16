@@ -43,12 +43,13 @@ const classificationBanner = cva(
 export interface ClassificationBannerProps
   extends VariantProps<typeof classificationBanner> {
   className?: string;
+  /** If no text is provided, the system will fallback to safe defaults. You can override the text with children. */
   children?: ReactNode;
 }
 
 export const ClassificationBanner = ({
   className,
-  variant,
+  variant = 'missing',
   ...props
 }: ClassificationBannerProps) => (
   <span
