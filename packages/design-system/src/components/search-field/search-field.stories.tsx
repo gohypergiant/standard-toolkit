@@ -11,12 +11,12 @@
  */
 
 import { type Story, type StoryDefault, action } from '@ladle/react';
-import { actions } from '../../ladle';
+import { actions } from '../../ladle/actions';
 import { AriaGroup } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Input } from '../input';
-import { SearchField } from './search-field';
+import { SearchField } from './';
 import type { SearchFieldProps } from './types';
 
 export default {

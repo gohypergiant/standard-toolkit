@@ -16,8 +16,9 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, surfaces } from '../../styles';
-import { containerQueries } from '../../utils';
+import { layers } from '../../styles/layers.css';
+import { surfaces } from '../../styles/surfaces.css';
+import { containerQueries } from '../../utils/css';
 import type { DrawerClassNames, DrawerDialogState, DrawerState } from './types';
 
 export const drawerContainer = createContainer();

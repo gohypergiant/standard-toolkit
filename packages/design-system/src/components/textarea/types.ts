@@ -15,7 +15,7 @@ import type {
   InputRenderProps as RACInputRenderProps,
   TextAreaProps as RACTextAreaProps,
 } from 'react-aria-components';
-import type { AsType } from '../../types';
+import type { AsType } from '../../types/generic';
 
 export type TextAreaClassNames = Partial<{
   container: string;

@@ -16,7 +16,7 @@ import {
   createThemeContract,
   fallbackVar,
 } from '@vanilla-extract/css';
-import type { MapLeafNodes } from '../types';
+import type { MapLeafNodes } from '../types/vanilla-extract';
 
 /**
  * Values should be set as rgb(a) values to support sharing over to DeckGL

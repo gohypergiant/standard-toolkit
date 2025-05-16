@@ -16,9 +16,10 @@ import type {
   TimeValue,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { AsType, OmitProtectedProps } from '../../types';
+import type { AsType } from '../../types/generic';
+import type { OmitProtectedProps } from '../../types/props';
 import type { DateInputClassNames } from '../date-input/types';
-import type { IconClassNames, IconProps } from '../icon';
+import type { IconClassNames, IconProps } from '../icon/types';
 
 export type TimeFieldClassNames = PartialDeep<{
   container: string;
