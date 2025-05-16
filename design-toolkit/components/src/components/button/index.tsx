@@ -1,3 +1,4 @@
+import { expectsIconWrapper } from '@/lib/react';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -87,23 +88,30 @@ export const Button = ({
   variant = 'primary',
   size = 'medium',
   ...props
-}: ButtonProps) => (
-  <AriaButton
-    className={composeRenderProps(className, (className) =>
-      cn(
-        'w-content',
-        buttonStyles({
-          isDisabled,
-          variant,
-          size,
-          className,
-        }),
-      ),
-    )}
-    isDisabled={isDisabled}
-    {...props}
-  />
-);
+}: ButtonProps) => {
+  expectsIconWrapper({
+    children: props.children,
+    componentName: Button.displayName,
+  });
+
+  return (
+    <AriaButton
+      className={composeRenderProps(className, (className) =>
+        cn(
+          'w-content',
+          buttonStyles({
+            isDisabled,
+            variant,
+            size,
+            className,
+          }),
+        ),
+      )}
+      isDisabled={isDisabled}
+      {...props}
+    />
+  );
+};
 Button.displayName = 'Button';
 Button.as = (
   props: VariantProps<typeof buttonStyles>,

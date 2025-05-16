@@ -27,6 +27,25 @@
       "ignore": [".next"]
     },
     {
+      "include": ["design-toolkit/icons/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noSvgWithoutTitle": "off"
+          },
+          "style": {
+            "useNamingConvention": {
+              "level": "error",
+              "options": {
+                "strictCase": false,
+                "requireAscii": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "include": ["packages/design-system/**", "design-toolkit/components/**"],
       "linter": {
         "rules": {

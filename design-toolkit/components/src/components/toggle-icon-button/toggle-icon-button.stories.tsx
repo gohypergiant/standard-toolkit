@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { Placeholder } from '@/icons/placeholder';
+import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { ToggleIconButton } from './index';
 
@@ -46,7 +47,9 @@ type Story = StoryObj<typeof ToggleIconButton>;
 export const Default: Story = {
   render: (args) => (
     <ToggleIconButton {...args}>
-      <Placeholder />
+      <Icon>
+        <Placeholder />
+      </Icon>
     </ToggleIconButton>
   ),
 };
@@ -56,7 +59,9 @@ export const WithTooltip: Story = {
     <Tooltip>
       <Tooltip.Trigger>
         <ToggleIconButton {...args}>
-          <Placeholder />
+          <Icon>
+            <Placeholder />
+          </Icon>
         </ToggleIconButton>
       </Tooltip.Trigger>
       <Tooltip.Body>Tool label</Tooltip.Body>

@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { Placeholder } from '@/icons';
+import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Button } from '../button';
+import { Icon } from '../icon';
 import { Chip } from './index';
 
 const meta: Meta<typeof Chip> = {
@@ -47,7 +48,9 @@ type Story = StoryObj<typeof Chip>;
 export const Default: Story = {
   render: ({ children, ...args }) => (
     <Chip {...args}>
-      <Placeholder />
+      <Icon>
+        <Placeholder />
+      </Icon>
       {children}
     </Chip>
   ),

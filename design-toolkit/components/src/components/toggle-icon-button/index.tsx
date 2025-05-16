@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { expectsIconWrapper } from '@/lib/react';
 import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
 import {
@@ -57,22 +58,29 @@ export const ToggleIconButton = ({
   variant = 'secondary',
   isDisabled,
   ...props
-}: ToggleIconButtonProps) => (
-  <AriaToggleButton
-    className={composeRenderProps(className, (className) =>
-      cn(
-        toggleIconButtonStyles({
-          isDisabled,
-          size,
-          variant,
-          className,
-        }),
-      ),
-    )}
-    isDisabled={isDisabled}
-    {...props}
-  />
-);
+}: ToggleIconButtonProps) => {
+  expectsIconWrapper({
+    children: props.children,
+    componentName: ToggleIconButton.displayName,
+  });
+
+  return (
+    <AriaToggleButton
+      className={composeRenderProps(className, (className) =>
+        cn(
+          toggleIconButtonStyles({
+            isDisabled,
+            size,
+            variant,
+            className,
+          }),
+        ),
+      )}
+      isDisabled={isDisabled}
+      {...props}
+    />
+  );
+};
 ToggleIconButton.displayName = 'ToggleIconButton';
 ToggleIconButton.as = (
   props: VariantProps<typeof toggleIconButtonStyles>,

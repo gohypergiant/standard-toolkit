@@ -11,7 +11,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { Checkbox } from './index';
+import { Checkbox } from './';
 
 /**
  * The `<Checkbox>` component is a direct wrapper around the equiavalent component from
