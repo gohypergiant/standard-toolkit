@@ -15,7 +15,7 @@ import type { ReactNode } from 'react';
 import { cn } from '../../lib/utils';
 
 const iconStyles = cva(
-  '[color:var(--icon-color,currentColor)] [height:var(--icon-size)] [width:var(--icon-size)]',
+  'inline-block [color:var(--icon-color,currentColor)] [height:var(--icon-size)] [width:var(--icon-size)]',
   {
     variants: {
       size: {
@@ -38,7 +38,7 @@ export interface IconProps extends VariantProps<typeof iconStyles> {
 
 export const Icon = ({ children, className, size, ...rest }: IconProps) => {
   return (
-    <div
+    <span
       className={cn(
         iconStyles({
           size,
@@ -48,7 +48,7 @@ export const Icon = ({ children, className, size, ...rest }: IconProps) => {
       {...rest}
     >
       {children}
-    </div>
+    </span>
   );
 };
 Icon.displayName = 'Icon';
