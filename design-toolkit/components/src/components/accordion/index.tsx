@@ -24,7 +24,6 @@ import {
   Button,
   type ButtonProps,
   Heading,
-  composeRenderProps,
 } from 'react-aria-components';
 
 import { cn } from '@/lib/utils';
@@ -86,11 +85,9 @@ export function Accordion({
       <AriaDisclosure
         {...props}
         isDisabled={isDisabled}
-        className={composeRenderProps(className, (className) =>
-          cn(
-            `group w-full ${options ? 'has-options' : ''}`,
-            accordionStyles({ variant, className }),
-          ),
+        className={cn(
+          `group w-full ${options ? 'has-options' : ''}`,
+          accordionStyles({ variant, className }),
         )}
       >
         {(props) =>
