@@ -14,9 +14,10 @@
  * Returns a new array containing elements between `start` and `end` (exclusive)
  * from the original array.
  *
- * @param start The index to start at (inclusive).
- * @param end The index to end on (exclusive).
- * @param arr The array to get a slice from.
+ * @template T - The type of array elements.
+ * @param start - The index to start at (inclusive).
+ * @param end - The index to end on (exclusive).
+ * @param arr - The array to get a slice from.
  *
  * @remarks
  * pure function

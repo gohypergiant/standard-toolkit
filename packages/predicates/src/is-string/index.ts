@@ -12,6 +12,8 @@
 
 /**
  * Determines if the given value is a string.
+ *
+ * @param val - The value to check whether or not it is a string.
  */
 export function isString(val: unknown) {
   return typeof val === 'string' || val instanceof String;
