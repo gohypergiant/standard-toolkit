@@ -366,8 +366,3 @@
 
 @custom-variant pressed (&:where([data-pressed] *));
 @custom-variant ai-hovered (&:where([data-hovered] *));
-
-@utility icon-size-* {
-  --icon-size: --value([ *]);
-  --icon-size: --value(--spacing- *);
-}
