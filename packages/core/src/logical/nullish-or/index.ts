@@ -13,8 +13,10 @@
 /**
  * Nullish Coalescing `(a ?? b)`.
  *
- * @param a The possible null value.
- * @param b The value to fallback to.
+ * @template A - The type of the first input value.
+ * @template B - The type of the second input value.
+ * @param a - The possible null value.
+ * @param b - The value to fallback to.
  *
  * @remark
  * pure function
@@ -31,9 +33,12 @@ export const nullishOr =
 /**
  * Nullish Coalescing `(a(x) ?? b(x))`.
  *
- * @param a The function to get the, possibly null, return of.
- * @param b The function to get the fallback return of.
- * @param c The value to pass to both `a` and `b`.
+ * @template T - The type of the input value of the functions.
+ * @template A - The return type of the first function.
+ * @template B - The return type of the second function.
+ * @param a - The function to get the, possibly null, return of.
+ * @param b - The function to get the fallback return of.
+ * @param c - The value to pass to both `a` and `b`.
  *
  * @remark
  * pure function
@@ -51,8 +56,10 @@ export const nullishOrFn =
 /**
  * Swapped Nullish Coalescing `(b ?? a)`.
  *
- * @param a The value to fallback to.
- * @param b The possible null value.
+ * @template A - The type of the first input value.
+ * @template B - The type of the second input value.
+ * @param a - The value to fallback to.
+ * @param b - The possible null value.
  *
  * @remark
  * pure function
@@ -69,9 +76,12 @@ export const swappedNullishOr =
 /**
  * Swapped Nullish Coalescing `(b(x) ?? a(x))`.
  *
- * @param a The function to get the fallback return of.
- * @param b The function to get the, possibly null, return of.
- * @param c The value to pass to both `a` and `b`.
+ * @template T - The type of the input value of the functions.
+ * @template A - The return type of the first function.
+ * @template B - The return type of the second function.
+ * @param a - The function to get the fallback return of.
+ * @param b - The function to get the, possibly null, return of.
+ * @param c - The value to pass to both `a` and `b`.
  *
  * @remark
  * pure function

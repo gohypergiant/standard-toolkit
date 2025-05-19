@@ -17,7 +17,7 @@ import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { DateInput, DateSegment, DateSegments } from '../date-input';
 import { Icon } from '../icon';
-import { TimeField } from './time-field';
+import { TimeField } from './';
 import type { TimeFieldProps } from './types';
 
 type TimeFieldStoryProps<T extends TimeValue> = TimeFieldProps<T> & {

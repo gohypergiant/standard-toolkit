@@ -15,8 +15,9 @@ import type { Comparator } from '@/types';
 /**
  * Tests whether any elements in the array pass the given comparator.
  *
- * @param comparator The comparator function to apply to each element of the array.
- * @param arr The array to check each element of.
+ * @template T - The type of array elements.
+ * @param comparator - The comparator function to apply to each element of the array.
+ * @param arr - The array to check each element of.
  *
  * @remarks
  * pure function

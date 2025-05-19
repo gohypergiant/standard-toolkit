@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { Link as LinkIcon } from '@/icons/link';
-import { Placeholder } from '@/icons/placeholder';
+import { Link as LinkIcon, Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { IconButton } from './index';
 
@@ -47,7 +47,9 @@ type Story = StoryObj<typeof IconButton>;
 export const Default: Story = {
   render: (args) => (
     <IconButton {...args}>
-      <Placeholder />
+      <Icon>
+        <Placeholder />
+      </Icon>
     </IconButton>
   ),
 };
@@ -55,7 +57,9 @@ export const Default: Story = {
 export const Link: Story = {
   render: (args) => (
     <a className={IconButton.as(args)} href='/'>
-      <LinkIcon />
+      <Icon>
+        <LinkIcon />
+      </Icon>
     </a>
   ),
 };
@@ -65,7 +69,9 @@ export const WithTooltip: Story = {
     <Tooltip>
       <Tooltip.Trigger>
         <IconButton {...args}>
-          <Placeholder />
+          <Icon>
+            <Placeholder />
+          </Icon>
         </IconButton>
       </Tooltip.Trigger>
       <Tooltip.Body>Tool label</Tooltip.Body>

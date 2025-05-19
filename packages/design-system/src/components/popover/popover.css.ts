@@ -16,7 +16,9 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, radiusVars, surfaces, zIndexVars } from '../../styles';
+import { layers } from '../../styles/layers.css';
+import { surfaces } from '../../styles/surfaces.css';
+import { radiusVars, zIndexVars } from '../../styles/theme.css';
 import type { PopoverClassNames } from './types';
 
 export const popoverContainer = createContainer();

@@ -15,8 +15,9 @@ import type { Predicate } from '@/types';
 /**
  * Returns a copy of the given array of elements that satisfy the predicate.
  *
- * @param predicate A predicate function to apply to each element of the array.
- * @param arr The array to filter on based on the predicate.
+ * @template T - The type of array elements.
+ * @param predicate - A predicate function to apply to each element of the array.
+ * @param arr - The array to filter on based on the predicate.
  *
  * @remarks
  * pure function

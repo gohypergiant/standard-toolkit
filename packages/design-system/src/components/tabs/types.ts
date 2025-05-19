@@ -21,7 +21,7 @@ import type {
   TabsProps as RACTabsProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { AsType } from '../../types';
+import type { AsType } from '../../types/generic';
 
 export type TabsClassNames = PartialDeep<{
   tabs: string;

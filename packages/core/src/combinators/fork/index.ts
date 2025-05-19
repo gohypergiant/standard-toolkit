@@ -13,10 +13,14 @@
 /**
  * Pass a value through two different functions and the results to a function that takes two arguments.
  *
- * @param a The final curried, binary function that receives the results from `b` and `c`.
- * @param b The first function to pass the value to.
- * @param c The second function to pass the value to.
- * @param d The value to pass to `b` and `c`.
+ * @template A - The type of the first input to the binary function. Corresponds to the return type of the first function.
+ * @template B - The type of the second input to the binary function. Corresponds to the return type of the second function.
+ * @template C - The return type of the binary function.
+ * @template D - The type of the input value.
+ * @param a - The final curried, binary function that receives the results from `b` and `c`.
+ * @param b - The first function to pass the value to.
+ * @param c - The second function to pass the value to.
+ * @param d - The value to pass to `b` and `c`.
  *
  * @remarks
  * Phi combinator
