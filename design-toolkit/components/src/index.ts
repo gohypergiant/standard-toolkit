@@ -43,6 +43,8 @@ export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
+export { TextArea } from './components/text-area';
+export type { TextAreaProps } from './components/text-area';
 export { TextField } from './components/text-field';
 export type { TextFieldProps } from './components/text-field';
 export { ToggleIconButton } from './components/toggle-icon-button';

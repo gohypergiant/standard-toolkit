@@ -116,6 +116,13 @@
       },
       "default": "./dist/components/switch/index.js"
     },
+    "./text-area": {
+      "import": {
+        "types": "./dist/components/text-area/index.d.ts",
+        "default": "./dist/components/text-area/index.js"
+      },
+      "default": "./dist/components/text-area/index.js"
+    },
     "./text-field": {
       "import": {
         "types": "./dist/components/text-field/index.d.ts",
