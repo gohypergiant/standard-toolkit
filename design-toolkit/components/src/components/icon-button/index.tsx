@@ -10,13 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import { expectsIconWrapper } from '@/lib/react';
+import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'cva';
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
   composeRenderProps,
 } from 'react-aria-components';
-import { cn } from '../../lib/utils';
 
 const iconButtonStyles = cva(
   'inline-flex cursor-pointer items-center justify-center ai-pressed:bg-interactive-hover-dark bg-transparent outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
@@ -56,22 +57,30 @@ export const IconButton = ({
   variant = 'primary',
   isDisabled,
   ...props
-}: IconButtonProps) => (
-  <AriaButton
-    className={composeRenderProps(className, (className) =>
-      cn(
-        iconButtonStyles({
-          isDisabled,
-          size,
-          variant,
-          className,
-        }),
-      ),
-    )}
-    isDisabled={isDisabled}
-    {...props}
-  />
-);
+}: IconButtonProps) => {
+  expectsIconWrapper({
+    children: props.children,
+    componentName: IconButton.displayName,
+  });
+
+  return (
+    <AriaButton
+      className={composeRenderProps(className, (className) =>
+        cn(
+          iconButtonStyles({
+            isDisabled,
+            size,
+            variant,
+            className,
+          }),
+        ),
+      )}
+      isDisabled={isDisabled}
+      {...props}
+    />
+  );
+};
+
 IconButton.displayName = 'IconButton';
 IconButton.as = (
   props: VariantProps<typeof iconButtonStyles>,

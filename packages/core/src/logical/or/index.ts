@@ -13,8 +13,10 @@
 /**
  * Logical Disjunction `(a || b)`.
  *
- * @param a The possible falsey value.
- * @param b The value to fallback to.
+ * @template A - The type of the first input value.
+ * @template B - The type of the second input value.
+ * @param a - The possible falsey value.
+ * @param b - The value to fallback to.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
@@ -33,9 +35,12 @@ export const or =
 /**
  * Logical (Function Result) Disjunction `(a(x) || b(x))`.
  *
- * @param a The function to get the, possibly falsey, return of.
- * @param b The function to get the fallback return of.
- * @param c The value to pass to both `a` and `b`.
+ * @template T - The type of the input value of the functions.
+ * @template A - The return type of the first function.
+ * @template B - The return type of the second function.
+ * @param a - The function to get the, possibly falsey, return of.
+ * @param b - The function to get the fallback return of.
+ * @param c - The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
@@ -55,8 +60,10 @@ export const orFn =
 /**
  * Swapped Logical Disjunction: `(b || a)`.
  *
- * @param a The value to fallback to.
- * @param b The possible falsey value.
+ * @template A - The type of the first input value.
+ * @template B - The type of the second input value.
+ * @param a - The value to fallback to.
+ * @param b - The possible falsey value.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
@@ -75,9 +82,12 @@ export const swappedOr =
 /**
  * Swapped Logical (Function Result) Disjunction: `(b(x) || a(x))`.
  *
- * @param a The function to get the fallback return of.
- * @param b The function to get the, possibly falsey, return of.
- * @param c The value to pass to both `a` and `b`.
+ * @template T - The type of the input value of the functions.
+ * @template A - The return type of the first function.
+ * @template B - The return type of the second function.
+ * @param a - The function to get the fallback return of.
+ * @param b - The function to get the, possibly falsey, return of.
+ * @param c - The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *

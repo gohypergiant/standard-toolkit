@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { Check, Minus } from '@/icons';
 import { cn } from '@/lib/utils';
+import { CheckboxIndeterminate, CheckboxSelected } from '@accelint/icons';
 import { cva } from 'cva';
 import type React from 'react';
 import {
@@ -110,8 +110,8 @@ export function Checkbox({ className, children, ...args }: CheckboxProps) {
             )}
             aria-hidden
           >
-            {isIndeterminate && !isSelected && <Minus />}
-            {isSelected && !isIndeterminate && <Check />}
+            {isIndeterminate && !isSelected && <CheckboxIndeterminate />}
+            {isSelected && !isIndeterminate && <CheckboxSelected />}
           </div>
           {children}
         </>

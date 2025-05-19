@@ -22,10 +22,11 @@ import {
   useContextProps,
 } from 'react-aria-components';
 
-import { CancelFill } from '@/icons';
 import { cn } from '@/lib/utils';
+import { CancelFill } from '@accelint/icons';
 import { type VariantProps, cva } from 'cva';
 import { type ChangeEvent, type ForwardedRef, useEffect } from 'react';
+import { Icon } from '../icon';
 import { Label } from '../label';
 
 const textFieldStyles = cva(
@@ -162,7 +163,9 @@ const Input = ({
             ref.current?.focus();
           }}
         >
-          <CancelFill />
+          <Icon>
+            <CancelFill />
+          </Icon>
         </Button>
       )}
     </div>
@@ -198,8 +201,9 @@ export function TextField({
 }: TextFieldProps) {
   const isSmall = size === 'small';
   const shouldShowDescription =
-    !(isSmall || isInvalid || isReadOnly) || isDisabled;
-  const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
+    description && (!(isSmall || isInvalid) || isDisabled);
+  const shouldShowError =
+    errorMessage && isInvalid && !isDisabled && !isReadOnly;
 
   return (
     <AriaTextField

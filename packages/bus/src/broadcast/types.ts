@@ -10,17 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
+/** Broadcast configuration type. */
 export type BroadcastConfig = {
   channelName: string;
   debug?: boolean;
 };
 
+/** Listener object type. */
 export type Listener<T = any> = {
   callback: (data: Payload<T>) => void;
   once?: boolean;
   id: number;
 };
 
+/** Listener callback payload type. */
 export type Payload<T> = {
   type: string;
   payload: T;

@@ -19,7 +19,7 @@ import type {
   PopoverRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { AsType } from '../../types';
+import type { AsType } from '../../types/generic';
 import type { IconClassNames } from '../icon/types';
 
 export type OptionsClassNames = PartialDeep<{

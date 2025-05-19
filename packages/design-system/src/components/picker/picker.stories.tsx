@@ -12,9 +12,9 @@
 
 import type { Story, StoryDefault } from '@ladle/react';
 import { ColorSwatch } from 'react-aria-components';
-import { actions } from '../../ladle';
+import { actions } from '../../ladle/actions';
 import { Icon } from '../icon';
-import { Picker, PickerItem } from './picker';
+import { Picker, PickerItem } from './';
 import {
   colorPickerItem,
   colorSwatch,

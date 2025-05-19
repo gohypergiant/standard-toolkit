@@ -32,6 +32,8 @@ const test = (list: string[], val: unknown) =>
  * - `isNo(val)`
  * - `isOff(val)`
  *
+ * @param val - The value to check whether or not it is falsey.
+ *
  * @remarks
  * pure function
  *
@@ -53,6 +55,8 @@ export const isAnyFalsy = (val: unknown) =>
  * - `isTrue(val)`
  * - `isYes(val)`
  * - `isOn(val)`
+ *
+ * @param val - The value to check whether or not it is truthy.
  *
  * @remarks
  * pure function
@@ -79,6 +83,8 @@ export const isAnyTruthy = (val: unknown) =>
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
+ * @param val - The value to check whether or not it is false.
+ *
  * @remarks
  * pure function
  *
@@ -95,11 +101,12 @@ export const isFalse = (val: unknown) => test(listFalse, val);
  * "no" values.
  *
  * False values: ['', '0', 'false', 'nan', 'null', 'undefined']
- *
  * Additional values: ['n', 'no']
  *
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
+ *
+ * @param val - The value to check whether or not it is no.
  *
  * @remarks
  * pure function
@@ -119,11 +126,12 @@ export const isNo = (val: unknown) => test(listNo, val);
  * "off" values.
  *
  * False values: ['', '0', 'false', 'nan', 'null', 'undefined']
- *
  * Additional values: ['off']
  *
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
+ *
+ * @param val - The value to check whether or not it is off.
  *
  * @remarks
  * pure function
@@ -143,11 +151,12 @@ export const isOff = (val: unknown) => test(listOff, val);
  * "on" values.
  *
  * True values: ['1', 'true']
- *
  * Additional values: ['on']
  *
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
+ *
+ * @param val - The value to check whether or not it is on.
  *
  * @remarks
  * pure function
@@ -171,6 +180,8 @@ export const isOn = (val: unknown) => test(listOn, val);
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
  *
+ * @param val - The value to check whether or not it is true.
+ *
  * @remarks
  * pure function
  *
@@ -189,11 +200,12 @@ export const isTrue = (val: unknown) => test(listTrue, val);
  * "yes" values.
  *
  * True values: ['1', 'true']
- *
  * Additional values: ['y', 'yes']
  *
  * For a more liberal comparison/coercion to true or false see the converters
  * package (\@accelint/converters).
+ *
+ * @param val - The value to check whether or not it is yes.
  *
  * @remarks
  * pure function

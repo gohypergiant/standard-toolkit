@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { Link as LinkIcon } from '@/icons/link';
-import { Placeholder } from '@/icons/placeholder';
+import { Link as LinkIcon } from '@accelint/icons';
+import { Placeholder } from '@accelint/icons';
 // Replace your-framework with the name of your framework
 import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { FloatingButton } from './index';
 
@@ -39,7 +40,9 @@ export const Default: Story = {
   render: (args) => (
     <div className='relative bg-surface-raised p-oversized'>
       <FloatingButton {...args}>
-        <Placeholder />
+        <Icon>
+          <Placeholder />
+        </Icon>
       </FloatingButton>
     </div>
   ),
@@ -49,7 +52,9 @@ export const Link: Story = {
   render: (args) => (
     <div className='relative bg-surface-raised p-oversized'>
       <a className={FloatingButton.as(args)} href='/'>
-        <LinkIcon />
+        <Icon>
+          <LinkIcon />
+        </Icon>
       </a>
     </div>
   ),
@@ -61,7 +66,9 @@ export const WithTooltip: Story = {
       <Tooltip>
         <Tooltip.Trigger>
           <FloatingButton {...args}>
-            <Placeholder />
+            <Icon>
+              <Placeholder />
+            </Icon>
           </FloatingButton>
         </Tooltip.Trigger>
         <Tooltip.Body>Tool label</Tooltip.Body>

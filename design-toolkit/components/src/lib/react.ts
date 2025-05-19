@@ -53,3 +53,36 @@ export function containsExactChildren({
     );
   }
 }
+
+/**
+ * I look for svgIcons exported from the @accelint/icons library
+ * and ensure that they are wrapped in an Icon component in order
+ * to get the classes and styles they need in context.
+ *
+ * Using isValidElement means we will filter out strings, boolean, etc
+ * that are valid nodes but not elements.
+ *
+ * @example
+ *   expectsIconWrapper({
+ *     children,
+ *     componentName: Button.displayName,
+ *   });
+ *
+ *
+ * @param children the children of the calling component
+ * @param componentName the displayName of the calling component
+ */
+export function expectsIconWrapper({ children, componentName }) {
+  const childrenComponents = Children.toArray(children);
+
+  childrenComponents.map((child) => {
+    if (isValidElement(child)) {
+      // icons should never be a direct child of the parent
+      if (child.type.name?.startsWith('Svg')) {
+        throw new Error(
+          `${componentName} is using an icon without the required Icon wrapper`,
+        );
+      }
+    }
+  });
+}

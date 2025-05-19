@@ -12,6 +12,8 @@
 
 /**
  * Determines if given value is a Worker.
+ *
+ * @param val - The value to check whether or not it is a worker.
  */
 export function isWorker(val: unknown) {
   return val instanceof Worker;
@@ -19,6 +21,8 @@ export function isWorker(val: unknown) {
 
 /**
  * Determine if the given value is a SharedWorker.
+ *
+ * @param val - The value to check whether or not it is a shared worker.
  */
 export function isSharedWorker(val: unknown) {
   return val instanceof SharedWorker;

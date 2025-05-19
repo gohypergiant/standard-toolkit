@@ -20,7 +20,7 @@ import { Element } from '../element';
 import { Icon } from '../icon';
 import { TabPanel, TabPanels } from '../tabs';
 import { Tooltip, TooltipTarget } from '../tooltip';
-import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './drawer';
+import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './';
 import type { DrawerProps } from './types';
 
 export default {
