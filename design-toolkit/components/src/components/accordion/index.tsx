@@ -109,7 +109,7 @@ export interface AccordionHeaderProps
   isDisabled?: boolean;
 }
 
-export function AccordionHeader({ children }: AccordionHeaderProps) {
+function AccordionHeader({ children }: AccordionHeaderProps) {
   const { isDisabled, options, variant } = useContext(AccordionContext);
 
   return (
@@ -163,11 +163,12 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
     </Heading>
   );
 }
-AccordionHeader.displayName = 'AccordionHeader';
+AccordionHeader.displayName = 'Accordion.Header';
+Accordion.Header = AccordionHeader;
 
 export interface AccordionPanelProps extends AriaDisclosurePanelProps {}
 
-export function AccordionPanel({
+function AccordionPanel({
   children,
   className,
   ...props
@@ -181,14 +182,15 @@ export function AccordionPanel({
     </AriaDisclosurePanel>
   );
 }
-AccordionPanel.displayName = 'AccordionPanel';
+AccordionPanel.displayName = 'Accordion.Panel';
+Accordion.Panel = AccordionPanel;
 
 export interface AccordionGroupProps extends AriaDisclosureGroupProps {
   /** Whether multiple items can be expanded at the same time. */
   allowsMultipleExpanded?: boolean;
 }
 
-export function AccordionGroup({
+function AccordionGroup({
   allowsMultipleExpanded = false,
   children,
   className,
@@ -204,4 +206,5 @@ export function AccordionGroup({
     </AriaDisclosureGroup>
   );
 }
-AccordionGroup.displayName = 'AccordionGroup';
+AccordionGroup.displayName = 'Accordion.Group';
+Accordion.Group = AccordionGroup;

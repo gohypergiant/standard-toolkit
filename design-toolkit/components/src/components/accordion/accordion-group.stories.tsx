@@ -13,14 +13,14 @@
 import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from '../icon';
-import { Accordion, AccordionGroup, AccordionHeader, AccordionPanel } from './';
+import { Accordion } from './';
 
 /**
  * The accordion group will stretch to fill the entire width of its parent container.
  */
-const meta: Meta<typeof AccordionGroup> = {
-  title: 'Components/Accordion Group',
-  component: AccordionGroup,
+const meta: Meta<typeof Accordion.Group> = {
+  title: 'Components/Accordion.Group',
+  component: Accordion.Group,
   args: {
     allowsMultipleExpanded: false,
     isDisabled: false,
@@ -34,55 +34,55 @@ const meta: Meta<typeof AccordionGroup> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof AccordionGroup>;
+type Story = StoryObj<typeof Accordion.Group>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
-      <AccordionGroup {...args}>
+      <Accordion.Group {...args}>
         <Accordion>
-          <AccordionHeader>
+          <Accordion.Header>
             <Icon>
               <Placeholder />
             </Icon>{' '}
             Accordion one{' '}
-          </AccordionHeader>
-          <AccordionPanel>
+          </Accordion.Header>
+          <Accordion.Panel>
             <p className='fg-default-dark text-body-s'>
               This is a placeholder content for an accordion. Please replace
               with an actual content instance.
             </p>
-          </AccordionPanel>
+          </Accordion.Panel>
         </Accordion>
         <Accordion>
-          <AccordionHeader>
+          <Accordion.Header>
             <Icon>
               <Placeholder />
             </Icon>{' '}
             Accordion two{' '}
-          </AccordionHeader>
-          <AccordionPanel>
+          </Accordion.Header>
+          <Accordion.Panel>
             <p className='fg-default-dark text-body-s'>
               This is a placeholder content for an accordion. Please replace
               with an actual content instance.
             </p>
-          </AccordionPanel>
+          </Accordion.Panel>
         </Accordion>
         <Accordion>
-          <AccordionHeader>
+          <Accordion.Header>
             <Icon>
               <Placeholder />
             </Icon>{' '}
             Accordion three{' '}
-          </AccordionHeader>
-          <AccordionPanel>
+          </Accordion.Header>
+          <Accordion.Panel>
             <p className='fg-default-dark text-body-s'>
               This is a placeholder content for an accordion. Please replace
               with an actual content instance.
             </p>
-          </AccordionPanel>
+          </Accordion.Panel>
         </Accordion>
-      </AccordionGroup>
+      </Accordion.Group>
     </div>
   ),
 };

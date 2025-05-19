@@ -13,7 +13,7 @@
 import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from '../icon';
-import { Accordion, AccordionHeader, AccordionPanel } from './';
+import { Accordion } from './';
 
 /**
  * The accordion will stretch to fill the entire width of its parent container.
@@ -46,18 +46,18 @@ export const Default: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <Accordion {...args}>
-        <AccordionHeader>
+        <Accordion.Header>
           <Icon>
             <Placeholder />
           </Icon>{' '}
           Accordion title{' '}
-        </AccordionHeader>
-        <AccordionPanel>
+        </Accordion.Header>
+        <Accordion.Panel>
           <p className='fg-default-dark text-body-s'>
             This is a placeholder content for an accordion. Please replace with
             an actual content instance.
           </p>
-        </AccordionPanel>
+        </Accordion.Panel>
       </Accordion>
     </div>
   ),

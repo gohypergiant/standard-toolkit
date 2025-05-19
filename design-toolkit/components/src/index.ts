@@ -14,12 +14,7 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-export {
-  Accordion,
-  AccordionGroup,
-  AccordionHeader,
-  AccordionPanel,
-} from './components/accordion';
+export { Accordion } from './components/accordion';
 export type {
   AccordionGroupProps,
   AccordionHeaderProps,
