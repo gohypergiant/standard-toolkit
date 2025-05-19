@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { Placeholder } from '@/icons';
 import type { MenuItem } from '@/types/types';
+import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ComboBox } from './index';
 

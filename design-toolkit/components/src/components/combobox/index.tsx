@@ -24,11 +24,12 @@ import {
   Text as AriaText,
 } from 'react-aria-components';
 
-import { ChevronDown } from '@/icons';
 import { cn } from '@/lib/utils';
 import type { MenuItem } from '@/types/types';
+import { ChevronDown } from '@accelint/icons';
 import { type VariantProps, cva } from 'cva';
 import type { ReactNode } from 'react';
+import { Icon } from '../icon';
 import { Label } from '../label';
 
 const textFieldStyles = cva(
@@ -159,7 +160,9 @@ export function ComboBox<T extends MenuItem>({
                 isReadOnly && 'hidden',
               ])}
             >
-              <ChevronDown />
+              <Icon>
+                <ChevronDown />
+              </Icon>
             </AriaButton>
           </div>
           {shouldShowDescription && (
@@ -181,8 +184,8 @@ export function ComboBox<T extends MenuItem>({
               {errorMessage}
             </AriaText>
           )}
-          <AriaPopover>
-            <AriaListBox className='grid max-h-[200px] w-[160px] grid-cols-[auto_1fr] overflow-y-auto rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light'>
+          <AriaPopover className='w-(--trigger-width)'>
+            <AriaListBox className='grid max-h-[200px] grid-cols-[auto_1fr] overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light'>
               {children}
             </AriaListBox>
           </AriaPopover>
