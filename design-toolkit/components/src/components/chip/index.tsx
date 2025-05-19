@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { CancelFill } from '@/icons';
 import { cn } from '@/lib/utils';
+import { CancelFill } from '@accelint/icons';
 import { type VariantProps, cva } from 'cva';
 import type React from 'react';
 import { type ReactNode, createContext, useContext } from 'react';
@@ -24,6 +24,7 @@ import {
   type TagProps as AriaTagProps,
   Button,
 } from 'react-aria-components';
+import { Icon } from '../icon';
 
 const chipStyles = cva(
   cn([
@@ -241,7 +242,9 @@ export const DeletableChip = ({
                   'icon-disabled group-hover:icon-disabled cursor-not-allowed',
               ])}
             >
-              <CancelFill />
+              <Icon>
+                <CancelFill />
+              </Icon>
             </Button>
           </>
         );

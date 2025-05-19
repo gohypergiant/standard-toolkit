@@ -16,8 +16,10 @@ import { or, orFn } from '../or';
 /**
  * Logical Non-disjunction `!(a || b)`.
  *
- * @param a The first value to compare.
- * @param b The second value to compare.
+ * @template A - The type of the first input value.
+ * @template B - The type of the second input value.
+ * @param a - The first value to compare.
+ * @param b - The second value to compare.
  *
  * @see https://en.wikipedia.org/wiki/Logical_NOR
  *
@@ -36,9 +38,12 @@ export const nor =
 /**
  * Logical (Function Result) Non-disjunction `!(a(x) || b(x))`.
  *
- * @param a The first function to compare the return of.
- * @param b The second function to compare the return of.
- * @param c The value to pass to both `a` and `b`.
+ * @template T - The type of the input value of the functions.
+ * @template A - The return type of the first function.
+ * @template B - The return type of the second function.
+ * @param a - The first function to compare the return of.
+ * @param b - The second function to compare the return of.
+ * @param c - The value to pass to both `a` and `b`.
  *
  * @see https://en.wikipedia.org/wiki/Logical_NOR
  *

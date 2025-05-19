@@ -30,6 +30,7 @@
     "@accelint/bus": "workspace:*",
     "@accelint/design-system": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
+    "@accelint/icons": "workspace:*",
     "@tailwindcss/postcss": "4.1.4",
     "@vanilla-extract/css": "1.16.0",
     "@vanilla-extract/dynamic": "2.1.2",

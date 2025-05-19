@@ -11,7 +11,7 @@
  */
 
 import type { Key } from '@react-types/shared';
-import type { TreeNode, TreeNodes } from '../../types';
+import type { TreeNode, TreeNodes } from '../../types/use-tree';
 
 export function getChildren<T>(node: TreeNodes<T>) {
   return 'nodes' in node ? node.nodes : [];

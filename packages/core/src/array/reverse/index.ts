@@ -13,7 +13,8 @@
 /**
  * Returns a new array with the order of the elements reversed.
  *
- * @param arr The array to reverse the order of.
+ * @template T - The type of array elements.
+ * @param arr - The array to reverse the order of.
  *
  * @remarks
  * pure function

@@ -15,8 +15,8 @@ import { createIterable } from '../create-iterable';
 /**
  * Create an Iterator that goes from `start` to `end`.
  *
- * @param start The start of the number range (inclusive)
- * @param end The end of the number range (inclusive)
+ * @param start - The start of the number range (inclusive)
+ * @param end - The end of the number range (inclusive)
  *
  * @example
  * for (const n of range(1, 10)) {

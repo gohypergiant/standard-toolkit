@@ -16,8 +16,9 @@ import {
   fallbackVar,
   style,
 } from '@vanilla-extract/css';
-import { layers, radiusVars } from '../../styles';
-import { containerQueries } from '../../utils';
+import { layers } from '../../styles/layers.css';
+import { radiusVars } from '../../styles/theme.css';
+import { containerQueries } from '../../utils/css';
 import type {
   QueryBuilderClassNames,
   QueryBuilderGroupState,

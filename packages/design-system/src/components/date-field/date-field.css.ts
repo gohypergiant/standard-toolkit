@@ -15,7 +15,8 @@ import {
   createThemeContract,
   style,
 } from '@vanilla-extract/css';
-import { label, layers } from '../../styles';
+import { layers } from '../../styles/layers.css';
+import { label } from '../../styles/typography.css';
 import type { DateFieldClassNames } from './types';
 
 export const dateFieldContainer = createContainer();

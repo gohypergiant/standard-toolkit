@@ -13,7 +13,11 @@
 /**
  * Clamps a number within the specified bounds.
  *
- * @throws {RangeError} Throws an error if min > max.
+ * @param min - The lower bound to clamp to.
+ * @param max - The upper bound to clamp to.
+ * @param value - The number value to clamp to the given range.
+ *
+ * @throws {RangeError} Throws if min > max.
  *
  * @example
  * const value = clamp(5, 15, 10); // 10
@@ -22,7 +26,6 @@
  * const value = clamp(15, 5, 10); // RangeError
  */
 export function clamp(min: number, max: number, value: number) {
-  // TODO: do we want to handle this differently? A range error is quite explicit
   if (min > max) {
     throw new RangeError('min exceeded max');
   }

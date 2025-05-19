@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { Placeholder } from '@/icons';
+import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from '../icon';
 import { Accordion, AccordionGroup, AccordionHeader, AccordionPanel } from './';
 
 /**
@@ -41,7 +42,10 @@ export const Default: Story = {
       <AccordionGroup {...args}>
         <Accordion>
           <AccordionHeader>
-            <Placeholder /> Accordion one{' '}
+            <Icon>
+              <Placeholder />
+            </Icon>{' '}
+            Accordion one{' '}
           </AccordionHeader>
           <AccordionPanel>
             <p className='fg-default-dark text-body-s'>
@@ -52,7 +56,10 @@ export const Default: Story = {
         </Accordion>
         <Accordion>
           <AccordionHeader>
-            <Placeholder /> Accordion two{' '}
+            <Icon>
+              <Placeholder />
+            </Icon>{' '}
+            Accordion two{' '}
           </AccordionHeader>
           <AccordionPanel>
             <p className='fg-default-dark text-body-s'>
@@ -63,7 +70,10 @@ export const Default: Story = {
         </Accordion>
         <Accordion>
           <AccordionHeader>
-            <Placeholder /> Accordion three{' '}
+            <Icon>
+              <Placeholder />
+            </Icon>{' '}
+            Accordion three{' '}
           </AccordionHeader>
           <AccordionPanel>
             <p className='fg-default-dark text-body-s'>

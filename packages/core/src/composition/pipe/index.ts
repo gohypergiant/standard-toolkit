@@ -52,8 +52,9 @@ type Pipeable<Fn> =
  * Allows you combine two or more functions to create a new function, which passes the results from one
  * function to the next until all have be called. Has a left-to-right call order.
  *
- * @param fns The functions to pipe.
- * @param arg The argument to give to the first function in the pipe.
+ * @template Fns - The list of unary functions.
+ * @param fns - The functions to pipe.
+ * @param arg - The argument to give to the first function in the pipe.
  *
  * @remarks
  * pure function

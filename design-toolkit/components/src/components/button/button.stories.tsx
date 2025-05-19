@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { Placeholder } from '@/icons/placeholder';
+import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from '../icon';
 import { Button } from './index';
 
 const meta: Meta<typeof Button> = {
@@ -61,7 +62,9 @@ export const Link: Story = {
 export const ButtonWithLeftIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
-      <Placeholder />
+      <Icon>
+        <Placeholder />
+      </Icon>
       {typeof children !== 'function' && children}
     </Button>
   ),
@@ -71,7 +74,9 @@ export const ButtonWithRightIcon: Story = {
   render: ({ children, ...args }) => (
     <Button {...args}>
       {typeof children !== 'function' && children}
-      <Placeholder />
+      <Icon>
+        <Placeholder />
+      </Icon>
     </Button>
   ),
 };

@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { Person } from '@/icons/person';
 import { cn } from '@/lib/utils';
+import { Person } from '@accelint/icons';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import 'client-only';
 import { type VariantProps, cva } from 'cva';

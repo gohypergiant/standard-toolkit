@@ -19,7 +19,7 @@ import {
   isOptionGroupArray,
   useValueSelector,
 } from 'react-querybuilder';
-import { callRenderProps } from '../../utils';
+import { callRenderProps } from '../../utils/props';
 import { AriaHeader, AriaSection, AriaSelectValue } from '../aria';
 import { Button } from '../button';
 import { Options, OptionsItem, OptionsList } from '../options';

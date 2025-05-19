@@ -17,20 +17,21 @@ import {
   Disclosure as AriaDisclosure,
   DisclosureGroup as AriaDisclosureGroup,
   type DisclosureGroupProps as AriaDisclosureGroupProps,
+  DisclosureGroupStateContext as AriaDisclosureGroupStateContext,
   DisclosurePanel as AriaDisclosurePanel,
   type DisclosurePanelProps as AriaDisclosurePanelProps,
   type DisclosureProps as AriaDisclosureProps,
   Button,
-  ButtonContext,
   type ButtonProps,
   Heading,
   composeRenderProps,
 } from 'react-aria-components';
 
-import { ChevronDown, Kebab } from '@/icons';
 import { cn } from '@/lib/utils';
+import { ChevronDown, Kebab } from '@accelint/icons';
 import { type VariantProps, cva } from 'cva';
 import { createContext, useContext } from 'react';
+import { Icon } from '../icon';
 import { IconButton } from '../icon-button';
 
 const accordionStyles = cva('group flex flex-col bg-transparent', {
@@ -47,10 +48,12 @@ const accordionStyles = cva('group flex flex-col bg-transparent', {
 
 interface AccordionContextType
   extends Pick<VariantProps<typeof accordionStyles>, 'variant'> {
+  isDisabled?: boolean;
   options?: boolean;
 }
 
 const AccordionContext = createContext<AccordionContextType>({
+  isDisabled: false,
   options: false,
   variant: 'cozy',
 });
@@ -69,8 +72,17 @@ export function Accordion({
   variant = 'cozy',
   ...props
 }: AccordionProps) {
+  // @ts-expect-error package version mismatch
+  const stateContext = useContext(AriaDisclosureGroupStateContext);
+
   return (
-    <AccordionContext.Provider value={{ options, variant }}>
+    <AccordionContext.Provider
+      value={{
+        options,
+        variant,
+        isDisabled: isDisabled || stateContext?.isDisabled,
+      }}
+    >
       <AriaDisclosure
         {...props}
         isDisabled={isDisabled}
@@ -98,9 +110,7 @@ export interface AccordionHeaderProps
 }
 
 export function AccordionHeader({ children }: AccordionHeaderProps) {
-  const context = useContext(ButtonContext);
-  const isDisabled = context?.slots?.trigger.isDisabled;
-  const { options, variant } = useContext(AccordionContext);
+  const { isDisabled, options, variant } = useContext(AccordionContext);
 
   return (
     <Heading
@@ -121,6 +131,7 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
         ])}
         data-variant={variant}
       >
+        {/* @ts-expect-error package version mismatch */}
         <span
           className={IconButton.as({
             isDisabled,
@@ -129,9 +140,11 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
           })}
           aria-hidden
         >
-          <ChevronDown
-            className={cn('transform group-ai-expanded:rotate-180')}
-          />
+          <Icon>
+            <ChevronDown
+              className={cn('transform group-ai-expanded:rotate-180')}
+            />
+          </Icon>
         </span>
         {children}
       </Button>
@@ -142,7 +155,9 @@ export function AccordionHeader({ children }: AccordionHeaderProps) {
           size={variant === 'cozy' ? 'medium' : 'small'}
           variant='child'
         >
-          <Kebab />
+          <Icon>
+            <Kebab />
+          </Icon>
         </IconButton>
       )}
     </Heading>
@@ -183,9 +198,7 @@ export function AccordionGroup({
     <AriaDisclosureGroup
       {...props}
       allowsMultipleExpanded={allowsMultipleExpanded}
-      className={composeRenderProps(className, (className) =>
-        cn('flex w-full flex-col', className),
-      )}
+      className={cn('flex w-full flex-col', className)}
     >
       {(props) => (typeof children === 'function' ? children(props) : children)}
     </AriaDisclosureGroup>

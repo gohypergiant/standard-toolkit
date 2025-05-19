@@ -13,7 +13,7 @@
 import type { Story, StoryDefault } from '@ladle/react';
 import { startCase } from 'lodash';
 import type { ReactNode } from 'react';
-import type { MapLeafNodes } from '../types';
+import type { MapLeafNodes } from '../types/vanilla-extract';
 import {
   genericColorVars,
   radiusVars,

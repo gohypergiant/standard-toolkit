@@ -11,7 +11,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { ClassificationBadge } from './index';
+import { ClassificationBadge } from './';
 
 const meta: Meta<typeof ClassificationBadge> = {
   title: 'Components/ClassificationBadge',

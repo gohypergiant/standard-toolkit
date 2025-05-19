@@ -18,7 +18,7 @@ import {
 } from '@ladle/react';
 import { AriaLabel, AriaText } from '../aria';
 import { Icon } from '../icon';
-import { Checkbox, CheckboxGroup } from './checkbox';
+import { Checkbox, CheckboxGroup } from './';
 import type { CheckboxGroupProps, CheckboxProps } from './types';
 
 export default {

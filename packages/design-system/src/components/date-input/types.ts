@@ -19,8 +19,9 @@ import type {
   DateSegmentRenderProps as RACDateSegmentRenderProps,
 } from 'react-aria-components';
 import type { PartialDeep } from 'type-fest';
-import type { AsType, RenderPropsChildren } from '../../types';
-import type { IconClassNames } from '../icon';
+import type { AsType } from '../../types/generic';
+import type { RenderPropsChildren } from '../../types/react-aria';
+import type { IconClassNames } from '../icon/types';
 
 export type DateInputSizes = 'sm' | 'lg';
 

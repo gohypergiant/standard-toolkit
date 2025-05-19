@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { Placeholder } from '@/icons';
+import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Icon } from '../icon';
 import { Accordion, AccordionHeader, AccordionPanel } from './';
 
 /**
@@ -46,7 +47,10 @@ export const Default: Story = {
     <div className='w-[280px]'>
       <Accordion {...args}>
         <AccordionHeader>
-          <Placeholder /> Accordion title{' '}
+          <Icon>
+            <Placeholder />
+          </Icon>{' '}
+          Accordion title{' '}
         </AccordionHeader>
         <AccordionPanel>
           <p className='fg-default-dark text-body-s'>
