@@ -47,6 +47,7 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
+export { Tree } from './components/tree';
 export { AddFill } from './icons/add-fill';
 export { AddToList } from './icons/add-to-list';
 export { Add } from './icons/add';
@@ -56,6 +57,7 @@ export { CancelFill } from './icons/cancel-fill';
 export { Cancel } from './icons/cancel';
 export { CenterOn } from './icons/center-on';
 export { Check } from './icons/check';
+export { ChevronDown } from './icons/chevron-down';
 export { CollapseAll } from './icons/collapse-all';
 export { CollapseWindow } from './icons/collapse-window';
 export { Condense } from './icons/condense';

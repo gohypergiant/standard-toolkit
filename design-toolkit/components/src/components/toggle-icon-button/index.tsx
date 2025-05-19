@@ -33,7 +33,7 @@ const toggleIconButtonStyles = cva(
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'not-ai-selected:icon-disabled ai-selected:cursor-default not-ai-selected:cursor-not-allowed not-ai-selected:bg-interactive-disabled ai-selected:hover:bg-transparent not-ai-selected:hover:bg-interactive-disabled ai-selected:focus:bg-transparent not-ai-selected:focus:bg-interactive-disabled',
+        true: 'not-ai-selected:icon-disabled ai-selected:cursor-default not-ai-selected:cursor-not-allowed not-ai-selected:bg-interactive-disabled ai-selected:hover:bg-transparent not-ai-selected:hover:bg-interactive-disabled ai-selected:focus:bg-transparent not-ai-selected:focus:bg-interactive-disabled hover:icon-default-transparent',
         false: '',
       },
     },
