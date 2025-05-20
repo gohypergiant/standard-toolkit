@@ -156,6 +156,8 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
+    "@fontsource/roboto-flex": "5.1.0",
+    "@fontsource/roboto-mono": "5.1.0",
     "@radix-ui/react-avatar": "^1.1.4",
     "@react-types/shared": "3.25.0",
     "react": "^19.0.0",
@@ -178,8 +180,6 @@
     "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@fontsource/roboto-flex": "5.1.0",
-    "@fontsource/roboto-mono": "5.1.0",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/blocks": "8.6.12",
     "@storybook/builder-vite": "8.6.12",
