@@ -132,7 +132,7 @@ export function ComboBox<T extends MenuItem>({
       isDisabled={isDisabled}
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
-      className={'flex flex-col gap-xs'}
+      className='flex flex-col gap-xs'
     >
       {({ isDisabled, isOpen }) => (
         <>
@@ -186,6 +186,7 @@ export function ComboBox<T extends MenuItem>({
           )}
           <AriaPopover className='w-(--trigger-width)'>
             <AriaListBox className='grid max-h-[200px] grid-cols-[auto_1fr] overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light'>
+              {/* @ts-expect-error package version mismatch TODO */}
               {children}
             </AriaListBox>
           </AriaPopover>
