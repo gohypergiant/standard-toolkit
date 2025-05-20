@@ -14,6 +14,13 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+export { Accordion } from './components/accordion';
+export type {
+  AccordionGroupProps,
+  AccordionHeaderProps,
+  AccordionPanelProps,
+  AccordionProps,
+} from './components/accordion';
 export { Avatar } from './components/avatar';
 export type { AvatarProps } from './components/avatar';
 export { Badge } from './components/badge';

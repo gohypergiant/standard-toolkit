@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -17,6 +17,13 @@
         "default": "./dist/index.js"
       },
       "default": "./dist/index.js"
+    },
+    "./accordion": {
+      "import": {
+        "types": "./dist/components/accordion/index.d.ts",
+        "default": "./dist/components/accordion/index.js"
+      },
+      "default": "./dist/components/accordion/index.js"
     },
     "./avatar": {
       "import": {
@@ -159,10 +166,14 @@
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
     "lint": "pnpm biome lint",
     "preview": "pnpm storybook dev -p 6006",
+    "preview:docs": "pnpm storybook dev --docs -p 6006",
     "test": "pnpm vitest --dir=src",
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
+    "@accelint/icons": "^1.0.0",
+    "@fontsource/roboto-flex": "5.1.0",
+    "@fontsource/roboto-mono": "5.1.0",
     "@radix-ui/react-avatar": "^1.1.4",
     "@react-types/shared": "3.25.0",
     "react": "^19.0.0",
@@ -185,8 +196,6 @@
     "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@fontsource/roboto-flex": "5.1.0",
-    "@fontsource/roboto-mono": "5.1.0",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/blocks": "8.6.12",
     "@storybook/builder-vite": "8.6.12",

@@ -30,8 +30,8 @@ const classificationBanner = cva(
           "fg-default-light bg-classification-secret [&:empty]:before:content-['Secret']",
         'top-secret':
           "fg-inverse-light bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
-        'top-secret-sci':
-          "fg-inverse-light bg-classification-top-secret-sci [&:empty]:before:content-['Top_Secret//SCI']",
+        'ts-sci':
+          "fg-inverse-light bg-classification-ts-sci [&:empty]:before:content-['Top_Secret//SCI']",
       },
     },
     defaultVariants: {

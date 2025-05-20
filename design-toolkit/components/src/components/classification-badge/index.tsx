@@ -29,8 +29,8 @@ const classificationBadge = cva(
           "fg-default-light bg-classification-secret [&:empty]:before:content-['Secret']",
         'top-secret':
           "fg-inverse-light bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
-        'top-secret-sci':
-          "fg-inverse-light bg-classification-top-secret-sci [&:empty]:before:content-['TS/SCI']",
+        'ts-sci':
+          "fg-inverse-light bg-classification-ts-sci [&:empty]:before:content-['TS/SCI']",
       },
       size: {
         medium: 'px-s py-xs text-header-s',
