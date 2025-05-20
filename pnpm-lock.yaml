@@ -249,6 +249,12 @@ importers:
       '@accelint/icons':
         specifier: workspace:*
         version: link:../icons
+      '@fontsource/roboto-flex':
+        specifier: 5.1.0
+        version: 5.1.0
+      '@fontsource/roboto-mono':
+        specifier: 5.1.0
+        version: 5.1.0
       '@radix-ui/react-avatar':
         specifier: ^1.1.4
         version: 1.1.7(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -295,12 +301,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@fontsource/roboto-flex':
-        specifier: 5.1.0
-        version: 5.1.0
-      '@fontsource/roboto-mono':
-        specifier: 5.1.0
-        version: 5.1.0
       '@storybook/addon-essentials':
         specifier: ^8.6.12
         version: 8.6.12(@types/react@19.1.2)(storybook@8.6.12(prettier@2.8.8))
