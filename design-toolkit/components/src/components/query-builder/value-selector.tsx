@@ -68,6 +68,7 @@ export function ValueSelector(props: ValueSelectorProps) {
         : optionsProp.map((option) => (
             <ComboBox.Item
               name={option.name}
+              textValue={option.label}
               id={option.name}
               key={option.name}
             >
@@ -81,7 +82,7 @@ export function ValueSelector(props: ValueSelectorProps) {
     <ComboBox
       size='small'
       {...rest}
-      inputValue={Array.isArray(val) ? val[0] : val}
+      selectedKey={Array.isArray(val) ? val[0] : val}
       aria-labelledby={title}
       onSelectionChange={handleSelectionChange}
     >

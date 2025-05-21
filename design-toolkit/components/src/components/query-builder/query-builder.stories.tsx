@@ -144,7 +144,7 @@ const fields: Field[] = [
     }),
   },
   {
-    name: 'Country',
+    name: 'COUNTRY',
     label: 'Country',
     type: 'str',
     operators: [
@@ -165,7 +165,7 @@ const fields: Field[] = [
     valueEditorType: 'textarea',
   },
   {
-    name: 'OperationalStatus',
+    name: 'OPERSTATUS',
     label: 'Is Operational',
     type: 'bool',
     defaultValue: false,
@@ -223,6 +223,7 @@ const fields: Field[] = [
     name: 'TYPE_CODE',
     label: 'Type Code',
     type: 'str',
+    operators: [{ name: '=', value: '=', label: 'is' } as const],
     valueEditorType: 'radio',
     values: [
       { name: 'Heliport', label: 'Heliport', value: 'Heliport' },
@@ -321,28 +322,27 @@ export const Default: Story = {
       rules: [
         { field: 'AK_HIGH', operator: '>', value: '10000' }, // i32
         { field: 'AK_LOW', operator: 'between', value: ['1000', '5000'] }, // between
-        { field: 'COUNTRY', operator: 'like', value: 'Canada' },
+        { field: 'COUNTRY', operator: 'like', value: 'Canada' }, //text
+        { field: 'NOTES', operator: 'contains', value: 'Clear skies...' }, // textarea
         { field: 'SERVCITY', operator: 'like', value: 'Anchorage' }, // options with headers
-        { field: 'OperationalStatus', operator: '=', value: false }, // bool
+        { field: 'OPERSTATUS', operator: '=', value: false }, // bool
         { field: 'DONUTS', operator: '=', value: true }, // switch
         { field: 'TYPE_CODE', operator: '=', value: 'Aerodrome' }, // radio
-        { field: 'NICKNAME', operator: 'like', value: 'Old Bumpy' }, // text
-        { field: 'NOTES', operator: 'contains', value: 'Clear skies...' }, // textarea
         {
           field: 'ESTABLISHED',
           operator: 'during',
           value: ['2024-10-01', '2024-11-01'],
         }, // date
         {
-          field: 'MAINTENANCE',
-          operator: 'overlapped',
-          value: ['2024-10-01T18:22:54', '2024-11-01T18:22:54'],
-        }, // datetime
-        {
           field: 'PEAK_TRAFFIC',
           operator: 'overlaps',
           value: ['18:22:54', '19:22:54'],
         }, // time
+        {
+          field: 'MAINTENANCE',
+          operator: 'overlapped',
+          value: ['2024-10-01T18:22:54', '2024-11-01T18:22:54'],
+        }, // datetime
       ],
     });
 
