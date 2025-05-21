@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { memo, useContext } from 'react';
+import { useContext } from 'react';
 import {
   type RuleProps,
   TestID,
@@ -19,7 +19,7 @@ import {
 } from 'react-querybuilder';
 import type { QueryBuilderContextType } from './types';
 
-export const Rule = memo(function Rule(props: RuleProps) {
+export function Rule(props: RuleProps) {
   const rule = useRule(props);
   const context: QueryBuilderContextType = useContext(props.context);
 
@@ -174,4 +174,4 @@ export const Rule = memo(function Rule(props: RuleProps) {
       </div>
     </>
   );
-});
+}
