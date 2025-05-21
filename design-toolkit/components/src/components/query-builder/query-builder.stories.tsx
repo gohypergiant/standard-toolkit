@@ -318,7 +318,7 @@ const fields: Field[] = [
 export const Default: Story = {
   render: (args) => {
     const [query, setQuery] = useState<RuleGroupType>({
-      combinator: 'and',
+      combinator: 'AND',
       rules: [
         { field: 'AK_HIGH', operator: '>', value: '10000' }, // i32
         { field: 'AK_LOW', operator: 'between', value: ['1000', '5000'] }, // between
