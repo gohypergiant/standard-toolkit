@@ -34,6 +34,7 @@ import type { QueryBuilderContextType, QueryBuilderProps } from './types';
 import { pressToMouseEvent } from './utils';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
+import './querybuilder.css';
 
 // TODO: make these tooltips configurable?
 const operatorDescriptions: Record<string, string> = {

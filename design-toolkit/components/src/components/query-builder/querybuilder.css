@@ -10,14 +10,47 @@
  * governing permissions and limitations under the License.
  */
 
-@import 'react-querybuilder/dist/query-builder.css';
-@import 'react-querybuilder/dist/query-builder-layout.css';
+.rule-lines::before {
+  content: '';
+  width: 10px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  background-image:
+    repeating-linear-gradient(to bottom, var(--neutral-04), var(--neutral-04)),
+    repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+  background-position: left -1px, center;
+  background-repeat: repeat-y, repeat-x;
+  background-size: 1px 4px, 4px 1px;
+}
 
-:root {
-  --rqb-spacing: 0.5rem;
-  --rqb-border-width: 1px;
-  --rqb-background-color: #004bb733;
-  --rqb-border-color: #8081a2;
-  --rqb-border-style: solid;
-  --rqb-border-radius: 0.25rem;
+.group > span.rule-lines:last-of-type::before {
+  content: '';
+  width: 10px;
+  position: absolute;
+  top: 0;
+  bottom: 50%;
+  left: 50%;
+  background-image:
+    repeating-linear-gradient(to bottom,var(--neutral-04), var(--neutral-04)),
+    repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+  background-position: left -1px, bottom;
+  background-repeat: repeat-y, repeat-x;
+  background-size: 1px 4px, 4px 1px;
+}
+
+.group > span.rule-lines:last-of-type:has(~ div.group)::before {
+  content: '';
+  width: 10px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  background-image:
+    repeating-linear-gradient(to bottom, var(--neutral-04), var(--neutral-04)),
+    repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+  background-position: left -1px, center;
+  background-repeat: repeat-y, repeat-x;
+  background-size: 1px 4px, 4px 1px;
 }
