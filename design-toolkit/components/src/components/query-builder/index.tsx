@@ -135,7 +135,6 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 }
 
-// TODO: add docs notes, etc for the classname override
 export function QueryBuilder({
   controlClassnames,
   controlElements,
@@ -143,6 +142,11 @@ export function QueryBuilder({
   showRuleLines = true,
   ...rest
 }: QueryBuilderProps) {
+  /**
+   * Represents the list of available controls that the component can use as a custom
+   * component override.Passed in as a map of our custom defaults, but can be
+   * overridden by using the controlElements prop
+   */
   const mergedElements = useMemo(
     () => ({
       combinatorSelector: CombinatorSelector,
@@ -161,6 +165,11 @@ export function QueryBuilder({
     [controlElements],
   );
 
+  /**
+   * Represents the list of available classnames that the component will recognize.
+   * Passed in as a map as all the default styling, but can be overridden by using the
+   * controlClassnames prop
+   */
   const defaultClassnames: Partial<Classnames> = useMemo(
     () => ({
       queryBuilder: 'border border-transparent',
@@ -178,22 +187,22 @@ export function QueryBuilder({
       addGroup: '',
       cloneRule: 'fg-interactive hover:fg-interactive-hover',
       cloneGroup: 'fg-interactive hover:fg-interactive-hover',
-      removeGroup: 'ruleGroup-remove',
+      removeGroup: '',
       rule: cn(
         'flex gap-xs py-s',
         orientation === 'vertical' ? 'flex-col' : 'items-center',
       ),
-      fields: 'rule-fields w-full',
-      operators: 'rule-operators',
-      value: 'rule-value w-full',
-      removeRule: 'rule-remove',
-      valid: 'queryBuilder-valid',
-      invalid: 'queryBuilder-invalid',
-      disabled: 'queryBuilder-disabled',
+      fields: 'w-full',
+      operators: '',
+      value: 'w-full',
+      removeRule: '',
+      valid: '',
+      invalid: '',
+      disabled: '',
       lockRule: 'fg-interactive hover:fg-interactive-hover',
       lockGroup: 'fg-interactive hover:fg-interactive-hover',
-      valueSource: 'rule-valueSource',
-      valueListItem: 'rule-value-list-item',
+      valueSource: '',
+      valueListItem: '',
     }),
     [orientation, showRuleLines],
   );

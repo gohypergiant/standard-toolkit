@@ -64,6 +64,9 @@ const hideArgs = [
   {} as Record<string, { table: { disable: true } }>,
 );
 
+/**
+ * A custom port of the React QueryBuilder component: https://react-querybuilder.js.org/
+ */
 const meta: Meta<typeof QueryBuilder> = {
   title: 'Components/QueryBuilder',
   component: QueryBuilder,
@@ -83,11 +86,19 @@ const meta: Meta<typeof QueryBuilder> = {
       },
     },
   },
+  parameters: {
+    docs: {
+      subtitle: 'Builds a complex formatted query for filtering a dataset',
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof QueryBuilder>;
 
+/**
+ * Represents sample field types and data for building a query
+ */
 const fields: Field[] = [
   {
     name: 'AK_HIGH',
@@ -184,32 +195,22 @@ const fields: Field[] = [
     label: 'Service City',
     valueEditorType: 'select',
     values: [
+      { name: 'Anchorage', label: 'Anchorage', value: 'Anchorage' },
+      { name: 'Juneau', label: 'Juneau', value: 'Juneau' },
       {
-        label: 'Alaska',
-        options: [
-          { name: 'Anchorage', label: 'Anchorage', value: 'Anchorage' },
-          { name: 'Juneau', label: 'Juneau', value: 'Juneau' },
-          {
-            name: 'Fairbanks',
-            label: 'Fairbanks',
-            value: 'Fairbanks',
-          },
-          { name: 'Sitka', label: 'Sitka', value: 'Sitka' },
-        ],
+        name: 'Fairbanks',
+        label: 'Fairbanks',
+        value: 'Fairbanks',
       },
+      { name: 'Sitka', label: 'Sitka', value: 'Sitka' },
+      { name: 'Montgomery', label: 'Montgomery', value: 'Montgomery' },
+      { name: 'Birmingham', label: 'Birmingham', value: 'Birmingham' },
       {
-        label: 'Alabama',
-        options: [
-          { name: 'Montgomery', label: 'Montgomery', value: 'Montgomery' },
-          { name: 'Birmingham', label: 'Birmingham', value: 'Birmingham' },
-          {
-            name: 'Huntsville',
-            label: 'Huntsville',
-            value: 'Huntsville',
-          },
-          { name: 'Mobile', label: 'Mobile', value: 'Mobile' },
-        ],
+        name: 'Huntsville',
+        label: 'Huntsville',
+        value: 'Huntsville',
       },
+      { name: 'Mobile', label: 'Mobile', value: 'Mobile' },
     ],
     type: 'str',
     operators: [
