@@ -84,7 +84,6 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
-export { Trash } from './icons/trash';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';
 export type { MenuItem } from './types/types';
