@@ -15,15 +15,17 @@ import ansis from 'ansis';
 import { Command } from 'commander';
 import ora from 'ora';
 import { Result } from 'true-myth';
-import {
-  type GatherResult,
-  type GenerateResult,
-  type GlobResult,
-  cleanUp,
-  findSprites,
-  gatherSprites,
-  generateSprites,
-} from './lib.js';
+import { cleanUp } from './utils/clean-up.js';
+import { findSprites } from './utils/find-sprites.js';
+import { gatherSprites } from './utils/gather-sprites.js';
+import { generateConst } from './utils/generate-const.js';
+import { generateSprites } from './utils/generate-sprites.js';
+import type {
+  ConstantsResult,
+  GatherResult,
+  GenerateResult,
+  GlobResult,
+} from './utils/types.js';
 
 const program = new Command();
 
@@ -81,7 +83,25 @@ async function generate(input: GatherResult, cmd: string, output: string) {
   return result;
 }
 
-async function clean(dir: GenerateResult) {
+async function constants(input: GenerateResult) {
+  if (input.isErr) {
+    return Result.err(input.error);
+  }
+
+  const spinner = ora('Generating constant mapping');
+  spinner.start();
+
+  const result = await generateConst(input);
+
+  result.match({
+    Ok: () => spinner.succeed(),
+    Err: (e) => spinner.fail(e),
+  });
+
+  return result;
+}
+
+async function clean(dir: ConstantsResult) {
   const spinner = ora('Cleaning up');
   spinner.start();
 
@@ -111,11 +131,12 @@ program
       const newOut = out ?? path.join(process.cwd(), 'atlas');
       const spreetPath = options.spreet ?? 'spreet';
 
-      // asyncCompose
+      // TODO: add async compose
       const sprites = await find(glob as string, process.cwd());
       const gathered = await gather(sprites);
       const atlas = await generate(gathered, spreetPath, newOut);
-      const cleaned = await clean(atlas);
+      const genConst = await constants(atlas);
+      const cleaned = await clean(genConst);
     },
   );
 
