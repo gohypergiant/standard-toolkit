@@ -14,6 +14,7 @@ import type { Key, ReactNode } from 'react';
 
 // TODO: move when menu is added to desTK
 export interface MenuItem {
+  children?: MenuItem[];
   description?: string;
   icon?: ReactNode;
   id?: Key;

@@ -15,11 +15,15 @@ import {
   Button as AriaButton,
   ComboBox as AriaComboBox,
   type ComboBoxProps as AriaComboBoxProps,
+  Header as AriaHeader,
   Input as AriaInput,
   type InputProps as AriaInputProps,
   ListBox as AriaListBox,
+  Collection as AriaListBoxCollection,
   ListBoxItem as AriaListBoxItem,
   type ListBoxItemProps as AriaListBoxItemProps,
+  ListBoxSection as AriaListBoxSection,
+  type ListBoxSectionProps as AriaListBoxSectionProps,
   Popover as AriaPopover,
   Text as AriaText,
 } from 'react-aria-components';
@@ -233,7 +237,11 @@ function ComboBoxItem<T extends MenuItem>({
 
         return (
           <>
-            {icon && <span className='mr-xs'>{icon}</span>}
+            {icon && (
+              <span className='mr-xs'>
+                <Icon>{icon}</Icon>
+              </span>
+            )}
             <div className='col-start-2 flex flex-col gap-xxs'>
               <AriaText slot='label'>{name}</AriaText>
               {description && (
@@ -251,3 +259,28 @@ function ComboBoxItem<T extends MenuItem>({
 ComboBoxItem.displayName = 'ComboBox.Item';
 
 ComboBox.Item = ComboBoxItem;
+
+interface ComboBoxSectionProps<T extends MenuItem>
+  extends AriaListBoxSectionProps<T> {
+  header?: string;
+}
+
+export function ComboBoxSection<T extends MenuItem>({
+  children,
+  header,
+  items,
+}: ComboBoxSectionProps<T>) {
+  return (
+    <AriaListBoxSection
+      id={header}
+      className='col-span-2 mt-s grid grid-cols-[auto_1fr] border-default-dark border-t first:border-none'
+    >
+      <AriaHeader className='col-span-2 m-xs my-s text-default-dark text-header-xs'>
+        {header}
+      </AriaHeader>
+      <AriaListBoxCollection items={items}>{children}</AriaListBoxCollection>
+    </AriaListBoxSection>
+  );
+}
+ComboBox.displayName = 'ComboBox.Section';
+ComboBox.Section = ComboBoxSection;

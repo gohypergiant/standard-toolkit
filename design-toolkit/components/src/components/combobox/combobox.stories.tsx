@@ -82,6 +82,53 @@ const items: CustomMenuItem[] = [
   },
 ];
 
+const itemsWithSections: CustomMenuItem[] = [
+  {
+    id: 1,
+    icon: <Placeholder />,
+    name: 'Animals',
+    children: [
+      {
+        id: 2,
+        icon: <Placeholder />,
+        name: 'Danger Noodle',
+        description: 'Snake',
+      },
+      {
+        id: 3,
+        icon: <Placeholder />,
+        name: 'Murder Log',
+        description: 'Crocodile',
+      },
+      {
+        id: 4,
+        icon: <Placeholder />,
+        name: 'Trash Panda',
+        description: 'Racoon',
+      },
+    ],
+  },
+  {
+    id: 5,
+    icon: <Placeholder />,
+    name: 'Fruit and Vegetables',
+    children: [
+      {
+        id: 6,
+        icon: <Placeholder />,
+        name: 'Almost Apple',
+        description: 'Pear',
+      },
+      {
+        id: 7,
+        icon: <Placeholder />,
+        name: 'Mutant Carrot',
+        description: 'Parsnip',
+      },
+    ],
+  },
+];
+
 export const Default: Story = {
   render: ({ children, ...args }) => (
     <ComboBox<CustomMenuItem> {...args} defaultItems={items}>
@@ -93,6 +140,25 @@ export const Default: Story = {
           description={item.description}
           isDisabled={item.isDisabled}
         />
+      )}
+    </ComboBox>
+  ),
+};
+
+export const WithSections: Story = {
+  render: ({ children, ...args }) => (
+    <ComboBox<CustomMenuItem> {...args} defaultItems={itemsWithSections}>
+      {(section) => (
+        <ComboBox.Section header={section.name} items={section.children}>
+          {(item) => (
+            <ComboBox.Item
+              key={item.id}
+              icon={item.icon}
+              name={item.name}
+              description={item.description}
+            />
+          )}
+        </ComboBox.Section>
       )}
     </ComboBox>
   ),
