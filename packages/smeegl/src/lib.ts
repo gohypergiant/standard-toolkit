@@ -68,7 +68,7 @@ export async function gatherSprites(sprites: GlobResult): GatherResultPromise {
 
   try {
     const tmp = await tempDir();
-    const list = sprites.unwrapOr([]);
+    const list: string[] = sprites.unwrapOr([]);
     const result = await Promise.all(
       list.map((src) => duplicateFile(src, tmp)),
     );
