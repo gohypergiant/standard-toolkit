@@ -230,9 +230,9 @@ function ComboBoxItem<T extends MenuItem>({
       {...props}
       className={comboBoxItemStyles({ className })}
     >
-      {(props) => {
-        if (children) {
-          return typeof children === 'function' ? children(props) : children;
+      {(renderProps) => {
+        if (typeof children === 'function') {
+          return children(renderProps);
         }
 
         return (

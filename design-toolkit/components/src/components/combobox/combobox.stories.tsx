@@ -86,44 +86,44 @@ const itemsWithSections: CustomMenuItem[] = [
   {
     id: 1,
     icon: <Placeholder />,
-    name: 'Animals',
+    name: 'North American Birds',
     children: [
       {
         id: 2,
         icon: <Placeholder />,
-        name: 'Danger Noodle',
-        description: 'Snake',
+        name: 'Blue jay',
       },
       {
         id: 3,
         icon: <Placeholder />,
-        name: 'Murder Log',
-        description: 'Crocodile',
+        name: 'Gray catbird',
       },
       {
         id: 4,
         icon: <Placeholder />,
-        name: 'Trash Panda',
-        description: 'Racoon',
+        name: 'Black-capped chickadee',
+      },
+      {
+        id: 5,
+        icon: <Placeholder />,
+        name: 'Song sparrow',
       },
     ],
   },
   {
-    id: 5,
+    id: 6,
     icon: <Placeholder />,
-    name: 'Fruit and Vegetables',
+    name: 'African Birds',
     children: [
       {
         id: 6,
         icon: <Placeholder />,
-        name: 'Almost Apple',
-        description: 'Pear',
+        name: 'Lilac-breasted roller',
       },
       {
         id: 7,
         icon: <Placeholder />,
-        name: 'Mutant Carrot',
-        description: 'Parsnip',
+        name: 'Hornbill',
       },
     ],
   },
@@ -145,7 +145,7 @@ export const Default: Story = {
   ),
 };
 
-export const WithSections: Story = {
+export const WithDynamicSections: Story = {
   render: ({ children, ...args }) => (
     <ComboBox<CustomMenuItem> {...args} defaultItems={itemsWithSections}>
       {(section) => (
@@ -164,9 +164,38 @@ export const WithSections: Story = {
   ),
 };
 
+export const WithStaticSections: Story = {
+  render: ({ children, ...args }) => (
+    <ComboBox {...args}>
+      <ComboBox.Section header='North American Birds'>
+        <ComboBox.Item icon={<Placeholder />} name='Blue Jay'>
+          Blue Jay
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Gray catbird'>
+          Gray catbird
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Black-capped chickadee'>
+          Black-capped chickadee
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Song Sparrow'>
+          Song Sparrow
+        </ComboBox.Item>
+      </ComboBox.Section>
+      <ComboBox.Section header='African Birds'>
+        <ComboBox.Item icon={<Placeholder />} name='Lilac-breasted roller'>
+          Lilac-breasted roller
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Hornbill'>
+          Hornbill
+        </ComboBox.Item>
+      </ComboBox.Section>
+    </ComboBox>
+  ),
+};
+
 export const Test: Story = {
   render: ({ children, ...args }) => (
-    <ComboBox {...args} defaultItems={items}>
+    <ComboBox {...args}>
       <ComboBox.Item
         icon={<Placeholder />}
         name='Red Panda'
