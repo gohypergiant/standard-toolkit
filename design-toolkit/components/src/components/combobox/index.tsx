@@ -164,7 +164,7 @@ export function ComboBox<T extends MenuItem>({
                 isReadOnly && 'hidden',
               ])}
             >
-              <Icon>
+              <Icon className='block'>
                 <ChevronDown />
               </Icon>
             </AriaButton>

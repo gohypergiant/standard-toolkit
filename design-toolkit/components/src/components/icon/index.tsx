@@ -15,7 +15,7 @@ import type { ReactNode } from 'react';
 import { cn } from '../../lib/utils';
 
 const iconStyles = cva(
-  'block [color:var(--icon-color,currentColor)] [height:var(--icon-size)] [width:var(--icon-size)]',
+  'inline-block [color:var(--icon-color,currentColor)] [height:var(--icon-size)] [width:var(--icon-size)]',
   {
     variants: {
       size: {
