@@ -140,7 +140,7 @@ export function ComboBox<T extends MenuItem>({
     >
       {({ isDisabled, isOpen }) => (
         <>
-          {!isSmall && (
+          {!isSmall && label && (
             <Label
               className='empty:hidden'
               isDisabled={isDisabled}
