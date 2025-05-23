@@ -37,6 +37,8 @@ export { ClassificationBadge } from './components/classification-badge';
 export type { ClassificationBadgeProps } from './components/classification-badge';
 export { ClassificationBanner } from './components/classification-banner';
 export type { ClassificationBannerProps } from './components/classification-banner';
+export { ComboBox, ComboBoxSection } from './components/combobox';
+export type { ComboBoxProps } from './components/combobox';
 export { FloatingButton } from './components/floating-button';
 export type { FloatingButtonProps } from './components/floating-button';
 export { Icon } from './components/icon';
@@ -62,3 +64,4 @@ export type {
 } from './components/tooltip';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';
+export type { MenuItem } from './types/types';
