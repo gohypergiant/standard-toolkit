@@ -44,6 +44,8 @@ ${constExports.join('\n')}`;
 
     return Result.ok({ tmp });
   } catch (err) {
-    return Result.err((err as Error).message);
+    const { tmp } = genResult.unwrapOr({ tmp: '' });
+
+    return Result.err({ msg: (err as Error).message.trim(), tmp });
   }
 }

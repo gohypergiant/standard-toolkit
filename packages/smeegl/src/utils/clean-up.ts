@@ -11,27 +11,33 @@
  */
 
 import { rm } from 'node:fs/promises';
-import { Result } from 'true-myth';
-import type { ConstantsResult } from './types.js';
+import { Result, Unit } from 'true-myth';
+import type { CleanResult, ConstantsResult } from './types.js';
 
 export async function cleanUp(
   constResult: ConstantsResult,
-): Promise<ConstantsResult> {
-  if (constResult.isErr) {
-    return Result.err(constResult.error);
-  }
-
+): Promise<CleanResult> {
   try {
-    const { tmp } = constResult.unwrapOr({ tmp: '' });
+    let tempDir: string | null;
 
-    if (!tmp) {
-      return constResult;
+    if (constResult.isErr) {
+      tempDir = constResult.error.tmp;
+    } else {
+      const { tmp } = constResult.unwrapOr({ tmp: '' });
+      tempDir = tmp;
     }
 
-    await rm(tmp, { recursive: true });
+    // If there is no `tmp` directory, then it failed before
+    // creating it so no further clean up is needed.
+    if (!tempDir) {
+      return Result.ok(Unit);
+    }
 
-    return constResult;
+    await rm(tempDir, { recursive: true });
+
+    return Result.ok(Unit);
   } catch (err) {
-    return Result.err((err as Error).message);
+    console.log(err);
+    return Result.err((err as Error).message.trim());
   }
 }

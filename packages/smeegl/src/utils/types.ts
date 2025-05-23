@@ -10,12 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Result } from 'true-myth';
+import type { Result, Unit } from 'true-myth';
 
-export type GlobResult = Result<string[], string>;
-export type GatherResult = Result<{ tmp: string; sprites: string[] }, string>;
+type ErrorPath = { msg: string; tmp: string | null };
+
+export type GlobResult = Result<string[], ErrorPath>;
+export type GatherResult = Result<
+  { tmp: string; sprites: string[] },
+  ErrorPath
+>;
 export type GenerateResult = Result<
   { tmp: string; json: string; png: string },
-  string
+  ErrorPath
 >;
-export type ConstantsResult = Result<{ tmp: string }, string>;
+export type ConstantsResult = Result<{ tmp: string }, ErrorPath>;
+export type CleanResult = Result<Unit, string>;

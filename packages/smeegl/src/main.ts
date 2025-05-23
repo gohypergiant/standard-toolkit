@@ -41,7 +41,7 @@ async function find(glob: string, rootPath: string) {
 
   result.match({
     Ok: (r) => spinner.succeed(`Found ${ansis.bold.cyan(r.length)} sprites`),
-    Err: (e) => spinner.fail(e),
+    Err: ({ msg }) => spinner.fail(msg),
   });
 
   return result;
@@ -59,7 +59,7 @@ async function gather(sprites: GlobResult) {
 
   result.match({
     Ok: () => spinner.succeed(),
-    Err: (e) => spinner.fail(e),
+    Err: ({ msg }) => spinner.fail(msg),
   });
 
   return result;
@@ -78,7 +78,7 @@ async function generate(input: GatherResult, cmd: string, output: string) {
   result.match({
     Ok: ({ png }) =>
       spinner.succeed(`Generated spritesheet ${ansis.italic.cyan(png)}`),
-    Err: (e) => spinner.fail(e),
+    Err: ({ msg }) => spinner.fail(msg),
   });
 
   return result;
@@ -96,7 +96,7 @@ async function constants(input: GenerateResult) {
 
   result.match({
     Ok: () => spinner.succeed(),
-    Err: (e) => spinner.fail(e),
+    Err: ({ msg }) => spinner.fail(msg),
   });
 
   return result;
@@ -127,8 +127,12 @@ program
   )
   .action(
     async (glob: string, out: string | undefined, options: CmdOptions) => {
-      const newOut = out ?? path.join(process.cwd(), 'atlas');
+      const newOut = out
+        ? path.resolve(out)
+        : path.join(process.cwd(), 'atlas');
       const spreetPath = options.spreet ?? 'spreet';
+
+      console.log(newOut);
 
       // TODO: Need to add async compose to core
       const sprites = await find(glob as string, process.cwd());

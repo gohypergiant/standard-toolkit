@@ -14,6 +14,18 @@ import { Result } from 'true-myth';
 import { duplicateFile, tempDir } from './file-sys.js';
 import type { GatherResult, GlobResult } from './types.js';
 
+async function copySprites(tmp: string, sprites: string[]) {
+  try {
+    const movedSprites = await Promise.all(
+      sprites.map((src) => duplicateFile(src, tmp)),
+    );
+
+    return Result.ok({ tmp, sprites: movedSprites });
+  } catch (err) {
+    return Result.err({ msg: (err as Error).message.trim(), tmp });
+  }
+}
+
 export async function gatherSprites(
   globResult: GlobResult,
 ): Promise<GatherResult> {
@@ -24,12 +36,10 @@ export async function gatherSprites(
   try {
     const tmp = await tempDir();
     const list: string[] = globResult.unwrapOr([]);
-    const sprites = await Promise.all(
-      list.map((src) => duplicateFile(src, tmp)),
-    );
 
-    return Result.ok({ tmp, sprites });
+    // Needed a different scope for before/after tmp dir was created
+    return copySprites(tmp, list);
   } catch (err) {
-    return Result.err((err as Error).message);
+    return Result.err({ msg: (err as Error).message.trim(), tmp: null });
   }
 }

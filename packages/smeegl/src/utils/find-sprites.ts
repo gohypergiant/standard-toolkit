@@ -27,8 +27,10 @@ export async function findSprites(
   try {
     const result = await globby(glob, { ignore: IGNORE_LIST, cwd: rootPath });
 
-    return result.length ? Result.ok(result) : Result.err('No sprites found');
+    return result.length
+      ? Result.ok(result)
+      : Result.err({ msg: 'No sprites found', tmp: null });
   } catch (err) {
-    return Result.err((err as Error).message);
+    return Result.err({ msg: (err as Error).message.trim(), tmp: null });
   }
 }

@@ -11,8 +11,11 @@
  */
 
 import { exec } from 'node:child_process';
+import util from 'node:util';
 import { Result } from 'true-myth';
 import type { GatherResult, GenerateResult } from './types.js';
+
+const execProm = util.promisify(exec);
 
 export async function generateSprites(
   gatherResult: GatherResult,
@@ -26,24 +29,17 @@ export async function generateSprites(
   try {
     const { tmp } = gatherResult.unwrapOr({ tmp: '' });
 
-    await new Promise((resolve, reject) => {
-      exec(
-        `${cmd} --minify-index-file --retina --recursive --unique ${tmp} ${output}`,
-        (error) => {
-          if (error) {
-            reject(error.message);
-          }
-
-          return resolve(output);
-        },
-      );
-    });
+    await execProm(
+      `${cmd} --minify-index-file --retina --recursive --unique ${tmp} ${output}`,
+    );
 
     const json = `${output}.json`;
     const png = `${output}.png`;
 
     return Result.ok({ tmp, json, png });
   } catch (err) {
-    return Result.err((err as Error).message);
+    const { tmp } = gatherResult.unwrapOr({ tmp: '' });
+
+    return Result.err({ msg: (err as Error).message.trim(), tmp });
   }
 }
