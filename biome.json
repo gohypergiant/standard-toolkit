@@ -75,7 +75,7 @@
       }
     },
     {
-      "include": ["packages/smeegl"],
+      "include": ["tooling/smeegl"],
       "linter": {
         "rules": {
           "style": {
