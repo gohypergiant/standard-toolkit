@@ -11,6 +11,9 @@ npm install @accelint/smeegl
 ## Use
 
 ```sh
+smeegl --help
+
+
 Usage: smeegl [options] <GLOB> [OUTPUT]
 
 CLI tool to create spritesheets from an SVG glob pattern
