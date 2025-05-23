@@ -133,8 +133,6 @@ program
         : path.join(process.cwd(), 'atlas');
       const spreetPath = options.spreet ?? 'spreet';
 
-      console.log(newOut);
-
       // TODO: Need to add async compose to core
       const sprites = await find(glob as string, process.cwd());
       const gathered = await gather(sprites);
