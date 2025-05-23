@@ -26,19 +26,21 @@
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
-  "dependencies": {
+  "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/node": "^20.17.48",
+    "tsup": "8.3.0",
+    "vitest": "2.1.3"
+  },
+  "dependencies": {
     "ansis": "4.0.0",
     "commander": "14.0.0",
     "esbuild-plugin-file-path-extensions": "2.1.3",
     "globby": "14.1.0",
     "inquirer": "12.6.1",
     "ora": "8.2.0",
-    "true-myth": "9.0.1",
-    "tsup": "8.3.0",
-    "vitest": "2.1.3"
+    "true-myth": "9.0.1"
   },
   "$schema": "https://json.schemastore.org/package",
   "author": "https://hypergiant.com",

@@ -848,15 +848,6 @@ importers:
 
   tooling/smeegl:
     dependencies:
-      '@accelint/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@accelint/vitest-config':
-        specifier: workspace:*
-        version: link:../vitest-config
-      '@types/node':
-        specifier: ^20.17.48
-        version: 20.17.48
       ansis:
         specifier: 4.0.0
         version: 4.0.0
@@ -878,6 +869,16 @@ importers:
       true-myth:
         specifier: 9.0.1
         version: 9.0.1
+    devDependencies:
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      '@types/node':
+        specifier: ^20.17.48
+        version: 20.17.48
       tsup:
         specifier: 8.3.0
         version: 8.3.0(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@2.4.2)(postcss@8.4.47)(tsx@4.19.4)(typescript@5.7.3)(yaml@2.8.0)
