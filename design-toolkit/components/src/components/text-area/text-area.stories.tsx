@@ -18,6 +18,7 @@ const meta: Meta<typeof TextArea> = {
   component: TextArea,
   args: {
     className: '',
+    cols: 0,
     description: 'Helper text',
     errorMessage: 'Error description',
     isDisabled: false,
@@ -26,6 +27,7 @@ const meta: Meta<typeof TextArea> = {
     isRequired: true,
     label: 'Label',
     placeholder: 'Placeholder',
+    selectOnFocus: false,
     size: 'medium',
   },
   argTypes: {
