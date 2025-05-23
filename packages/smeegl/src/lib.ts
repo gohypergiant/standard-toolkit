@@ -29,10 +29,11 @@ export async function smeegl(
     throw new Error('No glob pattern prvided');
   }
 
-  // TODO: add async compose
+  // TODO: Need to add async compose to core
   const sprites = await findSprites(glob, rootPath);
   const gathered = await gatherSprites(sprites);
   const atlas = await generateSprites(gathered, spreet ?? 'spreet', out);
   const genConst = await generateConst(atlas);
-  const cleaned = await cleanUp(genConst);
+
+  await cleanUp(genConst);
 }

@@ -12,7 +12,7 @@
 
 import { globby } from 'globby';
 import { Result } from 'true-myth';
-import type { GlobResultPromise } from './types.js';
+import type { GlobResult } from './types.js';
 
 const IGNORE_LIST = [
   // NOTE: For now, ignore. Will need later?
@@ -23,7 +23,7 @@ const IGNORE_LIST = [
 export async function findSprites(
   glob: string,
   rootPath: string,
-): GlobResultPromise {
+): Promise<GlobResult> {
   try {
     const result = await globby(glob, { ignore: IGNORE_LIST, cwd: rootPath });
 

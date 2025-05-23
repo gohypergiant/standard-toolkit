@@ -12,23 +12,25 @@
 
 import { rm } from 'node:fs/promises';
 import { Result } from 'true-myth';
-import type { ConstantsResult, ConstantsResultPromise } from './types.js';
+import type { ConstantsResult } from './types.js';
 
-export async function cleanUp(dir: ConstantsResult): ConstantsResultPromise {
-  if (dir.isErr) {
-    return Result.err(dir.error);
+export async function cleanUp(
+  constResult: ConstantsResult,
+): Promise<ConstantsResult> {
+  if (constResult.isErr) {
+    return Result.err(constResult.error);
   }
 
   try {
-    const { tmp } = dir.unwrapOr({ tmp: '' });
+    const { tmp } = constResult.unwrapOr({ tmp: '' });
 
     if (!tmp) {
-      return dir;
+      return constResult;
     }
 
     await rm(tmp, { recursive: true });
 
-    return dir;
+    return constResult;
   } catch (err) {
     return Result.err((err as Error).message);
   }

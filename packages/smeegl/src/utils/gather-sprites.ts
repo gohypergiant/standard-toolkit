@@ -12,21 +12,23 @@
 
 import { Result } from 'true-myth';
 import { duplicateFile, tempDir } from './file-sys.js';
-import type { GatherResultPromise, GlobResult } from './types.js';
+import type { GatherResult, GlobResult } from './types.js';
 
-export async function gatherSprites(sprites: GlobResult): GatherResultPromise {
-  if (sprites.isErr) {
-    return Result.err(sprites.error);
+export async function gatherSprites(
+  globResult: GlobResult,
+): Promise<GatherResult> {
+  if (globResult.isErr) {
+    return Result.err(globResult.error);
   }
 
   try {
     const tmp = await tempDir();
-    const list: string[] = sprites.unwrapOr([]);
-    const result = await Promise.all(
+    const list: string[] = globResult.unwrapOr([]);
+    const sprites = await Promise.all(
       list.map((src) => duplicateFile(src, tmp)),
     );
 
-    return Result.ok({ tmp, sprites: result });
+    return Result.ok({ tmp, sprites });
   } catch (err) {
     return Result.err((err as Error).message);
   }

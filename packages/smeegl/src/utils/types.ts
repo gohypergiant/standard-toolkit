@@ -13,13 +13,9 @@
 import type { Result } from 'true-myth';
 
 export type GlobResult = Result<string[], string>;
-export type GlobResultPromise = Promise<GlobResult>;
 export type GatherResult = Result<{ tmp: string; sprites: string[] }, string>;
-export type GatherResultPromise = Promise<GatherResult>;
 export type GenerateResult = Result<
-  { tmp: string; sprites: string[]; output: string; json: string; png: string },
+  { tmp: string; json: string; png: string },
   string
 >;
-export type GenerateResultPromise = Promise<GenerateResult>;
 export type ConstantsResult = Result<{ tmp: string }, string>;
-export type ConstantsResultPromise = Promise<Result<{ tmp: string }, string>>;

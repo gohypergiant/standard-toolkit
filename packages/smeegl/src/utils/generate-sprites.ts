@@ -12,26 +12,21 @@
 
 import { exec } from 'node:child_process';
 import { Result } from 'true-myth';
-import type { GatherResult, GenerateResultPromise } from './types.js';
+import type { GatherResult, GenerateResult } from './types.js';
 
 export async function generateSprites(
-  input: GatherResult,
+  gatherResult: GatherResult,
   cmd: string,
   output: string,
-): GenerateResultPromise {
-  if (input.isErr) {
-    return Result.err(input.error);
+): Promise<GenerateResult> {
+  if (gatherResult.isErr) {
+    return Result.err(gatherResult.error);
   }
 
   try {
-    const { tmp, sprites } = input.unwrapOr({
-      tmp: '',
-      sprites: [] as string[],
-    });
+    const { tmp } = gatherResult.unwrapOr({ tmp: '' });
 
     await new Promise((resolve, reject) => {
-      const { tmp } = input.unwrapOr({ tmp: null });
-
       exec(
         `${cmd} --minify-index-file --retina --recursive --unique ${tmp} ${output}`,
         (error) => {
@@ -47,7 +42,7 @@ export async function generateSprites(
     const json = `${output}.json`;
     const png = `${output}.png`;
 
-    return Result.ok({ tmp, sprites, output, json, png });
+    return Result.ok({ tmp, json, png });
   } catch (err) {
     return Result.err((err as Error).message);
   }

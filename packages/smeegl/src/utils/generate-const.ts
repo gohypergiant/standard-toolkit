@@ -12,17 +12,17 @@
 
 import { readFile, writeFile } from 'node:fs/promises';
 import { Result } from 'true-myth';
-import type { ConstantsResultPromise, GenerateResult } from './types.js';
+import type { ConstantsResult, GenerateResult } from './types.js';
 
 export async function generateConst(
-  result: GenerateResult,
-): ConstantsResultPromise {
-  if (result.isErr) {
-    return Result.err(result.error);
+  genResult: GenerateResult,
+): Promise<ConstantsResult> {
+  if (genResult.isErr) {
+    return Result.err(genResult.error);
   }
 
   try {
-    const { json, tmp } = result.unwrapOr({ tmp: '', json: '' });
+    const { json, tmp } = genResult.unwrapOr({ tmp: '', json: '' });
     const content = await readFile(json, 'utf-8');
     const atlasObj = JSON.parse(content);
 

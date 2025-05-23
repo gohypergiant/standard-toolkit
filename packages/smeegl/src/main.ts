@@ -76,7 +76,8 @@ async function generate(input: GatherResult, cmd: string, output: string) {
   const result = await generateSprites(input, cmd, output);
 
   result.match({
-    Ok: ({ png }) => spinner.succeed(`Generated spritesheet ${png}`),
+    Ok: ({ png }) =>
+      spinner.succeed(`Generated spritesheet ${ansis.italic.cyan(png)}`),
     Err: (e) => spinner.fail(e),
   });
 
@@ -124,19 +125,18 @@ program
     '--spreet <path>',
     'Bath to pre-built spreet binary, unneeded if installed',
   )
-  // TODO: Future addition
-  // .option('--config', 'path to a smeegl config file')
   .action(
     async (glob: string, out: string | undefined, options: CmdOptions) => {
       const newOut = out ?? path.join(process.cwd(), 'atlas');
       const spreetPath = options.spreet ?? 'spreet';
 
-      // TODO: add async compose
+      // TODO: Need to add async compose to core
       const sprites = await find(glob as string, process.cwd());
       const gathered = await gather(sprites);
       const atlas = await generate(gathered, spreetPath, newOut);
       const genConst = await constants(atlas);
-      const cleaned = await clean(genConst);
+
+      await clean(genConst);
     },
   );
 
