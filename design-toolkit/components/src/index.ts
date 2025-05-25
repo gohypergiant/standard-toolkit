@@ -60,5 +60,11 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
+export { Tree, treeItemStyles } from './components/tree';
+export type {
+  ContentRenderProps,
+  TreeItemContentProps,
+  TreeItemProps,
+} from './components/tree/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';
