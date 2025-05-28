@@ -16,14 +16,14 @@ import { createRequire } from 'node:module';
 import { URL } from 'node:url';
 import { default as babelParser } from '@babel/parser';
 import { fs, path, $, argv, chalk, echo, glob, spinner } from 'zx';
+import { getFormattedHeader } from './license.js';
 
 const INDEX_REGEX = /[\\/]index\.[tj]sx?$/;
 const EXT_REGEX = /\.[tj]sx?$/;
 const PRIVATE_REGEX = /^\/\/ __private-exports\n/;
 const CLIENT_DIRECTIVE = `'use client';\n`;
 
-const HEADER_MSG =
-  '/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n';
+const HEADER_MSG = `${getFormattedHeader('.ts')}\n\n/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n`;
 
 const IGNORE_LIST = [
   '**/node_modules',
