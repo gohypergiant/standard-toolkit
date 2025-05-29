@@ -10,13 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { isIn } from '@/is-in';
+import { compose, not } from '@accelint/core';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+/**
+ * Determines if the value is not in the provided array.
+ *
+ * @param a - The array to check for the value in.
+ * @param b - The value to check for.
+ * @template T - The type of the value/array.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isIn([58, 93, 29, 23])(23); // false
+ * isIn([58, 93, 29, 123])(23); // true
+ */
+export const isNotIn = <T>(a: T[]) => compose(not, isIn<T>(a));

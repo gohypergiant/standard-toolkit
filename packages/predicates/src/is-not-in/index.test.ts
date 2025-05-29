@@ -10,13 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import fc from 'fast-check';
+import { it } from 'vitest';
+import { isNotIn } from './';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+it('should correctly test value is not in array', () => {
+  fc.assert(
+    fc.property(
+      fc.array(fc.integer(), { maxLength: 1000 }),
+      fc.integer(),
+      (a, b) => {
+        return isNotIn(a)(b) === !a.includes(b);
+      },
+    ),
+    {
+      verbose: 2,
+      // manual cases
+      examples: [
+        [[50, 75, 100], 100],
+        [[100, 200, 300], 50],
+      ],
+    },
+  );
+});

@@ -11,5 +11,13 @@
  */
 
 import baseConfig from '@accelint/vitest-config/no-dom';
+import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default baseConfig;
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      setupFiles: './src/test.setup.ts',
+    },
+  }),
+);

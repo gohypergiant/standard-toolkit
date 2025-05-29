@@ -11,12 +11,20 @@
  */
 
 /**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ * Determines if the value is in the provided array.
+ *
+ * @param a - The array to check for the value in.
+ * @param b - The value to check for.
+ * @template T - The type of the value/array.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isIn([58, 93, 29, 23])(23); // true
+ * isIn([58, 93, 29, 123])(23); // false
  */
-
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+export const isIn =
+  <T>(a: T[]) =>
+  (b: T) =>
+    a.includes(b);

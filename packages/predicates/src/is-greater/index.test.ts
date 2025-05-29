@@ -10,13 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import fc from 'fast-check';
+import { it } from 'vitest';
+import { isGreater } from './';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+it('should correctly test for greater than values', () => {
+  fc.assert(
+    fc.property(fc.integer(), fc.integer(), (a, b) => {
+      return isGreater(a)(b) === a > b;
+    }),
+    {
+      verbose: 2,
+      // manual cases
+      examples: [
+        [50, 100],
+        [100, 50],
+      ],
+    },
+  );
+});

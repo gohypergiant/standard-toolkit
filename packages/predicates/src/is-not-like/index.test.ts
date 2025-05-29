@@ -10,13 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import fc from 'fast-check';
+import { it } from 'vitest';
+import { isNotLike } from './';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+const TESTER_GEN = /^(?:(?:java|type)script)$/;
+const STRING_GEN = /(?:(?:java|type)script)/;
+const ALTERNATE_GEN = /^(?:markdown|rust)$/;
+
+it('should correctly determine if the regex is not like the string', () => {
+  fc.assert(
+    fc.property(
+      fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
+      fc.stringMatching(STRING_GEN),
+      (a, b) => {
+        return isNotLike(a)(b) === !new RegExp(a).test(b);
+      },
+    ),
+    { verbose: 2 },
+  );
+});

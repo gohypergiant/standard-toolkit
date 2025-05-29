@@ -11,12 +11,19 @@
  */
 
 /**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ * Determine if first string starts with the second string.
+ *
+ * @param a - The first string to check against.
+ * @param b - The second string to check with.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * doesStartWith('b7a70c6346b5')('b7a7'); // true
+ * doesStartWith('471aead1ae80')('b7a7'); // false
  */
-
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+export const doesStartWith = (a: string) => (b: string) => a.startsWith(b);
+// REVIEW: I think the params need to be swapped?
+// It feels like it is more likely (i.e. when used in a `filter()`)
+// that the array elements will be taking the `a` role.

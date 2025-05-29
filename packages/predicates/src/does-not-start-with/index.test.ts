@@ -10,13 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import fc from 'fast-check';
+import { it } from 'vitest';
+import { doesNotStartWith } from './';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+const STRING_GEN = /^[a-z0-9]{16}$/;
+const TESTER_GEN = /^[a-z0-9]{4}$/;
+
+it('should correctly determine if the regex is not like the string', () => {
+  fc.assert(
+    fc.property(
+      fc.stringMatching(STRING_GEN),
+      fc.stringMatching(TESTER_GEN),
+      (a, b) => {
+        return doesNotStartWith(a)(b) === !a.startsWith(b);
+      },
+    ),
+    {
+      verbose: 2,
+      // manual cases
+      examples: [
+        ['b7a70c6346b5', 'b7a7'],
+        ['471aead1ae80', 'b7a7'],
+      ],
+    },
+  );
+});

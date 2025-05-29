@@ -10,13 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { isBetween } from '@/is-between';
+import { compose, not } from '@accelint/core';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+/**
+ * Determine if the given value is not between the the values in the tuple.
+ *
+ * @param a - The tuple to check against.
+ * @param b - The number to check.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isBetween([42, 101])(89); // false
+ * isBetween([42, 126])(7); // true
+ */
+export const isNotBetween = (a: [number, number]) => compose(not, isBetween(a));

@@ -10,13 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { isLike } from '@/is-like';
+import { compose, not } from '@accelint/core';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+/**
+ * Determine if second string is not like the first string/RegExp.
+ *
+ * @param a - The string/RegExp to use for testing.
+ * @param b - The string to test against.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isNotLike(/[jt]s/)('.js'); // false
+ * isNotLike(/[jt]s/)('.md'); // true
+ */
+export const isNotLike = (a: string | RegExp) => compose(not, isLike(a));

@@ -10,13 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
+import { doesStartWith } from '@/does-start-with';
+import { compose, not } from '@accelint/core';
 /**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ * Determine if first string does not start with the second string.
+ *
+ * @param a - The first string to check against.
+ * @param b - The second string to check with.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * doesNotStartWith('b7a70c6346b5')('b7a7'); // false
+ * doesNotStartWith('471aead1ae80')('b7a7'); // true
  */
-
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+export const doesNotStartWith = (a: string) => compose(not, doesStartWith(a));

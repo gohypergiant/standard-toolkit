@@ -10,13 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import fc from 'fast-check';
+import { it } from 'vitest';
+import { isBetween } from './';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+it('should correctly test if the value is between the two tuple elements', () => {
+  fc.assert(
+    fc.property(fc.tuple(fc.integer(), fc.integer()), fc.integer(), (a, b) => {
+      return isBetween(a)(b) === (a.sort()[0] >= b && a.sort()[1] <= b);
+    }),
+    {
+      verbose: 2,
+      // manual cases
+      examples: [
+        [[50, 198], 100],
+        [[100, 89], 50],
+        [[50, 60], 50],
+      ],
+    },
+  );
+});

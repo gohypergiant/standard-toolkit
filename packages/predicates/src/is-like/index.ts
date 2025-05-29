@@ -11,12 +11,17 @@
  */
 
 /**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ * Determine if second string is like the first string/RegExp.
+ *
+ * @param a - The string/RegExp to use for testing.
+ * @param b - The string to test against.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isLike(/[jt]s/)('.js'); // true
+ * isLike(/[jt]s/)('.md'); // false
  */
-
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+export const isLike = (a: string | RegExp) => (b: string) =>
+  (a instanceof RegExp ? a : new RegExp(a)).test(b);

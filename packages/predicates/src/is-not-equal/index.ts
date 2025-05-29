@@ -10,13 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { compose, equality, not } from '@accelint/core';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+/**
+ * Determines if the provided values are not strictly equal.
+ *
+ * @param a - The first value to check against.
+ * @param b - The second value to check against.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isNotEqual(5)(32); // true
+ * isNotEqual('foo')('foo'); // false
+ */
+export const isNotEqual = (a: unknown) => compose(not, equality(a));

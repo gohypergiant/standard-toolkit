@@ -11,12 +11,21 @@
  */
 
 /**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ * Determines if the first value is lesser than or equal to the second value.
+ *
+ * @param a - The first value to check against.
+ * @param b - The second value to check against.
+ * @template T - The type of the values.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isLesserEqual(42)(23); // false
+ * isLesserEqual(5)(23); // true
+ * isLesserEqual(5)(5); // true
  */
-
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+export const isLesserEqual =
+  <T>(a: T) =>
+  (b: T) =>
+    a <= b;

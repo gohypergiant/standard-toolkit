@@ -10,13 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { equality } from '@accelint/core';
 
-export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { parseMGRS } from './coordinates/mgrs/parser';
-export { parseUTM } from './coordinates/utm/parser';
+/**
+ * Determines if the provided values are strictly equal.
+ *
+ * @param a - The first value to check against.
+ * @param b - The second value to check against.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isEqual(5)(32); // false
+ * isEqual('foo')('foo'); // true
+ */
+export const isEqual = equality;
