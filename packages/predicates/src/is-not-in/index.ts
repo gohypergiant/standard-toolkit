@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,14 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@accelint/vitest-config/no-dom';
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { isIn } from '@/is-in';
+import { compose, not } from '@accelint/core';
 
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    test: {
-      setupFiles: './src/test.setup.ts',
-    },
-  }),
-);
+/**
+ * Determines if the value is not in the provided array.
+ *
+ * @param a - The array to check for the value in.
+ * @param b - The value to check for.
+ * @template T - The type of the value/array.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isIn([58, 93, 29, 23])(23); // false
+ * isIn([58, 93, 29, 123])(23); // true
+ */
+export const isNotIn = <T>(a: T[]) => compose(not, isIn<T>(a));

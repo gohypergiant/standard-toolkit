@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,14 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@accelint/vitest-config/no-dom';
-import { defineConfig, mergeConfig } from 'vitest/config';
-
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    test: {
-      setupFiles: './src/test.setup.ts',
-    },
-  }),
-);
+/**
+ * Determines if the first value is lesser than the second value.
+ *
+ * @param a - The first value to check against.
+ * @param b - The second value to check against.
+ * @template T - The type of the values.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isLesser(42)(23); // false
+ * isLesser(5)(23); // true
+ */
+export const isLesser =
+  <T>(a: T) =>
+  (b: T) =>
+    a < b;

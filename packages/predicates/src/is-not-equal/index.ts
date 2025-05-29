@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,14 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@accelint/vitest-config/no-dom';
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { compose, equality, not } from '@accelint/core';
 
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    test: {
-      setupFiles: './src/test.setup.ts',
-    },
-  }),
-);
+/**
+ * Determines if the provided values are not strictly equal.
+ *
+ * @param a - The first value to check against.
+ * @param b - The second value to check against.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isNotEqual(5)(32); // true
+ * isNotEqual('foo')('foo'); // false
+ */
+export const isNotEqual = (a: unknown) => compose(not, equality(a));
