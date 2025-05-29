@@ -2,7 +2,7 @@
 
 A small, `spreet` based spritesheet/texture package for use with Deck.gl.
 
-You will need to install `spreet` (`cargo install spreet`) or use the `--spreet` flag to point to a stand-alone binary.
+You will need to install [spreet](https://github.com/flother/spreet?tab=readme-ov-file#installation) (`cargo install spreet`) or use the `--spreet` flag to point to a stand-alone binary.
 
 ## Installation
 

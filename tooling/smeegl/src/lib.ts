@@ -26,7 +26,7 @@ export async function smeegl(
   spreet?: string,
 ) {
   if (!glob) {
-    throw new Error('No glob pattern prvided');
+    throw new Error('No glob pattern provided');
   }
 
   // TODO: Need to add async compose to core
