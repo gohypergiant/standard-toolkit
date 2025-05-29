@@ -10,23 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import fc from 'fast-check';
-import { it } from 'vitest';
-import { isLike } from './';
+import { isBetween } from '@/is-between';
+import { compose, not } from '@accelint/core';
 
-const TESTER_GEN = /^(?:(?:java|type)script)$/;
-const STRING_GEN = /(?:(?:java|type)script)/;
-const ALTERNATE_GEN = /^(?:markdown|rust)$/;
-
-it('should correctly determine if the regex is like the string', () => {
-  fc.assert(
-    fc.property(
-      fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
-      fc.stringMatching(STRING_GEN),
-      (a, b) => {
-        return isLike(a)(b) === new RegExp(a).test(b);
-      },
-    ),
-    { verbose: 2 },
-  );
-});
+/**
+ * Determine if the given value is not between the the values in the tuple.
+ *
+ * @param a - The tuple to check against.
+ * @param b - The number to check.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isBetween([42, 101])(89); // false
+ * isBetween([42, 126])(7); // true
+ */
+export const isNotBetween = (a: [number, number]) => compose(not, isBetween(a));

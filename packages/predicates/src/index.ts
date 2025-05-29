@@ -14,7 +14,10 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+export { doesNotStartWith } from './does-not-start-with';
+export { doesStartWith } from './does-start-with';
 export { isBbox } from './is-bbox';
+export { isBetween } from './is-between';
 export { isEqual } from './is-equal';
 export { isGreater } from './is-greater';
 export { isGreaterEqual } from './is-greater-equal';
@@ -24,8 +27,10 @@ export { isLesser } from './is-lesser';
 export { isLesserEqual } from './is-lesser-equal';
 export { isLike } from './is-like';
 export { isLongitude } from './is-longitude';
+export { isNotBetween } from './is-not-between';
 export { isNotEqual } from './is-not-equal';
 export { isNotIn } from './is-not-in';
+export { isNotLike } from './is-not-like';
 export { isNothing } from './is-nothing';
 export {
   isAnyFalsy,

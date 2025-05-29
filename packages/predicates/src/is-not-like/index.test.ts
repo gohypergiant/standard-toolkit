@@ -12,19 +12,19 @@
 
 import fc from 'fast-check';
 import { it } from 'vitest';
-import { isLike } from './';
+import { isNotLike } from './';
 
 const TESTER_GEN = /^(?:(?:java|type)script)$/;
 const STRING_GEN = /(?:(?:java|type)script)/;
 const ALTERNATE_GEN = /^(?:markdown|rust)$/;
 
-it('should correctly determine if the regex is like the string', () => {
+it('should correctly determine if the regex is not like the string', () => {
   fc.assert(
     fc.property(
       fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
       fc.stringMatching(STRING_GEN),
       (a, b) => {
-        return isLike(a)(b) === new RegExp(a).test(b);
+        return isNotLike(a)(b) === !new RegExp(a).test(b);
       },
     ),
     { verbose: 2 },

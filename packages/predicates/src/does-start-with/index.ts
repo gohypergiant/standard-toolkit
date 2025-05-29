@@ -10,23 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import fc from 'fast-check';
-import { it } from 'vitest';
-import { isLike } from './';
-
-const TESTER_GEN = /^(?:(?:java|type)script)$/;
-const STRING_GEN = /(?:(?:java|type)script)/;
-const ALTERNATE_GEN = /^(?:markdown|rust)$/;
-
-it('should correctly determine if the regex is like the string', () => {
-  fc.assert(
-    fc.property(
-      fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
-      fc.stringMatching(STRING_GEN),
-      (a, b) => {
-        return isLike(a)(b) === new RegExp(a).test(b);
-      },
-    ),
-    { verbose: 2 },
-  );
-});
+/**
+ * Determine if first string starts with the second string.
+ *
+ * @param a - The first string to check against.
+ * @param b - The second string to check with.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * doesStartWith('b7a70c6346b5')('b7a7'); // true
+ * doesStartWith('471aead1ae80')('b7a7'); // false
+ */
+export const doesStartWith = (a: string) => (b: string) => a.startsWith(b);
+// REVIEW: I think the params need to be swapped?
+// It feels like it is more likely (i.e. when used in a `filter()`)
+// that the array elements will be taking the `a` role.

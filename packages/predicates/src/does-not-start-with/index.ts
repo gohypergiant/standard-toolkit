@@ -10,23 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import fc from 'fast-check';
-import { it } from 'vitest';
-import { isLike } from './';
-
-const TESTER_GEN = /^(?:(?:java|type)script)$/;
-const STRING_GEN = /(?:(?:java|type)script)/;
-const ALTERNATE_GEN = /^(?:markdown|rust)$/;
-
-it('should correctly determine if the regex is like the string', () => {
-  fc.assert(
-    fc.property(
-      fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
-      fc.stringMatching(STRING_GEN),
-      (a, b) => {
-        return isLike(a)(b) === new RegExp(a).test(b);
-      },
-    ),
-    { verbose: 2 },
-  );
-});
+import { doesStartWith } from '@/does-start-with';
+import { compose, not } from '@accelint/core';
+/**
+ * Determine if first string does not start with the second string.
+ *
+ * @param a - The first string to check against.
+ * @param b - The second string to check with.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * doesNotStartWith('b7a70c6346b5')('b7a7'); // false
+ * doesNotStartWith('471aead1ae80')('b7a7'); // true
+ */
+export const doesNotStartWith = (a: string) => compose(not, doesStartWith(a));

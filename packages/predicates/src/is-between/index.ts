@@ -10,23 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import fc from 'fast-check';
-import { it } from 'vitest';
-import { isLike } from './';
+import { isGreaterEqual } from '@/is-greater-equal';
+import { isLesserEqual } from '@/is-lesser-equal';
+import { andFn } from '@accelint/core';
 
-const TESTER_GEN = /^(?:(?:java|type)script)$/;
-const STRING_GEN = /(?:(?:java|type)script)/;
-const ALTERNATE_GEN = /^(?:markdown|rust)$/;
+/**
+ * Determine if the given value is between the the values in the tuple.
+ *
+ * @param a - The tuple to check against.
+ * @param b - The number to check.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isBetween([42, 101])(89); // true
+ * isBetween([42, 126])(7); // false
+ */
+export const isBetween = (a: [number, number]) => (b: number) => {
+  const sorted = [...a].sort() as [number, number];
 
-it('should correctly determine if the regex is like the string', () => {
-  fc.assert(
-    fc.property(
-      fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
-      fc.stringMatching(STRING_GEN),
-      (a, b) => {
-        return isLike(a)(b) === new RegExp(a).test(b);
-      },
-    ),
-    { verbose: 2 },
-  );
-});
+  return andFn(isGreaterEqual(sorted[0]))(isLesserEqual(sorted[1]))(b);
+};

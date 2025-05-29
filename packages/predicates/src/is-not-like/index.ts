@@ -10,23 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import fc from 'fast-check';
-import { it } from 'vitest';
-import { isLike } from './';
+import { isLike } from '@/is-like';
+import { compose, not } from '@accelint/core';
 
-const TESTER_GEN = /^(?:(?:java|type)script)$/;
-const STRING_GEN = /(?:(?:java|type)script)/;
-const ALTERNATE_GEN = /^(?:markdown|rust)$/;
-
-it('should correctly determine if the regex is like the string', () => {
-  fc.assert(
-    fc.property(
-      fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
-      fc.stringMatching(STRING_GEN),
-      (a, b) => {
-        return isLike(a)(b) === new RegExp(a).test(b);
-      },
-    ),
-    { verbose: 2 },
-  );
-});
+/**
+ * Determine if second string is not like the first string/RegExp.
+ *
+ * @param a - The string/RegExp to use for testing.
+ * @param b - The string to test against.
+ *
+ * @remarks
+ * pure function
+ *
+ * @example
+ * isNotLike(/[jt]s/)('.js'); // false
+ * isNotLike(/[jt]s/)('.md'); // true
+ */
+export const isNotLike = (a: string | RegExp) => compose(not, isLike(a));

@@ -12,21 +12,21 @@
 
 import fc from 'fast-check';
 import { it } from 'vitest';
-import { isLike } from './';
+import { isBetween } from './';
 
-const TESTER_GEN = /^(?:(?:java|type)script)$/;
-const STRING_GEN = /(?:(?:java|type)script)/;
-const ALTERNATE_GEN = /^(?:markdown|rust)$/;
-
-it('should correctly determine if the regex is like the string', () => {
+it('should correctly test if the value is between the two tuple elements', () => {
   fc.assert(
-    fc.property(
-      fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
-      fc.stringMatching(STRING_GEN),
-      (a, b) => {
-        return isLike(a)(b) === new RegExp(a).test(b);
-      },
-    ),
-    { verbose: 2 },
+    fc.property(fc.tuple(fc.integer(), fc.integer()), fc.integer(), (a, b) => {
+      return isBetween(a)(b) === (a.sort()[0] >= b && a.sort()[1] <= b);
+    }),
+    // manual cases
+    {
+      verbose: 2,
+      examples: [
+        [[50, 198], 100],
+        [[100, 89], 50],
+        [[50, 60], 50],
+      ],
+    },
   );
 });
