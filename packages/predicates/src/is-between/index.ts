@@ -18,7 +18,7 @@ import { andFn } from '@accelint/core';
  * Determine if the given value is between the the values in the tuple.
  *
  * @param a - The tuple to check against.
- * @param b - The number to check.
+ * @param c - The number to check.
  *
  * @remarks
  * pure function
@@ -27,8 +27,8 @@ import { andFn } from '@accelint/core';
  * isBetween([42, 101])(89); // true
  * isBetween([42, 126])(7); // false
  */
-export const isBetween = (a: [number, number]) => (b: number) => {
+export const isBetween = (a: [number, number]) => {
   const sorted = [...a].sort() as [number, number];
 
-  return andFn(isGreaterEqual(sorted[0]))(isLesserEqual(sorted[1]))(b);
+  return andFn(isGreaterEqual(sorted[0]))(isLesserEqual(sorted[1]));
 };
