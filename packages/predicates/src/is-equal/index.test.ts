@@ -19,9 +19,9 @@ it('should correctly test for equality', () => {
     fc.property(fc.integer(), fc.integer(), (a, b) => {
       return isEqual(a)(b) === (a === b);
     }),
-    // manual cases
     {
       verbose: 2,
+      // manual cases
       examples: [
         [50, 50],
         [50, 100],

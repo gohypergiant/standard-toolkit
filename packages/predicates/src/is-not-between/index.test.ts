@@ -19,9 +19,9 @@ it('should correctly test if the value is between the two tuple elements', () =>
     fc.property(fc.tuple(fc.integer(), fc.integer()), fc.integer(), (a, b) => {
       return isNotBetween(a)(b) === !(a.sort()[0] >= b && a.sort()[1] <= b);
     }),
-    // manual cases
     {
       verbose: 2,
+      // manual cases
       examples: [
         [[50, 198], 100],
         [[100, 89], 50],

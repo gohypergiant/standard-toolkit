@@ -28,6 +28,7 @@ it('should correctly determine if the regex is not like the string', () => {
     ),
     {
       verbose: 2,
+      // manual cases
       examples: [
         ['b7a70c6346b5', 'b7a7'],
         ['471aead1ae80', 'b7a7'],

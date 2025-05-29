@@ -23,9 +23,9 @@ it('should correctly test value is not in array', () => {
         return isNotIn(a)(b) === !a.includes(b);
       },
     ),
-    // manual cases
     {
       verbose: 2,
+      // manual cases
       examples: [
         [[50, 75, 100], 100],
         [[100, 200, 300], 50],

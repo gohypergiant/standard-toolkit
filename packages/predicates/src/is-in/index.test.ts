@@ -23,9 +23,9 @@ it('should correctly test value is in array', () => {
         return isIn(a)(b) === a.includes(b);
       },
     ),
-    // manual cases
     {
       verbose: 2,
+      // manual cases
       examples: [
         [[50, 75, 100], 100],
         [[100, 200, 300], 50],

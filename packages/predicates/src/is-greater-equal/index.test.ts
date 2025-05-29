@@ -19,9 +19,9 @@ it('should correctly test for greater or equal values', () => {
     fc.property(fc.integer(), fc.integer(), (a, b) => {
       return isGreaterEqual(a)(b) === a >= b;
     }),
-    // manual cases
     {
       verbose: 2,
+      // manual cases
       examples: [
         [50, 100],
         [100, 50],
