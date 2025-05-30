@@ -30,6 +30,13 @@
         "default": "./dist/index.css"
       },
       "default": "./dist/index.css"
+    },
+    "./utils": {
+      "import": {
+        "types": "./dist/lib/utils.d.ts",
+        "default": "./dist/lib/utils.js"
+      },
+      "default": "./dist/lib/utils.js"
     }
   },
   "scripts": {
