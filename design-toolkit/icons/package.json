@@ -17,6 +17,13 @@
         "default": "./dist/index.js"
       },
       "default": "./dist/index.js"
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.js"
+      },
+      "default": "./dist/*.js"
     }
   },
   "scripts": {

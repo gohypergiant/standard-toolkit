@@ -13,7 +13,7 @@
 'use client';
 import { Button } from '@accelint/design-toolkit/button';
 import { Icon } from '@accelint/design-toolkit/icon';
-import { Placeholder } from '@accelint/icons';
+import Placeholder from '@accelint/icons/placeholder';
 
 export function Buttons() {
   return (
