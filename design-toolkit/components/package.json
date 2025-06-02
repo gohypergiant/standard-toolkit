@@ -55,6 +55,8 @@
     "@accelint/icons": "^1.0.0",
     "@fontsource/roboto-flex": "5.1.0",
     "@fontsource/roboto-mono": "5.1.0",
+    "@headless-tree/core": "1.0.1",
+    "@headless-tree/react": "1.0.1",
     "@radix-ui/react-avatar": "^1.1.4",
     "@react-types/shared": "3.25.0",
     "react": "^19.0.0",
