@@ -11,21 +11,22 @@
  */
 
 /**
- * Determines if the first value is greater than or equal to the second value.
+ * Determines if one value is greater than or equal to another value.
+ * Right-to-left (composition) order.
  *
- * @param a - The first value to check against.
- * @param b - The second value to check against.
+ * @param a - The right hand value.
+ * @param b - The left hand value.
  * @template T - The type of the values.
  *
  * @remarks
  * pure function
  *
  * @example
- * isGreaterEqual(42)(23); // true
- * isGreaterEqual(5)(23); // false
+ * isGreaterEqual(42)(23); // false
+ * isGreaterEqual(5)(23); // true
  * isGreaterEqual(5)(5); // true
  */
 export const isGreaterEqual =
   <T>(a: T) =>
   (b: T) =>
-    a >= b;
+    b >= a;
