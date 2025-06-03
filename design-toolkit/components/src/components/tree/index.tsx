@@ -44,10 +44,7 @@ import type {
 } from './types';
 
 /**
- * TODO: disabled behavior?
  * TODO: async loading?
- * - write usage example docs
- * - write tests for rando corner cases
  */
 
 const TreeContext = createContext<TreeContextType>({
@@ -214,7 +211,7 @@ function TreeNode<T extends TreeNodeType>({
 
   const { onClick, ...props } = getProps();
 
-  const expandAction = isExpanded() ? (
+  const expander = isExpanded() ? (
     <button type='button' onClick={expand} {...getProps()}>
       <Icon>
         <ChevronUp />
@@ -228,11 +225,11 @@ function TreeNode<T extends TreeNodeType>({
     </button>
   );
 
-  const folder = isFolder() ? (
-    expandAction
-  ) : (
+  const spacer = (
     <span className='group-data-[variant=compact]:w-[15px] group-data-[variant=cozy]:w-[20px] group-data-[variant=tight]:w-[10px]' />
   );
+
+  const folder = isFolder() ? expander : spacer;
 
   const lines = Array.from({ length: item.getItemMeta().level }).map((_, i) => (
     <span
@@ -265,7 +262,11 @@ function TreeNode<T extends TreeNodeType>({
           <LockFill />
         </Icon>
       ) : (
-        <button {...getProps()} onClick={toggleSelect}>
+        <button
+          {...getProps()}
+          onClick={toggleSelect}
+          disabled={item.getItemData().isDisabled}
+        >
           <SelectionIcons
             selectionMode={selectionMode ?? 'none'}
             isSelected={isSelected()}

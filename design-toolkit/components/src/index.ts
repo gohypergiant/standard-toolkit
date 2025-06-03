@@ -67,6 +67,7 @@ export type {
   TreeItemRenderProps,
   TreeNode,
   TreeProps,
+  TreeSelectionMode,
   TreeVariants,
 } from './components/tree/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
