@@ -13,6 +13,8 @@
 import { cn } from '@/lib/utils';
 import './tree.css';
 import {
+  CheckboxSelected,
+  CheckboxUnselected,
   ChevronDown,
   ChevronUp,
   DragVert,
@@ -32,12 +34,13 @@ import {
 } from '@headless-tree/core';
 import { useTree } from '@headless-tree/react';
 import { type VariantProps, cva } from 'cva';
-import { type ReactNode, createContext, useContext } from 'react';
+import { type ReactNode, createContext, useContext, useMemo } from 'react';
 import { Icon } from '../icon';
 import type {
   TreeContextType,
   TreeNode as TreeNodeType,
   TreeProps,
+  TreeSelectionMode,
 } from './types';
 
 /**
@@ -51,6 +54,7 @@ const TreeContext = createContext<TreeContextType>({
   variant: 'cozy',
   allowsDragging: true,
   showRuleLines: true,
+  selectionMode: 'visibility',
 });
 
 export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
@@ -63,6 +67,7 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
     setSelected,
     setExpanded,
     onDrop,
+    selectionMode = 'visibility',
     allowsDragging = true,
     showRuleLines = true,
   } = props;
@@ -70,7 +75,7 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
   const options: Partial<TreeConfig<T>> = {};
   const state: Partial<TreeState<T>> = {};
 
-  if (selected && setSelected) {
+  if (selected && setSelected && selectionMode !== 'none') {
     state.selectedItems = selected;
     options.setSelectedItems = setSelected;
   }
@@ -116,7 +121,9 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
   }
 
   return (
-    <TreeContext.Provider value={{ variant, allowsDragging, showRuleLines }}>
+    <TreeContext.Provider
+      value={{ variant, selectionMode, allowsDragging, showRuleLines }}
+    >
       <div
         {...tree.getContainerProps()}
         className='fg-default-light overflow-x flex w-full flex-col outline-hidden'
@@ -170,11 +177,30 @@ export interface TreeNodeProps<T> extends VariantProps<typeof treeNodeStyles> {
   item: ItemInstance<T>;
 }
 
+function SelectionIcons({
+  selectionMode,
+  isSelected,
+}: { selectionMode: TreeSelectionMode; isSelected: boolean }) {
+  if (selectionMode === 'visibility') {
+    return <Icon>{isSelected ? <Show /> : <Hide />}</Icon>;
+  }
+
+  if (selectionMode === 'checkbox') {
+    return (
+      <Icon>{isSelected ? <CheckboxSelected /> : <CheckboxUnselected />}</Icon>
+    );
+  }
+
+  // no selection
+  return null;
+}
+
 function TreeNode<T extends TreeNodeType>({
   children,
   item,
 }: TreeNodeProps<T>) {
-  const { variant, allowsDragging, showRuleLines } = useContext(TreeContext);
+  const { variant, selectionMode, allowsDragging, showRuleLines } =
+    useContext(TreeContext);
 
   const {
     getProps,
@@ -234,13 +260,16 @@ function TreeNode<T extends TreeNodeType>({
         }),
       )}
     >
-      {item.getItemData().isReadOnly ? (
+      {selectionMode !== 'none' && item.getItemData().isReadOnly ? (
         <Icon>
           <LockFill />
         </Icon>
       ) : (
         <button {...getProps()} onClick={toggleSelect}>
-          <Icon>{isSelected() ? <Show /> : <Hide />}</Icon>
+          <SelectionIcons
+            selectionMode={selectionMode ?? 'none'}
+            isSelected={isSelected()}
+          />
         </button>
       )}
       {lines}

@@ -15,6 +15,8 @@ import type { ReactNode } from 'react';
 
 export type TreeVariants = 'cozy' | 'compact' | 'tight';
 
+export type TreeSelectionMode = 'visibility' | 'checkbox' | 'none';
+
 export type TreeItemRenderProps<T> = {
   variant: TreeVariants;
   item: ItemInstance<T>;
@@ -32,12 +34,14 @@ export interface TreeProps<T extends TreeNode> {
     items: ItemInstance<T>[],
     target: DragTarget<T>,
   ) => void | Promise<void>;
+  selectionMode?: TreeSelectionMode;
   allowsDragging?: boolean;
   showRuleLines?: boolean;
 }
 
 export interface TreeContextType {
   variant: TreeVariants;
+  selectionMode?: TreeSelectionMode;
   allowsDragging: boolean;
   showRuleLines: boolean;
 }

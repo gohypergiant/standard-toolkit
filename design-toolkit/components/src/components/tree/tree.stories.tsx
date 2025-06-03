@@ -23,6 +23,7 @@ const meta = {
   component: Tree,
   args: {
     variant: 'cozy',
+    selectionMode: 'visibility',
     allowsDragging: true,
     showRuleLines: true,
   },
@@ -30,6 +31,10 @@ const meta = {
     variant: {
       control: 'select',
       options: ['cozy', 'compact', 'tight'],
+    },
+    selectionMode: {
+      control: 'select',
+      options: ['visibility', 'checkbox', 'none'],
     },
   },
   parameters: {
