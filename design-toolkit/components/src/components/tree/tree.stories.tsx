@@ -11,8 +11,9 @@
  */
 
 import { Placeholder, Warning } from '@accelint/icons';
+import type { DragTarget, ItemInstance } from '@headless-tree/core';
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Icon } from '../icon';
 import { Tree } from './index';
 import type { TreeNode } from './types';
@@ -42,13 +43,19 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
+interface StoryNode extends TreeNode {
+  indicator?: ReactNode;
+}
+
 // TODO: might be better to build this data structure than pass it in?
 const treeNodes = {
   root: { key: 'root', label: 'Root', childNodes: ['fruits', 'vegetables'] },
   fruits: {
     key: 'fruits',
     label: 'Fruits',
-    childNodes: ['apples', 'pear', 'banana'],
+    childNodes: ['apples', 'pear', 'banana', 'kiwi', 'mango'],
+    iconPrefix: <Placeholder />,
+    indicator: <Warning />,
   },
   apples: {
     key: 'apples',
@@ -58,50 +65,49 @@ const treeNodes = {
   },
   green: { key: 'green', label: 'Green Apples' },
   red: { key: 'red', label: 'Red Apples' },
-  pear: { key: 'pear', label: 'Pear' },
+  pear: { key: 'pear', label: 'Pear', isReadOnly: true },
   banana: { key: 'banana', label: 'Banana' },
+  kiwi: { key: 'kiwi', label: 'Kiwi', isDisabled: true },
+  mango: { key: 'mango', label: 'Mango', isDisabled: true },
   vegetables: {
     key: 'vegetables',
     label: 'Vegetables',
     childNodes: ['tomato', 'carrot'],
+    iconPrefix: <Placeholder />,
+    indicator: <Warning />,
   },
   tomato: { key: 'tomato', label: 'Tomato' },
   carrot: { key: 'carrot', label: 'Carrot' },
 };
 
-export const Default: Story = {
+/**
+ * example for handling drag/drop state
+ * @param items
+ * @param target
+ */
+const handleDrop = (
+  items: ItemInstance<StoryNode>[],
+  target: DragTarget<StoryNode>,
+) => {
+  alert(
+    `Dropped ${items.map((item) =>
+      item.getId(),
+    )} on ${target.item.getId()}, ${JSON.stringify(target)}`,
+  );
+};
+
+export const Controlled: Story = {
   render: (args) => {
     const [selected, setSelected] = useState<string[]>(['fruits', 'green']);
     const [expanded, setExpanded] = useState<string[]>(['fruits', 'apples']);
 
-    /**
-     * Example of state management for selected items. Could be done in the tree nodes instead.
-     * @param item
-     */
-    const handleSelect = (item: string[]) => {
-      const key = item[0];
-      if (key) {
-        selected.includes(key)
-          ? setSelected((prev) => prev.filter((item) => item !== key))
-          : setSelected((prev) => prev.concat(key));
-      }
-    };
-
-    const handleDrop = (items, target) => {
-      alert(
-        `Dropped ${items.map((item) =>
-          item.getId(),
-        )} on ${target.item.getId()}, ${JSON.stringify(target)}`,
-      );
-    };
-
     return (
-      <div className='w-[500px]'>
-        <Tree<TreeNode>
+      <div className='w-[550px]'>
+        <Tree<StoryNode>
           {...args}
           items={treeNodes}
           selected={selected}
-          setSelected={handleSelect}
+          setSelected={setSelected}
           expanded={expanded}
           setExpanded={setExpanded}
           onDrop={handleDrop}
@@ -110,7 +116,30 @@ export const Default: Story = {
             return (
               <Tree.Node item={item}>
                 <Icon className='fg-serious'>
-                  <Warning />
+                  {item.getItemData().indicator}
+                </Icon>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+              </Tree.Node>
+            );
+          }}
+        </Tree>
+      </div>
+    );
+  },
+};
+
+export const Uncontrolled: Story = {
+  render: (args) => {
+    return (
+      <div className='w-[550px]'>
+        <Tree<StoryNode> {...args} items={treeNodes} onDrop={handleDrop}>
+          {({ item }) => {
+            return (
+              <Tree.Node item={item}>
+                <Icon className='fg-serious'>
+                  {item.getItemData().indicator}
                 </Icon>
                 <Icon>
                   <Placeholder />

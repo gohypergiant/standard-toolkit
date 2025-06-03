@@ -11,7 +11,7 @@
  */
 
 import type { DragTarget, ItemInstance, SetStateFn } from '@headless-tree/core';
-import type { Key, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export type TreeVariants = 'cozy' | 'compact' | 'tight';
 
@@ -22,18 +22,18 @@ export type TreeItemRenderProps<T> = {
 
 export interface TreeProps<T extends TreeNode> {
   items: Record<string, TreeNode>;
-  variant: TreeVariants;
-  selected: string[];
-  expanded: string[];
-  setSelected: SetStateFn<string[]>;
-  setExpanded: SetStateFn<string[]>;
+  children: ReactNode | ((renderProps: TreeItemRenderProps<T>) => ReactNode);
+  variant?: TreeVariants;
+  selected?: string[];
+  expanded?: string[];
+  setSelected?: SetStateFn<string[]>;
+  setExpanded?: SetStateFn<string[]>;
   onDrop?: (
     items: ItemInstance<T>[],
     target: DragTarget<T>,
   ) => void | Promise<void>;
   allowsDragging?: boolean;
   showRuleLines?: boolean;
-  children: ReactNode | ((renderProps: TreeItemRenderProps<T>) => ReactNode);
 }
 
 export interface TreeContextType {
@@ -43,12 +43,13 @@ export interface TreeContextType {
 }
 
 export type TreeNode = {
-  key: Key;
+  key: string;
   label: string;
   description?: string;
-  childNodes?: TreeNode[];
-  isSelected?: boolean;
-  isExpanded?: boolean;
+  iconPrefix?: ReactNode;
+  childNodes?: string[];
   isDisabled?: boolean;
+  isExpanded?: boolean;
   isReadOnly?: boolean;
+  isSelected?: boolean;
 };

@@ -14,13 +14,16 @@ import { cn } from '@/lib/utils';
 import './tree.css';
 import {
   ChevronDown,
-  ChevronRight,
+  ChevronUp,
   DragVert,
   Hide,
+  LockFill,
   Show,
 } from '@accelint/icons';
 import {
   type ItemInstance,
+  type TreeConfig,
+  type TreeState,
   dragAndDropFeature,
   hotkeysCoreFeature,
   keyboardDragAndDropFeature,
@@ -38,12 +41,8 @@ import type {
 } from './types';
 
 /**
- * TODO:
- * - tree icons
- * - disentangle select/expand
- * - disabled behavior
- * - async loading
- * - read only behavior
+ * TODO: disabled behavior?
+ * TODO: async loading?
  * - write usage example docs
  * - write tests for rando corner cases
  */
@@ -59,8 +58,8 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
     children,
     items,
     variant = 'cozy',
-    selected = [],
-    expanded = [],
+    selected,
+    expanded,
     setSelected,
     setExpanded,
     onDrop,
@@ -68,10 +67,28 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
     showRuleLines = true,
   } = props;
 
+  const options: Partial<TreeConfig<T>> = {};
+  const state: Partial<TreeState<T>> = {};
+
+  if (selected && setSelected) {
+    state.selectedItems = selected;
+    options.setSelectedItems = setSelected;
+  }
+
+  if (expanded && setExpanded) {
+    state.expandedItems = expanded;
+    options.setExpandedItems = setExpanded;
+  }
+
+  if (allowsDragging && onDrop) {
+    options.canReorder = true;
+    options.canDrag = () => true;
+    options.onDrop = onDrop;
+  }
+
   const tree = useTree<T>({
-    state: { selectedItems: selected, expandedItems: expanded },
-    setSelectedItems: setSelected,
-    setExpandedItems: setExpanded,
+    state,
+    ...options,
     rootItemId: 'root',
     getItemName: (item) => item.getItemData().label,
     isItemFolder: (item) => {
@@ -83,11 +100,8 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
     },
     dataLoader: {
       getItem: (key) => items[key],
-      getChildren: (key) => items[key].childNodes ?? [],
+      getChildren: (key) => items[key]?.childNodes ?? [],
     },
-    canReorder: allowsDragging,
-    canDrag: () => allowsDragging,
-    onDrop,
     features: [
       syncDataLoaderFeature,
       selectionFeature,
@@ -105,31 +119,32 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
     <TreeContext.Provider value={{ variant, allowsDragging, showRuleLines }}>
       <div
         {...tree.getContainerProps()}
-        className='fg-default-light flex w-full flex-col overflow-auto outline-hidden'
+        className='fg-default-light overflow-x flex w-full flex-col outline-hidden'
       >
         {typeof children === 'function'
           ? tree.getItems().map((item) => {
               const lastOfSet =
                 item.getItemMeta().setSize - 1 === item.getItemMeta().posInSet;
               return (
-                <button
-                  {...item.getProps()}
-                  key={item.getId()}
-                  data-last-of-set={lastOfSet}
-                >
+                <div key={item.getId()} data-last-of-set={lastOfSet}>
                   {children({ item, variant })}
-                </button>
+                </div>
               );
             })
           : children}
+        <div
+          className='absolute border border-highlight-hover'
+          style={{ ...tree.getDragLineStyle() }}
+        />
       </div>
     </TreeContext.Provider>
   );
 }
+
 Tree.displayName = 'Tree';
 
 const treeNodeStyles = cva(
-  'flex items-center border-1 border-transparent hover:bg-interactive-hover-dark',
+  'flex items-center border-transparent border-t border-b hover:bg-interactive-hover-dark',
   {
     variants: {
       variant: {
@@ -137,14 +152,14 @@ const treeNodeStyles = cva(
         compact: 'icon-size-l gap-s text-header-s', //icons
         tight: 'icon-size-l gap-xxs text-header-s',
       },
+      isSelected: {
+        false: 'fg-default-dark',
+      },
+      isReadOnly: {
+        true: 'fg-default-dark',
+      },
       isDragTarget: {
         true: 'bg-interactive-hover-dark',
-      },
-      isDragAbove: {
-        true: 'border-highlight-hover border-t-2',
-      },
-      isDragBelow: {
-        true: 'border-highlight-hover border-b-2',
       },
     },
   },
@@ -161,8 +176,34 @@ function TreeNode<T extends TreeNodeType>({
 }: TreeNodeProps<T>) {
   const { variant, allowsDragging, showRuleLines } = useContext(TreeContext);
 
-  const folder = item.isFolder() ? (
-    <Icon>{item.isExpanded() ? <ChevronDown /> : <ChevronRight />}</Icon>
+  const {
+    getProps,
+    toggleSelect,
+    isSelected,
+    isFolder,
+    expand,
+    collapse,
+    isExpanded,
+  } = item;
+
+  const { onClick, ...props } = getProps();
+
+  const expandAction = isExpanded() ? (
+    <button type='button' onClick={expand} {...getProps()}>
+      <Icon>
+        <ChevronUp />
+      </Icon>
+    </button>
+  ) : (
+    <button type='button' onClick={collapse} {...getProps()}>
+      <Icon>
+        <ChevronDown />
+      </Icon>
+    </button>
+  );
+
+  const folder = isFolder() ? (
+    expandAction
   ) : (
     <span className='group-data-[variant=compact]:w-[15px] group-data-[variant=cozy]:w-[20px] group-data-[variant=tight]:w-[10px]' />
   );
@@ -181,20 +222,32 @@ function TreeNode<T extends TreeNodeType>({
 
   return (
     <div
+      {...props}
       data-variant={variant}
       className={cn(
         'group',
         treeNodeStyles({
           variant,
           isDragTarget: item.isDragTarget() || item.isDraggingOver(),
-          isDragAbove: item.isDragTargetAbove(),
-          isDragBelow: item.isDragTargetBelow(),
+          isSelected: item.isSelected(),
+          isReadOnly: item.getItemData().isReadOnly,
         }),
       )}
     >
-      <Icon>{item.isSelected() ? <Show /> : <Hide />}</Icon>
+      {item.getItemData().isReadOnly ? (
+        <Icon>
+          <LockFill />
+        </Icon>
+      ) : (
+        <button {...getProps()} onClick={toggleSelect}>
+          <Icon>{isSelected() ? <Show /> : <Hide />}</Icon>
+        </button>
+      )}
       {lines}
       {folder}
+      {item.getItemData().iconPrefix && (
+        <Icon>{item.getItemData().iconPrefix}</Icon>
+      )}
       <div
         className={cn(
           'flex-1 items-center text-start',
@@ -219,5 +272,6 @@ function TreeNode<T extends TreeNodeType>({
     </div>
   );
 }
+
 TreeNode.displayName = 'TreeNode';
 Tree.Node = TreeNode;
