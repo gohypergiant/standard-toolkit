@@ -34,7 +34,7 @@ import {
 } from '@headless-tree/core';
 import { useTree } from '@headless-tree/react';
 import { type VariantProps, cva } from 'cva';
-import { type ReactNode, createContext, useContext, useMemo } from 'react';
+import { type ReactNode, createContext, useContext } from 'react';
 import { Icon } from '../icon';
 import type {
   TreeContextType,
@@ -101,7 +101,8 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
       return Array.isArray(nodes) && nodes.length > 0;
     },
     dataLoader: {
-      getItem: (key) => items[key],
+      // biome-ignore lint/style/noNonNullAssertion: key should always return a value
+      getItem: (key) => items[key]!,
       getChildren: (key) => items[key]?.childNodes ?? [],
     },
     features: [
@@ -188,7 +189,7 @@ function SelectionIcons({
     );
   }
 
-  // no selection
+  // selection === 'none'
   return null;
 }
 
