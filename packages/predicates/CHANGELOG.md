@@ -1,5 +1,12 @@
 # @accelint/predicates
 
+## 0.3.0
+
+### Minor Changes
+
+- b77d30e: Add additional predicates functions
+- 0fafa9f: Change the predicate params to be data last
+
 ## 0.2.2
 
 ### Patch Changes
