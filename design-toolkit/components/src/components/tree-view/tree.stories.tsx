@@ -15,12 +15,12 @@ import type { DragTarget, ItemInstance } from '@headless-tree/core';
 import type { Meta, StoryObj } from '@storybook/react';
 import { type ReactNode, useState } from 'react';
 import { Icon } from '../icon';
-import { Tree } from './index';
+import { TreeView } from './index';
 import type { TreeNode } from './types';
 
 const meta = {
-  title: 'Components/Tree',
-  component: Tree,
+  title: 'Components/TreeView',
+  component: TreeView,
   args: {
     variant: 'cozy',
     selectionMode: 'visibility',
@@ -108,7 +108,7 @@ export const Controlled: Story = {
 
     return (
       <div className='w-[550px]'>
-        <Tree<StoryNode>
+        <TreeView<StoryNode>
           {...args}
           items={treeNodes}
           selected={selected}
@@ -119,17 +119,17 @@ export const Controlled: Story = {
         >
           {({ item }) => {
             return (
-              <Tree.Node item={item}>
+              <TreeView.Node item={item}>
                 <Icon className='fg-serious'>
                   {item.getItemData().indicator}
                 </Icon>
                 <Icon>
                   <Placeholder />
                 </Icon>
-              </Tree.Node>
+              </TreeView.Node>
             );
           }}
-        </Tree>
+        </TreeView>
       </div>
     );
   },
@@ -139,20 +139,20 @@ export const Uncontrolled: Story = {
   render: (args) => {
     return (
       <div className='w-[550px]'>
-        <Tree<StoryNode> {...args} items={treeNodes} onDrop={handleDrop}>
+        <TreeView<StoryNode> {...args} items={treeNodes} onDrop={handleDrop}>
           {({ item }) => {
             return (
-              <Tree.Node item={item}>
+              <TreeView.Node item={item}>
                 <Icon className='fg-serious'>
                   {item.getItemData().indicator}
                 </Icon>
                 <Icon>
                   <Placeholder />
                 </Icon>
-              </Tree.Node>
+              </TreeView.Node>
             );
           }}
-        </Tree>
+        </TreeView>
       </div>
     );
   },

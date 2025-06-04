@@ -39,8 +39,8 @@ import { Icon } from '../icon';
 import type {
   TreeContextType,
   TreeNode as TreeNodeType,
-  TreeProps,
   TreeSelectionMode,
+  TreeViewProps,
 } from './types';
 
 /**
@@ -54,7 +54,7 @@ const TreeContext = createContext<TreeContextType>({
   selectionMode: 'visibility',
 });
 
-export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
+export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
   const {
     children,
     items,
@@ -146,7 +146,7 @@ export function Tree<T extends TreeNodeType>(props: TreeProps<T>) {
   );
 }
 
-Tree.displayName = 'Tree';
+TreeView.displayName = 'TreeView';
 
 const treeNodeStyles = cva(
   'flex items-center border-transparent border-t border-b hover:bg-interactive-hover-dark',
@@ -305,4 +305,4 @@ function TreeNode<T extends TreeNodeType>({
 }
 
 TreeNode.displayName = 'TreeNode';
-Tree.Node = TreeNode;
+TreeView.Node = TreeNode;

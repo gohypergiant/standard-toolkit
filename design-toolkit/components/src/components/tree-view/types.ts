@@ -22,7 +22,7 @@ export type TreeItemRenderProps<T> = {
   item: ItemInstance<T>;
 };
 
-export interface TreeProps<T extends TreeNode> {
+export interface TreeViewProps<T extends TreeNode> {
   items: Record<string, T>;
   children: ReactNode | ((renderProps: TreeItemRenderProps<T>) => ReactNode);
   variant?: TreeVariants;

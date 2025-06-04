@@ -62,16 +62,16 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
-export { Tree } from './components/tree';
-export type { TreeNodeProps } from './components/tree';
+export { TreeView } from './components/tree-view';
+export type { TreeNodeProps } from './components/tree-view';
 export type {
   TreeContextType,
   TreeItemRenderProps,
   TreeNode,
-  TreeProps,
   TreeSelectionMode,
   TreeVariants,
-} from './components/tree/types';
+  TreeViewProps,
+} from './components/tree-view/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';
 export type { MenuItem } from './types/types';
