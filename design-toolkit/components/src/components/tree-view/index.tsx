@@ -83,8 +83,6 @@ export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
   }
 
   if (allowsDragging && onDrop) {
-    options.canReorder = true;
-    options.canDrag = () => true;
     options.onDrop = onDrop;
   }
 
@@ -105,6 +103,8 @@ export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
       getItem: (key) => items[key]!,
       getChildren: (key) => items[key]?.childNodes ?? [],
     },
+    canReorder: allowsDragging,
+    canDrag: () => allowsDragging,
     features: [
       syncDataLoaderFeature,
       selectionFeature,
