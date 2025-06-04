@@ -30,7 +30,7 @@ import {
 
 import { cn } from '@/lib/utils';
 import type { MenuItem } from '@/types/types';
-import { ChevronDown } from '@accelint/icons';
+import ChevronDown from '@accelint/icons/chevron-down';
 import { type VariantProps, cva } from 'cva';
 import type { ReactNode } from 'react';
 import { Icon } from '../icon';
