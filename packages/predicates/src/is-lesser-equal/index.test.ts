@@ -17,7 +17,7 @@ import { isLesserEqual } from './';
 it('should correctly test for lesser or equal values', () => {
   fc.assert(
     fc.property(fc.integer(), fc.integer(), (a, b) => {
-      return isLesserEqual(a)(b) === a <= b;
+      return isLesserEqual(a)(b) === b <= a;
     }),
     {
       verbose: 2,
