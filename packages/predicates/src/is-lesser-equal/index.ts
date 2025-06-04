@@ -12,20 +12,21 @@
 
 /**
  * Determines if the first value is lesser than or equal to the second value.
+ * Right-to-left (composition) order.
  *
- * @param a - The first value to check against.
- * @param b - The second value to check against.
+ * @param a - The right hand value.
+ * @param b - The left hand value.
  * @template T - The type of the values.
  *
  * @remarks
  * pure function
  *
  * @example
- * isLesserEqual(42)(23); // false
- * isLesserEqual(5)(23); // true
+ * isLesserEqual(42)(23); // true
+ * isLesserEqual(5)(23); // false
  * isLesserEqual(5)(5); // true
  */
 export const isLesserEqual =
   <T>(a: T) =>
   (b: T) =>
-    a <= b;
+    b <= a;

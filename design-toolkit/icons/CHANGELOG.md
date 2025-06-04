@@ -1,5 +1,11 @@
 # @accelint/icons
 
+## 1.1.0
+
+### Minor Changes
+
+- 4974392: Add individual export for icons
+
 ## 1.0.0
 
 ### Major Changes

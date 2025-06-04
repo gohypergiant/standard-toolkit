@@ -10,22 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import fc from 'fast-check';
-import { it } from 'vitest';
-import { isGreater } from './';
+import type { Key, ReactNode } from 'react';
 
-it('should correctly test for greater than values', () => {
-  fc.assert(
-    fc.property(fc.integer(), fc.integer(), (a, b) => {
-      return isGreater(a)(b) === b > a;
-    }),
-    {
-      verbose: 2,
-      // manual cases
-      examples: [
-        [50, 100],
-        [100, 50],
-      ],
-    },
-  );
-});
+// TODO: move when menu is added to desTK
+export interface MenuItem {
+  children?: MenuItem[];
+  description?: string;
+  icon?: ReactNode;
+  id?: Key;
+  name: string;
+}
