@@ -255,6 +255,12 @@ importers:
       '@fontsource/roboto-mono':
         specifier: 5.1.0
         version: 5.1.0
+      '@headless-tree/core':
+        specifier: 1.0.1
+        version: 1.0.1
+      '@headless-tree/react':
+        specifier: 1.0.1
+        version: 1.0.1(@headless-tree/core@1.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-avatar':
         specifier: ^1.1.4
         version: 1.1.9(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -2683,6 +2689,16 @@ packages:
 
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
+
+  '@headless-tree/core@1.0.1':
+    resolution: {integrity: sha512-HbkveX2B5jltHS+90uTgD1CrgTEexjszff4+PRB8onMnAFZJ/eYPGVHZF5sK2dui9dGmP5OwNYTP6r2YXGCe+w==}
+
+  '@headless-tree/react@1.0.1':
+    resolution: {integrity: sha512-H58dcHAt8vriAUtU8xxaKPJG6l0RN7ezDBbuUYvYsbIADEmiWbCzUPL9Tz8945Cy5gfFDEK4WwprGs4A5DHEow==}
+    peerDependencies:
+      '@headless-tree/core': '*'
+      react: '*'
+      react-dom: '*'
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -13523,6 +13539,14 @@ snapshots:
   '@hapi/topo@5.1.0':
     dependencies:
       '@hapi/hoek': 9.3.0
+
+  '@headless-tree/core@1.0.1': {}
+
+  '@headless-tree/react@1.0.1(@headless-tree/core@1.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@headless-tree/core': 1.0.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
