@@ -39,6 +39,8 @@ export { ClassificationBanner } from './components/classification-banner';
 export type { ClassificationBannerProps } from './components/classification-banner';
 export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
+export { DateField } from './components/date-field';
+export type { DateFieldProps } from './components/date-field';
 export { FloatingButton } from './components/floating-button';
 export type { FloatingButtonProps } from './components/floating-button';
 export { Icon } from './components/icon';
