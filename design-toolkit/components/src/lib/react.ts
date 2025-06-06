@@ -13,12 +13,29 @@
 // @ts-nocheck
 import { Children, type ReactNode, isValidElement } from 'react';
 
+class ComponentStructureError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ComponentStructureError";
+  }
+}
+
 type ContainsExactChildrenProps = {
   componentName: string;
-  children: ReactNode | ReactNode[];
-  restrictions: Record<string, number>;
+  // biome-ignore lint/suspicious/noExplicitAny: aria render props include a generic type
+  children: ReactNode | ReactNode[] | ((values: any & {
+    defaultChildren: ReactNode | undefined;
+  }) => ReactNode);
+  restrictions: Record<string, { min: number, max?: number }>;
 };
 
+/**
+ * Validates the intended composite component structure.
+ *
+ * @param children the children of the component
+ * @param componentName the displayName of the component
+ * @param restrictions the record of validation rules
+ */
 export function containsExactChildren({
   children,
   componentName,
@@ -27,30 +44,36 @@ export function containsExactChildren({
   const childrenComponents = Children.toArray(children);
 
   if (!childrenComponents.every(isValidElement)) {
-    throw new Error(`<${componentName}> received invalid children.`);
+    throw new ComponentStructureError(`<${componentName}> received invalid children.`);
   }
 
-  const restrictionResults = childrenComponents.reduce(
-    (acc, child) => ({
-      // biome-ignore lint/performance/noAccumulatingSpread: this is fine.
-      ...acc,
-      [child.type.displayName]: acc[child.type.displayName] - 1,
-    }),
-    restrictions,
-  );
+  const accumulationResults = childrenComponents.reduce((acc, child) => {
+    const name = child?.type?.displayName;
+    if (name) { acc[name] = (acc[name] || 0) + 1 }
+    return acc;
+  }, {});
 
-  const missingComponents = Object.entries(restrictionResults).filter(
-    ([, value]) => value !== 0,
-  );
+  const missingComponentsArray: string[] = [];
+  const excessComponentsArray: string[] = [];
 
-  if (missingComponents.length !== 0) {
-    const restrictionString = missingComponents
-      .map(([key, value]) => `${value} of <${key}>`)
-      .join(', ');
+  for (const [key, value] of Object.entries(accumulationResults)) {
+    const restriction = restrictions[key];
+    if (!restriction) { continue }
 
-    throw new Error(
-      `<${componentName}> is missing the following: ${restrictionString}`,
-    );
+    const { min, max } = restriction;
+    if (value < min) { missingComponentsArray.push(`${min - value} of <${key}>`) }
+    if (max !== undefined && value > max) { excessComponentsArray.push(`${value - max} of <${key}>`) }
+  }
+
+  if (missingComponentsArray.length || excessComponentsArray.length) {
+    const formatList = (label: string, items: string[]) =>
+      items.length ? `\t${label}:\n\t${items.join(', ')}\n` : '';
+
+    const errorMessage = `Invalid <${componentName}> structure\n
+      ${formatList('Missing the following', missingComponentsArray)}
+      ${formatList('Excess of the following', excessComponentsArray)}`;
+
+    throw new ComponentStructureError(errorMessage.trim());
   }
 }
 
@@ -59,7 +82,7 @@ export function containsExactChildren({
  * and ensure that they are wrapped in an Icon component in order
  * to get the classes and styles they need in context.
  *
- * Using isValidElement means we will filter out strings, boolean, etc
+ * Using isValidElement means we will filter out strings, boolean, etc.
  * that are valid nodes but not elements.
  *
  * @example

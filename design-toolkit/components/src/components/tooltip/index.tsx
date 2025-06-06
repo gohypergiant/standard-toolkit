@@ -37,8 +37,8 @@ export function Tooltip({
     children,
     componentName: Tooltip.displayName,
     restrictions: {
-      [TooltipTrigger.displayName]: 1,
-      [TooltipBody.displayName]: 1,
+      [TooltipTrigger.displayName]: { min: 1, max: 1 },
+      [TooltipBody.displayName]: { min: 1, max: 1 },
     },
   });
 

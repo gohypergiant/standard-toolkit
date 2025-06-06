@@ -1,0 +1,28 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+
+import * as ListStories from './tab-list.stories';
+
+<Meta of={ListStories} />
+
+# Tabs.List
+
+The `<Tabs.List>` component is a direct wrapper around the `TabList` component from `react-aria-components`.
+
+Please see the documentation for that component [here](https://react-spectrum.adobe.com/react-aria/Tabs.html).
+
+## Composition Requirements
+
+Error boundaries for incorrect usage of this component:
+
+- `Tabs.List` must include at least 1 `Tabs.Tab`
+
+<Canvas of={ListStories.Default} />
+
+<Controls of={ListStories.Default} />
+
+<Canvas of={ListStories.Icons} />
+
+<Controls of={ListStories.Icons} />
+
+
+

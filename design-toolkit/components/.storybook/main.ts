@@ -22,7 +22,10 @@ function getAbsolutePath(packageName: string): string {
 }
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    '../src/**/*.docs.@(mdx|tsx)',
+    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   addons: [getAbsolutePath('@storybook/addon-essentials')],
   framework: {
     name: '@storybook/react-vite',

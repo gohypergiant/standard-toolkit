@@ -50,6 +50,13 @@ export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
+export { Tabs } from './components/tabs';
+export type {
+  TabListProps,
+  TabPanelProps,
+  TabProps,
+  TabsProps,
+} from './components/tabs';
 export { TextArea } from './components/text-area';
 export type { TextAreaProps } from './components/text-area';
 export { TextField } from './components/text-field';
