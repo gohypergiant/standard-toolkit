@@ -107,7 +107,7 @@ export const menuClassNames: MenuClassNames = {
         [layers.components.l1]: {
           containerName: menuContainers.menu,
           display: 'block',
-          zIndex: `${zIndexVars.popover} !important`, // Need to override inline style set by React Aria
+          zIndex: `${zIndexVars.popup} !important`, // Need to override inline style set by React Aria
         },
       },
     }),
