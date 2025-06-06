@@ -49,7 +49,7 @@
     "@react-aria/focus": "3.18.4",
     "@react-aria/i18n": "3.12.4",
     "@react-aria/interactions": "3.22.4",
-    "@react-aria/overlays": "3.23.4",
+    "@react-aria/overlays": "3.27.1",
     "@react-aria/ssr": "3.9.6",
     "@react-aria/utils": "3.25.3",
     "@react-stately/data": "3.11.7",

@@ -116,8 +116,10 @@ export const DateInput = forwardRef(function DateInput(
             callRenderProps(childrenProp, { ...renderProps, ...state })
           ) : (
             <>
-              {state.segments.map((segment) => (
-                <Fragment key={segment.type}>{childrenProp(segment)}</Fragment>
+              {state.segments.map((segment, idx) => (
+                <Fragment key={`${segment.type}_${idx}`}>
+                  {childrenProp(segment)}
+                </Fragment>
               ))}
             </>
           ))}
@@ -159,8 +161,10 @@ export const DateSegments = forwardRef(
 
     return (
       <div className={classNames?.input?.segments} ref={ref}>
-        {state.segments.map((segment) => (
-          <Fragment key={segment.type}>{children(segment)}</Fragment>
+        {state.segments.map((segment, idx) => (
+          <Fragment key={`${segment.type}_${idx}`}>
+            {children(segment)}
+          </Fragment>
         ))}
       </div>
     );
