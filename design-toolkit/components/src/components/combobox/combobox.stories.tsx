@@ -29,6 +29,9 @@ const meta: Meta<typeof ComboBox> = {
     label: 'Label',
     placeholder: 'Placeholder',
     size: 'medium',
+    layoutOptions: {
+      estimatedRowHeight: 46,
+    },
   },
   argTypes: {
     className: { type: 'string' },
@@ -76,6 +79,42 @@ const items: CustomMenuItem[] = [
   },
   {
     id: 6,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 7,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 8,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 9,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 10,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 11,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 12,
     icon: <Placeholder />,
     name: 'Snake',
     description: 'Slithering reptile',
