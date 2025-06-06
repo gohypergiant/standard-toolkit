@@ -24,12 +24,12 @@ import {
   type ListBoxItemProps as AriaListBoxItemProps,
   ListBoxSection as AriaListBoxSection,
   type ListBoxSectionProps as AriaListBoxSectionProps,
+  ListLayout as AriaListLayout,
+  type ListLayoutOptions as AriaListLayoutOptions,
   Popover as AriaPopover,
   Text as AriaText,
   Virtualizer as AriaVirtualizer,
-  ListLayout,
-  type ListLayoutOptions,
-  type VirtualizerProps,
+  type VirtualizerProps as AriaVirtualizerProps,
 } from 'react-aria-components';
 
 import { cn } from '@/lib/utils';
@@ -109,7 +109,7 @@ export interface ComboBoxProps<T extends MenuItem>
       'isDisabled' | 'isInvalid' | 'isReadOnly'
     >,
     Omit<AriaComboBoxProps<T>, 'children'>,
-    Pick<VirtualizerProps<ListLayoutOptions>, 'layoutOptions'> {
+    Pick<AriaVirtualizerProps<AriaListLayoutOptions>, 'layoutOptions'> {
   className?: string;
   children: ReactNode | ((item: T) => ReactNode);
   description?: string;
@@ -195,7 +195,10 @@ export function ComboBox<T extends MenuItem>({
             </AriaText>
           )}
           <AriaPopover className='w-(--trigger-width)'>
-            <AriaVirtualizer layout={ListLayout} layoutOptions={layoutOptions}>
+            <AriaVirtualizer
+              layout={AriaListLayout}
+              layoutOptions={layoutOptions}
+            >
               <AriaListBox className='grid max-h-[200px] grid-cols-[auto_1fr] overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light'>
                 {/* @ts-expect-error package version mismatch TODO */}
                 {children}
