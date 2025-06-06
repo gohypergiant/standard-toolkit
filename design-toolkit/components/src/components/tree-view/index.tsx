@@ -29,15 +29,16 @@ import {
   dragAndDropFeature,
   hotkeysCoreFeature,
   keyboardDragAndDropFeature,
+  propMemoizationFeature,
   selectionFeature,
   syncDataLoaderFeature,
 } from '@headless-tree/core';
 import { useTree } from '@headless-tree/react';
 import { type VariantProps, cva } from 'cva';
-import { type ReactNode, createContext, useContext } from 'react';
+import { type ReactNode, memo } from 'react';
 import { Icon } from '../icon';
 import type {
-  TreeContextType,
+  TreeItemRenderProps,
   TreeNode as TreeNodeType,
   TreeSelectionMode,
   TreeViewProps,
@@ -45,7 +46,7 @@ import type {
 
 /**
  * TODO: async loading?
- */
+
 
 const TreeContext = createContext<TreeContextType>({
   variant: 'cozy',
@@ -53,10 +54,10 @@ const TreeContext = createContext<TreeContextType>({
   showRuleLines: true,
   selectionMode: 'visibility',
 });
+ */
 
 export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
   const {
-    children,
     items,
     variant = 'cozy',
     selected,
@@ -67,6 +68,7 @@ export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
     selectionMode = 'visibility',
     allowsDragging = true,
     showRuleLines = true,
+    customChild,
   } = props;
 
   const options: Partial<TreeConfig<T>> = {};
@@ -99,8 +101,13 @@ export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
       return Array.isArray(nodes) && nodes.length > 0;
     },
     dataLoader: {
-      // biome-ignore lint/style/noNonNullAssertion: key should always return a value
-      getItem: (key) => items[key]!,
+      getItem: (key) => ({
+        ...(items[key] as T),
+        variant,
+        selectionMode,
+        allowsDragging,
+        showRuleLines,
+      }),
       getChildren: (key) => items[key]?.childNodes ?? [],
     },
     canReorder: allowsDragging,
@@ -111,6 +118,7 @@ export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
       hotkeysCoreFeature,
       dragAndDropFeature,
       keyboardDragAndDropFeature,
+      propMemoizationFeature,
     ],
   });
 
@@ -119,30 +127,35 @@ export function TreeView<T extends TreeNodeType>(props: TreeViewProps<T>) {
   }
 
   return (
-    <TreeContext.Provider
-      value={{ variant, selectionMode, allowsDragging, showRuleLines }}
+    <div
+      {...tree.getContainerProps()}
+      className='fg-default-light overflow-x flex w-full flex-col outline-hidden'
     >
+      {tree.getItems().map((item) => {
+        const lastOfSet =
+          item.getItemMeta().setSize - 1 === item.getItemMeta().posInSet;
+        return (
+          <div key={item.getId()} data-last-of-set={lastOfSet}>
+            <TreeView.Node
+              {...item.getProps()}
+              {...item.getItemData()}
+              customChild={customChild}
+              isExpanded={item.isExpanded()}
+              isSelected={item.isSelected()}
+              toggleSelect={item.toggleSelect}
+              isFolder={item.isFolder()}
+              expand={item.expand}
+              collapse={item.collapse}
+            />
+          </div>
+        );
+      })}
+
       <div
-        {...tree.getContainerProps()}
-        className='fg-default-light overflow-x flex w-full flex-col outline-hidden'
-      >
-        {typeof children === 'function'
-          ? tree.getItems().map((item) => {
-              const lastOfSet =
-                item.getItemMeta().setSize - 1 === item.getItemMeta().posInSet;
-              return (
-                <div key={item.getId()} data-last-of-set={lastOfSet}>
-                  {children({ item, variant })}
-                </div>
-              );
-            })
-          : children}
-        <div
-          className='absolute border border-highlight-hover'
-          style={{ ...tree.getDragLineStyle() }}
-        />
-      </div>
-    </TreeContext.Provider>
+        className='absolute border border-highlight-hover'
+        style={{ ...tree.getDragLineStyle() }}
+      />
+    </div>
   );
 }
 
@@ -170,9 +183,18 @@ const treeNodeStyles = cva(
   },
 );
 
-export interface TreeNodeProps<T> extends VariantProps<typeof treeNodeStyles> {
-  children: ReactNode;
-  item: ItemInstance<T>;
+export interface TreeNodeProps<T extends TreeNodeType>
+  extends VariantProps<typeof treeNodeStyles>,
+    Pick<
+      ReturnType<ItemInstance<T>['getItemData']>,
+      'isDisabled' | 'selectionMode' | 'allowsDragging' | 'showRuleLines'
+    >,
+    Omit<ItemInstance<T>, 'isDragTarget' | 'isSelected' | 'isExpanded'> {
+  customChild?:
+    | ReactNode
+    | ((renderProps: TreeItemRenderProps<T>) => ReactNode);
+  isExpanded?: boolean;
+  isFolder?: boolean;
 }
 
 function SelectionIcons({
@@ -193,116 +215,119 @@ function SelectionIcons({
   return null;
 }
 
-function TreeNode<T extends TreeNodeType>({
-  children,
-  item,
-}: TreeNodeProps<T>) {
-  const { variant, selectionMode, allowsDragging, showRuleLines } =
-    useContext(TreeContext);
-
-  const {
-    getProps,
-    toggleSelect,
+const TreeNode = memo(
+  <T extends TreeNodeType>({
+    isExpanded,
     isSelected,
     isFolder,
+    variant,
     expand,
     collapse,
-    isExpanded,
-  } = item;
+    selectionMode,
+    allowsDragging,
+    showRuleLines,
+    customChild,
+    ...htmlProps
+  }: TreeNodeProps<T>) => {
+    const { onClick, ...props } = htmlProps;
 
-  const { onClick, ...props } = getProps();
-
-  const expander = isExpanded() ? (
-    <button type='button' onClick={expand} {...getProps()}>
-      <Icon>
-        <ChevronUp />
-      </Icon>
-    </button>
-  ) : (
-    <button type='button' onClick={collapse} {...getProps()}>
-      <Icon>
-        <ChevronDown />
-      </Icon>
-    </button>
-  );
-
-  const spacer = (
-    <span className='group-data-[variant=compact]:w-[15px] group-data-[variant=cozy]:w-[20px] group-data-[variant=tight]:w-[10px]' />
-  );
-
-  const folder = isFolder() ? expander : spacer;
-
-  const lines = Array.from({ length: item.getItemMeta().level }).map((_, i) => (
-    <span
-      key={i}
-      className={cn(
-        'relative',
-        'self-stretch group-data-[variant=compact]:w-[15px] group-data-[variant=cozy]:w-[20px] group-data-[variant=tight]:w-[10px]',
-        showRuleLines &&
-          (i !== item.getItemMeta().level - 1 ? 'vert-line' : 'tree-line'),
-      )}
-    />
-  ));
-
-  return (
-    <div
-      {...props}
-      data-variant={variant}
-      className={cn(
-        'group',
-        treeNodeStyles({
-          variant,
-          isDragTarget: item.isDragTarget() || item.isDraggingOver(),
-          isSelected: item.isSelected(),
-          isReadOnly: item.getItemData().isReadOnly,
-        }),
-      )}
-    >
-      {selectionMode !== 'none' && item.getItemData().isReadOnly ? (
+    const expander = isExpanded ? (
+      <button type='button' onClick={expand} {...props}>
         <Icon>
-          <LockFill />
+          <ChevronUp />
         </Icon>
-      ) : (
-        <button
-          {...getProps()}
-          onClick={toggleSelect}
-          disabled={item.getItemData().isDisabled}
-        >
-          <SelectionIcons
-            selectionMode={selectionMode ?? 'none'}
-            isSelected={isSelected()}
-          />
-        </button>
-      )}
-      {lines}
-      {folder}
-      {item.getItemData().iconPrefix && (
-        <Icon>{item.getItemData().iconPrefix}</Icon>
-      )}
+      </button>
+    ) : (
+      <button type='button' onClick={collapse} {...props}>
+        <Icon>
+          <ChevronDown />
+        </Icon>
+      </button>
+    );
+
+    const spacer = (
+      <span className='group-data-[variant=compact]:w-[15px] group-data-[variant=cozy]:w-[20px] group-data-[variant=tight]:w-[10px]' />
+    );
+
+    const folder = isFolder ? expander : spacer;
+
+    const lines = Array.from({ length: item.getItemMeta().level }).map(
+      (_, i) => (
+        <span
+          key={`${item.getId()}-level-${i}`}
+          className={cn(
+            'relative',
+            'self-stretch group-data-[variant=compact]:w-[15px] group-data-[variant=cozy]:w-[20px] group-data-[variant=tight]:w-[10px]',
+            showRuleLines &&
+              (i !== item.getItemMeta().level - 1 ? 'vert-line' : 'tree-line'),
+          )}
+        />
+      ),
+    );
+
+    const rightSlot =
+      typeof customChild === 'function' ? customChild() : customChild; // pass through custom child component
+
+    return (
       <div
+        {...props}
+        data-variant={variant}
         className={cn(
-          'flex-1 items-center text-start',
-          'group-data-[variant=compact]:py-xs group-data-[variant=cozy]:py-s group-data-[variant=tight]:py-xxs',
+          'group',
+          treeNodeStyles({
+            variant,
+            isDragTarget: item.isDragTarget() || item.isDraggingOver(),
+            isSelected: item.isSelected(),
+            isReadOnly: item.getItemData().isReadOnly,
+          }),
         )}
       >
-        {item.getItemName()}
-        {item.getItemData().description && (
-          <div className='fg-default-dark text-body-s'>
-            {item.getItemData().description}
-          </div>
-        )}
-      </div>
-      <div className='flex justify-end gap-s align-middle'>
-        {children}
-        {allowsDragging && (
+        {selectionMode !== 'none' && item.getItemData().isReadOnly ? (
           <Icon>
-            <DragVert />
+            <LockFill />
           </Icon>
+        ) : (
+          <button
+            {...getProps()}
+            onClick={toggleSelect}
+            disabled={item.getItemData().isDisabled}
+          >
+            <SelectionIcons
+              selectionMode={selectionMode ?? 'none'}
+              isSelected={!!isSelected}
+            />
+          </button>
         )}
+        {lines}
+        {folder}
+        {item.getItemData().iconPrefix && (
+          <Icon>{item.getItemData().iconPrefix}</Icon>
+        )}
+        <div
+          className={cn(
+            'flex-1 items-center text-start',
+            'group-data-[variant=compact]:py-xs group-data-[variant=cozy]:py-s group-data-[variant=tight]:py-xxs',
+          )}
+        >
+          {item.getItemName()}
+          {item.getItemData().description && (
+            <div className='fg-default-dark text-body-s'>
+              {item.getItemData().description}
+            </div>
+          )}
+        </div>
+        <div className='flex justify-end gap-s align-middle'>
+          {customChild()}
+          {allowsDragging && (
+            <Icon>
+              <DragVert />
+            </Icon>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  },
+);
 
 TreeNode.displayName = 'TreeNode';
 TreeView.Node = TreeNode;

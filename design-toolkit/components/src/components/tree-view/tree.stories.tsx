@@ -13,10 +13,10 @@
 import { Placeholder, Warning } from '@accelint/icons';
 import type { DragTarget, ItemInstance } from '@headless-tree/core';
 import type { Meta, StoryObj } from '@storybook/react';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useCallback, useState } from 'react';
 import { Icon } from '../icon';
 import { TreeView } from './index';
-import type { TreeNode } from './types';
+import type { TreeItemRenderProps, TreeNode } from './types';
 
 const meta = {
   title: 'Components/TreeView',
@@ -106,6 +106,20 @@ export const Controlled: Story = {
     const [selected, setSelected] = useState<string[]>(['fruits', 'green']);
     const [expanded, setExpanded] = useState<string[]>(['fruits', 'apples']);
 
+    const rightSlot = useCallback(
+      ({ indicator }: TreeItemRenderProps<StoryNode>) => {
+        return (
+          <>
+            <Icon className='fg-serious'>{indicator}</Icon>
+            <Icon>
+              <Placeholder />
+            </Icon>
+          </>
+        );
+      },
+      [],
+    );
+
     return (
       <div className='w-[550px]'>
         <TreeView<StoryNode>
@@ -116,20 +130,8 @@ export const Controlled: Story = {
           expanded={expanded}
           setExpanded={setExpanded}
           onDrop={handleDrop}
-        >
-          {({ item }) => {
-            return (
-              <TreeView.Node item={item}>
-                <Icon className='fg-serious'>
-                  {item.getItemData().indicator}
-                </Icon>
-                <Icon>
-                  <Placeholder />
-                </Icon>
-              </TreeView.Node>
-            );
-          }}
-        </TreeView>
+          customChild={child}
+        />
       </div>
     );
   },

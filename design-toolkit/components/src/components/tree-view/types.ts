@@ -19,12 +19,12 @@ export type TreeSelectionMode = 'visibility' | 'checkbox' | 'none';
 
 export type TreeItemRenderProps<T> = {
   variant: TreeVariants;
-  item: ItemInstance<T>;
+  // What do we want users to be able to use from the item instance?
+  // indicator?: string;
 };
 
 export interface TreeViewProps<T extends TreeNode> {
   items: Record<string, T>;
-  children: ReactNode | ((renderProps: TreeItemRenderProps<T>) => ReactNode);
   variant?: TreeVariants;
   selected?: string[];
   expanded?: string[];
@@ -37,6 +37,9 @@ export interface TreeViewProps<T extends TreeNode> {
   selectionMode?: TreeSelectionMode;
   allowsDragging?: boolean;
   showRuleLines?: boolean;
+  customChild?:
+    | ReactNode
+    | ((renderProps: TreeItemRenderProps<T>) => ReactNode);
 }
 
 export interface TreeContextType {
@@ -56,4 +59,8 @@ export type TreeNode = {
   isExpanded?: boolean;
   isReadOnly?: boolean;
   isSelected?: boolean;
+  variant?: TreeVariants;
+  selectionMode?: TreeSelectionMode;
+  allowsDragging?: boolean;
+  showRuleLines?: boolean;
 };
