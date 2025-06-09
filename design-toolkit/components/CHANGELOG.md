@@ -1,5 +1,12 @@
 # @accelint/design-toolkit
 
+## 1.0.1
+
+### Patch Changes
+
+- 0c66cab: added virtualizer to combobox component
+- 032e278: Added the ComboBox component.
+
 ## 1.0.0
 
 ### Patch Changes
