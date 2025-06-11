@@ -19,10 +19,13 @@ import {
   MenuSection as AriaMenuSection,
   type MenuSectionProps as AriaMenuSectionProps,
   Collection,
+  Focusable,
   Header,
   type MenuItemProps,
+  MenuTrigger as RACMenuTrigger,
   Separator,
   type SeparatorProps,
+  SubmenuTrigger,
   composeRenderProps,
 } from 'react-aria-components';
 import { Popover, type PopoverProps } from '../popover';
@@ -31,7 +34,20 @@ interface MenuProps<T> extends AriaMenuProps<T> {
   placement?: PopoverProps['placement'];
 }
 
-export function Menu<T extends object>(props: MenuProps<T>) {
+export function Menu({ children }) {
+  return <RACMenuTrigger>{children}</RACMenuTrigger>;
+}
+Menu.displayName = 'Menu';
+
+export function MenuTrigger({ children, ...props }) {
+  return <Focusable {...props}>{children}</Focusable>;
+}
+MenuTrigger.displayName = 'Menu.Trigger';
+Menu.Trigger = MenuTrigger;
+
+Menu.SubmenuTrigger = SubmenuTrigger;
+
+export function MenuList<T extends object>(props: MenuProps<T>) {
   return (
     <Popover placement={props.placement} className='min-w-[150px]'>
       <AriaMenu
@@ -41,6 +57,8 @@ export function Menu<T extends object>(props: MenuProps<T>) {
     </Popover>
   );
 }
+MenuList.displayName = 'Menu.List';
+Menu.List = MenuList;
 
 export const menuItemStyles = cva(
   'group fg-default-dark flex cursor-default select-none items-center gap-4 rounded-lg py-2 pr-1 pl-3 text-sm outline outline-0 forced-color-adjust-none',
@@ -85,6 +103,9 @@ export function MenuItem(props: MenuItemProps) {
   );
 }
 
+MenuItem.displayName = 'Menu.Item';
+Menu.Item = MenuItem;
+
 export function MenuSeparator(props: SeparatorProps) {
   return (
     <Separator
@@ -93,6 +114,8 @@ export function MenuSeparator(props: SeparatorProps) {
     />
   );
 }
+MenuSeparator.displayName = 'Menu.Separator';
+Menu.Separator = MenuSeparator;
 
 export interface MenuSectionProps<T> extends AriaMenuSectionProps<T> {
   title?: string;
@@ -107,3 +130,6 @@ export function MenuSection<T extends object>(props: MenuSectionProps<T>) {
     </AriaMenuSection>
   );
 }
+
+MenuSection.displayName = 'Menu.Section';
+Menu.Section = MenuSection;

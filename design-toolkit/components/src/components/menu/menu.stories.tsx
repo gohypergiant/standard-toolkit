@@ -12,10 +12,9 @@
 
 import { Kebab } from '@accelint/icons';
 import type { Meta } from '@storybook/react';
-import { MenuTrigger, SubmenuTrigger } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { Menu, MenuItem, MenuSection, MenuSeparator } from './';
+import { Menu } from './';
 
 const meta: Meta<typeof Menu> = {
   title: 'Components/Menu',
@@ -29,22 +28,24 @@ const meta: Meta<typeof Menu> = {
 export default meta;
 
 export const Example = (args: any) => (
-  <MenuTrigger>
-    <Button variant='outline' className='px-2'>
-      <Icon>
-        <Kebab className='h-5 w-5' />
-      </Icon>
-    </Button>
-    <Menu {...args}>
-      <MenuItem id='new'>New…</MenuItem>
-      <MenuItem id='open'>Open…</MenuItem>
-      <MenuSeparator />
-      <MenuItem id='save'>Save</MenuItem>
-      <MenuItem id='saveAs'>Save as…</MenuItem>
-      <MenuSeparator />
-      <MenuItem id='print'>Print…</MenuItem>
-    </Menu>
-  </MenuTrigger>
+  <Menu>
+    <Menu.Trigger>
+      <Button variant='outline' className='px-2'>
+        <Icon>
+          <Kebab className='h-5 w-5' />
+        </Icon>
+      </Button>
+    </Menu.Trigger>
+    <Menu.List {...args}>
+      <Menu.Item id='new'>New…</Menu.Item>
+      <Menu.Item id='open'>Open…</Menu.Item>
+      <Menu.Separator />
+      <Menu.Item id='save'>Save</Menu.Item>
+      <Menu.Item id='saveAs'>Save as…</Menu.Item>
+      <Menu.Separator />
+      <Menu.Item id='print'>Print…</Menu.Item>
+    </Menu.List>
+  </Menu>
 );
 
 export const DisabledItems = (args: any) => <Example {...args} />;
@@ -53,61 +54,65 @@ DisabledItems.args = {
 };
 
 export const Sections = (args: any) => (
-  <MenuTrigger>
-    <Button variant='outline' className='px-2'>
-      <Icon>
-        <Kebab className='h-5 w-5' />
-      </Icon>
-    </Button>
-    <Menu {...args}>
-      <MenuSection title='Your Content'>
-        <MenuItem id='repos'>Repositories</MenuItem>
-        <MenuItem id='projects'>Projects</MenuItem>
-        <MenuItem id='organizations'>Organizations</MenuItem>
-        <MenuItem id='stars'>Stars</MenuItem>
-        <MenuItem id='sponsors'>Sponsors</MenuItem>
-      </MenuSection>
-      <MenuSection title='Your Account'>
-        <MenuItem id='profile'>Profile</MenuItem>
-        <MenuItem id='status'>Set status</MenuItem>
-        <MenuItem id='sign-out'>Sign out</MenuItem>
-      </MenuSection>
-    </Menu>
-  </MenuTrigger>
+  <Menu>
+    <Menu.Trigger>
+      <Button variant='outline' className='px-2'>
+        <Icon>
+          <Kebab className='h-5 w-5' />
+        </Icon>
+      </Button>
+    </Menu.Trigger>
+    <Menu.List {...args}>
+      <Menu.Section title='Your Content'>
+        <Menu.Item id='repos'>Repositories</Menu.Item>
+        <Menu.Item id='projects'>Projects</Menu.Item>
+        <Menu.Item id='organizations'>Organizations</Menu.Item>
+        <Menu.Item id='stars'>Stars</Menu.Item>
+        <Menu.Item id='sponsors'>Sponsors</Menu.Item>
+      </Menu.Section>
+      <Menu.Section title='Your Account'>
+        <Menu.Item id='profile'>Profile</Menu.Item>
+        <Menu.Item id='status'>Set status</Menu.Item>
+        <Menu.Item id='sign-out'>Sign out</Menu.Item>
+      </Menu.Section>
+    </Menu.List>
+  </Menu>
 );
 
 export const Submenu = (args: any) => (
-  <MenuTrigger>
-    <Button variant='outline' className='px-2'>
-      <Icon>
-        <Kebab className='h-5 w-5' />
-      </Icon>
-    </Button>
-    <Menu {...args}>
-      <MenuItem id='new'>New…</MenuItem>
-      <SubmenuTrigger>
-        <MenuItem id='open'>Open</MenuItem>
-        <Menu>
-          <MenuItem id='open-new'>Open in New Window</MenuItem>
-          <MenuItem id='open-current'>Open in Current Window</MenuItem>
-        </Menu>
-      </SubmenuTrigger>
-      <MenuSeparator />
-      <MenuItem id='print'>Print…</MenuItem>
-      <SubmenuTrigger>
-        <MenuItem id='share'>Share</MenuItem>
-        <Menu>
-          <MenuItem id='sms'>SMS</MenuItem>
-          <MenuItem id='x'>X</MenuItem>
-          <SubmenuTrigger>
-            <MenuItem id='email'>Email</MenuItem>
-            <Menu>
-              <MenuItem id='work'>Work</MenuItem>
-              <MenuItem id='personal'>Personal</MenuItem>
-            </Menu>
-          </SubmenuTrigger>
-        </Menu>
-      </SubmenuTrigger>
-    </Menu>
-  </MenuTrigger>
+  <Menu>
+    <Menu.Trigger>
+      <Button variant='outline' className='px-2'>
+        <Icon>
+          <Kebab className='h-5 w-5' />
+        </Icon>
+      </Button>
+    </Menu.Trigger>
+    <Menu.List {...args}>
+      <Menu.Item id='new'>New…</Menu.Item>
+      <Menu.SubmenuTrigger>
+        <Menu.Item id='open'>Open</Menu.Item>
+        <Menu.List>
+          <Menu.Item id='open-new'>Open in New Window</Menu.Item>
+          <Menu.Item id='open-current'>Open in Current Window</Menu.Item>
+        </Menu.List>
+      </Menu.SubmenuTrigger>
+      <Menu.Separator />
+      <Menu.Item id='print'>Print…</Menu.Item>
+      <Menu.SubmenuTrigger>
+        <Menu.Item id='share'>Share</Menu.Item>
+        <Menu.List>
+          <Menu.Item id='sms'>SMS</Menu.Item>
+          <Menu.Item id='x'>X</Menu.Item>
+          <Menu.SubmenuTrigger>
+            <Menu.Item id='email'>Email</Menu.Item>
+            <Menu.List>
+              <Menu.Item id='work'>Work</Menu.Item>
+              <Menu.Item id='personal'>Personal</Menu.Item>
+            </Menu.List>
+          </Menu.SubmenuTrigger>
+        </Menu.List>
+      </Menu.SubmenuTrigger>
+    </Menu.List>
+  </Menu>
 );

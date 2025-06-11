@@ -44,6 +44,18 @@ export type { IconProps } from './components/icon';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
+export {
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuSection,
+  MenuSeparator,
+  MenuTrigger,
+  menuItemStyles,
+} from './components/menu';
+export type { MenuSectionProps } from './components/menu';
+export { Popover } from './components/popover';
+export type { PopoverProps } from './components/popover';
 export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
 export { Switch } from './components/switch';
