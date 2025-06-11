@@ -76,6 +76,8 @@ export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
 export { SearchField } from './components/search-field';
 export type { SearchFieldProps } from './components/search-field';
+export { RangeSlider, Slider } from './components/slider';
+export type { RangeSliderProps, SliderProps } from './components/slider';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
 export { Tabs } from './components/tabs';

@@ -34,7 +34,7 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "rm -rf dist && pnpm tsup --config=tsup.css.config.ts && rm -f dist/index.js && NODE_OPTIONS=--max_old_space_size=8192 pnpm tsup",
+    "build": "rm -rf dist && pnpm tsup --config=tsup.css.config.ts && rm -f dist/index.js && pnpm tsup",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-system --barrels",
     "lint": "pnpm biome lint",
