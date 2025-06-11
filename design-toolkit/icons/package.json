@@ -1,6 +1,6 @@
 {
   "name": "@accelint/icons",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -17,6 +17,13 @@
         "default": "./dist/index.js"
       },
       "default": "./dist/index.js"
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.js"
+      },
+      "default": "./dist/*.js"
     }
   },
   "scripts": {

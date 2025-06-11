@@ -1,5 +1,24 @@
 # @apps/next
 
+## 0.2.13
+
+### Patch Changes
+
+- Updated dependencies [3462683]
+- Updated dependencies [0c66cab]
+- Updated dependencies [032e278]
+  - @accelint/design-system@0.9.0
+  - @accelint/design-toolkit@1.0.1
+
+## 0.2.12
+
+### Patch Changes
+
+- Updated dependencies [4974392]
+- Updated dependencies [1cab20a]
+  - @accelint/icons@1.1.0
+  - @accelint/design-toolkit@1.0.0
+
 ## 0.2.11
 
 ### Patch Changes

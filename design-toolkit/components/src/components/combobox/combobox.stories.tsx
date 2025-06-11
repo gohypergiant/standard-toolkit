@@ -11,7 +11,7 @@
  */
 
 import type { MenuItem } from '@/types/types';
-import { Placeholder } from '@accelint/icons';
+import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ComboBox } from './index';
 
@@ -29,6 +29,9 @@ const meta: Meta<typeof ComboBox> = {
     label: 'Label',
     placeholder: 'Placeholder',
     size: 'medium',
+    layoutOptions: {
+      estimatedRowHeight: 46,
+    },
   },
   argTypes: {
     className: { type: 'string' },
@@ -80,6 +83,89 @@ const items: CustomMenuItem[] = [
     name: 'Snake',
     description: 'Slithering reptile',
   },
+  {
+    id: 7,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 8,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 9,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 10,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 11,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+  {
+    id: 12,
+    icon: <Placeholder />,
+    name: 'Snake',
+    description: 'Slithering reptile',
+  },
+];
+
+const itemsWithSections: CustomMenuItem[] = [
+  {
+    id: 1,
+    icon: <Placeholder />,
+    name: 'North American Birds',
+    children: [
+      {
+        id: 2,
+        icon: <Placeholder />,
+        name: 'Blue jay',
+      },
+      {
+        id: 3,
+        icon: <Placeholder />,
+        name: 'Gray catbird',
+      },
+      {
+        id: 4,
+        icon: <Placeholder />,
+        name: 'Black-capped chickadee',
+      },
+      {
+        id: 5,
+        icon: <Placeholder />,
+        name: 'Song sparrow',
+      },
+    ],
+  },
+  {
+    id: 6,
+    icon: <Placeholder />,
+    name: 'African Birds',
+    children: [
+      {
+        id: 6,
+        icon: <Placeholder />,
+        name: 'Lilac-breasted roller',
+      },
+      {
+        id: 7,
+        icon: <Placeholder />,
+        name: 'Hornbill',
+      },
+    ],
+  },
 ];
 
 export const Default: Story = {
@@ -98,9 +184,57 @@ export const Default: Story = {
   ),
 };
 
+export const WithDynamicSections: Story = {
+  render: ({ children, ...args }) => (
+    <ComboBox<CustomMenuItem> {...args} defaultItems={itemsWithSections}>
+      {(section) => (
+        <ComboBox.Section header={section.name} items={section.children}>
+          {(item) => (
+            <ComboBox.Item
+              key={item.id}
+              icon={item.icon}
+              name={item.name}
+              description={item.description}
+            />
+          )}
+        </ComboBox.Section>
+      )}
+    </ComboBox>
+  ),
+};
+
+export const WithStaticSections: Story = {
+  render: ({ children, ...args }) => (
+    <ComboBox {...args}>
+      <ComboBox.Section header='North American Birds'>
+        <ComboBox.Item icon={<Placeholder />} name='Blue Jay'>
+          Blue Jay
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Gray catbird'>
+          Gray catbird
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Black-capped chickadee'>
+          Black-capped chickadee
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Song Sparrow'>
+          Song Sparrow
+        </ComboBox.Item>
+      </ComboBox.Section>
+      <ComboBox.Section header='African Birds'>
+        <ComboBox.Item icon={<Placeholder />} name='Lilac-breasted roller'>
+          Lilac-breasted roller
+        </ComboBox.Item>
+        <ComboBox.Item icon={<Placeholder />} name='Hornbill'>
+          Hornbill
+        </ComboBox.Item>
+      </ComboBox.Section>
+    </ComboBox>
+  ),
+};
+
 export const Test: Story = {
   render: ({ children, ...args }) => (
-    <ComboBox {...args} defaultItems={items}>
+    <ComboBox {...args}>
       <ComboBox.Item
         icon={<Placeholder />}
         name='Red Panda'

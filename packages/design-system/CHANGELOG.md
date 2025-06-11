@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.9.0
+
+### Minor Changes
+
+- 3462683: Update peer dependency
+
 ## 0.8.1
 
 ### Patch Changes

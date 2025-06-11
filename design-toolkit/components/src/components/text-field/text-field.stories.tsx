@@ -27,6 +27,7 @@ const meta: Meta<typeof TextField> = {
     isRequired: true,
     label: 'Label',
     placeholder: 'Placeholder',
+    selectOnFocus: false,
     size: 'medium',
   },
   argTypes: {

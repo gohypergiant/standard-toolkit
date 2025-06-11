@@ -73,13 +73,15 @@ const textAreaStyles = cva(
 interface InputProps
   extends VariantProps<typeof textAreaStyles>,
     Omit<AriaTextAreaProps, 'size'> {
+  selectOnFocus?: boolean;
   ref?: ForwardedRef<HTMLTextAreaElement>;
 }
 
 const Input = ({
   className,
-  size = 'medium',
   ref = null,
+  selectOnFocus = false,
+  size = 'medium',
   ...props
 }: InputProps) => {
   [props, ref] = useContextProps(props, ref, TextAreaContext);
@@ -106,7 +108,10 @@ const Input = ({
       <AriaTextArea
         {...props}
         onFocus={(e) => {
-          ref.current?.select();
+          if (selectOnFocus) {
+            ref.current?.select();
+          }
+
           props.onFocus?.(e);
         }}
         ref={ref}
@@ -132,7 +137,8 @@ export interface TextAreaProps
       VariantProps<typeof textAreaStyles>,
       'isDisabled' | 'isInvalid' | 'isReadOnly'
     >,
-    Omit<AriaTextFieldProps, 'className'> {
+    Omit<AriaTextFieldProps, 'className'>,
+    Omit<InputProps, keyof AriaTextFieldProps> {
   className?: string;
   description?: string;
   errorMessage?: string;
@@ -158,7 +164,7 @@ export function TextArea({
 
   return (
     <AriaTextField
-      {...props}
+      {...(props as AriaTextFieldProps)}
       isDisabled={isDisabled}
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
@@ -173,7 +179,12 @@ export function TextArea({
           {label}
         </Label>
       )}
-      <Input className={className} placeholder={placeholder} size={size} />
+      <Input
+        className={className}
+        placeholder={placeholder}
+        size={size}
+        {...(props as InputProps)}
+      />
       {shouldShowDescription && (
         <AriaText
           className={cn([

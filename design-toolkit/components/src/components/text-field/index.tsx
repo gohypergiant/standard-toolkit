@@ -79,6 +79,7 @@ interface InputProps
   extends VariantProps<typeof textFieldStyles>,
     Omit<AriaInputProps, 'size'> {
   isClearable?: boolean;
+  selectOnFocus?: boolean;
   ref?: ForwardedRef<HTMLInputElement>;
 }
 
@@ -89,8 +90,9 @@ const clearInputEvent = {
 const Input = ({
   className,
   isClearable = true,
-  size = 'medium',
   ref = null,
+  selectOnFocus = false,
+  size = 'medium',
   ...props
 }: InputProps) => {
   [props, ref] = useContextProps(props, ref, InputContext);
@@ -137,7 +139,10 @@ const Input = ({
       <AriaInput
         {...props}
         onFocus={(e) => {
-          ref.current?.select();
+          if (selectOnFocus) {
+            ref.current?.select();
+          }
+
           props.onFocus?.(e);
         }}
         ref={ref}
@@ -177,7 +182,8 @@ export interface TextFieldProps
       VariantProps<typeof textFieldStyles>,
       'isDisabled' | 'isInvalid' | 'isReadOnly'
     >,
-    Omit<AriaTextFieldProps, 'className'> {
+    Omit<AriaTextFieldProps, 'className'>,
+    Omit<InputProps, keyof AriaTextFieldProps> {
   className?: string;
   isClearable?: boolean;
   description?: string;
@@ -207,7 +213,7 @@ export function TextField({
 
   return (
     <AriaTextField
-      {...props}
+      {...(props as TextFieldProps)}
       isDisabled={isDisabled}
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
@@ -227,6 +233,7 @@ export function TextField({
         isClearable={isClearable}
         placeholder={placeholder}
         size={size}
+        {...(props as InputProps)}
       />
       {shouldShowDescription && (
         <AriaText

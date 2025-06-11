@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "0.0.2",
+  "version": "1.0.1",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -18,151 +18,25 @@
       },
       "default": "./dist/index.js"
     },
-    "./accordion": {
+    "./*": {
       "import": {
-        "types": "./dist/components/accordion/index.d.ts",
-        "default": "./dist/components/accordion/index.js"
+        "types": "./dist/components/*/index.d.ts",
+        "default": "./dist/components/*/index.js"
       },
-      "default": "./dist/components/accordion/index.js"
-    },
-    "./avatar": {
-      "import": {
-        "types": "./dist/components/avatar/index.d.ts",
-        "default": "./dist/components/avatar/index.js"
-      },
-      "default": "./dist/components/avatar/index.js"
-    },
-    "./badge": {
-      "import": {
-        "types": "./dist/components/badge/index.d.ts",
-        "default": "./dist/components/badge/index.js"
-      },
-      "default": "./dist/components/badge/index.js"
-    },
-    "./button": {
-      "import": {
-        "types": "./dist/components/button/index.d.ts",
-        "default": "./dist/components/button/index.js"
-      },
-      "default": "./dist/components/button/index.js"
-    },
-    "./checkbox": {
-      "import": {
-        "types": "./dist/components/checkbox/index.d.ts",
-        "default": "./dist/components/checkbox/index.js"
-      },
-      "default": "./dist/components/checkbox/index.js"
-    },
-    "./chip": {
-      "import": {
-        "types": "./dist/components/chip/index.d.ts",
-        "default": "./dist/components/chip/index.js"
-      },
-      "default": "./dist/components/chip/index.js"
-    },
-    "./classification-badge": {
-      "import": {
-        "types": "./dist/components/classification-badge/index.d.ts",
-        "default": "./dist/components/classification-badge/index.js"
-      },
-      "default": "./dist/components/classification-badge/index.js"
-    },
-    "./classification-banner": {
-      "import": {
-        "types": "./dist/components/classification-banner/index.d.ts",
-        "default": "./dist/components/classification-banner/index.js"
-      },
-      "default": "./dist/components/classification-banner/index.js"
-    },
-    "./combobox": {
-      "import": {
-        "types": "./dist/components/combobox/index.d.ts",
-        "default": "./dist/components/combobox/index.js"
-      },
-      "default": "./dist/components/combobox/index.js"
-    },
-    "./floating-button": {
-      "import": {
-        "types": "./dist/components/floating-button/index.d.ts",
-        "default": "./dist/components/floating-button/index.js"
-      },
-      "default": "./dist/components/floating-button/index.js"
-    },
-    "./icon": {
-      "import": {
-        "types": "./dist/components/icon/index.d.ts",
-        "default": "./dist/components/icon/index.js"
-      },
-      "default": "./dist/components/icon/index.js"
-    },
-    "./icon-button": {
-      "import": {
-        "types": "./dist/components/icon-button/index.d.ts",
-        "default": "./dist/components/icon-button/index.js"
-      },
-      "default": "./dist/components/icon-button/index.js"
-    },
-    "./label": {
-      "import": {
-        "types": "./dist/components/label/index.d.ts",
-        "default": "./dist/components/label/index.js"
-      },
-      "default": "./dist/components/label/index.js"
-    },
-    "./query-builder": {
-      "import": {
-        "types": "./dist/components/query-builder/index.d.ts",
-        "default": "./dist/components/query-builder/index.js"
-      },
-      "default": "./dist/components/query-builder/index.js"
-    },
-    "./radio": {
-      "import": {
-        "types": "./dist/components/radio/index.d.ts",
-        "default": "./dist/components/radio/index.js"
-      },
-      "default": "./dist/components/radio/index.js"
-    },
-    "./switch": {
-      "import": {
-        "types": "./dist/components/switch/index.d.ts",
-        "default": "./dist/components/switch/index.js"
-      },
-      "default": "./dist/components/switch/index.js"
-    },
-    "./text-area": {
-      "import": {
-        "types": "./dist/components/text-area/index.d.ts",
-        "default": "./dist/components/text-area/index.js"
-      },
-      "default": "./dist/components/text-area/index.js"
-    },
-    "./text-field": {
-      "import": {
-        "types": "./dist/components/text-field/index.d.ts",
-        "default": "./dist/components/text-field/index.js"
-      },
-      "default": "./dist/components/text-field/index.js"
-    },
-    "./toggle-icon-button": {
-      "import": {
-        "types": "./dist/components/toggle-icon-button/index.d.ts",
-        "default": "./dist/components/toggle-icon-button/index.js"
-      },
-      "default": "./dist/components/toggle-icon-button/index.js"
-    },
-    "./tooltip": {
-      "import": {
-        "types": "./dist/components/tooltip/index.d.ts",
-        "default": "./dist/components/tooltip/index.js"
-      },
-      "default": "./dist/components/tooltip/index.js"
+      "default": "./dist/components/*/index.js"
     },
     "./styles": {
       "import": {
         "default": "./dist/index.css"
       },
       "default": "./dist/index.css"
+    },
+    "./utils": {
+      "import": {
+        "types": "./dist/lib/utils.d.ts",
+        "default": "./dist/lib/utils.js"
+      },
+      "default": "./dist/lib/utils.js"
     }
   },
   "scripts": {
@@ -178,7 +52,7 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/icons": "^1.0.0",
+    "@accelint/icons": "^1.1.0",
     "@fontsource/roboto-flex": "5.1.0",
     "@fontsource/roboto-mono": "5.1.0",
     "@radix-ui/react-avatar": "^1.1.4",

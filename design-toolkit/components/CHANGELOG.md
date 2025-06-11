@@ -1,5 +1,20 @@
 # @accelint/design-toolkit
 
+## 1.0.1
+
+### Patch Changes
+
+- 0c66cab: added virtualizer to combobox component
+- 032e278: Added the ComboBox component.
+
+## 1.0.0
+
+### Patch Changes
+
+- 1cab20a: Updated the TextField and TextArea components to also pass props down to the underlying HTML elements.
+- Updated dependencies [4974392]
+  - @accelint/icons@1.1.0
+
 ## 0.0.2
 
 ### Patch Changes
