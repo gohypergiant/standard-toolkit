@@ -37,6 +37,8 @@ export { ClassificationBadge } from './components/classification-badge';
 export type { ClassificationBadgeProps } from './components/classification-badge';
 export { ClassificationBanner } from './components/classification-banner';
 export type { ClassificationBannerProps } from './components/classification-banner';
+export { ColorPicker, useColorPickerState } from './components/color-picker';
+export type { ColorPickerProps } from './components/color-picker';
 export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
 export { FloatingButton } from './components/floating-button';
