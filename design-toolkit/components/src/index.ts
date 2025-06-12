@@ -48,6 +48,8 @@ export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
 export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
+export { SearchField } from './components/search-field';
+export type { SearchFieldProps } from './components/search-field';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
 export { Tabs } from './components/tabs';

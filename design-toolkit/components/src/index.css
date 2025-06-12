@@ -363,3 +363,9 @@
   --icon-color: --value([ *]);
   --icon-color: --value(--color- *);
 }
+
+@layer components {
+  .hide-cancel::-webkit-search-cancel-button {
+    display: none;
+  }
+}
