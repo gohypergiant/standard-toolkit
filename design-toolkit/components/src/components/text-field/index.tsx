@@ -137,7 +137,6 @@ const Input = ({
   return (
     <div className='relative flex items-center'>
       <AriaInput
-        {...props}
         onFocus={(e) => {
           if (selectOnFocus) {
             ref.current?.select();
