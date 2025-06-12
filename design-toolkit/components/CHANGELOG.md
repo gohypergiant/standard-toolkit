@@ -1,5 +1,15 @@
 # @accelint/design-toolkit
 
+## 1.1.0
+
+### Minor Changes
+
+- 3c9a57a: Added the Tabs component along with its subcomponents
+
+### Patch Changes
+
+- 5ee48c2: fixed combobox layout
+
 ## 1.0.1
 
 ### Patch Changes
