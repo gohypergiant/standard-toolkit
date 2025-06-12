@@ -4,10 +4,10 @@ packages:
   - "tooling/*"
   - "design-toolkit/*"
 onlyBuiltDependencies:
-  -  "@biomejs/biome"
-  -  "@parcel/watcher"
-  -  "@swc/core"
-  -  "@tailwindcss/oxide"
+  - "@biomejs/biome"
+  - "@parcel/watcher"
+  - "@swc/core"
+  - "@tailwindcss/oxide"
   - "core-js"
   - "core-js-pure"
   - "es5-ext"
@@ -15,3 +15,10 @@ onlyBuiltDependencies:
   - "lefthook"
   - "msw"
   - "sharp"
+packageExtensions:
+  "react-aria-components@1.8.0":
+    peerDependencies:
+      "@types/react": "^19.0.10"
+  "react-aria-components@1.4.1":
+    peerDependencies:
+      "@types/react": "18.3.11"

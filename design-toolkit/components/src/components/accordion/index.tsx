@@ -71,7 +71,6 @@ export function Accordion({
   variant = 'cozy',
   ...props
 }: AccordionProps) {
-  // @ts-expect-error package version mismatch TODO
   const stateContext = useContext(AriaDisclosureGroupStateContext);
 
   return (
@@ -128,7 +127,6 @@ function AccordionHeader({ children }: AccordionHeaderProps) {
         ])}
         data-variant={variant}
       >
-        {/* @ts-expect-error package version mismatch TODO*/}
         <span
           className={IconButton.as({
             isDisabled,

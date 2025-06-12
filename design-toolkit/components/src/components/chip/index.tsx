@@ -79,7 +79,6 @@ export const Chip = ({
   const Component = context ? AriaTag : 'span';
 
   return (
-    // @ts-expect-error we are intentionally omitting children.
     <Component
       className={cn(
         chipStyles({

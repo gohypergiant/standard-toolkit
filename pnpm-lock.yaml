@@ -10,6 +10,8 @@ overrides:
   '@internationalized/date': 3.8.0
   '@docusaurus/plugin-debug@3.7.0>react-json-view-lite': ^2.0.0
 
+packageExtensionsChecksum: sha256-luftPPtx3I0aq/xVV4oRerN02E06RORIM9fCFplH60c=
+
 importers:
 
   .:
@@ -187,7 +189,7 @@ importers:
         version: 19.0.0
       react-aria-components:
         specifier: 1.4.1
-        version: 1.4.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 1.4.1(@types/react@18.3.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
@@ -278,7 +280,7 @@ importers:
         version: 19.0.0
       react-aria-components:
         specifier: 1.8.0
-        version: 1.8.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 1.8.0(@types/react@19.1.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
@@ -578,7 +580,7 @@ importers:
         version: 19.0.0
       react-aria-components:
         specifier: 1.4.1
-        version: 1.4.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 1.4.1(@types/react@18.3.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom:
         specifier: ^18.0.0 || ^19.0.0
         version: 19.0.0(react@19.0.0)
@@ -9296,12 +9298,14 @@ packages:
   react-aria-components@1.4.1:
     resolution: {integrity: sha512-pDRcIByLJi4M2VxZuXrlqi7wyjCKwqAxkPPdKvf4HPupUES56FpbW72yS3syu6fxw16CSx62/3zpuNJX1UotTA==}
     peerDependencies:
+      '@types/react': 18.3.11
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
 
   react-aria-components@1.8.0:
     resolution: {integrity: sha512-qNJ/Z4opj1/NKFf1ch/V8rNYar5MXu4J8YVAt2pFgnBRLjVlIlfnENN8Oa5OFiYFCzMPRFdq5mI8RuYIEnvZfg==}
     peerDependencies:
+      '@types/react': ^19.0.10
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -21531,7 +21535,7 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-aria-components@1.4.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  react-aria-components@1.4.1(@types/react@18.3.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@internationalized/date': 3.8.0
       '@internationalized/string': 3.2.6
@@ -21561,6 +21565,7 @@ snapshots:
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@react-types/table': 3.13.0(react@19.0.0)
       '@swc/helpers': 0.5.17
+      '@types/react': 18.3.11
       client-only: 0.0.1
       react: 19.0.0
       react-aria: 3.40.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -21568,7 +21573,7 @@ snapshots:
       react-stately: 3.38.0(react@19.0.0)
       use-sync-external-store: 1.5.0(react@19.0.0)
 
-  react-aria-components@1.8.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  react-aria-components@1.8.0(@types/react@19.1.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@internationalized/date': 3.8.0
       '@internationalized/string': 3.2.6
@@ -21594,6 +21599,7 @@ snapshots:
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@react-types/table': 3.13.0(react@19.0.0)
       '@swc/helpers': 0.5.17
+      '@types/react': 19.1.2
       client-only: 0.0.1
       react: 19.0.0
       react-aria: 3.40.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
