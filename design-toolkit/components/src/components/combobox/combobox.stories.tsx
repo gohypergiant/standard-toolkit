@@ -13,6 +13,7 @@
 import type { MenuItem } from '@/types/types';
 import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { ReactNode } from 'react';
 import { ComboBox } from './index';
 
 const meta: Meta<typeof ComboBox> = {
@@ -29,6 +30,8 @@ const meta: Meta<typeof ComboBox> = {
     label: 'Label',
     placeholder: 'Placeholder',
     size: 'medium',
+    menuTrigger: 'focus',
+    autoFocus: true,
     layoutOptions: {
       estimatedRowHeight: 46,
     },
@@ -79,42 +82,6 @@ const items: CustomMenuItem[] = [
   },
   {
     id: 6,
-    icon: <Placeholder />,
-    name: 'Snake',
-    description: 'Slithering reptile',
-  },
-  {
-    id: 7,
-    icon: <Placeholder />,
-    name: 'Snake',
-    description: 'Slithering reptile',
-  },
-  {
-    id: 8,
-    icon: <Placeholder />,
-    name: 'Snake',
-    description: 'Slithering reptile',
-  },
-  {
-    id: 9,
-    icon: <Placeholder />,
-    name: 'Snake',
-    description: 'Slithering reptile',
-  },
-  {
-    id: 10,
-    icon: <Placeholder />,
-    name: 'Snake',
-    description: 'Slithering reptile',
-  },
-  {
-    id: 11,
-    icon: <Placeholder />,
-    name: 'Snake',
-    description: 'Slithering reptile',
-  },
-  {
-    id: 12,
     icon: <Placeholder />,
     name: 'Snake',
     description: 'Slithering reptile',
@@ -185,6 +152,12 @@ export const Default: Story = {
 };
 
 export const WithDynamicSections: Story = {
+  args: {
+    ...Default.args,
+    layoutOptions: {
+      rowHeight: 32,
+    },
+  },
   render: ({ children, ...args }) => (
     <ComboBox<CustomMenuItem> {...args} defaultItems={itemsWithSections}>
       {(section) => (
@@ -204,6 +177,12 @@ export const WithDynamicSections: Story = {
 };
 
 export const WithStaticSections: Story = {
+  args: {
+    ...Default.args,
+    layoutOptions: {
+      rowHeight: 32,
+    },
+  },
   render: ({ children, ...args }) => (
     <ComboBox {...args}>
       <ComboBox.Section header='North American Birds'>
@@ -232,52 +211,25 @@ export const WithStaticSections: Story = {
   ),
 };
 
-export const Test: Story = {
+const manyItems: { id: number; name: string; icon: ReactNode }[] = [];
+for (let i = 0; i < 5000; i++) {
+  manyItems.push({ id: i, name: `Item ${i}`, icon: <Placeholder /> });
+}
+
+export const WithManyItems: Story = {
+  args: {
+    ...Default.args,
+    layoutOptions: {
+      rowHeight: 32,
+    },
+  },
   render: ({ children, ...args }) => (
     <ComboBox {...args}>
-      <ComboBox.Item
-        icon={<Placeholder />}
-        name='Red Panda'
-        isDisabled
-        description='Some ice cream'
-      >
-        Red Panda
-      </ComboBox.Item>
-      <ComboBox.Item
-        icon={<Placeholder />}
-        name='Cat'
-        description='Some ice cream'
-      >
-        Cat
-      </ComboBox.Item>
-      <ComboBox.Item
-        icon={<Placeholder />}
-        name='Dog'
-        description='Some ice cream'
-      >
-        Dog
-      </ComboBox.Item>
-      <ComboBox.Item
-        icon={<Placeholder />}
-        name='Aardvark'
-        description='Some ice cream'
-      >
-        Aardvark
-      </ComboBox.Item>
-      <ComboBox.Item
-        icon={<Placeholder />}
-        name='Kangaroo'
-        description='Some ice cream'
-      >
-        Kangaroo
-      </ComboBox.Item>
-      <ComboBox.Item
-        icon={<Placeholder />}
-        name='Snake'
-        description='Some ice cream'
-      >
-        Snake
-      </ComboBox.Item>
+      {manyItems.map((item) => (
+        <ComboBox.Item key={item.id} icon={item.icon} name={item.name}>
+          {item.name}
+        </ComboBox.Item>
+      ))}
     </ComboBox>
   ),
 };
