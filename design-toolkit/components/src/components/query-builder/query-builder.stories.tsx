@@ -17,54 +17,6 @@ import { z } from 'zod';
 import { QueryBuilder } from './';
 
 /**
- * This hides all the irrelevant props that are auto created for storybook
- * in order to have a less confusing developer experience of the story.
- */
-const hideArgs = [
-  'accessibleDescriptionGenerator',
-  'context',
-  'idGenerator',
-  'validator',
-  'query',
-  'defaultQuery',
-  'onQueryChange',
-  'fields',
-  'getDefaultField',
-  'operators',
-  'getDefaultOperator',
-  'getOperators',
-  'combinators',
-  'baseField',
-  'baseCombinator',
-  'baseOperator',
-  'independentCombinators',
-  'getValueEditorType',
-  'getDefaultValue',
-  'getValueEditorSeparator',
-  'getValueSources',
-  'getValues',
-  'getRuleClassname',
-  'getRuleGroupClassname',
-  'getInputType',
-  'onAddRule',
-  'onAddGroup',
-  'onMoveRule',
-  'onMoveGroup',
-  'onGroupRule',
-  'onGroupGroup',
-  'onRemove',
-  'onLog',
-  'suppressStandardClassnames',
-  'showShiftActions',
-].reduce(
-  (list, arg) => {
-    list[arg] = { table: { disable: true } };
-    return list;
-  },
-  {} as Record<string, { table: { disable: true } }>,
-);
-
-/**
  * A custom port of the React QueryBuilder component: https://react-querybuilder.js.org/
  */
 const meta: Meta<typeof QueryBuilder> = {
@@ -78,7 +30,6 @@ const meta: Meta<typeof QueryBuilder> = {
     showRuleLines: true,
   },
   argTypes: {
-    ...hideArgs,
     orientation: { options: ['horizontal', 'vertical'] },
     disabled: {
       control: {
@@ -87,6 +38,15 @@ const meta: Meta<typeof QueryBuilder> = {
     },
   },
   parameters: {
+    controls: {
+      include: [
+        'disabled',
+        'orientation',
+        'showCloneButtons',
+        'showLockButtons',
+        'showRuleLines',
+      ],
+    },
     docs: {
       subtitle: 'Builds a complex formatted query for filtering a dataset',
     },

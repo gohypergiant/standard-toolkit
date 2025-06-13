@@ -21,12 +21,11 @@ import {
   QueryBuilder as RQBBuilder,
 } from 'react-querybuilder';
 import { cn } from '../../lib/utils';
+import { Icon } from '../icon';
 import { IconButton } from '../icon-button';
 import { Label } from '../label';
 import { Radio } from '../radio';
 import { Tooltip } from '../tooltip';
-import './querybuilder.css';
-import { Icon } from '../icon';
 import { ActionElement } from './action-element';
 import { RuleGroup } from './group';
 import { Rule } from './rule';
