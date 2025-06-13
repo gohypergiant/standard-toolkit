@@ -23,6 +23,7 @@ import { ComboBox } from '../combobox';
 export function ValueSelector(props: ValueSelectorProps) {
   const {
     handleOnChange,
+    disabled,
     listsAsArrays,
     options: optionsProp,
     multiple,
@@ -81,6 +82,7 @@ export function ValueSelector(props: ValueSelectorProps) {
   return (
     <ComboBox
       size='small'
+      isDisabled={disabled}
       {...rest}
       selectedKey={Array.isArray(val) ? val[0] : val}
       aria-labelledby={title}
