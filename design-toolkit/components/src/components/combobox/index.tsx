@@ -135,6 +135,7 @@ export function ComboBox<T extends MenuItem>({
   const isSmall = size === 'small';
   const shouldShowDescription = !(isSmall || isInvalid) || isDisabled;
   const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
+  const shouldShowLabel = !isSmall && label;
 
   return (
     <AriaComboBox<T>
@@ -146,7 +147,7 @@ export function ComboBox<T extends MenuItem>({
     >
       {({ isDisabled, isOpen }) => (
         <>
-          {!isSmall && (
+          {shouldShowLabel && (
             <Label
               className='empty:hidden'
               isDisabled={isDisabled}

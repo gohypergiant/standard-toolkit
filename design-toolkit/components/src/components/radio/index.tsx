@@ -18,6 +18,7 @@ import {
   RadioGroup as AriaRadioGroup,
   type RadioGroupProps as AriaRadioGroupProps,
   type RadioProps as AriaRadioProps,
+  composeRenderProps,
 } from 'react-aria-components';
 import { Label } from '../label';
 
@@ -99,9 +100,13 @@ function RadioGroup({ children, className, label, ...props }: RadioGroupProps) {
   return (
     <AriaRadioGroup
       {...props}
-      className={cn(
-        'fg-default-light flex flex-col gap-m text-body-s',
-        className,
+      className={composeRenderProps(className, (className, renderProps) =>
+        cn(
+          'fg-default-light flex flex-col gap-m text-body-s',
+          renderProps.orientation === 'horizontal' && 'flex-row items-center',
+
+          className,
+        ),
       )}
     >
       {(props) => (
