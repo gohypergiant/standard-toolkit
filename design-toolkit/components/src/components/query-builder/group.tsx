@@ -37,8 +37,6 @@ export function RuleGroup(props: RuleGroupProps) {
   const cloneGroup = useStopEventPropagation(group.cloneGroup);
   const toggleLockGroup = useStopEventPropagation(group.toggleLockGroup);
   const removeGroup = useStopEventPropagation(group.removeGroup);
-  const shiftGroupUp = useStopEventPropagation(group.shiftGroupUp);
-  const shiftGroupDown = useStopEventPropagation(group.shiftGroupDown);
 
   const elementProps = useMemo(
     () => ({
@@ -47,20 +45,9 @@ export function RuleGroup(props: RuleGroupProps) {
       addRule,
       cloneGroup,
       removeGroup,
-      shiftGroupDown,
-      shiftGroupUp,
       toggleLockGroup,
     }),
-    [
-      addGroup,
-      addRule,
-      cloneGroup,
-      group,
-      removeGroup,
-      shiftGroupDown,
-      shiftGroupUp,
-      toggleLockGroup,
-    ],
+    [addGroup, addRule, cloneGroup, group, removeGroup, toggleLockGroup],
   );
 
   return (
@@ -81,12 +68,14 @@ export function RuleGroup(props: RuleGroupProps) {
 export function RuleGroupHeaderComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {
+  const shouldShowLock = ruleGroup.schema.showLockButtons;
+  const isNotRoot = ruleGroup.path.length > 0;
+  const shouldShowClone = ruleGroup.schema.showCloneButtons && isNotRoot;
+
   const {
     schema: {
       controls: {
-        shiftActions: ShiftActionsControlElement,
         combinatorSelector: CombinatorSelectorControlElement,
-        notToggle: NotToggleControlElement,
         cloneGroupAction: CloneGroupActionControlElement,
         lockGroupAction: LockGroupActionControlElement,
         removeGroupAction: RemoveGroupActionControlElement,
@@ -94,50 +83,8 @@ export function RuleGroupHeaderComponent(
     },
   } = ruleGroup;
 
-  const titles = useMemo(
-    () => ({
-      shiftUp: ruleGroup.translations.shiftActionUp.title,
-      shiftDown: ruleGroup.translations.shiftActionDown.title,
-    }),
-    [
-      ruleGroup.translations.shiftActionDown.title,
-      ruleGroup.translations.shiftActionUp.title,
-    ],
-  );
-
-  const labels = useMemo(
-    () => ({
-      shiftUp: ruleGroup.translations.shiftActionUp.label,
-      shiftDown: ruleGroup.translations.shiftActionDown.label,
-    }),
-    [
-      ruleGroup.translations.shiftActionDown.label,
-      ruleGroup.translations.shiftActionUp.label,
-    ],
-  );
-
   return (
     <>
-      {ruleGroup.schema.showShiftActions && ruleGroup.path.length > 0 && (
-        <ShiftActionsControlElement
-          key={TestID.shiftActions}
-          testID={TestID.shiftActions}
-          level={ruleGroup.path.length}
-          path={ruleGroup.path}
-          titles={titles}
-          labels={labels}
-          className={ruleGroup.classNames.shiftActions}
-          disabled={ruleGroup.disabled}
-          shiftUp={ruleGroup.shiftGroupUp}
-          shiftDown={ruleGroup.shiftGroupDown}
-          shiftUpDisabled={ruleGroup.shiftUpDisabled}
-          shiftDownDisabled={ruleGroup.shiftDownDisabled}
-          context={ruleGroup.context}
-          validation={ruleGroup.validationResult}
-          schema={ruleGroup.schema}
-          ruleOrGroup={ruleGroup.ruleGroup}
-        />
-      )}
       <CombinatorSelectorControlElement
         key={TestID.combinators}
         testID={TestID.combinators}
@@ -154,25 +101,7 @@ export function RuleGroupHeaderComponent(
         validation={ruleGroup.validationResult}
         schema={ruleGroup.schema}
       />
-      {ruleGroup.schema.showNotToggle && (
-        <NotToggleControlElement
-          key={TestID.notToggle}
-          testID={TestID.notToggle}
-          className={ruleGroup.classNames.notToggle}
-          title={ruleGroup.translations.notToggle.title}
-          label={ruleGroup.translations.notToggle.label}
-          checked={ruleGroup.ruleGroup.not}
-          handleOnChange={ruleGroup.onNotToggleChange}
-          level={ruleGroup.path.length}
-          disabled={ruleGroup.disabled}
-          path={ruleGroup.path}
-          context={ruleGroup.context}
-          validation={ruleGroup.validationResult}
-          schema={ruleGroup.schema}
-          ruleGroup={ruleGroup.ruleGroup}
-        />
-      )}
-      {ruleGroup.schema.showCloneButtons && ruleGroup.path.length >= 1 && (
+      {shouldShowClone && (
         <div>
           <CloneGroupActionControlElement
             key={TestID.cloneGroup}
@@ -192,7 +121,7 @@ export function RuleGroupHeaderComponent(
           />
         </div>
       )}
-      {ruleGroup.schema.showLockButtons && (
+      {shouldShowLock && (
         <div>
           <LockGroupActionControlElement
             key={TestID.lockGroup}
@@ -217,7 +146,7 @@ export function RuleGroupHeaderComponent(
           />
         </div>
       )}
-      {ruleGroup.path.length > 0 && (
+      {isNotRoot && (
         <div>
           <RemoveGroupActionControlElement
             key={TestID.removeGroup}
