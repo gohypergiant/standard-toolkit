@@ -8,9 +8,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {

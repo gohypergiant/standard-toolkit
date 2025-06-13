@@ -258,6 +258,9 @@ importers:
       '@radix-ui/react-avatar':
         specifier: ^1.1.4
         version: 1.1.9(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/ssr':
+        specifier: 3.9.6
+        version: 3.9.6(react@19.0.0)
       '@react-types/shared':
         specifier: 3.25.0
         version: 3.25.0(react@19.0.0)
@@ -3692,12 +3695,6 @@ packages:
     engines: {node: '>= 12'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
-
-  '@react-aria/ssr@3.9.8':
-    resolution: {integrity: sha512-lQDE/c9uTfBSDOjaZUJS8xP2jCKVk4zjQeIlCH90xaLhHDgbpCdns3xvFpJJujfj3nI4Ll9K7A+ONUBDCASOuw==}
-    engines: {node: '>= 12'}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
   '@react-aria/ssr@3.9.9':
     resolution: {integrity: sha512-2P5thfjfPy/np18e5wD4WPt8ydNXhij1jwA8oehxZTFqlgVMGXzcWKxTb4RtJrLFsqPO7RUQTiY8QJk0M4Vy2g==}
@@ -14405,7 +14402,7 @@ snapshots:
 
   '@react-aria/collections@3.0.0-alpha.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@react-aria/ssr': 3.9.6(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.25.3(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -14416,7 +14413,7 @@ snapshots:
   '@react-aria/collections@3.0.0-rc.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@react-aria/interactions': 3.25.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -14524,7 +14521,7 @@ snapshots:
     dependencies:
       '@react-aria/button': 3.13.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/selection': 3.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/disclosure': 3.0.0-alpha.0(react@19.0.0)
       '@react-stately/toggle': 3.8.4(react@19.0.0)
@@ -14537,7 +14534,7 @@ snapshots:
 
   '@react-aria/disclosure@3.0.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/disclosure': 3.0.4(react@19.0.0)
       '@react-types/button': 3.12.1(react@19.0.0)
@@ -14667,7 +14664,7 @@ snapshots:
       '@internationalized/message': 3.1.7
       '@internationalized/number': 3.6.2
       '@internationalized/string': 3.2.6
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -14681,7 +14678,7 @@ snapshots:
       '@internationalized/message': 3.1.7
       '@internationalized/number': 3.6.2
       '@internationalized/string': 3.2.6
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -14690,7 +14687,7 @@ snapshots:
 
   '@react-aria/interactions@3.22.4(react@19.0.0)':
     dependencies:
-      '@react-aria/ssr': 3.9.6(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.25.3(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -14698,7 +14695,7 @@ snapshots:
 
   '@react-aria/interactions@3.25.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/flags': 3.1.1
       '@react-types/shared': 3.25.0(react@19.0.0)
@@ -14944,11 +14941,6 @@ snapshots:
       '@swc/helpers': 0.5.17
       react: 19.0.0
 
-  '@react-aria/ssr@3.9.8(react@19.0.0)':
-    dependencies:
-      '@swc/helpers': 0.5.17
-      react: 19.0.0
-
   '@react-aria/ssr@3.9.9(react@19.0.0)':
     dependencies:
       '@swc/helpers': 0.5.17
@@ -15120,7 +15112,7 @@ snapshots:
 
   '@react-aria/utils@3.25.3(react@19.0.0)':
     dependencies:
-      '@react-aria/ssr': 3.9.6(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-stately/utils': 3.10.4(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
@@ -15129,7 +15121,7 @@ snapshots:
 
   '@react-aria/utils@3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-stately/flags': 3.1.1
       '@react-stately/utils': 3.10.6(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
@@ -21579,7 +21571,7 @@ snapshots:
       '@react-aria/interactions': 3.25.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/live-announcer': 3.4.2
       '@react-aria/overlays': 3.27.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/toolbar': 3.0.0-beta.15(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/virtualizer': 4.1.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -21633,7 +21625,7 @@ snapshots:
       '@react-aria/selection': 3.24.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/separator': 3.4.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/slider': 3.7.19(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/ssr': 3.9.8(react@19.0.0)
+      '@react-aria/ssr': 3.9.9(react@19.0.0)
       '@react-aria/switch': 3.7.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/table': 3.17.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/tabs': 3.10.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
