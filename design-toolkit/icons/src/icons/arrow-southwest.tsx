@@ -34,7 +34,7 @@ const SvgArrowSouthwest = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       fill='currentColor'
-      d='M12.303 13.01v-1.994l-7.898-.007 8.605-8.605L11.596.99 2.991 9.595l.007-7.898H.99V13.01z'
+      d='M17.303 18.01v-1.994l-7.898-.007 8.605-8.605-1.414-1.415-8.605 8.606.007-7.898H5.99V18.01z'
     />
   </svg>
 );
