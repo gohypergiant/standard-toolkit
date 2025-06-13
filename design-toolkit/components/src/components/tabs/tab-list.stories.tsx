@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
-import { Add, Check, Group } from '@accelint/icons';
-import { Tabs } from '@/components/tabs/index';
 import { Icon } from '@/components/icon';
+import { Tabs } from '@/components/tabs/index';
+import { Add, Check, Group } from '@accelint/icons';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Tabs.List> = {
   title: 'Components/Tabs/Tabs.List',
@@ -48,7 +48,7 @@ export const Default: Story = {
       <div className='flex w-[300px] flex-col gap-m'>
         <h5 className='fg-default-light'>Horizontal Orientation</h5>
         <Tabs>
-          <Tabs.List { ...args }>
+          <Tabs.List {...args}>
             <Tabs.Tab id='Storybook-Tab-1'>Tab 1</Tabs.Tab>
             <Tabs.Tab id='Storybook-Tab-2'>Tab 2</Tabs.Tab>
             <Tabs.Tab id='Storybook-Tab-3'>Tab 3</Tabs.Tab>
@@ -58,7 +58,7 @@ export const Default: Story = {
       <div className='flex w-[300px] flex-col gap-m'>
         <h5 className='fg-default-light'>Vertical Orientation</h5>
         <Tabs orientation='vertical'>
-          <Tabs.List { ...args }>
+          <Tabs.List {...args}>
             <Tabs.Tab id='Storybook-Vert-Tab-1'>Tab 1</Tabs.Tab>
             <Tabs.Tab id='Storybook-Vert-Tab-2'>Tab 2</Tabs.Tab>
             <Tabs.Tab id='Storybook-Vert-Tab-3'>Tab 3</Tabs.Tab>
@@ -79,20 +79,44 @@ export const Icons: Story = {
       <div className='flex w-[300px] flex-col gap-m'>
         <h5 className='fg-default-light'>Horizontal Orientation</h5>
         <Tabs>
-          <Tabs.List { ...args } variant='icons'>
-            <Tabs.Tab id='Storybook-Icon-Tab-1'><Icon><Add/></Icon></Tabs.Tab>
-            <Tabs.Tab id='Storybook-Icon-Tab-2'><Icon><Check/></Icon></Tabs.Tab>
-            <Tabs.Tab id='Storybook-Icon-Tab-3'><Icon><Group/></Icon></Tabs.Tab>
+          <Tabs.List {...args} variant='icons'>
+            <Tabs.Tab id='Storybook-Icon-Tab-1'>
+              <Icon>
+                <Add />
+              </Icon>
+            </Tabs.Tab>
+            <Tabs.Tab id='Storybook-Icon-Tab-2'>
+              <Icon>
+                <Check />
+              </Icon>
+            </Tabs.Tab>
+            <Tabs.Tab id='Storybook-Icon-Tab-3'>
+              <Icon>
+                <Group />
+              </Icon>
+            </Tabs.Tab>
           </Tabs.List>
         </Tabs>
       </div>
       <div className='flex w-[300px] flex-col gap-m'>
         <h5 className='fg-default-light'>Vertical Orientation</h5>
         <Tabs orientation='vertical'>
-          <Tabs.List { ...args } variant='icons'>
-            <Tabs.Tab id='Storybook-Vert-Icon-Tab-1'><Icon><Add/></Icon></Tabs.Tab>
-            <Tabs.Tab id='Storybook-Vert-Icon-Tab-2'><Icon><Check/></Icon></Tabs.Tab>
-            <Tabs.Tab id='Storybook-Vert-Icon-Tab-3'><Icon><Group/></Icon></Tabs.Tab>
+          <Tabs.List {...args} variant='icons'>
+            <Tabs.Tab id='Storybook-Vert-Icon-Tab-1'>
+              <Icon>
+                <Add />
+              </Icon>
+            </Tabs.Tab>
+            <Tabs.Tab id='Storybook-Vert-Icon-Tab-2'>
+              <Icon>
+                <Check />
+              </Icon>
+            </Tabs.Tab>
+            <Tabs.Tab id='Storybook-Vert-Icon-Tab-3'>
+              <Icon>
+                <Group />
+              </Icon>
+            </Tabs.Tab>
           </Tabs.List>
         </Tabs>
       </div>

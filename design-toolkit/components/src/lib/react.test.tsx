@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
 import { containsExactChildren } from '@/lib/react';
+import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
+import { describe, expect, it } from 'vitest';
 
-const TestParent = ({ children }: { children: ReactNode}) => {
+const TestParent = ({ children }: { children: ReactNode }) => {
   containsExactChildren({
     children,
     componentName: TestParent.displayName,
@@ -24,13 +24,13 @@ const TestParent = ({ children }: { children: ReactNode}) => {
     },
   });
 
-  return ( <div>{ children }</div> );
+  return <div>{children}</div>;
 };
 
 TestParent.displayName = 'TestParent';
 
 const TestChild = () => {
-  return ( <p>Child Component</p> );
+  return <p>Child Component</p>;
 };
 
 TestChild.displayName = 'TestChild';
@@ -40,7 +40,7 @@ describe('containsExactChildren', () => {
     render(
       <TestParent>
         <TestChild />
-      </TestParent>
+      </TestParent>,
     );
 
     expect(screen.getByText('Child Component')).toBeInTheDocument();
@@ -52,11 +52,13 @@ describe('containsExactChildren', () => {
       render(
         <TestParent>
           <p>Incorrect Child Component</p>
-        </TestParent>
-      )
+        </TestParent>,
+      );
     }
 
-    await expect(minNotMet()).rejects.toThrow(`Missing the following:\n\t\t1 of <${TestChild.displayName}>`);
+    await expect(minNotMet()).rejects.toThrow(
+      `Missing the following:\n\t\t1 of <${TestChild.displayName}>`,
+    );
   });
 
   it('should not render when maximum children is exceeded', async () => {
@@ -66,10 +68,12 @@ describe('containsExactChildren', () => {
         <TestParent>
           <TestChild />
           <TestChild />
-        </TestParent>
-      )
+        </TestParent>,
+      );
     }
 
-    await expect(maxExceeded()).rejects.toThrow(`Excess of the following:\n\t\t1 of <${TestChild.displayName}>`);
+    await expect(maxExceeded()).rejects.toThrow(
+      `Excess of the following:\n\t\t1 of <${TestChild.displayName}>`,
+    );
   });
 });

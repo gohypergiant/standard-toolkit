@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { Tabs } from '@/components/tabs/index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 /**
  * The `<Tabs.Tab>` component is a direct wrapper around the `Tab` component from
@@ -54,11 +54,8 @@ export const Default: Story = {
           <Tabs.List>
             <Tabs.Tab id='Storybook-Tab-1'>Tab 1</Tabs.Tab>
             <Tabs.Tab id='Storybook-Tab-2'>Tab 2</Tabs.Tab>
-            <Tabs.Tab
-              id={ `${ id }-Horizontal` }
-              isDisabled={ isDisabled }
-            >
-              { children }
+            <Tabs.Tab id={`${id}-Horizontal`} isDisabled={isDisabled}>
+              {children}
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>
@@ -69,11 +66,8 @@ export const Default: Story = {
           <Tabs.List>
             <Tabs.Tab id='Storybook-Vert-Tab-1'>Tab 1</Tabs.Tab>
             <Tabs.Tab id='Storybook-Vert-Tab-2'>Tab 2</Tabs.Tab>
-            <Tabs.Tab
-              id={ `${ id }-Vertical` }
-              isDisabled={ isDisabled }
-            >
-              { children }
+            <Tabs.Tab id={`${id}-Vertical`} isDisabled={isDisabled}>
+              {children}
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>
