@@ -10,7 +10,7 @@ overrides:
   '@internationalized/date': 3.8.0
   '@docusaurus/plugin-debug@3.7.0>react-json-view-lite': ^2.0.0
 
-packageExtensionsChecksum: sha256-luftPPtx3I0aq/xVV4oRerN02E06RORIM9fCFplH60c=
+packageExtensionsChecksum: sha256-OlimU5A/lOPVlA+AJZfFg2HAc/LxVtkLdoHgFmnMEMI=
 
 importers:
 
@@ -523,7 +523,7 @@ importers:
         version: 3.8.0
       '@react-aria/collections':
         specifier: 3.0.0-alpha.5
-        version: 3.0.0-alpha.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 3.0.0-alpha.5(@types/react@18.3.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/datepicker':
         specifier: 3.14.1
         version: 3.14.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -3452,12 +3452,14 @@ packages:
   '@react-aria/collections@3.0.0-alpha.5':
     resolution: {integrity: sha512-8m8yZe1c5PYCylEN4lcG3ZL/1nyrON95nVsoknC8shY1uKP01oJd7w+f6hvVza0tJRQuVe4zW3gO4FVjv33a5g==}
     peerDependencies:
+      '@types/react': ^19.0.10
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
 
   '@react-aria/collections@3.0.0-rc.0':
     resolution: {integrity: sha512-WcRcE3wKtbprOJlBaMbdYS5Suu2KIGq1gVT2fLXVbmDY0CjGemqp2m5aDblQOO8pxvsAqHV8pyznkhANTnK1CQ==}
     peerDependencies:
+      '@types/react': ^19.0.10
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -14407,23 +14409,25 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
-  '@react-aria/collections@3.0.0-alpha.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@react-aria/collections@3.0.0-alpha.5(@types/react@18.3.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@react-aria/ssr': 3.9.6(react@19.0.0)
       '@react-aria/utils': 3.25.3(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
+      '@types/react': 18.3.11
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       use-sync-external-store: 1.5.0(react@19.0.0)
 
-  '@react-aria/collections@3.0.0-rc.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@react-aria/collections@3.0.0-rc.0(@types/react@19.1.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@react-aria/interactions': 3.25.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/ssr': 3.9.8(react@19.0.0)
       '@react-aria/utils': 3.29.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-types/shared': 3.25.0(react@19.0.0)
       '@swc/helpers': 0.5.17
+      '@types/react': 19.1.2
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       use-sync-external-store: 1.5.0(react@19.0.0)
@@ -21540,7 +21544,7 @@ snapshots:
       '@internationalized/date': 3.8.0
       '@internationalized/string': 3.2.6
       '@react-aria/accordion': 3.0.0-alpha.35(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/collections': 3.0.0-alpha.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/collections': 3.0.0-alpha.5(@types/react@18.3.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/color': 3.0.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/disclosure': 3.0.0-alpha.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/dnd': 3.9.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -21578,7 +21582,7 @@ snapshots:
       '@internationalized/date': 3.8.0
       '@internationalized/string': 3.2.6
       '@react-aria/autocomplete': 3.0.0-beta.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/collections': 3.0.0-rc.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/collections': 3.0.0-rc.0(@types/react@19.1.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/dnd': 3.9.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/focus': 3.20.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/interactions': 3.25.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)

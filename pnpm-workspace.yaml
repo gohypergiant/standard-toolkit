@@ -22,3 +22,6 @@ packageExtensions:
   "react-aria-components@1.4.1":
     peerDependencies:
       "@types/react": "18.3.11"
+  "@react-aria/collections":
+    peerDependencies:
+      "@types/react": "^19.0.10"
