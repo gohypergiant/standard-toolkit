@@ -69,6 +69,14 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
+export { Tree, TreeContext, TreeItem } from './components/tree';
+export type {
+  TreeItem,
+  TreeItemMeta,
+  TreeSelectionType,
+} from './components/tree';
+export { SelectionToggle } from './components/tree/selection-toggle';
+export { useTree } from './hooks/useTree';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';
 export type { MenuItem } from './types/types';

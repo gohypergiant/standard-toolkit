@@ -230,6 +230,7 @@
 }
 
 @utility text-header-xxl {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--header-xxl-size);
   font-weight: 500;
   letter-spacing: 0px;
@@ -237,6 +238,7 @@
 }
 
 @utility text-header-xl {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--header-xl-size);
   font-weight: 500;
   letter-spacing: 0.18px;
@@ -244,6 +246,7 @@
 }
 
 @utility text-header-l {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--header-l-size);
   font-weight: 500;
   letter-spacing: 0.18px;
@@ -251,6 +254,7 @@
 }
 
 @utility text-header-m {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--header-m-size);
   font-weight: 500;
   letter-spacing: 0.25px;
@@ -258,6 +262,7 @@
 }
 
 @utility text-header-s {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--header-s-size);
   font-weight: 500;
   letter-spacing: 0.4px;
@@ -265,6 +270,7 @@
 }
 
 @utility text-header-xs {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--header-xs-size);
   font-weight: 500;
   letter-spacing: 0.25px;
@@ -273,6 +279,7 @@
 
 
 @utility text-body-l {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--body-l-size);
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -280,6 +287,7 @@
 }
 
 @utility text-body-m {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--body-m-size);
   font-weight: 400;
   letter-spacing: 0.25px;
@@ -287,6 +295,7 @@
 }
 
 @utility text-body-s {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--body-s-size);
   font-weight: 400;
   letter-spacing: 0.4px;
@@ -294,6 +303,7 @@
 }
 
 @utility text-body-xs {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--body-xs-size);
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -301,6 +311,7 @@
 }
 
 @utility text-body-xxs {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--body-xxs-size);
   font-weight: 400;
   letter-spacing: 0.25px;
@@ -308,6 +319,7 @@
 }
 
 @utility text-button-l {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--button-l-size);
   font-weight: bold;
   letter-spacing: 0.5px;
@@ -315,6 +327,7 @@
 }
 
 @utility text-button-m {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--button-m-size);
   font-weight: bold;
   letter-spacing: 0.25px;
@@ -322,6 +335,7 @@
 }
 
 @utility text-button-s {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--button-s-size);
   font-weight: bold;
   letter-spacing: 0.4px;
@@ -329,6 +343,7 @@
 }
 
 @utility text-button-xs {
+  font-family: var(--font-primary), sans-serif;
   font-size: var(--button-xs-size);
   font-weight: bold;
   letter-spacing: 0.5px;
