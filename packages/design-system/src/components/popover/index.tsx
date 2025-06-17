@@ -53,7 +53,7 @@ const defaultMapping: PopoverMapping = {
   primary: {
     size: 'sm',
   },
-  secondary: { size: 'sm', variant: 'bare' },
+  close: { size: 'sm', variant: 'bare' },
 };
 
 export const PopoverContext =
@@ -152,7 +152,7 @@ export const Popover = forwardRef(function Popover(
                     values: {
                       slots: {
                         [DEFAULT_SLOT]: mapping.primary ?? {},
-                        secondary: mapping.secondary ?? {},
+                        close: mapping.close ?? {},
                       },
                     },
                     ...mapping.actions,
@@ -172,7 +172,7 @@ export const Popover = forwardRef(function Popover(
       mapping.actions,
       mapping.heading,
       mapping.primary,
-      mapping.secondary,
+      mapping.close,
     ],
   );
 
