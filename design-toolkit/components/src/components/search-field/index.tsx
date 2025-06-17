@@ -10,15 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
+import { cn } from '@/lib/utils';
 import {
+  CancelFill,
+  Loop as LoopIcon,
+  Search as SearchIcon,
+} from '@accelint/icons';
+import { cva } from 'cva';
+import {
+  SearchField as AriaSearchField,
   Button,
   Input,
-  SearchField as AriaSearchField
 } from 'react-aria-components';
-import { cva } from 'cva';
-import { cn } from '@/lib/utils';
-import { Icon } from '@/components/icon';
-import { CancelFill, Search as SearchIcon, Loop as LoopIcon } from '@accelint/icons';
+import { Icon } from '../icon';
 
 export interface SearchFieldProps {
   className?: string;
@@ -59,22 +63,14 @@ export const SearchField = ({
   ...rest
 }: SearchFieldProps) => {
   return (
-    <AriaSearchField
-      className={ cn(
-        'group relative',
-        className,
-      ) }
-      { ...rest }
-    >
+    <AriaSearchField className={cn('group relative', className)} {...rest}>
       <Icon className='fg-interactive-hover absolute top-[6px] left-[7px]'>
         <SearchIcon />
       </Icon>
       <Input
-        placeholder={ placeholder }
-        className={ ({ isDisabled }) =>
-          cn(
-            textFieldStyles({ isDisabled, variant }),
-          )
+        placeholder={placeholder}
+        className={({ isDisabled }) =>
+          cn(textFieldStyles({ isDisabled, variant }))
         }
       />
       {isLoading ? (
@@ -82,8 +78,7 @@ export const SearchField = ({
           <LoopIcon className='scale-x-[-1]' />
         </Icon>
       ) : (
-        <Button
-          className='fg-default-dark icon-size-l hover:fg-interactive-hover absolute top-[6px] right-[8px] cursor-pointer group-ai-disabled:hidden group-ai-empty:hidden'>
+        <Button className='fg-default-dark icon-size-l hover:fg-interactive-hover absolute top-[6px] right-[8px] cursor-pointer group-ai-disabled:hidden group-ai-empty:hidden'>
           <Icon>
             <CancelFill />
           </Icon>

@@ -368,4 +368,52 @@
   .hide-cancel::-webkit-search-cancel-button {
     display: none;
   }
+
+  /**
+   * Rule line only applicable to the QueryBuilder component
+   */
+  .queryBuilder .rule-lines::before {
+    content: '';
+    width: 10px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    background-image:
+      repeating-linear-gradient(to bottom, var(--neutral-04), var(--neutral-04)),
+      repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+    background-position: left -1px, center;
+    background-repeat: repeat-y, repeat-x;
+    background-size: 1px 4px, 4px 1px;
+  }
+
+  .queryBuilder .group > span.rule-lines:last-of-type::before {
+    content: '';
+    width: 10px;
+    position: absolute;
+    top: 0;
+    bottom: 50%;
+    left: 50%;
+    background-image:
+      repeating-linear-gradient(to bottom,var(--neutral-04), var(--neutral-04)),
+      repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+    background-position: left -1px, bottom;
+    background-repeat: repeat-y, repeat-x;
+    background-size: 1px 4px, 4px 1px;
+  }
+
+  .queryBuilder .group > span.rule-lines:last-of-type:has(~ div.group)::before {
+    content: '';
+    width: 10px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    background-image:
+      repeating-linear-gradient(to bottom, var(--neutral-04), var(--neutral-04)),
+      repeating-linear-gradient(to right, var(--neutral-04), var(--neutral-04));
+    background-position: left -1px, center;
+    background-repeat: repeat-y, repeat-x;
+    background-size: 1px 4px, 4px 1px;
+  }
 }

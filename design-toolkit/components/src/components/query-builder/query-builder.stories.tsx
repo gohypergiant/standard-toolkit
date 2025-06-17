@@ -12,7 +12,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import type { Field, RuleGroupType } from 'react-querybuilder';
+import type { RuleGroupType } from './';
 
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './example_configuration';

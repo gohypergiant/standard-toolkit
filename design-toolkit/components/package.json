@@ -25,6 +25,13 @@
       },
       "default": "./dist/components/*/index.js"
     },
+    "./query-builder": {
+      "import": {
+        "types": "./dist/components/query-builder/index.d.ts",
+        "default": "./dist/components/query-builder/index.js"
+      },
+      "default": "./dist/components/query-builder/index.js"
+    },
     "./styles": {
       "import": {
         "default": "./dist/index.css"

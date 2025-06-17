@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -59,7 +60,7 @@ export function RuleGroup(props: RuleGroupProps) {
         <RuleGroupBodyElements {...elementProps} />
       </div>
       <div className={cn(classNames.header)}>
-        <RuleGroupFooterComponents {...elementProps} />
+        <RuleGroupFooterComponent {...elementProps} />
       </div>
     </div>
   );
@@ -170,7 +171,7 @@ export function RuleGroupHeaderComponent(
   );
 }
 
-export function RuleGroupFooterComponents(
+export function RuleGroupFooterComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {
   const {

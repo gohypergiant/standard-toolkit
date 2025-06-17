@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -21,8 +22,8 @@ import { Radio } from '../radio';
 import { Switch } from '../switch';
 import { TextArea } from '../text-area';
 import { TextField } from '../text-field';
+import type { QueryBuilderValueEditors } from './';
 import { multiValueOperators } from './constants';
-import type { QueryBuilderValueEditors } from './types';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
 

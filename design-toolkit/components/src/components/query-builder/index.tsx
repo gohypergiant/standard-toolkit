@@ -13,13 +13,22 @@
 import { Duplicate, LockFill } from '@accelint/icons';
 import { Delete } from '@accelint/icons';
 import type { PressEvent } from '@react-types/shared';
-import { createContext, useCallback, useMemo } from 'react';
+import { type ReactElement, createContext, useCallback, useMemo } from 'react';
 import {
   type ActionProps,
   type Classnames,
   type CombinatorSelectorProps,
+  type FullCombinator,
+  type FullField,
+  type FullOperator,
   QueryBuilder as RQBBuilder,
+  type Classnames as RQBClassnames,
+  type Field as RQBField,
+  type QueryBuilderProps as RQBProps,
+  type RuleGroupType as RQBRuleGroupType,
+  type ValueEditorProps,
 } from 'react-querybuilder';
+import type { LiteralUnion } from 'type-fest';
 import { cn } from '../../lib/utils';
 import { Icon } from '../icon';
 import { IconButton } from '../icon-button';
@@ -27,15 +36,74 @@ import { Label } from '../label';
 import { Radio } from '../radio';
 import { Tooltip } from '../tooltip';
 import { ActionElement } from './action-element';
-import { RuleGroup } from './group';
+import {
+  RuleGroup,
+  RuleGroupFooterComponent,
+  RuleGroupHeaderComponent,
+} from './group';
 import { Rule } from './rule';
-import type { QueryBuilderContextType, QueryBuilderProps } from './types';
-import { pressToMouseEvent } from './utils';
+import { getValidationResult, pressToMouseEvent } from './utils';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
-import './querybuilder.css';
 
-// TODO: make these tooltips configurable?
+export type RuleGroupType = RQBRuleGroupType;
+export type Field = RQBField;
+
+export type DefaultRQBProps = RQBProps<
+  RuleGroupType,
+  FullField,
+  FullOperator,
+  FullCombinator
+>;
+
+// TODO: need to add multiselect back in when we have a compatible component
+export type QueryBuilderValueEditors = Record<
+  LiteralUnion<
+    Exclude<ValueEditorProps['type'], null | undefined | 'multiselect'>,
+    string
+  >,
+  (props: ValueEditorProps) => ReactElement
+>;
+
+/**
+ * Omitted props are currently unsupported functionality
+ */
+export type QueryBuilderProps = Partial<
+  Omit<
+    DefaultRQBProps,
+    | 'showCombinatorsBetweenRules'
+    | 'independentCombinators'
+    | 'listsAsArrays'
+    | 'enableDragAndDrop'
+    | 'showNotToggle'
+    | 'showShiftActions'
+  > & {
+    orientation?: 'horizontal' | 'vertical';
+    showRuleLines?: boolean;
+  }
+>;
+
+/**
+ * Omitted classnames are for unsupported features
+ */
+export type ClassNames = Omit<
+  RQBClassnames,
+  | 'betweenRules'
+  | 'branches'
+  | 'dndDragging'
+  | 'dndOver'
+  | 'dndCopy'
+  | 'dndGroup'
+  | 'dragHandle'
+  | 'shiftActions'
+  | 'notToggle'
+>;
+
+export type QueryBuilderContextType = Pick<
+  QueryBuilderProps,
+  'showRuleLines' | 'orientation'
+>;
+
 const operatorDescriptions: Record<string, string> = {
   // biome-ignore lint/style/useNamingConvention: set by the library
   AND: 'All rules below must be true for a match',
@@ -231,3 +299,16 @@ export function QueryBuilder({
     />
   );
 }
+
+QueryBuilder.CombinatorSelector = CombinatorSelector;
+QueryBuilder.RemoveRuleAction = RemoveRuleAction;
+QueryBuilder.LockAction = LockAction;
+QueryBuilder.CloneAction = CloneAction;
+QueryBuilder.ActionElement = ActionElement;
+QueryBuilder.Rule = Rule;
+QueryBuilder.RuleGroup = RuleGroup;
+QueryBuilder.RuleGroupHeaderComponent = RuleGroupHeaderComponent;
+QueryBuilder.RuleGroupFooterComponent = RuleGroupFooterComponent;
+QueryBuilder.getValidationResult = getValidationResult;
+QueryBuilder.ValueEditor = ValueEditor;
+QueryBuilder.ValueSelector = ValueSelector;

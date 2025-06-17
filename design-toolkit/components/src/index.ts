@@ -48,28 +48,16 @@ export type { IconProps } from './components/icon';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
-export { ActionElement } from './components/query-builder/action-element';
-export { multiValueOperators } from './components/query-builder/constants';
-export {
-  RuleGroup,
-  RuleGroupFooterComponents,
-  RuleGroupHeaderComponent,
-} from './components/query-builder/group';
 export { QueryBuilder } from './components/query-builder';
-export { Rule } from './components/query-builder/rule';
 export type {
   ClassNames,
   DefaultRQBProps,
+  Field,
   QueryBuilderContextType,
   QueryBuilderProps,
   QueryBuilderValueEditors,
-} from './components/query-builder/types';
-export {
-  getValidationResult,
-  pressToMouseEvent,
-} from './components/query-builder/utils';
-export { ValueEditor } from './components/query-builder/value-editor';
-export { ValueSelector } from './components/query-builder/value-selector';
+  RuleGroupType,
+} from './components/query-builder';
 export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
 export { SearchField } from './components/search-field';
