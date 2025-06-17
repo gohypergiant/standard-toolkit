@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
-import { Add, Check, Group } from '@accelint/icons';
-import { Tabs } from '@/components/tabs/index';
 import { Icon } from '@/components/icon';
+import { Tabs } from '@/components/tabs/index';
+import { Add, Check, Group } from '@accelint/icons';
+import type { Meta, StoryObj } from '@storybook/react';
 
 /**
  * The `<Tabs>` component is a direct wrapper around the `Tabs` component from
@@ -54,7 +54,7 @@ export const Default: Story = {
   render: ({ ...args }) => (
     <div className='flex w-full flex-row flex-wrap gap-m'>
       <div className='w-[300px]'>
-        <Tabs { ...args }>
+        <Tabs {...args}>
           <Tabs.List>
             <Tabs.Tab id='Storybook-Tab-1'>Tab 1</Tabs.Tab>
             <Tabs.Tab id='Storybook-Tab-2'>Tab 2</Tabs.Tab>
@@ -63,11 +63,23 @@ export const Default: Story = {
         </Tabs>
       </div>
       <div className='w-[300px]'>
-        <Tabs { ...args }>
+        <Tabs {...args}>
           <Tabs.List variant='icons'>
-            <Tabs.Tab id='Storybook-Icon-Tab-1'><Icon><Add/></Icon></Tabs.Tab>
-            <Tabs.Tab id='Storybook-Icon-Tab-2'><Icon><Check/></Icon></Tabs.Tab>
-            <Tabs.Tab id='Storybook-Icon-Tab-3'><Icon><Group/></Icon></Tabs.Tab>
+            <Tabs.Tab id='Storybook-Icon-Tab-1'>
+              <Icon>
+                <Add />
+              </Icon>
+            </Tabs.Tab>
+            <Tabs.Tab id='Storybook-Icon-Tab-2'>
+              <Icon>
+                <Check />
+              </Icon>
+            </Tabs.Tab>
+            <Tabs.Tab id='Storybook-Icon-Tab-3'>
+              <Icon>
+                <Group />
+              </Icon>
+            </Tabs.Tab>
           </Tabs.List>
         </Tabs>
       </div>
