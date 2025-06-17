@@ -9,5 +9,23 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { QueryBuilder } from './';
+import { defaultQuery, fields } from './example_configuration';
 
-// write something
+describe('QueryBuilder', () => {
+  it('should render', () => {
+    const mockSetQuery = vi.fn();
+
+    render(
+      <QueryBuilder
+        fields={fields}
+        query={defaultQuery}
+        onQueryChange={mockSetQuery}
+      />,
+    );
+
+    expect(screen.getByRole('form')).toBeInTheDocument();
+  });
+});

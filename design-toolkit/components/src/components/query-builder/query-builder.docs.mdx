@@ -7,10 +7,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License. -->
 
-import { Meta } from '@storybook/blocks';
+import { Meta, Canvas, Controls } from '@storybook/blocks';
 
 import * as QueryBuilderStories from './query-builder.stories';
 
 <Meta of={ QueryBuilderStories }/>
 
 # QueryBuilder
+
+The `QueryBuilder` component is a specialized instance of the [React Query Builder](https://react-querybuilder.js.org/) library that allows us to provide a UI for crafting rulesets for queries and filtering.
+
+<Canvas of={ QueryBuilderStories.Default }/>
+
+<Controls of={ QueryBuilderStories.Default }/>
