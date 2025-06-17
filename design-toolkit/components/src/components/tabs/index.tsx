@@ -10,18 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
+import { containsExactChildren } from '@/lib/react';
 import { cn } from '@/lib/utils';
 import { cva } from 'cva';
-import { containsExactChildren } from '@/lib/react';
 import {
-  Tabs as AriaTabs,
-  TabList as AriaTabList,
   Tab as AriaTab,
-  TabPanel as AriaTabPanel,
-  type TabsProps as AriaTabsProps,
+  TabList as AriaTabList,
   type TabListProps as AriaTabListProps,
-  type TabProps as AriaTabProps,
+  TabPanel as AriaTabPanel,
   type TabPanelProps as AriaTabPanelProps,
+  type TabProps as AriaTabProps,
+  Tabs as AriaTabs,
+  type TabsProps as AriaTabsProps,
 } from 'react-aria-components';
 
 export interface TabsProps extends AriaTabsProps {}
@@ -43,15 +43,15 @@ export const Tabs = ({
 
   return (
     <AriaTabs
-      orientation={ orientation }
-      isDisabled={ isDisabled }
-      className={ cn(
+      orientation={orientation}
+      isDisabled={isDisabled}
+      className={cn(
         'group flex w-content flex-row ai-orientation-horizontal:flex-col',
         className,
-      ) }
-      { ...rest }
+      )}
+      {...rest}
     >
-      { children }
+      {children}
     </AriaTabs>
   );
 };
@@ -65,23 +65,23 @@ export interface TabListProps extends AriaTabListProps<object> {
   drawer?: 'left' | 'right' | 'top' | 'bottom';
 }
 
-const tabListStyles = cva(
-  'flex ai-orientation-horizontal:flex-row flex-col',
-  {
-    variants: {
-      variant: {
-        icons: '[&>*]:p-xs ai-orientation-horizontal:[&>*]:pr-s ai-orientation-horizontal:[&>*]:pl-s [&>*]:leading-[0]',
-        'default': '[&>*]:p-s [&>*]:text-header-m',
-      },
-      drawer: {
-        left: 'ai-orientation-vertical:gap-xs rounded-r-large bg-surface-default p-s',
-        right: 'ai-orientation-vertical:gap-xs rounded-l-large bg-surface-default p-s',
-        top: 'ai-orientation-vertical:gap-xs rounded-b-large bg-surface-default p-s',
-        bottom: 'ai-orientation-vertical:gap-xs rounded-t-large bg-surface-default p-s',
-      },
+const tabListStyles = cva('flex ai-orientation-horizontal:flex-row flex-col', {
+  variants: {
+    variant: {
+      icons:
+        '[&>*]:p-xs ai-orientation-horizontal:[&>*]:pr-s ai-orientation-horizontal:[&>*]:pl-s [&>*]:leading-[0]',
+      default: '[&>*]:p-s [&>*]:text-header-m',
+    },
+    drawer: {
+      left: 'ai-orientation-vertical:gap-xs rounded-r-large bg-surface-default p-s',
+      right:
+        'ai-orientation-vertical:gap-xs rounded-l-large bg-surface-default p-s',
+      top: 'ai-orientation-vertical:gap-xs rounded-b-large bg-surface-default p-s',
+      bottom:
+        'ai-orientation-vertical:gap-xs rounded-t-large bg-surface-default p-s',
     },
   },
-);
+});
 
 const TabList = ({
   children,
@@ -100,15 +100,10 @@ const TabList = ({
 
   return (
     <AriaTabList
-      className={
-        cn(
-          tabListStyles({ variant, drawer }),
-          className,
-        )
-      }
-      { ...rest }
+      className={cn(tabListStyles({ variant, drawer }), className)}
+      {...rest}
     >
-      { children }
+      {children}
     </AriaTabList>
   );
 };
@@ -123,42 +118,42 @@ const tabBaseStyles = cn(
   'group-ai-orientation-vertical:border group-ai-orientation-vertical:border-transparent',
 );
 
-const tabStyles = cva(
-  tabBaseStyles,
-  {
-    variants: {
-      isSelected: {
-        true: 'fg-highlight bg-highlight-subtle group-ai-orientation-horizontal:border-highlight',
-      },
-      isHovered: {
-        true: 'fg-default-light group-ai-orientation-horizontal:border-interactive-hover',
-      },
-      isFocused: {
-        true: 'fg-default-light group-ai-orientation-horizontal:border-interactive-hover',
-      },
-      isDisabled: {
-        true: 'fg-disabled cursor-not-allowed group-ai-orientation-horizontal:border-interactive-disabled',
-      },
+const tabStyles = cva(tabBaseStyles, {
+  variants: {
+    isSelected: {
+      true: 'fg-highlight bg-highlight-subtle group-ai-orientation-horizontal:border-highlight',
     },
-    compoundVariants: [
-      {
-        isSelected: true,
-        isHovered: true,
-        className: 'fg-highlight group-ai-orientation-horizontal:border-highlight',
-      },
-      {
-        isSelected: true,
-        isFocused: true,
-        className: 'fg-highlight group-ai-orientation-horizontal:border-interactive-hover group-ai-orientation-vertical:border-interactive-hover',
-      },
-      {
-        isDisabled: true,
-        isSelected: true,
-        className: 'fg-disabled bg-interactive-disabled group-ai-orientation-horizontal:border-interactive-disabled',
-      },
-    ],
+    isHovered: {
+      true: 'fg-default-light group-ai-orientation-horizontal:border-interactive-hover',
+    },
+    isFocused: {
+      true: 'fg-default-light group-ai-orientation-horizontal:border-interactive-hover',
+    },
+    isDisabled: {
+      true: 'fg-disabled cursor-not-allowed group-ai-orientation-horizontal:border-interactive-disabled',
+    },
   },
-);
+  compoundVariants: [
+    {
+      isSelected: true,
+      isHovered: true,
+      className:
+        'fg-highlight group-ai-orientation-horizontal:border-highlight',
+    },
+    {
+      isSelected: true,
+      isFocused: true,
+      className:
+        'fg-highlight group-ai-orientation-horizontal:border-interactive-hover group-ai-orientation-vertical:border-interactive-hover',
+    },
+    {
+      isDisabled: true,
+      isSelected: true,
+      className:
+        'fg-disabled bg-interactive-disabled group-ai-orientation-horizontal:border-interactive-disabled',
+    },
+  ],
+});
 
 export interface TabProps extends AriaTabProps {}
 
@@ -171,18 +166,17 @@ const Tab = ({
 }: TabProps) => {
   return (
     <AriaTab
-      id={ id }
-      className={
-        ({ isSelected, isHovered, isFocused, isDisabled }) =>
-          cn(
-            tabStyles({ isSelected, isHovered, isFocused, isDisabled }),
-            className,
-          )
+      id={id}
+      className={({ isSelected, isHovered, isFocused, isDisabled }) =>
+        cn(
+          tabStyles({ isSelected, isHovered, isFocused, isDisabled }),
+          className,
+        )
       }
-      isDisabled={ isDisabled }
-      { ...rest }
+      isDisabled={isDisabled}
+      {...rest}
     >
-      { children }
+      {children}
     </AriaTab>
   );
 };
@@ -192,22 +186,17 @@ Tabs.Tab = Tab;
 
 export interface TabPanelProps extends AriaTabPanelProps {}
 
-const TabPanel = ({
-  id,
-  children,
-  className,
-  ...rest
-}: TabPanelProps) => {
+const TabPanel = ({ id, children, className, ...rest }: TabPanelProps) => {
   return (
     <AriaTabPanel
-      id={ id }
-      className={ cn(
+      id={id}
+      className={cn(
         'fg-default-light p-s group-ai-orientation-vertical:pt-0 group-ai-orientation-horizontal:pl-0',
         className,
-      ) }
-      { ...rest }
+      )}
+      {...rest}
     >
-      { children }
+      {children}
     </AriaTabPanel>
   );
 };

@@ -12,28 +12,18 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Tabs } from './index';
+import { SearchField, type SearchFieldProps } from '@/components/search-field/index';
 
-function setup({ children }: { children: string } = { children: 'Foo' }) {
-  render(
-    <Tabs defaultSelectedKey={`tab-${children}`}>
-      <Tabs.List>
-        <Tabs.Tab id={`tab-${children}`}>{children} Tab</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel id={`tab-${children}`}>{children} Content</Tabs.Panel>
-    </Tabs>,
-  );
+function setup({ placeholder = 'Search' }: Partial<SearchFieldProps> = {}) {
+  render(<SearchField placeholder={ placeholder } aria-label='Test Search Field Component' />);
 
-  return {
-    children,
-  };
+  return { placeholder };
 }
 
-describe('Tabs', () => {
+describe('SearchField', () => {
   it('should render', () => {
-    const { children } = setup();
+    const { placeholder } = setup();
 
-    expect(screen.getByText(`${children} Tab`)).toBeInTheDocument();
-    expect(screen.getByText(`${children} Content`)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();
   });
 });

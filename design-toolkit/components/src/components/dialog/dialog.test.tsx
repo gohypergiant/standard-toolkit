@@ -12,28 +12,44 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Tabs } from './index';
+import { Dialog, type DialogProps } from './';
 
-function setup({ children }: { children: string } = { children: 'Foo' }) {
+function setup({
+  children = 'Foo',
+  isOpen = true,
+  ...rest
+}: Partial<DialogProps> = {}) {
   render(
-    <Tabs defaultSelectedKey={`tab-${children}`}>
-      <Tabs.List>
-        <Tabs.Tab id={`tab-${children}`}>{children} Tab</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel id={`tab-${children}`}>{children} Content</Tabs.Panel>
-    </Tabs>,
+    <Dialog {...rest} isOpen={isOpen}>
+      {children}
+    </Dialog>,
   );
 
   return {
+    ...rest,
     children,
+    isOpen,
   };
 }
 
-describe('Tabs', () => {
+describe('Dialog', () => {
   it('should render', () => {
-    const { children } = setup();
+    const title = 'Hello';
+    const content = 'World';
+    const footer = 'Foobar';
 
-    expect(screen.getByText(`${children} Tab`)).toBeInTheDocument();
-    expect(screen.getByText(`${children} Content`)).toBeInTheDocument();
+    setup({
+      children: (
+        <Dialog.Body>
+          <Dialog.Title>{title}</Dialog.Title>
+          {content}
+          <Dialog.Footer>{footer}</Dialog.Footer>
+        </Dialog.Body>
+      ),
+    });
+
+    expect(screen.getByText(title)).toBeInTheDocument();
+    expect(screen.getByText(content)).toBeInTheDocument();
+    expect(screen.getByText(footer)).toBeInTheDocument();
   });
 });

@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { Tabs } from '@/components/tabs/index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Tabs> = {
   title: 'Components/Tabs',
@@ -32,15 +32,9 @@ export const Default: Story = {
             <Tabs.Tab id='Storybook-Tab-2'>Tab 2</Tabs.Tab>
             <Tabs.Tab id='Storybook-Tab-3'>Tab 3</Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel id='Storybook-Tab-1'>
-            Tab 1 Content
-          </Tabs.Panel>
-          <Tabs.Panel id='Storybook-Tab-2'>
-            Tab 2 Content
-          </Tabs.Panel>
-          <Tabs.Panel id='Storybook-Tab-3'>
-            Tab 3 Content
-          </Tabs.Panel>
+          <Tabs.Panel id='Storybook-Tab-1'>Tab 1 Content</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Tab-2'>Tab 2 Content</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Tab-3'>Tab 3 Content</Tabs.Panel>
         </Tabs>
       </div>
       <div className='flex w-[300px] flex-col gap-m'>
@@ -51,15 +45,9 @@ export const Default: Story = {
             <Tabs.Tab id='Storybook-Vert-Tab-2'>Tab 2</Tabs.Tab>
             <Tabs.Tab id='Storybook-Vert-Tab-3'>Tab 3</Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel id='Storybook-Vert-Tab-1'>
-            Tab 1 Content
-          </Tabs.Panel>
-          <Tabs.Panel id='Storybook-Vert-Tab-2'>
-            Tab 2 Content
-          </Tabs.Panel>
-          <Tabs.Panel id='Storybook-Vert-Tab-3'>
-            Tab 3 Content
-          </Tabs.Panel>
+          <Tabs.Panel id='Storybook-Vert-Tab-1'>Tab 1 Content</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Vert-Tab-2'>Tab 2 Content</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Vert-Tab-3'>Tab 3 Content</Tabs.Panel>
         </Tabs>
       </div>
     </div>
