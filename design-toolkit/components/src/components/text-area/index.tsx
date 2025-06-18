@@ -179,12 +179,7 @@ export function TextArea({
           {label}
         </Label>
       )}
-      <Input
-        className={className}
-        placeholder={placeholder}
-        size={size}
-        {...(props as InputProps)}
-      />
+      <Input className={className} placeholder={placeholder} size={size} />
       {shouldShowDescription && (
         <AriaText
           className={cn([
