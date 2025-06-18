@@ -259,7 +259,7 @@ export function QueryBuilder({
         'flex gap-xs py-s',
         orientation === 'vertical'
           ? 'flex-col'
-          : 'items-start min-height-[50px]',
+          : 'min-height-[50px] items-start',
       ),
       fields: 'w-full',
       operators: '',
