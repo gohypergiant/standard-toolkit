@@ -15,7 +15,7 @@ import { useState } from 'react';
 import type { RuleGroupType } from './';
 
 import { QueryBuilder } from './';
-import { defaultQuery, fields } from './example_configuration';
+import { defaultQuery, fields } from './example-configuration';
 
 /**
  * A custom port of the React QueryBuilder component: https://react-querybuilder.js.org/
