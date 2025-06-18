@@ -257,7 +257,9 @@ export function QueryBuilder({
       removeGroup: '',
       rule: cn(
         'flex gap-xs py-s',
-        orientation === 'vertical' ? 'flex-col' : 'items-center',
+        orientation === 'vertical'
+          ? 'flex-col'
+          : 'items-start min-height-[50px]',
       ),
       fields: 'w-full',
       operators: '',
