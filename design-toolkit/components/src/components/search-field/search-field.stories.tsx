@@ -54,5 +54,7 @@ export default meta;
 type Story = StoryObj<typeof SearchField>;
 
 export const Default: Story = {
-  render: ({ ...args }) => <SearchField { ...args } aria-label='Storybook Search Field Component' />,
+  render: ({ ...args }) => (
+    <SearchField {...args} aria-label='Storybook Search Field Component' />
+  ),
 };

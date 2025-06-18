@@ -10,12 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  SearchField,
+  type SearchFieldProps,
+} from '@/components/search-field/index';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { SearchField, type SearchFieldProps } from '@/components/search-field/index';
 
 function setup({ placeholder = 'Search' }: Partial<SearchFieldProps> = {}) {
-  render(<SearchField placeholder={ placeholder } aria-label='Test Search Field Component' />);
+  render(
+    <SearchField
+      placeholder={placeholder}
+      aria-label='Test Search Field Component'
+    />,
+  );
 
   return { placeholder };
 }
