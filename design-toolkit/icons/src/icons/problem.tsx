@@ -35,12 +35,12 @@ const SvgProblem = ({
     <path
       fill='currentColor'
       fillRule='evenodd'
-      d='M4.889 16.5h6.222L16 11.611V5.39L11.111.5H4.89L0 5.389v6.222zm5.6-1.5 4.011-4.01V6.01L10.49 2H5.51L1.5 6.01v4.98L5.51 15z'
+      d='M8.889 20.5h6.222L20 15.611V9.39L15.111 4.5H8.89L4 9.389v6.222zm5.6-1.5 4.011-4.01v-4.98L14.49 6H9.51L5.5 10.01v4.98L9.51 19z'
       clipRule='evenodd'
     />
     <path
       fill='currentColor'
-      d='M7 4h2l-.25 6h-1.5zM8 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2'
+      d='M11 8h2l-.25 6h-1.5zM12 17a1 1 0 1 0 0-2 1 1 0 0 0 0 2'
     />
   </svg>
 );

@@ -10,32 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import {
+  SearchField,
+  type SearchFieldProps,
+} from '@/components/search-field/index';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
-import type { SVGProps } from 'react';
-interface SVGRProps {
-  title?: string;
-  titleId?: string;
+function setup({ placeholder = 'Search' }: Partial<SearchFieldProps> = {}) {
+  render(
+    <SearchField
+      placeholder={placeholder}
+      aria-label='Test Search Field Component'
+    />,
+  );
+
+  return { placeholder };
 }
-const SvgArrow = ({
-  title,
-  titleId,
-  ...props
-}: SVGProps<SVGSVGElement> & SVGRProps) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    fill='none'
-    viewBox='0 0 24 24'
-    aria-labelledby={titleId}
-    {...props}
-  >
-    {title ? <title id={titleId}>{title}</title> : null}
-    <path
-      fill='currentColor'
-      d='m20 4-1.495.689-13.04 5.926L4 11.272l1.365.554 4.84 1.97 1.969 4.839.553 1.365.657-1.464 5.927-13.041z'
-    />
-  </svg>
-);
-export default SvgArrow;
+
+describe('SearchField', () => {
+  it('should render', () => {
+    const { placeholder } = setup();
+
+    expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();
+  });
+});
