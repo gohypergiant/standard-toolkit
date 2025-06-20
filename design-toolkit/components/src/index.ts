@@ -50,6 +50,7 @@ export type { IconProps } from './components/icon';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
+export { Popover } from './components/popover';
 export { QueryBuilder } from './components/query-builder';
 export type {
   ClassNames,
