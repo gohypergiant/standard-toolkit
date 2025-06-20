@@ -63,6 +63,7 @@
     "@fontsource/roboto-flex": "5.1.0",
     "@fontsource/roboto-mono": "5.1.0",
     "@radix-ui/react-avatar": "^1.1.4",
+    "@react-stately/color": "3.8.6",
     "@react-aria/ssr": "3.9.9",
     "@react-types/shared": "3.30.0",
     "react": "^19.0.0",
@@ -74,6 +75,7 @@
   "dependencies": {
     "@accelint/core": "workspace:*",
     "@accelint/icons": "workspace:*",
+    "@react-stately/utils": "3.10.7",
     "client-only": "0.0.1",
     "clsx": "^2.1.1",
     "cva": "npm:class-variance-authority@^0.7.1",
