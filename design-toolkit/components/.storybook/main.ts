@@ -26,7 +26,10 @@ const config: StorybookConfig = {
     '../src/**/*.docs.@(mdx|tsx)',
     '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
-  addons: [getAbsolutePath('@storybook/addon-essentials')],
+  addons: [
+    getAbsolutePath('@storybook/addon-essentials'),
+    getAbsolutePath('@storybook/addon-storysource'),
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},
@@ -39,6 +42,19 @@ const config: StorybookConfig = {
   },
   typescript: {
     reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      tsconfigPath: '../tsconfig.json',
+      shouldExtractLiteralValuesFromEnum: true,
+      shouldRemoveUndefinedFromOptional: true,
+      savePropValueAsString: true,
+      propFilter: (prop) => {
+        // Exclude props that are not relevant for documentation
+        return prop.parent
+          ? /react-aria-components/.test(prop.parent?.fileName) ||
+              !/node_modules/.test(prop.parent?.fileName)
+          : true;
+      },
+    },
   },
 };
 export default config;
