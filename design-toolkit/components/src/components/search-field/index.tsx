@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { Icon } from '@/components/icon';
 import { cn } from '@/lib/utils';
 import {
   CancelFill,
@@ -23,6 +22,7 @@ import {
   Button,
   Input,
 } from 'react-aria-components';
+import { Icon } from '../icon';
 
 export interface SearchFieldProps {
   className?: string;

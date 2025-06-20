@@ -1,0 +1,13 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+
+import * as QueryBuilderStories from './query-builder.stories';
+
+<Meta of={ QueryBuilderStories }/>
+
+# QueryBuilder
+
+The `QueryBuilder` component is a specialized instance of the [React Query Builder](https://react-querybuilder.js.org/) library that allows us to provide a UI for crafting rulesets for queries and filtering.
+
+<Canvas of={ QueryBuilderStories.Default }/>
+
+<Controls of={ QueryBuilderStories.Default }/>

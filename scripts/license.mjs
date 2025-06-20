@@ -29,8 +29,8 @@ const files = await glob(
       '**/CHANGELOG.md',
       '**/.changeset/**/*.md',
       '**/.github/**/*.md',
-      '**/docs/**/*.md',
-      '**/docs/**/*.mdx',
+      '**/*.md',
+      '**/*.mdx',
     ],
   },
 );

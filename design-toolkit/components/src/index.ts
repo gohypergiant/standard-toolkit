@@ -48,6 +48,16 @@ export type { IconProps } from './components/icon';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
+export { QueryBuilder } from './components/query-builder';
+export type {
+  ClassNames,
+  DefaultRQBProps,
+  Field,
+  QueryBuilderContextType,
+  QueryBuilderProps,
+  QueryBuilderValueEditors,
+  RuleGroupType,
+} from './components/query-builder';
 export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
 export { SearchField } from './components/search-field';
