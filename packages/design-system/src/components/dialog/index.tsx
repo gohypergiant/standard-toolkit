@@ -68,7 +68,7 @@ const defaultMapping: DialogMapping = {
     },
     {} as Record<DialogSizes, OmitProtectedProps<ButtonProps>>,
   ),
-  secondary: dialogSizes.reduce(
+  close: dialogSizes.reduce(
     (acc, size) => {
       acc[size] = { size, variant: 'bare' };
 
@@ -185,7 +185,7 @@ export const Dialog = forwardRef(function Dialog(
                     values: {
                       slots: {
                         [DEFAULT_SLOT]: mapping.primary[size] ?? {},
-                        secondary: mapping.secondary[size] ?? {},
+                        close: mapping.close[size] ?? {},
                       },
                     },
                     ...mapping.actions,
@@ -205,7 +205,7 @@ export const Dialog = forwardRef(function Dialog(
       mapping.actions,
       mapping.heading,
       mapping.primary,
-      mapping.secondary,
+      mapping.close,
       size,
     ],
   );

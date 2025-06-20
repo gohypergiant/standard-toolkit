@@ -63,7 +63,7 @@ export const TitleTextButtonExample: Story<PopoverProps> = (props) => (
           <Element slot='footer'>
             <Group>
               <Button onPress={close}>CTA</Button>
-              <Button slot='secondary' onPress={close}>
+              <Button slot='close' onPress={close}>
                 Cancel
               </Button>
             </Group>
