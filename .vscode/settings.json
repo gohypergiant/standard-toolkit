@@ -24,5 +24,7 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+  "cSpell.words": ["accelint", "latlon", "LONLAT", "mgrs"],
+  "yaml.format.singleQuote": true,
   "tailwindCSS.classFunctions": ["tw", "clsx", "tw\\.[a-z-]+", "cn", "cva"]
 }

@@ -39,6 +39,20 @@ const config: StorybookConfig = {
   },
   typescript: {
     reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      tsconfigPath: '../tsconfig.json',
+      shouldExtractLiteralValuesFromEnum: true,
+      shouldRemoveUndefinedFromOptional: true,
+      savePropValueAsString: true,
+      propFilter: (prop) => {
+        // Exclude props that are not relevant for documentation
+        return prop.parent
+          ? /react-aria-components|@react-types\/datepicker/.test(
+              prop.parent?.fileName,
+            ) || !/node_modules/.test(prop.parent?.fileName)
+          : true;
+      },
+    },
   },
 };
 export default config;

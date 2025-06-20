@@ -41,6 +41,8 @@ export { ColorPicker, useColorPickerState } from './components/color-picker';
 export type { ColorPickerProps } from './components/color-picker';
 export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
+export { DateField } from './components/date-field';
+export type { DateFieldProps } from './components/date-field';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export { FloatingButton } from './components/floating-button';
