@@ -1,5 +1,13 @@
 # @accelint/docs
 
+## 0.1.11
+
+### Patch Changes
+
+- Updated dependencies [938c74e]
+  - @accelint/predicates@0.3.1
+  - @accelint/geo@0.2.4
+
 ## 0.1.10
 
 ### Patch Changes
