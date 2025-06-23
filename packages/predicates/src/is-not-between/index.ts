@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { isBetween } from '@/is-between';
 import { compose, not } from '@accelint/core';
+import { isBetween } from '../is-between';
 
 /**
  * Determine if the given value is not between the the values in the tuple.

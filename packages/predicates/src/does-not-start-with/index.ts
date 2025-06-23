@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { doesStartWith } from '@/does-start-with';
 import { compose, not } from '@accelint/core';
+import { doesStartWith } from '../does-start-with';
 /**
  * Determine if first string does not start with the second string.
  *
