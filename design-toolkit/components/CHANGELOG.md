@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 2.1.0
+
+### Minor Changes
+
+- e1ca0ad: added options component
+
 ## 2.0.0
 
 ### Minor Changes
