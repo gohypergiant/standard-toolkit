@@ -1,17 +1,17 @@
 packages:
-  - "apps/*"
-  - "packages/*"
-  - "tooling/*"
-  - "design-toolkit/*"
+  - 'apps/*'
+  - 'packages/*'
+  - 'tooling/*'
+  - 'design-toolkit/*'
 onlyBuiltDependencies:
-  - "@biomejs/biome"
-  - "@parcel/watcher"
-  - "@swc/core"
-  - "@tailwindcss/oxide"
-  - "core-js"
-  - "core-js-pure"
-  - "es5-ext"
-  - "esbuild"
-  - "lefthook"
-  - "msw"
-  - "sharp"
+  - '@biomejs/biome'
+  - '@parcel/watcher'
+  - '@swc/core'
+  - '@tailwindcss/oxide'
+  - 'core-js'
+  - 'core-js-pure'
+  - 'es5-ext'
+  - 'esbuild'
+  - 'lefthook'
+  - 'msw'
+  - 'sharp'

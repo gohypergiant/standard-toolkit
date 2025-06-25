@@ -41,6 +41,8 @@ export { ColorPicker, useColorPickerState } from './components/color-picker';
 export type { ColorPickerProps } from './components/color-picker';
 export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
+export { DateField } from './components/date-field';
+export type { DateFieldProps } from './components/date-field';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export { FloatingButton } from './components/floating-button';
@@ -51,6 +53,10 @@ export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
 export { Popover } from './components/popover';
+export { Options, OptionsContext, OptionsSection } from './components/options';
+export type { OptionsProps } from './components/options';
+export { OptionsItem } from './components/options-item';
+export type { IOptionsItem, OptionsItemProps } from './components/options-item';
 export { QueryBuilder } from './components/query-builder';
 export type {
   ClassNames,
@@ -88,4 +94,3 @@ export type {
 } from './components/tooltip';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';
-export type { MenuItem } from './types/types';

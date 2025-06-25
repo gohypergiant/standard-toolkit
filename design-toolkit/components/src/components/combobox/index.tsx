@@ -18,10 +18,7 @@ import {
   Header as AriaHeader,
   Input as AriaInput,
   type InputProps as AriaInputProps,
-  ListBox as AriaListBox,
   Collection as AriaListBoxCollection,
-  ListBoxItem as AriaListBoxItem,
-  type ListBoxItemProps as AriaListBoxItemProps,
   ListBoxSection as AriaListBoxSection,
   type ListBoxSectionProps as AriaListBoxSectionProps,
   ListLayout as AriaListLayout,
@@ -33,12 +30,13 @@ import {
 } from 'react-aria-components';
 
 import { cn } from '@/lib/utils';
-import type { MenuItem } from '@/types/types';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { type VariantProps, cva } from 'cva';
 import type { ReactNode } from 'react';
 import { Icon } from '../icon';
 import { Label } from '../label';
+import { Options } from '../options';
+import { type IOptionsItem, OptionsItem } from '../options-item';
 
 const textFieldStyles = cva(
   [
@@ -103,7 +101,7 @@ const Input = ({
 };
 Input.displayName = 'ComboBox.Input';
 
-export interface ComboBoxProps<T extends MenuItem>
+export interface ComboBoxProps<T extends IOptionsItem>
   extends Omit<
       VariantProps<typeof textFieldStyles>,
       'isDisabled' | 'isInvalid' | 'isReadOnly'
@@ -118,7 +116,7 @@ export interface ComboBoxProps<T extends MenuItem>
   placeholder?: string;
 }
 
-export function ComboBox<T extends MenuItem>({
+export function ComboBox<T extends IOptionsItem>({
   children,
   className,
   description,
@@ -200,10 +198,8 @@ export function ComboBox<T extends MenuItem>({
               layout={AriaListLayout}
               layoutOptions={layoutOptions}
             >
-              <AriaListBox className='grid max-h-[200px] grid-cols-[auto_1fr] overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light'>
-                {/* @ts-expect-error package version mismatch TODO */}
-                {children}
-              </AriaListBox>
+              {/* @ts-expect-error package version mismatch TODO */}
+              <Options>{children}</Options>
             </AriaVirtualizer>
           </AriaPopover>
         </>
@@ -213,76 +209,14 @@ export function ComboBox<T extends MenuItem>({
 }
 ComboBox.displayName = 'ComboBox';
 
-const comboBoxItemStyles = cva([
-  'fg-default-light icon-size-l flex items-center p-s pl-xs text-body-s',
-  '**:data-[slot=description]:fg-default-dark **:data-[slot=description]:text-body-xs',
-  'hover:fg-inverse-light hover:**:data-[slot=description]:fg-inverse-light hover:bg-highlight-bold',
-  'ai-focus:fg-inverse-light ai-focus:**:data-[slot=description]:fg-inverse-light ai-focus:bg-highlight-bold',
-  'ai-disabled:fg-disabled ai-disabled:**:data-[slot=description]:fg-disabled ai-disabled:bg-transparent',
-]);
+ComboBox.Item = OptionsItem;
 
-interface ComboBoxItemProps<T extends MenuItem>
-  extends AriaListBoxItemProps<T> {
-  description?: string;
-  icon?: ReactNode;
-  name: string;
-}
-
-function ComboBoxItem<T extends MenuItem>({
-  children,
-  className,
-  description,
-  icon,
-  name,
-  ...props
-}: ComboBoxItemProps<T>) {
-  return (
-    <AriaListBoxItem<T>
-      textValue={name}
-      {...props}
-      className={comboBoxItemStyles({ className })}
-    >
-      {(renderProps) => {
-        if (typeof children === 'function') {
-          return children(renderProps);
-        }
-
-        return (
-          <>
-            <span className='mr-s flex w-[16px] items-center'>
-              {icon && <Icon>{icon}</Icon>}
-            </span>
-
-            <div className='flex min-w-0 flex-col gap-xxs'>
-              <AriaText className='truncate' slot='label'>
-                {name}
-              </AriaText>
-              {description && (
-                <AriaText
-                  className='truncate'
-                  data-slot='description'
-                  slot='description'
-                >
-                  {description}
-                </AriaText>
-              )}
-            </div>
-          </>
-        );
-      }}
-    </AriaListBoxItem>
-  );
-}
-ComboBoxItem.displayName = 'ComboBox.Item';
-
-ComboBox.Item = ComboBoxItem;
-
-interface ComboBoxSectionProps<T extends MenuItem>
+interface ComboBoxSectionProps<T extends IOptionsItem>
   extends AriaListBoxSectionProps<T> {
   header?: string;
 }
 
-export function ComboBoxSection<T extends MenuItem>({
+export function ComboBoxSection<T extends IOptionsItem>({
   children,
   header,
   items,

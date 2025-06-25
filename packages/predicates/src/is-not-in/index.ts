@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { isIn } from '@/is-in';
 import { compose, not } from '@accelint/core';
+import { isIn } from '../is-in';
 
 /**
  * Determines if the value is not in the provided array.

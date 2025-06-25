@@ -10,13 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Key, ReactNode } from 'react';
+import { parseDate } from '@internationalized/date';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { DateField, type DateFieldProps } from './index';
 
-// TODO: move when menu is added to desTK
-export interface MenuItem {
-  children?: MenuItem[];
-  description?: string;
-  icon?: ReactNode;
-  id?: Key;
-  name: string;
+function setup({
+  defaultValue = parseDate('2020-01-23'),
+}: Partial<DateFieldProps> = {}) {
+  render(<DateField defaultValue={defaultValue} />);
 }
+
+describe('DateField', () => {
+  it('should render', () => {
+    setup();
+
+    expect(screen.getByText('2020')).toBeInTheDocument();
+    expect(screen.getByText('JAN')).toBeInTheDocument();
+    expect(screen.getByText('23')).toBeInTheDocument();
+  });
+});
