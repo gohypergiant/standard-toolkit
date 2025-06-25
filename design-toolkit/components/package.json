@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -59,11 +59,12 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/icons": "^1.1.0",
+    "@accelint/icons": "^2.0.0",
     "@fontsource/roboto-flex": "5.1.0",
     "@fontsource/roboto-mono": "5.1.0",
     "@internationalized/date": "3.8.0",
     "@radix-ui/react-avatar": "^1.1.4",
+    "@react-aria/utils": "3.29.1",
     "@react-stately/color": "3.8.6",
     "@react-stately/datepicker": "3.13.0",
     "@react-stately/utils": "3.10.7",
@@ -93,6 +94,7 @@
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/addon-storysource": "8.6.14",
     "@storybook/blocks": "8.6.12",
     "@storybook/builder-vite": "8.6.12",
     "@storybook/manager-api": "8.6.12",

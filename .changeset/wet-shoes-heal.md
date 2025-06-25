@@ -2,4 +2,4 @@
 "@accelint/design-toolkit": minor
 ---
 
-added DateField component
+added options component

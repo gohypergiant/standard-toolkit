@@ -25,6 +25,9 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "cSpell.words": ["accelint", "latlon", "LONLAT", "mgrs"],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit"
+  },
   "yaml.format.singleQuote": true,
   "tailwindCSS.classFunctions": ["tw", "clsx", "tw\\.[a-z-]+", "cn", "cva"]
 }

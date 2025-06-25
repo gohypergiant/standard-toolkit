@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { isLike } from '@/is-like';
 import { compose, not } from '@accelint/core';
+import { isLike } from '../is-like';
 
 /**
  * Determine if second string is not like the first string/RegExp.

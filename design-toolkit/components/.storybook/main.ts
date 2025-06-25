@@ -26,7 +26,10 @@ const config: StorybookConfig = {
     '../src/**/*.docs.@(mdx|tsx)',
     '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
-  addons: [getAbsolutePath('@storybook/addon-essentials')],
+  addons: [
+    getAbsolutePath('@storybook/addon-essentials'),
+    getAbsolutePath('@storybook/addon-storysource'),
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},

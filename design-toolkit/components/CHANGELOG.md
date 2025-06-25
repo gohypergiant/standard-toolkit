@@ -1,5 +1,23 @@
 # @accelint/design-toolkit
 
+## 2.0.0
+
+### Minor Changes
+
+- 3c9a57a: Added the Tabs component along with its subcomponents
+- 283cc55: Add SearchField component
+- 3e374a2: Add <QueryBuilder> component
+- a0c80d0: added DateField component
+- e92adc6: Added the Dialog component.
+- 3b9c678: added ColorPicker component to DesTK
+
+### Patch Changes
+
+- 5ee48c2: fixed combobox layout
+- 3e374a2: Added the ComboBox component.
+- Updated dependencies [6d07b28]
+  - @accelint/icons@2.0.0
+
 ## 1.0.1
 
 ### Patch Changes
