@@ -42,7 +42,7 @@ const meta: Meta<typeof Popover> = {
 export default meta;
 type Story = StoryObj<typeof Popover>;
 
-export const SimpleDeclarative: Story = {
+export const Simple: Story = {
   render: ({ ...args }) => (
     <Popover>
       <Popover.Trigger>
