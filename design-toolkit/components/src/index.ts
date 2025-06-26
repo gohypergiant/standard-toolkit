@@ -56,6 +56,7 @@ export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
+export { Popover } from './components/popover';
 export { QueryBuilder } from './components/query-builder';
 export type {
   ClassNames,
