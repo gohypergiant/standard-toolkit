@@ -44,16 +44,19 @@ Also add the following to your `settings.json` file for VSCode:
     },
     "tailwindCSS.includeLanguages": {
         "javascript": "javascript",
-        "javascriptreact": "javascriptreact",
         "typescript": "typescript",
-        "typescriptreact": "typescriptreact",
-        "html": "html"
+        "html": "html",
+        "typescriptreact": "html",
+        "javascriptreact": "html"
     },
     "tailwindCSS.experimental.classRegex": [
-        ["/\\*tw\\*/ '([^']*)'"],
-        ["cva\\(((?:[^()]|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-        ["cx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
-        ["className\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+        [
+            "/\\*tw\\*/ '([^']*)'"
+        ],
+        [
+            "([\"'`][^\"'`]*.*?[\"'`])",
+            "[\"'`]([^\"'`]*).*?[\"'`]"
+        ],
     ],
     "files.associations": {
         "*.css": "tailwindcss"
