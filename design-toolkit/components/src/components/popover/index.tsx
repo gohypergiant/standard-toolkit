@@ -11,67 +11,113 @@
  */
 
 import { cn } from '@/lib/utils';
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import {
   Dialog as AriaDialog,
+  DialogTrigger as AriaDialogTrigger,
   Heading as AriaHeading,
   type HeadingProps as AriaHeadingProps,
   Popover as AriaPopover,
   type PopoverProps as AriaPopoverProps,
+  type PopoverRenderProps,
+  Pressable,
 } from 'react-aria-components';
 
 const popoverStyles =
   'bg-surface-raised rounded-medium max-w-[280px] border border-static-light p-s';
 
-interface PopoverProps extends Omit<AriaPopoverProps, 'children'> {
+interface PopoverProps {
   placement?: 'left' | 'right' | 'top' | 'bottom';
-  header?: string;
-  body?: string | ReactNode;
+  children?: ReactNode;
 }
 
 export const Popover = ({
-  className,
   placement = 'bottom',
-  header,
-  body,
+  children,
   ...rest
 }: PopoverProps) => {
+  /* @ts-expect-error package version mismatch TODO */
+  return <AriaDialogTrigger {...rest}>{children}</AriaDialogTrigger>;
+};
+Popover.displayName = 'Popover';
+
+export interface PopoverTriggerProps extends ComponentProps<typeof Pressable> {}
+
+export const PopoverTrigger = ({ children, ...props }: PopoverTriggerProps) => {
+  return <Pressable {...props}>{children}</Pressable>;
+};
+Popover.displayName = 'Popover.Trigger';
+
+interface PopoverContentProps extends Omit<AriaPopoverProps, 'children'> {
+  children?:
+    | ReactNode
+    | ((props: PopoverRenderProps & { close: () => void }) => ReactNode);
+  className?: string;
+}
+
+const PopoverContent = ({
+  children,
+  className,
+  ...rest
+}: PopoverContentProps) => {
   return (
-    <AriaPopover
-      placement={placement}
-      className={cn(popoverStyles, className)}
-      {...rest}
-    >
-      <AriaDialog>
-        {header && <PopoverHeader>{header}</PopoverHeader>}
-        {typeof body === 'string' ? (
-          <PopoverBody>{body}</PopoverBody>
-        ) : (
-          <>{body}</>
-        )}
-      </AriaDialog>
+    <AriaPopover className={cn(popoverStyles, className)} {...rest}>
+      {/* @ts-expect-error package version mismatch TODO */}
+      <AriaDialog>{children}</AriaDialog>
     </AriaPopover>
   );
 };
+PopoverContent.displayName = 'Popover.Content';
 
-Popover.displayName = 'Popover';
-
-interface PopoverHeaderProps extends Omit<AriaHeadingProps, 'children'> {
-  children?: string;
+interface PopoverTitleProps extends Omit<AriaHeadingProps, 'children'> {
+  children?: ReactNode;
 }
 
-const PopoverHeader = ({ children }: PopoverHeaderProps) => {
+const PopoverTitle = ({ children, className, ...rest }: PopoverTitleProps) => {
   return (
-    <AriaHeading slot='title' className='fg-default-light mb-s text-header-m'>
+    <AriaHeading
+      slot='title'
+      className={cn('fg-default-light mb-s text-header-m', className)}
+      {...rest}
+    >
+      {/* @ts-expect-error package version mismatch TODO */}
       {children}
     </AriaHeading>
   );
 };
 
+PopoverTitle.displayName = 'Popover.Title';
+
 interface PopoverBodyProps {
-  children?: string;
+  children?: ReactNode;
+  className?: string;
 }
 
-const PopoverBody = ({ children }: PopoverBodyProps) => {
-  return <p className='fg-default-dark text-body-m'>{children}</p>;
+const PopoverBody = ({ children, className }: PopoverBodyProps) => {
+  return (
+    <div className={cn('fg-default-dark text-body-s', className)}>
+      {children}
+    </div>
+  );
 };
+
+PopoverBody.displayName = 'Popover.Body';
+
+const PopoverFooter = ({
+  children,
+  className,
+}: { children: ReactNode; className?: string }) => {
+  return (
+    <div className={cn('mt-s flex justify-end gap-s', className)}>
+      {children}
+    </div>
+  );
+};
+
+PopoverFooter.displayName = 'Popover.Footer';
+
+Popover.Title = PopoverTitle;
+Popover.Content = PopoverContent;
+Popover.Body = PopoverBody;
+Popover.Footer = PopoverFooter;
+Popover.Trigger = PopoverTrigger;
