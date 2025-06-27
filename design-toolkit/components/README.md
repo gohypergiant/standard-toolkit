@@ -62,3 +62,9 @@ Also add the following to your `settings.json` file for VSCode:
         "*.css": "tailwindcss"
     }
 ```
+
+## In Depth Documentation
+
+Be sure to view topic specific documentation to understand technology choices, best practices, established patterns, and enforced opinions.
+
+- [Tailwind](./src/documentation/tailwind.md)

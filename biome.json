@@ -19,6 +19,30 @@
   },
   "overrides": [
     {
+      "include": ["**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": {
+              "level": "error",
+              "options": {
+                "strictCase": false,
+                "requireAscii": true,
+                "conventions": [
+                  {
+                    "selector": {
+                      "kind": "objectLiteralMember"
+                    },
+                    "formats": ["PascalCase", "camelCase", "CONSTANT_CASE"]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "include": ["apps/docs/**"],
       "ignore": [".docusaurus"]
     },
@@ -50,13 +74,6 @@
       "linter": {
         "rules": {
           "style": {
-            "useNamingConvention": {
-              "level": "error",
-              "options": {
-                "strictCase": false,
-                "requireAscii": true
-              }
-            },
             "noParameterAssign": {
               "level": "warn"
             }
@@ -67,29 +84,7 @@
               "fix": "safe",
               "options": {
                 "attributes": ["classList"],
-                "functions": ["clsx", "cva", "tw", "cn", "twMerge"]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "include": ["tooling/smeegl"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useNamingConvention": {
-              "level": "error",
-              "options": {
-                "conventions": [
-                  {
-                    "selector": {
-                      "kind": "objectLiteralProperty"
-                    },
-                    "formats": ["PascalCase", "camelCase"]
-                  }
-                ]
+                "functions": ["clsx", "cn", "cva", "tv", "tw", "twMerge"]
               }
             }
           }

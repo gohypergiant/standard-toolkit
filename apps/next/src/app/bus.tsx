@@ -23,7 +23,7 @@ const bus = Broadcast.getInstance();
 export function BusExample() {
   // NOTE: state is still local to each page, doing this for example sake
   const [value, setValue] = useState(0);
-  const workerRef = useRef<Worker>();
+  const workerRef = useRef<Worker>(null);
 
   const doInc = useCallback(() => {
     bus.emit('inc', {});

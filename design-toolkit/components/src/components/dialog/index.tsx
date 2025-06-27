@@ -164,7 +164,6 @@ const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
             size === 'lg' && 'rounded-large',
           )}
         >
-          {/* @ts-expect-error package version mismatch TODO */}
           <RACDialog className={dialogClasses({ size })}>{children}</RACDialog>
         </RACModal>
       </RACModalOverlay>
@@ -207,7 +206,6 @@ export const DialogTitle = ({
         className,
       )}
     >
-      {/* @ts-expect-error package version mismatch TODO */}
       {children}
     </RACHeading>
   );
@@ -222,7 +220,7 @@ const DialogButton = ({ children, className, ...props }: ButtonProps) => {
       {...props}
       //overriding the style to deal with rac's pressed state inherited
       //from the trigger state
-      className={cn('ai-pressed:bg-initial', className)}
+      className={cn('dtk-pressed:bg-initial', className)}
     >
       {children}
     </Button>

@@ -11,7 +11,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { JSX, ReactHTML } from 'react';
+import type { HTMLElementType, JSX } from 'react';
 import type { SlotProps } from 'react-aria-components';
 import type { ProviderValues } from '../../types/react-aria';
 
@@ -32,12 +32,12 @@ export type ElementProps<
  * passed into generic, but ran into major performance issues with enormous
  * type unions of all possible HTML elements props. It breaks all of TS
  */
-JSX.IntrinsicElements[keyof ReactHTML] &
+JSX.IntrinsicElements[HTMLElementType] &
   SlotProps & {
     /**
      * The HTML element to be rendered
      */
-    as?: keyof ReactHTML;
+    as?: HTMLElementType;
     /**
      * Values passed to Provider, overrides parent contexts
      */

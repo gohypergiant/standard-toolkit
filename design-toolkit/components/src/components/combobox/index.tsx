@@ -198,7 +198,6 @@ export function ComboBox<T extends IOptionsItem>({
               layout={AriaListLayout}
               layoutOptions={layoutOptions}
             >
-              {/* @ts-expect-error package version mismatch TODO */}
               <Options>{children}</Options>
             </AriaVirtualizer>
           </AriaPopover>

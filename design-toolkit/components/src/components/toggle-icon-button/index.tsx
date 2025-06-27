@@ -25,16 +25,16 @@ const toggleIconButtonStyles = cva(
     variants: {
       variant: {
         primary:
-          'icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle ai-selected:focus:bg-highlight-subtle',
+          'icon-default-light dtk-selected:icon-highlight dtk-selected:hover:bg-highlight-subtle dtk-selected:focus:bg-highlight-subtle',
         secondary:
-          'icon-default-dark hover:icon-default-light focus:icon-default-light ai-selected:icon-highlight ai-selected:hover:bg-highlight-subtle ai-selected:focus:bg-highlight-subtle',
+          'icon-default-dark hover:icon-default-light focus:icon-default-light dtk-selected:icon-highlight dtk-selected:hover:bg-highlight-subtle dtk-selected:focus:bg-highlight-subtle',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'not-ai-selected:icon-disabled ai-selected:cursor-default not-ai-selected:cursor-not-allowed not-ai-selected:bg-interactive-disabled ai-selected:hover:bg-transparent not-ai-selected:hover:bg-interactive-disabled ai-selected:focus:bg-transparent not-ai-selected:focus:bg-interactive-disabled',
+        true: 'not-dtk-selected:icon-disabled dtk-selected:cursor-default not-dtk-selected:cursor-not-allowed not-dtk-selected:bg-interactive-disabled dtk-selected:hover:bg-transparent not-dtk-selected:hover:bg-interactive-disabled dtk-selected:focus:bg-transparent not-dtk-selected:focus:bg-interactive-disabled',
         false: '',
       },
     },

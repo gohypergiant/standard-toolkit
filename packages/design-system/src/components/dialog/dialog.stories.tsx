@@ -11,7 +11,7 @@
  */
 
 import { type Story, type StoryDefault, action } from '@ladle/react';
-import { useRef } from 'react';
+import { type RefObject, useRef } from 'react';
 import { DialogTrigger } from 'react-aria-components';
 import { genericColorVars, radiusVars, sizeVars } from '../../styles/theme.css';
 import { AriaHeading } from '../aria';
@@ -74,7 +74,12 @@ export const Example: Story<
     >
       <DialogTrigger onOpenChange={action('onOpenChange')}>
         <Button>Press me</Button>
-        <Dialog {...rest} parentRef={isGlobal ? undefined : ref}>
+        <Dialog
+          {...rest}
+          parentRef={
+            isGlobal ? undefined : (ref as unknown as RefObject<HTMLElement>)
+          }
+        >
           {({ state }) => (
             <>
               <Element slot='header'>
