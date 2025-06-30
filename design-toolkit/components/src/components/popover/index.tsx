@@ -11,25 +11,22 @@
  */
 
 import { cn } from '@/lib/utils';
-import type { ComponentProps, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import {
   Dialog as AriaDialog,
   DialogTrigger as AriaDialogTrigger,
   Heading as AriaHeading,
-  type HeadingProps as AriaHeadingProps,
   Popover as AriaPopover,
-  type PopoverProps as AriaPopoverProps,
-  type PopoverRenderProps,
   Pressable,
 } from 'react-aria-components';
 
-const popoverStyles =
-  'bg-surface-raised rounded-medium max-w-[280px] border border-static-light p-s';
-
-interface PopoverProps {
-  placement?: 'left' | 'right' | 'top' | 'bottom';
-  children?: ReactNode;
-}
+import type {
+  PopoverBodyProps,
+  PopoverContentProps,
+  PopoverProps,
+  PopoverTitleProps,
+  PopoverTriggerProps,
+} from './types';
 
 export const Popover = ({
   placement = 'bottom',
@@ -41,19 +38,10 @@ export const Popover = ({
 };
 Popover.displayName = 'Popover';
 
-export interface PopoverTriggerProps extends ComponentProps<typeof Pressable> {}
-
 export const PopoverTrigger = ({ children, ...props }: PopoverTriggerProps) => {
   return <Pressable {...props}>{children}</Pressable>;
 };
 Popover.displayName = 'Popover.Trigger';
-
-interface PopoverContentProps extends Omit<AriaPopoverProps, 'children'> {
-  children?:
-    | ReactNode
-    | ((props: PopoverRenderProps & { close: () => void }) => ReactNode);
-  className?: string;
-}
 
 const PopoverContent = ({
   children,
@@ -61,17 +49,19 @@ const PopoverContent = ({
   ...rest
 }: PopoverContentProps) => {
   return (
-    <AriaPopover className={cn(popoverStyles, className)} {...rest}>
+    <AriaPopover
+      className={cn(
+        'max-w-[280px] rounded-medium border border-static-light bg-surface-raised p-s',
+        className,
+      )}
+      {...rest}
+    >
       {/* @ts-expect-error package version mismatch TODO */}
       <AriaDialog>{children}</AriaDialog>
     </AriaPopover>
   );
 };
 PopoverContent.displayName = 'Popover.Content';
-
-interface PopoverTitleProps extends Omit<AriaHeadingProps, 'children'> {
-  children?: ReactNode;
-}
 
 const PopoverTitle = ({ children, className, ...rest }: PopoverTitleProps) => {
   return (
@@ -88,11 +78,6 @@ const PopoverTitle = ({ children, className, ...rest }: PopoverTitleProps) => {
 
 PopoverTitle.displayName = 'Popover.Title';
 
-interface PopoverBodyProps {
-  children?: ReactNode;
-  className?: string;
-}
-
 const PopoverBody = ({ children, className }: PopoverBodyProps) => {
   return (
     <div className={cn('fg-default-dark text-body-s', className)}>
@@ -100,7 +85,6 @@ const PopoverBody = ({ children, className }: PopoverBodyProps) => {
     </div>
   );
 };
-
 PopoverBody.displayName = 'Popover.Body';
 
 const PopoverFooter = ({
@@ -113,7 +97,6 @@ const PopoverFooter = ({
     </div>
   );
 };
-
 PopoverFooter.displayName = 'Popover.Footer';
 
 Popover.Title = PopoverTitle;
