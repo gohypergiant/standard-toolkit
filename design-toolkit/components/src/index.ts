@@ -91,5 +91,18 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
+export { ExpandToggle } from './components/tree/expand-toggle';
+export { Tree, TreeContext, TreeItem, treeStyles } from './components/tree';
+export { SelectionToggle } from './components/tree/selection-toggle';
+export type {
+  DragAndDropConfig,
+  DragItem,
+  TreeActionRenderProps,
+  TreeItem,
+  TreeItemProps,
+  TreeNodeProps,
+  TreeProps,
+  TreeSelectionType,
+} from './components/tree/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export { cn, twMerge } from './lib/utils';

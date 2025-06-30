@@ -1,0 +1,26 @@
+import {Canvas, Meta} from '@storybook/blocks';
+
+import * as TreeStories from './tree.stories';
+
+<Meta of={TreeStories} />
+
+# Tree
+
+<Canvas of={ TreeStories.StaticCollection }/>
+
+## Drag and Drop
+
+To enable drag and drop, provide the following
+
+A function that returns the items being dragged. This is required and if not
+provided, the tree will assume that drag and drop is disabled.
+`getItems?: (keys: Set<Key>) => DragItem[]`
+
+<Canvas of={ TreeStories.DragAndDrop } />
+
+## Tree.Item
+
+The `<Tree.Item>` component displays a single item in the tree.
+
+## Tree.Node
+
