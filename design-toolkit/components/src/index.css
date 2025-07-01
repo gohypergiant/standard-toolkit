@@ -364,6 +364,11 @@
   --icon-color: --value(--color- *);
 }
 
+@custom-variant data-selected (&[data-selected~="true"]);
+@custom-variant data-active (&[data-active~="true"]);
+@custom-variant data-pinned (&[data-pinned~="top"]);
+
+
 @layer components {
   .hide-cancel::-webkit-search-cancel-button {
     display: none;
@@ -416,4 +421,6 @@
     background-repeat: repeat-y, repeat-x;
     background-size: 1px 4px, 4px 1px;
   }
+
+
 }

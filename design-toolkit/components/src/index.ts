@@ -72,6 +72,20 @@ export { SearchField } from './components/search-field';
 export type { SearchFieldProps } from './components/search-field';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
+export { ActionsCell } from './components/table/actions-cell';
+export type { ActionsCellProps } from './components/table/actions-cell';
+export { Table } from './components/table';
+export type { TableProps } from './components/table';
+export { TableBody } from './components/table/table-body';
+export type { TableBodyProps } from './components/table/table-body';
+export { TableCell } from './components/table/table-cell';
+export type { TableCellProps } from './components/table/table-cell';
+export { HeaderColumn } from './components/table/table-header-column';
+export type { TableHeaderColumnProps } from './components/table/table-header-column';
+export { TableHeader } from './components/table/table-header';
+export type { TableHeaderProps } from './components/table/table-header';
+export { TableRow } from './components/table/table-row';
+export type { TableRowProps } from './components/table/table-row';
 export { Tabs } from './components/tabs';
 export type {
   TabListProps,

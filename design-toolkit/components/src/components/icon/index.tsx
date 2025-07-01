@@ -11,7 +11,7 @@
  */
 
 import { type VariantProps, cva } from 'cva';
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '../../lib/utils';
 
 const iconStyles = cva(
@@ -31,7 +31,9 @@ const iconStyles = cva(
   },
 );
 
-export interface IconProps extends VariantProps<typeof iconStyles> {
+export interface IconProps
+  extends VariantProps<typeof iconStyles>,
+    HTMLAttributes<HTMLSpanElement> {
   className?: string;
   children: ReactNode;
 }
