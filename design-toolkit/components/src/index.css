@@ -15,7 +15,7 @@
 @import '@fontsource/roboto-mono';
 @import 'tailwindcss';
 @plugin 'tailwindcss-react-aria-components' {
-  prefix: 'ai'
+  prefix: 'dtk'
 }
 @source './components/foundation';
 

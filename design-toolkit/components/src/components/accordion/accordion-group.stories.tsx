@@ -23,9 +23,15 @@ const meta: Meta<typeof Accordion.Group> = {
   component: Accordion.Group,
   args: {
     allowsMultipleExpanded: false,
+    variant: 'cozy',
     isDisabled: false,
   },
-  argTypes: {},
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['cozy', 'compact'],
+    },
+  },
   parameters: {
     docs: {
       subtitle: 'Group together multiple <Accordion> components.',
@@ -34,18 +40,19 @@ const meta: Meta<typeof Accordion.Group> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Accordion.Group>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof Accordion.Group> = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <Accordion.Group {...args}>
         <Accordion>
           <Accordion.Header>
-            <Icon>
-              <Placeholder />
-            </Icon>{' '}
-            Accordion one{' '}
+            <Accordion.Trigger>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              Accordion one
+            </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Panel>
             <p className='fg-default-dark text-body-s'>
@@ -56,10 +63,12 @@ export const Default: Story = {
         </Accordion>
         <Accordion>
           <Accordion.Header>
-            <Icon>
-              <Placeholder />
-            </Icon>{' '}
-            Accordion two{' '}
+            <Accordion.Trigger>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              Accordion two
+            </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Panel>
             <p className='fg-default-dark text-body-s'>
@@ -70,10 +79,12 @@ export const Default: Story = {
         </Accordion>
         <Accordion>
           <Accordion.Header>
-            <Icon>
-              <Placeholder />
-            </Icon>{' '}
-            Accordion three{' '}
+            <Accordion.Trigger>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              Accordion three
+            </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Panel>
             <p className='fg-default-dark text-body-s'>

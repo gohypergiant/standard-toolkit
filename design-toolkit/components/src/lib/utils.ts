@@ -11,7 +11,10 @@
  */
 
 import { type ClassValue, clsx } from 'clsx';
+import type { ForwardedRef } from 'react';
+import type { ContextValue } from 'react-aria-components';
 import { extendTailwindMerge, validators } from 'tailwind-merge';
+import { createTV } from 'tailwind-variants';
 
 type AdditionalClassGroupIds = 'icon' | 'icon-size' | 'fg';
 
@@ -117,4 +120,124 @@ export const twMerge = extendTailwindMerge<AdditionalClassGroupIds>({
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export const tv = createTV({
+  twMergeConfig: {
+    extend: {
+      classGroups: {
+        icon: [{ icon: ['', validators.isAny] }],
+        'icon-size': [{ 'icon-size': ['', validators.isAny] }],
+        fg: [{ fg: ['', validators.isAny] }],
+      },
+      conflictingClassGroups: {
+        fg: ['icon', 'text-color'],
+      },
+      theme: {
+        color: [
+          'current',
+          'surface-default',
+          'surface-raised',
+          'surface-overlay',
+          'transparent-dark',
+          'transparent-light',
+          'interactive-default',
+          'interactive-hover-light',
+          'interactive-hover-dark',
+          'interactive-disabled',
+          'static-light',
+          'static-dark',
+          'interactive',
+          'interactive-hover',
+          'highlight-bold',
+          'highlight-hover',
+          'highlight-subtle',
+          'info-bold',
+          'info-hover',
+          'info-subtle',
+          'advisory-bold',
+          'advisory-hover',
+          'advisory-subtle',
+          'normal-bold',
+          'normal-hover',
+          'normal-subtle',
+          'serious-bold',
+          'serious-hover',
+          'serious-subtle',
+          'critical-bold',
+          'critical-hover',
+          'critical-subtle',
+          'default-light',
+          'default-dark',
+          'inverse-dark',
+          'inverse-light',
+          'disabled',
+          'highlight',
+          'info',
+          'advisory',
+          'normal',
+          'serious',
+          'critical',
+          'classification-missing',
+          'classification-unclass',
+          'classification-cui',
+          'classification-confidential',
+          'classification-secret',
+          'classification-top-secret',
+        ],
+        font: ['primary', 'display'],
+        text: [
+          'header-xxl',
+          'header-xl',
+          'header-l',
+          'header-m',
+          'header-s',
+          'header-xs',
+          'body-xl',
+          'body-l',
+          'body-m',
+          'body-s',
+          'body-xs',
+          'body-xxs',
+          'button-xl',
+          'button-l',
+          'button-m',
+          'button-s',
+          'button-xs',
+        ],
+        radius: ['none', 'small', 'medium', 'large', 'round'],
+        shadow: ['elevation-default', 'elevation-overlay', 'elevation-raised'],
+        spacing: [
+          'none',
+          '0',
+          'xxs',
+          'xs',
+          's',
+          'm',
+          'l',
+          'xl',
+          'xxl',
+          'oversized',
+        ],
+      },
+    },
+  },
+});
+
+// Types copied from RAC due to not being exported
+type WithRef<T, E> = T & {
+  ref?: ForwardedRef<E>;
+};
+
+interface SlottedValue<T> {
+  slots?: Record<string | symbol, T>;
+}
+
+/**
+ * A helper to narrow the type of Context Value
+ */
+export function isSlottedContextValue<T, E>(
+  context: ContextValue<T, E>,
+): context is SlottedValue<WithRef<T, E>> {
+  return !!context && 'slots' in context;
 }

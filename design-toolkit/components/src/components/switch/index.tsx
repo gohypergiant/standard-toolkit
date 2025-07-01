@@ -35,12 +35,12 @@ const switchStyles = cva(
           'outline-highlight before:right-[3px] before:bg-highlight',
           'group-hover:bg-highlight-subtle group-hover:outline-highlight group-hover:before:bg-highlight',
           'group-focus-within:bg-highlight-subtle group-focus-within:outline-interactive-hover group-focus-within:before:bg-highlight',
-          'group-ai-disabled:bg-interactive-disabled group-ai-disabled:outline-interactive-disabled group-ai-disabled:before:bg-disabled',
+          'group-dtk-disabled:bg-interactive-disabled group-dtk-disabled:outline-interactive-disabled group-dtk-disabled:before:bg-disabled',
         ],
         false: 'before:left-[3px]',
       },
       isDisabled: {
-        true: 'group-ai-disabled:bg-interactive-disabled group-ai-disabled:outline-interactive-disabled group-ai-disabled:before:bg-disabled',
+        true: 'group-dtk-disabled:bg-interactive-disabled group-dtk-disabled:outline-interactive-disabled group-dtk-disabled:before:bg-disabled',
         false: '',
       },
     },
@@ -58,7 +58,7 @@ export function Switch({ children, className, ...props }: SwitchProps) {
   return (
     <AriaSwitch
       {...props}
-      className='group flex ai-disabled:cursor-not-allowed items-center gap-s'
+      className='group flex dtk-disabled:cursor-not-allowed items-center gap-s'
     >
       {({ isDisabled, isSelected }) => (
         <>

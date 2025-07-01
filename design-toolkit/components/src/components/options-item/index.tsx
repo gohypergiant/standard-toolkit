@@ -27,15 +27,15 @@ const optionsItemStyles = cva(
     'fg-default-light icon-size-l flex items-center gap-s p-s text-body-s ',
     '**:data-[slot=description]:fg-default-dark **:data-[slot=description]:text-body-xs',
     'hover:fg-inverse-light hover:**:data-[slot=description]:fg-inverse-light',
-    'ai-focus:fg-inverse-light ai-focus:**:data-[slot=description]:fg-inverse-light ',
-    'ai-disabled:fg-disabled ai-disabled:**:data-[slot=description]:fg-disabled ai-disabled:bg-transparent',
-    'ai-focus:bg-highlight-bold hover:bg-highlight-bold',
+    'dtk-focus:fg-inverse-light dtk-focus:**:data-[slot=description]:fg-inverse-light ',
+    'dtk-disabled:fg-disabled dtk-disabled:**:data-[slot=description]:fg-disabled dtk-disabled:bg-transparent',
+    'dtk-focus:bg-highlight-bold hover:bg-highlight-bold',
   ],
   {
     variants: {
       type: {
-        destructive: 'ai-focus:bg-serious-bold hover:bg-serious-bold',
-        default: 'ai-focus:bg-highlight-bold hover:bg-highlight-bold',
+        destructive: 'dtk-focus:bg-serious-bold hover:bg-serious-bold',
+        default: 'dtk-focus:bg-highlight-bold hover:bg-highlight-bold',
       },
       size: {
         large: 'pt-s pb-s',

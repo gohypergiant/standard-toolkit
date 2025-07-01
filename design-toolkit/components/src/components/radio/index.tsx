@@ -67,7 +67,7 @@ export function Radio({ className, children, ...args }: RadioProps) {
     <AriaRadio
       {...args}
       className={cn(
-        'fg-default-light flex items-center gap-m ai-disabled:text-interactive-disabled',
+        'fg-default-light flex items-center gap-m dtk-disabled:text-interactive-disabled',
         className,
       )}
     >
