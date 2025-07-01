@@ -1,5 +1,19 @@
 # @accelint/docs
 
+## 0.1.12
+
+### Patch Changes
+
+- cb2ec56: - Established new styling standard for DesignTK
+  - Converted DesignTK Tailwind prefix from ai- to dtk-
+  - Made object member casing more flexible and consistent across all packages
+  - Upgraded TS types for React to be consistent and fix type conflicts
+- Updated dependencies [cb2ec56]
+- Updated dependencies [3f382f2]
+  - @accelint/design-system@0.10.0
+  - @accelint/predicates@0.3.2
+  - @accelint/geo@0.2.5
+
 ## 0.1.11
 
 ### Patch Changes

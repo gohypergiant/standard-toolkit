@@ -1,5 +1,14 @@
 # @accelint/predicates
 
+## 0.3.2
+
+### Patch Changes
+
+- cb2ec56: - Established new styling standard for DesignTK
+  - Converted DesignTK Tailwind prefix from ai- to dtk-
+  - Made object member casing more flexible and consistent across all packages
+  - Upgraded TS types for React to be consistent and fix type conflicts
+
 ## 0.3.1
 
 ### Patch Changes
@@ -36,7 +45,6 @@
   to a boolean which enables the predicate functions (packages/predicates/src/is-noyes) to
   be more specific in what they compare against rather than them simply being alias names
   to broad validation. The available predicates are now:
-
   - `isAnyFalsy`
   - `isAnyTruthy`
   - `isFalse`

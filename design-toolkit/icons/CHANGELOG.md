@@ -1,5 +1,14 @@
 # @accelint/icons
 
+## 2.0.1
+
+### Patch Changes
+
+- cb2ec56: - Established new styling standard for DesignTK
+  - Converted DesignTK Tailwind prefix from ai- to dtk-
+  - Made object member casing more flexible and consistent across all packages
+  - Upgraded TS types for React to be consistent and fix type conflicts
+
 ## 2.0.0
 
 ### Major Changes

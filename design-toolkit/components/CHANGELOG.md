@@ -1,5 +1,29 @@
 # @accelint/design-toolkit
 
+## 3.0.0
+
+### Major Changes
+
+- 9a5eff5: Added slider and range slider component
+
+### Minor Changes
+
+- 3f382f2: Update react-aria-component and associated libraries to latest
+- e1ca0ad: added options component
+
+### Patch Changes
+
+- cb2ec56: - Established new styling standard for DesignTK
+  - Converted DesignTK Tailwind prefix from ai- to dtk-
+  - Made object member casing more flexible and consistent across all packages
+  - Upgraded TS types for React to be consistent and fix type conflicts
+- 6f4aad2: - Updated Icon to use separated styles
+  - Added Icon provider for easy prop spreading to multiple Icons
+  - Handled style overrides from parent and locally
+  - Added icon size vars to config to globalize mapping
+- Updated dependencies [cb2ec56]
+  - @accelint/icons@2.0.1
+
 ## 2.0.0
 
 ### Minor Changes
