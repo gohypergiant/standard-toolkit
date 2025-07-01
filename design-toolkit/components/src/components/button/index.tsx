@@ -24,14 +24,14 @@ const buttonStyles = cva(
     variants: {
       variant: {
         primary:
-          'fg-inverse-light rounded-medium ai-pressed:bg-interactive-hover-light bg-interactive-default outline-none hover:bg-interactive-hover-light focus:bg-interactive-hover-light',
+          'fg-inverse-light rounded-medium bg-interactive-default dtk-pressed:bg-interactive-hover-light outline-none hover:bg-interactive-hover-light focus:bg-interactive-hover-light',
         outline:
-          'fg-default-light rounded-medium outline ai-pressed:outline-interactive-hover outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
-        flat: 'fg-default-light rounded-medium ai-pressed:bg-interactive-hover-dark bg-transparent outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
+          'fg-default-light rounded-medium outline dtk-pressed:outline-interactive-hover outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
+        flat: 'fg-default-light rounded-medium bg-transparent dtk-pressed:bg-interactive-hover-dark outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
         destructive:
-          'fg-inverse-light rounded-medium ai-pressed:bg-serious-hover bg-serious-bold outline-none hover:bg-serious-hover focus:bg-serious-hover',
+          'fg-inverse-light rounded-medium bg-serious-bold dtk-pressed:bg-serious-hover outline-none hover:bg-serious-hover focus:bg-serious-hover',
         critical:
-          'fg-default-light rounded-medium ai-pressed:bg-critical-hover bg-critical-bold outline-none hover:bg-critical-hover focus:bg-critical-hover',
+          'fg-default-light rounded-medium bg-critical-bold dtk-pressed:bg-critical-hover outline-none hover:bg-critical-hover focus:bg-critical-hover',
       },
       size: {
         large:

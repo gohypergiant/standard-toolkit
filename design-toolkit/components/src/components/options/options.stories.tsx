@@ -13,38 +13,24 @@
 import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
-
+import {
+  ListLayout as AriaListLayout,
+  Virtualizer as AriaVirtualizer,
+} from 'react-aria-components';
 import type { IOptionsItem } from '../options-item';
-import { ComboBox } from './index';
+import { Options } from './index';
 
-const meta: Meta<typeof ComboBox> = {
-  title: 'Components/ComboBox',
-  component: ComboBox,
+const meta: Meta<typeof Options> = {
+  title: 'Components/Options',
+  component: Options,
   args: {
-    className: '',
-    description: 'Helper text',
-    errorMessage: 'Error description',
-    isDisabled: false,
-    isInvalid: false,
-    isReadOnly: false,
-    isRequired: true,
-    label: 'Label',
-    placeholder: 'Placeholder',
-    size: 'medium',
-    menuTrigger: 'focus',
-    autoFocus: true,
-    layoutOptions: {
-      estimatedRowHeight: 46,
-    },
-  },
-  argTypes: {
-    className: { type: 'string' },
-    size: { options: ['small', 'medium'], control: 'select' },
+    size: 'large',
+    type: 'default',
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof ComboBox>;
+type Story = StoryObj<typeof Options>;
 
 interface CustomOptionsItem extends IOptionsItem {
   isDisabled?: boolean;
@@ -69,6 +55,7 @@ const items: CustomOptionsItem[] = [
     prefixIcon: <Placeholder />,
     name: 'Dog',
     description: 'Loyal companion',
+    suffixIcon: <Placeholder />,
   },
   {
     id: 4,
@@ -137,110 +124,102 @@ const itemsWithSections: CustomOptionsItem[] = [
 ];
 
 export const Default: Story = {
+  args: {
+    size: 'large',
+    selectionBehavior: 'toggle',
+    type: 'default',
+  },
+
   render: ({ children, ...args }) => (
-    <ComboBox<CustomOptionsItem> {...args} defaultItems={items}>
+    <Options<CustomOptionsItem> {...args} items={items}>
       {(item) => (
-        <ComboBox.Item
+        <Options.Item
           key={item.id}
           prefixIcon={item.prefixIcon}
           name={item.name}
           description={item.description}
           isDisabled={item.isDisabled}
+          suffixIcon={item.suffixIcon}
         />
       )}
-    </ComboBox>
+    </Options>
   ),
 };
 
 export const WithDynamicSections: Story = {
   args: {
     ...Default.args,
-    layoutOptions: {
-      rowHeight: 32,
-    },
   },
   render: ({ children, ...args }) => (
-    <ComboBox<CustomOptionsItem> {...args} defaultItems={itemsWithSections}>
+    <Options<CustomOptionsItem> {...args} items={itemsWithSections}>
       {(section) => (
-        <ComboBox.Section header={section.name} items={section.children}>
-          {(item) => (
-            <ComboBox.Item
-              key={item.id}
-              prefixIcon={item.prefixIcon}
-              name={item.name}
-              description={item.description}
-            />
-          )}
-        </ComboBox.Section>
+        <Options.Section header={section.name} items={section.children}>
+          {({ children, ...item }) => <Options.Item key={item.id} {...item} />}
+        </Options.Section>
       )}
-    </ComboBox>
+    </Options>
   ),
 };
 
 export const WithStaticSections: Story = {
   args: {
     ...Default.args,
-    layoutOptions: {
-      rowHeight: 32,
-    },
+    size: 'large',
   },
   render: ({ children, ...args }) => (
-    <ComboBox {...args}>
-      <ComboBox.Section header='North American Birds'>
-        <ComboBox.Item prefixIcon={<Placeholder />} name='Blue Jay'>
+    <Options {...args}>
+      <Options.Section header='North American Birds' className='w-[200px]'>
+        <Options.Item prefixIcon={<Placeholder />} name='Blue Jay'>
           Blue Jay
-        </ComboBox.Item>
-        <ComboBox.Item prefixIcon={<Placeholder />} name='Gray catbird'>
+        </Options.Item>
+        <Options.Item prefixIcon={<Placeholder />} name='Gray catbird'>
           Gray catbird
-        </ComboBox.Item>
-        <ComboBox.Item
+        </Options.Item>
+        <Options.Item
           prefixIcon={<Placeholder />}
           name='Black-capped chickadee'
         >
           Black-capped chickadee
-        </ComboBox.Item>
-        <ComboBox.Item prefixIcon={<Placeholder />} name='Song Sparrow'>
+        </Options.Item>
+        <Options.Item prefixIcon={<Placeholder />} name='Song Sparrow'>
           Song Sparrow
-        </ComboBox.Item>
-      </ComboBox.Section>
-      <ComboBox.Section header='African Birds'>
-        <ComboBox.Item
-          prefixIcon={<Placeholder />}
-          name='Lilac-breasted roller'
-        >
+        </Options.Item>
+      </Options.Section>
+      <Options.Section header='African Birds'>
+        <Options.Item prefixIcon={<Placeholder />} name='Lilac-breasted roller'>
           Lilac-breasted roller
-        </ComboBox.Item>
-        <ComboBox.Item prefixIcon={<Placeholder />} name='Hornbill'>
+        </Options.Item>
+        <Options.Item prefixIcon={<Placeholder />} name='Hornbill'>
           Hornbill
-        </ComboBox.Item>
-      </ComboBox.Section>
-    </ComboBox>
+        </Options.Item>
+      </Options.Section>
+    </Options>
   ),
 };
 
-const manyItems: { id: number; name: string; prefixIcon: ReactNode }[] = [];
+const manyItems: { id: number; name: string; icon: ReactNode }[] = [];
 for (let i = 0; i < 5000; i++) {
-  manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });
+  manyItems.push({ id: i, name: `Item ${i}`, icon: <Placeholder /> });
 }
 
-export const WithManyItems: Story = {
+export const Virtualized: Story = {
   args: {
     ...Default.args,
-    layoutOptions: {
-      rowHeight: 32,
-    },
   },
   render: ({ children, ...args }) => (
-    <ComboBox {...args}>
-      {manyItems.map((item) => (
-        <ComboBox.Item
-          key={item.id}
-          prefixIcon={item.prefixIcon}
-          name={item.name}
-        >
-          {item.name}
-        </ComboBox.Item>
-      ))}
-    </ComboBox>
+    <div className='w-[200px]'>
+      <AriaVirtualizer
+        layout={AriaListLayout}
+        layoutOptions={{ rowHeight: 32 }}
+      >
+        <Options {...args}>
+          {manyItems.map((item) => (
+            <Options.Item key={item.id} prefixIcon={item.icon} name={item.name}>
+              {item.name}
+            </Options.Item>
+          ))}
+        </Options>
+      </AriaVirtualizer>
+    </div>
   ),
 };

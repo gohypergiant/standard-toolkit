@@ -105,9 +105,7 @@ export type QueryBuilderContextType = Pick<
 >;
 
 const operatorDescriptions: Record<string, string> = {
-  // biome-ignore lint/style/useNamingConvention: set by the library
   AND: 'All rules below must be true for a match',
-  // biome-ignore lint/style/useNamingConvention: set by the library
   OR: 'One of the rules below must be true for a match',
 };
 

@@ -126,7 +126,6 @@ function ColorSwatchPickerItem({
       className='w-fit outline-none outline outline-offset-1 hover:outline-interactive-hover hover:outline-solid focus:outline-interactive-hover focus:outline-solid data-selected:outline-highlight data-selected:outline-solid'
     >
       <AriaColorSwatchContext.Provider value={{ color }}>
-        {/* @ts-expect-error package version mismatch TODO*/}
         {props.children}
       </AriaColorSwatchContext.Provider>
     </AriaListBoxItem>
@@ -140,7 +139,6 @@ export interface ColorPickerProps extends AriaColorSwatchPickerProps {
   ref?: ForwardedRef<HTMLDivElement>;
 }
 
-// @ts-expect-error package version mismatch TODO
 interface ColorSwatchPickerProps extends Omit<ColorPickerProps, 'options'> {
   children?: ReactNode;
 }

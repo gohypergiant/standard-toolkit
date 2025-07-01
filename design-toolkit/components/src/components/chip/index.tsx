@@ -79,7 +79,6 @@ export const Chip = ({
   const Component = context ? AriaTag : 'span';
 
   return (
-    // @ts-expect-error we are intentionally omitting children.
     <Component
       className={cn(
         chipStyles({
@@ -129,12 +128,12 @@ Chip.List = ChipList;
 const selectableChipStyles = cva(
   cn([
     'fg-default-light inline-flex w-content items-center justify-center rounded-full outline outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
-    'ai-selected:bg-highlight-subtle ai-selected:outline-highlight',
+    'dtk-selected:bg-highlight-subtle dtk-selected:outline-highlight',
   ]),
   {
     variants: {
       isDisabled: {
-        true: 'fg-disabled ai-selected:bg-transparent ai-selected:outline-interactive-disabled outline-interactive-disabled hover:outline-interactive-disabled focus:outline-interactive-disabled',
+        true: 'fg-disabled dtk-selected:bg-transparent dtk-selected:outline-interactive-disabled outline-interactive-disabled hover:outline-interactive-disabled focus:outline-interactive-disabled',
         false: 'cursor-pointer',
       },
       size: {

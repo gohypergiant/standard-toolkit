@@ -1,5 +1,11 @@
 # @accelint/predicates
 
+## 0.3.1
+
+### Patch Changes
+
+- 938c74e: address an issue where the comparison values were backwards
+
 ## 0.3.0
 
 ### Minor Changes

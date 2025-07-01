@@ -17,7 +17,8 @@ import { isBetween } from './';
 it('should correctly test if the value is between the two tuple elements', () => {
   fc.assert(
     fc.property(fc.tuple(fc.integer(), fc.integer()), fc.integer(), (a, b) => {
-      return isBetween(a)(b) === (a.sort()[0] >= b && a.sort()[1] <= b);
+      const sorted = [...a].sort();
+      return isBetween(a)(b) === (b >= sorted[0] && b <= sorted[1]);
     }),
     {
       verbose: 2,

@@ -20,22 +20,22 @@ import {
 } from 'react-aria-components';
 
 const iconButtonStyles = cva(
-  'inline-flex cursor-pointer items-center justify-center ai-pressed:bg-interactive-hover-dark bg-transparent outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
+  'inline-flex cursor-pointer items-center justify-center bg-transparent dtk-pressed:bg-interactive-hover-dark outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
   {
     variants: {
       variant: {
         primary: 'icon-default-light',
         secondary:
-          'icon-default-dark hover:icon-default-light ai-pressed:icon-default-light focus:icon-default-light',
+          'icon-default-dark hover:icon-default-light dtk-pressed:icon-default-light focus:icon-default-light',
         child:
-          'ai-pressed:bg-transparent bg-transparent hover:bg-transparent focus:bg-default-light/5',
+          'bg-transparent dtk-pressed:bg-transparent hover:bg-transparent focus:bg-default-light/5',
       },
       size: {
         medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
         small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
-        true: 'icon-disabled fg-disabled hover:fg-disabled focus:fg-disabled cursor-not-allowed ai-pressed:bg-transparent bg-transparent hover:bg-transparent focus:bg-transparent',
+        true: 'icon-disabled fg-disabled hover:fg-disabled focus:fg-disabled cursor-not-allowed bg-transparent dtk-pressed:bg-transparent hover:bg-transparent focus:bg-transparent',
         false: '',
       },
     },
