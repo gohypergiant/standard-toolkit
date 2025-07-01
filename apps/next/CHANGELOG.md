@@ -9,9 +9,8 @@
 - Updated dependencies [9a5eff5]
 - Updated dependencies [6f4aad2]
 - Updated dependencies [e1ca0ad]
-  - @accelint/design-toolkit@3.0.0
+  - @accelint/design-toolkit@2.1.0
   - @accelint/design-system@0.10.0
-  - @accelint/icons@2.0.1
 
 ## 0.2.14
 
