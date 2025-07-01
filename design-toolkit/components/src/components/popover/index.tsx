@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 import {
   Dialog as AriaDialog,
@@ -28,12 +27,15 @@ import type {
   PopoverTriggerProps,
 } from './types';
 
+import { PopoverStyles } from './styles';
+
+const { content, body, title, footer } = PopoverStyles();
+
 export const Popover = ({
   placement = 'bottom',
   children,
   ...rest
 }: PopoverProps) => {
-  /* @ts-expect-error package version mismatch TODO */
   return <AriaDialogTrigger {...rest}>{children}</AriaDialogTrigger>;
 };
 Popover.displayName = 'Popover';
@@ -49,13 +51,7 @@ const PopoverContent = ({
   ...rest
 }: PopoverContentProps) => {
   return (
-    <AriaPopover
-      className={cn(
-        'max-w-[280px] rounded-medium border border-static-light bg-surface-raised p-s',
-        className,
-      )}
-      {...rest}
-    >
+    <AriaPopover className={content({ className })} {...rest}>
       {/* @ts-expect-error package version mismatch TODO */}
       <AriaDialog>{children}</AriaDialog>
     </AriaPopover>
@@ -65,12 +61,7 @@ PopoverContent.displayName = 'Popover.Content';
 
 const PopoverTitle = ({ children, className, ...rest }: PopoverTitleProps) => {
   return (
-    <AriaHeading
-      slot='title'
-      className={cn('fg-default-light mb-s text-header-m', className)}
-      {...rest}
-    >
-      {/* @ts-expect-error package version mismatch TODO */}
+    <AriaHeading slot='title' className={title({ className })} {...rest}>
       {children}
     </AriaHeading>
   );
@@ -79,11 +70,7 @@ const PopoverTitle = ({ children, className, ...rest }: PopoverTitleProps) => {
 PopoverTitle.displayName = 'Popover.Title';
 
 const PopoverBody = ({ children, className }: PopoverBodyProps) => {
-  return (
-    <div className={cn('fg-default-dark text-body-s', className)}>
-      {children}
-    </div>
-  );
+  return <div className={body({ className })}>{children}</div>;
 };
 PopoverBody.displayName = 'Popover.Body';
 
@@ -91,11 +78,7 @@ const PopoverFooter = ({
   children,
   className,
 }: { children: ReactNode; className?: string }) => {
-  return (
-    <div className={cn('mt-s flex justify-end gap-s', className)}>
-      {children}
-    </div>
-  );
+  return <div className={footer({ className })}>{children}</div>;
 };
 PopoverFooter.displayName = 'Popover.Footer';
 
