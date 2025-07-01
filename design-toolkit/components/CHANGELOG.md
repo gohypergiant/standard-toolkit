@@ -1,13 +1,10 @@
 # @accelint/design-toolkit
 
-## 3.0.0
-
-### Major Changes
-
-- 9a5eff5: Added slider and range slider component
+## 2.0.1
 
 ### Minor Changes
 
+- 9a5eff5: Added slider and range slider component
 - 3f382f2: Update react-aria-component and associated libraries to latest
 - e1ca0ad: added options component
 
@@ -21,8 +18,6 @@
   - Added Icon provider for easy prop spreading to multiple Icons
   - Handled style overrides from parent and locally
   - Added icon size vars to config to globalize mapping
-- Updated dependencies [cb2ec56]
-  - @accelint/icons@2.0.1
 
 ## 2.0.0
 

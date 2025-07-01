@@ -4,10 +4,6 @@
 
 ### Patch Changes
 
-- cb2ec56: - Established new styling standard for DesignTK
-  - Converted DesignTK Tailwind prefix from ai- to dtk-
-  - Made object member casing more flexible and consistent across all packages
-  - Upgraded TS types for React to be consistent and fix type conflicts
 - Updated dependencies [cb2ec56]
 - Updated dependencies [3f382f2]
 - Updated dependencies [9a5eff5]
