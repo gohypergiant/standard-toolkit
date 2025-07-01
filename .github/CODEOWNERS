@@ -4,11 +4,11 @@
 # Starting off simple and broad.
 
 # Catch all
-* @brandonjpierce @belsrc @shadyendless @switzerb
+* @brandonjpierce @belsrc @shadyendless @switzerb @ArrayKnight
 
 # Design system
-/packages/design-system @shadyendless @switzerb @brandonjpierce
-/design-toolkit @shadyendless @switzerb @brandonjpierce
+/packages/design-system @shadyendless @switzerb @brandonjpierce @ArrayKnight
+/design-toolkit @shadyendless @switzerb @brandonjpierce @ArrayKnight
 
 # Geo package
 /packages/geo @kalisjoshua @brandonjpierce
