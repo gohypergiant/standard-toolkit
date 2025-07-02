@@ -38,7 +38,7 @@ export type DialogMapping = {
   heading: Partial<Record<DialogSizes, HeadingProps>>;
   actions: GroupProps<ButtonProps, HTMLButtonElement>;
   primary: Partial<Record<DialogSizes, OmitProtectedProps<ButtonProps>>>;
-  secondary: Partial<Record<DialogSizes, OmitProtectedProps<ButtonProps>>>;
+  close: Partial<Record<DialogSizes, OmitProtectedProps<ButtonProps>>>;
 };
 
 export type DialogRenderProps = ModalRenderProps & {

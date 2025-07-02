@@ -84,6 +84,12 @@ export const DateInput = forwardRef(function DateInput(
   const timeFieldState = useContext(TimeFieldStateContext);
   const state = dateFieldState ?? timeFieldState ?? null;
 
+  if (!state) {
+    throw new Error(
+      'Date Input component must be used as a child of either DateField or TimeField.',
+    );
+  }
+
   const theme = useTheme();
 
   const mapping = useMemo(
@@ -150,6 +156,12 @@ export const DateSegments = forwardRef(
     const dateFieldState = useContext(DateFieldStateContext);
     const timeFieldState = useContext(TimeFieldStateContext);
     const state = dateFieldState ?? timeFieldState ?? null;
+
+    if (!state) {
+      throw new Error(
+        'Date Segments component must be used as a child of either DateField or TimeField.',
+      );
+    }
 
     const theme = useTheme();
 

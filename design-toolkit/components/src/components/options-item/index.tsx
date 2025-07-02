@@ -24,7 +24,7 @@ import { OptionsContext } from '../options';
 
 const optionsItemStyles = cva(
   [
-    'fg-default-light icon-size-l flex items-center gap-s p-s text-body-s ',
+    'fg-default-light flex items-center gap-s p-s text-body-s ',
     '**:data-[slot=description]:fg-default-dark **:data-[slot=description]:text-body-xs',
     'hover:fg-inverse-light hover:**:data-[slot=description]:fg-inverse-light',
     'dtk-focus:fg-inverse-light dtk-focus:**:data-[slot=description]:fg-inverse-light ',
@@ -120,7 +120,7 @@ export function OptionsItem<T extends IOptionsItem>({
               )}
             </div>
             <span className='flex w-[16px] items-center'>
-              {suffixIcon && <Icon>{suffixIcon}</Icon>}
+              {suffixIcon && <Icon size='small'>{suffixIcon}</Icon>}
             </span>
           </>
         );

@@ -163,13 +163,13 @@ export function ComboBox<T extends IOptionsItem>({
             />
             <AriaButton
               className={cn([
-                'fg-default-light icon-size-xl absolute right-xs transform',
+                'fg-default-light absolute right-xs transform',
                 isDisabled && 'fg-disabled',
                 isOpen && 'rotate-180',
                 isReadOnly && 'hidden',
               ])}
             >
-              <Icon className='block'>
+              <Icon className='block' size='large'>
                 <ChevronDown />
               </Icon>
             </AriaButton>

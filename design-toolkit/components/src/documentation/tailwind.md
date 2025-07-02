@@ -111,13 +111,10 @@ Do not hardcode values that match the theme, instead reference theme values.
 
 ```jsx
 // Bad
-<div className="[--icon-size:12px]" />
+<div className="[--my-font-size:12px]" />
 
 // Good
-<div className="[--icon-size:--spacing-m]" />
-
-// Better, keep an eye out for custom utilities
-<div className="icon-size-m" />
+<div className="[--my-font-size:var(--body-m-size)]" />
 ```
 
 Do not use arbitrary properties unless you're 100% certain (and double checked) that TW & DTK don't provide a utility class. If the styles are sufficiently complex (beyond 1-2 properties) use CSS Modules instead. Use of arbitrary properties for local CSS variables is supported.

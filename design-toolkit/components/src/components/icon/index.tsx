@@ -10,49 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
-import { type VariantProps, cva } from 'cva';
-import type { ReactNode } from 'react';
-import { cn } from '../../lib/utils';
+import { createContext } from 'react';
+import { type ContextValue, useContextProps } from 'react-aria-components';
+import { IconStyles, IconStylesDefaults } from './styles';
+import type { IconProps, IconProviderProps } from './types';
 
-const iconStyles = cva(
-  'block [color:var(--icon-color,currentColor)] [height:var(--icon-size)] [width:var(--icon-size)]',
-  {
-    variants: {
-      size: {
-        large: 'h-[var(--icon-size,24px)] w-[var(--icon-size,24px)]',
-        medium: 'h-[var(--icon-size,20px)] w-[var(--icon-size,20px)]',
-        small: 'h-[var(--icon-size,16px)] w-[var(--icon-size,16px)]',
-        xsmall: 'h-[var(--icon-size,12px)] w-[var(--icon-size,12px)]',
-      },
-    },
-    defaultVariants: {
-      size: 'medium',
-    },
-  },
-);
+export const IconContext =
+  createContext<ContextValue<IconProps, HTMLSpanElement>>(null);
 
-export interface IconProps extends VariantProps<typeof iconStyles> {
-  className?: string;
-  children: ReactNode;
+function IconProvider({ children, ...props }: IconProviderProps) {
+  return <IconContext.Provider value={props}>{children}</IconContext.Provider>;
 }
+IconProvider.displayName = 'Icon.Provider';
 
-export const Icon = ({ children, className, size, ...rest }: IconProps) => {
+export function Icon({ ref, ...props }: IconProps) {
+  [props, ref] = useContextProps(props, ref ?? null, IconContext);
+
+  const {
+    children,
+    className,
+    size = IconStylesDefaults.size,
+    ...rest
+  } = props;
+
   return (
-    <span
-      className={cn(
-        iconStyles({
-          size,
-        }),
-        className,
-      )}
-      {...rest}
-    >
+    <span {...rest} ref={ref} className={IconStyles({ className, size })}>
       {children}
     </span>
   );
-};
+}
 Icon.displayName = 'Icon';
-Icon.as = (
-  props: VariantProps<typeof iconStyles>,
-  className?: string | string[],
-) => cn(iconStyles({ ...props, className }));
+Icon.Provider = IconProvider;

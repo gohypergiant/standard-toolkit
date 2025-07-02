@@ -91,7 +91,7 @@ export const Example: Story<
               <Element slot='footer'>
                 <Group>
                   <Button onPress={state.close}>Action 1</Button>
-                  <Button slot='secondary' onPress={state.close}>
+                  <Button slot='close' onPress={state.close}>
                     Action 2
                   </Button>
                 </Group>

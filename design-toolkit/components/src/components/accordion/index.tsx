@@ -82,17 +82,19 @@ function AccordionHeader({ ref, children, className }: AccordionHeaderProps) {
   const isExpanded = state?.isExpanded ?? AccordionStylesDefaults.isExpanded;
 
   return (
-    <div
-      ref={ref}
-      className={header({
-        className,
-        variant,
-        isDisabled,
-        isExpanded,
-      })}
-    >
-      {children}
-    </div>
+    <Icon.Provider size={variant === 'compact' ? 'small' : 'large'}>
+      <div
+        ref={ref}
+        className={header({
+          className,
+          variant,
+          isDisabled,
+          isExpanded,
+        })}
+      >
+        {children}
+      </div>
+    </Icon.Provider>
   );
 }
 AccordionHeader.displayName = 'Accordion.Header';

@@ -40,8 +40,8 @@ const chipStyles = cva(
         info: 'bg-info-subtle outline-info-bold',
       },
       size: {
-        medium: 'icon-size-l px-s py-xs text-body-s',
-        small: 'icon-size-m px-s py-xs text-body-xs',
+        medium: 'px-s py-xs text-body-s',
+        small: 'px-s py-xs text-body-xs',
       },
     },
     defaultVariants: {
@@ -79,16 +79,18 @@ export const Chip = ({
   const Component = context ? AriaTag : 'span';
 
   return (
-    <Component
-      className={cn(
-        chipStyles({
-          size,
-          variant,
-          className,
-        }),
-      )}
-      {...props}
-    />
+    <Icon.Provider size={size === 'medium' ? 'small' : 'xsmall'}>
+      <Component
+        className={cn(
+          chipStyles({
+            size,
+            variant,
+            className,
+          }),
+        )}
+        {...props}
+      />
+    </Icon.Provider>
   );
 };
 Chip.displayName = 'Chip';
@@ -236,12 +238,12 @@ export const DeletableChip = ({
             <Button
               slot='remove'
               className={cn([
-                'icon-size-[15px] icon-default-dark group-hover:icon-default-light group-focus:icon-default-light cursor-pointer',
+                'icon-default-dark group-hover:icon-default-light group-focus:icon-default-light cursor-pointer',
                 isDisabled &&
                   'icon-disabled group-hover:icon-disabled cursor-not-allowed',
               ])}
             >
-              <Icon>
+              <Icon size='small'>
                 <CancelFill />
               </Icon>
             </Button>

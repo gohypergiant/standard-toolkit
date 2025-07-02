@@ -83,6 +83,9 @@ export const SliderBar = forwardRef(function SliderBar(
   );
 
   const state = useContext(SliderStateContext);
+  if (!state) {
+    throw new Error('SliderBar must be used as a child of Slider.');
+  }
 
   const min = state.getThumbPercent(0);
   const max = state.getThumbPercent(1);
