@@ -33,13 +33,13 @@ export const Tabs = ({
   isDisabled = false,
   ...rest
 }: TabsProps) => {
-  containsExactChildren({
-    children,
-    componentName: Tabs.displayName,
-    restrictions: {
-      [TabList.displayName]: { min: 1, max: 1 },
-    },
-  });
+  // containsExactChildren({
+  //   children,
+  //   componentName: Tabs.displayName,
+  //   restrictions: {
+  //     [TabList.displayName]: { min: 1, max: 1 },
+  //   },
+  // });
 
   return (
     <AriaTabs
@@ -90,13 +90,13 @@ const TabList = ({
   drawer = undefined,
   ...rest
 }: TabListProps) => {
-  containsExactChildren({
-    children,
-    componentName: TabList.displayName,
-    restrictions: {
-      [Tab.displayName]: { min: 1 },
-    },
-  });
+  // containsExactChildren({
+  //   children,
+  //   componentName: TabList.displayName,
+  //   restrictions: {
+  //     [Tab.displayName]: { min: 1 },
+  //   },
+  // });
 
   return (
     <AriaTabList
