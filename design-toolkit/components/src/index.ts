@@ -121,6 +121,15 @@ export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
+export { Drawer, DrawerContext } from './components/drawer';
+export { DrawerStyles, DrawerStylesDefaults } from './components/drawer/styles';
+export type { DrawerStyleVariants } from './components/drawer/styles';
+export type {
+  DrawerContextValue,
+  DrawerPosition,
+  DrawerProps,
+  DrawerTriggerProps,
+} from './components/drawer/types';
 export { Icon, IconContext } from './components/icon';
 export { IconStyles } from './components/icon/styles';
 export type { IconProps, IconProviderProps } from './components/icon/types';
@@ -154,6 +163,19 @@ export type {
   SeparatorProps,
   SubmenuTriggerProps,
 } from './components/menu/types';
+export {
+  NavigationStack,
+  NavigationStackContext,
+} from './components/navigation-stack';
+export {
+  NavigationStackStyles,
+  NavigationStackStylesDefaults,
+} from './components/navigation-stack/styles';
+export type { NavigationStackStyleVariants } from './components/navigation-stack/styles';
+export type {
+  NavigationStackProps,
+  NavigationStackViewProps,
+} from './components/navigation-stack/types';
 export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
