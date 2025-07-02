@@ -1,5 +1,5 @@
 ---
-"@accelint/design-toolkit": major
+"@accelint/design-toolkit": minor
 ---
 
 Add popover component
