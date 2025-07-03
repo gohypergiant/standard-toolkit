@@ -1,5 +1,12 @@
 # @accelint/design-toolkit
 
+## 2.2.0
+
+### Minor Changes
+
+- 301e690: Add popover component
+- 006587b: Set default to primary font
+
 ## 2.1.0
 
 ### Minor Changes
