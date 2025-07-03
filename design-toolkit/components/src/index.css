@@ -317,6 +317,7 @@
   font-weight: bold;
   letter-spacing: 0.5px;
   line-height: var(--button-l-height);
+  font-family: var(--font-primary), sans-serif;
 }
 
 @utility text-button-m {
@@ -324,6 +325,7 @@
   font-weight: bold;
   letter-spacing: 0.25px;
   line-height: var(--button-m-height);
+  font-family: var(--font-primary), sans-serif;
 }
 
 @utility text-button-s {
@@ -331,6 +333,7 @@
   font-weight: bold;
   letter-spacing: 0.4px;
   line-height: var(--button-s-height);
+  font-family: var(--font-primary), sans-serif;
 }
 
 @utility text-button-xs {
@@ -338,6 +341,7 @@
   font-weight: bold;
   letter-spacing: 0.5px;
   line-height: var(--button-xs-height);
+  font-family: var(--font-primary), sans-serif;
 }
 
 @utility w-content {
