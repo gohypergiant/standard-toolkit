@@ -29,5 +29,12 @@
     "source.organizeImports.biome": "explicit"
   },
   "yaml.format.singleQuote": true,
-  "tailwindCSS.classFunctions": ["tw", "clsx", "tw\\.[a-z-]+", "cn", "cva"]
+  "tailwindCSS.classFunctions": [
+    "tw",
+    "clsx",
+    "tw\\.[a-z-]+",
+    "cn",
+    "cva",
+    "tv"
+  ]
 }
