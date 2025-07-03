@@ -60,11 +60,33 @@ export type { IconProps, IconProviderProps } from './components/icon/types';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
+export {
+  Menu,
+  MenuContext,
+  MenuDescription,
+  MenuItem,
+  MenuItemIcon,
+  MenuLabel,
+  MenuSection,
+  MenuSeparator,
+  MenuTrigger,
+} from './components/menu';
+export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
+export type { MenuStyleVariants } from './components/menu/styles';
+export type {
+  MenuIconProps,
+  MenuItemProps,
+  MenuProps,
+  MenuSectionProps,
+  MenuTextProps,
+  SeparatorProps,
+} from './components/menu/types';
 export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
 export { Popover, PopoverTrigger } from './components/popover';
+export { PopoverStyles } from './components/popover/styles';
 export type {
   PopoverBodyProps,
   PopoverContentProps,
@@ -120,4 +142,10 @@ export type {
   StylePropRenderProps,
   StyleRenderProps,
 } from './lib/types';
-export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
+export {
+  callRenderProps,
+  cn,
+  isSlottedContextValue,
+  tv,
+  twMerge,
+} from './lib/utils';
