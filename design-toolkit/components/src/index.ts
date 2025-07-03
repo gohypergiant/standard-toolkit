@@ -33,8 +33,21 @@ export { Badge } from './components/badge';
 export type { BadgeProps } from './components/badge';
 export { Box } from './components/box';
 export type { BoxProps } from './components/box';
-export { Button } from './components/button';
-export type { ButtonProps } from './components/button';
+export {
+  Button,
+  ButtonContext,
+  LinkButton,
+  ToggleButton,
+} from './components/button';
+export { ButtonStyles, ButtonStylesDefaults } from './components/button/styles';
+export type { ButtonStyleVariants } from './components/button/styles';
+export type {
+  ButtonContextValue,
+  ButtonProps,
+  ButtonProviderProps,
+  LinkButtonProps,
+  ToggleButtonProps,
+} from './components/button/types';
 export { Checkbox } from './components/checkbox';
 export type { CheckboxGroupProps, CheckboxProps } from './components/checkbox';
 export { Chip, DeletableChip, SelectableChip } from './components/chip';
@@ -51,20 +64,17 @@ export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
-export { FloatingButton } from './components/floating-button';
-export type { FloatingButtonProps } from './components/floating-button';
 export { Icon, IconContext } from './components/icon';
 export { IconStyles, IconStylesDefaults } from './components/icon/styles';
 export type { IconStyleVariants } from './components/icon/styles';
 export type { IconProps, IconProviderProps } from './components/icon/types';
-export { IconButton } from './components/icon-button';
-export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
 export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
 export { Popover, PopoverTrigger } from './components/popover';
+export { PopoverStyles } from './components/popover/styles';
 export type {
   PopoverBodyProps,
   PopoverContentProps,
@@ -101,8 +111,6 @@ export { TextArea } from './components/text-area';
 export type { TextAreaProps } from './components/text-area';
 export { TextField } from './components/text-field';
 export type { TextFieldProps } from './components/text-field';
-export { ToggleIconButton } from './components/toggle-icon-button';
-export type { ToggleIconButtonProps } from './components/toggle-icon-button';
 export { Tooltip, TooltipBody, TooltipTrigger } from './components/tooltip';
 export type {
   TooltipBodyProps,

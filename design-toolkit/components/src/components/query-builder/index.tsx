@@ -30,8 +30,8 @@ import {
 } from 'react-querybuilder';
 import type { LiteralUnion } from 'type-fest';
 import { cn } from '../../lib/utils';
+import { Button } from '../button';
 import { Icon } from '../icon';
-import { IconButton } from '../icon-button';
 import { Label } from '../label';
 import { Radio } from '../radio';
 import { Tooltip } from '../tooltip';
@@ -145,8 +145,9 @@ function RemoveRuleAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 
   return (
-    <IconButton
+    <Button
       size='small'
+      variant='icon'
       onPress={handlePress}
       className={className}
       {...rest}
@@ -154,7 +155,7 @@ function RemoveRuleAction({ handleOnClick, className, ...rest }: ActionProps) {
       <Icon>
         <Delete />
       </Icon>
-    </IconButton>
+    </Button>
   );
 }
 
@@ -166,8 +167,9 @@ function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 
   return (
-    <IconButton
-      size={'small'}
+    <Button
+      size='small'
+      variant='icon'
       onPress={handlePress}
       className={className}
       {...rest}
@@ -175,7 +177,7 @@ function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
       <Icon>
         <LockFill />
       </Icon>
-    </IconButton>
+    </Button>
   );
 }
 
@@ -187,8 +189,9 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 
   return (
-    <IconButton
-      size={'small'}
+    <Button
+      size='small'
+      variant='icon'
       onPress={handlePress}
       className={className}
       {...rest}
@@ -196,7 +199,7 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
       <Icon>
         <Duplicate />
       </Icon>
-    </IconButton>
+    </Button>
   );
 }
 

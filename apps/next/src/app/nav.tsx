@@ -12,30 +12,27 @@
 
 'use client';
 
-import { Button } from '@accelint/design-toolkit/button';
-import Link from 'next/link';
+import { LinkButton } from '@accelint/design-toolkit/button';
 
 export function Nav() {
   return (
     <div className='w-full bg-surface-default p-m flex items-center gap-m'>
-      <Link
-        className={Button.as(
-          { variant: 'flat', size: 'xsmall' },
-          'rounded-none',
-        )}
+      <LinkButton
+        size='xsmall'
+        variant='flat'
+        className='rounded-none'
         href='/'
       >
         Bus Example
-      </Link>
-      <Link
-        className={Button.as(
-          { variant: 'flat', size: 'xsmall' },
-          'rounded-none',
-        )}
+      </LinkButton>
+      <LinkButton
+        size='xsmall'
+        variant='flat'
+        className='rounded-none'
         href='/buttons'
       >
         Button Example
-      </Link>
+      </LinkButton>
     </div>
   );
 }

@@ -12,71 +12,88 @@
 
 import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { composeRenderProps } from 'react-aria-components';
 import { Icon } from '../icon';
-import { Button } from './index';
+import { Button, LinkButton, ToggleButton } from './';
+import { ButtonStylesDefaults } from './styles';
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
   args: {
-    className: undefined,
     children: 'Button',
+    color: ButtonStylesDefaults.color,
+    hierarchy: ButtonStylesDefaults.hierarchy,
+    size: ButtonStylesDefaults.size,
+    variant: ButtonStylesDefaults.variant,
     isDisabled: false,
-    size: 'medium',
-    variant: 'primary',
   },
   argTypes: {
-    variant: {
+    color: {
       control: 'select',
-      options: ['primary', 'outline', 'flat', 'destructive', 'critical'],
+      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
     },
-    className: {
-      control: 'text',
-      type: 'string',
-    },
-    children: {
-      control: 'text',
+    hierarchy: {
+      control: 'select',
+      options: ['primary', 'secondary'],
     },
     size: {
       control: 'select',
       options: ['large', 'medium', 'small', 'xsmall'],
     },
+    variant: {
+      control: 'select',
+      options: ['solid', 'outline', 'flat', 'icon', 'floating'],
+    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Button>;
 
-export const Default: Story = {
-  render: ({ children, ...args }) => <Button {...args}>{children}</Button>,
-};
-
-export const Link: Story = {
-  render: (args) => (
-    <a className={Button.as(args)} href='/'>
-      Link
-    </a>
-  ),
-};
-
-export const ButtonWithLeftIcon: Story = {
-  render: ({ children, ...args }) => (
-    <Button {...args}>
-      <Icon>
-        <Placeholder />
-      </Icon>
-      {typeof children !== 'function' && children}
+export const Default: StoryObj<typeof Button> = {
+  render: ({ children, ...props }) => (
+    <Button {...props}>
+      {composeRenderProps(children, (children) =>
+        props.variant === 'icon' || props.variant === 'floating' ? (
+          <Icon>
+            <Placeholder />
+          </Icon>
+        ) : (
+          children
+        ),
+      )}
     </Button>
   ),
 };
 
-export const ButtonWithRightIcon: Story = {
-  render: ({ children, ...args }) => (
-    <Button {...args}>
-      {typeof children !== 'function' && children}
-      <Icon>
-        <Placeholder />
-      </Icon>
-    </Button>
+export const Link: StoryObj<typeof LinkButton> = {
+  render: ({ children, ...props }) => (
+    <LinkButton {...props} href='/'>
+      {composeRenderProps(children, (children) =>
+        props.variant === 'icon' || props.variant === 'floating' ? (
+          <Icon>
+            <Placeholder />
+          </Icon>
+        ) : (
+          children
+        ),
+      )}
+    </LinkButton>
+  ),
+};
+
+export const Toggle: StoryObj<typeof ToggleButton> = {
+  render: ({ children, ...props }) => (
+    <ToggleButton {...props}>
+      {composeRenderProps(children, (children) =>
+        props.variant === 'icon' || props.variant === 'floating' ? (
+          <Icon>
+            <Placeholder />
+          </Icon>
+        ) : (
+          children
+        ),
+      )}
+    </ToggleButton>
   ),
 };
