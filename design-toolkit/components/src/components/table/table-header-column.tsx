@@ -16,7 +16,7 @@ import { type VariantProps, cva } from 'cva';
 import type { ForwardedRef, ThHTMLAttributes } from 'react';
 
 const headerCellStyles = cva(
-  'h-12 p-m text-center align-middle font-medium text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0',
+  'h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
 
   {
     variants: {

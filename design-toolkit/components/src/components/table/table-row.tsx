@@ -27,7 +27,7 @@ export function TableRow({ ref, className, ...props }: TableRowProps) {
         'data-active:bg-highlight-subtle data-selected:bg-highlight-subtle',
         /** Ensure border is applied to first and last selected rows */
         'has-[+[data-selected="true"]]:not-data-selected:border-b-highlight-bold has-[+[data-selected="false"]]:data-selected:border-b-highlight-bold ',
-        'data-selected:last-of-type:border-b-highlight-bold data-selected:first-of-type:border-t-highlight-bold',
+        'not-data-selected:first-of-type:border-t-static-light data-selected:last-of-type:border-b-highlight-bold data-selected:first-of-type:border-t-highlight-bold',
         className,
       )}
       {...props}

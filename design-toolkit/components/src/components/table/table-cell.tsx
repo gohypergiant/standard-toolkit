@@ -20,11 +20,11 @@ export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
   };
 
 const cellStyles = cva(
-  'min-w-xl text-left align-middle font-display text-default-light hover:group-not-data-selected/row:bg-surface-raised',
+  'min-w-l text-left align-middle font-display text-body-s text-default-light hover:group-not-data-selected/row:bg-surface-raised',
   {
     variants: {
       narrow: {
-        true: 'px-0 py-m ',
+        true: 'px-0 py-m text-center',
         false: 'p-m',
       },
       numeral: {

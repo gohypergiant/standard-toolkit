@@ -162,8 +162,12 @@ export function Table<T extends { id: string | number }>({
           }}
           actions={[
             {
-              label: 'Pin',
+              label: 'Pin to top',
               onAction: () => row.pin('top'),
+            },
+            {
+              label: 'Pin to bottom',
+              onAction: () => row.pin('bottom'),
             },
             {
               label: 'Move up',
@@ -252,35 +256,36 @@ export function Table<T extends { id: string | number }>({
         id: 'numeral',
         cell: ({ row }) =>
           row.getIsPinned() ? (
-            <Icon className='mx-auto'>
+            <Icon size='small' className='mx-auto block'>
               <Pin />
             </Icon>
           ) : (
-            <span className='mx-auto'>{row.index + 1}</span>
+            <span className='mx-auto block text-center'>{row.index + 1}</span>
           ),
       },
       ...columns,
     ];
   }, [showCheckbox, columnsProp, kebabPosition, actionColumn]);
 
-  const { getHeaderGroups, getTopRows, getCenterRows } = useReactTable<T>({
-    data: data,
-    columns,
-    enableSorting: true,
-    state: {
-      rowSelection,
-      sorting,
-    },
-    getRowId: (row, index) => {
-      // Use the index as the row ID if no unique identifier is available
-      return row.id ? row.id.toString() : index.toString();
-    },
-    enableRowSelection: true,
-    onSortingChange: setSorting,
-    onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel<T>(),
-    getSortedRowModel: getSortedRowModel<T>(),
-  });
+  const { getHeaderGroups, getTopRows, getCenterRows, getBottomRows } =
+    useReactTable<T>({
+      data: data,
+      columns,
+      enableSorting: true,
+      state: {
+        rowSelection,
+        sorting,
+      },
+      getRowId: (row, index) => {
+        // Use the index as the row ID if no unique identifier is available
+        return row.id ? row.id.toString() : index.toString();
+      },
+      enableRowSelection: true,
+      onSortingChange: setSorting,
+      onRowSelectionChange: setRowSelection,
+      getCoreRowModel: getCoreRowModel<T>(),
+      getSortedRowModel: getSortedRowModel<T>(),
+    });
 
   return (
     <table>
@@ -316,18 +321,12 @@ export function Table<T extends { id: string | number }>({
             data-active={activeRow === row.id}
             data-pinned={row.getIsPinned()}
           >
-            {row
-              .getVisibleCells()
-              .map((cell) =>
-                dataTableCell(
-                  cell,
-                  cell.column.id === 'numeral'
-                    ? persistNumerals
-                    : cell.column.id === 'kebab'
-                      ? persistKebab
-                      : true,
-                ),
-              )}
+            {row.getVisibleCells().map((cell) =>
+              dataTableCell(
+                cell,
+                cell.column.id === 'kebab' ? persistKebab : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
+              ),
+            )}
           </TableRow>
         ))}
         {getCenterRows().map((row) => (
@@ -349,6 +348,21 @@ export function Table<T extends { id: string | number }>({
                       : true,
                 ),
               )}
+          </TableRow>
+        ))}
+        {getBottomRows().map((row) => (
+          <TableRow
+            key={row.id}
+            data-selected={row.getIsSelected()}
+            data-active={activeRow === row.id}
+            data-pinned={row.getIsPinned()}
+          >
+            {row.getVisibleCells().map((cell) =>
+              dataTableCell(
+                cell,
+                cell.column.id === 'kebab' ? persistKebab : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
+              ),
+            )}
           </TableRow>
         ))}
       </TableBody>

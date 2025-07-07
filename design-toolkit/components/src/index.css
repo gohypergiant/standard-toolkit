@@ -366,7 +366,14 @@
 
 @custom-variant data-selected (&[data-selected~="true"]);
 @custom-variant data-active (&[data-active~="true"]);
-@custom-variant data-pinned (&[data-pinned~="top"]);
+@custom-variant data-pinned {
+  &[data-pinned~="top"] {
+    @slot;
+  }
+  &[data-pinned~="bottom"] {
+    @slot;
+  }
+}
 
 
 @layer components {
