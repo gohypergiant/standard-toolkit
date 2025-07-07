@@ -21,6 +21,7 @@ import {
 import {
   Collection,
   type CollectionRenderer,
+  CollectionRendererContext,
   type ContextValue,
   DEFAULT_SLOT,
   MenuStateContext,
@@ -33,7 +34,6 @@ import {
   type SectionProps,
   type SeparatorProps,
   type TextProps,
-  UNSTABLE_CollectionRendererContext,
 } from 'react-aria-components';
 import { useContextProps } from '../../hooks/use-context-props';
 import { useDefaultProps } from '../../hooks/use-defaults';
@@ -253,12 +253,13 @@ export const MenuList = forwardRef(function MenuList<T extends object>(
   }, [childrenProp, classNames?.list?.list, items]);
 
   const renderer = useMemo<CollectionRenderer>(
+    // @ts-expect-error ts unnecessarily guarding against null state
     () => createCollectionRenderer(MenuStateContext, values),
     [values],
   );
 
   return (
-    <UNSTABLE_CollectionRendererContext.Provider value={renderer}>
+    <CollectionRendererContext.Provider value={renderer}>
       <Provider values={values}>
         <RACMenu<T>
           {...rest}
@@ -272,7 +273,7 @@ export const MenuList = forwardRef(function MenuList<T extends object>(
           {children}
         </RACMenu>
       </Provider>
-    </UNSTABLE_CollectionRendererContext.Provider>
+    </CollectionRendererContext.Provider>
   );
 });
 

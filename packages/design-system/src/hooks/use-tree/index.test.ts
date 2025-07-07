@@ -53,7 +53,7 @@ describe('useTree', () => {
       key: expect.any(String),
       children: options.nodes.map((node) => ({
         key: node.id,
-        parentKey: undefined,
+        parentKey: null,
         value: node,
         children: [],
       })),

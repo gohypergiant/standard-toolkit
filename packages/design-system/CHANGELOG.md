@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.10.0
+
+### Minor Changes
+
+- 3f382f2: Update react-aria-component and associated libraries to latest
+
 ## 0.9.0
 
 ### Minor Changes

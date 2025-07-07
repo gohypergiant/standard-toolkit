@@ -2,4 +2,4 @@
 "@accelint/design-toolkit": minor
 ---
 
-added options component
+Set default to primary font

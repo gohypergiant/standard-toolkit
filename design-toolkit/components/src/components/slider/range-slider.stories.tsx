@@ -10,52 +10,38 @@
  * governing permissions and limitations under the License.
  */
 
-import { Add } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Icon } from './';
+import { RangeSlider } from './index';
 
-const meta: Meta<typeof Icon> = {
-  title: 'Components/Icon',
-  component: Icon,
+const meta: Meta<typeof Range> = {
+  title: 'Components/RangeSlider',
+  component: RangeSlider,
   args: {
-    className: 'fg-default-light',
-    size: 'medium',
+    orientation: 'horizontal',
+    layout: 'stacked',
+    label: 'Opacity',
+    defaultValue: [20, 30],
+    minValue: 0,
+    maxValue: 100,
+    showInput: true,
   },
   argTypes: {
-    className: {
-      type: 'string',
-    },
-    size: {
+    orientation: {
       control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
+      options: ['horizontal', 'vertical'],
     },
   },
 };
 
 export default meta;
+type Story = StoryObj<typeof RangeSlider>;
 
-export const Default: StoryObj<typeof Icon> = {
-  render: (args) => (
-    <Icon {...args}>
-      <Add />
-    </Icon>
-  ),
-};
-
-export const Provider: StoryObj<typeof Icon> = {
-  render: ({ className, size }) => (
-    <Icon.Provider size={size}>
-      <div className={className}>
-        <Icon>
-          <Add />
-        </Icon>
-        <Icon>
-          <Add />
-        </Icon>
-        <Icon>
-          <Add />
-        </Icon>
+export const Default: Story = {
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <RangeSlider {...args} />
       </div>
-    </Icon.Provider>
-  ),
+    );
+  },
 };

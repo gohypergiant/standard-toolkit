@@ -40,8 +40,8 @@ const chipStyles = cva(
         info: 'bg-info-subtle outline-info-bold',
       },
       size: {
-        medium: 'icon-size-l px-s py-xs text-body-s',
-        small: 'icon-size-m px-s py-xs text-body-xs',
+        medium: 'px-s py-xs text-body-s',
+        small: 'px-s py-xs text-body-xs',
       },
     },
     defaultVariants: {
@@ -79,17 +79,18 @@ export const Chip = ({
   const Component = context ? AriaTag : 'span';
 
   return (
-    // @ts-expect-error we are intentionally omitting children.
-    <Component
-      className={cn(
-        chipStyles({
-          size,
-          variant,
-          className,
-        }),
-      )}
-      {...props}
-    />
+    <Icon.Provider size={size === 'medium' ? 'small' : 'xsmall'}>
+      <Component
+        className={cn(
+          chipStyles({
+            size,
+            variant,
+            className,
+          }),
+        )}
+        {...props}
+      />
+    </Icon.Provider>
   );
 };
 Chip.displayName = 'Chip';
@@ -129,12 +130,12 @@ Chip.List = ChipList;
 const selectableChipStyles = cva(
   cn([
     'fg-default-light inline-flex w-content items-center justify-center rounded-full outline outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
-    'ai-selected:bg-highlight-subtle ai-selected:outline-highlight',
+    'dtk-selected:bg-highlight-subtle dtk-selected:outline-highlight',
   ]),
   {
     variants: {
       isDisabled: {
-        true: 'fg-disabled ai-selected:bg-transparent ai-selected:outline-interactive-disabled outline-interactive-disabled hover:outline-interactive-disabled focus:outline-interactive-disabled',
+        true: 'fg-disabled dtk-selected:bg-transparent dtk-selected:outline-interactive-disabled outline-interactive-disabled hover:outline-interactive-disabled focus:outline-interactive-disabled',
         false: 'cursor-pointer',
       },
       size: {
@@ -237,12 +238,12 @@ export const DeletableChip = ({
             <Button
               slot='remove'
               className={cn([
-                'icon-size-[15px] icon-default-dark group-hover:icon-default-light group-focus:icon-default-light cursor-pointer',
+                'icon-default-dark group-hover:icon-default-light group-focus:icon-default-light cursor-pointer',
                 isDisabled &&
                   'icon-disabled group-hover:icon-disabled cursor-not-allowed',
               ])}
             >
-              <Icon>
+              <Icon size='small'>
                 <CancelFill />
               </Icon>
             </Button>

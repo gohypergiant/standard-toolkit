@@ -40,7 +40,7 @@ export type TreeNode<T, N extends TreeNodes<T> = TreeNodes<T>> = {
 
 export type TreeActions<T> = Omit<
   TreeData<TreeNodes<T>>,
-  'items' | 'selectedKeys' | 'update'
+  'items' | 'selectedKeys' | 'update' | 'moveBefore' | 'moveAfter'
 > & {
   revertIsExpanded: () => void;
   toggleIsExpanded: (

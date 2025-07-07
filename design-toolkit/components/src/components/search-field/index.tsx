@@ -78,8 +78,8 @@ export const SearchField = ({
           <LoopIcon className='scale-x-[-1]' />
         </Icon>
       ) : (
-        <Button className='fg-default-dark icon-size-l hover:fg-interactive-hover absolute top-[6px] right-[8px] cursor-pointer group-ai-disabled:hidden group-ai-empty:hidden'>
-          <Icon>
+        <Button className='fg-default-dark hover:fg-interactive-hover absolute top-[8px] right-[8px] cursor-pointer group-dtk-disabled:hidden group-dtk-empty:hidden'>
+          <Icon size='small'>
             <CancelFill />
           </Icon>
         </Button>

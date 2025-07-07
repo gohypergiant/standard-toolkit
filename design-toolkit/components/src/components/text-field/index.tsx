@@ -160,14 +160,14 @@ const Input = ({
       />
       {shouldShowClearButton && (
         <Button
-          className='fg-default-dark icon-size-m hover:fg-interactive-hover absolute right-[5px] cursor-pointer'
+          className='fg-default-dark hover:fg-interactive-hover absolute right-[5px] cursor-pointer'
           excludeFromTabOrder
           onPress={() => {
             props.onChange?.(clearInputEvent);
             ref.current?.focus();
           }}
         >
-          <Icon>
+          <Icon size='small'>
             <CancelFill />
           </Icon>
         </Button>

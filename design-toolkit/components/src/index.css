@@ -15,7 +15,7 @@
 @import '@fontsource/roboto-mono';
 @import 'tailwindcss';
 @plugin 'tailwindcss-react-aria-components' {
-  prefix: 'ai'
+  prefix: 'dtk'
 }
 @source './components/foundation';
 
@@ -227,6 +227,11 @@
   --spacing-xl: 24px;
   --spacing-xxl: 40px;
   --spacing-oversized: 80px;
+
+  --icon-size-l: var(--spacing-xl);
+  --icon-size-m: 20px;
+  --icon-size-s: var(--spacing-l);
+  --icon-size-xs: var(--spacing-m);
 }
 
 @utility text-header-xxl {
@@ -352,11 +357,6 @@
   --icon-color: --value(--color- *);
 }
 
-@utility icon-size-* {
-  --icon-size: --value([ *]);
-  --icon-size: --value(--spacing- *);
-}
-
 @utility fg-* {
   color: --value([ *]);
   color: --value(--color- *);
@@ -375,6 +375,10 @@
   }
 }
 
+
+body {
+  @apply font-primary;
+}
 
 @layer components {
   .hide-cancel::-webkit-search-cancel-button {

@@ -111,7 +111,11 @@ export function useTree<T>({
         return node;
       }
 
-      node = list.getItem(key);
+      node = list.getItem(key) as TreeNode<T>;
+
+      if (!node) {
+        throw new Error(`Key of ${key} does not exist in tree`);
+      }
 
       if ('nodes' in node.value) {
         return {

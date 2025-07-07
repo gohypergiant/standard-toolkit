@@ -21,6 +21,7 @@ import {
 import {
   Collection,
   type CollectionRenderer,
+  CollectionRendererContext,
   type ContextValue,
   ListBox,
   ListBoxItem,
@@ -33,7 +34,6 @@ import {
   type SectionProps,
   type SeparatorProps,
   type TextProps,
-  UNSTABLE_CollectionRendererContext,
 } from 'react-aria-components';
 import { useContextProps } from '../../hooks/use-context-props';
 import { useDefaultProps } from '../../hooks/use-defaults';
@@ -261,12 +261,13 @@ export const OptionsList = forwardRef(function OptionList<T extends object>(
   }, [classNames?.list?.list, childrenProp, items]);
 
   const renderer = useMemo<CollectionRenderer>(
+    // @ts-expect-error ts unnecessarily guarding against null state
     () => createCollectionRenderer(ListStateContext, values),
     [values],
   );
 
   return (
-    <UNSTABLE_CollectionRendererContext.Provider value={renderer}>
+    <CollectionRendererContext.Provider value={renderer}>
       <Provider values={values}>
         <ListBox<T>
           {...rest}
@@ -281,7 +282,7 @@ export const OptionsList = forwardRef(function OptionList<T extends object>(
           {children}
         </ListBox>
       </Provider>
-    </UNSTABLE_CollectionRendererContext.Provider>
+    </CollectionRendererContext.Provider>
   );
 });
 

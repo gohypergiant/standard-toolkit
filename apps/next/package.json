@@ -1,6 +1,6 @@
 {
   "name": "@apps/next",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,8 +17,8 @@
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
     "@types/node": "20",
-    "@types/react": "18.3.11",
-    "@types/react-dom": "18.3.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "@vanilla-extract/next-plugin": "2.4.6",
     "@vanilla-extract/vite-plugin": "4.0.16",
     "jsdom": "25.0.1",

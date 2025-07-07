@@ -36,7 +36,7 @@ export type PopoverMapping = {
   heading: string;
   actions: GroupProps<ButtonProps, HTMLButtonElement>;
   primary: Partial<OmitProtectedProps<ButtonProps>>;
-  secondary: Partial<OmitProtectedProps<ButtonProps>>;
+  close: Partial<OmitProtectedProps<ButtonProps>>;
 };
 
 export type PopoverRenderProps = AsType<RACPopoverRenderProps> &

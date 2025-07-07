@@ -14,13 +14,19 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-export { Accordion } from './components/accordion';
+export { Accordion, AccordionContext } from './components/accordion';
+export {
+  AccordionStyles,
+  AccordionStylesDefaults,
+} from './components/accordion/styles';
+export type { AccordionStyleVariants } from './components/accordion/styles';
 export type {
   AccordionGroupProps,
   AccordionHeaderProps,
   AccordionPanelProps,
   AccordionProps,
-} from './components/accordion';
+  AccordionTriggerProps,
+} from './components/accordion/types';
 export { Avatar } from './components/avatar';
 export type { AvatarProps } from './components/avatar';
 export { Badge } from './components/badge';
@@ -47,8 +53,10 @@ export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export { FloatingButton } from './components/floating-button';
 export type { FloatingButtonProps } from './components/floating-button';
-export { Icon } from './components/icon';
-export type { IconProps } from './components/icon';
+export { Icon, IconContext } from './components/icon';
+export { IconStyles, IconStylesDefaults } from './components/icon/styles';
+export type { IconStyleVariants } from './components/icon/styles';
+export type { IconProps, IconProviderProps } from './components/icon/types';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
@@ -56,6 +64,15 @@ export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
+export { Popover, PopoverTrigger } from './components/popover';
+export { PopoverStyles } from './components/popover/styles';
+export type {
+  PopoverBodyProps,
+  PopoverContentProps,
+  PopoverProps,
+  PopoverTitleProps,
+  PopoverTriggerProps,
+} from './components/popover/types';
 export { QueryBuilder } from './components/query-builder';
 export type {
   ClassNames,
@@ -70,6 +87,8 @@ export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio';
 export { SearchField } from './components/search-field';
 export type { SearchFieldProps } from './components/search-field';
+export { RangeSlider, Slider } from './components/slider';
+export type { RangeSliderProps, SliderProps } from './components/slider';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
 export { ActionsCell } from './components/table/actions-cell';
@@ -106,4 +125,14 @@ export type {
   TooltipTriggerProps,
 } from './components/tooltip';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
-export { cn, twMerge } from './lib/utils';
+export type {
+  ChildrenRenderProps,
+  ClassNameRenderProps,
+  RenderProps,
+  RenderPropsChildren,
+  RenderPropsClassName,
+  RenderPropsStyle,
+  StylePropRenderProps,
+  StyleRenderProps,
+} from './lib/types';
+export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
