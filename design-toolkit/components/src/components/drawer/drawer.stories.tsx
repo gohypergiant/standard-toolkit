@@ -88,7 +88,7 @@ export const Default: Story = {
   },
 };
 
-export const AttachedTrigger: Story = {
+export const WithTabs: Story = {
   render: () => {
     return (
       <div className='absolute inset-0 grid grid-cols-3 grid-rows-3 bg-default-light'>
@@ -116,7 +116,7 @@ export const AttachedTrigger: Story = {
   },
 };
 
-export const ChildView: Story = {
+export const WithNavigationStack: Story = {
   render: () => {
     return (
       <div className='absolute inset-0 grid grid-cols-3 grid-rows-3 bg-default-light'>

@@ -27,7 +27,7 @@ import type { ReactNode } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { DrawerStyles, DrawerStylesDefaults } from './styles';
-import type { DrawerContextValue, DrawerProps } from './types';
+import type { DrawerContentProps, DrawerContextValue, DrawerProps } from './types';
 
 export const DrawerContext = createContext<DrawerContextValue>({
   position: 'left',
@@ -71,8 +71,12 @@ const DrawerTrigger = ({
 };
 DrawerTrigger.displayName = 'Drawer.Trigger';
 
-const DrawerContent = ({ children, ...props }: { children: ReactNode }) => {
+const DrawerContent = ({ children, ...props }: DrawerContentProps) => {
   const context = useContext(DrawerContext);
+  if (!context.close) {
+    throw new Error('Drawer.Content must be used within a Drawer component');
+  }
+
   return (
     <div className={content()} {...props}>
       {typeof children === 'function'
@@ -116,7 +120,7 @@ const DrawerHeader = ({ children }: { children: ReactNode }) => {
         isOpen: context.isOpen,
       })}
     >
-      <div className='text-default-light text-header-l w-full'>{children}</div>
+      <div className='w-full text-default-light text-header-l'>{children}</div>
       <DrawerCloseButton />
     </div>
   );

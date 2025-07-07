@@ -38,6 +38,13 @@ export type DrawerProps = Pick<
     parentRef?: RefObject<HTMLElement | null>;
   };
 
+
+export type DrawerContentProps = {
+  children:
+    | ReactNode
+    | ((props: { close: () => void }) => ReactNode);
+}
+
 export type DrawerTriggerProps = {
   children:
     | ReactNode

@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { containsExactChildren } from "@/lib/react";
 import {
   Children,
   type ReactNode,
   createContext,
   isValidElement,
+  useCallback,
   useContext,
   useMemo,
   useState
@@ -37,8 +37,8 @@ interface NavigationStackContextValue {
 
 export const NavigationStackContext = createContext<NavigationStackContextValue>({
   currentViewId: null,
-  pushView: () => {},
-  popView: () => {},
+  pushView: () => undefined,
+  popView: () => undefined,
   canGoBack: false,
   viewStack: []
 })
@@ -119,12 +119,12 @@ export const NavigationStack = ({
   const currentViewId = viewStack[viewStack.length - 1] || null;
   const canGoBack = viewStack.length > 1;
 
-  const pushView = (viewId: string) => {
+  const pushView = useCallback((viewId: string) => {
     setViewStack(prev => [...prev, viewId])
-  }
-  const popView = () => {
+  }, [])
+  const popView = useCallback(() => {
     setViewStack(prev => prev.slice(0, -1))
-  }
+  }, [])
 
   const contextValue = useMemo(() => ({
     currentViewId,
@@ -132,7 +132,7 @@ export const NavigationStack = ({
     popView,
     canGoBack,
     viewStack
-  }), [currentViewId,canGoBack,viewStack])
+  }), [currentViewId,canGoBack,viewStack, pushView, popView])
 
   const header = Children.toArray(children).find(
     (child) => isValidElement(child) && child.type === NavigationStackHeader
