@@ -2,6 +2,10 @@
   "recommendations": [
     "editorconfig.editorconfig",
     "redhat.vscode-yaml",
-    "biomejs.biome"
+    "biomejs.biome",
+    "github.remotehub",
+    "ms-vscode.remote-repositories",
+    "github.vscode-pull-request-github",
+    "gitlab.gitlab-workflow"
   ]
 }
