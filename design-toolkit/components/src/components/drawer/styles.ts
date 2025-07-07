@@ -24,7 +24,7 @@ export const DrawerStyles = tv({
     overlay:
       'absolute top-0 left-0 z-50 flex h-full w-full items-stretch justify-start duration-300 ease-in-out',
     modal:
-      'relative flex h-full flex-col bg-surface-default duration-300 ease-in-out text-body-m',
+      'relative flex h-full flex-col bg-surface-default text-body-m duration-300 ease-in-out',
     dialog: 'flex flex-1 flex-col p-l text-body-m text-default-light',
     attachedTrigger:
       'absolute z-60 transition-transform duration-300 ease-in-out',

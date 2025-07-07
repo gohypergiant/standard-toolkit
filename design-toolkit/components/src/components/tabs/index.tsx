@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-import { containsExactChildren } from '@/lib/react';
 import { cn } from '@/lib/utils';
 import 'client-only';
 import { cva } from 'cva';
@@ -35,14 +33,6 @@ export const Tabs = ({
   isDisabled = false,
   ...rest
 }: TabsProps) => {
-  // containsExactChildren({
-  //   children,
-  //   componentName: Tabs.displayName,
-  //   restrictions: {
-  //     [TabList.displayName]: { min: 1, max: 1 },
-  //   },
-  // });
-
   return (
     <AriaTabs
       orientation={orientation}
@@ -92,14 +82,6 @@ const TabList = ({
   drawer = undefined,
   ...rest
 }: TabListProps) => {
-  // containsExactChildren({
-  //   children,
-  //   componentName: TabList.displayName,
-  //   restrictions: {
-  //     [Tab.displayName]: { min: 1 },
-  //   },
-  // });
-
   return (
     <AriaTabList
       className={cn(tabListStyles({ variant, drawer }), className)}
