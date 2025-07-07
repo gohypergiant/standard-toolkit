@@ -51,6 +51,15 @@ export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
+export { Drawer, DrawerContext } from './components/drawer';
+export { DrawerStyles, DrawerStylesDefaults } from './components/drawer/styles';
+export type { DrawerStyleVariants } from './components/drawer/styles';
+export type {
+  DrawerContextValue,
+  DrawerPosition,
+  DrawerProps,
+  DrawerTriggerProps,
+} from './components/drawer/types';
 export { FloatingButton } from './components/floating-button';
 export type { FloatingButtonProps } from './components/floating-button';
 export { Icon, IconContext } from './components/icon';
@@ -60,11 +69,25 @@ export type { IconProps, IconProviderProps } from './components/icon/types';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
+export {
+  NavigationStack,
+  NavigationStackContext,
+} from './components/navigation-stack';
+export {
+  NavigationStackStyles,
+  NavigationStackStylesDefaults,
+} from './components/navigation-stack/styles';
+export type { NavigationStackStyleVariants } from './components/navigation-stack/styles';
+export type {
+  NavigationStackProps,
+  NavigationStackViewProps,
+} from './components/navigation-stack/types';
 export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
 export { Popover, PopoverTrigger } from './components/popover';
+export { PopoverStyles } from './components/popover/styles';
 export type {
   PopoverBodyProps,
   PopoverContentProps,
