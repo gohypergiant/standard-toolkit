@@ -25,13 +25,13 @@ type BaseProps = {
   className?: string;
 };
 
-export type MenuProps<T extends object> = Omit<AriaMenuProps<T>, 'className'> &
+export type MenuProps<T> = Omit<AriaMenuProps<T>, 'className'> &
   Pick<MenuStyleVariants, 'variant'> &
   BaseProps;
 
 export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & BaseProps;
 
-export type MenuSectionProps<T extends object> = AriaMenuSectionProps<T> & {
+export type MenuSectionProps<T> = AriaMenuSectionProps<T> & {
   header?: string;
 };
 

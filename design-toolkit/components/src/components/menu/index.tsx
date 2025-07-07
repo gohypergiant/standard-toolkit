@@ -42,9 +42,9 @@ import type {
 const { item, label, description, menu, more, icon, separator } = MenuStyles();
 
 export const MenuContext =
-  createContext<ContextValue<MenuProps<object>, HTMLDivElement>>(null);
+  createContext<ContextValue<MenuProps<unknown>, HTMLDivElement>>(null);
 
-export const Menu = (props: MenuProps<any>) => {
+export function Menu<T extends object>(props: MenuProps<T>) {
   const {
     children,
     className,
@@ -66,7 +66,7 @@ export const Menu = (props: MenuProps<any>) => {
       </MenuContext.Provider>
     </Popover>
   );
-};
+}
 
 export const MenuTrigger = ({ children }: AriaMenuTriggerProps) => {
   return <AriaMenuTrigger>{children}</AriaMenuTrigger>;
@@ -118,7 +118,7 @@ export function MenuSection<T extends object>(props: MenuSectionProps<T>) {
   const { header, children, items } = props;
 
   return (
-    <AriaMenuSection id={header} className=''>
+    <AriaMenuSection id={header}>
       <AriaHeader className='fg-default-dark px-s py-xs text-header-xs'>
         {header}
       </AriaHeader>

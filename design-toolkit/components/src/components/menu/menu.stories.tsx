@@ -13,6 +13,7 @@
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { ReactNode } from 'react';
 import { Icon } from '../icon';
 import { IconButton } from '../icon-button';
 import { Menu } from './';
@@ -38,7 +39,16 @@ const meta: Meta<typeof Menu> = {
 
 export default meta;
 
-const menuItems = [
+type MenuItem = {
+  id: number;
+  name: string;
+  description?: string;
+  prefixIcon?: ReactNode;
+  children?: MenuItem[];
+  isDisabled?: boolean;
+};
+
+const menuItems: MenuItem[] = [
   {
     id: 1,
     prefixIcon: <Placeholder />,
@@ -166,7 +176,7 @@ export const Dynamic: StoryObj<typeof Menu> = {
           <Kebab />
         </Icon>
       </IconButton>
-      <Menu {...args} items={menuItems}>
+      <Menu<MenuItem> {...args} items={menuItems}>
         {function render(item) {
           if (item.children) {
             return (
