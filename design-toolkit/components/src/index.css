@@ -366,14 +366,10 @@
 
 @custom-variant data-selected (&[data-selected~="true"]);
 @custom-variant data-active (&[data-active~="true"]);
-@custom-variant data-pinned {
-  &[data-pinned~="top"] {
-    @slot;
-  }
-  &[data-pinned~="bottom"] {
-    @slot;
-  }
-}
+@custom-variant data-pinned (&:is([data-pinned~="top"], [data-pinned~="bottom"]));
+
+
+
 
 
 body {

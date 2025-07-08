@@ -10,27 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
-import type { ForwardedRef, HTMLAttributes } from 'react';
-
-export type TableRowProps = HTMLAttributes<HTMLTableRowElement> & {
-  ref?: ForwardedRef<HTMLTableRowElement>;
-};
+import { rowStyles } from './styles';
+import type { TableRowProps } from './types';
 
 export function TableRow({ ref, className, ...props }: TableRowProps) {
-  return (
-    <tr
-      ref={ref}
-      className={cn(
-        'group/row',
-        'border-1 border-transparent data-selected:border-x-highlight-bold',
-        'data-active:bg-highlight-subtle data-selected:bg-highlight-subtle',
-        /** Ensure border is applied to first and last selected rows */
-        'has-[+[data-selected="true"]]:not-data-selected:border-b-highlight-bold has-[+[data-selected="false"]]:data-selected:border-b-highlight-bold ',
-        'not-data-selected:first-of-type:border-t-static-light data-selected:last-of-type:border-b-highlight-bold data-selected:first-of-type:border-t-highlight-bold',
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <tr ref={ref} className={rowStyles({ className })} {...props} />;
 }

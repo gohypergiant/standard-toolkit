@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Meta, StoryObj } from '@storybook/react';
 import { createColumnHelper } from '@tanstack/react-table';
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { DataTable, type DataTableProps } from './data-table';
+import { DataTable } from './data-table';
 
 type Person = {
   id: string;
@@ -57,7 +56,7 @@ const defaultData: Person[] = [
 
 const columnHelper = createColumnHelper<Person>();
 
-const defaultColumns = [
+const columns = [
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
   }),
@@ -81,56 +80,21 @@ const defaultColumns = [
   }),
 ];
 
-function setup<T extends { id: string | number }>(props: DataTableProps<T>) {
-  render(<DataTable {...props} />);
-}
+const meta: Meta<typeof DataTable<Person>> = {
+  title: 'Components/Table/DataTable',
+  component: DataTable,
+  args: {
+    data: defaultData,
+    columns: columns,
+    showCheckbox: true,
+    persistKebab: false,
+    persistNumerals: false,
+  },
+};
 
-describe('Table', () => {
-  it('should render', () => {
-    setup({
-      columns: defaultColumns,
-      data: defaultData,
-    });
+export default meta;
+type Story = StoryObj<typeof DataTable<Person>>;
 
-    expect(screen.getByText('tanner')).toBeInTheDocument();
-  });
-
-  it('should render with checkboxes', () => {
-    setup({
-      columns: defaultColumns,
-      data: defaultData,
-      showCheckbox: true,
-    });
-
-    expect(screen.getAllByRole('checkbox')).toHaveLength(
-      defaultData.length + 1,
-    ); // +1 for the header checkbox
-  });
-
-  /**
-
-  issue detecting visibility: https://github.com/testing-library/jest-dom/issues/209#issuecomment-1149476837
-
-  it('should show kebab on hover', async () => {
-    const user = userEvent.setup();
-    setup({
-      columns: defaultColumns,
-      data: defaultData,
-      persistKebab: false,
-    });
-
-    const kebabButton = screen.getAllByRole('button', {
-      name: /row actions/i,
-    })[2];
-
-
-    if (kebabButton) {
-      expect(kebabButton).toBeInTheDocument();
-      expect(kebabButton).not.toBeVisible();
-      await user.hover(kebabButton);
-      expect(kebabButton).toBeVisible();
-    }
-  });
-
-  */
-});
+export const Default: Story = {
+  render: (args) => <DataTable {...args} columns={columns} />,
+};

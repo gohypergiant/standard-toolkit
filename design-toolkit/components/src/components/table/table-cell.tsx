@@ -10,54 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
-import type { ForwardedRef, TdHTMLAttributes } from 'react';
-
-export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
-  VariantProps<typeof cellStyles> & {
-    ref?: ForwardedRef<HTMLTableCellElement>;
-  };
-
-const cellStyles = cva(
-  'min-w-l text-left align-middle font-display text-body-s text-default-light hover:group-not-data-selected/row:bg-surface-raised',
-  {
-    variants: {
-      narrow: {
-        true: 'px-0 py-m text-center',
-        false: 'p-m',
-      },
-      numeral: {
-        true: ' text-default-dark hover:text-default-light',
-        false: '',
-      },
-      // This is used to control the visibility of the cell content
-      // when the cell or table row is hovered.
-      // If true, the cell is always visible.
-      persistent: {
-        true: 'visible',
-        false: 'hover:*:visible group-hover/row:*:visible',
-      },
-    },
-    defaultVariants: {
-      narrow: false,
-      numeral: false,
-      persistent: true,
-    },
-    compoundVariants: [
-      {
-        persistent: false,
-        numeral: true,
-        className: 'text-default-dark group-not-data-pinned/row:*:invisible',
-      },
-      {
-        persistent: false,
-        numeral: false,
-        className: '*:invisible',
-      },
-    ],
-  },
-);
+import { cellStyles } from './styles';
+import type { TableCellProps } from './types';
 
 export function TableCell({
   ref,
@@ -70,7 +24,7 @@ export function TableCell({
   return (
     <td
       ref={ref}
-      className={cn(cellStyles({ narrow, numeral, persistent, className }))}
+      className={cellStyles({ narrow, numeral, persistent, className })}
       {...props}
     />
   );

@@ -93,18 +93,28 @@ export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
 export { ActionsCell } from './components/table/actions-cell';
 export type { ActionsCellProps } from './components/table/actions-cell';
+export { DataTable } from './components/table/data-table';
+export type { DataTableProps } from './components/table/data-table';
 export { Table } from './components/table';
-export type { TableProps } from './components/table';
+export {
+  cellStyles,
+  headerCellStyles,
+  rowStyles,
+  tableBodyStyles,
+} from './components/table/styles';
 export { TableBody } from './components/table/table-body';
-export type { TableBodyProps } from './components/table/table-body';
 export { TableCell } from './components/table/table-cell';
-export type { TableCellProps } from './components/table/table-cell';
-export { HeaderColumn } from './components/table/table-header-column';
-export type { TableHeaderColumnProps } from './components/table/table-header-column';
+export { HeaderCell } from './components/table/table-header-cell';
 export { TableHeader } from './components/table/table-header';
-export type { TableHeaderProps } from './components/table/table-header';
 export { TableRow } from './components/table/table-row';
-export type { TableRowProps } from './components/table/table-row';
+export type {
+  TableBodyProps,
+  TableCellProps,
+  TableHeaderCellProps,
+  TableHeaderProps,
+  TableProps,
+  TableRowProps,
+} from './components/table/types';
 export { Tabs } from './components/tabs';
 export type {
   TabListProps,

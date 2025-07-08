@@ -10,12 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
-import type { ForwardedRef, HTMLAttributes } from 'react';
+import { tableBodyStyles } from './styles';
+import type { TableBodyProps } from './types';
 
-export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> & {
-  ref?: ForwardedRef<HTMLTableSectionElement>;
-};
 export function TableBody({ className, ref, ...props }: TableBodyProps) {
-  return <tbody ref={ref} className={cn(className)} {...props} />;
+  return <tbody ref={ref} className={tableBodyStyles(className)} {...props} />;
 }

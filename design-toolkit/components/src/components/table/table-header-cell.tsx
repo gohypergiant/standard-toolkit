@@ -10,15 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@/lib/utils';
-import type { TableHeaderProps } from './types';
+import { headerCellStyles } from './styles';
+import type { TableHeaderCellProps } from './types';
 
-const tableHeaderStyles = tv({
-  base: ['group/theader'],
-});
-
-export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
+export function HeaderCell({
+  ref,
+  className,
+  narrow,
+  ...props
+}: TableHeaderCellProps) {
   return (
-    <thead ref={ref} className={tableHeaderStyles(className)} {...props} />
+    <th
+      ref={ref}
+      className={headerCellStyles({ narrow, className })}
+      {...props}
+    />
   );
 }
