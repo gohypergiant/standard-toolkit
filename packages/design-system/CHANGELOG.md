@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.10.1
+
+### Patch Changes
+
+- 1f3c039: Ensure complete exports
+
 ## 0.10.0
 
 ### Minor Changes
