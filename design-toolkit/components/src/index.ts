@@ -65,6 +65,7 @@ export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
 export { Popover, PopoverTrigger } from './components/popover';
+export { PopoverStyles } from './components/popover/styles';
 export type {
   PopoverBodyProps,
   PopoverContentProps,
