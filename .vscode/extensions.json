@@ -8,6 +8,9 @@
     "github.vscode-pull-request-github",
     "gitlab.gitlab-workflow",
     "eamodio.gitlens",
-    "mhutchie.git-graph"
+    "mhutchie.git-graph",
+    "streetsidesoftware.code-spell-checker",
+    "bradlc.vscode-tailwindcss",
+    "natqe.reload"
   ]
 }
