@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { cn } from '@/lib/utils';
 import { useIsSSR } from '@react-aria/ssr';
+import 'client-only';
 import { cva } from 'cva';
 import {
   type PropsWithChildren,

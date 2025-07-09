@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { cn } from '@/lib/utils';
 import { CancelFill } from '@accelint/icons';
+import 'client-only';
 import { type VariantProps, cva } from 'cva';
 import type React from 'react';
 import { type ReactNode, createContext, useContext } from 'react';

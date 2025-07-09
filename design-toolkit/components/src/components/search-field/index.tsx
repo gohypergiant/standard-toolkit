@@ -10,12 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { cn } from '@/lib/utils';
 import {
   CancelFill,
   Loop as LoopIcon,
   Search as SearchIcon,
 } from '@accelint/icons';
+import 'client-only';
 import { cva } from 'cva';
 import {
   SearchField as AriaSearchField,

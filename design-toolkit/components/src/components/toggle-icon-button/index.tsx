@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { expectsIconWrapper } from '@/lib/react';
 import { cn } from '@/lib/utils';
+import 'client-only';
 import { type VariantProps, cva } from 'cva';
 import {
   ToggleButton as AriaToggleButton,

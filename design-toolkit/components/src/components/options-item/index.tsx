@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import 'client-only';
+'use client';
 import { mergeProps } from '@react-aria/utils';
+import 'client-only';
 import { type VariantProps, cva } from 'cva';
 import { type ReactNode, useContext, useMemo } from 'react';
 import {

@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
+import 'client-only';
 import type { ReactNode } from 'react';
 import {
   Dialog as AriaDialog,

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import 'client-only';
 import {
   Button as AriaButton,
@@ -30,7 +31,7 @@ import {
 } from 'react-aria-components';
 
 import { cn } from '@/lib/utils';
-import ChevronDown from '@accelint/icons/chevron-down';
+import { ChevronDown } from '@accelint/icons';
 import { type VariantProps, cva } from 'cva';
 import type { ReactNode } from 'react';
 import { Icon } from '../icon';

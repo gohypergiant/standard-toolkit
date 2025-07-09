@@ -1,6 +1,3 @@
-import { containsExactChildren } from '@/lib/react';
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -12,6 +9,11 @@ import { type VariantProps, cva } from 'cva';
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
+import { containsExactChildren } from '@/lib/react';
+import { cn } from '@/lib/utils';
+import 'client-only';
+import { type VariantProps, cva } from 'cva';
 import type React from 'react';
 import {
   Focusable,
