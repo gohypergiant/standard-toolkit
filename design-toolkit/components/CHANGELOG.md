@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 2.2.1
+
+### Patch Changes
+
+- 0fd9e71: Fixes an issue where certain components were not properly marked as client components.
+
 ## 2.2.0
 
 ### Minor Changes
