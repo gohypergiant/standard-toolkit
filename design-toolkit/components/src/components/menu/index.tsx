@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { callRenderProps, isSlottedContextValue } from '@/lib/utils';
 import ChevronRight from '@accelint/icons/chevron-right';
 import { createContext, useCallback, useContext } from 'react';
 import {
@@ -20,14 +21,14 @@ import {
   type MenuItemRenderProps as AriaMenuItemRenderProps,
   MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
-  type MenuTriggerProps as AriaMenuTriggerProps,
   Separator as AriaSeparator,
   SubmenuTrigger as AriaSubmenuTrigger,
   Text as AriaText,
   type ContextValue,
   Popover,
+  composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
-import { callRenderProps, isSlottedContextValue } from '../../lib/utils';
 import { Icon } from '../icon';
 import { MenuStyles, MenuStylesDefaults } from './styles';
 import type {
@@ -39,25 +40,39 @@ import type {
   SeparatorProps,
 } from './types';
 
-const { item, label, description, menu, more, icon, separator } = MenuStyles();
+const { menu, icon, item, label, description, more, header, separator } =
+  MenuStyles();
 
 export const MenuContext =
   createContext<ContextValue<MenuProps<unknown>, HTMLDivElement>>(null);
 
-export function Menu<T extends object>(props: MenuProps<T>) {
+export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
+  [props, ref] = useContextProps(props, ref ?? null, MenuContext);
+
   const {
     children,
     className,
-    variant = MenuStylesDefaults.variant,
     selectionMode = 'single',
+    offset = -4,
+    placement,
+    isNonModal,
+    containerPadding,
+    variant = MenuStylesDefaults.variant,
     ...rest
   } = props;
 
   return (
-    <Popover offset={-4}>
+    <Popover
+      offset={offset}
+      placement={placement}
+      isNonModal={isNonModal}
+      containerPadding={containerPadding}
+    >
       <MenuContext.Provider value={{ variant }}>
         <AriaMenu
-          className={menu({ className })}
+          className={composeRenderProps(className, (className) =>
+            menu({ className, variant }),
+          )}
           selectionMode={selectionMode}
           {...rest}
         >
@@ -67,11 +82,7 @@ export function Menu<T extends object>(props: MenuProps<T>) {
     </Popover>
   );
 }
-
-export const MenuTrigger = ({ children }: AriaMenuTriggerProps) => {
-  return <AriaMenuTrigger>{children}</AriaMenuTrigger>;
-};
-MenuTrigger.displayName = 'Menu.Trigger';
+Menu.displayName = 'Menu';
 
 export const MenuItem = (props: MenuItemProps) => {
   const context = useContext(MenuContext);
@@ -108,20 +119,24 @@ export const MenuItem = (props: MenuItemProps) => {
   );
 
   return (
-    <AriaMenuItem className={item({ className, variant })} {...rest}>
+    <AriaMenuItem
+      {...rest}
+      className={composeRenderProps(className, (className) =>
+        item({ className, variant }),
+      )}
+    >
       {children}
     </AriaMenuItem>
   );
 };
+MenuItem.displayName = 'Menu.Item';
 
 export function MenuSection<T extends object>(props: MenuSectionProps<T>) {
-  const { header, children, items } = props;
+  const { header: headerTitle, children, items, ...rest } = props;
 
   return (
-    <AriaMenuSection id={header}>
-      <AriaHeader className='fg-default-dark px-s py-xs text-header-xs'>
-        {header}
-      </AriaHeader>
+    <AriaMenuSection {...rest}>
+      <AriaHeader className={header()}>{headerTitle}</AriaHeader>
       <AriaMenuCollection items={items}>{children}</AriaMenuCollection>
     </AriaMenuSection>
   );
@@ -133,18 +148,23 @@ export function MenuSeparator(props: SeparatorProps) {
 }
 MenuSeparator.displayName = 'Menu.Separator';
 
-export function MenuLabel({ children }: MenuTextProps) {
+export function MenuLabel(props: MenuTextProps) {
+  const { children, ...rest } = props;
+
   return (
-    <AriaText slot='label' className={label()}>
+    <AriaText {...rest} slot='label' className={label()}>
       {children}
     </AriaText>
   );
 }
-MenuLabel.displayName = 'Menu.Label';
+MenuLabel.displayName = 'Menu.Item.Label';
 
-export function MenuDescription({ children }: MenuTextProps) {
+export function MenuDescription(props: MenuTextProps) {
+  const { children, ...rest } = props;
+
   return (
     <AriaText
+      {...rest}
       slot='description'
       data-slot='description'
       className={description()}
@@ -153,17 +173,24 @@ export function MenuDescription({ children }: MenuTextProps) {
     </AriaText>
   );
 }
-MenuDescription.displayName = 'Menu.Description';
+MenuDescription.displayName = 'Menu.Item.Description';
 
-export function MenuItemIcon({ children }: MenuIconProps) {
-  return <Icon className={icon()}>{children}</Icon>;
+export function MenuItemIcon(props: MenuIconProps) {
+  const { children, ...rest } = props;
+
+  return (
+    <Icon {...rest} className={icon()}>
+      {children}
+    </Icon>
+  );
 }
+MenuItemIcon.displayName = 'Menu.Item.Icon';
 
-Menu.Trigger = MenuTrigger;
-Menu.Item = MenuItem;
-Menu.Icon = MenuItemIcon;
-Menu.Label = MenuLabel;
-Menu.Description = MenuDescription;
-Menu.Section = MenuSection;
-Menu.Separator = MenuSeparator;
+Menu.Trigger = AriaMenuTrigger;
 Menu.Submenu = AriaSubmenuTrigger;
+Menu.Item = MenuItem;
+MenuItem.Icon = MenuItemIcon;
+MenuItem.Label = MenuLabel;
+MenuItem.Description = MenuDescription;
+Menu.Separator = MenuSeparator;
+Menu.Section = MenuSection;

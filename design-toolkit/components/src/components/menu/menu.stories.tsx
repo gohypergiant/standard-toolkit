@@ -110,57 +110,61 @@ export const Basic: StoryObj<typeof Menu> = {
           <Kebab />
         </Icon>
       </IconButton>
-      <Menu {...args}>
+      <Menu {...args} placement='top'>
         <Menu.Item>
-          <Menu.Icon>
+          <Menu.Item.Icon>
             <Placeholder />
-          </Menu.Icon>
-          <Menu.Label>Songbirds</Menu.Label>
+          </Menu.Item.Icon>
+          <Menu.Item.Label>Songbirds</Menu.Item.Label>
         </Menu.Item>
         <Menu.Separator />
         <Menu.Submenu>
           <Menu.Item>
-            <Menu.Label>North American Birds</Menu.Label>
+            <Menu.Item.Label>North American Birds</Menu.Item.Label>
           </Menu.Item>
           <Menu>
             <Menu.Item>
-              <Menu.Icon>
+              <Menu.Item.Icon>
                 <Placeholder />
-              </Menu.Icon>
-              <Menu.Label>Blue Jay</Menu.Label>
-              <Menu.Description>Cyanocitta cristata</Menu.Description>
+              </Menu.Item.Icon>
+              <Menu.Item.Label>Blue Jay</Menu.Item.Label>
+              <Menu.Item.Description>Cyanocitta cristata</Menu.Item.Description>
             </Menu.Item>
             <Menu.Item isDisabled>
-              <Menu.Icon>
+              <Menu.Item.Icon>
                 <Placeholder />
-              </Menu.Icon>
-              <Menu.Label>Gray catbird</Menu.Label>
-              <Menu.Description>Dumetella carolinensis</Menu.Description>
+              </Menu.Item.Icon>
+              <Menu.Item.Label>Gray catbird</Menu.Item.Label>
+              <Menu.Item.Description>
+                Dumetella carolinensis
+              </Menu.Item.Description>
             </Menu.Item>
           </Menu>
         </Menu.Submenu>
         <Menu.Separator />
         <Menu.Section header='Additional Notable Species'>
           <Menu.Item>
-            <Menu.Icon>
+            <Menu.Item.Icon>
               <Placeholder />
-            </Menu.Icon>
-            <Menu.Label>Mallard</Menu.Label>
-            <Menu.Description>Anas platyrhynchos</Menu.Description>
+            </Menu.Item.Icon>
+            <Menu.Item.Label>Mallard</Menu.Item.Label>
+            <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
           </Menu.Item>
           <Menu.Item>
-            <Menu.Icon>
+            <Menu.Item.Icon>
               <Placeholder />
-            </Menu.Icon>
-            <Menu.Label>Chimney swift</Menu.Label>
-            <Menu.Description>Chaetura pelagica</Menu.Description>
+            </Menu.Item.Icon>
+            <Menu.Item.Label>Chimney swift</Menu.Item.Label>
+            <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
           </Menu.Item>
           <Menu.Item>
-            <Menu.Icon>
+            <Menu.Item.Icon>
               <Placeholder />
-            </Menu.Icon>
-            <Menu.Label>Brünnich's guillemot</Menu.Label>
-            <Menu.Description>Dumetella carolinensis</Menu.Description>
+            </Menu.Item.Icon>
+            <Menu.Item.Label>Brünnich's guillemot</Menu.Item.Label>
+            <Menu.Item.Description>
+              Dumetella carolinensis
+            </Menu.Item.Description>
           </Menu.Item>
         </Menu.Section>
       </Menu>
@@ -182,10 +186,12 @@ export const Dynamic: StoryObj<typeof Menu> = {
             return (
               <Menu.Submenu>
                 <Menu.Item key={item.id} isDisabled={item.isDisabled}>
-                  <Menu.Icon>{item.prefixIcon}</Menu.Icon>
-                  <Menu.Label>{item.name}</Menu.Label>
+                  <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
+                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
                   {item.description && (
-                    <Menu.Description>{item.description}</Menu.Description>
+                    <Menu.Item.Description>
+                      {item.description}
+                    </Menu.Item.Description>
                   )}
                 </Menu.Item>
                 <Menu items={item.children}>{(item) => render(item)}</Menu>
@@ -194,10 +200,12 @@ export const Dynamic: StoryObj<typeof Menu> = {
           }
           return (
             <Menu.Item key={item.id} isDisabled={item.isDisabled}>
-              <Menu.Icon>{item.prefixIcon}</Menu.Icon>
-              <Menu.Label>{item.name}</Menu.Label>
+              <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
+              <Menu.Item.Label>{item.name}</Menu.Item.Label>
               {item.description && (
-                <Menu.Description>{item.description}</Menu.Description>
+                <Menu.Item.Description>
+                  {item.description}
+                </Menu.Item.Description>
               )}
             </Menu.Item>
           );

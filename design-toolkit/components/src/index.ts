@@ -69,7 +69,6 @@ export {
   MenuLabel,
   MenuSection,
   MenuSeparator,
-  MenuTrigger,
 } from './components/menu';
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export type { MenuStyleVariants } from './components/menu/styles';
@@ -79,7 +78,9 @@ export type {
   MenuProps,
   MenuSectionProps,
   MenuTextProps,
+  MenuTriggerProps,
   SeparatorProps,
+  SubmenuTriggerProps,
 } from './components/menu/types';
 export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';

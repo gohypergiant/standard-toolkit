@@ -10,26 +10,33 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, RefAttributes } from 'react';
 import type {
   MenuItemProps as AriaMenuItemProps,
   MenuProps as AriaMenuProps,
   MenuSectionProps as AriaMenuSectionProps,
+  MenuTriggerProps as AriaMenuTriggerProps,
+  PopoverProps as AriaPopoverProps,
   SeparatorProps as AriaSeparatorProps,
+  SubmenuTriggerProps as AriaSubmenuTriggerProps,
   TextProps as AriaTextProps,
 } from 'react-aria-components';
 import type { IconProps } from '../icon/types';
 import type { MenuStyleVariants } from './styles';
 
-type BaseProps = {
-  className?: string;
-};
-
-export type MenuProps<T> = Omit<AriaMenuProps<T>, 'className'> &
+export type MenuProps<T> = AriaMenuProps<T> &
   Pick<MenuStyleVariants, 'variant'> &
-  BaseProps;
+  RefAttributes<HTMLDivElement> &
+  Pick<
+    AriaPopoverProps,
+    'placement' | 'offset' | 'containerPadding' | 'isNonModal'
+  >;
 
-export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & BaseProps;
+export type MenuItemProps = AriaMenuItemProps;
+
+export type MenuTriggerProps = AriaMenuTriggerProps;
+
+export type SubmenuTriggerProps = AriaSubmenuTriggerProps;
 
 export type MenuSectionProps<T> = AriaMenuSectionProps<T> & {
   header?: string;
@@ -37,8 +44,6 @@ export type MenuSectionProps<T> = AriaMenuSectionProps<T> & {
 
 export type SeparatorProps = AriaSeparatorProps;
 
-export type MenuTextProps = PropsWithChildren &
-  Omit<AriaTextProps, 'className'> &
-  BaseProps;
+export type MenuTextProps = PropsWithChildren & AriaTextProps;
 
 export type MenuIconProps = PropsWithChildren & IconProps;
