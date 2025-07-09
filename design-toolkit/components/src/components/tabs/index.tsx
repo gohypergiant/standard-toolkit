@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { containsExactChildren } from '@/lib/react';
 import { cn } from '@/lib/utils';
+import 'client-only';
 import { cva } from 'cva';
 import {
   Tab as AriaTab,

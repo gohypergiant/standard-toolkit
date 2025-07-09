@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { cn } from '@/lib/utils';
+import 'client-only';
 import { type VariantProps, cva } from 'cva';
 import {
   Button as AriaButton,

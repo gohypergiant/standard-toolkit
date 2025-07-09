@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import 'client-only';
 import {
   Text as AriaText,

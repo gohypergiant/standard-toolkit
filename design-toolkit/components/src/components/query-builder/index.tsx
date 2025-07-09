@@ -10,9 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { Duplicate, LockFill } from '@accelint/icons';
-import { Delete } from '@accelint/icons';
+'use client';
+import { Delete, Duplicate, LockFill } from '@accelint/icons';
 import type { PressEvent } from '@react-types/shared';
+import 'client-only';
 import { type ReactElement, createContext, useCallback, useMemo } from 'react';
 import {
   type ActionProps,

@@ -11,7 +11,7 @@
  */
 
 'use client';
-
+import 'client-only';
 import {
   Button,
   type ContextValue,

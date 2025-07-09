@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { cn } from '@/lib/utils';
 import { Person } from '@accelint/icons';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';

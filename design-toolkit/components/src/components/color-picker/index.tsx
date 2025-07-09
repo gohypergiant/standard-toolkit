@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { cn } from '@/lib/utils';
 import { useControlledState } from '@react-stately/utils';
+import 'client-only';
 import {
   type ForwardedRef,
   type ReactNode,
