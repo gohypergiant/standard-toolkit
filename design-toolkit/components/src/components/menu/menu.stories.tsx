@@ -110,7 +110,7 @@ export const Basic: StoryObj<typeof Menu> = {
           <Kebab />
         </Icon>
       </IconButton>
-      <Menu {...args} placement='top'>
+      <Menu {...args}>
         <Menu.Item>
           <Menu.Item.Icon>
             <Placeholder />

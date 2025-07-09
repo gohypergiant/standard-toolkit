@@ -241,17 +241,3 @@ export function isSlottedContextValue<T, E>(
 ): context is SlottedValue<WithRef<T, E>> {
   return !!context && 'slots' in context;
 }
-
-/**
- * A helper for not having to reimplement the type check for a renderProp value being a function or not everywhere
- */
-export function callRenderProps<T extends object, R>(
-  value: R | ((renderProps: T) => R),
-  values: T,
-) {
-  if (typeof value === 'function') {
-    return (value as (renderProps: T) => R)(values);
-  }
-
-  return value;
-}

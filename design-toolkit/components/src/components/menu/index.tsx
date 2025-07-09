@@ -10,15 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { callRenderProps, isSlottedContextValue } from '@/lib/utils';
+'use client';
+
+import 'client-only';
+import { isSlottedContextValue } from '@/lib/utils';
 import ChevronRight from '@accelint/icons/chevron-right';
-import { createContext, useCallback, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import {
   Header as AriaHeader,
   Menu as AriaMenu,
   Collection as AriaMenuCollection,
   MenuItem as AriaMenuItem,
-  type MenuItemRenderProps as AriaMenuItemRenderProps,
   MenuSection as AriaMenuSection,
   MenuTrigger as AriaMenuTrigger,
   Separator as AriaSeparator,
@@ -92,32 +94,6 @@ export const MenuItem = (props: MenuItemProps) => {
 
   const { children: childrenProp, className, ...rest } = props;
 
-  const children = useCallback(
-    (renderProps: AriaMenuItemRenderProps) => {
-      const { hasSubmenu } = renderProps;
-      const content = callRenderProps(childrenProp, {
-        ...renderProps,
-        defaultChildren: null,
-      });
-
-      return (
-        <>
-          {typeof content === 'string' ? (
-            <AriaText slot='label'>{content}</AriaText>
-          ) : (
-            content
-          )}
-          {hasSubmenu && (
-            <Icon className={more()}>
-              <ChevronRight />
-            </Icon>
-          )}
-        </>
-      );
-    },
-    [childrenProp],
-  );
-
   return (
     <AriaMenuItem
       {...rest}
@@ -125,7 +101,20 @@ export const MenuItem = (props: MenuItemProps) => {
         item({ className, variant }),
       )}
     >
-      {children}
+      {composeRenderProps(props.children, (children, { hasSubmenu }) => (
+        <>
+          {typeof children === 'string' ? (
+            <AriaText slot='label'>{children}</AriaText>
+          ) : (
+            children
+          )}
+          {hasSubmenu && (
+            <Icon className={more()}>
+              <ChevronRight />
+            </Icon>
+          )}
+        </>
+      ))}
     </AriaMenuItem>
   );
 };
