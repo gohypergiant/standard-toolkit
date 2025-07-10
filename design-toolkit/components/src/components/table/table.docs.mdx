@@ -1,0 +1,49 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+
+import * as TableStories from './table.stories';
+
+<Meta of={ TableStories }/>
+
+# Table
+
+Tables display data in a structured format, allowing users to easily read and compare information.
+
+
+
+
+Please see the documentation for that component [here](https://react-spectrum.adobe.com/react-aria/Tabs.html).
+
+## Structure
+<Canvas of={TableStories.Default} />
+<Controls of={TableStories.Default} />
+
+```
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.HeaderCell>First Name</Table.HeaderCell>
+      <Table.HeaderCell>Last Name</Table.HeaderCell>
+      <Table.HeaderCell>Age</Table.HeaderCell>
+      <Table.HeaderCell>Visits</Table.HeaderCell>
+      <Table.HeaderCell>Status</Table.HeaderCell>
+      <Table.HeaderCell>Progress</Table.HeaderCell>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    {defaultData.map((person) => (
+      <Table.Row key={person.id}>
+        <Table.Cell>{person.firstName}</Table.Cell>
+        <Table.Cell>{person.lastName}</Table.Cell>
+        <Table.Cell>{person.age}</Table.Cell>
+        <Table.Cell>{person.visits}</Table.Cell>
+        <Table.Cell>{person.status}</Table.Cell>
+        <Table.Cell>{person.progress}%</Table.Cell>
+      </Table.Row>
+    ))}
+  </Table.Body>
+</Table>
+```
+
+## Composition Requirements
+
+Error boundaries for incorrect usage of these components:

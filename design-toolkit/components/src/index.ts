@@ -91,6 +91,29 @@ export { RangeSlider, Slider } from './components/slider';
 export type { RangeSliderProps, SliderProps } from './components/slider';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
+export { ActionsCell } from './components/table/actions-cell';
+export { Table } from './components/table';
+export {
+  actionsCellStyles,
+  cellStyles,
+  headerCellStyles,
+  rowStyles,
+  tableBodyStyles,
+} from './components/table/styles';
+export { TableBody } from './components/table/table-body';
+export { TableCell } from './components/table/table-cell';
+export { HeaderCell } from './components/table/table-header-cell';
+export { TableHeader } from './components/table/table-header';
+export { TableRow } from './components/table/table-row';
+export type {
+  ActionsCellProps,
+  TableBodyProps,
+  TableCellProps,
+  TableHeaderCellProps,
+  TableHeaderProps,
+  TableProps,
+  TableRowProps,
+} from './components/table/types';
 export { Tabs } from './components/tabs';
 export type {
   TabListProps,
