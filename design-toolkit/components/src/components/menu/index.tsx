@@ -18,6 +18,7 @@ import ChevronRight from '@accelint/icons/chevron-right';
 import { createContext, useContext } from 'react';
 import {
   Header as AriaHeader,
+  Keyboard as AriaKeyboard,
   Menu as AriaMenu,
   Collection as AriaMenuCollection,
   MenuItem as AriaMenuItem,
@@ -36,14 +37,24 @@ import { MenuStyles, MenuStylesDefaults } from './styles';
 import type {
   MenuIconProps,
   MenuItemProps,
+  MenuKeyboardProps,
   MenuProps,
   MenuSectionProps,
   MenuTextProps,
   SeparatorProps,
 } from './types';
 
-const { menu, icon, item, label, description, more, header, separator } =
-  MenuStyles();
+const {
+  menu,
+  icon,
+  item,
+  label,
+  description,
+  more,
+  section,
+  separator,
+  keyboard,
+} = MenuStyles();
 
 export const MenuContext =
   createContext<ContextValue<MenuProps<unknown>, HTMLDivElement>>(null);
@@ -121,27 +132,27 @@ export const MenuItem = (props: MenuItemProps) => {
 MenuItem.displayName = 'Menu.Item';
 
 export function MenuSection<T extends object>(props: MenuSectionProps<T>) {
-  const { header: headerTitle, children, items, ...rest } = props;
+  const { header, children, className, items, ...rest } = props;
 
   return (
     <AriaMenuSection {...rest}>
-      <AriaHeader className={header()}>{headerTitle}</AriaHeader>
+      <AriaHeader className={section({ className })}>{header}</AriaHeader>
       <AriaMenuCollection items={items}>{children}</AriaMenuCollection>
     </AriaMenuSection>
   );
 }
 MenuSection.displayName = 'Menu.Section';
 
-export function MenuSeparator(props: SeparatorProps) {
-  return <AriaSeparator {...props} className={separator()} />;
+export function MenuSeparator({ className, ...rest }: SeparatorProps) {
+  return <AriaSeparator {...rest} className={separator({ className })} />;
 }
 MenuSeparator.displayName = 'Menu.Separator';
 
 export function MenuLabel(props: MenuTextProps) {
-  const { children, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   return (
-    <AriaText {...rest} slot='label' className={label()}>
+    <AriaText {...rest} slot='label' className={label({ className })}>
       {children}
     </AriaText>
   );
@@ -149,14 +160,14 @@ export function MenuLabel(props: MenuTextProps) {
 MenuLabel.displayName = 'Menu.Item.Label';
 
 export function MenuDescription(props: MenuTextProps) {
-  const { children, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   return (
     <AriaText
       {...rest}
       slot='description'
       data-slot='description'
-      className={description()}
+      className={description({ className })}
     >
       {children}
     </AriaText>
@@ -165,15 +176,26 @@ export function MenuDescription(props: MenuTextProps) {
 MenuDescription.displayName = 'Menu.Item.Description';
 
 export function MenuItemIcon(props: MenuIconProps) {
-  const { children, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   return (
-    <Icon {...rest} className={icon()}>
+    <Icon {...rest} className={icon({ className })}>
       {children}
     </Icon>
   );
 }
 MenuItemIcon.displayName = 'Menu.Item.Icon';
+
+export function MenuItemKeyboard(props: MenuKeyboardProps) {
+  const { children, className, ...rest } = props;
+
+  return (
+    <AriaKeyboard {...rest} className={keyboard({ className })}>
+      {children}
+    </AriaKeyboard>
+  );
+}
+MenuItemKeyboard.displayName = 'Menu.Item.Keyboard';
 
 Menu.Trigger = AriaMenuTrigger;
 Menu.Submenu = AriaSubmenuTrigger;
@@ -181,5 +203,6 @@ Menu.Item = MenuItem;
 MenuItem.Icon = MenuItemIcon;
 MenuItem.Label = MenuLabel;
 MenuItem.Description = MenuDescription;
+MenuItem.Keyboard = MenuItemKeyboard;
 Menu.Separator = MenuSeparator;
 Menu.Section = MenuSection;

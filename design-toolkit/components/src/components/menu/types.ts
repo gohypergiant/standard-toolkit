@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren, RefAttributes } from 'react';
+import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
 import type {
   MenuItemProps as AriaMenuItemProps,
   MenuProps as AriaMenuProps,
@@ -47,3 +47,5 @@ export type SeparatorProps = AriaSeparatorProps;
 export type MenuTextProps = PropsWithChildren & AriaTextProps;
 
 export type MenuIconProps = PropsWithChildren & IconProps;
+
+export type MenuKeyboardProps = PropsWithChildren & HTMLAttributes<HTMLElement>;

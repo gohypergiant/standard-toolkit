@@ -116,6 +116,7 @@ export const Basic: StoryObj<typeof Menu> = {
             <Placeholder />
           </Menu.Item.Icon>
           <Menu.Item.Label>Songbirds</Menu.Item.Label>
+          <Menu.Item.Keyboard>⌘A</Menu.Item.Keyboard>
         </Menu.Item>
         <Menu.Separator />
         <Menu.Submenu>
@@ -149,6 +150,7 @@ export const Basic: StoryObj<typeof Menu> = {
             </Menu.Item.Icon>
             <Menu.Item.Label>Mallard</Menu.Item.Label>
             <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
+            <Menu.Item.Keyboard>⌘V</Menu.Item.Keyboard>
           </Menu.Item>
           <Menu.Item>
             <Menu.Item.Icon>
@@ -165,6 +167,7 @@ export const Basic: StoryObj<typeof Menu> = {
             <Menu.Item.Description>
               Dumetella carolinensis
             </Menu.Item.Description>
+            <Menu.Item.Keyboard>⌘X</Menu.Item.Keyboard>
           </Menu.Item>
         </Menu.Section>
       </Menu>
