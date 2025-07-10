@@ -1,5 +1,13 @@
 # @accelint/design-toolkit
 
+## 2.2.2
+
+### Patch Changes
+
+- 8b0d1eb: - Refactored Label & Switch to be consistent in standards
+  - Swapped Label isOptional for isRequired for consistency
+  - Added contexts and providers
+
 ## 2.2.1
 
 ### Patch Changes
