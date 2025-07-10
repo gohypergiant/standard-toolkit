@@ -60,6 +60,30 @@ export type { IconProps, IconProviderProps } from './components/icon/types';
 export { IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { Label } from './components/label';
+export {
+  Menu,
+  MenuContext,
+  MenuDescription,
+  MenuItem,
+  MenuItemIcon,
+  MenuItemKeyboard,
+  MenuLabel,
+  MenuSection,
+  MenuSeparator,
+} from './components/menu';
+export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
+export type { MenuStyleVariants } from './components/menu/styles';
+export type {
+  MenuIconProps,
+  MenuItemProps,
+  MenuKeyboardProps,
+  MenuProps,
+  MenuSectionProps,
+  MenuTextProps,
+  MenuTriggerProps,
+  SeparatorProps,
+  SubmenuTriggerProps,
+} from './components/menu/types';
 export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
