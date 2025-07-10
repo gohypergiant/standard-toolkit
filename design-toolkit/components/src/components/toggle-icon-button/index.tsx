@@ -29,11 +29,12 @@ const toggleIconButtonStyles = cva(
         primary:
           'icon-default-light dtk-selected:icon-highlight dtk-selected:hover:bg-highlight-subtle dtk-selected:focus:bg-highlight-subtle',
         secondary:
-          'icon-default-dark hover:icon-default-light focus:icon-default-light dtk-selected:icon-highlight dtk-selected:hover:bg-highlight-subtle dtk-selected:focus:bg-highlight-subtle',
+          'icon-default-dark hover:icon-default-light focus:icon-default-light dtk-selected:icon-highlight dtk-selected:hover:bg-highlight-subtle hover:bg-interactive-hover-dark dtk-selected:focus:bg-highlight-subtle focus:bg-interactive-hover-dark',
+        minimal: 'icon-default-light dtk-selected:icon-highlight',
       },
       size: {
-        medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
-        small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
+        medium: 'size-xl rounded-medium [--icon-size:var(--spacing-xl)]',
+        small: 'size-l rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
         true: 'not-dtk-selected:icon-disabled dtk-selected:cursor-default not-dtk-selected:cursor-not-allowed not-dtk-selected:bg-interactive-disabled dtk-selected:hover:bg-transparent not-dtk-selected:hover:bg-interactive-disabled dtk-selected:focus:bg-transparent not-dtk-selected:focus:bg-interactive-disabled',

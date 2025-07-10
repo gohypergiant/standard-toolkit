@@ -1,0 +1,41 @@
+import {Canvas, Meta} from '@storybook/blocks';
+
+import * as TreeStories from './tree.stories';
+
+<Meta of={TreeStories} />
+
+# Tree
+
+<Canvas of={ TreeStories.StaticCollection }/>
+
+## Drag and Drop
+
+To enable drag and drop, provide the following
+
+A function that returns the items being dragged. This is required and if not
+provided, the tree will assume that drag and drop is disabled.
+`getItems?: (keys: Set<Key>) => DragItem[]`
+
+<Canvas of={ TreeStories.DragAndDrop } />
+
+## Tree.Item
+
+The `<Tree.Item>` component displays a single item in the tree.
+
+## Tree State and Recursion
+
+### UseTree
+
+This is an optional recusive component that you can use with the also optional `useTree` hook. They are designed as helpers to make tree state management and recursion simpler to work with.
+
+### Tree.Node
+
+
+## Manual management of state
+
+You can opt out of using these helpers by using the `TreeItem` directly and recursing over your data structure with something like the following:
+
+```
+// example of recursive mapping with a data structure
+```
+

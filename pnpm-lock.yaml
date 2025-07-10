@@ -276,6 +276,9 @@ importers:
       '@react-stately/color':
         specifier: ^3.8.6
         version: 3.8.6(react@19.0.0)
+      '@react-stately/data':
+        specifier: ^3.13.1
+        version: 3.13.1(react@19.0.0)
       '@react-stately/datepicker':
         specifier: 3.13.0
         version: 3.13.0(react@19.0.0)

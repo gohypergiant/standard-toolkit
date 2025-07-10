@@ -33,8 +33,8 @@ const iconButtonStyles = cva(
           'bg-transparent dtk-pressed:bg-transparent hover:bg-transparent focus:bg-default-light/5',
       },
       size: {
-        medium: 'size-[28px] rounded-medium [--icon-size:var(--spacing-xl)]',
-        small: 'size-[20px] rounded-small [--icon-size:var(--spacing-l)]',
+        medium: 'size-xl rounded-medium [--icon-size:var(--spacing-xl)]',
+        small: 'size-l rounded-small [--icon-size:var(--spacing-l)]',
       },
       isDisabled: {
         true: 'icon-disabled fg-disabled hover:fg-disabled focus:fg-disabled cursor-not-allowed bg-transparent dtk-pressed:bg-transparent hover:bg-transparent focus:bg-transparent',
