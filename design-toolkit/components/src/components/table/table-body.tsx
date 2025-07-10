@@ -14,5 +14,13 @@ import { tableBodyStyles } from './styles';
 import type { TableBodyProps } from './types';
 
 export function TableBody({ className, ref, ...props }: TableBodyProps) {
-  return <tbody ref={ref} className={tableBodyStyles(className)} {...props} />;
+  return (
+    <tbody
+      ref={ref}
+      className={tableBodyStyles({
+        className,
+      })}
+      {...props}
+    />
+  );
 }

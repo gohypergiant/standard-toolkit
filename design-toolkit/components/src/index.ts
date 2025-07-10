@@ -92,11 +92,9 @@ export type { RangeSliderProps, SliderProps } from './components/slider';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';
 export { ActionsCell } from './components/table/actions-cell';
-export type { ActionsCellProps } from './components/table/actions-cell';
-export { DataTable } from './components/table/data-table';
-export type { DataTableProps } from './components/table/data-table';
 export { Table } from './components/table';
 export {
+  actionsCellStyles,
   cellStyles,
   headerCellStyles,
   rowStyles,
@@ -108,6 +106,7 @@ export { HeaderCell } from './components/table/table-header-cell';
 export { TableHeader } from './components/table/table-header';
 export { TableRow } from './components/table/table-row';
 export type {
+  ActionsCellProps,
   TableBodyProps,
   TableCellProps,
   TableHeaderCellProps,

@@ -10,57 +10,40 @@
  * governing permissions and limitations under the License.
  */
 
-import { Kebab } from '@accelint/icons';
 import {
   Menu as AriaMenu,
   MenuItem as AriaMenuItem,
   MenuTrigger as AriaMenuTrigger,
-  type MenuTriggerProps as AriaMenuTriggerProps,
   Popover as AriaPopover,
   Pressable as AriaPressable,
 } from 'react-aria-components';
 import { Icon } from '../icon';
+import { actionsCellStyles } from './styles';
+import type { ActionsCellProps } from './types';
 
-/** * ActionsCellProps defines the properties for the ActionsCell component.
- * It includes an array of actions, each with a unique label and an optional onAction callback.
- * The component renders a kebab menu icon that, when clicked, displays the actions in a popover.
- * @property onOpen - An optional callback function that is called when the menu is opened.
- * @property actions - An array of action objects, each containing a label and an optional onAction function.
- */
-export type ActionsCellProps = Pick<
-  AriaMenuTriggerProps,
-  'isOpen' | 'onOpenChange'
-> & {
-  actions: {
-    label: string;
-    onAction?: () => void;
-  }[];
-};
+const { button, popover, menuItem } = actionsCellStyles();
 
 export function ActionsCell({
+  className,
   isOpen,
   onOpenChange,
   actions,
+  children,
+  persistent = false,
 }: ActionsCellProps) {
   return (
     <AriaMenuTrigger onOpenChange={onOpenChange} isOpen={isOpen}>
       <AriaPressable>
-        <button
-          title='row actions'
-          className='mx-auto block align-middle'
-          type='button'
-        >
-          <Icon>
-            <Kebab />
-          </Icon>
+        <button className={button({ persistent, className })} type='button'>
+          <Icon>{children}</Icon>
         </button>
       </AriaPressable>
-      <AriaPopover className='border border-default-light bg-surface-raised'>
+      <AriaPopover className={popover()}>
         <AriaMenu>
           {actions.map((action) => (
             <AriaMenuItem
               key={action.label}
-              className='text-default-light hover:bg-highlight-bold'
+              className={menuItem()}
               onAction={action.onAction}
             >
               {action.label}

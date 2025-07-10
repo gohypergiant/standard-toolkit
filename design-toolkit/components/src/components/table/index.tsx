@@ -10,6 +10,33 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
+import 'client-only';
+
+import ArrowDown from '@accelint/icons/arrow-down';
+import ArrowUp from '@accelint/icons/arrow-up';
+import ChevronLeft from '@accelint/icons/chevron-left';
+import ChevronRight from '@accelint/icons/chevron-right';
+import Kebab from '@accelint/icons/kebab';
+import Pin from '@accelint/icons/pin';
+import { useListData } from '@react-stately/data';
+import {
+  type Cell,
+  type ColumnOrderState,
+  type RowSelectionState,
+  type SortingState,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { useCallback, useMemo, useState } from 'react';
+import { Input as AriaInput } from 'react-aria-components';
+import { Button } from '../button';
+import { Checkbox } from '../checkbox';
+import { Icon } from '../icon';
+import { IconButton } from '../icon-button';
 import { ActionsCell } from './actions-cell';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -18,8 +45,568 @@ import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
 import type { TableProps } from './types';
 
-export function Table({ className, ref, ...props }: TableProps) {
-  return <table ref={ref} className={className} {...props} />;
+const MAX_VISIBLE_PAGES = 5;
+
+const range = (lo: number, hi: number) =>
+  Array.from({ length: hi - lo }, (_, i) => i + lo);
+
+const pagination = (page: number, total: number) => {
+  const start = Math.max(
+    1,
+    Math.min(
+      page - Math.floor((MAX_VISIBLE_PAGES - 3) / 2),
+      total - MAX_VISIBLE_PAGES + 2,
+    ),
+  );
+  const end = Math.min(
+    total,
+    Math.max(
+      page + Math.floor((MAX_VISIBLE_PAGES - 2) / 2),
+      MAX_VISIBLE_PAGES - 1,
+    ),
+  );
+  return [
+    ...(start > 2 ? ([1, 'ellipsis'] as const) : start > 1 ? [1] : []),
+    ...range(start, end + 1),
+    ...(end < total - 1
+      ? (['ellipsis', total] as const)
+      : end < total
+        ? [total]
+        : []),
+  ];
+};
+
+const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
+  <TableCell
+    key={cell.id}
+    persistent={persistent}
+    narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
+    numeral={cell.column.id === 'numeral'}
+  >
+    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+  </TableCell>
+);
+
+export function Table<T extends { id: string | number }>({
+  columns: columnsProp,
+  data: dataProp,
+  showCheckbox,
+  kebabPosition = 'right',
+  persistRowActionMenu = false,
+  persistNumerals = false,
+  pageSize = 10,
+  ...props
+}: TableProps<T>) {
+  const {
+    items: data,
+    moveAfter,
+    moveBefore,
+  } = useListData({
+    initialItems: dataProp,
+  });
+
+  const dataIds = useMemo<(string | number)[]>(
+    () => data?.map(({ id }) => id),
+    [data],
+  );
+
+  const [activeRow, setActiveRow] = useState<string | number | null>(null);
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  /**
+   * moveUpSelectedRows moves the selected rows up in the table.
+   * It finds the first selected row, determines its index,
+   * and moves it before the previous row if it exists.
+   */
+  const moveUpSelectedRows = useCallback(() => {
+    const rowSelectionKeys = Object.keys(rowSelection).filter(
+      (id) => rowSelection[id],
+    );
+    const selectedRows = data.filter((item) =>
+      rowSelectionKeys.includes(item.id.toString()),
+    );
+
+    const firstSelectedRowId = selectedRows[0]?.id;
+    if (firstSelectedRowId) {
+      const rowIndex = dataIds.indexOf(firstSelectedRowId);
+
+      const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
+
+      if (prevRowId) {
+        moveBefore?.(prevRowId, rowSelectionKeys);
+      }
+    }
+  }, [data, dataIds, rowSelection, moveBefore]);
+
+  /**
+   * moveDownSelectedRows moves the selected rows down in the table.
+   * It finds the last selected row, determines its index,
+   * and moves it after the next row if it exists.
+   */
+  const moveDownSelectedRows = useCallback(() => {
+    const rowSelectionKeys = Object.keys(rowSelection).filter(
+      (id) => rowSelection[id],
+    );
+    const selectedRows = data.filter((item) =>
+      rowSelectionKeys.includes(item.id.toString()),
+    );
+
+    const lastSelectedRowId = selectedRows[selectedRows.length - 1]?.id;
+    if (lastSelectedRowId) {
+      const rowIndex = dataIds.indexOf(lastSelectedRowId);
+
+      const nextRowId =
+        dataIds[
+          rowIndex < dataIds.length - 1 ? rowIndex + 1 : dataIds.length - 1
+        ];
+
+      if (nextRowId) {
+        moveAfter?.(nextRowId, rowSelectionKeys);
+      }
+    }
+  }, [data, dataIds, rowSelection, moveAfter]);
+
+  /**
+   * actionColumn defines the actions available in the kebab menu for each row.
+   * It includes options to move the row up or down in the table.
+   */
+  const actionColumn: NonNullable<typeof columnsProp>[number] = useMemo(
+    () => ({
+      id: 'kebab',
+      cell: ({ row }) => {
+        const isPinned = row.getIsPinned();
+        return (
+          <ActionsCell
+            isOpen={activeRow === row.id}
+            onOpenChange={(isOpen) => {
+              if (isOpen) {
+                setActiveRow(row.id);
+              } else {
+                setActiveRow(null);
+              }
+            }}
+            actions={[
+              ...(row.getIsPinned()
+                ? [{ label: 'Unpin', onAction: () => row.pin(false) }]
+                : []),
+              ...(['top', false].includes(isPinned)
+                ? [
+                    {
+                      label: 'Pin to bottom',
+                      onAction: () => row.pin('bottom'),
+                    },
+                  ]
+                : []),
+              ...(['bottom', false].includes(isPinned)
+                ? [
+                    {
+                      label: 'Pin to top',
+                      onAction: () => row.pin('top'),
+                    },
+                  ]
+                : []),
+
+              {
+                label: 'Move rows up',
+                onAction: () => {
+                  const prevRowId = dataIds[row.index - 1];
+                  if (row.index > 0 && prevRowId) {
+                    moveBefore?.(prevRowId, [row.id]);
+                  }
+                },
+              },
+              {
+                label: 'Move rows down',
+                onAction: () => {
+                  const nextRowId = dataIds[row.index + 1];
+                  if (row.index < dataIds.length - 1 && nextRowId) {
+                    moveAfter?.(nextRowId, [row.id]);
+                  }
+                },
+              },
+            ]}
+          >
+            <Kebab />
+          </ActionsCell>
+        );
+      },
+      header: () => (
+        <ActionsCell
+          actions={[
+            {
+              label: 'Move up',
+              onAction: moveUpSelectedRows,
+            },
+            {
+              label: 'Move down',
+              onAction: moveDownSelectedRows,
+            },
+          ]}
+        >
+          <Kebab />
+        </ActionsCell>
+      ),
+    }),
+    [
+      dataIds,
+      moveBefore,
+      moveAfter,
+      moveUpSelectedRows,
+      moveDownSelectedRows,
+      activeRow,
+    ],
+  );
+
+  /**
+   * columns defines the structure of the table.
+   * It includes the action column and optionally a checkbox column.
+   * The kebab menu position can be set to 'left' or 'right'.
+   * If showCheckbox is true, a checkbox column is added.
+   */
+  const columns = useMemo<NonNullable<typeof columnsProp>>(() => {
+    const columns = [...(columnsProp || [])];
+
+    if (kebabPosition === 'left') {
+      columns.unshift(actionColumn);
+    } else if (kebabPosition === 'right') {
+      columns.push(actionColumn);
+    }
+    if (showCheckbox) {
+      columns.unshift({
+        id: 'selection',
+        header: ({ table }) => (
+          <Checkbox
+            isSelected={table.getIsAllRowsSelected()}
+            isIndeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.toggleAllRowsSelected}
+            slot='selection'
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            isSelected={row.getIsSelected()}
+            isIndeterminate={row.getIsSomeSelected()}
+            onChange={row.toggleSelected}
+            slot='selection'
+          />
+        ),
+      });
+    }
+
+    return [
+      {
+        id: 'numeral',
+        cell: ({ row }) =>
+          row.getIsPinned() ? (
+            <Icon size='small' className='mx-auto block'>
+              <Pin />
+            </Icon>
+          ) : (
+            <span className='mx-auto block text-center'>{row.index + 1}</span>
+          ),
+      },
+      ...columns,
+    ];
+  }, [showCheckbox, columnsProp, kebabPosition, actionColumn]);
+
+  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
+    columns.map((col) => col.id as string),
+  );
+
+  const {
+    getHeaderGroups,
+    getTopRows,
+    getCenterRows,
+    getBottomRows,
+    setPageIndex,
+    getCanPreviousPage,
+    getCanNextPage,
+    previousPage,
+    nextPage,
+    getPageCount,
+    getState,
+    setColumnOrder: setColumnOrderCallback,
+  } = useReactTable<T>({
+    data: data,
+    columns,
+    enableSorting: true,
+    initialState: {
+      pagination: { pageIndex: 0, pageSize },
+    },
+    state: {
+      rowSelection,
+      sorting,
+      columnOrder,
+      columnPinning: {
+        left: [
+          'numeral',
+          'selection',
+          ...(kebabPosition === 'left' ? ['kebab'] : []),
+        ],
+        right: kebabPosition === 'left' ? [] : ['kebab'],
+      },
+    },
+    getRowId: (row, index) => {
+      // Use the index as the row ID if no unique identifier is available
+      return row.id ? row.id.toString() : index.toString();
+    },
+    enableRowSelection: true,
+    onSortingChange: setSorting,
+    onRowSelectionChange: setRowSelection,
+    onColumnOrderChange: setColumnOrder,
+    getCoreRowModel: getCoreRowModel<T>(),
+    getSortedRowModel: getSortedRowModel<T>(),
+    getPaginationRowModel: getPaginationRowModel<T>(),
+  });
+
+  const moveColumnLeft = useCallback(
+    (oldIndex: number) => {
+      setColumnOrderCallback((order) => {
+        const newColumnOrder = [...order];
+        const newIndex = oldIndex - 1;
+        if (newIndex < 0) {
+          return order;
+        }
+        newColumnOrder.splice(
+          newIndex,
+          0,
+          newColumnOrder.splice(oldIndex, 1)[0] as string,
+        );
+        return newColumnOrder;
+      });
+    },
+    [setColumnOrderCallback],
+  );
+
+  const moveColumnRight = useCallback(
+    (oldIndex: number) => {
+      setColumnOrderCallback((order) => {
+        const newColumnOrder = [...order];
+        const newIndex = oldIndex + 1;
+        if (newIndex >= newColumnOrder.length) {
+          return order;
+        }
+        newColumnOrder.splice(
+          newIndex,
+          0,
+          newColumnOrder.splice(oldIndex, 1)[0] as string,
+        );
+        return newColumnOrder;
+      });
+    },
+    [setColumnOrderCallback],
+  );
+
+  if (dataProp) {
+    return (
+      <div>
+        <table {...props}>
+          <TableHeader>
+            {getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <HeaderCell
+                      key={header.id}
+                      narrow={
+                        header.column.id === 'numeral' ||
+                        header.column.id === 'kebab'
+                      }
+                    >
+                      <div className='flex items-center gap-xxs'>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                        {['numeral', 'kebab', 'selection'].includes(
+                          header.column.id,
+                        ) ? null : (
+                          <ActionsCell
+                            persistent={!!header.column.getIsSorted()}
+                            actions={[
+                              {
+                                label: 'Move column left',
+                                onAction: () =>
+                                  header.column.getIsFirstColumn('center')
+                                    ? undefined
+                                    : moveColumnLeft(header.column.getIndex()),
+                              },
+                              {
+                                label: 'Move column right',
+                                onAction: () =>
+                                  header.column.getIsLastColumn('center')
+                                    ? undefined
+                                    : moveColumnRight(header.column.getIndex()),
+                              },
+                              ...(header.column.getIsSorted() === 'asc'
+                                ? [
+                                    {
+                                      label: 'Clear sort',
+                                      onAction: () =>
+                                        header.column.clearSorting(),
+                                    },
+                                  ]
+                                : [
+                                    {
+                                      label: 'Sort ascending',
+                                      onAction: () =>
+                                        header.column.toggleSorting(false),
+                                    },
+                                  ]),
+                              ...(header.column.getIsSorted() === 'desc'
+                                ? [
+                                    {
+                                      label: 'Clear sort',
+                                      onAction: () =>
+                                        header.column.clearSorting(),
+                                    },
+                                  ]
+                                : [
+                                    {
+                                      label: 'Sort descending',
+                                      onAction: () =>
+                                        header.column.toggleSorting(true),
+                                    },
+                                  ]),
+                            ]}
+                          >
+                            {header.column.getIsSorted() === 'asc' ? (
+                              <ArrowUp />
+                            ) : header.column.getIsSorted() === 'desc' ? (
+                              <ArrowDown />
+                            ) : (
+                              <Kebab />
+                            )}
+                          </ActionsCell>
+                        )}
+                      </div>
+                    </HeaderCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {getTopRows().map((row) => (
+              <TableRow
+                key={row.id}
+                data-selected={row.getIsSelected()}
+                data-active={activeRow === row.id}
+                data-pinned={row.getIsPinned()}
+              >
+                {row.getVisibleCells().map((cell) =>
+                  dataTableCell(
+                    cell,
+                    cell.column.id === 'kebab' ? persistRowActionMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
+                  ),
+                )}
+              </TableRow>
+            ))}
+            {getCenterRows().map((row) => (
+              <TableRow
+                key={row.id}
+                data-selected={row.getIsSelected()}
+                data-active={activeRow === row.id}
+                data-pinned={row.getIsPinned()}
+              >
+                {row
+                  .getVisibleCells()
+                  .map((cell) =>
+                    dataTableCell(
+                      cell,
+                      cell.column.id === 'numeral'
+                        ? persistNumerals
+                        : cell.column.id === 'kebab'
+                          ? persistRowActionMenu
+                          : true,
+                    ),
+                  )}
+              </TableRow>
+            ))}
+            {getBottomRows().map((row) => (
+              <TableRow
+                key={row.id}
+                data-selected={row.getIsSelected()}
+                data-active={activeRow === row.id}
+                data-pinned={row.getIsPinned()}
+              >
+                {row.getVisibleCells().map((cell) =>
+                  dataTableCell(
+                    cell,
+                    cell.column.id === 'kebab' ? persistRowActionMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
+                  ),
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </table>
+        <div className='flex items-center gap-xxs'>
+          <IconButton
+            className='min-h-[32px] min-w-[32px] rounded-medium'
+            onPress={() => previousPage()}
+            isDisabled={!getCanPreviousPage()}
+            type='button'
+          >
+            <Icon>
+              <ChevronLeft />
+            </Icon>
+          </IconButton>
+          {pagination(getState().pagination.pageIndex + 1, getPageCount()).map(
+            (page) => {
+              if (page === 'ellipsis') {
+                return (
+                  <span key={page} className='text-default-light'>
+                    ...
+                  </span>
+                );
+              }
+              return (
+                <Button
+                  key={page}
+                  className='min-h-[32px] min-w-[32px] rounded-medium border-1 border-transparent bg-transparent px-s font-display text-default-light hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark data-selected:border-highlight-bold data-selected:bg-highlight-subtle data-selected:text-highlight-bold'
+                  onPress={() => setPageIndex(page - 1)}
+                  isDisabled={getState().pagination.pageIndex + 1 === page}
+                  data-selected={getState().pagination.pageIndex + 1 === page}
+                  type='button'
+                >
+                  {page}
+                </Button>
+              );
+            },
+          )}
+          <IconButton
+            className='min-h-[32px] min-w-[32px] rounded-medium'
+            onPress={() => nextPage()}
+            isDisabled={!getCanNextPage()}
+            type='button'
+          >
+            <Icon>
+              <ChevronRight />
+            </Icon>
+          </IconButton>
+          <span className='flex items-center gap-s text-default-light'>
+            Page{' '}
+            <AriaInput
+              type='number'
+              min='1'
+              max={getPageCount()}
+              value={(getState().pagination.pageIndex + 1).toString()}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                setPageIndex(page);
+              }}
+              className='w-16 rounded-medium border border-interactive px-s py-xs font-display'
+            />
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return <table {...props} />;
 }
 
 Table.displayName = 'Table';

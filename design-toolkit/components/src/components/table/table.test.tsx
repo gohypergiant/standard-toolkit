@@ -13,7 +13,8 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { DataTable, type DataTableProps } from './data-table';
+import { Table } from './index';
+import type { TableProps } from './types';
 
 type Person = {
   id: string;
@@ -81,8 +82,8 @@ const defaultColumns = [
   }),
 ];
 
-function setup<T extends { id: string | number }>(props: DataTableProps<T>) {
-  render(<DataTable {...props} />);
+function setup<T extends { id: string | number }>(props: TableProps<T>) {
+  render(<Table {...props} />);
 }
 
 describe('Table', () => {
@@ -116,7 +117,7 @@ describe('Table', () => {
     setup({
       columns: defaultColumns,
       data: defaultData,
-      persistKebab: false,
+      persistRowActionMenu: false,
     });
 
     const kebabButton = screen.getAllByRole('button', {

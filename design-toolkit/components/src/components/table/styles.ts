@@ -25,9 +25,6 @@ export const cellStyles = tv({
       true: ' text-default-dark hover:text-default-light',
       false: '',
     },
-    // This is used to control the visibility of the cell content
-    // when the cell or table row is hovered.
-    // If true, the cell is always visible.
     persistent: {
       true: 'visible',
       false: 'hover:*:visible group-hover/row:*:visible',
@@ -54,7 +51,7 @@ export const cellStyles = tv({
 
 export const headerCellStyles = tv({
   base: [
-    'h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
+    'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
   ],
   variants: {
     narrow: {
@@ -64,6 +61,24 @@ export const headerCellStyles = tv({
   },
   defaultVariants: {
     narrow: false,
+  },
+});
+
+export const actionsCellStyles = tv({
+  slots: {
+    button: 'block cursor-pointer align-middle',
+    popover: 'border border-default-light bg-surface-raised',
+    menuItem: 'text-default-light hover:bg-highlight-bold',
+  },
+  variants: {
+    persistent: {
+      true: {
+        button: '*:visible',
+      },
+      false: {
+        button: '*:invisible hover:*:visible group-hover/header-cell:*:visible',
+      },
+    },
   },
 });
 

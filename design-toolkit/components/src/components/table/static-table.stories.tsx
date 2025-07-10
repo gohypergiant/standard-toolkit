@@ -11,8 +11,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { createColumnHelper } from '@tanstack/react-table';
-import { DataTable } from './data-table';
+import { Table } from './index';
 
 type Person = {
   id: string;
@@ -54,47 +53,39 @@ const defaultData: Person[] = [
   },
 ];
 
-const columnHelper = createColumnHelper<Person>();
-
-const columns = [
-  columnHelper.accessor('firstName', {
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: 'lastName',
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-  }),
-  columnHelper.accessor('age', {
-    header: () => 'Age',
-    cell: (info) => info.renderValue(),
-  }),
-  columnHelper.accessor('visits', {
-    header: () => <span>Visits</span>,
-  }),
-  columnHelper.accessor('status', {
-    header: 'Status',
-  }),
-  columnHelper.accessor('progress', {
-    header: 'Profile Progress',
-  }),
-];
-
-const meta: Meta<typeof DataTable<Person>> = {
-  title: 'Components/Table/DataTable',
-  component: DataTable,
-  args: {
-    data: defaultData,
-    columns: columns,
-    showCheckbox: true,
-    persistKebab: false,
-    persistNumerals: false,
-  },
-};
+const meta = {
+  title: 'ComponentsTable',
+  component: Table,
+} satisfies Meta<typeof Table>;
 
 export default meta;
-type Story = StoryObj<typeof DataTable<Person>>;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: (args) => <DataTable {...args} columns={columns} />,
+export const Static: Story = {
+  render: (_data, _columns, ...args) => (
+    <Table {...args}>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>First Name</Table.HeaderCell>
+          <Table.HeaderCell>Last Name</Table.HeaderCell>
+          <Table.HeaderCell>Age</Table.HeaderCell>
+          <Table.HeaderCell>Visits</Table.HeaderCell>
+          <Table.HeaderCell>Status</Table.HeaderCell>
+          <Table.HeaderCell>Progress</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {defaultData.map((person) => (
+          <Table.Row key={person.id}>
+            <Table.Cell>{person.firstName}</Table.Cell>
+            <Table.Cell>{person.lastName}</Table.Cell>
+            <Table.Cell>{person.age}</Table.Cell>
+            <Table.Cell>{person.visits}</Table.Cell>
+            <Table.Cell>{person.status}</Table.Cell>
+            <Table.Cell>{person.progress}%</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  ),
 };
