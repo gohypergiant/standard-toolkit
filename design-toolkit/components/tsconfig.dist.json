@@ -4,6 +4,7 @@
     "components/.storybook/*",
     "./components/src/**/*.stories.tsx",
     "./components/src/**/*.test.ts",
-    "./components/src/**/*.test.tsx"
+    "./components/src/**/*.test.tsx",
+    "./components/scripts/**"
   ]
 }
