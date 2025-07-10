@@ -17,6 +17,7 @@ import type { ReactNode } from 'react';
 import { Icon } from '../icon';
 import { IconButton } from '../icon-button';
 import { Menu } from './';
+import type { MenuItemProps } from './types';
 
 const meta: Meta<typeof Menu> = {
   title: 'Components/Menu',
@@ -46,6 +47,7 @@ type MenuItem = {
   prefixIcon?: ReactNode;
   children?: MenuItem[];
   isDisabled?: boolean;
+  color?: MenuItemProps['color'];
 };
 
 const menuItems: MenuItem[] = [
@@ -59,6 +61,7 @@ const menuItems: MenuItem[] = [
         prefixIcon: <Placeholder />,
         name: 'Blue jay',
         description: 'Cyanocitta cristata',
+        color: 'serious',
       },
       {
         id: 3,
@@ -144,7 +147,7 @@ export const Basic: StoryObj<typeof Menu> = {
         </Menu.Submenu>
         <Menu.Separator />
         <Menu.Section header='Additional Notable Species'>
-          <Menu.Item>
+          <Menu.Item color='serious'>
             <Menu.Item.Icon>
               <Placeholder />
             </Menu.Item.Icon>
@@ -188,7 +191,11 @@ export const Dynamic: StoryObj<typeof Menu> = {
           if (item.children) {
             return (
               <Menu.Submenu>
-                <Menu.Item key={item.id} isDisabled={item.isDisabled}>
+                <Menu.Item
+                  key={item.id}
+                  isDisabled={item.isDisabled}
+                  color={item.color}
+                >
                   <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
                   <Menu.Item.Label>{item.name}</Menu.Item.Label>
                   {item.description && (
@@ -202,7 +209,11 @@ export const Dynamic: StoryObj<typeof Menu> = {
             );
           }
           return (
-            <Menu.Item key={item.id} isDisabled={item.isDisabled}>
+            <Menu.Item
+              key={item.id}
+              isDisabled={item.isDisabled}
+              color={item.color}
+            >
               <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
               <Menu.Item.Label>{item.name}</Menu.Item.Label>
               {item.description && (

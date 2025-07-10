@@ -32,7 +32,9 @@ export type MenuProps<T> = AriaMenuProps<T> &
     'placement' | 'offset' | 'containerPadding' | 'isNonModal'
   >;
 
-export type MenuItemProps = AriaMenuItemProps;
+export type MenuItemProps = AriaMenuItemProps & {
+  color?: 'info' | 'serious';
+};
 
 export type MenuTriggerProps = AriaMenuTriggerProps;
 

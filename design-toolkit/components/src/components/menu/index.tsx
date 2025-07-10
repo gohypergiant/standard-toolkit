@@ -103,13 +103,13 @@ export const MenuItem = (props: MenuItemProps) => {
     (isSlottedContextValue(context) ? undefined : context?.variant) ??
     MenuStylesDefaults.variant;
 
-  const { children: childrenProp, className, ...rest } = props;
+  const { children: childrenProp, className, color = 'info', ...rest } = props;
 
   return (
     <AriaMenuItem
       {...rest}
       className={composeRenderProps(className, (className) =>
-        item({ className, variant }),
+        item({ className, variant, color }),
       )}
     >
       {composeRenderProps(props.children, (children, { hasSubmenu }) => (

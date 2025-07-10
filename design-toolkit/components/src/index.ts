@@ -66,6 +66,7 @@ export {
   MenuDescription,
   MenuItem,
   MenuItemIcon,
+  MenuItemKeyboard,
   MenuLabel,
   MenuSection,
   MenuSeparator,
@@ -75,6 +76,7 @@ export type { MenuStyleVariants } from './components/menu/styles';
 export type {
   MenuIconProps,
   MenuItemProps,
+  MenuKeyboardProps,
   MenuProps,
   MenuSectionProps,
   MenuTextProps,

@@ -16,6 +16,7 @@ import type { VariantProps } from 'tailwind-variants';
 
 export const MenuStylesDefaults = {
   variant: 'cozy',
+  color: 'info',
 } as const;
 
 export const MenuStyles = tv({
@@ -23,10 +24,8 @@ export const MenuStyles = tv({
     menu: 'mt-s overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light',
     icon: '[grid-area:icon]',
     item: [
-      'group flex items-center gap-s p-s text-body-s',
-      'grid grid-cols-[auto_auto_1fr_auto] items-center gap-s [grid-template-areas:"icon_label_space_action"_"icon_description_space_action"]',
-      'fg-default-light hover:fg-inverse-light data-[focused]:fg-inverse-light data-[open]:fg-inverse-light data-[selected]:fg-inverse-light',
-      'hover:bg-highlight-bold data-[focused]:bg-highlight-bold data-[open]:bg-highlight-bold data-[selected]:bg-highlight-bold',
+      'group flex items-center gap-x-s px-s text-body-s',
+      'grid grid-cols-[auto_auto_1fr_auto] [grid-template-areas:"icon_label_space_action"_"icon_description_space_action"]',
       'data-[disabled]:fg-disabled data-[disabled]:bg-transparent',
     ],
     label:
@@ -45,6 +44,20 @@ export const MenuStyles = tv({
       },
       compact: {
         item: 'pt-xs pb-xs',
+      },
+    },
+    color: {
+      info: {
+        item: [
+          'fg-default-light hover:fg-inverse-light data-[focused]:fg-inverse-light data-[open]:fg-inverse-light data-[selected]:fg-inverse-light',
+          'hover:bg-highlight-bold data-[focused]:bg-highlight-bold data-[open]:bg-highlight-bold data-[selected]:bg-highlight-bold',
+        ],
+      },
+      serious: {
+        item: [
+          'fg-serious hover:fg-inverse-light data-[focused]:fg-inverse-light data-[open]:fg-inverse-light data-[selected]:fg-inverse-light',
+          'hover:bg-serious-bold data-[focused]:bg-serious-bold data-[open]:bg-serious-bold data-[selected]:bg-serious-bold',
+        ],
       },
     },
   },
