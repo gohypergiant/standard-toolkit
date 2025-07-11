@@ -106,8 +106,21 @@ export type {
   TabProps,
   TabsProps,
 } from './components/tabs';
-export { TextArea } from './components/text-area';
-export type { TextAreaProps } from './components/text-area';
+export {
+  TextArea,
+  TextAreaContext,
+  TextAreaInput,
+} from './components/text-area';
+export {
+  TextAreaStyles,
+  TextAreaStylesDefaults,
+} from './components/text-area/styles';
+export type { TextAreaStyleVariants } from './components/text-area/styles';
+export type {
+  TextAreaFieldProps,
+  TextAreaFieldProviderProps,
+  TextAreaProps,
+} from './components/text-area/types';
 export { TextField } from './components/text-field';
 export type { TextFieldProps } from './components/text-field';
 export { ToggleIconButton } from './components/toggle-icon-button';

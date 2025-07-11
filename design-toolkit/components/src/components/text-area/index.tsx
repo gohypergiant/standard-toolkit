@@ -12,102 +12,56 @@
 
 'use client';
 import 'client-only';
+import { isSlottedContextValue } from '@/lib/utils';
+import { createContext, useContext } from 'react';
 import {
   Text as AriaText,
   TextArea as AriaTextArea,
-  type TextAreaProps as AriaTextAreaProps,
+  TextAreaContext as AriaTextAreaContext,
   TextField as AriaTextField,
-  type TextFieldProps as AriaTextFieldProps,
-  TextAreaContext,
+  type ContextValue,
+  FieldError,
+  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
-import type { ForwardedRef } from 'react';
 import { Label } from '../label';
+import { TextAreaStyles, TextAreaStylesDefaults } from './styles';
+import type {
+  TextAreaFieldProps,
+  TextAreaFieldProviderProps,
+  TextAreaProps,
+} from './types';
 
-const textAreaStyles = cva(
-  ['block w-full rounded-medium p-s font-display outline outline-interactive'],
-  {
-    variants: {
-      isDisabled: {
-        true: 'text-disabled outline-interactive-disabled placeholder:text-disabled',
-        false:
-          'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus:outline-highlight',
-      },
-      isInvalid: {
-        true: 'outline-serious',
-      },
-      isReadOnly: {
-        true: 'rounded-none p-0 outline-none',
-      },
-      size: {
-        medium: 'text-body-s',
-        small: 'text-body-xs',
-      },
-      isClearable: {
-        true: '',
-        false: '',
-      },
-    },
-    compoundVariants: [
-      {
-        isDisabled: true,
-        isInvalid: true,
-        className: 'outline-interactive-disabled',
-      },
-      {
-        isClearable: true,
-        isDisabled: false,
-        size: 'medium',
-        className: 'pr-xl',
-      },
-    ],
-    defaultVariants: {
-      isClearable: false,
-      size: 'medium',
-    },
-  },
-);
+const { field, input, description, error } = TextAreaStyles();
 
-interface InputProps
-  extends VariantProps<typeof textAreaStyles>,
-    Omit<AriaTextAreaProps, 'size'> {
-  selectOnFocus?: boolean;
-  ref?: ForwardedRef<HTMLTextAreaElement>;
+// context
+export const TextAreaContext =
+  createContext<ContextValue<TextAreaFieldProviderProps, HTMLDivElement>>(null);
+
+function TextAreaProvider({ children, ...props }: TextAreaFieldProviderProps) {
+  return (
+    <TextAreaContext.Provider value={props}>
+      {children}
+    </TextAreaContext.Provider>
+  );
 }
+TextAreaProvider.displayName = 'TextArea.Provider';
 
-const Input = ({
-  className,
-  ref = null,
-  selectOnFocus = false,
-  size = 'medium',
-  ...props
-}: InputProps) => {
-  [props, ref] = useContextProps(props, ref, TextAreaContext);
+// TextArea.Input
+export function TextAreaInput({ ref, ...props }: TextAreaProps) {
+  [props, ref] = useContextProps(props, ref ?? null, AriaTextAreaContext);
+  const context = useContext(TextAreaContext);
+  const finalSize =
+    props.size ??
+    (isSlottedContextValue(context) ? undefined : context?.size) ??
+    TextAreaStylesDefaults.size;
 
-  if (props.readOnly) {
-    return (
-      <span
-        className={cn(
-          textAreaStyles({
-            isDisabled: false,
-            isReadOnly: props.readOnly,
-            size,
-            className,
-          }),
-        )}
-      >
-        {props.value || '\u00A0'}
-      </span>
-    );
-  }
+  const { className, readOnly, selectOnFocus, ...rest } = props;
 
   return (
     <div className='relative flex items-center'>
       <AriaTextArea
-        {...props}
+        {...rest}
         onFocus={(e) => {
           if (selectOnFocus) {
             ref.current?.select();
@@ -116,91 +70,99 @@ const Input = ({
           props.onFocus?.(e);
         }}
         ref={ref}
+        readOnly={readOnly}
         className={({ isDisabled, isInvalid }) =>
-          cn(
-            textAreaStyles({
-              isDisabled,
-              isInvalid,
-              isReadOnly: props.readOnly,
-              size,
-              className,
-            }),
-          )
+          input({
+            isDisabled,
+            isInvalid,
+            isReadOnly: readOnly,
+            size: finalSize,
+            className,
+          })
         }
       />
     </div>
   );
-};
-Input.displayName = 'TextArea.Input';
-
-export interface TextAreaProps
-  extends Omit<
-      VariantProps<typeof textAreaStyles>,
-      'isDisabled' | 'isInvalid' | 'isReadOnly'
-    >,
-    Omit<AriaTextFieldProps, 'className'>,
-    Omit<InputProps, keyof AriaTextFieldProps> {
-  className?: string;
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  placeholder?: string;
 }
+TextAreaInput.displayName = 'TextArea.Input';
 
-export function TextArea({
-  className,
-  description,
-  errorMessage,
-  isDisabled,
-  isInvalid,
-  isReadOnly,
-  label,
-  placeholder,
-  size = 'medium',
-  ...props
-}: TextAreaProps) {
-  const isSmall = size === 'small';
-  const shouldShowDescription = !(isSmall || isInvalid) || isDisabled;
-  const shouldShowError = isInvalid && !isDisabled && !isReadOnly;
+// TextArea
+export function TextArea(props: TextAreaFieldProps) {
+  const { size, isDisabled, isInvalid, isReadOnly, classNames, selectOnFocus } =
+    props;
+
+  const context = useContext(TextAreaContext);
+  const finalSize =
+    size ??
+    (isSlottedContextValue(context) ? undefined : context?.size) ??
+    TextAreaStylesDefaults.size;
+  const finalIsDisabled =
+    isDisabled ??
+    (isSlottedContextValue(context) ? undefined : context?.isDisabled) ??
+    TextAreaStylesDefaults.isDisabled;
+  const finalIsInvalid =
+    isInvalid ??
+    (isSlottedContextValue(context) ? undefined : context?.isInvalid) ??
+    TextAreaStylesDefaults.isInvalid;
+  const finalIsReadOnly =
+    isReadOnly ??
+    (isSlottedContextValue(context) ? undefined : context?.isReadOnly) ??
+    TextAreaStylesDefaults.isReadOnly;
+  const finalSelectOnFocus =
+    selectOnFocus ??
+    (isSlottedContextValue(context) ? undefined : context?.selectOnFocus) ??
+    TextAreaStylesDefaults.selectOnFocus;
+
+  const isSmall = finalSize === 'small';
+  const shouldShowDescription = !(isSmall || finalIsInvalid) || finalIsDisabled;
 
   return (
-    <AriaTextField
-      {...(props as AriaTextFieldProps)}
-      isDisabled={isDisabled}
-      isInvalid={isInvalid}
-      isReadOnly={isReadOnly}
-      className={'flex flex-col gap-xs'}
+    <TextAreaContext.Provider
+      value={{
+        size: finalSize,
+        isDisabled: finalIsDisabled,
+        isInvalid: finalIsInvalid,
+        isReadOnly: finalIsReadOnly,
+        selectOnFocus: finalSelectOnFocus,
+      }}
     >
-      {!isSmall && (
-        <Label
-          className='empty:hidden'
-          isDisabled={isDisabled}
-          isRequired={props.isRequired}
-        >
-          {label}
-        </Label>
-      )}
-      <Input className={className} placeholder={placeholder} size={size} />
-      {shouldShowDescription && (
-        <AriaText
-          className={cn([
-            'fg-default-dark text-body-xs empty:hidden',
-            isDisabled && 'fg-disabled',
-          ])}
-          slot='description'
-        >
-          {description}
-        </AriaText>
-      )}
-      {shouldShowError && (
-        <AriaText
-          className='fg-serious text-body-xs empty:hidden'
-          slot='errorMessage'
-        >
-          {errorMessage}
-        </AriaText>
-      )}
-    </AriaTextField>
+      <AriaTextField
+        {...props}
+        isDisabled={finalIsDisabled}
+        isInvalid={finalIsInvalid}
+        isReadOnly={finalIsReadOnly}
+        className={composeRenderProps(classNames?.field, (className) =>
+          field({ className }),
+        )}
+      >
+        {!isSmall && (
+          <Label
+            className='empty:hidden'
+            isDisabled={finalIsDisabled}
+            isRequired={props.isRequired}
+          >
+            {props.label}
+          </Label>
+        )}
+        <TextAreaInput
+          className={classNames?.input}
+          placeholder={props.placeholder}
+          size={finalSize}
+          selectOnFocus={finalSelectOnFocus}
+        />
+        {shouldShowDescription && (
+          <AriaText
+            className={description({ isDisabled: finalIsDisabled })}
+            slot='description'
+          >
+            {props.description}
+          </AriaText>
+        )}
+        <FieldError className={error()}>{props.errorMessage}</FieldError>
+      </AriaTextField>
+    </TextAreaContext.Provider>
   );
 }
 TextArea.displayName = 'TextArea';
+TextArea.Provider = TextAreaProvider;
+TextArea.Input = TextAreaInput;
