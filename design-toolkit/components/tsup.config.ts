@@ -13,6 +13,7 @@
 import { fixImportsPlugin } from 'esbuild-fix-imports-plugin';
 import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions';
 import { defineConfig } from 'tsup';
+import { reactCompilerEsbuildPlugin } from './react-compiler.esbuild';
 
 export default defineConfig({
   esbuildPlugins: [
@@ -20,6 +21,10 @@ export default defineConfig({
       esmExtension: 'js',
     }),
     fixImportsPlugin(),
+    reactCompilerEsbuildPlugin({
+      sourceMaps: true,
+      filter: /.*/,
+    }),
   ],
   entry: [
     'src/**/*.{ts,tsx,css}',
