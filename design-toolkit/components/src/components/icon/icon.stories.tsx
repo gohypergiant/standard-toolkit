@@ -13,13 +13,14 @@
 import { Add } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from './';
+import { IconStylesDefaults } from './styles';
 
 const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',
   component: Icon,
   args: {
     className: 'fg-default-light',
-    size: 'medium',
+    size: IconStylesDefaults.size,
   },
   argTypes: {
     className: {

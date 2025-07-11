@@ -9,114 +9,124 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
-import { expectsIconWrapper } from '@/lib/react';
-import { cn } from '@/lib/utils';
+
 import 'client-only';
-import { type VariantProps, cva } from 'cva';
+import { type Ref, createContext } from 'react';
 import {
   Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
+  ToggleButton as AriaToggleButton,
+  Link,
   composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
+import { Icon } from '../icon';
+import { ButtonStyles } from './styles';
+import type {
+  ButtonContextValue,
+  ButtonProps,
+  ButtonProviderProps,
+  LinkButtonProps,
+  ToggleButtonProps,
+} from './types';
 
-const buttonStyles = cva(
-  'inline-flex cursor-pointer items-center justify-center whitespace-nowrap [--icon-size:20px]',
-  {
-    variants: {
-      variant: {
-        primary:
-          'fg-inverse-light rounded-medium bg-interactive-default dtk-pressed:bg-interactive-hover-light outline-none hover:bg-interactive-hover-light focus:bg-interactive-hover-light',
-        outline:
-          'fg-default-light rounded-medium outline dtk-pressed:outline-interactive-hover outline-interactive hover:outline-interactive-hover focus:outline-interactive-hover',
-        flat: 'fg-default-light rounded-medium bg-transparent dtk-pressed:bg-interactive-hover-dark outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',
-        destructive:
-          'fg-inverse-light rounded-medium bg-serious-bold dtk-pressed:bg-serious-hover outline-none hover:bg-serious-hover focus:bg-serious-hover',
-        critical:
-          'fg-default-light rounded-medium bg-critical-bold dtk-pressed:bg-critical-hover outline-none hover:bg-critical-hover focus:bg-critical-hover',
-      },
-      size: {
-        large:
-          'min-h-xxl gap-xs rounded-medium px-l py-s text-button-l [--icon-size:24px]',
-        medium:
-          'min-h-[32px] gap-xs rounded-medium px-l py-xs text-button-m [--icon-size:20px]',
-        small: 'min-h-xl gap-xxs p-s text-button-s [--icon-size:16px]',
-        xsmall:
-          'min-h-[20px] gap-xxs px-s py-xs text-button-xs [--icon-size:12px]',
-      },
-      isDisabled: {
-        true: 'fg-disabled hover:fg-disabled cursor-not-allowed bg-interactive-disabled hover:bg-interactive-disabled focus:bg-interactive-disabled',
-        false: '',
-      },
-    },
-    compoundVariants: [
-      {
-        variant: 'outline',
-        isDisabled: true,
-        className:
-          'fg-disabled hover:fg-disabled focus:fg-disabled cursor-not-allowed bg-transparent outline outline-interactive-disabled hover:bg-transparent focus:bg-transparent',
-      },
-      {
-        variant: 'flat',
-        isDisabled: true,
-        className:
-          'fg-disabled hover:fg-disabled focus:fg-disabled cursor-not-allowed bg-transparent hover:bg-transparent focus:bg-transparent',
-      },
-    ],
-    defaultVariants: {
-      isDisabled: false,
-      variant: 'primary',
-      size: 'medium',
-    },
-  },
-);
+export const ButtonContext = createContext<ButtonContextValue>(null);
 
-export interface ButtonProps
-  extends Omit<AriaButtonProps, 'children' | 'isDisabled'>,
-    VariantProps<typeof buttonStyles> {
-  /**
-   * Used to add text to the badge, such as the number of unread notifications.
-   *
-   * Can also receive a function which will be called with the parameters mentioned
-   * {@link https://react-spectrum.adobe.com/react-aria/Button.html#styling:~:text=are%20documented%20below.-,Name,-CSS%20Selector here}
-   */
-  children?: AriaButtonProps['children'];
-  isDisabled?: boolean;
+function ButtonProvider({ children, ...props }: ButtonProviderProps) {
+  return (
+    <ButtonContext.Provider value={props as ButtonContextValue}>
+      {children}
+    </ButtonContext.Provider>
+  );
 }
 
-export const Button = ({
-  className,
-  isDisabled,
-  variant = 'primary',
-  size = 'medium',
-  ...props
-}: ButtonProps) => {
-  expectsIconWrapper({
-    children: props.children,
-    componentName: Button.displayName,
-  });
+export function Button({ ref, ...props }: ButtonProps) {
+  [props, ref] = useContextProps(
+    props,
+    (ref ?? null) as Ref<HTMLAnchorElement & HTMLButtonElement>,
+    ButtonContext,
+  );
+
+  const { children, className, color, size, variant, ...rest } = props;
 
   return (
-    <AriaButton
-      className={composeRenderProps(className, (className) =>
-        cn(
-          'w-content',
-          buttonStyles({
-            isDisabled,
-            variant,
-            size,
+    <Icon.Provider size={size}>
+      <AriaButton
+        {...rest}
+        className={composeRenderProps(className, (className, { isPending }) =>
+          ButtonStyles({
             className,
+            color,
+            size,
+            variant,
+            isPending,
           }),
-        ),
-      )}
-      isDisabled={isDisabled}
-      {...props}
-    />
+        )}
+      >
+        {children}
+      </AriaButton>
+    </Icon.Provider>
   );
-};
+}
 Button.displayName = 'Button';
-Button.as = (
-  props: VariantProps<typeof buttonStyles>,
-  className?: string | string[],
-) => cn(buttonStyles({ ...props, className }));
+Button.Provider = ButtonProvider;
+
+export function LinkButton({ ref, ...props }: LinkButtonProps) {
+  [props, ref] = useContextProps(
+    props,
+    (ref ?? null) as Ref<HTMLAnchorElement & HTMLButtonElement>,
+    ButtonContext,
+  );
+
+  const { children, className, color, size, variant, ...rest } = props;
+
+  return (
+    <Icon.Provider size={size}>
+      <Link
+        {...rest}
+        className={composeRenderProps(className, (className, { isCurrent }) =>
+          ButtonStyles({
+            className,
+            color,
+            size,
+            variant,
+            isCurrent,
+          }),
+        )}
+      >
+        {children}
+      </Link>
+    </Icon.Provider>
+  );
+}
+LinkButton.displayName = 'LinkButton';
+
+export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
+  [props, ref] = useContextProps(
+    props,
+    (ref ?? null) as Ref<HTMLAnchorElement & HTMLButtonElement>,
+    ButtonContext,
+  );
+
+  const { children, className, color, size, variant, ...rest } = props;
+
+  return (
+    <Icon.Provider size={size}>
+      <AriaToggleButton
+        {...rest}
+        className={composeRenderProps(className, (className, { isSelected }) =>
+          ButtonStyles({
+            className,
+            color,
+            size,
+            variant,
+            isSelected,
+          }),
+        )}
+      >
+        {children}
+      </AriaToggleButton>
+    </Icon.Provider>
+  );
+}
+ToggleButton.displayName = 'ToggleButton';

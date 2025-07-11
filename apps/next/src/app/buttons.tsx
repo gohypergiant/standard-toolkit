@@ -24,17 +24,14 @@ export function Buttons() {
         Design Toolkit buttons
       </h2>
       <div className='p-m flex gap-m items-center mb-l'>
-        <Button variant='primary'>
+        <Button>
           <Icon>
             <Placeholder />
           </Icon>
           Primary Button
         </Button>
-        <Button variant='critical'>Critical Button</Button>
-        <Button
-          variant='primary'
-          className='bg-advisory-bold hover:bg-advisory-hover text-interactive-default'
-        >
+        <Button color='critical'>Critical Button</Button>
+        <Button className='bg-advisory-bold hover:bg-advisory-hover text-interactive-default'>
           Custom Button
         </Button>
       </div>
