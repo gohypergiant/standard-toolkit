@@ -12,22 +12,23 @@
 
 import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
+import type {
+  ChipListProps,
+  DeletableChipProps,
+  SelectableChipProps,
+} from './types';
 
 const meta: Meta<typeof Chip> = {
   title: 'Components/Chip',
   component: Chip,
   args: {
-    className: undefined,
-    children: 'Chip text',
     size: 'medium',
-    variant: 'info',
   },
   argTypes: {
-    className: { type: 'string' },
     children: {
       control: 'text',
     },
@@ -35,17 +36,22 @@ const meta: Meta<typeof Chip> = {
       control: 'select',
       options: ['medium', 'small'],
     },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
-    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Chip>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof Chip> = {
+  args: {
+    children: 'Chip',
+    variant: 'info',
+  },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
+    },
+  },
   render: ({ children, ...args }) => (
     <Chip {...args}>
       <Icon>
@@ -56,22 +62,26 @@ export const Default: Story = {
   ),
 };
 
-export const List: Story = {
+export const List: StoryObj<typeof Chip> = {
+  args: {
+    variant: 'info',
+  },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
+    },
+  },
   parameters: {
     controls: {
       exclude: ['children', 'className', 'variant'],
     },
   },
-  render: (args) => (
-    <Chip.List>
-      {meta.argTypes?.variant?.options?.map((option) => (
-        <Chip
-          key={option}
-          variant={option}
-          className='capitalize'
-          size={args.size}
-        >
-          {option}
+  render: ({ size }) => (
+    <Chip.List size={size}>
+      {List.argTypes?.variant?.options?.map((label) => (
+        <Chip key={label} className='capitalize' variant={label}>
+          {label}
         </Chip>
       ))}
     </Chip.List>
@@ -81,82 +91,88 @@ export const List: Story = {
 const selectableData = [
   {
     id: 'chip-1',
-    name: 'Selectable chip',
+    label: 'Selectable chip',
   },
   {
     id: 'chip-2',
-    name: 'Selectable chip',
+    label: 'Selectable chip',
   },
   {
     id: 'chip-3',
-    name: 'Selectable chip',
+    label: 'Selectable chip',
   },
 ];
 
-export const SelectableChipList: Story = {
-  parameters: {
-    controls: {
-      exclude: ['children', 'className', 'variant'],
+export const SelectableChipList: StoryObj<
+  FC<ChipListProps<unknown> & SelectableChipProps & { isDisabled: boolean }>
+> = {
+  args: {
+    disallowEmptySelection: false,
+    selectionMode: 'multiple',
+    isDisabled: false,
+  },
+  argTypes: {
+    selectionMode: {
+      control: 'select',
+      options: ['none', 'single', 'multiple'],
     },
   },
-  render: (args) => (
-    <Chip.List items={selectableData} selectionMode='multiple'>
-      {(item) => (
-        <Chip.Selectable id={item.id} size={args.size}>
-          {item.name}
-        </Chip.Selectable>
-      )}
+  parameters: {
+    controls: {
+      exclude: ['children'],
+    },
+  },
+  render: ({ children, id, className, style, size, isDisabled, ...rest }) => (
+    <Chip.List
+      {...rest}
+      disabledKeys={isDisabled ? selectableData.map(({ id }) => id) : undefined}
+      items={selectableData}
+      size={size}
+    >
+      {({ id, label }) => <Chip.Selectable id={id}>{label}</Chip.Selectable>}
     </Chip.List>
   ),
 };
 
-const deletableData = [
-  {
-    id: 'chip-1',
-    name: 'Deletable chip 1',
-  },
-  {
-    id: 'chip-2',
-    name: 'Deletable chip 2',
-  },
-  {
-    id: 'chip-3',
-    name: 'Deletable chip 3',
-  },
-];
+const deletableChips = new Set([
+  'Deletable chip 1',
+  'Deletable chip 2',
+  'Deletable chip 3',
+]);
 
-export const DeletableChipList: Story = {
+export const DeletableChipList: StoryObj<
+  FC<ChipListProps<unknown> & DeletableChipProps & { isDisabled: boolean }>
+> = {
+  args: {
+    isDisabled: false,
+  },
   parameters: {
     controls: {
-      exclude: ['children', 'className', 'variant'],
+      exclude: ['children'],
     },
   },
-  render: (args) => {
-    const [items, setItems] = useState(deletableData);
+  render: ({ children, id, className, style, size, isDisabled, ...rest }) => {
+    const [chips, setChips] = useState(deletableChips);
 
     return (
-      <div className='flex flex-col items-center gap-m'>
+      <>
         <Chip.List
-          items={items}
-          selectionMode='multiple'
-          onRemove={(ids) =>
-            setItems((items) => items.filter((i) => !ids.has(i.id)))
-          }
+          {...rest}
+          disabledKeys={isDisabled ? chips : undefined}
+          items={Array.from(chips).map((label) => ({ id: label, label }))}
+          size={size}
+          onRemove={(keys) => setChips((prev) => prev.difference(keys))}
         >
-          {(item) => (
-            <Chip.Deletable id={item.id} size={args.size}>
-              {item.name}
-            </Chip.Deletable>
-          )}
+          {({ id, label }) => <Chip.Deletable id={id}>{label}</Chip.Deletable>}
         </Chip.List>
         <Button
-          variant='flat'
           size='xsmall'
-          onPress={() => setItems(deletableData)}
+          variant='flat'
+          onPress={() => setChips(deletableChips)}
         >
           Reset
         </Button>
-      </div>
+      </>
     );
   },
 };

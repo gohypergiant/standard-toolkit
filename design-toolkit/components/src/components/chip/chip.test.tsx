@@ -12,7 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Chip, type ChipProps } from './index';
+import { Chip } from './index';
+import type { ChipProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<ChipProps> = {}) {
   render(<Chip {...rest}>{children}</Chip>);
