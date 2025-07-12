@@ -20,7 +20,7 @@ import {
 import { Checkbox } from '../checkbox';
 import { Radio } from '../radio';
 import { Switch } from '../switch';
-import { TextArea } from '../text-area';
+import { TextAreaField } from '../text-area-field';
 import { TextField } from '../text-field';
 import type { QueryBuilderValueEditors } from './';
 import { multiValueOperators } from './constants';
@@ -162,17 +162,17 @@ function TextareaValueEditor({
   const { valid, reasons } = getValidationResult(rule, validator);
 
   return (
-    <TextArea
+    <TextAreaField
+      size='small'
+      errorMessage={reasons?.join('/n')}
+      inputProps={{ placeholder }}
+      value={value}
       isDisabled={disabled}
       isInvalid={!valid}
-      placeholder={placeholder}
-      size='small'
-      value={value}
       onChange={handleOnChange}
       aria-label={name}
       aria-invalid={!valid}
       aria-labelledby={name}
-      errorMessage={reasons?.join('/n')}
     />
   );
 }
