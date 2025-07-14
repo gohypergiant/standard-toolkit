@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import type { PanelState } from './config';
+import type { DrawerState } from './types';
 import {
   toggleBottomPanel,
   toggleLeftPanel,
@@ -24,7 +24,7 @@ const toggleFns = {
   top: toggleTopPanel,
   bottom: toggleBottomPanel,
 } as const;
-const toggleOptions = ['closed', 'open'] as [PanelState, PanelState];
+const toggleOptions = ['closed', 'open'] as [DrawerState, DrawerState];
 
 function hotKey(panel: keyof typeof toggleFns, e: KeyboardEvent) {
   e.preventDefault();

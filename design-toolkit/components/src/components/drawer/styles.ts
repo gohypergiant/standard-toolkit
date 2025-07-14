@@ -106,6 +106,82 @@ export const DrawerStyles = tv({
       'data-[right*="nav"]:[--panel-w-right:var(--panel-size-nav)]',
       'data-[right*="open"]:[--panel-w-right:var(--panel-size-open)]',
       'data-[right*="xl"]:[--panel-w-right:var(--panel-size-xl)]',
+
+      // base styles
+      'group/layout relative top-[var(--classification-banner-height)]',
+      // grid definition
+      'grid grid-cols-[var(--route-layout-grid-cols)] grid-rows-[var(--route-layout-grid-rows)] transition-[grid-template-columns,grid-template-rows]',
+      // menu styles
+      'data-[menu*="float"]:h-[var(--available-height)] data-[menu*="scroll"]:min-h-[var(--available-height)]',
     ],
+    main: 'relative z-1 col-[var(--panel-main-cols)] row-[var(--panel-main-rows)]',
+    drawer: '',
+    menu: '',
+    trigger:
+      'fg-default-dark hover:fg-default-light cursor-pointer hover:bg-surface-overlay',
+  },
+  variants: {
+    anchor: {
+      bottom: {
+        drawer: [
+          // base styles
+          'relative row-start-3 row-end-4',
+          // grid placement
+          'z-5 col-start-2 col-end-3 group-data-[extend*=bottom]/layout:z-10 group-data-[bottom*=extend]/layout:col-start-1 group-data-[extend*=bottom]/layout:col-start-1 group-data-[extend=right]/layout:col-start-1 group-data-[bottom*=extend]/layout:col-end-4 group-data-[extend*=bottom]/layout:col-end-4 group-data-[extend=left]/layout:col-end-4',
+          // allows pointer events to pass-through, i.e. to the map
+          'pointer-events-none [&>*]:pointer-events-auto',
+          // hides all content except the panel-menu when closed
+          'group-data-[bottom*=closed]/layout:[&>*:not(nav)]:hidden',
+        ],
+        menu: '-translate-y-[var(--panel-size-icons)] rounded-b-none',
+      },
+      left: {
+        drawer: [
+          // base styles
+          'relative col-start-1 col-end-2',
+          // allows pointer events to pass-through, i.e. to the map
+          'pointer-events-none [&>*]:pointer-events-auto',
+          // grid placement
+          'z-5 row-start-2 row-end-3 group-data-[extend*=left]/layout:z-10 group-data-[extend=right]/layout:z-1 group-data-[extend*=left]/layout:row-start-1 group-data-[extend=bottom]/layout:row-start-1 group-data-[left*=extend]/layout:row-start-1 group-data-[extend*=left]/layout:row-end-4 group-data-[extend=top]/layout:row-end-4 group-data-[left*=extend]/layout:row-end-4',
+          // hides all content except the panel-menu when closed
+          'group-data-[left*=closed]/layout:[&>*:not(nav,[data-drawer-tabs])]:hidden',
+        ],
+        menu: 'left-full rounded-l-none',
+      },
+      right: {
+        drawer: [
+          // base styles
+          'relative col-start-3 col-end-4',
+          // allows pointer events to pass-through, i.e. to the map
+          'pointer-events-none [&>*]:pointer-events-auto',
+          // grid placement
+          'z-5 row-start-2 row-end-3 group-data-[extend*=right]/layout:z-10 group-data-[extend=left]/layout:z-1 group-data-[extend*=right]/layout:row-start-1 group-data-[extend=bottom]/layout:row-start-1 group-data-[right*=extend]/layout:row-start-1 group-data-[extend*=right]/layout:row-end-4 group-data-[extend=top]/layout:row-end-4 group-data-[right*=extend]/layout:row-end-4',
+          // hides all content except the panel-menu when closed
+          'group-data-[right*=closed]/layout:[&>*:not(nav)]:hidden',
+        ],
+        menu: '-left-[var(--panel-size-icons)] rounded-r-none',
+      },
+      top: {
+        drawer: [
+          // base styles
+          'relative row-start-1 row-end-2',
+          // allows pointer events to pass-through, i.e. to the map
+          'pointer-events-none [&>*]:pointer-events-auto',
+          // grid placement
+          'z-5 col-start-2 col-end-3 group-data-[extend*=top]/layout:z-10 group-data-[extend*=top]/layout:col-start-1 group-data-[extend=right]/layout:col-start-1 group-data-[top*=extend]/layout:col-start-1 group-data-[extend*=top]/layout:col-end-4 group-data-[extend=left]/layout:col-end-4 group-data-[top*=extend]/layout:col-end-4',
+          // hides all content except the panel-menu when closed
+          'group-data-[top*=closed]/layout:[&>*:not(nav)]:hidden',
+        ],
+        menu: 'bottom-0 translate-y-[var(--panel-size-icons)] rounded-t-none',
+      },
+    },
+    orientation: {
+      horizontal: {
+        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--panel-size-icons)] rounded-large bg-surface-default px-s',
+      },
+      vertical: {
+        menu: 'absolute mt-xxl w-[var(--panel-size-icons)] rounded-large bg-surface-default py-s',
+      },
+    },
   },
 });

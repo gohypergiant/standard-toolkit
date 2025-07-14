@@ -2,7 +2,7 @@
  * @fileoverview Panel Toggle Components
  *
  * Provides pre-configured toggle button components for common panel operations.
- * These components use the usePanelToggle hook to create consistent, accessible
+ * These components use the useDrawerToggle hook to create consistent, accessible
  * toggle buttons with appropriate icons and responsive behavior.
  *
  * ## Features:
@@ -12,12 +12,12 @@
  * - **Layout Integration**: Works seamlessly with the layout system's data attributes
  *
  * @requires 'client-only' - These components must run in the browser environment
- * @see {@link usePanelToggle} - The underlying hook that provides toggle functionality
+ * @see {@link useDrawerToggle} - The underlying hook that provides toggle functionality
  */
 
 import 'client-only';
-import type { PanelLabel, PanelState } from './config';
 import { LAYOUT_SELECTOR } from './config';
+import type { DrawerAnchor, DrawerState } from './types';
 
 /**
  * Pre-configured toggle function for the bottom panel.
@@ -67,8 +67,8 @@ export const toggleRightPanel = createToggleFn('right');
  * @param panel - The panel identifier (left, right, top, bottom)
  * @returns Toggle function that accepts a state array with two states
  */
-export function createToggleFn(panel: PanelLabel) {
-  return ([a, b]: [PanelState, PanelState]) => {
+export function createToggleFn(panel: DrawerAnchor) {
+  return ([a, b]: [DrawerState, DrawerState]) => {
     const container = document.querySelector(LAYOUT_SELECTOR) as HTMLElement;
     const current = container?.dataset[panel]?.match(/\w+-(\w+)/)?.at(1);
 

@@ -1,9 +1,8 @@
 'use client';
+import { cn } from '@/lib/utils';
 import type { PropsWithChildren } from 'react';
 import { createToggleFn } from './toggle-utils';
-import type { PanelLabel } from './config';
-import type { PanelToggleProps } from './panel-toggle-props';
-import { cn } from '@/lib/utils';
+import type { DrawerAnchor, DrawerToggleProps } from './types';
 
 /**
  * Props interface for the button component returned by the hook.
@@ -14,15 +13,15 @@ interface ButtonProps extends PropsWithChildren {
 }
 
 /**
- * Configuration object for the usePanelToggle hook.
+ * Configuration object for the useDrawerToggle hook.
  */
-interface HookProps extends PanelToggleProps {
+interface HookProps extends DrawerToggleProps {
   /** The panel to control (left, right, top, or bottom) */
-  panel: PanelLabel;
+  drawer: DrawerAnchor;
 }
 
 /**
- * usePanelToggle - Panel Toggle Hook
+ * useDrawerToggle - Drawer Toggle Hook
  *
  * Custom React hook that creates a reusable Button component for toggling panel states.
  * This hook encapsulates all the logic needed to create accessible, styled toggle buttons
@@ -45,7 +44,7 @@ interface HookProps extends PanelToggleProps {
  * ```tsx
  * // Basic usage in a component
  * function MyToggle() {
- *   const Button = usePanelToggle({
+ *   const Button = useDrawerToggle({
  *     options: ['over-closed', 'over-open'],
  *     panel: 'left'
  *   });
@@ -59,7 +58,7 @@ interface HookProps extends PanelToggleProps {
  *
  * // With custom button props
  * function AdvancedToggle() {
- *   const Button = usePanelToggle({
+ *   const Button = useDrawerToggle({
  *     options: ['over-icons', 'over-nav'],
  *     panel: 'right'
  *   });
@@ -88,7 +87,7 @@ interface HookProps extends PanelToggleProps {
  * @example
  * ```tsx
  * // Create a custom bottom toggle
- * const BottomButton = usePanelToggle({
+ * const BottomButton = useDrawerToggle({
  *   options: ['over-closed', 'over-open'],
  *   panel: 'bottom'
  * });
@@ -99,8 +98,8 @@ interface HookProps extends PanelToggleProps {
  * </BottomButton>
  * ```
  */
-export function usePanelToggle({ options, panel }: HookProps) {
-  const toggleFn = createToggleFn(panel);
+export function useDrawerToggle({ options, drawer }: HookProps) {
+  const toggleFn = createToggleFn(drawer);
 
   return <T extends ButtonProps>({ children, className, ...props }: T) => (
     <button
@@ -111,7 +110,7 @@ export function usePanelToggle({ options, panel }: HookProps) {
       onClick={() => {
         toggleFn(options);
       }}
-      title={`Toggle ${panel} panel`}
+      title={`Toggle ${drawer} drawer`}
       type='button'
       {...props}
     >
