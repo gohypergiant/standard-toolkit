@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from 'react';
 
 export type DrawerAnchor = 'left' | 'right' | 'top' | 'bottom';
+export type DrawerId = string;
 /**
  * Props interface for child panel components
  *
@@ -45,28 +46,47 @@ export interface DrawerRootProps
 }
 
 export interface DrawerProps extends PropsWithChildren {
+  id: DrawerId;
   anchor: DrawerAnchor;
+  mode?: DrawerMode;
+  hotKey?: string;
+  isOpen?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
   className?: string;
 }
 
 export interface DrawerMenuProps extends PropsWithChildren {
+  className?: string;
+}
+
+export interface DrawerTriggerProps extends PropsWithChildren {
+  for: DrawerId;
+  className?: string;
+}
+
+export interface UseDrawerToggleProps {
+  drawerId: DrawerId;
+}
+
+export interface DrawerLayoutContextValue {
+  drawerStates: Record<DrawerId, DrawerStateOption>;
+  toggleDrawer: (drawerId: DrawerId) => void;
+  openDrawer: (drawerId: DrawerId) => void;
+  closeDrawer: (drawerId: DrawerId) => void;
+  setDrawerState: (drawerId: DrawerId, state: DrawerStateOption) => void;
+  getDrawerState: (drawerId: DrawerId) => DrawerStateOption | undefined;
+  registerDrawer: (
+    drawerId: DrawerId,
+    anchor: DrawerAnchor,
+    isOpen: boolean,
+    mode: DrawerMode,
+  ) => void;
+  getDrawerAnchor: (drawerId: DrawerId) => DrawerAnchor | undefined;
+}
+
+export interface DrawerContextValue {
+  drawerId: DrawerId;
   anchor: DrawerAnchor;
-  className?: string;
-}
-
-export interface DrawerToggleProps {
-  /** Array of exactly two panel states to toggle between */
-  options: [DrawerState, DrawerState];
-}
-
-export interface DrawerTriggerProps
-  extends PropsWithChildren<DrawerToggleProps> {
-  drawer: DrawerAnchor;
-  className?: string;
-}
-
-export interface UseDrawerToggleProps extends DrawerToggleProps {
-  drawer: DrawerAnchor;
 }
 
 /**

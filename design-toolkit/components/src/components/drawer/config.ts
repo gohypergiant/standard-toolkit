@@ -35,4 +35,4 @@ export const MENU_DEFAULT: MenuVariant = 'scroll' as const;
  *
  * The default state of panels when no config is provided.
  */
-export const PANEL_CONFIG_DEFAULT: DrawerStateOption = 'over-closed' as const;
+export const PANEL_CONFIG_DEFAULT: DrawerStateOption = 'over-open' as const;

@@ -112,10 +112,18 @@ export const DrawerStyles = tv({
       // grid definition
       'grid grid-cols-[var(--route-layout-grid-cols)] grid-rows-[var(--route-layout-grid-rows)] transition-[grid-template-columns,grid-template-rows]',
       // menu styles
-      'data-[menu*="float"]:h-[var(--available-height)] data-[menu*="scroll"]:min-h-[var(--available-height)]',
+      // 'data-[menu*="float"]:h-[var(--available-height)] data-[menu*="scroll"]:min-h-[var(--available-height)]',
+      'h-[var(--available-height)] min-h-[var(--available-height)]',
     ],
     main: 'relative z-1 col-[var(--panel-main-cols)] row-[var(--panel-main-rows)]',
-    drawer: '',
+    drawer: [
+      'bg-surface-default',
+      'data-[drawer-state*="closed"]:[&>*:not(nav,[data-drawer-tabs])]:hidden',
+      'data-[drawer-state*="icons"]:block',
+      'data-[drawer-state*="nav"]:block',
+      'data-[drawer-state*="open"]:block',
+      'data-[drawer-state*="xl"]:block',
+    ],
     menu: '',
     trigger:
       'fg-default-dark hover:fg-default-light cursor-pointer hover:bg-surface-overlay',

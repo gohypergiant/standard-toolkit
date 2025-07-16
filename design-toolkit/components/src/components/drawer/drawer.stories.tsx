@@ -7,11 +7,10 @@ import {
 } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties, PropsWithChildren } from 'react';
+import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tabs } from '../tabs';
 import { Drawer } from './index';
-import { KeyboardListener } from './keyboard-listener';
-import type { DrawerAnchor, DrawerState } from './types';
 
 const meta: Meta<typeof Drawer.Root> = {
   title: 'Components/Drawer',
@@ -64,7 +63,7 @@ const extraItemsX = Array.from({ length: 6 }, (_, index) => (
     className='my-s flex w-full cursor-pointer justify-center'
     key={`${index + 1}`}
   >
-    <Icon>
+    <Icon className='text-disabled'>
       <Placeholder />
     </Icon>
   </span>
@@ -72,179 +71,166 @@ const extraItemsX = Array.from({ length: 6 }, (_, index) => (
 
 const extraItemsY = Array.from({ length: 6 }, (_, index) => (
   <span className='mx-s flex cursor-pointer items-center' key={`${index + 1}`}>
-    <Icon>
+    <Icon className='text-disabled'>
       <Placeholder />
     </Icon>
   </span>
 ));
-type StateOptions = [DrawerState, DrawerState];
 
-const STATES = ['closed', 'open'];
+// export const FullLayout: Story = {
+//   render: () => {
+//     return (
+//       <Drawer.Root extend='left and right'>
+//         <Drawer
+//           id='header'
+//           className='bg-[rgba(200,50,0,0.5)]'
+//           anchor='top'
+//           mode='push'
+//           hotKey='w'
+//         >
+//           <Drawer.Menu>
+//             <Drawer.Trigger for='header'>
+//               <TopIcon />
+//             </Drawer.Trigger>
 
-const toggleStates = [STATES[0], STATES[1]] as StateOptions;
+//             {extraItemsY}
+//           </Drawer.Menu>
 
-const options = {
-  bottom: toggleStates,
-  top: toggleStates,
-  left: toggleStates,
-  right: toggleStates,
-} as const satisfies Record<DrawerAnchor, [DrawerState, DrawerState]>;
+//           <PanelTitle>Top</PanelTitle>
+//           {/* {LIPSUM} */}
+//         </Drawer>
 
-export const FullLayout: Story = {
-  render: () => {
-    return (
-      <Drawer.Root
-        extend='left and right'
-        panels={{
-          bottom: 'over-open',
-          left: 'over-open',
-          right: 'over-open',
-          top: 'over-open',
-        }}
-      >
-        <Drawer anchor='top' className='bg-[rgba(200,50,0,0.5)]'>
-          <Drawer.Menu anchor='top'>
-            <Drawer.Trigger drawer='top' options={options.top}>
-              <TopIcon />
-            </Drawer.Trigger>
+//         <Drawer.Main>
+//           <div
+//             className='flex h-full items-center justify-center bg-surface-overlay'
+//             style={
+//               {
+//                 '--single': '40px',
+//                 '--double': 'calc(2 * var(--single))',
+//                 backgroundImage: `
+//             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
+//             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
+//           `,
+//                 backgroundSize: 'var(--double) var(--double)',
+//                 backgroundPosition:
+//                   'center, calc(50% + var(--single)) calc(50% + var(--single))',
+//               } as CSSProperties
+//             }
+//           >
+//             <div className='flex w-[23em] flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl drop-shadow-[0_0_150px_rgba(255,255,255,0.4)] [&>*]:my-s'>
+//               <p>This page is for demo purposes only!</p>
+//               <p>Key-bindings for toggles:</p>
 
-            {extraItemsY}
-          </Drawer.Menu>
+//               <ul className='[&_kbd]:mr-m [&_kbd]:inline-block [&_kbd]:w-[4em] [&_kbd]:text-right'>
+//                 <li>
+//                   <kbd>w</kbd>
+//                   open/closed "top" panel
+//                 </li>
 
-          <PanelTitle>Top</PanelTitle>
-          {/* {LIPSUM} */}
-        </Drawer>
+//                 <li>
+//                   <kbd>s</kbd>
+//                   open/closed "bottom" panel
+//                 </li>
 
-        <Drawer.Content>
-          <div
-            className='flex h-full items-center justify-center bg-surface-overlay'
-            style={
-              {
-                '--single': '40px',
-                '--double': 'calc(2 * var(--single))',
-                backgroundImage: `
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
-          `,
-                backgroundSize: 'var(--double) var(--double)',
-                backgroundPosition:
-                  'center, calc(50% + var(--single)) calc(50% + var(--single))',
-              } as CSSProperties
-            }
-          >
-            <div className='flex w-[23em] flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl drop-shadow-[0_0_150px_rgba(255,255,255,0.4)] [&>*]:my-s'>
-              <p>This page is for demo purposes only!</p>
-              <p>Key-bindings for toggles:</p>
+//                 <li>
+//                   <kbd>a</kbd>
+//                   open/closed "left" panel
+//                 </li>
 
-              <ul className='[&_kbd]:mr-m [&_kbd]:inline-block [&_kbd]:w-[4em] [&_kbd]:text-right'>
-                <li>
-                  <kbd>w</kbd>
-                  open/closed "top" panel
-                </li>
+//                 <li>
+//                   <kbd>d</kbd>
+//                   open/closed "right" panel
+//                 </li>
+//               </ul>
+//             </div>
+//           </div>
+//         </Drawer.Main>
 
-                <li>
-                  <kbd>s</kbd>
-                  open/closed "bottom" panel
-                </li>
+//         <Drawer
+//           id='footer'
+//           className='bg-[rgba(50,200,0,0.5)]'
+//           anchor='bottom'
+//           mode='push'
+//           hotKey='s'
+//         >
+//           <Drawer.Menu>
+//             <Drawer.Trigger for='footer'>
+//               <BottomIcon />
+//             </Drawer.Trigger>
 
-                <li>
-                  <kbd>a</kbd>
-                  open/closed "left" panel
-                </li>
+//             {extraItemsY}
+//           </Drawer.Menu>
 
-                <li>
-                  <kbd>d</kbd>
-                  open/closed "right" panel
-                </li>
+//           <PanelTitle>Bottom</PanelTitle>
+//           {/* {LIPSUM} */}
+//         </Drawer>
 
-                <li>
-                  <kbd>shift</kbd>
-                  push/over "each" panel
-                </li>
+//         <Drawer
+//           id='settings'
+//           className='bg-[rgba(0,150,200,0.5)]'
+//           anchor='left'
+//           mode='push'
+//           hotKey='a'
+//         >
+//           <Drawer.Menu>
+//             <Drawer.Trigger for='settings'>
+//               <LeftIcon />
+//             </Drawer.Trigger>
 
-                <li>
-                  <kbd>p</kbd>
-                  push/over "all" panels
-                </li>
+//             {extraItemsX}
+//           </Drawer.Menu>
 
-                <li>
-                  <kbd>1-6</kbd>
-                  Panel layouts
-                </li>
-              </ul>
-            </div>
+//           <PanelTitle>Left</PanelTitle>
+//         </Drawer>
 
-            <KeyboardListener />
-          </div>
-        </Drawer.Content>
+//         <Drawer
+//           id='sidebar'
+//           className='bg-[rgba(200,50,200,0.5)]'
+//           anchor='right'
+//           mode='push'
+//           hotKey='d'
+//         >
+//           <Drawer.Menu>
+//             <Drawer.Trigger for='sidebar'>
+//               <RightIcon />
+//             </Drawer.Trigger>
 
-        <Drawer anchor='bottom' className='bg-[rgba(50,200,0,0.5)]'>
-          <Drawer.Menu anchor='bottom'>
-            <Drawer.Trigger drawer='bottom' options={options.bottom}>
-              <BottomIcon />
-            </Drawer.Trigger>
+//             {extraItemsX}
+//           </Drawer.Menu>
 
-            {extraItemsY}
-          </Drawer.Menu>
+//           <PanelTitle>Right</PanelTitle>
+//         </Drawer>
+//       </Drawer.Root>
+//     );
+//   },
+// };
 
-          <PanelTitle>Bottom</PanelTitle>
-          {/* {LIPSUM} */}
-        </Drawer>
-
-        <Drawer anchor='left' className='bg-[rgba(0,150,200,0.5)]'>
-          <Drawer.Menu anchor='left'>
-            <Drawer.Trigger drawer='left' options={options.left}>
-              <LeftIcon />
-            </Drawer.Trigger>
-
-            {extraItemsX}
-          </Drawer.Menu>
-
-          <PanelTitle>Left</PanelTitle>
-        </Drawer>
-
-        <Drawer anchor='right' className='bg-[rgba(200,50,200,0.5)]'>
-          <Drawer.Menu anchor='right'>
-            <Drawer.Trigger drawer='right' options={options.left}>
-              <RightIcon />
-            </Drawer.Trigger>
-
-            {extraItemsX}
-          </Drawer.Menu>
-
-          <PanelTitle>Right</PanelTitle>
-        </Drawer>
-      </Drawer.Root>
-    );
-  },
-};
-
-//Position menu start middle end - default to start
+// //Position menu start middle end - default to start
 export const WithTabs: Story = {
   render: () => {
     return (
-      <Drawer.Root
-        extend='right'
-        panels={{
-          left: 'over-open',
-        }}
-      >
+      <Drawer.Root>
         <Drawer.Main>
           <div className='text-default-light'>Left Drawer Content</div>
         </Drawer.Main>
-        <Drawer anchor='left' className='bg-[rgba(0,150,200,0.5)]'>
+        <Drawer id='settings' anchor='left' mode='over'>
+          <div className='flex flex-row justify-between'>
+            <h3 className='text-default-light'>Title</h3>
+            <Drawer.Close for='settings'>
+              <Button>Close</Button>
+            </Drawer.Close>
+          </div>
           <Tabs orientation='vertical' data-drawer-tabs='true'>
-            <Drawer.Menu anchor='left'>
-              <Drawer.Trigger drawer='left' options={options.left}>
-                <LeftIcon />
-                <Tabs.List>
+            <Drawer.Menu>
+              <Drawer.Open for='settings'>
+                <Tabs.List drawer='left'>
                   <Tabs.Tab id='a'>a</Tabs.Tab>
                   <Tabs.Tab id='b'>b</Tabs.Tab>
                   <Tabs.Tab id='c'>c</Tabs.Tab>
                 </Tabs.List>
-              </Drawer.Trigger>
+              </Drawer.Open>
             </Drawer.Menu>
-            <Tabs.Panel id='a'>A content</Tabs.Panel>
+            <Tabs.Panel id='b'>B Content</Tabs.Panel>
           </Tabs>
         </Drawer>
       </Drawer.Root>
