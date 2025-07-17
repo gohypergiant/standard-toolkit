@@ -227,7 +227,7 @@ const DrawerPanel = ({
   return (
     <div
       {...props}
-      className={panel()}
+      className={panel({className})}
       id={`panel-${id}`}
       role='tabpanel'
       aria-labelledby={`tab-${id}`}

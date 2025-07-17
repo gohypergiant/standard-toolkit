@@ -239,6 +239,30 @@ export const WithTabs: Story = {
   },
 };
 
+export const WithLongContent: Story = {
+  render: () => {
+    return (
+      <Drawer.Root className='bg-default-dark'>
+        <Drawer.Main>
+          <div className='text-default-light'>Left Drawer Content</div>
+        </Drawer.Main>
+        <Drawer id='settings' placement='left' mode='over'>
+          <Drawer.Menu>
+            <Drawer.MenuItem id="">
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.MenuItem>
+          </Drawer.Menu>
+          <Drawer.Header>Title</Drawer.Header>
+          <Drawer.Panel id=''>{longContent}</Drawer.Panel>
+          <Drawer.Footer>Footer</Drawer.Footer>
+        </Drawer>
+      </Drawer.Root>
+    );
+  },
+};
+
 export const ControlledOpen: Story = {
   render: () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -352,3 +376,15 @@ export const WithNavigationStack: Story = {
     );
   },
 };
+
+const longContent = `
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed rhoncus urna. Nam blandit tortor laoreet, efficitur ante eget, sagittis massa. Nam eu consequat nibh, a pulvinar mi. Donec in felis elementum turpis vehicula rutrum at vel purus. Integer tristique sodales eros, nec suscipit mi posuere a. Phasellus non mi erat. Sed at elementum lacus, ac rhoncus urna. Nullam metus diam, porta sed elementum in, rutrum eu turpis. Aliquam hendrerit eget augue ac sodales. Phasellus fermentum ante dolor, et hendrerit dolor bibendum id. Etiam placerat tortor sagittis diam faucibus feugiat. Etiam sed dolor a ante dignissim condimentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed eu nulla consequat, malesuada elit eu, imperdiet nibh. Ut dictum enim non aliquam tempus.
+
+Praesent ullamcorper neque non dolor ultrices porta. Suspendisse potenti. Integer ipsum mauris, vestibulum ut luctus sit amet, mollis vel velit. Cras vitae molestie nunc. In ut velit ut libero posuere porta. Pellentesque fringilla sollicitudin elit, ut feugiat augue pellentesque sed. Ut non dui tellus. Aenean vehicula ultrices vulputate. Morbi viverra interdum mi, eu convallis dolor hendrerit ac. Sed interdum est arcu, a tempus nunc accumsan a. Praesent porta malesuada laoreet. Sed ultrices elit quis enim pretium, in venenatis mauris faucibus. Curabitur nec velit ligula. Maecenas orci ipsum, accumsan quis nisi in, fringilla facilisis dolor. Proin magna felis, tristique nec elit rutrum, tristique aliquam sem.
+
+Cras neque nulla, imperdiet nec nulla sed, tempus mollis purus. Etiam sed erat vitae enim sagittis tristique. Ut luctus felis et fermentum pellentesque. Pellentesque eleifend blandit nibh ut interdum. Etiam ultricies pretium eros, auctor vehicula tellus ornare nec. Donec metus risus, faucibus tincidunt arcu a, malesuada pretium metus. Nunc ac est vitae ex gravida euismod. Praesent quam ligula, venenatis eget neque ac, pellentesque finibus ipsum. Quisque rutrum ligula sed ex posuere mollis. Integer pretium luctus massa. Suspendisse diam massa, congue vitae bibendum quis, finibus quis felis. Vivamus in dui a lectus posuere rutrum.
+
+Etiam venenatis vulputate dignissim. Proin risus sem, aliquet eget vestibulum ut, mattis nec nulla. Integer nec semper quam. Ut blandit mi quis eros imperdiet tincidunt. Maecenas ac tincidunt tortor. In accumsan sem eget massa bibendum euismod. Pellentesque sit amet lorem urna. Sed consectetur a mauris sit amet commodo. Sed quis laoreet dolor. Mauris quis mattis tellus.
+
+Integer in libero velit. Donec fringilla sem eu tellus cursus, maximus bibendum lacus rhoncus. Vestibulum hendrerit porttitor neque, vitae venenatis nibh. Nulla risus quam, cursus ac ultricies at, mattis nec nisl. Suspendisse vulputate, sem at dapibus facilisis, nibh sapien cursus ipsum, at suscipit risus arcu sed nibh. Cras pellentesque, urna ut venenatis euismod, leo lacus facilisis turpis, in gravida tortor nisl eget ipsum. In finibus tempus est at tristique. Aenean ut hendrerit massa. Donec magna nisi, imperdiet at lacinia non, dictum non elit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam et enim consequat, malesuada urna et, placerat dui.
+`;

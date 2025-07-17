@@ -19,7 +19,7 @@ export const DrawerStyles = tv({
       'data-[right*="push"]:[--drawer-main-col-end:3]',
 
       '[--route-layout-grid-cols:var(--drawer-w-left)_auto_var(--drawer-w-right)]',
-      '[--route-layout-grid-rows:var(--drawer-h-top)_auto_var(--drawer-h-bottom)]',
+      '[--route-layout-grid-rows:var(--drawer-h-top)_1fr_var(--drawer-h-bottom)]',
       '[--drawer-main-cols:var(--drawer-main-col-start)/var(--drawer-main-col-end)]',
       '[--drawer-main-rows:var(--drawer-main-row-start)/var(--drawer-main-row-end)]',
 
@@ -53,7 +53,7 @@ export const DrawerStyles = tv({
       'grid grid-cols-[var(--route-layout-grid-cols)] grid-rows-[var(--route-layout-grid-rows)] transition-[grid-template-columns,grid-template-rows]',
       // menu styles
       // 'data-[menu*="float"]:h-[var(--available-height)] data-[menu*="scroll"]:min-h-[var(--available-height)]',
-      'h-[var(--available-height)] min-h-[var(--available-height)]',
+      'h-[var(--available-height)] min-h-[var(--available-height)] overflow-hidden',
     ],
     main: 'relative z-1 col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
     drawer: [
@@ -66,11 +66,11 @@ export const DrawerStyles = tv({
     ],
     trigger:
       'fg-default-dark hover:fg-default-light cursor-pointer hover:bg-surface-overlay',
-    content: 'p-l',
-    panel: 'text-default-light',
+    content: 'flex h-full min-h-0 flex-col gap-s p-l',
+    panel: 'flex max-h-full flex-1 overflow-y-auto text-default-light',
     header: 'mb-s flex flex-row items-center justify-between',
     title: 'w-full text-default-light text-header-l',
-    footer: 'mt-s flex flex-row items-center justify-end',
+    footer: 'mt-s flex flex-row items-center justify-end text-default-light',
   },
   variants: {
     placement: {
@@ -125,7 +125,7 @@ export const DrawerStyles = tv({
     },
     visible: {
       true: {
-        content: 'block',
+        content: 'flex',
       },
       false: {
         content: 'hidden',
