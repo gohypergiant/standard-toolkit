@@ -115,7 +115,7 @@ export const shadowsElevationRaised =
   '0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14)';
 export const fontPrimary = '"Roboto Flex", sans-serif';
 export const fontDisplay = '"Roboto Mono", monospace';
-export const iconsSizeL = 24;
-export const iconsSizeM = 20;
-export const iconsSizeS = 16;
-export const iconsSizeXs = 12;
+export const iconSizeL = 24;
+export const iconSizeM = 20;
+export const iconSizeS = 16;
+export const iconSizeXs = 12;

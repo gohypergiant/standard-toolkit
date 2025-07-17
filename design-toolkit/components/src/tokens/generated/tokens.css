@@ -124,8 +124,8 @@
   --shadows-elevation-raised: 0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14);
   --font-primary: "Roboto Flex", sans-serif;
   --font-display: "Roboto Mono", monospace;
-  --icons-size-l: var(--spacing-xl);
-  --icons-size-m: 20px;
-  --icons-size-s: var(--spacing-l);
-  --icons-size-xs: var(--spacing-m);
+  --icon-size-l: var(--spacing-xl);
+  --icon-size-m: 20px;
+  --icon-size-s: var(--spacing-l);
+  --icon-size-xs: var(--spacing-m);
 }
