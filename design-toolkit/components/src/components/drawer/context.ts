@@ -12,6 +12,7 @@ import type {
   DrawerMode,
   DrawerPlacement,
   DrawerStateOption,
+  OnOpenChangeCallback,
 } from './types';
 
 const OPEN_STATE = 'open';
@@ -56,6 +57,10 @@ export function useDrawerLayoutState() {
   const [selectedMenuItem, setSelectedMenuItem] = useState<
     string | undefined
   >();
+  const [callbacks, setCallbacks] = useState<
+    Record<string, OnOpenChangeCallback>
+  >({});
+
   const selectMenuItem = useCallback((menuItemId: string) => {
     setSelectedMenuItem(menuItemId);
   }, []);
@@ -71,6 +76,8 @@ export function useDrawerLayoutState() {
         currentState === OPEN_STATE ? CLOSE_STATE : OPEN_STATE,
       ].join('-') as DrawerStateOption;
 
+      notifyOpenChange(drawerId, newStateOption);
+
       return {
         ...prev,
         [drawerId]: newStateOption,
@@ -78,27 +85,47 @@ export function useDrawerLayoutState() {
     });
   }, []);
 
-  const openDrawer = useCallback((drawerId: DrawerId) => {
-    setDrawerStates((prev) => {
-      const [mode] = (prev[drawerId] || DEFAULT_STATE_OPTION).split('-');
+  const notifyOpenChange = useCallback(
+    (drawerId: string, nextState: DrawerStateOption) => {
+      callbacks[drawerId]?.(nextState.includes('open'));
+    },
+    [callbacks],
+  );
 
-      return {
-        ...prev,
-        [drawerId]: `${mode}-open` as DrawerStateOption,
-      };
-    });
-  }, []);
+  const openDrawer = useCallback(
+    (drawerId: DrawerId) => {
+      setDrawerStates((prev) => {
+        const [mode] = (prev[drawerId] || DEFAULT_STATE_OPTION).split('-');
+        const nextState = `${mode}-open` as DrawerStateOption;
 
-  const closeDrawer = useCallback((drawerId: DrawerId) => {
-    setDrawerStates((prev) => {
-      const [mode] = (prev[drawerId] || DEFAULT_STATE_OPTION).split('-');
+        notifyOpenChange(drawerId, nextState);
 
-      return {
-        ...prev,
-        [drawerId]: `${mode}-${CLOSE_STATE}` as DrawerStateOption,
-      };
-    });
-  }, []);
+        return {
+          ...prev,
+          [drawerId]: nextState,
+        };
+      });
+    },
+    [notifyOpenChange],
+  );
+
+  const closeDrawer = useCallback(
+    (drawerId: DrawerId) => {
+      setDrawerStates((prev) => {
+        const [mode] = (prev[drawerId] || DEFAULT_STATE_OPTION).split('-');
+        const nextState = `${mode}-${CLOSE_STATE}` as DrawerStateOption;
+
+        notifyOpenChange(drawerId, nextState);
+
+        return {
+          ...prev,
+          [drawerId]: nextState,
+        };
+      });
+      setSelectedMenuItem('');
+    },
+    [notifyOpenChange],
+  );
 
   const setDrawerState = useCallback(
     (drawerId: DrawerId, state: DrawerStateOption) => {
@@ -123,20 +150,22 @@ export function useDrawerLayoutState() {
       placement: DrawerPlacement,
       isOpen: boolean,
       mode: DrawerMode,
+      onOpenChange?: (isOpen: boolean) => void,
     ) => {
+      setCallbacks((prev) => ({
+        ...prev,
+        [drawerId]: onOpenChange,
+      }));
       setDrawerPlacements((prev) => ({
         ...prev,
         [drawerId]: placement,
       }));
 
       setDrawerStates((prev) => {
-        if (!prev[drawerId]) {
-          return {
-            ...prev,
-            [drawerId]: `${mode || 'over'}-${isOpen ? OPEN_STATE : CLOSE_STATE}`,
-          };
-        }
-        return prev;
+        return {
+          ...prev,
+          [drawerId]: `${mode || 'over'}-${isOpen ? OPEN_STATE : CLOSE_STATE}`,
+        };
       });
     },
     [],
@@ -151,9 +180,9 @@ export function useDrawerLayoutState() {
 
   const isDrawerVisible = useCallback(
     (drawerId: string) => {
-      return !!drawerPlacements[drawerId];
+      return drawerStates[drawerId]?.includes('open') ?? false;
     },
-    [drawerPlacements],
+    [drawerStates],
   );
 
   const contextValue = useMemo<DrawerLayoutContextValue>(

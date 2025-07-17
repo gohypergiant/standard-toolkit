@@ -24,12 +24,16 @@ export interface DrawerProps extends ContainerProps {
   mode?: DrawerMode;
   hotKey?: string;
   isOpen?: boolean;
-  onOpenChange?: (isOpen: boolean) => void;
+  onOpenChange?: OnOpenChangeCallback
 }
 
 export interface DrawerContentProps extends ContainerProps {}
 
-export interface DrawerMenuProps extends ContainerProps {}
+type DrawerMenuPosition = 'start' | 'middle' | 'end';
+
+export interface DrawerMenuProps extends ContainerProps {
+  position?: DrawerMenuPosition;
+}
 export interface DrawerMainProps extends ContainerProps {}
 export interface DrawerCloseProps extends ContainerProps {}
 
@@ -49,6 +53,8 @@ export interface UseDrawerToggleProps {
   drawerId: DrawerId;
 }
 
+export type OnOpenChangeCallback = ((isOpen: boolean) => void) | undefined
+
 export interface DrawerLayoutContextValue {
   drawerStates: Record<DrawerId, DrawerStateOption>;
   toggleDrawer: (drawerId: DrawerId) => void;
@@ -61,6 +67,7 @@ export interface DrawerLayoutContextValue {
     placement: DrawerPlacement,
     isOpen: boolean,
     mode: DrawerMode,
+    onOpenChange?: OnOpenChangeCallback
   ) => void;
   getDrawerPlacement: (drawerId: DrawerId) => DrawerPlacement | undefined;
   isDrawerVisible: (drawerId: DrawerId) => boolean;

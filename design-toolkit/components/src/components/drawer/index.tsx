@@ -18,7 +18,7 @@ import {
   useDrawerLayoutContext,
   useDrawerLayoutState,
 } from './context';
-import { DrawerStyles } from './styles';
+import { DrawerMenuStyles, DrawerStyles } from './styles';
 import type {
   DrawerCloseProps,
   DrawerMainProps,
@@ -30,19 +30,10 @@ import type {
   DrawerTriggerProps,
 } from './types';
 
-const {
-  root,
-  main,
-  drawer,
-  menu,
-  trigger,
-  menuItem,
-  content,
-  panel,
-  header,
-  footer,
-  title,
-} = DrawerStyles();
+const { root, main, drawer, trigger, content, panel, header, footer, title } =
+  DrawerStyles();
+
+const { menu, menuItem } = DrawerMenuStyles();
 
 const DrawerRoot = ({ children, className, ...settings }: DrawerRootProps) => {
   const drawerState = useDrawerLayoutState();
@@ -87,6 +78,7 @@ export const Drawer = ({
   className,
   hotKey,
   children,
+  onOpenChange,
   ...props
 }: DrawerProps) => {
   const {
@@ -97,9 +89,16 @@ export const Drawer = ({
     selectedMenuItem,
     selectMenuItem,
   } = useDrawerLayoutContext();
+  const currentState = getDrawerState(id);
+  const visible = isDrawerVisible(id);
+  const [, drawerState] = (currentState || 'over-closed').split('-');
 
+  const menuChildren: ReactNode[] = [];
+  const contentChildren: ReactNode[] = [];
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: this should not run if onOpenChange changes
   useEffect(() => {
-    registerDrawer(id, placement, isOpen, mode);
+    registerDrawer(id, placement, isOpen, mode, onOpenChange);
   }, [id, placement, isOpen, mode, registerDrawer]);
 
   useEffect(() => {
@@ -111,13 +110,6 @@ export const Drawer = ({
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
   });
-
-  const currentState = getDrawerState(id);
-  const visible = isDrawerVisible(id);
-  const [, drawerState] = (currentState || 'over-closed').split('-');
-
-  const menuChildren: ReactNode[] = [];
-  const contentChildren: ReactNode[] = [];
 
   Children.forEach(children, (child) => {
     if (isValidElement(child) && child.type === DrawerMenu) {
@@ -152,7 +144,7 @@ export const Drawer = ({
 };
 
 const DrawerMain = ({ children, className, ...props }: DrawerMainProps) => (
-  <main className={main()} {...props}>
+  <main className={main({ className })} {...props}>
     {children}
   </main>
 );
@@ -162,7 +154,7 @@ const DrawerContent = ({
   visible,
   children,
 }: { visible: boolean; children: ReactNode }) => {
-  return <div className={content({ visible})}>{children}</div>;
+  return <div className={content({ visible })}>{children}</div>;
 };
 DrawerContent.displayName = 'Drawer.Content';
 
@@ -175,7 +167,7 @@ const DrawerMenu = ({ children, className, ...props }: DrawerMenuProps) => {
           placement === 'top' || placement === 'bottom'
             ? 'horizontal'
             : 'vertical',
-        placement,
+        drawer: placement,
         className,
       })}
       {...props}
@@ -201,19 +193,20 @@ const DrawerMenuItem = ({
     selectMenuItem(id);
   };
   return (
-    <button
+    <Button
       {...props}
-      className={menuItem({ placement, className })}
+      variant='flat'
+      className={menuItem({ drawer: placement, className })}
       data-selected={isSelected}
-      onClick={handleClick}
+      size='small'
+      onPress={handleClick}
       type='button'
-      role='tab'
       aria-selected={isSelected}
       aria-controls={`panel-${id}`}
       id={`tab-${id}`}
     >
       {children}
-    </button>
+    </Button>
   );
 };
 DrawerMenuItem.displayName = 'Drawer.MenuItem';

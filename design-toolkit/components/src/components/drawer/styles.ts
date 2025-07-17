@@ -64,24 +64,8 @@ export const DrawerStyles = tv({
       'data-[drawer-state*="open"]:block',
       'data-[drawer-state*="xl"]:block',
     ],
-    menu: '',
     trigger:
       'fg-default-dark hover:fg-default-light cursor-pointer hover:bg-surface-overlay',
-    menuItem: [
-      'flex flex-col items-center justify-center',
-      'fg-default-dark cursor-pointer p-s outline-none',
-      'rounded-medium group-dtk-orientation-horizontal:rounded-small group-dtk-orientation-horizontal:rounded-b-none',
-      'group-dtk-orientation-horizontal:border-static-light group-dtk-orientation-horizontal:border-b',
-      'group-dtk-orientation-vertical:border group-dtk-orientation-vertical:border-transparent',
-      //hover
-      'hover:fg-default-light hover:group-dtk-orientation-horizontal:border-interactive-hover',
-      //selected
-      'data-[selected=true]:fg-highlight data-[selected=true]:bg-highlight-subtle data-[selected=true]:group-dtk-orientation-horizontal:border-highlight',
-      //focused
-      'focus:fg-default-light focus:group-dtk-orientation-horizontal:border-interactive-hover',
-      //disabled
-      'disabled:fg-disabled disabled:cursor-not-allowed disabled:group-dtk-orientation-horizontal:border-interactive-disabled',
-    ],
     content: 'p-l',
     panel: 'text-default-light',
     header: 'mb-s flex flex-row items-center justify-between',
@@ -101,7 +85,6 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[bottom*=closed]/layout:[&>*:not(nav)]:hidden',
         ],
-        menu: '-translate-y-[var(--drawer-size-icons)] rounded-b-none',
       },
       left: {
         drawer: [
@@ -114,7 +97,6 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[left*=closed]/layout:[&>*:not(nav,[data-drawer-tabs])]:hidden',
         ],
-        menu: ['left-full rounded-l-none'],
       },
       right: {
         drawer: [
@@ -127,7 +109,6 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[right*=closed]/layout:[&>*:not(nav)]:hidden',
         ],
-        menu: '-left-[var(--drawer-size-icons)] rounded-r-none',
       },
       top: {
         drawer: [
@@ -140,15 +121,6 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[top*=closed]/layout:[&>*:not(nav)]:hidden',
         ],
-        menu: 'bottom-0 translate-y-[var(--drawer-size-icons)] rounded-t-none',
-      },
-    },
-    orientation: {
-      horizontal: {
-        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--drawer-size-icons)] rounded-large bg-surface-default px-s',
-      },
-      vertical: {
-        menu: 'absolute mt-xxl w-[var(--drawer-size-icons)] rounded-large bg-surface-default py-s',
       },
     },
     visible: {
@@ -160,34 +132,108 @@ export const DrawerStyles = tv({
       },
     },
   },
+});
+
+export const DrawerMenuStyles = tv({
+  slots: {
+    menu: '',
+    menuItem: [
+      'flex flex-col items-center justify-center',
+      'fg-default-dark cursor-pointer p-s outline-none',
+      'rounded-medium group-dtk-orientation-horizontal:rounded-small group-dtk-orientation-horizontal:rounded-b-none',
+      'group-dtk-orientation-horizontal:border-static-light group-dtk-orientation-horizontal:border-b',
+      'group-dtk-orientation-vertical:border group-dtk-orientation-vertical:border-transparent',
+      //hover
+      'hover:fg-default-light hover:!bg-transparent hover:group-dtk-orientation-horizontal:border-interactive-hover',
+      //selected
+      'data-[selected=true]:fg-highlight data-[selected=true]:bg-highlight-subtle data-[selected=true]:group-dtk-orientation-horizontal:border-highlight',
+      //focused
+      'focus:fg-default-light focus:group-dtk-orientation-horizontal:border-interactive-hover',
+      //disabled
+      'disabled:fg-disabled disabled:cursor-not-allowed disabled:group-dtk-orientation-horizontal:border-interactive-disabled',
+    ],
+  },
+  variants: {
+    drawer: {
+      bottom: {
+        menu: '-translate-y-[var(--drawer-size-icons)] rounded-b-none',
+      },
+      left: {
+        menu: ['left-full rounded-l-none'],
+      },
+      right: {
+        menu: '-left-[var(--drawer-size-icons)] rounded-r-none',
+      },
+      top: {
+        menu: 'bottom-0 translate-y-[var(--drawer-size-icons)] rounded-t-none',
+      },
+    },
+    orientation: {
+      horizontal: {
+        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--drawer-size-icons)] rounded-large bg-surface-default px-s',
+      },
+      vertical: {
+        menu: 'absolute w-[var(--drawer-size-icons)] rounded-large bg-surface-default py-s',
+      },
+    },
+    position: {
+      start: {},
+      middle: {},
+      end: {},
+    },
+  },
   compoundVariants: [
     {
       orientation: 'vertical',
-      placement: 'left',
+      position: 'start',
+      class: {
+        menu: '-translate-y-1/8 top-1/8',
+      },
+    },
+    {
+      orientation: 'vertical',
+      position: 'middle',
+      class: {
+        menu: '-translate-y-1/2 top-1/2',
+      },
+    },
+    {
+      orientation: 'vertical',
+      position: 'end',
+      class: {
+        menu: '-translate-y-7/8 top-7/8',
+      },
+    },
+    {
+      orientation: 'vertical',
+      drawer: 'left',
       class: {
         menu: 'flex flex-col gap-xs rounded-l-none px-xs py-m',
       },
     },
     {
       orientation: 'vertical',
-      placement: 'right',
+      drawer: 'right',
       class: {
         menu: 'flex flex-col gap-s rounded-r-none py-m',
       },
     },
     {
       orientation: 'horizontal',
-      placement: 'top',
+      drawer: 'top',
       class: {
         menu: 'flex flex-row gap-s rounded-t-none px-m py-xs',
       },
     },
     {
       orientation: 'horizontal',
-      placement: 'bottom',
+      drawer: 'bottom',
       class: {
         menu: 'flex flex-row gap-s rounded-b-none px-m py-xs',
       },
     },
   ],
+  defaultVariants: {
+    position: 'middle',
+  }
 });

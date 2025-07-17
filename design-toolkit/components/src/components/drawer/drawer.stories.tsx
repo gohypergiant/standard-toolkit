@@ -6,10 +6,16 @@ import {
   Placeholder,
 } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { CSSProperties, PropsWithChildren } from 'react';
+import {
+  type CSSProperties,
+  type PropsWithChildren,
+  useCallback,
+  useState,
+} from 'react';
+import { Button } from '../button';
 import { Icon } from '../icon';
-import { Drawer } from './index';
 import { NavigationStack } from '../navigation-stack';
+import { Drawer } from './index';
 
 const meta: Meta<typeof Drawer.Root> = {
   title: 'Components/Drawer',
@@ -204,11 +210,10 @@ export const FullLayout: Story = {
   },
 };
 
-// //Position menu start middle end - default to start
 export const WithTabs: Story = {
   render: () => {
     return (
-      <Drawer.Root className="bg-default-dark">
+      <Drawer.Root className='bg-default-dark'>
         <Drawer.Main>
           <div className='text-default-light'>Left Drawer Content</div>
         </Drawer.Main>
@@ -234,28 +239,62 @@ export const WithTabs: Story = {
   },
 };
 
-export const WithNavigationStack: Story = {
+export const ControlledOpen: Story = {
   render: () => {
+    const [isOpen, setIsOpen] = useState(true);
+    const handleOpenChange = useCallback((isOpen: boolean) => {
+      setIsOpen(isOpen);
+    }, []);
     return (
-      <Drawer.Root className='bg-default-light'>
-        <Drawer id="settings" placement='left' mode='over'>
+      <Drawer.Root className='bg-default-dark'>
+        <Drawer.Main className='flex flex-col gap-m p-l'>
+          <h1 className='text-header-l '>Left Drawer Content</h1>
+          <Button variant='outline' onPress={() => handleOpenChange(!isOpen)}>
+            {isOpen ? 'Close' : 'Open'}
+          </Button>
+        </Drawer.Main>
+        <Drawer
+          isOpen={isOpen}
+          onOpenChange={handleOpenChange}
+          id='settings'
+          placement='left'
+          mode='push'
+        >
+          <Drawer.Header>Title</Drawer.Header>
           <Drawer.Menu>
-            <Drawer.MenuItem id="a">
-
-              <Icon>
-                <Placeholder />
-              </Icon>
-            </Drawer.MenuItem>
-            <Drawer.MenuItem id="b">
-
+            <Drawer.MenuItem id=''>
               <Icon>
                 <Placeholder />
               </Icon>
             </Drawer.MenuItem>
           </Drawer.Menu>
-          <Drawer.Panel id="a">
-            <NavigationStack defaultViewId="a">
-              <NavigationStack.View id="a">
+          <Drawer.Panel id=''>A Content</Drawer.Panel>
+        </Drawer>
+      </Drawer.Root>
+    );
+  },
+};
+
+export const WithNavigationStack: Story = {
+  render: () => {
+    return (
+      <Drawer.Root className='bg-default-light'>
+        <Drawer id='settings' placement='left' mode='over'>
+          <Drawer.Menu>
+            <Drawer.MenuItem id='a'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.MenuItem>
+            <Drawer.MenuItem id='b'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.MenuItem>
+          </Drawer.Menu>
+          <Drawer.Panel id='a'>
+            <NavigationStack defaultViewId='a'>
+              <NavigationStack.View id='a'>
                 <Drawer.Header>
                   <NavigationStack.Header>
                     <NavigationStack.Title>Parent A</NavigationStack.Title>
@@ -263,23 +302,27 @@ export const WithNavigationStack: Story = {
                 </Drawer.Header>
                 <NavigationStack.Content>a content</NavigationStack.Content>
                 <Drawer.Footer>
-                  <NavigationStack.NavigationButton childId="child-a">View Child</NavigationStack.NavigationButton>
+                  <NavigationStack.NavigationButton childId='child-a'>
+                    View Child
+                  </NavigationStack.NavigationButton>
                 </Drawer.Footer>
               </NavigationStack.View>
 
-              <NavigationStack.View id="child-a">
+              <NavigationStack.View id='child-a'>
                 <NavigationStack.Header>
                   <NavigationStack.Title>Child A</NavigationStack.Title>
                   <Drawer.Close />
                 </NavigationStack.Header>
-                <NavigationStack.Content>a child content</NavigationStack.Content>
+                <NavigationStack.Content>
+                  a child content
+                </NavigationStack.Content>
               </NavigationStack.View>
             </NavigationStack>
           </Drawer.Panel>
 
-          <Drawer.Panel id="b" className="h-full p-0">
-            <NavigationStack defaultViewId="b">
-              <NavigationStack.View id="b">
+          <Drawer.Panel id='b' className='h-full p-0'>
+            <NavigationStack defaultViewId='b'>
+              <NavigationStack.View id='b'>
                 <Drawer.Header>
                   <NavigationStack.Header>
                     <NavigationStack.Title>Parent B</NavigationStack.Title>
@@ -287,16 +330,20 @@ export const WithNavigationStack: Story = {
                 </Drawer.Header>
                 <NavigationStack.Content>b content</NavigationStack.Content>
                 <Drawer.Footer>
-                  <NavigationStack.NavigationButton childId="child-b">View Child</NavigationStack.NavigationButton>
+                  <NavigationStack.NavigationButton childId='child-b'>
+                    View Child
+                  </NavigationStack.NavigationButton>
                 </Drawer.Footer>
               </NavigationStack.View>
 
-              <NavigationStack.View id="child-b">
+              <NavigationStack.View id='child-b'>
                 <NavigationStack.Header>
                   <NavigationStack.Title>Child B</NavigationStack.Title>
                   <Drawer.Close />
                 </NavigationStack.Header>
-                <NavigationStack.Content>b child content</NavigationStack.Content>
+                <NavigationStack.Content>
+                  b child content
+                </NavigationStack.Content>
               </NavigationStack.View>
             </NavigationStack>
           </Drawer.Panel>
