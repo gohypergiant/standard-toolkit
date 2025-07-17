@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 2.3.1
+
+### Patch Changes
+
+- 32b4176: Fixes incorrect pluralization of icons css vars
+
 ## 2.3.0
 
 ### Minor Changes
