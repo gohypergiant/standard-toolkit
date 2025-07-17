@@ -17,7 +17,7 @@ import ArrowDown from '@accelint/icons/arrow-down';
 import ArrowUp from '@accelint/icons/arrow-up';
 import ChevronLeft from '@accelint/icons/chevron-left';
 import ChevronRight from '@accelint/icons/chevron-right';
-import Kebab from '@accelint/icons/kebab';
+import * as KebabRaw from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
@@ -36,7 +36,6 @@ import { Input as AriaInput } from 'react-aria-components';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
-// import { IconButton } from '../icon-button';
 import { ActionsCell } from './actions-cell';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -46,6 +45,12 @@ import { TableRow } from './table-row';
 import type { TableProps } from './types';
 
 const MAX_VISIBLE_PAGES = 5;
+
+const Kebab = () => {
+  return (
+    <KebabRaw.default className=' text-default-light border-2 border-advisory' />
+  );
+};
 
 const range = (lo: number, hi: number) =>
   Array.from({ length: hi - lo }, (_, i) => i + lo);
@@ -95,6 +100,7 @@ export function Table<T extends { id: string | number }>({
   persistRowActionMenu = false,
   persistNumerals = false,
   pageSize = 10,
+  enableSorting = true,
   ...props
 }: TableProps<T>) {
   const {
@@ -207,21 +213,27 @@ export function Table<T extends { id: string | number }>({
                     },
                   ]
                 : []),
-
               {
-                label: 'Move rows up',
+                label: 'Move row up',
                 onAction: () => {
-                  const prevRowId = dataIds[row.index - 1];
-                  if (row.index > 0 && prevRowId) {
+                  const rowIndex = dataIds.indexOf(row.id);
+                  const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
+                  if (rowIndex > 0 && prevRowId) {
                     moveBefore?.(prevRowId, [row.id]);
                   }
                 },
               },
               {
-                label: 'Move rows down',
+                label: 'Move row down',
                 onAction: () => {
-                  const nextRowId = dataIds[row.index + 1];
-                  if (row.index < dataIds.length - 1 && nextRowId) {
+                  const rowIndex = dataIds.indexOf(row.id);
+                  const nextRowId =
+                    dataIds[
+                      rowIndex < dataIds.length - 1
+                        ? rowIndex + 1
+                        : dataIds.length - 1
+                    ];
+                  if (rowIndex < dataIds.length - 1 && nextRowId) {
                     moveAfter?.(nextRowId, [row.id]);
                   }
                 },
@@ -331,7 +343,7 @@ export function Table<T extends { id: string | number }>({
   } = useReactTable<T>({
     data: data,
     columns,
-    enableSorting: true,
+    enableSorting,
     initialState: {
       pagination: { pageIndex: 0, pageSize },
     },
@@ -407,6 +419,7 @@ export function Table<T extends { id: string | number }>({
             {getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  console.log({ header });
                   return (
                     <HeaderCell
                       key={header.id}
@@ -422,67 +435,63 @@ export function Table<T extends { id: string | number }>({
                               header.column.columnDef.header,
                               header.getContext(),
                             )}
-                        {['numeral', 'kebab', 'selection'].includes(
-                          header.column.id,
-                        ) ? null : (
-                          <ActionsCell
-                            persistent={!!header.column.getIsSorted()}
-                            actions={[
-                              {
-                                label: 'Move column left',
-                                onAction: () =>
-                                  header.column.getIsFirstColumn('center')
-                                    ? undefined
-                                    : moveColumnLeft(header.column.getIndex()),
-                              },
-                              {
-                                label: 'Move column right',
-                                onAction: () =>
-                                  header.column.getIsLastColumn('center')
-                                    ? undefined
-                                    : moveColumnRight(header.column.getIndex()),
-                              },
-                              ...(header.column.getIsSorted() === 'asc'
-                                ? [
-                                    {
-                                      label: 'Clear sort',
-                                      onAction: () =>
-                                        header.column.clearSorting(),
-                                    },
-                                  ]
-                                : [
-                                    {
-                                      label: 'Sort ascending',
-                                      onAction: () =>
-                                        header.column.toggleSorting(false),
-                                    },
-                                  ]),
-                              ...(header.column.getIsSorted() === 'desc'
-                                ? [
-                                    {
-                                      label: 'Clear sort',
-                                      onAction: () =>
-                                        header.column.clearSorting(),
-                                    },
-                                  ]
-                                : [
-                                    {
-                                      label: 'Sort descending',
-                                      onAction: () =>
-                                        header.column.toggleSorting(true),
-                                    },
-                                  ]),
-                            ]}
-                          >
-                            {header.column.getIsSorted() === 'asc' ? (
-                              <ArrowUp />
-                            ) : header.column.getIsSorted() === 'desc' ? (
-                              <ArrowDown />
-                            ) : (
-                              <Kebab />
-                            )}
-                          </ActionsCell>
-                        )}
+                        <ActionsCell
+                          persistent={!!header.column.getIsSorted()}
+                          actions={[
+                            {
+                              label: 'Move column left',
+                              onAction: () =>
+                                header.column.getIsFirstColumn('center')
+                                  ? undefined
+                                  : moveColumnLeft(header.column.getIndex()),
+                            },
+                            {
+                              label: 'Move column right',
+                              onAction: () =>
+                                header.column.getIsLastColumn('center')
+                                  ? undefined
+                                  : moveColumnRight(header.column.getIndex()),
+                            },
+                            ...(header.column.getIsSorted() === 'asc'
+                              ? [
+                                  {
+                                    label: 'Clear sort',
+                                    onAction: () =>
+                                      header.column.clearSorting(),
+                                  },
+                                ]
+                              : [
+                                  {
+                                    label: 'Sort ascending',
+                                    onAction: () =>
+                                      header.column.toggleSorting(false),
+                                  },
+                                ]),
+                            ...(header.column.getIsSorted() === 'desc'
+                              ? [
+                                  {
+                                    label: 'Clear sort',
+                                    onAction: () =>
+                                      header.column.clearSorting(),
+                                  },
+                                ]
+                              : [
+                                  {
+                                    label: 'Sort descending',
+                                    onAction: () =>
+                                      header.column.toggleSorting(true),
+                                  },
+                                ]),
+                          ]}
+                        >
+                          {header.column.getIsSorted() === 'asc' ? (
+                            <ArrowUp />
+                          ) : header.column.getIsSorted() === 'desc' ? (
+                            <ArrowDown />
+                          ) : (
+                            <Kebab />
+                          )}
+                        </ActionsCell>
                       </div>
                     </HeaderCell>
                   );

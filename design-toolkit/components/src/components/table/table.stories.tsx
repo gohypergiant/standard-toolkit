@@ -114,6 +114,7 @@ const columns = [
   columnHelper.accessor('firstName', {
     id: 'firstName',
     cell: (info) => info.getValue(),
+    header: () => <span>First Name</span>,
   }),
   columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
@@ -122,8 +123,8 @@ const columns = [
   }),
   columnHelper.accessor('age', {
     id: 'age',
-    header: () => 'Age',
     cell: (info) => info.renderValue(),
+    header: () => 'Age',
   }),
   columnHelper.accessor('visits', {
     id: 'visits',
@@ -150,6 +151,7 @@ const meta = {
     persistRowActionMenu: true,
     persistNumerals: true,
     pageSize: 5,
+    enableSorting: true,
   },
   argTypes: {
     kebabPosition: {
@@ -170,5 +172,18 @@ export const Default: Story = {
     kebabPosition: 'right',
   },
 
+  render: (args) => <Table {...args} />,
+};
+
+export const SortableColumns: Story = {
+  args: {},
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Columns are sortable by clicking the headers. Click a header to sort ascending, descending, or clear sorting.',
+      },
+    },
+  },
   render: (args) => <Table {...args} />,
 };
