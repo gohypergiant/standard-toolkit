@@ -7,10 +7,9 @@ import {
 } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties, PropsWithChildren } from 'react';
-import { Button } from '../button';
 import { Icon } from '../icon';
-import { Tabs } from '../tabs';
 import { Drawer } from './index';
+import { NavigationStack } from '../navigation-stack';
 
 const meta: Meta<typeof Drawer.Root> = {
   title: 'Components/Drawer',
@@ -77,161 +76,230 @@ const extraItemsY = Array.from({ length: 6 }, (_, index) => (
   </span>
 ));
 
-// export const FullLayout: Story = {
-//   render: () => {
-//     return (
-//       <Drawer.Root extend='left and right'>
-//         <Drawer
-//           id='header'
-//           className='bg-[rgba(200,50,0,0.5)]'
-//           anchor='top'
-//           mode='push'
-//           hotKey='w'
-//         >
-//           <Drawer.Menu>
-//             <Drawer.Trigger for='header'>
-//               <TopIcon />
-//             </Drawer.Trigger>
+export const FullLayout: Story = {
+  render: () => {
+    return (
+      <Drawer.Root extend='left and right'>
+        <Drawer
+          id='header'
+          className='bg-[rgba(200,50,0,0.5)]'
+          placement='top'
+          mode='push'
+          hotKey='w'
+        >
+          <Drawer.Menu>
+            <Drawer.Trigger for='header'>
+              <TopIcon />
+            </Drawer.Trigger>
 
-//             {extraItemsY}
-//           </Drawer.Menu>
+            {extraItemsY}
+          </Drawer.Menu>
 
-//           <PanelTitle>Top</PanelTitle>
-//           {/* {LIPSUM} */}
-//         </Drawer>
+          <PanelTitle>Top</PanelTitle>
+          {/* {LIPSUM} */}
+        </Drawer>
 
-//         <Drawer.Main>
-//           <div
-//             className='flex h-full items-center justify-center bg-surface-overlay'
-//             style={
-//               {
-//                 '--single': '40px',
-//                 '--double': 'calc(2 * var(--single))',
-//                 backgroundImage: `
-//             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
-//             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
-//           `,
-//                 backgroundSize: 'var(--double) var(--double)',
-//                 backgroundPosition:
-//                   'center, calc(50% + var(--single)) calc(50% + var(--single))',
-//               } as CSSProperties
-//             }
-//           >
-//             <div className='flex w-[23em] flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl drop-shadow-[0_0_150px_rgba(255,255,255,0.4)] [&>*]:my-s'>
-//               <p>This page is for demo purposes only!</p>
-//               <p>Key-bindings for toggles:</p>
+        <Drawer.Main>
+          <div
+            className='flex h-full items-center justify-center bg-surface-overlay'
+            style={
+              {
+                '--single': '40px',
+                '--double': 'calc(2 * var(--single))',
+                backgroundImage: `
+            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
+            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
+          `,
+                backgroundSize: 'var(--double) var(--double)',
+                backgroundPosition:
+                  'center, calc(50% + var(--single)) calc(50% + var(--single))',
+              } as CSSProperties
+            }
+          >
+            <div className='flex w-[23em] flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl drop-shadow-[0_0_150px_rgba(255,255,255,0.4)] [&>*]:my-s'>
+              <p>This page is for demo purposes only!</p>
+              <p>Key-bindings for toggles:</p>
 
-//               <ul className='[&_kbd]:mr-m [&_kbd]:inline-block [&_kbd]:w-[4em] [&_kbd]:text-right'>
-//                 <li>
-//                   <kbd>w</kbd>
-//                   open/closed "top" panel
-//                 </li>
+              <ul className='[&_kbd]:mr-m [&_kbd]:inline-block [&_kbd]:w-[4em] [&_kbd]:text-right'>
+                <li>
+                  <kbd>w</kbd>
+                  open/closed "top" panel
+                </li>
 
-//                 <li>
-//                   <kbd>s</kbd>
-//                   open/closed "bottom" panel
-//                 </li>
+                <li>
+                  <kbd>s</kbd>
+                  open/closed "bottom" panel
+                </li>
 
-//                 <li>
-//                   <kbd>a</kbd>
-//                   open/closed "left" panel
-//                 </li>
+                <li>
+                  <kbd>a</kbd>
+                  open/closed "left" panel
+                </li>
 
-//                 <li>
-//                   <kbd>d</kbd>
-//                   open/closed "right" panel
-//                 </li>
-//               </ul>
-//             </div>
-//           </div>
-//         </Drawer.Main>
+                <li>
+                  <kbd>d</kbd>
+                  open/closed "right" panel
+                </li>
+              </ul>
+            </div>
+          </div>
+        </Drawer.Main>
 
-//         <Drawer
-//           id='footer'
-//           className='bg-[rgba(50,200,0,0.5)]'
-//           anchor='bottom'
-//           mode='push'
-//           hotKey='s'
-//         >
-//           <Drawer.Menu>
-//             <Drawer.Trigger for='footer'>
-//               <BottomIcon />
-//             </Drawer.Trigger>
+        <Drawer
+          id='footer'
+          className='bg-[rgba(50,200,0,0.5)]'
+          placement='bottom'
+          mode='push'
+          hotKey='s'
+        >
+          <Drawer.Menu>
+            <Drawer.Trigger for='footer'>
+              <BottomIcon />
+            </Drawer.Trigger>
 
-//             {extraItemsY}
-//           </Drawer.Menu>
+            {extraItemsY}
+          </Drawer.Menu>
 
-//           <PanelTitle>Bottom</PanelTitle>
-//           {/* {LIPSUM} */}
-//         </Drawer>
+          <PanelTitle>Bottom</PanelTitle>
+          {/* {LIPSUM} */}
+        </Drawer>
 
-//         <Drawer
-//           id='settings'
-//           className='bg-[rgba(0,150,200,0.5)]'
-//           anchor='left'
-//           mode='push'
-//           hotKey='a'
-//         >
-//           <Drawer.Menu>
-//             <Drawer.Trigger for='settings'>
-//               <LeftIcon />
-//             </Drawer.Trigger>
+        <Drawer
+          id='settings'
+          className='bg-[rgba(0,150,200,0.5)]'
+          placement='left'
+          mode='push'
+          hotKey='a'
+        >
+          <Drawer.Menu>
+            <Drawer.Trigger for='settings'>
+              <LeftIcon />
+            </Drawer.Trigger>
 
-//             {extraItemsX}
-//           </Drawer.Menu>
+            {extraItemsX}
+          </Drawer.Menu>
 
-//           <PanelTitle>Left</PanelTitle>
-//         </Drawer>
+          <PanelTitle>Left</PanelTitle>
+        </Drawer>
 
-//         <Drawer
-//           id='sidebar'
-//           className='bg-[rgba(200,50,200,0.5)]'
-//           anchor='right'
-//           mode='push'
-//           hotKey='d'
-//         >
-//           <Drawer.Menu>
-//             <Drawer.Trigger for='sidebar'>
-//               <RightIcon />
-//             </Drawer.Trigger>
+        <Drawer
+          id='sidebar'
+          className='bg-[rgba(200,50,200,0.5)]'
+          placement='right'
+          mode='push'
+          hotKey='d'
+        >
+          <Drawer.Menu>
+            <Drawer.Trigger for='sidebar'>
+              <RightIcon />
+            </Drawer.Trigger>
 
-//             {extraItemsX}
-//           </Drawer.Menu>
+            {extraItemsX}
+          </Drawer.Menu>
 
-//           <PanelTitle>Right</PanelTitle>
-//         </Drawer>
-//       </Drawer.Root>
-//     );
-//   },
-// };
+          <PanelTitle>Right</PanelTitle>
+        </Drawer>
+      </Drawer.Root>
+    );
+  },
+};
 
 // //Position menu start middle end - default to start
 export const WithTabs: Story = {
   render: () => {
     return (
-      <Drawer.Root>
+      <Drawer.Root className="bg-default-dark">
         <Drawer.Main>
           <div className='text-default-light'>Left Drawer Content</div>
         </Drawer.Main>
-        <Drawer id='settings' anchor='left' mode='over'>
-          <div className='flex flex-row justify-between'>
-            <h3 className='text-default-light'>Title</h3>
-            <Drawer.Close for='settings'>
-              <Button>Close</Button>
-            </Drawer.Close>
-          </div>
-          <Tabs orientation='vertical' data-drawer-tabs='true'>
-            <Drawer.Menu>
-              <Drawer.Open for='settings'>
-                <Tabs.List drawer='left'>
-                  <Tabs.Tab id='a'>a</Tabs.Tab>
-                  <Tabs.Tab id='b'>b</Tabs.Tab>
-                  <Tabs.Tab id='c'>c</Tabs.Tab>
-                </Tabs.List>
-              </Drawer.Open>
-            </Drawer.Menu>
-            <Tabs.Panel id='b'>B Content</Tabs.Panel>
-          </Tabs>
+        <Drawer id='settings' placement='left' mode='over'>
+          <Drawer.Header>Title</Drawer.Header>
+          <Drawer.Menu>
+            <Drawer.MenuItem id='a'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.MenuItem>
+            <Drawer.MenuItem id='b'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.MenuItem>
+          </Drawer.Menu>
+          <Drawer.Panel id='a'>A Content</Drawer.Panel>
+          <Drawer.Panel id='b'>B Content</Drawer.Panel>
+        </Drawer>
+      </Drawer.Root>
+    );
+  },
+};
+
+export const WithNavigationStack: Story = {
+  render: () => {
+    return (
+      <Drawer.Root className='bg-default-light'>
+        <Drawer id="settings" placement='left' mode='over'>
+          <Drawer.Menu>
+            <Drawer.MenuItem id="a">
+
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.MenuItem>
+            <Drawer.MenuItem id="b">
+
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.MenuItem>
+          </Drawer.Menu>
+          <Drawer.Panel id="a">
+            <NavigationStack defaultViewId="a">
+              <NavigationStack.View id="a">
+                <Drawer.Header>
+                  <NavigationStack.Header>
+                    <NavigationStack.Title>Parent A</NavigationStack.Title>
+                  </NavigationStack.Header>
+                </Drawer.Header>
+                <NavigationStack.Content>a content</NavigationStack.Content>
+                <Drawer.Footer>
+                  <NavigationStack.NavigationButton childId="child-a">View Child</NavigationStack.NavigationButton>
+                </Drawer.Footer>
+              </NavigationStack.View>
+
+              <NavigationStack.View id="child-a">
+                <NavigationStack.Header>
+                  <NavigationStack.Title>Child A</NavigationStack.Title>
+                  <Drawer.Close />
+                </NavigationStack.Header>
+                <NavigationStack.Content>a child content</NavigationStack.Content>
+              </NavigationStack.View>
+            </NavigationStack>
+          </Drawer.Panel>
+
+          <Drawer.Panel id="b" className="h-full p-0">
+            <NavigationStack defaultViewId="b">
+              <NavigationStack.View id="b">
+                <Drawer.Header>
+                  <NavigationStack.Header>
+                    <NavigationStack.Title>Parent B</NavigationStack.Title>
+                  </NavigationStack.Header>
+                </Drawer.Header>
+                <NavigationStack.Content>b content</NavigationStack.Content>
+                <Drawer.Footer>
+                  <NavigationStack.NavigationButton childId="child-b">View Child</NavigationStack.NavigationButton>
+                </Drawer.Footer>
+              </NavigationStack.View>
+
+              <NavigationStack.View id="child-b">
+                <NavigationStack.Header>
+                  <NavigationStack.Title>Child B</NavigationStack.Title>
+                  <Drawer.Close />
+                </NavigationStack.Header>
+                <NavigationStack.Content>b child content</NavigationStack.Content>
+              </NavigationStack.View>
+            </NavigationStack>
+          </Drawer.Panel>
         </Drawer>
       </Drawer.Root>
     );

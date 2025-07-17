@@ -1,67 +1,48 @@
 import type { PropsWithChildren } from 'react';
 
-export type DrawerAnchor = 'left' | 'right' | 'top' | 'bottom';
-export type DrawerId = string;
-/**
- * Props interface for child panel components
- *
- * Standard props shared by all panel components (Top, Bottom, Left, Right, Main).
- */
-export interface PanelProps extends PropsWithChildren {
-  /** Additional Tailwind CSS classes to apply to the panel */
-  className?: string;
-}
+interface ContainerProps extends PropsWithChildren<{ className?: string }> {}
 
-/**
- * Props interface for the Drawer.Root component
- */
+export type DrawerId = string;
+
+export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
+
 export interface DrawerRootProps
-  extends PropsWithChildren,
-    Partial<Record<DrawerAnchor, DrawerState>> {
-  /** Additional Tailwind CSS classes to apply to the layout container */
-  className?: string;
+  extends ContainerProps,
+    Partial<Record<DrawerPlacement, DrawerState>> {
   /**
-   * Which panels should extend to full container dimensions.
-   * Determines the overall layout structure and panel relationships.
+   * Which drawers should extend to full container dimensions.
+   * Determines the overall layout structure and drawer relationships in regard to space.
    *
    * @default 'left and right'
    */
   extend?: LayoutOption;
-
-  /**
-   * Menu presentation variant for navigation component.
-   *
-   * @default 'scroll'
-   */
-  menu?: MenuVariant;
-
-  /**
-   * Individual panel configurations as strings. Only specify panels you want to configure;
-   * omitted panels will use system defaults (over-closed).
-   *
-   * Format: "{mode}-{state}[ extend]"
-   * Examples: 'over-open', 'push-nav', 'over-closed extend'
-   */
-  panels?: Partial<Record<DrawerAnchor, DrawerStateOption>>;
 }
 
-export interface DrawerProps extends PropsWithChildren {
+export interface DrawerProps extends ContainerProps {
   id: DrawerId;
-  anchor: DrawerAnchor;
+  placement: DrawerPlacement;
   mode?: DrawerMode;
   hotKey?: string;
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
-  className?: string;
 }
 
-export interface DrawerMenuProps extends PropsWithChildren {
-  className?: string;
-}
+export interface DrawerContentProps extends ContainerProps {}
 
-export interface DrawerTriggerProps extends PropsWithChildren {
+export interface DrawerMenuProps extends ContainerProps {}
+export interface DrawerMainProps extends ContainerProps {}
+export interface DrawerCloseProps extends ContainerProps {}
+
+export interface DrawerTriggerProps extends ContainerProps {
   for: DrawerId;
-  className?: string;
+}
+
+export interface DrawerMenuItemProps extends ContainerProps {
+  id: DrawerId;
+}
+
+export interface DrawerPanelProps extends ContainerProps {
+  id: string;
 }
 
 export interface UseDrawerToggleProps {
@@ -77,23 +58,29 @@ export interface DrawerLayoutContextValue {
   getDrawerState: (drawerId: DrawerId) => DrawerStateOption | undefined;
   registerDrawer: (
     drawerId: DrawerId,
-    anchor: DrawerAnchor,
+    placement: DrawerPlacement,
     isOpen: boolean,
     mode: DrawerMode,
   ) => void;
-  getDrawerAnchor: (drawerId: DrawerId) => DrawerAnchor | undefined;
+  getDrawerPlacement: (drawerId: DrawerId) => DrawerPlacement | undefined;
+  isDrawerVisible: (drawerId: DrawerId) => boolean;
+  selectedMenuItem?: string;
+  selectMenuItem: (menuItem: string) => void;
 }
 
 export interface DrawerContextValue {
   drawerId: DrawerId;
-  anchor: DrawerAnchor;
+  placement: DrawerPlacement;
+  state?: string;
+  selectedMenuItem?: string;
+  selectMenuItem: (menuItemId: string) => void;
 }
 
 /**
- * Extended Panel Layout Configurations
+ * Extended Drawer Layout Configurations
  *
- * The layout system supports four different panel extension modes that determine
- * how panels are arranged and which panels extend to the full container dimensions.
+ * The layout system supports four different drawer extension modes that determine
+ * how drawers are arranged and which drawers extend to the full container dimensions.
  *
  * extend: "left and right"
  * ┌──────┬──────────┬───────┐
@@ -168,19 +155,19 @@ export type LayoutOption =
 export type MenuVariant = 'float' | 'scroll';
 
 /**
- * Panel Layout Modes
+ * Drawer Layout Modes
  *
- * Determines how panels interact with the main content area and overall layout:
+ * Determines how drawer interact with the main content area and overall layout:
  *
- * - `'over'`: Panel floats over the main content without affecting its layout or dimensions.
+ * - `'over'`: Drawer floats over the main content without affecting its layout or dimensions.
  *   Content remains at full width, panel appears as an overlay.
- * - `'push'`: Panel pushes the main content aside, reducing its available width.
+ * - `'push'`: Drawer pushes the main content aside, reducing its available width.
  *   Content area shrinks to accommodate the panel space.
  */
 export type DrawerMode = 'over' | 'push';
 
 /**
- * Panel Sizes
+ * Drawer Sizes
  *
  * Defines the available states for panel visibility and sizing:
  *

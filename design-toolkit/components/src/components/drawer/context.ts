@@ -6,11 +6,11 @@ import {
   useState,
 } from 'react';
 import type {
-  DrawerAnchor,
   DrawerContextValue,
   DrawerId,
   DrawerLayoutContextValue,
   DrawerMode,
+  DrawerPlacement,
   DrawerStateOption,
 } from './types';
 
@@ -50,9 +50,15 @@ export function useDrawerLayoutState() {
   const [drawerStates, setDrawerStates] = useState<
     Record<DrawerId, DrawerStateOption>
   >({});
-  const [drawerAnchors, setDrawerAnchors] = useState<
-    Record<DrawerId, DrawerAnchor>
+  const [drawerPlacements, setDrawerPlacements] = useState<
+    Record<DrawerId, DrawerPlacement>
   >({});
+  const [selectedMenuItem, setSelectedMenuItem] = useState<
+    string | undefined
+  >();
+  const selectMenuItem = useCallback((menuItemId: string) => {
+    setSelectedMenuItem(menuItemId);
+  }, []);
 
   const toggleDrawer = useCallback((drawerId: DrawerId) => {
     setDrawerStates((prev) => {
@@ -114,13 +120,13 @@ export function useDrawerLayoutState() {
   const registerDrawer = useCallback(
     (
       drawerId: DrawerId,
-      anchor: DrawerAnchor,
+      placement: DrawerPlacement,
       isOpen: boolean,
       mode: DrawerMode,
     ) => {
-      setDrawerAnchors((prev) => ({
+      setDrawerPlacements((prev) => ({
         ...prev,
-        [drawerId]: anchor,
+        [drawerId]: placement,
       }));
 
       setDrawerStates((prev) => {
@@ -136,11 +142,18 @@ export function useDrawerLayoutState() {
     [],
   );
 
-  const getDrawerAnchor = useCallback(
+  const getDrawerPlacement = useCallback(
     (drawerId: DrawerId) => {
-      return drawerAnchors[drawerId];
+      return drawerPlacements[drawerId];
     },
-    [drawerAnchors],
+    [drawerPlacements],
+  );
+
+  const isDrawerVisible = useCallback(
+    (drawerId: string) => {
+      return !!drawerPlacements[drawerId];
+    },
+    [drawerPlacements],
   );
 
   const contextValue = useMemo<DrawerLayoutContextValue>(
@@ -152,7 +165,10 @@ export function useDrawerLayoutState() {
       setDrawerState,
       getDrawerState,
       registerDrawer,
-      getDrawerAnchor,
+      getDrawerPlacement,
+      isDrawerVisible,
+      selectedMenuItem,
+      selectMenuItem,
     }),
     [
       drawerStates,
@@ -162,7 +178,10 @@ export function useDrawerLayoutState() {
       setDrawerState,
       getDrawerState,
       registerDrawer,
-      getDrawerAnchor,
+      getDrawerPlacement,
+      isDrawerVisible,
+      selectedMenuItem,
+      selectMenuItem,
     ],
   );
 

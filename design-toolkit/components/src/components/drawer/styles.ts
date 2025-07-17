@@ -1,111 +1,51 @@
 import { tv } from 'tailwind-variants';
 
-/*
-
-:root {
-  --classification-banner-height: 20px;
-  --available-height: calc(100vh - var(--classification-banner-height));
-
-  --panel-size-closed: 0px;
-  --panel-size-icons: 40px;
-  --panel-size-nav: 200px;
-  --panel-size-open: min(475px, 25%);
-  --panel-size-xl: min(600px, 35%);
-}
-
-
-  [data-id="b8a0eb6e-5b5d-e65e-93d2-2596b8b7dcd9"] {
-    // Setting a bunch of variables for CSS animations
-    &[data-bottom*=over] { --panel-main-row-end: 4; }
-    &[data-bottom*=push] { --panel-main-row-end: 3; }
-
-    &[data-top*=over] { --panel-main-row-start: 1; }
-    &[data-top*=push] { --panel-main-row-start: 2; }
-
-    &[data-left*=over] { --panel-main-col-start: 1; }
-    &[data-left*=push] { --panel-main-col-start: 2; }
-
-    &[data-right*=over] { --panel-main-col-end: 4; }
-    &[data-right*=push] { --panel-main-col-end: 3; }
-
-    --route-layout-grid-cols: var(--panel-w-left) auto var(--panel-w-right);
-    --route-layout-grid-rows: var(--panel-h-top) auto var(--panel-h-bottom);
-    --panel-main-cols: var(--panel-main-col-start)/var(--panel-main-col-end);
-    --panel-main-rows: var(--panel-main-row-start)/var(--panel-main-row-end);
-
-    &[data-bottom*="closed"] { --panel-h-bottom: var(--panel-size-closed); }
-    &[data-bottom*="icons"] { --panel-h-bottom: var(--panel-size-icons); }
-    &[data-bottom*="nav"] { --panel-h-bottom: var(--panel-size-nav); }
-    &[data-bottom*="open"] { --panel-h-bottom: var(--panel-size-open); }
-    &[data-bottom*="xl"] { --panel-h-bottom: var(--panel-size-xl); }
-
-    &[data-top*="closed"] { --panel-h-top: var(--panel-size-closed); }
-    &[data-top*="icons"] { --panel-h-top: var(--panel-size-icons); }
-    &[data-top*="nav"] { --panel-h-top: var(--panel-size-nav); }
-    &[data-top*="open"] { --panel-h-top: var(--panel-size-open); }
-    &[data-top*="xl"] { --panel-h-top: var(--panel-size-xl); }
-
-    &[data-left*="closed"] { --panel-w-left: var(--panel-size-closed); }
-    &[data-left*="icons"] { --panel-w-left: var(--panel-size-icons); }
-    &[data-left*="nav"] { --panel-w-left: var(--panel-size-nav); }
-    &[data-left*="open"] { --panel-w-left: var(--panel-size-open); }
-    &[data-left*="xl"] { --panel-w-left: var(--panel-size-xl); }
-
-    &[data-right*="closed"] { --panel-w-right: var(--panel-size-closed); }
-    &[data-right*="icons"] { --panel-w-right: var(--panel-size-icons); }
-    &[data-right*="nav"] { --panel-w-right: var(--panel-size-nav); }
-    &[data-right*="open"] { --panel-w-right: var(--panel-size-open); }
-    &[data-right*="xl"] { --panel-w-right: var(--panel-size-xl); }
-  }
-
-*/
-
 export const DrawerStyles = tv({
   slots: {
     root: [
       '[--available-height:100vh]',
-      '[--panel-size-closed:0] [--panel-size-icons:40px] [--panel-size-nav:200px] [--panel-size-open:min(475px,25%)] [--panel-size-xl:min(600px,35%)]',
+      '[--drawer-size-closed:0] [--drawer-size-icons:40px] [--drawer-size-nav:200px] [--drawer-size-open:min(475px,25%)] [--drawer-size-xl:min(600px,35%)]',
 
-      'data-[bottom*="over"]:[--panel-main-row-end:4]',
-      'data-[bottom*="push"]:[--panel-main-row-end:3]',
+      'data-[bottom*="over"]:[--drawer-main-row-end:4]',
+      'data-[bottom*="push"]:[--drawer-main-row-end:3]',
 
-      'data-[top*="over"]:[--panel-main-row-start:1]',
-      'data-[top*="push"]:[--panel-main-row-start:2]',
+      'data-[top*="over"]:[--drawer-main-row-start:1]',
+      'data-[top*="push"]:[--drawer-main-row-start:2]',
 
-      'data-[left*="over"]:[--panel-main-col-start:1]',
-      'data-[left*="push"]:[--panel-main-col-start:2]',
+      'data-[left*="over"]:[--drawer-main-col-start:1]',
+      'data-[left*="push"]:[--drawer-main-col-start:2]',
 
-      'data-[right*="over"]:[--panel-main-col-end:4]',
-      'data-[right*="push"]:[--panel-main-col-end:3]',
+      'data-[right*="over"]:[--drawer-main-col-end:4]',
+      'data-[right*="push"]:[--drawer-main-col-end:3]',
 
-      '[--route-layout-grid-cols:var(--panel-w-left)_auto_var(--panel-w-right)]',
-      '[--route-layout-grid-rows:var(--panel-h-top)_auto_var(--panel-h-bottom)]',
-      '[--panel-main-cols:var(--panel-main-col-start)/var(--panel-main-col-end)]',
-      '[--panel-main-rows:var(--panel-main-row-start)/var(--panel-main-row-end)]',
+      '[--route-layout-grid-cols:var(--drawer-w-left)_auto_var(--drawer-w-right)]',
+      '[--route-layout-grid-rows:var(--drawer-h-top)_auto_var(--drawer-h-bottom)]',
+      '[--drawer-main-cols:var(--drawer-main-col-start)/var(--drawer-main-col-end)]',
+      '[--drawer-main-rows:var(--drawer-main-row-start)/var(--drawer-main-row-end)]',
 
-      'data-[bottom*="closed"]:[--panel-h-bottom:var(--panel-size-closed)]',
-      'data-[bottom*="icons"]:[--panel-h-bottom:var(--panel-size-icons)]',
-      'data-[bottom*="nav"]:[--panel-h-bottom:var(--panel-size-nav)]',
-      'data-[bottom*="open"]:[--panel-h-bottom:var(--panel-size-open)]',
-      'data-[bottom*="xl"]:[--panel-h-bottom:var(--panel-size-xl)]',
+      'data-[bottom*="closed"]:[--drawer-h-bottom:var(--drawer-size-closed)]',
+      'data-[bottom*="icons"]:[--drawer-h-bottom:var(--drawer-size-icons)]',
+      'data-[bottom*="nav"]:[--drawer-h-bottom:var(--drawer-size-nav)]',
+      'data-[bottom*="open"]:[--drawer-h-bottom:var(--drawer-size-open)]',
+      'data-[bottom*="xl"]:[--drawer-h-bottom:var(--drawer-size-xl)]',
 
-      'data-[top*="closed"]:[--panel-h-top:var(--panel-size-closed)]',
-      'data-[top*="icons"]:[--panel-h-top:var(--panel-size-icons)]',
-      'data-[top*="nav"]:[--panel-h-top:var(--panel-size-nav)]',
-      'data-[top*="open"]:[--panel-h-top:var(--panel-size-open)]',
-      'data-[top*="xl"]:[--panel-h-top:var(--panel-size-xl)]',
+      'data-[top*="closed"]:[--drawer-h-top:var(--drawer-size-closed)]',
+      'data-[top*="icons"]:[--drawer-h-top:var(--drawer-size-icons)]',
+      'data-[top*="nav"]:[--drawer-h-top:var(--drawer-size-nav)]',
+      'data-[top*="open"]:[--drawer-h-top:var(--drawer-size-open)]',
+      'data-[top*="xl"]:[--drawer-h-top:var(--drawer-size-xl)]',
 
-      'data-[left*="closed"]:[--panel-w-left:var(--panel-size-closed)]',
-      'data-[left*="icons"]:[--panel-w-left:var(--panel-size-icons)]',
-      'data-[left*="nav"]:[--panel-w-left:var(--panel-size-nav)]',
-      'data-[left*="open"]:[--panel-w-left:var(--panel-size-open)]',
-      'data-[left*="xl"]:[--panel-w-left:var(--panel-size-xl)]',
+      'data-[left*="closed"]:[--drawer-w-left:var(--drawer-size-closed)]',
+      'data-[left*="icons"]:[--drawer-w-left:var(--drawer-size-icons)]',
+      'data-[left*="nav"]:[--drawer-w-left:var(--drawer-size-nav)]',
+      'data-[left*="open"]:[--drawer-w-left:var(--drawer-size-open)]',
+      'data-[left*="xl"]:[--drawer-w-left:var(--drawer-size-xl)]',
 
-      'data-[right*="closed"]:[--panel-w-right:var(--panel-size-closed)]',
-      'data-[right*="icons"]:[--panel-w-right:var(--panel-size-icons)]',
-      'data-[right*="nav"]:[--panel-w-right:var(--panel-size-nav)]',
-      'data-[right*="open"]:[--panel-w-right:var(--panel-size-open)]',
-      'data-[right*="xl"]:[--panel-w-right:var(--panel-size-xl)]',
+      'data-[right*="closed"]:[--drawer-w-right:var(--drawer-size-closed)]',
+      'data-[right*="icons"]:[--drawer-w-right:var(--drawer-size-icons)]',
+      'data-[right*="nav"]:[--drawer-w-right:var(--drawer-size-nav)]',
+      'data-[right*="open"]:[--drawer-w-right:var(--drawer-size-open)]',
+      'data-[right*="xl"]:[--drawer-w-right:var(--drawer-size-xl)]',
 
       // base styles
       'group/layout relative top-[var(--classification-banner-height)]',
@@ -115,9 +55,9 @@ export const DrawerStyles = tv({
       // 'data-[menu*="float"]:h-[var(--available-height)] data-[menu*="scroll"]:min-h-[var(--available-height)]',
       'h-[var(--available-height)] min-h-[var(--available-height)]',
     ],
-    main: 'relative z-1 col-[var(--panel-main-cols)] row-[var(--panel-main-rows)]',
+    main: 'relative z-1 col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
     drawer: [
-      'bg-surface-default',
+      'bg-surface-default text-body-m',
       'data-[drawer-state*="closed"]:[&>*:not(nav,[data-drawer-tabs])]:hidden',
       'data-[drawer-state*="icons"]:block',
       'data-[drawer-state*="nav"]:block',
@@ -127,9 +67,29 @@ export const DrawerStyles = tv({
     menu: '',
     trigger:
       'fg-default-dark hover:fg-default-light cursor-pointer hover:bg-surface-overlay',
+    menuItem: [
+      'flex flex-col items-center justify-center',
+      'fg-default-dark cursor-pointer p-s outline-none',
+      'rounded-medium group-dtk-orientation-horizontal:rounded-small group-dtk-orientation-horizontal:rounded-b-none',
+      'group-dtk-orientation-horizontal:border-static-light group-dtk-orientation-horizontal:border-b',
+      'group-dtk-orientation-vertical:border group-dtk-orientation-vertical:border-transparent',
+      //hover
+      'hover:fg-default-light hover:group-dtk-orientation-horizontal:border-interactive-hover',
+      //selected
+      'data-[selected=true]:fg-highlight data-[selected=true]:bg-highlight-subtle data-[selected=true]:group-dtk-orientation-horizontal:border-highlight',
+      //focused
+      'focus:fg-default-light focus:group-dtk-orientation-horizontal:border-interactive-hover',
+      //disabled
+      'disabled:fg-disabled disabled:cursor-not-allowed disabled:group-dtk-orientation-horizontal:border-interactive-disabled',
+    ],
+    content: 'p-l',
+    panel: 'text-default-light',
+    header: 'mb-s flex flex-row items-center justify-between',
+    title: 'w-full text-default-light text-header-l',
+    footer: 'mt-s flex flex-row items-center justify-end',
   },
   variants: {
-    anchor: {
+    placement: {
       bottom: {
         drawer: [
           // base styles
@@ -141,7 +101,7 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[bottom*=closed]/layout:[&>*:not(nav)]:hidden',
         ],
-        menu: '-translate-y-[var(--panel-size-icons)] rounded-b-none',
+        menu: '-translate-y-[var(--drawer-size-icons)] rounded-b-none',
       },
       left: {
         drawer: [
@@ -154,7 +114,7 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[left*=closed]/layout:[&>*:not(nav,[data-drawer-tabs])]:hidden',
         ],
-        menu: 'left-full rounded-l-none',
+        menu: ['left-full rounded-l-none'],
       },
       right: {
         drawer: [
@@ -167,7 +127,7 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[right*=closed]/layout:[&>*:not(nav)]:hidden',
         ],
-        menu: '-left-[var(--panel-size-icons)] rounded-r-none',
+        menu: '-left-[var(--drawer-size-icons)] rounded-r-none',
       },
       top: {
         drawer: [
@@ -180,16 +140,54 @@ export const DrawerStyles = tv({
           // hides all content except the panel-menu when closed
           'group-data-[top*=closed]/layout:[&>*:not(nav)]:hidden',
         ],
-        menu: 'bottom-0 translate-y-[var(--panel-size-icons)] rounded-t-none',
+        menu: 'bottom-0 translate-y-[var(--drawer-size-icons)] rounded-t-none',
       },
     },
     orientation: {
       horizontal: {
-        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--panel-size-icons)] rounded-large bg-surface-default px-s',
+        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--drawer-size-icons)] rounded-large bg-surface-default px-s',
       },
       vertical: {
-        menu: 'absolute mt-xxl w-[var(--panel-size-icons)] rounded-large bg-surface-default py-s',
+        menu: 'absolute mt-xxl w-[var(--drawer-size-icons)] rounded-large bg-surface-default py-s',
+      },
+    },
+    visible: {
+      true: {
+        content: 'block',
+      },
+      false: {
+        content: 'hidden',
       },
     },
   },
+  compoundVariants: [
+    {
+      orientation: 'vertical',
+      placement: 'left',
+      class: {
+        menu: 'flex flex-col gap-xs rounded-l-none px-xs py-m',
+      },
+    },
+    {
+      orientation: 'vertical',
+      placement: 'right',
+      class: {
+        menu: 'flex flex-col gap-s rounded-r-none py-m',
+      },
+    },
+    {
+      orientation: 'horizontal',
+      placement: 'top',
+      class: {
+        menu: 'flex flex-row gap-s rounded-t-none px-m py-xs',
+      },
+    },
+    {
+      orientation: 'horizontal',
+      placement: 'bottom',
+      class: {
+        menu: 'flex flex-row gap-s rounded-b-none px-m py-xs',
+      },
+    },
+  ],
 });
