@@ -1,5 +1,22 @@
 # @accelint/design-toolkit
 
+## 2.2.1
+
+### Patch Changes
+
+- 0fd9e71: Fixes an issue where certain components were not properly marked as client components.
+
+## 2.2.0
+
+### Minor Changes
+
+- 301e690: Add popover component
+- 006587b: Set default to primary font
+
+### Patch Changes
+
+- 1f3c039: Ensure complete exports
+
 ## 2.1.0
 
 ### Minor Changes

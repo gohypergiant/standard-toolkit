@@ -23,11 +23,14 @@ export const AccordionStyles = tv({
   slots: {
     group: 'flex w-full flex-col',
     accordion: 'group flex w-full flex-col bg-transparent',
-    header:
+    header: [
       'fg-default-light flex w-full items-center gap-s rounded-medium p-s outline-none',
+      'group-enabled:hover:bg-interactive-hover-dark group-enabled:focus-within:bg-interactive-hover-dark',
+      'group-disabled:fg-disabled cursor-not-allowed',
+    ],
     heading: 'grow',
     trigger: [
-      'flex w-full cursor-pointer dtk-disabled:cursor-default items-center rounded-medium outline-none',
+      'flex w-full cursor-pointer items-center rounded-medium outline-none disabled:cursor-not-allowed',
     ],
     panel: 'p-s',
   },
@@ -39,20 +42,6 @@ export const AccordionStyles = tv({
       compact: {
         trigger: 'gap-xs text-header-s',
       },
-    },
-    isDisabled: {
-      false: {
-        header:
-          'focus-within:bg-interactive-hover-dark hover:bg-interactive-hover-dark',
-      },
-      true: {
-        header:
-          'fg-disabled cursor-default focus-within:bg-transparent hover:bg-transparent',
-      },
-    },
-    isExpanded: {
-      false: {},
-      true: {},
     },
   },
   defaultVariants: AccordionStylesDefaults,

@@ -44,60 +44,9 @@ const meta: Meta<typeof ClassificationBanner> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof ClassificationBanner>;
 
-export const Missing: Story = {
+export const Default: StoryObj<typeof ClassificationBanner> = {
   render: ({ children, ...args }) => (
-    <ClassificationBanner variant='missing' {...args}>
-      {children}
-    </ClassificationBanner>
-  ),
-};
-
-export const Unclassified: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBanner {...args} variant='unclassified'>
-      {children}
-    </ClassificationBanner>
-  ),
-};
-
-export const CUI: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBanner {...args} variant='cui'>
-      {children}
-    </ClassificationBanner>
-  ),
-};
-
-export const Confidential: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBanner {...args} variant='confidential'>
-      {children}
-    </ClassificationBanner>
-  ),
-};
-
-export const Secret: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBanner {...args} variant='secret'>
-      {children}
-    </ClassificationBanner>
-  ),
-};
-
-export const TopSecret: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBanner {...args} variant='top-secret'>
-      {children}
-    </ClassificationBanner>
-  ),
-};
-
-export const TopSecretSCI: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBanner {...args} variant='ts-sci'>
-      {children}
-    </ClassificationBanner>
+    <ClassificationBanner {...args}>{children}</ClassificationBanner>
   ),
 };

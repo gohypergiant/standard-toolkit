@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import { cn } from '@/lib/utils';
+import 'client-only';
 import { cva } from 'cva';
 import type React from 'react';
 import {
@@ -67,7 +69,7 @@ export function Radio({ className, children, ...args }: RadioProps) {
     <AriaRadio
       {...args}
       className={cn(
-        'fg-default-light flex items-center gap-m dtk-disabled:text-interactive-disabled',
+        'fg-default-light flex items-center gap-m disabled:text-interactive-disabled',
         className,
       )}
     >

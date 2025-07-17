@@ -10,14 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren, RefAttributes } from 'react';
+import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
 import type { IconStyleVariants } from './styles';
 
 export type IconProps = PropsWithChildren<
   RefAttributes<HTMLSpanElement> &
-    IconStyleVariants & {
-      className?: string;
-    }
+    HTMLAttributes<HTMLSpanElement> &
+    IconStyleVariants
 >;
 
-export type IconProviderProps = PropsWithChildren<IconStyleVariants>;
+export type IconProviderProps = PropsWithChildren<Omit<IconProps, 'ref'>>;

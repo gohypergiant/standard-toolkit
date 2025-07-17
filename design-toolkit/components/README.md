@@ -67,4 +67,5 @@ Also add the following to your `settings.json` file for VSCode:
 
 Be sure to view topic specific documentation to understand technology choices, best practices, established patterns, and enforced opinions.
 
+- [React](./src/documentation/react.md)
 - [Tailwind](./src/documentation/tailwind.md)

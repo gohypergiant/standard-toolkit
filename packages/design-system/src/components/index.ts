@@ -57,6 +57,7 @@ export type {
   ButtonState,
   LinkButtonProps,
   ToggleButtonProps,
+  ButtonVariants,
 } from './button/types';
 export {
   Checkbox,
@@ -71,6 +72,7 @@ export {
   checkboxStateVars,
   checkboxGroupStateVars,
   checkboxSpaceVars,
+  checkboxGroupContainer,
 } from './checkbox/checkbox.css';
 export type {
   CheckboxAlignment,
@@ -171,6 +173,7 @@ export type {
   DateInputState,
   DateInputSizes,
   DateSegmentsProps,
+  DateSegmentState,
 } from './date-input/types';
 export {
   Dialog,
@@ -196,6 +199,7 @@ export {
   DrawerDialog,
   DrawerTab,
   DrawerTabList,
+  DrawerDialogContext,
 } from './drawer';
 export {
   drawerAnimationVars,
@@ -285,6 +289,8 @@ export {
   menuItemStateVars,
   menuSpaceVars,
   menuStateVars,
+  menuClassNames,
+  menuContainers,
 } from './menu/menu.css';
 export type {
   MenuClassNames,
@@ -296,6 +302,7 @@ export type {
   MenuProps,
   MenuSizes,
   MenuState,
+  MenuRenderProps,
 } from './menu/types';
 export { MergeProvider } from './merge-provider';
 export type { MergeProviderProps } from './merge-provider/types';
@@ -316,6 +323,7 @@ export type {
   NumberFieldProps,
   NumberFieldSizes,
   NumberFieldState,
+  NumberFieldRenderProps,
 } from './number-field/types';
 export {
   Options,
@@ -344,6 +352,9 @@ export type {
   OptionsProps,
   OptionsSizes,
   OptionsState,
+  OptionsRenderProps,
+  OptionsItemRenderProps,
+  OptionsListRenderProps,
 } from './options/types';
 export {
   Picker,
@@ -376,11 +387,13 @@ export {
   popoverColorVars,
   popoverSpaceVars,
   popoverStateVars,
+  popoverContainer,
 } from './popover/popover.css';
 export type {
   PopoverClassNames,
   PopoverProps,
   PopoverState,
+  PopoverRenderProps,
 } from './popover/types';
 export { QueryBuilder } from './query-builder';
 export { QueryBuilderContext } from './query-builder/constants';
@@ -425,6 +438,9 @@ export type {
   RadioGroupState,
   RadioProps,
   RadioState,
+  RadioContextProps,
+  RadioGroupRenderProps,
+  RadioRenderProps,
 } from './radio/types';
 export {
   SearchField,
@@ -460,10 +476,17 @@ export type {
   SelectProps,
   SelectRenderProps,
   SelectState,
+  SelectSizes,
 } from './select/types';
 export {
   Slider,
+  SliderBar,
+  SliderOutput,
   SliderContext,
+  SliderBarContext,
+  SliderOutputContext,
+  SliderTrackContext,
+  SliderThumbContext,
   SliderThumb,
   SliderTrack,
 } from './slider';
@@ -473,6 +496,7 @@ export {
   sliderStateVars,
   sliderThumbStateVars,
   sliderTrackStateVars,
+  sliderClassNames,
 } from './slider/slider.css';
 export type {
   SliderLayout,
@@ -482,6 +506,12 @@ export type {
   SliderState,
   SliderThumbProps,
   SliderThumbState,
+  SliderBarProps,
+  SliderInputProps,
+  SliderOutputProps,
+  SliderThumbRenderProps,
+  SliderTrackProps,
+  SliderTrackRenderProps,
 } from './slider/types';
 export {
   Switch,

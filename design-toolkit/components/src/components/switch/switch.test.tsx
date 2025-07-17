@@ -12,7 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Switch, type SwitchProps } from './index';
+import { Switch } from './';
+import type { SwitchProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<SwitchProps> = {}) {
   render(<Switch {...rest}>{children}</Switch>);

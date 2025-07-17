@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import 'client-only';
 import {
   Input as AriaInput,
@@ -222,7 +223,7 @@ export function TextField({
         <Label
           className='empty:hidden'
           isDisabled={isDisabled}
-          isOptional={!props.isRequired}
+          isRequired={props.isRequired}
         >
           {label}
         </Label>
