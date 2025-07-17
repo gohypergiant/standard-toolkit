@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -8,7 +8,9 @@
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -60,7 +62,7 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/icons": "^2.0.0",
+    "@accelint/icons": "^2.0.1",
     "@fontsource/roboto-flex": "^5.1.0",
     "@fontsource/roboto-mono": "^5.1.0",
     "@internationalized/date": "^3.8.0",

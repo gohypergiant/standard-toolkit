@@ -1,5 +1,14 @@
 # @apps/next
 
+## 0.2.20
+
+### Patch Changes
+
+- Updated dependencies [ad067b2]
+  - @accelint/design-toolkit@2.3.2
+  - @accelint/design-system@0.11.1
+  - @accelint/icons@2.0.1
+
 ## 0.2.19
 
 ### Patch Changes
