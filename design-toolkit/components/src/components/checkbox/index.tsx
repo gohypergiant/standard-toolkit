@@ -86,7 +86,7 @@ export function Checkbox({ className, children, ...args }: CheckboxProps) {
     <AriaCheckbox
       {...args}
       className={cn(
-        'fg-default-light flex items-center gap-m dtk-disabled:text-interactive-disabled text-body-s',
+        'fg-default-light flex items-center gap-m text-body-s disabled:text-interactive-disabled',
         className,
       )}
     >

@@ -10,66 +10,62 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
+import { createContext } from 'react';
+import { type ContextValue, useContextProps } from 'react-aria-components';
+import {
+  ClassificationBadgeStyles,
+  ClassificationBadgeStylesDefaults,
+} from './styles';
+import type {
+  ClassificationBadgeProps,
+  ClassificationBadgeProviderProps,
+} from './types';
 
-const classificationBadge = cva(
-  'inline-flex items-center justify-center rounded-full uppercase',
-  {
-    variants: {
-      variant: {
-        missing:
-          "fg-critical bg-classification-missing [&:empty]:before:content-['Missing']",
-        unclassified:
-          "fg-default-light bg-classification-unclass [&:empty]:before:content-['Unclassified']",
-        cui: "fg-default-light bg-classification-cui [&:empty]:before:content-['CUI']",
-        confidential:
-          "fg-default-light bg-classification-confidential [&:empty]:before:content-['Confidential']",
-        secret:
-          "fg-default-light bg-classification-secret [&:empty]:before:content-['Secret']",
-        'top-secret':
-          "fg-inverse-light bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
-        'ts-sci':
-          "fg-inverse-light bg-classification-ts-sci [&:empty]:before:content-['TS/SCI']",
-      },
-      size: {
-        medium: 'px-s py-xs text-header-s',
-        small: 'px-s py-xs text-header-xs',
-      },
-    },
-    defaultVariants: {
-      variant: 'missing',
-      size: 'medium',
-    },
-  },
-);
+export const ClassificationBadgeContext =
+  createContext<ContextValue<ClassificationBadgeProps, HTMLSpanElement>>(null);
 
-export interface ClassificationBadgeProps
-  extends VariantProps<typeof classificationBadge> {
-  className?: string;
-  /** If no text is provided, the system will fallback to safe defaults. You can override the text with children. */
-  children?: string;
-}
-
-export const ClassificationBadge = ({
-  className,
-  size = 'medium',
-  variant = 'missing',
+function ClassificationBadgeProvider({
+  children,
   ...props
-}: ClassificationBadgeProps) => (
-  <span
-    className={cn(
-      classificationBadge({
+}: ClassificationBadgeProviderProps) {
+  return (
+    <ClassificationBadgeContext.Provider value={props}>
+      {children}
+    </ClassificationBadgeContext.Provider>
+  );
+}
+ClassificationBadgeProvider.displayName = 'ClassificationBadge.Provider';
+
+export function ClassificationBadge({
+  ref,
+  ...props
+}: ClassificationBadgeProps) {
+  [props, ref] = useContextProps(
+    props,
+    ref ?? null,
+    ClassificationBadgeContext,
+  );
+
+  const {
+    className,
+    size = ClassificationBadgeStylesDefaults.size,
+    variant = ClassificationBadgeStylesDefaults.variant,
+    children,
+    ...rest
+  } = props;
+
+  return (
+    <span
+      {...rest}
+      className={ClassificationBadgeStyles({
         size,
         variant,
         className,
-      }),
-    )}
-    {...props}
-  />
-);
+      })}
+    >
+      {children}
+    </span>
+  );
+}
 ClassificationBadge.displayName = 'ClassificationBadge';
-ClassificationBadge.as = (
-  props: VariantProps<typeof classificationBadge>,
-  className?: string | string[],
-) => cn(classificationBadge({ ...props, className }));
+ClassificationBadge.Provider = ClassificationBadgeProvider;

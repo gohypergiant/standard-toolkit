@@ -46,60 +46,9 @@ const meta: Meta<typeof ClassificationBadge> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof ClassificationBadge>;
 
-export const Missing: Story = {
+export const Default: StoryObj<typeof ClassificationBadge> = {
   render: ({ children, ...args }) => (
-    <ClassificationBadge variant='missing' {...args}>
-      {children}
-    </ClassificationBadge>
-  ),
-};
-
-export const Unclassified: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBadge {...args} variant='unclassified'>
-      {children}
-    </ClassificationBadge>
-  ),
-};
-
-export const CUI: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBadge {...args} variant='cui'>
-      {children}
-    </ClassificationBadge>
-  ),
-};
-
-export const Confidential: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBadge {...args} variant='confidential'>
-      {children}
-    </ClassificationBadge>
-  ),
-};
-
-export const Secret: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBadge {...args} variant='secret'>
-      {children}
-    </ClassificationBadge>
-  ),
-};
-
-export const TopSecret: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBadge {...args} variant='top-secret'>
-      {children}
-    </ClassificationBadge>
-  ),
-};
-
-export const TopSecretSCI: Story = {
-  render: ({ children, ...args }) => (
-    <ClassificationBadge {...args} variant='ts-sci'>
-      {children}
-    </ClassificationBadge>
+    <ClassificationBadge {...args}>{children}</ClassificationBadge>
   ),
 };

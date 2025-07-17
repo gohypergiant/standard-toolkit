@@ -9,23 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { IconButton, type IconButtonProps } from './index';
 
-function setup({ children = 'Foo', ...rest }: Partial<IconButtonProps> = {}) {
-  render(<IconButton {...rest}>{children}</IconButton>);
+import { tv } from '@/lib/utils';
 
-  return {
-    ...rest,
-    children,
-  };
-}
-
-describe('Icon Button', () => {
-  it('should render', () => {
-    const { children } = setup();
-
-    expect(screen.getByText(`${children}`)).toBeInTheDocument();
-  });
+export const LabelStyles = tv({
+  base: ['text-header-s', 'enabled:fg-default-light', 'disabled:fg-disabled'],
 });

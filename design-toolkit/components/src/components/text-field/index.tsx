@@ -223,7 +223,7 @@ export function TextField({
         <Label
           className='empty:hidden'
           isDisabled={isDisabled}
-          isOptional={!props.isRequired}
+          isRequired={props.isRequired}
         >
           {label}
         </Label>

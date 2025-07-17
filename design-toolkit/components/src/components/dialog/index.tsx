@@ -34,7 +34,8 @@ import {
   Modal as RACModal,
   ModalOverlay as RACModalOverlay,
 } from 'react-aria-components';
-import { Button, type ButtonProps } from '../button';
+import { Button } from '../button';
+import type { ButtonProps } from '../button/types';
 
 const dialogClasses = cva(
   'flex flex-col align-end font-light text-body-m text-default-dark',
@@ -222,7 +223,7 @@ const DialogButton = ({ children, className, ...props }: ButtonProps) => {
       {...props}
       //overriding the style to deal with rac's pressed state inherited
       //from the trigger state
-      className={cn('dtk-pressed:bg-initial', className)}
+      className={cn('pressed:bg-initial', className)}
     >
       {children}
     </Button>

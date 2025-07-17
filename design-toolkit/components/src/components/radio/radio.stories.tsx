@@ -13,30 +13,31 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Radio } from './index';
 
-/**
- * The `<Radio.Group>` component is a direct wrapper around the equiavalent component from
- * `react-aria-components`.
- *
- * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/RadioGroup.html">here</a>.
- */
 const meta: Meta<typeof Radio.Group> = {
-  title: 'Components/Radio.Group',
+  title: 'Components/Radio',
   component: Radio.Group,
   args: {
-    className: undefined,
+    orientation: 'vertical',
     isDisabled: false,
+    isRequired: false,
     label: 'Header',
   },
   argTypes: {
-    className: { type: 'string' },
-    label: { type: 'string' },
+    orientation: {
+      control: 'select',
+      options: ['horizontal', 'vertical'],
+    },
+  },
+  parameters: {
+    controls: {
+      exclude: ['children', 'validationBehavior'],
+    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Radio.Group>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof Radio.Group> = {
   render: ({ children, label, ...args }) => (
     <Radio.Group label={label} {...args}>
       <Radio value='1'>Radio text</Radio>

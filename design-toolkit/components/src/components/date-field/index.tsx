@@ -233,7 +233,7 @@ export function DateField<T extends DateValue>({
         <Label
           className='empty:hidden'
           isDisabled={isDisabled}
-          isOptional={!props.isRequired}
+          isRequired={props.isRequired}
         >
           {label}
         </Label>

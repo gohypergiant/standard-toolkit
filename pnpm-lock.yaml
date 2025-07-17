@@ -318,9 +318,6 @@ importers:
       tailwindcss:
         specifier: ^4.1.3
         version: 4.1.10
-      tailwindcss-react-aria-components:
-        specifier: ^2.0.0
-        version: 2.0.0(tailwindcss@4.1.10)
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -9969,11 +9966,6 @@ packages:
     engines: {node: '>=16.x', pnpm: '>=7.x'}
     peerDependencies:
       tailwindcss: '*'
-
-  tailwindcss-react-aria-components@2.0.0:
-    resolution: {integrity: sha512-l8YdpXX//qx0Mz2bW3YKLjboTQxR3zLrFhlHniAIn+mTwVM1yvT0Jp7Pn3eFrqi+qtOMmcJzXaF2rsKezSr0SQ==}
-    peerDependencies:
-      tailwindcss: ^4.0.0
 
   tailwindcss@4.1.10:
     resolution: {integrity: sha512-P3nr6WkvKV/ONsTzj6Gb57sWPMX29EPNPopo7+FcpkQaNsrNpZ1pv8QmrYI2RqEKD7mlGqLnGovlcYnBK0IqUA==}
@@ -22456,10 +22448,6 @@ snapshots:
   tailwind-variants@1.0.0(tailwindcss@4.1.10):
     dependencies:
       tailwind-merge: 3.0.2
-      tailwindcss: 4.1.10
-
-  tailwindcss-react-aria-components@2.0.0(tailwindcss@4.1.10):
-    dependencies:
       tailwindcss: 4.1.10
 
   tailwindcss@4.1.10: {}

@@ -9,26 +9,18 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { ToggleIconButton, type ToggleIconButtonProps } from './index';
 
-function setup({
-  children = 'Foo',
-  ...rest
-}: Partial<ToggleIconButtonProps> = {}) {
-  render(<ToggleIconButton {...rest}>{children}</ToggleIconButton>);
+import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
+import type { VariantProps } from 'tailwind-variants';
+import type { ClassificationBadgeStyles } from './styles';
 
-  return {
-    ...rest,
-    children,
-  };
-}
+export type ClassificationBadgeStyleVariants = VariantProps<
+  typeof ClassificationBadgeStyles
+>;
 
-describe('Toggle Button', () => {
-  it('should render', () => {
-    const { children } = setup();
+export type ClassificationBadgeProps = ClassificationBadgeStyleVariants &
+  RefAttributes<HTMLSpanElement> &
+  PropsWithChildren<HTMLAttributes<HTMLSpanElement>>;
 
-    expect(screen.getByText(`${children}`)).toBeInTheDocument();
-  });
-});
+export type ClassificationBadgeProviderProps =
+  PropsWithChildren<ClassificationBadgeProps>;

@@ -48,7 +48,7 @@ export const Tabs = ({
       orientation={orientation}
       isDisabled={isDisabled}
       className={cn(
-        'group flex w-content flex-row dtk-orientation-horizontal:flex-col',
+        'group flex w-content flex-row orientation-horizontal:flex-col',
         className,
       )}
       {...rest}
@@ -67,20 +67,20 @@ export interface TabListProps extends AriaTabListProps<object> {
   drawer?: 'left' | 'right' | 'top' | 'bottom';
 }
 
-const tabListStyles = cva('flex dtk-orientation-horizontal:flex-row flex-col', {
+const tabListStyles = cva('flex orientation-horizontal:flex-row flex-col', {
   variants: {
     variant: {
       icons:
-        '[&>*]:p-xs dtk-orientation-horizontal:[&>*]:pr-s dtk-orientation-horizontal:[&>*]:pl-s [&>*]:leading-[0]',
+        '[&>*]:p-xs orientation-horizontal:[&>*]:pr-s orientation-horizontal:[&>*]:pl-s [&>*]:leading-[0]',
       default: '[&>*]:p-s [&>*]:text-header-m',
     },
     drawer: {
-      left: 'dtk-orientation-vertical:gap-xs rounded-r-large bg-surface-default p-s',
+      left: 'orientation-vertical:gap-xs rounded-r-large bg-surface-default p-s',
       right:
-        'dtk-orientation-vertical:gap-xs rounded-l-large bg-surface-default p-s',
-      top: 'dtk-orientation-vertical:gap-xs rounded-b-large bg-surface-default p-s',
+        'orientation-vertical:gap-xs rounded-l-large bg-surface-default p-s',
+      top: 'orientation-vertical:gap-xs rounded-b-large bg-surface-default p-s',
       bottom:
-        'dtk-orientation-vertical:gap-xs rounded-t-large bg-surface-default p-s',
+        'orientation-vertical:gap-xs rounded-t-large bg-surface-default p-s',
     },
   },
 });
@@ -115,44 +115,43 @@ Tabs.List = TabList;
 
 const tabBaseStyles = cn(
   'fg-default-dark cursor-pointer p-s outline-none',
-  'rounded-medium group-dtk-orientation-horizontal:rounded-small group-dtk-orientation-horizontal:rounded-b-none',
-  'group-dtk-orientation-horizontal:border-static-light group-dtk-orientation-horizontal:border-b',
-  'group-dtk-orientation-vertical:border group-dtk-orientation-vertical:border-transparent',
+  'rounded-medium group-orientation-horizontal:rounded-small group-orientation-horizontal:rounded-b-none',
+  'group-orientation-horizontal:border-static-light group-orientation-horizontal:border-b',
+  'group-orientation-vertical:border group-orientation-vertical:border-transparent',
 );
 
 const tabStyles = cva(tabBaseStyles, {
   variants: {
     isSelected: {
-      true: 'fg-highlight bg-highlight-subtle group-dtk-orientation-horizontal:border-highlight',
+      true: 'fg-highlight bg-highlight-subtle group-orientation-horizontal:border-highlight',
     },
     isHovered: {
-      true: 'fg-default-light group-dtk-orientation-horizontal:border-interactive-hover',
+      true: 'fg-default-light group-orientation-horizontal:border-interactive-hover',
     },
     isFocused: {
-      true: 'fg-default-light group-dtk-orientation-horizontal:border-interactive-hover',
+      true: 'fg-default-light group-orientation-horizontal:border-interactive-hover',
     },
     isDisabled: {
-      true: 'fg-disabled cursor-not-allowed group-dtk-orientation-horizontal:border-interactive-disabled',
+      true: 'fg-disabled cursor-not-allowed group-orientation-horizontal:border-interactive-disabled',
     },
   },
   compoundVariants: [
     {
       isSelected: true,
       isHovered: true,
-      className:
-        'fg-highlight group-dtk-orientation-horizontal:border-highlight',
+      className: 'fg-highlight group-orientation-horizontal:border-highlight',
     },
     {
       isSelected: true,
       isFocused: true,
       className:
-        'fg-highlight group-dtk-orientation-horizontal:border-interactive-hover group-dtk-orientation-vertical:border-interactive-hover',
+        'fg-highlight group-orientation-horizontal:border-interactive-hover group-orientation-vertical:border-interactive-hover',
     },
     {
       isDisabled: true,
       isSelected: true,
       className:
-        'fg-disabled bg-interactive-disabled group-dtk-orientation-horizontal:border-interactive-disabled',
+        'fg-disabled bg-interactive-disabled group-orientation-horizontal:border-interactive-disabled',
     },
   ],
 });
@@ -193,7 +192,7 @@ const TabPanel = ({ id, children, className, ...rest }: TabPanelProps) => {
     <AriaTabPanel
       id={id}
       className={cn(
-        'fg-default-light p-s group-dtk-orientation-vertical:pt-0 group-dtk-orientation-horizontal:pl-0',
+        'fg-default-light p-s group-orientation-vertical:pt-0 group-orientation-horizontal:pl-0',
         className,
       )}
       {...rest}

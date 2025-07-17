@@ -22,11 +22,11 @@ class ComponentStructureError extends Error {
 
 type ContainsExactChildrenProps = {
   componentName: string;
-  // biome-ignore lint/suspicious/noExplicitAny: aria render props include a generic type
   children:
     | ReactNode
     | ReactNode[]
     | ((
+        // biome-ignore lint/suspicious/noExplicitAny: aria render props include a generic type
         values: any & {
           defaultChildren: ReactNode | undefined;
         },
