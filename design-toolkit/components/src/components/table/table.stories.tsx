@@ -170,5 +170,5 @@ export const Default: Story = {
     kebabPosition: 'right',
   },
 
-  render: (args) => <Table className='w-3xl' {...args} />,
+  render: (args) => <Table {...args} />,
 };

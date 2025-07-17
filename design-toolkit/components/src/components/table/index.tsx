@@ -36,7 +36,7 @@ import { Input as AriaInput } from 'react-aria-components';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
-import { IconButton } from '../icon-button';
+// import { IconButton } from '../icon-button';
 import { ActionsCell } from './actions-cell';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -491,6 +491,7 @@ export function Table<T extends { id: string | number }>({
             ))}
           </TableHeader>
           <TableBody>
+            {/* Top Rows */}
             {getTopRows().map((row) => (
               <TableRow
                 key={row.id}
@@ -544,17 +545,18 @@ export function Table<T extends { id: string | number }>({
             ))}
           </TableBody>
         </table>
+
+        {/* Pagination (Placeholder until we have a proper pagination component) */}
         <div className='flex items-center gap-xxs'>
-          <IconButton
-            className='min-h-[32px] min-w-[32px] rounded-medium'
+          <Button
+            variant='icon'
             onPress={() => previousPage()}
             isDisabled={!getCanPreviousPage()}
-            type='button'
+            className='min-h-[32px] min-w-[32px] rounded-medium'
           >
-            <Icon>
-              <ChevronLeft />
-            </Icon>
-          </IconButton>
+            <ChevronLeft />
+          </Button>
+
           {pagination(getState().pagination.pageIndex + 1, getPageCount()).map(
             (page) => {
               if (page === 'ellipsis') {
@@ -564,6 +566,7 @@ export function Table<T extends { id: string | number }>({
                   </span>
                 );
               }
+
               return (
                 <Button
                   key={page}
@@ -572,22 +575,23 @@ export function Table<T extends { id: string | number }>({
                   isDisabled={getState().pagination.pageIndex + 1 === page}
                   data-selected={getState().pagination.pageIndex + 1 === page}
                   type='button'
+                  variant='flat'
                 >
                   {page}
                 </Button>
               );
             },
           )}
-          <IconButton
-            className='min-h-[32px] min-w-[32px] rounded-medium'
+
+          <Button
+            variant='icon'
             onPress={() => nextPage()}
             isDisabled={!getCanNextPage()}
-            type='button'
+            className='min-h-[32px] min-w-[32px] rounded-medium'
           >
-            <Icon>
-              <ChevronRight />
-            </Icon>
-          </IconButton>
+            <ChevronRight />
+          </Button>
+
           <span className='flex items-center gap-s text-default-light'>
             Page{' '}
             <AriaInput
