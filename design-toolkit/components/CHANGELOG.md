@@ -1,5 +1,29 @@
 # @accelint/design-toolkit
 
+## 2.3.0
+
+### Minor Changes
+
+- 56e2555: add script to build phase to generate css vars and ts variables for tokens to ensure a single source of truth
+
+### Patch Changes
+
+- 8879858: Refactor component styles to use variant selectors
+- 8440a09: Refactored buttons to share styles
+- 038f012: Replaced RAC TW plugin with custom variants that merge with CSS pseudo classes making variant selectors agnostic of RAC
+- 6bf21ea: Refactored TextArea to be consistent in standards
+- 0e0125a: - Refactored Chip to conform to new standards
+  - Added Chip context provider
+  - Swapped Chip span out for div for consistency
+- 0089039: Conditionally render icon containers in OptionsItem
+- 61488e3: Refactor Radio to follow styling standards
+- b283521: refactor classification banner to use tailwind-variants
+- aca19ec: refactor classification badge component to use twv
+- 8b0d1eb: - Refactored Label & Switch to be consistent in standards
+  - Swapped Label isOptional for isRequired for consistency
+  - Added contexts and providers
+- c83d321: Simplified Accordion styles based on variant selectors
+
 ## 2.2.1
 
 ### Patch Changes

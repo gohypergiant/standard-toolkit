@@ -1,5 +1,26 @@
 # @apps/next
 
+## 0.2.18
+
+### Patch Changes
+
+- 8440a09: Refactored buttons to share styles
+- Updated dependencies [decc983]
+- Updated dependencies [8879858]
+- Updated dependencies [8440a09]
+- Updated dependencies [56e2555]
+- Updated dependencies [038f012]
+- Updated dependencies [6bf21ea]
+- Updated dependencies [0e0125a]
+- Updated dependencies [0089039]
+- Updated dependencies [61488e3]
+- Updated dependencies [b283521]
+- Updated dependencies [aca19ec]
+- Updated dependencies [8b0d1eb]
+- Updated dependencies [c83d321]
+  - @accelint/design-system@0.11.0
+  - @accelint/design-toolkit@2.3.0
+
 ## 0.2.17
 
 ### Patch Changes
