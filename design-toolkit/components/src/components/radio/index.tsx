@@ -9,116 +9,79 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
-import { cn } from '@/lib/utils';
+
 import 'client-only';
-import { cva } from 'cva';
-import type React from 'react';
+import { createContext } from 'react';
 import {
   Radio as AriaRadio,
   RadioGroup as AriaRadioGroup,
-  type RadioGroupProps as AriaRadioGroupProps,
-  type RadioProps as AriaRadioProps,
+  type ContextValue,
   composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
+import { RadioStyles } from './styles';
+import type { RadioGroupProps, RadioProps } from './types';
 
-const radioStyles = cva(
-  'fg-default-light flex size-l items-center justify-center rounded-round outline outline-interactive before:block before:size-s before:rounded-round before:bg-transparent',
-  {
-    variants: {
-      isSelected: {
-        true: 'outline-highlight before:bg-highlight',
-      },
-      isFocused: {
-        true: 'outline-interactive-hover hover:outline-interactive-hover',
-      },
-      isHovered: {
-        true: 'outline-interactive-hover hover:outline-interactive-hover',
-      },
-      isDisabled: {
-        true: 'outline-interactive-disabled',
-      },
-    },
-    compoundVariants: [
-      {
-        isDisabled: true,
-        isSelected: true,
-        className:
-          'hover:interactive-disabled outline-interactive-disabled before:bg-interactive-disabled',
-      },
-      {
-        isDisabled: true,
-        className: 'hover:interactive-disabled outline-interactive-disabled',
-      },
-    ],
-    defaultVariants: {
-      isDisabled: false,
-      isFocused: false,
-      isHovered: false,
-      isSelected: false,
-    },
-  },
-);
+const { group, groupLabel, radio, control, label } = RadioStyles();
 
-export interface RadioProps extends AriaRadioProps {}
+export const RadioContext =
+  createContext<ContextValue<RadioGroupProps, HTMLDivElement>>(null);
 
-export function Radio({ className, children, ...args }: RadioProps) {
-  return (
-    <AriaRadio
-      {...args}
-      className={cn(
-        'fg-default-light flex items-center gap-m disabled:text-interactive-disabled',
-        className,
-      )}
-    >
-      {(props) => (
-        <>
-          <div
-            className={cn(
-              radioStyles({
-                isDisabled: props.isDisabled,
-                isFocused: props.isFocused,
-                isHovered: props.isHovered,
-                isSelected: props.isSelected,
-              }),
-            )}
-            aria-hidden
-          />
-          {typeof children === 'function' ? children(props) : children}
-        </>
-      )}
-    </AriaRadio>
-  );
-}
+function RadioGroup({ ref, ...props }: RadioGroupProps) {
+  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
 
-export interface RadioGroupProps extends AriaRadioGroupProps {
-  // children: React.JSX.Element;
-  label?: string | React.JSX.Element;
-}
+  const { children, classNames, label, isDisabled, isRequired, ...rest } =
+    props;
 
-function RadioGroup({ children, className, label, ...props }: RadioGroupProps) {
   return (
     <AriaRadioGroup
-      {...props}
-      className={composeRenderProps(className, (className, renderProps) =>
-        cn(
-          'fg-default-light flex flex-col gap-m text-body-s',
-          renderProps.orientation === 'horizontal' && 'flex-row items-center',
-
-          className,
-        ),
+      {...rest}
+      ref={ref}
+      className={composeRenderProps(classNames?.group, (className) =>
+        group({ className }),
       )}
+      isDisabled={isDisabled}
+      isRequired={isRequired}
     >
-      {(props) => (
+      {composeRenderProps(children, (children) => (
         <>
-          {label ? <Label>{label}</Label> : undefined}
-          {typeof children === 'function' ? children(props) : children}
+          {label && (
+            <Label
+              className={groupLabel({ className: classNames?.label })}
+              isDisabled={isDisabled}
+              isRequired={isRequired}
+            >
+              {label}
+            </Label>
+          )}
+          {children}
         </>
-      )}
+      ))}
     </AriaRadioGroup>
   );
 }
+RadioGroup.displayName = 'Radio.Group';
 
+export function Radio({ classNames, children, ...rest }: RadioProps) {
+  return (
+    <AriaRadio
+      {...rest}
+      className={composeRenderProps(classNames?.radio, (className) =>
+        radio({ className }),
+      )}
+    >
+      {composeRenderProps(children, (children) => (
+        <>
+          <span className={control({ className: classNames?.control })} />
+          <span className={label({ className: classNames?.label })}>
+            {children}
+          </span>
+        </>
+      ))}
+    </AriaRadio>
+  );
+}
+Radio.displayName = 'Radio';
 Radio.Group = RadioGroup;

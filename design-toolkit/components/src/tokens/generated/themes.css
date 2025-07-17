@@ -151,9 +151,9 @@
 }
 
 @theme {
-  /** Icons **/
-  --icons-size-l: var(--icons-size-l);
-  --icons-size-m: var(--icons-size-m);
-  --icons-size-s: var(--icons-size-s);
-  --icons-size-xs: var(--icons-size-xs);
+  /** Icon **/
+  --icon-size-l: var(--icon-size-l);
+  --icon-size-m: var(--icon-size-m);
+  --icon-size-s: var(--icon-size-s);
+  --icon-size-xs: var(--icon-size-xs);
 }

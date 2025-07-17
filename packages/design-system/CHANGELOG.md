@@ -1,5 +1,11 @@
 # @accelint/design-system
 
+## 0.11.0
+
+### Minor Changes
+
+- decc983: use globalLayers to support layer orchestration
+
 ## 0.10.1
 
 ### Patch Changes

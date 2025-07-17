@@ -138,8 +138,13 @@ export type {
   QueryBuilderValueEditors,
   RuleGroupType,
 } from './components/query-builder';
-export { Radio } from './components/radio';
-export type { RadioGroupProps, RadioProps } from './components/radio';
+export { Radio, RadioContext } from './components/radio';
+export { RadioStyles } from './components/radio/styles';
+export type {
+  RadioGroupProps,
+  RadioProps,
+  RadioProviderProps,
+} from './components/radio/types';
 export { SearchField } from './components/search-field';
 export type { SearchFieldProps } from './components/search-field';
 export { RangeSlider, Slider } from './components/slider';
@@ -265,10 +270,10 @@ export {
   colorTransparentLight,
   fontDisplay,
   fontPrimary,
-  iconsSizeL,
-  iconsSizeM,
-  iconsSizeS,
-  iconsSizeXs,
+  iconSizeL,
+  iconSizeM,
+  iconSizeS,
+  iconSizeXs,
   radiusLarge,
   radiusMedium,
   radiusNone,
