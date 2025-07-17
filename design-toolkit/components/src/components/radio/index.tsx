@@ -32,8 +32,7 @@ export const RadioContext =
 function RadioGroup({ ref, ...props }: RadioGroupProps) {
   [props, ref] = useContextProps(props, ref ?? null, RadioContext);
 
-  const { children, classNames, label, isDisabled, isRequired, ...rest } =
-    props;
+  const { children, classNames, label, ...rest } = props;
 
   return (
     <AriaRadioGroup
@@ -42,10 +41,8 @@ function RadioGroup({ ref, ...props }: RadioGroupProps) {
       className={composeRenderProps(classNames?.group, (className) =>
         group({ className }),
       )}
-      isDisabled={isDisabled}
-      isRequired={isRequired}
     >
-      {composeRenderProps(children, (children) => (
+      {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
         <>
           {label && (
             <Label
