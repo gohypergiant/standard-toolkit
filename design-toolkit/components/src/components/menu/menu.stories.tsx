@@ -14,8 +14,8 @@ import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
+import { Button } from '../button';
 import { Icon } from '../icon';
-import { IconButton } from '../icon-button';
 import { Menu } from './';
 import type { MenuItemProps } from './types';
 
@@ -108,11 +108,11 @@ const menuItems: MenuItem[] = [
 export const Basic: StoryObj<typeof Menu> = {
   render: (args) => (
     <Menu.Trigger>
-      <IconButton aria-label='Menu'>
+      <Button variant='icon' aria-label='Menu'>
         <Icon>
           <Kebab />
         </Icon>
-      </IconButton>
+      </Button>
       <Menu {...args}>
         <Menu.Item>
           <Menu.Item.Icon>
@@ -181,11 +181,11 @@ export const Basic: StoryObj<typeof Menu> = {
 export const Dynamic: StoryObj<typeof Menu> = {
   render: (args) => (
     <Menu.Trigger>
-      <IconButton aria-label='Menu'>
+      <Button variant='icon' aria-label='Menu'>
         <Icon>
           <Kebab />
         </Icon>
-      </IconButton>
+      </Button>
       <Menu<MenuItem> {...args} items={menuItems}>
         {function render(item) {
           if (item.children) {
