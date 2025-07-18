@@ -15,8 +15,8 @@ import Placeholder from '@accelint/icons/placeholder';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { Button } from '../button';
 import { Icon } from '../icon';
-import { IconButton } from '../icon-button';
 import { Menu } from './index';
 import type { MenuProps } from './types';
 
@@ -83,11 +83,11 @@ function setup({
 }: Partial<MenuProps<object>> = {}) {
   render(
     <Menu.Trigger>
-      <IconButton aria-label='Menu'>
+      <Button variant='icon' aria-label='Menu'>
         <Icon>
           <Kebab />
         </Icon>
-      </IconButton>
+      </Button>
       <Menu {...rest}>{children}</Menu>
     </Menu.Trigger>,
   );
