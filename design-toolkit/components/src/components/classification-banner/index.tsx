@@ -10,60 +10,60 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
-import type { ReactNode } from 'react';
+import { createContext } from 'react';
+import { type ContextValue, useContextProps } from 'react-aria-components';
+import {
+  ClassificationBannerStyles,
+  ClassificationBannerStylesDefaults,
+} from './styles';
+import type {
+  ClassificationBannerProps,
+  ClassificationBannerProviderProps,
+} from './types';
 
-const classificationBanner = cva(
-  'flex select-none items-center justify-center font-medium text-header-m uppercase',
-  {
-    variants: {
-      variant: {
-        missing:
-          "fg-critical bg-classification-missing [&:empty]:before:content-['Missing_Classification']",
-        unclassified:
-          "fg-default-light bg-classification-unclass [&:empty]:before:content-['Unclassified']",
-        cui: "fg-default-light bg-classification-cui [&:empty]:before:content-['CUI']",
-        confidential:
-          "fg-default-light bg-classification-confidential [&:empty]:before:content-['Confidential']",
-        secret:
-          "fg-default-light bg-classification-secret [&:empty]:before:content-['Secret']",
-        'top-secret':
-          "fg-inverse-light bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
-        'ts-sci':
-          "fg-inverse-light bg-classification-ts-sci [&:empty]:before:content-['Top_Secret//SCI']",
-      },
-    },
-    defaultVariants: {
-      variant: 'missing',
-    },
-  },
-);
+export const ClassificationBannerContext =
+  createContext<ContextValue<ClassificationBannerProps, HTMLDivElement>>(null);
 
-export interface ClassificationBannerProps
-  extends VariantProps<typeof classificationBanner> {
-  className?: string;
-  /** If no text is provided, the system will fallback to safe defaults. You can override the text with children. */
-  children?: ReactNode;
-}
-
-export const ClassificationBanner = ({
-  className,
-  variant = 'missing',
+function ClassificationBannerProvider({
+  children,
   ...props
-}: ClassificationBannerProps) => (
-  <span
-    className={cn(
-      classificationBanner({
+}: ClassificationBannerProviderProps) {
+  return (
+    <ClassificationBannerContext.Provider value={props}>
+      {children}
+    </ClassificationBannerContext.Provider>
+  );
+}
+ClassificationBannerProvider.displayName = 'ClassificationBanner.Provider';
+
+export function ClassificationBanner({
+  ref,
+  ...props
+}: ClassificationBannerProps) {
+  [props, ref] = useContextProps(
+    props,
+    ref ?? null,
+    ClassificationBannerContext,
+  );
+
+  const {
+    className,
+    variant = ClassificationBannerStylesDefaults.variant,
+    children,
+    ...rest
+  } = props;
+
+  return (
+    <div
+      {...rest}
+      className={ClassificationBannerStyles({
         variant,
         className,
-      }),
-    )}
-    {...props}
-  />
-);
+      })}
+    >
+      {children}
+    </div>
+  );
+}
 ClassificationBanner.displayName = 'ClassificationBanner';
-ClassificationBanner.as = (
-  props: VariantProps<typeof classificationBanner>,
-  className?: string | string[],
-) => cn(classificationBanner({ ...props, className }));
+ClassificationBanner.Provider = ClassificationBannerProvider;

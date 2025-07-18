@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "2.2.0",
+  "version": "2.3.2",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -48,9 +48,10 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsup && pnpm build:css",
+    "build": "pnpm gen:tokens && pnpm tsup && pnpm build:css",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
     "dev": "pnpm tsc --watch",
+    "gen:tokens": "node scripts/generate-tokens.mjs",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
     "lint": "pnpm biome lint",
     "preview": "pnpm storybook dev -p 6006",
@@ -59,7 +60,7 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/icons": "^2.0.0",
+    "@accelint/icons": "^2.0.1",
     "@fontsource/roboto-flex": "^5.1.0",
     "@fontsource/roboto-mono": "^5.1.0",
     "@internationalized/date": "^3.8.0",
@@ -87,7 +88,6 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.2.0",
-    "tailwindcss-react-aria-components": "^2.0.0",
     "zod": "3.23.8"
   },
   "devDependencies": {

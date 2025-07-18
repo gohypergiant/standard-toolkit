@@ -1,0 +1,131 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+:root {
+  --colors-neutral-10: #0b0b0b;
+  --colors-neutral-11: #FF0000;
+  --colors-neutral-01: #ffffff;
+  --colors-neutral-02: #e6e6e6;
+  --colors-neutral-03: #898989;
+  --colors-neutral-04: #686868;
+  --colors-neutral-05: #565656;
+  --colors-neutral-06: #424242;
+  --colors-neutral-07: #383838;
+  --colors-neutral-08: #2f2f31;
+  --colors-neutral-09: #222222;
+  --colors-alpha-black-01: rgba(0, 0, 0, 0.08);
+  --colors-alpha-black-02: rgba(0, 0, 0, 0.4);
+  --colors-alpha-black-03: rgba(0, 0, 0, 0.8);
+  --colors-alpha-white-01: rgba(255, 255, 255, 0.08);
+  --colors-alpha-white-02: rgba(255, 255, 255, 0.4);
+  --colors-alpha-white-03: rgba(255, 255, 255, 0.8);
+  --colors-highlight-primary-01: #c9fdef;
+  --colors-highlight-primary-02: #7df9d8;
+  --colors-highlight-primary-03: #28f5be;
+  --colors-highlight-primary-04: #189372;
+  --colors-highlight-primary-05: #0a3d30;
+  --colors-highlight-secondary-01: #c9f6fd;
+  --colors-highlight-secondary-02: #7ee9f9;
+  --colors-highlight-secondary-03: #28dcf5;
+  --colors-highlight-secondary-04: #188493;
+  --colors-highlight-secondary-05: #0a373d;
+  --colors-highlight-tertiary-01: #f9c5e2;
+  --colors-highlight-tertiary-02: #f174b9;
+  --colors-highlight-tertiary-03: #e8178a;
+  --colors-highlight-tertiary-04: #8a0e53;
+  --colors-highlight-tertiary-05: #3a0623;
+  --colors-utility-info-01: #e6e6e6;
+  --colors-utility-info-02: #898989;
+  --colors-utility-info-03: #686868;
+  --colors-utility-info-04: #424244;
+  --colors-utility-info-05: #222222;
+  --colors-utility-advisory-01: #e0edff;
+  --colors-utility-advisory-02: #a1caff;
+  --colors-utility-advisory-03: #62a6ff;
+  --colors-utility-advisory-04: #3a6499;
+  --colors-utility-advisory-05: #142133;
+  --colors-utility-normal-01: #d6f6e5;
+  --colors-utility-normal-02: #82e4b2;
+  --colors-utility-normal-03: #30d27e;
+  --colors-utility-normal-04: #1c7e4c;
+  --colors-utility-normal-05: #0a2a19;
+  --colors-utility-serious-01: #feedcc;
+  --colors-utility-serious-02: #fdc865;
+  --colors-utility-serious-03: #fca400;
+  --colors-utility-serious-04: #976201;
+  --colors-utility-serious-05: #322100;
+  --colors-utility-critical-01: #f6d3d2;
+  --colors-utility-critical-02: #e57b77;
+  --colors-utility-critical-03: #d4231d;
+  --colors-utility-critical-04: #7f1511;
+  --colors-utility-critical-05: #2a0706;
+  --colors-classification-unclass: #007A33;
+  --colors-classification-cui: #502b85;
+  --colors-classification-confidential: #0033a0;
+  --colors-classification-secret: #c8102e;
+  --colors-classification-top-secret: #ff8c00;
+  --colors-classification-ts-sci: #fce83a;
+  --typography-header-xxl-size: 32px;
+  --typography-header-xxl-height: 40px;
+  --typography-header-xl-size: 24px;
+  --typography-header-xl-height: 28px;
+  --typography-header-l-size: 20px;
+  --typography-header-l-height: 24px;
+  --typography-header-m-size: 14px;
+  --typography-header-m-height: 20px;
+  --typography-header-s-size: 12px;
+  --typography-header-s-height: 16px;
+  --typography-header-xs-size: 10px;
+  --typography-header-xs-height: 12px;
+  --typography-body-l-size: 16px;
+  --typography-body-l-height: 24px;
+  --typography-body-m-size: 14px;
+  --typography-body-m-height: 20px;
+  --typography-body-s-size: 12px;
+  --typography-body-s-height: 16px;
+  --typography-body-xs-size: 10px;
+  --typography-body-xs-height: 12px;
+  --typography-body-xxs-size: 9px;
+  --typography-body-xxs-height: 12px;
+  --typography-button-l-size: 16px;
+  --typography-button-l-height: 24px;
+  --typography-button-m-size: 14px;
+  --typography-button-m-height: 20px;
+  --typography-button-s-size: 12px;
+  --typography-button-s-height: 16px;
+  --typography-button-xs-size: 10px;
+  --typography-button-xs-height: 12px;
+  --spacing-0: 0px;
+  --spacing-none: unset;
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-s: 8px;
+  --spacing-m: 12px;
+  --spacing-l: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 40px;
+  --spacing-oversized: 80px;
+  --radius-none: 0px;
+  --radius-small: 2px;
+  --radius-medium: 4px;
+  --radius-large: 8px;
+  --radius-round: 80px;
+  --shadows-elevation-default: initial;
+  --shadows-elevation-overlay: 0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14);
+  --shadows-elevation-raised: 0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14);
+  --font-primary: "Roboto Flex", sans-serif;
+  --font-display: "Roboto Mono", monospace;
+  --icon-size-l: var(--spacing-xl);
+  --icon-size-m: 20px;
+  --icon-size-s: var(--spacing-l);
+  --icon-size-xs: var(--spacing-m);
+}

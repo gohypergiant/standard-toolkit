@@ -10,11 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import 'client-only';
+'use client';
 import { cn } from '@/lib/utils';
 import Calendar from '@accelint/icons/calendar';
 import type { DateValue } from '@internationalized/date';
 import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
+import 'client-only';
 import { type VariantProps, cva } from 'cva';
 import type { ForwardedRef } from 'react';
 import {
@@ -232,7 +233,7 @@ export function DateField<T extends DateValue>({
         <Label
           className='empty:hidden'
           isDisabled={isDisabled}
-          isOptional={!props.isRequired}
+          isRequired={props.isRequired}
         >
           {label}
         </Label>

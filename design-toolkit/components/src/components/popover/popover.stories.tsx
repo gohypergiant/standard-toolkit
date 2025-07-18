@@ -64,7 +64,7 @@ export const WithActions: Story = {
   render: () => (
     <Popover>
       <Popover.Trigger>
-        <Button variant='critical'>
+        <Button variant='icon'>
           <Icon>
             <Delete />
           </Icon>
@@ -81,7 +81,7 @@ export const WithActions: Story = {
               <Button variant='flat' onPress={close}>
                 Cancel
               </Button>
-              <Button variant='destructive' onPress={close}>
+              <Button variant='filled' onPress={close}>
                 CTA
               </Button>
             </Popover.Footer>

@@ -1,0 +1,27 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: standard-toolkit
+  title: Development Toolkit (DevTK)
+  description: >
+    A public monorepo of reusable frontend and backend modules, design
+    primitives, and tooling used to standardize and accelerate application
+    development within the Accelint ecosystem.
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/edit/main/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/view-url: https://github.com/gohypergiant/standard-toolkit
+    github.com/project-slug: gohypergiant/standard-toolkit
+  tags:
+    - backend
+    - design-system
+    - design-toolkit
+    - devtk
+    - frontend
+    - monorepo
+    - public
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/hypergiant

@@ -1,7 +1,20 @@
-import { layer } from '@vanilla-extract/css';
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import { globalLayer } from '@vanilla-extract/css';
 import type { IntRange, Sum } from 'type-fest';
 
 const LEVELS = 5;
+const LAYER_NAMESPACE = 'old_ds_';
 
 type Range = IntRange<1, Sum<typeof LEVELS, 1>>;
 type Levels = `l${Range}`;
@@ -22,15 +35,21 @@ const levels: Levels[] = Array.from(
  */
 
 // Browser overrides to base elements
-const reset = layer();
+const reset = globalLayer(`${LAYER_NAMESPACE}reset`);
 // Parent for all of design system
-const framework = layer('framework');
+const framework = globalLayer(`${LAYER_NAMESPACE}framework`);
 // Parent for variables levels
-const variables = layer({ parent: framework }, 'variables');
+const variables = globalLayer(
+  { parent: framework },
+  `${LAYER_NAMESPACE}variables`,
+);
 
 const varsLevels = levels.reduce(
   (acc, level) => {
-    acc[level] = layer({ parent: variables }, `variables.${level}`);
+    acc[level] = globalLayer(
+      { parent: variables },
+      `${LAYER_NAMESPACE}variables.${level}`,
+    );
 
     return acc;
   },
@@ -38,13 +57,19 @@ const varsLevels = levels.reduce(
 );
 
 // Global styles, ex: typography
-const styles = layer({ parent: framework }, 'styles');
+const styles = globalLayer({ parent: framework }, `${LAYER_NAMESPACE}styles`);
 // Parent for components levels
-const components = layer({ parent: framework }, 'components');
+const components = globalLayer(
+  { parent: framework },
+  `${LAYER_NAMESPACE}components`,
+);
 
 const componentsLevels = levels.reduce(
   (acc, level) => {
-    acc[level] = layer({ parent: components }, `components.${level}`);
+    acc[level] = globalLayer(
+      { parent: components },
+      `${LAYER_NAMESPACE}components.${level}`,
+    );
 
     return acc;
   },
@@ -52,11 +77,14 @@ const componentsLevels = levels.reduce(
 );
 
 // Parent for app specific overrides
-const overrides = layer('overrides');
+const overrides = globalLayer(`${LAYER_NAMESPACE}overrides`);
 
 const overridesLevels = levels.reduce(
   (acc, level) => {
-    acc[level] = layer({ parent: overrides }, `overrides.${level}`);
+    acc[level] = globalLayer(
+      { parent: overrides },
+      `${LAYER_NAMESPACE}overrides.${level}`,
+    );
 
     return acc;
   },

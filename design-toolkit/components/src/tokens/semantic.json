@@ -1,0 +1,81 @@
+{
+  "colors": {
+    "surface": {
+      "default": "--colors-neutral-10",
+      "raised": "--colors-neutral-09",
+      "overlay": "--colors-neutral-08"
+    },
+    "transparent": {
+      "dark": "--colors-alpha-black-02",
+      "light": "--colors-alpha-white-01"
+    },
+    "interactive": {
+      "base": "--colors-neutral-05",
+      "default": "--colors-neutral-02",
+      "hover": {
+        "base": "--colors-neutral-01",
+        "light": "--colors-neutral-03",
+        "dark": "--colors-neutral-08"
+      },
+      "disabled": "--colors-neutral-07"
+    },
+    "static": {
+      "light": "--colors-neutral-07",
+      "dark": "--colors-neutral-09"
+    },
+    "highlight": {
+      "base": "--colors-highlight-primary-03",
+      "bold": "--colors-highlight-primary-03",
+      "hover": "--colors-highlight-primary-04",
+      "subtle": "--colors-highlight-primary-05"
+    },
+    "info": {
+      "base": "--colors-neutral-04",
+      "bold": "--colors-utility-info-03",
+      "hover": "--colors-utility-info-04",
+      "subtle": "--colors-utility-info-05"
+    },
+    "advisory": {
+      "base": "--colors-utility-advisory-03",
+      "bold": "--colors-utility-advisory-03",
+      "hover": "--colors-utility-advisory-04",
+      "subtle": "--colors-utility-advisory-05"
+    },
+    "normal": {
+      "base": "--colors-utility-normal-03",
+      "bold": "--colors-utility-normal-03",
+      "hover": "--colors-utility-normal-04",
+      "subtle": "--colors-utility-normal-05"
+    },
+    "serious": {
+      "base": "--colors-utility-serious-03",
+      "bold": "--colors-utility-serious-03",
+      "hover": "--colors-utility-serious-04",
+      "subtle": "--colors-utility-serious-05"
+    },
+    "critical": {
+      "base": "--colors-utility-critical-03",
+      "bold": "--colors-utility-critical-03",
+      "hover": "--colors-utility-critical-04",
+      "subtle": "--colors-utility-critical-05"
+    },
+    "default": {
+      "light": "--colors-neutral-01",
+      "dark": "--colors-neutral-03"
+    },
+    "inverse": {
+      "dark": "--colors-neutral-07",
+      "light": "--colors-neutral-09"
+    },
+    "disabled": "--colors-neutral-05",
+    "classification": {
+      "missing": "--colors-neutral-10",
+      "unclass": "--colors-classification-unclass",
+      "cui": "--colors-classification-cui",
+      "confidential": "--colors-classification-confidential",
+      "secret": "--colors-classification-secret",
+      "top-secret": "--colors-classification-top-secret",
+      "ts-sci": "--colors-classification-ts-sci"
+    }
+  }
+}

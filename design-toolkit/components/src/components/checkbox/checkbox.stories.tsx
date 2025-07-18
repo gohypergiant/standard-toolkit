@@ -13,23 +13,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from './';
 
-/**
- * The `<Checkbox>` component is a direct wrapper around the equiavalent component from
- * `react-aria-components`.
- *
- * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/Checkbox.html">here</a>.
- */
 const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox',
   component: Checkbox,
   args: {
-    className: '',
     children: 'Checkbox',
     isDisabled: false,
     isIndeterminate: false,
-    isReadOnly: false,
   },
-  argTypes: {},
+  parameters: {
+    controls: {
+      exclude: ['inputRef', 'validationBehavior'],
+    },
+  },
 };
 
 export default meta;

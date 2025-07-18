@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import 'client-only';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import { IconStyles, IconStylesDefaults } from './styles';

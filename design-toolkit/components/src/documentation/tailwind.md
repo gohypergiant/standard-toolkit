@@ -32,8 +32,11 @@ export const MyStyles = tv({
     bar: '...',
   },
   variants: {
-    isDisabled: {
-      true: {
+    size: {
+      medium: {
+        bar: '...',
+      },
+      small: {
         bar: '...',
       }
     }
@@ -45,29 +48,31 @@ import { MyStyles } from './styles';
 
 const { foo, bar } = MyStyles();
 
-function MyComponent({ children, className, isDisabled }: MyComponentProps) {
+function MyComponent({ children, className, size }: MyComponentProps) {
   return (
-    <Foo className={foo({ className, isDisabled })}>
-      <Bar className={bar({ isDisabled })}>{children}</Bar>
+    <Foo className={foo({ className, size })}>
+      <Bar className={bar({ size })}>{children}</Bar>
     </Foo>
   )
 }
 ```
 
+Keep in mind, when implementing variants within `tv`, you should not implement a variant that is covered by one of the state classes below. Use these state classes instead of implementing a local variant, if possible.
+
 ### [RAC State Classes](https://react-spectrum.adobe.com/react-aria/styling.html#plugin)
 
-The Core team has implemented the RAC TW plugin with the prefix `dtk`. This means that RAC state based classes are available to utilize.
+The Core team has chosen not to implement the RAC TW plugin directly. Instead we've implemented a modified version that follows the same patterns without being locked into RAC selectors or using a prefix that separates selector types. This means that RAC state based classes are available to utilize, they're just merged with CSS pseudo selectors and will work with any component that implements the cooresponding data attributes (when CSS pseudo selectors don't work).
 
-However, as a best practice, these should be used sparingly. They shouldn't be necessary in most cases and shouldn't be mixed with the primary approach of using TV. But for little one off things like rotating icons or something where implementing TV is overkill, it's acceptable so long as its only 1-2 classes.
+Because we have a custom implementation, there may be additional variants available than what is documented in RAC. Check out [index.css](../index.css) to see the custom variants defined and the selectors associated with each.
 
-Avoid using these classes when a CSS pseudo class alternative is available. Use `hover:bg-normal` instead of `dtk-hover:bg-normal`, or similar with `active`, `disabled`, `focus`, etc.
+Any reusable component that is being developed without RAC underpinning or has additional internal state which would be useful to expose to styling should implement data attributes and a custom variant. However, consider how generic the implementation is before proceeding. If the state is unique to the component being developed, using TV variants instead is likely the way to go.
 
 ```jsx
 function MyComponent() {
   return (
     <ToggleButton>
       <Icon>
-        <MyIcon className="transform group-dtk-selected:rotate-180" />
+        <MyIcon className="transform group-selected:rotate-180" />
       <Icon>
     </ToggleButton>
   )
@@ -151,7 +156,7 @@ function MyComponent({ size }: Props) {
   );
 
   // Ok, but custom variants aren't available
-  return <ToggleButton className="dtk-selected:foo" />
+  return <ToggleButton className="selected:foo" />
 
   // Good, if renderProps from RAC are available (props and internal state can be used too)
   return <ToggleButton className={({ isSelected }) => styles({ size, isSelected })} />

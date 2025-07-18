@@ -14,6 +14,7 @@ import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from '../icon';
 import { Accordion } from './';
+import { AccordionStylesDefaults } from './styles';
 
 /**
  * The accordion group will stretch to fill the entire width of its parent container.
@@ -23,7 +24,7 @@ const meta: Meta<typeof Accordion.Group> = {
   component: Accordion.Group,
   args: {
     allowsMultipleExpanded: false,
-    variant: 'cozy',
+    variant: AccordionStylesDefaults.variant,
     isDisabled: false,
   },
   argTypes: {
