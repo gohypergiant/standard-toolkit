@@ -64,6 +64,8 @@ export function reactCompilerEsbuildPlugin({
               BabelPluginReactCompiler,
               {
                 target: '19',
+                transformMode: 'standalone',
+                panicThreshold: 'NONE',
                 // runtimeModule: runtimeModulePath,
               },
             ],
