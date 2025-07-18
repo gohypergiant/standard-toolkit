@@ -9,49 +9,44 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
-import { cva } from 'cva';
+import 'client-only';
+import { createContext } from 'react';
 import {
   Label as AriaLabel,
-  type LabelProps as AriaLabelProps,
+  type ContextValue,
+  useContextProps,
 } from 'react-aria-components';
-import { cn } from '@/lib/utils';
+import { LabelStyles } from './styles';
+import type { LabelProps, LabelProviderProps } from './types';
 
-const labelStyles = cva(
-  'fg-default-light flex items-center gap-xs text-header-s',
-  {
-    variants: {
-      isDisabled: {
-        true: 'fg-disabled',
-        false: 'fg-default-light',
-      },
-    },
-    defaultVariants: {
-      isDisabled: false,
-    },
-  },
-);
+export const LabelContext =
+  createContext<ContextValue<LabelProps, HTMLLabelElement>>(null);
 
-interface LabelProps extends AriaLabelProps {
-  isDisabled?: boolean;
-  isOptional?: boolean;
+function LabelProvider({ children, ...props }: LabelProviderProps) {
+  return (
+    <LabelContext.Provider value={props}>{children}</LabelContext.Provider>
+  );
 }
+LabelProvider.displayName = 'Label.Provider';
 
-export function Label({
-  children,
-  className,
-  isDisabled,
-  isOptional,
-  ...props
-}: LabelProps) {
+export function Label({ ref, ...props }: LabelProps) {
+  [props, ref] = useContextProps(props, ref ?? null, LabelContext);
+
+  const { children, className, isDisabled, isRequired, ...rest } = props;
+
   return (
     <AriaLabel
-      {...props}
-      className={cn(labelStyles({ isDisabled, className }))}
+      {...rest}
+      className={LabelStyles({ className })}
+      data-disabled={isDisabled || null}
+      data-required={isRequired || null}
     >
-      {children} {isOptional && '(optional)'}
+      {children}
+      {!isRequired && ' (optional)'}
     </AriaLabel>
   );
 }
 Label.displayName = 'Label';
-Label.as = (className?: string | string[]) => cn(labelStyles({ className }));
+Label.Provider = LabelProvider;

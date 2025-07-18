@@ -10,26 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { Switch } from './index';
+import { Switch } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Switch> = {
   title: 'Components/Switch',
   component: Switch,
   args: {
-    className: undefined,
     children: 'Label',
     isDisabled: false,
-  },
-  argTypes: {
-    className: { type: 'string' },
-    children: { type: 'string' },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Switch>;
 
-export const Default: Story = {
-  render: ({ children, ...args }) => <Switch {...args}>{children}</Switch>,
+export const Default: StoryObj<typeof Switch> = {
+  render: Switch,
 };

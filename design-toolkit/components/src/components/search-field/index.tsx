@@ -10,11 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import {
   CancelFill,
   Loop as LoopIcon,
   Search as SearchIcon,
 } from '@accelint/icons';
+import 'client-only';
 import { cva } from 'cva';
 import {
   SearchField as AriaSearchField,
@@ -78,7 +80,7 @@ export const SearchField = ({
           <LoopIcon className='scale-x-[-1]' />
         </Icon>
       ) : (
-        <Button className='fg-default-dark hover:fg-interactive-hover absolute top-[8px] right-[8px] cursor-pointer group-dtk-disabled:hidden group-dtk-empty:hidden'>
+        <Button className='fg-default-dark hover:fg-interactive-hover absolute top-[8px] right-[8px] cursor-pointer group-empty:hidden group-disabled:hidden'>
           <Icon size='small'>
             <CancelFill />
           </Icon>

@@ -1,5 +1,24 @@
 # @accelint/design-system
 
+## 0.11.1
+
+### Patch Changes
+
+- ad067b2: - Update DesignTK Checkbox to follow styling standards
+  - Remove Checkbox and Radio icons due to not being implementable as-is
+
+## 0.11.0
+
+### Minor Changes
+
+- decc983: use globalLayers to support layer orchestration
+
+## 0.10.1
+
+### Patch Changes
+
+- 1f3c039: Ensure complete exports
+
 ## 0.10.0
 
 ### Minor Changes

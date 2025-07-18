@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import 'client-only';
 import { CancelFill } from '@accelint/icons';
 import { cva, type VariantProps } from 'cva';
@@ -221,7 +222,7 @@ export function TextField({
         <Label
           className='empty:hidden'
           isDisabled={isDisabled}
-          isOptional={!props.isRequired}
+          isRequired={props.isRequired}
         >
           {label}
         </Label>

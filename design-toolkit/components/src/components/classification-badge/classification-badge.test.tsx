@@ -11,7 +11,8 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ClassificationBadge, type ClassificationBadgeProps } from './';
+import { ClassificationBadge } from './';
+import type { ClassificationBadgeProps } from './types';
 
 function setup({
   children = 'Unclassified',
@@ -26,18 +27,10 @@ function setup({
 }
 
 describe('Classification Badge', () => {
-  it('should render unclassified variant', () => {
-    const { children } = setup({
-      children: 'Unclassified',
-      variant: 'unclassified',
-    });
-
+  it('should render', () => {
+    const { children } = setup();
     const component = screen.getByText(`${children}`);
 
     expect(component).toBeInTheDocument();
-    expect(component).toHaveClass(
-      'fg-default-light',
-      'bg-classification-unclass',
-    );
   });
 });

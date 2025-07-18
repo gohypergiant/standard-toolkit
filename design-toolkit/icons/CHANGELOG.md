@@ -1,5 +1,12 @@
 # @accelint/icons
 
+## 2.0.1
+
+### Patch Changes
+
+- ad067b2: - Update DesignTK Checkbox to follow styling standards
+  - Remove Checkbox and Radio icons due to not being implementable as-is
+
 ## 2.0.0
 
 ### Major Changes

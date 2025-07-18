@@ -14,6 +14,7 @@
 
 import { ChevronDown } from '@accelint/icons';
 import { createContext, useContext } from 'react';
+import 'client-only';
 import {
   Button,
   type ContextValue,
@@ -21,7 +22,6 @@ import {
   Disclosure,
   DisclosureGroup,
   DisclosurePanel,
-  DisclosureStateContext,
   Heading,
   useContextProps,
 } from 'react-aria-components';
@@ -58,7 +58,6 @@ function AccordionGroup({
           group({
             className,
             variant,
-            isDisabled,
           }),
         )}
       >
@@ -71,14 +70,9 @@ AccordionGroup.displayName = 'Accordion.Group';
 
 function AccordionHeader({ ref, children, className }: AccordionHeaderProps) {
   const context = useContext(AccordionContext);
-  const state = useContext(DisclosureStateContext);
   const variant =
     (isSlottedContextValue(context) ? undefined : context?.variant) ??
     AccordionStylesDefaults.variant;
-  const isDisabled =
-    (isSlottedContextValue(context) ? undefined : context?.isDisabled) ??
-    AccordionStylesDefaults.isDisabled;
-  const isExpanded = state?.isExpanded ?? AccordionStylesDefaults.isExpanded;
 
   return (
     <Icon.Provider size={variant === 'compact' ? 'small' : 'large'}>
@@ -87,8 +81,6 @@ function AccordionHeader({ ref, children, className }: AccordionHeaderProps) {
         className={header({
           className,
           variant,
-          isDisabled,
-          isExpanded,
         })}
       >
         {children}
@@ -104,14 +96,9 @@ function AccordionTrigger({
   classNames,
 }: AccordionTriggerProps) {
   const context = useContext(AccordionContext);
-  const state = useContext(DisclosureStateContext);
   const variant =
     (isSlottedContextValue(context) ? undefined : context?.variant) ??
     AccordionStylesDefaults.variant;
-  const isDisabled =
-    (isSlottedContextValue(context) ? undefined : context?.isDisabled) ??
-    AccordionStylesDefaults.isDisabled;
-  const isExpanded = state?.isExpanded ?? AccordionStylesDefaults.isExpanded;
 
   return (
     <Heading
@@ -119,8 +106,6 @@ function AccordionTrigger({
       className={heading({
         className: classNames?.heading,
         variant,
-        isDisabled,
-        isExpanded,
       })}
     >
       <Button
@@ -129,12 +114,11 @@ function AccordionTrigger({
           trigger({
             className,
             variant,
-            isExpanded,
           }),
         )}
       >
         <Icon>
-          <ChevronDown className='transform group-dtk-expanded:rotate-180' />
+          <ChevronDown className='transform group-expanded:rotate-180' />
         </Icon>
         {children}
       </Button>

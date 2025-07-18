@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
 import 'client-only';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { cva, type VariantProps } from 'cva';
@@ -148,7 +149,7 @@ export function ComboBox<T extends IOptionsItem>({
             <Label
               className='empty:hidden'
               isDisabled={isDisabled}
-              isOptional={!props.isRequired}
+              isRequired={props.isRequired}
             >
               {label}
             </Label>

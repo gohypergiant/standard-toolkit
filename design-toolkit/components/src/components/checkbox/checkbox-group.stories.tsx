@@ -26,14 +26,21 @@ const meta: Meta<typeof Checkbox.Group> = {
   title: 'Components/Checkbox.Group',
   component: Checkbox.Group,
   args: {
-    className: '',
-    children: '',
-    isDisabled: false,
-    isReadOnly: false,
     label: 'Header',
+    orientation: 'vertical',
+    isDisabled: false,
+    isRequired: false,
   },
   argTypes: {
-    label: { type: 'string' },
+    orientation: {
+      control: 'select',
+      options: ['horizontal', 'vertical'],
+    },
+  },
+  parameters: {
+    controls: {
+      exclude: ['validationBehavior'],
+    },
   },
 };
 

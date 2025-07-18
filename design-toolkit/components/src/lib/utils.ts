@@ -22,7 +22,6 @@ export const twMerge = extendTailwindMerge<AdditionalClassGroupIds>({
   extend: {
     classGroups: {
       icon: [{ icon: ['', validators.isAny] }],
-      'icon-size': [{ 'icon-size': ['', validators.isAny] }],
       fg: [{ fg: ['', validators.isAny] }],
     },
     conflictingClassGroups: {
@@ -127,7 +126,6 @@ export const tv = createTV({
     extend: {
       classGroups: {
         icon: [{ icon: ['', validators.isAny] }],
-        'icon-size': [{ 'icon-size': ['', validators.isAny] }],
         fg: [{ fg: ['', validators.isAny] }],
       },
       conflictingClassGroups: {

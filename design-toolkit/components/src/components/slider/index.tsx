@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
+import 'client-only';
 import { cva } from 'cva';
 import { useContext } from 'react';
 import {

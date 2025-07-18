@@ -12,7 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Radio, type RadioProps } from './index';
+import { Radio } from './';
+import type { RadioProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<RadioProps> = {}) {
   render(
