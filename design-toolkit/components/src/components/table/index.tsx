@@ -292,6 +292,7 @@ export function Table<T extends { id: string | number }>({
     } else if (kebabPosition === 'right') {
       columns.push(actionColumn);
     }
+
     if (showCheckbox) {
       columns.unshift({
         id: 'selection',
@@ -418,6 +419,14 @@ export function Table<T extends { id: string | number }>({
     [setColumnOrderCallback],
   );
 
+  // TODO:
+  // - when kebab position is right, top row, last column should not have a kebab menu
+  // - when kebab position is left, top row, first column (other than numeral / selection)
+  // should not have a kebab menu
+  // - when kebab position is left, the last column in the header is missing a kebab menu ✅
+  // - when you hover a row, if peristant numerials if off,
+  // the numerals for that row are visible. The same behavior
+  // should apply to row kebab items
   if (dataProp) {
     return (
       <div>
@@ -434,7 +443,8 @@ export function Table<T extends { id: string | number }>({
                     }
                   >
                     <div className='flex items-center justify-between gap-xxs'>
-                      {header.isPlaceholder ? null : (
+                      {header.isPlaceholder ||
+                      header.column.id === 'kebab' ? null : (
                         <button
                           type='button'
                           onClick={header.column.getToggleSortingHandler?.()}

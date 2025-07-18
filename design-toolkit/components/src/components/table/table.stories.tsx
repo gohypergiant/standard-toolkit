@@ -171,6 +171,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     kebabPosition: 'right',
+    enableSorting: false,
   },
 
   render: (args) => <Table {...args} />,
@@ -188,3 +189,9 @@ export const SortableColumns: Story = {
   },
   render: (args) => <Table {...args} />,
 };
+
+// persist numerials
+// persist row kebab menu
+// persist header kebab menu
+// pin-able rows
+// action menus
