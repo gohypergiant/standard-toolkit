@@ -17,7 +17,7 @@ import ArrowDown from '@accelint/icons/arrow-down';
 import ArrowUp from '@accelint/icons/arrow-up';
 import ChevronLeft from '@accelint/icons/chevron-left';
 import ChevronRight from '@accelint/icons/chevron-right';
-import * as KebabRaw from '@accelint/icons/kebab';
+import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
@@ -36,6 +36,7 @@ import { Input as AriaInput } from 'react-aria-components';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
+// import { IconButton } from '../icon-button';
 import { ActionsCell } from './actions-cell';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -45,12 +46,6 @@ import { TableRow } from './table-row';
 import type { TableProps } from './types';
 
 const MAX_VISIBLE_PAGES = 5;
-
-const Kebab = () => {
-  return (
-    <KebabRaw.default className=' text-default-light border-2 border-advisory' />
-  );
-};
 
 const range = (lo: number, hi: number) =>
   Array.from({ length: hi - lo }, (_, i) => i + lo);
@@ -92,15 +87,25 @@ const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
   </TableCell>
 );
 
+const TableDefaultProps = {
+  kebabPosition: 'right',
+  persistRowKebabMenu: true,
+  persistHeaderKebabMenu: true,
+  persistNumerals: false,
+  pageSize: 10,
+  enableSorting: true,
+} as const;
+
 export function Table<T extends { id: string | number }>({
   columns: columnsProp,
   data: dataProp,
   showCheckbox,
-  kebabPosition = 'right',
-  persistRowActionMenu = false,
-  persistNumerals = false,
-  pageSize = 10,
-  enableSorting = true,
+  kebabPosition = TableDefaultProps.kebabPosition,
+  persistRowKebabMenu = TableDefaultProps.persistRowKebabMenu,
+  persistHeaderKebabMenu = TableDefaultProps.persistHeaderKebabMenu,
+  persistNumerals = TableDefaultProps.persistNumerals,
+  pageSize = TableDefaultProps.pageSize,
+  enableSorting = TableDefaultProps.enableSorting,
   ...props
 }: TableProps<T>) {
   const {
@@ -185,6 +190,7 @@ export function Table<T extends { id: string | number }>({
         const isPinned = row.getIsPinned();
         return (
           <ActionsCell
+            persistent={persistRowKebabMenu}
             isOpen={activeRow === row.id}
             onOpenChange={(isOpen) => {
               if (isOpen) {
@@ -268,6 +274,7 @@ export function Table<T extends { id: string | number }>({
       moveUpSelectedRows,
       moveDownSelectedRows,
       activeRow,
+      persistRowKebabMenu,
     ],
   );
 
@@ -418,25 +425,48 @@ export function Table<T extends { id: string | number }>({
           <TableHeader>
             {getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  console.log({ header });
-                  return (
-                    <HeaderCell
-                      key={header.id}
-                      narrow={
-                        header.column.id === 'numeral' ||
-                        header.column.id === 'kebab'
-                      }
-                    >
-                      <div className='flex items-center gap-xxs'>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                {headerGroup.headers.map((header) => (
+                  <HeaderCell
+                    key={header.id}
+                    narrow={
+                      header.column.id === 'numeral' ||
+                      header.column.id === 'kebab'
+                    }
+                  >
+                    <div className='flex items-center justify-between gap-xxs'>
+                      {header.isPlaceholder ? null : (
+                        <button
+                          type='button'
+                          onClick={header.column.getToggleSortingHandler?.()}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: header.column.getCanSort()
+                              ? 'pointer'
+                              : 'default',
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: 0,
+                          }}
+                          disabled={!header.column.getCanSort()}
+                          aria-label={
+                            header.column.getIsSorted()
+                              ? `Sorted ${header.column.getIsSorted() === 'asc' ? 'ascending' : 'descending'}`
+                              : 'Not sorted'
+                          }
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                        </button>
+                      )}
+
+                      {['numeral', 'kebab', 'selection'].includes(
+                        header.column.id,
+                      ) ? null : (
                         <ActionsCell
-                          persistent={!!header.column.getIsSorted()}
+                          persistent={persistHeaderKebabMenu}
                           actions={[
                             {
                               label: 'Move column left',
@@ -492,10 +522,10 @@ export function Table<T extends { id: string | number }>({
                             <Kebab />
                           )}
                         </ActionsCell>
-                      </div>
-                    </HeaderCell>
-                  );
-                })}
+                      )}
+                    </div>
+                  </HeaderCell>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -511,7 +541,7 @@ export function Table<T extends { id: string | number }>({
                 {row.getVisibleCells().map((cell) =>
                   dataTableCell(
                     cell,
-                    cell.column.id === 'kebab' ? persistRowActionMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
+                    cell.column.id === 'kebab' ? persistRowKebabMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
                   ),
                 )}
               </TableRow>
@@ -531,7 +561,7 @@ export function Table<T extends { id: string | number }>({
                       cell.column.id === 'numeral'
                         ? persistNumerals
                         : cell.column.id === 'kebab'
-                          ? persistRowActionMenu
+                          ? persistRowKebabMenu
                           : true,
                     ),
                   )}
@@ -547,7 +577,7 @@ export function Table<T extends { id: string | number }>({
                 {row.getVisibleCells().map((cell) =>
                   dataTableCell(
                     cell,
-                    cell.column.id === 'kebab' ? persistRowActionMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
+                    cell.column.id === 'kebab' ? persistRowKebabMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
                   ),
                 )}
               </TableRow>
@@ -619,6 +649,7 @@ export function Table<T extends { id: string | number }>({
       </div>
     );
   }
+
   return <table {...props} />;
 }
 

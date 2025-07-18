@@ -12,6 +12,12 @@
 
 import { tv } from '@/lib/utils';
 
+export const TableCellStylesDefaults = {
+  narrow: false,
+  numeral: false,
+  persistent: true,
+} as const;
+
 export const cellStyles = tv({
   base: [
     'min-w-l text-left align-middle font-display text-body-s text-default-light hover:group-not-data-selected/row:bg-surface-raised',
@@ -31,9 +37,9 @@ export const cellStyles = tv({
     },
   },
   defaultVariants: {
-    narrow: false,
-    numeral: false,
-    persistent: true,
+    narrow: TableCellStylesDefaults.narrow,
+    numeral: TableCellStylesDefaults.numeral,
+    persistent: TableCellStylesDefaults.persistent,
   },
   compoundVariants: [
     {
@@ -49,6 +55,10 @@ export const cellStyles = tv({
   ],
 });
 
+export const TableHeaderCellStylesDefaults = {
+  narrow: false,
+} as const;
+
 export const headerCellStyles = tv({
   base: [
     'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
@@ -60,7 +70,7 @@ export const headerCellStyles = tv({
     },
   },
   defaultVariants: {
-    narrow: false,
+    narrow: TableHeaderCellStylesDefaults.narrow,
   },
 });
 

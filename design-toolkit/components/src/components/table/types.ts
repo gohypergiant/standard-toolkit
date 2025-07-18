@@ -39,31 +39,44 @@ type ExtendedTableProps<T extends { id: string | number }> = {
    * Each object must have a unique `id` property.
    */
   data: T[];
+
   /**
    * Whether to display a checkbox column.
    */
   showCheckbox?: boolean;
+
   /**
    * Position of the kebab menu, either 'left' or 'right'.
    */
   kebabPosition?: 'left' | 'right';
+
+  /**
+   * Whether to persist the header kebab menu.
+   * If true, the header kebab menu is always visible.
+   * If false, it is only visible on hover or when the row is hovered.
+   */
+  persistHeaderKebabMenu?: boolean;
+
   /**
    * Whether to persist the kebab menu.
    * If true, the kebab menu is always visible.
    * If false, it is only visible on hover or when the row is hovered.
    */
-  persistRowActionMenu?: boolean;
+  persistRowKebabMenu?: boolean;
+
   /**
    * Whether to persist numeral columns.
    * If true, numeral columns are always visible.
    * If false, they are only visible on hover or when the row is hovered.
    */
   persistNumerals?: boolean;
+
   /**
    * Optional page size for pagination.
    * If provided, the table will support pagination with the specified page size.
    */
   pageSize?: number;
+
   /**
    * Whether to enable sorting.
    * If true, the table will support sorting.
