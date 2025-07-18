@@ -234,6 +234,14 @@
   --icon-color: --value(--color- *);
 }
 
+@custom-variant data-selected (&[data-selected~="true"]);
+@custom-variant data-active (&[data-active~="true"]);
+@custom-variant data-pinned (&:is([data-pinned~="top"], [data-pinned~="bottom"]));
+
+
+
+
+
 body {
   @apply font-primary;
 }
@@ -290,4 +298,6 @@ body {
     background-repeat: repeat-y, repeat-x;
     background-size: 1px 4px, 4px 1px;
   }
+
+
 }

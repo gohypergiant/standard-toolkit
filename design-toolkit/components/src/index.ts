@@ -187,6 +187,29 @@ export type {
   SwitchProps,
   SwitchProviderProps,
 } from './components/switch/types';
+export { ActionsCell } from './components/table/actions-cell';
+export { Table } from './components/table';
+export {
+  actionsCellStyles,
+  cellStyles,
+  headerCellStyles,
+  rowStyles,
+  tableBodyStyles,
+} from './components/table/styles';
+export { TableBody } from './components/table/table-body';
+export { TableCell } from './components/table/table-cell';
+export { HeaderCell } from './components/table/table-header-cell';
+export { TableHeader } from './components/table/table-header';
+export { TableRow } from './components/table/table-row';
+export type {
+  ActionsCellProps,
+  TableBodyProps,
+  TableCellProps,
+  TableHeaderCellProps,
+  TableHeaderProps,
+  TableProps,
+  TableRowProps,
+} from './components/table/types';
 export { Tabs } from './components/tabs';
 export type {
   TabListProps,
