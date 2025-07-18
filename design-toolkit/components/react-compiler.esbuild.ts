@@ -16,9 +16,28 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { relative, resolve } from 'node:path';
 import * as babel from '@babel/core';
 import BabelPluginReactCompiler from 'babel-plugin-react-compiler';
 import type { Plugin } from 'esbuild';
+
+function logInfo(filename, event) {
+  // console.log(filename);
+  // console.log(event);
+
+  if (event.kind === 'CompileSuccess') {
+    console.info(`✅ ${relative(resolve(), filename)} ${event.fnName}`);
+  }
+
+  if (event.kind === 'CompileError') {
+    console.error(
+      `❌ ${relative(resolve(), filename)}
+       ${event.detail.severity}.
+       ${event.detail.reason}
+      `,
+    );
+  }
+}
 
 export function reactCompilerEsbuildPlugin({
   filter,
@@ -26,7 +45,6 @@ export function reactCompilerEsbuildPlugin({
 }: {
   filter: RegExp;
   sourceMaps: boolean;
-  runtimeModulePath?: string;
 }): Plugin {
   return {
     name: 'esbuild-react-compiler-plugin',
@@ -46,7 +64,7 @@ export function reactCompilerEsbuildPlugin({
         timings = [];
       });
 
-      build.onLoad({ filter, namespace: '' }, (args) => {
+      build.onLoad({ filter }, (args) => {
         const contents = readFileSync(args.path, 'utf8');
 
         const t0 = performance.now();
@@ -56,17 +74,18 @@ export function reactCompilerEsbuildPlugin({
           jsx: 'automatic',
           define: build.initialOptions.define,
           target: build.initialOptions.target,
+          format: build.initialOptions.format,
         });
 
         const transformResult = babel.transformSync(output.code, {
+          // NOTE: https://github.com/facebook/react/blob/main/compiler/packages/babel-plugin-react-compiler/src/Entrypoint/Options.ts#L275
           plugins: [
             [
               BabelPluginReactCompiler,
               {
-                target: '19',
-                transformMode: 'standalone',
-                panicThreshold: 'NONE',
-                // runtimeModule: runtimeModulePath,
+                logger: {
+                  logEvent: logInfo,
+                },
               },
             ],
           ],

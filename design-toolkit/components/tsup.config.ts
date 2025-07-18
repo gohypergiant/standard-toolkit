@@ -17,14 +17,14 @@ import { reactCompilerEsbuildPlugin } from './react-compiler.esbuild';
 
 export default defineConfig({
   esbuildPlugins: [
+    reactCompilerEsbuildPlugin({
+      sourceMaps: true,
+      filter: /\.m?[jt]sx?$/,
+    }),
     esbuildPluginFilePathExtensions({
       esmExtension: 'js',
     }),
     fixImportsPlugin(),
-    reactCompilerEsbuildPlugin({
-      sourceMaps: true,
-      filter: /.*/,
-    }),
   ],
   entry: [
     'src/**/*.{ts,tsx,css}',
