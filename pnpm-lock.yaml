@@ -270,9 +270,6 @@ importers:
       '@react-aria/interactions':
         specifier: 3.25.3
         version: 3.25.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/overlays':
-        specifier: 3.27.3
-        version: 3.27.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/ssr':
         specifier: ^3.9.6
         version: 3.9.9(react@19.0.0)
@@ -285,9 +282,6 @@ importers:
       '@react-stately/datepicker':
         specifier: 3.13.0
         version: 3.13.0(react@19.0.0)
-      '@react-stately/overlays':
-        specifier: 3.6.17
-        version: 3.6.17(react@19.0.0)
       '@react-stately/utils':
         specifier: ^3.10.7
         version: 3.10.7(react@19.0.0)

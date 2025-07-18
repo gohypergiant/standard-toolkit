@@ -85,8 +85,6 @@
     "@accelint/core": "workspace:*",
     "@accelint/icons": "workspace:*",
     "@react-aria/interactions": "3.25.3",
-    "@react-aria/overlays": "3.27.3",
-    "@react-stately/overlays": "3.6.17",
     "client-only": "0.0.1",
     "clsx": "^2.1.1",
     "cva": "npm:class-variance-authority@^0.7.1",
