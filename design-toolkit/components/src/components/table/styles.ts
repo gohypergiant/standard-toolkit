@@ -88,8 +88,11 @@ export const headerCellStyles = tv({
 export const actionsCellStyles = tv({
   slots: {
     button: 'block cursor-pointer align-middle',
-    popover: 'border border-default-light bg-surface-raised',
-    menuItem: 'text-default-light hover:bg-highlight-bold',
+    popover: '',
+    menuItem:
+      'gap-y-xs p-s text-default-light hover:bg-highlight-bold hover:text-inverse-light',
+    container:
+      ' rounded-medium border-2 border-static-light bg-surface-default',
   },
   variants: {
     persistent: {

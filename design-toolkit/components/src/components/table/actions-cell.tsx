@@ -21,7 +21,7 @@ import { Icon } from '../icon';
 import { actionsCellStyles } from './styles';
 import type { ActionsCellProps } from './types';
 
-const { button, popover, menuItem } = actionsCellStyles();
+const { button, popover, menuItem, container } = actionsCellStyles();
 
 export function ActionsCell({
   className,
@@ -39,7 +39,7 @@ export function ActionsCell({
         </button>
       </AriaPressable>
       <AriaPopover className={popover()}>
-        <AriaMenu>
+        <AriaMenu className={container()}>
           {actions.map((action) => (
             <AriaMenuItem
               key={action.label}
