@@ -189,9 +189,3 @@ export const SortableColumns: Story = {
   },
   render: (args) => <Table {...args} />,
 };
-
-// persist numerials
-// persist row kebab menu
-// persist header kebab menu
-// pin-able rows
-// action menus
