@@ -11,13 +11,13 @@
  */
 
 import {
-  type IconState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type IconState,
   iconColorVars,
   iconSpaceVars,
   iconStateVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

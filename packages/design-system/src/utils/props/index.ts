@@ -13,9 +13,9 @@
 import { mergeProps as mergePropsWithoutStyles } from '@react-aria/utils';
 import { clsx } from 'clsx';
 import { mergeWith } from 'lodash';
-import type { CSSProperties } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { z } from 'zod';
+import type { CSSProperties } from 'react';
 import type { AsType } from '../../types/generic';
 import type { ClassNames } from '../../types/props';
 import type {

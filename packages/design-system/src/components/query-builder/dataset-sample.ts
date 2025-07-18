@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { z } from 'zod';
 import type {
   Field,
   Option,
@@ -18,7 +19,6 @@ import type {
   ValidationResult,
   ValueEditorType,
 } from 'react-querybuilder';
-import { z } from 'zod';
 
 // Example of an options with grouping
 export const serviceCityOptions: OptionGroup[] = [

@@ -11,7 +11,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type ForwardedRef, createContext, forwardRef } from 'react';
+import { createContext, type ForwardedRef, forwardRef } from 'react';
 import { type ContextValue, Provider } from 'react-aria-components';
 import { useContextProps } from '../../hooks/use-context-props';
 import { MergeProvider } from '../merge-provider';

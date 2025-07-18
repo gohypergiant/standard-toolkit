@@ -11,9 +11,9 @@
  */
 
 import {
+  defaultTypographyVarValues,
   type ThemeContext,
   type ThemeVars,
-  defaultTypographyVarValues,
   typographyVars,
 } from '@accelint/design-system/vanilla';
 import { createTheme } from '@vanilla-extract/css';

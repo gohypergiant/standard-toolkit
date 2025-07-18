@@ -15,7 +15,7 @@
 import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { parseFileSync } from '@swc/core';
-import { path, chalk, glob } from 'zx';
+import { chalk, glob, path } from 'zx';
 
 const HEADER_MSG =
   '/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n\n';

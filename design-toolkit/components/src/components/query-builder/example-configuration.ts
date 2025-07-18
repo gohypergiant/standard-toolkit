@@ -11,8 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Field } from 'react-querybuilder';
 import { z } from 'zod';
+import type { Field } from 'react-querybuilder';
 
 /**
  * Represents sample field types and data for building a query.

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type StyleRule, globalStyle, style } from '@vanilla-extract/css';
+import { globalStyle, type StyleRule, style } from '@vanilla-extract/css';
 import { layers } from './layers.css';
 import { typographyVars } from './theme.css';
 

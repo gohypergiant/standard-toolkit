@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -34,12 +34,12 @@ import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaLabelContext, AriaTextContext } from '../aria';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import {
   checkboxClassNames,
   checkboxGroupStateVars,
   checkboxStateVars,
 } from './checkbox.css';
+import type { IconProps } from '../icon/types';
 import type {
   CheckboxGroupProps,
   CheckboxGroupRenderProps,

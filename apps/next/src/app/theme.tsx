@@ -12,11 +12,11 @@
 
 'use client';
 
-import { ThemeProvider, bodies, families } from '@accelint/design-system';
+import { bodies, families, ThemeProvider } from '@accelint/design-system';
 import { clsx } from 'clsx';
-import type { PropsWithChildren } from 'react';
 import { Defaults } from './defaults';
 import { theme, vars } from './theme.css';
+import type { PropsWithChildren } from 'react';
 
 export function Theme({ children }: PropsWithChildren) {
   return (

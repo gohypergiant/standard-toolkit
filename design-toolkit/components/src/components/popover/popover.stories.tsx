@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { Button } from '@/components/button';
 import { Delete, Information } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '@/components/button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Popover } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 /**
  * The `<Popover>` component is a direct wrapper around the `Popover` component from

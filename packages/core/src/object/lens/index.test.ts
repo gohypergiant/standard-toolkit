@@ -11,16 +11,16 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { composeLens, get, lens, lensOptionalProp, lensProp, set } from '.';
 import { associateDeep } from '../associate';
 import { optionalProperty, property } from '../property';
+import { composeLens, get, lens, lensOptionalProp, lensProp, set } from '.';
 import {
   type Address,
   type City,
   type Person,
   type Profile,
-  type User,
   personStore,
+  type User,
   userStore,
 } from './__fixtures__/lens-objects';
 

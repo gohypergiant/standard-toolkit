@@ -12,18 +12,18 @@
 
 import { style } from '@vanilla-extract/css';
 import {
-  type InputState,
-  type SearchFieldState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type InputState,
   inputColorVars,
   inputStateVars,
   layers,
+  type SearchFieldState,
   searchFieldSpaceVars,
   searchFieldStateVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '../../src';
 
 export const SearchField: ThemeContext['SearchField'] = {

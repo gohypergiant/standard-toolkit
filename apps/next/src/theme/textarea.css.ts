@@ -11,13 +11,13 @@
  */
 
 import {
-  type TextAreaState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
   semanticColorVars,
   sizeVars,
+  type TextAreaState,
+  type ThemeContext,
   textAreaColorVars,
   textAreaSpaceVars,
   textAreaStateVars,

@@ -11,7 +11,7 @@
  */
 
 // @ts-nocheck
-import { Children, type ReactNode, isValidElement } from 'react';
+import { Children, isValidElement, type ReactNode } from 'react';
 
 class ComponentStructureError extends Error {
   constructor(message) {

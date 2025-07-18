@@ -11,11 +11,11 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { type FC, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 import type {
   ChipListProps,
   DeletableChipProps,

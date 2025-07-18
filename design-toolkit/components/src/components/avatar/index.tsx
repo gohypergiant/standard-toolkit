@@ -11,11 +11,11 @@
  */
 
 'use client';
-import { cn } from '@/lib/utils';
 import { Person } from '@accelint/icons';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
+import { cn } from '@/lib/utils';
 import 'client-only';
-import { type VariantProps, cva } from 'cva';
+import { cva, type VariantProps } from 'cva';
 import type React from 'react';
 
 const avatarStyles = cva(

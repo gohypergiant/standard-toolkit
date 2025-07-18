@@ -16,11 +16,11 @@ import 'client-only';
 import { createContext } from 'react';
 import {
   type ContextValue,
+  composeRenderProps,
   FieldError,
   Text,
   TextArea,
   TextField,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';

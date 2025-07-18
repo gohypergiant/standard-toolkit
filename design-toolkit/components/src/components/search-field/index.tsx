@@ -11,7 +11,6 @@
  */
 
 'use client';
-import { cn } from '@/lib/utils';
 import {
   CancelFill,
   Loop as LoopIcon,
@@ -24,6 +23,7 @@ import {
   Button,
   Input,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 import { Icon } from '../icon';
 
 export interface SearchFieldProps {

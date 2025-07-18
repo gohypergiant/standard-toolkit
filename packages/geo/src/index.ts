@@ -14,6 +14,8 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+
 export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
 export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
 export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';

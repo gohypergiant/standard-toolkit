@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { useState } from 'react';
 import { TooltipTrigger } from 'react-aria-components';
 import { actions } from '../../ladle';
@@ -21,6 +20,7 @@ import { Icon } from '../icon';
 import { TabPanel, TabPanels } from '../tabs';
 import { Tooltip, TooltipTarget } from '../tooltip';
 import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { DrawerProps } from './types';
 
 export default {

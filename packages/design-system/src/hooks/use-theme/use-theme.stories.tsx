@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
-import { useTheme } from '.';
 import {
   genericColorVars,
   semanticColorVars,
   sizeVars,
 } from '../../styles/theme.css';
+import { useTheme } from '.';
+import type { Story, StoryDefault } from '@ladle/react';
 
 export default {
   title: 'Hooks',

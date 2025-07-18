@@ -11,9 +11,9 @@
  */
 
 import { Add } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from './';
 import { IconStylesDefaults } from './styles';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',

@@ -11,10 +11,10 @@
  */
 
 import {
-  type ForwardedRef,
-  type HTMLAttributes,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   useCallback,
   useMemo,
 } from 'react';
@@ -53,12 +53,12 @@ import {
 } from '../aria';
 import { createCollectionRenderer } from '../collection';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import {
   optionsClassNames,
   optionsItemStateVars,
   optionsStateVars,
 } from './options.css';
+import type { IconProps } from '../icon/types';
 import type {
   OptionsItemProps,
   OptionsListProps,

@@ -11,15 +11,15 @@
  */
 
 import {
-  type PopoverState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type PopoverState,
   popoverColorVars,
   popoverSpaceVars,
   popoverStateVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

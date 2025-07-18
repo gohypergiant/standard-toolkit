@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { Button, ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { Group } from './';
+import type { Story, StoryDefault } from '@ladle/react';
+import type { ButtonProps } from '../button/types';
 import type { GroupProps } from './types';
 
 export default {

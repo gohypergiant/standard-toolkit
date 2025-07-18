@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type Format, SYMBOLS, SYMBOL_PATTERNS } from '.';
+import { type Format, SYMBOL_PATTERNS, SYMBOLS } from '.';
 import { type ParseResults, parse } from './parse';
 import { violation } from './violation';
 

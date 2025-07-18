@@ -12,8 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { IOptionsItem } from '../options-item';
 import { ComboBox, type ComboBoxProps } from './index';
+import type { IOptionsItem } from '../options-item';
 
 function setup({
   children = (

@@ -11,10 +11,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Tokens } from '../lexer';
 import { pipesResult } from '../pipes';
-
 import { simpler } from './simpler';
+import type { Tokens } from '../lexer';
 
 /**
  * Check for problems in the numeric values.
