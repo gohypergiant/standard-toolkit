@@ -427,6 +427,7 @@ export function Table<T extends { id: string | number }>({
           <TableHeader>
             {getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
+                {/* biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation> */}
                 {headerGroup.headers.map((header) => (
                   <HeaderCell
                     key={header.id}
