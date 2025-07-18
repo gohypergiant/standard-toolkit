@@ -13,14 +13,15 @@
 import { fixImportsPlugin } from 'esbuild-fix-imports-plugin';
 import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions';
 import { defineConfig } from 'tsup';
-import { reactCompilerEsbuildPlugin } from './react-compiler.esbuild';
+// import { reactCompilerEsbuildPlugin } from './react-compiler.esbuild';
 
 export default defineConfig({
   esbuildPlugins: [
-    reactCompilerEsbuildPlugin({
-      sourceMaps: true,
-      filter: /\.m?[jt]sx?$/,
-    }),
+    // TODO: revisit this in the future
+    // reactCompilerEsbuildPlugin({
+    //   sourceMaps: true,
+    //   filter: /\.m?[jt]sx?$/,
+    // }),
     esbuildPluginFilePathExtensions({
       esmExtension: 'js',
     }),
