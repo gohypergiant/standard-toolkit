@@ -82,6 +82,7 @@ const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
     persistent={persistent}
     narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
     numeral={cell.column.id === 'numeral'}
+    kebab={cell.column.id === 'kebab'}
   >
     {flexRender(cell.column.columnDef.cell, cell.getContext())}
   </TableCell>
@@ -419,14 +420,6 @@ export function Table<T extends { id: string | number }>({
     [setColumnOrderCallback],
   );
 
-  // TODO:
-  // - when kebab position is right, top row, last column should not have a kebab menu
-  // - when kebab position is left, top row, first column (other than numeral / selection)
-  // should not have a kebab menu
-  // - when kebab position is left, the last column in the header is missing a kebab menu ✅
-  // - when you hover a row, if peristant numerials if off,
-  // the numerals for that row are visible. The same behavior
-  // should apply to row kebab items
   if (dataProp) {
     return (
       <div>

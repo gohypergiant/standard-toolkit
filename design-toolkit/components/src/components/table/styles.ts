@@ -31,6 +31,10 @@ export const cellStyles = tv({
       true: ' text-default-dark hover:text-default-light',
       false: '',
     },
+    kebab: {
+      true: '',
+      false: '',
+    },
     persistent: {
       true: 'visible',
       false: 'hover:*:visible group-hover/row:*:visible',
@@ -39,6 +43,7 @@ export const cellStyles = tv({
   defaultVariants: {
     narrow: TableCellStylesDefaults.narrow,
     numeral: TableCellStylesDefaults.numeral,
+    kebab: false,
     persistent: TableCellStylesDefaults.persistent,
   },
   compoundVariants: [
@@ -50,7 +55,13 @@ export const cellStyles = tv({
     {
       persistent: false,
       numeral: false,
+      kebab: false,
       className: '*:invisible',
+    },
+    {
+      persistent: false,
+      kebab: true,
+      className: 'group-not-data-pinned/row:*:invisible',
     },
   ],
 });
@@ -86,7 +97,8 @@ export const actionsCellStyles = tv({
         button: '*:visible',
       },
       false: {
-        button: '*:invisible hover:*:visible group-hover/header-cell:*:visible',
+        button:
+          '*:invisible hover:*:visible group-hover/header-cell:*:visible group-hover/row:*:visible',
       },
     },
   },
