@@ -158,6 +158,8 @@ export type {
 export { ActionsCell } from './components/table/actions-cell';
 export { Table } from './components/table';
 export {
+  TableCellStylesDefaults,
+  TableHeaderCellStylesDefaults,
   actionsCellStyles,
   cellStyles,
   headerCellStyles,
