@@ -32,16 +32,25 @@ export type MenuProps<T> = AriaMenuProps<T> &
     'placement' | 'offset' | 'containerPadding' | 'isNonModal'
   >;
 
-export type MenuItemProps = AriaMenuItemProps & {
+export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {
   color?: 'info' | 'serious';
+  classNames?: {
+    item?: AriaMenuItemProps['className'];
+    text?: AriaTextProps['className'];
+    more?: IconProps['className'];
+  };
 };
 
 export type MenuTriggerProps = AriaMenuTriggerProps;
 
 export type SubmenuTriggerProps = AriaSubmenuTriggerProps;
 
-export type MenuSectionProps<T> = AriaMenuSectionProps<T> & {
+export type MenuSectionProps<T> = Omit<AriaMenuSectionProps<T>, 'className'> & {
   header?: string;
+  classNames?: {
+    section?: string;
+    sectionHeader?: string;
+  };
 };
 
 export type SeparatorProps = AriaSeparatorProps;

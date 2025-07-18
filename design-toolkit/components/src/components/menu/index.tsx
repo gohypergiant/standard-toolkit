@@ -51,7 +51,7 @@ const {
   label,
   description,
   more,
-  section,
+  sectionHeader,
   separator,
   keyboard,
 } = MenuStyles();
@@ -103,24 +103,31 @@ export const MenuItem = (props: MenuItemProps) => {
     (isSlottedContextValue(context) ? undefined : context?.variant) ??
     MenuStylesDefaults.variant;
 
-  const { children: childrenProp, className, color = 'info', ...rest } = props;
+  const {
+    children: childrenProp,
+    classNames,
+    color = MenuStylesDefaults.color,
+    ...rest
+  } = props;
 
   return (
     <AriaMenuItem
       {...rest}
-      className={composeRenderProps(className, (className) =>
+      className={composeRenderProps(classNames?.item, (className) =>
         item({ className, variant, color }),
       )}
     >
       {composeRenderProps(props.children, (children, { hasSubmenu }) => (
         <>
           {typeof children === 'string' ? (
-            <AriaText slot='label'>{children}</AriaText>
+            <AriaText className={classNames?.text} slot='label'>
+              {children}
+            </AriaText>
           ) : (
             children
           )}
           {hasSubmenu && (
-            <Icon className={more()}>
+            <Icon className={more({ className: classNames?.more })}>
               <ChevronRight />
             </Icon>
           )}
@@ -132,11 +139,15 @@ export const MenuItem = (props: MenuItemProps) => {
 MenuItem.displayName = 'Menu.Item';
 
 export function MenuSection<T extends object>(props: MenuSectionProps<T>) {
-  const { header, children, className, items, ...rest } = props;
+  const { header, children, classNames, items, ...rest } = props;
 
   return (
-    <AriaMenuSection {...rest}>
-      <AriaHeader className={section({ className })}>{header}</AriaHeader>
+    <AriaMenuSection className={classNames?.section} {...rest}>
+      <AriaHeader
+        className={sectionHeader({ className: classNames?.sectionHeader })}
+      >
+        {header}
+      </AriaHeader>
       <AriaMenuCollection items={items}>{children}</AriaMenuCollection>
     </AriaMenuSection>
   );

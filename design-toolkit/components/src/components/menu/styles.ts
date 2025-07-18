@@ -33,7 +33,7 @@ export const MenuStyles = tv({
     description:
       'fg-default-dark group-hover:fg-inverse-light group-data-[focused]:fg-inverse-light group-data-[disabled]:fg-disabled truncate text-body-xs [grid-area:description]',
     more: '[grid-area:action]',
-    section: 'fg-default-dark px-s py-xs text-header-xs',
+    sectionHeader: 'fg-default-dark px-s py-xs text-header-xs',
     separator: 'mx-3 my-1 border border-static-light',
     keyboard: '[grid-area:action]',
   },
