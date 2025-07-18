@@ -1,5 +1,20 @@
 # @accelint/design-toolkit
 
+## 2.4.0
+
+### Minor Changes
+
+- fe10a47: Adds the <menu> component
+
+### Patch Changes
+
+- a502977: Fix accordion icon not flipping
+- 34f3d91: - Flattened token folder structure for easier use within DesignTK
+  - Added group names to deconflict Tailwind groups
+  - Converted size to variant selector
+  - Added missing provider
+- f9e0cac: Refactored Avatar & Badge to new styling standard
+
 ## 2.3.2
 
 ### Patch Changes
