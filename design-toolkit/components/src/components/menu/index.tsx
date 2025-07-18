@@ -83,6 +83,7 @@ export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
     >
       <MenuContext.Provider value={{ variant }}>
         <AriaMenu
+          ref={ref}
           className={composeRenderProps(className, (className) =>
             menu({ className, variant }),
           )}
