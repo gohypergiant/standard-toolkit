@@ -11,10 +11,10 @@
  */
 
 import {
-  type ForwardedRef,
-  type HTMLAttributes,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   useCallback,
   useMemo,
 } from 'react';
@@ -53,8 +53,8 @@ import {
 } from '../aria';
 import { createCollectionRenderer } from '../collection';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import { menuClassNames, menuItemStateVars, menuStateVars } from './menu.css';
+import type { IconProps } from '../icon/types';
 import type {
   MenuItemProps,
   MenuListProps,

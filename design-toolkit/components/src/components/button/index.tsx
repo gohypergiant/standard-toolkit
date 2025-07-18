@@ -1,3 +1,9 @@
+import { cva, type VariantProps } from 'cva';
+import {
+  Button as AriaButton,
+  type ButtonProps as AriaButtonProps,
+  composeRenderProps,
+} from 'react-aria-components';
 import { expectsIconWrapper } from '@/lib/react';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
@@ -11,12 +17,6 @@ import { expectsIconWrapper } from '@/lib/react';
  * governing permissions and limitations under the License.
  */
 import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-  composeRenderProps,
-} from 'react-aria-components';
 
 const buttonStyles = cva(
   'inline-flex cursor-pointer items-center justify-center whitespace-nowrap [--icon-size:20px]',

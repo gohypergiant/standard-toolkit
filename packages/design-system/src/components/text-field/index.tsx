@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -39,8 +39,8 @@ import {
   AriaTextContext,
 } from '../aria';
 import { InputContext } from '../input';
-import type { InputProps } from '../input/types';
 import { textFieldClassNames, textFieldStateVars } from './text-field.css';
+import type { InputProps } from '../input/types';
 import type { TextFieldMapping, TextFieldProps } from './types';
 
 const defaultMapping: TextFieldMapping = {

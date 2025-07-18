@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import { cva } from 'cva';
-import type { ReactNode } from 'react';
 import {
   Switch as AriaSwitch,
   type SwitchProps as AriaSwitchProps,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 import { Label } from '../label';
+import type { ReactNode } from 'react';
 
 const labelStyles = Label.as();
 

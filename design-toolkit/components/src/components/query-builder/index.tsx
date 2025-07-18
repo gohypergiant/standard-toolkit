@@ -10,10 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { Duplicate, LockFill } from '@accelint/icons';
-import { Delete } from '@accelint/icons';
-import type { PressEvent } from '@react-types/shared';
-import { type ReactElement, createContext, useCallback, useMemo } from 'react';
+import { Delete, Duplicate, LockFill } from '@accelint/icons';
+import { createContext, type ReactElement, useCallback, useMemo } from 'react';
 import {
   type ActionProps,
   type Classnames,
@@ -28,7 +26,6 @@ import {
   type RuleGroupType as RQBRuleGroupType,
   type ValueEditorProps,
 } from 'react-querybuilder';
-import type { LiteralUnion } from 'type-fest';
 import { cn } from '../../lib/utils';
 import { Icon } from '../icon';
 import { IconButton } from '../icon-button';
@@ -45,6 +42,8 @@ import { Rule } from './rule';
 import { getValidationResult, pressToMouseEvent } from './utils';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
+import type { PressEvent } from '@react-types/shared';
+import type { LiteralUnion } from 'type-fest';
 
 export type RuleGroupType = RQBRuleGroupType;
 export type Field = RQBField;

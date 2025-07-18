@@ -13,11 +13,9 @@
 
 import { Point } from '@ngageoint/grid-js';
 import { UTM } from '@ngageoint/mgrs-js';
-
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
-import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
-
 import { parseUTM } from './parser';
+import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
 // biome-ignore lint/style/useNamingConvention: acronym
 export const systemUTM: CoordinateSystem = {

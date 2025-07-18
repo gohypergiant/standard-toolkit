@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type Story, type StoryDefault, action } from '@ladle/react';
+import { action, type Story, type StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle/actions';
 import { AriaGroup } from '../aria';
 import { Button } from '../button';

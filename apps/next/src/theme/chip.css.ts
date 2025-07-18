@@ -11,15 +11,15 @@
  */
 
 import {
-  type ChipState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type ChipState,
   chipColorVars,
   chipSpaceVars,
   chipStateVars,
   genericColorVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

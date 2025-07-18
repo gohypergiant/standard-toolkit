@@ -12,7 +12,6 @@
 
 import { noop } from '@accelint/core';
 import { usePress } from '@react-aria/interactions';
-import type { Key } from '@react-types/shared';
 import { createContext, useCallback, useContext, useMemo } from 'react';
 import {
   type ContextValue,
@@ -37,11 +36,8 @@ import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaTextContext } from '../aria';
 import { Button, ButtonContext, ToggleButtonContext } from '../button';
-import type { ButtonProps, ToggleButtonProps } from '../button/types';
 import { CheckboxContext } from '../checkbox';
-import type { CheckboxProps } from '../checkbox/types';
 import { GroupContext } from '../group';
-import type { GroupProps } from '../group/types';
 import { Icon } from '../icon';
 import { MergeProvider } from '../merge-provider';
 import {
@@ -51,6 +47,11 @@ import {
   treeItemStateVars,
   treeStateVars,
 } from './tree.css';
+import { createDragAndDropHandlers } from './utils';
+import type { Key } from '@react-types/shared';
+import type { ButtonProps, ToggleButtonProps } from '../button/types';
+import type { CheckboxProps } from '../checkbox/types';
+import type { GroupProps } from '../group/types';
 import type {
   TreeGroupProps,
   TreeIndicatorRenderProps,
@@ -59,7 +60,6 @@ import type {
   TreeProps,
   TreeStateContextValue,
 } from './types';
-import { createDragAndDropHandlers } from './utils';
 
 const emptyTree = {
   key: '',

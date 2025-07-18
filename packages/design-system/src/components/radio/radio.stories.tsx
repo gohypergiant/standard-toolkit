@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { AriaLabel } from '../aria';
 import { Radio, RadioGroup } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { RadioGroupProps } from './types';
 
 export default {

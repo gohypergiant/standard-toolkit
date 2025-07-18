@@ -11,20 +11,20 @@
  */
 
 import {
-  type InputState,
-  type NumberFieldState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type InputState,
   inputColorVars,
   inputSpaceVars,
   inputStateVars,
+  type NumberFieldState,
   numberFieldColorVars,
   numberFieldSpaceVars,
   numberFieldStateVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

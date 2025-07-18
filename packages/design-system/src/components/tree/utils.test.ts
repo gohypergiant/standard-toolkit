@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Key } from '@react-types/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { TreeNode, UseTreeResult } from '../../types/use-tree';
 import {
   createDragAndDropHandlers,
   getDroppedItemPayload,
   processDroppedItem,
 } from './utils';
+import type { Key } from '@react-types/shared';
+import type { TreeNode, UseTreeResult } from '../../types/use-tree';
 
 describe('tree/utils', () => {
   describe('createDragAndDropHandlers', () => {

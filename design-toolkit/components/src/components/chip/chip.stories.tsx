@@ -11,11 +11,11 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Chip> = {
   title: 'Components/Chip',

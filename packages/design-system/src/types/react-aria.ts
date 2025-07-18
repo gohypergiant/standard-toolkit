@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { CSSProperties, Context, ReactNode } from 'react';
+import type { Context, CSSProperties, ReactNode } from 'react';
 
 /**
  * Re-export due to not being exported by library

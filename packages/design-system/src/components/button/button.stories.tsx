@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle/actions';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
 export default {

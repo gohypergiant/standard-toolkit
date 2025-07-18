@@ -11,15 +11,15 @@
  */
 
 import {
-  type SwitchState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type SwitchState,
   sizeVars,
   switchColorVars,
   switchSpaceVars,
   switchStateVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

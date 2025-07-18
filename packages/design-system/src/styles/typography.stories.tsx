@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { bodies, headings } from './typography.css';
+import type { Story, StoryDefault } from '@ladle/react';
 
 export default {
   title: 'Primitives',

@@ -11,11 +11,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PressEvent } from '@react-types/shared';
 import { useCallback, useMemo } from 'react';
-import type { ActionProps } from 'react-querybuilder';
 import { Button } from '../button';
 import { pressToMouseEvent } from './utils';
+import type { PressEvent } from '@react-types/shared';
+import type { ActionProps } from 'react-querybuilder';
 
 export function ActionElement({
   disabled,

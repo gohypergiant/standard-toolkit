@@ -11,10 +11,10 @@
  */
 
 import {
-  type ForwardedRef,
-  type HTMLAttributes,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   useCallback,
   useMemo,
 } from 'react';
@@ -35,12 +35,12 @@ import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaHeadingContext } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { ElementContext } from '../element';
-import type { ElementProps } from '../element/types';
 import { GroupContext } from '../group';
-import type { GroupProps } from '../group/types';
 import { popoverClassNames, popoverStateVars } from './popover.css';
+import type { ButtonProps } from '../button/types';
+import type { ElementProps } from '../element/types';
+import type { GroupProps } from '../group/types';
 import type { PopoverMapping, PopoverProps } from './types';
 
 const defaultMapping: PopoverMapping = {

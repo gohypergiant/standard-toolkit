@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { containsExactChildren } from '@/lib/react';
-import { cn } from '@/lib/utils';
 import { cva } from 'cva';
 import {
   Tab as AriaTab,
@@ -23,6 +21,8 @@ import {
   Tabs as AriaTabs,
   type TabsProps as AriaTabsProps,
 } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
+import { cn } from '@/lib/utils';
 
 export interface TabsProps extends AriaTabsProps {}
 

@@ -11,15 +11,15 @@
  */
 
 import {
-  type DialogState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type DialogState,
   dialogColorVars,
   dialogSpaceVars,
   dialogStateVars,
   genericColorVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

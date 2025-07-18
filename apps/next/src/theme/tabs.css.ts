@@ -11,14 +11,14 @@
  */
 
 import {
-  type TabListState,
-  type TabState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
   semanticColorVars,
   sizeVars,
+  type TabListState,
+  type TabState,
+  type ThemeContext,
   tabColorVars,
   tabListStateVars,
   tabSpaceVars,

@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import { cva } from 'cva';
 import {
   Label as AriaLabel,
   type LabelProps as AriaLabelProps,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 
 const labelStyles = cva(
   'fg-default-light flex items-center gap-xs text-header-s',

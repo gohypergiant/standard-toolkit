@@ -10,10 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type { GlobalStyleRule, StyleRule } from '@vanilla-extract/css';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { kebabCase } from 'lodash';
 import { layers } from '../../styles/layers.css';
+import {
+  pixelValueAsStringValidator,
+  rgbaAsStringValidator,
+} from '../validators';
+import type { GlobalStyleRule, StyleRule } from '@vanilla-extract/css';
 import type { RGBA } from '../../types/deckgl';
 import type {
   Contract,
@@ -22,10 +26,6 @@ import type {
   PartialMapLeafNodes,
   Primitive,
 } from '../../types/vanilla-extract';
-import {
-  pixelValueAsStringValidator,
-  rgbaAsStringValidator,
-} from '../validators';
 
 /**
  * Parse out CSS var name from CSS var implementation

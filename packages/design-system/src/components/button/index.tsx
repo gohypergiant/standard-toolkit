@@ -14,8 +14,8 @@ import { noop } from '@accelint/core';
 import { clsx } from 'clsx';
 import {
   type Context,
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -35,12 +35,12 @@ import { useDefaultProps } from '../../hooks/use-defaults';
 import { useTheme } from '../../hooks/use-theme';
 import { surfaces } from '../../styles/surfaces.css';
 import { bodies } from '../../styles/typography.css';
-import type { OmitProtectedProps } from '../../types/props';
 import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import { buttonClassNames, buttonStateVars } from './button.css';
+import type { OmitProtectedProps } from '../../types/props';
+import type { IconProps } from '../icon/types';
 import type {
   ButtonMapping,
   ButtonProps,

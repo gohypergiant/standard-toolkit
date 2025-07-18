@@ -14,9 +14,9 @@ import '@fontsource/roboto-flex';
 import '@fontsource/roboto-mono';
 import { createTheme, globalStyle } from '@vanilla-extract/css';
 import {
+  defaultTypographyVarValues,
   type ThemeContext,
   type ThemeVars,
-  defaultTypographyVarValues,
   typographyVars,
 } from '../src';
 import {

@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -40,12 +40,12 @@ import {
   AriaTextContext,
 } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { InputContext } from '../input';
-import type { InputProps } from '../input/types';
 import { OptionsContext } from '../options';
-import type { OptionsProps } from '../options/types';
 import { comboBoxClassNames, comboBoxStateVars } from './combo-box.css';
+import type { ButtonProps } from '../button/types';
+import type { InputProps } from '../input/types';
+import type { OptionsProps } from '../options/types';
 import type { ComboBoxMapping, ComboBoxProps } from './types';
 
 const defaultMapping: ComboBoxMapping = {

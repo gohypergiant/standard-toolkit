@@ -13,8 +13,8 @@
 import Placeholder from '@accelint/icons/placeholder';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { IOptionsItem } from '../options-item';
 import { Options, type OptionsProps } from './index';
+import type { IOptionsItem } from '../options-item';
 
 function setup({
   children = (

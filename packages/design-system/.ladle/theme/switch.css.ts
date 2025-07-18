@@ -12,15 +12,15 @@
 
 import { style } from '@vanilla-extract/css';
 import {
-  type SwitchState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type SwitchState,
   sizeVars,
   switchColorVars,
   switchSpaceVars,
   switchStateVars,
+  type ThemeContext,
 } from '../../src';
 
 export const Switch: ThemeContext['Switch'] = {

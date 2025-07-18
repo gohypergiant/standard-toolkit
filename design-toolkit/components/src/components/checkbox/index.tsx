@@ -10,17 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import { CheckboxIndeterminate, CheckboxSelected } from '@accelint/icons';
 import { cva } from 'cva';
-import type React from 'react';
 import {
   Checkbox as AriaCheckbox,
   CheckboxGroup as AriaCheckboxGroup,
   type CheckboxGroupProps as AriaCheckboxGroupProps,
   type CheckboxProps as AriaCheckboxProps,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 import { Label } from '../label';
+import type React from 'react';
 
 const checkboxStyles = cva(
   'fg-inverse-light size-l rounded-small outline outline-interactive',

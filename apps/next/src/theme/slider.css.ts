@@ -11,19 +11,19 @@
  */
 
 import {
-  type SliderState,
-  type SliderThumbState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
   radiusVars,
+  type SliderState,
+  type SliderThumbState,
   semanticColorVars,
   sizeVars,
   sliderColorVars,
   sliderSpaceVars,
   sliderStateVars,
   sliderThumbStateVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

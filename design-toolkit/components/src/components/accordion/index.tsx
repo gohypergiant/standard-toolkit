@@ -12,21 +12,20 @@
 
 'use client';
 
+import { ChevronDown } from '@accelint/icons';
+import { createContext, useContext } from 'react';
 import {
   Button,
   type ContextValue,
+  composeRenderProps,
   Disclosure,
   DisclosureGroup,
   DisclosurePanel,
   DisclosureStateContext,
   Heading,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-
 import { isSlottedContextValue } from '@/lib/utils';
-import { ChevronDown } from '@accelint/icons';
-import { createContext, useContext } from 'react';
 import { Icon } from '../icon';
 import { AccordionStyles, AccordionStylesDefaults } from './styles';
 import type {

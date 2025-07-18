@@ -11,10 +11,10 @@
  */
 
 import { Lasso } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tooltip } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',

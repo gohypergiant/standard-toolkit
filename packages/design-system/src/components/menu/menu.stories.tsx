@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
-import type { ReactNode } from 'react';
 import { Collection, MenuTrigger, SubmenuTrigger } from 'react-aria-components';
 import { actions } from '../../ladle/actions';
 import {
@@ -24,6 +22,8 @@ import {
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu, MenuItem, MenuList } from './';
+import type { Story, StoryDefault } from '@ladle/react';
+import type { ReactNode } from 'react';
 import type { MenuListProps, MenuProps } from './types';
 
 export default {

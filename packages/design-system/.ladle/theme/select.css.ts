@@ -12,20 +12,20 @@
 
 import { style } from '@vanilla-extract/css';
 import {
-  type InputState,
-  type SelectState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   buttonColorVars,
   buttonSpaceVars,
   genericColorVars,
+  type InputState,
   inputColorVars,
   inputStateVars,
+  type SelectState,
   selectColorVars,
   selectStateVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '../../src';
 
 export const Select: ThemeContext['Select'] = {

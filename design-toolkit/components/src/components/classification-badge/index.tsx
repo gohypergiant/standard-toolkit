@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { cva, type VariantProps } from 'cva';
 import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
 
 const classificationBadge = cva(
   'inline-flex items-center justify-center rounded-full uppercase',

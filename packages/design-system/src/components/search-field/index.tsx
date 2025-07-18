@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -31,15 +31,15 @@ import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaGroupContext } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import { InputContext } from '../input';
-import type { InputProps } from '../input/types';
 import {
   searchFieldClassNames,
   searchFieldStateVars,
 } from './search-field.css';
+import type { ButtonProps } from '../button/types';
+import type { IconProps } from '../icon/types';
+import type { InputProps } from '../input/types';
 import type { SearchFieldMapping, SearchFieldProps } from './types';
 
 const defaultMapping: SearchFieldMapping = {

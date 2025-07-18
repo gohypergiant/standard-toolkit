@@ -11,6 +11,9 @@
  */
 
 import 'client-only';
+import { CancelFill } from '@accelint/icons';
+import { cva, type VariantProps } from 'cva';
+import { type ChangeEvent, type ForwardedRef, useEffect } from 'react';
 import {
   Input as AriaInput,
   type InputProps as AriaInputProps,
@@ -21,11 +24,7 @@ import {
   InputContext,
   useContextProps,
 } from 'react-aria-components';
-
 import { cn } from '@/lib/utils';
-import { CancelFill } from '@accelint/icons';
-import { type VariantProps, cva } from 'cva';
-import { type ChangeEvent, type ForwardedRef, useEffect } from 'react';
 import { Icon } from '../icon';
 import { Label } from '../label';
 

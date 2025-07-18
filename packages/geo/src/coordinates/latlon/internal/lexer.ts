@@ -12,8 +12,7 @@
  */
 
 import * as Patterning from '@/patterning';
-
-import { SYMBOLS, SYMBOL_PATTERNS } from '.';
+import { SYMBOL_PATTERNS, SYMBOLS } from '.';
 
 export type Tokens = ReturnType<typeof lexer>;
 

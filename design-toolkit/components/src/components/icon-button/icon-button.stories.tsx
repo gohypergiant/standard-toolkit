@@ -11,10 +11,10 @@
  */
 
 import { Link as LinkIcon, Placeholder } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { IconButton } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof IconButton> = {
   title: 'Components/IconButton',

@@ -10,9 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import { cva } from 'cva';
-import type React from 'react';
 import {
   Radio as AriaRadio,
   RadioGroup as AriaRadioGroup,
@@ -20,7 +18,9 @@ import {
   type RadioProps as AriaRadioProps,
   composeRenderProps,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 import { Label } from '../label';
+import type React from 'react';
 
 const radioStyles = cva(
   'fg-default-light flex size-l items-center justify-center rounded-round outline outline-interactive before:block before:size-s before:rounded-round before:bg-transparent',

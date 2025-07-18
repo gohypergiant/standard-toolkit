@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import { cva } from 'cva';
 import { useContext } from 'react';
 import {
@@ -26,6 +25,7 @@ import {
   Text,
   useSlottedContext,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 import { Tooltip } from '../tooltip';
 
 const sliderVariants = cva('grid gap-s', {

@@ -11,11 +11,6 @@
  */
 
 import {
-  type ThemeContext,
-  type TreeGroupState,
-  type TreeIndicatorState,
-  type TreeItemState,
-  type TreeState,
   applyThemeVars,
   assignPartialVars,
   buttonColorVars,
@@ -23,6 +18,11 @@ import {
   layers,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
+  type TreeGroupState,
+  type TreeIndicatorState,
+  type TreeItemState,
+  type TreeState,
   treeColorVars,
   treeGroupStateVars,
   treeIndicatorStateVars,

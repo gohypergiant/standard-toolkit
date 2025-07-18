@@ -1,6 +1,13 @@
+import { cva, type VariantProps } from 'cva';
+import {
+  Focusable,
+  Tooltip as RACTooltip,
+  type TooltipProps as RACTooltipProps,
+  TooltipTrigger as RACTooltipTrigger,
+  type TooltipTriggerComponentProps,
+} from 'react-aria-components';
 import { containsExactChildren } from '@/lib/react';
 import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -13,13 +20,6 @@ import { type VariantProps, cva } from 'cva';
  * governing permissions and limitations under the License.
  */
 import type React from 'react';
-import {
-  Focusable,
-  Tooltip as RACTooltip,
-  type TooltipProps as RACTooltipProps,
-  TooltipTrigger as RACTooltipTrigger,
-  type TooltipTriggerComponentProps,
-} from 'react-aria-components';
 
 const tooltipStyles = cva(
   'fg-default-light flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay',

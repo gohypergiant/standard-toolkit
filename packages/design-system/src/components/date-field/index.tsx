@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -39,10 +39,10 @@ import {
   AriaTextContext,
 } from '../aria';
 import { DateInputContext } from '../date-input';
-import type { DateInputProps } from '../date-input/types';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import { dateFieldClassNames, dateFieldStateVars } from './date-field.css';
+import type { DateInputProps } from '../date-input/types';
+import type { IconProps } from '../icon/types';
 import type {
   DateFieldMapping,
   DateFieldProps,

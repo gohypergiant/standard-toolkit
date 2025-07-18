@@ -10,11 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import { CancelFill } from '@accelint/icons';
-import { type VariantProps, cva } from 'cva';
-import type React from 'react';
-import { type ReactNode, createContext, useContext } from 'react';
+import { cva, type VariantProps } from 'cva';
+import { createContext, type ReactNode, useContext } from 'react';
 import {
   Tag as AriaTag,
   TagGroup as AriaTagGroup,
@@ -24,7 +22,9 @@ import {
   type TagProps as AriaTagProps,
   Button,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 import { Icon } from '../icon';
+import type React from 'react';
 
 const chipStyles = cva(
   cn([

@@ -12,7 +12,6 @@
 
 import { style } from '@vanilla-extract/css';
 import {
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   dateFieldColorVars,
@@ -21,6 +20,7 @@ import {
   genericColorVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '../../src';
 import type { DateFieldState } from '../../src/components/date-field/types';
 

@@ -20,8 +20,8 @@ import type {
   QueryBuilderProps as RQBProps,
   RuleGroupProps,
   RuleGroupType,
-  ValueEditorProps,
   useRuleGroup,
+  ValueEditorProps,
 } from 'react-querybuilder';
 import type { LiteralUnion, PartialDeep } from 'type-fest';
 import type { AsType } from '../../types/generic';

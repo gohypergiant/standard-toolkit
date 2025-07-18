@@ -11,6 +11,7 @@
  */
 
 import 'client-only';
+import { cva, type VariantProps } from 'cva';
 import {
   Text as AriaText,
   TextArea as AriaTextArea,
@@ -20,11 +21,9 @@ import {
   TextAreaContext,
   useContextProps,
 } from 'react-aria-components';
-
 import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
-import type { ForwardedRef } from 'react';
 import { Label } from '../label';
+import type { ForwardedRef } from 'react';
 
 const textAreaStyles = cva(
   ['block w-full rounded-medium p-s font-display outline outline-interactive'],

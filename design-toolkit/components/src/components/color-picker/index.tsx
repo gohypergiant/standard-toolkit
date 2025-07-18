@@ -10,12 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
 import { useControlledState } from '@react-stately/utils';
 import {
+  createContext,
   type ForwardedRef,
   type ReactNode,
-  createContext,
   useContext,
   useEffect,
   useMemo,
@@ -33,6 +32,7 @@ import {
   useContextProps,
   useLocale,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 
 interface ColorPickerState {
   /** The current color value of the color picker. */

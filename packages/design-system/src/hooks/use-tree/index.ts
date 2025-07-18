@@ -11,9 +11,11 @@
  */
 
 import { useTreeData } from '@react-stately/data';
-import type { Key } from '@react-types/shared';
 import { isEqual } from 'lodash';
 import { useCallback, useId, useMemo, useRef } from 'react';
+import { useUpdateEffect } from '../use-update-effect';
+import { getChildren, getKey, mapTree, toggleVisibility } from './utils';
+import type { Key } from '@react-types/shared';
 import type {
   TreeActions,
   TreeNode,
@@ -21,8 +23,6 @@ import type {
   UseTreeOptions,
   UseTreeResult,
 } from '../../types/use-tree';
-import { useUpdateEffect } from '../use-update-effect';
-import { getChildren, getKey, mapTree, toggleVisibility } from './utils';
 
 export function useTree<T>({
   allowsExpansion = true,

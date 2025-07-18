@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Context, ReactNode } from 'react';
 import { mergeProps } from '../../utils/props';
+import type { Context, ReactNode } from 'react';
 import type { MergeProviderProps } from './types';
 
 function merge<T>(context: Context<T>, next: T, children: ReactNode) {

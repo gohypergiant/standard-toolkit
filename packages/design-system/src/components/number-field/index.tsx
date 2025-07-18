@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -41,13 +41,13 @@ import {
   AriaTextContext,
 } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { InputContext } from '../input';
-import type { InputProps } from '../input/types';
 import {
   numberFieldClassNames,
   numberFieldStateVars,
 } from './number-field.css';
+import type { ButtonProps } from '../button/types';
+import type { InputProps } from '../input/types';
 import type { NumberFieldMapping, NumberFieldProps } from './types';
 
 const defaultMapping: NumberFieldMapping = {

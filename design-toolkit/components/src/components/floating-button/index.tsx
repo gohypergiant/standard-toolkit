@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
+import { cva, type VariantProps } from 'cva';
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
   composeRenderProps,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 
 const floatingButtonStyles = cva(
   [

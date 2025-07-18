@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { expectsIconWrapper } from '@/lib/react';
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
+import { cva, type VariantProps } from 'cva';
 import {
   ToggleButton as AriaToggleButton,
   type ToggleButtonProps as AriaToggleButtonProps,
   composeRenderProps,
 } from 'react-aria-components';
+import { expectsIconWrapper } from '@/lib/react';
+import { cn } from '@/lib/utils';
 
 const toggleIconButtonStyles = cva(
   'inline-flex cursor-pointer items-center justify-center bg-transparent outline-none hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark',

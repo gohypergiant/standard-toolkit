@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { TimeValue } from '@react-aria/datepicker';
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -35,12 +34,13 @@ import {
   type AriaLabelContext,
   AriaTextContext,
 } from '../aria';
-import type { DateFieldRenderProps } from '../date-field/types';
 import { DateInputContext } from '../date-input';
-import type { DateInputProps } from '../date-input/types';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import { timeFieldClassNames, timeFieldStateVars } from './time-field.css';
+import type { TimeValue } from '@react-aria/datepicker';
+import type { DateFieldRenderProps } from '../date-field/types';
+import type { DateInputProps } from '../date-input/types';
+import type { IconProps } from '../icon/types';
 import type {
   TimeFieldMapping,
   TimeFieldProps,

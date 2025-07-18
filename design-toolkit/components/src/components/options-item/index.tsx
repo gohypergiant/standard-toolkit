@@ -12,7 +12,7 @@
 
 import 'client-only';
 import { mergeProps } from '@react-aria/utils';
-import { type VariantProps, cva } from 'cva';
+import { cva, type VariantProps } from 'cva';
 import { type ReactNode, useContext, useMemo } from 'react';
 import {
   ListBoxItem as AriaListBoxItem,

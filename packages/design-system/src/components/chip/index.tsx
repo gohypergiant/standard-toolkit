@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -35,8 +35,8 @@ import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaTextContext } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { chipClassNames, chipStateVars } from './chip.css';
+import type { ButtonProps } from '../button/types';
 import type {
   ChipGroupProps,
   ChipItemProps,

@@ -19,8 +19,8 @@ import {
   type ButtonProps as RACButtonProps,
 } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
-import { MergeProvider } from '.';
 import { callRenderProps } from '../../utils/props';
+import { MergeProvider } from '.';
 
 const renderProps = {
   defaultClassName: '',

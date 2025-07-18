@@ -11,10 +11,10 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { ToggleIconButton } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ToggleIconButton> = {
   title: 'Components/ToggleIconButton',

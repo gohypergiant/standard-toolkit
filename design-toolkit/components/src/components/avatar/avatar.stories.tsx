@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from '../badge';
 import { Avatar } from './';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',

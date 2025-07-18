@@ -10,13 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { Link as LinkIcon } from '@accelint/icons';
-import { Placeholder } from '@accelint/icons';
-// Replace your-framework with the name of your framework
-import type { Meta, StoryObj } from '@storybook/react';
+import { Link as LinkIcon, Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { FloatingButton } from './index';
+// Replace your-framework with the name of your framework
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof FloatingButton> = {
   title: 'Components/FloatingButton',

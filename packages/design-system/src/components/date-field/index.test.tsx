@@ -16,13 +16,13 @@ import {
   parseDate,
   parseDateTime,
 } from '@internationalized/date';
-import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import { render, screen } from '@testing-library/react';
-import type { DateValue } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { DateInput, DateSegment, DateSegments } from '../date-input';
 import { DateField } from './';
+import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
+import type { DateValue } from 'react-aria-components';
 import type { DateFieldProps } from './types';
 
 function setup<T extends DateValue>(props: Partial<DateFieldProps<T>> = {}) {

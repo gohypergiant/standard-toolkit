@@ -12,13 +12,13 @@
 
 import { Fragment, useContext, useMemo } from 'react';
 import {
+  isRuleGroup,
+  isRuleGroupType,
+  pathsAreEqual,
   type RuleGroupArray,
   type RuleGroupICArray,
   type RuleGroupProps,
   TestID,
-  isRuleGroup,
-  isRuleGroupType,
-  pathsAreEqual,
   useRuleGroup,
   useStopEventPropagation,
 } from 'react-querybuilder';

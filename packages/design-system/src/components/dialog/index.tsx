@@ -12,10 +12,10 @@
 
 import { useIsSSR } from '@react-aria/ssr';
 import {
-  type ForwardedRef,
-  type HTMLAttributes,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   useCallback,
   useEffect,
   useMemo,
@@ -35,17 +35,17 @@ import { useDefaultProps } from '../../hooks/use-defaults';
 import { useSlot } from '../../hooks/use-slot';
 import { useTheme } from '../../hooks/use-theme';
 import { headings } from '../../styles/typography.css';
-import type { OmitProtectedProps } from '../../types/props';
 import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { AriaHeadingContext } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { ElementContext } from '../element';
-import type { ElementProps } from '../element/types';
 import { GroupContext } from '../group';
-import type { GroupProps } from '../group/types';
 import { dialogClassNames, dialogStateVars } from './dialog.css';
+import type { OmitProtectedProps } from '../../types/props';
+import type { ButtonProps } from '../button/types';
+import type { ElementProps } from '../element/types';
+import type { GroupProps } from '../group/types';
 import type { DialogMapping, DialogProps, DialogSizes } from './types';
 
 const dialogSizes: DialogSizes[] = ['sm', 'lg'];

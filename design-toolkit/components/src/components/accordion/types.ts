@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RenderPropsClassName } from '@/lib/types';
 import type { PropsWithChildren, RefAttributes } from 'react';
 import type {
   ButtonRenderProps,
@@ -18,6 +17,7 @@ import type {
   DisclosurePanelProps,
   DisclosureProps,
 } from 'react-aria-components';
+import type { RenderPropsClassName } from '@/lib/types';
 import type { AccordionStyleVariants } from './styles';
 
 export type AccordionGroupProps = DisclosureGroupProps &

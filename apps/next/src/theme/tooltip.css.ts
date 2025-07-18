@@ -11,11 +11,11 @@
  */
 
 import {
-  type ThemeContext,
-  type TooltipState,
   applyThemeVars,
   assignPartialVars,
   sizeVars,
+  type ThemeContext,
+  type TooltipState,
   tooltipSpaceVars,
   tooltipStateVars,
 } from '@accelint/design-system/vanilla';
