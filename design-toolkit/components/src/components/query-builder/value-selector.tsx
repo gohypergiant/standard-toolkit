@@ -11,15 +11,15 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Key } from '@react-types/shared';
 import { useCallback, useMemo } from 'react';
 import { Header, ListBoxSection } from 'react-aria-components';
 import {
-  type ValueSelectorProps,
   isOptionGroupArray,
   useValueSelector,
+  type ValueSelectorProps,
 } from 'react-querybuilder';
 import { ComboBox } from '../combobox';
+import type { Key } from '@react-types/shared';
 
 export function ValueSelector(props: ValueSelectorProps) {
   const {
@@ -29,6 +29,7 @@ export function ValueSelector(props: ValueSelectorProps) {
     options: optionsProp,
     multiple,
     title,
+    // biome-ignore lint/correctness/noUnusedVariables: should we ignore rest siblings? https://biomejs.dev/linter/rules/no-unused-variables/#ignorerestsiblings
     validation,
     value,
     ...rest

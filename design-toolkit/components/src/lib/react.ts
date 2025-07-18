@@ -11,7 +11,7 @@
  */
 
 // @ts-nocheck
-import { Children, type ReactNode, isValidElement } from 'react';
+import { Children, isValidElement, type ReactNode } from 'react';
 
 class ComponentStructureError extends Error {
   constructor(message) {
@@ -22,11 +22,11 @@ class ComponentStructureError extends Error {
 
 type ContainsExactChildrenProps = {
   componentName: string;
-  // biome-ignore lint/suspicious/noExplicitAny: aria render props include a generic type
   children:
     | ReactNode
     | ReactNode[]
     | ((
+        // biome-ignore lint/suspicious/noExplicitAny: aria render props include a generic type
         values: any & {
           defaultChildren: ReactNode | undefined;
         },

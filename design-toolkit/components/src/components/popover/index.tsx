@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ReactNode } from 'react';
 import {
   Dialog as AriaDialog,
   DialogTrigger as AriaDialogTrigger,
@@ -18,7 +17,8 @@ import {
   Popover as AriaPopover,
   Pressable,
 } from 'react-aria-components';
-
+import { PopoverStyles } from './styles';
+import type { ReactNode } from 'react';
 import type {
   PopoverBodyProps,
   PopoverContentProps,
@@ -26,8 +26,6 @@ import type {
   PopoverTitleProps,
   PopoverTriggerProps,
 } from './types';
-
-import { PopoverStyles } from './styles';
 
 const { content, body, title, footer } = PopoverStyles();
 
@@ -77,7 +75,10 @@ PopoverBody.displayName = 'Popover.Body';
 const PopoverFooter = ({
   children,
   className,
-}: { children: ReactNode; className?: string }) => {
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
   return <div className={footer({ className })}>{children}</div>;
 };
 PopoverFooter.displayName = 'Popover.Footer';
