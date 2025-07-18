@@ -10,9 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-/* this @layer declaration needs to be before the stylesheet imports */
-@layer properties, theme,  base, old_ds_reset, old_ds_framework, old_ds_overrides, components, utilities;
+import type { PropsWithChildren } from 'react';
+import './globals.css';
 
-@import '@accelint/design-system/styles';
-@import "@accelint/design-toolkit/styles";
-@source "../../node_modules/@accelint/design-toolkit";
+export default function Layout({ children }: PropsWithChildren) {
+  return (
+    <html lang='en'>
+      <body className='min-h-dvh bg-surface-default'>{children}</body>
+    </html>
+  );
+}

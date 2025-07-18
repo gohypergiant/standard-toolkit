@@ -10,12 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-import * as matchers from '@testing-library/jest-dom/matchers';
-import { cleanup } from '@testing-library/react';
-import { afterEach, expect } from 'vitest';
+import type { PropsWithChildren } from 'react';
 
-expect.extend(matchers);
+export const PreviewGrid = ({ children }: PropsWithChildren) => {
+  return (
+    <div className='flex flex-1 flex-col gap-s p-s'>
+      <div className='grid auto-rows-min gap-s md:grid-cols-5'>{children}</div>
+    </div>
+  );
+};
 
-afterEach(() => {
-  cleanup();
-});
+const PreviewGridItem = ({ children }: PropsWithChildren) => {
+  return (
+    <div className='flex justify-center aspect-square items-center bg-surface-raised p-m'>
+      {children}
+    </div>
+  );
+};
+
+PreviewGrid.Item = PreviewGridItem;
