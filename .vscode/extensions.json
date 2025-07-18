@@ -2,6 +2,12 @@
   "recommendations": [
     "editorconfig.editorconfig",
     "redhat.vscode-yaml",
-    "biomejs.biome"
+    "biomejs.biome",
+    "github.vscode-pull-request-github",
+    "mhutchie.git-graph",
+    "streetsidesoftware.code-spell-checker",
+    "bradlc.vscode-tailwindcss",
+    "natqe.reload",
+    "kamikillerto.vscode-colorize"
   ]
 }

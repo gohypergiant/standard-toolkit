@@ -56,8 +56,16 @@ export type {
   ToggleButtonProps,
   ToggleButtonProviderProps,
 } from './components/button/types';
-export { Checkbox } from './components/checkbox';
-export type { CheckboxGroupProps, CheckboxProps } from './components/checkbox';
+export {
+  Checkbox,
+  CheckboxContext,
+  CheckboxGroupContext,
+} from './components/checkbox';
+export { CheckboxStyles } from './components/checkbox/styles';
+export type {
+  CheckboxGroupProps,
+  CheckboxProps,
+} from './components/checkbox/types';
 export { Chip, ChipContext } from './components/chip';
 export {
   BaseChipStyles,
@@ -271,10 +279,10 @@ export {
   colorTransparentLight,
   fontDisplay,
   fontPrimary,
-  iconsSizeL,
-  iconsSizeM,
-  iconsSizeS,
-  iconsSizeXs,
+  iconSizeL,
+  iconSizeM,
+  iconSizeS,
+  iconSizeXs,
   radiusLarge,
   radiusMedium,
   radiusNone,
