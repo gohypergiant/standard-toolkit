@@ -13,13 +13,12 @@
     "jsx": "preserve",
     "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "~/*": ["./src/*"]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "types": ["@testing-library/jest-dom"]
+    ]
   }
 }
