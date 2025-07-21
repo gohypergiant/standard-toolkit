@@ -133,12 +133,10 @@ export type { DialogProps } from './components/dialog';
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
 export type { HeroProps } from './components/hero/types';
-export { Drawer, DrawerContext } from './components/drawer';
-export { DrawerStyles, DrawerStylesDefaults } from './components/drawer/styles';
-export type { DrawerStyleVariants } from './components/drawer/styles';
+export { Drawer } from './components/drawer';
+export { DrawerStyles } from './components/drawer/styles';
 export type {
   DrawerContextValue,
-  DrawerPosition,
   DrawerProps,
   DrawerTriggerProps,
 } from './components/drawer/types';
