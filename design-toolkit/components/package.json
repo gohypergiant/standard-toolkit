@@ -8,7 +8,9 @@
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -65,6 +67,7 @@
     "@fontsource/roboto-mono": "^5.1.0",
     "@internationalized/date": "^3.8.0",
     "@radix-ui/react-avatar": "^1.1.4",
+    "@react-aria/interactions": "3.25.3",
     "@react-aria/ssr": "^3.9.6",
     "@react-aria/utils": "^3.29.1",
     "@react-stately/color": "^3.8.6",
@@ -82,7 +85,6 @@
   "dependencies": {
     "@accelint/core": "workspace:*",
     "@accelint/icons": "workspace:*",
-    "@react-aria/interactions": "3.25.3",
     "client-only": "0.0.1",
     "clsx": "^2.1.1",
     "cva": "npm:class-variance-authority@^0.7.1",
@@ -96,6 +98,7 @@
     "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
+    "@react-aria/interactions": "3.25.3",
     "@storybook/addon-essentials": "^8.6.12",
     "@storybook/addon-storysource": "8.6.14",
     "@storybook/blocks": "8.6.12",
