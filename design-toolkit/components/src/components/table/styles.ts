@@ -12,9 +12,14 @@
 
 import { tv } from '@/lib/utils';
 
+export const tableHeaderStyles = tv({
+  base: ['group/theader'],
+});
+
 export const TableCellStylesDefaults = {
   narrow: false,
   numeral: false,
+  kebab: false,
   persistent: true,
 } as const;
 
@@ -40,12 +45,7 @@ export const cellStyles = tv({
       false: 'hover:*:visible group-hover/row:*:visible',
     },
   },
-  defaultVariants: {
-    narrow: TableCellStylesDefaults.narrow,
-    numeral: TableCellStylesDefaults.numeral,
-    kebab: false,
-    persistent: TableCellStylesDefaults.persistent,
-  },
+  defaultVariants: TableCellStylesDefaults,
   compoundVariants: [
     {
       persistent: false,

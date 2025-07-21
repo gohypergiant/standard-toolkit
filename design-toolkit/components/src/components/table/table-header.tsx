@@ -10,15 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@/lib/utils';
+import { tableHeaderStyles } from './styles';
 import type { TableHeaderProps } from './types';
-
-const tableHeaderStyles = tv({
-  base: ['group/theader'],
-});
 
 export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
   return (
-    <thead ref={ref} className={tableHeaderStyles(className)} {...props} />
+    <thead {...props} ref={ref} className={tableHeaderStyles(className)} />
   );
 }

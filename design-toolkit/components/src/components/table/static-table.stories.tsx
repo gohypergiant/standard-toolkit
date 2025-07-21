@@ -54,7 +54,7 @@ const defaultData: Person[] = [
 ];
 
 const meta = {
-  title: 'ComponentsTable',
+  title: 'Components/Table',
   component: Table,
 } satisfies Meta<typeof Table>;
 
@@ -62,7 +62,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Static: Story = {
-  render: (_data, _columns, ...args) => (
+  render: (...args) => (
     <Table {...args}>
       <Table.Header>
         <Table.Row>
