@@ -15,8 +15,8 @@ import {
   MenuItem as AriaMenuItem,
   MenuTrigger as AriaMenuTrigger,
   Popover as AriaPopover,
-  Pressable as AriaPressable,
 } from 'react-aria-components';
+import { Button } from '../button';
 import { Icon } from '../icon';
 import { actionsCellStyles } from './styles';
 import type { ActionsCellProps } from './types';
@@ -33,11 +33,9 @@ export function ActionsCell({
 }: ActionsCellProps) {
   return (
     <AriaMenuTrigger onOpenChange={onOpenChange} isOpen={isOpen}>
-      <AriaPressable>
-        <button className={button({ persistent, className })} type='button'>
-          <Icon>{children}</Icon>
-        </button>
-      </AriaPressable>
+      <Button className={button({ persistent, className })} variant='icon'>
+        <Icon>{children}</Icon>
+      </Button>
       <AriaPopover className={popover()}>
         <AriaMenu className={container()}>
           {actions.map((action) => (
