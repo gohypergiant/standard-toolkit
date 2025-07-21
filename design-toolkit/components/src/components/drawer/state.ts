@@ -29,7 +29,7 @@ export type DrawerAction =
  * Default state for new drawers
  */
 export const createDefaultDrawerState = (
-  mode: DrawerMode = 'over',
+  mode: DrawerMode = 'overlay',
   size: DrawerSize = 'closed',
   initialSize: DrawerSize = 'content',
   extended = false,
@@ -110,7 +110,7 @@ export const isDrawerOpen = (state: DrawerState): boolean => {
  * Type guards for runtime validation
  */
 export const isValidDrawerMode = (value: unknown): value is DrawerMode => {
-  return typeof value === 'string' && ['over', 'push'].includes(value);
+  return typeof value === 'string' && ['overlay', 'push'].includes(value);
 };
 
 export const isValidDrawerSize = (value: unknown): value is DrawerSize => {

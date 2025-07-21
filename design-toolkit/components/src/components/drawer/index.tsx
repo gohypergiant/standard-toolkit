@@ -89,7 +89,7 @@ export const Drawer = ({
   id,
   placement = 'left',
   isOpen = false,
-  mode = 'over',
+  mode = 'overlay',
   size = 'content',
   className,
   children,

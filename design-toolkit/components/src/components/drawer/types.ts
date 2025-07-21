@@ -24,7 +24,7 @@ export type MenuItemId = string;
  * - `'push'`: Drawer pushes the main content aside, reducing its available width.
  *   Content area shrinks to accommodate the panel space.
  */
-export type DrawerMode = 'over' | 'push';
+export type DrawerMode = 'overlay' | 'push';
 
 /**
  * Drawer Sizes
