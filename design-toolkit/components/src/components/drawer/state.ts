@@ -21,6 +21,7 @@ export type DrawerAction =
   | { type: 'OPEN' }
   | { type: 'CLOSE' }
   | { type: 'SET_SIZE'; size: DrawerSize }
+  | { type: 'SET_INITIAL_SIZE'; size: DrawerSize }
   | { type: 'SET_MODE'; mode: DrawerMode }
   | { type: 'SET_EXTENDED'; extended: boolean };
 
@@ -29,9 +30,10 @@ export type DrawerAction =
  */
 export const createDefaultDrawerState = (
   mode: DrawerMode = 'over',
-  size: DrawerSize = 'open',
+  size: DrawerSize = 'closed',
+  initialSize: DrawerSize = 'content',
   extended = false,
-): DrawerState => ({ mode, size, extended });
+): DrawerState => ({ mode, size, initialSize, extended });
 
 export const drawerStateReducer = (
   state: DrawerState,
@@ -41,13 +43,13 @@ export const drawerStateReducer = (
     case 'TOGGLE':
       return {
         ...state,
-        size: state.size === 'closed' ? 'open' : 'closed',
+        size: state.size === 'closed' ? state.initialSize : 'closed',
       };
 
     case 'OPEN':
       return {
         ...state,
-        size: state.size === 'closed' ? 'open' : state.size,
+        size: state.initialSize,
       };
 
     case 'CLOSE':
@@ -57,6 +59,11 @@ export const drawerStateReducer = (
       };
 
     case 'SET_SIZE':
+      return {
+        ...state,
+        size: action.size,
+      };
+    case 'SET_INITIAL_SIZE':
       return {
         ...state,
         size: action.size,
@@ -96,7 +103,7 @@ export const isDrawerVisible = (state: DrawerState): boolean => {
  * Check if drawer is in an open state
  */
 export const isDrawerOpen = (state: DrawerState): boolean => {
-  return ['nav', 'open', 'extra', 'nav', 'icons'].includes(state.size);
+  return ['nav', 'content', 'extra', 'nav', 'icons'].includes(state.size);
 };
 
 /**
@@ -109,7 +116,7 @@ export const isValidDrawerMode = (value: unknown): value is DrawerMode => {
 export const isValidDrawerSize = (value: unknown): value is DrawerSize => {
   return (
     typeof value === 'string' &&
-    ['closed', 'icons', 'nav', 'open', 'extra'].includes(value)
+    ['closed', 'icons', 'nav', 'content', 'extra'].includes(value)
   );
 };
 

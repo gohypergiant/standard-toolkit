@@ -38,7 +38,7 @@ import type {
 } from './types';
 
 const DEFAULT_DRAWER_DATA_ATTRIBUTE = stateToDataAttribute(
-  createDefaultDrawerState('over', 'closed', false),
+  createDefaultDrawerState(),
 );
 
 const { root, main, drawer, trigger, content, panel, header, footer, title } =
@@ -90,7 +90,7 @@ export const Drawer = ({
   placement = 'left',
   isOpen = false,
   mode = 'over',
-  initialSize,
+  size = 'content',
   className,
   children,
   onOpenChange,
@@ -113,7 +113,8 @@ export const Drawer = ({
   useEffect(() => {
     const initialState = createDefaultDrawerState(
       mode,
-      initialSize || (isOpen ? 'open' : 'closed'),
+      isOpen ? size : 'closed',
+      size,
     );
     registerDrawer(id, placement, initialState, {
       onOpenChange,
@@ -123,7 +124,7 @@ export const Drawer = ({
     id,
     placement,
     mode,
-    initialSize,
+    size,
     isOpen,
     registerDrawer,
     onOpenChange,
@@ -232,7 +233,6 @@ const DrawerPanel = ({
 }: DrawerPanelProps) => {
   const { selectedMenuItemId } = useDrawerContext();
   const isSelected = selectedMenuItemId === id;
-  console.log('Drawer.Panel', selectedMenuItemId, id);
 
   if (!isSelected) {
     return null;

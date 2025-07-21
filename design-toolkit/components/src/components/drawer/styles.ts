@@ -18,7 +18,7 @@ const gridBase = {
     '[--drawer-size-closed:0]',
     '[--drawer-size-icons:40px]',
     '[--drawer-size-nav:200px]',
-    '[--drawer-size-open:min(475px,25%)]',
+    '[--drawer-size-content:min(475px,25%)]',
     '[--drawer-size-xl:min(600px,35%)]',
 
     //Grid template definitions
@@ -107,28 +107,28 @@ const stateProperties = {
     'data-[top*="closed"]:[--drawer-h-top:var(--drawer-size-closed)]',
     'data-[top*="icons"]:[--drawer-h-top:var(--drawer-size-icons)]',
     'data-[top*="nav"]:[--drawer-h-top:var(--drawer-size-nav)]',
-    'data-[top*="open"]:[--drawer-h-top:var(--drawer-size-open)]',
+    'data-[top*="content"]:[--drawer-h-top:var(--drawer-size-content)]',
     'data-[top*="xl"]:[--drawer-h-top:var(--drawer-size-xl)]',
 
     //Bottom drawer
     'data-[bottom*="closed"]:[--drawer-h-bottom:var(--drawer-size-closed)]',
     'data-[bottom*="icons"]:[--drawer-h-bottom:var(--drawer-size-icons)]',
     'data-[bottom*="nav"]:[--drawer-h-bottom:var(--drawer-size-nav)]',
-    'data-[bottom*="open"]:[--drawer-h-bottom:var(--drawer-size-open)]',
+    'data-[bottom*="content"]:[--drawer-h-bottom:var(--drawer-size-content)]',
     'data-[bottom*="xl"]:[--drawer-h-bottom:var(--drawer-size-xl)]',
 
     //Left drawer
     'data-[left*="closed"]:[--drawer-w-left:var(--drawer-size-closed)]',
     'data-[left*="icons"]:[--drawer-w-left:var(--drawer-size-icons)]',
     'data-[left*="nav"]:[--drawer-w-left:var(--drawer-size-nav)]',
-    'data-[left*="open"]:[--drawer-w-left:var(--drawer-size-open)]',
+    'data-[left*="content"]:[--drawer-w-left:var(--drawer-size-content)]',
     'data-[left*="xl"]:[--drawer-w-left:var(--drawer-size-xl)]',
 
     //Righ drawer
     'data-[right*="closed"]:[--drawer-w-right:var(--drawer-size-closed)]',
     'data-[right*="icons"]:[--drawer-w-right:var(--drawer-size-icons)]',
     'data-[right*="nav"]:[--drawer-w-right:var(--drawer-size-nav)]',
-    'data-[right*="open"]:[--drawer-w-right:var(--drawer-size-open)]',
+    'data-[right*="content"]:[--drawer-w-right:var(--drawer-size-content)]',
     'data-[right*="xl"]:[--drawer-w-right:var(--drawer-size-xl)]',
   ],
 };
@@ -147,7 +147,7 @@ export const DrawerStyles = tv({
       'data-[drawer-state*="closed"]:[&>*:not(nav)]:hidden',
       'data-[drawer-state*="icons"]:block',
       'data-[drawer-state*="nav"]:block',
-      'data-[drawer-state*="open"]:block',
+      'data-[drawer-state*="content"]:block',
       'data-[drawer-state*="xl"]:block',
     ],
     content: ['flex h-full min-h-0 flex-col gap-s p-l'],
