@@ -1,4 +1,16 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 import {
+  Cancel,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -17,17 +29,21 @@ import { Icon } from '../icon';
 import { NavigationStack } from '../navigation-stack';
 import { Drawer } from './index';
 
-const meta: Meta<typeof Drawer.Root> = {
+const meta: Meta<typeof Drawer> = {
   title: 'Components/Drawer',
-  component: Drawer.Root,
+  component: Drawer,
   parameters: {
     layout: 'fullscreen',
   },
-  argTypes: {},
+  args: {
+    id: 'left-drawer',
+    placement: 'left',
+    mode: 'over',
+  },
 };
 
 export default meta;
-type Story = StoryObj<typeof Drawer.Root>;
+type Story = StoryObj<typeof Drawer>;
 
 const PanelTitle = ({ children }: PropsWithChildren) => (
   <h2 className='fg-[#fff] mx-auto mt-l w-content rounded-full bg-[rgba(0,0,0,0.3)] p-m px-xl'>
@@ -63,23 +79,12 @@ const RightIcon = () => (
   </Icon>
 );
 
-const extraItemsX = Array.from({ length: 6 }, (_, index) => (
-  <span
-    className='my-s flex w-full cursor-pointer justify-center'
-    key={`${index + 1}`}
-  >
-    <Icon className='text-disabled'>
+const placeholderIcons = Array.from({ length: 6 }, (_, index) => (
+  <Drawer.Menu.Item key={`${index + 1}`}>
+    <Icon className='self-center text-disabled'>
       <Placeholder />
     </Icon>
-  </span>
-));
-
-const extraItemsY = Array.from({ length: 6 }, (_, index) => (
-  <span className='mx-s flex cursor-pointer items-center' key={`${index + 1}`}>
-    <Icon className='text-disabled'>
-      <Placeholder />
-    </Icon>
-  </span>
+  </Drawer.Menu.Item>
 ));
 
 export const FullLayout: Story = {
@@ -91,14 +96,13 @@ export const FullLayout: Story = {
           className='bg-[rgba(200,50,0,0.5)]'
           placement='top'
           mode='push'
-          hotKey='w'
         >
           <Drawer.Menu>
             <Drawer.Trigger for='header'>
               <TopIcon />
             </Drawer.Trigger>
 
-            {extraItemsY}
+            {placeholderIcons}
           </Drawer.Menu>
 
           <PanelTitle>Top</PanelTitle>
@@ -124,29 +128,6 @@ export const FullLayout: Story = {
           >
             <div className='flex w-[23em] flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl drop-shadow-[0_0_150px_rgba(255,255,255,0.4)] [&>*]:my-s'>
               <p>This page is for demo purposes only!</p>
-              <p>Key-bindings for toggles:</p>
-
-              <ul className='[&_kbd]:mr-m [&_kbd]:inline-block [&_kbd]:w-[4em] [&_kbd]:text-right'>
-                <li>
-                  <kbd>w</kbd>
-                  open/closed "top" panel
-                </li>
-
-                <li>
-                  <kbd>s</kbd>
-                  open/closed "bottom" panel
-                </li>
-
-                <li>
-                  <kbd>a</kbd>
-                  open/closed "left" panel
-                </li>
-
-                <li>
-                  <kbd>d</kbd>
-                  open/closed "right" panel
-                </li>
-              </ul>
             </div>
           </div>
         </Drawer.Main>
@@ -156,14 +137,13 @@ export const FullLayout: Story = {
           className='bg-[rgba(50,200,0,0.5)]'
           placement='bottom'
           mode='push'
-          hotKey='s'
         >
           <Drawer.Menu>
             <Drawer.Trigger for='footer'>
               <BottomIcon />
             </Drawer.Trigger>
 
-            {extraItemsY}
+            {placeholderIcons}
           </Drawer.Menu>
 
           <PanelTitle>Bottom</PanelTitle>
@@ -175,14 +155,13 @@ export const FullLayout: Story = {
           className='bg-[rgba(0,150,200,0.5)]'
           placement='left'
           mode='push'
-          hotKey='a'
         >
           <Drawer.Menu>
             <Drawer.Trigger for='settings'>
               <LeftIcon />
             </Drawer.Trigger>
 
-            {extraItemsX}
+            {placeholderIcons}
           </Drawer.Menu>
 
           <PanelTitle>Left</PanelTitle>
@@ -193,14 +172,13 @@ export const FullLayout: Story = {
           className='bg-[rgba(200,50,200,0.5)]'
           placement='right'
           mode='push'
-          hotKey='d'
         >
           <Drawer.Menu>
             <Drawer.Trigger for='sidebar'>
               <RightIcon />
             </Drawer.Trigger>
 
-            {extraItemsX}
+            {placeholderIcons}
           </Drawer.Menu>
 
           <PanelTitle>Right</PanelTitle>
@@ -211,25 +189,34 @@ export const FullLayout: Story = {
 };
 
 export const WithTabs: Story = {
-  render: () => {
+  render: ({ id, ...args }) => {
     return (
       <Drawer.Root className='bg-default-dark'>
         <Drawer.Main>
           <div className='text-default-light'>Left Drawer Content</div>
         </Drawer.Main>
-        <Drawer id='settings' placement='left' mode='over'>
-          <Drawer.Header>Title</Drawer.Header>
+        <Drawer id='settings' {...args}>
+          <Drawer.Header>
+            <Drawer.Title>Title</Drawer.Title>
+            <Drawer.Close>
+              <Button size='small' variant='flat'>
+                <Icon>
+                  <Cancel />
+                </Icon>
+              </Button>
+            </Drawer.Close>
+          </Drawer.Header>
           <Drawer.Menu>
-            <Drawer.MenuItem id='a'>
+            <Drawer.Menu.Item id='a'>
               <Icon>
                 <Placeholder />
               </Icon>
-            </Drawer.MenuItem>
-            <Drawer.MenuItem id='b'>
+            </Drawer.Menu.Item>
+            <Drawer.Menu.Item id='b'>
               <Icon>
                 <Placeholder />
               </Icon>
-            </Drawer.MenuItem>
+            </Drawer.Menu.Item>
           </Drawer.Menu>
           <Drawer.Panel id='a'>A Content</Drawer.Panel>
           <Drawer.Panel id='b'>B Content</Drawer.Panel>
@@ -248,14 +235,23 @@ export const WithLongContent: Story = {
         </Drawer.Main>
         <Drawer id='settings' placement='left' mode='over'>
           <Drawer.Menu>
-            <Drawer.MenuItem id=''>
+            <Drawer.Menu.Item>
               <Icon>
                 <Placeholder />
               </Icon>
-            </Drawer.MenuItem>
+            </Drawer.Menu.Item>
           </Drawer.Menu>
-          <Drawer.Header>Title</Drawer.Header>
-          <Drawer.Panel id=''>{longContent}</Drawer.Panel>
+          <Drawer.Header>
+            <Drawer.Title>Title</Drawer.Title>
+            <Drawer.Close>
+              <Button size='small'>
+                <Icon>
+                  <Cancel />
+                </Icon>
+              </Button>
+            </Drawer.Close>
+          </Drawer.Header>
+          <Drawer.Panel>{longContent}</Drawer.Panel>
           <Drawer.Footer>Footer</Drawer.Footer>
         </Drawer>
       </Drawer.Root>
@@ -284,15 +280,22 @@ export const ControlledOpen: Story = {
           placement='left'
           mode='push'
         >
-          <Drawer.Header>Title</Drawer.Header>
+          <Drawer.Header>
+            <Drawer.Title>Title</Drawer.Title>
+          </Drawer.Header>
           <Drawer.Menu>
-            <Drawer.MenuItem id=''>
+            <Drawer.Menu.Item>
               <Icon>
                 <Placeholder />
               </Icon>
-            </Drawer.MenuItem>
+            </Drawer.Menu.Item>
           </Drawer.Menu>
-          <Drawer.Panel id=''>A Content</Drawer.Panel>
+          <Drawer.Panel>A Content</Drawer.Panel>
+          <Drawer.Footer>
+            <Drawer.Close>
+              <Button>Cancel</Button>
+            </Drawer.Close>
+          </Drawer.Footer>
         </Drawer>
       </Drawer.Root>
     );
@@ -305,16 +308,16 @@ export const WithNavigationStack: Story = {
       <Drawer.Root className='bg-default-light'>
         <Drawer id='settings' placement='left' mode='over'>
           <Drawer.Menu>
-            <Drawer.MenuItem id='a'>
+            <Drawer.Menu.Item id='a'>
               <Icon>
                 <Placeholder />
               </Icon>
-            </Drawer.MenuItem>
-            <Drawer.MenuItem id='b'>
+            </Drawer.Menu.Item>
+            <Drawer.Menu.Item id='b'>
               <Icon>
                 <Placeholder />
               </Icon>
-            </Drawer.MenuItem>
+            </Drawer.Menu.Item>
           </Drawer.Menu>
           <Drawer.Panel id='a'>
             <NavigationStack defaultViewId='a'>
