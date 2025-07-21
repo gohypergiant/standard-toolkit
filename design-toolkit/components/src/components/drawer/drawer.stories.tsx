@@ -39,6 +39,7 @@ const meta: Meta<typeof Drawer> = {
     id: 'left-drawer',
     placement: 'left',
     mode: 'over',
+    size: 'content',
   },
 };
 
@@ -53,21 +54,21 @@ const PanelTitle = ({ children }: PropsWithChildren) => (
 
 const BottomIcon = () => (
   <Icon>
-    <ChevronDown className='hidden group-data-[bottom*=nav]/layout:block group-data-[bottom*=open]/layout:block group-data-[bottom*=xl]/layout:block' />
+    <ChevronDown className='hidden group-data-[bottom*=content]/layout:block group-data-[bottom*=nav]/layout:block group-data-[bottom*=xl]/layout:block' />
     <ChevronUp className='hidden group-data-[bottom*=closed]/layout:block group-data-[bottom*=icons]/layout:block' />
   </Icon>
 );
 
 const TopIcon = () => (
   <Icon>
-    <ChevronUp className='hidden group-data-[top*=nav]/layout:block group-data-[top*=open]/layout:block group-data-[top*=xl]/layout:block' />
+    <ChevronUp className='hidden group-data-[top*=content]/layout:block group-data-[top*=nav]/layout:block group-data-[top*=xl]/layout:block' />
     <ChevronDown className='hidden group-data-[top*=closed]/layout:block group-data-[top*=icons]/layout:block' />
   </Icon>
 );
 
 const LeftIcon = () => (
   <Icon>
-    <ChevronLeft className='hidden group-data-[left*=nav]/layout:block group-data-[left*=open]/layout:block group-data-[left*=xl]/layout:block' />
+    <ChevronLeft className='hidden group-data-[left*=content]/layout:block group-data-[left*=nav]/layout:block group-data-[left*=xl]/layout:block' />
     <ChevronRight className='hidden group-data-[left*=closed]/layout:block group-data-[left*=icons]/layout:block' />
   </Icon>
 );
@@ -75,7 +76,7 @@ const LeftIcon = () => (
 const RightIcon = () => (
   <Icon>
     <ChevronLeft className='hidden group-data-[right*=closed]/layout:block group-data-[right*=icons]/layout:block group-data-[right*=xl]/layout:block' />
-    <ChevronRight className='hidden group-data-[right*=nav]/layout:block group-data-[right*=open]/layout:block' />
+    <ChevronRight className='hidden group-data-[right*=content]/layout:block group-data-[right*=nav]/layout:block' />
   </Icon>
 );
 
@@ -86,6 +87,44 @@ const placeholderIcons = Array.from({ length: 6 }, (_, index) => (
     </Icon>
   </Drawer.Menu.Item>
 ));
+
+export const WithTabs: Story = {
+  render: ({ id, ...args }) => {
+    return (
+      <Drawer.Root className='bg-default-dark'>
+        <Drawer.Main>
+          <div className='text-default-light'>Left Drawer Content</div>
+        </Drawer.Main>
+        <Drawer id='settings' {...args}>
+          <Drawer.Header>
+            <Drawer.Title>Title</Drawer.Title>
+            <Drawer.Close>
+              <Button size='small' variant='flat'>
+                <Icon>
+                  <Cancel />
+                </Icon>
+              </Button>
+            </Drawer.Close>
+          </Drawer.Header>
+          <Drawer.Menu>
+            <Drawer.Menu.Item id='a'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.Menu.Item>
+            <Drawer.Menu.Item id='b'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+            </Drawer.Menu.Item>
+          </Drawer.Menu>
+          <Drawer.Panel id='a'>A Content</Drawer.Panel>
+          <Drawer.Panel id='b'>B Content</Drawer.Panel>
+        </Drawer>
+      </Drawer.Root>
+    );
+  },
+};
 
 export const FullLayout: Story = {
   render: () => {
@@ -188,43 +227,6 @@ export const FullLayout: Story = {
   },
 };
 
-export const WithTabs: Story = {
-  render: ({ id, ...args }) => {
-    return (
-      <Drawer.Root className='bg-default-dark'>
-        <Drawer.Main>
-          <div className='text-default-light'>Left Drawer Content</div>
-        </Drawer.Main>
-        <Drawer id='settings' {...args}>
-          <Drawer.Header>
-            <Drawer.Title>Title</Drawer.Title>
-            <Drawer.Close>
-              <Button size='small' variant='flat'>
-                <Icon>
-                  <Cancel />
-                </Icon>
-              </Button>
-            </Drawer.Close>
-          </Drawer.Header>
-          <Drawer.Menu>
-            <Drawer.Menu.Item id='a'>
-              <Icon>
-                <Placeholder />
-              </Icon>
-            </Drawer.Menu.Item>
-            <Drawer.Menu.Item id='b'>
-              <Icon>
-                <Placeholder />
-              </Icon>
-            </Drawer.Menu.Item>
-          </Drawer.Menu>
-          <Drawer.Panel id='a'>A Content</Drawer.Panel>
-          <Drawer.Panel id='b'>B Content</Drawer.Panel>
-        </Drawer>
-      </Drawer.Root>
-    );
-  },
-};
 
 export const WithLongContent: Story = {
   render: () => {

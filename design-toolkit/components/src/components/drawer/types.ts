@@ -34,7 +34,7 @@ export type DrawerMode = 'over' | 'push';
  * - `'closed'`: Panel is completely hidden with zero width/height
  * - `'icons'`: Panel shows minimal width/height, typically for icon-only display
  * - `'nav'`: Panel displays at navigation width, suitable for menu items with labels
- * - `'open'`: Panel shows at standard width for general content
+ * - `'content'`: Panel shows at standard width for general content
  * - `'extra'`: Panel expands to maximum width for detailed content
  *
  * ## State Transitions
@@ -43,13 +43,14 @@ export type DrawerMode = 'over' | 'push';
  * - `icons` ↔ `nav` - Expand/collapse navigation
  * - `open` ↔ `extra` - Standard to expanded view
  */
-export type DrawerSize = 'closed' | 'icons' | 'nav' | 'open' | 'extra';
+export type DrawerSize = 'closed' | 'icons' | 'nav' | 'content' | 'extra';
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 
 export interface DrawerState {
   mode: DrawerMode;
   size: DrawerSize;
+  initialSize: DrawerSize;
   extended: boolean;
 }
 
@@ -71,7 +72,7 @@ export interface DrawerProps extends ContainerProps {
   id: DrawerId;
   placement: DrawerPlacement;
   mode?: DrawerMode;
-  initialSize?: DrawerSize;
+  size?: DrawerSize;
   isOpen?: boolean;
   onOpenChange?: OnOpenChangeCallback;
   onStateChange?: (state: DrawerState) => void;
