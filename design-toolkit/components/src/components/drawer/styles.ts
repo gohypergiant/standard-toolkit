@@ -91,13 +91,13 @@ const placementStyles = {
 const stateProperties = {
   //Main content grid positioning
   mainContent: [
-    'data-[bottom*="over"]:[--drawer-main-row-end:4]',
+    'data-[bottom*="overlay"]:[--drawer-main-row-end:4]',
     'data-[bottom*="push"]:[--drawer-main-row-end:3]',
-    'data-[top*="over"]:[--drawer-main-row-start:1]',
+    'data-[top*="overlay"]:[--drawer-main-row-start:1]',
     'data-[top*="push"]:[--drawer-main-row-start:2]',
-    'data-[left*="over"]:[--drawer-main-col-start:1]',
+    'data-[left*="overlay"]:[--drawer-main-col-start:1]',
     'data-[left*="push"]:[--drawer-main-col-start:2]',
-    'data-[right*="over"]:[--drawer-main-col-end:4]',
+    'data-[right*="overlay"]:[--drawer-main-col-end:4]',
     'data-[right*="push"]:[--drawer-main-col-end:3]',
   ],
 
@@ -124,7 +124,7 @@ const stateProperties = {
     'data-[left*="content"]:[--drawer-w-left:var(--drawer-size-content)]',
     'data-[left*="xl"]:[--drawer-w-left:var(--drawer-size-xl)]',
 
-    //Righ drawer
+    //Right drawer
     'data-[right*="closed"]:[--drawer-w-right:var(--drawer-size-closed)]',
     'data-[right*="icons"]:[--drawer-w-right:var(--drawer-size-icons)]',
     'data-[right*="nav"]:[--drawer-w-right:var(--drawer-size-nav)]',

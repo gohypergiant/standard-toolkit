@@ -38,7 +38,7 @@ const meta: Meta<typeof Drawer> = {
   args: {
     id: 'left-drawer',
     placement: 'left',
-    mode: 'over',
+    mode: 'overlay',
     size: 'content',
   },
 };
@@ -132,7 +132,6 @@ export const FullLayout: Story = {
       <Drawer.Root extend='left and right'>
         <Drawer
           id='header'
-          className='bg-[rgba(200,50,0,0.5)]'
           placement='top'
           mode='push'
         >
@@ -173,7 +172,6 @@ export const FullLayout: Story = {
 
         <Drawer
           id='footer'
-          className='bg-[rgba(50,200,0,0.5)]'
           placement='bottom'
           mode='push'
         >
@@ -191,7 +189,6 @@ export const FullLayout: Story = {
 
         <Drawer
           id='settings'
-          className='bg-[rgba(0,150,200,0.5)]'
           placement='left'
           mode='push'
         >
@@ -208,7 +205,6 @@ export const FullLayout: Story = {
 
         <Drawer
           id='sidebar'
-          className='bg-[rgba(200,50,200,0.5)]'
           placement='right'
           mode='push'
         >
@@ -235,7 +231,7 @@ export const WithLongContent: Story = {
         <Drawer.Main>
           <div className='text-default-light'>Left Drawer Content</div>
         </Drawer.Main>
-        <Drawer id='settings' placement='left' mode='over'>
+        <Drawer id='settings' placement='left' mode='overlay'>
           <Drawer.Menu>
             <Drawer.Menu.Item>
               <Icon>
@@ -308,7 +304,7 @@ export const WithNavigationStack: Story = {
   render: () => {
     return (
       <Drawer.Root className='bg-default-light'>
-        <Drawer id='settings' placement='left' mode='over'>
+        <Drawer id='settings' placement='left' mode='overlay'>
           <Drawer.Menu>
             <Drawer.Menu.Item id='a'>
               <Icon>
