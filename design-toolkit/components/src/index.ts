@@ -165,6 +165,7 @@ export {
   headerCellStyles,
   rowStyles,
   tableBodyStyles,
+  tableHeaderStyles,
 } from './components/table/styles';
 export { TableBody } from './components/table/table-body';
 export { TableCell } from './components/table/table-cell';
