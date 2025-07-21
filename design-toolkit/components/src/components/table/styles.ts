@@ -25,7 +25,7 @@ export const TableCellStylesDefaults = {
 
 export const cellStyles = tv({
   base: [
-    'min-w-l text-left align-middle font-display text-body-s text-default-light hover:group-not-data-selected/row:bg-surface-raised',
+    'min-w-l text-left align-middle font-display text-body-s text-default-light hover:group-not-selected/row:bg-surface-raised',
   ],
   variants: {
     narrow: {
