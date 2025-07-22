@@ -33,6 +33,7 @@ import {
 } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
 import { Input as AriaInput } from 'react-aria-components';
+import { tv } from 'tailwind-variants';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
@@ -612,10 +613,22 @@ export function Table<T extends { id: string | number }>({
                 );
               }
 
+              // Will move to pagination component once we have one
+              const paginationButtonStyles = tv({
+                base: 'min-h-[32px] min-w-[32px] rounded-medium border-1 border-transparent bg-transparent px-s font-display text-default-light hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark ',
+                variants: {
+                  selected: {
+                    true: 'border-highlight-bold bg-highlight-subtle text-highlight-bold',
+                  },
+                },
+              });
+
               return (
                 <Button
                   key={page}
-                  className='min-h-[32px] min-w-[32px] rounded-medium border-1 border-transparent bg-transparent px-s font-display text-default-light hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark data-selected:border-highlight-bold data-selected:bg-highlight-subtle data-selected:text-highlight-bold'
+                  className={paginationButtonStyles({
+                    selected: getState().pagination.pageIndex + 1 === page,
+                  })}
                   onPress={() => setPageIndex(page - 1)}
                   isDisabled={getState().pagination.pageIndex + 1 === page}
                   data-selected={getState().pagination.pageIndex + 1 === page}
