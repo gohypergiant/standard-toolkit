@@ -41,10 +41,10 @@ const { list, section, sectionHeader, item, itemIcon, itemContent } =
   OptionsStyles();
 
 export const OptionsContext = createContext<
-  Pick<OptionsProps<IOptionsItem>, 'size' | 'type'>
+  Pick<OptionsProps<IOptionsItem>, 'size' | 'color'>
 >({
   size: 'large',
-  type: 'default',
+  color: 'default',
 });
 
 export function Options<T extends IOptionsItem>({
@@ -55,11 +55,11 @@ export function Options<T extends IOptionsItem>({
   label,
   placeholder,
   size,
-  type,
+  color,
   ...props
 }: OptionsProps<T>) {
   return (
-    <OptionsContext.Provider value={{ size, type }}>
+    <OptionsContext.Provider value={{ size, color }}>
       <AriaListBox<T> className={list()} {...props}>
         {children}
       </AriaListBox>
@@ -67,8 +67,6 @@ export function Options<T extends IOptionsItem>({
   );
 }
 Options.displayName = 'Options';
-
-Options.Item = OptionsItem;
 
 export function OptionsSection<T extends IOptionsItem>({
   children,
@@ -83,7 +81,6 @@ export function OptionsSection<T extends IOptionsItem>({
   );
 }
 OptionsSection.displayName = 'Options.Section';
-Options.Section = OptionsSection;
 
 export function OptionsItem<T extends IOptionsItem>({
   children,
@@ -92,26 +89,26 @@ export function OptionsItem<T extends IOptionsItem>({
   prefixIcon,
   suffixIcon,
   name,
-  type: typeProp,
+  color: colorProp,
   size: sizeProp,
   ...props
 }: OptionsItemProps<T>) {
   const optionsContext = useContext(OptionsContext) ?? {};
 
-  const { size, type } = useMemo(
+  const { size, color } = useMemo(
     () =>
       mergeProps(optionsContext, {
         size: sizeProp,
-        type: typeProp,
+        color: colorProp,
       }),
-    [optionsContext, sizeProp, typeProp],
+    [optionsContext, sizeProp, colorProp],
   );
 
   return (
     <AriaListBoxItem<T>
       textValue={name}
       {...props}
-      className={item({ type, size })}
+      className={item({ color, size })}
     >
       {(renderProps) => {
         if (typeof children === 'function') {
@@ -150,4 +147,7 @@ export function OptionsItem<T extends IOptionsItem>({
     </AriaListBoxItem>
   );
 }
-OptionsItem.displayName = 'OptionsItem';
+OptionsItem.displayName = 'Options.Item';
+
+Options.Item = OptionsItem;
+Options.Section = OptionsSection;

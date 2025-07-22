@@ -44,7 +44,7 @@ export interface OptionsProps<T extends IOptionsItem>
   label?: string;
   placeholder?: string;
   size?: OptionsItemProps<T>['size'];
-  type?: OptionsItemProps<T>['type'];
+  color?: OptionsItemProps<T>['color'];
 }
 
 export interface OptionsSectionProps<T extends IOptionsItem>

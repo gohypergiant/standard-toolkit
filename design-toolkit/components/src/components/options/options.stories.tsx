@@ -25,7 +25,7 @@ const meta: Meta<typeof Options> = {
   component: Options,
   args: {
     size: 'large',
-    type: 'default',
+    color: 'default',
   },
 };
 
@@ -127,7 +127,7 @@ export const Default: Story = {
   args: {
     size: 'large',
     selectionBehavior: 'toggle',
-    type: 'default',
+    color: 'default',
   },
 
   render: ({ children, ...args }) => (

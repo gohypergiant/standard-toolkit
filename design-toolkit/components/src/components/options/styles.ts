@@ -29,7 +29,7 @@ export const OptionsStyles = tv({
     itemIcon: 'flex w-[16px] items-center',
   },
   variants: {
-    type: {
+    color: {
       destructive: {
         item: 'hover:bg-serious-bold focus:bg-serious-bold',
       },
