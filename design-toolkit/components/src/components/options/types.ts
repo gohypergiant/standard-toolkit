@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ReactNode } from 'react';
+import type { ReactNode, RefAttributes } from 'react';
 import type {
   ListBoxItemProps as AriaListBoxItemProps,
   ListBoxProps as AriaListBoxProps,
@@ -37,7 +37,8 @@ export interface OptionsItemProps<T extends IOptionsItem>
 }
 
 export interface OptionsProps<T extends IOptionsItem>
-  extends AriaListBoxProps<T> {
+  extends AriaListBoxProps<T>,
+    RefAttributes<HTMLDivElement> {
   className?: string;
   description?: string;
   errorMessage?: string;

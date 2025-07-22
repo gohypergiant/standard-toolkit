@@ -19,6 +19,8 @@ import {
   ListBox as AriaListBox,
   Collection as AriaListBoxCollection,
   ListBoxSection as AriaListBoxSection,
+  type ContextValue,
+  useContextProps,
 } from 'react-aria-components';
 import 'client-only';
 import { useContext, useMemo } from 'react';
@@ -41,26 +43,31 @@ const { list, section, sectionHeader, item, itemIcon, itemContent } =
   OptionsStyles();
 
 export const OptionsContext = createContext<
-  Pick<OptionsProps<IOptionsItem>, 'size' | 'color'>
+  ContextValue<OptionsProps<IOptionsItem>, HTMLDivElement>
 >({
   size: 'large',
   color: 'default',
 });
 
 export function Options<T extends IOptionsItem>({
-  children,
-  className,
-  description,
-  errorMessage,
-  label,
-  placeholder,
-  size,
-  color,
+  ref,
   ...props
 }: OptionsProps<T>) {
+  [props, ref] = useContextProps(props, ref ?? null, OptionsContext);
+  const {
+    children,
+    className,
+    description,
+    errorMessage,
+    label,
+    placeholder,
+    size,
+    color,
+    ...rest
+  } = props;
   return (
     <OptionsContext.Provider value={{ size, color }}>
-      <AriaListBox<T> className={list()} {...props}>
+      <AriaListBox<T> ref={ref} className={list()} {...rest}>
         {children}
       </AriaListBox>
     </OptionsContext.Provider>
