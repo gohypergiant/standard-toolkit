@@ -37,7 +37,7 @@ import type { ReactNode } from 'react';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
-import { type IOptionsItem, OptionsItem } from '../options-item';
+import type { IOptionsItem } from '../options/types';
 
 const textFieldStyles = cva(
   [
@@ -209,7 +209,7 @@ export function ComboBox<T extends IOptionsItem>({
 }
 ComboBox.displayName = 'ComboBox';
 
-ComboBox.Item = OptionsItem;
+ComboBox.Item = Options.Item;
 
 interface ComboBoxSectionProps<T extends IOptionsItem>
   extends AriaListBoxSectionProps<T> {

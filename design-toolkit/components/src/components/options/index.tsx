@@ -20,6 +20,7 @@ import {
   Collection as AriaListBoxCollection,
   ListBoxSection as AriaListBoxSection,
   type ContextValue,
+  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import 'client-only';
@@ -32,7 +33,9 @@ import { Icon } from '../icon';
 
 import type {
   IOptionsItem,
+  OptionsItemIconProps,
   OptionsItemProps,
+  OptionsItemTextProps,
   OptionsProps,
   OptionsSectionProps,
 } from './types';
@@ -89,72 +92,105 @@ export function OptionsSection<T extends IOptionsItem>({
 }
 OptionsSection.displayName = 'Options.Section';
 
-export function OptionsItem<T extends IOptionsItem>({
+export function OptionsItem({
   children,
   className,
-  description,
-  prefixIcon,
-  suffixIcon,
-  name,
-  color: colorProp,
   size: sizeProp,
+  color: colorProp,
   ...props
-}: OptionsItemProps<T>) {
-  const optionsContext = useContext(OptionsContext) ?? {};
+}: OptionsItemProps) {
+  const context = useContext(OptionsContext) ?? {};
 
   const { size, color } = useMemo(
     () =>
-      mergeProps(optionsContext, {
+      mergeProps(context, {
         size: sizeProp,
         color: colorProp,
       }),
-    [optionsContext, sizeProp, colorProp],
+    [context, sizeProp, colorProp],
   );
 
   return (
-    <AriaListBoxItem<T>
-      textValue={name}
+    <AriaListBoxItem
       {...props}
-      className={item({ color, size })}
+      className={composeRenderProps(className, () => item({ size, color }))}
     >
-      {(renderProps) => {
-        if (typeof children === 'function') {
-          return children(renderProps);
-        }
-
-        return (
-          <>
-            {prefixIcon && (
-              <span className={itemIcon()}>
-                <Icon>{prefixIcon}</Icon>
-              </span>
-            )}
-            <div className={itemContent()}>
-              <AriaText className='truncate' slot='label'>
-                {name}
-              </AriaText>
-              {description && (
-                <AriaText
-                  className='truncate'
-                  data-slot='description'
-                  slot='description'
-                >
-                  {description}
-                </AriaText>
-              )}
-            </div>
-            {suffixIcon && (
-              <span className={itemIcon()}>
-                <Icon size='small'>{suffixIcon}</Icon>
-              </span>
-            )}
-          </>
-        );
-      }}
+      {composeRenderProps(children, (children) => (
+        <>
+          {typeof children === 'string' ? (
+            <OptionsItemLabel>{children}</OptionsItemLabel>
+          ) : (
+            children
+          )}
+        </>
+      ))}
     </AriaListBoxItem>
   );
 }
 OptionsItem.displayName = 'Options.Item';
 
+function OptionsItemContent({
+  children,
+  className,
+  ...props
+}: OptionsItemTextProps) {
+  return (
+    <div {...props} className={itemContent()}>
+      {children}
+    </div>
+  );
+}
+OptionsItemContent.displayName = 'Options.Item.Content';
+
+function OptionsItemLabel({
+  children,
+  className,
+  ...props
+}: OptionsItemTextProps) {
+  return (
+    <AriaText {...props} className='truncate' slot='label'>
+      {children}
+    </AriaText>
+  );
+}
+OptionsItemLabel.displayName = 'Options.Item.Label';
+
+function OptionsItemDescription({
+  children,
+  className,
+  ...props
+}: OptionsItemTextProps) {
+  return (
+    <AriaText
+      {...props}
+      className='truncate'
+      data-slot='description'
+      slot='description'
+    >
+      {children}
+    </AriaText>
+  );
+}
+OptionsItemDescription.displayName = 'Options.Item.Description';
+
+function OptionsItemIcon({
+  children,
+  className,
+  ...props
+}: OptionsItemIconProps) {
+  return (
+    <span className={itemIcon()}>
+      <Icon size='small' {...props}>
+        {children}
+      </Icon>
+    </span>
+  );
+}
+OptionsItemIcon.displayName = 'Options.Item.Icon';
+
+OptionsItem.Label = OptionsItemLabel;
+OptionsItem.Content = OptionsItemContent;
+OptionsItem.Description = OptionsItemDescription;
+OptionsItem.Icon = OptionsItemIcon;
 Options.Item = OptionsItem;
 Options.Section = OptionsSection;

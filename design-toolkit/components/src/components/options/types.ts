@@ -15,7 +15,9 @@ import type {
   ListBoxItemProps as AriaListBoxItemProps,
   ListBoxProps as AriaListBoxProps,
   ListBoxSectionProps as AriaListBoxSectionProps,
+  TextProps,
 } from 'react-aria-components';
+import type { IconProps } from '../icon/types';
 import type { OptionsStyleVariants } from './styles';
 
 export interface IOptionsItem {
@@ -23,17 +25,13 @@ export interface IOptionsItem {
   description?: string;
   prefixIcon?: ReactNode;
   suffixIcon?: ReactNode;
-  id?: string | number;
+  id: string | number;
   name: string;
 }
 
-export interface OptionsItemProps<T extends IOptionsItem>
-  extends OptionsStyleVariants,
-    AriaListBoxItemProps<T> {
-  description?: string;
-  prefixIcon?: ReactNode;
-  suffixIcon?: ReactNode;
-  name: string;
+export interface OptionsItemProps extends AriaListBoxItemProps {
+  color?: OptionsStyleVariants['color'];
+  size?: OptionsStyleVariants['size'];
 }
 
 export interface OptionsProps<T extends IOptionsItem>
@@ -44,11 +42,19 @@ export interface OptionsProps<T extends IOptionsItem>
   errorMessage?: string;
   label?: string;
   placeholder?: string;
-  size?: OptionsItemProps<T>['size'];
-  color?: OptionsItemProps<T>['color'];
+  size?: OptionsItemProps['size'];
+  color?: OptionsItemProps['color'];
 }
 
 export interface OptionsSectionProps<T extends IOptionsItem>
   extends AriaListBoxSectionProps<T> {
   header?: string;
+}
+
+export interface OptionsItemTextProps extends TextProps {
+  className?: string;
+}
+
+export interface OptionsItemIconProps extends IconProps {
+  className?: string;
 }
