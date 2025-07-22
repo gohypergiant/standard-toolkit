@@ -273,6 +273,9 @@ importers:
       '@react-aria/utils':
         specifier: ^3.29.1
         version: 3.29.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-stately/color':
+        specifier: ^3.8.6
+        version: 3.8.6(react@19.0.0)
       '@react-types/overlays':
         specifier: ^3.8.16
         version: 3.8.16(react@19.0.0)
@@ -322,9 +325,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@react-stately/color':
-        specifier: 3.8.6
-        version: 3.8.6(react@19.0.0)
       '@react-stately/data':
         specifier: 3.13.1
         version: 3.13.1(react@19.0.0)
