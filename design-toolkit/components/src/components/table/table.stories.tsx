@@ -161,6 +161,12 @@ const meta = {
         options: ['left', 'right'],
       },
     },
+    // @ts-expect-error - firstNameColumnWidth is not a valid prop for Table
+    firstNameColumnWidth: {
+      control: {
+        type: 'number',
+      },
+    },
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof Table<Person>>;
@@ -188,4 +194,72 @@ export const SortableColumns: Story = {
     },
   },
   render: (args) => <Table {...args} />,
+};
+
+/**
+ * CustomFirstNameColumnWidth story allows you to set the width of the first name column using the controls.
+ * @param firstNameColumnWidth Custom width (px) for the first name column
+ */
+export const CustomFirstNameColumnWidth: Story = {
+  args: {
+    data: defaultData,
+    showCheckbox: true,
+    kebabPosition: 'right',
+    persistHeaderKebabMenu: true,
+    persistRowKebabMenu: true,
+    persistNumerals: true,
+    pageSize: 5,
+    enableSorting: true,
+    // @ts-expect-error - firstNameColumnWidth is not a valid prop for Table
+    firstNameColumnWidth: 250,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'You can set the width of the first column using the controls. If the control does not appear, add it via the Storybook controls panel.',
+      },
+    },
+  },
+  render: (args) => {
+    // @ts-expect-error - firstNameColumnWidth is not a valid prop for Table
+    const { firstNameColumnWidth, children, ...restArgs } = args;
+    const dynamicColumns = [
+      columnHelper.accessor('firstName', {
+        id: 'firstName',
+        cell: (info) => info.getValue(),
+        header: () => <span>First Name</span>,
+        size: firstNameColumnWidth,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        cell: (info) => <i>{info.getValue()}</i>,
+        header: () => <span>Last Name</span>,
+      }),
+      columnHelper.accessor('age', {
+        id: 'age',
+        cell: (info) => info.renderValue(),
+        header: () => 'Age',
+      }),
+      columnHelper.accessor('visits', {
+        id: 'visits',
+        header: () => <span>Visits</span>,
+      }),
+      columnHelper.accessor('status', {
+        id: 'status',
+        header: 'Status',
+      }),
+      columnHelper.accessor('progress', {
+        id: 'progress',
+        header: 'Profile Progress',
+      }),
+    ];
+    return (
+      <Table<Person>
+        {...restArgs}
+        data={args.data as Person[]}
+        columns={dynamicColumns}
+      />
+    );
+  },
 };
