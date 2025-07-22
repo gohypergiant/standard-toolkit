@@ -47,10 +47,10 @@ export function ClassificationBadge({
   );
 
   const {
-    className,
-    size = ClassificationBadgeStylesDefaults.size,
-    variant = ClassificationBadgeStylesDefaults.variant,
     children,
+    className,
+    size = 'medium',
+    variant = ClassificationBadgeStylesDefaults.variant,
     ...rest
   } = props;
 
@@ -58,10 +58,10 @@ export function ClassificationBadge({
     <span
       {...rest}
       className={ClassificationBadgeStyles({
-        size,
         variant,
         className,
       })}
+      data-size={size}
     >
       {children}
     </span>

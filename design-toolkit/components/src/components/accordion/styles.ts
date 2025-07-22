@@ -21,12 +21,12 @@ export const AccordionStylesDefaults = {
 
 export const AccordionStyles = tv({
   slots: {
-    group: 'flex w-full flex-col',
-    accordion: 'group flex w-full flex-col bg-transparent',
+    group: 'group/accordion-group flex w-full flex-col',
+    accordion: 'group/accordion flex w-full flex-col bg-transparent',
     header: [
       'fg-default-light flex w-full items-center gap-s rounded-medium p-s outline-none',
-      'group-enabled:hover:bg-interactive-hover-dark group-enabled:focus-within:bg-interactive-hover-dark',
-      'group-disabled:fg-disabled cursor-not-allowed',
+      'group-enabled/accordion:hover:bg-interactive-hover-dark group-enabled/accordion:focus-within:bg-interactive-hover-dark',
+      'group-disabled/accordion:fg-disabled group-disabled/accordion:cursor-not-allowed',
     ],
     heading: 'grow',
     trigger: [

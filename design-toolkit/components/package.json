@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -60,7 +60,7 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/icons": "^2.0.0",
+    "@accelint/icons": "^2.0.1",
     "@fontsource/roboto-flex": "^5.1.0",
     "@fontsource/roboto-mono": "^5.1.0",
     "@internationalized/date": "^3.8.0",
@@ -73,6 +73,7 @@
     "@react-stately/utils": "^3.10.7",
     "@react-types/shared": "^3.25.0",
     "@tanstack/react-table": "^8.21.3",
+    "@react-types/overlays": "^3.8.16",
     "react": "^19.0.0",
     "react-aria-components": "^1.10.1",
     "react-dom": "^19.0.0",

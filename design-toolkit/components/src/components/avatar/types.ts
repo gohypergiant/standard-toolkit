@@ -10,19 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
+import type { Avatar, Fallback, Image } from '@radix-ui/react-avatar';
+import type { ComponentProps, PropsWithChildren, RefAttributes } from 'react';
 import type { VariantProps } from 'tailwind-variants';
-import type { ClassificationBadgeStyles } from './styles';
+import type { AvatarStyles } from './styles';
 
-export type ClassificationBadgeStyleVariants = VariantProps<
-  typeof ClassificationBadgeStyles
->;
-
-export type ClassificationBadgeProps = ClassificationBadgeStyleVariants &
-  RefAttributes<HTMLSpanElement> &
-  PropsWithChildren<HTMLAttributes<HTMLSpanElement>> & {
+export type AvatarProps = RefAttributes<HTMLSpanElement> &
+  Omit<ComponentProps<typeof Avatar>, 'className'> &
+  VariantProps<typeof AvatarStyles> &
+  PropsWithChildren<{
+    classNames?: {
+      avatar?: string;
+      image?: string;
+      fallback?: string;
+      content?: string;
+    };
+    fallbackProps?: Omit<ComponentProps<typeof Fallback>, 'className'>;
+    imageProps?: Omit<ComponentProps<typeof Image>, 'className'>;
     size?: 'medium' | 'small';
-  };
+  }>;
 
-export type ClassificationBadgeProviderProps =
-  PropsWithChildren<ClassificationBadgeProps>;
+export type AvatarProviderProps = PropsWithChildren<AvatarProps>;

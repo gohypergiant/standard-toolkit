@@ -14,14 +14,17 @@ import { tv } from '@/lib/utils';
 
 export const ButtonStylesDefaults = {
   color: 'info',
-  size: 'medium',
   variant: 'filled',
 } as const;
 
 const BaseButtonStyles = tv({
   base: [
-    'flex w-content cursor-pointer items-center justify-center rounded-medium outline outline-transparent',
+    'group/button flex w-content cursor-pointer items-center justify-center rounded-medium outline outline-transparent',
     'disabled:cursor-not-allowed',
+    'size-large:gap-xs size-large:px-m size-large:py-s size-large:text-button-l',
+    'size-medium:gap-xs size-medium:px-m size-medium:py-s size-medium:text-button-m',
+    'size-small:gap-xxs size-small:px-s size-small:py-xs size-small:text-button-s',
+    'size-xsmall:gap-xxs size-xsmall:px-s size-xsmall:py-xs size-xsmall:text-button-xs',
   ],
   variants: {
     color: {
@@ -29,40 +32,22 @@ const BaseButtonStyles = tv({
       serious: '',
       critical: '',
     },
-    size: {
-      large: 'gap-xs px-m py-s text-button-l',
-      medium: 'gap-xs px-m py-s text-button-m',
-      small: 'gap-xxs px-s py-xs text-button-s',
-      xsmall: 'gap-xxs px-s py-xs text-button-xs',
-    },
     variant: {
       filled: 'disabled:fg-disabled disabled:bg-interactive-disabled',
       outline: 'disabled:fg-disabled disabled:outline-interactive-disabled',
       flat: 'disabled:fg-disabled disabled:bg-transparent',
-      icon: 'disabled:fg-disabled disabled:bg-transparent',
+      icon: [
+        'size-small:rounded-small size-xsmall:rounded-small size-large:p-xs size-medium:p-xs size-small:p-xxs size-xsmall:p-xxs',
+        'disabled:fg-disabled disabled:bg-transparent',
+      ],
       floating: [
         'rounded-full',
+        'size-large:p-xs size-medium:p-xs size-small:p-xxs size-xsmall:p-xxs',
         'disabled:fg-disabled disabled:bg-interactive-disabled disabled:outline-interactive-disabled',
       ],
     },
   },
   compoundVariants: [
-    {
-      size: ['large', 'medium'],
-      variant: ['icon', 'floating'],
-      className: 'p-xs',
-    },
-    {
-      size: ['small', 'xsmall'],
-      variant: ['icon', 'floating'],
-      className: 'p-xxs',
-    },
-    {
-      size: ['small', 'xsmall'],
-      variant: 'icon',
-      className: 'rounded-small',
-    },
-
     /** Colors **/
     // Info
     {

@@ -10,80 +10,95 @@
  * governing permissions and limitations under the License.
  */
 
+import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from '../badge';
+import { Icon } from '../icon';
 import { Avatar } from './';
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
   component: Avatar,
   args: {
-    className: undefined,
     children: '',
-    source: 'https://placedog.net/100x100?id=144',
+    imageProps: {
+      alt: 'Dog',
+      src: 'https://placedog.net/100x100?id=144',
+    },
     size: 'medium',
   },
   argTypes: {
-    className: {
-      type: 'string',
-    },
     size: {
       control: 'select',
       options: ['medium', 'small'],
-    },
-    source: {
-      control: 'text',
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Avatar>;
 
-export const Default: Story = {
-  render: ({ children, ...args }) => (
-    <Avatar
-      source='https://placedog.net/100x100?id=144'
-      alt='Cute Doggie'
-      {...args}
-    />
-  ),
+export const Default: StoryObj<typeof Avatar> = {
+  render: Avatar,
 };
 
-export const WithBadge: Story = {
+export const WithBadge: StoryObj<typeof Avatar> = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
-      <Avatar
-        source='https://placedog.net/100x100?id=144'
-        alt='Cute Doggie'
-        {...args}
-      >
-        <Badge variant='serious'>9</Badge>
+      <Avatar {...args}>
+        <Badge variant='critical'>99+</Badge>
       </Avatar>
-
-      <Avatar
-        source='https://placedog.net/100x100?id=144'
-        alt='Cute Doggie'
-        {...args}
-      >
-        <Badge variant='serious' />
+      <Avatar {...args}>
+        <Badge variant='serious'>1</Badge>
+      </Avatar>
+      <Avatar {...args}>
+        <Badge variant='normal' />
       </Avatar>
     </div>
   ),
 };
 
-export const WithFallback: Story = {
+export const WithContent: StoryObj<typeof Avatar> = {
+  args: {
+    children: (
+      <span className='fg-interactive-default text-shadow-2xs'>DS</span>
+    ),
+  },
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
-      <Avatar {...args} source='http://not-here' alt='Cute Doggie' />
-      <Avatar
-        source='https://placedog.net/100x100?id=144'
-        alt='Cute Doggie'
-        {...args}
-      />
-      <Avatar {...args} alt='Cute Doggie' source={<>PX</>}>
-        <Badge variant={'info'} />
+      <Avatar {...args}>{children}</Avatar>
+      <Avatar {...args}>
+        <Icon className='fg-interactive-default'>
+          <Placeholder />
+        </Icon>
       </Avatar>
+      <Avatar {...args} classNames={{ content: 'items-end' }}>
+        <Badge offset={0} placement='bottom' variant='critical'>
+          Offline
+        </Badge>
+      </Avatar>
+    </div>
+  ),
+};
+
+// Needs to be static (or memoized) to not cause max call stack error with rerendering Fallback (Storybook only issue?)
+const fallbackPropsIcon = {
+  children: (
+    <Icon>
+      <Placeholder />
+    </Icon>
+  ),
+};
+const fallbackPropsInitials = { children: <>DS</> };
+
+export const WithFallback: StoryObj<typeof Avatar> = {
+  args: {
+    imageProps: { alt: 'broken url', src: 'http://not-here' },
+  },
+  render: ({ children, ...args }) => (
+    <div className='flex items-center gap-m'>
+      <Avatar {...args} />
+      <Avatar {...args} fallbackProps={fallbackPropsIcon} />
+      <Avatar {...args} fallbackProps={fallbackPropsInitials} />
     </div>
   ),
 };

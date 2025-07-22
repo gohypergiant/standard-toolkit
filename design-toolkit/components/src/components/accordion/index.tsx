@@ -118,7 +118,7 @@ function AccordionTrigger({
         )}
       >
         <Icon>
-          <ChevronDown className='transform group-expanded:rotate-180' />
+          <ChevronDown className='transform group-expanded/accordion:rotate-180' />
         </Icon>
         {children}
       </Button>

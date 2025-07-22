@@ -10,27 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
-import { Checkbox } from './';
+import type { Axis } from '@react-types/overlays';
+import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
+import type { VariantProps } from 'tailwind-variants';
+import type { BadgeStyles } from './styles';
 
-const meta: Meta<typeof Checkbox> = {
-  title: 'Components/Checkbox',
-  component: Checkbox,
-  args: {
-    children: 'Checkbox',
-    isDisabled: false,
-    isIndeterminate: false,
-  },
-  parameters: {
-    controls: {
-      exclude: ['inputRef', 'validationBehavior'],
-    },
-  },
-};
+export type BadgeProps = RefAttributes<HTMLSpanElement> &
+  HTMLAttributes<HTMLSpanElement> &
+  VariantProps<typeof BadgeStyles> & {
+    children?: string;
+    offset?: number | { x?: number; y?: number };
+    placement?: Axis | `${'top' | 'bottom'} ${'left' | 'right'}`;
+  };
 
-export default meta;
-type Story = StoryObj<typeof Checkbox>;
-
-export const Default: Story = {
-  render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
-};
+export type BadgeProviderProps = PropsWithChildren<
+  Omit<BadgeProps, 'children'>
+>;

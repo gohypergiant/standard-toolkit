@@ -273,6 +273,9 @@ importers:
       '@react-aria/utils':
         specifier: ^3.29.1
         version: 3.29.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-types/overlays':
+        specifier: ^3.8.16
+        version: 3.8.16(react@19.0.0)
       client-only:
         specifier: 0.0.1
         version: 0.0.1

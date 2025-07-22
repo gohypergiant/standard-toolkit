@@ -24,7 +24,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
-import { TextAreaStyles, TextAreaStylesDefaults } from './styles';
+import { TextAreaStyles } from './styles';
 import type { TextAreaFieldProps, TextAreaFieldProviderProps } from './types';
 
 const { field, label, input, description, error } = TextAreaStyles();
@@ -54,43 +54,29 @@ export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
     label: labelProp,
     inputRef,
     inputProps,
-    size = TextAreaStylesDefaults.size,
-    isDisabled,
+    size = 'medium',
     isInvalid: isInvalidProp,
-    isReadOnly,
-    isRequired,
     ...rest
   } = props;
   const errorMessage = errorMessageProp || null; // Protect against empty string
-  const isInvalid = isInvalidProp ?? (errorMessage ? true : undefined); // Leave uncontrolled if possible to fallback to validation state
   const isSmall = size === 'small';
 
   return (
     <TextField
       {...rest}
-      className={composeRenderProps(
-        classNames?.field,
-        (className, { isInvalid }) =>
-          field({ className, size, isDisabled, isInvalid, isReadOnly }),
+      className={composeRenderProps(classNames?.field, (className) =>
+        field({ className }),
       )}
-      isDisabled={isDisabled}
-      isInvalid={isInvalid}
-      isReadOnly={isReadOnly}
-      isRequired={isRequired}
+      isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
+      data-size={size}
     >
       {(
-        { isInvalid }, // Rely on internal state, not props, since validation result could differ from props
+        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props
       ) => (
         <>
-          {!isSmall && !!labelProp && (
+          {!!labelProp && !isSmall && (
             <Label
-              className={label({
-                className: classNames?.label,
-                size,
-                isDisabled,
-                isInvalid,
-                isReadOnly,
-              })}
+              className={label({ className: classNames?.label })}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >
@@ -101,38 +87,20 @@ export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
             ref={inputRef}
             {...inputProps}
             className={composeRenderProps(classNames?.input, (className) =>
-              input({
-                className,
-                size,
-                isDisabled,
-                isInvalid,
-                isReadOnly,
-              }),
+              input({ className }),
             )}
           />
-          {!(isSmall || isInvalid) && !!descriptionProp && (
+          {!!descriptionProp && !(isSmall || isInvalid) && (
             <Text
               slot='description'
-              className={description({
-                className: classNames?.description,
-                size,
-                isDisabled,
-                isInvalid,
-                isReadOnly,
-              })}
+              className={description({ className: classNames?.description })}
             >
               {descriptionProp}
             </Text>
           )}
           <FieldError
             className={composeRenderProps(classNames?.error, (className) =>
-              error({
-                className,
-                size,
-                isDisabled,
-                isInvalid,
-                isReadOnly,
-              }),
+              error({ className }),
             )}
           >
             {errorMessage}

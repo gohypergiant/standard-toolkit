@@ -9,57 +9,48 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
-import { cn } from '@/lib/utils';
-import { type VariantProps, cva } from 'cva';
-import type React from 'react';
+import 'client-only';
+import { createContext } from 'react';
+import { type ContextValue, useContextProps } from 'react-aria-components';
+import { BadgeStyles, BadgeStylesDefaults } from './styles';
+import type { BadgeProps, BadgeProviderProps } from './types';
 
-const badgeStyles = cva(
-  cn([
-    'fg-default-light inline-flex h-l min-w-l items-center justify-center rounded-full px-xs text-body-xs outline empty:size-s empty:min-w-none empty:px-none',
-    '[inset:var(--badge-inset,initial)] [position:var(--badge-position,initial)] empty:[inset:var(--badge-empty-inset,initial)]',
-  ]),
-  {
-    variants: {
-      variant: {
-        advisory: 'bg-advisory-subtle outline-advisory-bold',
-        critical: 'bg-critical-subtle outline-critical',
-        serious: 'bg-serious-subtle outline-serious',
-        normal: 'bg-normal-subtle outline-normal',
-        info: 'bg-info-subtle outline-info-bold',
-      },
-    },
-    defaultVariants: {
-      variant: 'info',
-    },
-  },
-);
+export const BadgeContext =
+  createContext<ContextValue<BadgeProps, HTMLSpanElement>>(null);
 
-export interface BadgeProps
-  extends VariantProps<typeof badgeStyles>,
-    Omit<React.HTMLProps<HTMLSpanElement>, 'children'> {
-  className?: string;
-  /** Used to add text to the badge, such as the number of unread notifications. */
-  children?: string;
+function BadgeProvider({ children, ...props }: BadgeProviderProps) {
+  return (
+    <BadgeContext.Provider value={props}>{children}</BadgeContext.Provider>
+  );
 }
+BadgeProvider.displayName = 'Badge.Provider';
 
-export const Badge = ({
-  className,
-  variant = 'info',
-  ...props
-}: BadgeProps) => (
-  <span
-    className={cn(
-      badgeStyles({
-        variant,
+export function Badge({ ref, ...props }: BadgeProps) {
+  [props, ref] = useContextProps(props, ref ?? null, BadgeContext);
+
+  const {
+    className,
+    offset,
+    placement,
+    variant = BadgeStylesDefaults.variant,
+    ...rest
+  } = props;
+
+  return (
+    <span
+      {...rest}
+      ref={ref}
+      className={BadgeStyles({
         className,
-      }),
-    )}
-    {...props}
-  />
-);
+        variant,
+      })}
+      data-offset-x={typeof offset === 'number' ? offset : offset?.x}
+      data-offset-y={typeof offset === 'number' ? offset : offset?.y}
+      data-placement={placement || null}
+    />
+  );
+}
 Badge.displayName = 'Badge';
-Badge.as = (
-  props: VariantProps<typeof badgeStyles>,
-  className?: string | string[],
-) => cn(badgeStyles({ ...props, className }));
+Badge.Provider = BadgeProvider;

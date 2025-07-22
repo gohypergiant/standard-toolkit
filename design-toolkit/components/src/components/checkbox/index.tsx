@@ -9,146 +9,103 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
-import { cn } from '@/lib/utils';
-import { CheckboxIndeterminate, CheckboxSelected } from '@accelint/icons';
+
 import 'client-only';
-import { cva } from 'cva';
-import type React from 'react';
+import { Check, Remove } from '@accelint/icons';
+import { createContext } from 'react';
 import {
   Checkbox as AriaCheckbox,
   CheckboxGroup as AriaCheckboxGroup,
-  type CheckboxGroupProps as AriaCheckboxGroupProps,
-  type CheckboxProps as AriaCheckboxProps,
+  type ContextValue,
+  composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
+import { Icon } from '../icon';
 import { Label } from '../label';
+import { CheckboxStyles } from './styles';
+import type { CheckboxGroupProps, CheckboxProps } from './types';
 
-const checkboxStyles = cva(
-  'fg-inverse-light size-l rounded-small outline outline-interactive',
-  {
-    variants: {
-      isIndeterminate: {
-        true: 'bg-highlight outline-highlight hover:outline-interactive-hover focus:outline-interactive-hover',
-      },
-      isSelected: {
-        true: 'bg-highlight outline-highlight hover:outline-interactive-hover focus:outline-interactive-hover',
-      },
-      isHovered: {
-        true: 'outline-interactive-hover',
-      },
-      isFocused: {
-        true: 'outline-interactive-hover',
-      },
-      isDisabled: {
-        true: 'outline-interactive-disabled hover:outline-interactive-disabled',
-      },
-      isReadOnly: {
-        true: 'outline-interactive-disabled hover:outline-interactive-disabled',
-      },
-    },
-    compoundVariants: [
-      {
-        isDisabled: true,
-        isSelected: true,
-        className: 'icon-inverse-light bg-interactive-disabled',
-      },
-      {
-        isDisabled: true,
-        isIndeterminate: true,
-        className: 'icon-inverse-light bg-interactive-disabled',
-      },
-      {
-        isReadOnly: true,
-        isSelected: true,
-        className: 'icon-inverse-light bg-interactive-disabled',
-      },
-      {
-        isReadOnly: true,
-        isIndeterminate: true,
-        className: 'icon-inverse-light bg-interactive-disabled',
-      },
-    ],
-    defaultVariants: {
-      isIndeterminate: false,
-      isSelected: false,
-    },
-  },
-);
+const { group, groupLabel, checkbox, control, label } = CheckboxStyles();
 
-/**
- * This is a checkbox.
- */
-export interface CheckboxProps extends AriaCheckboxProps {}
+export const CheckboxGroupContext =
+  createContext<ContextValue<CheckboxGroupProps, HTMLDivElement>>(null);
 
-export function Checkbox({ className, children, ...args }: CheckboxProps) {
+function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
+  [props, ref] = useContextProps(props, ref ?? null, CheckboxGroupContext);
+
+  const {
+    children,
+    classNames,
+    label,
+    orientation = 'vertical',
+    ...rest
+  } = props;
+
   return (
-    <AriaCheckbox
-      {...args}
-      className={cn(
-        'fg-default-light flex items-center gap-m text-body-s disabled:text-interactive-disabled',
-        className,
+    <AriaCheckboxGroup
+      {...rest}
+      ref={ref}
+      className={composeRenderProps(classNames?.group, (className) =>
+        group({ className }),
       )}
+      data-orientation={orientation}
     >
-      {({
-        isDisabled,
-        isFocused,
-        isHovered,
-        isIndeterminate,
-        isReadOnly,
-        isSelected,
-      }) => (
+      {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
         <>
-          <div
-            className={cn(
-              checkboxStyles({
-                isDisabled,
-                isFocused,
-                isHovered,
-                isIndeterminate,
-                isReadOnly,
-                isSelected,
-              }),
-            )}
-            aria-hidden
-          >
-            {isIndeterminate && !isSelected && <CheckboxIndeterminate />}
-            {isSelected && !isIndeterminate && <CheckboxSelected />}
-          </div>
+          {label && (
+            <Label
+              className={groupLabel({ className: classNames?.label })}
+              isDisabled={isDisabled}
+              isRequired={isRequired}
+            >
+              {label}
+            </Label>
+          )}
           {children}
         </>
+      ))}
+    </AriaCheckboxGroup>
+  );
+}
+CheckboxGroup.displayName = 'Checkbox.Group';
+
+export const CheckboxContext =
+  createContext<ContextValue<CheckboxProps, HTMLLabelElement>>(null);
+
+export function Checkbox({ ref, ...props }: CheckboxProps) {
+  [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);
+
+  const { classNames, children, ...rest } = props;
+
+  return (
+    <AriaCheckbox
+      {...rest}
+      ref={ref}
+      className={composeRenderProps(classNames?.checkbox, (className) =>
+        checkbox({ className }),
+      )}
+    >
+      {composeRenderProps(
+        children,
+        (children, { isIndeterminate, isSelected }) => (
+          <>
+            <span className={control({ className: classNames?.control })}>
+              <Icon size='small'>
+                {isIndeterminate && !isSelected && <Remove />}
+                {isSelected && <Check />}
+              </Icon>
+            </span>
+            {children && (
+              <span className={label({ className: classNames?.label })}>
+                {children}
+              </span>
+            )}
+          </>
+        ),
       )}
     </AriaCheckbox>
   );
 }
-
-export interface CheckboxGroupProps extends AriaCheckboxGroupProps {
-  // children: React.JSX.Element;
-  label?: string | React.JSX.Element;
-}
-
-function CheckboxGroup({
-  children,
-  className,
-  label,
-  ...props
-}: CheckboxGroupProps) {
-  return (
-    <AriaCheckboxGroup
-      {...props}
-      className={cn(
-        'fg-default-light flex flex-col gap-m text-body-s',
-        className,
-      )}
-    >
-      {(props) => (
-        <>
-          {label ? <Label>{label}</Label> : undefined}
-          {typeof children === 'function' ? children(props) : children}
-        </>
-      )}
-    </AriaCheckboxGroup>
-  );
-}
-
+Checkbox.displayName = 'Checkbox';
 Checkbox.Group = CheckboxGroup;

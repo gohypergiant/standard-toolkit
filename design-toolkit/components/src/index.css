@@ -16,94 +16,100 @@
 @import 'tailwindcss';
 
 /* Import generated themes.css */
-@import './tokens/generated/themes.css';
+@import './tokens/themes.css';
 
 @theme {
   --color-current: currentColor;
 }
 
 /** Recreating https://github.com/adobe/react-spectrum/blob/main/packages/tailwindcss-react-aria-components/src/index.js without RAC selectors (:where([data-rac])) or prefix and combining with native selectors **/
-@custom-variant placement-left { &[data-placement="left"] { @slot }}
-@custom-variant placement-right { &[data-placement="right"] { @slot }}
-@custom-variant placement-top { &[data-placement="top"] { @slot }}
-@custom-variant placement-bottom { &[data-placement="bottom"] { @slot }}
+@custom-variant placement-left (&[data-placement~="left"]);
+@custom-variant placement-right (&[data-placement~="right"]);
+@custom-variant placement-top (&[data-placement~="top"]);
+@custom-variant placement-bottom (&[data-placement~="bottom"]);
 
-@custom-variant type-literal { &[data-type="literal"] { @slot }}
-@custom-variant type-year { &[data-type="year"] { @slot }}
-@custom-variant type-month { &[data-type="month"] { @slot }}
-@custom-variant type-day { &[data-type="day"] { @slot }}
+@custom-variant size-xlarge (&[data-size="xlarge"]);
+@custom-variant size-large (&[data-size="large"]);
+@custom-variant size-medium (&[data-size="medium"]);
+@custom-variant size-small (&[data-size="small"]);
+@custom-variant size-xsmall (&[data-size="xsmall"]);
 
-@custom-variant layout-grid { &[data-layout="grid"] { @slot }}
-@custom-variant layout-stack { &[data-layout="stack"] { @slot }}
+@custom-variant type-literal (&[data-type="literal"]);
+@custom-variant type-year (&[data-type="year"]);
+@custom-variant type-month (&[data-type="month"]);
+@custom-variant type-day (&[data-type="day"]);
 
-@custom-variant orientation-horizontal { &[data-orientation="horizontal"] { @slot }}
-@custom-variant orientation-vertical { &[data-orientation="vertical"] { @slot }}
+@custom-variant layout-grid (&[data-layout="grid"]);
+@custom-variant layout-stack (&[data-layout="stack"]);
 
-@custom-variant selection-single { &[data-selection-mode="single"] { @slot }}
-@custom-variant selection-multiple { &[data-selection-mode="multiple"] { @slot }}
+@custom-variant orientation-horizontal (&[data-orientation="horizontal"]);
+@custom-variant orientation-vertical (&[data-orientation="vertical"]);
 
-@custom-variant resizable-right { &[data-resizable-direction="right"] { @slot }}
-@custom-variant resizable-left { &[data-resizable-direction="left"] { @slot }}
-@custom-variant resizable-both { &[data-resizable-direction="both"] { @slot }}
+@custom-variant selection-single (&[data-selection-mode="single"]);
+@custom-variant selection-multiple (&[data-selection-mode="multiple"]);
 
-@custom-variant sort-ascending { &[data-sort-direction="ascending"] { @slot }}
-@custom-variant sort-descending { &[data-sort-direction="descending"] { @slot }}
+@custom-variant resizable-right (&[data-resizable-direction="right"]);
+@custom-variant resizable-left (&[data-resizable-direction="left"]);
+@custom-variant resizable-both (&[data-resizable-direction="both"]);
 
-@custom-variant allows-removing { &[data-allows-removing] { @slot }}
-@custom-variant allows-sorting { &[data-allows-sorting] { @slot }}
-@custom-variant allows-dragging { &[data-allows-dragging] { @slot }}
+@custom-variant sort-ascending (&[data-sort-direction="ascending"]);
+@custom-variant sort-descending (&[data-sort-direction="descending"]);
 
-@custom-variant has-submenu { &[data-has-submenu] { @slot }}
-@custom-variant has-child-items { &[data-has-child-items] { @slot }}
+@custom-variant allows-removing (&[data-allows-removing]);
+@custom-variant allows-sorting (&[data-allows-sorting]);
+@custom-variant allows-dragging (&[data-allows-dragging]);
 
-@custom-variant open { &:is([open], [data-open]), &:open { @slot }}
-@custom-variant expanded { &:is([expanded], [data-expanded]) { @slot }}
+@custom-variant has-submenu (&[data-has-submenu]);
+@custom-variant has-child-items (&[data-has-child-items]);
 
-@custom-variant entering { &[data-entering] { @slot }}
-@custom-variant exiting { &[data-exiting] { @slot }}
+@custom-variant open (&:is([open], [data-open]), &:open);
+@custom-variant expanded (&:is([expanded], [data-expanded]));
 
-@custom-variant indeterminate { &[data-indeterminate], &:indeterminate { @slot }}
+@custom-variant entering (&[data-entering]);
+@custom-variant exiting (&[data-exiting]);
 
-@custom-variant placeholder-shown { &[data-placeholder], &:placeholder-shown { @slot }}
+@custom-variant indeterminate (&[data-indeterminate], &:indeterminate);
 
-@custom-variant current { &[data-current] { @slot }}
+@custom-variant placeholder-shown (&[data-placeholder], &:placeholder-shown);
 
-@custom-variant optional { &:not([required], [data-required]), &:optional { @slot }}
-@custom-variant required { &:is([required], [data-required]), &:required { @slot }}
+@custom-variant current (&[data-current]);
 
-@custom-variant unavailable { &[data-unavailable] { @slot }}
+@custom-variant optional (&:not([required], [data-required]), &:optional);
+@custom-variant required (&:is([required], [data-required]), &:required);
 
-@custom-variant invalid { &:is([invalid], [data-invalid]), &:invalid { @slot }}
+@custom-variant unavailable (&[data-unavailable]);
 
-@custom-variant read-only { &:is([readonly], [data-readonly]), &:read-only { @slot }}
+@custom-variant invalid (&:is([invalid], [data-invalid]), &:invalid);
 
-@custom-variant outside-month { &[data-outside-month] { @slot }}
-@custom-variant outside-visible-range { &[data-outside-visible-range] { @slot }}
+@custom-variant read-only (&:is([readonly], [data-readonly]), &:read-only);
 
-@custom-variant pending { &[data-pending] { @slot }}
+@custom-variant outside-month (&[data-outside-month]);
+@custom-variant outside-visible-range (&[data-outside-visible-range]);
 
-@custom-variant empty { &[data-empty], &:empty { @slot }}
+@custom-variant pending (&[data-pending]);
 
-@custom-variant focus-within { &[data-focus-within], &:focus-within { @slot }}
+@custom-variant empty (&[data-empty], &:empty);
 
-@custom-variant hover { &[data-hovered], &:hover { @slot }}
+@custom-variant focus-within (&[data-focus-within], &:focus-within);
 
-@custom-variant focus { &[data-focused], &:focus { @slot }}
-@custom-variant focus-visible { &[data-focus-visible], &:focus-visible { @slot }}
+@custom-variant hover (&[data-hovered], &:hover);
 
-@custom-variant pressed { &[data-pressed], &:active { @slot }}
+@custom-variant focus (&[data-focused], &:focus);
+@custom-variant focus-visible (&[data-focus-visible], &:focus-visible);
 
-@custom-variant selected { &[data-selected] { @slot }}
-@custom-variant selection-start { &[data-selection-start] { @slot }}
-@custom-variant selection-end { &[data-selection-end] { @slot }}
+@custom-variant pressed (&[data-pressed], &:active);
 
-@custom-variant dragging { &[data-dragging] { @slot }}
-@custom-variant drop-target { &[data-drop-target] { @slot }}
+@custom-variant selected (&[data-selected]);
+@custom-variant selection-start (&[data-selection-start]);
+@custom-variant selection-end (&[data-selection-end]);
 
-@custom-variant resizing { &[data-resizing] { @slot }}
+@custom-variant dragging (&[data-dragging]);
+@custom-variant drop-target (&[data-drop-target]);
 
-@custom-variant enabled { &:not([disabled], [data-disabled]), &:enabled { @slot }}
-@custom-variant disabled { &:is([disabled], [data-disabled]), &:disabled { @slot }}
+@custom-variant resizing (&[data-resizing]);
+
+@custom-variant enabled (&:not([disabled], [data-disabled]), &:enabled);
+@custom-variant disabled (&:is([disabled], [data-disabled]), &:disabled);
 
 @utility text-header-xxl {
   font-size: var(--typography-header-xxl-size);

@@ -9,87 +9,73 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
-import { cn } from '@/lib/utils';
-import { Person } from '@accelint/icons';
-import * as AvatarPrimitive from '@radix-ui/react-avatar';
+
 import 'client-only';
-import { type VariantProps, cva } from 'cva';
-import type React from 'react';
+import { spacingXs } from '@/tokens/';
+import { Person } from '@accelint/icons';
+import { Fallback, Image, Root } from '@radix-ui/react-avatar';
+import { createContext } from 'react';
+import { type ContextValue, useContextProps } from 'react-aria-components';
+import { Badge } from '../badge';
+import { Icon } from '../icon';
+import { AvatarStyles } from './styles';
+import type { AvatarProps, AvatarProviderProps } from './types';
 
-const avatarStyles = cva(
-  'fg-default-dark flex items-center justify-center overflow-hidden rounded-full bg-surface-overlay',
-  {
-    variants: {
-      size: {
-        medium: 'size-[32px] **:[svg]:size-xl',
-        small: 'size-xl **:[svg]:size-l',
-      },
-    },
-    defaultVariants: {
-      size: 'medium',
-    },
-  },
-);
+const { avatar, image, fallback, content } = AvatarStyles();
 
-const avatarWrapperStyles = cn([
-  'relative inline-block',
-  '[--badge-empty-inset:0_0_auto_auto] [--badge-inset:calc(var(--spacing-xxs)*-1)_calc(var(--spacing-xxs)*-1)_auto_auto] [--badge-position:absolute]',
-]);
+export const AvatarContext =
+  createContext<ContextValue<AvatarProps, HTMLSpanElement>>(null);
 
-export interface AvatarProps
-  extends React.ComponentProps<typeof AvatarPrimitive.Image>,
-    VariantProps<typeof avatarStyles> {
-  /**
-   * The fallback that the avatar will render if it cannot load the provided source.
-   *
-   * Accepts any React component.
-   */
-  fallback?: React.ReactNode;
-  /** How long the system should wait before it shows the fallback component. By default there is no delay. */
-  fallbackDelay?: number;
-  /** The source of an avatar can either be a URL representing an image or a React component (such as an SVG or an icon from a library). */
-  source?: string | React.ReactNode;
+function AvatarProvider({ children, ...props }: AvatarProviderProps) {
+  return (
+    <AvatarContext.Provider value={props}>{children}</AvatarContext.Provider>
+  );
 }
+AvatarProvider.displayName = 'Avatar.Provider';
 
-export const Avatar = ({
-  className,
-  children,
-  fallback,
-  fallbackDelay = 0,
-  source,
-  size = 'medium',
-  ...props
-}: AvatarProps) => (
-  <div className={avatarWrapperStyles}>
-    <AvatarPrimitive.Root
-      className={cn(
-        'pointer-events-none inline-block',
-        avatarStyles({ size, className }),
-      )}
-      role='img'
-    >
-      {typeof source === 'string' && (
-        <AvatarPrimitive.Image
-          className='size-full object-cover object-center'
-          src={typeof source === 'string' ? source : undefined}
-          {...props}
+export function Avatar({ ref, ...props }: AvatarProps) {
+  [props, ref] = useContextProps(props, ref ?? null, AvatarContext);
+
+  const {
+    children,
+    classNames,
+    fallbackProps,
+    imageProps,
+    size = 'medium',
+    ...rest
+  } = props;
+
+  return (
+    <Icon.Provider size={size === 'medium' ? 'large' : 'medium'}>
+      <Root
+        {...rest}
+        className={avatar({ size, className: classNames?.avatar })}
+        role='img'
+        data-size={size}
+      >
+        <Image
+          {...imageProps}
+          className={image({ className: classNames?.image, size })}
         />
-      )}
-      {source && typeof source !== 'string' ? (
-        source
-      ) : (
-        <AvatarPrimitive.Fallback delayMs={fallbackDelay}>
-          {fallback ? fallback : <Person />}
-        </AvatarPrimitive.Fallback>
-      )}
-    </AvatarPrimitive.Root>
-    {children}
-  </div>
-);
-Avatar.displayAs = 'Avatar';
-Avatar.as = (
-  props: VariantProps<typeof avatarStyles>,
-  className?: string | string[],
-) => cn(avatarStyles({ ...props, className }));
+        <Fallback
+          {...fallbackProps}
+          className={fallback({ className: classNames?.fallback, size })}
+        >
+          {fallbackProps?.children || (
+            <Icon>
+              <Person />
+            </Icon>
+          )}
+        </Fallback>
+        <Badge.Provider offset={spacingXs} placement='top right'>
+          <span className={content({ className: classNames?.content, size })}>
+            {children}
+          </span>
+        </Badge.Provider>
+      </Root>
+    </Icon.Provider>
+  );
+}
+Avatar.displayName = 'Avatar';
+Avatar.Provider = AvatarProvider;

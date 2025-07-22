@@ -45,7 +45,14 @@ ButtonProvider.displayName = 'Button.Provider';
 export function Button({ ref, ...props }: ButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ButtonContext);
 
-  const { children, className, color, size, variant, ...rest } = props;
+  const {
+    children,
+    className,
+    color,
+    size = 'medium',
+    variant,
+    ...rest
+  } = props;
 
   return (
     <Icon.Provider size={size}>
@@ -56,10 +63,10 @@ export function Button({ ref, ...props }: ButtonProps) {
           ButtonStyles({
             className,
             color,
-            size,
             variant,
           }),
         )}
+        data-size={size}
       >
         {children}
       </AriaButton>
@@ -84,7 +91,14 @@ LinkButtonProvider.displayName = 'LinkButton.Provider';
 export function LinkButton({ ref, ...props }: LinkButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, LinkButtonContext);
 
-  const { children, className, color, size, variant, ...rest } = props;
+  const {
+    children,
+    className,
+    color,
+    size = 'medium',
+    variant,
+    ...rest
+  } = props;
 
   return (
     <Icon.Provider size={size}>
@@ -95,10 +109,10 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
           LinkButtonStyles({
             className,
             color,
-            size,
             variant,
           }),
         )}
+        data-size={size}
       >
         {children}
       </Link>
@@ -126,7 +140,14 @@ ToggleButtonProvider.displayName = 'ToggleButton.Provider';
 export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ToggleButtonContext);
 
-  const { children, className, color, size, variant, ...rest } = props;
+  const {
+    children,
+    className,
+    color,
+    size = 'medium',
+    variant,
+    ...rest
+  } = props;
 
   return (
     <Icon.Provider size={size}>
@@ -137,10 +158,10 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
           ToggleButtonStyles({
             className,
             color,
-            size,
             variant,
           }),
         )}
+        data-size={size}
       >
         {children}
       </AriaToggleButton>

@@ -36,6 +36,7 @@ export type TextAreaFieldProps = Omit<TextFieldProps, 'children'> &
     inputProps?: Omit<TextAreaProps, 'className'>;
     description?: string;
     errorMessage?: FieldErrorProps['children'];
+    size?: 'medium' | 'small';
   };
 
 export type TextAreaFieldProviderProps = PropsWithChildren<

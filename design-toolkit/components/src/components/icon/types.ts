@@ -11,12 +11,12 @@
  */
 
 import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
-import type { IconStyleVariants } from './styles';
 
 export type IconProps = PropsWithChildren<
   RefAttributes<HTMLSpanElement> &
-    HTMLAttributes<HTMLSpanElement> &
-    IconStyleVariants
+    HTMLAttributes<HTMLSpanElement> & {
+      size?: 'large' | 'medium' | 'small' | 'xsmall';
+    }
 >;
 
-export type IconProviderProps = PropsWithChildren<Omit<IconProps, 'ref'>>;
+export type IconProviderProps = PropsWithChildren<IconProps>;

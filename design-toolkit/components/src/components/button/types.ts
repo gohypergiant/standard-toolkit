@@ -19,7 +19,9 @@ import type {
 import type { VariantProps } from 'tailwind-variants';
 import type { ButtonStyles } from './styles';
 
-export type ButtonStyleVariants = VariantProps<typeof ButtonStyles>;
+export type ButtonStyleVariants = VariantProps<typeof ButtonStyles> & {
+  size?: 'large' | 'medium' | 'small' | 'xsmall';
+};
 
 export type ButtonProps = AriaButtonProps &
   ButtonStyleVariants &

@@ -45,13 +45,14 @@ async function generateTokens() {
     );
     const semanticContent = readFileSync(semanticPath, 'utf-8');
     const semantic = JSON.parse(semanticContent);
-
     // Generate files in the src/tokens directory
-    const outputDir = path.join(__dirname, '..', 'src', 'tokens', 'generated');
+    const outputDir = path.join(__dirname, '..', 'src', 'tokens');
+
     await fs.promises.mkdir(outputDir, { recursive: true });
 
     // Generate CSS variables
     const cssContent = generateCSS(tokens);
+
     await fs.promises.writeFile(
       path.join(outputDir, 'tokens.css'),
       cssContent,
@@ -60,14 +61,16 @@ async function generateTokens() {
 
     // Generate TypeScript constants and types
     const tsContent = generateTypeScript(tokens, semantic);
+
     await fs.promises.writeFile(
-      path.join(outputDir, 'tokens.ts'),
+      path.join(outputDir, 'index.ts'),
       tsContent,
       'utf-8',
     );
 
     // Generate theme blocks CSS
     const themesContent = generateThemesCSS(tokens, semantic);
+
     await fs.promises.writeFile(
       path.join(outputDir, 'themes.css'),
       themesContent,

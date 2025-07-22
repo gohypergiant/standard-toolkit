@@ -12,53 +12,22 @@
 
 import { tv } from '@/lib/utils';
 
-export const TextAreaStylesDefaults = {
-  size: 'medium',
-  isDisabled: false,
-  isInvalid: false,
-  isReadOnly: false,
-} as const;
-
 export const TextAreaStyles = tv({
   slots: {
-    field: 'flex flex-col gap-xs',
+    field: 'group/text-area-field flex flex-col gap-xs',
     label: '',
     input: [
-      'block w-full rounded-medium p-s font-display outline outline-interactive',
-      'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus:outline-highlight',
+      'block w-full rounded-medium p-s font-display text-default-light outline outline-interactive placeholder:text-default-dark',
+      'group-size-medium/text-area-field:text-body-s group-size-small/text-area-field:text-body-xs',
+      'group-enabled/text-area-field:focus:outline-highlight',
+      'group-enabled/text-area-field:hover:outline-interactive-hover',
+      'group-enabled/text-area-field:group-invalid/text-area-field:outline-serious',
+      'group-disabled/text-area-field:text-disabled group-disabled/text-area-field:outline-interactive-disabled group-disabled/text-area-field:placeholder:text-disabled',
     ],
-    description: 'fg-default-dark text-body-xs',
+    description: [
+      'fg-default-dark text-body-xs',
+      'group-disabled/text-area-field:fg-disabled',
+    ],
     error: 'fg-serious text-body-xs',
   },
-  variants: {
-    size: {
-      medium: {
-        input: 'text-body-s',
-      },
-      small: {
-        input: 'text-body-xs',
-      },
-    },
-    isInvalid: {
-      false: '',
-      true: {
-        input: 'outline-serious',
-      },
-    },
-    isReadOnly: {
-      false: '',
-      true: {
-        input: 'rounded-none p-0 outline-none',
-      },
-    },
-    isDisabled: {
-      false: '',
-      true: {
-        input:
-          'text-disabled outline-interactive-disabled placeholder:text-disabled',
-        description: 'fg-disabled',
-      },
-    },
-  },
-  defaultVariants: TextAreaStylesDefaults,
 });

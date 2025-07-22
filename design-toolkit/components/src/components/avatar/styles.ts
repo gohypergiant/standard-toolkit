@@ -10,27 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
-import { Checkbox } from './';
+import { tv } from '@/lib/utils';
 
-const meta: Meta<typeof Checkbox> = {
-  title: 'Components/Checkbox',
-  component: Checkbox,
-  args: {
-    children: 'Checkbox',
-    isDisabled: false,
-    isIndeterminate: false,
+export const AvatarStyles = tv({
+  slots: {
+    avatar: [
+      `group/avatar grid [grid-template-areas:'content'] rounded-full bg-surface-overlay fg-default-dark`,
+      'size-medium:size-[32px] size-medium:text-header-m',
+      'size-small:size-xl size-small:text-header-xs',
+    ],
+    image:
+      'size-full overflow-hidden rounded-full object-cover object-center [grid-area:content]',
+    fallback: 'flex size-full items-center justify-center [grid-area:content]',
+    content:
+      'relative flex size-full items-center justify-center [grid-area:content]',
   },
-  parameters: {
-    controls: {
-      exclude: ['inputRef', 'validationBehavior'],
-    },
-  },
-};
-
-export default meta;
-type Story = StoryObj<typeof Checkbox>;
-
-export const Default: Story = {
-  render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
-};
+});

@@ -11,24 +11,13 @@
  */
 
 import { tv } from '@/lib/utils';
-import type { VariantProps } from 'tailwind-variants';
-
-export const IconStylesDefaults = {
-  size: 'unset',
-} as const;
 
 export const IconStyles = tv({
-  base: 'block h-[var(--icon-size,var(--icon-size-m))] w-[var(--icon-size,var(--icon-size-m))] [color:var(--icon-color,currentColor)]',
-  variants: {
-    size: {
-      large: '[--icon-size:var(--icon-size-l)]',
-      medium: '[--icon-size:var(--icon-size-m)]',
-      small: '[--icon-size:var(--icon-size-s)]',
-      xsmall: '[--icon-size:var(--icon-size-xs)]',
-      unset: '',
-    },
-  },
-  defaultVariants: IconStylesDefaults,
+  base: [
+    'block h-[var(--icon-size,var(--icon-size-m))] w-[var(--icon-size,var(--icon-size-m))] [color:var(--icon-color,currentColor)]',
+    'size-large:[--icon-size:var(--icon-size-l)]',
+    'size-medium:[--icon-size:var(--icon-size-m)]',
+    'size-small:[--icon-size:var(--icon-size-s)]',
+    'size-xsmall:[--icon-size:var(--icon-size-xs)]',
+  ],
 });
-
-export type IconStyleVariants = VariantProps<typeof IconStyles>;
