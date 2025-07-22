@@ -35,7 +35,7 @@ export interface OptionsItemProps extends AriaListBoxItemProps {
 }
 
 export interface OptionsProps<T extends IOptionsItem>
-  extends AriaListBoxProps<T>,
+  extends Omit<AriaListBoxProps<T>, 'orientation' | 'layout'>,
     RefAttributes<HTMLDivElement> {
   className?: string;
   description?: string;
