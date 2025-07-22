@@ -83,6 +83,7 @@ const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
     narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
     numeral={cell.column.id === 'numeral'}
     kebab={cell.column.id === 'kebab'}
+    style={{ width: cell.column.getSize() }}
   >
     {flexRender(cell.column.columnDef.cell, cell.getContext())}
   </TableCell>
@@ -435,6 +436,7 @@ export function Table<T extends { id: string | number }>({
                       header.column.id === 'numeral' ||
                       header.column.id === 'kebab'
                     }
+                    style={{ width: header.getSize() }}
                   >
                     <div className='flex items-center justify-between gap-xxs'>
                       {header.isPlaceholder ||
