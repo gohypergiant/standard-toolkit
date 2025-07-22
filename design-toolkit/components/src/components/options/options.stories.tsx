@@ -17,8 +17,8 @@ import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
 } from 'react-aria-components';
-import type { IOptionsItem } from '../options-item';
 import { Options } from './index';
+import type { IOptionsItem } from './types';
 
 const meta: Meta<typeof Options> = {
   title: 'Components/Options',

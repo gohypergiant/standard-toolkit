@@ -12,31 +12,33 @@
 
 'use client';
 import 'client-only';
+import { mergeProps } from '@react-aria/utils';
 import { createContext } from 'react';
 import {
   Header as AriaHeader,
   ListBox as AriaListBox,
   Collection as AriaListBoxCollection,
-  type ListBoxProps as AriaListBoxProps,
   ListBoxSection as AriaListBoxSection,
-  type ListBoxSectionProps as AriaListBoxSectionProps,
 } from 'react-aria-components';
+import 'client-only';
+import { useContext, useMemo } from 'react';
 import {
-  type IOptionsItem,
-  OptionsItem,
-  type OptionsItemProps,
-} from '../options-item';
+  ListBoxItem as AriaListBoxItem,
+  Text as AriaText,
+} from 'react-aria-components';
+import { Icon } from '../icon';
 
-export interface OptionsProps<T extends IOptionsItem>
-  extends AriaListBoxProps<T> {
-  className?: string;
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  placeholder?: string;
-  size?: OptionsItemProps<T>['size'];
-  type?: OptionsItemProps<T>['type'];
-}
+import type {
+  IOptionsItem,
+  OptionsItemProps,
+  OptionsProps,
+  OptionsSectionProps,
+} from './types';
+
+import { OptionsStyles } from './styles';
+
+const { list, section, sectionHeader, item, itemIcon, itemContent } =
+  OptionsStyles();
 
 export const OptionsContext = createContext<
   Pick<OptionsProps<IOptionsItem>, 'size' | 'type'>
@@ -58,10 +60,7 @@ export function Options<T extends IOptionsItem>({
 }: OptionsProps<T>) {
   return (
     <OptionsContext.Provider value={{ size, type }}>
-      <AriaListBox<T>
-        className='max-h-[200px] overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light'
-        {...props}
-      >
+      <AriaListBox<T> className={list()} {...props}>
         {children}
       </AriaListBox>
     </OptionsContext.Provider>
@@ -71,27 +70,84 @@ Options.displayName = 'Options';
 
 Options.Item = OptionsItem;
 
-interface OptionsSectionProps<T extends IOptionsItem>
-  extends AriaListBoxSectionProps<T> {
-  header?: string;
-}
-
 export function OptionsSection<T extends IOptionsItem>({
   children,
   header,
   items,
 }: OptionsSectionProps<T>) {
   return (
-    <AriaListBoxSection
-      id={header}
-      className='mt-s border-default-dark border-t first:border-none'
-    >
-      <AriaHeader className='m-xs my-s text-default-dark text-header-xs'>
-        {header}
-      </AriaHeader>
+    <AriaListBoxSection id={header} className={section()}>
+      <AriaHeader className={sectionHeader()}>{header}</AriaHeader>
       <AriaListBoxCollection items={items}>{children}</AriaListBoxCollection>
     </AriaListBoxSection>
   );
 }
 OptionsSection.displayName = 'Options.Section';
 Options.Section = OptionsSection;
+
+export function OptionsItem<T extends IOptionsItem>({
+  children,
+  className,
+  description,
+  prefixIcon,
+  suffixIcon,
+  name,
+  type: typeProp,
+  size: sizeProp,
+  ...props
+}: OptionsItemProps<T>) {
+  const optionsContext = useContext(OptionsContext) ?? {};
+
+  const { size, type } = useMemo(
+    () =>
+      mergeProps(optionsContext, {
+        size: sizeProp,
+        type: typeProp,
+      }),
+    [optionsContext, sizeProp, typeProp],
+  );
+
+  return (
+    <AriaListBoxItem<T>
+      textValue={name}
+      {...props}
+      className={item({ type, size })}
+    >
+      {(renderProps) => {
+        if (typeof children === 'function') {
+          return children(renderProps);
+        }
+
+        return (
+          <>
+            {prefixIcon && (
+              <span className={itemIcon()}>
+                <Icon>{prefixIcon}</Icon>
+              </span>
+            )}
+            <div className={itemContent()}>
+              <AriaText className='truncate' slot='label'>
+                {name}
+              </AriaText>
+              {description && (
+                <AriaText
+                  className='truncate'
+                  data-slot='description'
+                  slot='description'
+                >
+                  {description}
+                </AriaText>
+              )}
+            </div>
+            {suffixIcon && (
+              <span className={itemIcon()}>
+                <Icon size='small'>{suffixIcon}</Icon>
+              </span>
+            )}
+          </>
+        );
+      }}
+    </AriaListBoxItem>
+  );
+}
+OptionsItem.displayName = 'OptionsItem';
