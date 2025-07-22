@@ -110,11 +110,16 @@ export const actionsCellStyles = tv({
 export const rowStyles = tv({
   base: [
     'group/row',
-    'border-transparent group-not-data-selected/tbody:border-1 data-selected:border-x-highlight-bold',
-    'data-active:bg-highlight-subtle data-selected:bg-highlight-subtle',
+    'border-transparent group-not-selected/tbody:border-1',
+    'data-active:bg-highlight-subtle',
+    'selected:bg-highlight-subtle',
+    'selected:border-x-highlight-bold',
     /** Ensure border is applied to first and last selected rows */
-    'has-[+[data-selected="true"]]:not-data-selected:border-b-highlight-bold has-[+[data-selected="false"]]:data-selected:border-b-highlight-bold ',
-    'group-not-data-selected/tbody:first-of-type:border-t-static-light data-selected:last-of-type:border-b-highlight-bold data-selected:first-of-type:border-t-highlight-bold',
+    'has-[+[data-selected="true"]]:not-selected:border-b-highlight-bold',
+    'has-[+[data-selected="false"]]:selected:border-b-highlight-bold',
+    'group-not-selected/tbody:first-of-type:border-t-static-light',
+    'selected:first-of-type:border-t-highlight-bold',
+    'selected:last-of-type:border-b-highlight-bold',
   ],
 });
 

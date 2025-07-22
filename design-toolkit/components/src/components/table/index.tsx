@@ -538,7 +538,7 @@ export function Table<T extends { id: string | number }>({
             {getTopRows().map((row) => (
               <TableRow
                 key={row.id}
-                data-selected={row.getIsSelected()}
+                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
                 data-active={activeRow === row.id}
                 data-pinned={row.getIsPinned()}
               >
@@ -553,7 +553,7 @@ export function Table<T extends { id: string | number }>({
             {getCenterRows().map((row) => (
               <TableRow
                 key={row.id}
-                data-selected={row.getIsSelected()}
+                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
                 data-active={activeRow === row.id}
                 data-pinned={row.getIsPinned()}
               >
@@ -574,7 +574,7 @@ export function Table<T extends { id: string | number }>({
             {getBottomRows().map((row) => (
               <TableRow
                 key={row.id}
-                data-selected={row.getIsSelected()}
+                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
                 data-active={activeRow === row.id}
                 data-pinned={row.getIsPinned()}
               >

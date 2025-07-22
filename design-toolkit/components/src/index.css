@@ -234,7 +234,6 @@
   --icon-color: --value(--color- *);
 }
 
-@custom-variant data-selected (&[data-selected~="true"]);
 @custom-variant data-active (&[data-active~="true"]);
 @custom-variant data-pinned (&:is([data-pinned~="top"], [data-pinned~="bottom"]));
 
