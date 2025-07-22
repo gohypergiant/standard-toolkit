@@ -12,7 +12,6 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
-  ForwardedRef,
   HTMLAttributes,
   PropsWithChildren,
   RefAttributes,
@@ -160,9 +159,8 @@ export type TableRowProps = HTMLAttributes<HTMLTableRowElement> &
  *   If false, the cell content is only visible on hover or when the row is hovered.
  */
 export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
-  VariantProps<typeof cellStyles> & {
-    ref?: ForwardedRef<HTMLTableCellElement>;
-  };
+  VariantProps<typeof cellStyles> &
+  RefAttributes<HTMLTableCellElement>;
 
 /**
  * Props for a table header cell component.
