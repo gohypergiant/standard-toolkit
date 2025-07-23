@@ -10,18 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, RefAttributes } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { PaginationStyles } from './styles';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Pagination } from './index';
 
-export type PaginationProps = RefAttributes<HTMLDivElement> &
-  HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof PaginationStyles> & {
-    onPreviousPage: () => void;
-    isPreviousPageDisabled: boolean;
-    onNextPage: () => void;
-    isNextPageDisabled: boolean;
-    pageCount: number;
-    pageIndex: number;
-    setPageIndex: (pageIndex: number) => void;
-  };
+const meta: Meta<typeof Pagination> = {
+  title: 'Components/Pagination',
+  component: Pagination,
+  args: {
+    pageCount: 10,
+    pageIndex: 1,
+  },
+};
+
+export default meta;
+
+export const Default: StoryObj<typeof Pagination> = {
+  render: Pagination,
+};

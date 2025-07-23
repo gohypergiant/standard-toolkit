@@ -10,18 +10,4 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, RefAttributes } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { PaginationStyles } from './styles';
-
-export type PaginationProps = RefAttributes<HTMLDivElement> &
-  HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof PaginationStyles> & {
-    onPreviousPage: () => void;
-    isPreviousPageDisabled: boolean;
-    onNextPage: () => void;
-    isNextPageDisabled: boolean;
-    pageCount: number;
-    pageIndex: number;
-    setPageIndex: (pageIndex: number) => void;
-  };
+export const MAX_VISIBLE_PAGES = 5;

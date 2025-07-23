@@ -18,6 +18,7 @@ import { Input as AriaInput } from 'react-aria-components';
 import { Button } from '../button';
 import { PaginationStyles } from './styles';
 import type { PaginationProps } from './types';
+import { pagination } from './utils';
 
 const {
   wrapper,
@@ -35,7 +36,6 @@ export function Pagination({
   isNextPageDisabled,
   pageCount,
   pageIndex,
-  pagination,
   setPageIndex,
   ...props
 }: PaginationProps) {

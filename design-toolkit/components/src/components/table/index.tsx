@@ -41,37 +41,6 @@ import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
 import type { TableProps } from './types';
 
-const MAX_VISIBLE_PAGES = 5;
-
-const range = (lo: number, hi: number) =>
-  Array.from({ length: hi - lo }, (_, i) => i + lo);
-
-const pagination = (page: number, total: number) => {
-  const start = Math.max(
-    1,
-    Math.min(
-      page - Math.floor((MAX_VISIBLE_PAGES - 3) / 2),
-      total - MAX_VISIBLE_PAGES + 2,
-    ),
-  );
-  const end = Math.min(
-    total,
-    Math.max(
-      page + Math.floor((MAX_VISIBLE_PAGES - 2) / 2),
-      MAX_VISIBLE_PAGES - 1,
-    ),
-  );
-  return [
-    ...(start > 2 ? ([1, 'ellipsis'] as const) : start > 1 ? [1] : []),
-    ...range(start, end + 1),
-    ...(end < total - 1
-      ? (['ellipsis', total] as const)
-      : end < total
-        ? [total]
-        : []),
-  ];
-};
-
 const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
   <TableCell
     key={cell.id}
@@ -588,7 +557,6 @@ export function Table<T extends { id: string | number }>({
         </table>
 
         <Pagination
-          pagination={pagination}
           onPreviousPage={previousPage}
           onNextPage={nextPage}
           isPreviousPageDisabled={!getCanPreviousPage()}

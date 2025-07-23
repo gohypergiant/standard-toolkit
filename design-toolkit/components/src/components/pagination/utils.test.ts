@@ -10,18 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, RefAttributes } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { PaginationStyles } from './styles';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { pagination } from './utils';
 
-export type PaginationProps = RefAttributes<HTMLDivElement> &
-  HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof PaginationStyles> & {
-    onPreviousPage: () => void;
-    isPreviousPageDisabled: boolean;
-    onNextPage: () => void;
-    isNextPageDisabled: boolean;
-    pageCount: number;
-    pageIndex: number;
-    setPageIndex: (pageIndex: number) => void;
-  };
+// Mock the constants module
+vi.mock('./constants', () => ({
+  MAX_VISIBLE_PAGES: 5,
+}));
+
+describe('pagination', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should return the ellipsis when page range is greater than max visible pages', () => {
+    expect(pagination(1, 10)).toEqual([1, 2, 3, 4, 'ellipsis', 10]);
+  });
+
+  it('should not return the ellipsis when page range is less than max visible pages', () => {
+    expect(pagination(1, 5)).toEqual([1, 2, 3, 4, 5]);
+  });
+});
