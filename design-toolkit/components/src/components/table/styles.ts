@@ -50,7 +50,7 @@ export const cellStyles = tv({
     {
       persistent: false,
       numeral: true,
-      className: 'text-default-dark group-not-data-pinned/row:*:invisible',
+      className: 'text-default-dark group-not-pinned/row:*:invisible',
     },
     {
       persistent: false,
@@ -61,7 +61,7 @@ export const cellStyles = tv({
     {
       persistent: false,
       kebab: true,
-      className: 'group-not-data-pinned/row:*:invisible',
+      className: 'group-not-pinned/row:*:invisible',
     },
   ],
 });
@@ -89,7 +89,7 @@ export const rowStyles = tv({
   base: [
     'group/row',
     'border-transparent group-not-selected/tbody:border-1',
-    'data-active:bg-highlight-subtle',
+    'active:bg-highlight-subtle',
     'selected:bg-highlight-subtle',
     'selected:border-x-highlight-bold',
     /** Ensure border is applied to first and last selected rows */

@@ -240,11 +240,11 @@
   --icon-color: --value(--color- *);
 }
 
-@custom-variant data-active (&[data-active~="true"]);
-@custom-variant data-pinned (&:is([data-pinned~="top"], [data-pinned~="bottom"]));
-
-
-
+/* Table Related Custom Variants */
+@custom-variant active (&[data-active~="true"]);
+@custom-variant pinned (&[data-pinned])
+@custom-variant pinned-top (&[data-pinned="top"]);
+@custom-variant pinned-bottom (&[data-pinned="bottom"]);
 
 
 body {
