@@ -24,14 +24,14 @@ export const MenuStyles = tv({
     menu: 'mt-s overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light',
     icon: '[grid-area:icon]',
     item: [
-      'group flex items-center gap-x-s px-s text-body-s',
+      'group/item flex items-center gap-x-s px-s text-body-s',
       'grid grid-cols-[auto_auto_1fr_auto] [grid-template-areas:"icon_label_space_action"_"icon_description_space_action"]',
-      'data-[disabled]:fg-disabled data-[disabled]:bg-transparent',
+      'disabled:fg-disabled disabled:bg-transparent',
     ],
     label:
-      'truncate [grid-area:label] group-not-has-data-[slot=description]:row-span-full',
+      'truncate [grid-area:label] group-not-has-data-[slot=description]/item:row-span-full',
     description:
-      'fg-default-dark group-hover:fg-inverse-light group-data-[focused]:fg-inverse-light group-data-[disabled]:fg-disabled truncate text-body-xs [grid-area:description]',
+      'fg-default-dark group-hover/item:fg-inverse-light group-data-[focused]/item:fg-inverse-light group-data-[disabled]/item:fg-disabled truncate text-body-xs [grid-area:description]',
     more: '[grid-area:action]',
     sectionHeader: 'fg-default-dark px-s py-xs text-header-xs',
     separator: 'mx-3 my-1 border border-static-light',
@@ -49,14 +49,14 @@ export const MenuStyles = tv({
     color: {
       info: {
         item: [
-          'fg-default-light hover:fg-inverse-light data-[focused]:fg-inverse-light data-[open]:fg-inverse-light data-[selected]:fg-inverse-light',
-          'hover:bg-highlight-bold data-[focused]:bg-highlight-bold data-[open]:bg-highlight-bold data-[selected]:bg-highlight-bold',
+          'fg-default-light hover:fg-inverse-light focus:fg-inverse-light open:fg-inverse-light selected:fg-inverse-light',
+          'selected:bg-highlight-bold open:bg-highlight-bold hover:bg-highlight-bold focus:bg-highlight-bold',
         ],
       },
       serious: {
         item: [
-          'fg-serious hover:fg-inverse-light data-[focused]:fg-inverse-light data-[open]:fg-inverse-light data-[selected]:fg-inverse-light',
-          'hover:bg-serious-bold data-[focused]:bg-serious-bold data-[open]:bg-serious-bold data-[selected]:bg-serious-bold',
+          'fg-serious hover:fg-inverse-light focus:fg-inverse-light open:fg-inverse-light selected:fg-inverse-light',
+          'selected:bg-serious-bold open:bg-serious-bold hover:bg-serious-bold focus:bg-serious-bold',
         ],
       },
     },

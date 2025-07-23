@@ -18,7 +18,6 @@ import ChevronRight from '@accelint/icons/chevron-right';
 import { createContext, useContext } from 'react';
 import {
   Header as AriaHeader,
-  Keyboard as AriaKeyboard,
   Menu as AriaMenu,
   Collection as AriaMenuCollection,
   MenuItem as AriaMenuItem,
@@ -28,16 +27,17 @@ import {
   SubmenuTrigger as AriaSubmenuTrigger,
   Text as AriaText,
   type ContextValue,
+  DEFAULT_SLOT,
+  KeyboardContext,
   Popover,
+  Provider,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import { Icon } from '../icon';
+import { Icon, IconContext } from '../icon';
 import { MenuStyles, MenuStylesDefaults } from './styles';
 import type {
-  MenuIconProps,
   MenuItemProps,
-  MenuKeyboardProps,
   MenuProps,
   MenuSectionProps,
   MenuTextProps,
@@ -104,12 +104,7 @@ export const MenuItem = (props: MenuItemProps) => {
     (isSlottedContextValue(context) ? undefined : context?.variant) ??
     MenuStylesDefaults.variant;
 
-  const {
-    children: childrenProp,
-    classNames,
-    color = MenuStylesDefaults.color,
-    ...rest
-  } = props;
+  const { classNames, color = MenuStylesDefaults.color, children, ...rest } = props;
 
   return (
     <AriaMenuItem
@@ -118,8 +113,26 @@ export const MenuItem = (props: MenuItemProps) => {
         item({ className, variant, color }),
       )}
     >
-      {composeRenderProps(props.children, (children, { hasSubmenu }) => (
-        <>
+      {composeRenderProps(children, (children, { hasSubmenu }) => (
+        <Provider
+          values={[
+            [
+              KeyboardContext,
+              { className: keyboard({ className: classNames?.keyboard }) },
+            ],
+            [
+              IconContext,
+              {
+                slots: {
+                  [DEFAULT_SLOT]: {
+                    className: icon({ className: classNames?.icon }),
+                  },
+                  submenu: { className: more({ className: classNames?.more }) },
+                },
+              },
+            ],
+          ]}
+        >
           {typeof children === 'string' ? (
             <AriaText className={classNames?.text} slot='label'>
               {children}
@@ -128,11 +141,11 @@ export const MenuItem = (props: MenuItemProps) => {
             children
           )}
           {hasSubmenu && (
-            <Icon className={more({ className: classNames?.more })}>
+            <Icon slot='submenu'>
               <ChevronRight />
             </Icon>
           )}
-        </>
+        </Provider>
       ))}
     </AriaMenuItem>
   );
@@ -187,34 +200,10 @@ export function MenuDescription(props: MenuTextProps) {
 }
 MenuDescription.displayName = 'Menu.Item.Description';
 
-export function MenuItemIcon(props: MenuIconProps) {
-  const { children, className, ...rest } = props;
-
-  return (
-    <Icon {...rest} className={icon({ className })}>
-      {children}
-    </Icon>
-  );
-}
-MenuItemIcon.displayName = 'Menu.Item.Icon';
-
-export function MenuItemKeyboard(props: MenuKeyboardProps) {
-  const { children, className, ...rest } = props;
-
-  return (
-    <AriaKeyboard {...rest} className={keyboard({ className })}>
-      {children}
-    </AriaKeyboard>
-  );
-}
-MenuItemKeyboard.displayName = 'Menu.Item.Keyboard';
-
 Menu.Trigger = AriaMenuTrigger;
 Menu.Submenu = AriaSubmenuTrigger;
 Menu.Item = MenuItem;
-MenuItem.Icon = MenuItemIcon;
 MenuItem.Label = MenuLabel;
 MenuItem.Description = MenuDescription;
-MenuItem.Keyboard = MenuItemKeyboard;
 Menu.Separator = MenuSeparator;
 Menu.Section = MenuSection;

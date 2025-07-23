@@ -18,6 +18,7 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from './';
 import type { MenuItemProps } from './types';
+import { Keyboard } from 'react-aria-components';
 
 const meta: Meta<typeof Menu> = {
   title: 'Components/Menu',
@@ -115,11 +116,11 @@ export const Basic: StoryObj<typeof Menu> = {
       </Button>
       <Menu {...args}>
         <Menu.Item>
-          <Menu.Item.Icon>
+          <Icon>
             <Placeholder />
-          </Menu.Item.Icon>
+          </Icon>
           <Menu.Item.Label>Songbirds</Menu.Item.Label>
-          <Menu.Item.Keyboard>⌘A</Menu.Item.Keyboard>
+          <Keyboard>⌘A</Keyboard>
         </Menu.Item>
         <Menu.Separator />
         <Menu.Submenu>
@@ -128,16 +129,16 @@ export const Basic: StoryObj<typeof Menu> = {
           </Menu.Item>
           <Menu>
             <Menu.Item>
-              <Menu.Item.Icon>
+              <Icon>
                 <Placeholder />
-              </Menu.Item.Icon>
+              </Icon>
               <Menu.Item.Label>Blue Jay</Menu.Item.Label>
               <Menu.Item.Description>Cyanocitta cristata</Menu.Item.Description>
             </Menu.Item>
             <Menu.Item isDisabled>
-              <Menu.Item.Icon>
+              <Icon>
                 <Placeholder />
-              </Menu.Item.Icon>
+              </Icon>
               <Menu.Item.Label>Gray catbird</Menu.Item.Label>
               <Menu.Item.Description>
                 Dumetella carolinensis
@@ -148,29 +149,29 @@ export const Basic: StoryObj<typeof Menu> = {
         <Menu.Separator />
         <Menu.Section header='Additional Notable Species'>
           <Menu.Item color='serious'>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Mallard</Menu.Item.Label>
             <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
-            <Menu.Item.Keyboard>⌘V</Menu.Item.Keyboard>
+            <Keyboard>⌘V</Keyboard>
           </Menu.Item>
           <Menu.Item>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Chimney swift</Menu.Item.Label>
             <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
           </Menu.Item>
           <Menu.Item>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Brünnich's guillemot</Menu.Item.Label>
             <Menu.Item.Description>
               Dumetella carolinensis
             </Menu.Item.Description>
-            <Menu.Item.Keyboard>⌘X</Menu.Item.Keyboard>
+            <Keyboard>⌘X</Keyboard>
           </Menu.Item>
         </Menu.Section>
       </Menu>
@@ -196,7 +197,7 @@ export const Dynamic: StoryObj<typeof Menu> = {
                   isDisabled={item.isDisabled}
                   color={item.color}
                 >
-                  <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
+                  <Icon>{item.prefixIcon}</Icon>
                   <Menu.Item.Label>{item.name}</Menu.Item.Label>
                   {item.description && (
                     <Menu.Item.Description>
@@ -214,7 +215,7 @@ export const Dynamic: StoryObj<typeof Menu> = {
               isDisabled={item.isDisabled}
               color={item.color}
             >
-              <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
+              <Icon>{item.prefixIcon}</Icon>
               <Menu.Item.Label>{item.name}</Menu.Item.Label>
               {item.description && (
                 <Menu.Item.Description>
