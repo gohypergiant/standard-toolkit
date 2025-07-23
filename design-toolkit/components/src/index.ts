@@ -155,12 +155,14 @@ export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
+export { MAX_VISIBLE_PAGES } from './components/pagination/constants';
 export { Pagination } from './components/pagination';
 export {
   PaginationStyles,
   PaginationStylesDefaults,
 } from './components/pagination/styles';
 export type { PaginationProps } from './components/pagination/types';
+export { pagination } from './components/pagination/utils';
 export { Popover, PopoverTrigger } from './components/popover';
 export { PopoverStyles } from './components/popover/styles';
 export type {
