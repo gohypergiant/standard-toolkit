@@ -119,9 +119,9 @@
   --radius-medium: 4px;
   --radius-large: 8px;
   --radius-round: 80px;
-  --shadows-elevation-default: initial;
-  --shadows-elevation-overlay: 0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14);
-  --shadows-elevation-raised: 0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14);
+  --shadow-elevation-default: initial;
+  --shadow-elevation-overlay: 0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14);
+  --shadow-elevation-raised: 0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14);
   --font-primary: "Roboto Flex", sans-serif;
   --font-display: "Roboto Mono", monospace;
   --icon-size-l: var(--spacing-xl);
