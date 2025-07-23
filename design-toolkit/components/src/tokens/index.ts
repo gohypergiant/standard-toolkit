@@ -108,10 +108,10 @@ export const radiusSmall = 2;
 export const radiusMedium = 4;
 export const radiusLarge = 8;
 export const radiusRound = 80;
-export const shadowsElevationDefault = 'initial';
-export const shadowsElevationOverlay =
+export const shadowElevationDefault = 'initial';
+export const shadowElevationOverlay =
   '0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14)';
-export const shadowsElevationRaised =
+export const shadowElevationRaised =
   '0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14)';
 export const fontPrimary = '"Roboto Flex", sans-serif';
 export const fontDisplay = '"Roboto Mono", monospace';

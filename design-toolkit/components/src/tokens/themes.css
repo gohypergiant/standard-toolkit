@@ -138,10 +138,10 @@
 }
 
 @theme {
-  /** Shadows **/
-  --shadows-elevation-default: var(--shadows-elevation-default);
-  --shadows-elevation-overlay: var(--shadows-elevation-overlay);
-  --shadows-elevation-raised: var(--shadows-elevation-raised);
+  /** Shadow **/
+  --shadow-elevation-default: var(--shadow-elevation-default);
+  --shadow-elevation-overlay: var(--shadow-elevation-overlay);
+  --shadow-elevation-raised: var(--shadow-elevation-raised);
 }
 
 @theme {
