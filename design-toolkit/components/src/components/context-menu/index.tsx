@@ -18,22 +18,27 @@ import {
 } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { actionsCellStyles } from './styles';
-import type { ActionsCellProps } from './types';
+import { ContextMenuStyles } from './styles';
+import type { ContextMenuProps } from './types';
 
-const { button, popover, menuItem, container } = actionsCellStyles();
+const { button, popover, menuItem, container } = ContextMenuStyles();
 
-export function ActionsCell({
+export function ContextMenu({
   className,
   isOpen,
   onOpenChange,
   actions,
   children,
   persistent = false,
-}: ActionsCellProps) {
+  ...props
+}: ContextMenuProps) {
   return (
     <AriaMenuTrigger onOpenChange={onOpenChange} isOpen={isOpen}>
-      <Button className={button({ persistent, className })} variant='icon'>
+      <Button
+        className={button({ persistent, className })}
+        variant='icon'
+        {...props}
+      >
         <Icon>{children}</Icon>
       </Button>
       <AriaPopover className={popover()}>

@@ -85,28 +85,6 @@ export const headerCellStyles = tv({
   },
 });
 
-export const actionsCellStyles = tv({
-  slots: {
-    button: 'block cursor-pointer align-middle',
-    popover: '',
-    menuItem:
-      'gap-y-xs p-s text-default-light hover:bg-highlight-bold hover:text-inverse-light',
-    container:
-      ' rounded-medium border-2 border-static-light bg-surface-default',
-  },
-  variants: {
-    persistent: {
-      true: {
-        button: '*:visible',
-      },
-      false: {
-        button:
-          '*:invisible hover:*:visible group-hover/header-cell:*:visible group-hover/row:*:visible',
-      },
-    },
-  },
-});
-
 export const rowStyles = tv({
   base: [
     'group/row',

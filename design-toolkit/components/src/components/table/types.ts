@@ -13,15 +13,13 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   HTMLAttributes,
-  PropsWithChildren,
   RefAttributes,
   TableHTMLAttributes,
   TdHTMLAttributes,
   ThHTMLAttributes,
 } from 'react';
-import type { MenuTriggerProps as AriaMenuTriggerProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
-import type { actionsCellStyles, cellStyles, headerCellStyles } from './styles';
+import type { cellStyles, headerCellStyles } from './styles';
 
 type BaseTableProps = TableHTMLAttributes<HTMLTableElement> &
   RefAttributes<HTMLTableElement>;
@@ -186,18 +184,3 @@ export type TableHeaderCellProps = ThHTMLAttributes<HTMLTableCellElement> &
  */
 export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
   RefAttributes<HTMLTableSectionElement>;
-
-/** * ActionsCellProps defines the properties for the ActionsCell component.
- * It includes an array of actions, each with a unique label and an optional onAction callback.
- * The component renders a kebab menu icon that, when clicked, displays the actions in a popover.
- * @property onOpen - An optional callback function that is called when the menu is opened.
- * @property actions - An array of action objects, each containing a label and an optional onAction function.
- */
-export type ActionsCellProps = VariantProps<typeof actionsCellStyles> &
-  PropsWithChildren<Pick<AriaMenuTriggerProps, 'isOpen' | 'onOpenChange'>> & {
-    className?: string;
-    actions: {
-      label: string;
-      onAction?: () => void;
-    }[];
-  };

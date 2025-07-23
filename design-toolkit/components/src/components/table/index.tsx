@@ -31,9 +31,9 @@ import {
 } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
 import { Checkbox } from '../checkbox';
+import { ContextMenu } from '../context-menu';
 import { Icon } from '../icon';
 import { Pagination } from '../pagination';
-import { ActionsCell } from './actions-cell';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
@@ -156,7 +156,7 @@ export function Table<T extends { id: string | number }>({
       cell: ({ row }) => {
         const isPinned = row.getIsPinned();
         return (
-          <ActionsCell
+          <ContextMenu
             persistent={persistRowKebabMenu}
             isOpen={activeRow === row.id}
             onOpenChange={(isOpen) => {
@@ -214,11 +214,11 @@ export function Table<T extends { id: string | number }>({
             ]}
           >
             <Kebab />
-          </ActionsCell>
+          </ContextMenu>
         );
       },
       header: () => (
-        <ActionsCell
+        <ContextMenu
           actions={[
             {
               label: 'Move up',
@@ -231,7 +231,7 @@ export function Table<T extends { id: string | number }>({
           ]}
         >
           <Kebab />
-        </ActionsCell>
+        </ContextMenu>
       ),
     }),
     [
@@ -436,7 +436,7 @@ export function Table<T extends { id: string | number }>({
                       {['numeral', 'kebab', 'selection'].includes(
                         header.column.id,
                       ) ? null : (
-                        <ActionsCell
+                        <ContextMenu
                           persistent={persistHeaderKebabMenu}
                           actions={[
                             {
@@ -492,7 +492,7 @@ export function Table<T extends { id: string | number }>({
                           ) : (
                             <Kebab />
                           )}
-                        </ActionsCell>
+                        </ContextMenu>
                       )}
                     </div>
                   </HeaderCell>
@@ -578,4 +578,4 @@ Table.Cell = TableCell;
 Table.Header = TableHeader;
 Table.HeaderCell = HeaderCell;
 Table.Row = TableRow;
-Table.ActionsCell = ActionsCell;
+Table.ContextMenu = ContextMenu;
