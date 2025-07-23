@@ -117,6 +117,9 @@ export { ColorPicker, useColorPickerState } from './components/color-picker';
 export type { ColorPickerProps } from './components/color-picker';
 export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
+export { ContextMenu } from './components/context-menu';
+export { ContextMenuStyles } from './components/context-menu/styles';
+export type { ContextMenuProps } from './components/context-menu/types';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field';
 export { Dialog, DialogTitle } from './components/dialog';
@@ -199,12 +202,10 @@ export type {
   SwitchProps,
   SwitchProviderProps,
 } from './components/switch/types';
-export { ActionsCell } from './components/table/actions-cell';
 export { Table } from './components/table';
 export {
   TableCellStylesDefaults,
   TableHeaderCellStylesDefaults,
-  actionsCellStyles,
   cellStyles,
   headerCellStyles,
   rowStyles,
@@ -217,7 +218,6 @@ export { HeaderCell } from './components/table/table-header-cell';
 export { TableHeader } from './components/table/table-header';
 export { TableRow } from './components/table/table-row';
 export type {
-  ActionsCellProps,
   TableBodyProps,
   TableCellProps,
   TableHeaderCellProps,
