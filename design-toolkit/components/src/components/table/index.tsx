@@ -15,8 +15,6 @@ import 'client-only';
 
 import ArrowDown from '@accelint/icons/arrow-down';
 import ArrowUp from '@accelint/icons/arrow-up';
-import ChevronLeft from '@accelint/icons/chevron-left';
-import ChevronRight from '@accelint/icons/chevron-right';
 import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
@@ -32,12 +30,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
-import { Input as AriaInput } from 'react-aria-components';
-import { tv } from 'tailwind-variants';
-import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
-// import { IconButton } from '../icon-button';
+import { Pagination } from '../pagination';
 import { ActionsCell } from './actions-cell';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -592,79 +587,16 @@ export function Table<T extends { id: string | number }>({
           </TableBody>
         </table>
 
-        {/* Pagination (Placeholder until we have a proper pagination component) */}
-        <div className='flex items-center gap-xxs'>
-          <Button
-            variant='icon'
-            onPress={() => previousPage()}
-            isDisabled={!getCanPreviousPage()}
-            className='min-h-[32px] min-w-[32px] rounded-medium'
-          >
-            <ChevronLeft />
-          </Button>
-
-          {pagination(getState().pagination.pageIndex + 1, getPageCount()).map(
-            (page) => {
-              if (page === 'ellipsis') {
-                return (
-                  <span key={page} className='text-default-light'>
-                    ...
-                  </span>
-                );
-              }
-
-              // Will move to pagination component once we have one
-              const paginationButtonStyles = tv({
-                base: 'min-h-[32px] min-w-[32px] rounded-medium border-1 border-transparent bg-transparent px-s font-display text-default-light hover:bg-interactive-hover-dark focus:bg-interactive-hover-dark ',
-                variants: {
-                  selected: {
-                    true: 'border-highlight-bold bg-highlight-subtle text-highlight-bold',
-                  },
-                },
-              });
-
-              return (
-                <Button
-                  key={page}
-                  className={paginationButtonStyles({
-                    selected: getState().pagination.pageIndex + 1 === page,
-                  })}
-                  onPress={() => setPageIndex(page - 1)}
-                  isDisabled={getState().pagination.pageIndex + 1 === page}
-                  data-selected={getState().pagination.pageIndex + 1 === page}
-                  type='button'
-                  variant='flat'
-                >
-                  {page}
-                </Button>
-              );
-            },
-          )}
-
-          <Button
-            variant='icon'
-            onPress={() => nextPage()}
-            isDisabled={!getCanNextPage()}
-            className='min-h-[32px] min-w-[32px] rounded-medium'
-          >
-            <ChevronRight />
-          </Button>
-
-          <span className='flex items-center gap-s text-default-light'>
-            Page{' '}
-            <AriaInput
-              type='number'
-              min='1'
-              max={getPageCount()}
-              value={(getState().pagination.pageIndex + 1).toString()}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                setPageIndex(page);
-              }}
-              className='w-16 rounded-medium border border-interactive px-s py-xs font-display'
-            />
-          </span>
-        </div>
+        <Pagination
+          pagination={pagination}
+          onPreviousPage={previousPage}
+          onNextPage={nextPage}
+          isPreviousPageDisabled={!getCanPreviousPage()}
+          isNextPageDisabled={!getCanNextPage()}
+          pageCount={getPageCount()}
+          pageIndex={getState().pagination.pageIndex}
+          setPageIndex={setPageIndex}
+        />
       </div>
     );
   }
