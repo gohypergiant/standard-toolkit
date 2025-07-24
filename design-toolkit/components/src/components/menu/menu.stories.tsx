@@ -14,11 +14,11 @@ import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
+import { Keyboard } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from './';
 import type { MenuItemProps } from './types';
-import { Keyboard } from 'react-aria-components';
 
 const meta: Meta<typeof Menu> = {
   title: 'Components/Menu',

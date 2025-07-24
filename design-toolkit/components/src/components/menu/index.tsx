@@ -104,7 +104,12 @@ export const MenuItem = (props: MenuItemProps) => {
     (isSlottedContextValue(context) ? undefined : context?.variant) ??
     MenuStylesDefaults.variant;
 
-  const { classNames, color = MenuStylesDefaults.color, children, ...rest } = props;
+  const {
+    classNames,
+    color = MenuStylesDefaults.color,
+    children,
+    ...rest
+  } = props;
 
   return (
     <AriaMenuItem

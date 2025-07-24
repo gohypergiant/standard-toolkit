@@ -135,8 +135,6 @@ export {
   MenuContext,
   MenuDescription,
   MenuItem,
-  MenuItemIcon,
-  MenuItemKeyboard,
   MenuLabel,
   MenuSection,
   MenuSeparator,
@@ -144,9 +142,7 @@ export {
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export type { MenuStyleVariants } from './components/menu/styles';
 export type {
-  MenuIconProps,
   MenuItemProps,
-  MenuKeyboardProps,
   MenuProps,
   MenuSectionProps,
   MenuTextProps,
