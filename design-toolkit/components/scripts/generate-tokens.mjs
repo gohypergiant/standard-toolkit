@@ -17,6 +17,8 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const skipFallback = ['icon-size', 'shadow-elevation', 'font'];
+
 // Import the token generator using dynamic import with tsx
 import { readFileSync } from 'node:fs';
 
@@ -360,7 +362,9 @@ function generateThemesCSS(tokens, semantic) {
       if (typeof v === 'object' && v !== null) {
         lines = lines.concat(walkTokens(v, `${prefix}-${k}`));
       } else {
-        lines.push(`  --${prefix}-${k}: var(--${prefix}-${k});`);
+        skipFallback.includes(prefix)
+          ? lines.push(`  --${prefix}-${k}: var(--${prefix}-${k});`)
+          : lines.push(`  --${prefix}-${k}: var(--${prefix}-${k}, ${v});`);
       }
     }
     return lines;
