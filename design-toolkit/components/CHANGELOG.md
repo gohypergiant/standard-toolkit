@@ -1,10 +1,6 @@
 # @accelint/design-toolkit
 
-## 3.0.0
-
-### Major Changes
-
-- 9421185: Remove Menu.Item.Icon and Menu.Item.Keyboard and cleanup styles
+## 2.4.0
 
 ### Minor Changes
 
@@ -19,6 +15,7 @@
   - Add typography spacing tokens
 - c16b479: Removed plural naming for shadow tokens
 - 51422c1: Remove menu icon and menu keyboard exports
+- 9421185: Remove Menu.Item.Icon and Menu.Item.Keyboard and cleanup styles
 - a502977: Fix accordion icon not flipping
 - 34f3d91: - Flattened token folder structure for easier use within DesignTK
   - Added group names to deconflict Tailwind groups

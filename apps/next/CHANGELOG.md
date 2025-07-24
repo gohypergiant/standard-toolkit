@@ -12,7 +12,7 @@
 - Updated dependencies [9421185]
 - Updated dependencies [34f3d91]
 - Updated dependencies [f9e0cac]
-  - @accelint/design-toolkit@3.0.0
+  - @accelint/design-toolkit@2.4.0
 
 ## 0.2.20
 
