@@ -12,55 +12,70 @@
 
 'use client';
 import 'client-only';
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import {
   Header as AriaHeader,
   ListBox as AriaListBox,
   Collection as AriaListBoxCollection,
-  type ListBoxProps as AriaListBoxProps,
+  ListBoxItem as AriaListBoxItem,
   ListBoxSection as AriaListBoxSection,
-  type ListBoxSectionProps as AriaListBoxSectionProps,
+  Text as AriaText,
+  type ContextValue,
+  composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
-import {
-  type IOptionsItem,
-  OptionsItem,
-  type OptionsItemProps,
-} from '../options-item';
 
-export interface OptionsProps<T extends IOptionsItem>
-  extends AriaListBoxProps<T> {
-  className?: string;
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  placeholder?: string;
-  size?: OptionsItemProps<T>['size'];
-  type?: OptionsItemProps<T>['type'];
-}
+import { isSlottedContextValue } from '@/lib/utils';
+import { Icon } from '../icon';
+import { OptionsStyles } from './styles';
+import type {
+  OptionsItemProps,
+  OptionsItemTextProps,
+  IOptionsItem,
+  OptionsProps,
+  OptionsSectionProps,
+} from './types';
 
-export const OptionsContext = createContext<
-  Pick<OptionsProps<IOptionsItem>, 'size' | 'type'>
->({
-  size: 'large',
-  type: 'default',
-});
+const {
+  list,
+  section,
+  sectionHeader,
+  item,
+  itemIcon,
+  itemContent,
+  itemLabel,
+  itemDescription,
+} = OptionsStyles();
+
+export const OptionsContext =
+  createContext<ContextValue<OptionsProps<IOptionsItem>, HTMLDivElement>>(
+    null,
+  );
 
 export function Options<T extends IOptionsItem>({
-  children,
-  className,
-  description,
-  errorMessage,
-  label,
-  placeholder,
-  size,
-  type,
+  ref,
   ...props
 }: OptionsProps<T>) {
+  [props, ref] = useContextProps(props, ref ?? null, OptionsContext);
+  const {
+    children,
+    className,
+    description,
+    errorMessage,
+    label,
+    placeholder,
+    size,
+    color,
+    ...rest
+  } = props;
   return (
-    <OptionsContext.Provider value={{ size, type }}>
+    <OptionsContext.Provider value={{ size, color }}>
       <AriaListBox<T>
-        className='max-h-[200px] overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light'
-        {...props}
+        ref={ref}
+        className={composeRenderProps(className, (className) =>
+          list({ className }),
+        )}
+        {...rest}
       >
         {children}
       </AriaListBox>
@@ -69,29 +84,100 @@ export function Options<T extends IOptionsItem>({
 }
 Options.displayName = 'Options';
 
-Options.Item = OptionsItem;
-
-interface OptionsSectionProps<T extends IOptionsItem>
-  extends AriaListBoxSectionProps<T> {
-  header?: string;
-}
-
 export function OptionsSection<T extends IOptionsItem>({
   children,
   header,
   items,
 }: OptionsSectionProps<T>) {
   return (
-    <AriaListBoxSection
-      id={header}
-      className='mt-s border-default-dark border-t first:border-none'
-    >
-      <AriaHeader className='m-xs my-s text-default-dark text-header-xs'>
-        {header}
-      </AriaHeader>
+    <AriaListBoxSection id={header} className={section()}>
+      <AriaHeader className={sectionHeader()}>{header}</AriaHeader>
       <AriaListBoxCollection items={items}>{children}</AriaListBoxCollection>
     </AriaListBoxSection>
   );
 }
 OptionsSection.displayName = 'Options.Section';
+
+export function OptionsItem({
+  children,
+  className,
+  size: sizeProp,
+  color: colorProp,
+  ...props
+}: OptionsItemProps) {
+  const context = useContext(OptionsContext) ?? {};
+  const color =
+    (isSlottedContextValue(context) ? undefined : context?.color) ?? colorProp;
+  const size =
+    (isSlottedContextValue(context) ? undefined : context?.size) ?? sizeProp;
+
+  return (
+    <AriaListBoxItem
+      {...props}
+      data-size={size}
+      className={composeRenderProps(className, (className) =>
+        item({ color, className }),
+      )}
+    >
+      {composeRenderProps(children, (children) => (
+        <Icon.Provider size='small' className={itemIcon()}>
+          {typeof children === 'string' ? (
+            <OptionsItemLabel>{children}</OptionsItemLabel>
+          ) : (
+            children
+          )}
+        </Icon.Provider>
+      ))}
+    </AriaListBoxItem>
+  );
+}
+OptionsItem.displayName = 'Options.Item';
+
+function OptionsItemContent({
+  children,
+  className,
+  ...props
+}: OptionsItemTextProps) {
+  return (
+    <div {...props} className={itemContent({ className })}>
+      {children}
+    </div>
+  );
+}
+OptionsItemContent.displayName = 'Options.Item.Content';
+
+function OptionsItemLabel({
+  children,
+  className,
+  ...props
+}: OptionsItemTextProps) {
+  return (
+    <AriaText {...props} className={itemLabel({ className })} slot='label'>
+      {children}
+    </AriaText>
+  );
+}
+OptionsItemLabel.displayName = 'Options.Item.Label';
+
+function OptionsItemDescription({
+  children,
+  className,
+  ...props
+}: OptionsItemTextProps) {
+  return (
+    <AriaText
+      {...props}
+      className={itemDescription({ className })}
+      slot='description'
+    >
+      {children}
+    </AriaText>
+  );
+}
+OptionsItemDescription.displayName = 'Options.Item.Description';
+
+OptionsItem.Label = OptionsItemLabel;
+OptionsItem.Content = OptionsItemContent;
+OptionsItem.Description = OptionsItemDescription;
+Options.Item = OptionsItem;
 Options.Section = OptionsSection;

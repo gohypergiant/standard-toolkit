@@ -12,20 +12,23 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { IOptionsItem } from '../options-item';
+import type { IOptionsItem } from '../options/types';
 import { ComboBox, type ComboBoxProps } from './index';
 
 function setup({
   children = (
     <>
-      <ComboBox.Item name='Red Panda' isDisabled description='Some ice cream'>
-        Red Panda
+      <ComboBox.Item isDisabled>
+        <ComboBox.Item.Label>Red Panda</ComboBox.Item.Label>
+        <ComboBox.Item.Description>Some ice cream</ComboBox.Item.Description>
       </ComboBox.Item>
-      <ComboBox.Item name='Cat' description='Some ice cream'>
-        Cat
+      <ComboBox.Item>
+        <ComboBox.Item.Label>Cat</ComboBox.Item.Label>
+        <ComboBox.Item.Description>Some ice cream</ComboBox.Item.Description>
       </ComboBox.Item>
-      <ComboBox.Item name='Dog' description='Some ice cream'>
-        Dog
+      <ComboBox.Item>
+        <ComboBox.Item.Label>Dog</ComboBox.Item.Label>
+        <ComboBox.Item.Description>Some ice cream</ComboBox.Item.Description>
       </ComboBox.Item>
     </>
   ),

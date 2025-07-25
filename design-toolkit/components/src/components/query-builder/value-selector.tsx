@@ -57,24 +57,19 @@ export function ValueSelector(props: ValueSelectorProps) {
             <ListBoxSection key={section.label}>
               <Header>{section.label}</Header>
               {section.options.map((option) => (
-                <ComboBox.Item
-                  name={option.name}
-                  id={option.name}
-                  key={option.name}
-                >
-                  {option.label}
+                <ComboBox.Item id={option.name} key={option.name}>
+                  <ComboBox.Item.Label>{option.label}</ComboBox.Item.Label>
                 </ComboBox.Item>
               ))}
             </ListBoxSection>
           ))
         : optionsProp.map((option) => (
             <ComboBox.Item
-              name={option.name}
               textValue={option.label}
               id={option.name}
               key={option.name}
             >
-              {option.label}
+              <ComboBox.Item.Label>{option.label}</ComboBox.Item.Label>
             </ComboBox.Item>
           )),
     [optionsProp],

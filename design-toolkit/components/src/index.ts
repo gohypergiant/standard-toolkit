@@ -150,10 +150,21 @@ export type {
   SeparatorProps,
   SubmenuTriggerProps,
 } from './components/menu/types';
-export { Options, OptionsContext, OptionsSection } from './components/options';
-export type { OptionsProps } from './components/options';
-export { OptionsItem } from './components/options-item';
-export type { IOptionsItem, OptionsItemProps } from './components/options-item';
+export {
+  Options,
+  OptionsContext,
+  OptionsItem,
+  OptionsSection,
+} from './components/options';
+export { OptionsStyles } from './components/options/styles';
+export type {
+  OptionsStyleVariants,
+  IOptionsItem,
+  OptionsItemProps,
+  OptionsItemTextProps,
+  OptionsProps,
+  OptionsSectionProps,
+} from './components/options/types';
 export { Popover, PopoverTrigger } from './components/popover';
 export { PopoverStyles } from './components/popover/styles';
 export type {
