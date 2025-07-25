@@ -130,6 +130,10 @@ export type { InputProps } from './components/input/types';
 export { Label, LabelContext } from './components/label';
 export { LabelStyles } from './components/label/styles';
 export type { LabelProps, LabelProviderProps } from './components/label/types';
+export { Lines } from './components/lines';
+export { LinesStyles } from './components/lines/styles';
+export type { LinesStylesVariants } from './components/lines/styles';
+export type { LinesProps } from './components/lines/types';
 export {
   Menu,
   MenuContext,
@@ -218,6 +222,41 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip';
+export { ExpandToggle } from './components/tree/expand-toggle';
+export { ItemContent, Tree, TreeContext, TreeItem } from './components/tree';
+export { SelectionToggle } from './components/tree/selection-toggle';
+export { TreeStyles, TreeStylesDefaults } from './components/tree/styles';
+export type { TreeStyleVariants } from './components/tree/styles';
+export type {
+  DragAndDropConfig,
+  DragItem,
+  ItemContentProps,
+  ItemContentRenderProps,
+  ItemTextProps,
+  TreeItemProps,
+  TreeProps,
+  TreeSelectionType,
+} from './components/tree/types';
+export { VisibilityToggle } from './components/tree/visibility-toggle';
+export { items, nodeDefaults } from './hooks/fixtures';
+export type { Values } from './hooks/fixtures';
+export type {
+  Position,
+  TreeActions,
+  TreeData,
+  TreeNode,
+  TreeNodeBase,
+  UseTreeActionsOptions,
+  UseTreeState,
+  UseTreeStateOptions,
+} from './hooks/types';
+export { useTreeActions } from './hooks/use-tree-actions';
+export { useTreeState } from './hooks/use-tree-state';
+export {
+  getDroppedItemPayload,
+  processDroppedItem,
+  processDroppedItems,
+} from './hooks/use-tree-state/utils';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   ChildrenRenderProps,
