@@ -1,5 +1,14 @@
 # @accelint/design-toolkit
 
+## 2.4.1
+
+### Patch Changes
+
+- f57cb86: Adds fallback for some css tokens
+- 4fa066a: - Converted Input autoSize behavior to an optional prop variant
+  - Lowered custom variant selector specificity to reduce friction of overrides
+  - Fixed Checkbox styling for state of indeterminate + disabled
+
 ## 2.4.0
 
 ### Minor Changes
