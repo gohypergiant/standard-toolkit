@@ -93,16 +93,12 @@ export interface DrawerTriggerProps extends ContainerProps {
 
 export interface DrawerMenuItemProps {
   className?: string;
-  children: ReactElement<DOMAttributes<FocusableElement>, string>
+  children: ReactElement<DOMAttributes<FocusableElement>, string>;
   id?: Key;
 }
 
 export interface DrawerPanelProps extends ContainerProps {
   id?: Key;
-}
-
-export interface UseDrawerToggleProps {
-  drawerId: Key;
 }
 
 export interface DrawerLayoutContextValue {
