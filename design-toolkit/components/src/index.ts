@@ -119,6 +119,13 @@ export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field';
+export { DetailsList } from './components/details-list';
+export { DetailsListStyles } from './components/details-list/styles';
+export type {
+  DetailsListLabelProps,
+  DetailsListProps,
+  DetailsListValueProps,
+} from './components/details-list/types';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export { Icon, IconContext } from './components/icon';
