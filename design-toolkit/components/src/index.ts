@@ -117,6 +117,9 @@ export { ColorPicker, useColorPickerState } from './components/color-picker';
 export type { ColorPickerProps } from './components/color-picker';
 export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
+export { ContextMenu } from './components/context-menu';
+export { ContextMenuStyles } from './components/context-menu/styles';
+export type { ContextMenuProps } from './components/context-menu/types';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field';
 export { Dialog, DialogTitle } from './components/dialog';
@@ -154,6 +157,14 @@ export { Options, OptionsContext, OptionsSection } from './components/options';
 export type { OptionsProps } from './components/options';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
+export { MAX_VISIBLE_PAGES } from './components/pagination/constants';
+export { Pagination } from './components/pagination';
+export {
+  PaginationStyles,
+  PaginationStylesDefaults,
+} from './components/pagination/styles';
+export type { PaginationProps } from './components/pagination/types';
+export { pagination } from './components/pagination/utils';
 export { Popover, PopoverTrigger } from './components/popover';
 export { PopoverStyles } from './components/popover/styles';
 export type {
@@ -190,6 +201,29 @@ export type {
   SwitchProps,
   SwitchProviderProps,
 } from './components/switch/types';
+export { Table } from './components/table';
+export {
+  TableCellStylesDefaults,
+  TableHeaderCellStylesDefaults,
+  cellStyles,
+  headerCellStyles,
+  rowStyles,
+  tableBodyStyles,
+  tableHeaderStyles,
+} from './components/table/styles';
+export { TableBody } from './components/table/table-body';
+export { TableCell } from './components/table/table-cell';
+export { HeaderCell } from './components/table/table-header-cell';
+export { TableHeader } from './components/table/table-header';
+export { TableRow } from './components/table/table-row';
+export type {
+  TableBodyProps,
+  TableCellProps,
+  TableHeaderCellProps,
+  TableHeaderProps,
+  TableProps,
+  TableRowProps,
+} from './components/table/types';
 export { Tabs } from './components/tabs';
 export type {
   TabListProps,

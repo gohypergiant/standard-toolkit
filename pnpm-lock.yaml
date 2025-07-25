@@ -276,18 +276,9 @@ importers:
       '@react-stately/color':
         specifier: ^3.8.6
         version: 3.8.6(react@19.0.0)
-      '@react-stately/datepicker':
-        specifier: 3.13.0
-        version: 3.13.0(react@19.0.0)
-      '@react-stately/utils':
-        specifier: ^3.10.7
-        version: 3.10.7(react@19.0.0)
       '@react-types/overlays':
         specifier: ^3.8.16
         version: 3.8.16(react@19.0.0)
-      '@react-types/shared':
-        specifier: 3.25.0
-        version: 3.25.0(react@19.0.0)
       client-only:
         specifier: 0.0.1
         version: 0.0.1
@@ -334,6 +325,18 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
+      '@react-stately/data':
+        specifier: 3.13.1
+        version: 3.13.1(react@19.0.0)
+      '@react-stately/datepicker':
+        specifier: 3.13.0
+        version: 3.13.0(react@19.0.0)
+      '@react-stately/utils':
+        specifier: 3.10.7
+        version: 3.10.7(react@19.0.0)
+      '@react-types/shared':
+        specifier: 3.25.0
+        version: 3.25.0(react@19.0.0)
       '@storybook/addon-essentials':
         specifier: ^8.6.12
         version: 8.6.14(@types/react@19.1.2)(storybook@8.6.14(prettier@3.6.1))
@@ -364,6 +367,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.4
         version: 4.1.10(vite@5.4.18(@types/node@20.19.1)(lightningcss@1.30.1)(terser@5.43.1))
+      '@tanstack/react-table':
+        specifier: 8.21.3
+        version: 8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@testing-library/dom':
         specifier: 10.4.0
         version: 10.4.0
@@ -4873,6 +4879,17 @@ packages:
     resolution: {integrity: sha512-QWnD5HDY2IADv+vYR82lOhqOlS1jSCUUAmfem52cXAhRTKxpDh3ARX8TTXJTCCO7Rv7cD2Nlekabv02bwP3a2A==}
     peerDependencies:
       vite: ^5.2.0 || ^6
+
+  '@tanstack/react-table@8.21.3':
+    resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
+  '@tanstack/table-core@8.21.3':
+    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
+    engines: {node: '>=12'}
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -16057,6 +16074,14 @@ snapshots:
       '@tailwindcss/oxide': 4.1.10
       tailwindcss: 4.1.10
       vite: 5.4.18(@types/node@20.19.1)(lightningcss@1.30.1)(terser@5.43.1)
+
+  '@tanstack/react-table@8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@tanstack/table-core': 8.21.3
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  '@tanstack/table-core@8.21.3': {}
 
   '@testing-library/dom@10.4.0':
     dependencies:

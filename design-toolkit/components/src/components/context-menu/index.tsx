@@ -1,0 +1,59 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import {
+  Menu as AriaMenu,
+  MenuItem as AriaMenuItem,
+  MenuTrigger as AriaMenuTrigger,
+  Popover as AriaPopover,
+} from 'react-aria-components';
+import { Button } from '../button';
+import { Icon } from '../icon';
+import { ContextMenuStyles } from './styles';
+import type { ContextMenuProps } from './types';
+
+const { button, popover, menuItem, container } = ContextMenuStyles();
+
+export function ContextMenu({
+  className,
+  isOpen,
+  onOpenChange,
+  actions,
+  children,
+  persistent = false,
+  ...props
+}: ContextMenuProps) {
+  return (
+    <AriaMenuTrigger onOpenChange={onOpenChange} isOpen={isOpen}>
+      <Button
+        className={button({ persistent, className })}
+        variant='icon'
+        {...props}
+      >
+        <Icon>{children}</Icon>
+      </Button>
+      <AriaPopover className={popover()}>
+        <AriaMenu className={container()}>
+          {actions.map((action) => (
+            <AriaMenuItem
+              key={action.label}
+              className={menuItem()}
+              onAction={action.onAction}
+            >
+              {action.label}
+            </AriaMenuItem>
+          ))}
+        </AriaMenu>
+      </AriaPopover>
+    </AriaMenuTrigger>
+  );
+}
