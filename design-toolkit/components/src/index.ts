@@ -118,7 +118,11 @@ export type { ColorPickerProps } from './components/color-picker';
 export { ComboBox, ComboBoxSection } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
 export { DateField } from './components/date-field';
-export type { DateFieldProps } from './components/date-field';
+export { DateFieldStyles } from './components/date-field/styles';
+export type {
+  DateFieldProps,
+  DateInputProps,
+} from './components/date-field/types';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export { Icon, IconContext } from './components/icon';

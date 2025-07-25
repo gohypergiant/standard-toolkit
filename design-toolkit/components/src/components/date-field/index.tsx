@@ -11,26 +11,24 @@
  */
 
 'use client';
-import { cn } from '@/lib/utils';
+import 'client-only';
 import Calendar from '@accelint/icons/calendar';
 import type { DateValue } from '@internationalized/date';
 import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
-import 'client-only';
-import { type VariantProps, cva } from 'cva';
-import type { ForwardedRef } from 'react';
 import {
   DateField as AriaDateField,
-  type DateFieldProps as AriaDateFieldProps,
   DateInput as AriaDateInput,
-  type DateInputProps as AriaDateInputProps,
   type DateSegmentProps as AriaDateSegmentProps,
   Text as AriaText,
   DateSegment,
   type DateSegmentRenderProps,
   FieldError,
+  composeRenderProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
+import { DateFieldStyles } from './styles';
+import type { DateFieldProps, DateInputProps } from './types';
 
 const months = [
   'JAN',
@@ -99,51 +97,6 @@ const FormattedDateSegment = ({
   );
 };
 
-const dateFieldStyles = cva(
-  [
-    'flex w-full gap-xs rounded-medium px-s py-xs font-display outline outline-interactive',
-  ],
-  {
-    variants: {
-      isDisabled: {
-        true: 'text-disabled outline-interactive-disabled placeholder:text-disabled',
-        false:
-          'text-default-light placeholder:text-default-dark focus-within:outline-highlight hover:outline-interactive-hover',
-      },
-      isInvalid: {
-        true: 'outline-serious',
-      },
-      isReadOnly: {
-        true: 'rounded-none p-0 outline-none',
-      },
-      size: {
-        medium: ['text-body-s', 'pl-[32px]'],
-        small: 'text-body-xs',
-      },
-    },
-    compoundVariants: [
-      {
-        isDisabled: true,
-        isInvalid: true,
-        className: 'outline-interactive-disabled',
-      },
-      {
-        isDisabled: false,
-        size: 'medium',
-      },
-    ],
-    defaultVariants: {
-      size: 'medium',
-    },
-  },
-);
-
-interface DateInputProps
-  extends VariantProps<typeof dateFieldStyles>,
-    Omit<AriaDateInputProps, 'size'> {
-  ref?: ForwardedRef<HTMLDivElement>;
-}
-
 const DateInput = ({
   className,
   ref = null,
@@ -155,50 +108,26 @@ const DateInput = ({
     <div className='relative flex'>
       {size === 'medium' ? (
         <Icon
-          className={cn([
-            '-translate-y-1/2 absolute top-1/2 left-s',
-            props.isDisabled ? 'text-disabled' : 'text-default-light',
-          ])}
+          className={`-translate-y-1/2 absolute top-1/2 left-s ${props.isDisabled ? ' text-disabled' : ' text-default-light'}`}
         >
           <Calendar />
         </Icon>
       ) : null}
       <AriaDateInput
         {...props}
-        className={({ isDisabled, isInvalid }) =>
-          cn(
-            dateFieldStyles({
-              isDisabled,
-              isInvalid,
-              isReadOnly: isReadOnly,
-              size,
-              className,
-            }),
-          )
-        }
+        className={composeRenderProps(className, (className) =>
+          DateFieldStyles({
+            isDisabled: props.isDisabled,
+            isInvalid: props.isInvalid,
+            isReadOnly,
+            size,
+            className,
+          }),
+        )}
       />
     </div>
   );
 };
-
-export interface DateFieldProps<T extends DateValue>
-  extends Omit<
-      VariantProps<typeof dateFieldStyles>,
-      'isDisabled' | 'isInvalid' | 'isReadOnly'
-    >,
-    Omit<AriaDateFieldProps<T>, 'className' | 'style'>, // Exclude className to avoid conflict with cva
-    Omit<AriaDateInputProps, 'className' | 'children' | 'style'> {
-  isDisabled?: boolean;
-  isInvalid?: boolean;
-  isReadOnly?: boolean;
-  size?: 'small' | 'medium';
-  className?: string;
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  placeholder?: string;
-  shortMonth?: boolean;
-}
 
 export function DateField<T extends DateValue>({
   className,
@@ -252,10 +181,7 @@ export function DateField<T extends DateValue>({
       </DateInput>
       {shouldShowDescription && (
         <AriaText
-          className={cn([
-            'fg-default-dark text-body-xs empty:hidden',
-            isDisabled && 'fg-disabled',
-          ])}
+          className={`fg-default-dark text-body-xs empty:hidden ${isDisabled && 'fg-disabled'}`}
           slot='description'
         >
           {description}
