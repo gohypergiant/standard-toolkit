@@ -19,9 +19,7 @@ const TestParent = ({ children }: { children: ReactNode }) => {
   containsExactChildren({
     children,
     componentName: TestParent.displayName,
-    restrictions: {
-      [TestChild.displayName]: { min: 1, max: 1 },
-    },
+    restrictions: [[TestChild, { min: 1, max: 1 }]],
   });
 
   return <div>{children}</div>;

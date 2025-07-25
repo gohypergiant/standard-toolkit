@@ -38,10 +38,10 @@ export function Tooltip({
   containsExactChildren({
     children,
     componentName: Tooltip.displayName,
-    restrictions: {
-      [TooltipTrigger.displayName]: { min: 1, max: 1 },
-      [TooltipBody.displayName]: { min: 1, max: 1 },
-    },
+    restrictions: [
+      [TooltipTrigger, { min: 1, max: 1 }],
+      [TooltipBody, { min: 1, max: 1 }],
+    ],
   });
 
   return (
