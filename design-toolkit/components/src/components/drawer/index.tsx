@@ -11,14 +11,10 @@
  */
 'use client';
 import 'client-only';
-import { PressResponder, Pressable } from '@react-aria/interactions';
-import {
-  Children,
-  type ReactNode,
-  isValidElement,
-  useEffect,
-  useMemo,
-} from 'react';
+import { PressResponder } from '@react-aria/interactions';
+import { type ReactNode, useEffect, useMemo } from 'react';
+import { Button } from '../button';
+import { Icon } from '../icon';
 import {
   DrawerContext,
   DrawerLayoutContext,
@@ -84,33 +80,26 @@ export const Drawer = ({
   isOpen = false,
   mode = 'overlay',
   size = 'medium',
+  defaultSelectedMenuItemId,
   className,
   children,
   onOpenChange,
   onStateChange,
   ...props
 }: DrawerProps) => {
-  const {
-    getDrawerState,
-    registerDrawer,
-    isDrawerVisible,
-    selectedMenuItemId,
-    selectMenuItem,
-  } = useDrawerLayoutContext();
+  const { getDrawerState, registerDrawer, selectedMenuItemId, selectMenuItem } =
+    useDrawerLayoutContext();
   const currentState = getDrawerState(id);
-  const visible = isDrawerVisible(id);
-
-  const menuChildren: ReactNode[] = [];
-  const contentChildren: ReactNode[] = [];
 
   useEffect(() => {
-    const initialState = createDefaultDrawerState(
+    const initialState = createDefaultDrawerState({
       placement,
+      selectedMenuItemId: defaultSelectedMenuItemId,
       mode,
       size,
       isOpen,
-    );
-    registerDrawer(id, placement, initialState, {
+    });
+    registerDrawer(id, initialState, {
       onOpenChange,
       onStateChange,
     });
@@ -120,18 +109,11 @@ export const Drawer = ({
     mode,
     size,
     isOpen,
+    defaultSelectedMenuItemId,
     registerDrawer,
     onOpenChange,
     onStateChange,
   ]);
-
-  Children.forEach(children, (child) => {
-    if (isValidElement(child) && child.type === DrawerMenu) {
-      menuChildren.push(child);
-    } else {
-      contentChildren.push(child);
-    }
-  });
 
   return (
     <DrawerContext.Provider
@@ -151,8 +133,7 @@ export const Drawer = ({
         data-size={currentState.size}
         data-open={currentState.isOpen}
       >
-        {menuChildren}
-        <DrawerContent visible={visible}>{contentChildren}</DrawerContent>
+        {children}
       </div>
     </DrawerContext.Provider>
   );
@@ -165,10 +146,10 @@ const DrawerMain = ({ children, className, ...props }: DrawerMainProps) => (
 );
 DrawerMain.displayName = 'Drawer.Main';
 
-const DrawerContent = ({
-  visible,
-  children,
-}: { visible: boolean; children: ReactNode }) => {
+const DrawerContent = ({ children }: { children: ReactNode }) => {
+  const { drawerId } = useDrawerContext();
+  const { isDrawerVisible } = useDrawerLayoutContext();
+  const visible = isDrawerVisible(drawerId);
   return <div className={content({ visible })}>{children}</div>;
 };
 DrawerContent.displayName = 'Drawer.Content';
@@ -201,23 +182,26 @@ const DrawerMenuItem = ({
   ...props
 }: DrawerMenuItemProps) => {
   const { openDrawer, showSelected } = useDrawerLayoutContext();
-  const { selectMenuItem, state, drawerId } = useDrawerContext();
-  const isSelected = showSelected(id);
-  const handleClick = () => {
+  const { state, drawerId, selectMenuItem } = useDrawerContext();
+  const isSelected = showSelected(drawerId, id);
+
+  const handlePress = () => {
     openDrawer(drawerId);
-    selectMenuItem(id);
+    selectMenuItem(drawerId, id);
   };
   return (
-    <div
+    <Button
       {...props}
+      variant='icon'
       className={menuItem({ drawer: state?.placement, className })}
       aria-selected={isSelected}
       aria-controls={`panel-${id}`}
       id={`tab-${id}`}
       data-selected={isSelected ? true : undefined}
+      onPress={handlePress}
     >
-      <Pressable onPress={handleClick}>{children}</Pressable>
-    </div>
+      <Icon>{children}</Icon>
+    </Button>
   );
 };
 DrawerMenuItem.displayName = 'Drawer.Menu.Item';
@@ -339,3 +323,4 @@ Drawer.Panel = DrawerPanel;
 Drawer.Header = DrawerHeader;
 Drawer.Title = DrawerTitle;
 Drawer.Footer = DrawerFooter;
+Drawer.Content = DrawerContent;

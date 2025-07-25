@@ -48,6 +48,7 @@ export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 export interface DrawerState {
   mode: DrawerMode;
   size: DrawerSize;
+  selectedMenuItemId?: Key;
   placement: DrawerPlacement;
   isOpen: boolean;
 }
@@ -72,6 +73,7 @@ export interface DrawerProps extends ContainerProps {
   mode?: DrawerMode;
   size?: DrawerSize;
   isOpen?: boolean;
+  defaultSelectedMenuItemId?: Key;
   onOpenChange?: OnOpenChangeCallback;
   onStateChange?: (state: DrawerState) => void;
 }
@@ -111,7 +113,6 @@ export interface DrawerLayoutContextValue {
   getDrawerState: (drawerId: Key) => DrawerState;
   registerDrawer: (
     drawerId: Key,
-    placement: DrawerPlacement,
     initialState: DrawerState,
     callbacks?: {
       onOpenChange?: OnOpenChangeCallback;
@@ -120,15 +121,15 @@ export interface DrawerLayoutContextValue {
   ) => void;
   isDrawerVisible: (drawerId: Key) => boolean;
   selectedMenuItemId?: Key;
-  selectMenuItem: (menuItemId?: Key) => void;
-  showSelected: (menuItemId?: Key) => boolean;
+  selectMenuItem: (drawerId: Key, menuItemId?: Key) => void;
+  showSelected: (drawerId: Key, menuItemId?: Key) => boolean;
 }
 
 export interface DrawerContextValue {
   drawerId: Key;
   state?: DrawerState;
   selectedMenuItemId?: Key;
-  selectMenuItem: (menuItemId?: Key) => void;
+  selectMenuItem: (drawerId: Key, menuItemId?: Key) => void;
 }
 
 /**
@@ -198,3 +199,11 @@ export type DrawerExtensions =
   | 'bottom'
   | 'left'
   | 'right';
+
+export const DrawerDefaults = {
+  placement: 'left',
+  mode: 'overlay',
+  selectedMenuItemId: undefined,
+  size: 'medium',
+  isOpen: false,
+} as const;

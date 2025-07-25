@@ -21,14 +21,14 @@ import {
   createDefaultDrawerState,
   drawerStateReducer,
 } from './state';
-import type {
-  DrawerContextValue,
-  DrawerLayoutContextValue,
-  DrawerMode,
-  DrawerPlacement,
-  DrawerSize,
-  DrawerState,
-  OnOpenChangeCallback,
+import {
+  type DrawerContextValue,
+  DrawerDefaults,
+  type DrawerLayoutContextValue,
+  type DrawerMode,
+  type DrawerSize,
+  type DrawerState,
+  type OnOpenChangeCallback,
 } from './types';
 
 import type { Key } from '@react-types/shared';
@@ -67,25 +67,26 @@ export function useDrawerLayoutState() {
   const [drawerStates, setDrawerStates] = useState<Record<Key, DrawerState>>(
     {},
   );
-  const [drawerPlacements, setDrawerPlacements] = useState<
-    Record<Key, DrawerPlacement>
-  >({});
-  const [selectedMenuItemId, setSelectedMenuItemId] = useState<Key>();
   const [callbacks, setCallbacks] = useState<Record<Key, DrawerCallbacks>>({});
 
-  const selectMenuItem = useCallback((menuItemId?: Key) => {
-    setSelectedMenuItemId(menuItemId);
+  const selectMenuItem = useCallback((drawerId: Key, menuItemId?: Key) => {
+    updateDrawerState(drawerId, {
+      type: 'SET_MENU_ID',
+      menuItemId: menuItemId ?? '',
+    });
   }, []);
 
   const showSelected = useCallback(
-    (menuItemId?: Key) => {
+    (drawerId: Key, menuItemId?: Key) => {
+      const selectedMenuItemId = drawerStates[drawerId]?.selectedMenuItemId;
+
       return (
         selectedMenuItemId !== '' &&
         typeof selectedMenuItemId !== 'undefined' &&
         menuItemId === selectedMenuItemId
       );
     },
-    [selectedMenuItemId],
+    [drawerStates],
   );
 
   const notifyCallbacks = useCallback(
@@ -102,7 +103,15 @@ export function useDrawerLayoutState() {
   const updateDrawerState = useCallback(
     (drawerId: Key, action: DrawerAction) => {
       setDrawerStates((prev) => {
-        const currentState = prev[drawerId] || createDefaultDrawerState('left');
+        const currentState =
+          prev[drawerId] ||
+          createDefaultDrawerState({
+            placement: DrawerDefaults.placement,
+            selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
+            size: DrawerDefaults.size,
+            mode: DrawerDefaults.mode,
+            isOpen: DrawerDefaults.isOpen,
+          });
         const nextState = drawerStateReducer(currentState, action);
 
         notifyCallbacks(drawerId, nextState);
@@ -133,7 +142,6 @@ export function useDrawerLayoutState() {
   const closeDrawer = useCallback(
     (drawerId: Key) => {
       updateDrawerState(drawerId, { type: 'CLOSE' });
-      setSelectedMenuItemId(undefined);
     },
     [updateDrawerState],
   );
@@ -154,7 +162,16 @@ export function useDrawerLayoutState() {
 
   const getDrawerState = useCallback(
     (drawerId: Key): DrawerState => {
-      return drawerStates[drawerId] || createDefaultDrawerState('left');
+      return (
+        drawerStates[drawerId] ||
+        createDefaultDrawerState({
+          placement: DrawerDefaults.placement,
+          selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
+          size: DrawerDefaults.size,
+          mode: DrawerDefaults.mode,
+          isOpen: DrawerDefaults.isOpen,
+        })
+      );
     },
     [drawerStates],
   );
@@ -162,7 +179,6 @@ export function useDrawerLayoutState() {
   const registerDrawer = useCallback(
     (
       drawerId: Key,
-      placement: DrawerPlacement,
       initialState: DrawerState,
       drawerCallbacks?: DrawerCallbacks,
     ) => {
@@ -170,26 +186,21 @@ export function useDrawerLayoutState() {
         ...prev,
         [drawerId]: drawerCallbacks || {},
       }));
-      setDrawerPlacements((prev) => ({
-        ...prev,
-        [drawerId]: placement,
-      }));
 
       setDrawerStates((prev) => {
+        const currentState = prev[drawerId];
         return {
           ...prev,
-          [drawerId]: initialState,
+          [drawerId]: {
+            ...initialState,
+            selectedMenuItemId:
+              currentState?.selectedMenuItemId ??
+              initialState.selectedMenuItemId,
+          },
         };
       });
     },
     [],
-  );
-
-  const getDrawerPlacement = useCallback(
-    (drawerId: Key) => {
-      return drawerPlacements[drawerId];
-    },
-    [drawerPlacements],
   );
 
   const isDrawerVisible = useCallback(
@@ -203,7 +214,6 @@ export function useDrawerLayoutState() {
   const contextValue = useMemo<DrawerLayoutContextValue>(
     () => ({
       drawerStates,
-      drawerPlacements,
       toggleDrawer,
       openDrawer,
       closeDrawer,
@@ -211,15 +221,12 @@ export function useDrawerLayoutState() {
       setDrawerMode,
       getDrawerState,
       registerDrawer,
-      getDrawerPlacement,
       isDrawerVisible,
-      selectedMenuItemId,
       selectMenuItem,
       showSelected,
     }),
     [
       drawerStates,
-      drawerPlacements,
       toggleDrawer,
       openDrawer,
       closeDrawer,
@@ -227,9 +234,7 @@ export function useDrawerLayoutState() {
       setDrawerMode,
       getDrawerState,
       registerDrawer,
-      getDrawerPlacement,
       isDrawerVisible,
-      selectedMenuItemId,
       selectMenuItem,
       showSelected,
     ],
