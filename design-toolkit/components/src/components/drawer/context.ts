@@ -63,7 +63,9 @@ interface DrawerCallbacks {
   onStateChange?: (state: DrawerState) => void;
 }
 
-export function useDrawerLayoutState() {
+export function useDrawerLayoutState(opts?: {
+  onStateChange?: (drawerId: Key, state: DrawerState) => void;
+}) {
   const [drawerStates, setDrawerStates] = useState<Record<Key, DrawerState>>(
     {},
   );
@@ -96,8 +98,9 @@ export function useDrawerLayoutState() {
         drawerCallbacks.onOpenChange?.(nextState.isOpen);
         drawerCallbacks.onStateChange?.(nextState);
       }
+      opts?.onStateChange?.(drawerId, nextState);
     },
-    [callbacks],
+    [opts?.onStateChange, callbacks],
   );
 
   const updateDrawerState = useCallback(
@@ -133,8 +136,8 @@ export function useDrawerLayoutState() {
   );
 
   const openDrawer = useCallback(
-    (drawerId: Key) => {
-      updateDrawerState(drawerId, { type: 'OPEN' });
+    (drawerId: Key, menuItemId?: Key) => {
+      updateDrawerState(drawerId, { type: 'OPEN', menuItemId });
     },
     [updateDrawerState],
   );

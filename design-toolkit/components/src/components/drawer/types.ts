@@ -65,6 +65,7 @@ export interface DrawerRootProps
    * @default 'left and right'
    */
   extend?: DrawerExtensions;
+  onStateChange?: (drawerId: Key, state: DrawerState) => void;
 }
 
 export interface DrawerProps extends ContainerProps {
@@ -106,7 +107,7 @@ export interface DrawerPanelProps extends ContainerProps {
 export interface DrawerLayoutContextValue {
   drawerStates: Record<Key, DrawerState>;
   toggleDrawer: (drawerId: Key) => void;
-  openDrawer: (drawerId: Key) => void;
+  openDrawer: (drawerId: Key, menuItemId?: Key) => void;
   closeDrawer: (drawerId: Key) => void;
   setDrawerSize: (drawerId: Key, size: DrawerSize) => void;
   setDrawerMode: (drawerId: Key, mode: DrawerMode) => void;

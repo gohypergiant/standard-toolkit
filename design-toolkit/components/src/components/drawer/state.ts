@@ -21,7 +21,7 @@ import type { Key } from '@react-types/shared';
 
 export type DrawerAction =
   | { type: 'TOGGLE' }
-  | { type: 'OPEN' }
+  | { type: 'OPEN'; menuItemId?: Key }
   | { type: 'CLOSE' }
   | { type: 'SET_SIZE'; size: DrawerSize }
   | { type: 'SET_MENU_ID'; menuItemId?: Key }
@@ -60,6 +60,7 @@ export const drawerStateReducer = (
       return {
         ...state,
         isOpen: true,
+        selectedMenuItemId: action.menuItemId,
       };
 
     case 'CLOSE':

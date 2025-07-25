@@ -44,8 +44,11 @@ const DrawerRoot = ({
   children,
   className,
   extend = 'left right',
+  onStateChange,
 }: DrawerRootProps) => {
-  const drawerState = useDrawerLayoutState();
+  const drawerState = useDrawerLayoutState({
+    onStateChange,
+  });
 
   const dataAttributes = useMemo(() => {
     const attrs: Record<string, string | boolean> = {};
@@ -182,12 +185,11 @@ const DrawerMenuItem = ({
   ...props
 }: DrawerMenuItemProps) => {
   const { openDrawer, showSelected } = useDrawerLayoutContext();
-  const { state, drawerId, selectMenuItem } = useDrawerContext();
+  const { state, drawerId } = useDrawerContext();
   const isSelected = showSelected(drawerId, id);
 
   const handlePress = () => {
-    openDrawer(drawerId);
-    selectMenuItem(drawerId, id);
+    openDrawer(drawerId, id);
   };
   return (
     <Button
