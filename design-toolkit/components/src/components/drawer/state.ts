@@ -9,31 +9,24 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import type {
-  DrawerMode,
-  DrawerPlacement,
-  DrawerSize,
-  DrawerState,
-} from './types';
+import type { DrawerMode, DrawerPlacement, DrawerSize, DrawerState } from './types';
 
 export type DrawerAction =
   | { type: 'TOGGLE' }
   | { type: 'OPEN' }
   | { type: 'CLOSE' }
   | { type: 'SET_SIZE'; size: DrawerSize }
-  | { type: 'SET_INITIAL_SIZE'; size: DrawerSize }
-  | { type: 'SET_MODE'; mode: DrawerMode }
-  | { type: 'SET_EXTENDED'; extended: boolean };
+  | { type: 'SET_MODE'; mode: DrawerMode };
 
 /**
  * Default state for new drawers
  */
 export const createDefaultDrawerState = (
+  placement: DrawerPlacement,
   mode: DrawerMode = 'overlay',
-  size: DrawerSize = 'closed',
-  initialSize: DrawerSize = 'content',
-  extended = false,
-): DrawerState => ({ mode, size, initialSize, extended });
+  size: DrawerSize = 'medium',
+  isOpen = false,
+): DrawerState => ({ mode, size, placement, isOpen });
 
 export const drawerStateReducer = (
   state: DrawerState,
@@ -43,88 +36,34 @@ export const drawerStateReducer = (
     case 'TOGGLE':
       return {
         ...state,
-        size: state.size === 'closed' ? state.initialSize : 'closed',
+        isOpen: !state.isOpen,
       };
 
     case 'OPEN':
       return {
         ...state,
-        size: state.initialSize,
+        isOpen: true,
       };
 
     case 'CLOSE':
       return {
         ...state,
-        size: 'closed',
+        isOpen: false,
       };
 
     case 'SET_SIZE':
       return {
         ...state,
         size: action.size,
-      };
-    case 'SET_INITIAL_SIZE':
-      return {
-        ...state,
-        size: action.size,
+        isOpen: true,
       };
     case 'SET_MODE':
       return {
         ...state,
         mode: action.mode,
       };
-    case 'SET_EXTENDED':
-      return {
-        ...state,
-        extended: action.extended,
-      };
 
     default:
       return state;
   }
-};
-
-/**
- * Convert drawer state to CSS data attributes
- */
-export const stateToDataAttribute = (state: DrawerState): string => {
-  const base = `${state.mode}-${state.size}`;
-  return state.extended ? `${base} extend` : base;
-};
-
-/**
- * Check if drawer is visible (not closed)
- */
-export const isDrawerVisible = (state: DrawerState): boolean => {
-  return state.size !== 'closed';
-};
-
-/**
- * Check if drawer is in an open state
- */
-export const isDrawerOpen = (state: DrawerState): boolean => {
-  return ['nav', 'content', 'extra', 'nav', 'icons'].includes(state.size);
-};
-
-/**
- * Type guards for runtime validation
- */
-export const isValidDrawerMode = (value: unknown): value is DrawerMode => {
-  return typeof value === 'string' && ['overlay', 'push'].includes(value);
-};
-
-export const isValidDrawerSize = (value: unknown): value is DrawerSize => {
-  return (
-    typeof value === 'string' &&
-    ['closed', 'icons', 'nav', 'content', 'extra'].includes(value)
-  );
-};
-
-export const isValidDrawerPlacement = (
-  value: unknown,
-): value is DrawerPlacement => {
-  return (
-    typeof value === 'string' &&
-    ['left', 'right', 'top', 'bottom'].includes(value)
-  );
 };

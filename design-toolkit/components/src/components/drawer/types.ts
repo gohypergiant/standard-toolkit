@@ -9,11 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import type { FocusableElement } from '@react-types/shared';
+import type { FocusableElement, Key } from '@react-types/shared';
 import type { DOMAttributes, PropsWithChildren, ReactElement } from 'react';
 
-export type DrawerId = string;
-export type MenuItemId = string;
 /**
  * Drawer Layout Modes
  *
@@ -43,15 +41,15 @@ export type DrawerMode = 'overlay' | 'push';
  * - `icons` ↔ `nav` - Expand/collapse navigation
  * - `open` ↔ `extra` - Standard to expanded view
  */
-export type DrawerSize = 'closed' | 'icons' | 'nav' | 'content' | 'extra';
+export type DrawerSize = 'menu-size' | 'small' | 'medium' | 'large';
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 
 export interface DrawerState {
   mode: DrawerMode;
   size: DrawerSize;
-  initialSize: DrawerSize;
-  extended: boolean;
+  placement: DrawerPlacement;
+  isOpen: boolean;
 }
 
 interface ContainerProps extends PropsWithChildren<{ className?: string }> {}
@@ -69,7 +67,7 @@ export interface DrawerRootProps
 }
 
 export interface DrawerProps extends ContainerProps {
-  id: DrawerId;
+  id: Key;
   placement: DrawerPlacement;
   mode?: DrawerMode;
   size?: DrawerSize;
@@ -90,34 +88,33 @@ export interface DrawerMenuProps extends ContainerProps {
 }
 
 export interface DrawerTriggerProps extends ContainerProps {
-  for: DrawerId;
+  for: Key;
 }
 
 export interface DrawerMenuItemProps {
   className?: string;
   children: ReactElement<DOMAttributes<FocusableElement>, string>
-  id?: MenuItemId;
+  id?: Key;
 }
 
 export interface DrawerPanelProps extends ContainerProps {
-  id?: MenuItemId;
+  id?: Key;
 }
 
 export interface UseDrawerToggleProps {
-  drawerId: DrawerId;
+  drawerId: Key;
 }
 
 export interface DrawerLayoutContextValue {
-  drawerStates: Record<DrawerId, DrawerState>;
-  drawerPlacements: Record<DrawerId, DrawerPlacement>;
-  toggleDrawer: (drawerId: DrawerId) => void;
-  openDrawer: (drawerId: DrawerId) => void;
-  closeDrawer: (drawerId: DrawerId) => void;
-  setDrawerSize: (drawerId: DrawerId, size: DrawerSize) => void;
-  setDrawerMode: (drawerId: DrawerId, mode: DrawerMode) => void;
-  getDrawerState: (drawerId: DrawerId) => DrawerState;
+  drawerStates: Record<Key, DrawerState>;
+  toggleDrawer: (drawerId: Key) => void;
+  openDrawer: (drawerId: Key) => void;
+  closeDrawer: (drawerId: Key) => void;
+  setDrawerSize: (drawerId: Key, size: DrawerSize) => void;
+  setDrawerMode: (drawerId: Key, mode: DrawerMode) => void;
+  getDrawerState: (drawerId: Key) => DrawerState;
   registerDrawer: (
-    drawerId: DrawerId,
+    drawerId: Key,
     placement: DrawerPlacement,
     initialState: DrawerState,
     callbacks?: {
@@ -125,19 +122,17 @@ export interface DrawerLayoutContextValue {
       onStateChange?: (state: DrawerState) => void;
     },
   ) => void;
-  getDrawerPlacement: (drawerId: DrawerId) => DrawerPlacement | undefined;
-  isDrawerVisible: (drawerId: DrawerId) => boolean;
-  selectedMenuItemId?: MenuItemId;
-  selectMenuItem: (menuItemId?: MenuItemId) => void;
-  showSelected: (menuItemId?: MenuItemId) => boolean;
+  isDrawerVisible: (drawerId: Key) => boolean;
+  selectedMenuItemId?: Key;
+  selectMenuItem: (menuItemId?: Key) => void;
+  showSelected: (menuItemId?: Key) => boolean;
 }
 
 export interface DrawerContextValue {
-  drawerId: DrawerId;
-  placement: DrawerPlacement;
+  drawerId: Key;
   state?: DrawerState;
-  selectedMenuItemId?: MenuItemId;
-  selectMenuItem: (menuItemId?: MenuItemId) => void;
+  selectedMenuItemId?: Key;
+  selectMenuItem: (menuItemId?: Key) => void;
 }
 
 /**
@@ -201,8 +196,8 @@ export interface DrawerContextValue {
  * └─────────────────┴───────┘
  */
 export type DrawerExtensions =
-  | 'left and right'
-  | 'top and bottom'
+  | 'left right'
+  | 'top bottom'
   | 'top'
   | 'bottom'
   | 'left'

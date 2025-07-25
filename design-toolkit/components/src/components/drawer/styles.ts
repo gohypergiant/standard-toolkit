@@ -15,11 +15,19 @@ const gridBase = {
   //Properties for dynamic sizing
   properties: [
     //Drawer sizes
+    '[--drawer-w-left:0]',
+    '[--drawer-w-right:0]',
+    '[--drawer-h-bottom:0]',
+    '[--drawer-h-bottom:0]',
+    'data-[top*="overlay"]:[--drawer-main-row-start:1]', //top overlay
+    'data-[bottom*="overlay"]:[--drawer-main-row-end:4]', //bottom overlay
+    'data-[left*="overlay"]:[--drawer-main-col-start:1]', //left overlay
+    'data-[right*="overlay"]:[--drawer-main-col-end:4]', //right overlay
     '[--drawer-size-closed:0]',
-    '[--drawer-size-icons:40px]',
-    '[--drawer-size-nav:200px]',
-    '[--drawer-size-content:min(475px,25%)]',
-    '[--drawer-size-xl:min(600px,35%)]',
+    '[--drawer-menu-size:40px]',
+    '[--drawer-size-small:200px]',
+    '[--drawer-size-medium:min(475px,25%)]',
+    '[--drawer-size-large:min(600px,35%)]',
 
     //Grid template definitions
     '[--route-layout-grid-cols:var(--drawer-w-left)_1fr_var(--drawer-w-right)]',
@@ -42,7 +50,7 @@ const placementStyles = {
       'group-data-[extend=right]/layout:col-start-1',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
-    content: 'group-data-[top*=closed]/layout:[&>*:not(nav)]:hidden',
+    content: 'group-data-[top-open="false"]/layout:[&>*:not(nav)]:hidden',
   },
 
   bottom: {
@@ -54,7 +62,7 @@ const placementStyles = {
       'group-data-[extend=right]/layout:col-start-1',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
-    content: 'group-data-[bottom*=closed]/layout:[&>*:not(nav)]:hidden',
+    content: 'group-data-[bottom-open="false"]/layout:[&>*:not(nav)]:hidden',
   },
 
   left: {
@@ -67,7 +75,7 @@ const placementStyles = {
       'group-data-[extend=top]/layout:row-end-4',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
-    content: 'group-data-[left*=closed]/layout:[&>*:not(nav)]:hidden',
+    content: 'group-data-[left-open="false"]/layout:[&>*:not(nav)]:hidden',
   },
 
   right: {
@@ -80,7 +88,7 @@ const placementStyles = {
       'group-data-[extend=top]/layout:row-end-4',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
-    content: 'group-data-[right*=closed]/layout:[&>*:not(nav)]:hidden',
+    content: 'group-data-[right-open="false"]/layout:[&>*:not(nav)]:hidden',
   },
 };
 
@@ -104,32 +112,32 @@ const stateProperties = {
   //Drawer size mappings
   sizing: [
     //Top drawer
-    'data-[top*="closed"]:[--drawer-h-top:var(--drawer-size-closed)]',
-    'data-[top*="icons"]:[--drawer-h-top:var(--drawer-size-icons)]',
-    'data-[top*="nav"]:[--drawer-h-top:var(--drawer-size-nav)]',
-    'data-[top*="content"]:[--drawer-h-top:var(--drawer-size-content)]',
-    'data-[top*="xl"]:[--drawer-h-top:var(--drawer-size-xl)]',
+    'data-[top-open="false"]:[--drawer-h-top:var(--drawer-size-closed)]',
+    'data-[top*="menu-size"]:[--drawer-h-top:var(--drawer-menu-size)]',
+    'data-[top*="small"]:[--drawer-h-top:var(--drawer-size-small)]',
+    'data-[top*="medium"]:[--drawer-h-top:var(--drawer-size-medium)]',
+    'data-[top*="large"]:[--drawer-h-top:var(--drawer-size-large)]',
 
     //Bottom drawer
-    'data-[bottom*="closed"]:[--drawer-h-bottom:var(--drawer-size-closed)]',
-    'data-[bottom*="icons"]:[--drawer-h-bottom:var(--drawer-size-icons)]',
-    'data-[bottom*="nav"]:[--drawer-h-bottom:var(--drawer-size-nav)]',
-    'data-[bottom*="content"]:[--drawer-h-bottom:var(--drawer-size-content)]',
-    'data-[bottom*="xl"]:[--drawer-h-bottom:var(--drawer-size-xl)]',
+    'data-[bottom-open="false"]:[--drawer-h-bottom:var(--drawer-size-closed)]',
+    'data-[bottom*="menu-size"]:[--drawer-h-bottom:var(--drawer-menu-size)]',
+    'data-[bottom*="small"]:[--drawer-h-bottom:var(--drawer-size-small)]',
+    'data-[bottom*="medium"]:[--drawer-h-bottom:var(--drawer-size-medium)]',
+    'data-[bottom*="large"]:[--drawer-h-bottom:var(--drawer-size-large)]',
 
     //Left drawer
-    'data-[left*="closed"]:[--drawer-w-left:var(--drawer-size-closed)]',
-    'data-[left*="icons"]:[--drawer-w-left:var(--drawer-size-icons)]',
-    'data-[left*="nav"]:[--drawer-w-left:var(--drawer-size-nav)]',
-    'data-[left*="content"]:[--drawer-w-left:var(--drawer-size-content)]',
-    'data-[left*="xl"]:[--drawer-w-left:var(--drawer-size-xl)]',
+    'data-[left-open="false"]:[--drawer-w-left:var(--drawer-size-closed)]',
+    'data-[left*="menu-size"]:[--drawer-w-left:var(--drawer-menu-size)]',
+    'data-[left*="small"]:[--drawer-w-left:var(--drawer-size-small)]',
+    'data-[left*="medium"]:[--drawer-w-left:var(--drawer-size-medium)]',
+    'data-[left*="large"]:[--drawer-w-left:var(--drawer-size-large)]',
 
     //Right drawer
-    'data-[right*="closed"]:[--drawer-w-right:var(--drawer-size-closed)]',
-    'data-[right*="icons"]:[--drawer-w-right:var(--drawer-size-icons)]',
-    'data-[right*="nav"]:[--drawer-w-right:var(--drawer-size-nav)]',
-    'data-[right*="content"]:[--drawer-w-right:var(--drawer-size-content)]',
-    'data-[right*="xl"]:[--drawer-w-right:var(--drawer-size-xl)]',
+    'data-[right-open="false"]:[--drawer-w-right:var(--drawer-size-closed)]',
+    'data-[right*="menu-size"]:[--drawer-w-right:var(--drawer-menu-size)]',
+    'data-[right*="small"]:[--drawer-w-right:var(--drawer-size-small)]',
+    'data-[right*="medium"]:[--drawer-w-right:var(--drawer-size-medium)]',
+    'data-[right*="large"]:[--drawer-w-right:var(--drawer-size-large)]',
   ],
 };
 
@@ -144,11 +152,13 @@ export const DrawerStyles = tv({
     main: 'relative z-1 col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
     drawer: [
       'bg-surface-default text-body-m',
-      'data-[drawer-state*="closed"]:[&>*:not(nav)]:hidden',
-      'data-[drawer-state*="icons"]:block',
-      'data-[drawer-state*="nav"]:block',
-      'data-[drawer-state*="content"]:block',
-      'data-[drawer-state*="xl"]:block',
+      'data-[open="false"]:[&>*:not(nav)]:hidden',
+      'data-[mode="overlay"]:block',
+      'data-[mode="push"]:block',
+      'data-[size="menu-size"]:block',
+      'data-[size="small"]:block',
+      'data-[size="medium"]:block',
+      'data-[size="large"]:block',
     ],
     content: ['flex h-full min-h-0 flex-col gap-s p-l'],
     panel: ['flex max-h-full flex-1 overflow-y-auto text-default-light'],
@@ -220,7 +230,7 @@ export const DrawerMenuStyles = tv({
       //hover
       'hover:fg-default-light hover:!bg-transparent hover:group-dtk-orientation-horizontal:border-interactive-hover',
       //selected
-      'data-[selected=true]:fg-highlight data-[selected=true]:bg-highlight-subtle data-[selected=true]:group-dtk-orientation-horizontal:border-highlight',
+      'selected:fg-highlight selected:bg-highlight-subtle selected:group-dtk-orientation-horizontal:border-highlight',
       //focused
       'focus:fg-default-light focus:group-dtk-orientation-horizontal:border-interactive-hover',
       //disabled
@@ -230,24 +240,24 @@ export const DrawerMenuStyles = tv({
   variants: {
     drawer: {
       bottom: {
-        menu: '-translate-y-[var(--drawer-size-icons)] rounded-b-none',
+        menu: '-translate-y-[var(--drawer-menu-size)] rounded-b-none',
       },
       left: {
         menu: ['left-full rounded-l-none'],
       },
       right: {
-        menu: '-left-[var(--drawer-size-icons)] rounded-r-none',
+        menu: '-left-[var(--drawer-menu-size)] rounded-r-none',
       },
       top: {
-        menu: 'bottom-0 translate-y-[var(--drawer-size-icons)] rounded-t-none',
+        menu: 'bottom-0 translate-y-[var(--drawer-menu-size)] rounded-t-none',
       },
     },
     orientation: {
       horizontal: {
-        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--drawer-size-icons)] flex-row rounded-large bg-surface-default',
+        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--drawer-menu-size)] flex-row rounded-large bg-surface-default',
       },
       vertical: {
-        menu: 'absolute flex w-[var(--drawer-size-icons)] flex-col items-center rounded-large bg-surface-default',
+        menu: 'absolute flex w-[var(--drawer-menu-size)] flex-col items-center rounded-large bg-surface-default',
       },
     },
     position: {
