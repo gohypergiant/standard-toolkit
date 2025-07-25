@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Skeleton > should render with children 1`] = `
+<div
+  class="fg-default-light bg-transparent-light px-l py-s motion-safe:animate-pulse min-h-[1lh] w-full rounded-small"
+>
+  Loading content...
+</div>
+`;
+
+exports[`Skeleton > should render with more than one and nested 1`] = `
+<div>
+  <div
+    class="fg-default-light bg-transparent-light motion-safe:animate-pulse min-h-[1lh] w-full rounded-small mb-xl p-m"
+  >
+    <br />
+    <br />
+    <div
+      class="fg-default-light bg-transparent-light px-l py-s motion-safe:animate-pulse min-h-[1lh] rounded-small w-[75%]"
+    />
+  </div>
+  <div
+    class="fg-default-light bg-transparent-light px-l py-s motion-safe:animate-pulse min-h-[1lh] rounded-small mt-l w-[50%]"
+  />
+  <div
+    class="fg-default-light bg-transparent-light px-l py-s motion-safe:animate-pulse min-h-[1lh] rounded-small mt-l w-[50%]"
+  />
+  <div
+    class="fg-default-light bg-transparent-light px-l py-s motion-safe:animate-pulse min-h-[1lh] rounded-small mt-l w-[50%]"
+  />
+  <div
+    class="fg-default-light bg-transparent-light px-l py-s motion-safe:animate-pulse min-h-[1lh] rounded-small mt-l w-[50%]"
+  />
+</div>
+`;

@@ -182,6 +182,12 @@ export type {
 } from './components/radio/types';
 export { SearchField } from './components/search-field';
 export type { SearchFieldProps } from './components/search-field';
+export { Skeleton } from './components/skeleton';
+export {
+  SkeletonStyles,
+  SkeletonStylesDefaults,
+} from './components/skeleton/styles';
+export type { SkeletonStyleVariants } from './components/skeleton/styles';
 export { RangeSlider, Slider } from './components/slider';
 export type { RangeSliderProps, SliderProps } from './components/slider';
 export { Switch, SwitchContext } from './components/switch';

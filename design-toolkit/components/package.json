@@ -60,6 +60,7 @@
     "preview": "pnpm storybook dev -p 6006",
     "preview:docs": "pnpm storybook dev --docs -p 6006",
     "test": "pnpm vitest --dir=src",
+    "test-watch": "pnpm vitest --dir=src --watch",
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
