@@ -42,10 +42,8 @@ export default meta;
 type Story = StoryObj<typeof Drawer>;
 
 const placeholderIcons = Array.from({ length: 6 }, (_, index) => (
-  <Drawer.Menu.Item key={`${index + 1}`}>
-    <Icon className='self-center text-disabled'>
-      <Placeholder />
-    </Icon>
+  <Drawer.Menu.Item id={`${index + 1}`} key={`${index + 1}`}>
+    <Placeholder />
   </Drawer.Menu.Item>
 ));
 
@@ -57,30 +55,28 @@ export const WithTabs: Story = {
           <div className='p-l text-default-light'>{longContent}</div>
         </Drawer.Main>
         <Drawer id='settings' {...args}>
-          <Drawer.Header>
-            <Drawer.Title>Title</Drawer.Title>
-            <Drawer.Close>
-              <Button size='small' variant='flat'>
-                <Icon>
-                  <Cancel />
-                </Icon>
-              </Button>
-            </Drawer.Close>
-          </Drawer.Header>
           <Drawer.Menu>
             <Drawer.Menu.Item id='a'>
-              <Icon>
-                <Placeholder />
-              </Icon>
+              <Placeholder />
             </Drawer.Menu.Item>
             <Drawer.Menu.Item id='b'>
-              <Icon>
-                <Placeholder />
-              </Icon>
+              <Placeholder />
             </Drawer.Menu.Item>
           </Drawer.Menu>
-          <Drawer.Panel id='a'>A Content</Drawer.Panel>
-          <Drawer.Panel id='b'>B Content</Drawer.Panel>
+          <Drawer.Content>
+            <Drawer.Header>
+              <Drawer.Title>Title</Drawer.Title>
+              <Drawer.Close>
+                <Button size='small' variant='flat'>
+                  <Icon>
+                    <Cancel />
+                  </Icon>
+                </Button>
+              </Drawer.Close>
+            </Drawer.Header>
+            <Drawer.Panel id='a'>A Content</Drawer.Panel>
+            <Drawer.Panel id='b'>B Content</Drawer.Panel>
+          </Drawer.Content>
         </Drawer>
       </Drawer.Root>
     );
@@ -90,7 +86,7 @@ export const WithTabs: Story = {
 export const FullLayout: Story = {
   render: () => {
     return (
-      <Drawer.Root extend='left right'>
+      <Drawer.Root extend='top bottom'>
         <Drawer id='header' placement='top' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='header'>
@@ -103,7 +99,9 @@ export const FullLayout: Story = {
             {placeholderIcons}
           </Drawer.Menu>
 
-          <Drawer.Title>Top</Drawer.Title>
+          <Drawer.Content>
+            <Drawer.Title>Top</Drawer.Title>
+          </Drawer.Content>
         </Drawer>
 
         <Drawer.Main>
@@ -141,7 +139,9 @@ export const FullLayout: Story = {
             {placeholderIcons}
           </Drawer.Menu>
 
-          <Drawer.Title>Bottom</Drawer.Title>
+          <Drawer.Content>
+            <Drawer.Title>Bottom</Drawer.Title>
+          </Drawer.Content>
         </Drawer>
 
         <Drawer id='settings' placement='left' mode='push'>
@@ -156,7 +156,9 @@ export const FullLayout: Story = {
             {placeholderIcons}
           </Drawer.Menu>
 
-          <Drawer.Title>Left</Drawer.Title>
+          <Drawer.Content>
+            <Drawer.Title>Left</Drawer.Title>
+          </Drawer.Content>
         </Drawer>
 
         <Drawer id='sidebar' placement='right' mode='push'>
@@ -171,7 +173,9 @@ export const FullLayout: Story = {
             {placeholderIcons}
           </Drawer.Menu>
 
-          <Drawer.Title>Right</Drawer.Title>
+          <Drawer.Content>
+            <Drawer.Title>Right</Drawer.Title>
+          </Drawer.Content>
         </Drawer>
       </Drawer.Root>
     );
@@ -185,23 +189,23 @@ export const WithLongContent: Story = {
         <Drawer id='settings' placement='left' mode='overlay'>
           <Drawer.Menu>
             <Drawer.Menu.Item>
-              <Icon>
-                <Placeholder />
-              </Icon>
+              <Placeholder />
             </Drawer.Menu.Item>
           </Drawer.Menu>
-          <Drawer.Header>
-            <Drawer.Title>Title</Drawer.Title>
-            <Drawer.Close>
-              <Button size='small'>
-                <Icon>
-                  <Cancel />
-                </Icon>
-              </Button>
-            </Drawer.Close>
-          </Drawer.Header>
-          <Drawer.Panel>{longContent}</Drawer.Panel>
-          <Drawer.Footer>Footer</Drawer.Footer>
+          <Drawer.Content>
+            <Drawer.Header>
+              <Drawer.Title>Title</Drawer.Title>
+              <Drawer.Close>
+                <Button size='small'>
+                  <Icon>
+                    <Cancel />
+                  </Icon>
+                </Button>
+              </Drawer.Close>
+            </Drawer.Header>
+            <Drawer.Panel>{longContent}</Drawer.Panel>
+            <Drawer.Footer>Footer</Drawer.Footer>
+          </Drawer.Content>
         </Drawer>
       </Drawer.Root>
     );
@@ -227,23 +231,24 @@ export const ControlledOpen: Story = {
           id='settings'
           placement='left'
           mode='push'
+          defaultSelectedMenuItemId='placeholder'
         >
           <Drawer.Header>
             <Drawer.Title>Title</Drawer.Title>
           </Drawer.Header>
           <Drawer.Menu>
-            <Drawer.Menu.Item>
-              <Icon>
-                <Placeholder />
-              </Icon>
+            <Drawer.Menu.Item id='placeholder'>
+              <Placeholder />
             </Drawer.Menu.Item>
           </Drawer.Menu>
-          <Drawer.Panel>A Content</Drawer.Panel>
-          <Drawer.Footer>
-            <Drawer.Close>
-              <Button>Cancel</Button>
-            </Drawer.Close>
-          </Drawer.Footer>
+          <Drawer.Content>
+            <Drawer.Panel>A Content</Drawer.Panel>
+            <Drawer.Footer>
+              <Drawer.Close>
+                <Button>Cancel</Button>
+              </Drawer.Close>
+            </Drawer.Footer>
+          </Drawer.Content>
         </Drawer>
       </Drawer.Root>
     );
@@ -257,63 +262,61 @@ export const WithNavigationStack: Story = {
         <Drawer id='settings' placement='left' mode='overlay'>
           <Drawer.Menu>
             <Drawer.Menu.Item id='a'>
-              <Icon>
-                <Placeholder />
-              </Icon>
+              <Placeholder />
             </Drawer.Menu.Item>
             <Drawer.Menu.Item id='b'>
-              <Icon>
-                <Placeholder />
-              </Icon>
+              <Placeholder />
             </Drawer.Menu.Item>
           </Drawer.Menu>
-          <Drawer.Panel id='a'>
-            <NavigationStack defaultViewId='a'>
-              <NavigationStack.View id='a'>
-                <Drawer.Header>Parent A</Drawer.Header>
-                <NavigationStack.Content>a content</NavigationStack.Content>
-                <Drawer.Footer>
-                  <NavigationStack.NavigateButton childId='child-a'>
-                    View Child
-                  </NavigationStack.NavigateButton>
-                </Drawer.Footer>
-              </NavigationStack.View>
+          <Drawer.Content>
+            <Drawer.Panel id='a'>
+              <NavigationStack defaultViewId='a'>
+                <NavigationStack.View id='a'>
+                  <Drawer.Header>Parent A</Drawer.Header>
+                  <NavigationStack.Content>a content</NavigationStack.Content>
+                  <Drawer.Footer>
+                    <NavigationStack.NavigateButton childId='child-a'>
+                      View Child
+                    </NavigationStack.NavigateButton>
+                  </Drawer.Footer>
+                </NavigationStack.View>
 
-              <NavigationStack.View id='child-a'>
-                <div className='flex items-center justify-between'>
-                  <NavigationStack.Back>Back</NavigationStack.Back>
-                  <div>Child A</div>
-                </div>
-                <NavigationStack.Content>
-                  a child content
-                </NavigationStack.Content>
-              </NavigationStack.View>
-            </NavigationStack>
-          </Drawer.Panel>
+                <NavigationStack.View id='child-a'>
+                  <div className='flex items-center justify-between'>
+                    <NavigationStack.Back>Back</NavigationStack.Back>
+                    <div>Child A</div>
+                  </div>
+                  <NavigationStack.Content>
+                    a child content
+                  </NavigationStack.Content>
+                </NavigationStack.View>
+              </NavigationStack>
+            </Drawer.Panel>
 
-          <Drawer.Panel id='b' className='h-full p-0'>
-            <NavigationStack defaultViewId='b'>
-              <NavigationStack.View id='b'>
-                <Drawer.Header>Parent B</Drawer.Header>
-                <NavigationStack.Content>b content</NavigationStack.Content>
-                <Drawer.Footer>
-                  <NavigationStack.NavigateButton childId='child-b'>
-                    View Child
-                  </NavigationStack.NavigateButton>
-                </Drawer.Footer>
-              </NavigationStack.View>
+            <Drawer.Panel id='b' className='h-full p-0'>
+              <NavigationStack defaultViewId='b'>
+                <NavigationStack.View id='b'>
+                  <Drawer.Header>Parent B</Drawer.Header>
+                  <NavigationStack.Content>b content</NavigationStack.Content>
+                  <Drawer.Footer>
+                    <NavigationStack.NavigateButton childId='child-b'>
+                      View Child
+                    </NavigationStack.NavigateButton>
+                  </Drawer.Footer>
+                </NavigationStack.View>
 
-              <NavigationStack.View id='child-b'>
-                <div className='flex items-center justify-between'>
-                  <NavigationStack.Back />
-                  Child B
-                </div>
-                <NavigationStack.Content>
-                  b child content
-                </NavigationStack.Content>
-              </NavigationStack.View>
-            </NavigationStack>
-          </Drawer.Panel>
+                <NavigationStack.View id='child-b'>
+                  <div className='flex items-center justify-between'>
+                    <NavigationStack.Back />
+                    Child B
+                  </div>
+                  <NavigationStack.Content>
+                    b child content
+                  </NavigationStack.Content>
+                </NavigationStack.View>
+              </NavigationStack>
+            </Drawer.Panel>
+          </Drawer.Content>
         </Drawer>
       </Drawer.Root>
     );

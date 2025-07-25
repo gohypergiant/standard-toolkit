@@ -9,24 +9,40 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import type { DrawerMode, DrawerPlacement, DrawerSize, DrawerState } from './types';
+import {
+  DrawerDefaults,
+  type DrawerMode,
+  type DrawerPlacement,
+  type DrawerSize,
+  type DrawerState,
+} from './types';
+
+import type { Key } from '@react-types/shared';
 
 export type DrawerAction =
   | { type: 'TOGGLE' }
   | { type: 'OPEN' }
   | { type: 'CLOSE' }
   | { type: 'SET_SIZE'; size: DrawerSize }
+  | { type: 'SET_MENU_ID'; menuItemId?: Key }
   | { type: 'SET_MODE'; mode: DrawerMode };
 
 /**
  * Default state for new drawers
  */
-export const createDefaultDrawerState = (
-  placement: DrawerPlacement,
-  mode: DrawerMode = 'overlay',
-  size: DrawerSize = 'medium',
-  isOpen = false,
-): DrawerState => ({ mode, size, placement, isOpen });
+export const createDefaultDrawerState = ({
+  placement = DrawerDefaults.placement,
+  selectedMenuItemId = DrawerDefaults.selectedMenuItemId,
+  mode = DrawerDefaults.mode,
+  size = DrawerDefaults.size,
+  isOpen = DrawerDefaults.isOpen,
+}: {
+  placement?: DrawerPlacement;
+  selectedMenuItemId?: Key;
+  mode?: DrawerMode;
+  size?: DrawerSize;
+  isOpen?: boolean;
+}): DrawerState => ({ mode, size, placement, isOpen, selectedMenuItemId });
 
 export const drawerStateReducer = (
   state: DrawerState,
@@ -37,6 +53,7 @@ export const drawerStateReducer = (
       return {
         ...state,
         isOpen: !state.isOpen,
+        selectedMenuItemId: state.isOpen ? undefined : state.selectedMenuItemId,
       };
 
     case 'OPEN':
@@ -49,6 +66,7 @@ export const drawerStateReducer = (
       return {
         ...state,
         isOpen: false,
+        selectedMenuItemId: undefined,
       };
 
     case 'SET_SIZE':
@@ -61,6 +79,11 @@ export const drawerStateReducer = (
       return {
         ...state,
         mode: action.mode,
+      };
+    case 'SET_MENU_ID':
+      return {
+        ...state,
+        selectedMenuItemId: action.menuItemId,
       };
 
     default:
