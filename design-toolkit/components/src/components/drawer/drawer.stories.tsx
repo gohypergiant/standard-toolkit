@@ -18,12 +18,7 @@ import {
   Placeholder,
 } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import {
-  type CSSProperties,
-  type PropsWithChildren,
-  useCallback,
-  useState,
-} from 'react';
+import { type CSSProperties, useCallback, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NavigationStack } from '../navigation-stack';
@@ -45,40 +40,6 @@ const meta: Meta<typeof Drawer> = {
 
 export default meta;
 type Story = StoryObj<typeof Drawer>;
-
-const PanelTitle = ({ children }: PropsWithChildren) => (
-  <h2 className='fg-[#fff] mx-auto mt-l w-content rounded-full bg-[rgba(0,0,0,0.3)] p-m px-xl'>
-    {children}
-  </h2>
-);
-
-const BottomIcon = () => (
-  <Icon>
-    <ChevronDown className='hidden group-data-[bottom-open="true"]/layout:block' />
-    <ChevronUp className='hidden group-data-[bottom-open="false"]/layout:block' />
-  </Icon>
-);
-
-const TopIcon = () => (
-  <Icon>
-    <ChevronUp className='hidden group-data-[top-open="true"]/layout:block' />
-    <ChevronDown className='hidden group-data-[top-open="false"]/layout:block' />
-  </Icon>
-);
-
-const LeftIcon = () => (
-  <Icon>
-    <ChevronLeft className='hidden group-data-[left-open="true"]/layout:block' />
-    <ChevronRight className='hidden group-data-[left-open="false"]/layout:block' />
-  </Icon>
-);
-
-const RightIcon = () => (
-  <Icon>
-    <ChevronRight className='hidden group-data-[right-open="true"]/layout:block' />
-    <ChevronLeft className='hidden group-data-[right-open="false"]/layout:block' />
-  </Icon>
-);
 
 const placeholderIcons = Array.from({ length: 6 }, (_, index) => (
   <Drawer.Menu.Item key={`${index + 1}`}>
@@ -133,13 +94,16 @@ export const FullLayout: Story = {
         <Drawer id='header' placement='top' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='header'>
-              <TopIcon />
+              <Icon>
+                <ChevronUp className='hidden group-data-[top-open="true"]/layout:block' />
+                <ChevronDown className='hidden group-data-[top-open="false"]/layout:block' />
+              </Icon>
             </Drawer.Trigger>
 
             {placeholderIcons}
           </Drawer.Menu>
 
-          <PanelTitle>Top</PanelTitle>
+          <Drawer.Title>Top</Drawer.Title>
         </Drawer>
 
         <Drawer.Main>
@@ -159,7 +123,7 @@ export const FullLayout: Story = {
               } as CSSProperties
             }
           >
-            <div className='flex w-[23em] flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl drop-shadow-[0_0_150px_rgba(255,255,255,0.4)] [&>*]:my-s'>
+            <div className='flex w-1/2 flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl [&>*]:my-s'>
               <p>This page is for demo purposes only!</p>
             </div>
           </div>
@@ -168,37 +132,46 @@ export const FullLayout: Story = {
         <Drawer id='footer' placement='bottom' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='footer'>
-              <BottomIcon />
+              <Icon>
+                <ChevronDown className='hidden group-data-[bottom-open="true"]/layout:block' />
+                <ChevronUp className='hidden group-data-[bottom-open="false"]/layout:block' />
+              </Icon>
             </Drawer.Trigger>
 
             {placeholderIcons}
           </Drawer.Menu>
 
-          <PanelTitle>Bottom</PanelTitle>
+          <Drawer.Title>Bottom</Drawer.Title>
         </Drawer>
 
         <Drawer id='settings' placement='left' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='settings'>
-              <LeftIcon />
+              <Icon>
+                <ChevronLeft className='hidden group-data-[left-open="true"]/layout:block' />
+                <ChevronRight className='hidden group-data-[left-open="false"]/layout:block' />
+              </Icon>
             </Drawer.Trigger>
 
             {placeholderIcons}
           </Drawer.Menu>
 
-          <PanelTitle>Left</PanelTitle>
+          <Drawer.Title>Left</Drawer.Title>
         </Drawer>
 
         <Drawer id='sidebar' placement='right' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='sidebar'>
-              <RightIcon />
+              <Icon>
+                <ChevronRight className='hidden group-data-[right-open="true"]/layout:block' />
+                <ChevronLeft className='hidden group-data-[right-open="false"]/layout:block' />
+              </Icon>
             </Drawer.Trigger>
 
             {placeholderIcons}
           </Drawer.Menu>
 
-          <PanelTitle>Right</PanelTitle>
+          <Drawer.Title>Right</Drawer.Title>
         </Drawer>
       </Drawer.Root>
     );
@@ -208,10 +181,7 @@ export const FullLayout: Story = {
 export const WithLongContent: Story = {
   render: () => {
     return (
-      <Drawer.Root className='bg-default-dark'>
-        <Drawer.Main>
-          <div className='text-default-light'>Left Drawer Content</div>
-        </Drawer.Main>
+      <Drawer.Root>
         <Drawer id='settings' placement='left' mode='overlay'>
           <Drawer.Menu>
             <Drawer.Menu.Item>
@@ -245,9 +215,8 @@ export const ControlledOpen: Story = {
       setIsOpen(isOpen);
     }, []);
     return (
-      <Drawer.Root className='bg-default-dark'>
+      <Drawer.Root>
         <Drawer.Main className='flex flex-col gap-m p-l'>
-          <h1 className='text-header-l '>Left Drawer Content</h1>
           <Button variant='outline' onPress={() => handleOpenChange(!isOpen)}>
             {isOpen ? 'Close' : 'Open'}
           </Button>
@@ -284,7 +253,7 @@ export const ControlledOpen: Story = {
 export const WithNavigationStack: Story = {
   render: () => {
     return (
-      <Drawer.Root className='bg-default-light'>
+      <Drawer.Root>
         <Drawer id='settings' placement='left' mode='overlay'>
           <Drawer.Menu>
             <Drawer.Menu.Item id='a'>
