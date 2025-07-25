@@ -39,7 +39,7 @@ const meta: Meta<typeof Drawer> = {
     id: 'left-drawer',
     placement: 'left',
     mode: 'overlay',
-    size: 'content',
+    size: 'medium',
   },
 };
 
@@ -54,29 +54,29 @@ const PanelTitle = ({ children }: PropsWithChildren) => (
 
 const BottomIcon = () => (
   <Icon>
-    <ChevronDown className='hidden group-data-[bottom*=content]/layout:block group-data-[bottom*=nav]/layout:block group-data-[bottom*=xl]/layout:block' />
-    <ChevronUp className='hidden group-data-[bottom*=closed]/layout:block group-data-[bottom*=icons]/layout:block' />
+    <ChevronDown className='hidden group-data-[bottom-open="true"]/layout:block' />
+    <ChevronUp className='hidden group-data-[bottom-open="false"]/layout:block' />
   </Icon>
 );
 
 const TopIcon = () => (
   <Icon>
-    <ChevronUp className='hidden group-data-[top*=content]/layout:block group-data-[top*=nav]/layout:block group-data-[top*=xl]/layout:block' />
-    <ChevronDown className='hidden group-data-[top*=closed]/layout:block group-data-[top*=icons]/layout:block' />
+    <ChevronUp className='hidden group-data-[top-open="true"]/layout:block' />
+    <ChevronDown className='hidden group-data-[top-open="false"]/layout:block' />
   </Icon>
 );
 
 const LeftIcon = () => (
   <Icon>
-    <ChevronLeft className='hidden group-data-[left*=content]/layout:block group-data-[left*=nav]/layout:block group-data-[left*=xl]/layout:block' />
-    <ChevronRight className='hidden group-data-[left*=closed]/layout:block group-data-[left*=icons]/layout:block' />
+    <ChevronLeft className='hidden group-data-[left-open="true"]/layout:block' />
+    <ChevronRight className='hidden group-data-[left-open="false"]/layout:block' />
   </Icon>
 );
 
 const RightIcon = () => (
   <Icon>
-    <ChevronLeft className='hidden group-data-[right*=closed]/layout:block group-data-[right*=icons]/layout:block group-data-[right*=xl]/layout:block' />
-    <ChevronRight className='hidden group-data-[right*=content]/layout:block group-data-[right*=nav]/layout:block' />
+    <ChevronRight className='hidden group-data-[right-open="true"]/layout:block' />
+    <ChevronLeft className='hidden group-data-[right-open="false"]/layout:block' />
   </Icon>
 );
 
@@ -91,9 +91,9 @@ const placeholderIcons = Array.from({ length: 6 }, (_, index) => (
 export const WithTabs: Story = {
   render: ({ id, ...args }) => {
     return (
-      <Drawer.Root className='bg-default-dark'>
+      <Drawer.Root>
         <Drawer.Main>
-          <div className='text-default-light'>Left Drawer Content</div>
+          <div className='p-l text-default-light'>{longContent}</div>
         </Drawer.Main>
         <Drawer id='settings' {...args}>
           <Drawer.Header>
@@ -129,12 +129,8 @@ export const WithTabs: Story = {
 export const FullLayout: Story = {
   render: () => {
     return (
-      <Drawer.Root extend='left and right'>
-        <Drawer
-          id='header'
-          placement='top'
-          mode='push'
-        >
+      <Drawer.Root extend='left right'>
+        <Drawer id='header' placement='top' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='header'>
               <TopIcon />
@@ -144,7 +140,6 @@ export const FullLayout: Story = {
           </Drawer.Menu>
 
           <PanelTitle>Top</PanelTitle>
-          {/* {LIPSUM} */}
         </Drawer>
 
         <Drawer.Main>
@@ -170,11 +165,7 @@ export const FullLayout: Story = {
           </div>
         </Drawer.Main>
 
-        <Drawer
-          id='footer'
-          placement='bottom'
-          mode='push'
-        >
+        <Drawer id='footer' placement='bottom' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='footer'>
               <BottomIcon />
@@ -184,14 +175,9 @@ export const FullLayout: Story = {
           </Drawer.Menu>
 
           <PanelTitle>Bottom</PanelTitle>
-          {/* {LIPSUM} */}
         </Drawer>
 
-        <Drawer
-          id='settings'
-          placement='left'
-          mode='push'
-        >
+        <Drawer id='settings' placement='left' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='settings'>
               <LeftIcon />
@@ -203,11 +189,7 @@ export const FullLayout: Story = {
           <PanelTitle>Left</PanelTitle>
         </Drawer>
 
-        <Drawer
-          id='sidebar'
-          placement='right'
-          mode='push'
-        >
+        <Drawer id='sidebar' placement='right' mode='push'>
           <Drawer.Menu>
             <Drawer.Trigger for='sidebar'>
               <RightIcon />
@@ -222,7 +204,6 @@ export const FullLayout: Story = {
     );
   },
 };
-
 
 export const WithLongContent: Story = {
   render: () => {
