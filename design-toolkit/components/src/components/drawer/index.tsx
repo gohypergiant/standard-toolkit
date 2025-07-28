@@ -37,12 +37,12 @@ import type {
 const { root, main, drawer, trigger, content, panel, header, footer, title } =
   DrawerStyles();
 
-const { menu, menuItem } = DrawerMenuStyles();
+const { menu, item } = DrawerMenuStyles();
 
 const DrawerRoot = ({
   children,
   classNames,
-  layout= 'tall',
+  layout = 'tall',
   onStateChange,
 }: DrawerRootProps) => {
   const drawerState = useDrawerLayoutState({
@@ -125,17 +125,16 @@ export const Drawer = ({
   );
 };
 
-const DrawerMenu = ({ children, className, ...props }: DrawerMenuProps) => {
-  const { state } = useDrawerContext();
-  const orientation =
-    state?.placement === 'top' || state?.placement === 'bottom'
-      ? 'horizontal'
-      : 'vertical';
+const DrawerMenu = ({
+  children,
+  className,
+  position = 'middle',
+  ...props
+}: DrawerMenuProps) => {
   return (
     <nav
       className={menu({
-        orientation,
-        drawer: state?.placement,
+        position,
         className,
       })}
       {...props}
@@ -163,7 +162,7 @@ const DrawerMenuItem = ({
     <Button
       {...props}
       variant='icon'
-      className={menuItem({ drawer: state.placement, className })}
+      className={item({ className })}
       aria-selected={isSelected}
       aria-controls={`panel-${id}`}
       id={`tab-${id}`}

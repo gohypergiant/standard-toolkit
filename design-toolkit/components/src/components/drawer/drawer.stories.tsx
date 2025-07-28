@@ -94,7 +94,7 @@ export const WithTabs: Story = {
 };
 
 export const FullLayout: Story = {
-  render: ({layout, mode}) => {
+  render: ({layout, mode}: CombinedDrawerProps) => {
     return (
       <Drawer.Root layout={layout}>
         <Drawer id='header' placement='top' mode={mode}>

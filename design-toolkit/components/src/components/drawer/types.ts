@@ -24,23 +24,6 @@ import type { DOMAttributes, PropsWithChildren, ReactElement } from 'react';
  */
 export type DrawerMode = 'overlay' | 'push';
 
-/**
- * Drawer Sizes
- *
- * Defines the available states for panel visibility and sizing:
- *
- * - `'closed'`: Panel is completely hidden with zero width/height
- * - `'icons'`: Panel shows minimal width/height, typically for icon-only display
- * - `'nav'`: Panel displays at navigation width, suitable for menu items with labels
- * - `'content'`: Panel shows at standard width for general content
- * - `'extra'`: Panel expands to maximum width for detailed content
- *
- * ## State Transitions
- * States can be toggled between any two options, commonly:
- * - `closed` ↔ `open` - Basic show/hide
- * - `icons` ↔ `nav` - Expand/collapse navigation
- * - `open` ↔ `extra` - Standard to expanded view
- */
 export type DrawerSize = 'small' | 'medium' | 'large';
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';

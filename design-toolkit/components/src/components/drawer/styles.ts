@@ -161,6 +161,7 @@ export const DrawerStyles = tv({
     ],
     main: 'relative z-1 col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
     drawer: [
+      'group/drawer',
       'bg-surface-default text-body-m',
       'data-[open="false"]:[&>*:not(nav)]:hidden',
       'data-[mode="overlay"]:block',
@@ -226,8 +227,23 @@ export const DrawerStyles = tv({
 
 export const DrawerMenuStyles = tv({
   slots: {
-    menu: 'p-s',
-    menuItem: [
+    menu: [
+      'absolute flex rounded-large bg-surface-default p-s',
+
+      //horizontal
+      'group-placement-top/drawer:transform-[translateX(-50%)] group-placement-top/drawer:left-[50%] group-placement-top/drawer:h-[var(--drawer-menu-size)] group-placement-top/drawer:flex-row',
+      'group-placement-bottom/drawer:transform-[translateX(-50%)] group-placement-bottom/drawer:left-[50%] group-placement-bottom/drawer:h-[var(--drawer-menu-size)] group-placement-bottom/drawer:flex-row',
+      'group-placement-bottom/drawer:-translate-y-[var(--drawer-menu-size)] group-placement-bottom/drawer:rounded-b-none',
+      'group-placement-top/drawer:bottom-0 group-placement-top/drawer:translate-y-[var(--drawer-menu-size)] group-placement-top/drawer:rounded-t-none',
+      //vertical
+      'group-placement-right/drawer:-translate-y-1/8 group-placement-right/drawer:top-1/8',
+      'group-placement-left/drawer:left-full group-placement-left/drawer:rounded-l-none',
+      'group-placement-left/drawer:w-[var(--drawer-menu-size)] group-placement-left/drawer:flex-col group-placement-left/drawer:items-center',
+      'group-placement-right/drawer:-left-[var(--drawer-menu-size)] group-placement-right/drawer:rounded-r-none',
+      'group-placement-right/drawer:w-[var(--drawer-menu-size)] group-placement-right/drawer:flex-col group-placement-right/drawer:items-center',
+
+    ],
+    item: [
       'flex h-[28px] w-[28px] flex-col items-center justify-center',
       'fg-default-dark cursor-pointer p-s outline-none',
       'rounded-medium group-dtk-orientation-horizontal:rounded-small group-dtk-orientation-horizontal:rounded-b-none',
@@ -244,86 +260,31 @@ export const DrawerMenuStyles = tv({
     ],
   },
   variants: {
-    drawer: {
-      bottom: {
-        menu: '-translate-y-[var(--drawer-menu-size)] rounded-b-none',
-      },
-      left: {
-        menu: ['left-full rounded-l-none'],
-      },
-      right: {
-        menu: '-left-[var(--drawer-menu-size)] rounded-r-none',
-      },
-      top: {
-        menu: 'bottom-0 translate-y-[var(--drawer-menu-size)] rounded-t-none',
-      },
-    },
-    orientation: {
-      horizontal: {
-        menu: 'transform-[translateX(-50%)] absolute left-[50%] flex h-[var(--drawer-menu-size)] flex-row rounded-large bg-surface-default',
-      },
-      vertical: {
-        menu: 'absolute flex w-[var(--drawer-menu-size)] flex-col items-center rounded-large bg-surface-default',
-      },
-    },
     position: {
-      start: {},
-      middle: {},
-      end: {},
-    },
-  },
-  compoundVariants: [
-    {
-      orientation: 'vertical',
-      position: 'start',
-      class: {
-        menu: '-translate-y-1/8 top-1/8',
+      start: {
+        menu: [
+          'group-placement-left/drawer:-translate-y-1/2 group-placement-left/drawer:top-1/8',
+          'group-placement-right/drawer:-translate-y-1/2 group-placement-right/drawer:top-1/8',
+          'group-placement-top/drawer:left-1/8 group-placement-top/drawer:translate-x-1/4',
+          'group-placement-bottom/drawer:left-1/8 group-placement-bottom/drawer:translate-x-1/4',
+        ],
+      },
+      middle: {
+        menu: [
+          'group-placement-left/drawer:-translate-y-1/2 group-placement-left/drawer:top-1/2',
+          'group-placement-right/drawer:-translate-y-1/2 group-placement-right/drawer:top-1/2',
+          'group-placement-top/drawer:-translate-x-1/8 group-placement-top/drawer:left-1/2',
+          'group-placement-bottom/drawer:-translate-x-1/8 group-placement-bottom/drawer:left-1/2',
+        ],
+      },
+      end: {
+        menu: [
+          'group-placement-left/drawer:-translate-y-7/2 group-placement-left/drawer:top-7/8',
+          'group-placement-right/drawer:-translate-y-7/8 group-placement-right/drawer:top-7/8',
+          'group-placement-top/drawer:-translate-x-1/2 group-placement-top/drawer:left-7/8',
+          'group-placement-bottom/drawer:-translate-x-1/2 group-placement-bottom/drawer:left-7/8',
+        ],
       },
     },
-    {
-      orientation: 'vertical',
-      position: 'middle',
-      class: {
-        menu: '-translate-y-1/2 top-1/2',
-      },
-    },
-    {
-      orientation: 'vertical',
-      position: 'end',
-      class: {
-        menu: '-translate-y-7/8 top-7/8',
-      },
-    },
-    {
-      orientation: 'vertical',
-      drawer: 'left',
-      class: {
-        menu: 'rounded-l-none',
-      },
-    },
-    {
-      orientation: 'vertical',
-      drawer: 'right',
-      class: {
-        menu: 'rounded-r-none',
-      },
-    },
-    {
-      orientation: 'horizontal',
-      drawer: 'top',
-      class: {
-        menu: 'rounded-t-none',
-      },
-    },
-    {
-      orientation: 'horizontal',
-      drawer: 'bottom',
-      class: {
-        menu: 'rounded-b-none',
-      },
-    },
-  ],
-  defaultVariants: {
-    position: 'middle',
   },
 });
