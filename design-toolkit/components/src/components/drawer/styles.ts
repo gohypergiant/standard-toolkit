@@ -5,11 +5,10 @@ import { tv } from 'tailwind-variants';
  */
 const gridBase = {
   container: [
-    '[--available-height:100vh]',
     'group/layout relative top-[var(--classification-banner-height)]',
     'grid grid-cols-[var(--route-layout-grid-cols)] grid-rows-[var(--route-layout-grid-rows)]',
     'transition-[grid-template-columns,grid-template-rows]',
-    'h-[var(--available-height)] min-h-[var(--available-height)]',
+    'h-full max-h-full w-full'
   ],
 
   //Properties for dynamic sizing
@@ -159,6 +158,7 @@ export const DrawerStyles = tv({
     drawer: [
       'group/drawer',
       'bg-surface-default text-body-m',
+      'flex h-full min-h-0 flex-col',
       'data-[open="false"]:[&>*:not(nav)]:hidden',
       'data-[mode="overlay"]:block',
       'data-[mode="push"]:block',
