@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { spacingXs } from '@/tokens/';
+import { spacingXs } from '@/tokens/index';
 import { Person } from '@accelint/icons';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
 import { createContext } from 'react';
