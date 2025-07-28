@@ -42,50 +42,60 @@ const gridBase = {
  */
 const placementStyles = {
   top: {
-    position: 'relative row-start-1 row-end-2',
-    visibility: 'z-5 col-start-2 col-end-3',
-    extend: [
-      'group-data-[extend*=top]/layout:z-10 group-data[extend*=top]/layout:col-start-1 group-data[extend*=top]/layout:col-end-4',
-      'group-data-[extend=left]/layout:col-end-4',
-      'group-data-[extend=right]/layout:col-start-1',
+    position: 'relative row-start-1 row-end-2 col-start-2 col-end-3',
+    visibility: ['z-5', 'group-data-[layout=top]/layout:z-10'],
+    layout: [
+      '[&[data-layout="wide"]_[data-placement="top"]]:col-start-1 [&[data-layout="wide"]_[data-placement="top"]]:col-end-4',
+      '[&[data-layout="top"]_[data-placement="top"]]:col-start-1 [&[data-layout="top"]_[data-placement="top"]]:col-end-4',
+      '[&[data-layout="left"]_[data-placement="top"]]:col-start-2 [&[data-layout="left"]_[data-placement="top"]]:col-end-4',
+      '[&[data-layout="right"]_[data-placement="top"]]:col-start-1',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
     content: 'group-data-[top-open="false"]/layout:[&>*:not(nav)]:hidden',
   },
 
   bottom: {
-    position: 'relative row-start-3 row-end-4',
-    visibility: 'z-5 col-start-2 col-end-3',
-    extend: [
-      'group-data-[extend*=bottom]/layout:z-10 group-data[extend*=bottom]/layout:col-start-1 group-data[extend*=bottom]/layout:col-end-4',
-      'group-data-[extend=left]/layout:col-end-4',
-      'group-data-[extend=right]/layout:col-start-1',
+    position: 'relative row-start-3 row-end-4 col-start-2 col-end-3',
+    visibility: ['z-5', 'group-data-[layout=bottom]/layout:z-10'],
+    layout: [
+      '[&[data-layout="wide"]_[data-placement="bottom"]]:col-start-1 [&[data-layout="wide"]_[data-placement="bottom"]]:col-end-4',
+      '[&[data-layout="bottom"]_[data-placement="bottom"]]:col-start-1 [&[data-layout="bottom"]_[data-placement="bottom"]]:col-end-4',
+      '[&[data-layout="left"]_[data-placement="bottom"]]:col-end-4',
+      '[&[data-layout="right"]_[data-placement="bottom"]]:col-start-1',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
     content: 'group-data-[bottom-open="false"]/layout:[&>*:not(nav)]:hidden',
   },
 
   left: {
-    position: 'relative col-start-1 col-end-2',
-    visibility: 'z-5 row-start-2 row-end-3',
-    extend: [
-      'group-data-[extend*=left]/layout:z-10 group-data-[extend*=left]/layout:row-start-1 group-data-[extend*=left]/layout:row-end-4 ',
-      'group-data-[extend*=right]/layout:z-1',
-      'group-data-[extend=bottom]/layout:row-start-1',
-      'group-data-[extend=top]/layout:row-end-4',
+    position: 'relative col-start-1 col-end-2 row-start-2 row-end-3',
+    visibility: [
+      'z-5 ',
+      'group-data-[layout=left]/layout:z-10',
+      'group-data-[layout=right]/layout:z-1',
+    ],
+    layout: [
+      '[&[data-layout="tall"]_[data-placement="left"]]:row-start-1 [&[data-layout="tall"]_[data-placement="left"]]:row-end-4',
+      '[&[data-layout="left"]_[data-placement="left"]]:row-start-1 [&[data-layout="left"]_[data-placement="left"]]:row-end-4',
+      '[&[data-layout="top"]_[data-placement="left"]]:row-end-4',
+      '[&[data-layout="bottom"]_[data-placement="left"]]:row-start-1',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
     content: 'group-data-[left-open="false"]/layout:[&>*:not(nav)]:hidden',
   },
 
   right: {
-    position: 'relative col-start-3 col-end-4',
-    visibility: 'z-5 row-start-2 row-end-3',
-    extend: [
-      'group-data-[extend*=right]/layout:z-10 group-data-[extend*=left]/layout:row-start-1 group-data-[extend*=left]/layout:row-end-4 ',
-      'group-data-[extend*=left]/layout:z-1',
-      'group-data-[extend=bottom]/layout:row-start-1',
-      'group-data-[extend=top]/layout:row-end-4',
+    position: 'relative col-start-3 col-end-4 row-start-2 row-end-3',
+    visibility: [
+      'z-5',
+      'group-data-[layout=right]/layout:z-10',
+      'group-data-[layout=left]/layout:z-1',
+    ],
+    layout: [
+      '[&[data-layout="tall"]_[data-placement="right"]]:row-start-1 [&[data-layout="tall"]_[data-placement="right"]]:row-end-4',
+      '[&[data-layout="right"]_[data-placement="right"]]:row-start-1 [&[data-layout="right"]_[data-placement="right"]]:row-end-4',
+      '[&[data-layout="top"]_[data-placement="right"]]:row-end-4',
+      '[&[data-layout="bottom"]_[data-placement="right"]]:row-start-1',
     ],
     interactions: 'pointer-events-none [&>*]:pointer-events-auto',
     content: 'group-data-[right-open="false"]/layout:[&>*:not(nav)]:hidden',
@@ -113,28 +123,24 @@ const stateProperties = {
   sizing: [
     //Top drawer
     'data-[top-open="false"]:[--drawer-h-top:var(--drawer-size-closed)]',
-    'data-[top*="menu-size"]:[--drawer-h-top:var(--drawer-menu-size)]',
     'data-[top*="small"]:[--drawer-h-top:var(--drawer-size-small)]',
     'data-[top*="medium"]:[--drawer-h-top:var(--drawer-size-medium)]',
     'data-[top*="large"]:[--drawer-h-top:var(--drawer-size-large)]',
 
     //Bottom drawer
     'data-[bottom-open="false"]:[--drawer-h-bottom:var(--drawer-size-closed)]',
-    'data-[bottom*="menu-size"]:[--drawer-h-bottom:var(--drawer-menu-size)]',
     'data-[bottom*="small"]:[--drawer-h-bottom:var(--drawer-size-small)]',
     'data-[bottom*="medium"]:[--drawer-h-bottom:var(--drawer-size-medium)]',
     'data-[bottom*="large"]:[--drawer-h-bottom:var(--drawer-size-large)]',
 
     //Left drawer
     'data-[left-open="false"]:[--drawer-w-left:var(--drawer-size-closed)]',
-    'data-[left*="menu-size"]:[--drawer-w-left:var(--drawer-menu-size)]',
     'data-[left*="small"]:[--drawer-w-left:var(--drawer-size-small)]',
     'data-[left*="medium"]:[--drawer-w-left:var(--drawer-size-medium)]',
     'data-[left*="large"]:[--drawer-w-left:var(--drawer-size-large)]',
 
     //Right drawer
     'data-[right-open="false"]:[--drawer-w-right:var(--drawer-size-closed)]',
-    'data-[right*="menu-size"]:[--drawer-w-right:var(--drawer-menu-size)]',
     'data-[right*="small"]:[--drawer-w-right:var(--drawer-size-small)]',
     'data-[right*="medium"]:[--drawer-w-right:var(--drawer-size-medium)]',
     'data-[right*="large"]:[--drawer-w-right:var(--drawer-size-large)]',
@@ -148,6 +154,10 @@ export const DrawerStyles = tv({
       ...gridBase.container,
       ...stateProperties.mainContent,
       ...stateProperties.sizing,
+      placementStyles.top.layout,
+      placementStyles.bottom.layout,
+      placementStyles.left.layout,
+      placementStyles.right.layout,
     ],
     main: 'relative z-1 col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
     drawer: [
@@ -174,7 +184,6 @@ export const DrawerStyles = tv({
         drawer: [
           placementStyles.top.position,
           placementStyles.top.visibility,
-          placementStyles.top.extend,
           placementStyles.top.interactions,
           placementStyles.top.content,
         ],
@@ -183,7 +192,6 @@ export const DrawerStyles = tv({
         drawer: [
           placementStyles.bottom.position,
           placementStyles.bottom.visibility,
-          placementStyles.bottom.extend,
           placementStyles.bottom.interactions,
           placementStyles.bottom.content,
         ],
@@ -192,7 +200,6 @@ export const DrawerStyles = tv({
         drawer: [
           placementStyles.left.position,
           placementStyles.left.visibility,
-          placementStyles.left.extend,
           placementStyles.left.interactions,
           placementStyles.left.content,
         ],
@@ -201,7 +208,6 @@ export const DrawerStyles = tv({
         drawer: [
           placementStyles.right.position,
           placementStyles.right.visibility,
-          placementStyles.right.extend,
           placementStyles.right.interactions,
           placementStyles.right.content,
         ],

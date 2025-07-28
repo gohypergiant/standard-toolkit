@@ -23,8 +23,11 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { NavigationStack } from '../navigation-stack';
 import { Drawer } from './index';
+import type { DrawerProps, DrawerRootProps } from './types';
 
-const meta: Meta<typeof Drawer> = {
+type CombinedDrawerProps = DrawerProps & Pick<DrawerRootProps, 'layout'>;
+
+const meta: Meta<CombinedDrawerProps> = {
   title: 'Components/Drawer',
   component: Drawer,
   parameters: {
@@ -35,6 +38,13 @@ const meta: Meta<typeof Drawer> = {
     placement: 'left',
     mode: 'overlay',
     size: 'medium',
+    layout: 'tall',
+  },
+  argTypes: {
+    layout: {
+      control: 'radio',
+      options: ['tall', 'wide', 'top', 'bottom', 'left', 'right'],
+    },
   },
 };
 
@@ -84,10 +94,10 @@ export const WithTabs: Story = {
 };
 
 export const FullLayout: Story = {
-  render: () => {
+  render: ({layout, mode}) => {
     return (
-      <Drawer.Root extend='top bottom'>
-        <Drawer id='header' placement='top' mode='push'>
+      <Drawer.Root layout={layout}>
+        <Drawer id='header' placement='top' mode={mode}>
           <Drawer.Menu>
             <Drawer.Trigger for='header'>
               <Icon>
@@ -126,7 +136,7 @@ export const FullLayout: Story = {
           </div>
         </Drawer.Main>
 
-        <Drawer id='footer' placement='bottom' mode='push'>
+        <Drawer id='footer' placement='bottom' mode={mode}>
           <Drawer.Menu>
             <Drawer.Trigger for='footer'>
               <Icon>
@@ -142,7 +152,7 @@ export const FullLayout: Story = {
           </Drawer.Content>
         </Drawer>
 
-        <Drawer id='settings' placement='left' mode='push'>
+        <Drawer id='settings' placement='left' mode={mode}>
           <Drawer.Menu>
             <Drawer.Trigger for='settings'>
               <Icon>
@@ -158,7 +168,7 @@ export const FullLayout: Story = {
           </Drawer.Content>
         </Drawer>
 
-        <Drawer id='sidebar' placement='right' mode='push'>
+        <Drawer id='sidebar' placement='right' mode={mode}>
           <Drawer.Menu>
             <Drawer.Trigger for='sidebar'>
               <Icon>

@@ -42,7 +42,7 @@ const { menu, menuItem } = DrawerMenuStyles();
 const DrawerRoot = ({
   children,
   classNames,
-  extend = 'left right',
+  layout= 'tall',
   onStateChange,
 }: DrawerRootProps) => {
   const drawerState = useDrawerLayoutState({
@@ -66,7 +66,7 @@ const DrawerRoot = ({
     <DrawerLayoutContext.Provider value={drawerState}>
       <div
         className={root({ className: classNames?.layout })}
-        data-extend={extend}
+        data-layout={layout}
         {...dataAttributes}
       >
         {children}

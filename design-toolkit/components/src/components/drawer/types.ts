@@ -71,9 +71,9 @@ export interface DrawerRootProps
    * Which drawers should extend to full container dimensions.
    * Determines the overall layout structure and drawer relationships in regard to space.
    *
-   * @default 'left and right'
+   * @default 'tall'
    */
-  extend?: DrawerExtensions;
+  layout?: DrawerLayouts;
   classNames?: DrawerClassNames;
   onStateChange?: (drawerId: Key, state: DrawerState) => void;
 }
@@ -137,7 +137,7 @@ export interface DrawerContextValue {
  * The layout system supports four different drawer extension modes that determine
  * how drawers are arranged and which drawers extend to the full container dimensions.
  *
- * extend: "left and right"
+ * layout: "tall"
  * ┌──────┬──────────┬───────┐
  * │      │   top    │       │
  * │      ├──────────┤       │
@@ -146,7 +146,7 @@ export interface DrawerContextValue {
  * │      │  bottom  │       │
  * └──────┴──────────┴───────┘
  *
- * extend: "top and bottom"
+ * layout: "wide"
  * ┌─────────────────────────┐
  * │          top            │
  * ├──────┬──────────┬───────┤
@@ -155,7 +155,7 @@ export interface DrawerContextValue {
  * │         bottom          │
  * └─────────────────────────┘
  *
- * extend: "top"
+ * layout: "top"
  * ┌─────────────────────────┐
  * │          top            │
  * ├──────┬──────────┬───────┤
@@ -164,7 +164,7 @@ export interface DrawerContextValue {
  * │      │  bottom  │       │
  * └──────┴──────────┴───────┘
  *
- * extend: "bottom"
+ * layout: "bottom"
  * ┌──────┬──────────┬───────┐
  * │      │   top    │       │
  * │ left ├──────────┤ right │
@@ -173,7 +173,7 @@ export interface DrawerContextValue {
  * │         bottom          │
  * └─────────────────────────┘
  *
- * extend: "left"
+ * layout: "left"
  * ┌──────┬──────────────────┐
  * │      │   top            │
  * │      ├──────────┬───────│
@@ -182,7 +182,7 @@ export interface DrawerContextValue {
  * │      │  bottom          │
  * └──────┴──────────────────┘
  *
- * extend: "right"
+ * layout: "right"
  * ┌─────────────────┬───────┐
  * │          top    │       │
  * ├──────┬──────────┤       │
@@ -191,9 +191,9 @@ export interface DrawerContextValue {
  * │         bottom  │       │
  * └─────────────────┴───────┘
  */
-export type DrawerExtensions =
-  | 'left right'
-  | 'top bottom'
+export type DrawerLayouts =
+  | 'tall'
+  | 'wide'
   | 'top'
   | 'bottom'
   | 'left'
