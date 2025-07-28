@@ -54,6 +54,7 @@ const BaseButtonStyles = tv({
       color: 'info',
       variant: 'filled',
       className: [
+        'enabled:fg-inverse-light',
         'enabled:bg-interactive-default',
         'enabled:hover:bg-interactive-hover-light',
         'enabled:focus:bg-interactive-hover-light',
@@ -92,6 +93,7 @@ const BaseButtonStyles = tv({
       color: 'serious',
       variant: 'filled',
       className: [
+        'enabled:fg-inverse-light',
         'enabled:bg-serious',
         'enabled:hover:bg-serious-hover',
         'enabled:focus:bg-serious-hover',
@@ -130,6 +132,7 @@ const BaseButtonStyles = tv({
       color: 'critical',
       variant: 'filled',
       className: [
+        'enabled:fg-default-light',
         'enabled:bg-critical',
         'enabled:hover:bg-critical-hover',
         'enabled:focus:bg-critical-hover',
@@ -181,6 +184,7 @@ export const ToggleButtonStyles = tv({
       color: 'info',
       variant: 'filled',
       className: [
+        'enabled:fg-inverse-light',
         'enabled:selected:bg-info-subtle',
         'enabled:selected:hover:bg-interactive-hover-light',
         'enabled:selected:focus:bg-interactive-hover-light',
@@ -199,6 +203,7 @@ export const ToggleButtonStyles = tv({
       color: 'serious',
       variant: 'filled',
       className: [
+        'enabled:fg-inverse-light',
         'enabled:selected:bg-serious-subtle',
         'enabled:selected:hover:bg-serious-hover',
         'enabled:selected:focus:bg-serious-hover',
@@ -217,6 +222,7 @@ export const ToggleButtonStyles = tv({
       color: 'critical',
       variant: 'filled',
       className: [
+        'enabled:fg-default-light',
         'enabled:selected:bg-critical-subtle',
         'enabled:selected:hover:bg-critical-hover',
         'enabled:selected:focus:bg-critical-hover',

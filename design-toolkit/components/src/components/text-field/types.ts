@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren, RefAttributes } from 'react';
+import type { RefAttributes } from 'react';
 import type {
   TextFieldProps as AriaTextFieldProps,
   FieldErrorProps,
@@ -36,5 +36,3 @@ export type TextFieldProps = Omit<
     errorMessage?: string;
     size?: 'medium' | 'small';
   };
-
-export type TextFieldProviderProps = PropsWithChildren<TextFieldProps>;

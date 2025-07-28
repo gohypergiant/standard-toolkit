@@ -11,12 +11,9 @@
  */
 
 import { tv } from '@/lib/utils';
-import type { VariantProps } from 'tailwind-variants';
 
 export const AccordionStylesDefaults = {
   variant: 'cozy',
-  isDisabled: false,
-  isExpanded: false,
 } as const;
 
 export const AccordionStyles = tv({
@@ -24,13 +21,13 @@ export const AccordionStyles = tv({
     group: 'group/accordion-group flex w-full flex-col',
     accordion: 'group/accordion flex w-full flex-col bg-transparent',
     header: [
-      'fg-default-light flex w-full items-center gap-s rounded-medium p-s outline-none',
+      'fg-default-light flex w-full items-center gap-s rounded-medium px-s py-xs outline-none',
       'group-enabled/accordion:hover:bg-interactive-hover-dark group-enabled/accordion:focus-within:bg-interactive-hover-dark',
       'group-disabled/accordion:fg-disabled group-disabled/accordion:cursor-not-allowed',
     ],
     heading: 'grow',
     trigger: [
-      'flex w-full cursor-pointer items-center rounded-medium outline-none disabled:cursor-not-allowed',
+      'flex w-full cursor-pointer items-center justify-start size-medium:px-0 disabled:cursor-not-allowed',
     ],
     panel: 'p-s',
   },
@@ -46,5 +43,3 @@ export const AccordionStyles = tv({
   },
   defaultVariants: AccordionStylesDefaults,
 });
-
-export type AccordionStyleVariants = VariantProps<typeof AccordionStyles>;

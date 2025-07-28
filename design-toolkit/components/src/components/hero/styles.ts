@@ -10,14 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RefAttributes } from 'react';
-import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
+import { tv } from '@/lib/utils';
 
-export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
-  RefAttributes<HTMLLabelElement> & {
-    classNames?: {
-      switch?: AriaSwitchProps['className'];
-      control?: string;
-      label?: string;
-    };
-  };
+export const HeroStyles = tv({
+  slots: {
+    hero: 'group/hero relative flex flex-col layout-stack:rounded-large layout-stack:bg-transparent-light layout-stack:px-l layout-stack:py-xl layout-grid:pl-xxl',
+    icon: 'fg-default-dark -order-3 group-layout-grid/hero:absolute group-layout-grid/hero:top-xxs group-layout-grid/hero:left-xs group-layout-stack/hero:mb-l group-layout-stack/hero:size-[48px]',
+    title: 'fg-default-light -order-2 mb-xs font-display text-header-l',
+    subtitle: 'fg-default-dark -order-1 block font-display text-body-s',
+  },
+});

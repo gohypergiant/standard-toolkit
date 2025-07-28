@@ -11,15 +11,16 @@
  */
 
 import 'client-only';
+import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import { IconStyles } from './styles';
-import type { IconProps, IconProviderProps } from './types';
+import type { IconProps } from './types';
 
 export const IconContext =
   createContext<ContextValue<IconProps, HTMLSpanElement>>(null);
 
-function IconProvider({ children, ...props }: IconProviderProps) {
+function IconProvider({ children, ...props }: ProviderProps<IconProps>) {
   return <IconContext.Provider value={props}>{children}</IconContext.Provider>;
 }
 IconProvider.displayName = 'Icon.Provider';

@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import type { ProviderProps } from '@/lib/types';
 import { CancelFill } from '@accelint/icons';
 import { createContext, useContext } from 'react';
 import {
@@ -34,7 +35,6 @@ import type {
   BaseChipProps,
   ChipListProps,
   ChipProps,
-  ChipProviderProps,
   DeletableChipProps,
   SelectableChipProps,
 } from './types';
@@ -42,7 +42,7 @@ import type {
 export const ChipContext =
   createContext<ContextValue<BaseChipProps, HTMLDivElement>>(null);
 
-function ChipProvider({ children, ...props }: ChipProviderProps) {
+function ChipProvider({ children, ...props }: ProviderProps<BaseChipProps>) {
   return <ChipContext.Provider value={props}>{children}</ChipContext.Provider>;
 }
 ChipProvider.displayName = 'Chip.Provider';

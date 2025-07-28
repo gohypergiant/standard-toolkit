@@ -10,27 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RefAttributes } from 'react';
-import type {
-  RadioGroupProps as AriaRadioGroupProps,
-  RadioProps as AriaRadioProps,
-} from 'react-aria-components';
-import type { LabelProps } from '../label/types';
+import type { ComponentPropsWithRef, RefAttributes } from 'react';
+import type { TextProps } from 'react-aria-components';
+import type { VariantProps } from 'tailwind-variants';
+import type { DetailsListStyles } from './styles';
 
-export type RadioGroupProps = Omit<AriaRadioGroupProps, 'className'> &
-  RefAttributes<HTMLDivElement> & {
+export type DetailsListProps = Omit<ComponentPropsWithRef<'dl'>, 'className'> &
+  VariantProps<typeof DetailsListStyles> & {
     classNames?: {
-      group?: AriaRadioGroupProps['className'];
-      label?: LabelProps['className'];
-    };
-    label?: string;
-  };
-
-export type RadioProps = Omit<AriaRadioProps, 'className'> &
-  RefAttributes<HTMLLabelElement> & {
-    classNames?: {
-      radio?: AriaRadioProps['className'];
-      control?: string;
+      list?: string;
       label?: string;
+      value?: string;
     };
   };
+
+export type DetailsListLabelProps = Omit<TextProps, 'elementType'> &
+  RefAttributes<HTMLElement>;
+
+export type DetailsListValueProps = Omit<TextProps, 'elementType'> &
+  RefAttributes<HTMLElement>;

@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -58,6 +58,7 @@
     "preview": "pnpm storybook dev -p 6006",
     "preview:docs": "pnpm storybook dev --docs -p 6006",
     "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch",
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
@@ -111,6 +112,7 @@
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.5.2",
     "@types/lodash": "4.17.10",
+    "@types/node": "^24.1.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "autoprefixer": "10.4.20",

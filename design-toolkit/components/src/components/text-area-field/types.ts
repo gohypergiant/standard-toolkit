@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren, RefAttributes } from 'react';
+import type { RefAttributes } from 'react';
 import type {
   FieldErrorProps,
   TextAreaProps,
@@ -36,5 +36,3 @@ export type TextAreaFieldProps = Omit<
     errorMessage?: FieldErrorProps['children'];
     size?: 'medium' | 'small';
   };
-
-export type TextAreaFieldProviderProps = PropsWithChildren<TextAreaFieldProps>;

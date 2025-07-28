@@ -12,7 +12,9 @@
 
 import { Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from '../button';
 import { Icon } from '../icon';
+import { Menu } from '../menu';
 import { Accordion } from './';
 import { AccordionStylesDefaults } from './styles';
 
@@ -52,6 +54,36 @@ export const Default: StoryObj<typeof Accordion> = {
             </Icon>
             Accordion title
           </Accordion.Trigger>
+        </Accordion.Header>
+        <Accordion.Panel>
+          <p className='fg-default-dark text-body-s'>
+            This is a placeholder content for an accordion. Please replace with
+            an actual content instance.
+          </p>
+        </Accordion.Panel>
+      </Accordion>
+    </div>
+  ),
+};
+
+export const WithMenu: StoryObj<typeof Accordion> = {
+  render: ({ children, ...args }) => (
+    <div className='w-[280px]'>
+      <Accordion {...args}>
+        <Accordion.Header>
+          <Accordion.Trigger>
+            <Icon>
+              <Placeholder />
+            </Icon>
+            Accordion title
+          </Accordion.Trigger>
+          <Menu.Trigger>
+            <Button />
+            <Menu>
+              <Menu.Item>Foo</Menu.Item>
+              <Menu.Item>Bar</Menu.Item>
+            </Menu>
+          </Menu.Trigger>
         </Accordion.Header>
         <Accordion.Panel>
           <p className='fg-default-dark text-body-s'>

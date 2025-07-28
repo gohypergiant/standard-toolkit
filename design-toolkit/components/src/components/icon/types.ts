@@ -10,13 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
-export type IconProps = PropsWithChildren<
-  RefAttributes<HTMLSpanElement> &
-    HTMLAttributes<HTMLSpanElement> & {
-      size?: 'large' | 'medium' | 'small' | 'xsmall';
-    }
->;
-
-export type IconProviderProps = PropsWithChildren<IconProps>;
+export type IconProps = ComponentPropsWithRef<'span'> & {
+  size?: 'large' | 'medium' | 'small' | 'xsmall';
+};

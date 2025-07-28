@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   Button as AriaButton,
@@ -23,19 +24,12 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
-import type {
-  ButtonProps,
-  ButtonProviderProps,
-  LinkButtonProps,
-  LinkButtonProviderProps,
-  ToggleButtonProps,
-  ToggleButtonProviderProps,
-} from './types';
+import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
 export const ButtonContext =
   createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
 
-function ButtonProvider({ children, ...props }: ButtonProviderProps) {
+function ButtonProvider({ children, ...props }: ProviderProps<ButtonProps>) {
   return (
     <ButtonContext.Provider value={props}>{children}</ButtonContext.Provider>
   );
@@ -79,7 +73,10 @@ Button.Provider = ButtonProvider;
 export const LinkButtonContext =
   createContext<ContextValue<LinkButtonProps, HTMLAnchorElement>>(null);
 
-function LinkButtonProvider({ children, ...props }: LinkButtonProviderProps) {
+function LinkButtonProvider({
+  children,
+  ...props
+}: ProviderProps<LinkButtonProps>) {
   return (
     <LinkButtonContext.Provider value={props}>
       {children}
@@ -128,7 +125,7 @@ export const ToggleButtonContext =
 function ToggleButtonProvider({
   children,
   ...props
-}: ToggleButtonProviderProps) {
+}: ProviderProps<ToggleButtonProps>) {
   return (
     <ToggleButtonContext.Provider value={props}>
       {children}

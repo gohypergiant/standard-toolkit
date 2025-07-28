@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RefAttributes } from 'react';
-import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
+import type { ComponentPropsWithRef } from 'react';
 
-export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
-  RefAttributes<HTMLLabelElement> & {
-    classNames?: {
-      switch?: AriaSwitchProps['className'];
-      control?: string;
-      label?: string;
-    };
+export type HeroProps = Omit<ComponentPropsWithRef<'header'>, 'className'> & {
+  classNames?: {
+    hero?: string;
+    icon?: string;
+    title?: string;
+    subtitle?: string;
   };
+  compact?: boolean;
+};

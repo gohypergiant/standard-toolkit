@@ -22,17 +22,21 @@ import {
   useContextProps,
 } from 'react-aria-components';
 
+import type { ProviderProps } from '@/lib/types';
 import { Input } from '../input';
 import { Label } from '../label';
 import { TextFieldStyles } from './styles';
-import type { TextFieldProps, TextFieldProviderProps } from './types';
+import type { TextFieldProps } from './types';
 
 const { field, label, description, error } = TextFieldStyles();
 
 export const TextFieldContext =
   createContext<ContextValue<TextFieldProps, HTMLDivElement>>(null);
 
-function TextFieldProvider({ children, ...props }: TextFieldProviderProps) {
+function TextFieldProvider({
+  children,
+  ...props
+}: ProviderProps<TextFieldProps>) {
   return (
     <TextFieldContext.Provider value={props}>
       {children}

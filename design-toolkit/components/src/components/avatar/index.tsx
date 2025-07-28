@@ -20,14 +20,14 @@ import { type ContextValue, useContextProps } from 'react-aria-components';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
 import { AvatarStyles } from './styles';
-import type { AvatarProps, AvatarProviderProps } from './types';
+import type { AvatarProps } from './types';
 
 const { avatar, image, fallback, content } = AvatarStyles();
 
 export const AvatarContext =
   createContext<ContextValue<AvatarProps, HTMLSpanElement>>(null);
 
-function AvatarProvider({ children, ...props }: AvatarProviderProps) {
+function AvatarProvider({ children, ...props }: ProviderProps<AvatarProps>) {
   return (
     <AvatarContext.Provider value={props}>{children}</AvatarContext.Provider>
   );
@@ -50,6 +50,7 @@ export function Avatar({ ref, ...props }: AvatarProps) {
     <Icon.Provider size={size === 'medium' ? 'large' : 'medium'}>
       <Root
         {...rest}
+        ref={ref}
         className={avatar({ size, className: classNames?.avatar })}
         role='img'
         data-size={size}

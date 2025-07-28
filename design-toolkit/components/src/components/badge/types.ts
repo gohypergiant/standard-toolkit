@@ -11,18 +11,13 @@
  */
 
 import type { Axis } from '@react-types/overlays';
-import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import type { VariantProps } from 'tailwind-variants';
 import type { BadgeStyles } from './styles';
 
-export type BadgeProps = RefAttributes<HTMLSpanElement> &
-  HTMLAttributes<HTMLSpanElement> &
+export type BadgeProps = ComponentPropsWithRef<'span'> &
   VariantProps<typeof BadgeStyles> & {
     children?: string;
     offset?: number | { x?: number; y?: number };
     placement?: Axis | `${'top' | 'bottom'} ${'left' | 'right'}`;
   };
-
-export type BadgeProviderProps = PropsWithChildren<
-  Omit<BadgeProps, 'children'>
->;

@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   type ContextValue,
@@ -25,17 +26,17 @@ import {
 } from 'react-aria-components';
 import { Label } from '../label';
 import { TextAreaStyles } from './styles';
-import type { TextAreaFieldProps, TextAreaFieldProviderProps } from './types';
+import type { TextAreaFieldProps } from './types';
 
 const { field, label, input, description, error } = TextAreaStyles();
 
 export const TextAreaFieldContext =
-  createContext<ContextValue<TextAreaFieldProviderProps, HTMLDivElement>>(null);
+  createContext<ContextValue<TextAreaFieldProps, HTMLDivElement>>(null);
 
 function TextAreaFieldProvider({
   children,
   ...props
-}: TextAreaFieldProviderProps) {
+}: ProviderProps<TextAreaFieldProps>) {
   return (
     <TextAreaFieldContext.Provider value={props}>
       {children}

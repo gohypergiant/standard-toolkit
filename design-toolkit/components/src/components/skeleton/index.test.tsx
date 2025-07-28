@@ -10,14 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RefAttributes } from 'react';
-import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
+import { render } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { Skeleton } from './';
+import type { SkeletonProps } from './types';
 
-export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
-  RefAttributes<HTMLLabelElement> & {
-    classNames?: {
-      switch?: AriaSwitchProps['className'];
-      control?: string;
-      label?: string;
-    };
+function setup(props: Partial<SkeletonProps> = {}) {
+  return {
+    ...render(<Skeleton {...props} />),
+    ...props,
   };
+}
+
+describe('Skeleton', () => {
+  it('should render', () => {
+    const { container } = setup();
+
+    expect(container.firstChild).toBeInTheDocument();
+  });
+});

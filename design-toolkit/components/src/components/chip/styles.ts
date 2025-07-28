@@ -41,6 +41,7 @@ export const ChipStyles = tv({
       info: { chip: 'bg-info-subtle outline-info-bold' },
     },
   },
+  defaultVariants: ChipStylesDefaults,
 });
 
 export const SelectableChipStyles = tv({

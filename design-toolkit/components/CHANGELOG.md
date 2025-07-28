@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 2.4.3
+
+### Patch Changes
+
+- 382bbc2: Fixes a build issue caused by an import with trailing character in `components/avatar/index.tsx`.
+
 ## 2.4.2
 
 ### Patch Changes

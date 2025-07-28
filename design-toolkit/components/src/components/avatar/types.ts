@@ -11,23 +11,20 @@
  */
 
 import type { Avatar, Fallback, Image } from '@radix-ui/react-avatar';
-import type { ComponentProps, PropsWithChildren, RefAttributes } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import type { VariantProps } from 'tailwind-variants';
 import type { AvatarStyles } from './styles';
 
-export type AvatarProps = RefAttributes<HTMLSpanElement> &
-  Omit<ComponentProps<typeof Avatar>, 'className'> &
-  VariantProps<typeof AvatarStyles> &
-  PropsWithChildren<{
+export type AvatarProps = Omit<ComponentPropsWithRef<'span'>, 'className'> &
+  Omit<ComponentPropsWithRef<typeof Avatar>, 'className'> &
+  VariantProps<typeof AvatarStyles> & {
     classNames?: {
       avatar?: string;
       image?: string;
       fallback?: string;
       content?: string;
     };
-    fallbackProps?: Omit<ComponentProps<typeof Fallback>, 'className'>;
-    imageProps?: Omit<ComponentProps<typeof Image>, 'className'>;
+    fallbackProps?: Omit<ComponentPropsWithRef<typeof Fallback>, 'className'>;
+    imageProps?: Omit<ComponentPropsWithRef<typeof Image>, 'className'>;
     size?: 'medium' | 'small';
-  }>;
-
-export type AvatarProviderProps = PropsWithChildren<AvatarProps>;
+  };

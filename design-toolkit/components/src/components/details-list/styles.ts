@@ -10,14 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RefAttributes } from 'react';
-import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
+import { tv } from '@/lib/utils';
 
-export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
-  RefAttributes<HTMLLabelElement> & {
-    classNames?: {
-      switch?: AriaSwitchProps['className'];
-      control?: string;
-      label?: string;
-    };
-  };
+export const DetailsListStylesDefaults = {
+  align: 'justify',
+} as const;
+
+export const DetailsListStyles = tv({
+  slots: {
+    list: 'grid grid-cols-[auto_1fr] gap-x-m font-display text-body-m',
+    label: 'fg-default-dark col-start-1',
+    value: 'fg-default-light col-start-2',
+  },
+  variants: {
+    align: {
+      left: { label: 'text-left', value: 'text-left' },
+      center: { label: 'text-right', value: 'text-left' },
+      justify: { label: 'text-left', value: 'text-right' },
+    },
+  },
+  defaultVariants: DetailsListStylesDefaults,
+});

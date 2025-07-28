@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import type { VariantProps } from 'tailwind-variants';
 import type { ClassificationBadgeStyles } from './styles';
 
@@ -19,10 +19,6 @@ export type ClassificationBadgeStyleVariants = VariantProps<
 >;
 
 export type ClassificationBadgeProps = ClassificationBadgeStyleVariants &
-  RefAttributes<HTMLSpanElement> &
-  PropsWithChildren<HTMLAttributes<HTMLSpanElement>> & {
+  ComponentPropsWithRef<'span'> & {
     size?: 'medium' | 'small';
   };
-
-export type ClassificationBadgeProviderProps =
-  PropsWithChildren<ClassificationBadgeProps>;

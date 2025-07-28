@@ -10,14 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RefAttributes } from 'react';
-import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
+import type { ComponentPropsWithRef } from 'react';
+import type { VariantProps } from 'tailwind-variants';
+import type { SkeletonStyles } from './styles';
 
-export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
-  RefAttributes<HTMLLabelElement> & {
-    classNames?: {
-      switch?: AriaSwitchProps['className'];
-      control?: string;
-      label?: string;
-    };
-  };
+export type SkeletonStyleVariants = VariantProps<typeof SkeletonStyles>;
+
+export type SkeletonProps = ComponentPropsWithRef<'div'> &
+  SkeletonStyleVariants;

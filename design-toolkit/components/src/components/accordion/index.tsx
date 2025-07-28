@@ -9,24 +9,25 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
+
 import 'client-only';
+import { isSlottedContextValue } from '@/lib/utils';
+import { ChevronDown, Kebab } from '@accelint/icons';
+import { createContext, useContext } from 'react';
 import {
-  Button,
   type ContextValue,
   Disclosure,
   DisclosureGroup,
   DisclosurePanel,
+  Header,
   Heading,
+  Provider,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-
-import { isSlottedContextValue } from '@/lib/utils';
-import { ChevronDown } from '@accelint/icons';
-import { createContext, useContext } from 'react';
-import { Icon } from '../icon';
+import { Button, ButtonContext } from '../button';
+import { Icon, IconContext } from '../icon';
 import { AccordionStyles, AccordionStylesDefaults } from './styles';
 import type {
   AccordionGroupProps,
@@ -73,10 +74,28 @@ function AccordionHeader({ ref, children, className }: AccordionHeaderProps) {
   const variant =
     (isSlottedContextValue(context) ? undefined : context?.variant) ??
     AccordionStylesDefaults.variant;
+  const isDisabled =
+    (isSlottedContextValue(context) ? undefined : context?.isDisabled) ?? false;
 
   return (
-    <Icon.Provider size={variant === 'compact' ? 'small' : 'large'}>
-      <div
+    <Provider
+      values={[
+        [IconContext, { size: variant === 'compact' ? 'small' : 'large' }],
+        [
+          ButtonContext,
+          {
+            children: (
+              <Icon>
+                <Kebab />
+              </Icon>
+            ),
+            variant: 'icon',
+            isDisabled,
+          },
+        ],
+      ]}
+    >
+      <Header
         ref={ref}
         className={header({
           className,
@@ -84,8 +103,8 @@ function AccordionHeader({ ref, children, className }: AccordionHeaderProps) {
         })}
       >
         {children}
-      </div>
-    </Icon.Provider>
+      </Header>
+    </Provider>
   );
 }
 AccordionHeader.displayName = 'Accordion.Header';
@@ -116,6 +135,7 @@ function AccordionTrigger({
             variant,
           }),
         )}
+        variant='flat'
       >
         <Icon>
           <ChevronDown className='transform group-expanded/accordion:rotate-180' />

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLProps, PropsWithChildren, RefAttributes } from 'react';
+import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type {
   ButtonProps,
   TagGroupProps,
@@ -24,13 +24,6 @@ export type BaseChipProps = {
   size?: 'medium' | 'small';
 };
 
-export type ChipProps = VariantProps<typeof ChipStyles> &
-  Omit<HTMLProps<HTMLDivElement>, 'size'> &
-  RefAttributes<HTMLDivElement> &
-  BaseChipProps & {
-    className?: string;
-  };
-
 export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   Pick<
     TagListProps<T>,
@@ -38,6 +31,12 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   > &
   RefAttributes<HTMLDivElement> &
   BaseChipProps;
+
+export type ChipProps = VariantProps<typeof ChipStyles> &
+  Omit<ComponentPropsWithRef<'div'>, 'size'> &
+  BaseChipProps & {
+    className?: string;
+  };
 
 export type SelectableChipProps = Omit<TagProps, 'isDisabled'> &
   RefAttributes<HTMLDivElement> &
@@ -51,5 +50,3 @@ export type DeletableChipProps = Omit<TagProps, 'className' | 'isDisabled'> &
       remove?: ButtonProps['className'];
     };
   };
-
-export type ChipProviderProps = PropsWithChildren<BaseChipProps>;

@@ -12,15 +12,16 @@
 'use client';
 
 import 'client-only';
+import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import { BadgeStyles, BadgeStylesDefaults } from './styles';
-import type { BadgeProps, BadgeProviderProps } from './types';
+import type { BadgeProps } from './types';
 
 export const BadgeContext =
   createContext<ContextValue<BadgeProps, HTMLSpanElement>>(null);
 
-function BadgeProvider({ children, ...props }: BadgeProviderProps) {
+function BadgeProvider({ children, ...props }: ProviderProps<BadgeProps>) {
   return (
     <BadgeContext.Provider value={props}>{children}</BadgeContext.Provider>
   );

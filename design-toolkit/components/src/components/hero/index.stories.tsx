@@ -10,43 +10,32 @@
  * governing permissions and limitations under the License.
  */
 
+import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
-import { ClassificationBadge } from './';
+import { Icon } from '../icon';
+import { Hero } from './';
 
-const meta: Meta<typeof ClassificationBadge> = {
-  title: 'Components/ClassificationBadge',
-  component: ClassificationBadge,
+const meta: Meta<typeof Hero> = {
+  title: 'Components/Hero',
+  component: Hero,
   args: {
-    className: undefined,
-    children: '',
-    size: 'medium',
-    variant: 'missing',
-  },
-  argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: [
-        'missing',
-        'unclassified',
-        'cui',
-        'confidential',
-        'secret',
-        'top-secret',
-        'ts-sci',
-      ],
-    },
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
+    compact: false,
   },
 };
 
 export default meta;
 
-export const Default: StoryObj<typeof ClassificationBadge> = {
-  render: ClassificationBadge,
+export const Default: StoryObj<typeof Hero> = {
+  render: (args) => (
+    <div className='w-[480px]'>
+      <Hero {...args}>
+        <Icon>
+          <Placeholder />
+        </Icon>
+        <Hero.Title>{'{object.name}'}</Hero.Title>
+        <Hero.Subtitle>additional-metadata-01</Hero.Subtitle>
+        <Hero.Subtitle>additional-metadata-002</Hero.Subtitle>
+      </Hero>
+    </div>
+  ),
 };

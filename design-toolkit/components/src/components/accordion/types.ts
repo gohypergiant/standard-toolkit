@@ -11,14 +11,18 @@
  */
 
 import type { RenderPropsClassName } from '@/lib/types';
-import type { PropsWithChildren, RefAttributes } from 'react';
+import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type {
   ButtonRenderProps,
   DisclosureGroupProps,
   DisclosurePanelProps,
   DisclosureProps,
+  Heading,
 } from 'react-aria-components';
-import type { AccordionStyleVariants } from './styles';
+import type { VariantProps } from 'tailwind-variants';
+import type { AccordionStyles } from './styles';
+
+export type AccordionStyleVariants = VariantProps<typeof AccordionStyles>;
 
 export type AccordionGroupProps = DisclosureGroupProps &
   Pick<AccordionStyleVariants, 'variant'> &
@@ -28,18 +32,17 @@ export type AccordionProps = DisclosureProps &
   Pick<AccordionStyleVariants, 'variant'> &
   RefAttributes<HTMLDivElement>;
 
-export type AccordionHeaderProps = PropsWithChildren<{
-  className?: string;
-}> &
-  RefAttributes<HTMLDivElement>;
+export type AccordionHeaderProps = ComponentPropsWithRef<'header'>;
 
-export type AccordionTriggerProps = PropsWithChildren<{
+export type AccordionTriggerProps = Omit<
+  ComponentPropsWithRef<typeof Heading>,
+  'className'
+> & {
   classNames?: {
     heading?: string;
     trigger?: RenderPropsClassName<ButtonRenderProps>;
   };
-}> &
-  RefAttributes<HTMLDivElement>;
+};
 
 export type AccordionPanelProps = DisclosurePanelProps &
   RefAttributes<HTMLDivElement>;

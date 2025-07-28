@@ -38,9 +38,7 @@ export const Tabs = ({
   containsExactChildren({
     children,
     componentName: Tabs.displayName,
-    restrictions: {
-      [TabList.displayName]: { min: 1, max: 1 },
-    },
+    restrictions: [[TabList, { min: 1, max: 1 }]],
   });
 
   return (
@@ -95,9 +93,7 @@ const TabList = ({
   containsExactChildren({
     children,
     componentName: TabList.displayName,
-    restrictions: {
-      [Tab.displayName]: { min: 1 },
-    },
+    restrictions: [[Tab, { min: 1 }]],
   });
 
   return (
