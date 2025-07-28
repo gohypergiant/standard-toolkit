@@ -42,7 +42,7 @@ const { menu, item } = DrawerMenuStyles();
 const DrawerRoot = ({
   children,
   classNames,
-  layout = 'tall',
+  extend = 'left right',
   onStateChange,
 }: DrawerRootProps) => {
   const drawerState = useDrawerLayoutState({
@@ -66,7 +66,7 @@ const DrawerRoot = ({
     <DrawerLayoutContext.Provider value={drawerState}>
       <div
         className={root({ className: classNames?.layout })}
-        data-layout={layout}
+        data-extend={extend}
         {...dataAttributes}
       >
         {children}
@@ -92,7 +92,7 @@ export const Drawer = ({
   const { getDrawerState, registerDrawer } = useDrawerLayoutContext();
   const currentState = getDrawerState(id);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: this registers the drawer and should only run once
+  // biome-ignore lint/correctness/useExhaustiveDependencies: this should only run if these props change
   useEffect(() => {
     const initialState = createDefaultDrawerState({
       id,
@@ -106,7 +106,7 @@ export const Drawer = ({
       onOpenChange,
       onStateChange,
     });
-  }, []);
+  }, [isOpen, mode, size, placement]);
 
   return (
     <DrawerContext.Provider value={{ state: currentState }}>

@@ -25,7 +25,7 @@ import { NavigationStack } from '../navigation-stack';
 import { Drawer } from './index';
 import type { DrawerProps, DrawerRootProps } from './types';
 
-type CombinedDrawerProps = DrawerProps & Pick<DrawerRootProps, 'layout'>;
+type CombinedDrawerProps = DrawerProps & Pick<DrawerRootProps, 'extend'>;
 
 const meta: Meta<CombinedDrawerProps> = {
   title: 'Components/Drawer',
@@ -38,12 +38,12 @@ const meta: Meta<CombinedDrawerProps> = {
     placement: 'left',
     mode: 'overlay',
     size: 'medium',
-    layout: 'tall',
+    extend: 'left right',
   },
   argTypes: {
-    layout: {
+    extend: {
       control: 'radio',
-      options: ['tall', 'wide', 'top', 'bottom', 'left', 'right'],
+      options: ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
     },
   },
 };
@@ -94,9 +94,9 @@ export const WithTabs: Story = {
 };
 
 export const FullLayout: Story = {
-  render: ({layout, mode}: CombinedDrawerProps) => {
+  render: ({ extend, mode }: CombinedDrawerProps) => {
     return (
-      <Drawer.Root layout={layout}>
+      <Drawer.Root extend={extend}>
         <Drawer id='header' placement='top' mode={mode}>
           <Drawer.Menu>
             <Drawer.Trigger for='header'>
@@ -191,29 +191,31 @@ export const FullLayout: Story = {
 export const WithLongContent: Story = {
   render: () => {
     return (
-      <Drawer.Root>
-        <Drawer id='settings' placement='left' mode='overlay'>
-          <Drawer.Menu>
-            <Drawer.Menu.Item>
-              <Placeholder />
-            </Drawer.Menu.Item>
-          </Drawer.Menu>
-          <Drawer.Content>
-            <Drawer.Header>
-              <Drawer.Title>Title</Drawer.Title>
-              <Drawer.Close>
-                <Button size='small'>
-                  <Icon>
-                    <Cancel />
-                  </Icon>
-                </Button>
-              </Drawer.Close>
-            </Drawer.Header>
-            <Drawer.Panel>{longContent}</Drawer.Panel>
-            <Drawer.Footer>Footer</Drawer.Footer>
-          </Drawer.Content>
-        </Drawer>
-      </Drawer.Root>
+      <div className='max-h-l'>
+        <Drawer.Root>
+          <Drawer id='settings' placement='left' mode='overlay'>
+            <Drawer.Menu>
+              <Drawer.Menu.Item>
+                <Placeholder />
+              </Drawer.Menu.Item>
+            </Drawer.Menu>
+            <Drawer.Content>
+              <Drawer.Header>
+                <Drawer.Title>Title</Drawer.Title>
+                <Drawer.Close>
+                  <Button size='small'>
+                    <Icon>
+                      <Cancel />
+                    </Icon>
+                  </Button>
+                </Drawer.Close>
+              </Drawer.Header>
+              <Drawer.Panel>{longContent}</Drawer.Panel>
+              <Drawer.Footer>Footer</Drawer.Footer>
+            </Drawer.Content>
+          </Drawer>
+        </Drawer.Root>
+      </div>
     );
   },
 };
