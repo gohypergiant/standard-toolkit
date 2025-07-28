@@ -25,8 +25,6 @@ import {
   type DrawerContextValue,
   DrawerDefaults,
   type DrawerLayoutContextValue,
-  type DrawerMode,
-  type DrawerSize,
   type DrawerState,
   type OnOpenChangeCallback,
 } from './types';
@@ -71,26 +69,6 @@ export function useDrawerLayoutState(opts?: {
   );
   const [callbacks, setCallbacks] = useState<Record<Key, DrawerCallbacks>>({});
 
-  const selectMenuItem = useCallback((drawerId: Key, menuItemId?: Key) => {
-    updateDrawerState(drawerId, {
-      type: 'SET_MENU_ID',
-      menuItemId: menuItemId ?? '',
-    });
-  }, []);
-
-  const showSelected = useCallback(
-    (drawerId: Key, menuItemId?: Key) => {
-      const selectedMenuItemId = drawerStates[drawerId]?.selectedMenuItemId;
-
-      return (
-        selectedMenuItemId !== '' &&
-        typeof selectedMenuItemId !== 'undefined' &&
-        menuItemId === selectedMenuItemId
-      );
-    },
-    [drawerStates],
-  );
-
   const notifyCallbacks = useCallback(
     (drawerId: Key, nextState: DrawerState) => {
       const drawerCallbacks = callbacks[drawerId];
@@ -109,6 +87,7 @@ export function useDrawerLayoutState(opts?: {
         const currentState =
           prev[drawerId] ||
           createDefaultDrawerState({
+            id: drawerId,
             placement: DrawerDefaults.placement,
             selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
             size: DrawerDefaults.size,
@@ -149,18 +128,25 @@ export function useDrawerLayoutState(opts?: {
     [updateDrawerState],
   );
 
-  const setDrawerSize = useCallback(
-    (drawerId: Key, size: DrawerSize) => {
-      updateDrawerState(drawerId, { type: 'SET_SIZE', size });
+  const selectMenuItem = useCallback(
+    (drawerId: Key, menuItemId?: Key) => {
+      updateDrawerState(drawerId, {
+        type: 'SET_MENU_ID',
+        menuItemId: menuItemId ?? '',
+      });
     },
     [updateDrawerState],
   );
 
-  const setDrawerMode = useCallback(
-    (drawerId: Key, mode: DrawerMode) => {
-      updateDrawerState(drawerId, { type: 'SET_MODE', mode });
+  const isSelectedMenuItem = useCallback(
+    (selectedMenuItemId?: Key, menuItemId?: Key) => {
+      return (
+        selectedMenuItemId !== '' &&
+        typeof selectedMenuItemId !== 'undefined' &&
+        menuItemId === selectedMenuItemId
+      );
     },
-    [updateDrawerState],
+    [],
   );
 
   const getDrawerState = useCallback(
@@ -168,6 +154,7 @@ export function useDrawerLayoutState(opts?: {
       return (
         drawerStates[drawerId] ||
         createDefaultDrawerState({
+          id: drawerId,
           placement: DrawerDefaults.placement,
           selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
           size: DrawerDefaults.size,
@@ -180,21 +167,17 @@ export function useDrawerLayoutState(opts?: {
   );
 
   const registerDrawer = useCallback(
-    (
-      drawerId: Key,
-      initialState: DrawerState,
-      drawerCallbacks?: DrawerCallbacks,
-    ) => {
+    (initialState: DrawerState, drawerCallbacks?: DrawerCallbacks) => {
       setCallbacks((prev) => ({
         ...prev,
-        [drawerId]: drawerCallbacks || {},
+        [initialState.id]: drawerCallbacks || {},
       }));
 
       setDrawerStates((prev) => {
-        const currentState = prev[drawerId];
+        const currentState = prev[initialState.id];
         return {
           ...prev,
-          [drawerId]: {
+          [initialState.id]: {
             ...initialState,
             selectedMenuItemId:
               currentState?.selectedMenuItemId ??
@@ -206,40 +189,26 @@ export function useDrawerLayoutState(opts?: {
     [],
   );
 
-  const isDrawerVisible = useCallback(
-    (drawerId: Key) => {
-      const state = drawerStates[drawerId];
-      return state ? state.isOpen : false;
-    },
-    [drawerStates],
-  );
-
   const contextValue = useMemo<DrawerLayoutContextValue>(
     () => ({
       drawerStates,
       toggleDrawer,
       openDrawer,
       closeDrawer,
-      setDrawerSize,
-      setDrawerMode,
       getDrawerState,
       registerDrawer,
-      isDrawerVisible,
       selectMenuItem,
-      showSelected,
+      isSelectedMenuItem,
     }),
     [
       drawerStates,
       toggleDrawer,
       openDrawer,
       closeDrawer,
-      setDrawerSize,
-      setDrawerMode,
       getDrawerState,
       registerDrawer,
-      isDrawerVisible,
       selectMenuItem,
-      showSelected,
+      isSelectedMenuItem,
     ],
   );
 

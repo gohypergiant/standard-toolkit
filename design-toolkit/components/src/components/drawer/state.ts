@@ -23,26 +23,26 @@ export type DrawerAction =
   | { type: 'TOGGLE' }
   | { type: 'OPEN'; menuItemId?: Key }
   | { type: 'CLOSE' }
-  | { type: 'SET_SIZE'; size: DrawerSize }
-  | { type: 'SET_MENU_ID'; menuItemId?: Key }
-  | { type: 'SET_MODE'; mode: DrawerMode };
+  | { type: 'SET_MENU_ID'; menuItemId?: Key };
 
 /**
  * Default state for new drawers
  */
 export const createDefaultDrawerState = ({
+  id,
   placement = DrawerDefaults.placement,
   selectedMenuItemId = DrawerDefaults.selectedMenuItemId,
   mode = DrawerDefaults.mode,
   size = DrawerDefaults.size,
   isOpen = DrawerDefaults.isOpen,
 }: {
+  id: Key;
   placement?: DrawerPlacement;
   selectedMenuItemId?: Key;
   mode?: DrawerMode;
   size?: DrawerSize;
   isOpen?: boolean;
-}): DrawerState => ({ mode, size, placement, isOpen, selectedMenuItemId });
+}): DrawerState => ({ id, mode, size, placement, isOpen, selectedMenuItemId });
 
 export const drawerStateReducer = (
   state: DrawerState,
@@ -70,17 +70,6 @@ export const drawerStateReducer = (
         selectedMenuItemId: undefined,
       };
 
-    case 'SET_SIZE':
-      return {
-        ...state,
-        size: action.size,
-        isOpen: true,
-      };
-    case 'SET_MODE':
-      return {
-        ...state,
-        mode: action.mode,
-      };
     case 'SET_MENU_ID':
       return {
         ...state,

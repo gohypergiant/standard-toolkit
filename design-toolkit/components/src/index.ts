@@ -170,9 +170,7 @@ export type {
   OptionsProps,
   OptionsSectionProps,
 } from './components/options/types';
-export {
-  NavigationStack,
-} from './components/navigation-stack';
+export { NavigationStack } from './components/navigation-stack';
 export type {
   NavigationStackProps,
   NavigationStackViewProps,

@@ -91,8 +91,7 @@ export const FullLayout: Story = {
           <Drawer.Menu>
             <Drawer.Trigger for='header'>
               <Icon>
-                <ChevronUp className='hidden group-data-[top-open="true"]/layout:block' />
-                <ChevronDown className='hidden group-data-[top-open="false"]/layout:block' />
+                <ChevronDown className='group-data-[top-open="true"]/layout:rotate-180' />
               </Icon>
             </Drawer.Trigger>
 
@@ -131,8 +130,7 @@ export const FullLayout: Story = {
           <Drawer.Menu>
             <Drawer.Trigger for='footer'>
               <Icon>
-                <ChevronDown className='hidden group-data-[bottom-open="true"]/layout:block' />
-                <ChevronUp className='hidden group-data-[bottom-open="false"]/layout:block' />
+                <ChevronUp className='group-data-[bottom-open="true"]/layout:rotate-180' />
               </Icon>
             </Drawer.Trigger>
 
@@ -148,8 +146,7 @@ export const FullLayout: Story = {
           <Drawer.Menu>
             <Drawer.Trigger for='settings'>
               <Icon>
-                <ChevronLeft className='hidden group-data-[left-open="true"]/layout:block' />
-                <ChevronRight className='hidden group-data-[left-open="false"]/layout:block' />
+                <ChevronRight className='group-data-[left-open="true"]/layout:rotate-180' />
               </Icon>
             </Drawer.Trigger>
 
@@ -165,8 +162,7 @@ export const FullLayout: Story = {
           <Drawer.Menu>
             <Drawer.Trigger for='sidebar'>
               <Icon>
-                <ChevronRight className='hidden group-data-[right-open="true"]/layout:block' />
-                <ChevronLeft className='hidden group-data-[right-open="false"]/layout:block' />
+                <ChevronLeft className='group-data-[right-open="true"]/layout:rotate-180' />
               </Icon>
             </Drawer.Trigger>
 
@@ -220,10 +216,12 @@ export const ControlledOpen: Story = {
     }, []);
     return (
       <Drawer.Root>
-        <Drawer.Main className='flex flex-col gap-m p-l'>
-          <Button variant='outline' onPress={() => handleOpenChange(!isOpen)}>
-            {isOpen ? 'Close' : 'Open'}
-          </Button>
+        <Drawer.Main>
+          <div className='flex flex-col gap-m p-l'>
+            <Button variant='outline' onPress={() => handleOpenChange(!isOpen)}>
+              {isOpen ? 'Close' : 'Open'}
+            </Button>
+          </div>
         </Drawer.Main>
         <Drawer
           isOpen={isOpen}

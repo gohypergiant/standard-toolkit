@@ -17,7 +17,7 @@ import type { DOMAttributes, PropsWithChildren, ReactElement } from 'react';
  *
  * Determines how drawer interact with the main content area and overall layout:
  *
- * - `'over'`: Drawer floats over the main content without affecting its layout or dimensions.
+ * - `'overlay'`: Drawer floats over the main content without affecting its layout or dimensions.
  *   Content remains at full width, panel appears as an overlay.
  * - `'push'`: Drawer pushes the main content aside, reducing its available width.
  *   Content area shrinks to accommodate the panel space.
@@ -41,22 +41,31 @@ export type DrawerMode = 'overlay' | 'push';
  * - `icons` ↔ `nav` - Expand/collapse navigation
  * - `open` ↔ `extra` - Standard to expanded view
  */
-export type DrawerSize = 'menu-size' | 'small' | 'medium' | 'large';
+export type DrawerSize = 'small' | 'medium' | 'large';
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 
 export interface DrawerState {
-  mode: DrawerMode;
-  size: DrawerSize;
-  selectedMenuItemId?: Key;
-  placement: DrawerPlacement;
+  id: Key;
   isOpen: boolean;
+  mode: DrawerMode;
+  placement: DrawerPlacement;
+  selectedMenuItemId?: Key;
+  size: DrawerSize;
 }
 
-interface ContainerProps extends PropsWithChildren<{ className?: string }> {}
+export type DrawerClassNames = Partial<{
+  layout: string;
+  main: string;
+  menu: string;
+  content: string;
+}>;
+
+export interface DrawerContainerProps
+  extends PropsWithChildren<{ className?: string }> {}
 
 export interface DrawerRootProps
-  extends ContainerProps,
+  extends DrawerContainerProps,
     Partial<Record<DrawerPlacement, DrawerState>> {
   /**
    * Which drawers should extend to full container dimensions.
@@ -65,10 +74,11 @@ export interface DrawerRootProps
    * @default 'left and right'
    */
   extend?: DrawerExtensions;
+  classNames?: DrawerClassNames;
   onStateChange?: (drawerId: Key, state: DrawerState) => void;
 }
 
-export interface DrawerProps extends ContainerProps {
+export interface DrawerProps extends DrawerContainerProps {
   id: Key;
   placement: DrawerPlacement;
   mode?: DrawerMode;
@@ -80,17 +90,12 @@ export interface DrawerProps extends ContainerProps {
 }
 
 export type OnOpenChangeCallback = ((isOpen: boolean) => void) | undefined;
-export interface DrawerContentProps extends ContainerProps {}
-export interface DrawerMainProps extends ContainerProps {}
-export interface DrawerHeaderProps extends ContainerProps {}
-export interface DrawerTitleProps extends ContainerProps {}
-export interface DrawerCloseProps extends ContainerProps {}
 
-export interface DrawerMenuProps extends ContainerProps {
+export interface DrawerMenuProps extends DrawerContainerProps {
   position?: 'start' | 'middle' | 'end';
 }
 
-export interface DrawerTriggerProps extends ContainerProps {
+export interface DrawerTriggerProps extends DrawerContainerProps {
   for: Key;
 }
 
@@ -100,7 +105,7 @@ export interface DrawerMenuItemProps {
   id?: Key;
 }
 
-export interface DrawerPanelProps extends ContainerProps {
+export interface DrawerPanelProps extends DrawerContainerProps {
   id?: Key;
 }
 
@@ -109,28 +114,21 @@ export interface DrawerLayoutContextValue {
   toggleDrawer: (drawerId: Key) => void;
   openDrawer: (drawerId: Key, menuItemId?: Key) => void;
   closeDrawer: (drawerId: Key) => void;
-  setDrawerSize: (drawerId: Key, size: DrawerSize) => void;
-  setDrawerMode: (drawerId: Key, mode: DrawerMode) => void;
   getDrawerState: (drawerId: Key) => DrawerState;
   registerDrawer: (
-    drawerId: Key,
     initialState: DrawerState,
     callbacks?: {
       onOpenChange?: OnOpenChangeCallback;
       onStateChange?: (state: DrawerState) => void;
     },
   ) => void;
-  isDrawerVisible: (drawerId: Key) => boolean;
   selectedMenuItemId?: Key;
   selectMenuItem: (drawerId: Key, menuItemId?: Key) => void;
-  showSelected: (drawerId: Key, menuItemId?: Key) => boolean;
+  isSelectedMenuItem: (selectedMenuItemId?: Key, menuItemId?: Key) => boolean;
 }
 
 export interface DrawerContextValue {
-  drawerId: Key;
-  state?: DrawerState;
-  selectedMenuItemId?: Key;
-  selectMenuItem: (drawerId: Key, menuItemId?: Key) => void;
+  state: DrawerState;
 }
 
 /**

@@ -12,7 +12,7 @@
 'use client';
 import 'client-only';
 import { PressResponder } from '@react-aria/interactions';
-import { type ReactNode, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import {
@@ -25,8 +25,7 @@ import {
 import { createDefaultDrawerState } from './state';
 import { DrawerMenuStyles, DrawerStyles } from './styles';
 import type {
-  DrawerCloseProps,
-  DrawerMainProps,
+  DrawerContainerProps,
   DrawerMenuItemProps,
   DrawerMenuProps,
   DrawerPanelProps,
@@ -42,7 +41,7 @@ const { menu, menuItem } = DrawerMenuStyles();
 
 const DrawerRoot = ({
   children,
-  className,
+  classNames,
   extend = 'left right',
   onStateChange,
 }: DrawerRootProps) => {
@@ -66,7 +65,7 @@ const DrawerRoot = ({
   return (
     <DrawerLayoutContext.Provider value={drawerState}>
       <div
-        className={root({ className })}
+        className={root({ className: classNames?.layout })}
         data-extend={extend}
         {...dataAttributes}
       >
@@ -90,43 +89,27 @@ export const Drawer = ({
   onStateChange,
   ...props
 }: DrawerProps) => {
-  const { getDrawerState, registerDrawer, selectedMenuItemId, selectMenuItem } =
-    useDrawerLayoutContext();
+  const { getDrawerState, registerDrawer } = useDrawerLayoutContext();
   const currentState = getDrawerState(id);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: this registers the drawer and should only run once
   useEffect(() => {
     const initialState = createDefaultDrawerState({
+      id,
       placement,
       selectedMenuItemId: defaultSelectedMenuItemId,
       mode,
       size,
       isOpen,
     });
-    registerDrawer(id, initialState, {
+    registerDrawer(initialState, {
       onOpenChange,
       onStateChange,
     });
-  }, [
-    id,
-    placement,
-    mode,
-    size,
-    isOpen,
-    defaultSelectedMenuItemId,
-    registerDrawer,
-    onOpenChange,
-    onStateChange,
-  ]);
+  }, []);
 
   return (
-    <DrawerContext.Provider
-      value={{
-        drawerId: id,
-        state: currentState,
-        selectedMenuItemId,
-        selectMenuItem,
-      }}
-    >
+    <DrawerContext.Provider value={{ state: currentState }}>
       <div
         className={drawer({ className, placement })}
         {...props}
@@ -141,21 +124,6 @@ export const Drawer = ({
     </DrawerContext.Provider>
   );
 };
-
-const DrawerMain = ({ children, className, ...props }: DrawerMainProps) => (
-  <main className={main({ className })} {...props}>
-    {children}
-  </main>
-);
-DrawerMain.displayName = 'Drawer.Main';
-
-const DrawerContent = ({ children }: { children: ReactNode }) => {
-  const { drawerId } = useDrawerContext();
-  const { isDrawerVisible } = useDrawerLayoutContext();
-  const visible = isDrawerVisible(drawerId);
-  return <div className={content({ visible })}>{children}</div>;
-};
-DrawerContent.displayName = 'Drawer.Content';
 
 const DrawerMenu = ({ children, className, ...props }: DrawerMenuProps) => {
   const { state } = useDrawerContext();
@@ -184,18 +152,18 @@ const DrawerMenuItem = ({
   className,
   ...props
 }: DrawerMenuItemProps) => {
-  const { openDrawer, showSelected } = useDrawerLayoutContext();
-  const { state, drawerId } = useDrawerContext();
-  const isSelected = showSelected(drawerId, id);
+  const { openDrawer, isSelectedMenuItem } = useDrawerLayoutContext();
+  const { state } = useDrawerContext();
+  const isSelected = isSelectedMenuItem(state.selectedMenuItemId, id);
 
   const handlePress = () => {
-    openDrawer(drawerId, id);
+    openDrawer(state.id, id);
   };
   return (
     <Button
       {...props}
       variant='icon'
-      className={menuItem({ drawer: state?.placement, className })}
+      className={menuItem({ drawer: state.placement, className })}
       aria-selected={isSelected}
       aria-controls={`panel-${id}`}
       id={`tab-${id}`}
@@ -214,8 +182,8 @@ const DrawerPanel = ({
   className,
   ...props
 }: DrawerPanelProps) => {
-  const { selectedMenuItemId } = useDrawerContext();
-  const isSelected = selectedMenuItemId === id;
+  const { state } = useDrawerContext();
+  const isSelected = state?.selectedMenuItemId === id;
 
   if (!isSelected) {
     return null;
@@ -246,12 +214,12 @@ const DrawerOpen = ({ for: drawerId, children }: DrawerTriggerProps) => {
 };
 DrawerOpen.displayName = 'Drawer.Open';
 
-const DrawerClose = ({ children }: DrawerCloseProps) => {
-  const { drawerId } = useDrawerContext();
+const DrawerClose = ({ children }: DrawerContainerProps) => {
+  const { state } = useDrawerContext();
   const { closeDrawer } = useDrawerLayoutContext();
 
   return (
-    <PressResponder onPress={() => closeDrawer(drawerId)}>
+    <PressResponder onPress={() => closeDrawer(state.id)}>
       {children}
     </PressResponder>
   );
@@ -282,10 +250,8 @@ const DrawerTrigger = ({
 };
 DrawerTrigger.displayName = 'Drawer.Trigger';
 
-const DrawerHeader = ({
-  children,
-  className,
-}: { children: ReactNode; className?: string }) => {
+//Slot candidates
+const DrawerHeader = ({ children, className }: DrawerContainerProps) => {
   return (
     <div
       className={header({
@@ -298,21 +264,36 @@ const DrawerHeader = ({
 };
 DrawerHeader.displayName = 'Drawer.Header';
 
-const DrawerTitle = ({
-  children,
-  className,
-}: { children: ReactNode; className?: string }) => {
+const DrawerTitle = ({ children, className }: DrawerContainerProps) => {
   return <div className={title({ className })}>{children}</div>;
 };
 DrawerHeader.displayName = 'Drawer.Title';
 
-const DrawerFooter = ({
-  children,
-  className,
-}: { children: ReactNode; className?: string }) => {
+const DrawerFooter = ({ children, className }: DrawerContainerProps) => {
   return <div className={footer({ className })}>{children}</div>;
 };
 DrawerFooter.displayName = 'Drawer.Footer';
+
+const DrawerMain = ({
+  children,
+  className,
+  ...props
+}: DrawerContainerProps) => (
+  <main className={main({ className })} {...props}>
+    {children}
+  </main>
+);
+DrawerMain.displayName = 'Drawer.Main';
+
+const DrawerContent = ({ children, className }: DrawerContainerProps) => {
+  const { state } = useDrawerContext();
+  return (
+    <div className={content({ className, visible: state?.isOpen })}>
+      {children}
+    </div>
+  );
+};
+DrawerContent.displayName = 'Drawer.Content';
 
 Drawer.Root = DrawerRoot;
 Drawer.Main = DrawerMain;
