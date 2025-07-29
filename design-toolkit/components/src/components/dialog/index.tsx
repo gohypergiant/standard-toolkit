@@ -14,7 +14,7 @@
 import { cn } from '@/lib/utils';
 import { useIsSSR } from '@react-aria/ssr';
 import 'client-only';
-import { cva } from 'cva';
+import { cva } from 'class-variance-authority';
 import {
   type PropsWithChildren,
   type ReactNode,

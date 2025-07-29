@@ -16,7 +16,7 @@ import Calendar from '@accelint/icons/calendar';
 import type { DateValue } from '@internationalized/date';
 import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import 'client-only';
-import { type VariantProps, cva } from 'cva';
+import { type VariantProps, cva } from 'class-variance-authority';
 import type { ForwardedRef } from 'react';
 import {
   DateField as AriaDateField,

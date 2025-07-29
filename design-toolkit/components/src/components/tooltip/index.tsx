@@ -13,7 +13,7 @@
 import { containsExactChildren } from '@/lib/react';
 import { cn } from '@/lib/utils';
 import 'client-only';
-import { type VariantProps, cva } from 'cva';
+import { type VariantProps, cva } from 'class-variance-authority';
 import type React from 'react';
 import {
   Focusable,

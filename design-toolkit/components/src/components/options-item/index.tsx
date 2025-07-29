@@ -13,7 +13,7 @@
 'use client';
 import { mergeProps } from '@react-aria/utils';
 import 'client-only';
-import { type VariantProps, cva } from 'cva';
+import { type VariantProps, cva } from 'class-variance-authority';
 import { type ReactNode, useContext, useMemo } from 'react';
 import {
   ListBoxItem as AriaListBoxItem,
