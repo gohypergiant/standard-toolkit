@@ -92,8 +92,6 @@ export const DrawerStyles = tv({
     header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],
     title: 'w-full text-default-light text-header-l',
     footer: 'mt-s flex flex-row items-center justify-end text-default-light',
-    trigger:
-      'fg-default-dark hover:fg-default-light cursor-pointer hover:bg-surface-overlay',
   },
 });
 

@@ -76,6 +76,8 @@ export interface DrawerMenuProps extends DrawerContainerProps {
 
 export interface DrawerTriggerProps extends DrawerContainerProps {
   for: Key;
+  behavior?: 'open' | 'close' | 'toggle';
+  children: ReactElement<DOMAttributes<FocusableElement>, string>
 }
 
 export interface DrawerMenuItemProps {

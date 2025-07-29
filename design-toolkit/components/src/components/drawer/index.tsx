@@ -11,8 +11,8 @@
  */
 'use client';
 import 'client-only';
-import { PressResponder } from '@react-aria/interactions';
-import { useEffect } from 'react';
+import { PressResponder, Pressable } from '@react-aria/interactions';
+import { useCallback, useEffect } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import {
@@ -35,7 +35,7 @@ import type {
   DrawerTriggerProps,
 } from './types';
 
-const { layout, main, drawer, trigger, content, panel, header, footer, title } =
+const { layout, main, drawer, content, panel, header, footer, title } =
   DrawerStyles();
 
 const { menu, item } = DrawerMenuStyles();
@@ -191,49 +191,27 @@ const DrawerPanel = ({
 };
 DrawerPanel.displayName = 'Drawer.Panel';
 
-const DrawerOpen = ({ for: drawerId, children }: DrawerTriggerProps) => {
-  const { openDrawer } = useDrawerLayoutContext();
-
-  return (
-    <PressResponder onPress={() => openDrawer(drawerId)}>
-      {children}
-    </PressResponder>
-  );
-};
-DrawerOpen.displayName = 'Drawer.Open';
-
-const DrawerClose = ({ children }: DrawerContainerProps) => {
-  const { state } = useDrawerContext();
-  const { closeDrawer } = useDrawerLayoutContext();
-
-  return (
-    <PressResponder onPress={() => closeDrawer(state.id)}>
-      {children}
-    </PressResponder>
-  );
-};
-DrawerClose.displayName = 'Drawer.Close';
-
 const DrawerTrigger = ({
   for: drawerId,
   children,
-  className,
-  ...props
+  behavior = 'toggle',
 }: DrawerTriggerProps) => {
-  const { toggleDrawer } = useDrawerLayoutContext();
+  const { toggleDrawer, openDrawer, closeDrawer } = useDrawerLayoutContext();
+
+  const handleOnPress = useCallback(() => {
+    if (behavior === 'open') {
+      openDrawer(drawerId);
+    } else if (behavior === 'close') {
+      closeDrawer(drawerId);
+    } else {
+      toggleDrawer(drawerId);
+    }
+  }, [behavior, drawerId, openDrawer, closeDrawer, toggleDrawer]);
 
   return (
-    <button
-      {...props}
-      className={trigger({ className })}
-      title={`Toggle ${drawerId} drawer`}
-      type='button'
-      onClick={() => {
-        toggleDrawer(drawerId);
-      }}
-    >
-      {children}
-    </button>
+    <PressResponder onPress={handleOnPress}>
+      <Pressable>{children}</Pressable>
+    </PressResponder>
   );
 };
 DrawerTrigger.displayName = 'Drawer.Trigger';
@@ -283,8 +261,6 @@ Drawer.Main = DrawerMain;
 DrawerMenu.Item = DrawerMenuItem;
 Drawer.Menu = DrawerMenu;
 Drawer.Trigger = DrawerTrigger;
-Drawer.Open = DrawerOpen;
-Drawer.Close = DrawerClose;
 Drawer.Panel = DrawerPanel;
 Drawer.Header = DrawerHeader;
 Drawer.Title = DrawerTitle;

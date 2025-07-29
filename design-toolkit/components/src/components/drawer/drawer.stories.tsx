@@ -79,13 +79,13 @@ export const WithTabs: Story = {
               <Drawer.Content>
                 <Drawer.Header>
                   <Drawer.Title>Title</Drawer.Title>
-                  <Drawer.Close>
+                  <Drawer.Trigger for='settings' behavior='close'>
                     <Button size='small' variant='flat'>
                       <Icon>
                         <Cancel />
                       </Icon>
                     </Button>
-                  </Drawer.Close>
+                  </Drawer.Trigger>
                 </Drawer.Header>
                 <Drawer.Panel id='a'>A Content</Drawer.Panel>
                 <Drawer.Panel id='b'>B Content</Drawer.Panel>
@@ -212,13 +212,13 @@ export const WithLongContent: Story = {
               <Drawer.Content>
                 <Drawer.Header>
                   <Drawer.Title>Title</Drawer.Title>
-                  <Drawer.Close>
+                  <Drawer.Trigger for='settings' behavior='close'>
                     <Button size='small'>
                       <Icon>
                         <Cancel />
                       </Icon>
                     </Button>
-                  </Drawer.Close>
+                  </Drawer.Trigger>
                 </Drawer.Header>
                 <Drawer.Panel>{longContent}</Drawer.Panel>
                 <Drawer.Footer>Footer</Drawer.Footer>
@@ -269,9 +269,9 @@ export const ControlledOpen: Story = {
                 </Drawer.Header>
                 <Drawer.Panel>A Content</Drawer.Panel>
                 <Drawer.Footer>
-                  <Drawer.Close>
+                  <Drawer.Trigger for='settings' behavior='close'>
                     <Button>Cancel</Button>
-                  </Drawer.Close>
+                  </Drawer.Trigger>
                 </Drawer.Footer>
               </Drawer.Content>
             </Drawer>
