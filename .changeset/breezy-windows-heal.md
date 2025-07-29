@@ -2,4 +2,4 @@
 "@accelint/design-toolkit": patch
 ---
 
-Fix css grid formattaing for menu
+Fix css grid formatting for menu
