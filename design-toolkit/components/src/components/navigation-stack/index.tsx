@@ -11,20 +11,18 @@
  */
 
 import {
-  Children,
-  type ReactNode,
+  type DOMAttributes,
+  type ReactElement,
   createContext,
-  isValidElement,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from 'react';
 
-import { ChevronLeft } from '@accelint/icons';
-import { Button } from '../button';
-import { Icon } from '../icon';
-import { NavigationStackStyles } from './styles';
+import { PressResponder } from '@react-aria/interactions';
+import type { FocusableElement } from '@react-types/shared';
+import { Pressable } from 'react-aria-components';
 import type { NavigationStackProps, NavigationStackViewProps } from './types';
 
 interface NavigationStackContextValue {
@@ -35,35 +33,18 @@ interface NavigationStackContextValue {
   viewStack: string[];
 }
 
-export const NavigationStackContext =
-  createContext<NavigationStackContextValue>({
-    currentViewId: null,
-    pushView: () => undefined,
-    popView: () => undefined,
-    canGoBack: false,
-    viewStack: [],
-  });
-
-const { container, content, backButton, view } = NavigationStackStyles();
-
-const NavigationStackContent = ({
-  children,
-  className,
-  ...props
-}: { children: ReactNode; className?: string }) => {
-  return (
-    <div className={content({ className })} {...props}>
-      {children}
-    </div>
-  );
-};
-NavigationStackContent.displayName = 'NavigationStack.Content';
+const NavigationStackContext = createContext<NavigationStackContextValue>({
+  currentViewId: null,
+  pushView: () => undefined,
+  popView: () => undefined,
+  canGoBack: false,
+  viewStack: [],
+});
 
 const NavigationStackView = ({
   id,
   children,
   className,
-  ...props
 }: NavigationStackViewProps) => {
   const context = useContext(NavigationStackContext);
   const isActive = context.currentViewId === id;
@@ -72,56 +53,45 @@ const NavigationStackView = ({
     return null;
   }
 
-  return (
-    <div className={view()} {...props}>
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 };
 NavigationStackView.displayName = 'NavigationStack.View';
 
-const NavigationStackButton = ({
+const NavigationStackNavigate = ({
   children,
   childId,
   ...props
-}: { children: ReactNode; childId: string }) => {
+}: {
+  children: ReactElement<DOMAttributes<FocusableElement>, string>;
+  childId: string;
+}) => {
   const context = useContext(NavigationStackContext);
   return (
-    <Button {...props} onPress={() => context.pushView(childId)}>
-      {children}
-    </Button>
+    <PressResponder onPress={() => context.pushView(childId)}>
+      <Pressable {...props}>{children}</Pressable>
+    </PressResponder>
   );
 };
-NavigationStackButton.displayName = 'NavigationStack.NavigationButton';
+NavigationStackNavigate.displayName = 'NavigationStack.Navigate';
 
-const NavigationStackBackButton = ({
+const NavigationStackBack = ({
   children,
   ...props
-}: { children?: ReactNode }) => {
+}: {
+  children: ReactElement<DOMAttributes<FocusableElement>, string>;
+}) => {
   const context = useContext(NavigationStackContext);
   return context.canGoBack ? (
-    <Button
-      {...props}
-      slot='back'
-      size='small'
-      variant='flat'
-      onPress={context.popView}
-      className={backButton()}
-    >
-      <Icon>
-        <ChevronLeft />
-      </Icon>
-      {children}
-    </Button>
+    <PressResponder onPress={context.popView}>
+      <Pressable {...props}>{children}</Pressable>
+    </PressResponder>
   ) : null;
 };
-NavigationStackButton.displayName = 'NavigationStack.BackButton';
+NavigationStackBack.displayName = 'NavigationStack.BackButton';
 
 export const NavigationStack = ({
   children,
   defaultViewId,
-  className,
-  ...props
 }: NavigationStackProps) => {
   const [viewStack, setViewStack] = useState<string[]>(
     defaultViewId ? [defaultViewId] : [],
@@ -147,25 +117,13 @@ export const NavigationStack = ({
     [currentViewId, canGoBack, viewStack, pushView, popView],
   );
 
-  const content = Children.toArray(children).find(
-    (child) => isValidElement(child) && child.type === NavigationStackContent,
-  );
-
-  const views = Children.toArray(children).filter(
-    (child) => isValidElement(child) && child.type === NavigationStackView,
-  );
-
   return (
     <NavigationStackContext.Provider value={contextValue}>
-      <div className={container({ className })} {...props}>
-        {content}
-        {views}
-      </div>
+      {children}
     </NavigationStackContext.Provider>
   );
 };
 NavigationStack.displayName = 'NavigationStack';
-NavigationStack.Content = NavigationStackContent;
 NavigationStack.View = NavigationStackView;
-NavigationStack.NavigateButton = NavigationStackButton;
-NavigationStack.Back = NavigationStackBackButton;
+NavigationStack.Navigate = NavigationStackNavigate;
+NavigationStack.Back = NavigationStackBack;

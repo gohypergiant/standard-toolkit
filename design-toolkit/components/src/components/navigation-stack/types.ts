@@ -11,9 +11,8 @@
  */
 
 import type {ReactNode, RefAttributes} from "react"
-import type {NavigationStackStyleVariants} from "./styles"
 
-export type NavigationStackProps = Pick<NavigationStackStyleVariants, never> & RefAttributes<HTMLDivElement> & {
+export type NavigationStackProps = RefAttributes<HTMLDivElement> & {
   children?: ReactNode;
   defaultViewId?: string;
   className?: string;

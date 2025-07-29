@@ -291,48 +291,56 @@ export const WithNavigationStack: Story = {
             <Drawer.Content>
               <Drawer.Panel id='a'>
                 <NavigationStack defaultViewId='a'>
-                  <NavigationStack.View id='a'>
+                  <NavigationStack.View id='a' className='flex flex-col'>
                     <Drawer.Header>Parent A</Drawer.Header>
-                    <NavigationStack.Content>a content</NavigationStack.Content>
+                    <div className='flex-1'>a content</div>
                     <Drawer.Footer>
-                      <NavigationStack.NavigateButton childId='child-a'>
-                        View Child
-                      </NavigationStack.NavigateButton>
+                      <NavigationStack.Navigate childId='child-a'>
+                        <span className='cursor-pointer'>View Child</span>
+                      </NavigationStack.Navigate>
                     </Drawer.Footer>
                   </NavigationStack.View>
 
-                  <NavigationStack.View id='child-a'>
-                    <div className='flex items-center justify-between'>
-                      <NavigationStack.Back>Back</NavigationStack.Back>
+                  <NavigationStack.View
+                    id='child-a'
+                    className='flex flex-col gap-m'
+                  >
+                    <div className='flex cursor-pointer items-center justify-between'>
+                      <NavigationStack.Back>
+                        <span>Back</span>
+                      </NavigationStack.Back>
                       <div>Child A</div>
                     </div>
-                    <NavigationStack.Content>
-                      a child content
-                    </NavigationStack.Content>
+                    <div> a child content </div>
                   </NavigationStack.View>
                 </NavigationStack>
               </Drawer.Panel>
 
               <Drawer.Panel id='b' className='h-full p-0'>
                 <NavigationStack defaultViewId='b'>
-                  <NavigationStack.View id='b'>
+                  <NavigationStack.View id='b' className='flex flex-col'>
                     <Drawer.Header>Parent B</Drawer.Header>
-                    <NavigationStack.Content>b content</NavigationStack.Content>
+                    <div className='flex-1'>b content</div>
                     <Drawer.Footer>
-                      <NavigationStack.NavigateButton childId='child-b'>
-                        View Child
-                      </NavigationStack.NavigateButton>
+                      <NavigationStack.Navigate childId='child-b'>
+                        <span className='cursor-pointer'>View Child</span>
+                      </NavigationStack.Navigate>
                     </Drawer.Footer>
                   </NavigationStack.View>
 
-                  <NavigationStack.View id='child-b'>
-                    <div className='flex items-center justify-between'>
-                      <NavigationStack.Back />
+                  <NavigationStack.View
+                    id='child-b'
+                    className='flex flex-col gap-m'
+                  >
+                    <div className='flex cursor-pointer items-center justify-between'>
+                      <NavigationStack.Back>
+                        <Icon>
+                          <ChevronLeft />
+                        </Icon>
+                      </NavigationStack.Back>
                       Child B
                     </div>
-                    <NavigationStack.Content>
-                      b child content
-                    </NavigationStack.Content>
+                    <div className='flex-1'>b child content</div>
                   </NavigationStack.View>
                 </NavigationStack>
               </Drawer.Panel>
