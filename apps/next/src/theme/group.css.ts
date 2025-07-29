@@ -11,13 +11,13 @@
  */
 
 import {
-  type GroupState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type GroupState,
   groupSpaceVars,
   groupStateVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

@@ -13,9 +13,9 @@
 import {
   Children,
   Fragment,
+  isValidElement,
   type JSXElementConstructor,
   type ReactNode,
-  isValidElement,
 } from 'react';
 
 class ComponentStructureError extends Error {

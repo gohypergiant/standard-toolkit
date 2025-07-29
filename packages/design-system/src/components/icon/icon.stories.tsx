@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { Icon } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { IconProps } from './types';
 
 export default {

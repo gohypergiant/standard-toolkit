@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Collection, Node } from '@react-types/shared';
 import { type Context, useContext } from 'react';
-import type { CollectionRenderer } from 'react-aria-components';
 import { useCollectionRender } from '../../hooks/use-collection-render';
 import { MergeProvider } from '../merge-provider';
+import type { Collection, Node } from '@react-types/shared';
+import type { CollectionRenderer } from 'react-aria-components';
 import type { MergeProviderProps } from '../merge-provider/types';
 
 /**

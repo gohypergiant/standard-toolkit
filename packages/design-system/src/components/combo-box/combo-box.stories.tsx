@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle/actions';
 import { AriaFieldError, AriaGroup, AriaLabel, AriaText } from '../aria';
 import { Button } from '../button';
@@ -18,6 +17,7 @@ import { Icon } from '../icon';
 import { Input } from '../input';
 import { Options, OptionsItem, OptionsList } from '../options';
 import { ComboBox } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { ComboBoxProps } from './types';
 
 type StoryProps = ComboBoxProps<object> & {

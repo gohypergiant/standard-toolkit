@@ -12,7 +12,6 @@
 
 import { describe, expect, it } from 'vitest';
 import { layers } from '../../styles/layers.css';
-import type { Contract } from '../../types/vanilla-extract';
 import {
   applyThemeVars,
   assignPartialVars,
@@ -22,6 +21,7 @@ import {
   inlineVars,
   unwrapCssVar,
 } from './';
+import type { Contract } from '../../types/vanilla-extract';
 
 describe('utils/css', () => {
   describe('applyThemeVars', () => {

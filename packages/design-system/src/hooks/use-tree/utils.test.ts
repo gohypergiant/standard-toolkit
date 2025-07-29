@@ -11,8 +11,8 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
-import type { TreeNode } from '../../types/use-tree';
 import { mapTree, toggleVisibility } from './utils';
+import type { TreeNode } from '../../types/use-tree';
 
 describe('hooks/use-tree/utils', () => {
   describe('mapTree', () => {

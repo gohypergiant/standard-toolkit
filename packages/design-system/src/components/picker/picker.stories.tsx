@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { ColorSwatch } from 'react-aria-components';
 import { actions } from '../../ladle/actions';
 import { Icon } from '../icon';
@@ -20,6 +19,7 @@ import {
   colorSwatch,
   iconPickerItem,
 } from './picker.stories.css';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { PickerProps } from './types';
 
 export default {

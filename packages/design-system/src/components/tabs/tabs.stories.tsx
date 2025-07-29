@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { type Story, type StoryDefault, action } from '@ladle/react';
-import type { CSSProperties } from 'react';
+import { action, type Story, type StoryDefault } from '@ladle/react';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from './';
+import type { CSSProperties } from 'react';
 import type { TabListProps } from './types';
 
 export default {

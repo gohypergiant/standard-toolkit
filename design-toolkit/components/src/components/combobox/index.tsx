@@ -12,6 +12,8 @@
 
 'use client';
 import 'client-only';
+import ChevronDown from '@accelint/icons/chevron-down';
+import { cva, type VariantProps } from 'cva';
 import {
   Button as AriaButton,
   ComboBox as AriaComboBox,
@@ -29,15 +31,12 @@ import {
   Virtualizer as AriaVirtualizer,
   type VirtualizerProps as AriaVirtualizerProps,
 } from 'react-aria-components';
-
 import { cn } from '@/lib/utils';
-import { ChevronDown } from '@accelint/icons';
-import { type VariantProps, cva } from 'cva';
-import type { ReactNode } from 'react';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
 import { type IOptionsItem, OptionsItem } from '../options-item';
+import type { ReactNode } from 'react';
 
 const textFieldStyles = cva(
   [

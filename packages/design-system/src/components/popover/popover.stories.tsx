@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type Story, type StoryDefault, action } from '@ladle/react';
+import { action, type Story, type StoryDefault } from '@ladle/react';
 import { DialogTrigger } from 'react-aria-components';
 import { genericColorVars } from '../../styles/theme.css';
 import { AriaHeading } from '../aria';

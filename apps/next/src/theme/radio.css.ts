@@ -11,18 +11,18 @@
  */
 
 import {
-  type RadioGroupState,
-  type RadioState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type RadioGroupState,
+  type RadioState,
   radioColorVars,
   radioGroupStateVars,
   radioSpaceVars,
   radioStateVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

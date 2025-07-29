@@ -11,14 +11,14 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
-import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactNode } from 'react';
 import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
 } from 'react-aria-components';
-import type { IOptionsItem } from '../options-item';
 import { Options } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
+import type { ReactNode } from 'react';
+import type { IOptionsItem } from '../options-item';
 
 const meta: Meta<typeof Options> = {
   title: 'Components/Options',

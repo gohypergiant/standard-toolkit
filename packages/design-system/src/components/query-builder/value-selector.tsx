@@ -10,14 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Key } from '@react-types/shared';
 import { useCallback, useContext, useMemo } from 'react';
-import type { Selection } from 'react-aria-components';
 import {
   type FullOption,
-  type ValueSelectorProps,
   isOptionGroupArray,
   useValueSelector,
+  type ValueSelectorProps,
 } from 'react-querybuilder';
 import { callRenderProps } from '../../utils/props';
 import { AriaHeader, AriaSection, AriaSelectValue } from '../aria';
@@ -25,6 +23,8 @@ import { Button } from '../button';
 import { Options, OptionsItem, OptionsList } from '../options';
 import { Select } from '../select';
 import { QueryBuilderContext } from './constants';
+import type { Key } from '@react-types/shared';
+import type { Selection } from 'react-aria-components';
 
 export function ValueSelector<T extends FullOption = FullOption>({
   handleOnChange,

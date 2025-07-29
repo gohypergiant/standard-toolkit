@@ -12,16 +12,16 @@
 
 import { style } from '@vanilla-extract/css';
 import {
-  type MenuItemState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type MenuItemState,
   menuColorVars,
   menuItemStateVars,
   menuSpaceVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '../../src';
 
 export const Menu: ThemeContext['Menu'] = {

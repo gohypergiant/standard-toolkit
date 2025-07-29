@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { type ForwardedRef, createContext, forwardRef, useMemo } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import { createContext, type ForwardedRef, forwardRef, useMemo } from 'react';
 import { useContextProps } from '../../hooks/use-context-props';
 import { useDefaultProps } from '../../hooks/use-defaults';
 import { useTheme } from '../../hooks/use-theme';
 import { inlineVars } from '../../utils/css';
 import { mergeClassNames } from '../../utils/props';
 import { iconClassNames, iconStateVars } from './icon.css';
+import type { ContextValue } from 'react-aria-components';
 import type { IconProps } from './types';
 
 export const IconContext =

@@ -1,0 +1,23 @@
+{
+  "root": false,
+  "extends": "//",
+  "linter": {
+    "rules": {
+      "style": {
+        "noParameterAssign": {
+          "level": "warn"
+        }
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "attributes": ["classList"],
+            "functions": ["clsx", "cn", "cva", "tv", "tw", "twMerge"]
+          }
+        }
+      }
+    }
+  }
+}

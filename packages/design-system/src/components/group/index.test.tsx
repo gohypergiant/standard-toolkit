@@ -13,8 +13,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Button, ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { Group } from './';
+import type { ButtonProps } from '../button/types';
 import type { GroupProps } from './types';
 
 function setup(

@@ -9,12 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
-import { containsExactChildren } from '@/lib/react';
-import { cn } from '@/lib/utils';
-import 'client-only';
-import { type VariantProps, cva } from 'cva';
-import type React from 'react';
+import { cva, type VariantProps } from 'cva';
 import {
   Focusable,
   Tooltip as RACTooltip,
@@ -22,6 +19,10 @@ import {
   TooltipTrigger as RACTooltipTrigger,
   type TooltipTriggerComponentProps,
 } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
+import { cn } from '@/lib/utils';
+import 'client-only';
+import type React from 'react';
 
 const tooltipStyles = cva(
   'fg-default-light flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay',

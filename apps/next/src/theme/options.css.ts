@@ -11,16 +11,16 @@
  */
 
 import {
-  type OptionsItemState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type OptionsItemState,
   optionsColorVars,
   optionsItemStateVars,
   optionsSpaceVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { fallbackVar, style } from '@vanilla-extract/css';
 

@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { startCase } from 'lodash';
 import { Icon } from '../components/icon';
 /*
@@ -13,6 +12,7 @@ import { Icon } from '../components/icon';
  * governing permissions and limitations under the License.
  */
 import { default as catalog } from './catalog';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Icons',

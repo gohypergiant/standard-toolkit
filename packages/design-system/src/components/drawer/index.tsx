@@ -16,12 +16,11 @@ import { useFocusWithin } from '@react-aria/interactions';
 import { useOverlay } from '@react-aria/overlays';
 import { useIsSSR } from '@react-aria/ssr';
 import { useOverlayTriggerState } from '@react-stately/overlays';
-import type { PressEvent } from '@react-types/shared';
 import {
-  type ForwardedRef,
-  type HTMLAttributes,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   useCallback,
   useContext,
   useMemo,
@@ -45,18 +44,19 @@ import {
 } from '../../utils/props';
 import { AriaHeadingContext } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { ElementContext } from '../element';
-import type { ElementProps } from '../element/types.ts';
 import { Tab, TabList, Tabs } from '../tabs';
-import type { TabRenderProps } from '../tabs/types';
 import { TooltipContext, TooltipTargetContext } from '../tooltip';
-import type { TooltipProps, TooltipTargetProps } from '../tooltip/types';
 import {
   drawerClassNames,
   drawerDialogStateVars,
   drawerStateVars,
 } from './drawer.css';
+import type { PressEvent } from '@react-types/shared';
+import type { ButtonProps } from '../button/types';
+import type { ElementProps } from '../element/types.ts';
+import type { TabRenderProps } from '../tabs/types';
+import type { TooltipProps, TooltipTargetProps } from '../tooltip/types';
 import type {
   DrawerContextValue,
   DrawerDialogProps,
@@ -428,6 +428,7 @@ export const DrawerDialog = forwardRef(function DrawerDialog(
 
   return (
     <Provider values={values}>
+      {/** biome-ignore lint/a11y/useAriaPropsSupportedByRole: <explanation> */}
       <div
         {...rest}
         className={classNames?.dialog?.container}

@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { TooltipTrigger } from 'react-aria-components';
 import { Button } from '../button';
 import { Tooltip } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { TooltipProps } from './types';
 
 export default {

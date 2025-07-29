@@ -11,13 +11,13 @@
  */
 
 import { Time, type Time as TimeType } from '@internationalized/date';
-import type { Story } from '@ladle/react';
-import type { TimeValue } from '@react-aria/datepicker';
-import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { DateInput, DateSegment, DateSegments } from '../date-input';
 import { Icon } from '../icon';
 import { TimeField } from './';
+import type { Story } from '@ladle/react';
+import type { TimeValue } from '@react-aria/datepicker';
+import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import type { TimeFieldProps } from './types';
 
 type TimeFieldStoryProps<T extends TimeValue> = TimeFieldProps<T> & {

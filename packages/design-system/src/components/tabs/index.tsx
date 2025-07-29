@@ -12,8 +12,8 @@
 
 import {
   Children,
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -27,7 +27,6 @@ import {
   Tabs as RACTabs,
   type SlotProps,
 } from 'react-aria-components';
-import type { RequiredDeep } from 'type-fest';
 import { useContextProps } from '../../hooks/use-context-props';
 import { useDefaultProps } from '../../hooks/use-defaults';
 import { usePropagatingPress } from '../../hooks/use-propagating-press';
@@ -41,6 +40,7 @@ import {
   tabStateVars,
   tabsClassNames,
 } from './tabs.css';
+import type { RequiredDeep } from 'type-fest';
 import type {
   TabListProps,
   TabPanelProps,

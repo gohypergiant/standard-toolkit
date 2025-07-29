@@ -12,19 +12,19 @@
 
 import { style } from '@vanilla-extract/css';
 import {
-  type ComboBoxState,
-  type InputState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type ComboBoxState,
   comboBoxColorVars,
   comboBoxSpaceVars,
   comboBoxStateVars,
   genericColorVars,
+  type InputState,
   inputColorVars,
   inputStateVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '../../src';
 
 export const ComboBox: ThemeContext['ComboBox'] = {

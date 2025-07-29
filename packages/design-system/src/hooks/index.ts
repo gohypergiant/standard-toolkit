@@ -17,20 +17,20 @@ export {
   useDefaultProps,
   useDefaults,
 } from './use-defaults';
-export type {
-  DefaultsContext,
-  DefaultsProviderProps,
-} from './use-defaults/types';
 export { usePropagatingPress } from './use-propagating-press';
 export { useSlot } from './use-slot';
 export {
   ThemeProvider,
   useTheme,
 } from './use-theme';
+export { useTree } from './use-tree';
+export { useUpdateEffect } from './use-update-effect';
+export type {
+  DefaultsContext,
+  DefaultsProviderProps,
+} from './use-defaults/types';
 export type {
   ThemeContext,
   ThemeProviderProps,
   ThemeVars,
 } from './use-theme/types';
-export { useTree } from './use-tree';
-export { useUpdateEffect } from './use-update-effect';

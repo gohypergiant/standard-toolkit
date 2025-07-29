@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
-import { TextArea } from '.';
 import { actions } from '../../ladle/actions';
+import { TextArea } from '.';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { TextAreaProps } from './types';
 
 export default {
