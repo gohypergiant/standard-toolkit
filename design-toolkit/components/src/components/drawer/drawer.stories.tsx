@@ -107,7 +107,7 @@ export const FullLayout: Story = {
             <Drawer id='header' placement='top' size='medium'>
               <Drawer.Menu>
                 <Drawer.Trigger for='header'>
-                  <Icon>
+                  <Icon className='cursor-pointer text-default-light'>
                     <ChevronDown className='group-open/drawer:rotate-180' />
                   </Icon>
                 </Drawer.Trigger>
@@ -146,7 +146,7 @@ export const FullLayout: Story = {
             <Drawer id='footer' placement='bottom'>
               <Drawer.Menu>
                 <Drawer.Trigger for='footer'>
-                  <Icon>
+                  <Icon className='cursor-pointer text-default-light'>
                     <ChevronUp className='group-open/drawer:rotate-180' />
                   </Icon>
                 </Drawer.Trigger>
@@ -162,7 +162,7 @@ export const FullLayout: Story = {
             <Drawer id='settings' placement='left'>
               <Drawer.Menu>
                 <Drawer.Trigger for='settings'>
-                  <Icon>
+                  <Icon className='cursor-pointer text-default-light'>
                     <ChevronRight className='group-open/drawer:rotate-180' />
                   </Icon>
                 </Drawer.Trigger>
@@ -178,7 +178,7 @@ export const FullLayout: Story = {
             <Drawer id='sidebar' placement='right'>
               <Drawer.Menu>
                 <Drawer.Trigger for='sidebar'>
-                  <Icon>
+                  <Icon className='cursor-pointer text-default-light'>
                     <ChevronLeft className='group-open/drawer:rotate-180' />
                   </Icon>
                 </Drawer.Trigger>
@@ -240,7 +240,7 @@ export const ControlledOpen: Story = {
     return (
       <div className='h-screen w-full'>
         <Drawer.Provider>
-          <Drawer.Layout>
+          <Drawer.Layout push="left">
             <Drawer.Main>
               <div className='flex flex-col gap-m p-l'>
                 <Button

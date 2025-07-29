@@ -16,8 +16,8 @@ export const DrawerStyles = tv({
       '[--drawer-size-closed:0]',
       '[--drawer-menu-size:40px]',
       '[--drawer-size-small:200px]',
-      '[--drawer-size-medium:min(475px,100%+var(--drawer-menu-size))]',
-      '[--drawer-size-large:min(600px,100%+var(--drawer-menu-size))]',
+      '[--drawer-size-medium:min(475px,100%)]',
+      '[--drawer-size-large:min(600px,100%)]',
 
       //Grid template definitions
       '[--route-layout-grid-cols:auto_1fr_auto]',
