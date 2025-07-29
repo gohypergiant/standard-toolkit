@@ -12,7 +12,6 @@
 
 import { Add } from '@accelint/icons';
 import { Icon } from './';
-import { IconStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Icon> = {
@@ -20,7 +19,6 @@ const meta: Meta<typeof Icon> = {
   component: Icon,
   args: {
     className: 'fg-default-light',
-    size: IconStylesDefaults.size,
   },
   argTypes: {
     className: {

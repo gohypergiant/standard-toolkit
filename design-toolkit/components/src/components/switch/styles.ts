@@ -15,19 +15,19 @@ import { tv } from '@/lib/utils';
 export const SwitchStyles = tv({
   slots: {
     switch:
-      'group flex cursor-pointer items-center gap-s disabled:cursor-not-allowed',
+      'group/switch flex cursor-pointer items-center gap-s disabled:cursor-not-allowed',
     control: [
       'flex rounded-round bg-transparent p-xxs outline outline-interactive before:mr-l before:block before:size-m before:rounded-full before:bg-default-dark',
-      'group-enabled:group-focus:bg-interactive-hover-dark group-enabled:group-focus:outline-interactive-hover group-enabled:group-focus:before:bg-interactive-hover',
-      'group-enabled:group-hover:bg-interactive-hover-dark group-enabled:group-hover:outline-interactive-hover group-enabled:group-hover:before:bg-interactive-hover',
-      'group-enabled:group-selected:outline-highlight group-selected:before:mr-0 group-selected:before:ml-l group-enabled:group-selected:before:bg-highlight',
-      'group-enabled:group-selected:group-focus:bg-highlight-subtle group-enabled:group-selected:group-focus:outline-interactive-hover group-enabled:group-selected:group-focus:before:bg-highlight',
-      'group-enabled:group-selected:group-hover:bg-highlight-subtle group-enabled:group-selected:group-hover:outline-highlight group-enabled:group-selected:group-hover:before:bg-highlight',
-      'group-disabled:bg-interactive-disabled group-disabled:outline-interactive-disabled group-disabled:before:bg-disabled',
+      'group-enabled/switch:group-focus/switch:bg-interactive-hover-dark group-enabled/switch:group-focus/switch:outline-interactive-hover group-enabled/switch:group-focus/switch:before:bg-interactive-hover',
+      'group-enabled/switch:group-hover/switch:bg-interactive-hover-dark group-enabled/switch:group-hover/switch:outline-interactive-hover group-enabled/switch:group-hover/switch:before:bg-interactive-hover',
+      'group-enabled/switch:group-selected/switch:outline-highlight group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:bg-highlight',
+      'group-enabled/switch:group-selected/switch:group-focus/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-focus/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus/switch:before:bg-highlight',
+      'group-enabled/switch:group-selected/switch:group-hover/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-hover/switch:outline-highlight group-enabled/switch:group-selected/switch:group-hover/switch:before:bg-highlight',
+      'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:bg-disabled',
     ],
     label: [
       'text-body-s text-interactive-default',
-      'group-disabled:text-interactive-disabled',
+      'group-disabled/switch:text-interactive-disabled',
     ],
   },
 });

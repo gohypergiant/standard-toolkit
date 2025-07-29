@@ -16,197 +16,133 @@
 @import 'tailwindcss';
 
 /* Import generated themes.css */
-@import './tokens/generated/themes.css';
+@import './tokens/themes.css';
 
 @theme {
   --color-current: currentColor;
 }
 
-/** Recreating https://github.com/adobe/react-spectrum/blob/main/packages/tailwindcss-react-aria-components/src/index.js without RAC selectors (:where([data-rac])) or prefix and combining with native selectors **/
-@custom-variant placement-left { &[data-placement="left"] { @slot }}
-@custom-variant placement-right { &[data-placement="right"] { @slot }}
-@custom-variant placement-top { &[data-placement="top"] { @slot }}
-@custom-variant placement-bottom { &[data-placement="bottom"] { @slot }}
+@import './variants/variants.css';
 
-@custom-variant type-literal { &[data-type="literal"] { @slot }}
-@custom-variant type-year { &[data-type="year"] { @slot }}
-@custom-variant type-month { &[data-type="month"] { @slot }}
-@custom-variant type-day { &[data-type="day"] { @slot }}
+/**
+ * Provides an escalation selector allowing for easier bump in specificity
+ * instead of having to target the same level established by a previous style.
+ *
+ * Can be stacked if necessary, just don't get carried away with power.
+ */
+@custom-variant sudo (&&);
 
-@custom-variant layout-grid { &[data-layout="grid"] { @slot }}
-@custom-variant layout-stack { &[data-layout="stack"] { @slot }}
-
-@custom-variant orientation-horizontal { &[data-orientation="horizontal"] { @slot }}
-@custom-variant orientation-vertical { &[data-orientation="vertical"] { @slot }}
-
-@custom-variant selection-single { &[data-selection-mode="single"] { @slot }}
-@custom-variant selection-multiple { &[data-selection-mode="multiple"] { @slot }}
-
-@custom-variant resizable-right { &[data-resizable-direction="right"] { @slot }}
-@custom-variant resizable-left { &[data-resizable-direction="left"] { @slot }}
-@custom-variant resizable-both { &[data-resizable-direction="both"] { @slot }}
-
-@custom-variant sort-ascending { &[data-sort-direction="ascending"] { @slot }}
-@custom-variant sort-descending { &[data-sort-direction="descending"] { @slot }}
-
-@custom-variant allows-removing { &[data-allows-removing] { @slot }}
-@custom-variant allows-sorting { &[data-allows-sorting] { @slot }}
-@custom-variant allows-dragging { &[data-allows-dragging] { @slot }}
-
-@custom-variant has-submenu { &[data-has-submenu] { @slot }}
-@custom-variant has-child-items { &[data-has-child-items] { @slot }}
-
-@custom-variant open { &:is([open], [data-open]), &:open { @slot }}
-@custom-variant expanded { &:is([expanded], [data-expanded]) { @slot }}
-
-@custom-variant entering { &[data-entering] { @slot }}
-@custom-variant exiting { &[data-exiting] { @slot }}
-
-@custom-variant indeterminate { &[data-indeterminate], &:indeterminate { @slot }}
-
-@custom-variant placeholder-shown { &[data-placeholder], &:placeholder-shown { @slot }}
-
-@custom-variant current { &[data-current] { @slot }}
-
-@custom-variant optional { &:not([required], [data-required]), &:optional { @slot }}
-@custom-variant required { &:is([required], [data-required]), &:required { @slot }}
-
-@custom-variant unavailable { &[data-unavailable] { @slot }}
-
-@custom-variant invalid { &:is([invalid], [data-invalid]), &:invalid { @slot }}
-
-@custom-variant read-only { &:is([readonly], [data-readonly]), &:read-only { @slot }}
-
-@custom-variant outside-month { &[data-outside-month] { @slot }}
-@custom-variant outside-visible-range { &[data-outside-visible-range] { @slot }}
-
-@custom-variant pending { &[data-pending] { @slot }}
-
-@custom-variant empty { &[data-empty], &:empty { @slot }}
-
-@custom-variant focus-within { &[data-focus-within], &:focus-within { @slot }}
-
-@custom-variant hover { &[data-hovered], &:hover { @slot }}
-
-@custom-variant focus { &[data-focused], &:focus { @slot }}
-@custom-variant focus-visible { &[data-focus-visible], &:focus-visible { @slot }}
-
-@custom-variant pressed { &[data-pressed], &:active { @slot }}
-
-@custom-variant selected { &[data-selected] { @slot }}
-@custom-variant selection-start { &[data-selection-start] { @slot }}
-@custom-variant selection-end { &[data-selection-end] { @slot }}
-
-@custom-variant dragging { &[data-dragging] { @slot }}
-@custom-variant drop-target { &[data-drop-target] { @slot }}
-
-@custom-variant resizing { &[data-resizing] { @slot }}
-
-@custom-variant enabled { &:not([disabled], [data-disabled]), &:enabled { @slot }}
-@custom-variant disabled { &:is([disabled], [data-disabled]), &:disabled { @slot }}
+/**
+ * DesignTK chooses to implement outlines instead of borders to make it so
+ * that the style doesn't impact box model dimensions. This way elements with
+ * or without a "border" are consistently sized based on content and padding alone
+ */
+@utility outline {
+  outline-offset: -1px;
+}
 
 @utility text-header-xxl {
   font-size: var(--typography-header-xxl-size);
   font-weight: 500;
-  letter-spacing: 0px;
+  letter-spacing: var(--typography-header-xxl-spacing);
   line-height: var(--typography-header-xxl-height);
 }
 
 @utility text-header-xl {
   font-size: var(--typography-header-xl-size);
   font-weight: 500;
-  letter-spacing: 0.18px;
+  letter-spacing: var(--typography-header-xl-spacing);
   line-height: var(--typography-header-xl-height);
 }
 
 @utility text-header-l {
   font-size: var(--typography-header-l-size);
   font-weight: 500;
-  letter-spacing: 0.18px;
+  letter-spacing: var(--typography-header-l-spacing);
   line-height: var(--typography-header-l-height);
 }
 
 @utility text-header-m {
   font-size: var(--typography-header-m-size);
   font-weight: 500;
-  letter-spacing: 0.25px;
+  letter-spacing: var(--typography-header-m-spacing);
   line-height: var(--typography-header-m-height);
 }
 
 @utility text-header-s {
   font-size: var(--typography-header-s-size);
   font-weight: 500;
-  letter-spacing: 0.4px;
+  letter-spacing: var(--typography-header-s-spacing);
   line-height: var(--typography-header-s-height);
 }
 
 @utility text-header-xs {
   font-size: var(--typography-header-xs-size);
   font-weight: 500;
-  letter-spacing: 0.25px;
+  letter-spacing: var(--typography-header-xs-spacing);
   line-height: var(--typography-header-xs-height);
 }
 
 @utility text-body-l {
   font-size: var(--typography-body-l-size);
   font-weight: 400;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--typography-body-l-spacing);
   line-height: var(--typography-body-l-height);
 }
 
 @utility text-body-m {
   font-size: var(--typography-body-m-size);
   font-weight: 400;
-  letter-spacing: 0.25px;
+  letter-spacing: var(--typography-body-m-spacing);
   line-height: var(--typography-body-m-height);
 }
 
 @utility text-body-s {
   font-size: var(--typography-body-s-size);
   font-weight: 400;
-  letter-spacing: 0.4px;
+  letter-spacing: var(--typography-body-s-spacing);
   line-height: var(--typography-body-s-height);
 }
 
 @utility text-body-xs {
   font-size: var(--typography-body-xs-size);
   font-weight: 400;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--typography-body-xs-spacing);
   line-height: var(--typography-body-xs-height);
 }
 
 @utility text-body-xxs {
   font-size: var(--typography-body-xxs-size);
   font-weight: 400;
-  letter-spacing: 0.25px;
+  letter-spacing: var(--typography-body-xxs-spacing);
   line-height: var(--typography-body-xxs-height);
 }
 
 @utility text-button-l {
   font-size: var(--typography-button-l-size);
   font-weight: bold;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--typography-button-l-spacing);
   line-height: var(--typography-button-l-height);
 }
 
 @utility text-button-m {
   font-size: var(--typography-button-m-size);
   font-weight: bold;
-  letter-spacing: 0.25px;
+  letter-spacing: var(--typography-button-m-spacing);
   line-height: var(--typography-button-m-height);
 }
 
 @utility text-button-s {
   font-size: var(--typography-button-s-size);
   font-weight: bold;
-  letter-spacing: 0.4px;
+  letter-spacing: var(--typography-button-s-spacing);
   line-height: var(--typography-button-s-height);
 }
 
 @utility text-button-xs {
   font-size: var(--typography-button-xs-size);
   font-weight: bold;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--typography-button-xs-spacing);
   line-height: var(--typography-button-xs-height);
 }
 

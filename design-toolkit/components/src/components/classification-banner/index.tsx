@@ -16,10 +16,8 @@ import {
   ClassificationBannerStyles,
   ClassificationBannerStylesDefaults,
 } from './styles';
-import type {
-  ClassificationBannerProps,
-  ClassificationBannerProviderProps,
-} from './types';
+import type { ProviderProps } from '@/lib/types';
+import type { ClassificationBannerProps } from './types';
 
 export const ClassificationBannerContext =
   createContext<ContextValue<ClassificationBannerProps, HTMLDivElement>>(null);
@@ -27,7 +25,7 @@ export const ClassificationBannerContext =
 function ClassificationBannerProvider({
   children,
   ...props
-}: ClassificationBannerProviderProps) {
+}: ProviderProps<ClassificationBannerProps>) {
   return (
     <ClassificationBannerContext.Provider value={props}>
       {children}

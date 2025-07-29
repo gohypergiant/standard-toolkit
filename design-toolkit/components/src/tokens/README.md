@@ -18,11 +18,10 @@ scripts
 ├── generate-tokens.mjs # Token generator logic
 
 src/tokens/
-├── tokens.json         # Single source of truth for all tokens
-├── tokens.d.ts         # TypeScript declarations
-├── generated/          # Generated files (auto-created)
-│   ├── tokens.css      # CSS variables
-│   └── tokens.ts       # TypeScript constants and types
+├── tokens.json   # Single source of truth for all tokens
+├── tokens.d.ts   # TypeScript declarations
+│── tokens.css    # CSS variables
+│── index.ts      # TypeScript constants and types
 ```
 
 ## Usage
@@ -71,9 +70,9 @@ pnpm gen:tokens
 ```
 
 This will create:
-- `src/tokens/generated/tokens.css` - CSS variables
-- `src/tokens/generated/tokens.ts`  - TypeScript constants and types
-- `src/tokens/generated/themes.css` - Tailwind theme blocks which map the raw color tokens to their semantic naming convention 
+- `src/tokens/tokens.css` - CSS variables
+- `src/tokens/index.ts`  - TypeScript constants and types
+- `src/tokens/themes.css` - Tailwind theme blocks which map the raw color tokens to their semantic naming convention 
 
 ### 4. Using Tokens in CSS
 
@@ -148,21 +147,3 @@ export default function MyDeckGLMap() {
   );
 }
 ```
-
-## Build Integration
-
-The token generation is automatically integrated into the build process:
-
-```json
-{
-  "scripts": {
-    "build": "pnpm gen:tokens && pnpm tsup && pnpm build:css"
-  }
-}
-```
-
-## TypeScript Types
-
-- Color tokens are exported as `[r, g, b, a]` tuples (type: `[number, number, number, number]`).
-- Spacing, radius, and other pixel tokens are exported as numbers (e.g., `16`).
-

@@ -13,26 +13,18 @@
 import { tv } from '@/lib/utils';
 
 export const ChipStylesDefaults = {
-  size: 'medium',
   variant: 'info',
 } as const;
 
 export const BaseChipStyles = tv({
   slots: {
-    list: 'flex w-content flex-wrap gap-xs',
-    chip: 'fg-default-light inline-flex w-content items-center justify-center rounded-full outline',
+    list: 'group/chip-list flex w-content flex-wrap gap-xs',
+    chip: [
+      'group/chip fg-default-light inline-flex w-content items-center justify-center rounded-full outline',
+      'size-medium:px-s size-medium:py-xs size-medium:text-body-s',
+      'size-small:px-s size-small:py-xs size-small:text-body-xs',
+    ],
   },
-  variants: {
-    size: {
-      medium: {
-        chip: 'px-s py-xs text-body-s',
-      },
-      small: {
-        chip: 'px-s py-xs text-body-xs',
-      },
-    },
-  },
-  defaultVariants: ChipStylesDefaults,
 });
 
 export const ChipStyles = tv({
@@ -49,6 +41,7 @@ export const ChipStyles = tv({
       info: { chip: 'bg-info-subtle outline-info-bold' },
     },
   },
+  defaultVariants: ChipStylesDefaults,
 });
 
 export const SelectableChipStyles = tv({
@@ -69,7 +62,7 @@ export const DeletableChipStyles = tv({
   extend: BaseChipStyles,
   slots: {
     chip: [
-      'group gap-xs outline-interactive',
+      'gap-xs outline-interactive',
       'enabled:focus:outline-interactive-hover',
       'enabled:hover:outline-interactive-hover',
       'disabled:fg-disabled disabled:cursor-not-allowed disabled:outline-interactive-disabled',

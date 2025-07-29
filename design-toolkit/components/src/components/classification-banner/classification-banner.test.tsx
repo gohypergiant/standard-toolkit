@@ -29,8 +29,7 @@ function setup({
 describe('Classification Banner', () => {
   it('should render', () => {
     const { children } = setup();
-    const component = screen.getByText(`${children}`);
 
-    expect(component).toBeInTheDocument();
+    expect(screen.getByText(`${children}`)).toBeInTheDocument();
   });
 });

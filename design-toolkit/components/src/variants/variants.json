@@ -1,0 +1,90 @@
+{
+  "placement-left": "[data-placement~=\"left\"]",
+  "placement-right": "[data-placement~=\"right\"]",
+  "placement-top": "[data-placement~=\"top\"]",
+  "placement-bottom": "[data-placement~=\"bottom\"]",
+
+  "size-xlarge": "[data-size=\"xlarge\"]",
+  "size-large": "[data-size=\"large\"]",
+  "size-medium": "[data-size=\"medium\"]",
+  "size-small": "[data-size=\"small\"]",
+  "size-xsmall": "[data-size=\"xsmall\"]",
+
+  "type-literal": "[data-type=\"literal\"]",
+  "type-year": "[data-type=\"year\"]",
+  "type-month": "[data-type=\"month\"]",
+  "type-day": "[data-type=\"day\"]",
+
+  "layout-grid": "[data-layout=\"grid\"]",
+  "layout-stack": "[data-layout=\"stack\"]",
+
+  "orientation-horizontal": "[data-orientation=\"horizontal\"]",
+  "orientation-vertical": "[data-orientation=\"vertical\"]",
+
+  "selection-single": "[data-selection-mode=\"single\"]",
+  "selection-multiple": "[data-selection-mode=\"multiple\"]",
+
+  "resizable-right": "[data-resizable-direction=\"right\"]",
+  "resizable-left": "[data-resizable-direction=\"left\"]",
+  "resizable-both": "[data-resizable-direction=\"both\"]",
+
+  "sort-ascending": "[data-sort-direction=\"ascending\"]",
+  "sort-descending": "[data-sort-direction=\"descending\"]",
+
+  "allows-removing": "[data-allows-removing]",
+  "allows-sorting": "[data-allows-sorting]",
+  "allows-dragging": "[data-allows-dragging]",
+
+  "has-submenu": "[data-has-submenu]",
+  "has-child-items": "[data-has-child-items]",
+
+  "enabled": ":not([disabled], [data-disabled]), :enabled",
+
+  "open": "[open], [data-open], :open",
+  "expanded": "[expanded], [data-expanded]",
+
+  "entering": "[data-entering]",
+  "exiting": "[data-exiting]",
+
+  "indeterminate": "[data-indeterminate], :indeterminate",
+
+  "placeholder-shown": "[data-placeholder], :placeholder-shown",
+
+  "current": "[data-current]",
+
+  "optional": ":not([required], [data-required]), :optional",
+  "required": "[required], [data-required], :required",
+
+  "unavailable": "[data-unavailable]",
+
+  "invalid": "[invalid], [data-invalid], :invalid",
+
+  "read-only": "[readonly], [data-readonly], :read-only",
+
+  "outside-month": "[data-outside-month]",
+  "outside-visible-range": "[data-outside-visible-range]",
+
+  "pending": "[data-pending]",
+
+  "empty": "[data-empty], :empty",
+
+  "focus-within": "[data-focus-within], :focus-within",
+
+  "hover": "[data-hovered], :hover",
+
+  "focus": "[data-focused], :focus",
+  "focus-visible": "[data-focus-visible], :focus-visible",
+
+  "pressed": "[data-pressed], :active",
+
+  "selected": "[data-selected], :checked",
+  "selection-start": "[data-selection-start]",
+  "selection-end": "[data-selection-end]",
+
+  "dragging": "[data-dragging]",
+  "drop-target": "[data-drop-target]",
+
+  "resizing": "[data-resizing]",
+
+  "disabled": "[disabled], [data-disabled], :disabled"
+}

@@ -23,7 +23,7 @@ const meta: Meta<typeof Button> = {
   args: {
     children: 'Button',
     color: ButtonStylesDefaults.color,
-    size: ButtonStylesDefaults.size,
+    size: 'medium',
     variant: ButtonStylesDefaults.variant,
     isDisabled: false,
   },

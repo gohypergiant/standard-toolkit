@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Badge } from './index';
+import { Badge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Badge> = {
@@ -33,14 +33,13 @@ const meta: Meta<typeof Badge> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Badge>;
 
-export const Default: Story = {
-  render: ({ children, ...args }) => <Badge {...args}>{children}</Badge>,
+export const Default: StoryObj<typeof Badge> = {
+  render: Badge,
 };
 
-export const WithText: Story = {
-  render: ({ children, ...args }) => (
-    <Badge {...args}>{children || '99+'}</Badge>
+export const WithText: StoryObj<typeof Badge> = {
+  render: ({ children, ...rest }) => (
+    <Badge {...rest}>{children || '99+'}</Badge>
   ),
 };

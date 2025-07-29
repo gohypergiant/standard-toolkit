@@ -137,12 +137,12 @@ function TextValueEditor({
 
   return (
     <TextField
-      isDisabled={disabled}
-      isInvalid={!valid}
-      placeholder={placeholder}
+      inputProps={{ placeholder }}
       type={(inputType as InputType) ?? 'text'}
       size='small'
       value={value}
+      isDisabled={disabled}
+      isInvalid={!valid}
       onChange={handleOnChange}
       aria-invalid={!valid}
       aria-label={name}

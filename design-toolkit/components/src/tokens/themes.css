@@ -82,66 +82,81 @@
 
 @theme {
   /** Typography **/
-  --typography-header-xxl-size: var(--typography-header-xxl-size);
-  --typography-header-xxl-height: var(--typography-header-xxl-height);
-  --typography-header-xl-size: var(--typography-header-xl-size);
-  --typography-header-xl-height: var(--typography-header-xl-height);
-  --typography-header-l-size: var(--typography-header-l-size);
-  --typography-header-l-height: var(--typography-header-l-height);
-  --typography-header-m-size: var(--typography-header-m-size);
-  --typography-header-m-height: var(--typography-header-m-height);
-  --typography-header-s-size: var(--typography-header-s-size);
-  --typography-header-s-height: var(--typography-header-s-height);
-  --typography-header-xs-size: var(--typography-header-xs-size);
-  --typography-header-xs-height: var(--typography-header-xs-height);
-  --typography-body-l-size: var(--typography-body-l-size);
-  --typography-body-l-height: var(--typography-body-l-height);
-  --typography-body-m-size: var(--typography-body-m-size);
-  --typography-body-m-height: var(--typography-body-m-height);
-  --typography-body-s-size: var(--typography-body-s-size);
-  --typography-body-s-height: var(--typography-body-s-height);
-  --typography-body-xs-size: var(--typography-body-xs-size);
-  --typography-body-xs-height: var(--typography-body-xs-height);
-  --typography-body-xxs-size: var(--typography-body-xxs-size);
-  --typography-body-xxs-height: var(--typography-body-xxs-height);
-  --typography-button-l-size: var(--typography-button-l-size);
-  --typography-button-l-height: var(--typography-button-l-height);
-  --typography-button-m-size: var(--typography-button-m-size);
-  --typography-button-m-height: var(--typography-button-m-height);
-  --typography-button-s-size: var(--typography-button-s-size);
-  --typography-button-s-height: var(--typography-button-s-height);
-  --typography-button-xs-size: var(--typography-button-xs-size);
-  --typography-button-xs-height: var(--typography-button-xs-height);
+  --typography-header-xxl-size: var(--typography-header-xxl-size, 32px);
+  --typography-header-xxl-height: var(--typography-header-xxl-height, 40px);
+  --typography-header-xxl-spacing: var(--typography-header-xxl-spacing, 0px);
+  --typography-header-xl-size: var(--typography-header-xl-size, 24px);
+  --typography-header-xl-height: var(--typography-header-xl-height, 28px);
+  --typography-header-xl-spacing: var(--typography-header-xl-spacing, 0.18px);
+  --typography-header-l-size: var(--typography-header-l-size, 20px);
+  --typography-header-l-height: var(--typography-header-l-height, 24px);
+  --typography-header-l-spacing: var(--typography-header-l-spacing, 0.18px);
+  --typography-header-m-size: var(--typography-header-m-size, 14px);
+  --typography-header-m-height: var(--typography-header-m-height, 20px);
+  --typography-header-m-spacing: var(--typography-header-m-spacing, 0.25px);
+  --typography-header-s-size: var(--typography-header-s-size, 12px);
+  --typography-header-s-height: var(--typography-header-s-height, 16px);
+  --typography-header-s-spacing: var(--typography-header-s-spacing, 0.4px);
+  --typography-header-xs-size: var(--typography-header-xs-size, 10px);
+  --typography-header-xs-height: var(--typography-header-xs-height, 12px);
+  --typography-header-xs-spacing: var(--typography-header-xs-spacing, 0.25px);
+  --typography-body-l-size: var(--typography-body-l-size, 16px);
+  --typography-body-l-height: var(--typography-body-l-height, 24px);
+  --typography-body-l-spacing: var(--typography-body-l-spacing, 0.5px);
+  --typography-body-m-size: var(--typography-body-m-size, 14px);
+  --typography-body-m-height: var(--typography-body-m-height, 20px);
+  --typography-body-m-spacing: var(--typography-body-m-spacing, 0.25px);
+  --typography-body-s-size: var(--typography-body-s-size, 12px);
+  --typography-body-s-height: var(--typography-body-s-height, 16px);
+  --typography-body-s-spacing: var(--typography-body-s-spacing, 0.4px);
+  --typography-body-xs-size: var(--typography-body-xs-size, 10px);
+  --typography-body-xs-height: var(--typography-body-xs-height, 12px);
+  --typography-body-xs-spacing: var(--typography-body-xs-spacing, 0.5px);
+  --typography-body-xxs-size: var(--typography-body-xxs-size, 9px);
+  --typography-body-xxs-height: var(--typography-body-xxs-height, 12px);
+  --typography-body-xxs-spacing: var(--typography-body-xxs-spacing, 0.25px);
+  --typography-button-l-size: var(--typography-button-l-size, 16px);
+  --typography-button-l-height: var(--typography-button-l-height, 24px);
+  --typography-button-l-spacing: var(--typography-button-l-spacing, 0.5px);
+  --typography-button-m-size: var(--typography-button-m-size, 14px);
+  --typography-button-m-height: var(--typography-button-m-height, 20px);
+  --typography-button-m-spacing: var(--typography-button-m-spacing, 0.25px);
+  --typography-button-s-size: var(--typography-button-s-size, 12px);
+  --typography-button-s-height: var(--typography-button-s-height, 16px);
+  --typography-button-s-spacing: var(--typography-button-s-spacing, 0.4px);
+  --typography-button-xs-size: var(--typography-button-xs-size, 10px);
+  --typography-button-xs-height: var(--typography-button-xs-height, 12px);
+  --typography-button-xs-spacing: var(--typography-button-xs-spacing, 0.5px);
 }
 
 @theme {
   /** Spacing **/
-  --spacing-0: var(--spacing-0);
-  --spacing-none: var(--spacing-none);
-  --spacing-xxs: var(--spacing-xxs);
-  --spacing-xs: var(--spacing-xs);
-  --spacing-s: var(--spacing-s);
-  --spacing-m: var(--spacing-m);
-  --spacing-l: var(--spacing-l);
-  --spacing-xl: var(--spacing-xl);
-  --spacing-xxl: var(--spacing-xxl);
-  --spacing-oversized: var(--spacing-oversized);
+  --spacing-0: var(--spacing-0, 0px);
+  --spacing-none: var(--spacing-none, unset);
+  --spacing-xxs: var(--spacing-xxs, 2px);
+  --spacing-xs: var(--spacing-xs, 4px);
+  --spacing-s: var(--spacing-s, 8px);
+  --spacing-m: var(--spacing-m, 12px);
+  --spacing-l: var(--spacing-l, 16px);
+  --spacing-xl: var(--spacing-xl, 24px);
+  --spacing-xxl: var(--spacing-xxl, 40px);
+  --spacing-oversized: var(--spacing-oversized, 80px);
 }
 
 @theme {
   /** Radius **/
-  --radius-none: var(--radius-none);
-  --radius-small: var(--radius-small);
-  --radius-medium: var(--radius-medium);
-  --radius-large: var(--radius-large);
-  --radius-round: var(--radius-round);
+  --radius-none: var(--radius-none, 0px);
+  --radius-small: var(--radius-small, 2px);
+  --radius-medium: var(--radius-medium, 4px);
+  --radius-large: var(--radius-large, 8px);
+  --radius-round: var(--radius-round, 80px);
 }
 
 @theme {
-  /** Shadows **/
-  --shadows-elevation-default: var(--shadows-elevation-default);
-  --shadows-elevation-overlay: var(--shadows-elevation-overlay);
-  --shadows-elevation-raised: var(--shadows-elevation-raised);
+  /** Shadow **/
+  --shadow-elevation-default: var(--shadow-elevation-default);
+  --shadow-elevation-overlay: var(--shadow-elevation-overlay);
+  --shadow-elevation-raised: var(--shadow-elevation-raised);
 }
 
 @theme {

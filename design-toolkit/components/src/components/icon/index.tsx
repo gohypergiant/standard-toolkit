@@ -13,13 +13,14 @@
 import 'client-only';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
-import { IconStyles, IconStylesDefaults } from './styles';
-import type { IconProps, IconProviderProps } from './types';
+import { IconStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
+import type { IconProps } from './types';
 
 export const IconContext =
   createContext<ContextValue<IconProps, HTMLSpanElement>>(null);
 
-function IconProvider({ children, ...props }: IconProviderProps) {
+function IconProvider({ children, ...props }: ProviderProps<IconProps>) {
   return <IconContext.Provider value={props}>{children}</IconContext.Provider>;
 }
 IconProvider.displayName = 'Icon.Provider';
@@ -27,15 +28,15 @@ IconProvider.displayName = 'Icon.Provider';
 export function Icon({ ref, ...props }: IconProps) {
   [props, ref] = useContextProps(props, ref ?? null, IconContext);
 
-  const {
-    children,
-    className,
-    size = IconStylesDefaults.size,
-    ...rest
-  } = props;
+  const { children, className, size = 'medium', ...rest } = props;
 
   return (
-    <span {...rest} ref={ref} className={IconStyles({ className, size })}>
+    <span
+      {...rest}
+      ref={ref}
+      className={IconStyles({ className })}
+      data-size={size}
+    >
       {children}
     </span>
   );

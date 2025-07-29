@@ -19,12 +19,13 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { LabelStyles } from './styles';
-import type { LabelProps, LabelProviderProps } from './types';
+import type { ProviderProps } from '@/lib/types';
+import type { LabelProps } from './types';
 
 export const LabelContext =
   createContext<ContextValue<LabelProps, HTMLLabelElement>>(null);
 
-function LabelProvider({ children, ...props }: LabelProviderProps) {
+function LabelProvider({ children, ...props }: ProviderProps<LabelProps>) {
   return (
     <LabelContext.Provider value={props}>{children}</LabelContext.Provider>
   );

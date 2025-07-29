@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren, RefAttributes } from 'react';
+import type { RefAttributes } from 'react';
 import type {
   RadioGroupProps as AriaRadioGroupProps,
   RadioProps as AriaRadioProps,
@@ -34,5 +34,3 @@ export type RadioProps = Omit<AriaRadioProps, 'className'> &
       label?: string;
     };
   };
-
-export type RadioProviderProps = PropsWithChildren<RadioGroupProps>;

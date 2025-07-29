@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLProps, PropsWithChildren, RefAttributes } from 'react';
+import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type {
   ButtonProps,
   TagGroupProps,
@@ -18,20 +18,11 @@ import type {
   TagProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
-import type {
-  BaseChipStyles,
-  ChipStyles,
-  DeletableChipStyles,
-  SelectableChipStyles,
-} from './styles';
+import type { ChipStyles } from './styles';
 
-export type BaseChipProps = VariantProps<typeof BaseChipStyles>;
-
-export type ChipProps = VariantProps<typeof ChipStyles> &
-  Omit<HTMLProps<HTMLDivElement>, 'size'> &
-  RefAttributes<HTMLDivElement> & {
-    className?: string;
-  };
+export type BaseChipProps = {
+  size?: 'medium' | 'small';
+};
 
 export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   Pick<
@@ -41,17 +32,21 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   RefAttributes<HTMLDivElement> &
   BaseChipProps;
 
+export type ChipProps = VariantProps<typeof ChipStyles> &
+  Omit<ComponentPropsWithRef<'div'>, 'size'> &
+  BaseChipProps & {
+    className?: string;
+  };
+
 export type SelectableChipProps = Omit<TagProps, 'isDisabled'> &
   RefAttributes<HTMLDivElement> &
-  VariantProps<typeof SelectableChipStyles>;
+  BaseChipProps;
 
 export type DeletableChipProps = Omit<TagProps, 'className' | 'isDisabled'> &
   RefAttributes<HTMLDivElement> &
-  VariantProps<typeof DeletableChipStyles> & {
+  BaseChipProps & {
     classNames?: {
       chip?: TagProps['className'];
       remove?: ButtonProps['className'];
     };
   };
-
-export type ChipProviderProps = PropsWithChildren<BaseChipProps>;

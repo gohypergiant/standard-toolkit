@@ -1,5 +1,49 @@
 # @accelint/design-toolkit
 
+## 2.4.3
+
+### Patch Changes
+
+- 382bbc2: Fixes a build issue caused by an import with trailing character in `components/avatar/index.tsx`.
+
+## 2.4.2
+
+### Patch Changes
+
+- 93b3750: Fixed controlled usage of field input
+
+## 2.4.1
+
+### Patch Changes
+
+- f57cb86: Adds fallback for some css tokens
+- 4fa066a: - Converted Input autoSize behavior to an optional prop variant
+  - Lowered custom variant selector specificity to reduce friction of overrides
+  - Fixed Checkbox styling for state of indeterminate + disabled
+
+## 2.4.0
+
+### Minor Changes
+
+- fe10a47: Adds the <menu> component
+
+### Patch Changes
+
+- 4dd70f2: - Add Input component with automatic resizing
+  - Refactor TextField to new style standard and to use new Input
+  - Fix Checkbox foreground color
+  - Fix outline inset
+  - Add typography spacing tokens
+- c16b479: Removed plural naming for shadow tokens
+- 51422c1: Remove menu icon and menu keyboard exports
+- 9421185: Remove Menu.Item.Icon and Menu.Item.Keyboard and cleanup styles
+- a502977: Fix accordion icon not flipping
+- 34f3d91: - Flattened token folder structure for easier use within DesignTK
+  - Added group names to deconflict Tailwind groups
+  - Converted size to variant selector
+  - Added missing provider
+- f9e0cac: Refactored Avatar & Badge to new styling standard
+
 ## 2.3.2
 
 ### Patch Changes

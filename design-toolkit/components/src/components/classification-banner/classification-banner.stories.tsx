@@ -46,7 +46,5 @@ const meta: Meta<typeof ClassificationBanner> = {
 export default meta;
 
 export const Default: StoryObj<typeof ClassificationBanner> = {
-  render: ({ children, ...args }) => (
-    <ClassificationBanner {...args}>{children}</ClassificationBanner>
-  ),
+  render: ClassificationBanner,
 };

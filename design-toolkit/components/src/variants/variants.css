@@ -1,0 +1,70 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@custom-variant placement-left (&:where([data-placement~="left"]));
+@custom-variant placement-right (&:where([data-placement~="right"]));
+@custom-variant placement-top (&:where([data-placement~="top"]));
+@custom-variant placement-bottom (&:where([data-placement~="bottom"]));
+@custom-variant size-xlarge (&:where([data-size="xlarge"]));
+@custom-variant size-large (&:where([data-size="large"]));
+@custom-variant size-medium (&:where([data-size="medium"]));
+@custom-variant size-small (&:where([data-size="small"]));
+@custom-variant size-xsmall (&:where([data-size="xsmall"]));
+@custom-variant type-literal (&:where([data-type="literal"]));
+@custom-variant type-year (&:where([data-type="year"]));
+@custom-variant type-month (&:where([data-type="month"]));
+@custom-variant type-day (&:where([data-type="day"]));
+@custom-variant layout-grid (&:where([data-layout="grid"]));
+@custom-variant layout-stack (&:where([data-layout="stack"]));
+@custom-variant orientation-horizontal (&:where([data-orientation="horizontal"]));
+@custom-variant orientation-vertical (&:where([data-orientation="vertical"]));
+@custom-variant selection-single (&:where([data-selection-mode="single"]));
+@custom-variant selection-multiple (&:where([data-selection-mode="multiple"]));
+@custom-variant resizable-right (&:where([data-resizable-direction="right"]));
+@custom-variant resizable-left (&:where([data-resizable-direction="left"]));
+@custom-variant resizable-both (&:where([data-resizable-direction="both"]));
+@custom-variant sort-ascending (&:where([data-sort-direction="ascending"]));
+@custom-variant sort-descending (&:where([data-sort-direction="descending"]));
+@custom-variant allows-removing (&:where([data-allows-removing]));
+@custom-variant allows-sorting (&:where([data-allows-sorting]));
+@custom-variant allows-dragging (&:where([data-allows-dragging]));
+@custom-variant has-submenu (&:where([data-has-submenu]));
+@custom-variant has-child-items (&:where([data-has-child-items]));
+@custom-variant enabled (&:where(:not([disabled], [data-disabled]), :enabled));
+@custom-variant open (&:where([open], [data-open], :open));
+@custom-variant expanded (&:where([expanded], [data-expanded]));
+@custom-variant entering (&:where([data-entering]));
+@custom-variant exiting (&:where([data-exiting]));
+@custom-variant indeterminate (&:where([data-indeterminate], :indeterminate));
+@custom-variant placeholder-shown (&:where([data-placeholder], :placeholder-shown));
+@custom-variant current (&:where([data-current]));
+@custom-variant optional (&:where(:not([required], [data-required]), :optional));
+@custom-variant required (&:where([required], [data-required], :required));
+@custom-variant unavailable (&:where([data-unavailable]));
+@custom-variant invalid (&:where([invalid], [data-invalid], :invalid));
+@custom-variant read-only (&:where([readonly], [data-readonly], :read-only));
+@custom-variant outside-month (&:where([data-outside-month]));
+@custom-variant outside-visible-range (&:where([data-outside-visible-range]));
+@custom-variant pending (&:where([data-pending]));
+@custom-variant empty (&:where([data-empty], :empty));
+@custom-variant focus-within (&:where([data-focus-within], :focus-within));
+@custom-variant hover (&:where([data-hovered], :hover));
+@custom-variant focus (&:where([data-focused], :focus));
+@custom-variant focus-visible (&:where([data-focus-visible], :focus-visible));
+@custom-variant pressed (&:where([data-pressed], :active));
+@custom-variant selected (&:where([data-selected], :checked));
+@custom-variant selection-start (&:where([data-selection-start]));
+@custom-variant selection-end (&:where([data-selection-end]));
+@custom-variant dragging (&:where([data-dragging]));
+@custom-variant drop-target (&:where([data-drop-target]));
+@custom-variant resizing (&:where([data-resizing]));
+@custom-variant disabled (&:where([disabled], [data-disabled], :disabled));

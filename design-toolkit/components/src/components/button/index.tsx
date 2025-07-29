@@ -23,19 +23,13 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
-import type {
-  ButtonProps,
-  ButtonProviderProps,
-  LinkButtonProps,
-  LinkButtonProviderProps,
-  ToggleButtonProps,
-  ToggleButtonProviderProps,
-} from './types';
+import type { ProviderProps } from '@/lib/types';
+import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
 export const ButtonContext =
   createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
 
-function ButtonProvider({ children, ...props }: ButtonProviderProps) {
+function ButtonProvider({ children, ...props }: ProviderProps<ButtonProps>) {
   return (
     <ButtonContext.Provider value={props}>{children}</ButtonContext.Provider>
   );
@@ -45,7 +39,14 @@ ButtonProvider.displayName = 'Button.Provider';
 export function Button({ ref, ...props }: ButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ButtonContext);
 
-  const { children, className, color, size, variant, ...rest } = props;
+  const {
+    children,
+    className,
+    color,
+    size = 'medium',
+    variant,
+    ...rest
+  } = props;
 
   return (
     <Icon.Provider size={size}>
@@ -56,10 +57,10 @@ export function Button({ ref, ...props }: ButtonProps) {
           ButtonStyles({
             className,
             color,
-            size,
             variant,
           }),
         )}
+        data-size={size}
       >
         {children}
       </AriaButton>
@@ -72,7 +73,10 @@ Button.Provider = ButtonProvider;
 export const LinkButtonContext =
   createContext<ContextValue<LinkButtonProps, HTMLAnchorElement>>(null);
 
-function LinkButtonProvider({ children, ...props }: LinkButtonProviderProps) {
+function LinkButtonProvider({
+  children,
+  ...props
+}: ProviderProps<LinkButtonProps>) {
   return (
     <LinkButtonContext.Provider value={props}>
       {children}
@@ -84,7 +88,14 @@ LinkButtonProvider.displayName = 'LinkButton.Provider';
 export function LinkButton({ ref, ...props }: LinkButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, LinkButtonContext);
 
-  const { children, className, color, size, variant, ...rest } = props;
+  const {
+    children,
+    className,
+    color,
+    size = 'medium',
+    variant,
+    ...rest
+  } = props;
 
   return (
     <Icon.Provider size={size}>
@@ -95,10 +106,10 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
           LinkButtonStyles({
             className,
             color,
-            size,
             variant,
           }),
         )}
+        data-size={size}
       >
         {children}
       </Link>
@@ -114,7 +125,7 @@ export const ToggleButtonContext =
 function ToggleButtonProvider({
   children,
   ...props
-}: ToggleButtonProviderProps) {
+}: ProviderProps<ToggleButtonProps>) {
   return (
     <ToggleButtonContext.Provider value={props}>
       {children}
@@ -126,7 +137,14 @@ ToggleButtonProvider.displayName = 'ToggleButton.Provider';
 export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ToggleButtonContext);
 
-  const { children, className, color, size, variant, ...rest } = props;
+  const {
+    children,
+    className,
+    color,
+    size = 'medium',
+    variant,
+    ...rest
+  } = props;
 
   return (
     <Icon.Provider size={size}>
@@ -137,10 +155,10 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
           ToggleButtonStyles({
             className,
             color,
-            size,
             variant,
           }),
         )}
+        data-size={size}
       >
         {children}
       </AriaToggleButton>
