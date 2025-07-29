@@ -9,12 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import {
-  DrawerDefaults,
-  type DrawerPlacement,
-  type DrawerSize,
-  type DrawerState,
-} from './types';
+import { DrawerDefaults, type DrawerState } from './types';
 
 import type { Key } from '@react-types/shared';
 
@@ -29,17 +24,13 @@ export type DrawerAction =
  */
 export const createDefaultDrawerState = ({
   id,
-  placement = DrawerDefaults.placement,
   selectedMenuItemId = DrawerDefaults.selectedMenuItemId,
-  size = DrawerDefaults.size,
   isOpen = DrawerDefaults.isOpen,
 }: {
   id: Key;
-  placement?: DrawerPlacement;
   selectedMenuItemId?: Key;
-  size?: DrawerSize;
   isOpen?: boolean;
-}): DrawerState => ({ id, size, placement, isOpen, selectedMenuItemId });
+}): DrawerState => ({ id, isOpen, selectedMenuItemId });
 
 export const drawerStateReducer = (
   state: DrawerState,

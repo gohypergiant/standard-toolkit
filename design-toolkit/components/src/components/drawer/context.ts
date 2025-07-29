@@ -40,7 +40,7 @@ export function useDrawerContext(): DrawerContextValue {
   const ctx = useContext(DrawerContext);
 
   if (!ctx) {
-    throw new Error('useDrawerContext must be used within <Drawer.Root>');
+    throw new Error('useDrawerContext must be used within <Drawer.Provider>');
   }
 
   return ctx;
@@ -50,7 +50,9 @@ export function useDrawerLayoutContext(): DrawerLayoutContextValue {
   const ctx = useContext(DrawerLayoutContext);
 
   if (!ctx) {
-    throw new Error('useDrawerLayoutContext must be used within <Drawer.Root>');
+    throw new Error(
+      'useDrawerLayoutContext must be used within <Drawer.Provider>',
+    );
   }
 
   return ctx;
@@ -88,9 +90,7 @@ export function useDrawerLayoutState(opts?: {
           prev[drawerId] ||
           createDefaultDrawerState({
             id: drawerId,
-            placement: DrawerDefaults.placement,
             selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
-            size: DrawerDefaults.size,
             isOpen: DrawerDefaults.isOpen,
           });
         const nextState = drawerStateReducer(currentState, action);
@@ -154,9 +154,7 @@ export function useDrawerLayoutState(opts?: {
         drawerStates[drawerId] ||
         createDefaultDrawerState({
           id: drawerId,
-          placement: DrawerDefaults.placement,
           selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
-          size: DrawerDefaults.size,
           isOpen: DrawerDefaults.isOpen,
         })
       );

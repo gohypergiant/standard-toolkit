@@ -19,9 +19,7 @@ export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 export interface DrawerState {
   id: Key;
   isOpen: boolean;
-  placement: DrawerPlacement;
   selectedMenuItemId?: Key;
-  size: DrawerSize;
 }
 
 export type DrawerClassNames = Partial<{
@@ -33,6 +31,10 @@ export type DrawerClassNames = Partial<{
 
 export interface DrawerContainerProps
   extends PropsWithChildren<{ className?: string }> {}
+
+export interface DrawerProviderProps extends PropsWithChildren {
+  onStateChange?: (drawerId: Key, state: DrawerState) => void;
+}
 
 export interface DrawerLayoutProps
   extends DrawerContainerProps,
@@ -54,7 +56,6 @@ export interface DrawerLayoutProps
    */
   push?: DrawerPlacement;
   classNames?: DrawerClassNames;
-  onStateChange?: (drawerId: Key, state: DrawerState) => void;
 }
 
 export interface DrawerProps extends DrawerContainerProps {
@@ -178,8 +179,6 @@ export type DrawerLayouts =
   | 'right';
 
 export const DrawerDefaults = {
-  placement: 'left',
   selectedMenuItemId: undefined,
-  size: 'medium',
   isOpen: false,
 } as const;

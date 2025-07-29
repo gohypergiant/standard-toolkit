@@ -62,35 +62,37 @@ export const WithTabs: Story = {
   render: ({ id, ...args }) => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Layout>
-          <Drawer.Main>
-            <div className='p-l text-default-light'>{longContent}</div>
-          </Drawer.Main>
-          <Drawer id='settings' {...args}>
-            <Drawer.Menu>
-              <Drawer.Menu.Item id='a'>
-                <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item id='b'>
-                <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Content>
-              <Drawer.Header>
-                <Drawer.Title>Title</Drawer.Title>
-                <Drawer.Close>
-                  <Button size='small' variant='flat'>
-                    <Icon>
-                      <Cancel />
-                    </Icon>
-                  </Button>
-                </Drawer.Close>
-              </Drawer.Header>
-              <Drawer.Panel id='a'>A Content</Drawer.Panel>
-              <Drawer.Panel id='b'>B Content</Drawer.Panel>
-            </Drawer.Content>
-          </Drawer>
-        </Drawer.Layout>
+        <Drawer.Provider>
+          <Drawer.Layout>
+            <Drawer.Main>
+              <div className='p-l text-default-light'>{longContent}</div>
+            </Drawer.Main>
+            <Drawer id='settings' {...args}>
+              <Drawer.Menu>
+                <Drawer.Menu.Item id='a'>
+                  <Placeholder />
+                </Drawer.Menu.Item>
+                <Drawer.Menu.Item id='b'>
+                  <Placeholder />
+                </Drawer.Menu.Item>
+              </Drawer.Menu>
+              <Drawer.Content>
+                <Drawer.Header>
+                  <Drawer.Title>Title</Drawer.Title>
+                  <Drawer.Close>
+                    <Button size='small' variant='flat'>
+                      <Icon>
+                        <Cancel />
+                      </Icon>
+                    </Button>
+                  </Drawer.Close>
+                </Drawer.Header>
+                <Drawer.Panel id='a'>A Content</Drawer.Panel>
+                <Drawer.Panel id='b'>B Content</Drawer.Panel>
+              </Drawer.Content>
+            </Drawer>
+          </Drawer.Layout>
+        </Drawer.Provider>
       </div>
     );
   },
@@ -100,94 +102,96 @@ export const FullLayout: Story = {
   render: ({ extend, push }: CombinedDrawerProps) => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Layout extend={extend} push={push}>
-          <Drawer id='header' placement='top' size='medium'>
-            <Drawer.Menu>
-              <Drawer.Trigger for='header'>
-                <Icon>
-                  <ChevronDown className='group-data-[top-open="true"]/layout:rotate-180' />
-                </Icon>
-              </Drawer.Trigger>
+        <Drawer.Provider>
+          <Drawer.Layout extend={extend} push={push}>
+            <Drawer id='header' placement='top' size='medium'>
+              <Drawer.Menu>
+                <Drawer.Trigger for='header'>
+                  <Icon>
+                    <ChevronDown className='group-open/drawer:rotate-180' />
+                  </Icon>
+                </Drawer.Trigger>
 
-              {placeholderIcons}
-            </Drawer.Menu>
+                {placeholderIcons}
+              </Drawer.Menu>
 
-            <Drawer.Content>
-              <Drawer.Title>Top</Drawer.Title>
-            </Drawer.Content>
-          </Drawer>
+              <Drawer.Content>
+                <Drawer.Title>Top</Drawer.Title>
+              </Drawer.Content>
+            </Drawer>
 
-          <Drawer.Main>
-            <div
-              className='flex h-full items-center justify-center bg-surface-overlay'
-              style={
-                {
-                  '--single': '40px',
-                  '--double': 'calc(2 * var(--single))',
-                  backgroundImage: `
+            <Drawer.Main>
+              <div
+                className='flex h-full items-center justify-center bg-surface-overlay'
+                style={
+                  {
+                    '--single': '40px',
+                    '--double': 'calc(2 * var(--single))',
+                    backgroundImage: `
             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
           `,
-                  backgroundSize: 'var(--double) var(--double)',
-                  backgroundPosition:
-                    'center, calc(50% + var(--single)) calc(50% + var(--single))',
-                } as CSSProperties
-              }
-            >
-              <div className='flex w-1/2 flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl [&>*]:my-s'>
-                <p>This page is for demo purposes only!</p>
+                    backgroundSize: 'var(--double) var(--double)',
+                    backgroundPosition:
+                      'center, calc(50% + var(--single)) calc(50% + var(--single))',
+                  } as CSSProperties
+                }
+              >
+                <div className='flex w-1/2 flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl [&>*]:my-s'>
+                  <p>This page is for demo purposes only!</p>
+                </div>
               </div>
-            </div>
-          </Drawer.Main>
+            </Drawer.Main>
 
-          <Drawer id='footer' placement='bottom'>
-            <Drawer.Menu>
-              <Drawer.Trigger for='footer'>
-                <Icon>
-                  <ChevronUp className='group-data-[bottom-open="true"]/layout:rotate-180' />
-                </Icon>
-              </Drawer.Trigger>
+            <Drawer id='footer' placement='bottom'>
+              <Drawer.Menu>
+                <Drawer.Trigger for='footer'>
+                  <Icon>
+                    <ChevronUp className='group-open/drawer:rotate-180' />
+                  </Icon>
+                </Drawer.Trigger>
 
-              {placeholderIcons}
-            </Drawer.Menu>
+                {placeholderIcons}
+              </Drawer.Menu>
 
-            <Drawer.Content>
-              <Drawer.Title>Bottom</Drawer.Title>
-            </Drawer.Content>
-          </Drawer>
+              <Drawer.Content>
+                <Drawer.Title>Bottom</Drawer.Title>
+              </Drawer.Content>
+            </Drawer>
 
-          <Drawer id='settings' placement='left'>
-            <Drawer.Menu>
-              <Drawer.Trigger for='settings'>
-                <Icon>
-                  <ChevronRight className='group-data-[left-open="true"]/layout:rotate-180' />
-                </Icon>
-              </Drawer.Trigger>
+            <Drawer id='settings' placement='left'>
+              <Drawer.Menu>
+                <Drawer.Trigger for='settings'>
+                  <Icon>
+                    <ChevronRight className='group-open/drawer:rotate-180' />
+                  </Icon>
+                </Drawer.Trigger>
 
-              {placeholderIcons}
-            </Drawer.Menu>
+                {placeholderIcons}
+              </Drawer.Menu>
 
-            <Drawer.Content>
-              <Drawer.Title>Left</Drawer.Title>
-            </Drawer.Content>
-          </Drawer>
+              <Drawer.Content>
+                <Drawer.Title>Left</Drawer.Title>
+              </Drawer.Content>
+            </Drawer>
 
-          <Drawer id='sidebar' placement='right'>
-            <Drawer.Menu>
-              <Drawer.Trigger for='sidebar'>
-                <Icon>
-                  <ChevronLeft className='group-data-[right-open="true"]/layout:rotate-180' />
-                </Icon>
-              </Drawer.Trigger>
+            <Drawer id='sidebar' placement='right'>
+              <Drawer.Menu>
+                <Drawer.Trigger for='sidebar'>
+                  <Icon>
+                    <ChevronLeft className='group-open/drawer:rotate-180' />
+                  </Icon>
+                </Drawer.Trigger>
 
-              {placeholderIcons}
-            </Drawer.Menu>
+                {placeholderIcons}
+              </Drawer.Menu>
 
-            <Drawer.Content>
-              <Drawer.Title>Right</Drawer.Title>
-            </Drawer.Content>
-          </Drawer>
-        </Drawer.Layout>
+              <Drawer.Content>
+                <Drawer.Title>Right</Drawer.Title>
+              </Drawer.Content>
+            </Drawer>
+          </Drawer.Layout>
+        </Drawer.Provider>
       </div>
     );
   },
@@ -197,29 +201,31 @@ export const WithLongContent: Story = {
   render: () => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Layout>
-          <Drawer id='settings' placement='left'>
-            <Drawer.Menu>
-              <Drawer.Menu.Item>
-                <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Content>
-              <Drawer.Header>
-                <Drawer.Title>Title</Drawer.Title>
-                <Drawer.Close>
-                  <Button size='small'>
-                    <Icon>
-                      <Cancel />
-                    </Icon>
-                  </Button>
-                </Drawer.Close>
-              </Drawer.Header>
-              <Drawer.Panel>{longContent}</Drawer.Panel>
-              <Drawer.Footer>Footer</Drawer.Footer>
-            </Drawer.Content>
-          </Drawer>
-        </Drawer.Layout>
+        <Drawer.Provider>
+          <Drawer.Layout>
+            <Drawer id='settings' placement='left'>
+              <Drawer.Menu>
+                <Drawer.Menu.Item>
+                  <Placeholder />
+                </Drawer.Menu.Item>
+              </Drawer.Menu>
+              <Drawer.Content>
+                <Drawer.Header>
+                  <Drawer.Title>Title</Drawer.Title>
+                  <Drawer.Close>
+                    <Button size='small'>
+                      <Icon>
+                        <Cancel />
+                      </Icon>
+                    </Button>
+                  </Drawer.Close>
+                </Drawer.Header>
+                <Drawer.Panel>{longContent}</Drawer.Panel>
+                <Drawer.Footer>Footer</Drawer.Footer>
+              </Drawer.Content>
+            </Drawer>
+          </Drawer.Layout>
+        </Drawer.Provider>
       </div>
     );
   },
@@ -233,42 +239,44 @@ export const ControlledOpen: Story = {
     }, []);
     return (
       <div className='h-screen w-full'>
-        <Drawer.Layout>
-          <Drawer.Main>
-            <div className='flex flex-col gap-m p-l'>
-              <Button
-                variant='outline'
-                onPress={() => handleOpenChange(!isOpen)}
-              >
-                {isOpen ? 'Close' : 'Open'}
-              </Button>
-            </div>
-          </Drawer.Main>
-          <Drawer
-            isOpen={isOpen}
-            onOpenChange={handleOpenChange}
-            id='settings'
-            placement='left'
-            defaultSelectedMenuItemId='placeholder'
-          >
-            <Drawer.Header>
-              <Drawer.Title>Title</Drawer.Title>
-            </Drawer.Header>
-            <Drawer.Menu>
-              <Drawer.Menu.Item id='placeholder'>
-                <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Content>
-              <Drawer.Panel>A Content</Drawer.Panel>
-              <Drawer.Footer>
-                <Drawer.Close>
-                  <Button>Cancel</Button>
-                </Drawer.Close>
-              </Drawer.Footer>
-            </Drawer.Content>
-          </Drawer>
-        </Drawer.Layout>
+        <Drawer.Provider>
+          <Drawer.Layout>
+            <Drawer.Main>
+              <div className='flex flex-col gap-m p-l'>
+                <Button
+                  variant='outline'
+                  onPress={() => handleOpenChange(!isOpen)}
+                >
+                  {isOpen ? 'Close' : 'Open'}
+                </Button>
+              </div>
+            </Drawer.Main>
+            <Drawer
+              isOpen={isOpen}
+              onOpenChange={handleOpenChange}
+              id='settings'
+              placement='left'
+              defaultSelectedMenuItemId='placeholder'
+            >
+              <Drawer.Menu>
+                <Drawer.Menu.Item id='placeholder'>
+                  <Placeholder />
+                </Drawer.Menu.Item>
+              </Drawer.Menu>
+              <Drawer.Content>
+                <Drawer.Header>
+                  <Drawer.Title>Title</Drawer.Title>
+                </Drawer.Header>
+                <Drawer.Panel>A Content</Drawer.Panel>
+                <Drawer.Footer>
+                  <Drawer.Close>
+                    <Button>Cancel</Button>
+                  </Drawer.Close>
+                </Drawer.Footer>
+              </Drawer.Content>
+            </Drawer>
+          </Drawer.Layout>
+        </Drawer.Provider>
       </div>
     );
   },
@@ -278,75 +286,77 @@ export const WithNavigationStack: Story = {
   render: () => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Layout>
-          <Drawer id='settings' placement='left'>
-            <Drawer.Menu>
-              <Drawer.Menu.Item id='a'>
-                <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item id='b'>
-                <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Content>
-              <Drawer.Panel id='a'>
-                <NavigationStack defaultViewId='a'>
-                  <NavigationStack.View id='a' className='flex flex-col'>
-                    <Drawer.Header>Parent A</Drawer.Header>
-                    <div className='flex-1'>a content</div>
-                    <Drawer.Footer>
-                      <NavigationStack.Navigate childId='child-a'>
-                        <span className='cursor-pointer'>View Child</span>
-                      </NavigationStack.Navigate>
-                    </Drawer.Footer>
-                  </NavigationStack.View>
+        <Drawer.Provider>
+          <Drawer.Layout>
+            <Drawer id='settings' placement='left'>
+              <Drawer.Menu>
+                <Drawer.Menu.Item id='a'>
+                  <Placeholder />
+                </Drawer.Menu.Item>
+                <Drawer.Menu.Item id='b'>
+                  <Placeholder />
+                </Drawer.Menu.Item>
+              </Drawer.Menu>
+              <Drawer.Content>
+                <Drawer.Panel id='a'>
+                  <NavigationStack defaultViewId='a'>
+                    <NavigationStack.View id='a' className='flex flex-col'>
+                      <Drawer.Header>Parent A</Drawer.Header>
+                      <div className='flex-1'>a content</div>
+                      <Drawer.Footer>
+                        <NavigationStack.Navigate childId='child-a'>
+                          <span className='cursor-pointer'>View Child</span>
+                        </NavigationStack.Navigate>
+                      </Drawer.Footer>
+                    </NavigationStack.View>
 
-                  <NavigationStack.View
-                    id='child-a'
-                    className='flex flex-col gap-m'
-                  >
-                    <div className='flex cursor-pointer items-center justify-between'>
-                      <NavigationStack.Back>
-                        <span>Back</span>
-                      </NavigationStack.Back>
-                      <div>Child A</div>
-                    </div>
-                    <div> a child content </div>
-                  </NavigationStack.View>
-                </NavigationStack>
-              </Drawer.Panel>
+                    <NavigationStack.View
+                      id='child-a'
+                      className='flex flex-col gap-m'
+                    >
+                      <div className='flex cursor-pointer items-center justify-between'>
+                        <NavigationStack.Back>
+                          <span>Back</span>
+                        </NavigationStack.Back>
+                        <div>Child A</div>
+                      </div>
+                      <div> a child content </div>
+                    </NavigationStack.View>
+                  </NavigationStack>
+                </Drawer.Panel>
 
-              <Drawer.Panel id='b' className='h-full p-0'>
-                <NavigationStack defaultViewId='b'>
-                  <NavigationStack.View id='b' className='flex flex-col'>
-                    <Drawer.Header>Parent B</Drawer.Header>
-                    <div className='flex-1'>b content</div>
-                    <Drawer.Footer>
-                      <NavigationStack.Navigate childId='child-b'>
-                        <span className='cursor-pointer'>View Child</span>
-                      </NavigationStack.Navigate>
-                    </Drawer.Footer>
-                  </NavigationStack.View>
+                <Drawer.Panel id='b' className='h-full p-0'>
+                  <NavigationStack defaultViewId='b'>
+                    <NavigationStack.View id='b' className='flex flex-col'>
+                      <Drawer.Header>Parent B</Drawer.Header>
+                      <div className='flex-1'>b content</div>
+                      <Drawer.Footer>
+                        <NavigationStack.Navigate childId='child-b'>
+                          <span className='cursor-pointer'>View Child</span>
+                        </NavigationStack.Navigate>
+                      </Drawer.Footer>
+                    </NavigationStack.View>
 
-                  <NavigationStack.View
-                    id='child-b'
-                    className='flex flex-col gap-m'
-                  >
-                    <div className='flex cursor-pointer items-center justify-between'>
-                      <NavigationStack.Back>
-                        <Icon>
-                          <ChevronLeft />
-                        </Icon>
-                      </NavigationStack.Back>
-                      Child B
-                    </div>
-                    <div className='flex-1'>b child content</div>
-                  </NavigationStack.View>
-                </NavigationStack>
-              </Drawer.Panel>
-            </Drawer.Content>
-          </Drawer>
-        </Drawer.Layout>
+                    <NavigationStack.View
+                      id='child-b'
+                      className='flex flex-col gap-m'
+                    >
+                      <div className='flex cursor-pointer items-center justify-between'>
+                        <NavigationStack.Back>
+                          <Icon>
+                            <ChevronLeft />
+                          </Icon>
+                        </NavigationStack.Back>
+                        Child B
+                      </div>
+                      <div className='flex-1'>b child content</div>
+                    </NavigationStack.View>
+                  </NavigationStack>
+                </Drawer.Panel>
+              </Drawer.Content>
+            </Drawer>
+          </Drawer.Layout>
+        </Drawer.Provider>
       </div>
     );
   },

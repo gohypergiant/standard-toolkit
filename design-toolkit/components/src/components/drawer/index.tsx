@@ -31,6 +31,7 @@ import type {
   DrawerMenuProps,
   DrawerPanelProps,
   DrawerProps,
+  DrawerProviderProps,
   DrawerTriggerProps,
 } from './types';
 
@@ -39,27 +40,32 @@ const { layout, main, drawer, trigger, content, panel, header, footer, title } =
 
 const { menu, item } = DrawerMenuStyles();
 
-const DrawerLayout = ({
-  children,
-  classNames,
-  extend = 'left right',
-  push,
-  onStateChange,
-}: DrawerLayoutProps) => {
+const DrawerProvider = ({ children, onStateChange }: DrawerProviderProps) => {
   const drawerState = useDrawerLayoutState({
     onStateChange,
   });
 
   return (
     <DrawerLayoutContext.Provider value={drawerState}>
-      <div
-        className={layout({ className: classNames?.layout })}
-        data-extend={extend}
-        data-push={push}
-      >
-        {children}
-      </div>
+      {children}
     </DrawerLayoutContext.Provider>
+  );
+};
+
+const DrawerLayout = ({
+  children,
+  classNames,
+  extend = 'left right',
+  push,
+}: DrawerLayoutProps) => {
+  return (
+    <div
+      className={layout({ className: classNames?.layout })}
+      data-extend={extend}
+      data-push={push}
+    >
+      {children}
+    </div>
   );
 };
 DrawerLayout.displayName = 'Drawer.Layout';
@@ -83,9 +89,7 @@ export const Drawer = ({
   useEffect(() => {
     const initialState = createDefaultDrawerState({
       id,
-      placement,
       selectedMenuItemId: defaultSelectedMenuItemId,
-      size,
       isOpen,
     });
     registerDrawer(initialState, {
@@ -101,7 +105,7 @@ export const Drawer = ({
         className={drawer({ className })}
         data-placement={placement}
         data-drawer-id={id}
-        data-size={currentState.size}
+        data-size={size}
         data-open={currentState.isOpen || null}
       >
         {children}
@@ -286,3 +290,4 @@ Drawer.Header = DrawerHeader;
 Drawer.Title = DrawerTitle;
 Drawer.Footer = DrawerFooter;
 Drawer.Content = DrawerContent;
+Drawer.Provider = DrawerProvider;
