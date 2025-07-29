@@ -240,7 +240,7 @@ export const DrawerMenuStyles = tv({
 
     ],
     item: [
-      'flex h-[28px] w-[28px] flex-col items-center justify-center',
+      'flex flex-col items-center justify-center',
       'fg-default-dark cursor-pointer p-s outline-none',
       'rounded-medium group-dtk-orientation-horizontal:rounded-small group-dtk-orientation-horizontal:rounded-b-none',
       'group-dtk-orientation-horizontal:border-static-light group-dtk-orientation-horizontal:border-b',
