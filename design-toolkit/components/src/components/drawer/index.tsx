@@ -12,7 +12,7 @@
 'use client';
 import 'client-only';
 import { PressResponder } from '@react-aria/interactions';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import {
@@ -26,68 +26,55 @@ import { createDefaultDrawerState } from './state';
 import { DrawerMenuStyles, DrawerStyles } from './styles';
 import type {
   DrawerContainerProps,
+  DrawerLayoutProps,
   DrawerMenuItemProps,
   DrawerMenuProps,
   DrawerPanelProps,
   DrawerProps,
-  DrawerRootProps,
   DrawerTriggerProps,
 } from './types';
 
-const { root, main, drawer, trigger, content, panel, header, footer, title } =
+const { layout, main, drawer, trigger, content, panel, header, footer, title } =
   DrawerStyles();
 
 const { menu, item } = DrawerMenuStyles();
 
-const DrawerRoot = ({
+const DrawerLayout = ({
   children,
   classNames,
   extend = 'left right',
+  push,
   onStateChange,
-}: DrawerRootProps) => {
+}: DrawerLayoutProps) => {
   const drawerState = useDrawerLayoutState({
     onStateChange,
   });
 
-  const dataAttributes = useMemo(() => {
-    const attrs: Record<string, string | boolean> = {};
-
-    for (const [_, state] of Object.entries(drawerState.drawerStates)) {
-      if (state?.placement) {
-        attrs[`data-${state?.placement}`] = `${state.mode}-${state.size}`;
-        attrs[`data-${state?.placement}-open`] = state.isOpen;
-      }
-    }
-
-    return attrs;
-  }, [drawerState.drawerStates]);
-
   return (
     <DrawerLayoutContext.Provider value={drawerState}>
       <div
-        className={root({ className: classNames?.layout })}
+        className={layout({ className: classNames?.layout })}
         data-extend={extend}
-        {...dataAttributes}
+        data-push={push}
       >
         {children}
       </div>
     </DrawerLayoutContext.Provider>
   );
 };
-DrawerRoot.displayName = 'Drawer.Root';
+DrawerLayout.displayName = 'Drawer.Layout';
 
 export const Drawer = ({
   id,
   placement = 'left',
   isOpen = false,
-  mode = 'overlay',
   size = 'medium',
   defaultSelectedMenuItemId,
   className,
   children,
   onOpenChange,
   onStateChange,
-  ...props
+  ...rest
 }: DrawerProps) => {
   const { getDrawerState, registerDrawer } = useDrawerLayoutContext();
   const currentState = getDrawerState(id);
@@ -98,7 +85,6 @@ export const Drawer = ({
       id,
       placement,
       selectedMenuItemId: defaultSelectedMenuItemId,
-      mode,
       size,
       isOpen,
     });
@@ -106,18 +92,17 @@ export const Drawer = ({
       onOpenChange,
       onStateChange,
     });
-  }, [isOpen, mode, size, placement]);
+  }, [isOpen, size, placement]);
 
   return (
     <DrawerContext.Provider value={{ state: currentState }}>
       <div
-        className={drawer({ className, placement })}
-        {...props}
+        {...rest}
+        className={drawer({ className })}
         data-placement={placement}
         data-drawer-id={id}
-        data-mode={currentState.mode}
         data-size={currentState.size}
-        data-open={currentState.isOpen}
+        data-open={currentState.isOpen || null}
       >
         {children}
       </div>
@@ -285,16 +270,11 @@ const DrawerMain = ({
 DrawerMain.displayName = 'Drawer.Main';
 
 const DrawerContent = ({ children, className }: DrawerContainerProps) => {
-  const { state } = useDrawerContext();
-  return (
-    <div className={content({ className, visible: state?.isOpen })}>
-      {children}
-    </div>
-  );
+  return <div className={content({ className })}>{children}</div>;
 };
 DrawerContent.displayName = 'Drawer.Content';
 
-Drawer.Root = DrawerRoot;
+Drawer.Layout = DrawerLayout;
 Drawer.Main = DrawerMain;
 DrawerMenu.Item = DrawerMenuItem;
 Drawer.Menu = DrawerMenu;

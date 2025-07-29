@@ -23,9 +23,10 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { NavigationStack } from '../navigation-stack';
 import { Drawer } from './index';
-import type { DrawerProps, DrawerRootProps } from './types';
+import type { DrawerLayoutProps, DrawerProps } from './types';
 
-type CombinedDrawerProps = DrawerProps & Pick<DrawerRootProps, 'extend'>;
+type CombinedDrawerProps = DrawerProps &
+  Pick<DrawerLayoutProps, 'push' | 'extend'>;
 
 const meta: Meta<CombinedDrawerProps> = {
   title: 'Components/Drawer',
@@ -36,9 +37,9 @@ const meta: Meta<CombinedDrawerProps> = {
   args: {
     id: 'left-drawer',
     placement: 'left',
-    mode: 'overlay',
     size: 'medium',
     extend: 'left right',
+    push: 'left',
   },
   argTypes: {
     extend: {
@@ -61,7 +62,7 @@ export const WithTabs: Story = {
   render: ({ id, ...args }) => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Root>
+        <Drawer.Layout>
           <Drawer.Main>
             <div className='p-l text-default-light'>{longContent}</div>
           </Drawer.Main>
@@ -89,18 +90,18 @@ export const WithTabs: Story = {
               <Drawer.Panel id='b'>B Content</Drawer.Panel>
             </Drawer.Content>
           </Drawer>
-        </Drawer.Root>
+        </Drawer.Layout>
       </div>
     );
   },
 };
 
 export const FullLayout: Story = {
-  render: ({ extend, mode }: CombinedDrawerProps) => {
+  render: ({ extend, push }: CombinedDrawerProps) => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Root extend={extend}>
-          <Drawer id='header' placement='top' mode={mode}>
+        <Drawer.Layout extend={extend} push={push}>
+          <Drawer id='header' placement='top' size='medium'>
             <Drawer.Menu>
               <Drawer.Trigger for='header'>
                 <Icon>
@@ -139,7 +140,7 @@ export const FullLayout: Story = {
             </div>
           </Drawer.Main>
 
-          <Drawer id='footer' placement='bottom' mode={mode}>
+          <Drawer id='footer' placement='bottom'>
             <Drawer.Menu>
               <Drawer.Trigger for='footer'>
                 <Icon>
@@ -155,7 +156,7 @@ export const FullLayout: Story = {
             </Drawer.Content>
           </Drawer>
 
-          <Drawer id='settings' placement='left' mode={mode}>
+          <Drawer id='settings' placement='left'>
             <Drawer.Menu>
               <Drawer.Trigger for='settings'>
                 <Icon>
@@ -171,7 +172,7 @@ export const FullLayout: Story = {
             </Drawer.Content>
           </Drawer>
 
-          <Drawer id='sidebar' placement='right' mode={mode}>
+          <Drawer id='sidebar' placement='right'>
             <Drawer.Menu>
               <Drawer.Trigger for='sidebar'>
                 <Icon>
@@ -186,7 +187,7 @@ export const FullLayout: Story = {
               <Drawer.Title>Right</Drawer.Title>
             </Drawer.Content>
           </Drawer>
-        </Drawer.Root>
+        </Drawer.Layout>
       </div>
     );
   },
@@ -196,8 +197,8 @@ export const WithLongContent: Story = {
   render: () => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Root>
-          <Drawer id='settings' placement='left' mode='overlay'>
+        <Drawer.Layout>
+          <Drawer id='settings' placement='left'>
             <Drawer.Menu>
               <Drawer.Menu.Item>
                 <Placeholder />
@@ -218,7 +219,7 @@ export const WithLongContent: Story = {
               <Drawer.Footer>Footer</Drawer.Footer>
             </Drawer.Content>
           </Drawer>
-        </Drawer.Root>
+        </Drawer.Layout>
       </div>
     );
   },
@@ -232,7 +233,7 @@ export const ControlledOpen: Story = {
     }, []);
     return (
       <div className='h-screen w-full'>
-        <Drawer.Root>
+        <Drawer.Layout>
           <Drawer.Main>
             <div className='flex flex-col gap-m p-l'>
               <Button
@@ -248,7 +249,6 @@ export const ControlledOpen: Story = {
             onOpenChange={handleOpenChange}
             id='settings'
             placement='left'
-            mode='push'
             defaultSelectedMenuItemId='placeholder'
           >
             <Drawer.Header>
@@ -268,7 +268,7 @@ export const ControlledOpen: Story = {
               </Drawer.Footer>
             </Drawer.Content>
           </Drawer>
-        </Drawer.Root>
+        </Drawer.Layout>
       </div>
     );
   },
@@ -278,8 +278,8 @@ export const WithNavigationStack: Story = {
   render: () => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Root>
-          <Drawer id='settings' placement='left' mode='overlay'>
+        <Drawer.Layout>
+          <Drawer id='settings' placement='left'>
             <Drawer.Menu>
               <Drawer.Menu.Item id='a'>
                 <Placeholder />
@@ -346,7 +346,7 @@ export const WithNavigationStack: Story = {
               </Drawer.Panel>
             </Drawer.Content>
           </Drawer>
-        </Drawer.Root>
+        </Drawer.Layout>
       </div>
     );
   },

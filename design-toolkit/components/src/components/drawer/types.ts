@@ -12,18 +12,6 @@
 import type { FocusableElement, Key } from '@react-types/shared';
 import type { DOMAttributes, PropsWithChildren, ReactElement } from 'react';
 
-/**
- * Drawer Layout Modes
- *
- * Determines how drawer interact with the main content area and overall layout:
- *
- * - `'overlay'`: Drawer floats over the main content without affecting its layout or dimensions.
- *   Content remains at full width, panel appears as an overlay.
- * - `'push'`: Drawer pushes the main content aside, reducing its available width.
- *   Content area shrinks to accommodate the panel space.
- */
-export type DrawerMode = 'overlay' | 'push';
-
 export type DrawerSize = 'small' | 'medium' | 'large';
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
@@ -31,7 +19,6 @@ export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 export interface DrawerState {
   id: Key;
   isOpen: boolean;
-  mode: DrawerMode;
   placement: DrawerPlacement;
   selectedMenuItemId?: Key;
   size: DrawerSize;
@@ -47,7 +34,7 @@ export type DrawerClassNames = Partial<{
 export interface DrawerContainerProps
   extends PropsWithChildren<{ className?: string }> {}
 
-export interface DrawerRootProps
+export interface DrawerLayoutProps
   extends DrawerContainerProps,
     Partial<Record<DrawerPlacement, DrawerState>> {
   /**
@@ -57,6 +44,15 @@ export interface DrawerRootProps
    * @default 'left right'
    */
   extend?: DrawerLayouts;
+  /**
+   * Determines how drawer interact with the main content area and overall layout:
+   *
+   * - `'push'`: Drawer pushes the main content aside, reducing its available width.
+   *   Content area shrinks to accommodate the panel space.
+   *   If no placements are defined for push, the default behavior for a drawer is to float over the main content without affecting its layout or dimensions.
+   *   Content remains at full width, panel appears as an overlay.
+   */
+  push?: DrawerPlacement;
   classNames?: DrawerClassNames;
   onStateChange?: (drawerId: Key, state: DrawerState) => void;
 }
@@ -64,7 +60,6 @@ export interface DrawerRootProps
 export interface DrawerProps extends DrawerContainerProps {
   id: Key;
   placement: DrawerPlacement;
-  mode?: DrawerMode;
   size?: DrawerSize;
   isOpen?: boolean;
   defaultSelectedMenuItemId?: Key;
@@ -184,7 +179,6 @@ export type DrawerLayouts =
 
 export const DrawerDefaults = {
   placement: 'left',
-  mode: 'overlay',
   selectedMenuItemId: undefined,
   size: 'medium',
   isOpen: false,

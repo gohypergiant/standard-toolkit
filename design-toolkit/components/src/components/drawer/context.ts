@@ -91,7 +91,6 @@ export function useDrawerLayoutState(opts?: {
             placement: DrawerDefaults.placement,
             selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
             size: DrawerDefaults.size,
-            mode: DrawerDefaults.mode,
             isOpen: DrawerDefaults.isOpen,
           });
         const nextState = drawerStateReducer(currentState, action);
@@ -158,7 +157,6 @@ export function useDrawerLayoutState(opts?: {
           placement: DrawerDefaults.placement,
           selectedMenuItemId: DrawerDefaults.selectedMenuItemId,
           size: DrawerDefaults.size,
-          mode: DrawerDefaults.mode,
           isOpen: DrawerDefaults.isOpen,
         })
       );

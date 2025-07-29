@@ -11,7 +11,6 @@
  */
 import {
   DrawerDefaults,
-  type DrawerMode,
   type DrawerPlacement,
   type DrawerSize,
   type DrawerState,
@@ -32,17 +31,15 @@ export const createDefaultDrawerState = ({
   id,
   placement = DrawerDefaults.placement,
   selectedMenuItemId = DrawerDefaults.selectedMenuItemId,
-  mode = DrawerDefaults.mode,
   size = DrawerDefaults.size,
   isOpen = DrawerDefaults.isOpen,
 }: {
   id: Key;
   placement?: DrawerPlacement;
   selectedMenuItemId?: Key;
-  mode?: DrawerMode;
   size?: DrawerSize;
   isOpen?: boolean;
-}): DrawerState => ({ id, mode, size, placement, isOpen, selectedMenuItemId });
+}): DrawerState => ({ id, size, placement, isOpen, selectedMenuItemId });
 
 export const drawerStateReducer = (
   state: DrawerState,
