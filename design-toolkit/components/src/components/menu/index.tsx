@@ -98,6 +98,7 @@ function MenuDescription(props: MenuTextProps) {
     <AriaText
       {...rest}
       slot='description'
+      data-slot='description'
       className={description({ className })}
     >
       {children}
