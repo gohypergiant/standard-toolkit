@@ -15,9 +15,9 @@ export const DrawerStyles = tv({
 
       '[--drawer-size-closed:0]',
       '[--drawer-menu-size:40px]',
-      '[--drawer-size-small:200px]',
-      '[--drawer-size-medium:min(475px,100%)]',
-      '[--drawer-size-large:min(600px,100%)]',
+      '[--drawer-size-small:100px]',
+      '[--drawer-size-medium:200px]',
+      '[--drawer-size-large:400px]',
 
       //Grid template definitions
       '[--route-layout-grid-cols:auto_1fr_auto]',
@@ -88,7 +88,7 @@ export const DrawerStyles = tv({
     content: [
       'hidden h-full min-h-0 flex-col gap-s p-l group-open/drawer:flex',
     ],
-    panel: ['flex max-h-full flex-1 overflow-y-auto text-default-light'],
+    panel: ['flex max-h-full flex-1 flex-col overflow-y-auto text-default-light'],
     header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],
     title: 'w-full text-default-light text-header-l',
     footer: 'mt-s flex flex-row items-center justify-end text-default-light',

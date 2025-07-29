@@ -240,7 +240,7 @@ export const ControlledOpen: Story = {
     return (
       <div className='h-screen w-full'>
         <Drawer.Provider>
-          <Drawer.Layout push="left">
+          <Drawer.Layout push='left'>
             <Drawer.Main>
               <div className='flex flex-col gap-m p-l'>
                 <Button
@@ -301,7 +301,16 @@ export const WithNavigationStack: Story = {
                 <Drawer.Panel id='a'>
                   <NavigationStack defaultViewId='a'>
                     <NavigationStack.View id='a' className='flex flex-col'>
-                      <Drawer.Header>Parent A</Drawer.Header>
+                      <Drawer.Header>
+                        Parent A
+                        <Drawer.Trigger for='settings' behavior='close'>
+                          <Button variant='icon'>
+                            <Icon>
+                              <Cancel />
+                            </Icon>
+                          </Button>
+                        </Drawer.Trigger>
+                      </Drawer.Header>
                       <div className='flex-1'>a content</div>
                       <Drawer.Footer>
                         <NavigationStack.Navigate childId='child-a'>
@@ -328,7 +337,16 @@ export const WithNavigationStack: Story = {
                 <Drawer.Panel id='b' className='h-full p-0'>
                   <NavigationStack defaultViewId='b'>
                     <NavigationStack.View id='b' className='flex flex-col'>
-                      <Drawer.Header>Parent B</Drawer.Header>
+                      <Drawer.Header>
+                        Parent B
+                        <Drawer.Trigger for='settings' behavior='close'>
+                          <Button variant='icon'>
+                            <Icon>
+                              <Cancel />
+                            </Icon>
+                          </Button>
+                        </Drawer.Trigger>
+                      </Drawer.Header>
                       <div className='flex-1'>b content</div>
                       <Drawer.Footer>
                         <NavigationStack.Navigate childId='child-b'>
