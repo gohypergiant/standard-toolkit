@@ -24,16 +24,14 @@ import {
 import {
   type DrawerContextValue,
   DrawerDefaults,
-  type DrawerLayoutContextValue,
   type DrawerState,
+  type DrawersContextValue,
   type OnOpenChangeCallback,
 } from './types';
 
 import type { Key } from '@react-types/shared';
 
-const DrawerLayoutContext = createContext<DrawerLayoutContextValue | null>(
-  null,
-);
+const DrawersContext = createContext<DrawersContextValue | null>(null);
 const DrawerContext = createContext<DrawerContextValue | null>(null);
 
 export function useDrawerContext(): DrawerContextValue {
@@ -46,13 +44,11 @@ export function useDrawerContext(): DrawerContextValue {
   return ctx;
 }
 
-export function useDrawerLayoutContext(): DrawerLayoutContextValue {
-  const ctx = useContext(DrawerLayoutContext);
+export function useDrawersContext(): DrawersContextValue {
+  const ctx = useContext(DrawersContext);
 
   if (!ctx) {
-    throw new Error(
-      'useDrawerLayoutContext must be used within <Drawer.Provider>',
-    );
+    throw new Error('useDrawersContext must be used within <Drawer.Provider>');
   }
 
   return ctx;
@@ -63,7 +59,7 @@ interface DrawerCallbacks {
   onStateChange?: (state: DrawerState) => void;
 }
 
-export function useDrawerLayoutState(opts?: {
+export function useDrawersState(opts?: {
   onStateChange?: (drawerId: Key, state: DrawerState) => void;
 }) {
   const [drawerStates, setDrawerStates] = useState<Record<Key, DrawerState>>(
@@ -185,7 +181,7 @@ export function useDrawerLayoutState(opts?: {
     [],
   );
 
-  const contextValue = useMemo<DrawerLayoutContextValue>(
+  const contextValue = useMemo<DrawersContextValue>(
     () => ({
       drawerStates,
       toggleDrawer,
@@ -211,4 +207,4 @@ export function useDrawerLayoutState(opts?: {
   return contextValue;
 }
 
-export { DrawerLayoutContext, DrawerContext };
+export { DrawersContext, DrawerContext };

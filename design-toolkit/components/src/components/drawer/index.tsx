@@ -17,10 +17,10 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import {
   DrawerContext,
-  DrawerLayoutContext,
+  DrawersContext,
   useDrawerContext,
-  useDrawerLayoutContext,
-  useDrawerLayoutState,
+  useDrawersContext,
+  useDrawersState,
 } from './context';
 import { createDefaultDrawerState } from './state';
 import { DrawerMenuStyles, DrawerStyles } from './styles';
@@ -41,14 +41,14 @@ const { layout, main, drawer, content, panel, header, footer, title } =
 const { menu, item } = DrawerMenuStyles();
 
 const DrawerProvider = ({ children, onStateChange }: DrawerProviderProps) => {
-  const drawerState = useDrawerLayoutState({
+  const drawerState = useDrawersState({
     onStateChange,
   });
 
   return (
-    <DrawerLayoutContext.Provider value={drawerState}>
+    <DrawersContext.Provider value={drawerState}>
       {children}
-    </DrawerLayoutContext.Provider>
+    </DrawersContext.Provider>
   );
 };
 
@@ -82,7 +82,7 @@ export const Drawer = ({
   onStateChange,
   ...rest
 }: DrawerProps) => {
-  const { getDrawerState, registerDrawer } = useDrawerLayoutContext();
+  const { getDrawerState, registerDrawer } = useDrawersContext();
   const currentState = getDrawerState(id);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: this should only run if these props change
@@ -138,9 +138,9 @@ const DrawerMenuItem = ({
   id,
   children,
   className,
-  ...props
+  ...rest
 }: DrawerMenuItemProps) => {
-  const { openDrawer, isSelectedMenuItem } = useDrawerLayoutContext();
+  const { openDrawer, isSelectedMenuItem } = useDrawersContext();
   const { state } = useDrawerContext();
   const isSelected = isSelectedMenuItem(state.selectedMenuItemId, id);
 
@@ -149,7 +149,7 @@ const DrawerMenuItem = ({
   };
   return (
     <Button
-      {...props}
+      {...rest}
       variant='icon'
       className={item({ className })}
       aria-selected={isSelected}
@@ -196,7 +196,7 @@ const DrawerTrigger = ({
   children,
   behavior = 'toggle',
 }: DrawerTriggerProps) => {
-  const { toggleDrawer, openDrawer, closeDrawer } = useDrawerLayoutContext();
+  const { toggleDrawer, openDrawer, closeDrawer } = useDrawersContext();
 
   const handleOnPress = useCallback(() => {
     if (behavior === 'open') {
@@ -216,7 +216,6 @@ const DrawerTrigger = ({
 };
 DrawerTrigger.displayName = 'Drawer.Trigger';
 
-//Slot candidates
 const DrawerHeader = ({ children, className }: DrawerContainerProps) => {
   return (
     <div
@@ -240,14 +239,8 @@ const DrawerFooter = ({ children, className }: DrawerContainerProps) => {
 };
 DrawerFooter.displayName = 'Drawer.Footer';
 
-const DrawerMain = ({
-  children,
-  className,
-  ...props
-}: DrawerContainerProps) => (
-  <main className={main({ className })} {...props}>
-    {children}
-  </main>
+const DrawerMain = ({ children, className }: DrawerContainerProps) => (
+  <main className={main({ className })}>{children}</main>
 );
 DrawerMain.displayName = 'Drawer.Main';
 

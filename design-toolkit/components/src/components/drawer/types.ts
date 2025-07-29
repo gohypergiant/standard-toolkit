@@ -90,7 +90,7 @@ export interface DrawerPanelProps extends DrawerContainerProps {
   id?: Key;
 }
 
-export interface DrawerLayoutContextValue {
+export interface DrawersContextValue {
   drawerStates: Record<Key, DrawerState>;
   toggleDrawer: (drawerId: Key) => void;
   openDrawer: (drawerId: Key, menuItemId?: Key) => void;
