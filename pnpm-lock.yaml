@@ -131,10 +131,10 @@ importers:
         specifier: 2.3.0
         version: 2.3.0(react@19.1.1)
       react:
-        specifier: ^19.1.1
+        specifier: ^19.0.0
         version: 19.1.1
       react-dom:
-        specifier: ^19.1.1
+        specifier: ^19.0.0
         version: 19.1.1(react@19.1.1)
       rehype-katex:
         specifier: '7'
@@ -147,7 +147,7 @@ importers:
         version: 0.28.8(typescript@5.8.3)
       typedoc-plugin-markdown:
         specifier: ^4.7.1
-        version: 4.7.1(typedoc@0.28.8(typescript@5.8.3))
+        version: 4.8.0(typedoc@0.28.8(typescript@5.8.3))
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -185,13 +185,13 @@ importers:
         specifier: 8.4.47
         version: 8.4.47
       react:
-        specifier: ^19.1.1
+        specifier: ^19.0.0
         version: 19.1.1
       react-aria-components:
         specifier: 1.4.1
         version: 1.4.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-dom:
-        specifier: ^19.1.1
+        specifier: ^19.0.0
         version: 19.1.1(react@19.1.1)
       tailwindcss:
         specifier: ^4.1.3
@@ -375,13 +375,13 @@ importers:
         specifier: ^8.5.6
         version: 8.5.6
       react:
-        specifier: ^19.1.1
+        specifier: ^19.0.0
         version: 19.1.1
       react-aria-components:
         specifier: ^1.11.0
         version: 1.11.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-dom:
-        specifier: ^19.1.1
+        specifier: ^19.0.0
         version: 19.1.1(react@19.1.1)
       react-querybuilder:
         specifier: ^8.8.1
@@ -418,7 +418,7 @@ importers:
         version: 2.1.3(@types/node@24.1.0)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.10.4(@types/node@24.1.0)(typescript@5.8.3))(terser@5.43.1)
       zod:
         specifier: ^4.0.13
-        version: 4.0.13
+        version: 4.0.14
 
   design-toolkit/icons:
     dependencies:
@@ -7530,8 +7530,8 @@ packages:
     resolution: {integrity: sha512-asOvN6bFlSnxewce2e/DK3p4tltyfC4VM7ZwuTuepI7dEQVcvpyFuBcEARu1+Hxg8DIwytce2n7jrZtRlPrARA==}
     engines: {node: '>= 10'}
 
-  koa@2.16.1:
-    resolution: {integrity: sha512-umfX9d3iuSxTQP4pnzLOz0HKnPg0FaUUIKcye2lOiz3KPu1Y3M3xlz76dISdFPQs37P9eJz1wUpcTS6KDPn9fA==}
+  koa@2.16.2:
+    resolution: {integrity: sha512-+CCssgnrWKx9aI3OeZwroa/ckG4JICxvIFnSiOUyl2Uv+UTI+xIw0FfFrWS7cQFpoePpr9o8csss7KzsTzNL8Q==}
     engines: {node: ^4.8.4 || ^6.10.1 || ^7.10.1 || >= 8.1.4}
 
   latest-version@7.0.0:
@@ -10238,8 +10238,8 @@ packages:
   typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
 
-  typedoc-plugin-markdown@4.7.1:
-    resolution: {integrity: sha512-HN/fHLm2S6MD4HX8txfB4eWvVBzX/mEYy5U5s1KTAdh3E5uX5/lilswqTzZlPTT6fNZInAboAdFGpbAuBKnE4A==}
+  typedoc-plugin-markdown@4.8.0:
+    resolution: {integrity: sha512-BQqXnT9PETe6WEFf8bcsvvGEGQHbwTo/BFyY+RUIsSB05Y0Wn56iF+fK1PY2OKJJIhV4kp4dp7osaP9Bm5a0Zw==}
     engines: {node: '>= 18'}
     peerDependencies:
       typedoc: 0.28.x
@@ -10764,8 +10764,8 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zod@4.0.13:
-    resolution: {integrity: sha512-jv+zRxuZQxTrFHzxZ46ezL2FtnE+M4HIJHJEwLsZ7UjrXHltdG6HrxvqM0twoVCWxJiYf8WqKjAcjztegpkB+Q==}
+  zod@4.0.14:
+    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -13718,7 +13718,7 @@ snapshots:
       get-port: 7.1.0
       globby: 14.1.0
       history: 5.3.0
-      koa: 2.16.1
+      koa: 2.16.2
       koa-connect: 2.1.0
       lodash.merge: 4.6.2
       msw: 2.10.4(@types/node@24.1.0)(typescript@5.8.3)
@@ -19170,7 +19170,7 @@ snapshots:
       co: 4.6.0
       koa-compose: 4.1.0
 
-  koa@2.16.1:
+  koa@2.16.2:
     dependencies:
       accepts: 1.3.8
       cache-content-type: 1.0.1
@@ -22509,7 +22509,7 @@ snapshots:
     dependencies:
       is-typedarray: 1.0.0
 
-  typedoc-plugin-markdown@4.7.1(typedoc@0.28.8(typescript@5.8.3)):
+  typedoc-plugin-markdown@4.8.0(typedoc@0.28.8(typescript@5.8.3)):
     dependencies:
       typedoc: 0.28.8(typescript@5.8.3)
 
@@ -23261,7 +23261,7 @@ snapshots:
 
   zod@3.23.8: {}
 
-  zod@4.0.13: {}
+  zod@4.0.14: {}
 
   zwitch@2.0.4: {}
 
