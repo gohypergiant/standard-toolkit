@@ -16,14 +16,14 @@ import { Drawer } from './';
 
 function setup() {
   render(
-    <Drawer.Root>
+    <Drawer.Provider>
       <Drawer.Main>Main</Drawer.Main>
       <Drawer id='settings' placement='left'>
         <Drawer.Title>Title</Drawer.Title>
         <Drawer.Panel>Content</Drawer.Panel>
         <Drawer.Footer>Footer</Drawer.Footer>
       </Drawer>
-    </Drawer.Root>,
+    </Drawer.Provider>,
   );
 }
 
