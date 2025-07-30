@@ -13,41 +13,60 @@
 import Placeholder from '@accelint/icons/placeholder';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { IOptionsItem } from '../options-item';
-import { Options, type OptionsProps } from './index';
+import { Icon } from '../icon';
+import { Options } from './index';
+import type { OptionsDataItem, OptionsProps } from './types';
 
 function setup({
   children = (
     <>
-      <Options.Section header='North American Birds' className='w-[200px]'>
-        <Options.Item prefixIcon={<Placeholder />} name='Blue Jay'>
-          Blue Jay
+      <Options.Section
+        header='North American Birds'
+        classNames={{ section: 'w-[200px]' }}
+      >
+        <Options.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Blue Jay</Options.Item.Label>
         </Options.Item>
-        <Options.Item prefixIcon={<Placeholder />} name='Gray catbird'>
-          Gray catbird
+        <Options.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Gray catbird</Options.Item.Label>
         </Options.Item>
-        <Options.Item
-          prefixIcon={<Placeholder />}
-          name='Black-capped chickadee'
-        >
-          Black-capped chickadee
+        <Options.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Black-capped chickadee</Options.Item.Label>
         </Options.Item>
-        <Options.Item prefixIcon={<Placeholder />} name='Song Sparrow'>
-          Song Sparrow
+        <Options.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Song Sparrow</Options.Item.Label>
         </Options.Item>
       </Options.Section>
       <Options.Section header='African Birds'>
-        <Options.Item prefixIcon={<Placeholder />} name='Lilac-breasted roller'>
-          Lilac-breasted roller
+        <Options.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Lilac-breasted roller</Options.Item.Label>
         </Options.Item>
-        <Options.Item prefixIcon={<Placeholder />} name='Hornbill'>
-          Hornbill
+        <Options.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Hornbill</Options.Item.Label>
         </Options.Item>
       </Options.Section>
     </>
   ),
   ...rest
-}: Partial<OptionsProps<IOptionsItem>> = {}) {
+}: Partial<OptionsProps<OptionsDataItem>> = {}) {
   render(<Options {...rest}>{children}</Options>);
 
   return {

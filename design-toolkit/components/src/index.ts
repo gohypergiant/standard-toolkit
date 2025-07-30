@@ -106,7 +106,7 @@ export type {
 } from './components/classification-banner/types';
 export { ColorPicker, useColorPickerState } from './components/color-picker';
 export type { ColorPickerProps } from './components/color-picker';
-export { ComboBox, ComboBoxSection } from './components/combobox';
+export { ComboBox } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field';
@@ -146,8 +146,15 @@ export type {
   SeparatorProps,
   SubmenuTriggerProps,
 } from './components/menu/types';
-export { Options, OptionsContext, OptionsSection } from './components/options';
-export type { OptionsProps } from './components/options';
+export { Options, OptionsContext } from './components/options';
+export { OptionsStyles } from './components/options/styles';
+export type {
+  OptionsDataItem,
+  OptionsItemProps,
+  OptionsItemTextProps,
+  OptionsProps,
+  OptionsSectionProps,
+} from './components/options/types';
 export { OptionsItem } from './components/options-item';
 export type { IOptionsItem, OptionsItemProps } from './components/options-item';
 export { Popover, PopoverTrigger } from './components/popover';
@@ -204,12 +211,13 @@ export type { TextAreaFieldProps } from './components/text-area-field/types';
 export { TextField, TextFieldContext } from './components/text-field';
 export { TextFieldStyles } from './components/text-field/styles';
 export type { TextFieldProps } from './components/text-field/types';
-export { Tooltip, TooltipBody, TooltipTrigger } from './components/tooltip';
+export { Tooltip, TooltipContext } from './components/tooltip';
+export { TooltipStyles } from './components/tooltip/styles';
 export type {
   TooltipBodyProps,
   TooltipProps,
   TooltipTriggerProps,
-} from './components/tooltip';
+} from './components/tooltip/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   ChildrenRenderProps,

@@ -9,19 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
+
 import 'client-only';
+import { cn } from '@/lib/utils';
+import { ChevronDown } from '@accelint/icons';
+import { type VariantProps, cva } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import {
   Button as AriaButton,
   ComboBox as AriaComboBox,
   type ComboBoxProps as AriaComboBoxProps,
-  Header as AriaHeader,
   Input as AriaInput,
   type InputProps as AriaInputProps,
-  Collection as AriaListBoxCollection,
-  ListBoxSection as AriaListBoxSection,
-  type ListBoxSectionProps as AriaListBoxSectionProps,
   ListLayout as AriaListLayout,
   type ListLayoutOptions as AriaListLayoutOptions,
   Popover as AriaPopover,
@@ -29,15 +29,10 @@ import {
   Virtualizer as AriaVirtualizer,
   type VirtualizerProps as AriaVirtualizerProps,
 } from 'react-aria-components';
-
-import { cn } from '@/lib/utils';
-import { ChevronDown } from '@accelint/icons';
-import { type VariantProps, cva } from 'class-variance-authority';
-import type { ReactNode } from 'react';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
-import { type IOptionsItem, OptionsItem } from '../options-item';
+import type { OptionsDataItem } from '../options/types';
 
 const textFieldStyles = cva(
   [
@@ -102,7 +97,7 @@ const Input = ({
 };
 Input.displayName = 'ComboBox.Input';
 
-export interface ComboBoxProps<T extends IOptionsItem>
+export interface ComboBoxProps<T extends OptionsDataItem>
   extends Omit<
       VariantProps<typeof textFieldStyles>,
       'isDisabled' | 'isInvalid' | 'isReadOnly'
@@ -117,7 +112,7 @@ export interface ComboBoxProps<T extends IOptionsItem>
   placeholder?: string;
 }
 
-export function ComboBox<T extends IOptionsItem>({
+export function ComboBox<T extends OptionsDataItem>({
   children,
   className,
   description,
@@ -170,7 +165,7 @@ export function ComboBox<T extends IOptionsItem>({
                 isReadOnly && 'hidden',
               ])}
             >
-              <Icon className='block' size='large'>
+              <Icon size='small'>
                 <ChevronDown />
               </Icon>
             </AriaButton>
@@ -208,30 +203,3 @@ export function ComboBox<T extends IOptionsItem>({
   );
 }
 ComboBox.displayName = 'ComboBox';
-
-ComboBox.Item = OptionsItem;
-
-interface ComboBoxSectionProps<T extends IOptionsItem>
-  extends AriaListBoxSectionProps<T> {
-  header?: string;
-}
-
-export function ComboBoxSection<T extends IOptionsItem>({
-  children,
-  header,
-  items,
-}: ComboBoxSectionProps<T>) {
-  return (
-    <AriaListBoxSection
-      id={header}
-      className='col-span-2 mt-s grid grid-cols-[auto_1fr] border-default-dark border-t first:border-none'
-    >
-      <AriaHeader className='col-span-2 m-xs my-s text-default-dark text-header-xs'>
-        {header}
-      </AriaHeader>
-      <AriaListBoxCollection items={items}>{children}</AriaListBoxCollection>
-    </AriaListBoxSection>
-  );
-}
-ComboBox.displayName = 'ComboBox.Section';
-ComboBox.Section = ComboBoxSection;

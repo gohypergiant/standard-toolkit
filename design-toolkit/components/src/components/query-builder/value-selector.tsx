@@ -13,13 +13,13 @@
 
 import type { Key } from '@react-types/shared';
 import { useCallback, useMemo } from 'react';
-import { Header, ListBoxSection } from 'react-aria-components';
 import {
   type ValueSelectorProps,
   isOptionGroupArray,
   useValueSelector,
 } from 'react-querybuilder';
 import { ComboBox } from '../combobox';
+import { Options } from '../options';
 
 export function ValueSelector(props: ValueSelectorProps) {
   const {
@@ -54,28 +54,22 @@ export function ValueSelector(props: ValueSelectorProps) {
     () =>
       isOptionGroupArray(optionsProp)
         ? optionsProp.map((section) => (
-            <ListBoxSection key={section.label}>
-              <Header>{section.label}</Header>
+            <Options.Section key={section.label} header={section.label}>
               {section.options.map((option) => (
-                <ComboBox.Item
-                  name={option.name}
-                  id={option.name}
-                  key={option.name}
-                >
+                <Options.Item id={option.name} key={option.name}>
                   {option.label}
-                </ComboBox.Item>
+                </Options.Item>
               ))}
-            </ListBoxSection>
+            </Options.Section>
           ))
         : optionsProp.map((option) => (
-            <ComboBox.Item
-              name={option.name}
+            <Options.Item
               textValue={option.label}
               id={option.name}
               key={option.name}
             >
               {option.label}
-            </ComboBox.Item>
+            </Options.Item>
           )),
     [optionsProp],
   );

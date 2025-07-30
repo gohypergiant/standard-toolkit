@@ -12,25 +12,29 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { IOptionsItem } from '../options-item';
-import { ComboBox, type ComboBoxProps } from './index';
+import { Options } from '../options';
+import type { OptionsDataItem } from '../options/types';
+import { ComboBox, type ComboBoxProps } from './';
 
 function setup({
   children = (
     <>
-      <ComboBox.Item name='Red Panda' isDisabled description='Some ice cream'>
-        Red Panda
-      </ComboBox.Item>
-      <ComboBox.Item name='Cat' description='Some ice cream'>
-        Cat
-      </ComboBox.Item>
-      <ComboBox.Item name='Dog' description='Some ice cream'>
-        Dog
-      </ComboBox.Item>
+      <Options.Item isDisabled>
+        <Options.Item.Label>Red Panda</Options.Item.Label>
+        <Options.Item.Description>Some ice cream</Options.Item.Description>
+      </Options.Item>
+      <Options.Item>
+        <Options.Item.Label>Cat</Options.Item.Label>
+        <Options.Item.Description>Some ice cream</Options.Item.Description>
+      </Options.Item>
+      <Options.Item>
+        <Options.Item.Label>Dog</Options.Item.Label>
+        <Options.Item.Description>Some ice cream</Options.Item.Description>
+      </Options.Item>
     </>
   ),
   ...rest
-}: Partial<ComboBoxProps<IOptionsItem>> = {}) {
+}: Partial<ComboBoxProps<OptionsDataItem>> = {}) {
   render(<ComboBox {...rest}>{children}</ComboBox>);
 
   return {

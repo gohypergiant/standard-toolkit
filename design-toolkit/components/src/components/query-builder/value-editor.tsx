@@ -12,12 +12,9 @@
  */
 
 import { useCallback } from 'react';
-import {
-  type InputType,
-  type ValueEditorProps,
-  useValueEditor,
-} from 'react-querybuilder';
+import { type ValueEditorProps, useValueEditor } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
+import type { InputProps } from '../input/types';
 import { Radio } from '../radio';
 import { Switch } from '../switch';
 import { TextAreaField } from '../text-area-field';
@@ -137,8 +134,10 @@ function TextValueEditor({
 
   return (
     <TextField
-      inputProps={{ placeholder }}
-      type={(inputType as InputType) ?? 'text'}
+      inputProps={{
+        placeholder,
+        type: (inputType as InputProps['type']) ?? 'text',
+      }}
       size='small'
       value={value}
       isDisabled={disabled}

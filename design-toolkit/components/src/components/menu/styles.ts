@@ -21,17 +21,17 @@ export const MenuStylesDefaults = {
 
 export const MenuStyles = tv({
   slots: {
-    menu: 'mt-s overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light',
+    menu: 'group/menu mt-s overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light',
     icon: '[grid-area:icon]',
     item: [
-      'group/item flex items-center gap-x-s px-s text-body-s',
+      'group/menu-item flex items-center gap-x-s px-s text-body-s',
       'grid grid-cols-[auto_auto_1fr_auto] [grid-template-areas:"icon_label_space_action"_"icon_description_space_action"]',
       'disabled:fg-disabled disabled:bg-transparent',
     ],
     label:
-      'truncate [grid-area:label] group-not-has-data-[slot=description]/item:row-span-full',
+      'truncate [grid-area:label] group-not-has-[>_[slot=description]]/menu-item:row-span-full',
     description:
-      'fg-default-dark group-hover/item:fg-inverse-light group-data-[focused]/item:fg-inverse-light group-data-[disabled]/item:fg-disabled truncate text-body-xs [grid-area:description]',
+      'fg-default-dark group-hover/menu-item:fg-inverse-light group-focus/menu-item:fg-inverse-light group-disabled/menu-item:fg-disabled truncate text-body-xs [grid-area:description]',
     more: '[grid-area:action]',
     sectionHeader: 'fg-default-dark px-s py-xs text-header-xs',
     separator: 'mx-3 my-1 border border-static-light',

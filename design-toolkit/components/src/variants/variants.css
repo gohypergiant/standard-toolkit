@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+@custom-variant color-info (&:where([data-color~="info"]));
+@custom-variant color-advisory (&:where([data-color~="advisory"]));
+@custom-variant color-normal (&:where([data-color~="normal"]));
+@custom-variant color-serious (&:where([data-color~="serious"]));
+@custom-variant color-critical (&:where([data-color~="critical"]));
 @custom-variant placement-left (&:where([data-placement~="left"]));
 @custom-variant placement-right (&:where([data-placement~="right"]));
 @custom-variant placement-top (&:where([data-placement~="top"]));
