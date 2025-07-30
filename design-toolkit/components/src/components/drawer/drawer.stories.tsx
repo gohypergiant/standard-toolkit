@@ -282,6 +282,54 @@ export const ControlledOpen: Story = {
   },
 };
 
+export const UncontrolledOpen: Story = {
+  render: () => {
+    return (
+      <div className='h-screen w-full'>
+        <Drawer.Provider>
+          <Drawer.Layout push='left'>
+            <Drawer.Main>
+              <div className='flex gap-m p-l'>
+                <Drawer.Trigger for='settings' behavior='toggle'>
+                  <Button variant='outline'>Toggle</Button>
+                </Drawer.Trigger>
+                <Drawer.Trigger for='settings' behavior='open'>
+                  <Button variant='outline'>Open</Button>
+                </Drawer.Trigger>
+                <Drawer.Trigger for='settings' behavior='close'>
+                  <Button variant='outline'>Close</Button>
+                </Drawer.Trigger>
+              </div>
+            </Drawer.Main>
+            <Drawer
+              id='settings'
+              placement='left'
+              defaultSelectedMenuItemId='placeholder'
+            >
+              <Drawer.Menu>
+                <Drawer.Menu.Item id='placeholder'>
+                  <Placeholder />
+                </Drawer.Menu.Item>
+              </Drawer.Menu>
+              <Drawer.Content>
+                <Drawer.Header>
+                  <Drawer.Title>Title</Drawer.Title>
+                </Drawer.Header>
+                <Drawer.Panel>A Content</Drawer.Panel>
+                <Drawer.Footer>
+                  <Drawer.Trigger for='settings' behavior='close'>
+                    <Button>Cancel</Button>
+                  </Drawer.Trigger>
+                </Drawer.Footer>
+              </Drawer.Content>
+            </Drawer>
+          </Drawer.Layout>
+        </Drawer.Provider>
+      </div>
+    );
+  },
+};
+
 export const WithNavigationStack: Story = {
   render: () => {
     return (
