@@ -17,15 +17,17 @@ export const Default: Story = {
   render: (args: NavigationStackProps) => (
     <div className='h-[300px] w-[200px] text-default-light'>
       <NavigationStack defaultViewId='parent' {...args}>
-        <NavigationStack.View id='parent' className='flex flex-col gap-m'>
-          <div className='text-header-l'>Parent View</div>
-          <NavigationStack.Navigate childId='child'>
-            <span className='text-body-s'>Go To Child</span>
-          </NavigationStack.Navigate>
+        <NavigationStack.View id='parent'>
+          <div className='flex flex-col gap-m'>
+            <div className='text-header-l'>Parent View</div>
+            <NavigationStack.Navigate behavior='child'>
+              <span className='text-body-s'>Go To Child</span>
+            </NavigationStack.Navigate>
+          </div>
         </NavigationStack.View>
         <NavigationStack.View id='child'>
           <div className='flex items-center justify-between'>
-            <NavigationStack.Back>
+            <NavigationStack.Navigate behavior='back'>
               <div className='flex cursor-pointer items-center'>
                 <Button variant='icon'>
                   <Icon>
@@ -34,7 +36,7 @@ export const Default: Story = {
                 </Button>
                 <span className='text-body-xs'> Parent View </span>
               </div>
-            </NavigationStack.Back>
+            </NavigationStack.Navigate>
             <div className='text-header-s uppercase'>Child View</div>
           </div>
           <div className='mt-m text-body-s'>

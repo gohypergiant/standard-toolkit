@@ -10,16 +10,40 @@
  * governing permissions and limitations under the License.
  */
 
-import type {ReactNode, RefAttributes} from "react"
+import type { FocusableElement } from '@react-types/shared';
+import type {
+  DOMAttributes,
+  ReactElement,
+  ReactNode,
+  RefAttributes,
+} from 'react';
+import type { LiteralUnion } from 'type-fest';
 
 export type NavigationStackProps = RefAttributes<HTMLDivElement> & {
   children?: ReactNode;
   defaultViewId?: string;
   className?: string;
-}
+};
 
 export type NavigationStackViewProps = RefAttributes<HTMLDivElement> & {
   id: string;
   children: ReactNode;
-  className?: string;
+};
+
+export interface NavigationStackNavigateProps {
+  children: ReactElement<DOMAttributes<FocusableElement>, string>;
+  /**
+   * The string is to be used as a childId. When behavior is a childId
+   * navigate will push the childId onto the stack.
+   * */
+  behavior: LiteralUnion<'back' | 'clear', string>;
+}
+
+export interface NavigationStackContextValue {
+  currentViewId: string | null;
+  pushView: (viewId: string) => void;
+  popView: () => void;
+  clear: () => void;
+  canGoBack: boolean;
+  viewStack: string[];
 }

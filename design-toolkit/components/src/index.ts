@@ -130,16 +130,40 @@ export type {
 } from './components/details-list/types';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
+export {
+  useDrawerContext,
+  useDrawersContext,
+  useDrawersState,
+} from './components/drawer/context';
+export { Drawer } from './components/drawer';
+export {
+  createDefaultDrawerState,
+  drawerStateReducer,
+} from './components/drawer/state';
+export type { DrawerAction } from './components/drawer/state';
+export { DrawerMenuStyles, DrawerStyles } from './components/drawer/styles';
+export { DrawerDefaults } from './components/drawer/types';
+export type {
+  DrawerClassNames,
+  DrawerContainerProps,
+  DrawerContextValue,
+  DrawerLayoutProps,
+  DrawerLayouts,
+  DrawerMenuItemProps,
+  DrawerMenuProps,
+  DrawerPanelProps,
+  DrawerPlacement,
+  DrawerProps,
+  DrawerProviderProps,
+  DrawerSize,
+  DrawerState,
+  DrawerTriggerProps,
+  DrawersContextValue,
+  OnOpenChangeCallback,
+} from './components/drawer/types';
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
 export type { HeroProps } from './components/hero/types';
-export { Drawer } from './components/drawer';
-export { DrawerStyles } from './components/drawer/styles';
-export type {
-  DrawerContextValue,
-  DrawerProps,
-  DrawerTriggerProps,
-} from './components/drawer/types';
 export { Icon, IconContext } from './components/icon';
 export { IconStyles } from './components/icon/styles';
 export type { IconProps } from './components/icon/types';
@@ -172,6 +196,8 @@ export type {
 } from './components/options/types';
 export { NavigationStack } from './components/navigation-stack';
 export type {
+  NavigationStackContextValue,
+  NavigationStackNavigateProps,
   NavigationStackProps,
   NavigationStackViewProps,
 } from './components/navigation-stack/types';

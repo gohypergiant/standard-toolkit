@@ -231,7 +231,7 @@ export const WithLongContent: Story = {
   },
 };
 
-export const ControlledOpen: Story = {
+export const Controlled: Story = {
   render: () => {
     const [isOpen, setIsOpen] = useState(true);
     const handleOpenChange = useCallback((isOpen: boolean) => {
@@ -282,7 +282,7 @@ export const ControlledOpen: Story = {
   },
 };
 
-export const UncontrolledOpen: Story = {
+export const Uncontrolled: Story = {
   render: () => {
     return (
       <div className='h-screen w-full'>
@@ -348,74 +348,76 @@ export const WithNavigationStack: Story = {
               <Drawer.Content>
                 <Drawer.Panel id='a'>
                   <NavigationStack defaultViewId='a'>
-                    <NavigationStack.View id='a' className='flex flex-col'>
-                      <Drawer.Header>
-                        Parent A
-                        <Drawer.Trigger for='settings' behavior='close'>
-                          <Button variant='icon'>
-                            <Icon>
-                              <Cancel />
-                            </Icon>
-                          </Button>
-                        </Drawer.Trigger>
-                      </Drawer.Header>
-                      <div className='flex-1'>a content</div>
-                      <Drawer.Footer>
-                        <NavigationStack.Navigate childId='child-a'>
-                          <span className='cursor-pointer'>View Child</span>
-                        </NavigationStack.Navigate>
-                      </Drawer.Footer>
+                    <NavigationStack.View id='a'>
+                      <div className='flex flex-col'>
+                        <Drawer.Header>
+                          Parent A
+                          <Drawer.Trigger for='settings' behavior='close'>
+                            <Button variant='icon'>
+                              <Icon>
+                                <Cancel />
+                              </Icon>
+                            </Button>
+                          </Drawer.Trigger>
+                        </Drawer.Header>
+                        <div className='flex-1'>a content</div>
+                        <Drawer.Footer>
+                          <NavigationStack.Navigate behavior='child-a'>
+                            <span className='cursor-pointer'>View Child</span>
+                          </NavigationStack.Navigate>
+                        </Drawer.Footer>
+                      </div>
                     </NavigationStack.View>
 
-                    <NavigationStack.View
-                      id='child-a'
-                      className='flex flex-col gap-m'
-                    >
-                      <div className='flex cursor-pointer items-center justify-between'>
-                        <NavigationStack.Back>
-                          <span>Back</span>
-                        </NavigationStack.Back>
-                        <div>Child A</div>
+                    <NavigationStack.View id='child-a'>
+                      <div className='flex flex-col gap-m'>
+                        <div className='flex cursor-pointer items-center justify-between'>
+                          <NavigationStack.Navigate behavior='back'>
+                            <span>Back</span>
+                          </NavigationStack.Navigate>
+                          <div>Child A</div>
+                        </div>
+                        <div> a child content </div>
                       </div>
-                      <div> a child content </div>
                     </NavigationStack.View>
                   </NavigationStack>
                 </Drawer.Panel>
 
                 <Drawer.Panel id='b' className='h-full p-0'>
                   <NavigationStack defaultViewId='b'>
-                    <NavigationStack.View id='b' className='flex flex-col'>
-                      <Drawer.Header>
-                        Parent B
-                        <Drawer.Trigger for='settings' behavior='close'>
-                          <Button variant='icon'>
-                            <Icon>
-                              <Cancel />
-                            </Icon>
-                          </Button>
-                        </Drawer.Trigger>
-                      </Drawer.Header>
-                      <div className='flex-1'>b content</div>
-                      <Drawer.Footer>
-                        <NavigationStack.Navigate childId='child-b'>
-                          <span className='cursor-pointer'>View Child</span>
-                        </NavigationStack.Navigate>
-                      </Drawer.Footer>
+                    <NavigationStack.View id='b'>
+                      <div className='flex flex-col'>
+                        <Drawer.Header>
+                          Parent B
+                          <Drawer.Trigger for='settings' behavior='close'>
+                            <Button variant='icon'>
+                              <Icon>
+                                <Cancel />
+                              </Icon>
+                            </Button>
+                          </Drawer.Trigger>
+                        </Drawer.Header>
+                        <div className='flex-1'>b content</div>
+                        <Drawer.Footer>
+                          <NavigationStack.Navigate behavior='child-b'>
+                            <span className='cursor-pointer'>View Child</span>
+                          </NavigationStack.Navigate>
+                        </Drawer.Footer>
+                      </div>
                     </NavigationStack.View>
 
-                    <NavigationStack.View
-                      id='child-b'
-                      className='flex flex-col gap-m'
-                    >
-                      <div className='flex cursor-pointer items-center justify-between'>
-                        <NavigationStack.Back>
-                          <Icon>
-                            <ChevronLeft />
-                          </Icon>
-                        </NavigationStack.Back>
-                        Child B
+                    <NavigationStack.View id='child-b'>
+                      <div className='flex flex-col gap-m'>
+                        <div className='flex cursor-pointer items-center justify-between'>
+                          <NavigationStack.Navigate behavior='back'>
+                            <Icon>
+                              <ChevronLeft />
+                            </Icon>
+                          </NavigationStack.Navigate>
+                          Child B
+                        </div>
+                        <div className='flex-1'>b child content</div>
                       </div>
-                      <div className='flex-1'>b child content</div>
                     </NavigationStack.View>
                   </NavigationStack>
                 </Drawer.Panel>

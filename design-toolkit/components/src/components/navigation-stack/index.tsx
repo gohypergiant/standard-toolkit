@@ -11,8 +11,6 @@
  */
 
 import {
-  type DOMAttributes,
-  type ReactElement,
   createContext,
   useCallback,
   useContext,
@@ -21,73 +19,53 @@ import {
 } from 'react';
 
 import { PressResponder } from '@react-aria/interactions';
-import type { FocusableElement } from '@react-types/shared';
 import { Pressable } from 'react-aria-components';
-import type { NavigationStackProps, NavigationStackViewProps } from './types';
-
-interface NavigationStackContextValue {
-  currentViewId: string | null;
-  pushView: (viewId: string) => void;
-  popView: () => void;
-  canGoBack: boolean;
-  viewStack: string[];
-}
+import type {
+  NavigationStackContextValue,
+  NavigationStackNavigateProps,
+  NavigationStackProps,
+  NavigationStackViewProps,
+} from './types';
 
 const NavigationStackContext = createContext<NavigationStackContextValue>({
   currentViewId: null,
   pushView: () => undefined,
   popView: () => undefined,
+  clear: () => undefined,
   canGoBack: false,
   viewStack: [],
 });
 
-const NavigationStackView = ({
-  id,
-  children,
-  className,
-}: NavigationStackViewProps) => {
+const NavigationStackView = ({ id, children }: NavigationStackViewProps) => {
   const context = useContext(NavigationStackContext);
   const isActive = context.currentViewId === id;
 
-  if (!isActive) {
-    return null;
-  }
-
-  return <div className={className}>{children}</div>;
+  return isActive ? children : null;
 };
 NavigationStackView.displayName = 'NavigationStack.View';
 
 const NavigationStackNavigate = ({
   children,
-  childId,
+  behavior,
   ...props
-}: {
-  children: ReactElement<DOMAttributes<FocusableElement>, string>;
-  childId: string;
-}) => {
+}: NavigationStackNavigateProps) => {
   const context = useContext(NavigationStackContext);
+  const handleOnPress = useCallback(() => {
+    if (behavior === 'back') {
+      context.popView();
+    } else if (behavior === 'clear') {
+      context.clear();
+    } else {
+      context.pushView(behavior);
+    }
+  }, [behavior, context.popView, context.clear, context.pushView]);
   return (
-    <PressResponder onPress={() => context.pushView(childId)}>
+    <PressResponder onPress={handleOnPress}>
       <Pressable {...props}>{children}</Pressable>
     </PressResponder>
   );
 };
 NavigationStackNavigate.displayName = 'NavigationStack.Navigate';
-
-const NavigationStackBack = ({
-  children,
-  ...props
-}: {
-  children: ReactElement<DOMAttributes<FocusableElement>, string>;
-}) => {
-  const context = useContext(NavigationStackContext);
-  return context.canGoBack ? (
-    <PressResponder onPress={context.popView}>
-      <Pressable {...props}>{children}</Pressable>
-    </PressResponder>
-  ) : null;
-};
-NavigationStackBack.displayName = 'NavigationStack.BackButton';
 
 export const NavigationStack = ({
   children,
@@ -105,16 +83,20 @@ export const NavigationStack = ({
   const popView = useCallback(() => {
     setViewStack((prev) => prev.slice(0, -1));
   }, []);
+  const clear = useCallback(() => {
+    setViewStack(defaultViewId ? [defaultViewId] : []);
+  }, [defaultViewId]);
 
   const contextValue = useMemo(
     () => ({
       currentViewId,
       pushView,
       popView,
+      clear,
       canGoBack,
       viewStack,
     }),
-    [currentViewId, canGoBack, viewStack, pushView, popView],
+    [currentViewId, canGoBack, viewStack, pushView, popView, clear],
   );
 
   return (
@@ -126,4 +108,3 @@ export const NavigationStack = ({
 NavigationStack.displayName = 'NavigationStack';
 NavigationStack.View = NavigationStackView;
 NavigationStack.Navigate = NavigationStackNavigate;
-NavigationStack.Back = NavigationStackBack;
