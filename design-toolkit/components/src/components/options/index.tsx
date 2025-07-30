@@ -46,9 +46,8 @@ const {
 } = OptionsStyles();
 
 export const OptionsContext =
-  createContext<ContextValue<OptionsProps<OptionsDataItem>, HTMLDivElement>>(
-    null,
-  );
+  // biome-ignore lint/suspicious/noExplicitAny: Can't make it generic so must allow any
+  createContext<ContextValue<OptionsProps<any>, HTMLDivElement>>(null);
 
 function OptionsSection<T extends OptionsDataItem>({
   children,
