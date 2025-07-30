@@ -54,10 +54,10 @@ export function useDrawersContext(): DrawersContextValue {
   return ctx;
 }
 
-interface DrawerCallbacks {
+type DrawerCallbacks = {
   onOpenChange?: OnOpenChangeCallback;
   onStateChange?: (state: DrawerState) => void;
-}
+};
 
 export function useDrawersState(opts?: {
   onStateChange?: (drawerId: Key, state: DrawerState) => void;

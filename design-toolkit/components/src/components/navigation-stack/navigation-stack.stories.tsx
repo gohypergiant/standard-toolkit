@@ -21,7 +21,7 @@ export const Default: Story = {
           <div className='flex flex-col gap-m'>
             <div className='text-header-l'>Parent View</div>
             <NavigationStack.Navigate behavior='child'>
-              <span className='text-body-s'>Go To Child</span>
+              <Button>Go To Child</Button>
             </NavigationStack.Navigate>
           </div>
         </NavigationStack.View>

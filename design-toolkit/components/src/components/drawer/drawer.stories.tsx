@@ -65,7 +65,9 @@ export const WithTabs: Story = {
         <Drawer.Provider>
           <Drawer.Layout>
             <Drawer.Main>
-              <div className='p-l text-default-light'>{longContent}</div>
+              <div className='h-dvh bg-surface-raised p-l text-default-light'>
+                {longContent}
+              </div>
             </Drawer.Main>
             <Drawer id='settings' {...args}>
               <Drawer.Menu>
@@ -203,6 +205,9 @@ export const WithLongContent: Story = {
       <div className='h-screen w-full'>
         <Drawer.Provider>
           <Drawer.Layout>
+            <Drawer.Main>
+              <div className='h-dvh bg-surface-raised' />
+            </Drawer.Main>
             <Drawer id='settings' placement='left'>
               <Drawer.Menu>
                 <Drawer.Menu.Item>
@@ -242,7 +247,7 @@ export const Controlled: Story = {
         <Drawer.Provider>
           <Drawer.Layout push='left'>
             <Drawer.Main>
-              <div className='flex flex-col gap-m p-l'>
+              <div className='flex h-dvh flex-col gap-m bg-surface-raised p-l'>
                 <Button
                   variant='outline'
                   onPress={() => handleOpenChange(!isOpen)}
@@ -289,16 +294,18 @@ export const Uncontrolled: Story = {
         <Drawer.Provider>
           <Drawer.Layout push='left'>
             <Drawer.Main>
-              <div className='flex gap-m p-l'>
-                <Drawer.Trigger for='settings' behavior='toggle'>
-                  <Button variant='outline'>Toggle</Button>
-                </Drawer.Trigger>
-                <Drawer.Trigger for='settings' behavior='open'>
-                  <Button variant='outline'>Open</Button>
-                </Drawer.Trigger>
-                <Drawer.Trigger for='settings' behavior='close'>
-                  <Button variant='outline'>Close</Button>
-                </Drawer.Trigger>
+              <div className='h-dvh bg-surface-raised p-l'>
+                <div className='flex gap-m '>
+                  <Drawer.Trigger for='settings' behavior='toggle'>
+                    <Button variant='outline'>Toggle</Button>
+                  </Drawer.Trigger>
+                  <Drawer.Trigger for='settings' behavior='open'>
+                    <Button variant='outline'>Open</Button>
+                  </Drawer.Trigger>
+                  <Drawer.Trigger for='settings' behavior='close'>
+                    <Button variant='outline'>Close</Button>
+                  </Drawer.Trigger>
+                </div>
               </div>
             </Drawer.Main>
             <Drawer
@@ -336,6 +343,9 @@ export const WithNavigationStack: Story = {
       <div className='h-screen w-full'>
         <Drawer.Provider>
           <Drawer.Layout>
+            <Drawer.Main>
+              <div className='h-dvh bg-surface-raised' />
+            </Drawer.Main>
             <Drawer id='settings' placement='left'>
               <Drawer.Menu>
                 <Drawer.Menu.Item id='a'>

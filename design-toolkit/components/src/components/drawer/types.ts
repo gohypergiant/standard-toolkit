@@ -16,11 +16,11 @@ export type DrawerSize = 'small' | 'medium' | 'large';
 
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 
-export interface DrawerState {
+export type DrawerState = {
   id: Key;
   isOpen: boolean;
   selectedMenuItemId?: Key;
-}
+};
 
 export type DrawerClassNames = Partial<{
   layout: string;
@@ -77,20 +77,20 @@ export interface DrawerMenuProps extends DrawerContainerProps {
 export interface DrawerTriggerProps extends DrawerContainerProps {
   for: Key;
   behavior?: 'open' | 'close' | 'toggle';
-  children: ReactElement<DOMAttributes<FocusableElement>, string>
+  children: ReactElement<DOMAttributes<FocusableElement>, string>;
 }
 
-export interface DrawerMenuItemProps {
+export type DrawerMenuItemProps = {
   className?: string;
   children: ReactElement<DOMAttributes<FocusableElement>, string>;
   id?: Key;
-}
+};
 
 export interface DrawerPanelProps extends DrawerContainerProps {
   id?: Key;
 }
 
-export interface DrawersContextValue {
+export type DrawersContextValue = {
   drawerStates: Record<Key, DrawerState>;
   toggleDrawer: (drawerId: Key) => void;
   openDrawer: (drawerId: Key, menuItemId?: Key) => void;
@@ -106,11 +106,11 @@ export interface DrawersContextValue {
   selectedMenuItemId?: Key;
   selectMenuItem: (drawerId: Key, menuItemId?: Key) => void;
   isSelectedMenuItem: (selectedMenuItemId?: Key, menuItemId?: Key) => boolean;
-}
+};
 
-export interface DrawerContextValue {
+export type DrawerContextValue = {
   state: DrawerState;
-}
+};
 
 /**
  * Extended Drawer Layout Configurations
@@ -118,7 +118,7 @@ export interface DrawerContextValue {
  * The layout system supports four different drawer extension modes that determine
  * how drawers are arranged and which drawers extend to the full container dimensions.
  *
- * extend: "tall"
+ * extend: "left right"
  * ┌──────┬──────────┬───────┐
  * │      │   top    │       │
  * │      ├──────────┤       │
@@ -127,7 +127,7 @@ export interface DrawerContextValue {
  * │      │  bottom  │       │
  * └──────┴──────────┴───────┘
  *
- * extend: "wide"
+ * extend: "top bottom"
  * ┌─────────────────────────┐
  * │          top            │
  * ├──────┬──────────┬───────┤

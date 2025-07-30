@@ -13,6 +13,7 @@
 import type { FocusableElement } from '@react-types/shared';
 import type {
   DOMAttributes,
+  Key,
   ReactElement,
   ReactNode,
   RefAttributes,
@@ -30,20 +31,20 @@ export type NavigationStackViewProps = RefAttributes<HTMLDivElement> & {
   children: ReactNode;
 };
 
-export interface NavigationStackNavigateProps {
+export type NavigationStackNavigateProps = {
   children: ReactElement<DOMAttributes<FocusableElement>, string>;
   /**
    * The string is to be used as a childId. When behavior is a childId
    * navigate will push the childId onto the stack.
    * */
   behavior: LiteralUnion<'back' | 'clear', string>;
-}
+};
 
-export interface NavigationStackContextValue {
-  currentViewId: string | null;
+export type NavigationStackContextValue = {
+  currentViewId: Key | null;
   pushView: (viewId: string) => void;
   popView: () => void;
   clear: () => void;
   canGoBack: boolean;
   viewStack: string[];
-}
+};
