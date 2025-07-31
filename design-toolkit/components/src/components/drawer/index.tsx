@@ -54,13 +54,13 @@ const DrawerProvider = ({ children, onStateChange }: DrawerProviderProps) => {
 
 const DrawerLayout = ({
   children,
-  classNames,
+  className,
   extend = 'left right',
   push,
 }: DrawerLayoutProps) => {
   return (
     <div
-      className={layout({ className: classNames?.layout })}
+      className={layout({ className })}
       data-extend={extend}
       data-push={push}
     >

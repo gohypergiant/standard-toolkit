@@ -8,6 +8,18 @@ import type { NavigationStackProps } from './types';
 const meta: Meta<typeof NavigationStack> = {
   title: 'Components/NavigationStack',
   component: NavigationStack,
+  parameters: {
+    docs: {
+      description: {
+        component: `
+          A NavigationStack is a component that allows you to manage a stack of views. It is commonly
+          used in drawers and modals to navigate between different views. The NavigationStack component
+          provides a way to push and pop views from the stack and it also provides a way to clear all
+          views back to the original view.
+        `
+      }
+    }
+  }
 };
 
 export default meta;
@@ -17,17 +29,17 @@ export const Default: Story = {
   render: (args: NavigationStackProps) => (
     <div className='h-[300px] w-[200px] text-default-light'>
       <NavigationStack defaultViewId='parent' {...args}>
-        <NavigationStack.View id='parent'>
+        <NavigationStack.View id='parent-id'>
           <div className='flex flex-col gap-m'>
             <div className='text-header-l'>Parent View</div>
-            <NavigationStack.Navigate behavior='child'>
+            <NavigationStack.Navigate for='child-id'>
               <Button>Go To Child</Button>
             </NavigationStack.Navigate>
           </div>
         </NavigationStack.View>
-        <NavigationStack.View id='child'>
+        <NavigationStack.View id='child-id'>
           <div className='flex items-center justify-between'>
-            <NavigationStack.Navigate behavior='back'>
+            <NavigationStack.Navigate for='back'>
               <div className='flex cursor-pointer items-center'>
                 <Button variant='icon'>
                   <Icon>

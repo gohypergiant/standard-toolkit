@@ -48,19 +48,19 @@ NavigationStackView.displayName = 'NavigationStack.View';
 
 const NavigationStackNavigate = ({
   children,
-  behavior,
+  for: action,
   ...props
 }: NavigationStackNavigateProps) => {
   const context = useContext(NavigationStackContext);
   const handleOnPress = useCallback(() => {
-    if (behavior === 'back') {
+    if (action === 'back') {
       context.popView();
-    } else if (behavior === 'clear') {
+    } else if (action === 'clear') {
       context.clear();
     } else {
-      context.pushView(behavior);
+      context.pushView(action);
     }
-  }, [behavior, context.popView, context.clear, context.pushView]);
+  }, [action, context.popView, context.clear, context.pushView]);
   return (
     <PressResponder onPress={handleOnPress}>
       <Pressable {...props}>{children}</Pressable>

@@ -9,26 +9,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import {
-  Cancel,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Placeholder,
-} from '@accelint/icons';
+import { Cancel, ChevronLeft, Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import { type CSSProperties, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NavigationStack } from '../navigation-stack';
 import { Drawer } from './index';
-import type { DrawerLayoutProps, DrawerProps } from './types';
+import type { DrawerProps } from './types';
 
-type CombinedDrawerProps = DrawerProps &
-  Pick<DrawerLayoutProps, 'push' | 'extend'>;
-
-const meta: Meta<CombinedDrawerProps> = {
+const meta: Meta<DrawerProps> = {
   title: 'Components/Drawer',
   component: Drawer,
   parameters: {
@@ -38,25 +28,21 @@ const meta: Meta<CombinedDrawerProps> = {
     id: 'left-drawer',
     placement: 'left',
     size: 'medium',
-    extend: 'left right',
-    push: 'left',
   },
   argTypes: {
-    extend: {
-      control: 'radio',
-      options: ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
+    size: {
+      control: 'select',
+      options: ['small', 'medium', 'large'],
+    },
+    placement: {
+      control: 'select',
+      options: ['top', 'bottom', 'left', 'right'],
     },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Drawer>;
-
-const placeholderIcons = Array.from({ length: 6 }, (_, index) => (
-  <Drawer.Menu.Item id={`${index + 1}`} key={`${index + 1}`}>
-    <Placeholder />
-  </Drawer.Menu.Item>
-));
 
 export const WithTabs: Story = {
   render: ({ id, ...args }) => {
@@ -91,105 +77,6 @@ export const WithTabs: Story = {
                 </Drawer.Header>
                 <Drawer.Panel id='a'>A Content</Drawer.Panel>
                 <Drawer.Panel id='b'>B Content</Drawer.Panel>
-              </Drawer.Content>
-            </Drawer>
-          </Drawer.Layout>
-        </Drawer.Provider>
-      </div>
-    );
-  },
-};
-
-export const FullLayout: Story = {
-  render: ({ extend, push }: CombinedDrawerProps) => {
-    return (
-      <div className='h-screen w-full'>
-        <Drawer.Provider>
-          <Drawer.Layout extend={extend} push={push}>
-            <Drawer id='header' placement='top' size='medium'>
-              <Drawer.Menu>
-                <Drawer.Trigger for='header'>
-                  <Icon className='cursor-pointer text-default-light'>
-                    <ChevronDown className='group-open/drawer:rotate-180' />
-                  </Icon>
-                </Drawer.Trigger>
-
-                {placeholderIcons}
-              </Drawer.Menu>
-
-              <Drawer.Content>
-                <Drawer.Title>Top</Drawer.Title>
-              </Drawer.Content>
-            </Drawer>
-
-            <Drawer.Main>
-              <div
-                className='flex h-full items-center justify-center bg-surface-overlay'
-                style={
-                  {
-                    '--single': '40px',
-                    '--double': 'calc(2 * var(--single))',
-                    backgroundImage: `
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
-          `,
-                    backgroundSize: 'var(--double) var(--double)',
-                    backgroundPosition:
-                      'center, calc(50% + var(--single)) calc(50% + var(--single))',
-                  } as CSSProperties
-                }
-              >
-                <div className='flex w-1/2 flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl [&>*]:my-s'>
-                  <p>This page is for demo purposes only!</p>
-                </div>
-              </div>
-            </Drawer.Main>
-
-            <Drawer id='footer' placement='bottom'>
-              <Drawer.Menu>
-                <Drawer.Trigger for='footer'>
-                  <Icon className='cursor-pointer text-default-light'>
-                    <ChevronUp className='group-open/drawer:rotate-180' />
-                  </Icon>
-                </Drawer.Trigger>
-
-                {placeholderIcons}
-              </Drawer.Menu>
-
-              <Drawer.Content>
-                <Drawer.Title>Bottom</Drawer.Title>
-              </Drawer.Content>
-            </Drawer>
-
-            <Drawer id='settings' placement='left'>
-              <Drawer.Menu>
-                <Drawer.Trigger for='settings'>
-                  <Icon className='cursor-pointer text-default-light'>
-                    <ChevronRight className='group-open/drawer:rotate-180' />
-                  </Icon>
-                </Drawer.Trigger>
-
-                {placeholderIcons}
-              </Drawer.Menu>
-
-              <Drawer.Content>
-                <Drawer.Title>Left</Drawer.Title>
-              </Drawer.Content>
-            </Drawer>
-
-            <Drawer id='sidebar' placement='right'>
-              <Drawer.Menu>
-                <Drawer.Trigger for='sidebar'>
-                  <Icon className='cursor-pointer text-default-light'>
-                    <ChevronLeft className='group-open/drawer:rotate-180' />
-                  </Icon>
-                </Drawer.Trigger>
-
-                {placeholderIcons}
-              </Drawer.Menu>
-
-              <Drawer.Content>
-                <Drawer.Title>Right</Drawer.Title>
               </Drawer.Content>
             </Drawer>
           </Drawer.Layout>
@@ -237,8 +124,11 @@ export const WithLongContent: Story = {
 };
 
 export const Controlled: Story = {
-  render: () => {
-    const [isOpen, setIsOpen] = useState(true);
+  args: {
+    isOpen: true,
+  },
+  render: ({ isOpen: defaultOpen }) => {
+    const [isOpen, setIsOpen] = useState(defaultOpen);
     const handleOpenChange = useCallback((isOpen: boolean) => {
       setIsOpen(isOpen);
     }, []);
@@ -372,7 +262,7 @@ export const WithNavigationStack: Story = {
                         </Drawer.Header>
                         <div className='flex-1'>a content</div>
                         <Drawer.Footer>
-                          <NavigationStack.Navigate behavior='child-a'>
+                          <NavigationStack.Navigate for='child-a'>
                             <span className='cursor-pointer'>View Child</span>
                           </NavigationStack.Navigate>
                         </Drawer.Footer>
@@ -382,7 +272,7 @@ export const WithNavigationStack: Story = {
                     <NavigationStack.View id='child-a'>
                       <div className='flex flex-col gap-m'>
                         <div className='flex cursor-pointer items-center justify-between'>
-                          <NavigationStack.Navigate behavior='back'>
+                          <NavigationStack.Navigate for='back'>
                             <span>Back</span>
                           </NavigationStack.Navigate>
                           <div>Child A</div>
@@ -409,7 +299,7 @@ export const WithNavigationStack: Story = {
                         </Drawer.Header>
                         <div className='flex-1'>b content</div>
                         <Drawer.Footer>
-                          <NavigationStack.Navigate behavior='child-b'>
+                          <NavigationStack.Navigate for='child-b'>
                             <span className='cursor-pointer'>View Child</span>
                           </NavigationStack.Navigate>
                         </Drawer.Footer>
@@ -419,7 +309,7 @@ export const WithNavigationStack: Story = {
                     <NavigationStack.View id='child-b'>
                       <div className='flex flex-col gap-m'>
                         <div className='flex cursor-pointer items-center justify-between'>
-                          <NavigationStack.Navigate behavior='back'>
+                          <NavigationStack.Navigate for='back'>
                             <Icon>
                               <ChevronLeft />
                             </Icon>

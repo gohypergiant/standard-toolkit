@@ -34,10 +34,10 @@ export type NavigationStackViewProps = RefAttributes<HTMLDivElement> & {
 export type NavigationStackNavigateProps = {
   children: ReactElement<DOMAttributes<FocusableElement>, string>;
   /**
-   * The string is to be used as a childId. When behavior is a childId
+   * The string is to be used as a childId. When for is a childId
    * navigate will push the childId onto the stack.
    * */
-  behavior: LiteralUnion<'back' | 'clear', string>;
+  for: LiteralUnion<'back' | 'clear', string>;
 };
 
 export type NavigationStackContextValue = {

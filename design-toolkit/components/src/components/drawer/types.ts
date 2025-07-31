@@ -12,33 +12,54 @@
 import type { FocusableElement, Key } from '@react-types/shared';
 import type { DOMAttributes, PropsWithChildren, ReactElement } from 'react';
 
+/**
+ * Defines the possible sizes for a drawer.
+ */
 export type DrawerSize = 'small' | 'medium' | 'large';
 
+/**
+ * Defines the possible placements for a drawer.
+ */
 export type DrawerPlacement = 'left' | 'right' | 'top' | 'bottom';
 
+export type DrawerLayoutPush =
+  | DrawerPlacement
+  | `${DrawerPlacement} ${DrawerPlacement}`
+  | `${DrawerPlacement} ${DrawerPlacement} ${DrawerPlacement}`
+  | `${DrawerPlacement} ${DrawerPlacement} ${DrawerPlacement} ${DrawerPlacement}`;
+
+/**
+ * Represents the state of a single drawer.
+ */
 export type DrawerState = {
   id: Key;
   isOpen: boolean;
   selectedMenuItemId?: Key;
 };
 
-export type DrawerClassNames = Partial<{
-  layout: string;
-  main: string;
-  menu: string;
-  content: string;
-}>;
-
+/**
+ * Base props for drawer container components.
+ */
 export interface DrawerContainerProps
   extends PropsWithChildren<{ className?: string }> {}
 
+/**
+ * Props for the `Drawer.Provider` component.
+ */
 export interface DrawerProviderProps extends PropsWithChildren {
+  /**
+   * A callback function that is called when the state of any drawer changes.
+   * @param drawerId
+   * @param state
+   * @returns
+   */
   onStateChange?: (drawerId: Key, state: DrawerState) => void;
 }
 
-export interface DrawerLayoutProps
-  extends DrawerContainerProps,
-    Partial<Record<DrawerPlacement, DrawerState>> {
+/**
+ * Props for the `Drawer.Layout` component.
+ */
+export interface DrawerLayoutProps extends DrawerContainerProps {
   /**
    * Which drawers should extend to full container dimensions.
    * Determines the overall layout structure and drawer relationships in regard to space.
@@ -54,48 +75,152 @@ export interface DrawerLayoutProps
    *   If no placements are defined for push, the default behavior for a drawer is to float over the main content without affecting its layout or dimensions.
    *   Content remains at full width, panel appears as an overlay.
    */
-  push?: DrawerPlacement;
-  classNames?: DrawerClassNames;
+  push?: DrawerLayoutPush;
 }
 
+/**
+ * Props for the `Drawer` component.
+ */
 export interface DrawerProps extends DrawerContainerProps {
+  /**
+   * The unique identifier for the drawer.
+   */
   id: Key;
+  /**
+   * The placement of the drawer.
+   * @default 'left'
+   */
   placement: DrawerPlacement;
+  /**
+   * The size of the drawer.
+   * @default 'medium'
+   */
   size?: DrawerSize;
+  /**
+   * Whether the drawer is open or not.
+   * @default false
+   */
   isOpen?: boolean;
+  /**
+   * The id of the menu item that should be selected by default.
+   */
   defaultSelectedMenuItemId?: Key;
+  /**
+   * A callback function that is called when the drawer is opened or closed.
+   * @param boolean
+   */
   onOpenChange?: OnOpenChangeCallback;
+  /**
+   * A callback function that is called when the state of the drawer changes.
+   * @param state
+   * @returns
+   */
   onStateChange?: (state: DrawerState) => void;
 }
 
+/**
+ * A callback function that is called when the drawer is opened or closed.
+ * @param boolean
+ */
 export type OnOpenChangeCallback = ((isOpen: boolean) => void) | undefined;
 
+/**
+ * Props for the 'Drawer.Menu' component.
+ */
 export interface DrawerMenuProps extends DrawerContainerProps {
+  /**
+   * The position of the menu.
+   * @default 'middle'
+   */
   position?: 'start' | 'middle' | 'end';
 }
 
+/**
+ * Props for the 'Drawer.Trigger' component.
+ */
 export interface DrawerTriggerProps extends DrawerContainerProps {
+  /**
+   * The id of the drawer to control.
+   */
   for: Key;
+  /**
+   * The behavior of the trigger.
+   * @default 'toggle'
+   */
   behavior?: 'open' | 'close' | 'toggle';
+  /**
+   * The children of the component.
+   */
   children: ReactElement<DOMAttributes<FocusableElement>, string>;
 }
 
+/**
+ * Props for the 'Drawer.Menu.Item' component.
+ */
 export type DrawerMenuItemProps = {
-  className?: string;
-  children: ReactElement<DOMAttributes<FocusableElement>, string>;
+  /**
+   * The unique identifier for the menu item.
+   */
   id?: Key;
+  /**
+   * The class name for the menu item.
+   */
+  className?: string;
+  /**
+   * The children of the component.
+   */
+  children: ReactElement<DOMAttributes<FocusableElement>, string>;
 };
 
+/**
+ * Props for the 'Drawer.Panel' component.
+ */
 export interface DrawerPanelProps extends DrawerContainerProps {
+  /**
+   * The unique identifier for the panel.
+   */
   id?: Key;
 }
 
+/**
+ * The value provided by the 'DrawersContext'.
+ */
 export type DrawersContextValue = {
+  /**
+   * A record of all the drawer's state.
+   */
   drawerStates: Record<Key, DrawerState>;
+  /**
+   * A function to toggle the drawer.
+   * @param drawerId
+   * @returns
+   */
   toggleDrawer: (drawerId: Key) => void;
+  /**
+   * A function to open a drawer.
+   * @param drawerId
+   * @param menuItemId
+   * @returns
+   */
   openDrawer: (drawerId: Key, menuItemId?: Key) => void;
+  /**
+   * A function to close a drawer.
+   * @param drawerId
+   * @returns
+   */
   closeDrawer: (drawerId: Key) => void;
+  /**
+   * A function to get the state of a drawer.
+   * @param drawerId
+   * @returns
+   */
   getDrawerState: (drawerId: Key) => DrawerState;
+  /**
+   * A function to register a drawer.
+   * @param initialState
+   * @param callbacks
+   * @returns
+   */
   registerDrawer: (
     initialState: DrawerState,
     callbacks?: {
@@ -103,8 +228,13 @@ export type DrawersContextValue = {
       onStateChange?: (state: DrawerState) => void;
     },
   ) => void;
-  selectedMenuItemId?: Key;
-  selectMenuItem: (drawerId: Key, menuItemId?: Key) => void;
+
+  /**
+   * A function to check if a menu item is selected.
+   * @param selectedMenuItemId
+   * @param menuItemId
+   * @returns
+   */
   isSelectedMenuItem: (selectedMenuItemId?: Key, menuItemId?: Key) => boolean;
 };
 

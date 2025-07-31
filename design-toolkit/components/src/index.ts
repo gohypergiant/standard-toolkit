@@ -144,7 +144,6 @@ export type { DrawerAction } from './components/drawer/state';
 export { DrawerMenuStyles, DrawerStyles } from './components/drawer/styles';
 export { DrawerDefaults } from './components/drawer/types';
 export type {
-  DrawerClassNames,
   DrawerContainerProps,
   DrawerContextValue,
   DrawerLayoutProps,
