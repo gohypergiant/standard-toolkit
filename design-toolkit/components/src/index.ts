@@ -181,7 +181,7 @@ export type {
   QueryBuilderProps,
   QueryBuilderValueEditors,
   RuleGroupType,
-} from './components/query-builder';
+} from './components/query-builder/types';
 export { Radio, RadioContext } from './components/radio';
 export { RadioStyles } from './components/radio/styles';
 export type { RadioGroupProps, RadioProps } from './components/radio/types';

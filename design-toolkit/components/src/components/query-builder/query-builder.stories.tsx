@@ -13,7 +13,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { QueryBuilder } from './';
-import { defaultQuery, fields } from './__fixtures__/example-configuration';
+import { defaultQuery, fields } from './__fixture__/example-configuration';
 import type { RuleGroupType } from './types';
 
 /**
