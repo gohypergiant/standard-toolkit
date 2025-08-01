@@ -10,28 +10,122 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  SearchField,
-  type SearchFieldProps,
-} from '@/components/search-field/index';
+import { SearchField } from '@/components/search-field/index';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-function setup({ placeholder = 'Search' }: Partial<SearchFieldProps> = {}) {
-  render(
-    <SearchField
-      placeholder={placeholder}
-      aria-label='Test Search Field Component'
-    />,
-  );
-
-  return { placeholder };
-}
-
 describe('SearchField', () => {
-  it('should render', () => {
-    const { placeholder } = setup();
+  const placeholder = 'Search';
 
-    expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();
+  it('should render', () => {
+    render(
+      <SearchField
+        placeholder={placeholder}
+        aria-label='Test Search Field Component'
+      />,
+    );
+
+    const input = screen.getByPlaceholderText(placeholder);
+
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveClass('outline-interactive');
+    expect(input).not.toHaveClass('outline-static-dark');
+    expect(input).not.toHaveClass('bg-surface-raised');
+  });
+
+  it('should render with custom classNames', () => {
+    const selector = 'search-field';
+
+    render(
+      <SearchField
+        aria-label='Test Search Field'
+        classNames={{
+          searchField: 'custom-search-field',
+          input: 'custom-input',
+        }}
+        data-testid={selector}
+      />,
+    );
+
+    const searchField = screen.getByTestId(selector);
+
+    expect(searchField).toHaveClass('custom-search-field');
+  });
+
+  it('should show loading state', () => {
+    render(
+      <SearchField
+        aria-label='Loading Search Field'
+        classNames={{ loadingIcon: 'loading-icon' }}
+        isLoading={true}
+        placeholder='Loading search'
+      />,
+    );
+
+    const loadingIcon = document.getElementsByClassName('loading-icon')[0];
+
+    // In loading state, the loading icon should be visible
+    expect(loadingIcon).toBeInTheDocument();
+
+    // and the clear button should not be visible
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('should render filled variant', () => {
+    render(
+      <SearchField
+        placeholder={placeholder}
+        variant='filled'
+        aria-label='Filled Search Field'
+        data-testid='filled-search'
+      />,
+    );
+
+    const input = screen.getByPlaceholderText(placeholder);
+
+    expect(input).toBeInTheDocument();
+    expect(input).not.toHaveClass('outline-interactive');
+    expect(input).toHaveClass('outline-static-dark');
+    expect(input).toHaveClass('bg-surface-raised');
+  });
+
+  it('should work with Provider context', () => {
+    const value = 'hello world';
+
+    render(
+      <SearchField.Provider value={value} variant='filled'>
+        <SearchField
+          aria-label='Context test'
+          data-testid='context-search'
+          placeholder={placeholder}
+        />
+      </SearchField.Provider>,
+    );
+
+    const input = screen.getByPlaceholderText(placeholder) as HTMLInputElement;
+
+    // the value is passed from the provider to the input; things are "wired" up properly
+    expect(input.value).toBe(value);
+  });
+
+  it('should render with all classNames options', () => {
+    render(
+      <SearchField
+        placeholder='All classes test'
+        classNames={{
+          searchField: 'custom-search-field',
+          searchIcon: 'custom-search-icon',
+          input: 'custom-input',
+          loadingIcon: 'custom-loading-icon',
+          clearButton: 'custom-clear-button',
+        }}
+        aria-label='All classes test'
+        data-testid='all-classes-search'
+      />,
+    );
+
+    const searchField = screen.getByTestId('all-classes-search');
+
+    expect(searchField).toHaveClass('custom-search-field');
   });
 });
