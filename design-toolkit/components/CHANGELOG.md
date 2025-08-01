@@ -1,5 +1,22 @@
 # @accelint/design-toolkit
 
+## 2.4.4
+
+### Patch Changes
+
+- 11a813f: Fix css grid formatting for menu
+- 7481c80: Update Options to follow DesignTK styling standards
+- a201c50: Updated types and fixtures in query builder to fix build
+- de8c60a: remove duplicative type prop from TextField
+- 484c14f: Added default text color for filled buttons
+- a16fbf3: - Created DetailsList component
+  - Created Hero component
+  - Created Skeleton component
+  - Simplified types
+  - Implemented missing tests
+  - Updated component structure validation functions to exit early in production
+  - Expanded component structure validation functions to handle RACs, functions and Fragments
+
 ## 2.4.3
 
 ### Patch Changes
