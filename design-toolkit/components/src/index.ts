@@ -130,6 +130,36 @@ export type {
 } from './components/details-list/types';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
+export {
+  useDrawerContext,
+  useDrawersContext,
+  useDrawersState,
+} from './components/drawer/context';
+export { Drawer } from './components/drawer';
+export {
+  createDefaultDrawerState,
+  drawerStateReducer,
+} from './components/drawer/state';
+export type { DrawerAction } from './components/drawer/state';
+export { DrawerMenuStyles, DrawerStyles } from './components/drawer/styles';
+export { DrawerDefaults } from './components/drawer/types';
+export type {
+  DrawerContainerProps,
+  DrawerContextValue,
+  DrawerLayoutProps,
+  DrawerLayouts,
+  DrawerMenuItemProps,
+  DrawerMenuProps,
+  DrawerPanelProps,
+  DrawerPlacement,
+  DrawerProps,
+  DrawerProviderProps,
+  DrawerSize,
+  DrawerState,
+  DrawerTriggerProps,
+  DrawersContextValue,
+  OnOpenChangeCallback,
+} from './components/drawer/types';
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
 export type { HeroProps } from './components/hero/types';
@@ -163,6 +193,13 @@ export type {
   OptionsProps,
   OptionsSectionProps,
 } from './components/options/types';
+export { NavigationStack } from './components/navigation-stack';
+export type {
+  NavigationStackContextValue,
+  NavigationStackNavigateProps,
+  NavigationStackProps,
+  NavigationStackViewProps,
+} from './components/navigation-stack/types';
 export { Popover, PopoverTrigger } from './components/popover';
 export { PopoverStyles } from './components/popover/styles';
 export type {

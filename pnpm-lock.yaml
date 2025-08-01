@@ -337,6 +337,9 @@ importers:
       '@storybook/addon-actions':
         specifier: ^8.6.12
         version: 8.6.14(storybook@8.6.14(prettier@3.6.1))
+      '@react-aria/interactions':
+        specifier: 3.25.3
+        version: 3.25.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@storybook/addon-essentials':
         specifier: ^8.6.12
         version: 8.6.14(@types/react@19.1.2)(storybook@8.6.14(prettier@3.6.1))

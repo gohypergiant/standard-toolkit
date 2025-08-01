@@ -47,6 +47,7 @@
   "enabled": ":not([disabled], [data-disabled]), :enabled",
 
   "open": "[open], [data-open], :open",
+  "closed": ":not([open], [data-open], :open)",
   "expanded": "[expanded], [data-expanded]",
 
   "entering": "[data-entering]",
