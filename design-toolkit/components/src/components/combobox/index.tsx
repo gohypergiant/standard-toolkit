@@ -14,7 +14,7 @@
 import 'client-only';
 import { cn } from '@/lib/utils';
 import { ChevronDown } from '@accelint/icons';
-import { type VariantProps, cva } from 'cva';
+import { type VariantProps, cva } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import {
   Button as AriaButton,

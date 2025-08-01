@@ -18,7 +18,7 @@ import {
   Search as SearchIcon,
 } from '@accelint/icons';
 import 'client-only';
-import { cva } from 'cva';
+import { cva } from 'class-variance-authority';
 import {
   SearchField as AriaSearchField,
   Button,

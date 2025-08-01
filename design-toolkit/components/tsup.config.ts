@@ -10,16 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import { fixImportsPlugin } from 'esbuild-fix-imports-plugin';
-import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions';
+import {
+  fixAliasPlugin,
+  fixExtensionsPlugin,
+  fixFolderImportsPlugin,
+} from 'esbuild-fix-imports-plugin';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
   esbuildPlugins: [
-    esbuildPluginFilePathExtensions({
-      esmExtension: 'js',
-    }),
-    fixImportsPlugin(),
+    fixAliasPlugin(),
+    fixFolderImportsPlugin(),
+    fixExtensionsPlugin(),
   ],
   entry: [
     'src/**/*.{ts,tsx,css}',
@@ -33,7 +35,7 @@ export default defineConfig({
   },
   tsconfig: './tsconfig.dist.json',
   metafile: true,
-  bundle: true,
+  bundle: false,
   clean: true,
   dts: true,
   format: 'esm',

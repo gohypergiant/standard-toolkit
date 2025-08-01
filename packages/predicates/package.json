@@ -39,14 +39,14 @@
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@vitest/web-worker": "2.1.3",
-    "esbuild-plugin-file-path-extensions": "2.1.3",
+    "esbuild-fix-imports-plugin": "1.0.21",
     "fast-check": "4.1.1",
-    "tsup": "8.4.0",
+    "tsup": "8.5.0",
     "vitest": "2.1.3"
   },
   "dependencies": {
     "@accelint/core": "workspace:*",
-    "typescript": "5.6.3"
+    "typescript": "^5.8.3"
   },
   "$schema": "https://json.schemastore.org/package",
   "author": "https://hypergiant.com",

@@ -14,7 +14,7 @@
 import { containsExactChildren } from '@/lib/react';
 import { cn } from '@/lib/utils';
 import 'client-only';
-import { cva } from 'cva';
+import { cva } from 'class-variance-authority';
 import {
   Tab as AriaTab,
   TabList as AriaTabList,

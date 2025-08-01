@@ -33,7 +33,7 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   BaseChipProps;
 
 export type ChipProps = VariantProps<typeof ChipStyles> &
-  Omit<ComponentPropsWithRef<'div'>, 'size'> &
+  Omit<ComponentPropsWithRef<'div'>, 'size' | 'onClick'> &
   BaseChipProps & {
     className?: string;
   };

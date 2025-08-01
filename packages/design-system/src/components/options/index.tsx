@@ -402,7 +402,7 @@ export const OptionsItem = forwardRef(function OptionItem<T extends object>(
     <ListBoxItem<T>
       {...rest}
       id={id ?? textValue}
-      ref={ref as ForwardedRef<T>}
+      ref={ref}
       className={classNames?.item?.container}
       style={style}
       textValue={textValue}

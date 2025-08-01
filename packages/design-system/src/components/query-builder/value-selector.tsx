@@ -46,7 +46,9 @@ export function ValueSelector<T extends FullOption = FullOption>({
   });
 
   const handleSelectionChange = useCallback(
-    (selection: Key) => onChange(`${selection}`),
+    (selection: Key | null) => {
+      onChange(selection ? `${selection}` : []);
+    },
     [onChange],
   );
 

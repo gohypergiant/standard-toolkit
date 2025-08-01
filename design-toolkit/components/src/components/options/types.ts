@@ -27,10 +27,10 @@ export type OptionsDataItem = {
 };
 
 export type OptionsItemProps<T extends OptionsDataItem> = Omit<
-  ListBoxItemProps,
+  ListBoxItemProps<T>,
   'className'
 > &
-  RefAttributes<T> & {
+  RefAttributes<HTMLDivElement> & {
     classNames?: {
       item?: ListBoxItemProps['className'];
       icon?: IconProps['className'];
