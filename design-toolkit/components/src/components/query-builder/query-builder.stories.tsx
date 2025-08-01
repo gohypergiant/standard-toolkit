@@ -12,10 +12,9 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import type { RuleGroupType } from './';
-
 import { QueryBuilder } from './';
-import { defaultQuery, fields } from './example-configuration';
+import { defaultQuery, fields } from './__fixtures__/example-configuration';
+import type { RuleGroupType } from './types';
 
 /**
  * A custom port of the React QueryBuilder component: https://react-querybuilder.js.org/
