@@ -14,107 +14,35 @@
 import 'client-only';
 import { cn } from '@/lib/utils';
 import { ChevronDown } from '@accelint/icons';
-import { type VariantProps, cva } from 'cva';
-import type { ReactNode } from 'react';
 import {
   Button as AriaButton,
   ComboBox as AriaComboBox,
-  type ComboBoxProps as AriaComboBoxProps,
   Input as AriaInput,
-  type InputProps as AriaInputProps,
   ListLayout as AriaListLayout,
-  type ListLayoutOptions as AriaListLayoutOptions,
   Popover as AriaPopover,
   Text as AriaText,
   Virtualizer as AriaVirtualizer,
-  type VirtualizerProps as AriaVirtualizerProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
+import type { InputProps } from '../input/types';
 import { Label } from '../label';
 import { Options } from '../options';
 import type { OptionsDataItem } from '../options/types';
+import { ComboBoxStyles } from './styles';
+import type { ComboBoxProps } from './types';
 
-const textFieldStyles = cva(
-  [
-    'block w-full rounded-medium py-xs pr-[32px] pl-s font-display outline outline-interactive',
-    'not-disabled:read-only:rounded-none not-disabled:read-only:p-0 not-disabled:read-only:outline-transparent not-disabled:read-only:hover:outline-transparent not-disabled:read-only:focus:outline-transparent',
-  ],
-  {
-    variants: {
-      isDisabled: {
-        true: 'text-disabled outline-interactive-disabled placeholder:text-disabled',
-        false:
-          'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus:outline-highlight',
-      },
-      isInvalid: {
-        true: 'outline-serious',
-      },
-      size: {
-        medium: 'text-body-s',
-        small: 'text-body-xs',
-      },
-    },
-    compoundVariants: [
-      {
-        isDisabled: true,
-        isInvalid: true,
-        className: 'outline-interactive-disabled',
-      },
-    ],
-    defaultVariants: {
-      size: 'medium',
-    },
-  },
-);
+const { textFieldBase, comboBox, input, error, popOver } = ComboBoxStyles();
 
-interface InputProps
-  extends VariantProps<typeof textFieldStyles>,
-    Omit<AriaInputProps, 'size'> {
-  isReadOnly?: boolean;
-}
-
-const Input = ({
-  className,
-  isReadOnly = false,
-  size = 'medium',
-  ...props
-}: InputProps) => {
+const Input = ({ classNames, size = 'medium', ...props }: InputProps) => {
   return (
-    <AriaInput
-      {...props}
-      className={({ isDisabled, isInvalid }) =>
-        cn(
-          textFieldStyles({
-            isDisabled,
-            isInvalid,
-            size,
-            className,
-          }),
-        )
-      }
-    />
+    <AriaInput {...props} className={textFieldBase({})} data-size={size} />
   );
 };
 Input.displayName = 'ComboBox.Input';
 
-export interface ComboBoxProps<T extends OptionsDataItem>
-  extends Omit<
-      VariantProps<typeof textFieldStyles>,
-      'isDisabled' | 'isInvalid' | 'isReadOnly'
-    >,
-    Omit<AriaComboBoxProps<T>, 'children'>,
-    Pick<AriaVirtualizerProps<AriaListLayoutOptions>, 'layoutOptions'> {
-  className?: string;
-  children: ReactNode | ((item: T) => ReactNode);
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  placeholder?: string;
-}
-
 export function ComboBox<T extends OptionsDataItem>({
   children,
-  className,
+  classNames,
   description,
   errorMessage,
   isDisabled,
@@ -137,23 +65,18 @@ export function ComboBox<T extends OptionsDataItem>({
       isDisabled={isDisabled}
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
-      className='flex flex-col gap-xs'
+      className={comboBox({})}
     >
       {({ isDisabled, isOpen }) => (
         <>
           {shouldShowLabel && (
-            <Label
-              className='empty:hidden'
-              isDisabled={isDisabled}
-              isRequired={props.isRequired}
-            >
+            <Label isDisabled={isDisabled} isRequired={props.isRequired}>
               {label}
             </Label>
           )}
-          <div className='relative flex items-center'>
+          <div className={input({})}>
             <Input
-              className={className}
-              isReadOnly={isReadOnly}
+              classNames={classNames?.input}
               placeholder={placeholder}
               size={size}
             />
@@ -162,7 +85,6 @@ export function ComboBox<T extends OptionsDataItem>({
                 'fg-default-light absolute right-xs transform',
                 isDisabled && 'fg-disabled',
                 isOpen && 'rotate-180',
-                isReadOnly && 'hidden',
               ])}
             >
               <Icon size='small'>
@@ -182,14 +104,11 @@ export function ComboBox<T extends OptionsDataItem>({
             </AriaText>
           )}
           {shouldShowError && (
-            <AriaText
-              className='fg-serious text-body-xs empty:hidden'
-              slot='errorMessage'
-            >
+            <AriaText className={error({})} slot='errorMessage'>
               {errorMessage}
             </AriaText>
           )}
-          <AriaPopover className='w-(--trigger-width)'>
+          <AriaPopover className={popOver({})}>
             <AriaVirtualizer
               layout={AriaListLayout}
               layoutOptions={layoutOptions}
