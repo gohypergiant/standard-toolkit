@@ -222,8 +222,15 @@ export type {
 export { Radio, RadioContext } from './components/radio';
 export { RadioStyles } from './components/radio/styles';
 export type { RadioGroupProps, RadioProps } from './components/radio/types';
-export { SearchField } from './components/search-field';
-export type { SearchFieldProps } from './components/search-field';
+export { SearchField, SearchFieldContext } from './components/search-field';
+export {
+  SearchFieldStyles,
+  SearchFieldStylesDefaults,
+} from './components/search-field/styles';
+export type {
+  SearchFieldProps,
+  SearchFieldStyleVariants,
+} from './components/search-field/types';
 export { Skeleton } from './components/skeleton';
 export {
   SkeletonStyles,

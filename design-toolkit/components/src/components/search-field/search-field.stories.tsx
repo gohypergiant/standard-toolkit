@@ -17,22 +17,17 @@ const meta: Meta<typeof SearchField> = {
   title: 'Components/SearchField',
   component: SearchField,
   args: {
-    className: '',
+    inputProps: {
+      placeholder: 'Search...',
+    },
+    variant: 'outlined',
     isDisabled: false,
     isLoading: false,
-    placeholder: 'Search',
-    variant: 'outlined',
   },
   argTypes: {
-    className: {
-      control: 'text',
-      type: 'string',
-      table: { defaultValue: { summary: '' } },
-    },
-    placeholder: {
-      control: 'text',
-      type: 'string',
-      table: { defaultValue: { summary: 'Search' } },
+    isDisabled: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
     },
     variant: {
       control: 'select',
@@ -43,17 +38,17 @@ const meta: Meta<typeof SearchField> = {
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } },
     },
-    isDisabled: {
-      control: 'boolean',
-      table: { defaultValue: { summary: 'false' } },
+  },
+  parameters: {
+    controls: {
+      exclude: ['children', 'slot', 'validationBehavior'],
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof SearchField>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof SearchField> = {
   render: ({ ...args }) => (
     <SearchField {...args} aria-label='Storybook Search Field Component' />
   ),

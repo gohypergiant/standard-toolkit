@@ -9,85 +9,128 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
-import { cn } from '@/lib/utils';
-import {
-  CancelFill,
-  Loop as LoopIcon,
-  Search as SearchIcon,
-} from '@accelint/icons';
+
 import 'client-only';
-import { cva } from 'cva';
+import type { ProviderProps } from '@/lib/types';
+import { CancelFill, Loop, Search } from '@accelint/icons';
+import { createContext } from 'react';
 import {
   SearchField as AriaSearchField,
   Button,
+  type ContextValue,
   Input,
+  composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
+import { SearchFieldStyles, SearchFieldStylesDefaults } from './styles';
+import type { SearchFieldProps } from './types';
 
-export interface SearchFieldProps {
-  className?: string;
-  /** Disables the input field. */
-  isDisabled?: boolean;
-  /** Displays a loading spinner. */
-  isLoading?: boolean;
-  /** Displays placeholder text. */
-  placeholder?: string;
-  /** Whether the input has a filled background or outlined. */
-  variant?: 'filled' | 'outlined';
+const { field, input, search, loading, clear } = SearchFieldStyles();
+
+export const SearchFieldContext =
+  createContext<ContextValue<SearchFieldProps, HTMLDivElement>>(null);
+
+function SearchFieldProvider({
+  children,
+  ...props
+}: ProviderProps<SearchFieldProps>) {
+  return (
+    <SearchFieldContext.Provider value={props}>
+      {children}
+    </SearchFieldContext.Provider>
+  );
+}
+SearchFieldProvider.displayName = 'SearchField.Provider';
+
+/**
+ * SearchField - A customizable search input component built on React Aria Components
+ *
+ * Provides a search input with integrated search icon, loading state, and clear functionality.
+ * Supports two visual variants (filled/outlined), and granular styling control.
+ *
+ * @example
+ * // Basic search field
+ * <SearchField placeholder="Search..." />
+ *
+ * @example
+ * // Filled variant with custom styling
+ * <SearchField
+ *   variant="filled"
+ *   placeholder="Search products"
+ *   classNames={{
+ *     input: "bg-gray-100",
+ *     searchIcon: "text-blue-600"
+ *   }}
+ * />
+ *
+ * @example
+ * // With event handlers
+ * <SearchField
+ *   placeholder="Type to search"
+ *   onSubmit={(value) => console.log('Search:', value)}
+ *   onChange={(value) => setQuery(value)}
+ * />
+ *
+ * @example
+ * // Using context provider for default props
+ * <SearchField.Provider variant="filled">
+ *   <SearchField placeholder="Search 1" />
+ *   <SearchField placeholder="Search 2" />
+ * </SearchField.Provider>
+ */
+export function SearchField({ ref, ...props }: SearchFieldProps) {
+  [props, ref] = useContextProps(props, ref ?? null, SearchFieldContext);
+
+  const {
+    classNames,
+    inputProps,
+    isLoading = false,
+    variant = SearchFieldStylesDefaults.variant,
+    ...rest
+  } = props;
+
+  return (
+    <Icon.Provider size='small'>
+      <AriaSearchField
+        {...rest}
+        ref={ref}
+        className={composeRenderProps(classNames?.field, (className) =>
+          field({ className, variant }),
+        )}
+      >
+        <Icon className={search({ className: classNames?.search, variant })}>
+          <Search />
+        </Icon>
+        <Input
+          {...inputProps}
+          className={composeRenderProps(classNames?.input, (className) =>
+            input({ className, variant }),
+          )}
+          type='search'
+        />
+        {isLoading ? (
+          <Icon
+            className={loading({ className: classNames?.loading, variant })}
+          >
+            <Loop />
+          </Icon>
+        ) : (
+          <Button
+            className={composeRenderProps(classNames?.clear, (className) =>
+              clear({ className, variant }),
+            )}
+          >
+            <Icon>
+              <CancelFill />
+            </Icon>
+          </Button>
+        )}
+      </AriaSearchField>
+    </Icon.Provider>
+  );
 }
 
-const textFieldStyles = cva(
-  [
-    'hide-cancel block w-full rounded-round p-s pr-[30px] pl-[35px] font-display text-body-s outline',
-  ],
-  {
-    variants: {
-      isDisabled: {
-        true: 'text-disabled outline-interactive-disabled placeholder:text-disabled',
-        false:
-          'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus:outline-highlight',
-      },
-      variant: {
-        filled: 'bg-surface-raised outline-static-dark',
-        outlined: 'outline-interactive',
-      },
-    },
-  },
-);
-
-export const SearchField = ({
-  className,
-  placeholder = 'Search',
-  variant = 'outlined',
-  isLoading = false,
-  ...rest
-}: SearchFieldProps) => {
-  return (
-    <AriaSearchField className={cn('group relative', className)} {...rest}>
-      <Icon className='fg-interactive-hover absolute top-[6px] left-[7px]'>
-        <SearchIcon />
-      </Icon>
-      <Input
-        placeholder={placeholder}
-        className={({ isDisabled }) =>
-          cn(textFieldStyles({ isDisabled, variant }))
-        }
-      />
-      {isLoading ? (
-        <Icon className='fg-interactive-hover absolute top-[6px] right-[8px] animate-spin'>
-          <LoopIcon className='scale-x-[-1]' />
-        </Icon>
-      ) : (
-        <Button className='fg-default-dark hover:fg-interactive-hover absolute top-[8px] right-[8px] cursor-pointer group-empty:hidden group-disabled:hidden'>
-          <Icon size='small'>
-            <CancelFill />
-          </Icon>
-        </Button>
-      )}
-    </AriaSearchField>
-  );
-};
-
 SearchField.displayName = 'SearchField';
+SearchField.Provider = SearchFieldProvider;
