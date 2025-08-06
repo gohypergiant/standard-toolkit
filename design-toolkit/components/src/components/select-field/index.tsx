@@ -14,7 +14,8 @@
 import 'client-only';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { createContext } from 'react';
-import {Popover as AriaPopover, 
+import {
+  Popover as AriaPopover,
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
   type ContextValue,
@@ -23,7 +24,7 @@ import {Popover as AriaPopover,
   ListLayout,
   Text,
   useContextProps,
-  Virtualizer
+  Virtualizer,
 } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
