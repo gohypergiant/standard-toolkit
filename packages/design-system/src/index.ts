@@ -544,7 +544,6 @@ export type {
   ThemeProviderProps,
   ThemeVars,
 } from './hooks';
-export { actions } from './ladle';
 export {
   bodies,
   defaultElevationVarValues,
