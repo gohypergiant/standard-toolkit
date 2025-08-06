@@ -1,5 +1,19 @@
 # @accelint/docs
 
+## 0.1.16
+
+### Patch Changes
+
+- Updated dependencies [ca3922a]
+  - @accelint/constants@0.1.4
+  - @accelint/core@0.2.2
+  - @accelint/design-system@0.11.2
+  - @accelint/formatters@0.1.4
+  - @accelint/math@0.1.4
+  - @accelint/predicates@0.3.2
+  - @accelint/converters@0.3.1
+  - @accelint/geo@0.2.5
+
 ## 0.1.15
 
 ### Patch Changes

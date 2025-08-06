@@ -179,6 +179,26 @@ body {
     display: none;
   }
 
+  /*
+ * Scrollbars
+ */
+  *::-webkit-scrollbar {
+    width: var(--spacing-l);
+    height: var(--spacing-l);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--color-interactive);
+  }
+
+  *::-webkit-scrollbar-thumb{
+    background-color: var(--color-interactive-hover-light);
+    border-radius: var(--radius-large);
+    border: 5px solid transparent;
+    background-clip: padding-box;
+  }
+
+
   /**
    * Rule line only applicable to the QueryBuilder component
    */

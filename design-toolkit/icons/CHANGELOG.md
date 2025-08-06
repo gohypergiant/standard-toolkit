@@ -1,5 +1,11 @@
 # @accelint/icons
 
+## 2.0.2
+
+### Patch Changes
+
+- ca3922a: added subpath exports for packages
+
 ## 2.0.1
 
 ### Patch Changes

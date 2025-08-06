@@ -44,7 +44,6 @@ import type { SkeletonProps } from './types';
  * <Skeleton className="w-[50%] mt-l" />
  */
 export function Skeleton({
-  children,
   className,
   shape = SkeletonStylesDefaults.shape,
   ...rest

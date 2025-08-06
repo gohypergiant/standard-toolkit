@@ -12,7 +12,7 @@
 
 'use client';
 import 'client-only';
-import { cva } from 'cva';
+import { cva } from 'class-variance-authority';
 import { useContext } from 'react';
 import {
   Input,

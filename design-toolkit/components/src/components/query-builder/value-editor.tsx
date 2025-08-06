@@ -10,13 +10,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import { useCallback } from 'react';
-import {
-  type InputType,
-  useValueEditor,
-  type ValueEditorProps,
-} from 'react-querybuilder';
+import { useValueEditor, type ValueEditorProps } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
 import { Radio } from '../radio';
 import { Switch } from '../switch';
@@ -25,7 +23,8 @@ import { TextField } from '../text-field';
 import { multiValueOperators } from './constants';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
-import type { QueryBuilderValueEditors } from './';
+import type { InputProps } from '../input/types';
+import type { QueryBuilderValueEditors } from './types';
 
 function CheckboxValueEditor({
   disabled,
@@ -137,8 +136,10 @@ function TextValueEditor({
 
   return (
     <TextField
-      inputProps={{ placeholder }}
-      type={(inputType as InputType) ?? 'text'}
+      inputProps={{
+        placeholder,
+        type: (inputType as InputProps['type']) ?? 'text',
+      }}
       size='small'
       value={value}
       isDisabled={disabled}

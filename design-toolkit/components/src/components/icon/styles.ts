@@ -14,7 +14,7 @@ import { tv } from '@/lib/utils';
 
 export const IconStyles = tv({
   base: [
-    'block h-[var(--icon-size,var(--icon-size-m))] w-[var(--icon-size,var(--icon-size-m))] [color:var(--icon-color,currentColor)]',
+    'block h-[var(--icon-size,var(--icon-size-m))] w-[var(--icon-size,var(--icon-size-m))] flex-none [color:var(--icon-color,currentColor)]',
     'size-large:[--icon-size:var(--icon-size-l)]',
     'size-medium:[--icon-size:var(--icon-size-m)]',
     'size-small:[--icon-size:var(--icon-size-s)]',

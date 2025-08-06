@@ -21,6 +21,7 @@ const preview: Preview = {
     backgrounds: { value: '#0b0b0b' },
   },
   parameters: {
+    actions: { argTypesRegex: '^on.*' },
     backgrounds: {
       values: [
         { name: 'Black', value: '#000000' },

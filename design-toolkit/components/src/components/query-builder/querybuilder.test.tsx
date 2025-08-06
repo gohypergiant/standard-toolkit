@@ -12,7 +12,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { QueryBuilder } from './';
-import { defaultQuery, fields } from './example-configuration';
+import { defaultQuery, fields } from './__fixtures__/example-configuration';
 
 describe('QueryBuilder', () => {
   it('should render', () => {

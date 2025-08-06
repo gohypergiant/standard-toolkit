@@ -9,24 +9,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
-import { Delete, Duplicate, LockFill } from '@accelint/icons';
+
 import 'client-only';
-import { createContext, type ReactElement, useCallback, useMemo } from 'react';
+import { Delete, Duplicate, LockFill } from '@accelint/icons';
+import { createContext, useCallback, useMemo } from 'react';
 import {
   type ActionProps,
   type Classnames,
   type CombinatorSelectorProps,
-  type FullCombinator,
-  type FullField,
-  type FullOperator,
   QueryBuilder as RQBBuilder,
-  type Classnames as RQBClassnames,
-  type Field as RQBField,
-  type QueryBuilderProps as RQBProps,
-  type RuleGroupType as RQBRuleGroupType,
-  type ValueEditorProps,
 } from 'react-querybuilder';
 import { cn } from '../../lib/utils';
 import { Button } from '../button';
@@ -45,65 +37,7 @@ import { getValidationResult, pressToMouseEvent } from './utils';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
 import type { PressEvent } from '@react-types/shared';
-import type { LiteralUnion } from 'type-fest';
-
-export type RuleGroupType = RQBRuleGroupType;
-export type Field = RQBField;
-
-export type DefaultRQBProps = RQBProps<
-  RuleGroupType,
-  FullField,
-  FullOperator,
-  FullCombinator
->;
-
-// TODO: need to add multiselect back in when we have a compatible component
-export type QueryBuilderValueEditors = Record<
-  LiteralUnion<
-    Exclude<ValueEditorProps['type'], null | undefined | 'multiselect'>,
-    string
-  >,
-  (props: ValueEditorProps) => ReactElement
->;
-
-/**
- * Omitted props are currently unsupported functionality
- */
-export type QueryBuilderProps = Partial<
-  Omit<
-    DefaultRQBProps,
-    | 'showCombinatorsBetweenRules'
-    | 'independentCombinators'
-    | 'listsAsArrays'
-    | 'enableDragAndDrop'
-    | 'showNotToggle'
-    | 'showShiftActions'
-  > & {
-    orientation?: 'horizontal' | 'vertical';
-    showRuleLines?: boolean;
-  }
->;
-
-/**
- * Omitted classnames are for unsupported features
- */
-export type ClassNames = Omit<
-  RQBClassnames,
-  | 'betweenRules'
-  | 'branches'
-  | 'dndDragging'
-  | 'dndOver'
-  | 'dndCopy'
-  | 'dndGroup'
-  | 'dragHandle'
-  | 'shiftActions'
-  | 'notToggle'
->;
-
-export type QueryBuilderContextType = Pick<
-  QueryBuilderProps,
-  'showRuleLines' | 'orientation'
->;
+import type { QueryBuilderContextType, QueryBuilderProps } from './types';
 
 const operatorDescriptions: Record<string, string> = {
   AND: 'All rules below must be true for a match',

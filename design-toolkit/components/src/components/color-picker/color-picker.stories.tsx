@@ -17,7 +17,7 @@ const meta: Meta<typeof ColorPicker> = {
   title: 'Components/ColorPicker',
   component: ColorPicker,
   args: {
-    options: ['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D'],
+    items: ['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D'],
   },
   argTypes: {
     className: { type: 'string' },
@@ -39,25 +39,21 @@ const meta: Meta<typeof ColorPicker> = {
       action: 'changed',
       description: 'Callback function when the color is changed.',
     },
-    options: {
+    items: {
       description: 'Array of color options to choose from.',
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof ColorPicker>;
 
-export const Default: Story = {
-  render: (args) => <ColorPicker {...args} />,
+export const Default: StoryObj<typeof ColorPicker> = {
+  render: ColorPicker,
 };
 
-export const Controlled: Story = {
+export const Controlled: StoryObj<typeof ColorPicker> = {
   args: {
     value: '#30D27E',
-    onChange: (value) => console.log('Selected color:', value),
   },
-  render: (args) => {
-    return <ColorPicker {...args} />;
-  },
+  render: ColorPicker,
 };

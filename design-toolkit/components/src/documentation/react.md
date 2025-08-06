@@ -2,6 +2,112 @@
 
 ## Best Practices
 
+### Components
+
+#### ClassName(s)
+
+When a component implements multiple elements, it should not support `className` and instead implement `classNames`. `classNames` is an optional object with properties that allow passing of class names to each of the elements that need to be addressable
+ 
+When a component is only a single element, it should implement `className` and not `classNames`, no need for the extra complexity for simple components
+
+```jsx
+type MyComponentProps = {
+  className?: string;
+}
+
+function MyComponent({ className }: MyComponentProps) {
+  return <div className={className} />
+}
+
+type MyComplexComponentProps = {
+  classNames?: {
+    container?: string;
+    foo?: string;
+    bar?: string;
+  }
+}
+
+function MyComplexComponent({ classNames }: MyComplexComponentProps) {
+  return (
+    <div className={classNames?.container}>
+      <span className={classNames?.foo} />
+      <span className={classNames?.bar} />
+    </div>
+  );
+}
+```
+
+#### Display Name
+
+All components should have a `displayName` attached for identification and debugging purposes. When viewing components rendered in devtools it's challenging to correctly identify anonymous functions. By attaching a `displayName` this name makes identification trivial. When providing a `displayName` be sure to follow the export structure when sub components are involved.
+
+```jsx
+function MySubComponent() {
+  //...
+}
+MySubComponent.displayName = 'MyComponent.Sub';
+
+export function MyComponent() {
+  //...
+}
+MyComponent.displayName = 'MyComponent';
+MyComponent.Sub = MySubComponent;
+```
+
+Notice how the `displayName` of the sub component matches the relationship of to the main exported component.
+
+#### Subcomponents
+
+Be mindful of creating subcomponents unnecessarily. It's often times possible to avoid creating custom subcomponents by using an existing RAC and context.
+
+```jsx
+// Bad
+function MySubComponent({ className, ...rest }) {
+  return <Button {...rest} className={item({ className })} />
+}
+MySubComponent.displayName = 'MyComponent.Item';
+
+export function MyComponent({ children, classNames, ...rest}) {
+  return (
+    <header {...rest} className={header({ className: classNames?.header })}>
+      <nav className={nav({ className: classNames?.nav })}>{children}</nav>
+    </header>
+  )
+}
+MyComponent.displayName = 'MyComponent';
+MyComponent.Item = MySubComponent;
+
+// Better (RAC)
+export function MyComponent({ children, classNames, ...rest}) {
+  return (
+    <ButtonContext.Provider value={{
+      className: item({ classNames?.item })
+    }}>
+      <header {...rest} className={header({ className: classNames?.header })}>
+        <nav className={nav({ className: classNames?.nav })}>{children}</nav>
+      </header>
+    </ButtonContext.Provider>
+  )
+}
+MyComponent.displayName = 'MyComponent';
+MyComponent.Item = Button; // Only do this if the component is straight from RAC
+MySubComponent.displayName = 'MyComponent.Item';
+
+// Better (non-RAC)
+export function MyComponent({ children, classNames, ...rest}) {
+  return (
+    <Button.Provider className={item({ classNames?.item })}>
+      <header {...rest} className={header({ className: classNames?.header })}>
+        <nav className={nav({ className: classNames?.nav })}>{children}</nav>
+      </header>
+    </Button.Provider>
+  )
+}
+MyComponent.displayName = 'MyComponent';
+```
+
+Notice that because the sub component was just a basic passthrough component with a className applied, it's possible to eliminate this component and provide the className through the provider instead. Also, when the sub component is based on a DesignTK component, it should not be attached to the main export.
+
 ### Context
 
 RAC utilizes context heavily in their components. Understanding the patterns they've established is critical to understanding how slots and prop inheritance works.

@@ -20,7 +20,7 @@ import type { LabelProps } from '../label/types';
 
 export type TextFieldProps = Omit<
   AriaTextFieldProps,
-  'children' | 'className'
+  'children' | 'className' | 'type' | 'pattern'
 > &
   RefAttributes<HTMLDivElement> & {
     classNames?: {

@@ -559,7 +559,7 @@ export function TreeItem<T>({
       ],
       // Need to expand the RAC ButtonContext to allow for additional slots
       [RACButtonContext, { slots: { [DEFAULT_SLOT]: {}, lines: {} } }],
-    ];
+    ] as TreeItemContexts;
   }, [
     classNames?.item?.lines,
     classNames?.item?.expansion,

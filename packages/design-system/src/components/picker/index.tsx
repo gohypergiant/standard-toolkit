@@ -181,7 +181,7 @@ export const PickerItem = forwardRef(function PickerItem<T extends object>(
   return (
     <ListBoxItem<T>
       {...rest}
-      ref={ref as ForwardedRef<T>}
+      ref={ref}
       id={id ?? textValue}
       className={classNames?.item?.container}
       style={style}

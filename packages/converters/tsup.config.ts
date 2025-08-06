@@ -10,25 +10,30 @@
  * governing permissions and limitations under the License.
  */
 
-import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions';
+import {
+  fixAliasPlugin,
+  fixExtensionsPlugin,
+  fixFolderImportsPlugin,
+} from 'esbuild-fix-imports-plugin';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
   esbuildPlugins: [
-    esbuildPluginFilePathExtensions({
-      esmExtension: 'js',
-    }),
+    fixAliasPlugin(),
+    fixFolderImportsPlugin(),
+    fixExtensionsPlugin(),
   ],
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixture__',
   ],
-  bundle: true,
+  bundle: false,
   clean: true,
   dts: true,
   format: 'esm',
   sourcemap: true,
   splitting: true,
   treeshake: true,
+  metafile: true,
 });

@@ -106,12 +106,20 @@ export type {
   ClassificationBannerProps,
   ClassificationBannerStyleVariants,
 } from './components/classification-banner/types';
-export { ColorPicker, useColorPickerState } from './components/color-picker';
-export type { ColorPickerProps } from './components/color-picker';
-export { ComboBox, ComboBoxSection } from './components/combobox';
+export { ColorPicker } from './components/color-picker';
+export { ColorPickerStyles } from './components/color-picker/styles';
+export type { ColorPickerProps } from './components/color-picker/types';
+export { ComboBox } from './components/combobox';
 export type { ComboBoxProps } from './components/combobox';
 export { DateField } from './components/date-field';
-export type { DateFieldProps } from './components/date-field';
+export {
+  DateFieldStyles,
+  DateFieldStylesDefault,
+} from './components/date-field/styles';
+export type {
+  DateFieldProps,
+  DateInputProps,
+} from './components/date-field/types';
 export { DetailsList, DetailsListContext } from './components/details-list';
 export {
   DetailsListStyles,
@@ -124,6 +132,37 @@ export type {
 } from './components/details-list/types';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
+export {
+  useDrawerContext,
+  useDrawersContext,
+  useDrawersState,
+} from './components/drawer/context';
+export { Drawer } from './components/drawer';
+export {
+  createDefaultDrawerState,
+  drawerStateReducer,
+} from './components/drawer/state';
+export type { DrawerAction } from './components/drawer/state';
+export { DrawerMenuStyles, DrawerStyles } from './components/drawer/styles';
+export { DrawerDefaults } from './components/drawer/types';
+export type {
+  DrawerContainerProps,
+  DrawerContextValue,
+  DrawerLayoutProps,
+  DrawerLayoutPush,
+  DrawerLayouts,
+  DrawerMenuItemProps,
+  DrawerMenuProps,
+  DrawerPanelProps,
+  DrawerPlacement,
+  DrawerProps,
+  DrawerProviderProps,
+  DrawerSize,
+  DrawerState,
+  DrawerTriggerProps,
+  DrawersContextValue,
+  OnOpenChangeCallback,
+} from './components/drawer/types';
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
 export type { HeroProps } from './components/hero/types';
@@ -148,10 +187,22 @@ export type {
   SeparatorProps,
   SubmenuTriggerProps,
 } from './components/menu/types';
-export { Options, OptionsContext, OptionsSection } from './components/options';
-export type { OptionsProps } from './components/options';
-export { OptionsItem } from './components/options-item';
-export type { IOptionsItem, OptionsItemProps } from './components/options-item';
+export { NavigationStack } from './components/navigation-stack';
+export type {
+  NavigationStackContextValue,
+  NavigationStackNavigateProps,
+  NavigationStackProps,
+  NavigationStackViewProps,
+} from './components/navigation-stack/types';
+export { Options, OptionsContext } from './components/options';
+export { OptionsStyles } from './components/options/styles';
+export type {
+  OptionsDataItem,
+  OptionsItemProps,
+  OptionsItemTextProps,
+  OptionsProps,
+  OptionsSectionProps,
+} from './components/options/types';
 export { Popover, PopoverTrigger } from './components/popover';
 export { PopoverStyles } from './components/popover/styles';
 export type {
@@ -170,12 +221,22 @@ export type {
   QueryBuilderProps,
   QueryBuilderValueEditors,
   RuleGroupType,
-} from './components/query-builder';
+} from './components/query-builder/types';
 export { Radio, RadioContext } from './components/radio';
 export { RadioStyles } from './components/radio/styles';
 export type { RadioGroupProps, RadioProps } from './components/radio/types';
-export { SearchField } from './components/search-field';
-export type { SearchFieldProps } from './components/search-field';
+export { SearchField, SearchFieldContext } from './components/search-field';
+export {
+  SearchFieldStyles,
+  SearchFieldStylesDefaults,
+} from './components/search-field/styles';
+export type {
+  SearchFieldProps,
+  SearchFieldStyleVariants,
+} from './components/search-field/types';
+export { SelectField, SelectFieldContext } from './components/select-field';
+export { SelectFieldStyles } from './components/select-field/styles';
+export type { SelectFieldProps } from './components/select-field/types';
 export { Skeleton } from './components/skeleton';
 export {
   SkeletonStyles,
@@ -206,12 +267,13 @@ export type { TextAreaFieldProps } from './components/text-area-field/types';
 export { TextField, TextFieldContext } from './components/text-field';
 export { TextFieldStyles } from './components/text-field/styles';
 export type { TextFieldProps } from './components/text-field/types';
-export { Tooltip, TooltipBody, TooltipTrigger } from './components/tooltip';
+export { Tooltip, TooltipContext } from './components/tooltip';
+export { TooltipStyles } from './components/tooltip/styles';
 export type {
   TooltipBodyProps,
   TooltipProps,
   TooltipTriggerProps,
-} from './components/tooltip';
+} from './components/tooltip/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   ChildrenRenderProps,

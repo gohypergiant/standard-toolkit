@@ -1,5 +1,13 @@
 # @accelint/geo
 
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [ca3922a]
+  - @accelint/math@0.1.4
+  - @accelint/predicates@0.3.2
+
 ## 0.2.4
 
 ### Patch Changes

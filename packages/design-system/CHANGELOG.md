@@ -1,5 +1,14 @@
 # @accelint/design-system
 
+## 0.11.2
+
+### Patch Changes
+
+- ca3922a: added subpath exports for packages
+- Updated dependencies [ca3922a]
+  - @accelint/core@0.2.2
+  - @accelint/converters@0.3.1
+
 ## 0.11.1
 
 ### Patch Changes
