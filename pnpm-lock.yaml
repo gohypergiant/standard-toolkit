@@ -582,7 +582,7 @@ importers:
         version: 3.12.11(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/interactions':
         specifier: ^3.25.3
-        version: 3.25.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 3.25.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/overlays':
         specifier: ^3.27.3
         version: 3.28.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -3086,6 +3086,7 @@ packages:
 
   '@ls-lint/ls-lint@2.3.0-beta.1':
     resolution: {integrity: sha512-NmujBNFslP4GhFsB92zh1evSSBadcg+RMsQ5FM70OrU36C3AbQYaVXDn4reC28GM6DFoOtiETRdKV6ie1TfP7g==}
+    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -3595,12 +3596,6 @@ packages:
 
   '@react-aria/i18n@3.12.11':
     resolution: {integrity: sha512-1mxUinHbGJ6nJ/uSl62dl48vdZfWTBZePNF/wWQy98gR0qNFXLeusd7CsEmJT1971CR5i/WNYUo1ezNlIJnu6A==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-aria/interactions@3.25.3':
-    resolution: {integrity: sha512-J1bhlrNtjPS/fe5uJQ+0c7/jiXniwa4RQlP+Emjfc/iuqpW2RhbF9ou5vROcLzWIyaW8tVMZ468J68rAs/aZ5A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -14440,16 +14435,6 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@react-aria/interactions@3.25.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
-    dependencies:
-      '@react-aria/ssr': 3.9.10(react@19.1.1)
-      '@react-aria/utils': 3.30.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@react-stately/flags': 3.1.2
-      '@react-types/shared': 3.31.0(react@19.1.1)
-      '@swc/helpers': 0.5.17
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
-
   '@react-aria/interactions@3.25.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@react-aria/ssr': 3.9.10(react@19.1.1)
@@ -21152,7 +21137,7 @@ snapshots:
       '@react-aria/disclosure': 3.0.0-alpha.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/dnd': 3.11.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/focus': 3.21.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@react-aria/interactions': 3.25.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@react-aria/interactions': 3.25.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/live-announcer': 3.4.4
       '@react-aria/menu': 3.19.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/toolbar': 3.0.0-beta.10(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
