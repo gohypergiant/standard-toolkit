@@ -12,7 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Badge, type BadgeProps } from './index';
+import { Badge } from './index';
+import type { BadgeProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<BadgeProps> = {}) {
   render(<Badge {...rest}>{children}</Badge>);

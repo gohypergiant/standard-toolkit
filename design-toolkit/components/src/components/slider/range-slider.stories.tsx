@@ -13,7 +13,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { RangeSlider } from './index';
 
-const meta: Meta<typeof Range> = {
+const meta: Meta<typeof RangeSlider> = {
   title: 'Components/RangeSlider',
   component: RangeSlider,
   args: {

@@ -73,6 +73,39 @@ CheckboxGroup.displayName = 'Checkbox.Group';
 export const CheckboxContext =
   createContext<ContextValue<CheckboxProps, HTMLLabelElement>>(null);
 
+/**
+ * Checkbox - A form control for binary or multiple selection with group support
+ *
+ * Provides accessible checkbox functionality with support for individual checkboxes
+ * or grouped selections. Includes visual feedback for checked, indeterminate, and
+ * disabled states with integrated labeling and validation support.
+ *
+ * @example
+ * // Basic checkbox
+ * <Checkbox>
+ *   Accept terms and conditions
+ * </Checkbox>
+ *
+ * @example
+ * // Checkbox group with multiple options
+ * <Checkbox.Group label="Select preferences">
+ *   <Checkbox value="notifications">Email notifications</Checkbox>
+ *   <Checkbox value="marketing">Marketing emails</Checkbox>
+ *   <Checkbox value="updates">Product updates</Checkbox>
+ * </Checkbox.Group>
+ *
+ * @example
+ * // Disabled checkbox
+ * <Checkbox isDisabled>
+ *   Unavailable option
+ * </Checkbox>
+ *
+ * @example
+ * // Indeterminate checkbox (partial selection)
+ * <Checkbox isIndeterminate>
+ *   Select all items
+ * </Checkbox>
+ */
 export function Checkbox({ ref, ...props }: CheckboxProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);
 

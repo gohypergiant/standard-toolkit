@@ -36,6 +36,37 @@ function HotkeyProvider({ children, ...props }: ProviderProps<HotkeyProps>) {
 }
 HotkeyProvider.displayName = 'Hotkey.Provider';
 
+/**
+ * Hotkey - A visual representation of keyboard shortcuts and key combinations
+ *
+ * Displays keyboard keys and shortcuts in a consistent, accessible format.
+ * Perfect for documentation, help systems, or UI elements that need to show
+ * keyboard shortcuts. Supports multiple visual styles including outlined keys,
+ * flat presentation, and icon-specific formatting.
+ *
+ * @example
+ * // Basic hotkey display
+ * <Hotkey>Ctrl</Hotkey>
+ *
+ * @example
+ * // Hotkey combination with different variants
+ * <Hotkey.Set>
+ *   <Hotkey variant="outline">Cmd</Hotkey>
+ *   <span>+</span>
+ *   <Hotkey variant="outline">K</Hotkey>
+ * </Hotkey.Set>
+ *
+ * @example
+ * // Flat style for inline text
+ * <p>Press <Hotkey variant="flat">Enter</Hotkey> to submit</p>
+ *
+ * @example
+ * // Icon variant for special keys
+ * <Hotkey.Set>
+ *   <Hotkey variant="icon">⌘</Hotkey>
+ *   <Hotkey>Space</Hotkey>
+ * </Hotkey.Set>
+ */
 export function Hotkey({ ref, children, ...props }: HotkeyProps) {
   [props, ref] = useContextProps(props, ref ?? null, HotkeyContext);
   const { className, variant = HotkeyStylesDefaults.variant } = props;
@@ -48,7 +79,7 @@ export function Hotkey({ ref, children, ...props }: HotkeyProps) {
 }
 Hotkey.displayName = 'Hotkey';
 
-export function HotkeySet({ children, ...props }: HotkeySetProps) {
+function HotkeySet({ children, ...props }: HotkeySetProps) {
   const { className } = props;
 
   return (

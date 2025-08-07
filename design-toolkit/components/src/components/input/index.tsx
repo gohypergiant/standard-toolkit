@@ -38,6 +38,24 @@ const clearInputEvent = {
 export const InputContext =
   createContext<ContextValue<InputProps, HTMLInputElement>>(null);
 
+/**
+ * Input - A flexible text input component with enhanced features
+ *
+ * Provides a customizable text input with automatic sizing, clear functionality,
+ * and integrated validation states. Supports various styling options and integrates
+ * seamlessly with form field components for comprehensive form experiences.
+ *
+ * @example
+ * // Basic input
+ * <Input placeholder="Enter text..." />
+ *
+ * @example
+ * // Input with clear button
+ * <Input
+ *   defaultValue="Clearable text"
+ *   classNames={{ clear: "hover:bg-gray-100" }}
+ * />
+ */
 export function Input({ ref, ...props }: InputProps) {
   /**
    * It is necessary to pull in the AriaInputContext to capture defaultValue,

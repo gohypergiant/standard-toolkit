@@ -39,7 +39,8 @@ export const Default: StoryObj<typeof Badge> = {
 };
 
 export const WithText: StoryObj<typeof Badge> = {
-  render: ({ children, ...rest }) => (
+  // biome-ignore lint/suspicious/noExplicitAny: too many options
+  render: ({ children, ...rest }: { [x: string]: any }) => (
     <Badge {...rest}>{children || '99+'}</Badge>
   ),
 };

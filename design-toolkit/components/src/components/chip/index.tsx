@@ -157,6 +157,40 @@ DeletableChip.displayName = 'Chip.Deletable';
 
 const { list, chip } = ChipStyles();
 
+/**
+ * Chip - A compact element for displaying tags, filters, or selectable items
+ *
+ * Provides flexible chip functionality supporting both individual chips and chip lists.
+ * Includes variants for deletable and selectable chips with keyboard navigation and
+ * accessibility features. Perfect for tags, filters, or multi-selection interfaces.
+ *
+ * @example
+ * // Basic chip
+ * <Chip>JavaScript</Chip>
+ *
+ * @example
+ * // Chip list with multiple items
+ * <Chip.List>
+ *   <Chip>React</Chip>
+ *   <Chip>TypeScript</Chip>
+ *   <Chip>Node.js</Chip>
+ * </Chip.List>
+ *
+ * @example
+ * // Deletable chips
+ * <Chip.List onRemove={() => console.log('removed')}>
+ *   <Chip.Deletable>
+ *     Removable Tag
+ *   </Chip.Deletable>
+ * </Chip.List>
+ *
+ * @example
+ * // Selectable chips
+ * <Chip.List selectionMode="multiple">
+ *   <Chip.Selectable id="option1">Option 1</Chip.Selectable>
+ *   <Chip.Selectable id="option2">Option 2</Chip.Selectable>
+ * </Chip.List>
+ */
 export function Chip({ ref, ...props }: ChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
 
