@@ -17,4 +17,3 @@
 // biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
 export { setClockInterval, setClockTimeout } from './timers';
-export { callNextSecond, remainder } from './timers/utils';
