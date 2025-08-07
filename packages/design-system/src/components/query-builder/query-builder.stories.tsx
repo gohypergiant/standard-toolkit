@@ -10,19 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
-import type { PressEvent } from '@react-types/shared';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import type { RuleGroupType } from 'react-querybuilder';
 import { Button } from '../button';
-import type { CheckboxRenderProps } from '../checkbox/types';
 import { Icon } from '../icon';
-import type { SelectRenderProps } from '../select/types';
 import { QueryBuilder } from './';
 import { QueryBuilderContext } from './constants';
 import { fields } from './dataset-sample';
-import type { ActionProps, QueryBuilderProps } from './types';
 import { pressToMouseEvent } from './utils';
+import type { Story, StoryDefault } from '@ladle/react';
+import type { PressEvent } from '@react-types/shared';
+import type { RuleGroupType } from 'react-querybuilder';
+import type { CheckboxRenderProps } from '../checkbox/types';
+import type { SelectRenderProps } from '../select/types';
+import type { ActionProps, QueryBuilderProps } from './types';
 
 export default {
   title: 'Components / Query Builder',

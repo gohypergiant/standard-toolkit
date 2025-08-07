@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Preview } from '@storybook/react';
 import { themes } from '@storybook/theming';
+import type { Preview } from '@storybook/react';
 import '../src/index.css';
 import { Docs } from './docs';
 

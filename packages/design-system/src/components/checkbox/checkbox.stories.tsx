@@ -12,9 +12,9 @@
 
 import {
   type ArgTypes,
+  action,
   type Story,
   type StoryDefault,
-  action,
 } from '@ladle/react';
 import { AriaLabel, AriaText } from '../aria';
 import { Icon } from '../icon';

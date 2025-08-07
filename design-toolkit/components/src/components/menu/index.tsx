@@ -13,7 +13,6 @@
 'use client';
 
 import 'client-only';
-import { isSlottedContextValue } from '@/lib/utils';
 import ChevronRight from '@accelint/icons/chevron-right';
 import { createContext, useContext } from 'react';
 import {
@@ -27,13 +26,14 @@ import {
   SubmenuTrigger as AriaSubmenuTrigger,
   Text as AriaText,
   type ContextValue,
+  composeRenderProps,
   DEFAULT_SLOT,
   KeyboardContext,
   Popover,
   Provider,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { isSlottedContextValue } from '@/lib/utils';
 import { Icon, IconContext } from '../icon';
 import { MenuStyles, MenuStylesDefaults } from './styles';
 import type {

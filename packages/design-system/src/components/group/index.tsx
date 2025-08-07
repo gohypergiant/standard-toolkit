@@ -12,19 +12,19 @@
 
 import {
   Children,
-  type ForwardedRef,
-  type ReactElement,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type ReactElement,
   useMemo,
 } from 'react';
-import type { ContextValue } from 'react-aria-components';
 import { useContextProps } from '../../hooks/use-context-props';
 import { useTheme } from '../../hooks/use-theme';
 import { inlineVars } from '../../utils/css';
 import { mergeClassNames } from '../../utils/props';
 import { MergeProvider } from '../merge-provider';
 import { groupClassNames, groupStateVars } from './group.css';
+import type { ContextValue } from 'react-aria-components';
 import type { GroupProps } from './types';
 
 export const GroupContext =

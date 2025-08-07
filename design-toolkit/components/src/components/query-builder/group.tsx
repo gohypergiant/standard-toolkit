@@ -13,7 +13,6 @@
 'use client';
 
 import 'client-only';
-import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import {
   type RuleGroupProps,
@@ -21,6 +20,7 @@ import {
   useRuleGroup,
   useStopEventPropagation,
 } from 'react-querybuilder';
+import { cn } from '@/lib/utils';
 
 export function RuleGroup(props: RuleGroupProps) {
   const group = useRuleGroup(props);

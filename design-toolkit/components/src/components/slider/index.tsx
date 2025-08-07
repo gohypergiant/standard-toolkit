@@ -11,7 +11,6 @@
  */
 
 'use client';
-import { cn } from '@/lib/utils';
 import 'client-only';
 import { cva } from 'class-variance-authority';
 import { useContext } from 'react';
@@ -28,6 +27,7 @@ import {
   Text,
   useSlottedContext,
 } from 'react-aria-components';
+import { cn } from '@/lib/utils';
 import { Tooltip } from '../tooltip';
 
 const sliderVariants = cva('grid gap-s', {

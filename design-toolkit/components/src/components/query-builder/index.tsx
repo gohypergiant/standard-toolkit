@@ -13,7 +13,6 @@
 
 import 'client-only';
 import { Delete, Duplicate, LockFill } from '@accelint/icons';
-import type { PressEvent } from '@react-types/shared';
 import { createContext, useCallback, useMemo } from 'react';
 import {
   type ActionProps,
@@ -34,10 +33,11 @@ import {
   RuleGroupHeaderComponent,
 } from './group';
 import { Rule } from './rule';
-import type { QueryBuilderContextType, QueryBuilderProps } from './types';
 import { getValidationResult, pressToMouseEvent } from './utils';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
+import type { PressEvent } from '@react-types/shared';
+import type { QueryBuilderContextType, QueryBuilderProps } from './types';
 
 const operatorDescriptions: Record<string, string> = {
   AND: 'All rules below must be true for a match',

@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 import { DrawerDefaults, type DrawerState } from './types';
-
 import type { Key } from '@react-types/shared';
 
 export type DrawerAction =

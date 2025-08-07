@@ -13,21 +13,21 @@
 'use client';
 import 'client-only';
 import Calendar from '@accelint/icons/calendar';
-import type { DateValue } from '@internationalized/date';
-import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,
   type DateSegmentProps as AriaDateSegmentProps,
   Text as AriaText,
+  composeRenderProps,
   DateSegment,
   type DateSegmentRenderProps,
   FieldError,
-  composeRenderProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { DateFieldStyles } from './styles';
+import type { DateValue } from '@internationalized/date';
+import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import type { DateFieldProps, DateInputProps } from './types';
 
 const {
@@ -89,7 +89,7 @@ const FormattedDateSegment = ({
   ...props
 }: FormattedDateSegmentProps) => {
   if (segment.type === 'literal' && segment.text !== ':') {
-    return <></>;
+    return null;
   }
 
   return (

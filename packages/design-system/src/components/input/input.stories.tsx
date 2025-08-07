@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle';
 import { Input } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { InputProps } from './types';
 
 export default {

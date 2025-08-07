@@ -10,21 +10,20 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { CancelFill, Loop, Search } from '@accelint/icons';
 import { createContext } from 'react';
 import {
   SearchField as AriaSearchField,
   Button,
   type ContextValue,
-  Input,
   composeRenderProps,
+  Input,
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { SearchFieldStyles, SearchFieldStylesDefaults } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { SearchFieldProps } from './types';
 
 const { field, input, search, loading, clear } = SearchFieldStyles();

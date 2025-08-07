@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 import { Cancel, ChevronLeft, Placeholder } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { useCallback, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NavigationStack } from '../navigation-stack';
 import { Drawer } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 import type { DrawerProps } from './types';
 
 const meta: Meta<DrawerProps> = {

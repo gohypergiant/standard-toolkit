@@ -16,10 +16,10 @@ import {
   ChevronUp,
   Placeholder,
 } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
-import type { CSSProperties } from 'react';
 import { Icon } from '../icon';
 import { Drawer } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
+import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
 
 const meta: Meta<DrawerLayoutProps> = {

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -34,9 +34,7 @@
             "syntax": "shorthand"
           }
         },
-        "noParameterAssign": {
-          "level": "error"
-        },
+        "noParameterAssign": "error",
         "useNamingConvention": {
           "level": "error",
           "options": {
@@ -57,9 +55,7 @@
         "noArrayIndexKey": "warn",
         "noEmptyBlockStatements": "error",
         "useAwait": "error",
-        "noExplicitAny": "warn"
-      },
-      "nursery": {
+        "noExplicitAny": "warn",
         "noDuplicateElseIf": "error"
       }
     }

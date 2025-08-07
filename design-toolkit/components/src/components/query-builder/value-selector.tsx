@@ -13,15 +13,15 @@
 'use client';
 
 import 'client-only';
-import type { Key } from '@react-types/shared';
 import { useCallback, useMemo } from 'react';
 import {
-  type ValueSelectorProps,
   isOptionGroupArray,
   useValueSelector,
+  type ValueSelectorProps,
 } from 'react-querybuilder';
 import { ComboBox } from '../combobox';
 import { Options } from '../options';
+import type { Key } from '@react-types/shared';
 
 export function ValueSelector(props: ValueSelectorProps) {
   const {
@@ -31,6 +31,7 @@ export function ValueSelector(props: ValueSelectorProps) {
     options: optionsProp,
     multiple,
     title,
+    // biome-ignore lint/correctness/noUnusedVariables: should we ignore rest siblings? https://biomejs.dev/linter/rules/no-unused-variables/#ignorerestsiblings
     validation,
     value,
     ...rest

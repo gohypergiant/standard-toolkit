@@ -61,7 +61,7 @@ export function create<Functions extends Actions>(
     emitter.emit(id, { id, ok, error });
   }
 
-  async function run<
+  function run<
     FunctionName extends keyof Functions,
     FunctionCall extends Functions[FunctionName],
   >(

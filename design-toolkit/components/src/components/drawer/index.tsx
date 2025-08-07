@@ -11,7 +11,7 @@
  */
 'use client';
 import 'client-only';
-import { PressResponder, Pressable } from '@react-aria/interactions';
+import { Pressable, PressResponder } from '@react-aria/interactions';
 import { useCallback, useEffect } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';

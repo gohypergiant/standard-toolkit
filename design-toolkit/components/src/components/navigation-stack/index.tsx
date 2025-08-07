@@ -12,6 +12,7 @@
 
 'use client';
 import 'client-only';
+import { PressResponder } from '@react-aria/interactions';
 import {
   createContext,
   useCallback,
@@ -19,8 +20,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-
-import { PressResponder } from '@react-aria/interactions';
 import { Pressable } from 'react-aria-components';
 import type {
   NavigationStackContextValue,

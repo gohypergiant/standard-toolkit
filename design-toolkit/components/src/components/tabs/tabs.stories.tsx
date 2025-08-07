@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { Add, Check, Group } from '@accelint/icons';
 import { Icon } from '@/components/icon';
 import { Tabs } from '@/components/tabs/index';
-import { Add, Check, Group } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**

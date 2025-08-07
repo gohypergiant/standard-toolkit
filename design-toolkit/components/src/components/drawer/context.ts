@@ -17,8 +17,8 @@ import {
   useState,
 } from 'react';
 import {
-  type DrawerAction,
   createDefaultDrawerState,
+  type DrawerAction,
   drawerStateReducer,
 } from './state';
 import {
@@ -28,7 +28,6 @@ import {
   type DrawersContextValue,
   type OnOpenChangeCallback,
 } from './types';
-
 import type { Key } from '@react-types/shared';
 
 const DrawersContext = createContext<DrawersContextValue | null>(null);

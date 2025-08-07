@@ -18,24 +18,17 @@ import { bodies } from '../../styles/typography.css';
 import { inlineVars } from '../../utils/css';
 import { mergeClassNames } from '../../utils/props';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { CheckboxContext } from '../checkbox';
-import type { CheckboxProps } from '../checkbox/types';
 import { InputContext } from '../input';
-import type { InputProps } from '../input/types';
 import { RadioGroupContext } from '../radio';
-import type { RadioGroupProps } from '../radio/types';
 import { SelectContext } from '../select';
-import type { SelectProps } from '../select/types';
 import { SwitchContext } from '../switch';
-import type { SwitchProps } from '../switch/types';
 import { TextAreaContext } from '../textarea';
-import type { TextAreaProps } from '../textarea/types';
 import { ActionElement } from './action-element';
 import {
-  QueryBuilderContext,
   defaultOrientation,
   defaultSize,
+  QueryBuilderContext,
 } from './constants';
 import {
   RuleGroup,
@@ -48,13 +41,20 @@ import {
   queryBuilderStateVars,
 } from './query-builder.css';
 import { Rule } from './rule';
+import { defaultValueEditors, ValueEditor } from './value-editor';
+import { ValueSelector } from './value-selector';
+import type { ButtonProps } from '../button/types';
+import type { CheckboxProps } from '../checkbox/types';
+import type { InputProps } from '../input/types';
+import type { RadioGroupProps } from '../radio/types';
+import type { SelectProps } from '../select/types';
+import type { SwitchProps } from '../switch/types';
+import type { TextAreaProps } from '../textarea/types';
 import type {
   QueryBuilderContextValue,
   QueryBuilderMapping,
   QueryBuilderProps,
 } from './types';
-import { ValueEditor, defaultValueEditors } from './value-editor';
-import { ValueSelector } from './value-selector';
 
 const defaultMapping: QueryBuilderMapping = {
   button: {

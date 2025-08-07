@@ -9,18 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
 import { createContext } from 'react';
 import 'client-only';
-import { containsExactChildren } from '@/lib/react';
 import {
   Tooltip as AriaTooltip,
   TooltipTrigger as AriaTooltipTrigger,
   type ContextValue,
-  Focusable,
   composeRenderProps,
+  Focusable,
   useContextProps,
 } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
 import { TooltipStyles } from './styles';
 import type {
   TooltipBodyProps,

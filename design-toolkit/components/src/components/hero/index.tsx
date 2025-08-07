@@ -12,7 +12,6 @@
 'use client';
 
 import 'client-only';
-import { containsExactChildren } from '@/lib/react';
 import { createContext } from 'react';
 import {
   type ContextValue,
@@ -24,6 +23,7 @@ import {
   TextContext,
   useContextProps,
 } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
 import { Icon, IconContext } from '../icon';
 import { HeroStyles } from './styles';
 import type { HeroProps } from './types';

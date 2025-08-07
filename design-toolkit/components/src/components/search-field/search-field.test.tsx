@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { SearchField } from '@/components/search-field/index';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { SearchField } from '@/components/search-field/index';
 import type { SearchFieldProps } from './types';
 
 function setup({
