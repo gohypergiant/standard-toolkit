@@ -249,6 +249,29 @@ export type { RangeSliderProps, SliderProps } from './components/slider';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
+export { Table } from './components/table';
+export {
+  TableCellStylesDefaults,
+  TableHeaderCellStylesDefaults,
+  cellStyles,
+  headerCellStyles,
+  rowStyles,
+  tableBodyStyles,
+  tableHeaderStyles,
+} from './components/table/styles';
+export { TableBody } from './components/table/table-body';
+export { TableCell } from './components/table/table-cell';
+export { HeaderCell } from './components/table/table-header-cell';
+export { TableHeader } from './components/table/table-header';
+export { TableRow } from './components/table/table-row';
+export type {
+  TableBodyProps,
+  TableCellProps,
+  TableHeaderCellProps,
+  TableHeaderProps,
+  TableProps,
+  TableRowProps,
+} from './components/table/types';
 export { Tabs } from './components/tabs';
 export type {
   TabListProps,
