@@ -17,14 +17,14 @@ export type BroadcastConfig = {
 };
 
 /** Listener object type. */
-export type Listener<T = any> = {
-  callback: (data: Payload<T>) => void;
+export type Listener<P extends Payload = Payload> = {
+  callback: (data: P) => void;
   once?: boolean;
   id: number;
 };
 
 /** Listener callback payload type. */
-export type Payload<T = any> = {
-  type: string;
-  payload: T;
+export type Payload<T extends string = string, P = unknown> = {
+  type: T;
+  payload: P;
 };
