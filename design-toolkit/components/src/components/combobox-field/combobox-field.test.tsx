@@ -14,7 +14,8 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Options } from '../options';
 import type { OptionsDataItem } from '../options/types';
-import { ComboBox, type ComboBoxProps } from './';
+import { ComboBoxField } from './';
+import type { ComboBoxFieldProps } from './types';
 
 function setup({
   children = (
@@ -34,8 +35,8 @@ function setup({
     </>
   ),
   ...rest
-}: Partial<ComboBoxProps<OptionsDataItem>> = {}) {
-  render(<ComboBox {...rest}>{children}</ComboBox>);
+}: Partial<ComboBoxFieldProps<OptionsDataItem>> = {}) {
+  render(<ComboBoxField {...rest}>{children}</ComboBoxField>);
 
   return {
     ...rest,
@@ -43,7 +44,7 @@ function setup({
   };
 }
 
-describe('Combobox', () => {
+describe('ComboBoxField', () => {
   it('should render', () => {
     setup();
 

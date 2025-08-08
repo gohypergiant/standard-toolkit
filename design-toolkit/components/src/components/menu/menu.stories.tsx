@@ -13,9 +13,9 @@
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactNode } from 'react';
-import { Keyboard } from 'react-aria-components';
+import { type ReactNode, useRef, useState } from 'react';
 import { Button } from '../button';
+import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
 import { Menu } from './';
 import type { MenuItemProps } from './types';
@@ -48,6 +48,7 @@ type MenuItem = {
   prefixIcon?: ReactNode;
   children?: MenuItem[];
   isDisabled?: boolean;
+  hotkey?: string;
   color?: MenuItemProps['color'];
 };
 
@@ -70,6 +71,7 @@ const menuItems: MenuItem[] = [
         name: 'Gray catbird',
         description: 'Dumetella carolinensis',
         isDisabled: true,
+        hotkey: '⌘V',
       },
       {
         id: 4,
@@ -120,7 +122,7 @@ export const Basic: StoryObj<typeof Menu> = {
             <Placeholder />
           </Icon>
           <Menu.Item.Label>Songbirds</Menu.Item.Label>
-          <Keyboard>⌘A</Keyboard>
+          <Hotkey variant='flat'>⌘A</Hotkey>
         </Menu.Item>
         <Menu.Separator />
         <Menu.Submenu>
@@ -154,7 +156,7 @@ export const Basic: StoryObj<typeof Menu> = {
             </Icon>
             <Menu.Item.Label>Mallard</Menu.Item.Label>
             <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
-            <Keyboard>⌘V</Keyboard>
+            <Hotkey variant='flat'>⌘V</Hotkey>
           </Menu.Item>
           <Menu.Item>
             <Icon>
@@ -171,7 +173,7 @@ export const Basic: StoryObj<typeof Menu> = {
             <Menu.Item.Description>
               Dumetella carolinensis
             </Menu.Item.Description>
-            <Keyboard>⌘X</Keyboard>
+            <Hotkey variant='flat'>⌘X</Hotkey>
           </Menu.Item>
         </Menu.Section>
       </Menu>
@@ -204,6 +206,7 @@ export const Dynamic: StoryObj<typeof Menu> = {
                       {item.description}
                     </Menu.Item.Description>
                   )}
+                  {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
                 </Menu.Item>
                 <Menu items={item.children}>{(item) => render(item)}</Menu>
               </Menu.Submenu>
@@ -222,10 +225,88 @@ export const Dynamic: StoryObj<typeof Menu> = {
                   {item.description}
                 </Menu.Item.Description>
               )}
+              {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
             </Menu.Item>
           );
         }}
       </Menu>
     </Menu.Trigger>
   ),
+};
+
+export const ContextMenu: StoryObj<typeof Menu> = {
+  render: () => {
+    const [menuPosition, setMenuPosition] = useState<{
+      x: number;
+      y: number;
+    } | null>(null);
+    const menuPositionRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div
+        className='fg-default-light m-xl flex h-dvh w-dvh items-center justify-center border border-b-default-dark border-dotted bg-surface-raised'
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setMenuPosition({ x: e.clientX, y: e.clientY });
+        }}
+      >
+        right-click for context menu
+        <div
+          ref={menuPositionRef}
+          style={{
+            position: 'fixed',
+            top: menuPosition?.y,
+            left: menuPosition?.x,
+          }}
+          data-pressed={!!menuPosition || undefined}
+        >
+          <Menu<MenuItem>
+            popoverProps={{
+              placement: 'bottom left',
+              offset: 0,
+              isOpen: !!menuPosition,
+              triggerRef: menuPositionRef,
+              onOpenChange: (isOpen) => {
+                if (!isOpen) {
+                  setMenuPosition(null);
+                }
+              },
+            }}
+            onClose={() => setMenuPosition(null)}
+            items={menuItems}
+          >
+            {function render(item) {
+              if (item.children) {
+                return (
+                  <Menu.Submenu>
+                    <Menu.Item
+                      key={item.id}
+                      isDisabled={item.isDisabled}
+                      color={item.color}
+                    >
+                      <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                      {item.hotkey && (
+                        <Hotkey variant='flat'>{item.hotkey}</Hotkey>
+                      )}
+                    </Menu.Item>
+                    <Menu items={item.children}>{(item) => render(item)}</Menu>
+                  </Menu.Submenu>
+                );
+              }
+              return (
+                <Menu.Item
+                  key={item.id}
+                  isDisabled={item.isDisabled}
+                  color={item.color}
+                >
+                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                  {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
+                </Menu.Item>
+              );
+            }}
+          </Menu>
+        </div>
+      </div>
+    );
+  },
 };

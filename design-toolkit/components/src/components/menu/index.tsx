@@ -53,7 +53,8 @@ const {
   more,
   sectionHeader,
   separator,
-  keyboard,
+  hotkey,
+  popover,
 } = MenuStyles();
 
 export const MenuContext =
@@ -131,7 +132,7 @@ function MenuItem(props: MenuItemProps) {
           values={[
             [
               KeyboardContext,
-              { className: keyboard({ className: classNames?.keyboard }) },
+              { className: hotkey({ className: classNames?.hotkey }) },
             ],
             [
               IconContext,
@@ -172,27 +173,24 @@ export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
 
   const {
     children,
-    className,
+    classNames,
     selectionMode = 'single',
-    offset = -4,
-    placement,
-    isNonModal,
-    containerPadding,
     variant = MenuStylesDefaults.variant,
+    popoverProps,
     ...rest
   } = props;
 
   return (
     <Popover
-      offset={offset}
-      placement={placement}
-      isNonModal={isNonModal}
-      containerPadding={containerPadding}
+      {...popoverProps}
+      className={composeRenderProps(classNames?.popover, (className) =>
+        popover({ className }),
+      )}
     >
       <MenuContext.Provider value={{ variant }}>
         <AriaMenu
           ref={ref}
-          className={composeRenderProps(className, (className) =>
+          className={composeRenderProps(classNames?.menu, (className) =>
             menu({ className, variant }),
           )}
           selectionMode={selectionMode}

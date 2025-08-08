@@ -20,7 +20,7 @@ import {
   isOptionGroupArray,
   useValueSelector,
 } from 'react-querybuilder';
-import { ComboBox } from '../combobox';
+import { ComboBoxField } from '../combobox-field';
 import { Options } from '../options';
 
 export function ValueSelector(props: ValueSelectorProps) {
@@ -77,7 +77,7 @@ export function ValueSelector(props: ValueSelectorProps) {
   );
 
   return (
-    <ComboBox
+    <ComboBoxField
       size='small'
       isDisabled={disabled}
       {...rest}
@@ -86,6 +86,6 @@ export function ValueSelector(props: ValueSelectorProps) {
       onSelectionChange={handleSelectionChange}
     >
       {options}
-    </ComboBox>
+    </ComboBoxField>
   );
 }

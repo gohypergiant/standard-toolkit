@@ -86,3 +86,5 @@ export { lookup } from './utility/lookup';
 export { noop } from './utility/noop';
 export { once } from './utility/once';
 export { tap } from './utility/tap';
+export { isUUID, uuid } from './utility/uuid';
+export type { UniqueId } from './utility/uuid';

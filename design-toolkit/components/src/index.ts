@@ -107,8 +107,12 @@ export type {
 export { ColorPicker } from './components/color-picker';
 export { ColorPickerStyles } from './components/color-picker/styles';
 export type { ColorPickerProps } from './components/color-picker/types';
-export { ComboBox } from './components/combobox';
-export type { ComboBoxProps } from './components/combobox';
+export {
+  ComboBoxField,
+  ComboBoxFieldContext,
+} from './components/combobox-field';
+export { ComboBoxStyles } from './components/combobox-field/styles';
+export type { ComboBoxFieldProps } from './components/combobox-field/types';
 export { DateField } from './components/date-field';
 export {
   DateFieldStyles,
@@ -164,6 +168,9 @@ export type {
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
 export type { HeroProps } from './components/hero/types';
+export { Hotkey, HotkeyContext, HotkeySet } from './components/hotkey';
+export { HotkeyStyles, HotkeyStylesDefaults } from './components/hotkey/styles';
+export type { HotkeyProps, HotkeySetProps } from './components/hotkey/types';
 export { Icon, IconContext } from './components/icon';
 export { IconStyles } from './components/icon/styles';
 export type { IconProps } from './components/icon/types';
@@ -185,13 +192,6 @@ export type {
   SeparatorProps,
   SubmenuTriggerProps,
 } from './components/menu/types';
-export { NavigationStack } from './components/navigation-stack';
-export type {
-  NavigationStackContextValue,
-  NavigationStackNavigateProps,
-  NavigationStackProps,
-  NavigationStackViewProps,
-} from './components/navigation-stack/types';
 export { Options, OptionsContext } from './components/options';
 export { OptionsStyles } from './components/options/styles';
 export type {
@@ -295,6 +295,17 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
+export { ViewStack, ViewStackEventTypes } from './components/view-stack';
+export type {
+  ViewStackBackEvent,
+  ViewStackClearEvent,
+  ViewStackContextValue,
+  ViewStackProps,
+  ViewStackPushEvent,
+  ViewStackResetEvent,
+  ViewStackTriggerProps,
+  ViewStackViewProps,
+} from './components/view-stack/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   ChildrenRenderProps,

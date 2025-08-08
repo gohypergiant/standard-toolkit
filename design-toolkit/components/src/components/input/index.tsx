@@ -87,9 +87,9 @@ export function Input({ ref, ...props }: InputProps) {
         autoSize,
         type,
         isClearable,
-        isEmpty,
       })}
       data-disabled={disabled || null}
+      data-empty={isEmpty || null}
       data-invalid={isInvalid || null}
       data-length={length}
       data-placeholder={(!!placeholder && isEmpty) || null}
@@ -103,14 +103,13 @@ export function Input({ ref, ...props }: InputProps) {
           autoSize,
           type,
           isClearable,
-          isEmpty,
         })}
       >
         <AriaInput
           {...rest}
           ref={ref}
           className={composeRenderProps(classNames?.input, (className) =>
-            input({ className, autoSize, type, isClearable, isEmpty }),
+            input({ className, autoSize, type, isClearable }),
           )}
           disabled={disabled}
           placeholder={placeholder}
@@ -135,7 +134,7 @@ export function Input({ ref, ...props }: InputProps) {
       {isClearable && (
         <Button
           className={composeRenderProps(classNames?.clear, (className) =>
-            clear({ className, autoSize, type, isClearable, isEmpty }),
+            clear({ className, autoSize, type, isClearable }),
           )}
           excludeFromTabOrder
           size='small'

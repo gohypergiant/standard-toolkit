@@ -1,0 +1,75 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ViewStackStories from './view-stack.stories';
+
+<Meta of={ViewStackStories}/>
+
+# ViewStack
+
+The ViewStack component allows you to manage a stack of views. Think of it as similar to the functionality of tabs, but the triggers can be anywhere, even programmatic. The ViewStack component provides a way to push and pop views from the stack as well as clear all or reset back to the original view.
+
+It is composed of the following components:
+
+- **ViewStack** - parent that encapsulates all the views and triggers
+- **ViewStack.View** - content view container
+- **ViewStack.Trigger** - fires a stack or view action
+
+The ViewStack has no inherent sense of style or layout. It simply displays the current view, if there is one. There's a limit of a single active view per stack, but stacks can also be nested to create more complex combinations of views.
+
+## Example usage
+```
+const ids = {
+  stack: uuid(),
+  a: uuid(),
+  b: uuid(),
+};
+
+<ViewStack id={ids.stack} defaultView={ids.a}>
+  <ViewStack.View id={ids.a}>
+    <ViewStack.Trigger for={ids.b}>
+      <Button>
+        Push View B
+      </Button>
+    </ViewStack.Trigger>
+    <h1>View A</h1>
+  </ViewStack.View>
+  <ViewStack.View id={ids.b}>
+    <ViewStack.Trigger for='back'>
+      <Button variant='icon'>
+        <Icon>
+          <ChevronLeft />
+        </Icon>
+      </Button>
+    </ViewStack.Trigger>
+    <h1>View B</h1>
+  </ViewStack.View>
+</ViewStack>
+```
+
+<Canvas of={ViewStackStories.Default} />
+
+## ViewStack.View
+
+The ViewStack.View is the content region that will be visible when that view's id is active. There's no rules around the DOM structure inside or outside of the ViewStack.View. This means the view can be as deeply nested as desired and/or can contain any content desired.
+
+## ViewStack.Trigger
+
+The ViewStack.Trigger is the React component to enable transitioning from one view to another. While the trigger can be placed anywhere in the application, there are a couple caveats to it's implementation that are necessary to understand its functionality.
+
+The most important prop for the ViewStack.Trigger is `for`. This dictates it's behavior when pressed. Here are the possible values and notes about each:
+
+- `'back'`: Can only be used when the trigger is inside a ViewStack. Will pop off the latest view from the stack. If the stack becomes empty, the stack resets to the `defaultView` if one was set.
+- `'clear'`: Can only be used when the trigger is inside a ViewStack. Will clear the stack of all views and will _not_ reset to the defaultView.
+- `'reset'`: Can only be used when the trigger is inside a ViewStack. Will clear the stack of all views and will reset to the `defaultView` if one was set.
+- A `UniqueId` (`id` should belong to a ViewStack.View). Can be anywhere in the application and will push that id to the stack of it's parent.
+- ``` `back:${UniqueId}` ``` (`id` should belong to a ViewStack): Can be anywhere in the application and will cause stack to follow `'back'` behavior.
+- ``` `clear:${UniqueId}` ``` (`id` should belong to a ViewStack): Can be anywhere in the application and will cause stack to follow `'clear'` behavior.
+- ``` `reset:${UniqueId}` ``` (`id` should belong to a ViewStack): Can be anywhere in the application and will cause stack to follow `'reset'` behavior.
+- `[any combination of the above]` (array of values): Each value with applicable rules as stated above. Each event will be fired in sequence in the order provided.
+
+## Implementation Notes
+To guarantee uniqueness of ids across an application, the ViewStack implements Tagged UUID strings. This is also validated and will throw an error if a non-UUID is passed in.
+
+Tagged (aka Branded) types: [https://github.com/sindresorhus/type-fest/blob/main/source/tagged.d.ts](https://github.com/sindresorhus/type-fest/blob/main/source/tagged.d.ts)
+
+`@accelint/core` provides the `UniqueId` type and `uuid` function that conforms to this type

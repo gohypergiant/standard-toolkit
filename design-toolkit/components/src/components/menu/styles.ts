@@ -30,12 +30,21 @@ export const MenuStyles = tv({
     ],
     label:
       'truncate [grid-area:label] group-not-has-[>_[slot=description]]/menu-item:row-span-full',
-    description:
-      'fg-default-dark group-hover/menu-item:fg-inverse-light group-focus/menu-item:fg-inverse-light group-disabled/menu-item:fg-disabled truncate text-body-xs [grid-area:description]',
+    description: [
+      '[grid-area:description]',
+      'fg-default-dark truncate text-body-xs',
+      'group-hover/menu-item:fg-inverse-light group-focus/menu-item:fg-inverse-light',
+      'group-disabled/menu-item:fg-disabled',
+    ],
     more: '[grid-area:action]',
     sectionHeader: 'fg-default-dark px-s py-xs text-header-xs',
     separator: 'mx-3 my-1 border border-static-light',
-    keyboard: '[grid-area:action]',
+    hotkey: [
+      '[grid-area:action]',
+      'group-hover/menu-item:fg-inverse-light group-focus/menu-item:fg-inverse-light',
+      'group-disabled/menu-item:fg-disabled',
+    ],
+    popover: '',
   },
   variants: {
     variant: {

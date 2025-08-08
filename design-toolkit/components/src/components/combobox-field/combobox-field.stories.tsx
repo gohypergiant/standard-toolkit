@@ -16,36 +16,35 @@ import type { ReactNode } from 'react';
 
 import { Icon } from '../icon';
 import { Options } from '../options';
-import { ComboBox } from './';
+import { ComboBoxField } from './';
 
-const meta: Meta<typeof ComboBox> = {
-  title: 'Components/ComboBox',
-  component: ComboBox,
+const meta: Meta<typeof ComboBoxField> = {
+  title: 'Components/ComboBoxField',
+  component: ComboBoxField,
   args: {
-    className: '',
     description: 'Helper text',
-    errorMessage: 'Error description',
-    isDisabled: false,
-    isInvalid: false,
-    isReadOnly: false,
-    isRequired: true,
+    errorMessage: '',
     label: 'Label',
-    placeholder: 'Placeholder',
+    inputProps: {
+      placeholder: 'Placeholder',
+    },
     size: 'medium',
-    menuTrigger: 'focus',
-    autoFocus: true,
     layoutOptions: {
       estimatedRowHeight: 46,
     },
+    isDisabled: false,
+    isInvalid: false,
+    isRequired: true,
   },
   argTypes: {
-    className: { type: 'string' },
-    size: { options: ['small', 'medium'], control: 'select' },
+    size: {
+      control: 'select',
+      options: ['medium', 'small'],
+    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof ComboBox>;
 
 interface CustomOptionsItem {
   id: number | string;
@@ -143,9 +142,9 @@ const itemsWithSections: CustomOptionsItem[] = [
   },
 ];
 
-export const Default: Story = {
+export const Default: StoryObj<typeof ComboBoxField> = {
   render: ({ children, ...args }) => (
-    <ComboBox<CustomOptionsItem> {...args} defaultItems={items}>
+    <ComboBoxField<CustomOptionsItem> {...args} defaultItems={items}>
       {(item) => (
         <Options.Item
           key={item.id}
@@ -163,11 +162,11 @@ export const Default: Story = {
           </Options.Item.Content>
         </Options.Item>
       )}
-    </ComboBox>
+    </ComboBoxField>
   ),
 };
 
-export const WithDynamicSections: Story = {
+export const WithDynamicSections: StoryObj<typeof ComboBoxField> = {
   args: {
     ...Default.args,
     layoutOptions: {
@@ -175,7 +174,10 @@ export const WithDynamicSections: Story = {
     },
   },
   render: ({ children, ...args }) => (
-    <ComboBox<CustomOptionsItem> {...args} defaultItems={itemsWithSections}>
+    <ComboBoxField<CustomOptionsItem>
+      {...args}
+      defaultItems={itemsWithSections}
+    >
       {(section) => (
         <Options.Section header={section.name} items={section.children}>
           {(item) => (
@@ -193,11 +195,11 @@ export const WithDynamicSections: Story = {
           )}
         </Options.Section>
       )}
-    </ComboBox>
+    </ComboBoxField>
   ),
 };
 
-export const WithStaticSections: Story = {
+export const WithStaticSections: StoryObj<typeof ComboBoxField> = {
   args: {
     ...Default.args,
     layoutOptions: {
@@ -205,7 +207,7 @@ export const WithStaticSections: Story = {
     },
   },
   render: ({ children, ...args }) => (
-    <ComboBox {...args}>
+    <ComboBoxField {...args}>
       <Options.Section header='North American Birds'>
         <Options.Item textValue='Blue Jay'>
           <Icon>
@@ -246,7 +248,7 @@ export const WithStaticSections: Story = {
           <Options.Item.Label>Hornbill</Options.Item.Label>
         </Options.Item>
       </Options.Section>
-    </ComboBox>
+    </ComboBoxField>
   ),
 };
 
@@ -255,7 +257,7 @@ for (let i = 0; i < 5000; i++) {
   manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });
 }
 
-export const WithManyItems: Story = {
+export const WithManyItems: StoryObj<typeof ComboBoxField> = {
   args: {
     ...Default.args,
     layoutOptions: {
@@ -263,13 +265,13 @@ export const WithManyItems: Story = {
     },
   },
   render: ({ children, ...args }) => (
-    <ComboBox {...args}>
+    <ComboBoxField {...args}>
       {manyItems.map((item) => (
         <Options.Item key={item.id} textValue={item.name}>
           {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
           <Options.Item.Label>{item.name}</Options.Item.Label>
         </Options.Item>
       ))}
-    </ComboBox>
+    </ComboBoxField>
   ),
 };

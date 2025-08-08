@@ -13,7 +13,9 @@
 import { tv } from '@/lib/utils';
 
 export const InputStylesDefaults = {
+  autoSize: false,
   type: 'text',
+  isClearable: false,
 } as const;
 
 export const InputStyles = tv({
@@ -37,6 +39,8 @@ export const InputStyles = tv({
       'enabled:fg-interactive enabled:bg-transparent',
       'enabled:focus:fg-interactive-hover enabled:focus:bg-transparent',
       'enabled:hover:fg-interactive-hover enabled:hover:bg-transparent',
+      'group-empty/input:invisible',
+      'group-not-empty/input:group-not-focus-within/input:invisible',
     ],
   },
   variants: {
@@ -77,14 +81,6 @@ export const InputStyles = tv({
       },
       true: {
         container: '[--room:20px]',
-      },
-    },
-    isEmpty: {
-      false: {
-        clear: 'group-not-focus-within/input:hidden',
-      },
-      true: {
-        clear: 'hidden',
       },
     },
   },

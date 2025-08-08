@@ -20,17 +20,21 @@ import type {
   SeparatorProps as AriaSeparatorProps,
   SubmenuTriggerProps as AriaSubmenuTriggerProps,
   TextProps as AriaTextProps,
+  PopoverProps,
 } from 'react-aria-components';
 import type { IconProps } from '../icon/types';
 import type { MenuStyleVariants } from './styles';
 
-export type MenuProps<T> = AriaMenuProps<T> &
+export type MenuProps<T> = Omit<AriaMenuProps<T>, 'className'> &
   Pick<MenuStyleVariants, 'variant'> &
-  RefAttributes<HTMLDivElement> &
-  Pick<
-    AriaPopoverProps,
-    'placement' | 'offset' | 'containerPadding' | 'isNonModal'
-  >;
+  RefAttributes<HTMLDivElement> & {
+    classNames?: {
+      menu?: AriaMenuProps<T>['className'];
+      popover?: PopoverProps['className'];
+    };
+  } & {
+    popoverProps?: Omit<AriaPopoverProps, 'children' | 'className' | 'style'>;
+  };
 
 export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {
   color?: 'info' | 'serious';
@@ -39,7 +43,7 @@ export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {
     text?: AriaTextProps['className'];
     more?: IconProps['className'];
     icon?: IconProps['className'];
-    keyboard?: string;
+    hotkey?: string;
   };
 };
 
