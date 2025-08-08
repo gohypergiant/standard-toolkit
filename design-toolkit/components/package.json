@@ -8,9 +8,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -69,6 +67,7 @@
     "@fontsource/roboto-mono": "^5.2.6",
     "@internationalized/date": "^3.8.2",
     "@radix-ui/react-avatar": "^1.1.10",
+    "@react-aria/interactions": "^3.25.3",
     "@react-aria/ssr": "^3.9.10",
     "@react-aria/utils": "^3.30.0",
     "@react-stately/color": "^3.9.0",
@@ -76,7 +75,7 @@
     "@react-stately/utils": "^3.10.8",
     "@react-types/overlays": "^3.9.0",
     "@react-types/shared": "^3.31.0",
-    "@react-aria/interactions": "^3.25.3",
+    "@tanstack/react-table": "8.21.3",
     "class-variance-authority": "^0.7.1",
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
@@ -100,6 +99,7 @@
     "@fontsource/roboto-mono": "^5.2.6",
     "@internationalized/date": "^3.8.2",
     "@radix-ui/react-avatar": "^1.1.10",
+    "@react-aria/interactions": "^3.25.3",
     "@react-aria/ssr": "^3.9.10",
     "@react-aria/utils": "^3.30.0",
     "@react-stately/color": "^3.9.0",
@@ -118,12 +118,12 @@
     "@storybook/theming": "^8.6.14",
     "@tailwindcss/cli": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
+    "@tanstack/react-table": "8.21.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/lodash": "^4.17.20",
-    "@react-aria/interactions": "^3.25.3",
     "@types/node": "^24.1.0",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
@@ -155,5 +155,9 @@
   "author": "https://hypergiant.com",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@react-stately/data": "3.13.2",
+    "@tanstack/react-table": "8.21.3"
   }
 }
