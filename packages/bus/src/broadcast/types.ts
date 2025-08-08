@@ -24,7 +24,7 @@ export type Listener<T = any> = {
 };
 
 /** Listener callback payload type. */
-export type Payload<T> = {
+export type Payload<T = any> = {
   type: string;
   payload: T;
 };
