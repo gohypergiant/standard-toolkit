@@ -36,6 +36,42 @@ function SwitchProvider({ children, ...props }: ProviderProps<SwitchProps>) {
 }
 SwitchProvider.displayName = 'Switch.Provider';
 
+/**
+ * Switch - A toggle control for binary state changes
+ *
+ * Provides an accessible toggle switch component for enabling/disabling features
+ * or settings. Offers clear visual feedback for on/off states with smooth transitions
+ * and proper keyboard and screen reader support.
+ *
+ * @example
+ * // Basic switch
+ * <Switch>Enable notifications</Switch>
+ *
+ * @example
+ * // Controlled switch
+ * <Switch
+ *   isSelected={isEnabled}
+ *   onChange={setIsEnabled}
+ * >
+ *   Dark mode
+ * </Switch>
+ *
+ * @example
+ * // Switch with default state
+ * <Switch defaultSelected>
+ *   Auto-save documents
+ * </Switch>
+ *
+ * @example
+ * // Disabled switch
+ * <Switch isDisabled>
+ *   Premium feature (upgrade required)
+ * </Switch>
+ *
+ * @example
+ * // Switch without label (icon-only)
+ * <Switch aria-label="Toggle sidebar" />
+ */
 export function Switch({ ref, ...props }: SwitchProps) {
   [props, ref] = useContextProps(props, ref ?? null, SwitchContext);
 

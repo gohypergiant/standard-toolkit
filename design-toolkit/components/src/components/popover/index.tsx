@@ -33,6 +33,41 @@ import { PopoverStyles } from './styles';
 
 const { content, body, title, footer } = PopoverStyles();
 
+/**
+ * Popover - A floating content container positioned relative to a trigger element
+ *
+ * Provides accessible popover functionality with flexible positioning and content
+ * organization. Perfect for contextual information, menus, or supplementary content
+ * that appears on demand without interrupting the user's workflow.
+ *
+ * @example
+ * // Basic popover
+ * <Popover>
+ *   <Popover.Trigger>
+ *     <Button>Show Info</Button>
+ *   </Popover.Trigger>
+ *   <Popover.Content>
+ *     <Popover.Body>
+ *       <p>Additional information appears here</p>
+ *     </Popover.Body>
+ *   </Popover.Content>
+ * </Popover>
+ *
+ * @example
+ * // Popover with title and actions
+ * <Popover placement="top">
+ *   <Popover.Trigger>
+ *     <Button>Options</Button>
+ *   </Popover.Trigger>
+ *   <Popover.Content>
+ *     <Popover.Title>Quick Actions</Popover.Title>
+ *     <Popover.Body>
+ *       <Button>Edit</Button>
+ *       <Button>Delete</Button>
+ *     </Popover.Body>
+ *   </Popover.Content>
+ * </Popover>
+ */
 export const Popover = ({
   placement = 'bottom',
   children,
@@ -42,7 +77,7 @@ export const Popover = ({
 };
 Popover.displayName = 'Popover';
 
-export const PopoverTrigger = ({ children, ...props }: PopoverTriggerProps) => {
+const PopoverTrigger = ({ children, ...props }: PopoverTriggerProps) => {
   return <Pressable {...props}>{children}</Pressable>;
 };
 Popover.displayName = 'Popover.Trigger';

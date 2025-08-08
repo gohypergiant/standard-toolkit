@@ -28,6 +28,30 @@ function BadgeProvider({ children, ...props }: ProviderProps<BadgeProps>) {
 }
 BadgeProvider.displayName = 'Badge.Provider';
 
+/**
+ * Badge - A small status indicator component for labeling and notifications
+ *
+ * Displays contextual information like status, counts, or labels. Supports various
+ * visual variants and can be positioned relative to other elements. Useful for
+ * indicating notifications, statuses, or providing supplementary information.
+ *
+ * @example
+ * // Basic badge
+ * <Badge>New</Badge>
+ *
+ * @example
+ * // Status badges with different variants
+ * <Badge variant="success">Active</Badge>
+ * <Badge variant="warning">Pending</Badge>
+ * <Badge variant="serious">Error</Badge>
+ *
+ * @example
+ * // Positioned badge (typically used with other components)
+ * <div className="relative">
+ *   <Button>Messages</Button>
+ *   <Badge placement='top right' offset={-spacingS}>3</Badge>
+ * </div>
+ */
 export function Badge({ ref, ...props }: BadgeProps) {
   [props, ref] = useContextProps(props, ref ?? null, BadgeContext);
 

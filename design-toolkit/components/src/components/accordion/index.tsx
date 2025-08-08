@@ -167,6 +167,48 @@ function AccordionPanel({
 }
 AccordionPanel.displayName = 'Accordion.Panel';
 
+/**
+ * Accordion - A collapsible content component with expandable sections
+ *
+ * Provides an accessible accordion interface for organizing content into
+ * collapsible sections. Supports both compact and full variants with
+ * integrated controls for expanding/collapsing content areas.
+ *
+ * @example
+ * // Basic accordion
+ * <Accordion>
+ *   <Accordion.Header>
+ *     <Accordion.Trigger>Section Title</Accordion.Trigger>
+ *   </Accordion.Header>
+ *   <Accordion.Panel>Content goes here</Accordion.Panel>
+ * </Accordion>
+ *
+ * @example
+ * // Compact variant
+ * <Accordion variant="compact">
+ *   <Accordion.Header>
+ *     <Accordion.Trigger>Compact Section</Accordion.Trigger>
+ *   </Accordion.Header>
+ *   <Accordion.Panel>Compact content</Accordion.Panel>
+ * </Accordion>
+ *
+ * @example
+ * // Multiple accordions in a group
+ * <Accordion.Group>
+ *   <Accordion>
+ *     <Accordion.Header>
+ *       <Accordion.Trigger>First Section</Accordion.Trigger>
+ *     </Accordion.Header>
+ *     <Accordion.Panel>First content</Accordion.Panel>
+ *   </Accordion>
+ *   <Accordion>
+ *     <Accordion.Header>
+ *       <Accordion.Trigger>Second Section</Accordion.Trigger>
+ *     </Accordion.Header>
+ *     <Accordion.Panel>Second content</Accordion.Panel>
+ *   </Accordion>
+ * </Accordion.Group>
+ */
 export function Accordion({ ref, ...props }: AccordionProps) {
   [props, ref] = useContextProps(props, ref ?? null, AccordionContext);
 

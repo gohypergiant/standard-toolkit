@@ -45,6 +45,68 @@ function TextFieldProvider({
 }
 TextFieldProvider.displayName = 'TextField.Provider';
 
+/**
+ * TextField - A complete form field component with label, input, and validation
+ *
+ * Provides a comprehensive form field experience combining label, input, description,
+ * and error message components. Handles validation states and accessibility
+ * automatically while supporting extensive customization through styling props.
+ *
+ * @example
+ * // Basic text field with label and required validation
+ * <TextField label='Full Name' isRequired defaultValue='John Doe' />
+ *
+ * @example
+ * // Text field with placeholder and description
+ * <TextField
+ *   label='Email Address'
+ *   inputProps={{ placeholder: 'Enter your email address', type: 'email' }}
+ *   description='We will never share your email with third parties'
+ * />
+ *
+ * @example
+ * // Text field with error state
+ * <TextField
+ *   label='Username'
+ *   isInvalid
+ *   errorMessage='Username must be at least 3 characters long'
+ *   inputProps={{ placeholder: 'Enter username' }}
+ * />
+ *
+ * @example
+ * // Small size text field with clearable input
+ * <TextField
+ *   label='Search'
+ *   size='small'
+ *   inputProps={{
+ *     placeholder: 'Type to search...',
+ *     isClearable: true,
+ *     type: 'search'
+ *   }}
+ * />
+ *
+ * @example
+ * // Disabled text field
+ * <TextField
+ *   label='Status'
+ *   isDisabled
+ *   defaultValue='Inactive'
+ *   description='This field cannot be edited'
+ * />
+ *
+ * @example
+ * // Password field with validation
+ * <TextField
+ *   label='Password'
+ *   isRequired
+ *   inputProps={{
+ *     type: 'password',
+ *     placeholder: 'Enter a secure password',
+ *     minLength: 8
+ *   }}
+ *   description='Password must be at least 8 characters'
+ * />
+ */
 export function TextField({ ref, ...props }: TextFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, TextFieldContext);
 
