@@ -1,5 +1,13 @@
 # @accelint/converters
 
+## 0.3.2
+
+### Patch Changes
+
+- 83104ea: Refactored ViewStack to be event driven, allowing for triggers anywhere in the app
+- Updated dependencies [83104ea]
+  - @accelint/constants@0.1.5
+
 ## 0.3.1
 
 ### Patch Changes
