@@ -134,36 +134,17 @@ export type {
 } from './components/details-list/types';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
-export {
-  useDrawerContext,
-  useDrawersContext,
-  useDrawersState,
-} from './components/drawer/context';
-export { Drawer } from './components/drawer';
-export {
-  createDefaultDrawerState,
-  drawerStateReducer,
-} from './components/drawer/state';
-export type { DrawerAction } from './components/drawer/state';
+export { Drawer, DrawerEventTypes } from './components/drawer';
 export { DrawerMenuStyles, DrawerStyles } from './components/drawer/styles';
-export { DrawerDefaults } from './components/drawer/types';
 export type {
-  DrawerContainerProps,
-  DrawerContextValue,
+  DrawerCloseEvent,
   DrawerLayoutProps,
-  DrawerLayoutPush,
-  DrawerLayouts,
   DrawerMenuItemProps,
   DrawerMenuProps,
-  DrawerPanelProps,
-  DrawerPlacement,
+  DrawerOpenEvent,
   DrawerProps,
-  DrawerProviderProps,
-  DrawerSize,
-  DrawerState,
+  DrawerSelectEvent,
   DrawerTriggerProps,
-  DrawersContextValue,
-  OnOpenChangeCallback,
 } from './components/drawer/types';
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
@@ -272,7 +253,11 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
-export { ViewStack, ViewStackEventTypes } from './components/view-stack';
+export {
+  ViewStack,
+  ViewStackContext,
+  ViewStackEventTypes,
+} from './components/view-stack';
 export type {
   ViewStackBackEvent,
   ViewStackClearEvent,

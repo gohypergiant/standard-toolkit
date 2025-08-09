@@ -13,13 +13,30 @@
 
 import 'client-only';
 import { Broadcast, type Payload } from '@accelint/bus';
+import { type UniqueId, isUUID } from '@accelint/core';
 import { PressResponder, Pressable } from '@react-aria/interactions';
 import { useControlledState } from '@react-stately/utils';
-import { type ComponentPropsWithRef, useCallback, useEffect } from 'react';
-import { Button } from '../button';
+import {
+  type ComponentPropsWithRef,
+  useCallback,
+  useContext,
+  useEffect,
+} from 'react';
+import { composeRenderProps } from 'react-aria-components';
+import { ToggleButton } from '../button';
 import { Icon } from '../icon';
-import { ViewStack } from '../view-stack';
-import type { ViewStackViewProps } from '../view-stack/types';
+import {
+  ViewStack,
+  ViewStackContext,
+  ViewStackEventTypes,
+} from '../view-stack';
+import type {
+  ViewStackBackEvent,
+  ViewStackClearEvent,
+  ViewStackPushEvent,
+  ViewStackResetEvent,
+  ViewStackViewProps,
+} from '../view-stack/types';
 import { DrawerMenuStyles, DrawerStyles } from './styles';
 import type {
   DrawerCloseEvent,
@@ -28,7 +45,6 @@ import type {
   DrawerMenuProps,
   DrawerOpenEvent,
   DrawerProps,
-  DrawerToggleEvent,
   DrawerTriggerProps,
 } from './types';
 
@@ -41,8 +57,6 @@ const DrawerEventNamespace = 'Drawer';
 export const DrawerEventTypes = {
   close: `${DrawerEventNamespace}:close`,
   open: `${DrawerEventNamespace}:open`,
-  toggle: `${DrawerEventNamespace}:toggle`,
-  select: `${DrawerEventNamespace}:select`,
 } as const;
 
 function DrawerLayoutMain({
@@ -72,8 +86,47 @@ DrawerLayout.displayName = 'Drawer.Layout';
 DrawerLayout.Main = DrawerLayoutMain;
 
 function DrawerTrigger({ children, for: types }: DrawerTriggerProps) {
+  const { parent } = useContext(ViewStackContext);
+
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: TODO: refactor
+  function handlePress() {
+    for (const type of Array.isArray(types) ? types : [types]) {
+      if (isUUID(type)) {
+        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, {
+          view: type,
+        });
+      } else {
+        let [event, stack, view] = type.split(':') as [
+          'back' | 'clear' | 'close' | 'open' | 'reset',
+          UniqueId | undefined | null,
+          UniqueId | undefined | null,
+        ];
+
+        stack ??= parent;
+
+        if (!stack) {
+          continue;
+        }
+
+        if (event === 'back' || event === 'clear' || event === 'reset') {
+          bus.emit<
+            ViewStackBackEvent | ViewStackClearEvent | ViewStackResetEvent
+          >(ViewStackEventTypes[event], { stack });
+        }
+
+        if (event === 'close') {
+          bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack });
+        }
+
+        if (event === 'open' && view) {
+          bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, { view });
+        }
+      }
+    }
+  }
+
   return (
-    <PressResponder onPress={handleOnPress}>
+    <PressResponder onPress={handlePress}>
       <Pressable>{children}</Pressable>
     </PressResponder>
   );
@@ -84,21 +137,31 @@ function DrawerMenuItem({
   id,
   children,
   className,
+  views,
   ...rest
 }: DrawerMenuItemProps) {
+  const { parent, stack } = useContext(ViewStackContext);
+  const view = stack.at(-1);
+
+  if (!(parent && view)) {
+    return null;
+  }
+
   return (
-    <Button
-      {...rest}
-      variant='icon'
-      className={item({ className })}
-      aria-selected={isSelected}
-      aria-controls={`panel-${id}`}
-      id={`tab-${id}`}
-      data-selected={isSelected ? true : undefined}
-      onPress={handlePress}
-    >
-      <Icon>{children}</Icon>
-    </Button>
+    <DrawerTrigger for={[`clear:${parent}`, id]}>
+      <ToggleButton
+        {...rest}
+        className={composeRenderProps(className, (className) =>
+          item({ className }),
+        )}
+        variant='icon'
+        isSelected={id === view || views?.some((view) => id === view)}
+      >
+        {composeRenderProps(children, (children) => (
+          <Icon>{children}</Icon>
+        ))}
+      </ToggleButton>
+    </DrawerTrigger>
   );
 }
 DrawerMenuItem.displayName = 'Drawer.Menu.Item';
@@ -175,35 +238,28 @@ export function Drawer({
   const handleClose = useCallback(
     (data: Payload<DrawerCloseEvent>) => {
       if (id === data?.payload?.drawer) {
-        setIsOpen(false);
+        bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack: id });
       }
     },
-    [id, setIsOpen],
+    [id],
   );
 
   const handleOpen = useCallback(
     (data: Payload<DrawerOpenEvent>) => {
-      if (id === data?.payload?.drawer) {
-        setIsOpen(true);
+      if (id === data?.payload?.drawer && data?.payload?.view) {
+        bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack: id });
+        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, {
+          view: data?.payload?.view,
+        });
       }
     },
-    [id, setIsOpen],
-  );
-
-  const handleToggle = useCallback(
-    (data: Payload<DrawerToggleEvent>) => {
-      if (id === data?.payload?.drawer) {
-        setIsOpen(!isOpen);
-      }
-    },
-    [id, setIsOpen, isOpen],
+    [id],
   );
 
   useEffect(() => {
     const listeners = [
       bus.on(DrawerEventTypes.close, handleClose),
       bus.on(DrawerEventTypes.open, handleOpen),
-      bus.on(DrawerEventTypes.toggle, handleToggle),
     ];
 
     () => {
@@ -211,7 +267,7 @@ export function Drawer({
         off();
       }
     };
-  }, [handleClose, handleOpen, handleToggle]);
+  }, [handleClose, handleOpen]);
 
   return (
     <ViewStack

@@ -37,7 +37,8 @@ import type {
 
 const bus = Broadcast.getInstance();
 const ViewStackEventNamespace = 'ViewStack';
-const ViewStackContext = createContext<ViewStackContextValue>({
+
+export const ViewStackContext = createContext<ViewStackContextValue>({
   parent: null,
   stack: [],
   view: null,
@@ -62,19 +63,20 @@ function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
           view: type,
         });
       } else {
-        const [event, target] = type.split(':') as [
+        let [event, stack] = type.split(':') as [
           'back' | 'clear' | 'reset',
-          UniqueId | undefined,
+          UniqueId | undefined | null,
         ];
-        const stack = target ?? parent;
 
-        if (stack) {
-          bus.emit<
-            ViewStackBackEvent | ViewStackClearEvent | ViewStackResetEvent
-          >(`${ViewStackEventNamespace}:${event}`, {
-            stack,
-          });
+        stack ??= parent;
+
+        if (!stack) {
+          continue;
         }
+
+        bus.emit<
+          ViewStackBackEvent | ViewStackClearEvent | ViewStackResetEvent
+        >(ViewStackEventTypes[event], { stack });
       }
     }
   }

@@ -12,7 +12,7 @@
 import type { UniqueId } from '@accelint/core';
 import type { FocusableElement } from '@react-types/shared';
 import type { ComponentPropsWithRef, DOMAttributes, ReactElement } from 'react';
-import type { ButtonProps } from '../button/types';
+import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackProps } from '../view-stack/types';
 
 type Top = 'top';
@@ -135,7 +135,7 @@ export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
   position?: 'start' | 'center' | 'end';
 };
 
-export type DrawerMenuItemProps = Omit<ButtonProps, 'id'> & {
+export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
   id: UniqueId;
   /**
    * Pass an array of associated views if the tab should display as active
@@ -154,10 +154,6 @@ export type DrawerOpenEvent = {
   view: UniqueId;
 };
 
-export type DrawerToggleEvent = {
-  drawer: UniqueId;
-};
-
 export type DrawerSelectEvent = {
   view: UniqueId;
 };
@@ -168,10 +164,8 @@ type TargetedEvents =
   | `back:${UniqueId}`
   | `clear:${UniqueId}`
   | `close:${UniqueId}`
-  | `open:${UniqueId}`
-  | `reset:${UniqueId}`
-  | `select:${UniqueId}`
-  | `toggle:${UniqueId}`;
+  | `open:${UniqueId}:${UniqueId}` // Drawer id then Tab id
+  | `reset:${UniqueId}`;
 
 type ChainedEvents = (SimpleEvents | TargetedEvents)[];
 
