@@ -152,7 +152,7 @@ export const DrawerMenuStyles = tv({
           'group-placement-bottom/drawer:left-1/8 group-placement-bottom/drawer:translate-x-1/4',
         ],
       },
-      middle: {
+      center: {
         menu: [
           'group-placement-left/drawer:-translate-y-1/2 group-placement-left/drawer:top-1/2',
           'group-placement-right/drawer:-translate-y-1/2 group-placement-right/drawer:top-1/2',

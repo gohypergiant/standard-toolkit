@@ -10,143 +10,82 @@
  * governing permissions and limitations under the License.
  */
 'use client';
+
 import 'client-only';
+import { Broadcast, type Payload } from '@accelint/bus';
 import { PressResponder, Pressable } from '@react-aria/interactions';
-import { useCallback, useEffect } from 'react';
+import { useControlledState } from '@react-stately/utils';
+import { type ComponentPropsWithRef, useCallback, useEffect } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import {
-  DrawerContext,
-  DrawersContext,
-  useDrawerContext,
-  useDrawersContext,
-  useDrawersState,
-} from './context';
-import { createDefaultDrawerState } from './state';
+import { ViewStack } from '../view-stack';
+import type { ViewStackViewProps } from '../view-stack/types';
 import { DrawerMenuStyles, DrawerStyles } from './styles';
 import type {
-  DrawerContainerProps,
+  DrawerCloseEvent,
   DrawerLayoutProps,
   DrawerMenuItemProps,
   DrawerMenuProps,
-  DrawerPanelProps,
+  DrawerOpenEvent,
   DrawerProps,
-  DrawerProviderProps,
+  DrawerToggleEvent,
   DrawerTriggerProps,
 } from './types';
 
 const { layout, main, drawer, content, panel, header, footer, title } =
   DrawerStyles();
-
 const { menu, item } = DrawerMenuStyles();
+const bus = Broadcast.getInstance();
+const DrawerEventNamespace = 'Drawer';
 
-const DrawerProvider = ({ children, onStateChange }: DrawerProviderProps) => {
-  const drawerState = useDrawersState({
-    onStateChange,
-  });
+export const DrawerEventTypes = {
+  close: `${DrawerEventNamespace}:close`,
+  open: `${DrawerEventNamespace}:open`,
+  toggle: `${DrawerEventNamespace}:toggle`,
+  select: `${DrawerEventNamespace}:select`,
+} as const;
 
-  return (
-    <DrawersContext.Provider value={drawerState}>
-      {children}
-    </DrawersContext.Provider>
-  );
-};
+function DrawerLayoutMain({
+  className,
+  ...rest
+}: ComponentPropsWithRef<'main'>) {
+  return <main {...rest} className={main({ className })} />;
+}
+DrawerLayoutMain.displayName = 'Drawer.Layout.Main';
 
-const DrawerLayout = ({
-  children,
+function DrawerLayout({
   className,
   extend = 'left right',
   push,
-}: DrawerLayoutProps) => {
+  ...rest
+}: DrawerLayoutProps) {
   return (
     <div
+      {...rest}
       className={layout({ className })}
       data-extend={extend}
       data-push={push}
-    >
-      {children}
-    </div>
+    />
   );
-};
+}
 DrawerLayout.displayName = 'Drawer.Layout';
+DrawerLayout.Main = DrawerLayoutMain;
 
-export const Drawer = ({
-  id,
-  placement = 'left',
-  isOpen = false,
-  size = 'medium',
-  defaultSelectedMenuItemId,
-  className,
-  children,
-  onOpenChange,
-  onStateChange,
-  ...rest
-}: DrawerProps) => {
-  const { getDrawerState, registerDrawer } = useDrawersContext();
-  const currentState = getDrawerState(id);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: this should only run if these props change
-  useEffect(() => {
-    const initialState = createDefaultDrawerState({
-      id,
-      selectedMenuItemId: defaultSelectedMenuItemId,
-      isOpen,
-    });
-    registerDrawer(initialState, {
-      onOpenChange,
-      onStateChange,
-    });
-  }, [isOpen, size, placement]);
-
+function DrawerTrigger({ children, for: types }: DrawerTriggerProps) {
   return (
-    <DrawerContext.Provider value={{ state: currentState }}>
-      <div
-        {...rest}
-        className={drawer({ className })}
-        data-placement={placement}
-        data-drawer-id={id}
-        data-size={size}
-        data-open={currentState.isOpen || null}
-      >
-        {children}
-      </div>
-    </DrawerContext.Provider>
+    <PressResponder onPress={handleOnPress}>
+      <Pressable>{children}</Pressable>
+    </PressResponder>
   );
-};
+}
+DrawerTrigger.displayName = 'Drawer.Trigger';
 
-const DrawerMenu = ({
-  children,
-  className,
-  position = 'middle',
-  ...props
-}: DrawerMenuProps) => {
-  return (
-    <nav
-      className={menu({
-        position,
-        className,
-      })}
-      {...props}
-    >
-      {children}
-    </nav>
-  );
-};
-DrawerMenu.displayName = 'Drawer.Menu';
-
-const DrawerMenuItem = ({
+function DrawerMenuItem({
   id,
   children,
   className,
   ...rest
-}: DrawerMenuItemProps) => {
-  const { openDrawer, isSelectedMenuItem } = useDrawersContext();
-  const { state } = useDrawerContext();
-  const isSelected = isSelectedMenuItem(state.selectedMenuItemId, id);
-
-  const handlePress = () => {
-    openDrawer(state.id, id);
-  };
+}: DrawerMenuItemProps) {
   return (
     <Button
       {...rest}
@@ -161,102 +100,141 @@ const DrawerMenuItem = ({
       <Icon>{children}</Icon>
     </Button>
   );
-};
+}
 DrawerMenuItem.displayName = 'Drawer.Menu.Item';
 
-const DrawerPanel = ({
-  id,
-  children,
+function DrawerMenu({
   className,
-  ...props
-}: DrawerPanelProps) => {
-  const { state } = useDrawerContext();
-  const isSelected = state?.selectedMenuItemId === id;
-
-  if (!isSelected) {
-    return null;
-  }
-
+  position = 'center',
+  ...rest
+}: DrawerMenuProps) {
   return (
-    <div
-      {...props}
-      className={panel({ className })}
-      id={`panel-${id}`}
-      role='tabpanel'
-      aria-labelledby={`tab-${id}`}
-    >
-      {children}
-    </div>
-  );
-};
-DrawerPanel.displayName = 'Drawer.Panel';
-
-const DrawerTrigger = ({
-  for: drawerId,
-  children,
-  behavior = 'toggle',
-}: DrawerTriggerProps) => {
-  const { toggleDrawer, openDrawer, closeDrawer } = useDrawersContext();
-
-  const handleOnPress = useCallback(() => {
-    if (behavior === 'open') {
-      openDrawer(drawerId);
-    } else if (behavior === 'close') {
-      closeDrawer(drawerId);
-    } else {
-      toggleDrawer(drawerId);
-    }
-  }, [behavior, drawerId, openDrawer, closeDrawer, toggleDrawer]);
-
-  return (
-    <PressResponder onPress={handleOnPress}>
-      <Pressable>{children}</Pressable>
-    </PressResponder>
-  );
-};
-DrawerTrigger.displayName = 'Drawer.Trigger';
-
-const DrawerHeader = ({ children, className }: DrawerContainerProps) => {
-  return (
-    <div
-      className={header({
+    <nav
+      {...rest}
+      className={menu({
+        position,
         className,
       })}
-    >
-      {children}
-    </div>
+    />
   );
-};
+}
+DrawerMenu.displayName = 'Drawer.Menu';
+DrawerMenu.Item = DrawerMenuItem;
+
+function DrawerPanel({ className, ...rest }: ComponentPropsWithRef<'div'>) {
+  return <div {...rest} className={panel({ className })} role='tabpanel' />;
+}
+DrawerPanel.displayName = 'Drawer.Panel';
+
+function DrawerView(props: ViewStackViewProps) {
+  return <ViewStack.View {...props} />;
+}
+DrawerView.displayName = 'Drawer.View';
+
+function DrawerHeaderTitle({
+  className,
+  ...rest
+}: ComponentPropsWithRef<'div'>) {
+  return <div {...rest} className={title({ className })} />;
+}
+DrawerHeaderTitle.displayName = 'Drawer.Title';
+
+function DrawerHeader({ className, ...rest }: ComponentPropsWithRef<'header'>) {
+  return <header {...rest} className={header({ className })} />;
+}
 DrawerHeader.displayName = 'Drawer.Header';
+DrawerHeader.Title = DrawerHeaderTitle;
 
-const DrawerTitle = ({ children, className }: DrawerContainerProps) => {
-  return <div className={title({ className })}>{children}</div>;
-};
-DrawerHeader.displayName = 'Drawer.Title';
-
-const DrawerFooter = ({ children, className }: DrawerContainerProps) => {
-  return <div className={footer({ className })}>{children}</div>;
-};
-DrawerFooter.displayName = 'Drawer.Footer';
-
-const DrawerMain = ({ children, className }: DrawerContainerProps) => (
-  <main className={main({ className })}>{children}</main>
-);
-DrawerMain.displayName = 'Drawer.Main';
-
-const DrawerContent = ({ children, className }: DrawerContainerProps) => {
-  return <div className={content({ className })}>{children}</div>;
-};
+function DrawerContent({ className, ...rest }: ComponentPropsWithRef<'div'>) {
+  return <div {...rest} className={content({ className })} />;
+}
 DrawerContent.displayName = 'Drawer.Content';
 
+function DrawerFooter({ className, ...rest }: ComponentPropsWithRef<'footer'>) {
+  return <footer {...rest} className={footer({ className })} />;
+}
+DrawerFooter.displayName = 'Drawer.Footer';
+
+export function Drawer({
+  id,
+  className,
+  defaultIsOpen = false,
+  defaultView,
+  placement = 'left',
+  size = 'medium',
+  isOpen: isOpenProp,
+  onChange,
+  ...rest
+}: DrawerProps) {
+  const [isOpen, setIsOpen] = useControlledState(
+    isOpenProp,
+    defaultIsOpen,
+    onChange,
+  );
+
+  const handleClose = useCallback(
+    (data: Payload<DrawerCloseEvent>) => {
+      if (id === data?.payload?.drawer) {
+        setIsOpen(false);
+      }
+    },
+    [id, setIsOpen],
+  );
+
+  const handleOpen = useCallback(
+    (data: Payload<DrawerOpenEvent>) => {
+      if (id === data?.payload?.drawer) {
+        setIsOpen(true);
+      }
+    },
+    [id, setIsOpen],
+  );
+
+  const handleToggle = useCallback(
+    (data: Payload<DrawerToggleEvent>) => {
+      if (id === data?.payload?.drawer) {
+        setIsOpen(!isOpen);
+      }
+    },
+    [id, setIsOpen, isOpen],
+  );
+
+  useEffect(() => {
+    const listeners = [
+      bus.on(DrawerEventTypes.close, handleClose),
+      bus.on(DrawerEventTypes.open, handleOpen),
+      bus.on(DrawerEventTypes.toggle, handleToggle),
+    ];
+
+    () => {
+      for (const off of listeners) {
+        off();
+      }
+    };
+  }, [handleClose, handleOpen, handleToggle]);
+
+  return (
+    <ViewStack
+      id={id}
+      defaultView={defaultView}
+      onChange={(view) => setIsOpen(!!view)}
+    >
+      <div
+        {...rest}
+        className={drawer({ className })}
+        data-open={isOpen || null}
+        data-placement={placement}
+        data-size={size}
+      />
+    </ViewStack>
+  );
+}
+Drawer.displayName = 'Drawer';
 Drawer.Layout = DrawerLayout;
-Drawer.Main = DrawerMain;
-DrawerMenu.Item = DrawerMenuItem;
 Drawer.Menu = DrawerMenu;
-Drawer.Trigger = DrawerTrigger;
 Drawer.Panel = DrawerPanel;
+Drawer.View = DrawerView;
 Drawer.Header = DrawerHeader;
-Drawer.Title = DrawerTitle;
-Drawer.Footer = DrawerFooter;
 Drawer.Content = DrawerContent;
-Drawer.Provider = DrawerProvider;
+Drawer.Footer = DrawerFooter;
+Drawer.Trigger = DrawerTrigger;

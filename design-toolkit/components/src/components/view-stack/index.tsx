@@ -108,7 +108,12 @@ function ViewStackView({ id, children }: ViewStackViewProps) {
 }
 ViewStackView.displayName = 'ViewStack.View';
 
-export function ViewStack({ id, children, defaultView }: ViewStackProps) {
+export function ViewStack({
+  id,
+  children,
+  defaultView,
+  onChange,
+}: ViewStackProps) {
   if (!isUUID(id)) {
     throw new Error(`ViewStack's id must be a UniqueId`);
   }
@@ -122,53 +127,61 @@ export function ViewStack({ id, children, defaultView }: ViewStackProps) {
   const handleBack = useCallback(
     (data: Payload<ViewStackBackEvent>) => {
       if (id === data?.payload?.stack) {
-        setStack((prev) => {
-          if (prev.length <= 1) {
-            return defaultView ? [defaultView] : [];
-          }
+        const next = stack.slice(0, -1);
 
-          return prev.slice(0, -1);
-        });
+        if (!next.length && defaultView) {
+          next.push(defaultView);
+        }
+
+        setStack(next);
+        onChange?.(next.at(-1) ?? null);
       }
     },
-    [id, defaultView],
+    [id, defaultView, onChange, stack],
   );
 
   const handleClear = useCallback(
     (data: Payload<ViewStackClearEvent>) => {
       if (id === data?.payload?.stack) {
-        setStack(() => []);
+        setStack([]);
+        onChange?.(null);
       }
     },
-    [id],
+    [id, onChange],
   );
 
   const handleReset = useCallback(
     (data: Payload<ViewStackResetEvent>) => {
       if (id === data?.payload?.stack) {
-        setStack(() => (defaultView ? [defaultView] : []));
+        setStack(defaultView ? [defaultView] : []);
+        onChange?.(defaultView ?? null);
       }
     },
-    [id, defaultView],
+    [id, defaultView, onChange],
   );
 
-  const handlePush = useCallback((data: Payload<ViewStackPushEvent>) => {
-    if (views.current.has(data?.payload?.view)) {
-      setStack((prev) => [...prev, data?.payload?.view]);
-    }
-  }, []);
+  const handlePush = useCallback(
+    (data: Payload<ViewStackPushEvent>) => {
+      if (views.current.has(data?.payload?.view)) {
+        setStack((prev) => [...prev, data?.payload?.view]);
+        onChange?.(data?.payload?.view);
+      }
+    },
+    [onChange],
+  );
 
   useEffect(() => {
-    bus.on(ViewStackEventTypes.back, handleBack);
-    bus.on(ViewStackEventTypes.clear, handleClear);
-    bus.on(ViewStackEventTypes.reset, handleReset);
-    bus.on(ViewStackEventTypes.push, handlePush);
+    const listeners = [
+      bus.on(ViewStackEventTypes.back, handleBack),
+      bus.on(ViewStackEventTypes.clear, handleClear),
+      bus.on(ViewStackEventTypes.reset, handleReset),
+      bus.on(ViewStackEventTypes.push, handlePush),
+    ];
 
     return () => {
-      bus.off(ViewStackEventTypes.back, handleBack);
-      bus.off(ViewStackEventTypes.clear, handleClear);
-      bus.off(ViewStackEventTypes.reset, handleReset);
-      bus.off(ViewStackEventTypes.push, handlePush);
+      for (const off of listeners) {
+        off();
+      }
     };
   }, [handleBack, handleClear, handleReset, handlePush]);
 
