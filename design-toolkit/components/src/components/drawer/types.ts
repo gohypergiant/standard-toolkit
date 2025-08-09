@@ -112,18 +112,12 @@ export type DrawerProps = Omit<ViewStackProps, 'onChange'> &
      * The placement of the drawer.
      * @default 'left'
      */
-    placement: XAxisUnion | YAxisUnion;
+    placement?: XAxisUnion | YAxisUnion;
     /**
      * The size of the drawer.
      * @default 'medium'
      */
     size?: 'small' | 'medium' | 'large';
-    /**
-     * Whether the drawer is open or not.
-     * @default false
-     */
-    defaultIsOpen?: boolean;
-    isOpen?: boolean;
     onChange?: (isOpen: boolean) => void;
   };
 
@@ -136,7 +130,10 @@ export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
 };
 
 export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
-  id: UniqueId;
+  /**
+   * Id for View
+   */
+  for: UniqueId;
   /**
    * Pass an array of associated views if the tab should display as active
    *

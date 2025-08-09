@@ -97,10 +97,11 @@ export const DrawerStyles = tv({
       'placement-right:open:size-medium:w-[var(--drawer-size-medium)]',
       'placement-right:open:size-large:w-[var(--drawer-size-large)]',
     ],
-    content: [
-      'hidden h-full min-h-0 flex-col gap-s p-l group-open/drawer:flex',
-    ],
     panel: [
+      'hidden h-full min-h-0 flex-col gap-s p-l',
+      'group-open/drawer:flex',
+    ],
+    content: [
       'flex max-h-full flex-1 flex-col overflow-y-auto text-default-light',
     ],
     header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],

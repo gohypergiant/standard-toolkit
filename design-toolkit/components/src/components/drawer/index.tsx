@@ -15,12 +15,12 @@ import 'client-only';
 import { Broadcast, type Payload } from '@accelint/bus';
 import { type UniqueId, isUUID } from '@accelint/core';
 import { PressResponder, Pressable } from '@react-aria/interactions';
-import { useControlledState } from '@react-stately/utils';
 import {
   type ComponentPropsWithRef,
   useCallback,
   useContext,
   useEffect,
+  useState,
 } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { ToggleButton } from '../button';
@@ -134,7 +134,7 @@ function DrawerTrigger({ children, for: types }: DrawerTriggerProps) {
 DrawerTrigger.displayName = 'Drawer.Trigger';
 
 function DrawerMenuItem({
-  id,
+  for: id,
   children,
   className,
   views,
@@ -189,6 +189,7 @@ function DrawerPanel({ className, ...rest }: ComponentPropsWithRef<'div'>) {
 }
 DrawerPanel.displayName = 'Drawer.Panel';
 
+// TS won't allow Drawer.View = ViewStack.View, WTF?!
 function DrawerView(props: ViewStackViewProps) {
   return <ViewStack.View {...props} />;
 }
@@ -221,19 +222,13 @@ DrawerFooter.displayName = 'Drawer.Footer';
 export function Drawer({
   id,
   className,
-  defaultIsOpen = false,
   defaultView,
   placement = 'left',
   size = 'medium',
-  isOpen: isOpenProp,
   onChange,
   ...rest
 }: DrawerProps) {
-  const [isOpen, setIsOpen] = useControlledState(
-    isOpenProp,
-    defaultIsOpen,
-    onChange,
-  );
+  const [isOpen, setIsOpen] = useState(!!defaultView);
 
   const handleClose = useCallback(
     (data: Payload<DrawerCloseEvent>) => {
@@ -273,7 +268,10 @@ export function Drawer({
     <ViewStack
       id={id}
       defaultView={defaultView}
-      onChange={(view) => setIsOpen(!!view)}
+      onChange={(view) => {
+        setIsOpen(!!view);
+        onChange?.(!!view);
+      }}
     >
       <div
         {...rest}
