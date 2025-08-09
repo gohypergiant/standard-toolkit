@@ -1,5 +1,13 @@
 # @accelint/predicates
 
+## 0.3.3
+
+### Patch Changes
+
+- 83104ea: Refactored ViewStack to be event driven, allowing for triggers anywhere in the app
+- Updated dependencies [83104ea]
+  - @accelint/core@0.3.0
+
 ## 0.3.2
 
 ### Patch Changes
