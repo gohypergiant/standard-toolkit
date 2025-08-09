@@ -10,7 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type { CSSProperties, PropsWithChildren, ReactNode } from 'react';
+import type {
+  AriaRole,
+  CSSProperties,
+  PropsWithChildren,
+  AriaAttributes as ReactAriaAttributes,
+  ReactNode,
+  RefAttributes,
+} from 'react';
 
 /**
  * Re-export due to not being exported by library
@@ -59,3 +66,9 @@ export type SlottedValue<T> = {
 export type ProviderProps<T> = PropsWithChildren<
   Omit<T, 'children' | 'slot'> & SlottedValue<T>
 >;
+
+export type AriaAttributes = ReactAriaAttributes & {
+  role?: AriaRole;
+};
+
+export type AriaAttributesWithRef<T> = AriaAttributes & RefAttributes<T>;

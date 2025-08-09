@@ -101,14 +101,47 @@ export const DrawerStyles = tv({
       'hidden h-full min-h-0 flex-col gap-s p-l',
       'group-open/drawer:flex',
     ],
+    view: '',
     content: [
       'flex max-h-full flex-1 flex-col overflow-y-auto text-default-light',
     ],
     header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],
-    title: 'w-full text-default-light text-header-l',
     footer: 'mt-s flex flex-row items-center justify-end text-default-light',
   },
 });
+
+export const DrawerTitleStylesDefaults = {
+  level: 2,
+} as const;
+
+export const DrawerTitleStyles = tv({
+  base: 'w-full text-default-light',
+  variants: {
+    level: {
+      [1]: '',
+      [2]: '',
+      [3]: '',
+      [4]: '',
+      [5]: '',
+      [6]: '',
+    },
+  },
+  compoundVariants: [
+    {
+      level: [1, 2, 3],
+      className: 'text-header-l',
+    },
+    {
+      level: [4, 5, 6],
+      className: 'text-header-m',
+    },
+  ],
+  defaultVariants: DrawerTitleStylesDefaults,
+});
+
+export const DrawerMenuStylesDefaults = {
+  position: 'center',
+} as const;
 
 export const DrawerMenuStyles = tv({
   slots: {
@@ -171,4 +204,5 @@ export const DrawerMenuStyles = tv({
       },
     },
   },
+  defaultVariants: DrawerMenuStylesDefaults,
 });

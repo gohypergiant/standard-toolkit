@@ -25,6 +25,38 @@ const ids = {
   b: uuid(),
   c: uuid(),
 };
+const alternate = (
+  <>
+    <Drawer.Menu>
+      <Drawer.Menu.Item for={ids.a}>A</Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.b}>B</Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.c}>C</Drawer.Menu.Item>
+    </Drawer.Menu>
+    <Drawer.Panel>
+      <Drawer.View id={ids.a}>
+        <Drawer.Header>
+          <Drawer.Header.Title>Title A</Drawer.Header.Title>
+        </Drawer.Header>
+        <Drawer.Content>Content A</Drawer.Content>
+        <Drawer.Footer>Footer A</Drawer.Footer>
+      </Drawer.View>
+      <Drawer.View id={ids.b}>
+        <Drawer.Header>
+          <Drawer.Header.Title>Title B</Drawer.Header.Title>
+        </Drawer.Header>
+        <Drawer.Content>Content B</Drawer.Content>
+        <Drawer.Footer>Footer B</Drawer.Footer>
+      </Drawer.View>
+      <Drawer.View id={ids.c}>
+        <Drawer.Header>
+          <Drawer.Header.Title>Title C</Drawer.Header.Title>
+        </Drawer.Header>
+        <Drawer.Content>Content C</Drawer.Content>
+        <Drawer.Footer>Footer C</Drawer.Footer>
+      </Drawer.View>
+    </Drawer.Panel>
+  </>
+);
 
 function setup(
   {
@@ -43,9 +75,11 @@ function setup(
               <Button>Close</Button>
             </Drawer.Trigger>
           </Drawer.Header>
-          <Drawer.View id={ids.a}>View A</Drawer.View>
-          <Drawer.View id={ids.b}>View B</Drawer.View>
-          <Drawer.View id={ids.c}>View C</Drawer.View>
+          <Drawer.Content>
+            <Drawer.View id={ids.a}>View A</Drawer.View>
+            <Drawer.View id={ids.b}>View B</Drawer.View>
+            <Drawer.View id={ids.c}>View C</Drawer.View>
+          </Drawer.Content>
           <Drawer.Footer>Footer</Drawer.Footer>
         </Drawer.Panel>
       </>
@@ -82,12 +116,38 @@ describe('Drawer', () => {
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
   });
 
+  it('should not render content: alternate', () => {
+    setup({ children: alternate });
+
+    expect(screen.queryByText('Content A')).not.toBeInTheDocument();
+    expect(screen.queryByText('Content B')).not.toBeInTheDocument();
+    expect(screen.queryByText('Content C')).not.toBeInTheDocument();
+  });
+
   it('should render default view', () => {
     const { container } = setup({ defaultView: ids.a });
 
     expect(screen.getByText('View A')).toBeInTheDocument();
     expect(screen.queryByText('View B')).not.toBeInTheDocument();
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
+    expect(screen.getByText('A').parentElement).toHaveAttribute(
+      'data-selected',
+    );
+    expect(container.firstChild).toHaveAttribute('data-open');
+  });
+
+  it('should render default view: alternate', () => {
+    const { container } = setup({ children: alternate, defaultView: ids.a });
+
+    expect(screen.getByText('Title A')).toBeInTheDocument();
+    expect(screen.getByText('Content A')).toBeInTheDocument();
+    expect(screen.getByText('Footer A')).toBeInTheDocument();
+    expect(screen.queryByText('Title B')).not.toBeInTheDocument();
+    expect(screen.queryByText('Content B')).not.toBeInTheDocument();
+    expect(screen.queryByText('Footer B')).not.toBeInTheDocument();
+    expect(screen.queryByText('Title C')).not.toBeInTheDocument();
+    expect(screen.queryByText('Content C')).not.toBeInTheDocument();
+    expect(screen.queryByText('Footer C')).not.toBeInTheDocument();
     expect(screen.getByText('A').parentElement).toHaveAttribute(
       'data-selected',
     );

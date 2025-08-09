@@ -135,7 +135,13 @@ export type {
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export { Drawer, DrawerEventTypes } from './components/drawer';
-export { DrawerMenuStyles, DrawerStyles } from './components/drawer/styles';
+export {
+  DrawerMenuStyles,
+  DrawerMenuStylesDefaults,
+  DrawerStyles,
+  DrawerTitleStyles,
+  DrawerTitleStylesDefaults,
+} from './components/drawer/styles';
 export type {
   DrawerCloseEvent,
   DrawerLayoutProps,
@@ -144,6 +150,7 @@ export type {
   DrawerOpenEvent,
   DrawerProps,
   DrawerSelectEvent,
+  DrawerTitleProps,
   DrawerTriggerProps,
 } from './components/drawer/types';
 export { Hero, HeroContext } from './components/hero';
@@ -270,6 +277,8 @@ export type {
 } from './components/view-stack/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
+  AriaAttributes,
+  AriaAttributesWithRef,
   ChildrenRenderProps,
   ClassNameRenderProps,
   ProviderProps,

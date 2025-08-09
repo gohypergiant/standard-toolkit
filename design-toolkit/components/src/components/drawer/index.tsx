@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { containsExactChildren } from '@/lib/react';
 import { Broadcast, type Payload } from '@accelint/bus';
 import { type UniqueId, isUUID } from '@accelint/core';
 import { PressResponder, Pressable } from '@react-aria/interactions';
@@ -22,7 +23,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { composeRenderProps } from 'react-aria-components';
+import { Header, Heading, composeRenderProps } from 'react-aria-components';
 import { ToggleButton } from '../button';
 import { Icon } from '../icon';
 import {
@@ -37,7 +38,7 @@ import type {
   ViewStackResetEvent,
   ViewStackViewProps,
 } from '../view-stack/types';
-import { DrawerMenuStyles, DrawerStyles } from './styles';
+import { DrawerMenuStyles, DrawerStyles, DrawerTitleStyles } from './styles';
 import type {
   DrawerCloseEvent,
   DrawerLayoutProps,
@@ -45,10 +46,11 @@ import type {
   DrawerMenuProps,
   DrawerOpenEvent,
   DrawerProps,
+  DrawerTitleProps,
   DrawerTriggerProps,
 } from './types';
 
-const { layout, main, drawer, content, panel, header, footer, title } =
+const { layout, main, drawer, panel, view, header, content, footer } =
   DrawerStyles();
 const { menu, item } = DrawerMenuStyles();
 const bus = Broadcast.getInstance();
@@ -154,6 +156,7 @@ function DrawerMenuItem({
         className={composeRenderProps(className, (className) =>
           item({ className }),
         )}
+        role='tab'
         variant='icon'
         isSelected={id === view || views?.some((view) => id === view)}
       >
@@ -185,26 +188,44 @@ DrawerMenu.displayName = 'Drawer.Menu';
 DrawerMenu.Item = DrawerMenuItem;
 
 function DrawerPanel({ className, ...rest }: ComponentPropsWithRef<'div'>) {
-  return <div {...rest} className={panel({ className })} role='tabpanel' />;
+  return <div {...rest} className={panel({ className })} />;
 }
 DrawerPanel.displayName = 'Drawer.Panel';
 
-// TS won't allow Drawer.View = ViewStack.View, WTF?!
-function DrawerView(props: ViewStackViewProps) {
-  return <ViewStack.View {...props} />;
+function DrawerView({
+  id,
+  children,
+  className,
+  ...rest
+}: ViewStackViewProps & ComponentPropsWithRef<'div'>) {
+  return (
+    <ViewStack.View id={id}>
+      <div {...rest} className={view({ className })} role='tabpanel'>
+        {children}
+      </div>
+    </ViewStack.View>
+  );
 }
 DrawerView.displayName = 'Drawer.View';
 
-function DrawerHeaderTitle({
-  className,
-  ...rest
-}: ComponentPropsWithRef<'div'>) {
-  return <div {...rest} className={title({ className })} />;
+/**
+ * To change size of title, use the `level` prop: `1`-`3` (large), `4`-`6` (medium).
+ *
+ * `level` also changes the semantic heading tag number `h1`-`h6`
+ */
+function DrawerHeaderTitle({ className, level, ...rest }: DrawerTitleProps) {
+  return (
+    <Heading
+      {...rest}
+      className={DrawerTitleStyles({ className, level })}
+      level={level}
+    />
+  );
 }
 DrawerHeaderTitle.displayName = 'Drawer.Title';
 
 function DrawerHeader({ className, ...rest }: ComponentPropsWithRef<'header'>) {
-  return <header {...rest} className={header({ className })} />;
+  return <Header {...rest} className={header({ className })} />;
 }
 DrawerHeader.displayName = 'Drawer.Header';
 DrawerHeader.Title = DrawerHeaderTitle;
@@ -221,6 +242,7 @@ DrawerFooter.displayName = 'Drawer.Footer';
 
 export function Drawer({
   id,
+  children,
   className,
   defaultView,
   placement = 'left',
@@ -228,6 +250,15 @@ export function Drawer({
   onChange,
   ...rest
 }: DrawerProps) {
+  containsExactChildren({
+    children,
+    componentName: Drawer.displayName,
+    restrictions: [
+      [DrawerMenu, { min: 0, max: 1 }],
+      [DrawerPanel, { min: 1, max: 1 }],
+    ],
+  });
+
   const [isOpen, setIsOpen] = useState(!!defaultView);
 
   const handleClose = useCallback(
@@ -279,7 +310,9 @@ export function Drawer({
         data-open={isOpen || null}
         data-placement={placement}
         data-size={size}
-      />
+      >
+        {children}
+      </div>
     </ViewStack>
   );
 }

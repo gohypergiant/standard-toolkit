@@ -1,3 +1,4 @@
+import type { AriaAttributesWithRef } from '@/lib/types';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -12,8 +13,11 @@
 import type { UniqueId } from '@accelint/core';
 import type { FocusableElement } from '@react-types/shared';
 import type { ComponentPropsWithRef, DOMAttributes, ReactElement } from 'react';
+import type { HeadingProps } from 'react-aria-components';
+import type { VariantProps } from 'tailwind-variants';
 import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackProps } from '../view-stack/types';
+import type { DrawerTitleStyles } from './styles';
 
 type Top = 'top';
 type Bottom = 'bottom';
@@ -141,6 +145,10 @@ export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
    */
   views?: UniqueId[];
 };
+
+export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
+  AriaAttributesWithRef<HTMLHeadingElement> &
+  VariantProps<typeof DrawerTitleStyles>;
 
 export type DrawerCloseEvent = {
   drawer: UniqueId;
