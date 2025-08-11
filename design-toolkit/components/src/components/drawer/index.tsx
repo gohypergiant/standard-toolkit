@@ -73,6 +73,30 @@ export const DrawerEventHandlers = {
     bus.emit<DrawerOpenEvent>(DrawerEventTypes.open, { view }),
 } as const;
 
+function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
+  const { parent } = useContext(ViewStackContext);
+
+  function handlePress() {
+    for (const type of Array.isArray(events) ? events : [events]) {
+      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
+        'back' | 'clear' | 'close' | 'open' | 'push' | 'reset',
+        UniqueId | undefined | null,
+      ];
+
+      id ??= parent;
+
+      if (!id) {
+        continue;
+      }
+
+      DrawerEventHandlers[event](id);
+    }
+  }
+
+  return <Pressable onPress={handlePress}>{children}</Pressable>;
+}
+DrawerTrigger.displayName = 'Drawer.Trigger';
+
 function DrawerLayoutMain({
   className,
   ...rest
@@ -98,30 +122,6 @@ function DrawerLayout({
 }
 DrawerLayout.displayName = 'Drawer.Layout';
 DrawerLayout.Main = DrawerLayoutMain;
-
-function DrawerTrigger({ children, for: types }: DrawerTriggerProps) {
-  const { parent } = useContext(ViewStackContext);
-
-  function handlePress() {
-    for (const type of Array.isArray(types) ? types : [types]) {
-      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
-        'back' | 'clear' | 'close' | 'open' | 'push' | 'reset',
-        UniqueId | undefined | null,
-      ];
-
-      id ??= parent;
-
-      if (!id) {
-        continue;
-      }
-
-      DrawerEventHandlers[event](id);
-    }
-  }
-
-  return <Pressable onPress={handlePress}>{children}</Pressable>;
-}
-DrawerTrigger.displayName = 'Drawer.Trigger';
 
 function DrawerMenuItem({
   for: id,
@@ -268,15 +268,7 @@ export function Drawer({
     [id],
   );
 
-  useEffect(() => {
-    const listeners = [bus.on(DrawerEventTypes.open, handleOpen)];
-
-    () => {
-      for (const off of listeners) {
-        off();
-      }
-    };
-  }, [handleOpen]);
+  useEffect(() => bus.on(DrawerEventTypes.open, handleOpen), [handleOpen]);
 
   return (
     <DrawerContext.Provider

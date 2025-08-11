@@ -9,12 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { Cancel, ChevronLeft, Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import { useCallback, useState } from 'react';
-import { Button } from '../button';
-import { Icon } from '../icon';
-import { ViewStack } from '../navigation-stack';
 import { Drawer } from './index';
 import type { DrawerProps } from './types';
 
@@ -44,6 +39,6 @@ export default meta;
 
 export const WithTabs: StoryObj<typeof Drawer> = {
   render: ({ id, ...args }) => {
-    return <div className='h-screen w-full'></div>;
+    return <div className='h-screen'></div>;
   },
 };

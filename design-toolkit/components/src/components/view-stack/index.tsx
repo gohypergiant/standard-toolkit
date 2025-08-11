@@ -62,11 +62,11 @@ export const ViewStackEventHandlers = {
     bus.emit<ViewStackResetEvent>(ViewStackEventTypes.reset, { stack }),
 } as const;
 
-function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
+function ViewStackTrigger({ children, for: events }: ViewStackTriggerProps) {
   const { parent } = useContext(ViewStackContext);
 
   function handlePress() {
-    for (const type of Array.isArray(types) ? types : [types]) {
+    for (const type of Array.isArray(events) ? events : [events]) {
       let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
         'back' | 'clear' | 'reset' | 'push',
         UniqueId | undefined | null,
