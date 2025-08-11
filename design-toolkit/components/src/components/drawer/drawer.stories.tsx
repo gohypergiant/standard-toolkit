@@ -9,12 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { Cancel, ChevronLeft, Placeholder } from '@accelint/icons';
+import { Cancel, Placeholder } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useCallback, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { ViewStack } from '../navigation-stack';
 import { Drawer } from './index';
 import type { DrawerProps } from './types';
 
@@ -218,109 +217,6 @@ export const Uncontrolled: Story = {
                     <Button>Cancel</Button>
                   </Drawer.Trigger>
                 </Drawer.Footer>
-              </Drawer.Content>
-            </Drawer>
-          </Drawer.Layout>
-        </Drawer.Provider>
-      </div>
-    );
-  },
-};
-
-export const WithViewStack: Story = {
-  render: () => {
-    return (
-      <div className='h-screen w-full'>
-        <Drawer.Provider>
-          <Drawer.Layout>
-            <Drawer.Main>
-              <div className='h-dvh bg-surface-raised' />
-            </Drawer.Main>
-            <Drawer id='settings' placement='left'>
-              <Drawer.Menu>
-                <Drawer.Menu.Item id='a'>
-                  <Placeholder />
-                </Drawer.Menu.Item>
-                <Drawer.Menu.Item id='b'>
-                  <Placeholder />
-                </Drawer.Menu.Item>
-              </Drawer.Menu>
-              <Drawer.Content>
-                <Drawer.Panel id='a'>
-                  <ViewStack defaultViewId='a'>
-                    <ViewStack.View id='a'>
-                      <div className='flex flex-col'>
-                        <Drawer.Header>
-                          Parent A
-                          <Drawer.Trigger for='settings' behavior='close'>
-                            <Button variant='icon'>
-                              <Icon>
-                                <Cancel />
-                              </Icon>
-                            </Button>
-                          </Drawer.Trigger>
-                        </Drawer.Header>
-                        <div className='flex-1'>a content</div>
-                        <Drawer.Footer>
-                          <ViewStack.Navigate for='child-a'>
-                            <span className='cursor-pointer'>View Child</span>
-                          </ViewStack.Navigate>
-                        </Drawer.Footer>
-                      </div>
-                    </ViewStack.View>
-
-                    <ViewStack.View id='child-a'>
-                      <div className='flex flex-col gap-m'>
-                        <div className='flex cursor-pointer items-center justify-between'>
-                          <ViewStack.Navigate for='back'>
-                            <span>Back</span>
-                          </ViewStack.Navigate>
-                          <div>Child A</div>
-                        </div>
-                        <div> a child content </div>
-                      </div>
-                    </ViewStack.View>
-                  </ViewStack>
-                </Drawer.Panel>
-
-                <Drawer.Panel id='b' className='h-full p-0'>
-                  <ViewStack defaultViewId='b'>
-                    <ViewStack.View id='b'>
-                      <div className='flex flex-col'>
-                        <Drawer.Header>
-                          Parent B
-                          <Drawer.Trigger for='settings' behavior='close'>
-                            <Button variant='icon'>
-                              <Icon>
-                                <Cancel />
-                              </Icon>
-                            </Button>
-                          </Drawer.Trigger>
-                        </Drawer.Header>
-                        <div className='flex-1'>b content</div>
-                        <Drawer.Footer>
-                          <ViewStack.Navigate for='child-b'>
-                            <span className='cursor-pointer'>View Child</span>
-                          </ViewStack.Navigate>
-                        </Drawer.Footer>
-                      </div>
-                    </ViewStack.View>
-
-                    <ViewStack.View id='child-b'>
-                      <div className='flex flex-col gap-m'>
-                        <div className='flex cursor-pointer items-center justify-between'>
-                          <ViewStack.Navigate for='back'>
-                            <Icon>
-                              <ChevronLeft />
-                            </Icon>
-                          </ViewStack.Navigate>
-                          Child B
-                        </div>
-                        <div className='flex-1'>b child content</div>
-                      </div>
-                    </ViewStack.View>
-                  </ViewStack>
-                </Drawer.Panel>
               </Drawer.Content>
             </Drawer>
           </Drawer.Layout>
