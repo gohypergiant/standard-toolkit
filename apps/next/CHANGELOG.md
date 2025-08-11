@@ -7,7 +7,7 @@
 - Updated dependencies [a97d386]
 - Updated dependencies [9ec4cbe]
 - Updated dependencies [83104ea]
-  - @accelint/design-toolkit@3.0.0
+  - @accelint/design-toolkit@2.6.0
   - @accelint/design-system@0.11.3
   - @accelint/icons@2.0.3
   - @accelint/bus@0.1.2
