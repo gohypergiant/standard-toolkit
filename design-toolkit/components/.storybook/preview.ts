@@ -10,9 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Preview } from '@storybook/react';
-import { themes } from '@storybook/theming';
+import { withThemeByClassName } from '@storybook/addon-themes';
+import type { Preview, ReactRenderer } from '@storybook/react';
 import '../src/index.css';
+import { themes } from '@storybook/theming';
 import { Docs } from './docs';
 
 const preview: Preview = {
@@ -43,6 +44,15 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    withThemeByClassName<ReactRenderer>({
+      themes: {
+        light: '',
+        dark: 'dark',
+      },
+      defaultTheme: 'dark',
+    }),
+  ],
   tags: ['autodocs'],
 };
 
