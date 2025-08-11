@@ -87,7 +87,7 @@ function setup(
     ...rest
   }: Partial<DrawerProps> = {},
   outside: ReactNode = (
-    <Drawer.Trigger for={`open:${ids.drawer}:${ids.a}`}>
+    <Drawer.Trigger for={`open:${ids.a}`}>
       <Button>Open A</Button>
     </Drawer.Trigger>
   ),

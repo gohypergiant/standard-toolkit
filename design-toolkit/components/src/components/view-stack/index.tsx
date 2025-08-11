@@ -14,7 +14,6 @@
 import 'client-only';
 import { Broadcast, type Payload } from '@accelint/bus';
 import { type UniqueId, isUUID } from '@accelint/core';
-import { PressResponder } from '@react-aria/interactions';
 import {
   createContext,
   useCallback,
@@ -49,8 +48,18 @@ export const ViewStackContext = createContext<ViewStackContextValue>({
 export const ViewStackEventTypes = {
   back: `${ViewStackEventNamespace}:back`,
   clear: `${ViewStackEventNamespace}:clear`,
-  reset: `${ViewStackEventNamespace}:reset`,
   push: `${ViewStackEventNamespace}:push`,
+  reset: `${ViewStackEventNamespace}:reset`,
+} as const;
+export const ViewStackEventHandlers = {
+  back: (stack: UniqueId) =>
+    bus.emit<ViewStackBackEvent>(ViewStackEventTypes.back, { stack }),
+  clear: (stack: UniqueId) =>
+    bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack }),
+  push: (view: UniqueId) =>
+    bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, { view }),
+  reset: (stack: UniqueId) =>
+    bus.emit<ViewStackResetEvent>(ViewStackEventTypes.reset, { stack }),
 } as const;
 
 function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
@@ -58,34 +67,22 @@ function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
 
   function handlePress() {
     for (const type of Array.isArray(types) ? types : [types]) {
-      if (isUUID(type)) {
-        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, {
-          view: type,
-        });
-      } else {
-        let [event, stack] = type.split(':') as [
-          'back' | 'clear' | 'reset',
-          UniqueId | undefined | null,
-        ];
+      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
+        'back' | 'clear' | 'reset' | 'push',
+        UniqueId | undefined | null,
+      ];
 
-        stack ??= parent;
+      id ??= parent;
 
-        if (!stack) {
-          continue;
-        }
-
-        bus.emit<
-          ViewStackBackEvent | ViewStackClearEvent | ViewStackResetEvent
-        >(ViewStackEventTypes[event], { stack });
+      if (!id) {
+        continue;
       }
+
+      ViewStackEventHandlers[event](id);
     }
   }
 
-  return (
-    <PressResponder onPress={handlePress}>
-      <Pressable>{children}</Pressable>
-    </PressResponder>
-  );
+  return <Pressable onPress={handlePress}>{children}</Pressable>;
 }
 ViewStackTrigger.displayName = 'ViewStack.Trigger';
 
@@ -152,16 +149,6 @@ export function ViewStack({
     [id, onChange],
   );
 
-  const handleReset = useCallback(
-    (data: Payload<ViewStackResetEvent>) => {
-      if (id === data?.payload?.stack) {
-        setStack(defaultView ? [defaultView] : []);
-        onChange?.(defaultView ?? null);
-      }
-    },
-    [id, defaultView, onChange],
-  );
-
   const handlePush = useCallback(
     (data: Payload<ViewStackPushEvent>) => {
       if (views.current.has(data?.payload?.view)) {
@@ -172,12 +159,22 @@ export function ViewStack({
     [onChange],
   );
 
+  const handleReset = useCallback(
+    (data: Payload<ViewStackResetEvent>) => {
+      if (id === data?.payload?.stack) {
+        setStack(defaultView ? [defaultView] : []);
+        onChange?.(defaultView ?? null);
+      }
+    },
+    [id, defaultView, onChange],
+  );
+
   useEffect(() => {
     const listeners = [
       bus.on(ViewStackEventTypes.back, handleBack),
       bus.on(ViewStackEventTypes.clear, handleClear),
-      bus.on(ViewStackEventTypes.reset, handleReset),
       bus.on(ViewStackEventTypes.push, handlePush),
+      bus.on(ViewStackEventTypes.reset, handleReset),
     ];
 
     return () => {
@@ -185,7 +182,7 @@ export function ViewStack({
         off();
       }
     };
-  }, [handleBack, handleClear, handleReset, handlePush]);
+  }, [handleBack, handleClear, handlePush, handleReset]);
 
   return (
     <ViewStackContext.Provider

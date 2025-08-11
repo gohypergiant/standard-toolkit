@@ -15,12 +15,14 @@ import 'client-only';
 import { containsExactChildren } from '@/lib/react';
 import { Broadcast, type Payload } from '@accelint/bus';
 import { type UniqueId, isUUID } from '@accelint/core';
-import { PressResponder, Pressable } from '@react-aria/interactions';
+import { Pressable } from '@react-aria/interactions';
 import {
   type ComponentPropsWithRef,
+  createContext,
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { Header, Heading, composeRenderProps } from 'react-aria-components';
@@ -29,18 +31,17 @@ import { Icon } from '../icon';
 import {
   ViewStack,
   ViewStackContext,
+  ViewStackEventHandlers,
   ViewStackEventTypes,
 } from '../view-stack';
 import type {
-  ViewStackBackEvent,
   ViewStackClearEvent,
   ViewStackPushEvent,
-  ViewStackResetEvent,
   ViewStackViewProps,
 } from '../view-stack/types';
 import { DrawerMenuStyles, DrawerStyles, DrawerTitleStyles } from './styles';
 import type {
-  DrawerCloseEvent,
+  DrawerContextValue,
   DrawerLayoutProps,
   DrawerMenuItemProps,
   DrawerMenuProps,
@@ -56,9 +57,20 @@ const { menu, item } = DrawerMenuStyles();
 const bus = Broadcast.getInstance();
 const DrawerEventNamespace = 'Drawer';
 
+export const DrawerContext = createContext<DrawerContextValue>({
+  register: () => undefined,
+  unregister: () => undefined,
+});
+
 export const DrawerEventTypes = {
   close: `${DrawerEventNamespace}:close`,
   open: `${DrawerEventNamespace}:open`,
+} as const;
+export const DrawerEventHandlers = {
+  ...ViewStackEventHandlers,
+  close: ViewStackEventHandlers.clear,
+  open: (view: UniqueId) =>
+    bus.emit<DrawerOpenEvent>(DrawerEventTypes.open, { view }),
 } as const;
 
 function DrawerLayoutMain({
@@ -90,48 +102,24 @@ DrawerLayout.Main = DrawerLayoutMain;
 function DrawerTrigger({ children, for: types }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: TODO: refactor
   function handlePress() {
     for (const type of Array.isArray(types) ? types : [types]) {
-      if (isUUID(type)) {
-        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, {
-          view: type,
-        });
-      } else {
-        let [event, stack, view] = type.split(':') as [
-          'back' | 'clear' | 'close' | 'open' | 'reset',
-          UniqueId | undefined | null,
-          UniqueId | undefined | null,
-        ];
+      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
+        'back' | 'clear' | 'close' | 'open' | 'push' | 'reset',
+        UniqueId | undefined | null,
+      ];
 
-        stack ??= parent;
+      id ??= parent;
 
-        if (!stack) {
-          continue;
-        }
-
-        if (event === 'back' || event === 'clear' || event === 'reset') {
-          bus.emit<
-            ViewStackBackEvent | ViewStackClearEvent | ViewStackResetEvent
-          >(ViewStackEventTypes[event], { stack });
-        }
-
-        if (event === 'close') {
-          bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack });
-        }
-
-        if (event === 'open' && view) {
-          bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, { view });
-        }
+      if (!id) {
+        continue;
       }
+
+      DrawerEventHandlers[event](id);
     }
   }
 
-  return (
-    <PressResponder onPress={handlePress}>
-      <Pressable>{children}</Pressable>
-    </PressResponder>
-  );
+  return <Pressable onPress={handlePress}>{children}</Pressable>;
 }
 DrawerTrigger.displayName = 'Drawer.Trigger';
 
@@ -150,7 +138,7 @@ function DrawerMenuItem({
   }
 
   return (
-    <DrawerTrigger for={[`clear:${parent}`, id]}>
+    <DrawerTrigger for={`open:${id}`}>
       <ToggleButton
         {...rest}
         className={composeRenderProps(className, (className) =>
@@ -198,6 +186,14 @@ function DrawerView({
   className,
   ...rest
 }: ViewStackViewProps & ComponentPropsWithRef<'div'>) {
+  const { register, unregister } = useContext(DrawerContext);
+
+  useEffect(() => {
+    register(id);
+
+    () => unregister(id);
+  }, [register, unregister, id]);
+
   return (
     <ViewStack.View id={id}>
       <div {...rest} className={view({ className })} role='tabpanel'>
@@ -259,61 +255,55 @@ export function Drawer({
     ],
   });
 
+  const views = useRef(new Set<UniqueId>());
   const [isOpen, setIsOpen] = useState(!!defaultView);
-
-  const handleClose = useCallback(
-    (data: Payload<DrawerCloseEvent>) => {
-      if (id === data?.payload?.drawer) {
-        bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack: id });
-      }
-    },
-    [id],
-  );
 
   const handleOpen = useCallback(
     (data: Payload<DrawerOpenEvent>) => {
-      if (id === data?.payload?.drawer && data?.payload?.view) {
+      if (views.current.has(data?.payload?.view)) {
         bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack: id });
-        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, {
-          view: data?.payload?.view,
-        });
+        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, data.payload);
       }
     },
     [id],
   );
 
   useEffect(() => {
-    const listeners = [
-      bus.on(DrawerEventTypes.close, handleClose),
-      bus.on(DrawerEventTypes.open, handleOpen),
-    ];
+    const listeners = [bus.on(DrawerEventTypes.open, handleOpen)];
 
     () => {
       for (const off of listeners) {
         off();
       }
     };
-  }, [handleClose, handleOpen]);
+  }, [handleOpen]);
 
   return (
-    <ViewStack
-      id={id}
-      defaultView={defaultView}
-      onChange={(view) => {
-        setIsOpen(!!view);
-        onChange?.(!!view);
+    <DrawerContext.Provider
+      value={{
+        register: (view: UniqueId) => views.current.add(view),
+        unregister: (view: UniqueId) => views.current.delete(view),
       }}
     >
-      <div
-        {...rest}
-        className={drawer({ className })}
-        data-open={isOpen || null}
-        data-placement={placement}
-        data-size={size}
+      <ViewStack
+        id={id}
+        defaultView={defaultView}
+        onChange={(view) => {
+          setIsOpen(!!view);
+          onChange?.(!!view);
+        }}
       >
-        {children}
-      </div>
-    </ViewStack>
+        <div
+          {...rest}
+          className={drawer({ className })}
+          data-open={isOpen || null}
+          data-placement={placement}
+          data-size={size}
+        >
+          {children}
+        </div>
+      </ViewStack>
+    </DrawerContext.Provider>
   );
 }
 Drawer.displayName = 'Drawer';

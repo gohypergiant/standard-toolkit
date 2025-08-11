@@ -133,6 +133,10 @@ export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
   position?: 'start' | 'center' | 'end';
 };
 
+/**
+ * Drawer.Menu.Item implements Drawer.Trigger with the default behavior of
+ * the trigger's `open` event type, which resets the stack before pushing the new view
+ */
 export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
   /**
    * Id for View
@@ -150,16 +154,7 @@ export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
   AriaAttributesWithRef<HTMLHeadingElement> &
   VariantProps<typeof DrawerTitleStyles>;
 
-export type DrawerCloseEvent = {
-  drawer: UniqueId;
-};
-
 export type DrawerOpenEvent = {
-  drawer: UniqueId;
-  view: UniqueId;
-};
-
-export type DrawerSelectEvent = {
   view: UniqueId;
 };
 
@@ -169,7 +164,7 @@ type TargetedEvents =
   | `back:${UniqueId}`
   | `clear:${UniqueId}`
   | `close:${UniqueId}`
-  | `open:${UniqueId}:${UniqueId}` // Drawer id then Tab id
+  | `open:${UniqueId}`
   | `reset:${UniqueId}`;
 
 type ChainedEvents = (SimpleEvents | TargetedEvents)[];
@@ -185,15 +180,22 @@ export type DrawerTriggerProps = {
    *
    * __ChainedEvents__ allow a list of events from a single control to enable multiple behaviors
    *
+   * _NOTE_: Open differs from Push (just a UniqueId), Open clears the stack before pushing the new view
+   *
    * @example
    * // Reset a drawer stack and then push a view on:
    * ['reset', myViewId]
    *
    * // Open multiple drawers:
-   * [`open:${stackOneId}`, `open:${stackTwoId}`]
+   * [`open:${tabOneId}`, `open:${tabCId}`]
    *
    * // Push multiple views to multiple drawers:
    * [viewOneId, viewTwoId, viewThreeId]
    */
   for: SimpleEvents | TargetedEvents | ChainedEvents;
+};
+
+export type DrawerContextValue = {
+  register: (view: UniqueId) => void;
+  unregister: (view: UniqueId) => void;
 };

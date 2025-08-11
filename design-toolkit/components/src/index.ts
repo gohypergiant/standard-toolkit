@@ -134,7 +134,12 @@ export type {
 } from './components/details-list/types';
 export { Dialog, DialogTitle } from './components/dialog';
 export type { DialogProps } from './components/dialog';
-export { Drawer, DrawerEventTypes } from './components/drawer';
+export {
+  Drawer,
+  DrawerContext,
+  DrawerEventHandlers,
+  DrawerEventTypes,
+} from './components/drawer';
 export {
   DrawerMenuStyles,
   DrawerMenuStylesDefaults,
@@ -143,13 +148,12 @@ export {
   DrawerTitleStylesDefaults,
 } from './components/drawer/styles';
 export type {
-  DrawerCloseEvent,
+  DrawerContextValue,
   DrawerLayoutProps,
   DrawerMenuItemProps,
   DrawerMenuProps,
   DrawerOpenEvent,
   DrawerProps,
-  DrawerSelectEvent,
   DrawerTitleProps,
   DrawerTriggerProps,
 } from './components/drawer/types';
@@ -263,6 +267,7 @@ export type {
 export {
   ViewStack,
   ViewStackContext,
+  ViewStackEventHandlers,
   ViewStackEventTypes,
 } from './components/view-stack';
 export type {
