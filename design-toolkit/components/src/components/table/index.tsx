@@ -13,6 +13,7 @@
 'use client';
 import 'client-only';
 
+import { Kebab } from '@accelint/icons';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
@@ -26,9 +27,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { head } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
+import { is } from 'zod/v4/locales';
+import { Button } from '../button';
 import { Checkbox } from '../checkbox';
+import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
+import { Menu } from '../menu';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
@@ -141,6 +147,33 @@ export function Table<T extends { id: string | number }>({
     }
   }, [data, dataIds, rowSelection, moveAfter]);
 
+  type MenuItem = {
+    id: number;
+    name: string;
+    description?: string;
+    children?: MenuItem[];
+    isDisabled?: boolean;
+    hotkey?: string;
+  };
+
+  const menuItems: MenuItem[] = [
+    {
+      id: 1,
+      name: 'Pin',
+      isDisabled: false,
+    },
+    {
+      id: 2,
+      name: 'Move Up',
+      isDisabled: false,
+    },
+    {
+      id: 3,
+      name: 'Move Down',
+      isDisabled: false,
+    },
+  ];
+
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
    * It includes options to move the row up or down in the table.
@@ -150,7 +183,44 @@ export function Table<T extends { id: string | number }>({
       id: 'kebab',
       cell: ({ row }) => {
         const isPinned = row.getIsPinned();
-        return <></>;
+        return (
+          <>
+            <Menu.Trigger>
+              <Button variant='icon' aria-label='Menu'>
+                <Icon>
+                  <Kebab />
+                </Icon>
+              </Button>
+              <Menu<MenuItem> items={menuItems}>
+                {(item) => (
+                  <Menu.Item
+                    onAction={() => {
+                      if (item.id === 1) {
+                        row.pin(
+                          isPinned ? false : 'top',
+                          true, // include leaf rows
+                          true, // include parent rows
+                        );
+                      }
+                    }}
+                    key={item.id}
+                    isDisabled={item.isDisabled}
+                  >
+                    <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                    {item.description && (
+                      <Menu.Item.Description>
+                        {item.description}
+                      </Menu.Item.Description>
+                    )}
+                    {item.hotkey && (
+                      <Hotkey variant='flat'>{item.hotkey}</Hotkey>
+                    )}
+                  </Menu.Item>
+                )}
+              </Menu>
+            </Menu.Trigger>
+          </>
+        );
       },
       header: () => ({}),
     }),
