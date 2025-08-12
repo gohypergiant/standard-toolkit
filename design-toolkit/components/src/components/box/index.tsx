@@ -1,4 +1,4 @@
-import { cx } from 'cva';
+import { cx } from 'class-variance-authority';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");

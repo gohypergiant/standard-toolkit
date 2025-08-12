@@ -49,7 +49,12 @@ import type {
   ToggleButtonProps,
 } from './types';
 
-const noopToggleState = { isSelected: false, setSelected: noop, toggle: noop };
+const noopToggleState = {
+  defaultSelected: false,
+  isSelected: false,
+  setSelected: noop,
+  toggle: noop,
+};
 const buttonSizes: ButtonSizes[] = ['xs', 'sm', 'md', 'lg', 'xl'];
 
 const defaultMapping: ButtonMapping = {

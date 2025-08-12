@@ -10,28 +10,76 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  SearchField,
-  type SearchFieldProps,
-} from '@/components/search-field/index';
+import { SearchField } from '@/components/search-field/index';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import type { SearchFieldProps } from './types';
 
-function setup({ placeholder = 'Search' }: Partial<SearchFieldProps> = {}) {
-  render(
-    <SearchField
-      placeholder={placeholder}
-      aria-label='Test Search Field Component'
-    />,
-  );
-
-  return { placeholder };
+function setup({
+  inputProps = { placeholder: 'Search' },
+  'aria-label': ariaLabel = 'Search',
+  ...rest
+}: Partial<SearchFieldProps> = {}) {
+  return {
+    ...render(
+      <SearchField {...rest} inputProps={inputProps} aria-label={ariaLabel} />,
+    ),
+    ...rest,
+    inputProps,
+    'aria-label': ariaLabel,
+  };
 }
 
 describe('SearchField', () => {
-  it('should render', () => {
-    const { placeholder } = setup();
+  const placeholder = 'Search';
 
-    expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();
+  it('should render', () => {
+    setup();
+
+    const input = screen.getByPlaceholderText(placeholder);
+
+    expect(input).toBeInTheDocument();
+  });
+
+  it('should show loading state', () => {
+    const className = 'loading-icon';
+
+    setup({ classNames: { loading: className }, isLoading: true });
+
+    const loadingIcon = document.getElementsByClassName(className)[0];
+
+    // In loading state, the loading icon should be visible
+    expect(loadingIcon).toBeInTheDocument();
+
+    // and the clear button should not be visible
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('should work with Provider context', () => {
+    const value = 'hello world';
+
+    render(
+      <SearchField.Provider value={value}>
+        <SearchField aria-label='Context test' />
+      </SearchField.Provider>,
+    );
+
+    expect(screen.getByRole('searchbox')).toHaveValue(value);
+  });
+
+  it('should render with all classNames options', () => {
+    const className = 'custom-search-field';
+
+    const { container } = setup({
+      classNames: {
+        field: className,
+        search: 'custom-search-icon',
+        input: 'custom-input',
+        loading: 'custom-loading-icon',
+        clear: 'custom-clear-button',
+      },
+    });
+
+    expect(container.firstChild).toHaveClass(className);
   });
 });

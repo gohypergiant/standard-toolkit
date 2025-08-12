@@ -11,26 +11,34 @@
  */
 
 'use client';
-import { cn } from '@/lib/utils';
+import 'client-only';
 import Calendar from '@accelint/icons/calendar';
 import type { DateValue } from '@internationalized/date';
 import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
-import 'client-only';
-import { type VariantProps, cva } from 'cva';
-import type { ForwardedRef } from 'react';
 import {
   DateField as AriaDateField,
-  type DateFieldProps as AriaDateFieldProps,
   DateInput as AriaDateInput,
-  type DateInputProps as AriaDateInputProps,
   type DateSegmentProps as AriaDateSegmentProps,
   Text as AriaText,
   DateSegment,
   type DateSegmentRenderProps,
   FieldError,
+  composeRenderProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
+import { DateFieldStyles } from './styles';
+import type { DateFieldProps, DateInputProps } from './types';
+
+const {
+  field,
+  dateInput,
+  dateInputContainer,
+  icon,
+  descriptionText,
+  error,
+  dateSegment,
+} = DateFieldStyles();
 
 const months = [
   'JAN',
@@ -85,11 +93,7 @@ const FormattedDateSegment = ({
   }
 
   return (
-    <DateSegment
-      segment={segment}
-      className='focus:bg-highlight focus:text-inverse-light focus:outline-none' // Ensure caret color is visible, RAC sets the style prop and it is not overridable. Thanks for that.
-      {...props}
-    >
+    <DateSegment segment={segment} className={dateSegment({})} {...props}>
       {segment.type === 'month'
         ? (renderProps) => (
             <MonthDateSegment {...renderProps} shortMonth={shortMonth} />
@@ -99,172 +103,96 @@ const FormattedDateSegment = ({
   );
 };
 
-const dateFieldStyles = cva(
-  [
-    'flex w-full gap-xs rounded-medium px-s py-xs font-display outline outline-interactive',
-  ],
-  {
-    variants: {
-      isDisabled: {
-        true: 'text-disabled outline-interactive-disabled placeholder:text-disabled',
-        false:
-          'text-default-light placeholder:text-default-dark focus-within:outline-highlight hover:outline-interactive-hover',
-      },
-      isInvalid: {
-        true: 'outline-serious',
-      },
-      isReadOnly: {
-        true: 'rounded-none p-0 outline-none',
-      },
-      size: {
-        medium: ['text-body-s', 'pl-[32px]'],
-        small: 'text-body-xs',
-      },
-    },
-    compoundVariants: [
-      {
-        isDisabled: true,
-        isInvalid: true,
-        className: 'outline-interactive-disabled',
-      },
-      {
-        isDisabled: false,
-        size: 'medium',
-      },
-    ],
-    defaultVariants: {
-      size: 'medium',
-    },
-  },
-);
-
-interface DateInputProps
-  extends VariantProps<typeof dateFieldStyles>,
-    Omit<AriaDateInputProps, 'size'> {
-  ref?: ForwardedRef<HTMLDivElement>;
-}
-
 const DateInput = ({
   className,
   ref = null,
-  size = 'medium',
-  isReadOnly,
+  size,
   ...props
 }: DateInputProps) => {
   return (
-    <div className='relative flex'>
+    <div className={dateInputContainer({})}>
       {size === 'medium' ? (
-        <Icon
-          className={cn([
-            '-translate-y-1/2 absolute top-1/2 left-s',
-            props.isDisabled ? 'text-disabled' : 'text-default-light',
-          ])}
-        >
+        <Icon className={icon({})}>
           <Calendar />
         </Icon>
       ) : null}
       <AriaDateInput
         {...props}
-        className={({ isDisabled, isInvalid }) =>
-          cn(
-            dateFieldStyles({
-              isDisabled,
-              isInvalid,
-              isReadOnly: isReadOnly,
-              size,
-              className,
-            }),
-          )
-        }
+        className={composeRenderProps(className, (className) =>
+          dateInput({
+            className,
+          }),
+        )}
+        data-size={size}
       />
     </div>
   );
 };
 
-export interface DateFieldProps<T extends DateValue>
-  extends Omit<
-      VariantProps<typeof dateFieldStyles>,
-      'isDisabled' | 'isInvalid' | 'isReadOnly'
-    >,
-    Omit<AriaDateFieldProps<T>, 'className' | 'style'>, // Exclude className to avoid conflict with cva
-    Omit<AriaDateInputProps, 'className' | 'children' | 'style'> {
-  isDisabled?: boolean;
-  isInvalid?: boolean;
-  isReadOnly?: boolean;
-  size?: 'small' | 'medium';
-  className?: string;
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  placeholder?: string;
-  shortMonth?: boolean;
-}
-
 export function DateField<T extends DateValue>({
-  className,
-  description,
-  errorMessage,
+  classNames,
+  description: descriptionProp,
+  errorMessage: errorMessageProp,
   isDisabled,
-  isInvalid,
+  isInvalid: isInvalidProp,
   isReadOnly,
   label,
   placeholder,
   slot,
   size = 'medium',
   shortMonth = true,
+  isRequired,
   ...props
 }: DateFieldProps<T>) {
+  const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
-  const shouldShowDescription =
-    description && (!(isSmall || isInvalid) || isDisabled);
-  const shouldShowError =
-    errorMessage && isInvalid && !isDisabled && !isReadOnly;
 
   return (
     <AriaDateField<T>
       {...props}
       isDisabled={isDisabled}
-      isInvalid={isInvalid}
+      isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isReadOnly={isReadOnly}
       slot={slot}
-      className={'flex flex-col gap-xs'}
+      className={composeRenderProps(classNames?.field, (className) =>
+        field({ className }),
+      )}
     >
-      {!isSmall && (
-        <Label
-          className='empty:hidden'
-          isDisabled={isDisabled}
-          isRequired={props.isRequired}
-        >
-          {label}
-        </Label>
-      )}
-
-      <DateInput
-        className={className}
-        isDisabled={isDisabled}
-        size={size}
-        isReadOnly={isReadOnly}
-        isInvalid={isInvalid}
-      >
-        {(segment) => (
-          <FormattedDateSegment segment={segment} shortMonth={shortMonth} />
-        )}
-      </DateInput>
-      {shouldShowDescription && (
-        <AriaText
-          className={cn([
-            'fg-default-dark text-body-xs empty:hidden',
-            isDisabled && 'fg-disabled',
-          ])}
-          slot='description'
-        >
-          {description}
-        </AriaText>
-      )}
-      {shouldShowError && (
-        <FieldError className='fg-serious text-body-xs empty:hidden'>
-          {errorMessage}
-        </FieldError>
+      {(
+        { isDisabled, isInvalid }, // Rely on internal state, not props, since state could differ from props
+      ) => (
+        <>
+          {!isSmall && label && (
+            <Label
+              className={classNames?.label}
+              isDisabled={isDisabled}
+              isRequired={isRequired}
+            >
+              {label}
+            </Label>
+          )}
+          <DateInput
+            className={classNames?.input}
+            size={size}
+            isInvalid={isInvalid}
+          >
+            {(segment) => (
+              <FormattedDateSegment segment={segment} shortMonth={shortMonth} />
+            )}
+          </DateInput>
+          {descriptionProp && (!(isSmall || isInvalidProp) || isDisabled) && (
+            <AriaText className={descriptionText({})} slot='description'>
+              {descriptionProp}
+            </AriaText>
+          )}
+          <FieldError
+            className={composeRenderProps(classNames?.error, (className) =>
+              error({ className }),
+            )}
+          >
+            {errorMessage}
+          </FieldError>
+        </>
       )}
     </AriaDateField>
   );

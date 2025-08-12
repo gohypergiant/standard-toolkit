@@ -48,7 +48,5 @@ const meta: Meta<typeof ClassificationBadge> = {
 export default meta;
 
 export const Default: StoryObj<typeof ClassificationBadge> = {
-  render: ({ children, ...args }) => (
-    <ClassificationBadge {...args}>{children}</ClassificationBadge>
-  ),
+  render: ClassificationBadge,
 };

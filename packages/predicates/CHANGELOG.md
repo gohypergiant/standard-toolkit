@@ -1,5 +1,21 @@
 # @accelint/predicates
 
+## 0.3.3
+
+### Patch Changes
+
+- 83104ea: Refactored ViewStack to be event driven, allowing for triggers anywhere in the app
+- Updated dependencies [83104ea]
+  - @accelint/core@0.3.0
+
+## 0.3.2
+
+### Patch Changes
+
+- ca3922a: added subpath exports for packages
+- Updated dependencies [ca3922a]
+  - @accelint/core@0.2.2
+
 ## 0.3.1
 
 ### Patch Changes
@@ -36,7 +52,6 @@
   to a boolean which enables the predicate functions (packages/predicates/src/is-noyes) to
   be more specific in what they compare against rather than them simply being alias names
   to broad validation. The available predicates are now:
-
   - `isAnyFalsy`
   - `isAnyTruthy`
   - `isFalse`

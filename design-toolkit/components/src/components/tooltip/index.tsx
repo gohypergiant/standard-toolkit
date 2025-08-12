@@ -10,80 +10,70 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-import { containsExactChildren } from '@/lib/react';
-import { cn } from '@/lib/utils';
+import { createContext } from 'react';
 import 'client-only';
-import { type VariantProps, cva } from 'cva';
-import type React from 'react';
+import { containsExactChildren } from '@/lib/react';
 import {
+  Tooltip as AriaTooltip,
+  TooltipTrigger as AriaTooltipTrigger,
+  type ContextValue,
   Focusable,
-  Tooltip as RACTooltip,
-  type TooltipProps as RACTooltipProps,
-  TooltipTrigger as RACTooltipTrigger,
-  type TooltipTriggerComponentProps,
+  composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
+import { TooltipStyles } from './styles';
+import type {
+  TooltipBodyProps,
+  TooltipProps,
+  TooltipTriggerProps,
+} from './types';
 
-const tooltipStyles = cva(
-  'fg-default-light flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay',
-);
+export const TooltipContext =
+  createContext<ContextValue<TooltipProps, HTMLDivElement>>(null);
 
-export interface TooltipProps extends TooltipTriggerComponentProps {}
+export function Tooltip({ ref, ...props }: TooltipProps) {
+  [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
 
-export function Tooltip({
-  children,
-  closeDelay = 0,
-  delay = 400,
-  ...props
-}: TooltipProps) {
+  const { children, ...rest } = props;
+
   containsExactChildren({
     children,
     componentName: Tooltip.displayName,
-    restrictions: {
-      [TooltipTrigger.displayName]: { min: 1, max: 1 },
-      [TooltipBody.displayName]: { min: 1, max: 1 },
-    },
+    restrictions: [
+      [TooltipTrigger, { min: 1, max: 1 }],
+      [TooltipBody, { min: 1, max: 1 }],
+    ],
   });
 
-  return (
-    <RACTooltipTrigger closeDelay={closeDelay} delay={delay} {...props}>
-      {children}
-    </RACTooltipTrigger>
-  );
+  return <AriaTooltipTrigger {...rest}>{children}</AriaTooltipTrigger>;
 }
 Tooltip.displayName = 'Tooltip';
-Tooltip.as = (
-  props: VariantProps<typeof tooltipStyles>,
-  className?: string | string[],
-) => cn(tooltipStyles({ ...props, className }));
 
-export interface TooltipTriggerProps
-  extends React.ComponentProps<typeof Focusable> {}
-
-export const TooltipTrigger = ({ children, ...props }: TooltipTriggerProps) => {
+function TooltipTrigger({ children, ...props }: TooltipTriggerProps) {
   return <Focusable {...props}>{children}</Focusable>;
-};
+}
 TooltipTrigger.displayName = 'Tooltip.Trigger';
 
-export interface TooltipBodyProps extends RACTooltipProps {}
-
-export const TooltipBody = ({
+function TooltipBody({
   children,
   className,
   offset = 5,
   placement = 'bottom',
   ...props
-}: TooltipBodyProps) => {
+}: TooltipBodyProps) {
   return (
-    <RACTooltip
+    <AriaTooltip
       {...props}
-      className={cn(tooltipStyles({ className }))}
+      className={composeRenderProps(className, (className) =>
+        TooltipStyles({ className }),
+      )}
       offset={offset}
       placement={placement}
     >
       {children}
-    </RACTooltip>
+    </AriaTooltip>
   );
-};
+}
 TooltipBody.displayName = 'Tooltip.Body';
 
 Tooltip.Trigger = TooltipTrigger;

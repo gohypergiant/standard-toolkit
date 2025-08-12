@@ -10,7 +10,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import { useContext } from 'react';
 import {
   type RuleProps,
@@ -18,7 +20,7 @@ import {
   useRule,
   useStopEventPropagation,
 } from 'react-querybuilder';
-import type { QueryBuilderContextType } from './';
+import type { QueryBuilderContextType } from './types';
 
 export function Rule(props: RuleProps) {
   const rule = useRule(props);

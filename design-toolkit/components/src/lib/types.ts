@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, PropsWithChildren, ReactNode } from 'react';
 
 /**
  * Re-export due to not being exported by library
@@ -51,3 +51,11 @@ export type RenderProps<T extends object> = StyleRenderProps<T> & {
   /** The children of the component. A function may be provided to alter the children based on component state. */
   children?: RenderPropsChildren<T>;
 };
+
+export type SlottedValue<T> = {
+  slots?: Record<string | symbol, T>;
+};
+
+export type ProviderProps<T> = PropsWithChildren<
+  Omit<T, 'children' | 'slot'> & SlottedValue<T>
+>;

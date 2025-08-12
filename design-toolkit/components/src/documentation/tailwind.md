@@ -63,7 +63,7 @@ Keep in mind, when implementing variants within `tv`, you should not implement a
 
 The Core team has chosen not to implement the RAC TW plugin directly. Instead we've implemented a modified version that follows the same patterns without being locked into RAC selectors or using a prefix that separates selector types. This means that RAC state based classes are available to utilize, they're just merged with CSS pseudo selectors and will work with any component that implements the cooresponding data attributes (when CSS pseudo selectors don't work).
 
-Because we have a custom implementation, there may be additional variants available than what is documented in RAC. Check out [index.css](../index.css) to see the custom variants defined and the selectors associated with each.
+Because we have a custom implementation, there may be additional variants available than what is documented in RAC. Check out [variants.css](../variants/variants.css) to see the custom variants defined and the selectors associated with each.
 
 Any reusable component that is being developed without RAC underpinning or has additional internal state which would be useful to expose to styling should implement data attributes and a custom variant. However, consider how generic the implementation is before proceeding. If the state is unique to the component being developed, using TV variants instead is likely the way to go.
 
@@ -228,3 +228,11 @@ function MyComponent({ className, isDisabled }: Props) {
   return <div className={styles({ className, isDisabled })} />
 }
 ```
+
+## Implementation Specifics
+
+### Border vs Outline
+
+DesignTK chooses to implement outlines instead of borders to make it so that the style doesn't impact box model dimensions. This way elements with or without a "border" are consistently sized based on content and padding alone. This also helps with sibling components rendering at the same size when their border styles may not match.
+
+Do not implement borders, do implement outlines

@@ -10,16 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import {
   ClassificationBadgeStyles,
   ClassificationBadgeStylesDefaults,
 } from './styles';
-import type {
-  ClassificationBadgeProps,
-  ClassificationBadgeProviderProps,
-} from './types';
+import type { ClassificationBadgeProps } from './types';
 
 export const ClassificationBadgeContext =
   createContext<ContextValue<ClassificationBadgeProps, HTMLSpanElement>>(null);
@@ -27,7 +25,7 @@ export const ClassificationBadgeContext =
 function ClassificationBadgeProvider({
   children,
   ...props
-}: ClassificationBadgeProviderProps) {
+}: ProviderProps<ClassificationBadgeProps>) {
   return (
     <ClassificationBadgeContext.Provider value={props}>
       {children}
@@ -47,10 +45,10 @@ export function ClassificationBadge({
   );
 
   const {
-    className,
-    size = ClassificationBadgeStylesDefaults.size,
-    variant = ClassificationBadgeStylesDefaults.variant,
     children,
+    className,
+    size = 'medium',
+    variant = ClassificationBadgeStylesDefaults.variant,
     ...rest
   } = props;
 
@@ -58,10 +56,10 @@ export function ClassificationBadge({
     <span
       {...rest}
       className={ClassificationBadgeStyles({
-        size,
         variant,
         className,
       })}
+      data-size={size}
     >
       {children}
     </span>

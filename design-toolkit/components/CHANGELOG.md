@@ -1,5 +1,91 @@
 # @accelint/design-toolkit
 
+## 2.6.0
+
+### Minor Changes
+
+- a97d386: Update Menu component to accept custom triggers
+  Add Hotkey component
+- 9ec4cbe: Adds <select> component
+
+### Patch Changes
+
+- 83104ea: Refactored ViewStack to be event driven, allowing for triggers anywhere in the app
+- Updated dependencies [83104ea]
+- Updated dependencies [83104ea]
+  - @accelint/core@0.3.0
+  - @accelint/icons@2.0.3
+  - @accelint/bus@0.1.2
+
+## 2.5.0
+
+### Minor Changes
+
+- 5404e48: Refactor SearchField to follow styling standards
+- 61a55ef: Add drawer
+
+### Patch Changes
+
+- 11a813f: Fix css grid formatting for menu
+- 7481c80: Update Options to follow DesignTK styling standards
+- a201c50: Updated types and fixtures in query builder to fix build
+- de8c60a: remove duplicative type prop from TextField
+- 484c14f: Added default text color for filled buttons
+- a16fbf3: - Created DetailsList component
+  - Created Hero component
+  - Created Skeleton component
+  - Simplified types
+  - Implemented missing tests
+  - Updated component structure validation functions to exit early in production
+  - Expanded component structure validation functions to handle RACs, functions and Fragments
+- c95e5b4: allow children
+- Updated dependencies [ca3922a]
+  - @accelint/icons@2.0.2
+
+## 2.4.3
+
+### Patch Changes
+
+- 382bbc2: Fixes a build issue caused by an import with trailing character in `components/avatar/index.tsx`.
+
+## 2.4.2
+
+### Patch Changes
+
+- 93b3750: Fixed controlled usage of field input
+
+## 2.4.1
+
+### Patch Changes
+
+- f57cb86: Adds fallback for some css tokens
+- 4fa066a: - Converted Input autoSize behavior to an optional prop variant
+  - Lowered custom variant selector specificity to reduce friction of overrides
+  - Fixed Checkbox styling for state of indeterminate + disabled
+
+## 2.4.0
+
+### Minor Changes
+
+- fe10a47: Adds the <menu> component
+
+### Patch Changes
+
+- 4dd70f2: - Add Input component with automatic resizing
+  - Refactor TextField to new style standard and to use new Input
+  - Fix Checkbox foreground color
+  - Fix outline inset
+  - Add typography spacing tokens
+- c16b479: Removed plural naming for shadow tokens
+- 51422c1: Remove menu icon and menu keyboard exports
+- 9421185: Remove Menu.Item.Icon and Menu.Item.Keyboard and cleanup styles
+- a502977: Fix accordion icon not flipping
+- 34f3d91: - Flattened token folder structure for easier use within DesignTK
+  - Added group names to deconflict Tailwind groups
+  - Converted size to variant selector
+  - Added missing provider
+- f9e0cac: Refactored Avatar & Badge to new styling standard
+
 ## 2.3.2
 
 ### Patch Changes

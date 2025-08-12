@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   Switch as AriaSwitch,
@@ -20,7 +21,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { SwitchStyles } from './styles';
-import type { SwitchProps, SwitchProviderProps } from './types';
+import type { SwitchProps } from './types';
 
 // "switch" is a reserved term in JS
 const { switch: switchClassNames, control, label } = SwitchStyles();
@@ -28,7 +29,7 @@ const { switch: switchClassNames, control, label } = SwitchStyles();
 export const SwitchContext =
   createContext<ContextValue<SwitchProps, HTMLLabelElement>>(null);
 
-function SwitchProvider({ children, ...props }: SwitchProviderProps) {
+function SwitchProvider({ children, ...props }: ProviderProps<SwitchProps>) {
   return (
     <SwitchContext.Provider value={props}>{children}</SwitchContext.Provider>
   );

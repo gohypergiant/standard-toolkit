@@ -24,9 +24,9 @@ function setup({
   children = (
     <>
       <Menu.Item>
-        <Menu.Item.Icon>
+        <Icon>
           <Placeholder />
-        </Menu.Item.Icon>
+        </Icon>
         <Menu.Item.Label>Songbirds</Menu.Item.Label>
       </Menu.Item>
       <Menu.Separator />
@@ -36,16 +36,16 @@ function setup({
         </Menu.Item>
         <Menu>
           <Menu.Item>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Blue Jay</Menu.Item.Label>
             <Menu.Item.Description>Cyanocitta cristata</Menu.Item.Description>
           </Menu.Item>
           <Menu.Item isDisabled>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Gray catbird</Menu.Item.Label>
             <Menu.Item.Description>
               Dumetella carolinensis
@@ -56,23 +56,23 @@ function setup({
       <Menu.Separator />
       <Menu.Section header='Additional Notable Species'>
         <Menu.Item>
-          <Menu.Item.Icon>
+          <Icon>
             <Placeholder />
-          </Menu.Item.Icon>
+          </Icon>
           <Menu.Item.Label>Mallard</Menu.Item.Label>
           <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
         </Menu.Item>
         <Menu.Item>
-          <Menu.Item.Icon>
+          <Icon>
             <Placeholder />
-          </Menu.Item.Icon>
+          </Icon>
           <Menu.Item.Label>Chimney swift</Menu.Item.Label>
           <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
         </Menu.Item>
         <Menu.Item>
-          <Menu.Item.Icon>
+          <Icon>
             <Placeholder />
-          </Menu.Item.Icon>
+          </Icon>
           <Menu.Item.Label>Brünnich's guillemot</Menu.Item.Label>
           <Menu.Item.Description>Dumetella carolinensis</Menu.Item.Description>
         </Menu.Item>

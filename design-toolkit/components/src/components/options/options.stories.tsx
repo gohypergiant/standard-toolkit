@@ -17,23 +17,32 @@ import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
 } from 'react-aria-components';
-import type { IOptionsItem } from '../options-item';
-import { Options } from './index';
+import { Icon } from '../icon';
+import { Options } from './';
 
 const meta: Meta<typeof Options> = {
   title: 'Components/Options',
   component: Options,
   args: {
     size: 'large',
-    type: 'default',
+  },
+  argTypes: {
+    size: {
+      control: 'select',
+    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Options>;
 
-interface CustomOptionsItem extends IOptionsItem {
+interface CustomOptionsItem {
+  id: number;
+  name: string;
+  description?: string;
   isDisabled?: boolean;
+  prefixIcon?: ReactNode;
+  suffixIcon?: ReactNode;
+  children?: CustomOptionsItem[];
 }
 
 const items: CustomOptionsItem[] = [
@@ -123,89 +132,114 @@ const itemsWithSections: CustomOptionsItem[] = [
   },
 ];
 
-export const Default: Story = {
-  args: {
-    size: 'large',
-    selectionBehavior: 'toggle',
-    type: 'default',
-  },
-
+export const Default: StoryObj<typeof Options> = {
   render: ({ children, ...args }) => (
-    <Options<CustomOptionsItem> {...args} items={items}>
+    <Options {...args} items={items}>
       {(item) => (
         <Options.Item
           key={item.id}
-          prefixIcon={item.prefixIcon}
-          name={item.name}
-          description={item.description}
+          id={item.id}
+          textValue={item.name}
           isDisabled={item.isDisabled}
-          suffixIcon={item.suffixIcon}
-        />
+        >
+          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+          <Options.Item.Content>
+            <Options.Item.Label>{item.name}</Options.Item.Label>
+            {item.description && (
+              <Options.Item.Description>
+                {item.description}
+              </Options.Item.Description>
+            )}
+          </Options.Item.Content>
+          {item.suffixIcon && <Icon>{item.suffixIcon}</Icon>}
+        </Options.Item>
       )}
     </Options>
   ),
 };
 
-export const WithDynamicSections: Story = {
-  args: {
-    ...Default.args,
-  },
+export const WithDynamicSections: StoryObj<typeof Options> = {
   render: ({ children, ...args }) => (
-    <Options<CustomOptionsItem> {...args} items={itemsWithSections}>
+    <Options {...args} items={itemsWithSections}>
       {(section) => (
         <Options.Section header={section.name} items={section.children}>
-          {({ children, ...item }) => <Options.Item key={item.id} {...item} />}
+          {({ children, ...item }) => (
+            <Options.Item key={item.id} id={item.id} textValue={item.name}>
+              {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+              <Options.Item.Content>
+                <Options.Item.Label>{item.name}</Options.Item.Label>
+                {item.description && (
+                  <Options.Item.Description>
+                    {item.description}
+                  </Options.Item.Description>
+                )}
+              </Options.Item.Content>
+              {item.suffixIcon && <Icon>{item.suffixIcon}</Icon>}
+            </Options.Item>
+          )}
         </Options.Section>
       )}
     </Options>
   ),
 };
 
-export const WithStaticSections: Story = {
-  args: {
-    ...Default.args,
-    size: 'large',
-  },
+export const WithStaticSections: StoryObj<typeof Options> = {
   render: ({ children, ...args }) => (
     <Options {...args}>
-      <Options.Section header='North American Birds' className='w-[200px]'>
-        <Options.Item prefixIcon={<Placeholder />} name='Blue Jay'>
-          Blue Jay
+      <Options.Section
+        header='North American Birds'
+        classNames={{ section: 'w-[200px]' }}
+      >
+        <Options.Item textValue='Blue Jay'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Blue Jay</Options.Item.Label>
         </Options.Item>
-        <Options.Item prefixIcon={<Placeholder />} name='Gray catbird'>
-          Gray catbird
+        <Options.Item textValue='Gray catbird'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Gray catbird</Options.Item.Label>
         </Options.Item>
-        <Options.Item
-          prefixIcon={<Placeholder />}
-          name='Black-capped chickadee'
-        >
-          Black-capped chickadee
+        <Options.Item textValue='Black-capped chickadee'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Black-capped chickadee</Options.Item.Label>
         </Options.Item>
-        <Options.Item prefixIcon={<Placeholder />} name='Song Sparrow'>
-          Song Sparrow
+        <Options.Item textValue='Song Sparrow'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Song Sparrow</Options.Item.Label>
         </Options.Item>
       </Options.Section>
       <Options.Section header='African Birds'>
-        <Options.Item prefixIcon={<Placeholder />} name='Lilac-breasted roller'>
-          Lilac-breasted roller
+        <Options.Item textValue='Lilac-breasted roller'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Lilac-breasted roller</Options.Item.Label>
         </Options.Item>
-        <Options.Item prefixIcon={<Placeholder />} name='Hornbill'>
-          Hornbill
+        <Options.Item textValue='Hornbill'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Hornbill</Options.Item.Label>
         </Options.Item>
       </Options.Section>
     </Options>
   ),
 };
 
-const manyItems: { id: number; name: string; icon: ReactNode }[] = [];
-for (let i = 0; i < 5000; i++) {
-  manyItems.push({ id: i, name: `Item ${i}`, icon: <Placeholder /> });
-}
+const manyItems = Array.from({ length: 5000 }, (_, index) => ({
+  id: index,
+  name: `Item ${index}`,
+  icon: <Placeholder />,
+}));
 
-export const Virtualized: Story = {
-  args: {
-    ...Default.args,
-  },
+export const Virtualized: StoryObj<typeof Options> = {
   render: ({ children, ...args }) => (
     <div className='w-[200px]'>
       <AriaVirtualizer
@@ -214,8 +248,9 @@ export const Virtualized: Story = {
       >
         <Options {...args}>
           {manyItems.map((item) => (
-            <Options.Item key={item.id} prefixIcon={item.icon} name={item.name}>
-              {item.name}
+            <Options.Item key={item.id} id={item.id} textValue={item.name}>
+              {item.icon && <Icon>{item.icon}</Icon>}
+              <Options.Item.Label>{item.name}</Options.Item.Label>
             </Options.Item>
           ))}
         </Options>

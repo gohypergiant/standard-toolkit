@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren, RefAttributes } from 'react';
+import type { RefAttributes } from 'react';
 import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
 
 export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
@@ -21,5 +21,3 @@ export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
       label?: string;
     };
   };
-
-export type SwitchProviderProps = PropsWithChildren<SwitchProps>;

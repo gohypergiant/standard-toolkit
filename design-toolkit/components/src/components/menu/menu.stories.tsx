@@ -13,8 +13,9 @@
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { Button } from '../button';
+import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
 import { Menu } from './';
 import type { MenuItemProps } from './types';
@@ -47,6 +48,7 @@ type MenuItem = {
   prefixIcon?: ReactNode;
   children?: MenuItem[];
   isDisabled?: boolean;
+  hotkey?: string;
   color?: MenuItemProps['color'];
 };
 
@@ -69,6 +71,7 @@ const menuItems: MenuItem[] = [
         name: 'Gray catbird',
         description: 'Dumetella carolinensis',
         isDisabled: true,
+        hotkey: '⌘V',
       },
       {
         id: 4,
@@ -115,11 +118,11 @@ export const Basic: StoryObj<typeof Menu> = {
       </Button>
       <Menu {...args}>
         <Menu.Item>
-          <Menu.Item.Icon>
+          <Icon>
             <Placeholder />
-          </Menu.Item.Icon>
+          </Icon>
           <Menu.Item.Label>Songbirds</Menu.Item.Label>
-          <Menu.Item.Keyboard>⌘A</Menu.Item.Keyboard>
+          <Hotkey variant='flat'>⌘A</Hotkey>
         </Menu.Item>
         <Menu.Separator />
         <Menu.Submenu>
@@ -128,16 +131,16 @@ export const Basic: StoryObj<typeof Menu> = {
           </Menu.Item>
           <Menu>
             <Menu.Item>
-              <Menu.Item.Icon>
+              <Icon>
                 <Placeholder />
-              </Menu.Item.Icon>
+              </Icon>
               <Menu.Item.Label>Blue Jay</Menu.Item.Label>
               <Menu.Item.Description>Cyanocitta cristata</Menu.Item.Description>
             </Menu.Item>
             <Menu.Item isDisabled>
-              <Menu.Item.Icon>
+              <Icon>
                 <Placeholder />
-              </Menu.Item.Icon>
+              </Icon>
               <Menu.Item.Label>Gray catbird</Menu.Item.Label>
               <Menu.Item.Description>
                 Dumetella carolinensis
@@ -148,29 +151,29 @@ export const Basic: StoryObj<typeof Menu> = {
         <Menu.Separator />
         <Menu.Section header='Additional Notable Species'>
           <Menu.Item color='serious'>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Mallard</Menu.Item.Label>
             <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
-            <Menu.Item.Keyboard>⌘V</Menu.Item.Keyboard>
+            <Hotkey variant='flat'>⌘V</Hotkey>
           </Menu.Item>
           <Menu.Item>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Chimney swift</Menu.Item.Label>
             <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
           </Menu.Item>
           <Menu.Item>
-            <Menu.Item.Icon>
+            <Icon>
               <Placeholder />
-            </Menu.Item.Icon>
+            </Icon>
             <Menu.Item.Label>Brünnich's guillemot</Menu.Item.Label>
             <Menu.Item.Description>
               Dumetella carolinensis
             </Menu.Item.Description>
-            <Menu.Item.Keyboard>⌘X</Menu.Item.Keyboard>
+            <Hotkey variant='flat'>⌘X</Hotkey>
           </Menu.Item>
         </Menu.Section>
       </Menu>
@@ -196,13 +199,14 @@ export const Dynamic: StoryObj<typeof Menu> = {
                   isDisabled={item.isDisabled}
                   color={item.color}
                 >
-                  <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
+                  <Icon>{item.prefixIcon}</Icon>
                   <Menu.Item.Label>{item.name}</Menu.Item.Label>
                   {item.description && (
                     <Menu.Item.Description>
                       {item.description}
                     </Menu.Item.Description>
                   )}
+                  {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
                 </Menu.Item>
                 <Menu items={item.children}>{(item) => render(item)}</Menu>
               </Menu.Submenu>
@@ -214,17 +218,95 @@ export const Dynamic: StoryObj<typeof Menu> = {
               isDisabled={item.isDisabled}
               color={item.color}
             >
-              <Menu.Item.Icon>{item.prefixIcon}</Menu.Item.Icon>
+              <Icon>{item.prefixIcon}</Icon>
               <Menu.Item.Label>{item.name}</Menu.Item.Label>
               {item.description && (
                 <Menu.Item.Description>
                   {item.description}
                 </Menu.Item.Description>
               )}
+              {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
             </Menu.Item>
           );
         }}
       </Menu>
     </Menu.Trigger>
   ),
+};
+
+export const ContextMenu: StoryObj<typeof Menu> = {
+  render: () => {
+    const [menuPosition, setMenuPosition] = useState<{
+      x: number;
+      y: number;
+    } | null>(null);
+    const menuPositionRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div
+        className='fg-default-light m-xl flex h-dvh w-dvh items-center justify-center border border-b-default-dark border-dotted bg-surface-raised'
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setMenuPosition({ x: e.clientX, y: e.clientY });
+        }}
+      >
+        right-click for context menu
+        <div
+          ref={menuPositionRef}
+          style={{
+            position: 'fixed',
+            top: menuPosition?.y,
+            left: menuPosition?.x,
+          }}
+          data-pressed={!!menuPosition || undefined}
+        >
+          <Menu<MenuItem>
+            popoverProps={{
+              placement: 'bottom left',
+              offset: 0,
+              isOpen: !!menuPosition,
+              triggerRef: menuPositionRef,
+              onOpenChange: (isOpen) => {
+                if (!isOpen) {
+                  setMenuPosition(null);
+                }
+              },
+            }}
+            onClose={() => setMenuPosition(null)}
+            items={menuItems}
+          >
+            {function render(item) {
+              if (item.children) {
+                return (
+                  <Menu.Submenu>
+                    <Menu.Item
+                      key={item.id}
+                      isDisabled={item.isDisabled}
+                      color={item.color}
+                    >
+                      <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                      {item.hotkey && (
+                        <Hotkey variant='flat'>{item.hotkey}</Hotkey>
+                      )}
+                    </Menu.Item>
+                    <Menu items={item.children}>{(item) => render(item)}</Menu>
+                  </Menu.Submenu>
+                );
+              }
+              return (
+                <Menu.Item
+                  key={item.id}
+                  isDisabled={item.isDisabled}
+                  color={item.color}
+                >
+                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                  {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
+                </Menu.Item>
+              );
+            }}
+          </Menu>
+        </div>
+      </div>
+    );
+  },
 };

@@ -10,20 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren, Ref, RefAttributes } from 'react';
+import type { RefAttributes } from 'react';
 import type {
   FieldErrorProps,
   TextAreaProps,
   TextFieldProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
-import type { TextAreaStyles } from './styles';
 
-export type TextAreaStyleVariants = VariantProps<typeof TextAreaStyles>;
-
-export type TextAreaFieldProps = Omit<TextFieldProps, 'children'> &
-  RefAttributes<HTMLDivElement> &
-  TextAreaStyleVariants & {
+export type TextAreaFieldProps = Omit<
+  TextFieldProps,
+  'children' | 'className'
+> &
+  RefAttributes<HTMLDivElement> & {
     classNames?: {
       field?: TextFieldProps['className'];
       label?: string;
@@ -32,12 +30,9 @@ export type TextAreaFieldProps = Omit<TextFieldProps, 'children'> &
       error?: FieldErrorProps['className'];
     };
     label?: string;
-    inputRef?: Ref<HTMLTextAreaElement>;
-    inputProps?: Omit<TextAreaProps, 'className'>;
+    inputProps?: Omit<TextAreaProps, 'className'> &
+      RefAttributes<HTMLTextAreaElement>;
     description?: string;
     errorMessage?: FieldErrorProps['children'];
+    size?: 'medium' | 'small';
   };
-
-export type TextAreaFieldProviderProps = PropsWithChildren<
-  Omit<TextAreaFieldProps, 'ref'>
->;

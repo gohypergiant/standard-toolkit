@@ -10,20 +10,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import { useCallback } from 'react';
-import {
-  type InputType,
-  type ValueEditorProps,
-  useValueEditor,
-} from 'react-querybuilder';
+import { type ValueEditorProps, useValueEditor } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
+import type { InputProps } from '../input/types';
 import { Radio } from '../radio';
 import { Switch } from '../switch';
 import { TextAreaField } from '../text-area-field';
 import { TextField } from '../text-field';
-import type { QueryBuilderValueEditors } from './';
 import { multiValueOperators } from './constants';
+import type { QueryBuilderValueEditors } from './types';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
 
@@ -137,12 +136,14 @@ function TextValueEditor({
 
   return (
     <TextField
-      isDisabled={disabled}
-      isInvalid={!valid}
-      placeholder={placeholder}
-      type={(inputType as InputType) ?? 'text'}
+      inputProps={{
+        placeholder,
+        type: (inputType as InputProps['type']) ?? 'text',
+      }}
       size='small'
       value={value}
+      isDisabled={disabled}
+      isInvalid={!valid}
       onChange={handleOnChange}
       aria-invalid={!valid}
       aria-label={name}

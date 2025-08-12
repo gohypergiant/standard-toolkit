@@ -59,15 +59,14 @@
   "packageManager": "pnpm@10.9.0",
   "pnpm": {
     "overrides": {
-      "@react-types/shared": "3.25.0",
       "@react-stately/datepicker": "3.13.0",
       "@internationalized/date": "3.8.0",
       "@docusaurus/plugin-debug@3.7.0>react-json-view-lite": "^2.0.0"
     },
     "peerDependencyRules": {
       "allowedVersions": {
-        "react": "19",
-        "react-dom": "19",
+        "react": "^19",
+        "react-dom": "^19",
         "vitest": "2.1.3"
       }
     }

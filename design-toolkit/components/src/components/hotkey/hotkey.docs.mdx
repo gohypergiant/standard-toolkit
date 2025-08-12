@@ -1,0 +1,50 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as HotkeyStories from './hotkey.stories';
+
+<Meta of={HotkeyStories}/>
+
+# Hotkey
+This is a representation of key(s) from a keyboard that executes a specific action. Common examples of hotkeys are: Copy (CMD/Ctrl + C), Paste (CMD/Ctrl + V), Undo (CMD/Ctrl + Z), and Save (CMD/Ctrl/ + S);
+
+## Example usage
+```
+<Hotkey>KEY</Hotkey>
+```
+
+## Variants
+
+* **Flat** - renders plain text, appropriate for using in a `Menu.Item` component
+* **Outline** - renders with borders.
+* **Icon** - renders an icon with the right size and spacing. An icon hotkey will never have a border.
+
+**Outline** is the default variant and should be used in most cases, unless the Hotkey is used as an element in a more complex parent, like an `Options` list.
+
+<Canvas of={HotkeyStories.Default} />
+
+# Hotkey Set
+If you want to group a set of `Hotkey` together to show multiple keystrokes or mouse events, wrap in a `Hotkey.Set` component.
+
+Wrapping the `+` or `or` interstitial marks in a `span` is optional.
+
+## Example usage
+```
+<Hotkey.Set>
+  <Hotkey variant='outline'>CMD</Hotkey>
+  <span>+</span>
+  <Hotkey variant='icon'>
+    <Icon>
+      <MouseRightClick />
+    </Icon>
+  </Hotkey>
+</Hotkey.Set>
+```
+
+<Canvas of={HotkeyStories.KeysSet} />
+
+## Implementation Notes
+The `Hotkey` component wraps the `Keyboard` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Keyboard.html#keyboard) -->
+
+The underlying element is a `kbd` HTML element. [Docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/kbd) -->
+
+

@@ -17,6 +17,8 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const skipFallback = ['icon-size', 'shadow-elevation', 'font'];
+
 // Import the token generator using dynamic import with tsx
 import { readFileSync } from 'node:fs';
 
@@ -45,13 +47,14 @@ async function generateTokens() {
     );
     const semanticContent = readFileSync(semanticPath, 'utf-8');
     const semantic = JSON.parse(semanticContent);
-
     // Generate files in the src/tokens directory
-    const outputDir = path.join(__dirname, '..', 'src', 'tokens', 'generated');
+    const outputDir = path.join(__dirname, '..', 'src', 'tokens');
+
     await fs.promises.mkdir(outputDir, { recursive: true });
 
     // Generate CSS variables
     const cssContent = generateCSS(tokens);
+
     await fs.promises.writeFile(
       path.join(outputDir, 'tokens.css'),
       cssContent,
@@ -60,14 +63,16 @@ async function generateTokens() {
 
     // Generate TypeScript constants and types
     const tsContent = generateTypeScript(tokens, semantic);
+
     await fs.promises.writeFile(
-      path.join(outputDir, 'tokens.ts'),
+      path.join(outputDir, 'index.ts'),
       tsContent,
       'utf-8',
     );
 
     // Generate theme blocks CSS
     const themesContent = generateThemesCSS(tokens, semantic);
+
     await fs.promises.writeFile(
       path.join(outputDir, 'themes.css'),
       themesContent,
@@ -75,11 +80,6 @@ async function generateTokens() {
     );
 
     console.log('✅ Design tokens generated successfully!');
-    console.log(`📁 Output directory: ${outputDir}`);
-    console.log('📄 Generated files:');
-    console.log('   - tokens.css (CSS variables)');
-    console.log('   - tokens.ts (TypeScript constants and types)');
-    console.log('   - themes.css (Theme blocks)');
   } catch (error) {
     console.error('❌ Error generating design tokens:', error);
     process.exit(1);
@@ -357,7 +357,9 @@ function generateThemesCSS(tokens, semantic) {
       if (typeof v === 'object' && v !== null) {
         lines = lines.concat(walkTokens(v, `${prefix}-${k}`));
       } else {
-        lines.push(`  --${prefix}-${k}: var(--${prefix}-${k});`);
+        skipFallback.includes(prefix)
+          ? lines.push(`  --${prefix}-${k}: var(--${prefix}-${k});`)
+          : lines.push(`  --${prefix}-${k}: var(--${prefix}-${k}, ${v});`);
       }
     }
     return lines;

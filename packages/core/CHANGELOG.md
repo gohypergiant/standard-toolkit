@@ -1,5 +1,17 @@
 # @accelint/core
 
+## 0.3.0
+
+### Minor Changes
+
+- 83104ea: Added UUID utilities and type for Tagged/Branded string type enforcement
+
+## 0.2.2
+
+### Patch Changes
+
+- ca3922a: added subpath exports for packages
+
 ## 0.2.1
 
 ### Patch Changes

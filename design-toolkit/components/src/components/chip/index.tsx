@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import type { ProviderProps } from '@/lib/types';
 import { CancelFill } from '@accelint/icons';
 import { createContext, useContext } from 'react';
 import {
@@ -34,7 +35,6 @@ import type {
   BaseChipProps,
   ChipListProps,
   ChipProps,
-  ChipProviderProps,
   DeletableChipProps,
   SelectableChipProps,
 } from './types';
@@ -42,7 +42,7 @@ import type {
 export const ChipContext =
   createContext<ContextValue<BaseChipProps, HTMLDivElement>>(null);
 
-function ChipProvider({ children, ...props }: ChipProviderProps) {
+function ChipProvider({ children, ...props }: ProviderProps<BaseChipProps>) {
   return <ChipContext.Provider value={props}>{children}</ChipContext.Provider>;
 }
 ChipProvider.displayName = 'Chip.Provider';
@@ -58,7 +58,7 @@ function ChipList<T extends object>({ ref, ...props }: ChipListProps<T>) {
     dependencies,
     items,
     renderEmptyState,
-    size = ChipStylesDefaults.size,
+    size = 'medium',
     ...rest
   } = props;
 
@@ -89,7 +89,7 @@ const { chip: selectableChip } = SelectableChipStyles();
 function SelectableChip({ ref, ...props }: SelectableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
 
-  const { className, size, ...rest } = props;
+  const { className, size = 'medium', ...rest } = props;
 
   return (
     <AriaTag
@@ -98,6 +98,7 @@ function SelectableChip({ ref, ...props }: SelectableChipProps) {
       className={composeRenderProps(className, (className) =>
         selectableChip({ className, size }),
       )}
+      data-size={size}
     />
   );
 }
@@ -111,7 +112,7 @@ function DeletableChip({ ref, ...props }: DeletableChipProps) {
   const {
     children,
     classNames,
-    size,
+    size = 'medium',
     textValue = typeof children === 'string' ? children : undefined,
     ...rest
   } = props;
@@ -124,6 +125,7 @@ function DeletableChip({ ref, ...props }: DeletableChipProps) {
         deletableChip({ className, size }),
       )}
       textValue={textValue}
+      data-size={size}
     >
       {composeRenderProps(children, (children, { allowsRemoving }) => {
         if (!allowsRemoving) {
@@ -162,7 +164,7 @@ export function Chip({ ref, ...props }: ChipProps) {
   const Component = context ? AriaTag : 'div';
   const {
     className,
-    size = ChipStylesDefaults.size,
+    size = 'medium',
     variant = ChipStylesDefaults.variant,
     ...rest
   } = props;
@@ -173,6 +175,7 @@ export function Chip({ ref, ...props }: ChipProps) {
         {...rest}
         ref={ref}
         className={chip({ size, variant, className })}
+        data-size={size}
       />
     </Icon.Provider>
   );

@@ -399,7 +399,7 @@ export const MenuItem = forwardRef(function MenuItem<T extends object>(
     <RACMenuItem<T>
       {...rest}
       id={id ?? textValue}
-      ref={ref as ForwardedRef<T>}
+      ref={ref}
       className={classNames?.item?.container}
       style={style}
       textValue={textValue}

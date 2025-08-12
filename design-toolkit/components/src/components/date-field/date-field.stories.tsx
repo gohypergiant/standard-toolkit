@@ -20,10 +20,9 @@ const meta: Meta<typeof DateField> = {
   args: {
     className: '',
     description: 'Format: d MMM yyyy',
-    errorMessage: 'Error description',
+    errorMessage: '',
     isDisabled: false,
     isInvalid: false,
-    isReadOnly: false,
     isRequired: true,
     label: 'Label',
     defaultValue: parseDate('2020-01-23'),

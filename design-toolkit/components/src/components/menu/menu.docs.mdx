@@ -1,0 +1,105 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as MenuStories from './menu.stories';
+
+<Meta of={MenuStories} />
+
+# Menu
+A menu displays a list of actions or options that a user can choose.
+
+Menu is a complex, composed component made up of smaller subcomponents. The subcomponents can only be used as elements of the larger `Menu` parent.
+
+It is composed of the following elements:
+- **Menu.Trigger** - the outside component that manages the open/close behavior of the `Menu`. When there is an interactive element as the first child component, the ref is passed automatically to that element to anchor the menu open location.
+
+- **Menu** - wraps the entire "dropdown" portion of the menu.
+
+- **Menu.Item** - represents a single item in the menu list
+- **Menu.Item.Label** - item display label
+- **Menu.Item.Description** - item description subtext
+- **Menu.Separator** - creates a line separator to denote a visual break
+- **Menu.Section** - creates a visually distinct section with a header
+- **Menu.Submenu** - opens a submenu flyout to navigate hierarchical items
+
+Additionally, you can compose in a `Hotkey` component or `Icon` component as additional elements.
+
+## Static
+You can construct a static menu by using the components directly.
+<Canvas of={MenuStories.Basic} />
+
+## Dynamic
+For a dynamic menu, the `items` prop is passed in.
+<Canvas of={MenuStories.Dynamic} />
+
+## Example usage
+You can build a static menu with a flat list of options to select.
+
+### Simplest Version
+```
+<Menu.Trigger>
+  <Button>Open Menu</Button>
+    <Menu>
+      <Menu.Item>
+        <Menu.Item.Label>Item</Menu.Item.Label>
+      </Menu.Item>
+      <Menu.Separator />
+      <Menu.Item>
+        <Menu.Item.Label>Item</Menu.Item.Label>
+      </Menu.Item>
+    </Menu>
+</Menu.Trigger>
+```
+
+### With Section
+You can add an optional section area.
+```
+<Menu.Trigger>
+  <Button>Open Menu</Button>
+    <Menu>
+      <Menu.Item>
+        <Menu.Item.Label>Item</Menu.Item.Label>
+      </Menu.Item>
+      <Menu.Section header='Additional Notable Species'>
+        <Menu.Item>
+          <Menu.Item.Label>Mallard</Menu.Item.Label>
+          <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
+          <Hotkey variant='flat'>⌘V</Hotkey>
+        </Menu.Item>
+        <Menu.Item>
+          <Menu.Item.Label>Chimney swift</Menu.Item.Label>
+          <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
+          <Hotkey variant='flat'>⌘V</Hotkey>
+        </Menu.Item>
+      </Menu.Section>
+    </Menu>
+</Menu.Trigger>
+```
+
+### With Submenu
+You can add in optional, nested Submenus
+
+```
+<Menu.Trigger>
+  <Button>Open Menu</Button>
+  <Menu>
+    <Menu.Item>
+      <Menu.Item.Label>Item</Menu.Item.Label>
+    </Menu.Item>
+    <Menu.Submenu>
+      <Menu.Item>
+        <Menu.Item.Label>Item With Children</Menu.Item.Label>
+      </Menu.Item>
+        <Menu>
+          <Menu.Item>
+            <Menu.Item.Label>Blue Jay</Menu.Item.Label>
+          </Menu.Item>
+        </Menu>
+      </Menu.Submenu>
+  </Menu>
+</Menu.Trigger>
+```
+
+## Implementation Notes
+
+The `Menu` component is based on the `Menu` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/Menu.html) -->
+

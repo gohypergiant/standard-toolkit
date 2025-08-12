@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
+import type { PropsWithChildren, RefAttributes } from 'react';
 import type {
   MenuItemProps as AriaMenuItemProps,
   MenuProps as AriaMenuProps,
@@ -20,17 +20,21 @@ import type {
   SeparatorProps as AriaSeparatorProps,
   SubmenuTriggerProps as AriaSubmenuTriggerProps,
   TextProps as AriaTextProps,
+  PopoverProps,
 } from 'react-aria-components';
 import type { IconProps } from '../icon/types';
 import type { MenuStyleVariants } from './styles';
 
-export type MenuProps<T> = AriaMenuProps<T> &
+export type MenuProps<T> = Omit<AriaMenuProps<T>, 'className'> &
   Pick<MenuStyleVariants, 'variant'> &
-  RefAttributes<HTMLDivElement> &
-  Pick<
-    AriaPopoverProps,
-    'placement' | 'offset' | 'containerPadding' | 'isNonModal'
-  >;
+  RefAttributes<HTMLDivElement> & {
+    classNames?: {
+      menu?: AriaMenuProps<T>['className'];
+      popover?: PopoverProps['className'];
+    };
+  } & {
+    popoverProps?: Omit<AriaPopoverProps, 'children' | 'className' | 'style'>;
+  };
 
 export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {
   color?: 'info' | 'serious';
@@ -38,6 +42,8 @@ export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {
     item?: AriaMenuItemProps['className'];
     text?: AriaTextProps['className'];
     more?: IconProps['className'];
+    icon?: IconProps['className'];
+    hotkey?: string;
   };
 };
 
@@ -56,7 +62,3 @@ export type MenuSectionProps<T> = Omit<AriaMenuSectionProps<T>, 'className'> & {
 export type SeparatorProps = AriaSeparatorProps;
 
 export type MenuTextProps = PropsWithChildren & AriaTextProps;
-
-export type MenuIconProps = PropsWithChildren & IconProps;
-
-export type MenuKeyboardProps = PropsWithChildren & HTMLAttributes<HTMLElement>;

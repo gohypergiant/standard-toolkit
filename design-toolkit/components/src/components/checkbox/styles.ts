@@ -26,6 +26,7 @@ export const CheckboxStyles = tv({
     ],
     control: [
       'my-xxs flex size-l items-center justify-center rounded-small outline outline-interactive',
+      'group-enabled/checkbox:fg-info-subtle',
       'group-enabled/checkbox:group-focus/checkbox:outline-interactive-hover',
       'group-enabled/checkbox:group-hover/checkbox:outline-interactive-hover',
       'group-enabled/checkbox:group-indeterminate/checkbox:bg-highlight group-enabled/checkbox:group-indeterminate/checkbox:outline-highlight',
@@ -35,7 +36,8 @@ export const CheckboxStyles = tv({
       'group-enabled/checkbox:group-selected/checkbox:group-focus/checkbox:outline-interactive-hover',
       'group-enabled/checkbox:group-selected/checkbox:group-hover/checkbox:outline-interactive-hover',
       'group-disabled/checkbox:outline-interactive-disabled',
-      'group-disabled/checkbox:group-selected/checkbox:bg-interactive-disabled',
+      'group-disabled/checkbox:group-indeterminate/checkbox:fg-inverse-light group-disabled/checkbox:group-indeterminate/checkbox:bg-interactive-disabled',
+      'group-disabled/checkbox:group-selected/checkbox:fg-inverse-light group-disabled/checkbox:group-selected/checkbox:bg-interactive-disabled',
     ],
     label: [
       'text-body-s text-interactive-default',

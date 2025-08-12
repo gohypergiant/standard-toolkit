@@ -15,10 +15,9 @@ import { describe, expect, it } from 'vitest';
 import { TextAreaField } from './';
 import type { TextAreaFieldProps } from './types';
 
-function setup({ ...props }: Partial<TextAreaFieldProps> = {}) {
-  render(<TextAreaField {...props} />);
-
+function setup(props: Partial<TextAreaFieldProps> = {}) {
   return {
+    ...render(<TextAreaField {...props} />),
     ...props,
   };
 }

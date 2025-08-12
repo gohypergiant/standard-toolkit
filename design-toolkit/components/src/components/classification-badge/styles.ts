@@ -14,11 +14,14 @@ import { tv } from 'tailwind-variants';
 
 export const ClassificationBadgeStylesDefaults = {
   variant: 'missing',
-  size: 'medium',
 } as const;
 
 export const ClassificationBadgeStyles = tv({
-  base: 'inline-flex items-center justify-center rounded-full px-s py-xs uppercase',
+  base: [
+    'group/classification-badge inline-flex items-center justify-center rounded-full px-s py-xs uppercase',
+    'size-medium:text-header-s',
+    'size-small:text-header-xs',
+  ],
   variants: {
     variant: {
       // TODO: dont hard code these strings into the styles
@@ -35,10 +38,6 @@ export const ClassificationBadgeStyles = tv({
         "fg-inverse-light bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
       'ts-sci':
         "fg-inverse-light bg-classification-ts-sci [&:empty]:before:content-['TS/SCI']",
-    },
-    size: {
-      small: 'text-header-xs',
-      medium: 'text-header-s',
     },
   },
   defaultVariants: ClassificationBadgeStylesDefaults,

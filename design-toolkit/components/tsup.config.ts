@@ -10,27 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import { fixImportsPlugin } from 'esbuild-fix-imports-plugin';
-import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions';
+import {
+  fixAliasPlugin,
+  fixExtensionsPlugin,
+  fixFolderImportsPlugin,
+} from 'esbuild-fix-imports-plugin';
 import { defineConfig } from 'tsup';
 // import { reactCompilerEsbuildPlugin } from './react-compiler.esbuild';
 
 export default defineConfig({
   esbuildPlugins: [
-    // TODO: revisit this in the future
-    // reactCompilerEsbuildPlugin({
-    //   sourceMaps: true,
-    //   filter: /\.m?[jt]sx?$/,
-    // }),
-    esbuildPluginFilePathExtensions({
-      esmExtension: 'js',
-    }),
-    fixImportsPlugin(),
+    fixAliasPlugin(),
+    fixFolderImportsPlugin(),
+    fixExtensionsPlugin(),
   ],
   entry: [
     'src/**/*.{ts,tsx,css}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
-    '!**/__fixture__',
+    '!**/__fixtures__',
     '!storybook-static',
     '!src/test',
   ],
@@ -39,7 +36,7 @@ export default defineConfig({
   },
   tsconfig: './tsconfig.dist.json',
   metafile: true,
-  bundle: true,
+  bundle: false,
   clean: true,
   dts: true,
   format: 'esm',

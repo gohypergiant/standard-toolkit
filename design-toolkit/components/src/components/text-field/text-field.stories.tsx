@@ -11,34 +11,35 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { TextField } from './index';
+import { TextField } from './';
 
 const meta: Meta<typeof TextField> = {
   title: 'Components/TextField',
   component: TextField,
   args: {
-    className: '',
+    label: 'Label',
+    inputProps: {
+      placeholder: 'Placeholder',
+      type: 'text',
+      isClearable: true,
+    },
     description: 'Helper text',
-    errorMessage: 'Error description',
-    isClearable: true,
+    errorMessage: '',
+    size: 'medium',
     isDisabled: false,
     isInvalid: false,
-    isReadOnly: false,
     isRequired: true,
-    label: 'Label',
-    placeholder: 'Placeholder',
-    selectOnFocus: false,
-    size: 'medium',
   },
   argTypes: {
-    className: { type: 'string' },
-    size: { options: ['small', 'medium'], control: 'select' },
+    size: {
+      control: 'select',
+      options: ['medium', 'small'],
+    },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof TextField>;
 
-export const Default: Story = {
-  render: ({ children, ...args }) => <TextField {...args} type='email' />,
+export const Default: StoryObj<typeof TextField> = {
+  render: TextField,
 };
