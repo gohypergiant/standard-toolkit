@@ -275,7 +275,7 @@ function generateSemanticColorExports(semantic, resolved) {
     }
   }
 
-  walkSemanticForTS(semantic.colors || {});
+  walkSemanticForTS(semantic.primitive || {});
   return lines;
 }
 
@@ -297,7 +297,7 @@ function generateTypeScript(tokens, semantic) {
   // Generate other token exports (non-colors)
   for (const [key, value] of Object.entries(resolved)) {
     // Skip color tokens since they're handled by semantic exports
-    if (key.startsWith('colors-')) {
+    if (key.startsWith('primitive-')) {
       continue;
     }
 
@@ -347,7 +347,7 @@ function generateThemesCSS(tokens, semantic) {
     }
     return lines;
   }
-  const semanticColorLines = walkSemantic(semantic.colors || {});
+  const semanticColorLines = walkSemantic(semantic.primitive || {});
   const semanticColorsBlock = `@theme {\n  /** Colors (semantic) **/\n${semanticColorLines.join('\n')}\n}`;
 
   // 3. Dynamic @theme blocks for each top-level key in tokens.json
