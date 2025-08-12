@@ -16,7 +16,6 @@ import type { ComponentPropsWithRef, DOMAttributes, ReactElement } from 'react';
 import type { HeadingProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
 import type { ToggleButtonProps } from '../button/types';
-import type { ViewStackProps } from '../view-stack/types';
 import type { DrawerTitleStyles } from './styles';
 
 type Top = 'top';
@@ -106,24 +105,33 @@ export type DrawerLayoutProps = ComponentPropsWithRef<'div'> & {
   push?:
     | XAxisUnion
     | YAxisUnion
-    | `${XAxisUnion | XAxisIntersection} ${YAxisUnion | YAxisIntersection}`
-    | `${YAxisUnion | YAxisIntersection} ${XAxisUnion | XAxisIntersection}`;
+    | XAxisIntersection
+    | YAxisIntersection
+    | `${XAxisUnion} ${YAxisUnion}`
+    | `${YAxisUnion} ${XAxisUnion}`
+    | `${XAxisUnion} ${YAxisIntersection}`
+    | `${YAxisIntersection} ${XAxisUnion}`
+    | `${YAxisUnion} ${XAxisIntersection}`
+    | `${XAxisIntersection} ${YAxisUnion}`
+    | `${XAxisIntersection} ${YAxisIntersection}`
+    | `${YAxisIntersection} ${XAxisIntersection}`;
 };
 
-export type DrawerProps = Omit<ViewStackProps, 'onChange'> &
-  ComponentPropsWithRef<'div'> & {
-    /**
-     * The placement of the drawer.
-     * @default 'left'
-     */
-    placement?: XAxisUnion | YAxisUnion;
-    /**
-     * The size of the drawer.
-     * @default 'medium'
-     */
-    size?: 'small' | 'medium' | 'large';
-    onChange?: (isOpen: boolean) => void;
-  };
+export type DrawerProps = Omit<ComponentPropsWithRef<'div'>, 'onChange'> & {
+  id: UniqueId;
+  defaultView?: UniqueId;
+  /**
+   * The placement of the drawer.
+   * @default 'left'
+   */
+  placement?: XAxisUnion | YAxisUnion;
+  /**
+   * The size of the drawer.
+   * @default 'medium'
+   */
+  size?: 'small' | 'medium' | 'large';
+  onChange?: (view: UniqueId | null) => void;
+};
 
 export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
   /**
@@ -139,15 +147,28 @@ export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
  */
 export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
   /**
-   * Id for View
+   * The unique identifier of the view that this menu item controls.
+   *
+   * Links the menu item to a specific view, enabling it to open or toggle the associated view when activated.
+   *
+   * The value should match the `id` of the target view component. This prop is required for correct association and interaction.
+   *
+   * If the menu item is intended to control multiple views, use the `views` prop for additional associations; do not include the `for` id in the `views` array.
    */
   for: UniqueId;
   /**
-   * Pass an array of associated views if the tab should display as active
+   * An optional array of additional view identifiers. If provided, the menu item will display as active when any of these views are active.
    *
-   * Do not need to include the `id` already passed
+   * You do not need to include the `id` already passed in the `for` prop.
    */
   views?: UniqueId[];
+
+  /**
+   * If set to `true`, the menu item will toggle the visibility of the associated view each time it is activated.
+   *
+   * By default, the menu item only opens the view. Use this prop to enable toggling between open and closed states.
+   */
+  toggle?: boolean;
 };
 
 export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
@@ -158,6 +179,10 @@ export type DrawerOpenEvent = {
   view: UniqueId;
 };
 
+export type DrawerToggleEvent = {
+  view: UniqueId;
+};
+
 type SimpleEvents = 'back' | 'clear' | 'close' | 'reset' | UniqueId;
 
 type TargetedEvents =
@@ -165,6 +190,7 @@ type TargetedEvents =
   | `clear:${UniqueId}`
   | `close:${UniqueId}`
   | `open:${UniqueId}`
+  | `toggle:${UniqueId}`
   | `reset:${UniqueId}`;
 
 type ChainedEvents = (SimpleEvents | TargetedEvents)[];
@@ -191,6 +217,9 @@ export type DrawerTriggerProps = {
    *
    * // Push multiple views to multiple drawers:
    * [viewOneId, viewTwoId, viewThreeId]
+   *
+   * // Close the current drawer from inside its context:
+   * 'close'
    */
   for: SimpleEvents | TargetedEvents | ChainedEvents;
 };

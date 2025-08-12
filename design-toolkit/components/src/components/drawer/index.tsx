@@ -48,6 +48,7 @@ import type {
   DrawerOpenEvent,
   DrawerProps,
   DrawerTitleProps,
+  DrawerToggleEvent,
   DrawerTriggerProps,
 } from './types';
 
@@ -65,12 +66,15 @@ export const DrawerContext = createContext<DrawerContextValue>({
 export const DrawerEventTypes = {
   close: `${DrawerEventNamespace}:close`,
   open: `${DrawerEventNamespace}:open`,
+  toggle: `${DrawerEventNamespace}:toggle`,
 } as const;
 export const DrawerEventHandlers = {
   ...ViewStackEventHandlers,
   close: ViewStackEventHandlers.clear,
   open: (view: UniqueId) =>
     bus.emit<DrawerOpenEvent>(DrawerEventTypes.open, { view }),
+  toggle: (view: UniqueId) =>
+    bus.emit<DrawerToggleEvent>(DrawerEventTypes.toggle, { view }),
 } as const;
 
 function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
@@ -79,7 +83,7 @@ function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
   function handlePress() {
     for (const type of Array.isArray(events) ? events : [events]) {
       let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
-        'back' | 'clear' | 'close' | 'open' | 'push' | 'reset',
+        'back' | 'clear' | 'close' | 'open' | 'push' | 'reset' | 'toggle',
         UniqueId | undefined | null,
       ];
 
@@ -127,18 +131,20 @@ function DrawerMenuItem({
   for: id,
   children,
   className,
+  toggle,
   views,
   ...rest
 }: DrawerMenuItemProps) {
   const { parent, stack } = useContext(ViewStackContext);
   const view = stack.at(-1);
+  const action = toggle ? 'toggle' : 'open';
 
-  if (!(parent && view)) {
+  if (!parent) {
     return null;
   }
 
   return (
-    <DrawerTrigger for={`open:${id}`}>
+    <DrawerTrigger for={`${action}:${id}`}>
       <ToggleButton
         {...rest}
         className={composeRenderProps(className, (className) =>
@@ -146,7 +152,7 @@ function DrawerMenuItem({
         )}
         role='tab'
         variant='icon'
-        isSelected={id === view || views?.some((view) => id === view)}
+        isSelected={id === view || !!views?.some((view) => id === view)}
       >
         {composeRenderProps(children, (children) => (
           <Icon>{children}</Icon>
@@ -160,8 +166,17 @@ DrawerMenuItem.displayName = 'Drawer.Menu.Item';
 function DrawerMenu({
   className,
   position = 'center',
+  children,
   ...rest
 }: DrawerMenuProps) {
+  containsExactChildren({
+    children,
+    componentName: DrawerMenu.displayName,
+    restrictions: [
+      [DrawerMenuItem, { min: 1 }],
+      [DrawerTrigger, { min: 0, max: 0 }],
+    ],
+  });
   return (
     <nav
       {...rest}
@@ -169,7 +184,9 @@ function DrawerMenu({
         position,
         className,
       })}
-    />
+    >
+      {children}
+    </nav>
   );
 }
 DrawerMenu.displayName = 'Drawer.Menu';
@@ -256,7 +273,9 @@ export function Drawer({
   });
 
   const views = useRef(new Set<UniqueId>());
-  const [isOpen, setIsOpen] = useState(!!defaultView);
+  const [activeView, setActiveView] = useState<UniqueId | null>(
+    defaultView || null,
+  );
 
   const handleOpen = useCallback(
     (data: Payload<DrawerOpenEvent>) => {
@@ -267,8 +286,30 @@ export function Drawer({
     },
     [id],
   );
+  const handleToggle = useCallback(
+    (data: Payload<DrawerToggleEvent>) => {
+      if (views.current.has(data?.payload?.view)) {
+        bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack: id });
+        if (activeView !== data?.payload?.view) {
+          bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, data.payload);
+        }
+      }
+    },
+    [id, activeView],
+  );
 
-  useEffect(() => bus.on(DrawerEventTypes.open, handleOpen), [handleOpen]);
+  useEffect(() => {
+    const listeners = [
+      bus.on(DrawerEventTypes.open, handleOpen),
+      bus.on(DrawerEventTypes.toggle, handleToggle),
+    ];
+
+    return () => {
+      for (const off of listeners) {
+        off();
+      }
+    };
+  }, [handleOpen, handleToggle]);
 
   return (
     <DrawerContext.Provider
@@ -281,14 +322,14 @@ export function Drawer({
         id={id}
         defaultView={defaultView}
         onChange={(view) => {
-          setIsOpen(!!view);
-          onChange?.(!!view);
+          setActiveView(view);
+          onChange?.(view);
         }}
       >
         <div
           {...rest}
           className={drawer({ className })}
-          data-open={isOpen || null}
+          data-open={!!activeView || null}
           data-placement={placement}
           data-size={size}
         >
@@ -299,6 +340,7 @@ export function Drawer({
   );
 }
 Drawer.displayName = 'Drawer';
+
 Drawer.Layout = DrawerLayout;
 Drawer.Menu = DrawerMenu;
 Drawer.Panel = DrawerPanel;
