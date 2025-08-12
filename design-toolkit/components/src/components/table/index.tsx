@@ -40,7 +40,7 @@ import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import type { TableProps } from './types';
+import type { TableMenuItem, TableProps } from './types';
 
 const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
   <TableCell
@@ -147,16 +147,7 @@ export function Table<T extends { id: string | number }>({
     }
   }, [data, dataIds, rowSelection, moveAfter]);
 
-  type MenuItem = {
-    id: number;
-    name: string;
-    description?: string;
-    children?: MenuItem[];
-    isDisabled?: boolean;
-    hotkey?: string;
-  };
-
-  const menuItems: MenuItem[] = [
+  const rowMenuItem: TableMenuItem[] = [
     {
       id: 1,
       name: 'Pin',
@@ -185,40 +176,43 @@ export function Table<T extends { id: string | number }>({
         const isPinned = row.getIsPinned();
         return (
           <>
-            <Menu.Trigger>
-              <Button variant='icon' aria-label='Menu'>
-                <Icon>
-                  <Kebab />
-                </Icon>
-              </Button>
-              <Menu<MenuItem> items={menuItems}>
-                {(item) => (
-                  <Menu.Item
-                    onAction={() => {
-                      if (item.id === 1) {
-                        row.pin(
-                          isPinned ? false : 'top',
-                          true, // include leaf rows
-                          true, // include parent rows
-                        );
-                      }
-                    }}
-                    key={item.id}
-                    isDisabled={item.isDisabled}
-                  >
-                    <Menu.Item.Label>{item.name}</Menu.Item.Label>
-                    {item.description && (
-                      <Menu.Item.Description>
-                        {item.description}
-                      </Menu.Item.Description>
-                    )}
-                    {item.hotkey && (
-                      <Hotkey variant='flat'>{item.hotkey}</Hotkey>
-                    )}
-                  </Menu.Item>
-                )}
-              </Menu>
-            </Menu.Trigger>
+            <div
+              className={
+                persistRowKebabMenu
+                  ? 'sticky right-0'
+                  : 'invisible hover:sticky right-0'
+              }
+            >
+              <Menu.Trigger>
+                <Button variant='icon' aria-label='Menu'>
+                  <Icon>
+                    <Kebab />
+                  </Icon>
+                </Button>
+                <Menu<TableMenuItem> items={rowMenuItem}>
+                  {(item) => (
+                    <Menu.Item
+                      onAction={() => {
+                        if (item.id === 1) {
+                          row.pin(isPinned ? false : 'top');
+                        }
+                      }}
+                      key={item.id}
+                      isDisabled={item.isDisabled}
+                    >
+                      <Menu.Item.Label>
+                        {item.id === 1 && isPinned ? 'Unpin' : item.name}
+                      </Menu.Item.Label>
+                      {item.description && (
+                        <Menu.Item.Description>
+                          {item.description}
+                        </Menu.Item.Description>
+                      )}
+                    </Menu.Item>
+                  )}
+                </Menu>
+              </Menu.Trigger>
+            </div>
           </>
         );
       },
@@ -375,6 +369,19 @@ export function Table<T extends { id: string | number }>({
     [setColumnOrderCallback],
   );
 
+  const columnMenuItems: TableMenuItem[] = [
+    {
+      id: 1,
+      name: 'Move Column Left',
+      isDisabled: false,
+    },
+    {
+      id: 2,
+      name: 'Move Column Right',
+      isDisabled: false,
+    },
+  ];
+
   if (dataProp) {
     return (
       <div>
@@ -420,6 +427,48 @@ export function Table<T extends { id: string | number }>({
                             header.getContext(),
                           )}
                         </button>
+                      )}
+
+                      {['numeral', 'kebab', 'selection'].includes(
+                        header.column.id,
+                      ) ? null : (
+                        <Menu.Trigger>
+                          <Button variant='icon' aria-label='Menu'>
+                            <Icon>
+                              <Kebab />
+                            </Icon>
+                          </Button>
+                          <Menu<TableMenuItem> items={columnMenuItems}>
+                            {(item) => (
+                              <Menu.Item
+                                onAction={() => {
+                                  if (item.id === 1) {
+                                    header.column.getIsFirstColumn('center')
+                                      ? undefined
+                                      : moveColumnLeft(
+                                          header.column.getIndex(),
+                                        );
+                                  } else if (item.id === 2) {
+                                    header.column.getIsLastColumn('center')
+                                      ? undefined
+                                      : moveColumnRight(
+                                          header.column.getIndex(),
+                                        );
+                                  }
+                                }}
+                                key={item.id}
+                                isDisabled={item.isDisabled}
+                              >
+                                <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                                {item.description && (
+                                  <Menu.Item.Description>
+                                    {item.description}
+                                  </Menu.Item.Description>
+                                )}
+                              </Menu.Item>
+                            )}
+                          </Menu>
+                        </Menu.Trigger>
                       )}
                     </div>
                   </HeaderCell>

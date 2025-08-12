@@ -184,3 +184,11 @@ export type TableHeaderCellProps = ThHTMLAttributes<HTMLTableCellElement> &
  */
 export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
   RefAttributes<HTMLTableSectionElement>;
+
+export type TableMenuItem = {
+  id: number;
+  name: string;
+  description?: string;
+  isDisabled?: boolean;
+  hotkey?: string;
+};
