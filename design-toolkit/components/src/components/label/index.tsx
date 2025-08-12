@@ -32,6 +32,25 @@ function LabelProvider({ children, ...props }: ProviderProps<LabelProps>) {
 }
 LabelProvider.displayName = 'Label.Provider';
 
+/**
+ * Label - A semantic label component for form elements and content
+ *
+ * Provides accessible labeling for form controls with automatic handling of
+ * required/optional states. Integrates with React Aria form components to
+ * ensure proper accessibility and screen reader support.
+ *
+ * @example
+ * // Basic label
+ * <Label>Username</Label>
+ *
+ * @example
+ * // Required field label
+ * <Label isRequired>Email Address</Label>
+ *
+ * @example
+ * // Disabled label
+ * <Label isDisabled>Inactive Field</Label>
+ */
 export function Label({ ref, ...props }: LabelProps) {
   [props, ref] = useContextProps(props, ref ?? null, LabelContext);
 

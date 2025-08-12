@@ -70,6 +70,37 @@ const DrawerLayout = ({
 };
 DrawerLayout.displayName = 'Drawer.Layout';
 
+/**
+ * Drawer - A slide-out panel component for navigation and supplementary content
+ *
+ * Provides accessible drawer functionality with support for different placements,
+ * sizes, and interactive states. Includes menu integration and focus management
+ * for comprehensive navigation experiences.
+ *
+ * @example
+ * // Basic drawer
+ * <Drawer.Provider>
+ *   <Drawer.Layout push='left'>
+ *     <Drawer.Main>
+ *       <div>stuff stuff stuff</div>
+ *       <Drawer.Trigger for='left-drawer' behavior='open'>
+ *         <Button>Open Menu</Button>
+ *       </Drawer.Trigger>
+ *     </Drawer.Main>
+ *     <Drawer id='left-drawer' placement='left'>
+ *       <Drawer.Content>
+ *         <Drawer.Header>
+ *           <Drawer.Title>Title</Drawer.Title>
+ *           <Drawer.Trigger for='left-drawer' behavior='close'>
+ *             <Button>&times;</Button>
+ *           </Drawer.Trigger>
+ *         </Drawer.Header>
+ *         <p>Drawer content.</p>
+ *       </Drawer.Content>
+ *     </Drawer>
+ *   </Drawer.Layout>
+ * </Drawer.Provider>
+ */
 export const Drawer = ({
   id,
   placement = 'left',

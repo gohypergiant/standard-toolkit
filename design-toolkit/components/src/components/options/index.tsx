@@ -123,6 +123,47 @@ OptionsItem.Label = OptionsItemLabel;
 OptionsItem.Content = OptionsItemContent;
 OptionsItem.Description = OptionsItemDescription;
 
+/**
+ * Options - A flexible list component for selectable items with rich content
+ *
+ * Provides accessible list functionality with support for selection, sections,
+ * and rich item content including labels, descriptions, and icons. Perfect for
+ * dropdown lists, menu items, or any selectable list interface.
+ *
+ * @example
+ * // Basic options list
+ * <Options>
+ *   <Options.Item>
+ *     <Options.Item.Label>Option 1</Options.Item.Label>
+ *   </Options.Item>
+ *   <Options.Item>
+ *     <Options.Item.Label>Option 2</Options.Item.Label>
+ *   </Options.Item>
+ * </Options>
+ *
+ * @example
+ * // Options with descriptions and icons
+ * <Options>
+ *   <Options.Item>
+ *     <Icon><User /></Icon>
+ *     <Options.Item.Content>
+ *       <Options.Item.Label>John Doe</Options.Item.Label>
+ *       <Options.Item.Description>Senior Developer</Options.Item.Description>
+ *     </Options.Item.Content>
+ *   </Options.Item>
+ * </Options>
+ *
+ * @example
+ * // Sectioned options
+ * <Options>
+ *   <Options.Section header="Recent">
+ *     <Options.Item>Recent Item 1</Options.Item>
+ *   </Options.Section>
+ *   <Options.Section header="All Items">
+ *     <Options.Item>All Items 1</Options.Item>
+ *   </Options.Section>
+ * </Options>
+ */
 export function Options<T extends OptionsDataItem>({
   ref,
   ...props

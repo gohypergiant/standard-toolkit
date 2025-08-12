@@ -33,8 +33,6 @@ export type { AvatarProps } from './components/avatar/types';
 export { Badge, BadgeContext } from './components/badge';
 export { BadgeStyles, BadgeStylesDefaults } from './components/badge/styles';
 export type { BadgeProps } from './components/badge/types';
-export { Box } from './components/box';
-export type { BoxProps } from './components/box';
 export {
   Button,
   ButtonContext,
@@ -132,7 +130,7 @@ export type {
   DetailsListProps,
   DetailsListValueProps,
 } from './components/details-list/types';
-export { Dialog, DialogTitle } from './components/dialog';
+export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export {
   useDrawerContext,
@@ -168,7 +166,7 @@ export type {
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
 export type { HeroProps } from './components/hero/types';
-export { Hotkey, HotkeyContext, HotkeySet } from './components/hotkey';
+export { Hotkey, HotkeyContext } from './components/hotkey';
 export { HotkeyStyles, HotkeyStylesDefaults } from './components/hotkey/styles';
 export type { HotkeyProps, HotkeySetProps } from './components/hotkey/types';
 export { Icon, IconContext } from './components/icon';
@@ -201,7 +199,7 @@ export type {
   OptionsProps,
   OptionsSectionProps,
 } from './components/options/types';
-export { Popover, PopoverTrigger } from './components/popover';
+export { Popover } from './components/popover';
 export { PopoverStyles } from './components/popover/styles';
 export type {
   PopoverBodyProps,

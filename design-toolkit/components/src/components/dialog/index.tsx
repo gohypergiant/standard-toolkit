@@ -87,6 +87,30 @@ export interface DialogProps extends DialogTriggerProps {
   parentRef?: RefObject<HTMLElement | null>;
 }
 
+/**
+ * Dialog - A modal dialog component for important content and interactions
+ *
+ * Provides accessible modal functionality with focus management, backdrop handling,
+ * and keyboard navigation. Supports multiple sizes and customizable dismissal behavior.
+ * Perfect for confirmations, forms, or any content requiring user focus.
+ *
+ * @example
+ * // Basic dialog with trigger
+ * <Dialog>
+ *   <Button>Open Dialog</Button>
+ *   <Dialog.Body>
+ *     {({ close }) => (
+ *       <>
+ *         <Dialog.Title>Confirm Action</Dialog.Title>
+ *         <p>Are you sure you want to continue?</p>
+ *         <Dialog.Footer>
+ *           <Dialog.Button onPress={close}>Confirm</Dialog.Button>
+ *         </Dialog.Footer>
+ *       </>
+ *     )}
+ *   </Dialog.Body>
+ * </Dialog>
+ */
 export const Dialog = ({
   children,
   size,
@@ -194,7 +218,7 @@ const DialogContent = ({
   );
 };
 
-export const DialogTitle = ({
+const DialogTitle = ({
   children,
   className,
 }: PropsWithChildren<{ className?: string }>) => {

@@ -61,6 +61,37 @@ function RadioGroup({ ref, ...props }: RadioGroupProps) {
 }
 RadioGroup.displayName = 'Radio.Group';
 
+/**
+ * Radio - A form control for exclusive selection within a group of options
+ *
+ * Provides accessible radio button functionality where only one option can be
+ * selected at a time within a group. Includes proper labeling, keyboard navigation,
+ * and visual feedback for selection states.
+ *
+ * @example
+ * // Basic radio group
+ * <Radio.Group label="Choose size">
+ *   <Radio value="small">Small</Radio>
+ *   <Radio value="medium">Medium</Radio>
+ *   <Radio value="large">Large</Radio>
+ * </Radio.Group>
+ *
+ * @example
+ * // Radio group with default selection
+ * <Radio.Group defaultValue="medium" label="Size preference">
+ *   <Radio value="small">Small (S)</Radio>
+ *   <Radio value="medium">Medium (M)</Radio>
+ *   <Radio value="large">Large (L)</Radio>
+ * </Radio.Group>
+ *
+ * @example
+ * // Disabled radio options
+ * <Radio.Group label="Shipping options">
+ *   <Radio value="standard">Standard shipping</Radio>
+ *   <Radio value="express">Express shipping</Radio>
+ *   <Radio value="overnight" isDisabled>Overnight (unavailable)</Radio>
+ * </Radio.Group>
+ */
 export function Radio({ classNames, children, ...rest }: RadioProps) {
   return (
     <AriaRadio

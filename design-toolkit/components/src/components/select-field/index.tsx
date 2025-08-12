@@ -52,6 +52,50 @@ function SelectFieldProvider({
 }
 SelectFieldProvider.displayName = 'SelectField.Provider';
 
+/**
+ * SelectField - A dropdown selection component with comprehensive form field features
+ *
+ * Provides an accessible and feature-rich select dropdown with built-in validation,
+ * multiple sizing options, virtualization support for large datasets, and seamless
+ * integration with form libraries. Includes label, description, and error messaging
+ * capabilities with customizable styling through className props.
+ *
+ * @example
+ * // Basic select field
+ * <SelectField label='Country' placeholder='Select a country'>
+ *   <Options.Item textValue='us'>United States</Options.Item>
+ *   <Options.Item textValue='ca'>Canada</Options.Item>
+ *   <Options.Item textValue='uk'>United Kingdom</Options.Item>
+ * </SelectField>
+ *
+ * @example
+ * // Select field with validation and description
+ * <SelectField
+ *   label="Priority Level"
+ *   description="Choose the urgency level for this task"
+ *   errorMessage={errors.priority}
+ *   isRequired
+ *   isInvalid={!!errors.priority}
+ * >
+ *   <Options.Item textValue="low">Low</Options.Item>
+ *   <Options.Item textValue="medium">Medium</Options.Item>
+ *   <Options.Item textValue="high">High</Options.Item>
+ * </SelectField>
+ *
+ * @example
+ * // Small size select field with custom styling
+ * <SelectField
+ *   size="small"
+ *   placeholder="Quick select"
+ *   classNames={{
+ *     field: "custom-field-styles",
+ *     trigger: "custom-trigger-styles"
+ *   }}
+ * >
+ *   <Options.Item textValue="option1">Option 1</Options.Item>
+ *   <Options.Item textValue="option2">Option 2</Options.Item>
+ * </SelectField>
+ */
 export function SelectField({ ref, ...props }: SelectFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, SelectFieldContext);
 
