@@ -13,26 +13,25 @@
 import { withThemeByClassName } from '@storybook/addon-themes';
 import type { Preview, ReactRenderer } from '@storybook/react';
 import '../src/index.css';
+import { DocsContainer } from '@storybook/blocks';
 import { themes } from '@storybook/theming';
+import { createElement } from 'react';
 import { Docs } from './docs';
 
 const preview: Preview = {
-  initialGlobals: {
-    // 👇 Set the initial background color
-    backgrounds: { value: '#0b0b0b' },
-  },
   parameters: {
     actions: { argTypesRegex: '^on.*' },
-    backgrounds: {
-      values: [
-        { name: 'Black', value: '#000000' },
-        { name: 'Dark', value: '#0b0b0b' },
-        { name: 'Light', value: '#555555' },
-      ],
-      default: 'Dark',
-    },
     docs: {
-      theme: themes.dark,
+      container: (props: any) => {
+        const el = document.querySelector('html');
+        const theme =
+          props?.context.store.userGlobals.globals.theme === 'dark'
+            ? themes.dark
+            : themes.light;
+        el!.dataset['theme'] = props?.context.store.userGlobals.globals.theme;
+        const newProps = { ...props, theme };
+        return createElement(DocsContainer, newProps);
+      },
       page: Docs,
     },
     layout: 'centered',
@@ -47,8 +46,8 @@ const preview: Preview = {
   decorators: [
     withThemeByClassName<ReactRenderer>({
       themes: {
-        light: '',
-        dark: 'dark',
+        light: 'light bg-surface-default',
+        dark: 'dark bg-surface-default',
       },
       defaultTheme: 'dark',
     }),
