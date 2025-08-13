@@ -22,20 +22,19 @@ import BabelPluginReactCompiler from 'babel-plugin-react-compiler';
 import type { Plugin } from 'esbuild';
 
 function logInfo(filename, event) {
-  // console.log(filename);
-  // console.log(event);
+  console.log(filename, event);
 
   if (event.kind === 'CompileSuccess') {
     console.info(`✅ ${relative(resolve(), filename)} ${event.fnName}`);
   }
 
   if (event.kind === 'CompileError') {
-    console.error(
-      `❌ ${relative(resolve(), filename)}
-       ${event.detail.severity}.
-       ${event.detail.reason}
-      `,
-    );
+    // console.error(
+    //   `❌ ${relative(resolve(), filename)}
+    //    ${event.detail.severity}.
+    //    ${event.detail.reason}
+    //   `,
+    // );
   }
 }
 
@@ -49,6 +48,7 @@ export function reactCompilerEsbuildPlugin({
   return {
     name: 'esbuild-react-compiler-plugin',
     setup(build) {
+      // console.dir(build.initialOptions);
       let timings: number[] = [];
 
       build.onEnd(() => {
@@ -71,7 +71,7 @@ export function reactCompilerEsbuildPlugin({
 
         const output = build.esbuild.transformSync(contents, {
           loader: 'tsx',
-          jsx: 'automatic',
+          jsx: 'transform',
           define: build.initialOptions.define,
           target: build.initialOptions.target,
           format: build.initialOptions.format,

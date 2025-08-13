@@ -16,13 +16,17 @@ import {
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
 import { defineConfig } from 'tsup';
-// import { reactCompilerEsbuildPlugin } from './react-compiler.esbuild';
+import { reactCompilerEsbuildPlugin } from './react-compiler.esbuild';
 
 export default defineConfig({
   esbuildPlugins: [
     fixAliasPlugin(),
     fixFolderImportsPlugin(),
     fixExtensionsPlugin(),
+    reactCompilerEsbuildPlugin({
+      filter: /src\/components/,
+      sourceMaps: false,
+    }),
   ],
   entry: [
     'src/**/*.{ts,tsx,css}',

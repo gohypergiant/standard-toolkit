@@ -10,7 +10,7 @@ import { Chip } from '@accelint/design-toolkit/chip';
 import { ClassificationBadge } from '@accelint/design-toolkit/classification-badge';
 import { ClassificationBanner } from '@accelint/design-toolkit/classification-banner';
 import { ColorPicker } from '@accelint/design-toolkit/color-picker';
-import { ComboBox } from '@accelint/design-toolkit/combobox';
+import { ComboBoxField } from '@accelint/design-toolkit/combobox-field';
 import { DateField } from '@accelint/design-toolkit/date-field';
 import { Dialog } from '@accelint/design-toolkit/dialog';
 import { Icon } from '@accelint/design-toolkit/icon';
@@ -19,6 +19,7 @@ import { Options } from '@accelint/design-toolkit/options';
 import { Popover } from '@accelint/design-toolkit/popover';
 import { Radio } from '@accelint/design-toolkit/radio';
 import { SearchField } from '@accelint/design-toolkit/search-field';
+import { Skeleton } from '@accelint/design-toolkit/skeleton';
 import { Slider } from '@accelint/design-toolkit/slider';
 import { Switch } from '@accelint/design-toolkit/switch';
 import { Tabs } from '@accelint/design-toolkit/tabs';
@@ -55,8 +56,10 @@ export default function Page() {
       </PreviewGrid.Item>
       <PreviewGrid.Item>
         <Avatar
-          source='https://placedog.net/100x100?id=144'
-          alt='Cute Doggie'
+          imageProps={{
+            src: 'https://placedog.net/100x100?id=144',
+            alt: 'Cute Doggie',
+          }}
         />
       </PreviewGrid.Item>
       <PreviewGrid.Item>
@@ -86,12 +89,17 @@ export default function Page() {
         <ClassificationBanner variant='unclassified' />
       </PreviewGrid.Item>
       <PreviewGrid.Item>
-        <ColorPicker options={colorOptions} />
+        <ColorPicker items={colorOptions} />
       </PreviewGrid.Item>
       <PreviewGrid.Item>
-        <ComboBox aria-label='ComboBox'>
-          <ComboBox.Item name='ComboBox.Item'>Item</ComboBox.Item>
-        </ComboBox>
+        <ComboBoxField>
+          <Options.Item textValue='Item 1'>
+            <Options.Item.Label>Item 1</Options.Item.Label>
+          </Options.Item>
+          <Options.Item textValue='Item 2'>
+            <Options.Item.Label>Item 2</Options.Item.Label>
+          </Options.Item>
+        </ComboBoxField>
       </PreviewGrid.Item>
       <PreviewGrid.Item>
         <DateField />
@@ -112,7 +120,7 @@ export default function Page() {
       </PreviewGrid.Item>
       <PreviewGrid.Item>
         <Options>
-          <Options.Item name='Options.Item'>Item</Options.Item>
+          <Options.Item>Item</Options.Item>
         </Options>
       </PreviewGrid.Item>
       <PreviewGrid.Item>
@@ -139,7 +147,17 @@ export default function Page() {
         <SearchField />
       </PreviewGrid.Item>
       <PreviewGrid.Item>
-        <Slider layout='stacked' label='Slider' />
+        <Slider
+          orientation='horizontal'
+          layout='stacked'
+          label='Slider'
+          minValue={0}
+          maxValue={100}
+          defaultValue={30}
+        />
+      </PreviewGrid.Item>
+      <PreviewGrid.Item>
+        <Skeleton>Loading content...</Skeleton>
       </PreviewGrid.Item>
       <PreviewGrid.Item>
         <Switch />
