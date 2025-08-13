@@ -22,7 +22,7 @@ export const ComboBoxStyles = tv({
       'group-size-small/combobox-field:min-w-[80px] group-size-small/combobox-field:max-w-[200px]',
       'group-enabled/combobox-field:fg-default-light group-enabled/combobox-field:outline-interactive',
       'group-enabled/combobox-field:placeholder:fg-default-dark',
-      'group-enabled/combobox-field:focus-within:outline-highlight',
+      'group-enabled/combobox-field:focus-visible-within:outline-highlight',
       'group-enabled/combobox-field:hover:outline-interactive-hover',
       'group-enabled/combobox-field:group-invalid/combobox-field:outline-serious',
       'group-disabled/combobox-field:fg-disabled group-disabled/combobox-field:outline-interactive-disabled',

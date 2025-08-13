@@ -26,10 +26,10 @@ export const RadioStyles = tv({
     ],
     control: [
       'my-xxs flex size-l items-center justify-center rounded-full outline outline-interactive before:block before:size-s before:rounded-full',
-      'group-enabled/radio:group-focus/radio:outline-interactive-hover',
+      'group-enabled/radio:group-focus-visible/radio:outline-interactive-hover',
       'group-enabled/radio:group-hover/radio:outline-interactive-hover',
       'group-enabled/radio:group-selected/radio:outline-highlight group-enabled/radio:group-selected/radio:before:bg-highlight',
-      'group-enabled/radio:group-selected/radio:group-focus/radio:outline-interactive-hover',
+      'group-enabled/radio:group-selected/radio:group-focus-visible/radio:outline-interactive-hover',
       'group-enabled/radio:group-selected/radio:group-hover/radio:outline-interactive-hover',
       'group-disabled/radio:outline-interactive-disabled',
       'group-disabled/radio:group-selected/radio:before:bg-interactive-disabled',

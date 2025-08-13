@@ -76,6 +76,7 @@
   "empty": "[data-empty], :empty",
 
   "focus-within": "[data-focus-within], :focus-within",
+  "focus-visible-within": ":has([data-focus-visible], :focus-visible)",
 
   "hover": "[data-hovered], :hover",
 

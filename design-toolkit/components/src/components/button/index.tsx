@@ -90,11 +90,11 @@ export function Button({ ref, ...props }: ButtonProps) {
         className={composeRenderProps(className, (className) =>
           ButtonStyles({
             className,
-            color,
             variant,
           }),
         )}
         data-size={size}
+        data-color={color}
       >
         {children}
       </AriaButton>
@@ -173,10 +173,10 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
         className={composeRenderProps(className, (className) =>
           LinkButtonStyles({
             className,
-            color,
             variant,
           }),
         )}
+        data-color={color}
         data-size={size}
       >
         {children}
@@ -258,11 +258,11 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
         className={composeRenderProps(className, (className) =>
           ToggleButtonStyles({
             className,
-            color,
             variant,
           }),
         )}
         data-size={size}
+        data-color={color}
       >
         {children}
       </AriaToggleButton>

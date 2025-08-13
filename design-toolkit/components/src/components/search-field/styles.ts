@@ -20,7 +20,7 @@ export const SearchFieldStyles = tv({
   slots: {
     field: [
       'group/search-field fg-default-light flex items-center gap-s rounded-round p-s outline',
-      'focus-within:outline-highlight',
+      'focus-visible-within:outline-highlight',
       'hover:outline-interactive-hover',
       'disabled:fg-disabled disabled:placeholder:fg-disabled disabled:cursor-not-allowed disabled:outline-interactive-disabled',
     ],
@@ -31,7 +31,7 @@ export const SearchFieldStyles = tv({
     ],
     clear: [
       'fg-interactive cursor-pointer',
-      'focus:fg-interactive-hover',
+      'focus-visible:fg-interactive-hover',
       'hover:fg-interactive-hover',
       'group-empty/search-field:invisible group-disabled/search-field:invisible',
     ],

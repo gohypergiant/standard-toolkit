@@ -221,7 +221,7 @@ const labelVariants = cva('text-default-light', {
 });
 
 const sliderThumbVariants = cva(
-  'h-m w-m rounded-full bg-highlight-bold outline-highlight-bold/40 hover:outline-4 focus:outline-4',
+  'h-m w-m rounded-full bg-highlight-bold outline-highlight-bold/40 hover:outline-4 focus-visible:outline-4',
   {
     variants: {
       orientation: {
@@ -358,7 +358,7 @@ export const Slider = ({
                       {!showInput && (
                         <Tooltip>
                           <Tooltip.Trigger>
-                            <div className='size-full' />
+                            <div className='size-full outline-none' />
                           </Tooltip.Trigger>
                           <Tooltip.Body placement='top'>
                             {state.getThumbValue(index)}

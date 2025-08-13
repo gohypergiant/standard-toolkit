@@ -100,7 +100,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, SelectFieldContext);
 
   const {
-    size,
+    size = 'medium',
     children,
     classNames,
     description: descriptionProp,
@@ -138,11 +138,11 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
               </Label>
             )}
             <Button
-              variant='outline'
-              size={isSmall ? 'small' : 'medium'}
               className={composeRenderProps(classNames?.trigger, (className) =>
                 trigger({ className }),
               )}
+              variant='outline'
+              size={size}
             >
               <AriaSelectValue
                 className={value({ className: classNames?.value })}

@@ -23,12 +23,12 @@ export const InputStyles = tv({
     container:
       'group/input grid items-center [--length:attr(data-length_type(<number>),0)] [grid-template-columns:minmax(0,1fr)_min-content]',
     sizer: [
-      '[grid-column:1/-1] [grid-row:1]',
-      'font-display group-size-medium/input:text-body-s group-size-small/input:text-body-xs',
+      'font-display [grid-column:1/-1] [grid-row:1]',
+      'group-size-medium/input:text-body-s group-size-small/input:text-body-xs',
     ],
     input: [
       'block w-full rounded-medium py-xs pr-[calc(var(--room)+var(--spacing-s))] pl-s font-display text-default-light outline outline-interactive',
-      'enabled:group-focus/input:outline-highlight',
+      'enabled:group-focus-visible-within/input:outline-highlight',
       'enabled:group-hover/input:outline-interactive-hover',
       'enabled:group-invalid/input:outline-serious',
       'disabled:cursor-not-allowed disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
@@ -37,7 +37,7 @@ export const InputStyles = tv({
       '[grid-column:2/-1] [grid-row:1]',
       'group-size-medium/input:mr-xs group-size-small/input:mr-xxs',
       'enabled:fg-interactive enabled:bg-transparent',
-      'enabled:focus:fg-interactive-hover enabled:focus:bg-transparent',
+      'enabled:focus-visible:fg-interactive-hover enabled:focus-visible:bg-transparent',
       'enabled:hover:fg-interactive-hover enabled:hover:bg-transparent',
       'group-empty/input:invisible',
       'group-not-empty/input:group-not-focus-within/input:invisible',

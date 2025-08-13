@@ -46,6 +46,7 @@
 @custom-variant has-child-items (&:where([data-has-child-items]));
 @custom-variant enabled (&:where(:not([disabled], [data-disabled]), :enabled));
 @custom-variant open (&:where([open], [data-open], :open));
+@custom-variant closed (&:where(:not([open], [data-open], :open)));
 @custom-variant expanded (&:where([expanded], [data-expanded]));
 @custom-variant entering (&:where([data-entering]));
 @custom-variant exiting (&:where([data-exiting]));
@@ -62,6 +63,7 @@
 @custom-variant pending (&:where([data-pending]));
 @custom-variant empty (&:where([data-empty], :empty));
 @custom-variant focus-within (&:where([data-focus-within], :focus-within));
+@custom-variant focus-visible-within (&:where(:has([data-focus-visible], :focus-visible)));
 @custom-variant hover (&:where([data-hovered], :hover));
 @custom-variant focus (&:where([data-focused], :focus));
 @custom-variant focus-visible (&:where([data-focus-visible], :focus-visible));
