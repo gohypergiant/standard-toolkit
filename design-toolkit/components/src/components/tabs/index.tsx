@@ -28,6 +28,52 @@ import {
 
 export interface TabsProps extends AriaTabsProps {}
 
+/**
+ * Tabs - A tab navigation component for organizing content into sections
+ *
+ * Provides accessible tab navigation with keyboard support and proper ARIA implementation.
+ * Supports both horizontal and vertical orientations with icon and text variants.
+ * Perfect for organizing related content into separate, focusable sections.
+ *
+ * @example
+ * // Basic horizontal tabs
+ * <Tabs>
+ *   <Tabs.List>
+ *     <Tabs.Tab id="overview">Overview</Tabs.Tab>
+ *     <Tabs.Tab id="details">Details</Tabs.Tab>
+ *     <Tabs.Tab id="settings">Settings</Tabs.Tab>
+ *   </Tabs.List>
+ *   <Tabs.Panel id="overview">Overview content</Tabs.Panel>
+ *   <Tabs.Panel id="details">Details content</Tabs.Panel>
+ *   <Tabs.Panel id="settings">Settings content</Tabs.Panel>
+ * </Tabs>
+ *
+ * @example
+ * // Vertical tabs
+ * <Tabs orientation="vertical">
+ *   <Tabs.List>
+ *     <Tabs.Tab id="profile">Profile</Tabs.Tab>
+ *     <Tabs.Tab id="account">Account</Tabs.Tab>
+ *   </Tabs.List>
+ *   <Tabs.Panel id="profile">Profile settings</Tabs.Panel>
+ *   <Tabs.Panel id="account">Account settings</Tabs.Panel>
+ * </Tabs>
+ *
+ * @example
+ * // Icon tabs
+ * <Tabs>
+ *   <Tabs.List variant="icons">
+ *     <Tabs.Tab id="home">
+ *       <Icon><Home /></Icon>
+ *     </Tabs.Tab>
+ *     <Tabs.Tab id="search">
+ *       <Icon><Search /></Icon>
+ *     </Tabs.Tab>
+ *   </Tabs.List>
+ *   <Tabs.Panel id="home">Home content</Tabs.Panel>
+ *   <Tabs.Panel id="search">Search content</Tabs.Panel>
+ * </Tabs>
+ */
 export const Tabs = ({
   children,
   className,

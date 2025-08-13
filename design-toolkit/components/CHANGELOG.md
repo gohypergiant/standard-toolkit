@@ -1,5 +1,22 @@
 # @accelint/design-toolkit
 
+## 2.6.0
+
+### Minor Changes
+
+- a97d386: Update Menu component to accept custom triggers
+  Add Hotkey component
+- 9ec4cbe: Adds <select> component
+
+### Patch Changes
+
+- 83104ea: Refactored ViewStack to be event driven, allowing for triggers anywhere in the app
+- Updated dependencies [83104ea]
+- Updated dependencies [83104ea]
+  - @accelint/core@0.3.0
+  - @accelint/icons@2.0.3
+  - @accelint/bus@0.1.2
+
 ## 2.5.0
 
 ### Minor Changes

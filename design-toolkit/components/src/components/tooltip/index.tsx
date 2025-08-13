@@ -31,6 +31,48 @@ import type {
 export const TooltipContext =
   createContext<ContextValue<TooltipProps, HTMLDivElement>>(null);
 
+/**
+ * Tooltip - A contextual popup component for providing additional information
+ *
+ * Displays helpful information when users hover over or focus on an element.
+ * Provides accessible tooltip functionality with proper positioning, keyboard
+ * navigation, and screen reader support for enhanced user experience.
+ *
+ * @example
+ * // Basic tooltip
+ * <Tooltip>
+ *   <Tooltip.Trigger>
+ *     <Button>Hover me</Button>
+ *   </Tooltip.Trigger>
+ *   <Tooltip.Body>
+ *     This is helpful information
+ *   </Tooltip.Body>
+ * </Tooltip>
+ *
+ * @example
+ * // Tooltip with custom positioning
+ * <Tooltip>
+ *   <Tooltip.Trigger>
+ *     <Button>Hover for info</Button>
+ *   </Tooltip.Trigger>
+ *   <Tooltip.Body placement="top" offset={10}>
+ *     Positioned above with custom offset
+ *   </Tooltip.Body>
+ * </Tooltip>
+ *
+ * @example
+ * // Icon with tooltip
+ * <Tooltip>
+ *   <Tooltip.Trigger>
+ *     <Button variant="icon">
+ *       <Icon><Info /></Icon>
+ *     </Button>
+ *   </Tooltip.Trigger>
+ *   <Tooltip.Body>
+ *     Additional context for this action
+ *   </Tooltip.Body>
+ * </Tooltip>
+ */
 export function Tooltip({ ref, ...props }: TooltipProps) {
   [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
 

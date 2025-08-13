@@ -261,7 +261,7 @@ export interface SliderProps
   className?: string;
   showInput?: boolean;
   showLabel?: boolean;
-  layout: 'stacked' | 'inline';
+  layout?: 'stacked' | 'inline';
   value?: number;
   defaultValue?: number;
   rangeValue?: [number, number];
@@ -270,6 +270,17 @@ export interface SliderProps
   label: string;
 }
 
+/**
+ * Slider - An interactive range input component for numeric value selection
+ *
+ * Provides accessible slider functionality with optional input field integration,
+ * flexible layouts, and comprehensive keyboard and mouse interaction support.
+ * Perfect for settings, filters, or any numeric input requiring visual feedback.
+ *
+ * @example
+ * // Basic slider
+ * <Slider label="Volume" defaultValue={50} />
+ */
 export const Slider = ({
   children,
   className,
@@ -376,10 +387,33 @@ export type RangeSliderProps = Omit<
   SliderProps,
   'isRange' | 'defaultRangeValue' | 'rangeValue' | 'defaultValue' | 'value'
 > & {
-  defaultValue: SliderProps['defaultRangeValue'];
+  defaultValue?: SliderProps['defaultRangeValue'];
   value: SliderProps['rangeValue'];
 };
 
+/**
+ * RangeSlider - A dual-handle slider component for selecting a range of numeric values
+ *
+ * Extends the base Slider component to provide range selection functionality with two thumbs,
+ * allowing users to define both minimum and maximum values within a specified range.
+ * Maintains all accessibility features and layout options of the base slider while
+ * providing intuitive range selection controls.
+ *
+ * @example
+ * // Basic range slider
+ * <RangeSlider label="Price Range" defaultValue={[20, 80]} minValue={0} maxValue={100} />
+ *
+ * @example
+ * // Controlled range slider with input fields
+ * <RangeSlider
+ *   label="Temperature Range"
+ *   value={tempRange}
+ *   onChange={setTempRange}
+ *   showInput
+ *   minValue={-10}
+ *   maxValue={40}
+ * />
+ */
 export const RangeSlider = ({
   defaultValue,
   value,

@@ -129,6 +129,50 @@ const DateInput = ({
   );
 };
 
+/**
+ * DateField - A comprehensive date input component with segmented editing
+ *
+ * Provides accessible date input functionality with separate segments for day,
+ * month, and year. Includes calendar icon, validation states, and international
+ * date format support with keyboard navigation between segments.
+ *
+ * @example
+ * // Basic date field
+ * <DateField label="Birth Date" />
+ *
+ * @example
+ * // Date field with validation
+ * <DateField
+ *   label="Event Date"
+ *   isRequired
+ *   isInvalid={hasError}
+ *   errorMessage="Please select a valid date"
+ * />
+ *
+ * @example
+ * // Date field with custom formatting
+ * <DateField
+ *   label="Meeting Date"
+ *   shortMonth={false}
+ *   placeholder="Select meeting date"
+ * />
+ *
+ * @example
+ * // Compact date field
+ * <DateField
+ *   label="Due Date"
+ *   size="small"
+ *   description="When is this task due?"
+ * />
+ *
+ * @example
+ * // Controlled date field
+ * <DateField
+ *   label="Selected Date"
+ *   value={selectedDate}
+ *   onChange={setSelectedDate}
+ * />
+ */
 export function DateField<T extends DateValue>({
   classNames,
   description: descriptionProp,

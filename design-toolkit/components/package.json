@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -62,9 +62,9 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/bus": "^0.1.1",
-    "@accelint/core": "^0.2.2",
-    "@accelint/icons": "^2.0.2",
+    "@accelint/bus": "^0.1.2",
+    "@accelint/core": "^0.3.0",
+    "@accelint/icons": "^2.0.3",
     "@fontsource/roboto-flex": "^5.2.6",
     "@fontsource/roboto-mono": "^5.2.6",
     "@internationalized/date": "^3.8.2",

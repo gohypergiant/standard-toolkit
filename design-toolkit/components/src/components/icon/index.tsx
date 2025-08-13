@@ -25,6 +25,35 @@ function IconProvider({ children, ...props }: ProviderProps<IconProps>) {
 }
 IconProvider.displayName = 'Icon.Provider';
 
+/**
+ * Icon - A wrapper component for displaying SVG icons with consistent sizing
+ *
+ * Provides a standardized container for SVG icons with built-in size variants and
+ * proper accessibility support. Works seamlessly with the Accelint icon library
+ * and supports custom SVG elements with consistent styling and alignment.
+ *
+ * @example
+ * // Basic icon usage
+ * <Icon>
+ *   <Settings />
+ * </Icon>
+ *
+ * @example
+ * // Icon with different sizes
+ * <Icon size="small">
+ *   <User />
+ * </Icon>
+ * <Icon size="large">
+ *   <Dashboard />
+ * </Icon>
+ *
+ * @example
+ * // Icon in button context (automatically inherits sizing)
+ * <Button>
+ *   <Icon><Plus /></Icon>
+ *   Add Item
+ * </Button>
+ */
 export function Icon({ ref, ...props }: IconProps) {
   [props, ref] = useContextProps(props, ref ?? null, IconContext);
 

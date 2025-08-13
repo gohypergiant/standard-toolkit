@@ -35,6 +35,35 @@ function AvatarProvider({ children, ...props }: ProviderProps<AvatarProps>) {
 }
 AvatarProvider.displayName = 'Avatar.Provider';
 
+/**
+ * Avatar - A user profile image component with fallback support
+ *
+ * Displays a user's profile image with automatic fallback to a default person icon
+ * when the image fails to load. Supports multiple sizes and can include status badges.
+ * Built on Radix UI Avatar for accessibility and reliability.
+ *
+ * @example
+ * // Basic avatar with image
+ * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }} />
+ *
+ * @example
+ * // Avatar with fallback and custom size
+ * <Avatar
+ *   size="large"
+ *   imageProps={{ src: "/user.jpg", alt: "User Name" }}
+ *   fallbackProps={{ children: "UN" }}
+ * />
+ *
+ * @example
+ * // Avatar with status badge
+ * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }}>
+ *   <Badge variant="success" />
+ * </Avatar>
+ *
+ * @example
+ * // Avatar with only initials fallback
+ * <Avatar fallbackProps={{ children: "JD" }} />
+ */
 export function Avatar({ ref, ...props }: AvatarProps) {
   [props, ref] = useContextProps(props, ref ?? null, AvatarContext);
 

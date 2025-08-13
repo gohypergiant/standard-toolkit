@@ -138,6 +138,30 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 }
 
+/**
+ * QueryBuilder - A visual interface for building complex database queries
+ *
+ * Provides an intuitive drag-and-drop interface for constructing database queries
+ * with support for multiple conditions, operators, and logical grouping. Enables
+ * users to build complex filters without writing SQL or code.
+ *
+ * @example
+ * // Basic query builder
+ * <QueryBuilder
+ *   fields={[
+ *     // { name, label, type, inputType, operators },
+ *   ]}
+ *   query={
+ *     // { combinator, rules }
+ *   }
+ *   onQueryChange={handleQueryChange}
+ *   controlElements={{
+ *     addRuleAction: CustomAddButton,
+ *     removeRuleAction: CustomRemoveButton
+ *   }}
+ *   orientation="vertical"
+ * />
+ */
 export function QueryBuilder({
   controlClassnames,
   controlElements,

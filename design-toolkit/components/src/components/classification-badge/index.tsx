@@ -34,6 +34,21 @@ function ClassificationBadgeProvider({
 }
 ClassificationBadgeProvider.displayName = 'ClassificationBadge.Provider';
 
+/**
+ * ClassificationBadge - A specialized badge for security and data classification
+ *
+ * Provides standardized visual indicators for data classification levels such as
+ * confidential, secret, or public information. Designed for compliance with
+ * security standards and information governance requirements.
+ *
+ * @example
+ * // Basic classification badge
+ * <ClassificationBadge level="confidential" />
+ *
+ * @example
+ * // Classification with custom styling
+ * <ClassificationBadge level="secret" />
+ */
 export function ClassificationBadge({
   ref,
   ...props

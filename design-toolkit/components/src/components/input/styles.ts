@@ -102,7 +102,7 @@ export const InputStyles = tv({
       className: {
         sizer: [
           'group-size-medium/input:min-w-[160px] group-size-medium/input:max-w-[400px]',
-          'group-size-medium/input:min-w-[80px] group-size-small/input:max-w-[200px]',
+          'group-size-small/input:min-w-[80px] group-size-small/input:max-w-[200px]',
         ],
       },
     },
