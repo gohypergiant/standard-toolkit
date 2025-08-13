@@ -112,6 +112,14 @@
   --primitive-utility-critical-700: #790501;
   --primitive-utility-critical-800: #540300;
   --primitive-utility-critical-900: #290200;
+  --primitive-roe-id-pending: #404040;
+  --primitive-roe-id-friend: #1484f4;
+  --primitive-roe-id-assumed-friend: #0e8f37;
+  --primitive-roe-id-neutral: #5b137a;
+  --primitive-roe-id-unknown: #edda0a;
+  --primitive-roe-id-suspect: #ffad38;
+  --primitive-roe-id-hostile: #ff0033;
+  --primitive-roe-id-no-statement: #404040;
   --primitive-classification-unclass: #007A33;
   --primitive-classification-cui: #502b85;
   --primitive-classification-confidential: #0033a0;
