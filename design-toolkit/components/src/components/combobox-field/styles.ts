@@ -18,7 +18,9 @@ export const ComboBoxStyles = tv({
     label: '',
     control: [
       'flex items-center rounded-medium px-s py-xs outline',
-      'group-enabled/combobox-field:fg-default-light group-enabled:combobox-field:outline-interactive',
+      'group-size-medium/combobox-field:min-w-[160px] group-size-medium/combobox-field:max-w-[400px]',
+      'group-size-small/combobox-field:min-w-[80px] group-size-small/combobox-field:max-w-[200px]',
+      'group-enabled/combobox-field:fg-default-light group-enabled/combobox-field:outline-interactive',
       'group-enabled/combobox-field:placeholder:fg-default-dark',
       'group-enabled/combobox-field:focus-within:outline-highlight',
       'group-enabled/combobox-field:hover:outline-interactive-hover',
@@ -26,7 +28,7 @@ export const ComboBoxStyles = tv({
       'group-disabled/combobox-field:fg-disabled group-disabled/combobox-field:outline-interactive-disabled',
     ],
     input: [
-      'font-display outline-none',
+      'grow font-display outline-none',
       'group-size-medium/combobox-field:text-body-s',
       'group-size-small/combobox-field:text-body-xs',
     ],
