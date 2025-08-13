@@ -11,6 +11,7 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
+import { darkTokens, lightTokens } from './token-data';
 
 const meta: Meta = {
   title: 'Foundation/Colors',
@@ -22,6 +23,8 @@ type Story = StoryObj;
 
 type ColorInfo = {
   name: string;
+  cssvar: string;
+  actual?: string;
   bg?: string;
   fg?: string;
 };
@@ -29,178 +32,6 @@ type ColorInfo = {
 type BorderInfo = {
   name: string;
   border: string;
-};
-
-const colors: Record<string, ColorInfo[]> = {
-  semanticBackgroundBase: [
-    {
-      name: 'bg-surface-default',
-      bg: 'bg-surface-default',
-    },
-    {
-      name: 'bg-interactive-default',
-      bg: 'bg-interactive-default',
-    },
-    {
-      name: 'bg-surface-raised',
-      bg: 'bg-surface-raised',
-    },
-    {
-      name: 'bg-interactive-hover-light',
-      bg: 'bg-interactive-hover-light',
-    },
-    {
-      name: 'bg-surface-overlay',
-      bg: 'bg-surface-overlay',
-    },
-    {
-      name: 'bg-interactive-hover-dark',
-      bg: 'bg-interactive-hover-dark',
-    },
-    {
-      name: 'bg-transparent-dark',
-      bg: 'bg-transparent-dark',
-    },
-    {
-      name: 'bg-interactive-disabled',
-      bg: 'bg-interactive-disabled',
-    },
-    {
-      name: 'bg-transparent-light',
-      bg: 'bg-transparent-light',
-    },
-  ],
-  semanticBackgroundColor: [
-    {
-      name: 'highlight-bold',
-      bg: 'bg-highlight-bold',
-    },
-    {
-      name: 'highlight-hover',
-      bg: 'bg-highlight-hover',
-    },
-    {
-      name: 'highlight-subtle',
-      bg: 'bg-highlight-subtle',
-    },
-    {
-      name: 'info-bold',
-      bg: 'bg-info-bold',
-    },
-    {
-      name: 'info-hover',
-      bg: 'bg-info-hover',
-    },
-    {
-      name: 'info-subtle',
-      bg: 'bg-info-subtle',
-    },
-    {
-      name: 'advisory-bold',
-      bg: 'bg-advisory-bold',
-    },
-    {
-      name: 'advisory-hover',
-      bg: 'bg-advisory-hover',
-    },
-    {
-      name: 'advisory-subtle',
-      bg: 'bg-advisory-subtle',
-    },
-    {
-      name: 'normal-bold',
-      bg: 'bg-normal-bold',
-    },
-    {
-      name: 'normal-hover',
-      bg: 'bg-normal-hover',
-    },
-    {
-      name: 'normal-subtle',
-      bg: 'bg-normal-subtle',
-    },
-    {
-      name: 'serious-bold',
-      bg: 'bg-serious-bold',
-    },
-    {
-      name: 'serious-hover',
-      bg: 'bg-serious-hover',
-    },
-    {
-      name: 'serious-subtle',
-      bg: 'bg-serious-subtle',
-    },
-    {
-      name: 'critical-bold',
-      bg: 'bg-critical-bold',
-    },
-    {
-      name: 'critical-hover',
-      bg: 'bg-critical-hover',
-    },
-    {
-      name: 'critical-subtle',
-      bg: 'bg-critical-subtle',
-    },
-  ],
-  semanticForeground: [
-    {
-      name: 'fg-default-light',
-      fg: 'fg-default-light',
-      bg: 'bg-default-light',
-    },
-    {
-      name: 'fg-info',
-      fg: 'fg-info',
-      bg: 'bg-info',
-    },
-    {
-      name: 'fg-default-dark',
-      fg: 'fg-default-dark',
-      bg: 'bg-default-dark',
-    },
-    {
-      name: 'fg-advisory',
-      fg: 'fg-advisory',
-      bg: 'bg-advisory',
-    },
-    {
-      name: 'fg-inverse-light',
-      fg: 'fg-inverse-light',
-      bg: 'bg-inverse-light',
-    },
-    {
-      name: 'fg-normal',
-      fg: 'fg-normal',
-      bg: 'bg-normal',
-    },
-    {
-      name: 'fg-inverse-dark',
-      fg: 'fg-inverse-dark',
-      bg: 'bg-inverse-dark',
-    },
-    {
-      name: 'fg-serious',
-      fg: 'fg-serious',
-      bg: 'bg-serious',
-    },
-    {
-      name: 'fg-disabled',
-      fg: 'fg-disabled',
-      bg: 'bg-disabled',
-    },
-    {
-      name: 'fg-critical',
-      fg: 'fg-critical',
-      bg: 'bg-critical',
-    },
-    {
-      name: 'fg-highlight',
-      fg: 'fg-highlight',
-      bg: 'bg-highlight',
-    },
-  ],
 };
 
 const borders: Record<string, BorderInfo[]> = {
@@ -252,23 +83,16 @@ const borders: Record<string, BorderInfo[]> = {
   ],
 };
 
-const BackgroundColorDisplay = (color: ColorInfo) => {
-  const rootElement = document.documentElement;
-  return (
-    <div className='flex items-center gap-l' key={color.name}>
-      <div className={`h-[90px] w-[120px] rounded-large ${color.bg}`} />
-      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
-        <span>{color.bg}</span>
-        <span>
-          {getComputedStyle(rootElement)
-            .getPropertyValue(`--color-${color.name.replace('bg-', '')}`)
-            .toLocaleUpperCase()}
-        </span>
-        <span className='fg-default-dark'>Figma: {color.name}</span>
-      </div>
+const BackgroundColorDisplay = (color: ColorInfo) => (
+  <div className='flex items-center gap-l' key={color.name}>
+    <div className={`h-[90px] w-[120px] rounded-large ${color.name}`} />
+    <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
+      <span>var(--{color.name})</span>
+      <span>{color.actual}</span>
+      <span className='fg-default-dark'>Figma: {color.name}</span>
     </div>
-  );
-};
+  </div>
+);
 
 const ForegroundColorDisplay = (color: ColorInfo) => {
   const rootElement = document.documentElement;
@@ -308,28 +132,56 @@ const BorderDisplay = (border: BorderInfo) => {
   );
 };
 
-export const SemanticBackground: Story = {
+export const BackgroundDark: Story = {
   globals: { backgrounds: { value: '#000000' } },
-  render: () => (
-    <div className='flex flex-col gap-xl'>
-      <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>
-          Semantic Background
-        </h1>
-        <p className='fg-interactive-hover-light text-body-s'>
-          These are tokens primarily used as backgrounds for any element or
-          component that contains content such as containers, sections, headers,
-          buttons, etc.
-        </p>
+  render: () => {
+    return (
+      <div className='flex flex-col gap-xl'>
+        <div className='flex flex-col gap-m'>
+          <h1 className='fg-interactive-default text-header-xl'>
+            Semantic Background
+          </h1>
+          <p className='fg-interactive-hover-light text-body-s'>
+            These are tokens primarily used as backgrounds for any element or
+            component that contains content such as containers, sections,
+            headers, buttons, etc.
+          </p>
+        </div>
+        <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
+          {darkTokens.bg.base.map(BackgroundColorDisplay)}
+        </div>
+        <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+          {darkTokens.bg.utility.map(BackgroundColorDisplay)}
+        </div>
       </div>
-      <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-        {colors.semanticBackgroundBase?.map(BackgroundColorDisplay)}
+    );
+  },
+};
+
+export const BackgroundLight: Story = {
+  globals: { backgrounds: { value: '#FFFFFF' } },
+  render: () => {
+    return (
+      <div className='flex flex-col gap-xl'>
+        <div className='flex flex-col gap-m'>
+          <h1 className='fg-interactive-default text-header-xl'>
+            Semantic Background
+          </h1>
+          <p className='fg-interactive-hover-light text-body-s'>
+            These are tokens primarily used as backgrounds for any element or
+            component that contains content such as containers, sections,
+            headers, buttons, etc.
+          </p>
+        </div>
+        <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
+          {lightTokens.bg.base.map(BackgroundColorDisplay)}
+        </div>
+        <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+          {lightTokens.bg.utility.map(BackgroundColorDisplay)}
+        </div>
       </div>
-      <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-        {colors.semanticBackgroundColor?.map(BackgroundColorDisplay)}
-      </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const SemanticForeground: Story = {

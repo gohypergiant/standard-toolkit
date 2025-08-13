@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-:root {
-  --primitive-neutral-50: #ffffff;
+    :root {
+
+        --primitive-neutral-50: #ffffff;
   --primitive-neutral-100: #eff1f2;
   --primitive-neutral-200: #d5d7d9;
   --primitive-neutral-300: #c3c5c7;
@@ -196,4 +197,5 @@
   --icon-size-m: 20px;
   --icon-size-s: var(--spacing-l);
   --icon-size-xs: var(--spacing-m);
-}
+
+    }
