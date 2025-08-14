@@ -76,7 +76,7 @@ export function Button({ ref, ...props }: ButtonProps) {
   const {
     children,
     className,
-    color,
+    color = 'info',
     size = 'medium',
     variant,
     ...rest
@@ -93,8 +93,8 @@ export function Button({ ref, ...props }: ButtonProps) {
             variant,
           }),
         )}
-        data-size={size}
         data-color={color}
+        data-size={size}
       >
         {children}
       </AriaButton>
@@ -159,7 +159,7 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
   const {
     children,
     className,
-    color,
+    color = 'info',
     size = 'medium',
     variant,
     ...rest
@@ -244,7 +244,7 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   const {
     children,
     className,
-    color,
+    color = 'info',
     size = 'medium',
     variant,
     ...rest
@@ -261,8 +261,8 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
             variant,
           }),
         )}
-        data-size={size}
         data-color={color}
+        data-size={size}
       >
         {children}
       </AriaToggleButton>
