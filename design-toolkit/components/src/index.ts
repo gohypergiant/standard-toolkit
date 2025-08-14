@@ -147,7 +147,7 @@ export {
 export {
   DrawerEventNamespace,
   DrawerEventTypes,
-} from './components/drawer/types';
+} from './components/drawer/events';
 export type {
   DrawerContextValue,
   DrawerEvent,

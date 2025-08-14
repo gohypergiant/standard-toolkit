@@ -18,6 +18,7 @@ import type { HeadingProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
 import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackEvent } from '../view-stack/types';
+import type { DrawerEventTypes } from './events';
 import type { DrawerTitleStyles } from './styles';
 
 type Top = 'top';
@@ -176,14 +177,6 @@ export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
 export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
   AriaAttributesWithRef<HTMLHeadingElement> &
   VariantProps<typeof DrawerTitleStyles>;
-
-export const DrawerEventNamespace = 'Drawer';
-
-export const DrawerEventTypes = {
-  close: `${DrawerEventNamespace}:close`,
-  open: `${DrawerEventNamespace}:open`,
-  toggle: `${DrawerEventNamespace}:toggle`,
-} as const;
 
 export type DrawerOpenEvent = Payload<
   typeof DrawerEventTypes.open,

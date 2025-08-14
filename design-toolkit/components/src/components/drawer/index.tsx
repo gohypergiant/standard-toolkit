@@ -35,19 +35,19 @@ import {
 } from '../view-stack';
 import { ViewStackEventTypes } from '../view-stack/events';
 import type { ViewStackViewProps } from '../view-stack/types';
+import { DrawerEventTypes } from './events';
 import { DrawerMenuStyles, DrawerStyles, DrawerTitleStyles } from './styles';
-import {
-  type DrawerContextValue,
-  type DrawerEvent,
-  DrawerEventTypes,
-  type DrawerLayoutProps,
-  type DrawerMenuItemProps,
-  type DrawerMenuProps,
-  type DrawerOpenEvent,
-  type DrawerProps,
-  type DrawerTitleProps,
-  type DrawerToggleEvent,
-  type DrawerTriggerProps,
+import type {
+  DrawerContextValue,
+  DrawerEvent,
+  DrawerLayoutProps,
+  DrawerMenuItemProps,
+  DrawerMenuProps,
+  DrawerOpenEvent,
+  DrawerProps,
+  DrawerTitleProps,
+  DrawerToggleEvent,
+  DrawerTriggerProps,
 } from './types';
 
 const { layout, main, drawer, panel, view, header, content, footer } =
