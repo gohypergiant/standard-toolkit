@@ -262,6 +262,10 @@ export { TableCell } from './components/table/table-cell';
 export { HeaderCell } from './components/table/table-header-cell';
 export { TableHeader } from './components/table/table-header';
 export { TableRow } from './components/table/table-row';
+export {
+  ColumnKebabMenuItems,
+  RowKebabMenuItems,
+} from './components/table/types';
 export type {
   TableBodyProps,
   TableCellProps,
