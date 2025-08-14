@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -9,8 +10,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
-// __private-exports
 
 export const darkTokens = {
   bg: {
@@ -326,123 +325,127 @@ export const darkTokens = {
       },
     ],
   },
-  outline: [
-    {
-      name: 'outline-static',
-      cssvar: '--primitive-neutral-600',
-      actual: '#414245',
-    },
-    {
-      name: 'outline-interactive',
-      cssvar: '--primitive-neutral-600',
-      actual: '#414245',
-    },
-    {
-      name: 'outline-interactive-hover',
-      cssvar: '--primitive-neutral-400',
-      actual: '#888a8f',
-    },
-    {
-      name: 'outline-interactive-pressed',
-      cssvar: '--primitive-neutral-700',
-      actual: '#2f2f31',
-    },
-    {
-      name: 'outline-interactive-disabled',
-      cssvar: '--primitive-neutral-700',
-      actual: '#2f2f31',
-    },
-    {
-      name: 'outline-accent-primary-bold',
-      cssvar: '--primitive-accent-primary-300',
-      actual: '#39b7fa',
-    },
-    {
-      name: 'outline-accent-primary-hover',
-      cssvar: '--primitive-accent-primary-200',
-      actual: '#6ed1ff',
-    },
-    {
-      name: 'outline-accent-primary-pressed',
-      cssvar: '--primitive-accent-primary-600',
-      actual: '#0068a1',
-    },
-    {
-      name: 'outline-info-bold',
-      cssvar: '--primitive-utility-info-400',
-      actual: '#888a8f',
-    },
-    {
-      name: 'outline-info-hover',
-      cssvar: '--primitive-utility-info-200',
-      actual: '#d5d7d9',
-    },
-    {
-      name: 'outline-info-pressed',
-      cssvar: '--primitive-utility-info-600',
-      actual: '#414245',
-    },
-    {
-      name: 'outline-advisory-bold',
-      cssvar: '--primitive-utility-advisory-400',
-      actual: '#62a6ff',
-    },
-    {
-      name: 'outline-advisory-hover',
-      cssvar: '--primitive-utility-advisory-200',
-      actual: '#a9ceff',
-    },
-    {
-      name: 'outline-advisory-pressed',
-      cssvar: '--primitive-utility-advisory-600',
-      actual: '#3c67a0',
-    },
-    {
-      name: 'outline-normal-bold',
-      cssvar: '--primitive-utility-normal-400',
-      actual: '#2bbf35',
-    },
-    {
-      name: 'outline-normal-hover',
-      cssvar: '--primitive-utility-normal-200',
-      actual: '#86e98c',
-    },
-    {
-      name: 'outline-normal-pressed',
-      cssvar: '--primitive-utility-normal-600',
-      actual: '#1c7e23',
-    },
-    {
-      name: 'outline-serious-bold',
-      cssvar: '--primitive-utility-serious-500',
-      actual: '#e89906',
-    },
-    {
-      name: 'outline-serious-hover',
-      cssvar: '--primitive-utility-serious-200',
-      actual: '#ffd382',
-    },
-    {
-      name: 'outline-serious-pressed',
-      cssvar: '--primitive-utility-serious-700',
-      actual: '#8e5d00',
-    },
-    {
-      name: 'outline-critical-bold',
-      cssvar: '--primitive-utility-critical-400',
-      actual: '#ff2e27',
-    },
-    {
-      name: 'outline-critical-hover',
-      cssvar: '--primitive-utility-critical-300',
-      actual: '#ff6d68',
-    },
-    {
-      name: 'outline-critical-pressed',
-      cssvar: '--primitive-utility-critical-600',
-      actual: '#a10701',
-    },
-  ],
+  outline: {
+    base: [
+      {
+        name: 'outline-static',
+        cssvar: '--primitive-neutral-600',
+        actual: '#414245',
+      },
+      {
+        name: 'outline-interactive',
+        cssvar: '--primitive-neutral-600',
+        actual: '#414245',
+      },
+      {
+        name: 'outline-interactive-hover',
+        cssvar: '--primitive-neutral-400',
+        actual: '#888a8f',
+      },
+      {
+        name: 'outline-interactive-pressed',
+        cssvar: '--primitive-neutral-700',
+        actual: '#2f2f31',
+      },
+      {
+        name: 'outline-interactive-disabled',
+        cssvar: '--primitive-neutral-700',
+        actual: '#2f2f31',
+      },
+      {
+        name: 'outline-accent-primary-bold',
+        cssvar: '--primitive-accent-primary-300',
+        actual: '#39b7fa',
+      },
+      {
+        name: 'outline-accent-primary-hover',
+        cssvar: '--primitive-accent-primary-200',
+        actual: '#6ed1ff',
+      },
+      {
+        name: 'outline-accent-primary-pressed',
+        cssvar: '--primitive-accent-primary-600',
+        actual: '#0068a1',
+      },
+    ],
+    utility: [
+      {
+        name: 'outline-info-bold',
+        cssvar: '--primitive-utility-info-400',
+        actual: '#888a8f',
+      },
+      {
+        name: 'outline-info-hover',
+        cssvar: '--primitive-utility-info-200',
+        actual: '#d5d7d9',
+      },
+      {
+        name: 'outline-info-pressed',
+        cssvar: '--primitive-utility-info-600',
+        actual: '#414245',
+      },
+      {
+        name: 'outline-advisory-bold',
+        cssvar: '--primitive-utility-advisory-400',
+        actual: '#62a6ff',
+      },
+      {
+        name: 'outline-advisory-hover',
+        cssvar: '--primitive-utility-advisory-200',
+        actual: '#a9ceff',
+      },
+      {
+        name: 'outline-advisory-pressed',
+        cssvar: '--primitive-utility-advisory-600',
+        actual: '#3c67a0',
+      },
+      {
+        name: 'outline-normal-bold',
+        cssvar: '--primitive-utility-normal-400',
+        actual: '#2bbf35',
+      },
+      {
+        name: 'outline-normal-hover',
+        cssvar: '--primitive-utility-normal-200',
+        actual: '#86e98c',
+      },
+      {
+        name: 'outline-normal-pressed',
+        cssvar: '--primitive-utility-normal-600',
+        actual: '#1c7e23',
+      },
+      {
+        name: 'outline-serious-bold',
+        cssvar: '--primitive-utility-serious-500',
+        actual: '#e89906',
+      },
+      {
+        name: 'outline-serious-hover',
+        cssvar: '--primitive-utility-serious-200',
+        actual: '#ffd382',
+      },
+      {
+        name: 'outline-serious-pressed',
+        cssvar: '--primitive-utility-serious-700',
+        actual: '#8e5d00',
+      },
+      {
+        name: 'outline-critical-bold',
+        cssvar: '--primitive-utility-critical-400',
+        actual: '#ff2e27',
+      },
+      {
+        name: 'outline-critical-hover',
+        cssvar: '--primitive-utility-critical-300',
+        actual: '#ff6d68',
+      },
+      {
+        name: 'outline-critical-pressed',
+        cssvar: '--primitive-utility-critical-600',
+        actual: '#a10701',
+      },
+    ],
+  },
 };
 
 export const lightTokens = {
@@ -761,131 +764,125 @@ export const lightTokens = {
       },
     ],
   },
-  outline: [
-    {
-      name: '  outline-static',
-      cssvar: ' --primitive-neutral-300',
-      actual: ' #c3c5c7',
-    },
-    {
-      name: '  outline-interactive',
-      cssvar: ' --primitive-neutral-300',
-      actual: ' #c3c5c7',
-    },
-    {
-      name: '  outline-interactive-hover',
-      cssvar: ' --primitive-neutral-400',
-      actual: ' #888a8f',
-    },
-    {
-      name: '  outline-interactive-pressed',
-      cssvar: ' --primitive-neutral-200',
-      actual: ' #d5d7d9',
-    },
-    {
-      name: '  outline-interactive-disabled',
-      cssvar: ' --primitive-neutral-200',
-      actual: ' #d5d7d9',
-    },
-    {
-      name: '  outline-accent-primary-bold',
-      cssvar: ' --primitive-accent-primary-500',
-      actual: ' #008fd0',
-    },
-    {
-      name: '  outline-accent-primary-hover',
-      cssvar: ' --primitive-accent-primary-600',
-      actual: ' #0068a1',
-    },
-    {
-      name: '  outline-accent-primary-pressed',
-      cssvar: ' --primitive-accent-primary-400',
-      actual: ' #009cde',
-    },
-    {
-      name: '  outline-info-bold',
-      cssvar: ' --primitive-utility-info-400',
-      actual: ' #888a8f',
-    },
-    {
-      name: '  outline-info-hover',
-      cssvar: ' --primitive-utility-info-600',
-      actual: ' #414245',
-    },
-    {
-      name: '  outline-info-pressed',
-      cssvar: ' --primitive-utility-info-500',
-      actual: ' #565759',
-    },
-    {
-      name: '  outline-advisory-bold',
-      cssvar: ' --primitive-utility-advisory-400',
-      actual: ' #62a6ff',
-    },
-    {
-      name: '  outline-advisory-hover',
-      cssvar: ' --primitive-utility-advisory-600',
-      actual: ' #3c67a0',
-    },
-    {
-      name: '  outline-advisory-pressed',
-      cssvar: ' --primitive-utility-advisory-500',
-      actual: ' #4e88da',
-    },
-    {
-      name: '  outline-normal-bold',
-      cssvar: ' --primitive-utility-normal-400',
-      actual: ' #2bbf35',
-    },
-    {
-      name: '  outline-normal-hover',
-      cssvar: ' --primitive-utility-normal-600',
-      actual: ' #1c7e23',
-    },
-    {
-      name: '  outline-normal-pressed',
-      cssvar: ' --primitive-utility-normal-500',
-      actual: ' #26a12e',
-    },
-    {
-      name: '  outline-serious-bold',
-      cssvar: ' --primitive-utility-serious-600',
-      actual: ' #bb7a00',
-    },
-    {
-      name: '  outline-serious-hover',
-      cssvar: ' --primitive-utility-serious-700',
-      actual: ' #8e5d00',
-    },
-    {
-      name: '  outline-serious-pressed',
-      cssvar: ' --primitive-utility-serious-500',
-      actual: ' #e89906',
-    },
-    {
-      name: '  outline-critical-bold',
-      cssvar: ' --primitive-utility-critical-400',
-      actual: ' #ff2e27',
-    },
-    {
-      name: '  outline-critical-hover',
-      cssvar: ' --primitive-utility-critical-600',
-      actual: ' #a10701',
-    },
-    {
-      name: '  outline-critical-pressed',
-      cssvar: ' --primitive-utility-critical-500',
-      actual: ' #d40b04',
-    },
-    {
-      name: '  shadow-elevation-raised',
-      cssvar: ' --shadow-elevation-overlay',
-      actual: ' 0 8px 10px 0 rgba(0 0 0 / 0.',
-    },
-    {
-      name: '  shadow-elevation-overlay',
-      cssvar: ' --shadow-elevation-raised',
-      actual: ' 0 5px 5px 0 rgba(0 0 0 / 0.',
-    },
-  ],
+  outline: {
+    base: [
+      {
+        name: '  outline-static',
+        cssvar: ' --primitive-neutral-300',
+        actual: ' #c3c5c7',
+      },
+      {
+        name: '  outline-interactive',
+        cssvar: ' --primitive-neutral-300',
+        actual: ' #c3c5c7',
+      },
+      {
+        name: '  outline-interactive-hover',
+        cssvar: ' --primitive-neutral-400',
+        actual: ' #888a8f',
+      },
+      {
+        name: '  outline-interactive-pressed',
+        cssvar: ' --primitive-neutral-200',
+        actual: ' #d5d7d9',
+      },
+      {
+        name: '  outline-interactive-disabled',
+        cssvar: ' --primitive-neutral-200',
+        actual: ' #d5d7d9',
+      },
+      {
+        name: '  outline-accent-primary-bold',
+        cssvar: ' --primitive-accent-primary-500',
+        actual: ' #008fd0',
+      },
+      {
+        name: '  outline-accent-primary-hover',
+        cssvar: ' --primitive-accent-primary-600',
+        actual: ' #0068a1',
+      },
+      {
+        name: '  outline-accent-primary-pressed',
+        cssvar: ' --primitive-accent-primary-400',
+        actual: ' #009cde',
+      },
+    ],
+    utility: [
+      {
+        name: '  outline-info-bold',
+        cssvar: ' --primitive-utility-info-400',
+        actual: ' #888a8f',
+      },
+      {
+        name: '  outline-info-hover',
+        cssvar: ' --primitive-utility-info-600',
+        actual: ' #414245',
+      },
+      {
+        name: '  outline-info-pressed',
+        cssvar: ' --primitive-utility-info-500',
+        actual: ' #565759',
+      },
+      {
+        name: '  outline-advisory-bold',
+        cssvar: ' --primitive-utility-advisory-400',
+        actual: ' #62a6ff',
+      },
+      {
+        name: '  outline-advisory-hover',
+        cssvar: ' --primitive-utility-advisory-600',
+        actual: ' #3c67a0',
+      },
+      {
+        name: '  outline-advisory-pressed',
+        cssvar: ' --primitive-utility-advisory-500',
+        actual: ' #4e88da',
+      },
+      {
+        name: '  outline-normal-bold',
+        cssvar: ' --primitive-utility-normal-400',
+        actual: ' #2bbf35',
+      },
+      {
+        name: '  outline-normal-hover',
+        cssvar: ' --primitive-utility-normal-600',
+        actual: ' #1c7e23',
+      },
+      {
+        name: '  outline-normal-pressed',
+        cssvar: ' --primitive-utility-normal-500',
+        actual: ' #26a12e',
+      },
+      {
+        name: '  outline-serious-bold',
+        cssvar: ' --primitive-utility-serious-600',
+        actual: ' #bb7a00',
+      },
+      {
+        name: '  outline-serious-hover',
+        cssvar: ' --primitive-utility-serious-700',
+        actual: ' #8e5d00',
+      },
+      {
+        name: '  outline-serious-pressed',
+        cssvar: ' --primitive-utility-serious-500',
+        actual: ' #e89906',
+      },
+      {
+        name: '  outline-critical-bold',
+        cssvar: ' --primitive-utility-critical-400',
+        actual: ' #ff2e27',
+      },
+      {
+        name: '  outline-critical-hover',
+        cssvar: ' --primitive-utility-critical-600',
+        actual: ' #a10701',
+      },
+      {
+        name: '  outline-critical-pressed',
+        cssvar: ' --primitive-utility-critical-500',
+        actual: ' #d40b04',
+      },
+    ],
+  },
 };
