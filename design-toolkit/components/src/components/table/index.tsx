@@ -23,13 +23,10 @@ import {
   type SortingState,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { head } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
-import { is } from 'zod/v4/locales';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Hotkey } from '../hotkey';
@@ -40,7 +37,12 @@ import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import type { TableMenuItem, TableProps } from './types';
+import {
+  ColumnKebabMenuItems,
+  RowKebabMenuItems,
+  type TableMenuItem,
+  type TableProps,
+} from './types';
 
 const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
   <TableCell
@@ -150,17 +152,17 @@ export function Table<T extends { id: string | number }>({
   const rowMenuItem: TableMenuItem[] = [
     {
       id: 1,
-      name: 'Pin',
+      name: RowKebabMenuItems.PIN,
       isDisabled: false,
     },
     {
       id: 2,
-      name: 'Move Up',
+      name: RowKebabMenuItems.MOVE_UP,
       isDisabled: false,
     },
     {
       id: 3,
-      name: 'Move Down',
+      name: RowKebabMenuItems.MOVE_DOWN,
       isDisabled: false,
     },
   ];
@@ -178,9 +180,7 @@ export function Table<T extends { id: string | number }>({
           <>
             <div
               className={
-                persistRowKebabMenu
-                  ? 'sticky right-0'
-                  : 'invisible hover:sticky right-0'
+                persistRowKebabMenu ? '' : 'invisible hover:sticky right-0'
               }
             >
               <Menu.Trigger>
@@ -193,15 +193,21 @@ export function Table<T extends { id: string | number }>({
                   {(item) => (
                     <Menu.Item
                       onAction={() => {
-                        if (item.id === 1) {
+                        if (item.name === RowKebabMenuItems.PIN) {
                           row.pin(isPinned ? false : 'top');
+                        } else if (item.name === RowKebabMenuItems.MOVE_UP) {
+                          moveUpSelectedRows();
+                        } else if (item.name === RowKebabMenuItems.MOVE_DOWN) {
+                          moveDownSelectedRows();
                         }
                       }}
                       key={item.id}
                       isDisabled={item.isDisabled}
                     >
                       <Menu.Item.Label>
-                        {item.id === 1 && isPinned ? 'Unpin' : item.name}
+                        {item.id === 1 && isPinned
+                          ? RowKebabMenuItems.UNPIN
+                          : item.name}
                       </Menu.Item.Label>
                       {item.description && (
                         <Menu.Item.Description>
@@ -372,12 +378,12 @@ export function Table<T extends { id: string | number }>({
   const columnMenuItems: TableMenuItem[] = [
     {
       id: 1,
-      name: 'Move Column Left',
+      name: ColumnKebabMenuItems.LEFT,
       isDisabled: false,
     },
     {
       id: 2,
-      name: 'Move Column Right',
+      name: ColumnKebabMenuItems.RIGHT,
       isDisabled: false,
     },
   ];
@@ -442,13 +448,15 @@ export function Table<T extends { id: string | number }>({
                             {(item) => (
                               <Menu.Item
                                 onAction={() => {
-                                  if (item.id === 1) {
+                                  if (item.name === ColumnKebabMenuItems.LEFT) {
                                     header.column.getIsFirstColumn('center')
                                       ? undefined
                                       : moveColumnLeft(
                                           header.column.getIndex(),
                                         );
-                                  } else if (item.id === 2) {
+                                  } else if (
+                                    item.name === ColumnKebabMenuItems.RIGHT
+                                  ) {
                                     header.column.getIsLastColumn('center')
                                       ? undefined
                                       : moveColumnRight(

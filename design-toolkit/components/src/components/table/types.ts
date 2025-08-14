@@ -192,3 +192,18 @@ export type TableMenuItem = {
   isDisabled?: boolean;
   hotkey?: string;
 };
+
+export enum RowKebabMenuItems {
+  PIN = 'Pin',
+  MOVE_UP = 'Move Up',
+  MOVE_DOWN = 'Move Down',
+  UNPIN = 'Unpin',
+}
+
+export enum ColumnKebabMenuItems {
+  LEFT = 'Move Column Left',
+  RIGHT = 'Move Column Right',
+  ASC = 'Sort Ascending',
+  DESC = 'Sort Descending',
+  RESET = 'Reset Sorting',
+}
