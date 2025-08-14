@@ -21,6 +21,7 @@ import type { ButtonStyles } from './styles';
 
 export type ButtonStyleVariants = VariantProps<typeof ButtonStyles> & {
   size?: 'large' | 'medium' | 'small' | 'xsmall';
+  color?: 'info' | 'serious' | 'critical';
 };
 
 export type ButtonProps = AriaButtonProps &
