@@ -20,16 +20,16 @@ export const SelectFieldStyles = tv({
       'size-medium:py-xs group-size-medium/select-field:min-w-[220px]',
       'group-size-small/select-field:fit-content size-small:py-xxs',
       'group-invalid/select-field:enabled:outline-serious',
-      'group-focus/select-field:enabled:outline-highlight-bold',
+      'group-focus-visible/select-field:enabled:outline-highlight-bold',
     ],
     label: '',
     description:
       'fg-default-dark group-disabled/select-field:fg-disabled text-body-xs',
     error: 'fg-serious text-body-xs',
     value: [
-      'flex items-center',
-      'group-size-small/select-field:gap-xs',
-      'group-size-medium/select-field:gap-s',
+      'flex grow items-center font-display',
+      'group-size-small/select-field:gap-xs group-size-small/select-field:text-body-xs',
+      'group-size-medium/select-field:gap-s group-size-medium/select-field:text-body-s',
     ],
   },
 });

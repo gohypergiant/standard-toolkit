@@ -180,15 +180,10 @@ export { LabelStyles } from './components/label/styles';
 export type { LabelProps } from './components/label/types';
 export { Menu, MenuContext } from './components/menu';
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
-export type { MenuStyleVariants } from './components/menu/styles';
 export type {
   MenuItemProps,
   MenuProps,
   MenuSectionProps,
-  MenuTextProps,
-  MenuTriggerProps,
-  SeparatorProps,
-  SubmenuTriggerProps,
 } from './components/menu/types';
 export { Options, OptionsContext } from './components/options';
 export { OptionsStyles } from './components/options/styles';

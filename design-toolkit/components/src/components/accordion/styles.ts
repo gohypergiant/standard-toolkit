@@ -22,7 +22,7 @@ export const AccordionStyles = tv({
     accordion: 'group/accordion flex w-full flex-col bg-transparent',
     header: [
       'fg-default-light flex w-full items-center gap-s rounded-medium px-s py-xs outline-none',
-      'group-enabled/accordion:hover:bg-interactive-hover-dark group-enabled/accordion:focus-within:bg-interactive-hover-dark',
+      'group-enabled/accordion:focus-visible-within:bg-interactive-hover-dark group-enabled/accordion:hover:bg-interactive-hover-dark',
       'group-disabled/accordion:fg-disabled group-disabled/accordion:cursor-not-allowed',
     ],
     heading: 'grow',

@@ -54,7 +54,7 @@ function setup({
         </Menu>
       </Menu.Submenu>
       <Menu.Separator />
-      <Menu.Section header='Additional Notable Species'>
+      <Menu.Section title='Additional Notable Species'>
         <Menu.Item>
           <Icon>
             <Placeholder />

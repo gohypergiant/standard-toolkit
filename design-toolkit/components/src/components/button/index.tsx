@@ -76,7 +76,7 @@ export function Button({ ref, ...props }: ButtonProps) {
   const {
     children,
     className,
-    color,
+    color = 'info',
     size = 'medium',
     variant,
     ...rest
@@ -90,10 +90,10 @@ export function Button({ ref, ...props }: ButtonProps) {
         className={composeRenderProps(className, (className) =>
           ButtonStyles({
             className,
-            color,
             variant,
           }),
         )}
+        data-color={color}
         data-size={size}
       >
         {children}
@@ -159,7 +159,7 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
   const {
     children,
     className,
-    color,
+    color = 'info',
     size = 'medium',
     variant,
     ...rest
@@ -173,10 +173,10 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
         className={composeRenderProps(className, (className) =>
           LinkButtonStyles({
             className,
-            color,
             variant,
           }),
         )}
+        data-color={color}
         data-size={size}
       >
         {children}
@@ -244,7 +244,7 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   const {
     children,
     className,
-    color,
+    color = 'info',
     size = 'medium',
     variant,
     ...rest
@@ -258,10 +258,10 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
         className={composeRenderProps(className, (className) =>
           ToggleButtonStyles({
             className,
-            color,
             variant,
           }),
         )}
+        data-color={color}
         data-size={size}
       >
         {children}

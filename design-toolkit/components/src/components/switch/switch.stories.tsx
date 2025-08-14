@@ -19,6 +19,7 @@ const meta: Meta<typeof Switch> = {
   args: {
     children: 'Label',
     isDisabled: false,
+    labelPosition: 'end',
   },
 };
 

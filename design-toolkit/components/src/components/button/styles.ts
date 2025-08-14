@@ -27,14 +27,46 @@ const BaseButtonStyles = tv({
     'size-xsmall:gap-xxs size-xsmall:px-s size-xsmall:py-xs size-xsmall:text-button-xs',
   ],
   variants: {
-    color: {
-      info: '',
-      serious: '',
-      critical: '',
-    },
     variant: {
-      filled: 'disabled:fg-disabled disabled:bg-interactive-disabled',
-      outline: 'disabled:fg-disabled disabled:outline-interactive-disabled',
+      filled: [
+        'disabled:fg-disabled disabled:bg-interactive-disabled',
+
+        // Info
+        'enabled:color-info:fg-inverse-light',
+        'enabled:color-info:bg-interactive-default',
+        'enabled:hover:color-info:bg-interactive-hover-light',
+        'enabled:focus-visible:color-info:bg-interactive-hover-light',
+
+        // Serious
+        'enabled:color-serious:fg-inverse-light',
+        'enabled:color-serious:bg-serious',
+        'enabled:hover:color-serious:bg-serious-hover',
+        'enabled:focus-visible:color-serious:bg-serious-hover',
+
+        // Critical
+        'enabled:color-critical:fg-default-light',
+        'enabled:color-critical:bg-critical',
+        'enabled:hover:color-critical:bg-critical-hover',
+        'enabled:focus-visible:color-critical:bg-critical-hover',
+      ],
+      outline: [
+        'disabled:fg-disabled disabled:outline-interactive-disabled',
+
+        // Info
+        'enabled:color-info:fg-default-light enabled:color-info:outline-interactive',
+        'enabled:hover:color-info:outline-interactive-hover',
+        'enabled:focus-visible:color-info:outline-interactive-hover',
+
+        // Serious
+        'enabled:color-serious:fg-default-light enabled:color-serious:outline-serious',
+        'enabled:hover:color-serious:outline-interactive-hover',
+        'enabled:focus-visible:color-serious:outline-interactive-hover',
+
+        // Critical
+        'enabled:color-critical:fg-default-light enabled:color-critical:outline-critical',
+        'enabled:hover:color-critical:outline-interactive-hover',
+        'enabled:focus-visible:color-critical:outline-interactive-hover',
+      ],
       flat: 'disabled:fg-disabled disabled:bg-transparent',
       icon: [
         'size-small:rounded-small size-xsmall:rounded-small size-large:p-xs size-medium:p-xs size-small:p-xxs size-xsmall:p-xxs',
@@ -44,125 +76,52 @@ const BaseButtonStyles = tv({
         'rounded-full',
         'size-large:p-xs size-medium:p-xs size-small:p-xxs size-xsmall:p-xxs',
         'disabled:fg-disabled disabled:bg-interactive-disabled disabled:outline-interactive-disabled',
+
+        // Info
+        'enabled:color-info:fg-interactive enabled:color-info:bg-surface-default enabled:color-info:outline-interactive',
+        'enabled:hover:color-info:fg-interactive-hover enabled:hover:color-info:outline-interactive-hover',
+        'enabled:focus-visible:color-info:fg-interactive-hover enabled:focus-visible:color-info:outline-interactive-hover',
+
+        // Serious
+        'enabled:color-serious:fg-serious enabled:color-serious:bg-serious-subtle enabled:color-serious:outline-serious',
+        'enabled:hover:color-serious:fg-interactive-hover enabled:hover:color-serious:outline-interactive-hover',
+        'enabled:focus-visible:color-serious:fg-interactive-hover enabled:focus-visible:color-serious:outline-interactive-hover',
+
+        // Critical
+        'enabled:color-critical:fg-critical enabled:color-critical:bg-critical-subtle enabled:color-critical:outline-critical',
+        'enabled:hover:color-critical:fg-interactive-hover enabled:hover:color-critical:outline-interactive-hover',
+        'enabled:focus-visible:color-critical:fg-interactive-hover enabled:focus-visible:color-critical:outline-interactive-hover',
       ],
     },
   },
   compoundVariants: [
-    /** Colors **/
     // Info
     {
-      color: 'info',
-      variant: 'filled',
-      className: [
-        'enabled:fg-inverse-light',
-        'enabled:bg-interactive-default',
-        'enabled:hover:bg-interactive-hover-light',
-        'enabled:focus:bg-interactive-hover-light',
-      ],
-    },
-    {
-      color: 'info',
-      variant: 'outline',
-      className: [
-        'enabled:fg-default-light enabled:outline-interactive',
-        'enabled:hover:outline-interactive-hover',
-        'enabled:focus:outline-interactive-hover',
-      ],
-    },
-    {
-      color: 'info',
       variant: ['flat', 'icon'],
       className: [
-        'enabled:fg-default-light',
-        'enabled:hover:bg-interactive-hover-dark',
-        'enabled:focus:bg-interactive-hover-dark',
-      ],
-    },
-    {
-      color: 'info',
-      variant: 'floating',
-      className: [
-        'enabled:fg-interactive enabled:bg-surface-default enabled:outline-interactive',
-        'enabled:hover:fg-interactive-hover enabled:hover:outline-interactive-hover',
-        'enabled:focus:fg-interactive-hover enabled:focus:outline-interactive-hover',
+        'enabled:color-info:fg-default-light',
+        'enabled:hover:color-info:bg-interactive-hover-dark',
+        'enabled:focus-visible:color-info:bg-interactive-hover-dark',
       ],
     },
 
     // Serious
     {
-      color: 'serious',
-      variant: 'filled',
-      className: [
-        'enabled:fg-inverse-light',
-        'enabled:bg-serious',
-        'enabled:hover:bg-serious-hover',
-        'enabled:focus:bg-serious-hover',
-      ],
-    },
-    {
-      color: 'serious',
-      variant: 'outline',
-      className: [
-        'enabled:fg-default-light enabled:outline-serious',
-        'enabled:hover:outline-interactive-hover',
-        'enabled:focus:outline-interactive-hover',
-      ],
-    },
-    {
-      color: 'serious',
       variant: ['flat', 'icon'],
       className: [
-        'enabled:fg-default-light',
-        'enabled:hover:bg-serious-hover',
-        'enabled:focus:bg-serious-hover',
-      ],
-    },
-    {
-      color: 'serious',
-      variant: 'floating',
-      className: [
-        'enabled:fg-serious enabled:bg-serious-subtle enabled:outline-serious',
-        'enabled:hover:fg-interactive-hover enabled:hover:outline-interactive-hover',
-        'enabled:focus:fg-interactive-hover enabled:focus:outline-interactive-hover',
+        'enabled:color-serious:fg-default-light',
+        'enabled:hover:color-serious:bg-serious-hover',
+        'enabled:focus-visible:color-serious:bg-serious-hover',
       ],
     },
 
     // Critical
     {
-      color: 'critical',
-      variant: 'filled',
-      className: [
-        'enabled:fg-default-light',
-        'enabled:bg-critical',
-        'enabled:hover:bg-critical-hover',
-        'enabled:focus:bg-critical-hover',
-      ],
-    },
-    {
-      color: 'critical',
-      variant: 'outline',
-      className: [
-        'enabled:fg-default-light enabled:outline-critical',
-        'enabled:hover:outline-interactive-hover',
-        'enabled:focus:outline-interactive-hover',
-      ],
-    },
-    {
-      color: 'critical',
       variant: ['flat', 'icon'],
       className: [
-        'enabled:fg-default-light',
-        'enabled:hover:bg-critical-hover',
-        'enabled:focus:bg-critical-hover',
-      ],
-    },
-    {
-      color: 'critical',
-      variant: 'floating',
-      className: [
-        'enabled:fg-critical enabled:bg-critical-subtle enabled:outline-critical',
-        'enabled:hover:fg-interactive-hover enabled:hover:outline-interactive-hover',
-        'enabled:focus:fg-interactive-hover enabled:focus:outline-interactive-hover',
+        'enabled:color-critical:fg-default-light',
+        'enabled:hover:color-critical:bg-critical-hover',
+        'enabled:focus-visible:color-critical:bg-critical-hover',
       ],
     },
   ],
@@ -179,71 +138,45 @@ export const LinkButtonStyles = tv({
 
 export const ToggleButtonStyles = tv({
   extend: BaseButtonStyles,
-  compoundVariants: [
-    {
-      color: 'info',
-      variant: 'filled',
-      className: [
-        'enabled:fg-inverse-light',
-        'enabled:selected:bg-info-subtle',
-        'enabled:selected:hover:bg-interactive-hover-light',
-        'enabled:selected:focus:bg-interactive-hover-light',
-      ],
-    },
-    {
-      color: 'info',
-      variant: 'floating',
-      className: [
-        'enabled:selected:outline-highlight',
-        'enabled:selected:hover:outline-interactive-hover',
-        'enabled:selected:focus:outline-interactive-hover',
-      ],
-    },
-    {
-      color: 'serious',
-      variant: 'filled',
-      className: [
-        'enabled:fg-inverse-light',
-        'enabled:selected:bg-serious-subtle',
-        'enabled:selected:hover:bg-serious-hover',
-        'enabled:selected:focus:bg-serious-hover',
-      ],
-    },
-    {
-      color: 'serious',
-      variant: 'floating',
-      className: [
-        'enabled:selected:outline-highlight',
-        'enabled:selected:hover:outline-interactive-hover',
-        'enabled:selected:focus:outline-interactive-hover',
-      ],
-    },
-    {
-      color: 'critical',
-      variant: 'filled',
-      className: [
-        'enabled:fg-default-light',
-        'enabled:selected:bg-critical-subtle',
-        'enabled:selected:hover:bg-critical-hover',
-        'enabled:selected:focus:bg-critical-hover',
-      ],
-    },
-    {
-      color: 'critical',
-      variant: 'floating',
-      className: [
-        'enabled:selected:outline-highlight',
-        'enabled:selected:hover:outline-interactive-hover',
-        'enabled:selected:focus:outline-interactive-hover',
-      ],
-    },
-    // Must be last to override color values
-    {
-      className: [
-        'enabled:selected:fg-highlight',
-        'enabled:selected:hover:fg-highlight',
-        'enabled:selected:focus:fg-highlight',
-      ],
-    },
+  base: [
+    'enabled:selected:fg-highlight',
+    'enabled:selected:hover:fg-highlight',
+    'enabled:selected:focus-visible:fg-highlight',
   ],
+  variants: {
+    variant: {
+      filled: [
+        // Info
+        'enabled:selected:color-info:bg-info-subtle',
+        'enabled:selected:hover:color-info:bg-interactive-hover-light',
+        'enabled:selected:focus-visible:color-info:bg-interactive-hover-light',
+
+        // Serious
+        'enabled:selected:color-serious:bg-serious-subtle',
+        'enabled:selected:hover:color-serious:bg-serious-hover',
+        'enabled:selected:focus-visible:color-serious:bg-serious-hover',
+
+        // Critical
+        'enabled:selected:color-critical:bg-critical-subtle',
+        'enabled:selected:hover:color-critical:bg-critical-hover',
+        'enabled:selected:focus-visible:color-critical:bg-critical-hover',
+      ],
+      floating: [
+        // Info
+        'enabled:selected:color-info:outline-highlight',
+        'enabled:selected:hover:color-info:outline-interactive-hover',
+        'enabled:selected:focus-visible:color-info:outline-interactive-hover',
+
+        // Serious
+        'enabled:selected:color-serious:outline-highlight',
+        'enabled:selected:hover:color-serious:outline-interactive-hover',
+        'enabled:selected:focus-visible:color-serious:outline-interactive-hover',
+
+        // Critical
+        'enabled:selected:color-critical:outline-highlight',
+        'enabled:selected:hover:color-critical:outline-interactive-hover',
+        'enabled:selected:focus-visible:color-critical:outline-interactive-hover',
+      ],
+    },
+  },
 });

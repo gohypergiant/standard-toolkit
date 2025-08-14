@@ -18,10 +18,10 @@ export const SwitchStyles = tv({
       'group/switch flex cursor-pointer items-center gap-s disabled:cursor-not-allowed',
     control: [
       'flex rounded-round bg-transparent p-xxs outline outline-interactive before:mr-l before:block before:size-m before:rounded-full before:bg-default-dark',
-      'group-enabled/switch:group-focus/switch:bg-interactive-hover-dark group-enabled/switch:group-focus/switch:outline-interactive-hover group-enabled/switch:group-focus/switch:before:bg-interactive-hover',
+      'group-enabled/switch:group-focus-visible/switch:bg-interactive-hover-dark group-enabled/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-focus-visible/switch:before:bg-interactive-hover',
       'group-enabled/switch:group-hover/switch:bg-interactive-hover-dark group-enabled/switch:group-hover/switch:outline-interactive-hover group-enabled/switch:group-hover/switch:before:bg-interactive-hover',
       'group-enabled/switch:group-selected/switch:outline-highlight group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:bg-highlight',
-      'group-enabled/switch:group-selected/switch:group-focus/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-focus/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus/switch:before:bg-highlight',
+      'group-enabled/switch:group-selected/switch:group-focus-visible/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus-visible/switch:before:bg-highlight',
       'group-enabled/switch:group-selected/switch:group-hover/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-hover/switch:outline-highlight group-enabled/switch:group-selected/switch:group-hover/switch:before:bg-highlight',
       'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:bg-disabled',
     ],
@@ -29,5 +29,15 @@ export const SwitchStyles = tv({
       'text-body-s text-interactive-default',
       'group-disabled/switch:text-interactive-disabled',
     ],
+  },
+  variants: {
+    labelPosition: {
+      start: {
+        switch: 'flex-row-reverse',
+      },
+      end: {
+        switch: 'flex-row',
+      },
+    },
   },
 });

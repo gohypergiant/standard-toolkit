@@ -137,7 +137,7 @@ export const DrawerMenuStyles = tv({
       //selected
       'selected:fg-highlight selected:bg-highlight-subtle selected:group-dtk-orientation-horizontal:border-highlight',
       //focused
-      'focus:fg-default-light focus:group-dtk-orientation-horizontal:border-interactive-hover',
+      'focus-visible:fg-default-light focus-visible:group-dtk-orientation-horizontal:border-interactive-hover',
       //disabled
       'disabled:fg-disabled disabled:cursor-not-allowed disabled:group-dtk-orientation-horizontal:border-interactive-disabled',
     ],
