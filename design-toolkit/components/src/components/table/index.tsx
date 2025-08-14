@@ -281,7 +281,15 @@ export function Table<T extends { id: string | number }>({
               <Pin />
             </Icon>
           ) : (
-            <span className='mx-auto block text-center'>{row.index + 1}</span>
+            <span
+              className={
+                persistNumerals
+                  ? 'mx-auto block text-center'
+                  : 'invisible hover:mx-auto hover:block hover:text-center'
+              }
+            >
+              {row.index + 1}
+            </span>
           ),
       },
       ...columns,
