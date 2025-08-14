@@ -1,0 +1,91 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as SwitchStories from './switch.stories';
+
+<Meta of={SwitchStories} />
+
+# Switch
+The Switch component provides a toggle input control that allows users to turn an option on or off. It's built on React Aria Components and provides excellent accessibility out of the box. Switches are commonly used in settings panels, feature toggles, notifications preferences, and anywhere users need to enable or disable a feature with immediate visual feedback.
+
+## Example usage
+```tsx
+// Basic switch with label
+<Switch>Enable notifications</Switch>
+
+// Controlled switch
+<Switch isSelected={isEnabled} onSelectionChange={setIsEnabled}>
+  Dark mode
+</Switch>
+
+// Disabled switch
+<Switch isDisabled>Feature unavailable</Switch>
+
+// Using context provider for default props
+<Switch.Provider>
+  <Switch>Option 1</Switch>
+  <Switch>Option 2</Switch>
+</Switch.Provider>
+
+// With custom styling
+<Switch
+  classNames={{
+    control: "custom-control-class",
+    label: "custom-label-class"
+  }}
+>
+  Custom styled switch
+</Switch>
+```
+
+## Variants
+
+The Switch component has a single visual variant that automatically adapts based on its state:
+* **Unselected** - displays in the default state with a left-aligned toggle
+* **Selected** - displays in the active state with a right-aligned toggle and highlight colors
+* **Disabled** - displays in a disabled state with reduced opacity and disabled colors
+* **Focused** - displays with focus indicators for keyboard navigation
+* **Hover** - displays with hover effects for better interactivity
+
+<Canvas of={SwitchStories.Default} />
+
+## Props
+
+* **`children`** - Label text displayed next to the switch
+* **`isSelected`** - Controlled selected state
+* **`defaultSelected`** - Initial selected state
+* **`onSelectionChange`** - Callback when selection changes
+* **`isDisabled`** - Disables the switch
+* **`isReadOnly`** - Makes the switch read-only
+* **`autoFocus`** - Automatically focuses the switch on mount
+* **`classNames`** - Custom class names for styling:
+  * `switch` - Applied to the switch container
+  * `control` - Applied to the toggle control element
+  * `label` - Applied to the label text
+
+The component accepts all standard HTML label attributes and forwards them to the underlying element.
+
+## Subcomponents
+
+### Switch.Provider
+Context provider component that allows setting default props for multiple Switch components. Useful for maintaining consistent styling across a group of switches.
+
+### Switch
+The main switch component that renders the toggle control with an optional label.
+
+## Implementation Notes
+The `Switch` component wraps the `Switch` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Switch.html)
+
+The underlying elements are:
+- `label` for the switch container (includes both control and text)
+- `span` for the toggle control with animated background and toggle indicator
+- `span` for the label text
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Space and Enter keys)
+- Focus management
+- Form integration
+- State announcements
+- Proper labeling and descriptions
+
+The component includes smooth animations for the toggle indicator movement and background color changes, providing clear visual feedback for state changes. The toggle indicator moves from left to right when selected, with appropriate color changes to indicate the current state.

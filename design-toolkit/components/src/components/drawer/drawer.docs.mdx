@@ -1,0 +1,152 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as DrawerStories from './drawer.stories';
+
+<Meta of={DrawerStories} />
+
+# Drawer
+A comprehensive drawer component system that provides collapsible side panels with tabbed navigation, layout management, and flexible positioning. The Drawer component uses a compound component pattern to create structured, customizable drawer interfaces with proper state management and accessibility features.
+
+## Example usage
+```tsx
+<Drawer.Provider>
+  <Drawer.Layout>
+    <Drawer.Main>
+      <div>Main content area</div>
+    </Drawer.Main>
+    <Drawer id="settings" placement="left" size="medium">
+      <Drawer.Menu>
+        <Drawer.Menu.Item id="general">
+          <SettingsIcon />
+        </Drawer.Menu.Item>
+        <Drawer.Menu.Item id="advanced">
+          <AdvancedIcon />
+        </Drawer.Menu.Item>
+      </Drawer.Menu>
+      <Drawer.Content>
+        <Drawer.Header>
+          <Drawer.Title>Settings</Drawer.Title>
+          <Drawer.Trigger for="settings" behavior="close">
+            <CloseButton />
+          </Drawer.Trigger>
+        </Drawer.Header>
+        <Drawer.Panel id="general">General settings content</Drawer.Panel>
+        <Drawer.Panel id="advanced">Advanced settings content</Drawer.Panel>
+        <Drawer.Footer>
+          <Drawer.Trigger for="settings" behavior="close">
+            <Button>Cancel</Button>
+          </Drawer.Trigger>
+        </Drawer.Footer>
+      </Drawer.Content>
+    </Drawer>
+  </Drawer.Layout>
+</Drawer.Provider>
+```
+
+## Variants
+
+* **Small** - Compact drawer with minimal width, suitable for simple navigation
+* **Medium** - Standard drawer size with balanced content space (default)
+* **Large** - Spacious drawer with maximum content area for complex interfaces
+
+**Medium** is the default size and should be used for most use cases, while **Small** and **Large** are better suited for specific content density requirements.
+
+<Canvas of={DrawerStories.WithTabs} />
+
+## Subcomponents
+
+The Drawer component provides several subcomponents that work together to create a complete drawer system:
+
+- **`Drawer.Provider`** - Context provider that manages the state of all drawers in the application
+- **`Drawer.Layout`** - Container that manages the overall layout and positioning of drawers
+- **`Drawer.Main`** - Main content area that can be pushed or overlaid by drawers
+- **`Drawer.Menu`** - Navigation menu container with configurable positioning
+- **`Drawer.Menu.Item`** - Individual menu item that controls panel visibility
+- **`Drawer.Content`** - Main content container for the drawer
+- **`Drawer.Header`** - Header section containing title and close controls
+- **`Drawer.Title`** - Drawer title text
+- **`Drawer.Panel`** - Content panel that displays when its corresponding menu item is selected
+- **`Drawer.Footer`** - Footer section for action buttons
+- **`Drawer.Trigger`** - Button or element that controls drawer open/close state
+
+## Props
+
+### Drawer Props
+- **`id`** - Unique identifier for the drawer (required)
+- **`placement`** - Position of the drawer: `'left'` | `'right'` | `'top'` | `'bottom'` (default: `'left'`)
+- **`size`** - Size variant: `'small'` | `'medium'` | `'large'` (default: `'medium'`)
+- **`isOpen`** - Whether the drawer is open (default: `false`)
+- **`defaultSelectedMenuItemId`** - ID of the menu item selected by default
+- **`onOpenChange`** - Callback when the drawer open state changes
+- **`onStateChange`** - Callback when the drawer state changes
+
+### Drawer.Layout Props
+- **`extend`** - Which drawers extend to full container dimensions: `'left right'` | `'top bottom'` | `'top'` | `'bottom'` | `'left'` | `'right'` (default: `'left right'`)
+- **`push`** - How drawers interact with main content: `'push'` or specific placement(s)
+- **`className`** - Custom CSS class name
+
+### Drawer.Menu Props
+- **`position`** - Menu positioning: `'start'` | `'middle'` | `'end'` (default: `'middle'`)
+- **`className`** - Custom CSS class name
+
+### Drawer.Menu.Item Props
+- **`id`** - Unique identifier for the menu item
+- **`children`** - Icon or content for the menu item
+- **`className`** - Custom CSS class name
+
+### Drawer.Panel Props
+- **`id`** - Unique identifier for the panel (should match menu item ID)
+- **`children`** - Panel content
+- **`className`** - Custom CSS class name
+
+### Drawer.Trigger Props
+- **`for`** - ID of the drawer to control (required)
+- **`behavior`** - Trigger behavior: `'open'` | `'close'` | `'toggle'` (default: `'toggle'`)
+- **`children`** - Trigger element (must be a focusable React element)
+
+### Drawer.Provider Props
+- **`onStateChange`** - Callback when any drawer state changes
+- **`children`** - Child components
+
+## Examples
+
+### Basic Drawer with Tabs
+<Canvas of={DrawerStories.WithTabs} />
+
+### Drawer with Long Content
+<Canvas of={DrawerStories.WithLongContent} />
+
+### Controlled Drawer
+<Canvas of={DrawerStories.Controlled} />
+
+### Uncontrolled Drawer
+<Canvas of={DrawerStories.Uncontrolled} />
+
+### Drawer with ViewStack Navigation
+<Canvas of={DrawerStories.WithViewStack} />
+
+## Layout System
+
+The Drawer component provides a sophisticated layout system with multiple extension modes:
+
+- **`extend: "left right"`** - Left and right drawers extend to full height
+- **`extend: "top bottom"`** - Top and bottom drawers extend to full width
+- **`extend: "top"`** - Only top drawer extends to full width
+- **`extend: "bottom"`** - Only bottom drawer extends to full width
+- **`extend: "left"`** - Only left drawer extends to full height
+- **`extend: "right"`** - Only right drawer extends to full height
+
+## Implementation Notes
+The `Drawer` component is built using React Aria Components and provides a comprehensive drawer system with advanced layout management.
+
+Key features:
+- **Compound Components**: Flexible structure using the compound component pattern
+- **State Management**: Centralized state management for multiple drawers
+- **Layout Control**: Advanced layout system with push/overlay modes
+- **Tabbed Navigation**: Menu-based panel switching system
+- **Accessibility**: Full ARIA compliance with proper focus management
+- **Responsive Design**: Size variants that adapt to different content needs
+- **Portal Support**: Flexible positioning and layout management
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+
+The underlying system creates a flexible, accessible drawer interface that can be used for navigation, settings panels, sidebars, and other overlay content while maintaining proper semantic structure and user experience.

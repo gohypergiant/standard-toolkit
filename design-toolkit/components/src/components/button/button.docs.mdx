@@ -1,0 +1,151 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ButtonStories from './button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+The Button component provides interactive elements for user actions, navigation, and form submissions. It's built on React Aria Components and provides excellent accessibility out of the box. Buttons are the primary interactive elements in user interfaces, used for submitting forms, triggering actions, navigating between pages, and providing clear calls-to-action.
+
+## Example usage
+```tsx
+// Basic button with default styling
+<Button>Click me</Button>
+
+// Button with different variants
+<Button variant="outline">Outlined Button</Button>
+<Button variant="flat">Flat Button</Button>
+<Button variant="icon">
+  <Icon><Settings /></Icon>
+</Button>
+<Button variant="floating">
+  <Icon><Plus /></Icon>
+</Button>
+
+// Button with different colors
+<Button color="serious">Warning Action</Button>
+<Button color="critical">Delete</Button>
+
+// Button with different sizes
+<Button size="large">Large Button</Button>
+<Button size="small">Small Button</Button>
+<Button size="xsmall">Extra Small</Button>
+
+// Disabled button
+<Button isDisabled>Disabled Button</Button>
+
+// Link button for navigation
+<LinkButton href="/dashboard" variant="outline">
+  Go to Dashboard
+</LinkButton>
+
+// Toggle button for state management
+<ToggleButton
+  isSelected={isActive}
+  onSelectionChange={setIsActive}
+>
+  Toggle Feature
+</ToggleButton>
+
+// Using context provider for default props
+<Button.Provider size="small" variant="outline">
+  <Button>Button 1</Button>
+  <Button>Button 2</Button>
+</Button.Provider>
+
+// Button with custom styling
+<Button
+  className="custom-button-class"
+  variant="filled"
+  color="info"
+>
+  Custom Button
+</Button>
+```
+
+## Variants
+
+* **Filled** - solid background with high contrast text (default)
+* **Outline** - transparent background with border and text
+* **Flat** - transparent background with text only
+* **Icon** - square button optimized for icon-only content
+* **Floating** - circular button with shadow, perfect for floating action buttons
+
+## Colors
+
+* **Info** - blue styling for primary actions (default)
+* **Serious** - orange styling for warning or caution actions
+* **Critical** - red styling for destructive or dangerous actions
+
+## Sizes
+
+* **Large** - prominent size for primary actions
+* **Medium** - standard size for most use cases (default)
+* **Small** - compact size for secondary actions
+* **XSmall** - minimal size for tight spaces or icon buttons
+
+<Canvas of={ButtonStories.Default} />
+
+## Props
+
+### Button Props
+* **`variant`** - Visual style: `'filled'` (default), `'outline'`, `'flat'`, `'icon'`, or `'floating'`
+* **`color`** - Color scheme: `'info'` (default), `'serious'`, or `'critical'`
+* **`size`** - Size variant: `'large'`, `'medium'` (default), `'small'`, or `'xsmall'`
+* **`isDisabled`** - Disables the button
+* **`isPressed`** - Controls the pressed state
+* **`onPress`** - Callback when button is pressed
+* **`onPressStart`** - Callback when button press starts
+* **`onPressEnd`** - Callback when button press ends
+* **`onPressChange`** - Callback when press state changes
+* **`className`** - Additional CSS classes for custom styling
+
+### LinkButton Props
+* **`href`** - URL for navigation
+* **`target`** - Target for link (e.g., `'_blank'`)
+* **`rel`** - Relationship attributes for security
+* **`variant`**, **`color`**, **`size** - Same as Button props
+* **`className`** - Additional CSS classes for custom styling
+
+### ToggleButton Props
+* **`isSelected`** - Controls the selected state
+* **`defaultSelected`** - Initial selected state
+* **`onSelectionChange`** - Callback when selection changes
+* **`variant`**, **`color`**, **`size`** - Same as Button props
+* **`className`** - Additional CSS classes for custom styling
+
+All button types accept standard HTML button/anchor attributes and forward them to the underlying elements.
+
+## Subcomponents
+
+### Button.Provider
+Context provider component that allows setting default props for multiple Button components. Useful for maintaining consistent styling across a group of buttons.
+
+### Button
+The main button component for standard button interactions and form submissions.
+
+### LinkButton
+A button that renders as an anchor tag for navigation purposes while maintaining button styling and behavior.
+
+### ToggleButton
+A button that can be toggled between selected and unselected states, perfect for feature toggles and multi-selection interfaces.
+
+## Implementation Notes
+The `Button` component wraps the `Button` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Button.html)
+
+The underlying elements are:
+- `button` for standard buttons
+- `a` for link buttons
+- `button` with `aria-pressed` for toggle buttons
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Enter, Space, Arrow keys)
+- Focus management
+- Form integration
+- State announcements
+- Proper labeling and descriptions
+
+The component includes responsive sizing that adapts to different size variants, with appropriate padding, text sizing, and icon scaling. All variants provide clear visual feedback for hover, focus, pressed, and disabled states. The button automatically scales icons based on the selected size variant, ensuring consistent visual hierarchy across different use cases.
+
+The component integrates seamlessly with the Icon component, automatically providing appropriate icon sizing and spacing. The floating variant is particularly useful for floating action buttons (FABs) in material design patterns, while the icon variant is optimized for toolbar and navigation scenarios.

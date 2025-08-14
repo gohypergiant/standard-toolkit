@@ -1,0 +1,155 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as AccordionStories from './accordion.stories';
+
+<Meta of={AccordionStories} />
+
+# Accordion
+The Accordion component provides a collapsible content section that can expand and collapse to show or hide content. It's built on React Aria Components and provides excellent accessibility out of the box. Accordions are commonly used in navigation menus, FAQ sections, settings panels, and anywhere you need to organize content into expandable sections to save space and improve readability.
+
+## Example usage
+```tsx
+// Basic accordion
+<Accordion>
+  <Accordion.Header>
+    <Accordion.Trigger>
+      <Icon><Placeholder /></Icon>
+      Accordion title
+    </Accordion.Trigger>
+  </Accordion.Header>
+  <Accordion.Panel>
+    <p>This is the accordion content that can be expanded and collapsed.</p>
+  </Accordion.Panel>
+</Accordion>
+
+// Accordion with custom variant
+<Accordion variant="compact">
+  <Accordion.Header>
+    <Accordion.Trigger>
+      <Icon><Info /></Icon>
+      Compact accordion
+    </Accordion.Trigger>
+  </Accordion.Header>
+  <Accordion.Panel>
+    <p>Compact variant with smaller text and spacing.</p>
+  </Accordion.Panel>
+</Accordion>
+
+// Accordion group with multiple items
+<Accordion.Group allowsMultipleExpanded={true}>
+  <Accordion>
+    <Accordion.Header>
+      <Accordion.Trigger>
+        <Icon><Settings /></Icon>
+        Settings
+      </Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Panel>
+      <p>Settings configuration options...</p>
+    </Accordion.Panel>
+  </Accordion>
+  <Accordion>
+    <Accordion.Header>
+      <Accordion.Trigger>
+        <Icon><Help /></Icon>
+        Help
+      </Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Panel>
+      <p>Help documentation...</p>
+    </Accordion.Panel>
+  </Accordion>
+</Accordion.Group>
+
+// Accordion with menu in header
+<Accordion>
+  <Accordion.Header>
+    <Accordion.Trigger>
+      <Icon><Document /></Icon>
+      Document options
+    </Accordion.Trigger>
+    <Menu.Trigger>
+      <Button />
+      <Menu>
+        <Menu.Item>Edit</Menu.Item>
+        <Menu.Item>Delete</Menu.Item>
+      </Menu>
+    </Menu.Trigger>
+  </Accordion.Header>
+  <Accordion.Panel>
+    <p>Document content...</p>
+  </Accordion.Panel>
+</Accordion>
+```
+
+## Variants
+
+* **Cozy** - standard size with larger text and spacing (default)
+* **Compact** - smaller size with reduced text and spacing for space-constrained layouts
+
+The variant can be controlled via the `variant` prop on individual accordions or set globally using the `Accordion.Group` component.
+
+<Canvas of={AccordionStories.Default} />
+
+## Props
+
+### Accordion Props
+* **`variant`** - Visual style: `'cozy'` (default) or `'compact'`
+* **`isDisabled`** - Disables the entire accordion
+* **`isExpanded`** - Controls the expanded state
+* **`defaultExpanded`** - Initial expanded state
+* **`onExpandedChange`** - Callback when expanded state changes
+
+### Accordion.Group Props
+* **`variant`** - Global variant for all child accordions
+* **`isDisabled`** - Disables all child accordions
+* **`allowsMultipleExpanded`** - Allows multiple accordions to be expanded simultaneously
+
+### Accordion.Header Props
+* **`children`** - Must contain an `Accordion.Trigger` and optionally other elements like menus
+
+### Accordion.Trigger Props
+* **`children`** - The trigger content (typically text with an icon)
+* **`classNames`** - Custom class names for styling:
+  * `heading` - Applied to the heading element
+  * `trigger` - Applied to the trigger button
+
+### Accordion.Panel Props
+* **`children`** - The content to display when expanded
+* **`className`** - Additional CSS classes for custom styling
+
+## Subcomponents
+
+### Accordion.Group
+Container component that groups multiple accordions together and provides shared configuration like variant and multiple expansion behavior.
+
+### Accordion
+The main accordion component that manages the expand/collapse state and renders the header and panel.
+
+### Accordion.Header
+Container for the accordion trigger and any additional header elements like menus or action buttons.
+
+### Accordion.Trigger
+The clickable button that controls the expand/collapse state, typically containing an icon and text.
+
+### Accordion.Panel
+The collapsible content container that shows/hides based on the accordion's expanded state.
+
+## Implementation Notes
+The `Accordion` component wraps the `Disclosure` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Disclosure.html)
+
+The underlying elements are:
+- `div` for the accordion container
+- `header` for the accordion header
+- `h3` (or appropriate heading level) for the trigger
+- `button` for the clickable trigger
+- `div` for the collapsible panel content
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Enter, Space, Arrow keys)
+- Focus management
+- Proper heading structure
+- Expanded/collapsed state announcements
+
+The component includes smooth animations for expanding/collapsing content and provides visual feedback for hover and focus states. The chevron icon automatically rotates to indicate the current state, and the component supports both single and multiple expansion modes through the group functionality.

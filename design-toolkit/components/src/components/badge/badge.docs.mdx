@@ -1,0 +1,104 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as BadgeStories from './badge.stories';
+
+<Meta of={BadgeStories} />
+
+# Badge
+The Badge component displays small status indicators, notifications, or labels that can be positioned relative to other elements. It's built with Tailwind CSS and provides excellent visual feedback for different states and priorities. Badges are commonly used to show notification counts, status indicators, priority levels, and small pieces of information that need to stand out from the surrounding content.
+
+## Example usage
+```tsx
+// Basic badge with default variant
+<Badge>New</Badge>
+
+// Badge with different variants
+<Badge variant="critical">Error</Badge>
+<Badge variant="serious">Warning</Badge>
+<Badge variant="advisory">Info</Badge>
+<Badge variant="normal">Success</Badge>
+
+// Badge with custom text
+<Badge variant="critical">99+</Badge>
+
+// Badge with custom placement and offset
+<Badge placement="top right" offset={8}>
+  <span>3</span>
+</Badge>
+
+// Badge with custom offset coordinates
+<Badge placement="bottom left" offset={{ x: 10, y: 5 }}>
+  New
+</Badge>
+
+// Badge without text (dot indicator)
+<Badge variant="critical" />
+
+// Using context provider for default props
+<Badge.Provider variant="info">
+  <Badge>Status 1</Badge>
+  <Badge>Status 2</Badge>
+</Badge.Provider>
+
+// Badge positioned on an avatar
+<Avatar>
+  <Badge placement="top right" offset={4} variant="critical">
+    5
+  </Badge>
+</Avatar>
+```
+
+## Variants
+
+* **Info** - blue styling for informational content (default)
+* **Advisory** - yellow styling for advisory/warning content
+* **Normal** - green styling for normal/success content
+* **Serious** - orange styling for serious issues
+* **Critical** - red styling for critical errors or alerts
+
+Each variant uses appropriate color combinations with subtle backgrounds and bold outlines for optimal contrast and readability.
+
+<Canvas of={BadgeStories.Default} />
+
+## Props
+
+* **`variant`** - Visual style variant: `'info'` (default), `'advisory'`, `'normal'`, `'serious'`, or `'critical'`
+* **`children`** - Text content to display in the badge (optional - can be empty for dot indicators)
+* **`placement`** - Position relative to parent element: `'top'`, `'bottom'`, `'left'`, `'right'`, `'top left'`, `'top right'`, `'bottom left'`, `'bottom right'`
+* **`offset`** - Distance from parent element:
+  * `number` - Uniform offset in pixels
+  * `{ x?: number, y?: number }` - Specific x and y offsets in pixels
+* **`className`** - Additional CSS classes for custom styling
+
+The component accepts all standard HTML span attributes and forwards them to the underlying element.
+
+## Subcomponents
+
+### Badge.Provider
+Context provider component that allows setting default props for multiple Badge components. Useful for maintaining consistent styling across a group of badges.
+
+### Badge
+The main badge component that renders the status indicator with optional text content and positioning.
+
+## Implementation Notes
+The `Badge` component is built with Tailwind CSS and uses CSS custom properties for dynamic positioning and offset calculations.
+
+The underlying elements are:
+- `span` for the badge container with appropriate ARIA attributes
+- Text content or empty state for dot indicators
+
+The component automatically handles accessibility features including:
+- Proper contrast ratios for all variant combinations
+- Semantic color usage for different priority levels
+- Responsive sizing and positioning
+- Flexible content support (text or empty)
+
+The component includes sophisticated positioning logic that supports:
+- Absolute positioning relative to parent elements
+- Configurable offset distances in both x and y directions
+- Automatic translation adjustments for proper centering
+- CSS custom property integration for dynamic offset values
+
+The badge automatically adapts its size based on content - empty badges render as small dots, while badges with text expand to accommodate the content with appropriate padding. All variants use semantic color combinations that maintain accessibility standards while providing clear visual hierarchy for different types of information.
+
+The component integrates seamlessly with other components like Avatar, providing notification indicators and status displays with consistent styling and positioning behavior.

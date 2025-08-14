@@ -1,0 +1,134 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as AvatarStories from './avatar.stories';
+
+<Meta of={AvatarStories} />
+
+# Avatar
+The Avatar component displays a user's profile picture, initials, or a fallback icon. It's built on Radix UI and provides excellent accessibility out of the box. Avatars are commonly used in user interfaces to represent users, display profile pictures, show online status, and provide visual identification in lists, headers, and user management systems.
+
+## Example usage
+```tsx
+// Basic avatar with image
+<Avatar
+  imageProps={{
+    alt: "User profile",
+    src: "https://example.com/avatar.jpg"
+  }}
+/>
+
+// Avatar with custom size
+<Avatar
+  size="small"
+  imageProps={{
+    alt: "Small avatar",
+    src: "https://example.com/avatar.jpg"
+  }}
+/>
+
+// Avatar with badge content
+<Avatar
+  imageProps={{
+    alt: "User with notification",
+    src: "https://example.com/avatar.jpg"
+  }}
+>
+  <Badge variant="critical">99+</Badge>
+</Avatar>
+
+// Avatar with custom content
+<Avatar
+  imageProps={{
+    alt: "User with status",
+    src: "https://example.com/avatar.jpg"
+  }}
+>
+  <span className="fg-interactive-default">DS</span>
+</Avatar>
+
+// Avatar with fallback when image fails to load
+<Avatar
+  imageProps={{
+    alt: "User initials",
+    src: "http://broken-url.com/avatar.jpg"
+  }}
+  fallbackProps={{
+    children: "JD"
+  }}
+/>
+
+// Avatar with icon fallback
+<Avatar
+  imageProps={{
+    alt: "User icon",
+    src: "http://broken-url.com/avatar.jpg"
+  }}
+  fallbackProps={{
+    children: <Icon><Person /></Icon>
+  }}
+/>
+
+// Using context provider for default props
+<Avatar.Provider size="small">
+  <Avatar imageProps={{ alt: "User 1", src: "avatar1.jpg" }} />
+  <Avatar imageProps={{ alt: "User 2", src: "avatar2.jpg" }} />
+</Avatar.Provider>
+```
+
+## Variants
+
+* **Medium** - standard size (32px) with larger text (default)
+* **Small** - compact size (24px) with smaller text for space-constrained layouts
+
+The size can be controlled via the `size` prop or set globally using the `Avatar.Provider` component.
+
+<Canvas of={AvatarStories.Default} />
+
+## Props
+
+* **`size`** - Size variant: `'medium'` (default) or `'small'`
+* **`imageProps`** - Props passed to the image element:
+  * `src` - Image source URL
+  * `alt` - Alternative text for accessibility
+  * `onLoad` - Image load event handler
+  * `onError` - Image error event handler
+* **`fallbackProps`** - Props passed to the fallback element:
+  * `children` - Fallback content (typically initials or icon)
+  * `onClick` - Click event handler
+  * `onKeyDown` - Keyboard event handler
+* **`classNames`** - Custom class names for styling:
+  * `avatar` - Applied to the avatar container
+  * `image` - Applied to the image element
+  * `fallback` - Applied to the fallback element
+  * `content` - Applied to the content overlay (badges, status indicators)
+* **`children`** - Content to display over the avatar (typically badges, status indicators, or custom content)
+
+The component accepts all standard HTML span attributes and forwards them to the underlying element.
+
+## Subcomponents
+
+### Avatar.Provider
+Context provider component that allows setting default props for multiple Avatar components. Useful for maintaining consistent sizing across a group of avatars.
+
+### Avatar
+The main avatar component that renders the profile picture, fallback, and optional overlay content.
+
+## Implementation Notes
+The `Avatar` component wraps the `Avatar`, `Image`, and `Fallback` components from `@radix-ui/react-avatar`. [Docs](https://www.radix-ui.com/primitives/docs/components/avatar)
+
+The underlying elements are:
+- `span` for the avatar container with role="img"
+- `img` for the profile picture
+- `span` for the fallback content (initials or icon)
+- `span` for the overlay content (badges, status indicators)
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Proper role="img" for image representation
+- Fallback content when images fail to load
+- Alt text support for screen readers
+- Keyboard navigation support
+
+The component includes responsive sizing that adapts to different size variants, with appropriate text sizing and spacing. The avatar uses CSS Grid for precise positioning of the image, fallback, and content overlay. The fallback automatically displays when an image fails to load, and the component integrates seamlessly with the Badge component for status indicators and notifications.
+
+The avatar automatically scales icons and content based on the selected size variant, ensuring consistent visual hierarchy across different use cases.

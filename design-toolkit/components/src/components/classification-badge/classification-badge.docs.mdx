@@ -1,0 +1,110 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ClassificationBadgeStories from './classification-badge.stories';
+
+<Meta of={ClassificationBadgeStories} />
+
+# ClassificationBadge
+The ClassificationBadge component displays security classification levels for documents, data, and information systems. It's built with Tailwind CSS and provides standardized visual indicators for different classification levels. Classification badges are commonly used in government systems, secure environments, and anywhere you need to clearly indicate the security level or classification of information.
+
+## Example usage
+```tsx
+// Basic classification badge with default variant
+<ClassificationBadge />
+
+// Classification badge with custom text
+<ClassificationBadge variant="confidential">
+  CONFIDENTIAL
+</ClassificationBadge>
+
+// Different classification levels
+<ClassificationBadge variant="unclassified" />
+<ClassificationBadge variant="cui" />
+<ClassificationBadge variant="confidential" />
+<ClassificationBadge variant="secret" />
+<ClassificationBadge variant="top-secret" />
+<ClassificationBadge variant="ts-sci" />
+
+// Classification badge with different sizes
+<ClassificationBadge variant="secret" size="medium" />
+<ClassificationBadge variant="secret" size="small" />
+
+// Using context provider for default props
+<ClassificationBadge.Provider variant="confidential" size="small">
+  <ClassificationBadge />
+  <ClassificationBadge />
+</ClassificationBadge.Provider>
+
+// Classification badge with custom styling
+<ClassificationBadge
+  className="custom-classification-class"
+  variant="top-secret"
+  size="medium"
+>
+  TOP SECRET
+</ClassificationBadge>
+
+// Empty badge (shows default text)
+<ClassificationBadge variant="missing" />
+```
+
+## Variants
+
+* **Missing** - red styling for missing classification information (default)
+* **Unclassified** - gray styling for unclassified information
+* **CUI** - Controlled Unclassified Information
+* **Confidential** - confidential level information
+* **Secret** - secret level information
+* **Top-Secret** - top secret level information
+* **TS-SCI** - Top Secret/Sensitive Compartmented Information
+
+Each variant uses appropriate color combinations and automatically displays default text when no children are provided.
+
+## Sizes
+
+* **Medium** - standard size with larger text (default)
+* **Small** - compact size with smaller text for space-constrained layouts
+
+<Canvas of={ClassificationBadgeStories.Default} />
+
+## Props
+
+* **`variant`** - Classification level: `'missing'` (default), `'unclassified'`, `'cui'`, `'confidential'`, `'secret'`, `'top-secret'`, or `'ts-sci'`
+* **`size`** - Size variant: `'medium'` (default) or `'small'`
+* **`children`** - Custom text content (optional - variant provides default text if empty)
+* **`className`** - Additional CSS classes for custom styling
+
+The component accepts all standard HTML span attributes and forwards them to the underlying element.
+
+## Subcomponents
+
+### ClassificationBadge.Provider
+Context provider component that allows setting default props for multiple ClassificationBadge components. Useful for maintaining consistent styling across a group of classification badges.
+
+### ClassificationBadge
+The main classification badge component that renders the security level indicator with appropriate styling and default text.
+
+## Implementation Notes
+The `ClassificationBadge` component is built with Tailwind CSS and Tailwind Variants (tv) for flexible styling and variant management.
+
+The underlying elements are:
+- `span` for the classification badge container with appropriate ARIA attributes
+- Text content or default text based on variant
+
+The component automatically handles accessibility features including:
+- Proper contrast ratios for all variant combinations
+- Semantic color usage for different classification levels
+- Responsive sizing and positioning
+- Default text generation for empty badges
+
+The component includes sophisticated styling that automatically:
+- Displays appropriate default text for each classification level when no children are provided
+- Uses semantic color combinations that maintain accessibility standards
+- Provides consistent sizing and spacing across all variants
+- Maintains proper visual hierarchy for different security levels
+
+The classification badge automatically adapts its appearance based on the selected variant and size, with appropriate color combinations that follow security classification standards. All variants use semantic color combinations that provide clear visual hierarchy for different security levels, with higher classification levels typically using more prominent colors.
+
+The component integrates seamlessly with other components and provides consistent visual indicators for security classification throughout your application. The automatic default text feature ensures that classification badges always display appropriate information even when no custom text is provided, making them ideal for automated systems and consistent labeling.
+
+The classification badge is particularly useful in government, military, and secure environments where clear visual indication of information sensitivity is required. The standardized color scheme and text formatting help users quickly identify the security level of displayed information.
