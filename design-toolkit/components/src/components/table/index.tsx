@@ -180,7 +180,7 @@ export function Table<T extends { id: string | number }>({
           <>
             <div
               className={
-                persistRowKebabMenu ? '' : 'invisible hover:sticky right-0'
+                persistRowKebabMenu ? '' : 'opacity-0 hover:opacity-100'
               }
             >
               <Menu.Trigger>
@@ -413,7 +413,7 @@ export function Table<T extends { id: string | number }>({
                     }
                     style={{ width: header.getSize() }}
                   >
-                    <div className='flex items-center justify-between gap-xxs'>
+                    <div className='flex items-center justify-between gap-xxs group'>
                       {header.isPlaceholder ||
                       header.column.id === 'kebab' ? null : (
                         <button
@@ -446,45 +446,55 @@ export function Table<T extends { id: string | number }>({
                       {['numeral', 'kebab', 'selection'].includes(
                         header.column.id,
                       ) ? null : (
-                        <Menu.Trigger>
-                          <Button variant='icon' aria-label='Menu'>
-                            <Icon>
-                              <Kebab />
-                            </Icon>
-                          </Button>
-                          <Menu<TableMenuItem> items={columnMenuItems}>
-                            {(item) => (
-                              <Menu.Item
-                                onAction={() => {
-                                  if (item.name === ColumnKebabMenuItems.LEFT) {
-                                    header.column.getIsFirstColumn('center')
-                                      ? undefined
-                                      : moveColumnLeft(
-                                          header.column.getIndex(),
-                                        );
-                                  } else if (
-                                    item.name === ColumnKebabMenuItems.RIGHT
-                                  ) {
-                                    header.column.getIsLastColumn('center')
-                                      ? undefined
-                                      : moveColumnRight(
-                                          header.column.getIndex(),
-                                        );
-                                  }
-                                }}
-                                key={item.id}
-                                isDisabled={item.isDisabled}
-                              >
-                                <Menu.Item.Label>{item.name}</Menu.Item.Label>
-                                {item.description && (
-                                  <Menu.Item.Description>
-                                    {item.description}
-                                  </Menu.Item.Description>
-                                )}
-                              </Menu.Item>
-                            )}
-                          </Menu>
-                        </Menu.Trigger>
+                        <div
+                          className={
+                            persistHeaderKebabMenu
+                              ? ''
+                              : 'opacity-0 group-hover:opacity-100'
+                          }
+                        >
+                          <Menu.Trigger>
+                            <Button variant='icon' aria-label='Menu'>
+                              <Icon>
+                                <Kebab />
+                              </Icon>
+                            </Button>
+                            <Menu<TableMenuItem> items={columnMenuItems}>
+                              {(item) => (
+                                <Menu.Item
+                                  onAction={() => {
+                                    if (
+                                      item.name === ColumnKebabMenuItems.LEFT
+                                    ) {
+                                      header.column.getIsFirstColumn('center')
+                                        ? undefined
+                                        : moveColumnLeft(
+                                            header.column.getIndex(),
+                                          );
+                                    } else if (
+                                      item.name === ColumnKebabMenuItems.RIGHT
+                                    ) {
+                                      header.column.getIsLastColumn('center')
+                                        ? undefined
+                                        : moveColumnRight(
+                                            header.column.getIndex(),
+                                          );
+                                    }
+                                  }}
+                                  key={item.id}
+                                  isDisabled={item.isDisabled}
+                                >
+                                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                                  {item.description && (
+                                    <Menu.Item.Description>
+                                      {item.description}
+                                    </Menu.Item.Description>
+                                  )}
+                                </Menu.Item>
+                              )}
+                            </Menu>
+                          </Menu.Trigger>
+                        </div>
                       )}
                     </div>
                   </HeaderCell>
