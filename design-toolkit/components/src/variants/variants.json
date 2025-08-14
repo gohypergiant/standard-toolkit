@@ -1,9 +1,9 @@
 {
-  "color-info": "[data-color~=\"info\"]",
-  "color-advisory": "[data-color~=\"advisory\"]",
-  "color-normal": "[data-color~=\"normal\"]",
-  "color-serious": "[data-color~=\"serious\"]",
-  "color-critical": "[data-color~=\"critical\"]",
+  "color-info": "[data-color=\"info\"]",
+  "color-advisory": "[data-color=\"advisory\"]",
+  "color-normal": "[data-color=\"normal\"]",
+  "color-serious": "[data-color=\"serious\"]",
+  "color-critical": "[data-color=\"critical\"]",
 
   "placement-left": "[data-placement~=\"left\"]",
   "placement-right": "[data-placement~=\"right\"]",

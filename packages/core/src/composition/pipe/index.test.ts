@@ -13,6 +13,7 @@
 import { expect, test } from 'vitest';
 import { pipe } from '.';
 
+const binaryAdd = (a: number, b: number) => a + b;
 const add3 = (x: number) => x + 3;
 const uppercase = (x: string) => x.toUpperCase();
 const upperMap = (x: string[]) => x.map((s) => s.toUpperCase());
@@ -31,7 +32,7 @@ const stringify = (x: number) =>
     'nine',
   ][x] ?? x.toString();
 
-test('it should return the correct result', () => {
+test('it should support unary for first fn call and return the correct result', () => {
   const explodedStrNumVal = pipe(add3, stringify, uppercase, splitIt);
   const upperStrNumVal = pipe(
     add3,
@@ -43,6 +44,23 @@ test('it should return the correct result', () => {
 
   const actualOne = explodedStrNumVal(3);
   const actualTwo = upperStrNumVal(3);
+
+  expect(actualOne).toStrictEqual(['S', 'I', 'X']);
+  expect(actualTwo).toBe('SIX');
+});
+
+test('it should support n-ary for first fn call and return the correct result', () => {
+  const explodedStrNumVal = pipe(binaryAdd, stringify, uppercase, splitIt);
+  const upperStrNumVal = pipe(
+    binaryAdd,
+    stringify,
+    splitIt,
+    upperMap,
+    (a: string[]) => a.join(''),
+  );
+
+  const actualOne = explodedStrNumVal(3, 3);
+  const actualTwo = upperStrNumVal(3, 3);
 
   expect(actualOne).toStrictEqual(['S', 'I', 'X']);
   expect(actualTwo).toBe('SIX');

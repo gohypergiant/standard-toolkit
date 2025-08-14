@@ -75,14 +75,14 @@ SwitchProvider.displayName = 'Switch.Provider';
 export function Switch({ ref, ...props }: SwitchProps) {
   [props, ref] = useContextProps(props, ref ?? null, SwitchContext);
 
-  const { children, classNames, ...rest } = props;
+  const { children, classNames, labelPosition = 'end', ...rest } = props;
 
   return (
     <AriaSwitch
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.switch, (className) =>
-        switchClassNames({ className }),
+        switchClassNames({ className, labelPosition }),
       )}
     >
       {composeRenderProps(children, (children) => (

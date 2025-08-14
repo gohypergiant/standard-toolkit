@@ -20,4 +20,5 @@ export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
       control?: string;
       label?: string;
     };
+    labelPosition?: 'start' | 'end';
   };

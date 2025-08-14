@@ -149,7 +149,7 @@ export const Basic: StoryObj<typeof Menu> = {
           </Menu>
         </Menu.Submenu>
         <Menu.Separator />
-        <Menu.Section header='Additional Notable Species'>
+        <Menu.Section title='Additional Notable Species'>
           <Menu.Item color='serious'>
             <Icon>
               <Placeholder />

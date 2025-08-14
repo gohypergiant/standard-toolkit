@@ -30,4 +30,14 @@ export const SwitchStyles = tv({
       'group-disabled/switch:text-interactive-disabled',
     ],
   },
+  variants: {
+    labelPosition: {
+      start: {
+        switch: 'flex-row-reverse',
+      },
+      end: {
+        switch: 'flex-row',
+      },
+    },
+  },
 });
