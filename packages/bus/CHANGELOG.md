@@ -1,5 +1,11 @@
 # @accelint/bus
 
+## 1.0.0
+
+### Major Changes
+
+- 0457dc6: enabled strict typing for Broadcast class and getInstance method
+
 ## 0.1.2
 
 ### Patch Changes

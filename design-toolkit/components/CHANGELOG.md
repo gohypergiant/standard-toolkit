@@ -1,5 +1,30 @@
 # @accelint/design-toolkit
 
+## 3.0.0
+
+### Major Changes
+
+- 57d61c4: Added docblocks; removed Box component
+
+### Minor Changes
+
+- e06fb14: Consolidate button styles to reduce complexity
+- 0d92211: refactor button colors
+- d3dcc87: Refactored Drawer to be event driven
+
+### Patch Changes
+
+- 13c065b: Made Menu Section title conditionally rendered
+- a7da3db: added labelPosition prop to Switch component
+- cd684ca: Fixed Combobox styles
+- 0701f3b: Fixed default Input size
+- f6d0be1: Switch to using focus visible for most focus states
+- ed09b0d: Added back in missing default for color of buttons
+- Updated dependencies [cdd91b3]
+- Updated dependencies [0457dc6]
+  - @accelint/core@0.4.0
+  - @accelint/bus@1.0.0
+
 ## 2.6.0
 
 ### Minor Changes

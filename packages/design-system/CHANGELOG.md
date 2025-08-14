@@ -1,5 +1,12 @@
 # @accelint/design-system
 
+## 0.11.4
+
+### Patch Changes
+
+- Updated dependencies [cdd91b3]
+  - @accelint/core@0.4.0
+
 ## 0.11.3
 
 ### Patch Changes

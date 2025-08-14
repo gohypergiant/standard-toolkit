@@ -1,6 +1,6 @@
 {
   "name": "@accelint/docs",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "private": true,
   "scripts": {
     "build": "pnpm run build:typedoc && pnpm run build:docusaurus",
@@ -46,7 +46,11 @@
     "typescript": "^5.8.3"
   },
   "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 3 chrome version",
       "last 3 firefox version",
