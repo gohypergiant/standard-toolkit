@@ -10,21 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-/** Broadcast configuration type. */
-export type BroadcastConfig = {
-  channelName: string;
-  debug?: boolean;
-};
+export const ViewStackEventNamespace = 'ViewStack';
 
-/** Listener object type. */
-export type Listener<P extends Payload = Payload> = {
-  callback: (data: P) => void;
-  once?: boolean;
-  id: number;
-};
-
-/** Listener callback payload type. */
-export type Payload<T extends string = string, P = unknown> = {
-  type: T;
-  payload: P;
-};
+export const ViewStackEventTypes = {
+  back: `${ViewStackEventNamespace}:back`,
+  clear: `${ViewStackEventNamespace}:clear`,
+  reset: `${ViewStackEventNamespace}:reset`,
+  push: `${ViewStackEventNamespace}:push`,
+} as const;

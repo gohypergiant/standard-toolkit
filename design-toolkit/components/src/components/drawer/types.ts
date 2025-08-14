@@ -1,4 +1,5 @@
 import type { AriaAttributesWithRef } from '@/lib/types';
+import type { Payload } from '@accelint/bus';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -16,6 +17,7 @@ import type { ComponentPropsWithRef, DOMAttributes, ReactElement } from 'react';
 import type { HeadingProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
 import type { ToggleButtonProps } from '../button/types';
+import type { ViewStackEvent } from '../view-stack/types';
 import type { DrawerTitleStyles } from './styles';
 
 type Top = 'top';
@@ -175,13 +177,29 @@ export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
   AriaAttributesWithRef<HTMLHeadingElement> &
   VariantProps<typeof DrawerTitleStyles>;
 
-export type DrawerOpenEvent = {
-  view: UniqueId;
-};
+export const DrawerEventNamespace = 'Drawer';
 
-export type DrawerToggleEvent = {
-  view: UniqueId;
-};
+export const DrawerEventTypes = {
+  close: `${DrawerEventNamespace}:close`,
+  open: `${DrawerEventNamespace}:open`,
+  toggle: `${DrawerEventNamespace}:toggle`,
+} as const;
+
+export type DrawerOpenEvent = Payload<
+  typeof DrawerEventTypes.open,
+  {
+    view: UniqueId;
+  }
+>;
+
+export type DrawerToggleEvent = Payload<
+  typeof DrawerEventTypes.toggle,
+  {
+    view: UniqueId;
+  }
+>;
+
+export type DrawerEvent = DrawerOpenEvent | DrawerToggleEvent | ViewStackEvent;
 
 type SimpleEvents = 'back' | 'clear' | 'close' | 'reset' | UniqueId;
 

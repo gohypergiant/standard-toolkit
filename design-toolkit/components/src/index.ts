@@ -136,7 +136,6 @@ export {
   Drawer,
   DrawerContext,
   DrawerEventHandlers,
-  DrawerEventTypes,
 } from './components/drawer';
 export {
   DrawerMenuStyles,
@@ -145,14 +144,20 @@ export {
   DrawerTitleStyles,
   DrawerTitleStylesDefaults,
 } from './components/drawer/styles';
+export {
+  DrawerEventNamespace,
+  DrawerEventTypes,
+} from './components/drawer/types';
 export type {
   DrawerContextValue,
+  DrawerEvent,
   DrawerLayoutProps,
   DrawerMenuItemProps,
   DrawerMenuProps,
   DrawerOpenEvent,
   DrawerProps,
   DrawerTitleProps,
+  DrawerToggleEvent,
   DrawerTriggerProps,
 } from './components/drawer/types';
 export { Hero, HeroContext } from './components/hero';
@@ -258,15 +263,19 @@ export type {
   TooltipTriggerProps,
 } from './components/tooltip/types';
 export {
+  ViewStackEventNamespace,
+  ViewStackEventTypes,
+} from './components/view-stack/events';
+export {
   ViewStack,
   ViewStackContext,
   ViewStackEventHandlers,
-  ViewStackEventTypes,
 } from './components/view-stack';
 export type {
   ViewStackBackEvent,
   ViewStackClearEvent,
   ViewStackContextValue,
+  ViewStackEvent,
   ViewStackProps,
   ViewStackPushEvent,
   ViewStackResetEvent,

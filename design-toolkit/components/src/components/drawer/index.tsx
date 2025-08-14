@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { containsExactChildren } from '@/lib/react';
-import { Broadcast, type Payload } from '@accelint/bus';
+import { Broadcast } from '@accelint/bus';
 import { type UniqueId, isUUID } from '@accelint/core';
 import { Pressable } from '@react-aria/interactions';
 import {
@@ -32,49 +32,39 @@ import {
   ViewStack,
   ViewStackContext,
   ViewStackEventHandlers,
-  ViewStackEventTypes,
 } from '../view-stack';
-import type {
-  ViewStackClearEvent,
-  ViewStackPushEvent,
-  ViewStackViewProps,
-} from '../view-stack/types';
+import { ViewStackEventTypes } from '../view-stack/events';
+import type { ViewStackViewProps } from '../view-stack/types';
 import { DrawerMenuStyles, DrawerStyles, DrawerTitleStyles } from './styles';
-import type {
-  DrawerContextValue,
-  DrawerLayoutProps,
-  DrawerMenuItemProps,
-  DrawerMenuProps,
-  DrawerOpenEvent,
-  DrawerProps,
-  DrawerTitleProps,
-  DrawerToggleEvent,
-  DrawerTriggerProps,
+import {
+  type DrawerContextValue,
+  type DrawerEvent,
+  DrawerEventTypes,
+  type DrawerLayoutProps,
+  type DrawerMenuItemProps,
+  type DrawerMenuProps,
+  type DrawerOpenEvent,
+  type DrawerProps,
+  type DrawerTitleProps,
+  type DrawerToggleEvent,
+  type DrawerTriggerProps,
 } from './types';
 
 const { layout, main, drawer, panel, view, header, content, footer } =
   DrawerStyles();
 const { menu, item } = DrawerMenuStyles();
-const bus = Broadcast.getInstance();
-const DrawerEventNamespace = 'Drawer';
+const bus = Broadcast.getInstance<DrawerEvent>();
 
 export const DrawerContext = createContext<DrawerContextValue>({
   register: () => undefined,
   unregister: () => undefined,
 });
 
-export const DrawerEventTypes = {
-  close: `${DrawerEventNamespace}:close`,
-  open: `${DrawerEventNamespace}:open`,
-  toggle: `${DrawerEventNamespace}:toggle`,
-} as const;
 export const DrawerEventHandlers = {
   ...ViewStackEventHandlers,
   close: ViewStackEventHandlers.clear,
-  open: (view: UniqueId) =>
-    bus.emit<DrawerOpenEvent>(DrawerEventTypes.open, { view }),
-  toggle: (view: UniqueId) =>
-    bus.emit<DrawerToggleEvent>(DrawerEventTypes.toggle, { view }),
+  open: (view: UniqueId) => bus.emit(DrawerEventTypes.open, { view }),
+  toggle: (view: UniqueId) => bus.emit(DrawerEventTypes.toggle, { view }),
 } as const;
 
 function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
@@ -278,20 +268,20 @@ export function Drawer({
   );
 
   const handleOpen = useCallback(
-    (data: Payload<DrawerOpenEvent>) => {
+    (data: DrawerOpenEvent) => {
       if (views.current.has(data?.payload?.view)) {
-        bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack: id });
-        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, data.payload);
+        bus.emit(ViewStackEventTypes.clear, { stack: id });
+        bus.emit(ViewStackEventTypes.push, data.payload);
       }
     },
     [id],
   );
   const handleToggle = useCallback(
-    (data: Payload<DrawerToggleEvent>) => {
+    (data: DrawerToggleEvent) => {
       if (views.current.has(data?.payload?.view)) {
-        bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack: id });
+        bus.emit(ViewStackEventTypes.clear, { stack: id });
         if (activeView !== data?.payload?.view) {
-          bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, data.payload);
+          bus.emit(ViewStackEventTypes.push, data.payload);
         }
       }
     },

@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { Broadcast, type Payload } from '@accelint/bus';
+import { Broadcast } from '@accelint/bus';
 import { type UniqueId, isUUID } from '@accelint/core';
 import {
   createContext,
@@ -23,10 +23,12 @@ import {
   useState,
 } from 'react';
 import { Pressable } from 'react-aria-components';
+import { ViewStackEventTypes } from './events';
 import type {
   ViewStackBackEvent,
   ViewStackClearEvent,
   ViewStackContextValue,
+  ViewStackEvent,
   ViewStackProps,
   ViewStackPushEvent,
   ViewStackResetEvent,
@@ -34,8 +36,7 @@ import type {
   ViewStackViewProps,
 } from './types';
 
-const bus = Broadcast.getInstance();
-const ViewStackEventNamespace = 'ViewStack';
+const bus = Broadcast.getInstance<ViewStackEvent>();
 
 export const ViewStackContext = createContext<ViewStackContextValue>({
   parent: null,
@@ -45,28 +46,18 @@ export const ViewStackContext = createContext<ViewStackContextValue>({
   unregister: () => undefined,
 });
 
-export const ViewStackEventTypes = {
-  back: `${ViewStackEventNamespace}:back`,
-  clear: `${ViewStackEventNamespace}:clear`,
-  push: `${ViewStackEventNamespace}:push`,
-  reset: `${ViewStackEventNamespace}:reset`,
-} as const;
 export const ViewStackEventHandlers = {
-  back: (stack: UniqueId) =>
-    bus.emit<ViewStackBackEvent>(ViewStackEventTypes.back, { stack }),
-  clear: (stack: UniqueId) =>
-    bus.emit<ViewStackClearEvent>(ViewStackEventTypes.clear, { stack }),
-  push: (view: UniqueId) =>
-    bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, { view }),
-  reset: (stack: UniqueId) =>
-    bus.emit<ViewStackResetEvent>(ViewStackEventTypes.reset, { stack }),
+  back: (stack: UniqueId) => bus.emit(ViewStackEventTypes.back, { stack }),
+  clear: (stack: UniqueId) => bus.emit(ViewStackEventTypes.clear, { stack }),
+  push: (view: UniqueId) => bus.emit(ViewStackEventTypes.push, { view }),
+  reset: (stack: UniqueId) => bus.emit(ViewStackEventTypes.reset, { stack }),
 } as const;
 
-function ViewStackTrigger({ children, for: events }: ViewStackTriggerProps) {
+function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
   const { parent } = useContext(ViewStackContext);
 
   function handlePress() {
-    for (const type of Array.isArray(events) ? events : [events]) {
+    for (const type of Array.isArray(types) ? types : [types]) {
       let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
         'back' | 'clear' | 'reset' | 'push',
         UniqueId | undefined | null,
@@ -124,7 +115,7 @@ export function ViewStack({
   const view = stack.at(-1) ?? null;
 
   const handleBack = useCallback(
-    (data: Payload<ViewStackBackEvent>) => {
+    (data: ViewStackBackEvent) => {
       if (id === data?.payload?.stack) {
         const next = stack.slice(0, -1);
 
@@ -140,7 +131,7 @@ export function ViewStack({
   );
 
   const handleClear = useCallback(
-    (data: Payload<ViewStackClearEvent>) => {
+    (data: ViewStackClearEvent) => {
       if (id === data?.payload?.stack) {
         setStack([]);
         onChange?.(null);
@@ -150,7 +141,7 @@ export function ViewStack({
   );
 
   const handlePush = useCallback(
-    (data: Payload<ViewStackPushEvent>) => {
+    (data: ViewStackPushEvent) => {
       if (views.current.has(data?.payload?.view)) {
         setStack((prev) => [...prev, data?.payload?.view]);
         onChange?.(data?.payload?.view);
@@ -160,7 +151,7 @@ export function ViewStack({
   );
 
   const handleReset = useCallback(
-    (data: Payload<ViewStackResetEvent>) => {
+    (data: ViewStackResetEvent) => {
       if (id === data?.payload?.stack) {
         setStack(defaultView ? [defaultView] : []);
         onChange?.(defaultView ?? null);
