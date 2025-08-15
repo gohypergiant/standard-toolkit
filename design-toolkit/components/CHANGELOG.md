@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 3.0.1
+
+### Patch Changes
+
+- 2848d9b: Remove unnecessary global selectors
+
 ## 3.0.0
 
 ### Major Changes
