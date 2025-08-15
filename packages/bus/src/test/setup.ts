@@ -10,14 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import * as matchers from '@testing-library/jest-dom/matchers';
+import { cleanup } from '@testing-library/react';
+import { afterEach, expect } from 'vitest';
 
-export { Broadcast } from './broadcast';
-export type {
-  BroadcastConfig,
-  ExtractEvent,
-  Listener,
-  Payload,
-} from './broadcast/types';
+expect.extend(matchers);
+
+afterEach(() => {
+  cleanup();
+});

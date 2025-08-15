@@ -28,3 +28,10 @@ export type Payload<T extends string = string, P = unknown> = {
   type: T;
   payload: P;
 };
+
+export type ExtractEvent<
+  P extends Payload = Payload,
+  T extends P['type'] = P['type'],
+> = {
+  [K in P['type']]: Extract<P, { type: K }>;
+}[T];

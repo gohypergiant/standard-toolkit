@@ -9,10 +9,13 @@
     "**/*.test-d.ts"
   ],
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM"],
     "rootDir": "src",
     "outDir": "dist",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["@testing-library/jest-dom"]
   }
 }
