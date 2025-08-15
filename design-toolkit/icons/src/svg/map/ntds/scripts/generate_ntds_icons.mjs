@@ -102,7 +102,7 @@ for (const entry of Object.entries(icon_map)) {
 
     // Replace color in SVG content
     const svgContent = color
-      ? svgs[svgKey].content.replace(/fill="[^"]*"/g, `fill="${color}"`)
+      ? svgs[svgKey].content.replace(/fill="[^"]#*"/g, `fill="${color}"`)
       : svgs[svgKey].content;
 
     // Write the updated SVG to the output directory

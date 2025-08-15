@@ -28,18 +28,18 @@ const SvgCarrierUnknown = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='EDDA0A'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
   >
     {title ? <title id={titleId}>{title}</title> : null}
-    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='EDDA0A' />
+    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='#FF69B4' />
     <path
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M22 2H2L2 22H22V2ZM19.2727 19.2727V4.72727H16.0909V19.2727H19.2727ZM14.7273 19.2727V4.72727L9.27272 4.72727V19.2727H14.7273ZM7.90908 19.2727H4.72727L4.72727 4.72727H7.90908V19.2727Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
   </svg>
 );

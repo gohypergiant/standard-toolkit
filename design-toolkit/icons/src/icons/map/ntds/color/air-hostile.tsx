@@ -28,14 +28,14 @@ const SvgAirHostile = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='FF0033'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
   >
     {title ? <title id={titleId}>{title}</title> : null}
-    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='FF0033' />
-    <path d='M6 12L12 6L18 12H21L12 3L3 12H6Z' fill='FF0033' />
+    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='#FF69B4' />
+    <path d='M6 12L12 6L18 12H21L12 3L3 12H6Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgAirHostile;

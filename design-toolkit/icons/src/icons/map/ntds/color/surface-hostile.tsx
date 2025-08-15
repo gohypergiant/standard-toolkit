@@ -28,7 +28,7 @@ const SvgSurfaceHostile = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='FF0033'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -38,9 +38,9 @@ const SvgSurfaceHostile = ({
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M12 3L21 12L12 21L3 12L12 3ZM12 6L18 12L12 18L6 12L12 6Z'
-      fill='FF0033'
+      fill='#FF69B4'
     />
-    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='FF0033' />
+    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgSurfaceHostile;

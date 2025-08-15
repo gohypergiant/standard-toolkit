@@ -28,7 +28,7 @@ const SvgAirGroupFriend = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='1484F4'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -36,11 +36,11 @@ const SvgAirGroupFriend = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       d='M12 2C17.5228 2 22 6.47715 22 12H19.2725C19.2725 7.98338 16.0166 4.72754 12 4.72754C7.98338 4.72754 4.72754 7.98338 4.72754 12H2C2 6.47715 6.47715 2 12 2Z'
-      fill='1484F4'
+      fill='#FF69B4'
     />
     <path
       d='M12 6.5459C15.0125 6.5459 17.4541 8.98754 17.4541 12H14.7275C14.7275 10.4938 13.5062 9.27246 12 9.27246C10.4938 9.27246 9.27246 10.4938 9.27246 12H6.5459C6.5459 8.98754 8.98754 6.5459 12 6.5459Z'
-      fill='1484F4'
+      fill='#FF69B4'
     />
   </svg>
 );

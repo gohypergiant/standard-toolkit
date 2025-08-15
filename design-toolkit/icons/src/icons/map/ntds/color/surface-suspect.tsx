@@ -28,7 +28,7 @@ const SvgSurfaceSuspect = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='FFAD38'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -38,9 +38,9 @@ const SvgSurfaceSuspect = ({
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M19.2727 19.2727V4.72727L4.72727 4.72727L4.72727 19.2727H19.2727ZM22 2L2 2L2 22H22L22 2Z'
-      fill='FFAD38'
+      fill='#FF69B4'
     />
-    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='FFAD38' />
+    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgSurfaceSuspect;

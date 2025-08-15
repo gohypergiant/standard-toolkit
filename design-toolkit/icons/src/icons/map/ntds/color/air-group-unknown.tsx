@@ -28,14 +28,14 @@ const SvgAirGroupUnknown = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='EDDA0A'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
   >
     {title ? <title id={titleId}>{title}</title> : null}
-    <path d='M22 12H19.2725V4.72754H4.72754V12H2V2H22V12Z' fill='EDDA0A' />
-    <path d='M17 12H14.5V10H9.5V12H7V7H17V12Z' fill='EDDA0A' />
+    <path d='M22 12H19.2725V4.72754H4.72754V12H2V2H22V12Z' fill='#FF69B4' />
+    <path d='M17 12H14.5V10H9.5V12H7V7H17V12Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgAirGroupUnknown;

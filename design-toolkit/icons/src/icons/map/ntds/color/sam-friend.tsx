@@ -28,7 +28,7 @@ const SvgSamFriend = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='1484F4'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -38,9 +38,9 @@ const SvgSamFriend = ({
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M13.5 17.5L18 22H6L10.5 17.5V8H13.5V17.5ZM11 20H13L12 19L11 20Z'
-      fill='1484F4'
+      fill='#FF69B4'
     />
-    <path d='M17 7V17H15V8L12 5L9 8V17H7V7L12 2L17 7Z' fill='1484F4' />
+    <path d='M17 7V17H15V8L12 5L9 8V17H7V7L12 2L17 7Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgSamFriend;

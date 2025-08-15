@@ -28,7 +28,7 @@ const SvgSubGroupUnknown = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='EDDA0A'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -36,9 +36,9 @@ const SvgSubGroupUnknown = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       d='M4.72754 12V19.2725H19.2725V12H22V22H2V12H4.72754Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
-    <path d='M9.5 12V14H14.5V12H17V17H7V12H9.5Z' fill='EDDA0A' />
+    <path d='M9.5 12V14H14.5V12H17V17H7V12H9.5Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgSubGroupUnknown;

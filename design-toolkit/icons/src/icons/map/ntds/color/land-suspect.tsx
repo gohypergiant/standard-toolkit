@@ -28,7 +28,7 @@ const SvgLandSuspect = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='FFAD38'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -38,13 +38,13 @@ const SvgLandSuspect = ({
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M16 16V8H8L8 16H16ZM18 6L6 6L6 18H18V6Z'
-      fill='FFAD38'
+      fill='#FF69B4'
     />
-    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='FFAD38' />
-    <path d='M13 23H11V19H13V23Z' fill='FFAD38' />
-    <path d='M23 11V13H19V11H23Z' fill='FFAD38' />
-    <path d='M5 13H1V11H5V13Z' fill='FFAD38' />
-    <path d='M13 5H11V1H13V5Z' fill='FFAD38' />
+    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='#FF69B4' />
+    <path d='M13 23H11V19H13V23Z' fill='#FF69B4' />
+    <path d='M23 11V13H19V11H23Z' fill='#FF69B4' />
+    <path d='M5 13H1V11H5V13Z' fill='#FF69B4' />
+    <path d='M13 5H11V1H13V5Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgLandSuspect;

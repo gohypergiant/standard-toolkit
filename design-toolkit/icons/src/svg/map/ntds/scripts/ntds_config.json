@@ -1,13 +1,13 @@
 {
   "color_map": {
-    "assumed-friend": "0E8F37",
-    "friend": "1484F4",
-    "hostile": "FF0033",
-    "masked": "FF69B4",
-    "neutral": "5B137A",
-    "pending": "404040",
-    "suspect": "FFAD38",
-    "unknown": "EDDA0A"
+    "assumed-friend": "#0E8F37",
+    "friend": "#1484F4",
+    "hostile": "#FF0033",
+    "masked": "#FF69B4",
+    "neutral": "#5B137A",
+    "pending": "#404040",
+    "suspect": "#FFAD38",
+    "unknown": "#EDDA0A"
   },
   "icon_map": {
     "air": {

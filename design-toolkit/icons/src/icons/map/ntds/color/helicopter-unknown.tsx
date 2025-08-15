@@ -28,7 +28,7 @@ const SvgHelicopterUnknown = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='EDDA0A'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -36,11 +36,11 @@ const SvgHelicopterUnknown = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       d='M2.76562 6.19791L4.17969 7.61197L6.02441 5.76627L8.52743 8.31849L4.32521 12.5207H6.8835L12.0001 7.40414L17.1166 12.5207H19.6749L15.4728 8.31859L17.9757 5.76724L19.8205 7.61197L21.2345 6.19791L17.963 2.92545L14.0583 6.90407L12.0001 4.84585L9.94185 6.90407L6.03711 2.92545L2.76562 6.19791Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
     <path
       d='M12.0012 11L14.0023 13.0011L12.0012 15.0022L10.0001 13.0011L12.0012 11Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
   </svg>
 );

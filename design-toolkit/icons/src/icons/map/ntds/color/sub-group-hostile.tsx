@@ -28,7 +28,7 @@ const SvgSubGroupHostile = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='FF0033'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -36,11 +36,11 @@ const SvgSubGroupHostile = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       d='M12 18.667L18.667 12H22L12 22L2 12H5.33301L12 18.667Z'
-      fill='FF0033'
+      fill='#FF69B4'
     />
     <path
       d='M10.333 12L12 13.667L13.667 12H17L12 17L7 12H10.333Z'
-      fill='FF0033'
+      fill='#FF69B4'
     />
   </svg>
 );

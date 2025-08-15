@@ -28,7 +28,7 @@ const SvgCarrierHostile = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='FF0033'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -36,13 +36,13 @@ const SvgCarrierHostile = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       d='M12 10L14.0011 12.0011L12 14.0022L9.99889 12.0011L12 10Z'
-      fill='FF0033'
+      fill='#FF69B4'
     />
     <path
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M12 3L3 12L12 21L21 12L12 3ZM15 9L12 6L9 9V15L12 18L15 15V9ZM16 14V10L18 12L16 14ZM8 14V10L6 12L8 14Z'
-      fill='FF0033'
+      fill='#FF69B4'
     />
   </svg>
 );

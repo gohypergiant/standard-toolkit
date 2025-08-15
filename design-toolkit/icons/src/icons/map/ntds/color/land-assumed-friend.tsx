@@ -28,7 +28,7 @@ const SvgLandAssumedFriend = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='0E8F37'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -38,13 +38,13 @@ const SvgLandAssumedFriend = ({
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6ZM12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8Z'
-      fill='0E8F37'
+      fill='#FF69B4'
     />
-    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='0E8F37' />
-    <path d='M13 23H11V19H13V23Z' fill='0E8F37' />
-    <path d='M23 11V13H19V11H23Z' fill='0E8F37' />
-    <path d='M5 13H1V11H5V13Z' fill='0E8F37' />
-    <path d='M13 5H11V1H13V5Z' fill='0E8F37' />
+    <path d='M12 10L14 12L12 14L10 12L12 10Z' fill='#FF69B4' />
+    <path d='M13 23H11V19H13V23Z' fill='#FF69B4' />
+    <path d='M23 11V13H19V11H23Z' fill='#FF69B4' />
+    <path d='M5 13H1V11H5V13Z' fill='#FF69B4' />
+    <path d='M13 5H11V1H13V5Z' fill='#FF69B4' />
   </svg>
 );
 export default SvgLandAssumedFriend;

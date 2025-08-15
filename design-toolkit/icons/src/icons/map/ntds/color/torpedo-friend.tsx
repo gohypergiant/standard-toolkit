@@ -28,7 +28,7 @@ const SvgTorpedoFriend = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='1484F4'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -36,11 +36,11 @@ const SvgTorpedoFriend = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       d='M12.7515 5.50519V13H11.2124V5.50519H12.7515ZM15.0576 5.50519V6.71486H8.94236V5.50519H15.0576Z'
-      fill='1484F4'
+      fill='#FF69B4'
     />
     <path
       d='M12 21C17.5228 21 22 16.5229 22 11H19.2727C19.2727 15.0166 16.0166 18.2727 12 18.2727C7.98338 18.2727 4.72727 15.0166 4.72727 11H2C2 16.5229 6.47715 21 12 21Z'
-      fill='1484F4'
+      fill='#FF69B4'
     />
   </svg>
 );

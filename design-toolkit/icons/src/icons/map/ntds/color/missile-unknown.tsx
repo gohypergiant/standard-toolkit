@@ -28,16 +28,16 @@ const SvgMissileUnknown = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='EDDA0A'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
   >
     {title ? <title id={titleId}>{title}</title> : null}
-    <path d='M6 12L12 6L18 12H21L12 3L3 12H6Z' fill='EDDA0A' />
+    <path d='M6 12L12 6L18 12H21L12 3L3 12H6Z' fill='#FF69B4' />
     <path
       d='M8.75705 12.5203H10.0645L11.9897 18.023L13.9149 12.5203H15.2224L12.5148 20.0151H11.4647L8.75705 12.5203ZM8.05183 12.5203H9.35416L9.59095 17.8841V20.0151H8.05183V12.5203ZM14.6252 12.5203H15.9327V20.0151H14.3885V17.8841L14.6252 12.5203Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
   </svg>
 );

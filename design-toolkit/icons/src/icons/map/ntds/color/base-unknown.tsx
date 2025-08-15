@@ -28,7 +28,7 @@ const SvgBaseUnknown = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='EDDA0A'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -38,7 +38,7 @@ const SvgBaseUnknown = ({
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M15.6367 2V8.36328H22V15.6367H15.6367V22H8.36328V15.6367H2V8.36328H8.36328V2H15.6367ZM10.1816 20.1816H13.8184V16.5459H10.1816V20.1816ZM3.81836 13.8184H7.4541V10.1816H3.81836V13.8184ZM10.1816 13.8184H13.8184V10.1816H10.1816V13.8184ZM16.5459 13.8184H20.1816V10.1816H16.5459V13.8184ZM10.1816 7.4541H13.8184V3.81836H10.1816V7.4541Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
   </svg>
 );

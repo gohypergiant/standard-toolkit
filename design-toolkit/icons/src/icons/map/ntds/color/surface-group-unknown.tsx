@@ -28,7 +28,7 @@ const SvgSurfaceGroupUnknown = ({
     width='24'
     height='24'
     viewBox='0 0 24 24'
-    fill='EDDA0A'
+    fill='none'
     xmlns='http://www.w3.org/2000/svg'
     aria-labelledby='titleId'
     {...props}
@@ -38,13 +38,13 @@ const SvgSurfaceGroupUnknown = ({
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M17 17H7V7H17V17ZM9.5 14H14.5V10H9.5V14Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
     <path
       fill-rule='evenodd'
       clip-rule='evenodd'
       d='M22 22H2V2H22V22ZM4.72754 19.2725H19.2725V4.72754H4.72754V19.2725Z'
-      fill='EDDA0A'
+      fill='#FF69B4'
     />
   </svg>
 );
