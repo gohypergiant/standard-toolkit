@@ -2,4 +2,4 @@
 "@accelint/design-toolkit": patch
 ---
 
-Remove unnecessary gloabl selectors
+Remove unnecessary global selectors
