@@ -25,11 +25,17 @@ export async function findSprites(
   rootPath: string,
 ): Promise<GlobResult> {
   try {
-    const result = await globby(glob, { ignore: IGNORE_LIST, cwd: rootPath });
+    const result = await globby(glob, {
+      ignore: IGNORE_LIST,
+      cwd: rootPath,
+    });
 
     return result.length
       ? Result.ok(result)
-      : Result.err({ msg: 'No sprites found', tmp: null });
+      : Result.err({
+          msg: `No sprites found; glob: ${glob} rootPath: ${rootPath} `,
+          tmp: null,
+        });
   } catch (err) {
     return Result.err({ msg: (err as Error).message.trim(), tmp: null });
   }
