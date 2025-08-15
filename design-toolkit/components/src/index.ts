@@ -133,6 +133,10 @@ export type {
 export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export {
+  DrawerEventNamespace,
+  DrawerEventTypes,
+} from './components/drawer/events';
+export {
   Drawer,
   DrawerContext,
   DrawerEventHandlers,
@@ -144,10 +148,6 @@ export {
   DrawerTitleStyles,
   DrawerTitleStylesDefaults,
 } from './components/drawer/styles';
-export {
-  DrawerEventNamespace,
-  DrawerEventTypes,
-} from './components/drawer/events';
 export type {
   DrawerContextValue,
   DrawerEvent,
