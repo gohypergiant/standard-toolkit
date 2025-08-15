@@ -50,10 +50,9 @@
     "@svgr/cli": "8.1.0",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
+    "change-case": "^5.4.4",
     "esbuild-fix-imports-plugin": "1.0.21",
     "tsup": "8.5.0"
   },
-  "dependencies": {
-    "change-case": "^5.4.4"
-  }
+  "dependencies": {}
 }
