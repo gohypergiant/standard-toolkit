@@ -13,7 +13,7 @@
 'use client';
 import 'client-only';
 
-import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
+import { Kebab } from '@accelint/icons';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
@@ -29,7 +29,6 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
-import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
 import { TableBody } from './table-body';
@@ -40,7 +39,6 @@ import { TableRow } from './table-row';
 import {
   ColumnKebabMenuItems,
   RowKebabMenuItems,
-  type TableMenuItem,
   type TableProps,
 } from './types';
 
@@ -149,24 +147,6 @@ export function Table<T extends { id: string | number }>({
     }
   }, [data, dataIds, rowSelection, moveAfter]);
 
-  const rowMenuItem: TableMenuItem[] = [
-    {
-      id: 1,
-      name: RowKebabMenuItems.PIN,
-      isDisabled: false,
-    },
-    {
-      id: 2,
-      name: RowKebabMenuItems.MOVE_UP,
-      isDisabled: false,
-    },
-    {
-      id: 3,
-      name: RowKebabMenuItems.MOVE_DOWN,
-      isDisabled: false,
-    },
-  ];
-
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
    * It includes options to move the row up or down in the table.
@@ -189,40 +169,34 @@ export function Table<T extends { id: string | number }>({
                     <Kebab />
                   </Icon>
                 </Button>
-                <Menu<TableMenuItem> items={rowMenuItem}>
-                  {(item) => (
-                    <Menu.Item
-                      onAction={() => {
-                        if (item.name === RowKebabMenuItems.PIN) {
-                          row.pin(isPinned ? false : 'top');
-                        } else if (item.name === RowKebabMenuItems.MOVE_UP) {
-                          moveUpSelectedRows();
-                        } else if (item.name === RowKebabMenuItems.MOVE_DOWN) {
-                          moveDownSelectedRows();
-                        }
-                      }}
-                      key={item.id}
-                      isDisabled={item.isDisabled}
-                    >
-                      <Menu.Item.Label>
-                        {item.id === 1 && isPinned
-                          ? RowKebabMenuItems.UNPIN
-                          : item.name}
-                      </Menu.Item.Label>
-                      {item.description && (
-                        <Menu.Item.Description>
-                          {item.description}
-                        </Menu.Item.Description>
-                      )}
-                    </Menu.Item>
-                  )}
+                <Menu>
+                  <Menu.Item
+                    onAction={() => {
+                      row.pin(isPinned ? false : 'top');
+                    }}
+                  >
+                    <Menu.Item.Label>
+                      {isPinned
+                        ? RowKebabMenuItems.UNPIN
+                        : RowKebabMenuItems.PIN}
+                    </Menu.Item.Label>
+                  </Menu.Item>
+                  <Menu.Item onAction={moveUpSelectedRows}>
+                    <Menu.Item.Label>
+                      {RowKebabMenuItems.MOVE_UP}
+                    </Menu.Item.Label>
+                  </Menu.Item>
+                  <Menu.Item onAction={moveDownSelectedRows}>
+                    <Menu.Item.Label>
+                      {RowKebabMenuItems.MOVE_DOWN}
+                    </Menu.Item.Label>
+                  </Menu.Item>
                 </Menu>
               </Menu.Trigger>
             </div>
           </>
         );
       },
-      header: () => ({}),
     }),
     [
       dataIds,
@@ -305,13 +279,6 @@ export function Table<T extends { id: string | number }>({
     getTopRows,
     getCenterRows,
     getBottomRows,
-    setPageIndex,
-    getCanPreviousPage,
-    getCanNextPage,
-    previousPage,
-    nextPage,
-    getPageCount,
-    getState,
     setColumnOrder: setColumnOrderCallback,
   } = useReactTable<T>({
     data: data,
@@ -444,7 +411,7 @@ export function Table<T extends { id: string | number }>({
                                 <Kebab />
                               </Icon>
                             </Button>
-                            <Menu<TableMenuItem>>
+                            <Menu>
                               <Menu.Item
                                 onAction={() => {
                                   moveColumnLeft(header.column.getIndex());
@@ -466,8 +433,7 @@ export function Table<T extends { id: string | number }>({
                                 )}
                               >
                                 <Menu.Item.Label>
-                                  {' '}
-                                  {ColumnKebabMenuItems.RIGHT}{' '}
+                                  {ColumnKebabMenuItems.RIGHT}
                                 </Menu.Item.Label>
                               </Menu.Item>
                               <Menu.Separator />
@@ -480,8 +446,7 @@ export function Table<T extends { id: string | number }>({
                                 }
                               >
                                 <Menu.Item.Label>
-                                  {' '}
-                                  {ColumnKebabMenuItems.ASC}{' '}
+                                  {ColumnKebabMenuItems.ASC}
                                 </Menu.Item.Label>
                               </Menu.Item>
                               <Menu.Item
@@ -493,8 +458,7 @@ export function Table<T extends { id: string | number }>({
                                 }
                               >
                                 <Menu.Item.Label>
-                                  {' '}
-                                  {ColumnKebabMenuItems.DESC}{' '}
+                                  {ColumnKebabMenuItems.DESC}
                                 </Menu.Item.Label>
                               </Menu.Item>
                               <Menu.Item
@@ -504,8 +468,7 @@ export function Table<T extends { id: string | number }>({
                                 isDisabled={!header.column.getIsSorted()}
                               >
                                 <Menu.Item.Label>
-                                  {' '}
-                                  {ColumnKebabMenuItems.CLEAR}{' '}
+                                  {ColumnKebabMenuItems.CLEAR}
                                 </Menu.Item.Label>
                               </Menu.Item>
                             </Menu>
