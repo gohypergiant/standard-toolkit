@@ -211,7 +211,7 @@
       },
       "unknown": {
         "color": "unknown",
-        "style": "square"
+        "style": "diamond"
       }
     },
     "pol": {
@@ -493,7 +493,7 @@
       },
       "unknown": {
         "color": "unknown",
-        "style": "square"
+        "style": "diamond"
       }
     }
   }
