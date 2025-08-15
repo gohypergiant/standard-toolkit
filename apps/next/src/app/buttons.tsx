@@ -12,11 +12,22 @@
 
 'use client';
 import { Button as DesignSystemButton } from '@accelint/design-system';
+import { useTheme } from '@accelint/design-toolkit';
 import { Button } from '@accelint/design-toolkit/button';
 import { Icon } from '@accelint/design-toolkit/icon';
 import Placeholder from '@accelint/icons/placeholder';
+import { useCallback } from 'react';
 
 export function Buttons() {
+  const theme = useTheme();
+  const mode = theme?.mode ?? 'dark';
+
+  const toggleMode = useCallback(() => {
+    const mode = theme?.mode ?? 'dark';
+    theme?.toggleMode(mode === 'light' ? 'dark' : 'light');
+    console.log(theme?.tokens);
+  }, [theme]);
+
   return (
     <>
       <h1 className='text-header-xl text-default-light mb-l'>BUTTONS!!!!</h1>
@@ -24,11 +35,11 @@ export function Buttons() {
         Design Toolkit buttons
       </h2>
       <div className='p-m flex gap-m items-center mb-l'>
-        <Button>
+        <Button onPress={toggleMode}>
           <Icon>
             <Placeholder />
           </Icon>
-          Primary Button
+          Toggle Mode
         </Button>
         <Button color='critical'>Critical Button</Button>
         <Button className='bg-advisory-bold hover:bg-advisory-hover text-interactive-default'>

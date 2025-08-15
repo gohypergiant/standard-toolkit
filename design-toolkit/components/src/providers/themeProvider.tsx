@@ -17,7 +17,7 @@ import {
   type PropsWithChildren,
   createContext,
   useContext,
-  useLayoutEffect,
+  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -43,12 +43,15 @@ export function ThemeProvider({
   defaultMode,
   onChange,
 }: ThemeProviderProps) {
-  const ref = useRef(document.documentElement);
+  const ref = useRef<HTMLElement>(null);
   const [mode, setMode] = useState<Mode>(defaultMode ?? 'dark');
 
-  useLayoutEffect(() => {
-    ref.current.classList.remove('dark', 'light');
-    ref.current.classList.add(mode);
+  useEffect(() => {
+    if (document) {
+      ref.current = document.documentElement;
+      ref.current.classList.remove('dark', 'light');
+      ref.current.classList.add(mode);
+    }
   }, [mode]);
 
   return (
