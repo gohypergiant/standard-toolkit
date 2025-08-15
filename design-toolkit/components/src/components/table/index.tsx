@@ -383,34 +383,6 @@ export function Table<T extends { id: string | number }>({
     [setColumnOrderCallback],
   );
 
-  const columnMenuItems: TableMenuItem[] = [
-    {
-      id: 1,
-      name: ColumnKebabMenuItems.LEFT,
-      isDisabled: false,
-    },
-    {
-      id: 2,
-      name: ColumnKebabMenuItems.RIGHT,
-      isDisabled: false,
-    },
-    {
-      id: 3,
-      name: ColumnKebabMenuItems.ASC,
-      isDisabled: false,
-    },
-    {
-      id: 4,
-      name: ColumnKebabMenuItems.DESC,
-      isDisabled: false,
-    },
-    {
-      id: 5,
-      name: ColumnKebabMenuItems.CLEAR,
-      isDisabled: false,
-    },
-  ];
-
   if (dataProp) {
     return (
       <div>
@@ -472,59 +444,70 @@ export function Table<T extends { id: string | number }>({
                                 <Kebab />
                               </Icon>
                             </Button>
-                            <Menu<TableMenuItem> items={columnMenuItems}>
-                              {(item) => (
-                                <Menu.Item
-                                  onAction={() => {
-                                    if (
-                                      item.name === ColumnKebabMenuItems.LEFT
-                                    ) {
-                                      header.column.getIsFirstColumn('center')
-                                        ? undefined
-                                        : moveColumnLeft(
-                                            header.column.getIndex(),
-                                          );
-                                    } else if (
-                                      item.name === ColumnKebabMenuItems.RIGHT
-                                    ) {
-                                      header.column.getIsLastColumn('center')
-                                        ? undefined
-                                        : moveColumnRight(
-                                            header.column.getIndex(),
-                                          );
-                                    } else if (
-                                      item.name === ColumnKebabMenuItems.ASC
-                                    ) {
-                                      header.column.toggleSorting(false);
-                                    } else if (
-                                      item.name === ColumnKebabMenuItems.DESC
-                                    ) {
-                                      header.column.toggleSorting(true);
-                                    } else if (
-                                      item.name === ColumnKebabMenuItems.CLEAR
-                                    ) {
-                                      header.column.clearSorting();
-                                    }
-                                  }}
-                                  key={item.id}
-                                  isDisabled={
-                                    (!header.column.getIsSorted() &&
-                                      item.name ===
-                                        ColumnKebabMenuItems.CLEAR) ||
-                                    (header.column.getIsSorted() === 'asc' &&
-                                      item.name === ColumnKebabMenuItems.ASC) ||
-                                    (header.column.getIsSorted() === 'desc' &&
-                                      item.name === ColumnKebabMenuItems.DESC)
-                                  }
-                                >
-                                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
-                                  {item.description && (
-                                    <Menu.Item.Description>
-                                      {item.description}
-                                    </Menu.Item.Description>
-                                  )}
-                                </Menu.Item>
-                              )}
+                            <Menu<TableMenuItem>>
+                              <Menu.Item
+                                onAction={() => {
+                                  moveColumnLeft(header.column.getIndex());
+                                }}
+                                isDisabled={header.column.getIsFirstColumn(
+                                  'center',
+                                )}
+                              >
+                                <Menu.Item.Label>
+                                  {ColumnKebabMenuItems.LEFT}
+                                </Menu.Item.Label>
+                              </Menu.Item>
+                              <Menu.Item
+                                onAction={() => {
+                                  moveColumnRight(header.column.getIndex());
+                                }}
+                                isDisabled={header.column.getIsLastColumn(
+                                  'center',
+                                )}
+                              >
+                                <Menu.Item.Label>
+                                  {' '}
+                                  {ColumnKebabMenuItems.RIGHT}{' '}
+                                </Menu.Item.Label>
+                              </Menu.Item>
+                              <Menu.Separator />
+                              <Menu.Item
+                                onAction={() => {
+                                  header.column.toggleSorting(false);
+                                }}
+                                isDisabled={
+                                  header.column.getIsSorted() === 'asc'
+                                }
+                              >
+                                <Menu.Item.Label>
+                                  {' '}
+                                  {ColumnKebabMenuItems.ASC}{' '}
+                                </Menu.Item.Label>
+                              </Menu.Item>
+                              <Menu.Item
+                                onAction={() => {
+                                  header.column.toggleSorting(true);
+                                }}
+                                isDisabled={
+                                  header.column.getIsSorted() === 'desc'
+                                }
+                              >
+                                <Menu.Item.Label>
+                                  {' '}
+                                  {ColumnKebabMenuItems.DESC}{' '}
+                                </Menu.Item.Label>
+                              </Menu.Item>
+                              <Menu.Item
+                                onAction={() => {
+                                  header.column.clearSorting();
+                                }}
+                                isDisabled={!header.column.getIsSorted()}
+                              >
+                                <Menu.Item.Label>
+                                  {' '}
+                                  {ColumnKebabMenuItems.CLEAR}{' '}
+                                </Menu.Item.Label>
+                              </Menu.Item>
                             </Menu>
                           </Menu.Trigger>
                         </div>
