@@ -30,6 +30,7 @@
 @custom-variant type-day (&:where([data-type="day"]));
 @custom-variant layout-grid (&:where([data-layout="grid"]));
 @custom-variant layout-stack (&:where([data-layout="stack"]));
+@custom-variant layout-inline (&:where([data-layout="inline"]));
 @custom-variant orientation-horizontal (&:where([data-orientation="horizontal"]));
 @custom-variant orientation-vertical (&:where([data-orientation="vertical"]));
 @custom-variant selection-single (&:where([data-selection-mode="single"]));

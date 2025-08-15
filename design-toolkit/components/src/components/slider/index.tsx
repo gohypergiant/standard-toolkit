@@ -11,33 +11,35 @@
  */
 
 'use client';
-import { cn } from '@/lib/utils';
 import 'client-only';
 import { useContext } from 'react';
 import {
+  Slider as AriaSlider,
+  SliderTrack as AriaSliderTrack,
   Input,
   Label,
   LabelContext,
   NumberField,
-  Slider as RACSlider,
-  SliderTrack as RACSliderTrack,
   SliderStateContext,
   SliderThumb,
   Text,
   useSlottedContext,
 } from 'react-aria-components';
 import { Tooltip } from '../tooltip';
-import { MaxValueStyles, MinValueStyles, SliderStyles } from './styles';
+import { SliderStyles } from './styles';
 import type { SliderProps } from './types';
 
 const {
-  slider,
-  label: sliderLabel,
-  trackValue,
   input,
+  inputContainer,
+  label: sliderLabel,
+  minValue: minStyles,
+  maxValue: maxStyles,
+  slider,
+  thumb,
   track,
   trackBackground,
-  thumb,
+  trackValue,
 } = SliderStyles();
 
 /**
@@ -53,7 +55,7 @@ const {
  */
 export const Slider = ({
   children,
-  className,
+  classNames,
   showInput = false,
   showLabel = true,
   layout = 'stack',
@@ -63,26 +65,32 @@ export const Slider = ({
   minValue = 0,
   maxValue = 100,
   orientation = 'horizontal',
-  ...props
+  ...rest
 }: SliderProps) => {
   return (
-    <RACSlider
-      className={slider()}
+    <AriaSlider
+      {...rest}
+      aria-label={showLabel ? undefined : label}
+      className={slider({ className: classNames?.slider })}
+      defaultValue={defaultValue}
+      data-layout={layout}
       minValue={minValue}
       maxValue={maxValue}
-      data-layout={layout}
       orientation={orientation}
-      value={value}
-      defaultValue={defaultValue}
-      {...props}
     >
-      {showLabel && <Label className={sliderLabel()}>{label}</Label>}
+      {showLabel && (
+        <Label className={sliderLabel({ className: classNames?.label })}>
+          {label}
+        </Label>
+      )}
       {showInput && (
-        <div className={input()}>
-          <SliderInput />
+        <div
+          className={inputContainer({ className: classNames?.inputContainer })}
+        >
+          <SliderInput className={classNames?.input} />
         </div>
       )}
-      <RACSliderTrack className={track()}>
+      <AriaSliderTrack className={track({ className: classNames?.track })}>
         {({ state }) => {
           const minValue = state.getThumbPercent(0);
           const maxValue = state.getThumbPercent(1) || minValue;
@@ -91,13 +99,19 @@ export const Slider = ({
             state.values.length === 2 ? `${Math.floor(minValue * 100)}%` : '0';
           return (
             <>
-              <div className={trackBackground()} />
+              <div
+                className={trackBackground({
+                  className: classNames?.trackBackground,
+                })}
+              />
               {state.values.map((_, index) => {
                 return (
                   <>
                     <div
                       key={`slider-${index === 0 ? 'min' : 'max'}`}
-                      className={trackValue()}
+                      className={trackValue({
+                        className: classNames?.trackValue,
+                      })}
                       style={
                         orientation === 'horizontal'
                           ? {
@@ -114,7 +128,7 @@ export const Slider = ({
                     <SliderThumb
                       key={`slider-thumb-${index === 0 ? 'min' : 'max'}`}
                       index={index}
-                      className={thumb()}
+                      className={thumb({ className: classNames?.thumb })}
                     >
                       {!showInput && (
                         <Tooltip>
@@ -133,14 +147,20 @@ export const Slider = ({
             </>
           );
         }}
-      </RACSliderTrack>
-      <Text slot='min' className={MinValueStyles()}>
+      </AriaSliderTrack>
+      <Text
+        slot='min'
+        className={minStyles({ className: classNames?.minValue })}
+      >
         {minValue}
       </Text>
-      <Text slot='max' className={MaxValueStyles()}>
+      <Text
+        slot='max'
+        className={maxStyles({ className: classNames?.maxValue })}
+      >
         {maxValue}
       </Text>
-    </RACSlider>
+    </AriaSlider>
   );
 };
 
@@ -156,12 +176,7 @@ function SliderInput({ className }: { className?: string }) {
           value={value}
           onChange={(v) => state.setThumbValue(0, v)}
         >
-          <Input
-            className={cn(
-              'w-[50px] rounded-medium border border-interactive px-s py-xs font-display text-body-m text-default-light',
-              className,
-            )}
-          />
+          <Input className={input({ className })} />
         </NumberField>
       ))}
     </>

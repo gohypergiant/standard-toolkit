@@ -235,11 +235,7 @@ export type {
   SkeletonStyleVariants,
 } from './components/skeleton/types';
 export { Slider } from './components/slider';
-export {
-  MaxValueStyles,
-  MinValueStyles,
-  SliderStyles,
-} from './components/slider/styles';
+export { SliderStyles } from './components/slider/styles';
 export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';

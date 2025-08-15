@@ -9,17 +9,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import type { SliderProps as AriaSliderProps } from 'react-aria-components';
+import type {
+  SliderProps as AriaSliderProps,
+  LabelProps,
+} from 'react-aria-components';
 
-export interface SliderProps
-  extends Omit<
-    AriaSliderProps,
-    'showOutput' | 'slot' | 'style' | 'formatOptions'
-  > {
-  className?: string;
+export interface SliderProps extends AriaSliderProps {
+  classNames?: {
+    input?: string;
+    inputContainer?: string;
+    label?: LabelProps['className'];
+    minValue?: string;
+    maxValue?: string;
+    slider?: string;
+    thumb?: string;
+    track?: string;
+    trackBackground?: string;
+    trackValue?: string;
+  };
   showInput?: boolean;
   showLabel?: boolean;
   layout?: 'stack' | 'inline';
-  value?: number;
   label: string;
 }
