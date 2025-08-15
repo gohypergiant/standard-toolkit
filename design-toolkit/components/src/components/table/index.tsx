@@ -13,7 +13,7 @@
 'use client';
 import 'client-only';
 
-import { Kebab } from '@accelint/icons';
+import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
@@ -394,6 +394,21 @@ export function Table<T extends { id: string | number }>({
       name: ColumnKebabMenuItems.RIGHT,
       isDisabled: false,
     },
+    {
+      id: 3,
+      name: ColumnKebabMenuItems.ASC,
+      isDisabled: false,
+    },
+    {
+      id: 4,
+      name: ColumnKebabMenuItems.DESC,
+      isDisabled: false,
+    },
+    {
+      id: 5,
+      name: ColumnKebabMenuItems.CLEAR,
+      isDisabled: false,
+    },
   ];
 
   if (dataProp) {
@@ -414,34 +429,32 @@ export function Table<T extends { id: string | number }>({
                     style={{ width: header.getSize() }}
                   >
                     <div className='flex items-center justify-between gap-xxs group'>
-                      {header.isPlaceholder ||
-                      header.column.id === 'kebab' ? null : (
-                        <button
-                          type='button'
-                          onClick={header.column.getToggleSortingHandler?.()}
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            cursor: header.column.getCanSort()
-                              ? 'pointer'
-                              : 'default',
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: 0,
-                          }}
-                          disabled={!header.column.getCanSort()}
-                          aria-label={
-                            header.column.getIsSorted()
-                              ? `Sorted ${header.column.getIsSorted() === 'asc' ? 'ascending' : 'descending'}`
-                              : 'Not sorted'
-                          }
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                        </button>
-                      )}
+                      <button>
+                        {header.isPlaceholder ||
+                        header.column.id === 'kebab' ? null : (
+                          <button
+                            type='button'
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              display: 'flex',
+                              alignItems: 'center',
+                              padding: 0,
+                            }}
+                            disabled={!header.column.getCanSort()}
+                            aria-label={
+                              header.column.getIsSorted()
+                                ? `Sorted ${header.column.getIsSorted() === 'asc' ? 'ascending' : 'descending'}`
+                                : 'Not sorted'
+                            }
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                          </button>
+                        )}
+                      </button>
 
                       {['numeral', 'kebab', 'selection'].includes(
                         header.column.id,
@@ -479,10 +492,30 @@ export function Table<T extends { id: string | number }>({
                                         : moveColumnRight(
                                             header.column.getIndex(),
                                           );
+                                    } else if (
+                                      item.name === ColumnKebabMenuItems.ASC
+                                    ) {
+                                      header.column.toggleSorting(false);
+                                    } else if (
+                                      item.name === ColumnKebabMenuItems.DESC
+                                    ) {
+                                      header.column.toggleSorting(true);
+                                    } else if (
+                                      item.name === ColumnKebabMenuItems.CLEAR
+                                    ) {
+                                      header.column.clearSorting();
                                     }
                                   }}
                                   key={item.id}
-                                  isDisabled={item.isDisabled}
+                                  isDisabled={
+                                    (!header.column.getIsSorted() &&
+                                      item.name ===
+                                        ColumnKebabMenuItems.CLEAR) ||
+                                    (header.column.getIsSorted() === 'asc' &&
+                                      item.name === ColumnKebabMenuItems.ASC) ||
+                                    (header.column.getIsSorted() === 'desc' &&
+                                      item.name === ColumnKebabMenuItems.DESC)
+                                  }
                                 >
                                   <Menu.Item.Label>{item.name}</Menu.Item.Label>
                                   {item.description && (

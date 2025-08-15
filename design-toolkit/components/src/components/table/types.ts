@@ -205,5 +205,5 @@ export enum ColumnKebabMenuItems {
   RIGHT = 'Move Column Right',
   ASC = 'Sort Ascending',
   DESC = 'Sort Descending',
-  RESET = 'Reset Sorting',
+  CLEAR = 'Clear Sort',
 }
