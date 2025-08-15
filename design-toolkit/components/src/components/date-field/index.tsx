@@ -93,7 +93,12 @@ const FormattedDateSegment = ({
   }
 
   return (
-    <DateSegment segment={segment} className={dateSegment({})} {...props}>
+    <DateSegment
+      segment={segment}
+      className={dateSegment({ shortMonth })}
+      data-type={segment.type}
+      {...props}
+    >
       {segment.type === 'month'
         ? (renderProps) => (
             <MonthDateSegment {...renderProps} shortMonth={shortMonth} />
