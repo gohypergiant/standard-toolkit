@@ -18,7 +18,7 @@ const meta: Meta<typeof Slider> = {
   component: Slider,
   args: {
     orientation: 'horizontal',
-    layout: 'stacked',
+    layout: 'stack',
     label: 'Opacity',
     defaultValue: 30,
     minValue: 0,
@@ -36,6 +36,20 @@ export default meta;
 type Story = StoryObj<typeof Slider>;
 
 export const Default: Story = {
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const Range: Story = {
+  args: {
+    defaultValue: [20, 30],
+    showInput: true,
+  },
   render: ({ ...args }) => {
     return (
       <div className='size-[400px]'>
