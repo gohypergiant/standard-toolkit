@@ -24,7 +24,17 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "cSpell.words": ["accelint", "latlon", "LONLAT", "mgrs"],
+  "cSpell.words": [
+    "accelint",
+    "flother",
+    "latlon",
+    "LONLAT",
+    "mgrs",
+    "NTDS",
+    "smeegl",
+    "spreet",
+    "spritesheets"
+  ],
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit"
   },
@@ -36,5 +46,11 @@
     "cn",
     "cva",
     "tv"
-  ]
+  ],
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  }
 }

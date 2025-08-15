@@ -16,15 +16,15 @@ import ansis from 'ansis';
 import { Command } from 'commander';
 import ora from 'ora';
 import { Result } from 'true-myth';
-import { cleanUp } from './utils/clean-up.js';
+import { cleanUpTempDirectory } from './utils/clean-up-temp-directory.js';
 import { findSprites } from './utils/find-sprites.js';
 import { gatherSprites } from './utils/gather-sprites.js';
-import { generateConst } from './utils/generate-const.js';
+import { generateConstantsFile } from './utils/generate-constants-file.js';
 import { generateSprites } from './utils/generate-sprites.js';
 import type {
-  ConstantsResult,
-  GatherResult,
-  GenerateResult,
+  GatherSpritesResult,
+  GenerateConstantsResult,
+  GenerateSpritesResult,
   GlobResult,
 } from './utils/types.js';
 
@@ -32,6 +32,7 @@ const program = new Command();
 
 type CmdOptions = {
   spreet?: string;
+  binary?: boolean;
 };
 
 async function find(glob: string, rootPath: string) {
@@ -48,7 +49,7 @@ async function find(glob: string, rootPath: string) {
   return result;
 }
 
-async function gather(sprites: GlobResult) {
+async function gather(sprites: GlobResult, isBinaryNamingUsed: boolean) {
   if (sprites.isErr) {
     return Result.err(sprites.error);
   }
@@ -56,7 +57,7 @@ async function gather(sprites: GlobResult) {
   const spinner = ora('Gathering sprites');
   spinner.start();
 
-  const result = await gatherSprites(sprites);
+  const result = await gatherSprites(sprites, isBinaryNamingUsed);
 
   result.match({
     Ok: () => spinner.succeed(),
@@ -66,7 +67,11 @@ async function gather(sprites: GlobResult) {
   return result;
 }
 
-async function generate(input: GatherResult, cmd: string, output: string) {
+async function generate(
+  input: GatherSpritesResult,
+  cmd: string,
+  output: string,
+) {
   if (input.isErr) {
     return Result.err(input.error);
   }
@@ -85,7 +90,7 @@ async function generate(input: GatherResult, cmd: string, output: string) {
   return result;
 }
 
-async function constants(input: GenerateResult) {
+async function constants(input: GenerateSpritesResult) {
   if (input.isErr) {
     return Result.err(input.error);
   }
@@ -93,7 +98,7 @@ async function constants(input: GenerateResult) {
   const spinner = ora('Generating constant mapping');
   spinner.start();
 
-  const result = await generateConst(input);
+  const result = await generateConstantsFile(input);
 
   result.match({
     Ok: () => spinner.succeed(),
@@ -103,11 +108,11 @@ async function constants(input: GenerateResult) {
   return result;
 }
 
-async function clean(dir: ConstantsResult) {
+async function clean(dir: GenerateConstantsResult) {
   const spinner = ora('Cleaning up');
   spinner.start();
 
-  const result = await cleanUp(dir);
+  const result = await cleanUpTempDirectory(dir);
 
   result.match({
     Ok: () => spinner.succeed(),
@@ -124,19 +129,30 @@ program
   .argument('[OUTPUT]', 'The atlas output path, CWD if none given')
   .option(
     '--spreet <path>',
-    'Bath to pre-built spreet binary, unneeded if installed',
+    'Path to pre-built spreet binary, unneeded if installed',
+  )
+  .option(
+    '--binary',
+    'Sprite names will be generated as binary numbers instead of strings',
   )
   .action(
     async (glob: string, out: string | undefined, options: CmdOptions) => {
       const newOut = out
         ? path.resolve(out)
         : path.join(process.cwd(), 'atlas');
-      const spreetPath = options.spreet ?? 'spreet';
+      const cmd = options.spreet ?? 'spreet';
+      const isBinaryNamingUsed = options.binary ?? false;
+
+      console.log(
+        `Using ${ansis.bold.cyan(cmd)} to generate spritesheet at ${ansis.italic.cyan(
+          newOut,
+        )}`,
+      );
 
       // TODO: Need to add async compose to core
       const sprites = await find(glob as string, process.cwd());
-      const gathered = await gather(sprites);
-      const atlas = await generate(gathered, spreetPath, newOut);
+      const gathered = await gather(sprites, isBinaryNamingUsed);
+      const atlas = await generate(gathered, cmd, newOut);
       const genConst = await constants(atlas);
 
       await clean(genConst);

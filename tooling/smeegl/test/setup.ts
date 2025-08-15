@@ -10,20 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { copyFile, mkdtemp } from 'node:fs/promises';
-import os from 'node:os';
-import path from 'node:path';
+import { afterEach } from 'vitest';
 
-export function tempDir() {
-  return mkdtemp(path.join(os.tmpdir(), 'smeegl-'));
-}
-
-export async function duplicateFile(src: string, destDir: string) {
-  const resolved = path.resolve(src);
-  const base = path.basename(resolved);
-  const destFile = path.join(destDir, base);
-
-  await copyFile(resolved, destFile);
-
-  return destFile;
-}
+afterEach(() => {
+  // no-op after each test
+});

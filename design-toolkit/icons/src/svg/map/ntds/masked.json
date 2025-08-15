@@ -1,0 +1,197 @@
+{
+  "00edd32b": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 0 },
+  "093bcb98": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 0 },
+  "0d3f0a20": { "height": 64, "pixelRatio": 2, "width": 64, "x": 128, "y": 0 },
+  "1fd6c09c": { "height": 64, "pixelRatio": 2, "width": 64, "x": 192, "y": 0 },
+  "205d8cd6": { "height": 64, "pixelRatio": 2, "width": 64, "x": 256, "y": 0 },
+  "2095f16d": { "height": 64, "pixelRatio": 2, "width": 64, "x": 320, "y": 0 },
+  "20ddeb17": { "height": 64, "pixelRatio": 2, "width": 64, "x": 384, "y": 0 },
+  "21636939": { "height": 64, "pixelRatio": 2, "width": 64, "x": 448, "y": 0 },
+  "2a04a374": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 64 },
+  "2cb1b032": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 128 },
+  "2d472866": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 192 },
+  "3448ba18": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 128 },
+  "35ed91cb": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 256 },
+  "383f48c0": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 320 },
+  "39d2891a": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 384 },
+  "3a55c60b": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 448 },
+  "3dbfba81": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 64 },
+  "42ddbcbf": { "height": 64, "pixelRatio": 2, "width": 64, "x": 128, "y": 64 },
+  "45dc7e6a": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 384 },
+  "5e0f5e44": { "height": 64, "pixelRatio": 2, "width": 64, "x": 192, "y": 64 },
+  "60936458": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 0 },
+  "688d0c19": { "height": 64, "pixelRatio": 2, "width": 64, "x": 256, "y": 64 },
+  "69ff18b5": { "height": 64, "pixelRatio": 2, "width": 64, "x": 320, "y": 64 },
+  "730453fe": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 128 },
+  "74341af6": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 448 },
+  "7467450d": { "height": 64, "pixelRatio": 2, "width": 64, "x": 384, "y": 64 },
+  "79b59c06": { "height": 64, "pixelRatio": 2, "width": 64, "x": 448, "y": 64 },
+  "79b9f3a2": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 128 },
+  "7f69e6f5": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 128 },
+  "88494c29": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 192 },
+  "8959d3d1": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 256 },
+  "91a0d9fb": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 256 },
+  "9511b69d": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 320 },
+  "9757eeee": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 384 },
+  "9c7200f0": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 448 },
+  "9dea4eb2": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 384 },
+  "a2d59633": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 128,
+    "y": 128
+  },
+  "a475c8e7": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 192,
+    "y": 128
+  },
+  "a4aa05df": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 256,
+    "y": 128
+  },
+  "a5a01e68": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 192,
+    "y": 128
+  },
+  "a64b4142": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 320,
+    "y": 128
+  },
+  "a72096c4": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 384,
+    "y": 128
+  },
+  "ad9d3698": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 448,
+    "y": 128
+  },
+  "af074f38": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 128,
+    "y": 192
+  },
+  "af8741d0": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 128,
+    "y": 256
+  },
+  "c15de452": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 128,
+    "y": 320
+  },
+  "c25fad7e": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 384 },
+  "c4a89a6b": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 256 },
+  "cc2f9dab": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 128,
+    "y": 384
+  },
+  "ce153a37": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 256 },
+  "cf8d7475": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 128,
+    "y": 448
+  },
+  "d41f415d": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 192,
+    "y": 192
+  },
+  "d9cd9856": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 192,
+    "y": 192
+  },
+  "daa6a754": { "height": 64, "pixelRatio": 2, "width": 64, "x": 64, "y": 384 },
+  "e06c7f22": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 384,
+    "y": 128
+  },
+  "e1560709": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 256,
+    "y": 192
+  },
+  "e15c7861": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 320,
+    "y": 192
+  },
+  "ec84de02": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 384,
+    "y": 192
+  },
+  "ec8ea16a": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 448,
+    "y": 192
+  },
+  "f547ac03": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 192,
+    "y": 256
+  },
+  "f5fff54a": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 192,
+    "y": 320
+  },
+  "f82d2c41": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 192,
+    "y": 384
+  },
+  "f8957508": { "height": 64, "pixelRatio": 2, "width": 64, "x": 384, "y": 128 }
+}
