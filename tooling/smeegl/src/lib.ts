@@ -24,7 +24,7 @@ export async function smeegl(
   glob: string,
   out: string,
   spreet?: string,
-  isBinaryNamingUsed = false,
+  crcMode: 'HEX' | 'DEC' | null = null,
 ) {
   if (!glob) {
     throw new Error('No glob pattern provided');
@@ -32,7 +32,7 @@ export async function smeegl(
 
   // TODO: Need to add async compose to core
   const sprites = await findSprites(glob, rootPath);
-  const gathered = await gatherSprites(sprites, isBinaryNamingUsed);
+  const gathered = await gatherSprites(sprites, crcMode);
   const atlas = await generateSprites(gathered, spreet ?? 'spreet', out);
   const genConst = await generateConstantsFile(atlas);
 

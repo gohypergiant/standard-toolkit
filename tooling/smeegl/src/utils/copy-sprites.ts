@@ -14,13 +14,13 @@ import * as fs from 'node:fs';
 import crc32 from 'crc32-universal';
 import { Result } from 'true-myth';
 import { duplicateFile } from './duplicate-file.js';
-import type { GatherSpritesResult, SpriteInfo } from './types.js';
+import type { CrcMode, GatherSpritesResult, SpriteInfo } from './types.js';
 
 export async function copySprites(
   tmpDir: string,
   sourceFileNames: string[],
   commonBasePath: string,
-  isBinaryNamingUsed: boolean,
+  crcMode: CrcMode | null,
 ): Promise<GatherSpritesResult> {
   try {
     const sprites = (
@@ -60,19 +60,19 @@ export async function copySprites(
             .replaceAll(/\(\)/g, ''); // remove parentheses
 
           result.name = result.fileName.replaceAll(/\.svg$/g, ''); // remove .svg extension
-          result.indexName = isBinaryNamingUsed
-            ? `${crc32(Buffer.from(result.fileName)).toString(16).padStart(8, '0')}`
-            : result.name;
+
+          result.indexName =
+            crcMode === 'HEX'
+              ? `${crc32(Buffer.from(result.fileName)).toString(16).padStart(8, '0')}`
+              : crcMode === 'DEC'
+                ? `${crc32(Buffer.from(result.fileName)).toString(10)}`
+                : result.name;
 
           result.filePath = await duplicateFile(
             sourceFileName,
             tmpDir,
             `${result.indexName}.svg`,
           );
-
-          // console.log(
-          //   `✅ Copied sprite: ${result.fileName} to ${result.tmpFileName}`,
-          // );
 
           return result;
         }),

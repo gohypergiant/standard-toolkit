@@ -22,6 +22,7 @@ import { gatherSprites } from './utils/gather-sprites.js';
 import { generateConstantsFile } from './utils/generate-constants-file.js';
 import { generateSprites } from './utils/generate-sprites.js';
 import type {
+  CrcMode,
   GatherSpritesResult,
   GenerateConstantsResult,
   GenerateSpritesResult,
@@ -32,7 +33,7 @@ const program = new Command();
 
 type CmdOptions = {
   spreet?: string;
-  binary?: boolean;
+  crc?: CrcMode;
 };
 
 async function find(glob: string, rootPath: string) {
@@ -49,7 +50,7 @@ async function find(glob: string, rootPath: string) {
   return result;
 }
 
-async function gather(sprites: GlobResult, isBinaryNamingUsed: boolean) {
+async function gather(sprites: GlobResult, crcMode: CrcMode | null) {
   if (sprites.isErr) {
     return Result.err(sprites.error);
   }
@@ -57,7 +58,7 @@ async function gather(sprites: GlobResult, isBinaryNamingUsed: boolean) {
   const spinner = ora('Gathering sprites');
   spinner.start();
 
-  const result = await gatherSprites(sprites, isBinaryNamingUsed);
+  const result = await gatherSprites(sprites, crcMode);
 
   result.match({
     Ok: () => spinner.succeed(),
@@ -132,8 +133,8 @@ program
     'Path to pre-built spreet binary, unneeded if installed',
   )
   .option(
-    '--binary',
-    'Sprite names will be generated as binary numbers instead of strings',
+    '--crc <MODE>',
+    'Sprite names will be converted to crc32, either DEC or HEX',
   )
   .action(
     async (glob: string, out: string | undefined, options: CmdOptions) => {
@@ -141,17 +142,37 @@ program
         ? path.resolve(out)
         : path.join(process.cwd(), 'atlas');
       const cmd = options.spreet ?? 'spreet';
-      const isBinaryNamingUsed = options.binary ?? false;
+      const crcMode = options.crc ?? null;
 
-      console.log(
-        `Using ${ansis.bold.cyan(cmd)} to generate spritesheet at ${ansis.italic.cyan(
-          newOut,
-        )}`,
-      );
+      if (!glob) {
+        console.error(ansis.red('Error: No glob pattern provided'));
+        process.exit(1);
+      }
+
+      if (!glob.endsWith('.svg')) {
+        console.warn(
+          ansis.yellow(
+            'Warning: The glob pattern should end with .svg for best results',
+          ),
+        );
+      }
+
+      if (glob.startsWith('~/')) {
+        console.error(
+          ansis.red(
+            'Error: Please expand the glob pattern to an absolute path before running this command.',
+          ),
+        );
+        process.exit(1);
+      }
+
+      console.log(`Using ${ansis.bold.cyan(cmd)} to generate spritesheet`);
+      console.log(`Pulling from ${ansis.italic.cyan(glob)}`);
+      console.log(`Saving to ${ansis.italic.cyan(`${newOut}.*`)}`);
 
       // TODO: Need to add async compose to core
       const sprites = await find(glob as string, process.cwd());
-      const gathered = await gather(sprites, isBinaryNamingUsed);
+      const gathered = await gather(sprites, crcMode);
       const atlas = await generate(gathered, cmd, newOut);
       const genConst = await constants(atlas);
 

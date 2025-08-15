@@ -52,6 +52,7 @@ Arguments:
 
 Options:
   --spreet <path>  Path to pre-built spreet binary, unneeded if installed
+  --crc <MODE>     Sprite names will be converted to crc32. Valid modes are 'DEC' or 'HEX'
   -h, --help       display help for command
 
 

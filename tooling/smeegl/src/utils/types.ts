@@ -14,6 +14,8 @@ import type { Result, Unit } from 'true-myth';
 
 type ErrorPath = { msg: string; tmp: string | null };
 
+export type CrcMode = 'DEC' | 'HEX';
+
 export type SpriteInfo = {
   name: string; // sprite name, no extension
   indexName: string; // sprite definition name, used for binary naming

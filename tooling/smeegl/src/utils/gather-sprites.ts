@@ -14,11 +14,11 @@ import { Result } from 'true-myth';
 import { copySprites } from './copy-sprites.js';
 import { findCommonBasePath } from './find-common-base-path.js';
 import { makeTempDirectory } from './make-temp-directory.js';
-import type { GatherSpritesResult, GlobResult } from './types.js';
+import type { CrcMode, GatherSpritesResult, GlobResult } from './types.js';
 
 export async function gatherSprites(
   globResult: GlobResult,
-  isBinaryNamingUsed: boolean,
+  crcMode: CrcMode | null,
 ): Promise<GatherSpritesResult> {
   if (globResult.isErr) {
     return Result.err(globResult.error);
@@ -30,7 +30,7 @@ export async function gatherSprites(
     const commonBasePath = findCommonBasePath(list);
 
     // Needed a different scope for before/after tmp dir was created
-    return copySprites(tmpDir, list, commonBasePath, isBinaryNamingUsed);
+    return copySprites(tmpDir, list, commonBasePath, crcMode);
   } catch (err) {
     return Result.err({ msg: (err as Error).message.trim(), tmp: null });
   }
