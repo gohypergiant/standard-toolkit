@@ -15,11 +15,39 @@ import { describe, expect, it } from 'vitest';
 import { Slider } from './';
 
 describe('Slider', () => {
-  it('should render', () => {
-    render(<Slider label='Foo' minValue={0} maxValue={100} layout='inline' />);
+  it('should render single', () => {
+    render(
+      <Slider
+        defaultValue={50}
+        label='Foo'
+        layout='inline'
+        minValue={0}
+        maxValue={100}
+      />,
+    );
 
     const element = screen.getByRole('group');
+    const value = screen.getByDisplayValue(50);
 
     expect(element).toBeInTheDocument();
+    expect(value).toBeInTheDocument();
+  });
+
+  it('should render range', () => {
+    render(
+      <Slider
+        defaultValue={[20, 50]}
+        label='Range'
+        layout='inline'
+        minValue={0}
+        maxValue={100}
+      />,
+    );
+
+    const minValue = screen.getByDisplayValue(20);
+    const maxValue = screen.getByDisplayValue(50);
+
+    expect(minValue).toBeInTheDocument();
+    expect(maxValue).toBeInTheDocument();
   });
 });
