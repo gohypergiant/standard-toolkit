@@ -133,6 +133,10 @@ export type {
 export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export {
+  DrawerEventNamespace,
+  DrawerEventTypes,
+} from './components/drawer/events';
+export {
   Drawer,
   DrawerContext,
   DrawerEventHandlers,
@@ -144,10 +148,6 @@ export {
   DrawerTitleStyles,
   DrawerTitleStylesDefaults,
 } from './components/drawer/styles';
-export {
-  DrawerEventNamespace,
-  DrawerEventTypes,
-} from './components/drawer/events';
 export type {
   DrawerContextValue,
   DrawerEvent,
@@ -175,6 +175,10 @@ export type { InputProps } from './components/input/types';
 export { Label, LabelContext } from './components/label';
 export { LabelStyles } from './components/label/styles';
 export type { LabelProps } from './components/label/types';
+export { Lines } from './components/lines';
+export { LinesStyles } from './components/lines/styles';
+export type { LinesStylesVariants } from './components/lines/styles';
+export type { LinesProps } from './components/lines/types';
 export { Menu, MenuContext } from './components/menu';
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export type {
@@ -262,6 +266,19 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
+export { ItemContent, Tree, TreeContext, TreeItem } from './components/tree';
+export { TreeStyles, TreeStylesDefaults } from './components/tree/styles';
+export type { TreeStyleVariants } from './components/tree/styles';
+export type {
+  DragAndDropConfig,
+  DragItem,
+  ItemContentProps,
+  ItemContentRenderProps,
+  ItemTextProps,
+  TreeItemProps,
+  TreeProps,
+  TreeSelectionType,
+} from './components/tree/types';
 export {
   ViewStackEventNamespace,
   ViewStackEventTypes,
@@ -282,6 +299,18 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export type {
+  Position,
+  TreeActions,
+  TreeData,
+  TreeNode,
+  TreeNodeBase,
+  UseTreeActionsOptions,
+  UseTreeState,
+  UseTreeStateOptions,
+} from './hooks/types';
+export { useTreeActions } from './hooks/use-tree-actions';
+export { useTreeState } from './hooks/use-tree-state';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   AriaAttributes,

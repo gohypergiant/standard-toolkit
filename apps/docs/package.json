@@ -33,7 +33,7 @@
     "@docusaurus/theme-live-codeblock": "3.8.1",
     "@docusaurus/tsconfig": "3.8.1",
     "@docusaurus/types": "3.8.1",
-    "@easyops-cn/docusaurus-search-local": "0.47.0",
+    "@easyops-cn/docusaurus-search-local": "0.52.1",
     "@mdx-js/react": "3.0.0",
     "clsx": "2.0.0",
     "prism-react-renderer": "2.3.0",
@@ -46,11 +46,7 @@
     "typescript": "^5.8.3"
   },
   "browserslist": {
-    "production": [
-      ">0.5%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.5%", "not dead", "not op_mini all"],
     "development": [
       "last 3 chrome version",
       "last 3 firefox version",

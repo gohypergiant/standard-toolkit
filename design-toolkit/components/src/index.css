@@ -170,6 +170,10 @@
   --icon-color: --value(--color- *);
 }
 
+@utility outline {
+  outline-offset: -1px;
+}
+
 body {
   @apply font-primary;
 }
