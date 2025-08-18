@@ -25,7 +25,7 @@ export const TableCellStylesDefaults = {
 
 export const cellStyles = tv({
   base: [
-    'min-w-l text-left align-middle font-display text-body-s text-default-light row:bg-surface-raised',
+    'min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s text-default-light',
   ],
   variants: {
     narrow: {
@@ -108,7 +108,7 @@ export const tableBodyStyles = tv({
 export const TableStyles = tv({
   slots: {
     base: 'group/table',
-    headerCellButton: 'flex items-center justify-between gap-xxs group',
+    headerCellButton: 'flex items-center justify-between gap-xxs',
     pinIcon: 'mx-auto block',
     rowCell: '',
     rowKebab: '',

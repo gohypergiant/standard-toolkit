@@ -368,7 +368,7 @@ export function Table<T extends { id: string | number }>({
                     style={{ width: header.getSize() }}
                   >
                     <div className={headerCellButton()}>
-                      <button>
+                      <button type='button'>
                         {header.isPlaceholder ||
                         header.column.id === 'kebab' ? null : (
                           <button
