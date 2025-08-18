@@ -266,7 +266,6 @@ export type {
   TableCellProps,
   TableHeaderCellProps,
   TableHeaderProps,
-  TableMenuItem,
   TableProps,
   TableRowProps,
 } from './components/table/types';
