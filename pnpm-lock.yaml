@@ -930,6 +930,9 @@ importers:
       commander:
         specifier: 14.0.0
         version: 14.0.0
+      crc32-universal:
+        specifier: ^1.0.1
+        version: 1.0.1
       esbuild-plugin-file-path-extensions:
         specifier: 2.1.3
         version: 2.1.3
@@ -6009,6 +6012,9 @@ packages:
       typescript:
         optional: true
 
+  crc32-universal@1.0.1:
+    resolution: {integrity: sha512-s5aeEG79zDRscFoDVtcsWNNSLrpRk9PVINTGIBtRW/wGWYw1tJiSrpNo7yTxokJcbg6SvYgy/NHlMxlyuBL1pg==}
+
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
 
@@ -8303,6 +8309,10 @@ packages:
   node-forge@1.3.1:
     resolution: {integrity: sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==}
     engines: {node: '>= 6.13.0'}
+
+  node-gyp-build@4.8.4:
+    resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
+    hasBin: true
 
   node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
@@ -17410,6 +17420,10 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
+  crc32-universal@1.0.1:
+    dependencies:
+      node-gyp-build: 4.8.4
+
   crelt@1.0.6: {}
 
   cross-spawn@5.1.0:
@@ -20235,6 +20249,8 @@ snapshots:
   node-fetch-native@1.6.7: {}
 
   node-forge@1.3.1: {}
+
+  node-gyp-build@4.8.4: {}
 
   node-releases@2.0.19: {}
 
