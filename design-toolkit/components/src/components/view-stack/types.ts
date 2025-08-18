@@ -10,14 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { ComponentProps, PropsWithChildren, RefAttributes } from 'react';
 import type { Pressable } from 'react-aria-components';
+import type { ViewStackEventTypes } from './events';
 
 export type ViewStackProps = RefAttributes<HTMLDivElement> &
   PropsWithChildren<{
     id: UniqueId;
     defaultView?: UniqueId;
+    onChange?: (view: UniqueId | null) => void;
   }>;
 
 export type ViewStackViewProps = RefAttributes<HTMLDivElement> &
@@ -25,21 +28,31 @@ export type ViewStackViewProps = RefAttributes<HTMLDivElement> &
     id: UniqueId;
   }>;
 
-export type ViewStackBackEvent = {
-  stack: UniqueId;
-};
+export type ViewStackBackEvent = Payload<
+  typeof ViewStackEventTypes.back,
+  { stack: UniqueId }
+>;
 
-export type ViewStackClearEvent = {
-  stack: UniqueId;
-};
+export type ViewStackClearEvent = Payload<
+  typeof ViewStackEventTypes.clear,
+  { stack: UniqueId }
+>;
 
-export type ViewStackResetEvent = {
-  stack: UniqueId;
-};
+export type ViewStackResetEvent = Payload<
+  typeof ViewStackEventTypes.reset,
+  { stack: UniqueId }
+>;
 
-export type ViewStackPushEvent = {
-  view: UniqueId;
-};
+export type ViewStackPushEvent = Payload<
+  typeof ViewStackEventTypes.push,
+  { view: UniqueId }
+>;
+
+export type ViewStackEvent =
+  | ViewStackBackEvent
+  | ViewStackClearEvent
+  | ViewStackResetEvent
+  | ViewStackPushEvent;
 
 type SimpleEvents = 'back' | 'clear' | 'reset' | UniqueId;
 

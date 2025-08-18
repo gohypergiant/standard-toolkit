@@ -76,7 +76,7 @@ export function Input({ ref, ...props }: InputProps) {
     placeholder,
     readOnly,
     required,
-    size,
+    size = 'medium',
     type = InputStylesDefaults.type,
     value: valueProp,
     isClearable,

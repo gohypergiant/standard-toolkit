@@ -12,9 +12,8 @@
 'use client';
 
 import 'client-only';
-import { Broadcast, type Payload } from '@accelint/bus';
+import { Broadcast } from '@accelint/bus';
 import { type UniqueId, isUUID } from '@accelint/core';
-import { PressResponder } from '@react-aria/interactions';
 import {
   createContext,
   useCallback,
@@ -24,10 +23,12 @@ import {
   useState,
 } from 'react';
 import { Pressable } from 'react-aria-components';
+import { ViewStackEventTypes } from './events';
 import type {
   ViewStackBackEvent,
   ViewStackClearEvent,
   ViewStackContextValue,
+  ViewStackEvent,
   ViewStackProps,
   ViewStackPushEvent,
   ViewStackResetEvent,
@@ -35,9 +36,9 @@ import type {
   ViewStackViewProps,
 } from './types';
 
-const bus = Broadcast.getInstance();
-const ViewStackEventNamespace = 'ViewStack';
-const ViewStackContext = createContext<ViewStackContextValue>({
+const bus = Broadcast.getInstance<ViewStackEvent>();
+
+export const ViewStackContext = createContext<ViewStackContextValue>({
   parent: null,
   stack: [],
   view: null,
@@ -45,11 +46,11 @@ const ViewStackContext = createContext<ViewStackContextValue>({
   unregister: () => undefined,
 });
 
-export const ViewStackEventTypes = {
-  back: `${ViewStackEventNamespace}:back`,
-  clear: `${ViewStackEventNamespace}:clear`,
-  reset: `${ViewStackEventNamespace}:reset`,
-  push: `${ViewStackEventNamespace}:push`,
+export const ViewStackEventHandlers = {
+  back: (stack: UniqueId) => bus.emit(ViewStackEventTypes.back, { stack }),
+  clear: (stack: UniqueId) => bus.emit(ViewStackEventTypes.clear, { stack }),
+  push: (view: UniqueId) => bus.emit(ViewStackEventTypes.push, { view }),
+  reset: (stack: UniqueId) => bus.emit(ViewStackEventTypes.reset, { stack }),
 } as const;
 
 function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
@@ -57,33 +58,22 @@ function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
 
   function handlePress() {
     for (const type of Array.isArray(types) ? types : [types]) {
-      if (isUUID(type)) {
-        bus.emit<ViewStackPushEvent>(ViewStackEventTypes.push, {
-          view: type,
-        });
-      } else {
-        const [event, target] = type.split(':') as [
-          'back' | 'clear' | 'reset',
-          UniqueId | undefined,
-        ];
-        const stack = target ?? parent;
+      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
+        'back' | 'clear' | 'reset' | 'push',
+        UniqueId | undefined | null,
+      ];
 
-        if (stack) {
-          bus.emit<
-            ViewStackBackEvent | ViewStackClearEvent | ViewStackResetEvent
-          >(`${ViewStackEventNamespace}:${event}`, {
-            stack,
-          });
-        }
+      id ??= parent;
+
+      if (!id) {
+        continue;
       }
+
+      ViewStackEventHandlers[event](id);
     }
   }
 
-  return (
-    <PressResponder onPress={handlePress}>
-      <Pressable>{children}</Pressable>
-    </PressResponder>
-  );
+  return <Pressable onPress={handlePress}>{children}</Pressable>;
 }
 ViewStackTrigger.displayName = 'ViewStack.Trigger';
 
@@ -108,7 +98,12 @@ function ViewStackView({ id, children }: ViewStackViewProps) {
 }
 ViewStackView.displayName = 'ViewStack.View';
 
-export function ViewStack({ id, children, defaultView }: ViewStackProps) {
+export function ViewStack({
+  id,
+  children,
+  defaultView,
+  onChange,
+}: ViewStackProps) {
   if (!isUUID(id)) {
     throw new Error(`ViewStack's id must be a UniqueId`);
   }
@@ -120,57 +115,65 @@ export function ViewStack({ id, children, defaultView }: ViewStackProps) {
   const view = stack.at(-1) ?? null;
 
   const handleBack = useCallback(
-    (data: Payload<ViewStackBackEvent>) => {
+    (data: ViewStackBackEvent) => {
       if (id === data?.payload?.stack) {
-        setStack((prev) => {
-          if (prev.length <= 1) {
-            return defaultView ? [defaultView] : [];
-          }
+        const next = stack.slice(0, -1);
 
-          return prev.slice(0, -1);
-        });
+        if (!next.length && defaultView) {
+          next.push(defaultView);
+        }
+
+        setStack(next);
+        onChange?.(next.at(-1) ?? null);
       }
     },
-    [id, defaultView],
+    [id, defaultView, onChange, stack],
   );
 
   const handleClear = useCallback(
-    (data: Payload<ViewStackClearEvent>) => {
+    (data: ViewStackClearEvent) => {
       if (id === data?.payload?.stack) {
-        setStack(() => []);
+        setStack([]);
+        onChange?.(null);
       }
     },
-    [id],
+    [id, onChange],
+  );
+
+  const handlePush = useCallback(
+    (data: ViewStackPushEvent) => {
+      if (views.current.has(data?.payload?.view)) {
+        setStack((prev) => [...prev, data?.payload?.view]);
+        onChange?.(data?.payload?.view);
+      }
+    },
+    [onChange],
   );
 
   const handleReset = useCallback(
-    (data: Payload<ViewStackResetEvent>) => {
+    (data: ViewStackResetEvent) => {
       if (id === data?.payload?.stack) {
-        setStack(() => (defaultView ? [defaultView] : []));
+        setStack(defaultView ? [defaultView] : []);
+        onChange?.(defaultView ?? null);
       }
     },
-    [id, defaultView],
+    [id, defaultView, onChange],
   );
 
-  const handlePush = useCallback((data: Payload<ViewStackPushEvent>) => {
-    if (views.current.has(data?.payload?.view)) {
-      setStack((prev) => [...prev, data?.payload?.view]);
-    }
-  }, []);
-
   useEffect(() => {
-    bus.on(ViewStackEventTypes.back, handleBack);
-    bus.on(ViewStackEventTypes.clear, handleClear);
-    bus.on(ViewStackEventTypes.reset, handleReset);
-    bus.on(ViewStackEventTypes.push, handlePush);
+    const listeners = [
+      bus.on(ViewStackEventTypes.back, handleBack),
+      bus.on(ViewStackEventTypes.clear, handleClear),
+      bus.on(ViewStackEventTypes.push, handlePush),
+      bus.on(ViewStackEventTypes.reset, handleReset),
+    ];
 
     return () => {
-      bus.off(ViewStackEventTypes.back, handleBack);
-      bus.off(ViewStackEventTypes.clear, handleClear);
-      bus.off(ViewStackEventTypes.reset, handleReset);
-      bus.off(ViewStackEventTypes.push, handlePush);
+      for (const off of listeners) {
+        off();
+      }
     };
-  }, [handleBack, handleClear, handleReset, handlePush]);
+  }, [handleBack, handleClear, handlePush, handleReset]);
 
   return (
     <ViewStackContext.Provider

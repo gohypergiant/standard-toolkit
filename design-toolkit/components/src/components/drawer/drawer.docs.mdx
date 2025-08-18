@@ -1,0 +1,89 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as DrawerStories from './drawer.stories';
+
+<Meta of={DrawerStories}/>
+
+# Drawer
+
+The Drawer component provides a flexible, accessible UI pattern for displaying content in a panel that slides in from the edge of the viewport. It is commonly used for navigation, menus, or contextual panels. The Drawer is built on top of the ViewStack system, allowing for stacked views, programmatic triggers, and nested navigation.
+
+It is composed of the following components:
+
+- **Drawer** – root component that manages the drawer state and view stack
+- **Drawer.Layout** – container for layout structure, supports extending specific drawer's layout and drawer's push/overlay behavior
+- **Drawer.Menu** – navigation menu for switching between views
+- **Drawer.Menu.Item** – individual menu item, can trigger open/toggle for a drawer as well as show a specific view
+- **Drawer.Panel** – main panel container for drawer content
+- **Drawer.View** – content region for a specific view, mapped to a unique id
+- **Drawer.Header** – header region, typically for titles or actions
+- **Drawer.Header.Title** – heading element, supports semantic levels and styling
+- **Drawer.Content** – main content area within a view
+- **Drawer.Footer** – footer region for actions or supplementary info
+- **Drawer.Trigger** – programmatic trigger for drawer/view actions
+
+The Drawer enforces a predictable child structure: only one Drawer.Panel is allowed per Drawer, and Drawer.Menu is optional.
+
+## Example usage
+
+```
+const ids = {
+  drawer: uuid(),
+  a: uuid(),
+  b: uuid(),
+};
+
+<Drawer id={ids.drawer} defaultView={ids.a}>
+  <Drawer.Menu>
+    <Drawer.Menu.Item for={ids.a}>View A</Drawer.Menu.Item>
+    <Drawer.Menu.Item for={ids.b}>View B</Drawer.Menu.Item>
+  </Drawer.Menu>
+  <Drawer.Panel>
+    <Drawer.View id={ids.a}>
+      <Drawer.Header>
+        <Drawer.Header.Title level={2}>Title A</Drawer.Header.Title>
+      </Drawer.Header>
+      <Drawer.Content>
+        Content for View A
+      </Drawer.Content>
+      <Drawer.Footer>
+        Footer Actions
+      </Drawer.Footer>
+    </Drawer.View>
+    <Drawer.View id={ids.b}>
+      <Drawer.Header>
+        <Drawer.Header.Title level={2}>Title B</Drawer.Header.Title>
+      </Drawer.Header>
+      <Drawer.Content>
+        Content for View B
+      </Drawer.Content>
+      <Drawer.Footer>
+        Footer Actions
+      </Drawer.Footer>
+    </Drawer.View>
+  </Drawer.Panel>
+</Drawer>
+```
+
+<Canvas of={DrawerStories.StaticHeaderFooter} />
+
+## Drawer.View
+
+The Drawer.View is the content region that will be visible when that view's id is active. The view can be deeply nested and contain any content.
+
+## Drawer.Trigger
+
+Drawer.Trigger enables transitioning between views or controlling the drawer programmatically. The `for` prop dictates its behavior:
+
+- `'open'`, `'toggle'`, `'close'`: Control the drawer state
+- A `UniqueId`: Pushes the corresponding view onto the stack
+- `[any combination of the above]` (array): Each event is fired in sequence
+
+## Implementation Notes
+
+- Uses Tagged UUIDs for unique view identification
+- Events are managed via `@accelint/bus` for open/toggle/close actions
+- Integrates with ViewStack for stacked navigation and triggers
+- Accessible by default, with ARIA roles and keyboard support
+
+See [ViewStack documentation](?path=/docs/components-viewstack--playground) for details on how to use the ViewStack component.

@@ -1,5 +1,15 @@
 # @accelint/docs
 
+## 0.1.18
+
+### Patch Changes
+
+- Updated dependencies [cdd91b3]
+  - @accelint/core@0.4.0
+  - @accelint/design-system@0.11.4
+  - @accelint/predicates@0.3.4
+  - @accelint/geo@0.2.7
+
 ## 0.1.17
 
 ### Patch Changes

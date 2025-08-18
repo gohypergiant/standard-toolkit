@@ -2,4 +2,4 @@
 "@accelint/design-toolkit": patch
 ---
 
-Fixed Combobox styles
+Remove unnecessary global selectors

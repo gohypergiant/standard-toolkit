@@ -103,4 +103,15 @@ describe('Input', () => {
 
     expect(onChange).toHaveBeenCalledWith({ target: { value: '' } });
   });
+
+
+  it('should default size', () => {
+    const value = 'Foo';
+    const { container } = setup({ value });
+
+    expect(container.firstChild).toHaveAttribute(
+      'data-size',
+      'medium',
+    );
+  });
 });

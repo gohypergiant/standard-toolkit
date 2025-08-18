@@ -25,7 +25,6 @@ export const DrawerStyles = tv({
       '[--drawer-main-col-end:4]', //right overlay
       'data-[push~=right]:[--drawer-main-col-end:3]',
 
-      '[--drawer-size-closed:0]',
       '[--drawer-menu-size:40px]',
       '[--drawer-size-small:100px]',
       '[--drawer-size-medium:200px]',
@@ -49,65 +48,74 @@ export const DrawerStyles = tv({
       'bg-surface-default text-body-m',
       'relative z-5 flex h-full min-h-0 flex-col',
       'pointer-events-none [&>*]:pointer-events-auto',
-      'closed:[&>*:not(nav)]:hidden',
 
-      //top
+      //Base positioning
       'placement-top:col-start-2 placement-top:col-end-3 placement-top:row-start-1 placement-top:row-end-2',
-      'group-data-[extend~=top]/layout:placement-top:z-10',
-      'group-data-[extend~=top]/layout:placement-top:col-span-full',
-      'group-data-[extend=left]/layout:placement-top:col-end-4',
-      'group-data-[extend=right]/layout:placement-top:col-start-1',
-      'placement-top:closed:h-[var(--drawer-size-closed)]',
-      'placement-top:open:size-small:h-[var(--drawer-size-small)]',
-      'placement-top:open:size-medium:h-[var(--drawer-size-medium)]',
-      'placement-top:open:size-large:h-[var(--drawer-size-large)]',
-
-      //bottom
       'placement-bottom:col-start-2 placement-bottom:col-end-3 placement-bottom:row-start-3 placement-bottom:row-end-4',
-      'group-data-[extend=bottom]/layout:placement-bottom:z-10',
-      'group-data-[extend~=bottom]/layout:placement-bottom:col-span-full',
-      'group-data-[extend=left]/layout:placement-bottom:col-end-4',
-      'group-data-[extend=right]/layout:placement-bottom:col-start-1',
-      'placement-bottom:closed:h-[var(--drawer-size-closed)]',
-      'placement-bottom:open:size-small:h-[var(--drawer-size-small)]',
-      'placement-bottom:open:size-medium:h-[var(--drawer-size-medium)]',
-      'placement-bottom:open:size-large:h-[var(--drawer-size-large)]',
-
-      //left
       'placement-left:col-start-1 placement-left:col-end-2 placement-left:row-start-2 placement-left:row-end-3',
-      'group-data-[extend=left]/layout:placement-left:z-10',
-      'group-data-[extend=right]/layout:placement-left:z-1',
-      'placement-left:closed:w-[var(--drawer-size-closed)]',
-      'placement-left:open:size-small:w-[var(--drawer-size-small)]',
-      'placement-left:open:size-medium:w-[var(--drawer-size-medium)]',
-      'placement-left:open:size-large:w-[var(--drawer-size-large)]',
-      'group-data-[extend~=left]/layout:placement-left:row-span-full',
-      'group-data-[extend=top]/layout:placement-left:row-end-4',
-      'group-data-[extend=bottom]/layout:placement-left:row-start-1',
-
-      //right
       'placement-right:col-start-3 placement-right:col-end-4 placement-right:row-start-2 placement-right:row-end-3',
-      'group-data-[extend=right]/layout:placement-right:z-10',
-      'group-data-[extend=left]/layout:placement-right:z-1',
+
+      //Extend positioning
+      'group-data-[extend~=top]/layout:placement-top:col-span-full',
+      'group-data-[extend~=bottom]/layout:placement-bottom:col-span-full',
+      'group-data-[extend~=left]/layout:placement-left:row-span-full',
       'group-data-[extend~=right]/layout:placement-right:row-span-full',
-      'group-data-[extend=top]/layout:placement-right:row-end-4',
-      'group-data-[extend=bottom]/layout:placement-right:row-start-1',
-      'placement-right:closed:w-[var(--drawer-size-closed)]',
-      'placement-right:open:size-small:w-[var(--drawer-size-small)]',
-      'placement-right:open:size-medium:w-[var(--drawer-size-medium)]',
-      'placement-right:open:size-large:w-[var(--drawer-size-large)]',
-    ],
-    content: [
-      'hidden h-full min-h-0 flex-col gap-s p-l group-open/drawer:flex',
+
+      //Extend fitment
+      'group-data-[extend=top]/layout:placement-left:row-end-4 group-data-[extend=top]/layout:placement-right:row-end-4',
+      'group-data-[extend=bottom]/layout:placement-left:row-start-1 group-data-[extend=bottom]/layout:placement-right:row-start-1',
+      'group-data-[extend=left]/layout:placement-bottom:col-end-4 group-data-[extend=left]/layout:placement-top:col-end-4',
+      'group-data-[extend=right]/layout:placement-bottom:col-start-1 group-data-[extend=right]/layout:placement-top:col-start-1',
     ],
     panel: [
+      'hidden h-full min-h-0 flex-col gap-s p-l',
+      'group-open/drawer:flex',
+      'group-placement-left/drawer:group-size-large/drawer:w-[var(--drawer-size-large)] group-placement-left/drawer:group-size-medium/drawer:w-[var(--drawer-size-medium)] group-placement-left/drawer:group-size-small/drawer:w-[var(--drawer-size-small)]',
+      'group-placement-right/drawer:group-size-large/drawer:w-[var(--drawer-size-large)] group-placement-right/drawer:group-size-medium/drawer:w-[var(--drawer-size-medium)] group-placement-right/drawer:group-size-small/drawer:w-[var(--drawer-size-small)]',
+      'group-placement-top/drawer:group-size-large/drawer:h-[var(--drawer-size-large)] group-placement-top/drawer:group-size-medium/drawer:h-[var(--drawer-size-medium)] group-placement-top/drawer:group-size-small/drawer:h-[var(--drawer-size-small)]',
+      'group-placement-bottom/drawer:group-size-large/drawer:h-[var(--drawer-size-large)] group-placement-bottom/drawer:group-size-medium/drawer:h-[var(--drawer-size-medium)] group-placement-bottom/drawer:group-size-small/drawer:h-[var(--drawer-size-small)]',
+    ],
+    view: 'flex h-full flex-col',
+    content: [
       'flex max-h-full flex-1 flex-col overflow-y-auto text-default-light',
     ],
     header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],
-    title: 'w-full text-default-light text-header-l',
     footer: 'mt-s flex flex-row items-center justify-end text-default-light',
   },
 });
+
+export const DrawerTitleStylesDefaults = {
+  level: 2,
+} as const;
+
+export const DrawerTitleStyles = tv({
+  base: 'w-full text-default-light',
+  variants: {
+    level: {
+      [1]: '',
+      [2]: '',
+      [3]: '',
+      [4]: '',
+      [5]: '',
+      [6]: '',
+    },
+  },
+  compoundVariants: [
+    {
+      level: [1, 2, 3],
+      className: 'text-header-l',
+    },
+    {
+      level: [4, 5, 6],
+      className: 'text-header-m',
+    },
+  ],
+  defaultVariants: DrawerTitleStylesDefaults,
+});
+
+export const DrawerMenuStylesDefaults = {
+  position: 'center',
+} as const;
 
 export const DrawerMenuStyles = tv({
   slots: {
@@ -120,7 +128,6 @@ export const DrawerMenuStyles = tv({
       'group-placement-bottom/drawer:-translate-y-[var(--drawer-menu-size)] group-placement-bottom/drawer:rounded-b-none',
       'group-placement-top/drawer:bottom-0 group-placement-top/drawer:translate-y-[var(--drawer-menu-size)] group-placement-top/drawer:rounded-t-none',
       //vertical
-      'group-placement-right/drawer:-translate-y-1/8 group-placement-right/drawer:top-1/8',
       'group-placement-left/drawer:left-full group-placement-left/drawer:rounded-l-none',
       'group-placement-left/drawer:w-[var(--drawer-menu-size)] group-placement-left/drawer:flex-col group-placement-left/drawer:items-center',
       'group-placement-right/drawer:-left-[var(--drawer-menu-size)] group-placement-right/drawer:rounded-r-none',
@@ -128,18 +135,16 @@ export const DrawerMenuStyles = tv({
     ],
     item: [
       'flex flex-col items-center justify-center',
-      'fg-default-dark cursor-pointer p-s outline-none',
-      'rounded-medium group-dtk-orientation-horizontal:rounded-small group-dtk-orientation-horizontal:rounded-b-none',
-      'group-dtk-orientation-horizontal:border-static-light group-dtk-orientation-horizontal:border-b',
-      'group-dtk-orientation-vertical:border group-dtk-orientation-vertical:border-transparent',
+      'fg-default-dark !p-xs cursor-pointer outline-none',
+      'rounded-medium',
       //hover
-      'hover:fg-default-light hover:!bg-transparent hover:group-dtk-orientation-horizontal:border-interactive-hover',
+      'hover:fg-default-light hover:!bg-transparent',
       //selected
-      'selected:fg-highlight selected:bg-highlight-subtle selected:group-dtk-orientation-horizontal:border-highlight',
+      'selected:fg-highlight selected:bg-highlight-subtle',
       //focused
-      'focus-visible:fg-default-light focus-visible:group-dtk-orientation-horizontal:border-interactive-hover',
+      'focus:fg-default-light',
       //disabled
-      'disabled:fg-disabled disabled:cursor-not-allowed disabled:group-dtk-orientation-horizontal:border-interactive-disabled',
+      'disabled:fg-disabled disabled:cursor-not-allowed',
     ],
   },
   variants: {
@@ -152,7 +157,7 @@ export const DrawerMenuStyles = tv({
           'group-placement-bottom/drawer:left-1/8 group-placement-bottom/drawer:translate-x-1/4',
         ],
       },
-      middle: {
+      center: {
         menu: [
           'group-placement-left/drawer:-translate-y-1/2 group-placement-left/drawer:top-1/2',
           'group-placement-right/drawer:-translate-y-1/2 group-placement-right/drawer:top-1/2',
@@ -170,4 +175,5 @@ export const DrawerMenuStyles = tv({
       },
     },
   },
+  defaultVariants: DrawerMenuStylesDefaults,
 });

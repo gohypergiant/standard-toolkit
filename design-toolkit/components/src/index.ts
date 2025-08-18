@@ -133,35 +133,32 @@ export type {
 export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export {
-  useDrawerContext,
-  useDrawersContext,
-  useDrawersState,
-} from './components/drawer/context';
-export { Drawer } from './components/drawer';
+  Drawer,
+  DrawerContext,
+  DrawerEventHandlers,
+} from './components/drawer';
 export {
-  createDefaultDrawerState,
-  drawerStateReducer,
-} from './components/drawer/state';
-export type { DrawerAction } from './components/drawer/state';
-export { DrawerMenuStyles, DrawerStyles } from './components/drawer/styles';
-export { DrawerDefaults } from './components/drawer/types';
+  DrawerMenuStyles,
+  DrawerMenuStylesDefaults,
+  DrawerStyles,
+  DrawerTitleStyles,
+  DrawerTitleStylesDefaults,
+} from './components/drawer/styles';
+export {
+  DrawerEventNamespace,
+  DrawerEventTypes,
+} from './components/drawer/events';
 export type {
-  DrawerContainerProps,
   DrawerContextValue,
+  DrawerEvent,
   DrawerLayoutProps,
-  DrawerLayoutPush,
-  DrawerLayouts,
   DrawerMenuItemProps,
   DrawerMenuProps,
-  DrawerPanelProps,
-  DrawerPlacement,
+  DrawerOpenEvent,
   DrawerProps,
-  DrawerProviderProps,
-  DrawerSize,
-  DrawerState,
+  DrawerTitleProps,
+  DrawerToggleEvent,
   DrawerTriggerProps,
-  DrawersContextValue,
-  OnOpenChangeCallback,
 } from './components/drawer/types';
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
@@ -292,11 +289,20 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
-export { ViewStack, ViewStackEventTypes } from './components/view-stack';
+export {
+  ViewStackEventNamespace,
+  ViewStackEventTypes,
+} from './components/view-stack/events';
+export {
+  ViewStack,
+  ViewStackContext,
+  ViewStackEventHandlers,
+} from './components/view-stack';
 export type {
   ViewStackBackEvent,
   ViewStackClearEvent,
   ViewStackContextValue,
+  ViewStackEvent,
   ViewStackProps,
   ViewStackPushEvent,
   ViewStackResetEvent,
@@ -305,6 +311,8 @@ export type {
 } from './components/view-stack/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
+  AriaAttributes,
+  AriaAttributesWithRef,
   ChildrenRenderProps,
   ClassNameRenderProps,
   ProviderProps,

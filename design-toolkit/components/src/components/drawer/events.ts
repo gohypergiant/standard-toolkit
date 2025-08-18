@@ -10,21 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-/** Broadcast configuration type. */
-export type BroadcastConfig = {
-  channelName: string;
-  debug?: boolean;
-};
+export const DrawerEventNamespace = 'Drawer';
 
-/** Listener object type. */
-export type Listener<P extends Payload = Payload> = {
-  callback: (data: P) => void;
-  once?: boolean;
-  id: number;
-};
-
-/** Listener callback payload type. */
-export type Payload<T extends string = string, P = unknown> = {
-  type: T;
-  payload: P;
-};
+export const DrawerEventTypes = {
+  close: `${DrawerEventNamespace}:close`,
+  open: `${DrawerEventNamespace}:open`,
+  toggle: `${DrawerEventNamespace}:toggle`,
+} as const;

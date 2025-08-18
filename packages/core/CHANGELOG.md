@@ -1,5 +1,11 @@
 # @accelint/core
 
+## 0.4.0
+
+### Minor Changes
+
+- cdd91b3: Change `compose` and `pipe` to accept a n-ary function in the last/first position, respectively
+
 ## 0.3.0
 
 ### Minor Changes
