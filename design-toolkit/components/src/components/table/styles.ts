@@ -104,3 +104,35 @@ export const rowStyles = tv({
 export const tableBodyStyles = tv({
   base: ['group/tbody'],
 });
+
+export const TableStyles = tv({
+  slots: {
+    base: 'group/table',
+    headerCellButton: 'flex items-center justify-between gap-xxs group',
+    pinIcon: 'mx-auto block',
+    rowCell: '',
+    rowKebab: '',
+    headerKebab: '',
+  },
+  variants: {
+    persistNums: {
+      true: {
+        rowCell: 'mx-auto block text-center',
+      },
+      false: {
+        rowCell:
+          'invisible group-hover/table:mx-auto group-hover/table:block group-hover/table:text-center',
+      },
+    },
+    persistKebab: {
+      true: {
+        rowKebab: '',
+        headerKebab: '',
+      },
+      false: {
+        rowKebab: 'opacity-0 hover:opacity-100',
+        headerKebab: 'opacity-0 group-hover:opacity-100',
+      },
+    },
+  },
+});

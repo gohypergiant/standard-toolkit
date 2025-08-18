@@ -31,6 +31,7 @@ import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { TableStyles } from './styles';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
@@ -41,6 +42,9 @@ import {
   RowKebabMenuItems,
   type TableProps,
 } from './types';
+
+const { headerCellButton, pinIcon, rowCell, rowKebab, headerKebab } =
+  TableStyles();
 
 const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
   <TableCell
@@ -159,9 +163,9 @@ export function Table<T extends { id: string | number }>({
         return (
           <>
             <div
-              className={
-                persistRowKebabMenu ? '' : 'opacity-0 hover:opacity-100'
-              }
+              className={rowKebab({
+                persistKebab: persistRowKebabMenu,
+              })}
             >
               <Menu.Trigger>
                 <Button variant='icon' aria-label='Menu'>
@@ -250,16 +254,13 @@ export function Table<T extends { id: string | number }>({
         id: 'numeral',
         cell: ({ row }) =>
           row.getIsPinned() ? (
-            <Icon size='small' className='mx-auto block'>
+            <Icon size='small' className={pinIcon()}>
               <Pin />
             </Icon>
           ) : (
             <span
-              className={
-                persistNumerals
-                  ? 'mx-auto block text-center'
-                  : 'invisible hover:mx-auto hover:block hover:text-center'
-              }
+              className={rowCell({ persistNums: persistNumerals })}
+              data-testid='numeral'
             >
               {row.index + 1}
             </span>
@@ -366,19 +367,12 @@ export function Table<T extends { id: string | number }>({
                     }
                     style={{ width: header.getSize() }}
                   >
-                    <div className='flex items-center justify-between gap-xxs group'>
+                    <div className={headerCellButton()}>
                       <button>
                         {header.isPlaceholder ||
                         header.column.id === 'kebab' ? null : (
                           <button
                             type='button'
-                            style={{
-                              background: 'none',
-                              border: 'none',
-                              display: 'flex',
-                              alignItems: 'center',
-                              padding: 0,
-                            }}
                             disabled={!header.column.getCanSort()}
                             aria-label={
                               header.column.getIsSorted()
@@ -416,11 +410,9 @@ export function Table<T extends { id: string | number }>({
                                 </div>
                               ) : (
                                 <div
-                                  className={
-                                    persistHeaderKebabMenu
-                                      ? ''
-                                      : 'opacity-0 group-hover:opacity-100'
-                                  }
+                                  className={headerKebab({
+                                    persistKebab: persistHeaderKebabMenu,
+                                  })}
                                 >
                                   <Kebab />
                                 </div>
