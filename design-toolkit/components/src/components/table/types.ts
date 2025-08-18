@@ -186,16 +186,16 @@ export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
   RefAttributes<HTMLTableSectionElement>;
 
 export enum RowKebabMenuItems {
-  PIN = 'Pin',
-  MOVE_UP = 'Move Up',
-  MOVE_DOWN = 'Move Down',
-  UNPIN = 'Unpin',
+  Pin = 'Pin',
+  MoveUp = 'Move Up',
+  MoveDown = 'Move Down',
+  Unpin = 'Unpin',
 }
 
 export enum ColumnKebabMenuItems {
-  LEFT = 'Move Column Left',
-  RIGHT = 'Move Column Right',
-  ASC = 'Sort Ascending',
-  DESC = 'Sort Descending',
-  CLEAR = 'Clear Sort',
+  Left = 'Move Column Left',
+  Right = 'Move Column Right',
+  Asc = 'Sort Ascending',
+  Desc = 'Sort Descending',
+  Clear = 'Clear Sort',
 }

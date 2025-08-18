@@ -89,7 +89,6 @@ export function Table<T extends { id: string | number }>({
     [data],
   );
 
-  const [activeRow, setActiveRow] = useState<string | number | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
@@ -178,18 +177,18 @@ export function Table<T extends { id: string | number }>({
                   >
                     <Menu.Item.Label>
                       {isPinned
-                        ? RowKebabMenuItems.UNPIN
-                        : RowKebabMenuItems.PIN}
+                        ? RowKebabMenuItems.Unpin
+                        : RowKebabMenuItems.Pin}
                     </Menu.Item.Label>
                   </Menu.Item>
                   <Menu.Item onAction={moveUpSelectedRows}>
                     <Menu.Item.Label>
-                      {RowKebabMenuItems.MOVE_UP}
+                      {RowKebabMenuItems.MoveUp}
                     </Menu.Item.Label>
                   </Menu.Item>
                   <Menu.Item onAction={moveDownSelectedRows}>
                     <Menu.Item.Label>
-                      {RowKebabMenuItems.MOVE_DOWN}
+                      {RowKebabMenuItems.MoveDown}
                     </Menu.Item.Label>
                   </Menu.Item>
                 </Menu>
@@ -205,7 +204,6 @@ export function Table<T extends { id: string | number }>({
       moveAfter,
       moveUpSelectedRows,
       moveDownSelectedRows,
-      activeRow,
       persistRowKebabMenu,
     ],
   );
@@ -439,7 +437,7 @@ export function Table<T extends { id: string | number }>({
                               )}
                             >
                               <Menu.Item.Label>
-                                {ColumnKebabMenuItems.LEFT}
+                                {ColumnKebabMenuItems.Left}
                               </Menu.Item.Label>
                             </Menu.Item>
                             <Menu.Item
@@ -451,7 +449,7 @@ export function Table<T extends { id: string | number }>({
                               )}
                             >
                               <Menu.Item.Label>
-                                {ColumnKebabMenuItems.RIGHT}
+                                {ColumnKebabMenuItems.Right}
                               </Menu.Item.Label>
                             </Menu.Item>
                             <Menu.Separator />
@@ -462,7 +460,7 @@ export function Table<T extends { id: string | number }>({
                               isDisabled={header.column.getIsSorted() === 'asc'}
                             >
                               <Menu.Item.Label>
-                                {ColumnKebabMenuItems.ASC}
+                                {ColumnKebabMenuItems.Asc}
                               </Menu.Item.Label>
                             </Menu.Item>
                             <Menu.Item
@@ -474,7 +472,7 @@ export function Table<T extends { id: string | number }>({
                               }
                             >
                               <Menu.Item.Label>
-                                {ColumnKebabMenuItems.DESC}
+                                {ColumnKebabMenuItems.Desc}
                               </Menu.Item.Label>
                             </Menu.Item>
                             <Menu.Item
@@ -484,7 +482,7 @@ export function Table<T extends { id: string | number }>({
                               isDisabled={!header.column.getIsSorted()}
                             >
                               <Menu.Item.Label>
-                                {ColumnKebabMenuItems.CLEAR}
+                                {ColumnKebabMenuItems.Clear}
                               </Menu.Item.Label>
                             </Menu.Item>
                           </Menu>
@@ -502,7 +500,6 @@ export function Table<T extends { id: string | number }>({
               <TableRow
                 key={row.id}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                data-active={activeRow === row.id}
                 data-pinned={row.getIsPinned()}
               >
                 {row.getVisibleCells().map((cell) =>
@@ -517,7 +514,6 @@ export function Table<T extends { id: string | number }>({
               <TableRow
                 key={row.id}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                data-active={activeRow === row.id}
                 data-pinned={row.getIsPinned()}
               >
                 {row
@@ -538,15 +534,16 @@ export function Table<T extends { id: string | number }>({
               <TableRow
                 key={row.id}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                data-active={activeRow === row.id}
                 data-pinned={row.getIsPinned()}
               >
-                {row.getVisibleCells().map((cell) =>
-                  dataTableCell(
-                    cell,
-                    cell.column.id === 'kebab' ? persistRowKebabMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown
-                  ),
-                )}
+                {row
+                  .getVisibleCells()
+                  .map((cell) =>
+                    dataTableCell(
+                      cell,
+                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
+                    ),
+                  )}
               </TableRow>
             ))}
           </TableBody>
