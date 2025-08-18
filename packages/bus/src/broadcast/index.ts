@@ -11,7 +11,7 @@
  */
 
 import { DEFAULT_CONFIG } from './constants';
-import type { BroadcastConfig, Listener, Payload } from './types';
+import type { BroadcastConfig, ExtractEvent, Listener, Payload } from './types';
 
 /** Broadcast event class allows for emitting and listening for events */
 export class Broadcast<P extends Payload = Payload> {
@@ -131,11 +131,7 @@ export class Broadcast<P extends Payload = Payload> {
    */
   on<T extends P['type']>(
     type: T,
-    callback: (
-      data: {
-        [K in P['type']]: Extract<P, { type: K }>;
-      }[T],
-    ) => void,
+    callback: (data: ExtractEvent<P, T>) => void,
   ) {
     const id = this.listenerCounter++;
 
@@ -153,11 +149,7 @@ export class Broadcast<P extends Payload = Payload> {
    */
   once<T extends P['type']>(
     type: T,
-    callback: (
-      data: {
-        [K in P['type']]: Extract<P, { type: K }>;
-      }[T],
-    ) => void,
+    callback: (data: ExtractEvent<P, T>) => void,
   ) {
     const id = this.listenerCounter++;
 
@@ -174,11 +166,7 @@ export class Broadcast<P extends Payload = Payload> {
    */
   off<T extends P['type']>(
     type: T,
-    callback: (
-      data: {
-        [K in P['type']]: Extract<P, { type: K }>;
-      }[T],
-    ) => void,
+    callback: (data: ExtractEvent<P, T>) => void,
   ) {
     if (this.listeners[type]) {
       this.listeners[type] = this.listeners[type].filter(
@@ -205,12 +193,7 @@ export class Broadcast<P extends Payload = Payload> {
    *   },
    * );
    */
-  emit<T extends P['type']>(
-    type: T,
-    payload: {
-      [K in P['type']]: Extract<P, { type: K }>;
-    }[T]['payload'],
-  ) {
+  emit<T extends P['type']>(type: T, payload: ExtractEvent<P, T>['payload']) {
     if (!this.channel) {
       console.warn('Cannot emit: BroadcastChannel is not initialized.');
       return;
