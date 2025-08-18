@@ -444,39 +444,45 @@ export function Table<T extends { id: string | number }>({
                                 {ColumnKebabMenuItems.Right}
                               </Menu.Item.Label>
                             </Menu.Item>
-                            <Menu.Separator />
-                            <Menu.Item
-                              onAction={() => {
-                                header.column.toggleSorting(false);
-                              }}
-                              isDisabled={header.column.getIsSorted() === 'asc'}
-                            >
-                              <Menu.Item.Label>
-                                {ColumnKebabMenuItems.Asc}
-                              </Menu.Item.Label>
-                            </Menu.Item>
-                            <Menu.Item
-                              onAction={() => {
-                                header.column.toggleSorting(true);
-                              }}
-                              isDisabled={
-                                header.column.getIsSorted() === 'desc'
-                              }
-                            >
-                              <Menu.Item.Label>
-                                {ColumnKebabMenuItems.Desc}
-                              </Menu.Item.Label>
-                            </Menu.Item>
-                            <Menu.Item
-                              onAction={() => {
-                                header.column.clearSorting();
-                              }}
-                              isDisabled={!header.column.getIsSorted()}
-                            >
-                              <Menu.Item.Label>
-                                {ColumnKebabMenuItems.Clear}
-                              </Menu.Item.Label>
-                            </Menu.Item>
+                            {enableSorting && (
+                              <>
+                                <Menu.Separator />
+                                <Menu.Item
+                                  onAction={() => {
+                                    header.column.toggleSorting(false);
+                                  }}
+                                  isDisabled={
+                                    header.column.getIsSorted() === 'asc'
+                                  }
+                                >
+                                  <Menu.Item.Label>
+                                    {ColumnKebabMenuItems.Asc}
+                                  </Menu.Item.Label>
+                                </Menu.Item>
+                                <Menu.Item
+                                  onAction={() => {
+                                    header.column.toggleSorting(true);
+                                  }}
+                                  isDisabled={
+                                    header.column.getIsSorted() === 'desc'
+                                  }
+                                >
+                                  <Menu.Item.Label>
+                                    {ColumnKebabMenuItems.Desc}
+                                  </Menu.Item.Label>
+                                </Menu.Item>
+                                <Menu.Item
+                                  onAction={() => {
+                                    header.column.clearSorting();
+                                  }}
+                                  isDisabled={!header.column.getIsSorted()}
+                                >
+                                  <Menu.Item.Label>
+                                    {ColumnKebabMenuItems.Clear}
+                                  </Menu.Item.Label>
+                                </Menu.Item>
+                              </>
+                            )}
                           </Menu>
                         </Menu.Trigger>
                       )}

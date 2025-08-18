@@ -108,7 +108,7 @@ export const tableBodyStyles = tv({
 export const TableStyles = tv({
   slots: {
     base: 'group/table',
-    headerCellButton: 'flex items-center justify-between gap-xxs',
+    headerCellButton: 'group flex items-center justify-between gap-xxs',
     pinIcon: 'mx-auto block',
     rowCell: '',
     rowKebab: '',
