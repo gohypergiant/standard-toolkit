@@ -18,16 +18,16 @@ import type { GatherSpritesResult, GenerateSpritesResult } from './types.js';
 const execProm = util.promisify(exec);
 
 export async function generateSprites(
-  input: GatherSpritesResult,
+  gatherResult: GatherSpritesResult,
   cmd: string,
   output: string,
 ): Promise<GenerateSpritesResult> {
-  if (input.isErr) {
-    return Result.err(input.error);
+  if (gatherResult.isErr) {
+    return Result.err(gatherResult.error);
   }
 
   try {
-    const { tmp } = input.unwrapOr({ tmp: '' });
+    const { tmp } = gatherResult.unwrapOr({ tmp: '' });
 
     await execProm(
       `${cmd} --minify-index-file --retina --recursive --unique ${tmp} ${output}`,
@@ -36,11 +36,11 @@ export async function generateSprites(
     const json = `${output}.json`;
     const png = `${output}.png`;
 
-    const { sprites } = input.unwrapOr({ tmp: '', sprites: [] });
+    const { sprites } = gatherResult.unwrapOr({ tmp: '', sprites: [] });
 
     return Result.ok({ tmp, json, png, sprites });
   } catch (err) {
-    const { tmp } = input.unwrapOr({ tmp: '' });
+    const { tmp } = gatherResult.unwrapOr({ tmp: '' });
 
     return Result.err({ msg: (err as Error).message.trim(), tmp });
   }
