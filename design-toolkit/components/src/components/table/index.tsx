@@ -356,7 +356,7 @@ export function Table<T extends { id: string | number }>({
         <table {...props}>
           <TableHeader>
             {getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} data-top>
                 {/* biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation> */}
                 {headerGroup.headers.map((header) => (
                   <HeaderCell
@@ -493,7 +493,6 @@ export function Table<T extends { id: string | number }>({
             ))}
           </TableHeader>
           <TableBody>
-            {/* Top Rows */}
             {getTopRows().map((row) => (
               <TableRow
                 key={row.id}

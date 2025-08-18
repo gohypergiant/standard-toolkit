@@ -73,6 +73,7 @@ export const TableHeaderCellStylesDefaults = {
 export const headerCellStyles = tv({
   base: [
     'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
+    'active:bg-highlight-subtle',
   ],
   variants: {
     narrow: {
@@ -89,7 +90,7 @@ export const rowStyles = tv({
   base: [
     'group/row',
     'border-transparent group-not-selected/tbody:border-1',
-    'active:bg-highlight-subtle',
+    '[&:not([data-top])]:active:bg-highlight-subtle',
     'selected:bg-highlight-subtle',
     'selected:border-x-highlight-bold',
     /** Ensure border is applied to first and last selected rows */
