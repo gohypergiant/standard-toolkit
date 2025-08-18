@@ -13,21 +13,21 @@
 import { exec } from 'node:child_process';
 import util from 'node:util';
 import { Result } from 'true-myth';
-import type { GatherResult, GenerateResult } from './types.js';
+import type { GatherSpritesResult, GenerateSpritesResult } from './types.js';
 
 const execProm = util.promisify(exec);
 
 export async function generateSprites(
-  gatherResult: GatherResult,
+  input: GatherSpritesResult,
   cmd: string,
   output: string,
-): Promise<GenerateResult> {
-  if (gatherResult.isErr) {
-    return Result.err(gatherResult.error);
+): Promise<GenerateSpritesResult> {
+  if (input.isErr) {
+    return Result.err(input.error);
   }
 
   try {
-    const { tmp } = gatherResult.unwrapOr({ tmp: '' });
+    const { tmp } = input.unwrapOr({ tmp: '' });
 
     await execProm(
       `${cmd} --minify-index-file --retina --recursive --unique ${tmp} ${output}`,
@@ -36,9 +36,11 @@ export async function generateSprites(
     const json = `${output}.json`;
     const png = `${output}.png`;
 
-    return Result.ok({ tmp, json, png });
+    const { sprites } = input.unwrapOr({ tmp: '', sprites: [] });
+
+    return Result.ok({ tmp, json, png, sprites });
   } catch (err) {
-    const { tmp } = gatherResult.unwrapOr({ tmp: '' });
+    const { tmp } = input.unwrapOr({ tmp: '' });
 
     return Result.err({ msg: (err as Error).message.trim(), tmp });
   }
