@@ -10,9 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import fs from 'node:fs';
+import fs, { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { argv, chalk, spinner } from 'zx';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,12 +27,7 @@ const APPLIED_PROPERTY_MAP = {
   outline: ['outline-color'],
   shadow: ['box-shadow'],
 };
-
 const skipFallback = ['icon-size', 'shadow-elevation', 'font'];
-
-// Import the token generator using dynamic import with tsx
-import { readFileSync } from 'node:fs';
-import { argv } from 'zx';
 
 function parse(file) {
   const tokensPath = path.join(INPUT_DIR, file);
@@ -58,58 +54,6 @@ function flattenTokens(obj, prefix = '') {
     }
   }
   return result;
-}
-
-function toCamelCase(str) {
-  // Remove all non-alphanumeric characters and convert to camelCase
-  return str
-    .replace(/[-_]+(.)?/g, (_, chr) => (chr ? chr.toUpperCase() : ''))
-    .replace(/^(\d)/, '_$1'); // prefix leading digit with underscore
-}
-
-function extractVarReference(value) {
-  // Check if the value is a string
-  if (typeof value !== 'string') {
-    return null;
-  }
-
-  // Check if the value is a var(--...) reference
-  const varMatch = value.match(/^var\(--([a-zA-Z0-9-_]+)\)$/);
-
-  // Return the matched variable name or null if not found
-  return varMatch ? varMatch[1] : null;
-}
-
-function resolveReferences(flattened) {
-  // Recursively resolve var(--...) references to their concrete values
-  const resolved = {};
-  const resolving = {};
-  function resolveValue(key) {
-    if (resolved[key] !== undefined) {
-      return resolved[key];
-    }
-    if (resolving[key]) {
-      throw new Error(`Circular reference detected for token: ${key}`);
-    }
-    resolving[key] = true;
-    const value = flattened[key];
-    const refKey = extractVarReference(value);
-    if (refKey) {
-      if (refKey in flattened) {
-        resolved[key] = resolveValue(refKey);
-      } else {
-        resolved[key] = value; // fallback to original if not found
-      }
-    } else {
-      resolved[key] = value;
-    }
-    resolving[key] = false;
-    return resolved[key];
-  }
-  for (const key of Object.keys(flattened)) {
-    resolveValue(key);
-  }
-  return resolved;
 }
 
 function hexToRgbaTuple(hex) {
@@ -209,10 +153,9 @@ function generateTS(tokens, lookup) {
       if (obj.endsWith('px')) {
         // Emit pixel values as numbers
         return Number.parseFloat(obj.replace('px', ''));
-      } else {
-        const raw = lookup[obj.replace('--', '')];
-        return obj.startsWith('--') ? convert(raw) : obj;
       }
+      const raw = lookup[obj.replace('--', '')];
+      return obj.startsWith('--') ? convert(raw) : obj;
     }
 
     if (obj !== null && typeof obj === 'object') {
@@ -299,13 +242,16 @@ function generateThemesCSS(tokens, semantic) {
     ...dynamicThemeBlocks,
   ].join('\n\n');
 }
+
 function getTokenNames(semantic) {
   function walk(obj, prefix) {
     let names = [];
     for (const [key, value] of Object.entries(obj)) {
-      typeof value === 'string'
-        ? names.push(key === 'base' ? prefix : `${prefix}-${key}`)
-        : (names = names.concat(walk(value, `${prefix}-${key}`)));
+      if (typeof value === 'string') {
+        names.push(key === 'base' ? prefix : `${prefix}-${key}`);
+      } else {
+        names = names.concat(walk(value, `${prefix}-${key}`));
+      }
     }
     return names;
   }
