@@ -43,7 +43,7 @@ import {
   type TableProps,
 } from './types';
 
-const { headerCellButton, pinIcon, rowCell, rowKebab, headerKebab } =
+const { headerCellButton, pinIcon, rowCell, rowKebab, headerKebab, menuItem } =
   TableStyles();
 
 const dataTableCell = <T,>(cell: Cell<T, unknown>, persistent: boolean) => (
@@ -175,6 +175,7 @@ export function Table<T extends { id: string | number }>({
                 </Button>
                 <Menu>
                   <Menu.Item
+                    classNames={{ item: menuItem() }}
                     onAction={() => {
                       row.pin(isPinned ? false : 'top');
                     }}
@@ -185,12 +186,18 @@ export function Table<T extends { id: string | number }>({
                         : RowKebabMenuItems.Pin}
                     </Menu.Item.Label>
                   </Menu.Item>
-                  <Menu.Item onAction={moveUpSelectedRows}>
+                  <Menu.Item
+                    classNames={{ item: menuItem() }}
+                    onAction={moveUpSelectedRows}
+                  >
                     <Menu.Item.Label>
                       {RowKebabMenuItems.MoveUp}
                     </Menu.Item.Label>
                   </Menu.Item>
-                  <Menu.Item onAction={moveDownSelectedRows}>
+                  <Menu.Item
+                    classNames={{ item: menuItem() }}
+                    onAction={moveDownSelectedRows}
+                  >
                     <Menu.Item.Label>
                       {RowKebabMenuItems.MoveDown}
                     </Menu.Item.Label>
@@ -421,6 +428,7 @@ export function Table<T extends { id: string | number }>({
                           </Button>
                           <Menu>
                             <Menu.Item
+                              classNames={{ item: menuItem() }}
                               onAction={() => {
                                 moveColumnLeft(header.column.getIndex());
                               }}
@@ -433,6 +441,7 @@ export function Table<T extends { id: string | number }>({
                               </Menu.Item.Label>
                             </Menu.Item>
                             <Menu.Item
+                              classNames={{ item: menuItem() }}
                               onAction={() => {
                                 moveColumnRight(header.column.getIndex());
                               }}
@@ -448,6 +457,7 @@ export function Table<T extends { id: string | number }>({
                               <>
                                 <Menu.Separator />
                                 <Menu.Item
+                                  classNames={{ item: menuItem() }}
                                   onAction={() => {
                                     header.column.toggleSorting(false);
                                   }}

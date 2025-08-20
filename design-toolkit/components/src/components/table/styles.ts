@@ -114,6 +114,7 @@ export const TableStyles = tv({
     rowCell: '',
     rowKebab: '',
     headerKebab: '',
+    menuItem: 'cursor-pointer disabled:cursor-auto',
   },
   variants: {
     persistNums: {
