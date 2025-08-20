@@ -7,6 +7,11 @@ import * as AvatarStories from './avatar.stories';
 # Avatar
 The Avatar component displays a user's profile picture, initials, or a fallback icon. Avatars are commonly used in user interfaces to represent users, display profile pictures, show online status, and provide visual identification in lists, headers, and user management systems.
 
+It is composed of the following components:
+
+- **Avatar** - Main avatar component that renders profile picture with fallback support
+- **Avatar.Provider** - Context provider for setting default props across multiple avatars
+
 ## Example Usage
 
 ### Basic
@@ -49,9 +54,9 @@ The Avatar component displays a user's profile picture, initials, or a fallback 
 ```
 <Canvas of={AvatarStories.WithFallback} />
 
-## Variants
-* **Medium** - standard size (32px) with larger text (default)
-* **Small** - compact size (24px) with smaller text for space-constrained layouts
+## Sizes
+* **medium** - standard size (32px) with larger text (default)
+* **small** - compact size (24px) with smaller text for space-constrained layouts
 
 The size can be controlled via the `size` prop or set globally using the `Avatar.Provider` component.
 
