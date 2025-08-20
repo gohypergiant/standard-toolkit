@@ -86,7 +86,7 @@ export function Drawer(props: DrawerProps) {
     defaultOpen = false,
     layoutShift = false,
     shouldCloseOnBlur = false,
-    isDismissable = true,
+    isDismissible = true,
     isKeyboardDismissDisabled = false,
     isOpen: isOpenProp,
     onOpenChange,
@@ -134,7 +134,7 @@ export function Drawer(props: DrawerProps) {
     {
       isOpen,
       shouldCloseOnBlur,
-      isDismissable,
+      isDismissible,
       isKeyboardDismissDisabled,
       onClose: close,
     },

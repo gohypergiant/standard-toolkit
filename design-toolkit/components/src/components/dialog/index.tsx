@@ -61,7 +61,7 @@ type DialogSize = 'sm' | 'lg';
 
 interface DialogContextValue {
   size: DialogSize;
-  isDismissable?: boolean;
+  isDismissible?: boolean;
   isKeyboardDismissDisabled?: boolean;
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
@@ -80,7 +80,7 @@ const useDialogContext = () => {
 
 export interface DialogProps extends DialogTriggerProps {
   size?: DialogSize;
-  isDismissable?: boolean;
+  isDismissible?: boolean;
   isKeyboardDismissDisabled?: boolean;
   isOpen?: boolean;
   onOpenChange?: (isOpen: boolean) => void;
@@ -116,7 +116,7 @@ export const Dialog = ({
   size,
   isOpen,
   onOpenChange,
-  isDismissable = true,
+  isDismissible = true,
   isKeyboardDismissDisabled = true,
   parentRef,
 }: DialogProps) => {
@@ -125,7 +125,7 @@ export const Dialog = ({
       <DialogContext.Provider
         value={{
           size: size ?? 'sm',
-          isDismissable,
+          isDismissible,
           isOpen,
           onOpenChange,
           parentRef,
@@ -147,7 +147,7 @@ const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
   ({ children, ...rest }, ref) => {
     const {
       size,
-      isDismissable,
+      isDismissible,
       isOpen,
       onOpenChange,
       parentRef,
@@ -176,10 +176,10 @@ const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
     return portal ? (
       <RACModalOverlay
         UNSTABLE_portalContainer={portal}
-        isKeyboardDismissDisabled={!isDismissable && isKeyboardDismissDisabled}
+        isKeyboardDismissDisabled={!isDismissible && isKeyboardDismissDisabled}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        isDismissable={isDismissable}
+        isDismissible={isDismissible}
         className='absolute inset-0 flex items-center justify-center'
         {...rest}
       >

@@ -31,7 +31,7 @@ export default {
       options: ['sm', 'lg'],
       defaultValue: 'lg',
     },
-    isDismissable: {
+    isDismissible: {
       control: {
         type: 'boolean',
       },
@@ -57,7 +57,7 @@ export const Example: Story<
   DialogProps & {
     isGlobal: boolean;
   }
-> = ({ isDismissable, isKeyboardDismissDisabled, isGlobal, ...rest }) => {
+> = ({ isDismissible, isKeyboardDismissDisabled, isGlobal, ...rest }) => {
   const ref = useRef(null);
 
   return (

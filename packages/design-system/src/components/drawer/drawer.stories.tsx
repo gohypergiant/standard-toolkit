@@ -43,7 +43,7 @@ export default {
         type: 'boolean',
       },
     },
-    isDismissable: {
+    isDismissible: {
       control: {
         type: 'boolean',
       },

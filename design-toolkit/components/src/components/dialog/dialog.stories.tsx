@@ -20,7 +20,7 @@ const meta: Meta<typeof Dialog> = {
   component: Dialog,
   args: {
     size: 'sm',
-    isDismissable: true,
+    isDismissible: true,
     isKeyboardDismissDisabled: false,
   },
   argTypes: {
