@@ -7,6 +7,14 @@ import * as ChipStories from './chip.stories';
 # Chip
 The Chip component provides compact, interactive elements for displaying tags, categories, filters, and selectable items. It's built on React Aria Components and provides excellent accessibility out of the box. Chips are commonly used in search interfaces, data tables, form inputs, and anywhere you need to represent discrete pieces of information in a compact, interactive format.
 
+It is composed of the following components:
+
+- **Chip** - Main chip component for displaying tags and labels
+- **Chip.List** - Container component for grouping multiple chips with shared behavior
+- **Chip.Selectable** - Interactive chip that can be selected/deselected for filtering
+- **Chip.Deletable** - Chip with built-in remove button for dynamic content management
+- **Chip.Provider** - Context provider for setting default props across multiple chips
+
 ## Example usage
 ```tsx
 // Basic chip with default styling
@@ -71,30 +79,30 @@ The Chip component provides compact, interactive elements for displaying tags, c
 
 ## Variants
 
-* **Info** - blue styling for informational content (default)
-* **Advisory** - yellow styling for advisory/warning content
-* **Normal** - green styling for normal/success content
-* **Serious** - orange styling for serious issues
-* **Critical** - red styling for critical errors or alerts
+* **info** - Blue styling for informational content (default)
+* **advisory** - Yellow styling for advisory/warning content
+* **normal** - Green styling for normal/success content
+* **serious** - Orange styling for serious issues
+* **critical** - Red styling for critical errors or alerts
 
 ## Sizes
 
-* **Medium** - standard size with larger text and padding (default)
-* **Small** - compact size with smaller text and padding for space-constrained layouts
+* **medium** - Standard size with larger text and padding (default)
+* **small** - Compact size with smaller text and padding for space-constrained layouts
 
 ## Types
 
-* **Basic Chip** - simple display chip for showing tags or labels
-* **Selectable Chip** - interactive chip that can be selected/deselected
-* **Deletable Chip** - chip with a remove button for dynamic content management
+* **Basic Chip** - Simple display chip for showing tags or labels
+* **Selectable Chip** - Interactive chip that can be selected/deselected
+* **Deletable Chip** - Chip with a remove button for dynamic content management
 
 <Canvas of={ChipStories.Default} />
 
 ## Props
 
 ### Chip Props
-* **`variant`** - Visual style variant: `'info'` (default), `'advisory'`, `'normal'`, `'serious'`, or `'critical'`
-* **`size`** - Size variant: `'medium'` (default) or `'small'`
+* **`variant`** - Visual style variant: `'info'` (default) | `'advisory'` | `'normal'` | `'serious'` | `'critical'`
+* **`size`** - Size variant: `'medium'` (default) | `'small'`
 * **`children`** - Content to display in the chip (text, icons, etc.)
 * **`className`** - Additional CSS classes for custom styling
 
@@ -104,7 +112,7 @@ The Chip component provides compact, interactive elements for displaying tags, c
 * **`dependencies`** - Dependencies for re-rendering when they change
 * **`renderEmptyState`** - Function to render when no items exist
 * **`onRemove`** - Callback when chips are removed (required for deletable chips)
-* **`selectionMode`** - Selection behavior: `'none'`, `'single'`, or `'multiple'`
+* **`selectionMode`** - Selection behavior: `'none'` | `'single'` | `'multiple'`
 * **`disallowEmptySelection`** - Whether empty selection is allowed
 * **`disabledKeys`** - Keys of disabled chips
 * **`selectedKeys`** - Currently selected chip keys
