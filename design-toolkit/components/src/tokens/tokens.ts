@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-const designTokens = {
+export const designTokens = {
   dark: {
     bg: {
       surface: {
@@ -437,4 +437,3 @@ const designTokens = {
     },
   },
 } as const;
-export { designTokens };

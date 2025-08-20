@@ -8,9 +8,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -50,7 +48,7 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm gen:tokens && pnpm gen:variants && pnpm tsup && pnpm build:css",
+    "build": "pnpm gen:tokens && pnpm biome format ./src/tokens/tokens.ts --write && pnpm gen:variants && pnpm tsup && pnpm build:css",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
     "dev": "pnpm tsc --watch",
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
