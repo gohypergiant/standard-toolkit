@@ -1,0 +1,64 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as CheckboxStories from './checkbox.stories';
+
+<Meta of={CheckboxStories} />
+
+# Checkbox
+The Checkbox component provides interactive checkboxes for form inputs, settings, and multi-selection interfaces. It's built on React Aria Components and provides excellent accessibility out of the box. Checkboxes are commonly used in forms, settings panels, data tables, and anywhere users need to make binary selections or choose from multiple options.
+
+## Example usage
+
+### Basic
+```tsx
+// Basic checkbox
+<Checkbox>Accept terms and conditions</Checkbox>
+```
+<Canvas of={CheckboxStories.Default} />
+
+## Variants
+
+* **Individual Checkbox** - standalone checkbox for single selections
+* **Checkbox Group** - container for multiple related checkboxes with shared label and orientation
+
+## States
+
+* **Unselected** - default state with empty checkbox
+* **Selected** - checked state with checkmark icon
+* **Indeterminate** - partial selection state with minus icon (commonly used for "select all" scenarios)
+* **Disabled** - non-interactive state with reduced opacity
+
+## Orientations
+
+* **Vertical** - checkboxes stacked vertically (default)
+* **Horizontal** - checkboxes arranged horizontally with wrapping
+
+
+## Props
+All components and subcomponents accept a `className` prop that allow for custom style overrides.
+
+The Checkbox supports all the `Checkbox` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Checkbox.html#props).
+
+* **`classNames`** - Custom class names for styling:
+  * `checkbox` - Applied to the checkbox container
+  * `control` - Applied to the checkbox control (the square box)
+  * `label` - Applied to the label text
+
+All checkbox types accept standard HTML input attributes and forward them to the underlying elements.
+
+## Subcomponents
+
+### Checkbox
+The main checkbox component for individual selections. Renders as a label element containing the checkbox control and text.
+
+### Checkbox.Group
+Container component that groups multiple checkboxes together and provides shared configuration like label, orientation, and validation state.
+
+## Implementation Notes
+The `Checkbox` component wraps the `Checkbox` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Checkbox.html)
+
+The component includes state management that handles:
+- Selected state with checkmark icon
+- Indeterminate state with minus icon (perfect for "select all" scenarios)
+- Disabled state with reduced opacity and non-interactive behavior
+- Focus and hover states with visual feedback

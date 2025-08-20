@@ -1,0 +1,113 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as SliderStories from './slider.stories';
+
+<Meta of={SliderStories} />
+
+# Slider and Range Slider
+The Slider component provides a customizable input control for selecting a single value or range of values within a specified range. It's built on React Aria Components and provides excellent accessibility out of the box. Sliders are commonly used in settings panels, image editors, audio/video controls, and anywhere users need to adjust numeric values with visual feedback.
+
+## Example usage
+```tsx
+// Basic single value slider
+<Slider
+  label="Opacity"
+  defaultValue={30}
+  minValue={0}
+  maxValue={100}
+  layout="stacked"
+/>
+
+// Range slider with input fields
+<RangeSlider
+  label="Price Range"
+  defaultValue={[20, 80]}
+  minValue={0}
+  maxValue={100}
+  showInput={true}
+  layout="inline"
+/>
+
+// Vertical orientation
+<Slider
+  label="Volume"
+  orientation="vertical"
+  layout="stacked"
+  defaultValue={50}
+/>
+
+// With custom styling
+<Slider
+  label="Custom Slider"
+  className="w-full max-w-md"
+  showLabel={true}
+  showInput={false}
+/>
+```
+
+## Variants
+
+### Layout Variants
+* **Stacked** - label, input (optional), slider, and min/max values are arranged vertically
+* **Inline** - all elements are arranged horizontally in a single row
+
+### Orientation Variants
+* **Horizontal** - slider moves left to right (default)
+* **Vertical** - slider moves bottom to top
+
+### Slider Types
+* **Single Slider** - selects one value within a range
+* **Range Slider** - selects two values (min/max) within a range
+
+<Canvas of={SliderStories.Default} />
+
+## Props
+
+### Common Props
+* **`label`** - Text label displayed above or beside the slider
+* **`layout`** - Layout arrangement: `'stacked'` or `'inline'`
+* **`orientation`** - Slider direction: `'horizontal'` (default) or `'vertical'`
+* **`minValue`** - Minimum allowed value (default: 0)
+* **`maxValue`** - Maximum allowed value (default: 100)
+* **`showLabel`** - Whether to display the label (default: true)
+* **`showInput`** - Whether to display numeric input fields (default: false)
+* **`className`** - Additional CSS classes for custom styling
+
+### Single Slider Props
+* **`value`** - Controlled value
+* **`defaultValue`** - Initial value
+* **`onChange`** - Callback when value changes
+
+### Range Slider Props
+* **`value`** - Controlled range value as `[min, max]`
+* **`defaultValue`** - Initial range value as `[min, max]`
+* **`onChange`** - Callback when range values change
+
+## Subcomponents
+
+### Slider
+The main slider component for single value selection. Supports both horizontal and vertical orientations with flexible layout options.
+
+### RangeSlider
+A specialized slider component for selecting a range of values. Built on top of the base Slider component with range-specific behavior.
+
+## Implementation Notes
+The `Slider` component wraps the `Slider` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Slider.html)
+
+The underlying elements are:
+- `div` for the slider container with grid-based layout
+- `label` for the slider label
+- `div` for the slider track and background
+- `button` elements for the slider thumbs
+- `input` elements for numeric input fields (when enabled)
+- `span` elements for min/max value display
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Arrow keys, Page Up/Down, Home/End)
+- Focus management
+- Form integration
+- Value announcements
+- Tooltip display for current values (when input fields are hidden)
+
+The component integrates with the Tooltip system to show current values on hover and provides flexible layout options through CSS Grid-based positioning.
