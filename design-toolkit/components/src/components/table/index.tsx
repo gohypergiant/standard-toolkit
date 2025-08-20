@@ -107,7 +107,7 @@ export function Table<T extends { id: string | number }>({
     const rowSelectionKeys = Object.keys(rowSelection).filter(
       (id) => rowSelection[id],
     );
-    const selectedRows = data.filter((item: any) =>
+    const selectedRows = data.filter((item: T) =>
       rowSelectionKeys.includes(item.id.toString()),
     );
 
@@ -132,7 +132,7 @@ export function Table<T extends { id: string | number }>({
     const rowSelectionKeys = Object.keys(rowSelection).filter(
       (id) => rowSelection[id],
     );
-    const selectedRows = data.filter((item: any) =>
+    const selectedRows = data.filter((item: T) =>
       rowSelectionKeys.includes(item.id.toString()),
     );
 
