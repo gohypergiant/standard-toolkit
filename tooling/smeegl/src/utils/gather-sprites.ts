@@ -11,34 +11,26 @@
  */
 
 import { Result } from 'true-myth';
-import { duplicateFile, tempDir } from './file-sys.js';
-import type { GatherResult, GlobResult } from './types.js';
-
-async function copySprites(tmp: string, sprites: string[]) {
-  try {
-    const movedSprites = await Promise.all(
-      sprites.map((src) => duplicateFile(src, tmp)),
-    );
-
-    return Result.ok({ tmp, sprites: movedSprites });
-  } catch (err) {
-    return Result.err({ msg: (err as Error).message.trim(), tmp });
-  }
-}
+import { copySprites } from './copy-sprites.js';
+import { findCommonBasePath } from './find-common-base-path.js';
+import { makeTempDirectory } from './make-temp-directory.js';
+import type { CrcMode, GatherSpritesResult, GlobResult } from './types.js';
 
 export async function gatherSprites(
   globResult: GlobResult,
-): Promise<GatherResult> {
+  crcMode: CrcMode | null,
+): Promise<GatherSpritesResult> {
   if (globResult.isErr) {
     return Result.err(globResult.error);
   }
 
   try {
-    const tmp = await tempDir();
+    const tmpDir = await makeTempDirectory();
     const list: string[] = globResult.unwrapOr([]);
+    const commonBasePath = findCommonBasePath(list);
 
     // Needed a different scope for before/after tmp dir was created
-    return copySprites(tmp, list);
+    return copySprites(tmpDir, list, commonBasePath, crcMode);
   } catch (err) {
     return Result.err({ msg: (err as Error).message.trim(), tmp: null });
   }

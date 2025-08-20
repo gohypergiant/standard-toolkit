@@ -114,12 +114,9 @@ export type { ComboBoxFieldProps } from './components/combobox-field/types';
 export { DateField } from './components/date-field';
 export {
   DateFieldStyles,
-  DateFieldStylesDefault,
+  DateFieldStylesDefaults,
 } from './components/date-field/styles';
-export type {
-  DateFieldProps,
-  DateInputProps,
-} from './components/date-field/types';
+export type { DateFieldProps } from './components/date-field/types';
 export { DetailsList, DetailsListContext } from './components/details-list';
 export {
   DetailsListStyles,
