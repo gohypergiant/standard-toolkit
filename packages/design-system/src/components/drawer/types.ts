@@ -69,7 +69,7 @@ type BaseProps = {
 
 export type BaseDrawerProps = Pick<
   RACOverlayProps,
-  'shouldCloseOnBlur' | 'isDismissable' | 'isKeyboardDismissDisabled'
+  'shouldCloseOnBlur' | 'isDismissible' | 'isKeyboardDismissDisabled'
 > & {
   children?: RenderPropsChildren<DrawerRenderProps>;
   /**
