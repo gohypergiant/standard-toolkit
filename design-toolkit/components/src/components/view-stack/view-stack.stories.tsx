@@ -53,7 +53,7 @@ export const Default: StoryObj<typeof ViewStack> = {
               Push View B
             </Button>
           </ViewStack.Trigger>
-          <h1 className='fg-default-light h-oversized text-center'>View A</h1>
+          <h1 className='fg-primary-bold h-oversized text-center'>View A</h1>
         </ViewStack.View>
         <ViewStack.View id={ids.b}>
           <div className='flex'>
@@ -70,7 +70,7 @@ export const Default: StoryObj<typeof ViewStack> = {
               </Button>
             </ViewStack.Trigger>
           </div>
-          <h1 className='fg-default-light h-oversized text-center'>View B</h1>
+          <h1 className='fg-primary-bold h-oversized text-center'>View B</h1>
         </ViewStack.View>
         <ViewStack.View id={ids.c}>
           <ViewStack.Trigger for='back'>
@@ -80,7 +80,7 @@ export const Default: StoryObj<typeof ViewStack> = {
               </Icon>
             </Button>
           </ViewStack.Trigger>
-          <h1 className='fg-default-light h-oversized text-center'>View C</h1>
+          <h1 className='fg-primary-bold h-oversized text-center'>View C</h1>
         </ViewStack.View>
       </ViewStack>
       <div className='flex gap-s'>

@@ -22,8 +22,8 @@ export const DateFieldStyles = tv({
     dateInput: [
       'group/date-field flex w-full gap-xs rounded-medium px-s py-xs font-display outline outline-interactive',
       'disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
-      'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus-visible-within:outline-highlight',
-      'invalid:outline-serious',
+      'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus-visible-within:outline-accent-bold',
+      'invalid:outline-serious-bold',
       'size-medium:pl-[32px] size-medium:text-body-s',
       'size-small:text-body-xs',
     ],
@@ -33,10 +33,10 @@ export const DateFieldStyles = tv({
       'group-disabled/date-field:text-disabled',
     ],
     descriptionText: [
-      'fg-default-dark text-body-xs empty:hidden',
+      'fg-primary-muted text-body-xs empty:hidden',
       'group-disabled/date-field:fg-disabled',
     ],
-    error: 'fg-serious text-body-xs empty:hidden',
+    error: 'fg-serious-bold text-body-xs empty:hidden',
     dateSegment:
       'focus-visible:bg-highlight focus-visible:text-inverse-light focus-visible:outline-none',
   },

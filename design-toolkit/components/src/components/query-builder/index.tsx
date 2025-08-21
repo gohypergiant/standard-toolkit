@@ -201,7 +201,7 @@ export function QueryBuilder({
     () => ({
       queryBuilder: 'border border-transparent',
       ruleGroup:
-        'group col-span-full flex flex-col gap-s p-s border border-info rounded-medium',
+        'group col-span-full flex flex-col gap-s p-s border border-info-bold rounded-medium',
       header: 'flex gap-s',
       body: cn(
         'group grid gap-x-s empty:hidden',

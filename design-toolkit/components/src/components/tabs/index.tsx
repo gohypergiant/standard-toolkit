@@ -156,22 +156,22 @@ TabList.displayName = 'Tabs.List';
 Tabs.List = TabList;
 
 const tabBaseStyles = cn(
-  'fg-default-dark cursor-pointer p-s outline-none',
+  'fg-primary-muted cursor-pointer p-s outline-none',
   'rounded-medium group-orientation-horizontal:rounded-small group-orientation-horizontal:rounded-b-none',
-  'group-orientation-horizontal:border-static-light group-orientation-horizontal:border-b',
+  'group-orientation-horizontal:border-static group-orientation-horizontal:border-b',
   'group-orientation-vertical:border group-orientation-vertical:border-transparent',
 );
 
 const tabStyles = cva(tabBaseStyles, {
   variants: {
     isSelected: {
-      true: 'fg-highlight bg-highlight-subtle group-orientation-horizontal:border-highlight',
+      true: 'fg-accent-primary-bold bg-accent-muted group-orientation-horizontal:border-accent-bold',
     },
     isHovered: {
-      true: 'fg-default-light group-orientation-horizontal:border-interactive-hover',
+      true: 'fg-primary-bold group-orientation-horizontal:border-interactive-hover',
     },
     isFocused: {
-      true: 'fg-default-light group-orientation-horizontal:border-interactive-hover',
+      true: 'fg-primary-bold group-orientation-horizontal:border-interactive-hover',
     },
     isDisabled: {
       true: 'fg-disabled cursor-not-allowed group-orientation-horizontal:border-interactive-disabled',
@@ -181,13 +181,14 @@ const tabStyles = cva(tabBaseStyles, {
     {
       isSelected: true,
       isHovered: true,
-      className: 'fg-highlight group-orientation-horizontal:border-highlight',
+      className:
+        'fg-accent-primary-bold group-orientation-horizontal:border-accent-bold',
     },
     {
       isSelected: true,
       isFocused: true,
       className:
-        'fg-highlight group-orientation-horizontal:border-interactive-hover group-orientation-vertical:border-interactive-hover',
+        'fg-accent-primary-bold group-orientation-horizontal:border-interactive-hover group-orientation-vertical:border-interactive-hover',
     },
     {
       isDisabled: true,
@@ -234,7 +235,7 @@ const TabPanel = ({ id, children, className, ...rest }: TabPanelProps) => {
     <AriaTabPanel
       id={id}
       className={cn(
-        'fg-default-light p-s group-orientation-vertical:pt-0 group-orientation-horizontal:pl-0',
+        'fg-primary-bold p-s group-orientation-vertical:pt-0 group-orientation-horizontal:pl-0',
         className,
       )}
       {...rest}

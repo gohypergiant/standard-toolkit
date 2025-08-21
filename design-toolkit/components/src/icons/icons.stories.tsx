@@ -37,7 +37,7 @@ export const UIIcons: Story = {
               {meta.icons.map((icon) => {
                 return (
                   <div className='flex items-center gap-s' key={icon.name}>
-                    <Icon className='fg-default-light flex-none'>
+                    <Icon className='fg-primary-bold flex-none'>
                       {icon.icon}
                     </Icon>
                     <div className='flex flex-col'>

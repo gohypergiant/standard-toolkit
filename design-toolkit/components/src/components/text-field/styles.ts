@@ -18,9 +18,9 @@ export const TextFieldStyles = tv({
     label: '',
     input: '',
     description: [
-      'fg-default-dark text-body-xs',
+      'fg-primary-muted text-body-xs',
       'group-disabled/text-field:fg-disabled',
     ],
-    error: 'fg-serious text-body-xs',
+    error: 'fg-serious-bold text-body-xs',
   },
 });

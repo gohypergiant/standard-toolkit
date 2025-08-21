@@ -20,9 +20,9 @@ export const SwitchStyles = tv({
       'flex rounded-round bg-transparent p-xxs outline outline-interactive before:mr-l before:block before:size-m before:rounded-full before:bg-default-dark',
       'group-enabled/switch:group-focus-visible/switch:bg-interactive-hover-dark group-enabled/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-focus-visible/switch:before:bg-interactive-hover',
       'group-enabled/switch:group-hover/switch:bg-interactive-hover-dark group-enabled/switch:group-hover/switch:outline-interactive-hover group-enabled/switch:group-hover/switch:before:bg-interactive-hover',
-      'group-enabled/switch:group-selected/switch:outline-highlight group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:bg-highlight',
-      'group-enabled/switch:group-selected/switch:group-focus-visible/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus-visible/switch:before:bg-highlight',
-      'group-enabled/switch:group-selected/switch:group-hover/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-hover/switch:outline-highlight group-enabled/switch:group-selected/switch:group-hover/switch:before:bg-highlight',
+      'group-enabled/switch:group-selected/switch:outline-accent-bold group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:bg-highlight',
+      'group-enabled/switch:group-selected/switch:group-focus-visible/switch:bg-accent-muted group-enabled/switch:group-selected/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus-visible/switch:before:bg-highlight',
+      'group-enabled/switch:group-selected/switch:group-hover/switch:bg-accent-muted group-enabled/switch:group-selected/switch:group-hover/switch:outline-accent-bold group-enabled/switch:group-selected/switch:group-hover/switch:before:bg-highlight',
       'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:bg-disabled',
     ],
     label: [

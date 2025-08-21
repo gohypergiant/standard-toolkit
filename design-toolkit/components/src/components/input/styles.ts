@@ -28,9 +28,9 @@ export const InputStyles = tv({
     ],
     input: [
       'block w-full rounded-medium py-xs pr-[calc(var(--room)+var(--spacing-s))] pl-s font-display text-default-light outline outline-interactive',
-      'enabled:group-focus-visible-within/input:outline-highlight',
+      'enabled:group-focus-visible-within/input:outline-accent-bold',
       'enabled:group-hover/input:outline-interactive-hover',
-      'enabled:group-invalid/input:outline-serious',
+      'enabled:group-invalid/input:outline-serious-bold',
       'disabled:cursor-not-allowed disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
     ],
     clear: [
