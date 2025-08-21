@@ -53,6 +53,7 @@
     "dev": "pnpm tsc --watch",
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
+    "temp:token-migration": "pnpm zx scripts/token-migration.mjs",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
     "lint": "pnpm biome lint",
     "preview": "pnpm storybook dev -p 6006",
