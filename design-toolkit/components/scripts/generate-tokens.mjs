@@ -128,13 +128,12 @@ function isRgbaString(value) {
 }
 
 function generatePrimitives(primitives) {
-  return `
-    :root {\n
-      ${Object.entries(primitives)
-        .map(([key, value]) => `  --${key}: ${value};\n`)
-        .join('')}
-    }
-  `;
+  const lines = Object.entries(primitives)
+    .map(([key, value]) => `  --${key}: ${value};`)
+    .join('\n');
+  return `:root {
+${lines}
+}`;
 }
 
 function convert(raw) {
@@ -197,7 +196,7 @@ function generateThemesCSS(tokens, semantic) {
         const fallback = getTokenFallback(v);
         // Special case: omit "base" from the variable name
         const varName = k === 'base' ? prefix : `${prefix}-${k}`;
-        lines.push(`  -${varName}: var(${v}, ${fallback});`);
+        lines.push(`    -${varName}: var(${v}, ${fallback});`);
       } else if (typeof v === 'object' && v !== null) {
         lines = lines.concat(walkSemantic(v, `${prefix}-${k}`));
       }
@@ -207,10 +206,19 @@ function generateThemesCSS(tokens, semantic) {
   const dark = walkSemantic(semantic.dark || {});
   const light = walkSemantic(semantic.light || {});
 
-  const semanticColorsBlock = [
-    `@layer theme {\n :root {\n /** Dark theme **/ \n @variant dark {\n ${dark.join('\n')}\n}\n}\n}`,
-    `@layer theme {\n :root {\n /** Light theme **/ \n @variant light {\n ${light.join('\n')}\n}\n}\n}`,
-  ].join('\n\n');
+  const semanticColorsBlock = `@layer theme {
+  :root {
+    /** Dark theme **/
+    @variant dark {
+      ${dark.join('\n')}
+    }
+
+    /** Light theme **/
+    @variant light {
+      ${light.join('\n')}
+    }
+  }
+}`;
 
   // 3. Dynamic @theme blocks for each top-level key in tokens.json
   function walkTokens(obj, prefix) {
