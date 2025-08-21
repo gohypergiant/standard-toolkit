@@ -10,23 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-/* this @layer declaration needs to be before the stylesheet imports */
-@layer properties, base, theme, old_ds_reset, old_ds_framework, old_ds_overrides, components, utilities;
-
-@import '@accelint/design-system/styles';
-@import "@accelint/design-toolkit/styles";
-@source "../../node_modules/@accelint/design-toolkit";
-
-/* TODO
-@layer theme {
-  :root {
-    @variant light {
-      --bg-surface-default: red;
-      --something: #f5c506;
-    }
-    @variant dark {
-      --bg-surface-default: blue;
-      --something: #62d1f3;
-    }
-  }
-} */
+// declare module '*.json' {
+//   const value: unknown;
+//   export { value as default };
+// }

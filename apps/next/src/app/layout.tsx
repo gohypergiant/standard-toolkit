@@ -23,8 +23,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang='en' className='bg-surface-raised font-primary w-full h-full'>
-      <body className='w-full h-full'>
+    // TODO: fix FOUC
+    <html lang='en' className='bg-surface-raised font-primary'>
+      <body className='w-full h-svh'>
         <DSTheme>
           <Defaults>
             <DTKTheme>

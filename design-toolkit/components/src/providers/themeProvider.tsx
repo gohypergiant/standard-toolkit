@@ -18,7 +18,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { designTokens } from '../tokens/tokens';
@@ -43,14 +42,13 @@ export function ThemeProvider({
   defaultMode,
   onChange,
 }: ThemeProviderProps) {
-  const ref = useRef<HTMLElement>(null);
   const [mode, setMode] = useState<Mode>(defaultMode ?? 'dark');
 
   useEffect(() => {
     if (document) {
-      ref.current = document.documentElement;
-      ref.current.classList.remove('dark', 'light');
-      ref.current.classList.add(mode);
+      const { documentElement } = document;
+      documentElement.classList.remove('dark', 'light');
+      documentElement.classList.add(mode);
     }
   }, [mode]);
 
