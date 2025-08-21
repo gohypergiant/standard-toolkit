@@ -54,7 +54,7 @@ export function BusExample() {
   }, []);
 
   return (
-    <div className='p-xl text-default-light flex flex-col gap-m items-center justify-center w-full'>
+    <div className='p-xl fg-primary-bold flex flex-col gap-m items-center justify-center w-full'>
       <div className='font-display text-s'>Value: {value}</div>
       <div>
         <Button variant='outline' size='small' onPress={doInc}>
