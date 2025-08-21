@@ -45,7 +45,7 @@ const ElevationDisplay = (elevation: ElevationInfo) => (
     <div
       className={`h-[90px] w-[90px] bg-surface-overlay ${elevation.shadow}`}
     />
-    <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
+    <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
       <span>{elevation.shadow}</span>
       <span className='text-default-dark'>Figma: {elevation.name}</span>
     </div>
@@ -57,8 +57,8 @@ export const Elevation: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>Elevation</h1>
-        <p className='fg-interactive-hover-light text-body-s'>
+        <h1 className='fg-primary-bold text-header-xl'>Elevation</h1>
+        <p className='fg-info-pressed text-body-s'>
           These are tokens primarily used as backgrounds for any element or
           component that contains content such as containers, sections, headers,
           buttons, etc.

@@ -165,7 +165,7 @@ const tabBaseStyles = cn(
 const tabStyles = cva(tabBaseStyles, {
   variants: {
     isSelected: {
-      true: 'fg-accent-primary-bold bg-accent-muted group-orientation-horizontal:border-accent-bold',
+      true: 'fg-accent-primary-bold bg-accent-primary-muted group-orientation-horizontal:border-accent-bold',
     },
     isHovered: {
       true: 'fg-primary-bold group-orientation-horizontal:border-interactive-hover',

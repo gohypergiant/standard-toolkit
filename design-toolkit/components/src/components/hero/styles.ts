@@ -14,7 +14,7 @@ import { tv } from '@/lib/utils';
 
 export const HeroStyles = tv({
   slots: {
-    hero: 'group/hero relative flex flex-col layout-stack:rounded-large layout-stack:bg-transparent-light layout-stack:px-l layout-stack:py-xl layout-grid:pl-xxl',
+    hero: 'group/hero relative flex flex-col layout-stack:rounded-large layout-stack:bg-interactive-disabled layout-stack:px-l layout-stack:py-xl layout-grid:pl-xxl',
     icon: 'fg-primary-muted -order-3 group-layout-grid/hero:absolute group-layout-grid/hero:top-xxs group-layout-grid/hero:left-xs group-layout-stack/hero:mb-l group-layout-stack/hero:size-[48px]',
     title: 'fg-primary-bold -order-2 mb-xs font-display text-header-l',
     subtitle: 'fg-primary-muted -order-1 block font-display text-body-s',

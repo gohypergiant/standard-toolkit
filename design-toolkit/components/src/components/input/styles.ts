@@ -28,7 +28,7 @@ export const InputStyles = tv({
     ],
     input: [
       'block w-full rounded-medium py-xs pr-[calc(var(--room)+var(--spacing-s))] pl-s font-display text-default-light outline outline-interactive',
-      'enabled:group-focus-visible-within/input:outline-accent-bold',
+      'enabled:group-focus-visible-within/input:outline-accent-primary-bold',
       'enabled:group-hover/input:outline-interactive-hover',
       'enabled:group-invalid/input:outline-serious-bold',
       'disabled:cursor-not-allowed disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
@@ -36,9 +36,9 @@ export const InputStyles = tv({
     clear: [
       '[grid-column:2/-1] [grid-row:1]',
       'group-size-medium/input:mr-xs group-size-small/input:mr-xxs',
-      'enabled:fg-interactive enabled:bg-transparent',
-      'enabled:focus-visible:fg-interactive-hover enabled:focus-visible:bg-transparent',
-      'enabled:hover:fg-interactive-hover enabled:hover:bg-transparent',
+      'enabled:fg-info-bold enabled:bg-transparent',
+      'enabled:focus-visible:fg-info-hover enabled:focus-visible:bg-transparent',
+      'enabled:hover:fg-info-hover enabled:hover:bg-transparent',
       'group-empty/input:invisible',
       'group-not-empty/input:group-not-focus-within/input:invisible',
     ],

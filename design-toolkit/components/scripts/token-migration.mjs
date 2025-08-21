@@ -111,7 +111,7 @@ const replacementMap = new Map([
   ['bg-transparent-dark', 'bg-surface-muted'],
   ['bg-interactive-default', 'bg-interactive-muted'],
   ['bg-interactive-hover-light', 'bg-interactive-muted-hover'],
-  ['bg-highlight-subtle', 'bg-accent-muted'],
+  ['bg-highlight-subtle', 'bg-accent-primary-muted'],
   ['bg-info-subtle', 'bg-info-muted'],
   ['bg-advisory-subtle', 'bg-advisory-muted'],
   ['bg-normal-subtle', 'bg-normal-muted'],
@@ -130,7 +130,7 @@ const replacementMap = new Map([
   ['fg-critical', 'fg-critical-bold'],
   // outline
   ['outline-static-light', 'outline-static'],
-  ['outline-highlight', 'outline-accent-bold'],
+  ['outline-highlight', 'outline-accent-primary-bold'],
   ['outline-info', 'outline-info-bold'],
   ['outline-advisory', 'outline-advisory-bold'],
   ['outline-normal', 'outline-normal-bold'],
@@ -138,7 +138,7 @@ const replacementMap = new Map([
   ['outline-critical', 'outline-critical-bold'],
   // border
   ['border-static-light', 'border-static'],
-  ['border-highlight', 'border-accent-bold'],
+  ['border-highlight', 'border-accent-primary-bold'],
   ['border-info', 'border-info-bold'],
   ['border-advisory', 'border-advisory-bold'],
   ['border-normal', 'border-normal-bold'],

@@ -26,10 +26,10 @@ export const MenuStyles = tv({
 
       // Info
       'color-info:enabled:fg-primary-bold',
-      'color-info:enabled:focus-visible:fg-inverse-bold color-info:enabled:focus-visible:bg-highlight-bold',
-      'color-info:enabled:hover:fg-inverse-bold color-info:enabled:hover:bg-highlight-bold',
-      'color-info:enabled:open:fg-inverse-bold color-info:enabled:open:bg-highlight-bold',
-      'color-info:enabled:selected:fg-inverse-bold color-info:enabled:selected:bg-highlight-bold',
+      'color-info:enabled:focus-visible:fg-inverse-bold color-info:enabled:focus-visible:bg-accent-primary-bold',
+      'color-info:enabled:hover:fg-inverse-bold color-info:enabled:hover:bg-accent-primary-bold',
+      'color-info:enabled:open:fg-inverse-bold color-info:enabled:open:bg-accent-primary-bold',
+      'color-info:enabled:selected:fg-inverse-bold color-info:enabled:selected:bg-accent-primary-bold',
 
       // Serious
       'color-serious:enabled:fg-serious-bold',

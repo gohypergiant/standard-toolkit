@@ -56,7 +56,7 @@ const RadiusDisplay = (radius: RadiusInfo) => {
       <div
         className={`block h-[40px] w-[80px] border border-interactive-hover ${radius.rounded}`}
       />
-      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
+      <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
         <span className='inline-flex gap-s'>
           {radius.rounded}
           <span className='fg-disabled text-body-xxs'>
@@ -79,8 +79,8 @@ export const Radius: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>Radius</h1>
-        <p className='fg-interactive-hover-light text-body-s'>
+        <h1 className='fg-primary-bold text-header-xl'>Radius</h1>
+        <p className='fg-info-pressed text-body-s'>
           These are the contextualized spacing values available for use in any
           Figma design file. It can be applied to components/elements as padding
           and/or gap for listing patterns.

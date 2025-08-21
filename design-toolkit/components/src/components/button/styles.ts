@@ -39,13 +39,13 @@ const BaseButtonStyles = tv({
 
         // Serious
         'enabled:color-serious:fg-inverse-bold',
-        'enabled:color-serious:bg-serious',
+        'enabled:color-serious:bg-serious-bold',
         'enabled:hover:color-serious:bg-serious-hover',
         'enabled:focus-visible:color-serious:bg-serious-hover',
 
         // Critical
         'enabled:color-critical:fg-primary-bold',
-        'enabled:color-critical:bg-critical',
+        'enabled:color-critical:bg-critical-bold',
         'enabled:hover:color-critical:bg-critical-hover',
         'enabled:focus-visible:color-critical:bg-critical-hover',
       ],
@@ -78,19 +78,19 @@ const BaseButtonStyles = tv({
         'disabled:fg-disabled disabled:bg-interactive-disabled disabled:outline-interactive-disabled',
 
         // Info
-        'enabled:color-info:fg-interactive enabled:color-info:bg-surface-default enabled:color-info:outline-interactive',
-        'enabled:hover:color-info:fg-interactive-hover enabled:hover:color-info:outline-interactive-hover',
-        'enabled:focus-visible:color-info:fg-interactive-hover enabled:focus-visible:color-info:outline-interactive-hover',
+        'enabled:color-info:fg-info-bold enabled:color-info:bg-surface-default enabled:color-info:outline-interactive',
+        'enabled:hover:color-info:fg-info-hover enabled:hover:color-info:outline-interactive-hover',
+        'enabled:focus-visible:color-info:fg-info-hover enabled:focus-visible:color-info:outline-interactive-hover',
 
         // Serious
         'enabled:color-serious:fg-serious-bold enabled:color-serious:bg-serious-muted enabled:color-serious:outline-serious-bold',
-        'enabled:hover:color-serious:fg-interactive-hover enabled:hover:color-serious:outline-interactive-hover',
-        'enabled:focus-visible:color-serious:fg-interactive-hover enabled:focus-visible:color-serious:outline-interactive-hover',
+        'enabled:hover:color-serious:fg-info-hover enabled:hover:color-serious:outline-interactive-hover',
+        'enabled:focus-visible:color-serious:fg-info-hover enabled:focus-visible:color-serious:outline-interactive-hover',
 
         // Critical
         'enabled:color-critical:fg-critical-bold enabled:color-critical:bg-critical-muted enabled:color-critical:outline-critical-bold',
-        'enabled:hover:color-critical:fg-interactive-hover enabled:hover:color-critical:outline-interactive-hover',
-        'enabled:focus-visible:color-critical:fg-interactive-hover enabled:focus-visible:color-critical:outline-interactive-hover',
+        'enabled:hover:color-critical:fg-info-hover enabled:hover:color-critical:outline-interactive-hover',
+        'enabled:focus-visible:color-critical:fg-info-hover enabled:focus-visible:color-critical:outline-interactive-hover',
       ],
     },
   },
@@ -100,8 +100,8 @@ const BaseButtonStyles = tv({
       variant: ['flat', 'icon'],
       className: [
         'enabled:color-info:fg-primary-bold',
-        'enabled:hover:color-info:bg-interactive-hover-dark',
-        'enabled:focus-visible:color-info:bg-interactive-hover-dark',
+        'enabled:hover:color-info:bg-interactive-muted-hover',
+        'enabled:focus-visible:color-info:bg-interactive-muted-hover',
       ],
     },
 
@@ -163,17 +163,17 @@ export const ToggleButtonStyles = tv({
       ],
       floating: [
         // Info
-        'enabled:selected:color-info:outline-accent-bold',
+        'enabled:selected:color-info:outline-accent-primary-bold',
         'enabled:selected:hover:color-info:outline-interactive-hover',
         'enabled:selected:focus-visible:color-info:outline-interactive-hover',
 
         // Serious
-        'enabled:selected:color-serious:outline-accent-bold',
+        'enabled:selected:color-serious:outline-accent-primary-bold',
         'enabled:selected:hover:color-serious:outline-interactive-hover',
         'enabled:selected:focus-visible:color-serious:outline-interactive-hover',
 
         // Critical
-        'enabled:selected:color-critical:outline-accent-bold',
+        'enabled:selected:color-critical:outline-accent-primary-bold',
         'enabled:selected:hover:color-critical:outline-interactive-hover',
         'enabled:selected:focus-visible:color-critical:outline-interactive-hover',
       ],

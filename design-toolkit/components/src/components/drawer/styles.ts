@@ -140,7 +140,7 @@ export const DrawerMenuStyles = tv({
       //hover
       'hover:fg-primary-bold hover:!bg-transparent',
       //selected
-      'selected:fg-accent-primary-bold selected:bg-accent-muted',
+      'selected:fg-accent-primary-bold selected:bg-accent-primary-muted',
       //focused
       'focus:fg-primary-bold',
       //disabled

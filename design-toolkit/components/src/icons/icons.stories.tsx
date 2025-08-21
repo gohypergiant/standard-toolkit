@@ -27,13 +27,11 @@ export const UIIcons: Story = {
       <>
         {Object.entries(catalog).map(([section, meta]) => (
           <div key={section} className='flex flex-col gap-xl'>
-            <h1 className='fg-interactive-default mt-xl text-header-xl'>
+            <h1 className='fg-primary-bold mt-xl text-header-xl'>
               {startCase(section)}
             </h1>
-            <p className='fg-interactive-hover-light text-body-s'>
-              {meta.description}
-            </p>
-            <div className='fg-interactive-default grid auto-cols-max grid-cols-2 justify-center gap-l font-display text-body-xs md:grid-cols-3 lg:grid-cols-4'>
+            <p className='fg-info-pressed text-body-s'>{meta.description}</p>
+            <div className='fg-primary-bold grid auto-cols-max grid-cols-2 justify-center gap-l font-display text-body-xs md:grid-cols-3 lg:grid-cols-4'>
               {meta.icons.map((icon) => {
                 return (
                   <div className='flex items-center gap-s' key={icon.name}>
@@ -44,7 +42,7 @@ export const UIIcons: Story = {
                       <span className='flex-none'>
                         {startCase(icon.name).replaceAll(' ', '')}
                       </span>
-                      <span className='fg-interactive'>{icon.name}</span>
+                      <span className='fg-info-bold'>{icon.name}</span>
                     </div>
                   </div>
                 );

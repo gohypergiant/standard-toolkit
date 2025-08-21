@@ -51,7 +51,7 @@ export const SelectableChipStyles = tv({
       'cursor-pointer outline-interactive',
       'enabled:focus-visible:outline-interactive-hover',
       'enabled:hover:outline-interactive-hover',
-      'enabled:selected:bg-accent-muted enabled:selected:outline-accent-bold',
+      'enabled:selected:bg-accent-primary-muted enabled:selected:outline-accent-primary-bold',
       'enabled:selected:focus-visible:outline-interactive-hover',
       'enabled:selected:hover:outline-interactive-hover',
       'disabled:fg-disabled disabled:cursor-not-allowed disabled:outline-interactive-disabled',

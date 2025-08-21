@@ -90,7 +90,7 @@ export const LocalPortal: Story = {
         </div>
         <div
           ref={parentRef}
-          className='relative h-full w-[500px] bg-default-dark'
+          className='relative h-full w-[500px] bg-info-bold'
         />
       </div>
     );

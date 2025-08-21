@@ -221,7 +221,7 @@ const labelVariants = cva('text-default-light', {
 });
 
 const sliderThumbVariants = cva(
-  'h-m w-m rounded-full bg-highlight-bold outline-highlight-bold/40 hover:outline-4 focus-visible:outline-4',
+  'h-m w-m rounded-full bg-accent-primary-bold outline-accent-primary-bold/40 hover:outline-4 focus-visible:outline-4',
   {
     variants: {
       orientation: {
@@ -233,7 +233,7 @@ const sliderThumbVariants = cva(
 );
 
 const sliderTrackBackgroundVariants = cva(
-  'absolute rounded-full bg-default-light/40',
+  'absolute rounded-full bg-interactive-disabled/40',
   {
     variants: {
       orientation: {
@@ -244,14 +244,17 @@ const sliderTrackBackgroundVariants = cva(
   },
 );
 
-const sliderTrackValueVariants = cva('absolute rounded-full bg-highlight', {
-  variants: {
-    orientation: {
-      horizontal: 'top-1/2 h-xxs translate-y-1/2',
-      vertical: 'left-1/2 w-xxs',
+const sliderTrackValueVariants = cva(
+  'absolute rounded-full bg-accent-primary-bold',
+  {
+    variants: {
+      orientation: {
+        horizontal: 'top-1/2 h-xxs translate-y-1/2',
+        vertical: 'left-1/2 w-xxs',
+      },
     },
   },
-});
+);
 
 export interface SliderProps
   extends Omit<

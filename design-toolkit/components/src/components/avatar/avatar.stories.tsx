@@ -59,15 +59,13 @@ export const WithBadge: StoryObj<typeof Avatar> = {
 
 export const WithContent: StoryObj<typeof Avatar> = {
   args: {
-    children: (
-      <span className='fg-interactive-default text-shadow-2xs'>DS</span>
-    ),
+    children: <span className='fg-primary-bold text-shadow-2xs'>DS</span>,
   },
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
       <Avatar {...args}>{children}</Avatar>
       <Avatar {...args}>
-        <Icon className='fg-interactive-default'>
+        <Icon className='fg-primary-bold'>
           <Placeholder />
         </Icon>
       </Avatar>

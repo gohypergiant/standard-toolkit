@@ -115,10 +115,8 @@ const button: TypographyInfo[] = [
 
 const TypographyDisplay = (typo: TypographyInfo) => (
   <React.Fragment key={typo.name}>
-    <div className={`fg-interactive-default text-right ${typo.text}`}>
-      {typo.name}
-    </div>
-    <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
+    <div className={`fg-primary-bold text-right ${typo.text}`}>{typo.name}</div>
+    <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
       <span className='inline-flex gap-s'>{typo.text}</span>
       <span className='fg-default-dark'>Figma: {typo.name}</span>
     </div>
@@ -129,13 +127,13 @@ export const Fonts: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>Fonts</h1>
-        <p className='fg-interactive-hover-light text-body-s'>
+        <h1 className='fg-primary-bold text-header-xl'>Fonts</h1>
+        <p className='fg-info-pressed text-body-s'>
           We use the Roboto and Roboto Mono fonts as the basis for this design
           system.
         </p>
       </div>
-      <div className='fg-interactive-default flex flex-col gap-y-oversized'>
+      <div className='fg-primary-bold flex flex-col gap-y-oversized'>
         <div className='flex flex-col font-primary'>
           <h1 className='font-medium text-[48px] leading-[64px]'>Roboto</h1>
           <p className='font-normal text-[24px] leading-[32px]'>
@@ -168,8 +166,8 @@ export const PrimaryHeader: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>Headers</h1>
-        <p className='fg-interactive-hover-light text-body-s'>
+        <h1 className='fg-primary-bold text-header-xl'>Headers</h1>
+        <p className='fg-info-pressed text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />
@@ -196,8 +194,8 @@ export const PrimaryBody: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>Body</h1>
-        <p className='fg-interactive-hover-light text-body-s'>
+        <h1 className='fg-primary-bold text-header-xl'>Body</h1>
+        <p className='fg-info-pressed text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />
@@ -219,8 +217,8 @@ export const DisplayBody: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>Body</h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <h1 className='fg-primary-bold text-header-xl'>Body</h1>
+        <p className='fg-primary-muted text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />
@@ -242,8 +240,8 @@ export const PrimaryButton: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='text-header-xl text-interactive-default'>Button</h1>
-        <p className='text-body-s text-interactive-hover-light'>
+        <h1 className='fg-primary-bold text-header-xl'>Button</h1>
+        <p className='fg-primary-muted text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />

@@ -68,7 +68,7 @@ const SpacingDisplay = (space: SpacingInfo) => {
       <div
         className={`border border-[#E8178A] bg-[#E8178A]/40 ${space.size}`}
       />
-      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
+      <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
         <span className='inline-flex gap-s'>
           {space.size}
           <span className='fg-disabled text-body-xxs'>
@@ -90,8 +90,8 @@ export const Spacing: Story = {
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>Spacing</h1>
-        <p className='fg-interactive-hover-light text-body-s'>
+        <h1 className='fg-primary-bold text-header-xl'>Spacing</h1>
+        <p className='fg-info-pressed text-body-s'>
           These are the contextualized spacing values available for use in any
           Figma design file. It can be applied to components/elements as padding
           and/or gap for listing patterns.
