@@ -12,8 +12,8 @@
  */
 'use client';
 
-import 'client-only';
 import { cn } from '@/lib/utils';
+import 'client-only';
 import { useMemo } from 'react';
 import {
   type RuleGroupProps,
@@ -97,6 +97,7 @@ export function RuleGroupHeaderComponent(
         className={ruleGroup.classNames.combinators}
         handleOnChange={ruleGroup.onCombinatorChange}
         rules={ruleGroup.ruleGroup.rules}
+        ruleGroup={ruleGroup.ruleGroup}
         level={ruleGroup.path.length}
         path={ruleGroup.path}
         disabled={ruleGroup.disabled}
