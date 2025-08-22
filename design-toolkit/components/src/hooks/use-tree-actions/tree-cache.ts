@@ -19,12 +19,6 @@ type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
   children?: Key[];
 };
 
-function assert(condition: boolean, message?: string): asserts condition {
-  if (!condition) {
-    throw new Error(message);
-  }
-}
-
 /**
  * This is a cache created only for performance reasons and is considered
  * to be only a temporary mirror of the data. The data is *always* correct
@@ -35,7 +29,10 @@ function assert(condition: boolean, message?: string): asserts condition {
  * updated with each tree operation.
  */
 export function treeCache<T>() {
-  let cache = { lookup: new Map<Key, CacheTreeNode<T>>(), roots: [] as Key[] };
+  let cache: { lookup: Map<Key, CacheTreeNode<T>>; roots: Key[] } = {
+    lookup: new Map(),
+    roots: [],
+  };
 
   /**
    * Validates the cache against incoming tree data
@@ -60,7 +57,7 @@ export function treeCache<T>() {
    * rebuilding the entire tree
    */
   function toTree(): TreeNode<T>[] {
-    return cache.roots.map((key: Key) => buildNode(key));
+    return cache.roots.map((key) => buildNode(key));
   }
 
   /**
@@ -73,25 +70,26 @@ export function treeCache<T>() {
   function buildLookup(
     nodes: TreeNode<T>[],
     lookup: Map<Key, CacheTreeNode<T>>,
-    parentKey?: Key | null,
+    parentKey: Key | null = null,
   ) {
     nodes.map((node) => {
       lookup.set(node.key, {
-        parentKey: parentKey ?? null,
-        isVisible: node.isVisible ?? false,
-        isViewable: node.isVisible ?? false,
-        isSelected: node.isSelected ?? false,
-        isExpanded: node.isExpanded ?? false,
-        isReadOnly: node.isReadOnly ?? false,
+        parentKey,
+        isVisible: false,
+        isViewable: false,
+        isSelected: false,
+        isExpanded: false,
+        isReadOnly: false,
         ...node,
         children: (node.children ?? []).map((child) => child.key),
       });
+
       if (node.children) {
         buildLookup(node.children, lookup, node.key);
       }
     });
-    const roots = nodes.map((node) => node.key);
-    cache = { lookup, roots };
+
+    cache = { lookup, roots: nodes.map((node) => node.key) };
   }
 
   /**
@@ -100,15 +98,16 @@ export function treeCache<T>() {
    * @param key
    */
   function buildNode(key: Key): TreeNode<T> {
-    const node = cache.lookup.get(key);
-    assert(node !== undefined, `Key of ${key} does not exist in tree`);
+    const node = _getNode(key);
 
     const children = (node.children ?? []).reduce(
-      (acc: TreeNode<T>[], child: Key) => {
+      (acc: TreeNode<T>[], child) => {
         const childNode = cache.lookup.get(child);
+
         if (childNode && childNode.parentKey === key) {
           acc.push(buildNode(child));
         }
+
         return acc;
       },
       [],
@@ -116,7 +115,7 @@ export function treeCache<T>() {
 
     return {
       ...node,
-      children: children.length > 0 ? children : [],
+      children,
     };
   }
 
@@ -131,7 +130,7 @@ export function treeCache<T>() {
     return {
       ...node,
       children: node.children?.map((key) => buildNode(key)),
-    } as TreeNode<T>;
+    };
   }
 
   function getAllNodes() {
@@ -145,9 +144,7 @@ export function treeCache<T>() {
     });
   }
 
-  function setAllNodes(patch: Partial<TreeNode<T>>) {
-    const { parentKey, children, ...rest } = patch;
-
+  function setAllNodes({ parentKey, children, ...rest }: Partial<TreeNode<T>>) {
     for (const node of cache.lookup.values()) {
       _setNode(node.key, {
         ...node,
@@ -181,27 +178,24 @@ export function treeCache<T>() {
     position: 'before' | 'after',
   ) {
     const { parentKey, index } = _parentOrSibling(target, position);
+    const idx = index + (position === 'before' ? 0 : 1);
 
-    position === 'before'
-      ? nodes.map((node, i) => insert(parentKey, node, index + i))
-      : nodes.map((node, i) => insert(parentKey, node, index + 1 + i));
+    nodes.map((node, i) => insert(parentKey, node, idx + i));
   }
 
   function insert(parentKey: Key | null, node: TreeNode<T>, idx: number) {
     const { children, ...rest } = node;
 
-    const newNode = {
+    _setNode(node.key, {
       parentKey,
-      isVisible: node.isVisible ?? false,
-      isViewable: node.isVisible ?? false,
-      isSelected: node.isSelected ?? false,
-      isExpanded: node.isExpanded ?? false,
-      isReadOnly: node.isReadOnly ?? false,
+      isVisible: false,
+      isViewable: false,
+      isSelected: false,
+      isExpanded: false,
+      isReadOnly: false,
       children: children?.map((child) => child.key),
       ...rest,
-    };
-
-    _setNode(node.key, newNode);
+    });
 
     node.children?.map((child, i) => insert(node.key, child, i));
 
@@ -216,19 +210,17 @@ export function treeCache<T>() {
     position: 'before' | 'after',
   ) {
     const { parentKey, index } = _parentOrSibling(target, position);
+    const idx = index + (position === 'before' ? 0 : 1);
 
-    position === 'before'
-      ? Array.from(nodes).map((key, i) => move(parentKey, key, index + i))
-      : Array.from(nodes).map((key, i) => move(parentKey, key, index + 1 + i));
+    Array.from(nodes).map((key, i) => move(parentKey, key, idx + i));
   }
 
   function move(parentKey: Key | null, key: Key, idx: number) {
     const node = _getNode(key);
-    const previousParent = node.parentKey;
 
     // remove from previous parent
-    previousParent
-      ? _removeFromParent(previousParent, key)
+    node.parentKey
+      ? _removeFromParent(node.parentKey, key)
       : _removeFromRoot(key);
 
     // add as child to new parent or root at position
@@ -237,28 +229,31 @@ export function treeCache<T>() {
 
   function setViewable(key: Key, state: boolean) {
     const node = cache.lookup.get(key);
+
     if (node) {
       _setNode(key, {
         ...node,
         isViewable: state,
       });
+
       node.children?.map((key) => setViewable(key, state));
     }
   }
 
+  // TODO: Has nothing to do with the cache
   function getVisibilityChange(
     current: Set<Key>,
     previous: Set<Key>,
   ): { key: Key | undefined; state: boolean } {
-    const removed = [...previous].filter((x) => !current.has(x));
-    const added = [...current].filter((x) => !previous.has(x));
+    const removed = previous.difference(current);
+    const added = current.difference(previous);
 
-    if (removed.length > 0) {
-      return { key: removed[0], state: false };
+    if (removed.size) {
+      return { key: removed.keys().next().value, state: false };
     }
 
-    if (added.length > 0) {
-      return { key: added[0], state: true };
+    if (added.size) {
+      return { key: added.keys().next().value, state: true };
     }
 
     return { key: undefined, state: false };
@@ -268,7 +263,11 @@ export function treeCache<T>() {
 
   function _getNode(key: Key) {
     const node = cache.lookup.get(key);
-    assert(node !== undefined, `Key of ${key} does not exist in tree`);
+
+    if (node === undefined) {
+      throw new Error(`Key of ${key} does not exist in tree`);
+    }
+
     return node;
   }
 
@@ -283,20 +282,20 @@ export function treeCache<T>() {
   function _addToParent(parentKey: Key, childKey: Key, idx: number) {
     const parent = _getNode(parentKey);
     const child = _getNode(childKey);
-    const index = idx < 0 ? 0 : idx;
+    const index = Math.max(0, idx);
 
     _setNode(childKey, {
       ...child,
       parentKey,
     });
 
+    const children = (parent.children ?? []).slice(0);
+
+    children.splice(index, 0, childKey);
+
     _setNode(parentKey, {
       ...parent,
-      children: [
-        ...(parent.children ?? []).slice(0, index),
-        childKey,
-        ...(parent.children ?? []).slice(index),
-      ],
+      children,
     });
   }
 
@@ -331,19 +330,19 @@ export function treeCache<T>() {
     const node = _getNode(key);
     const idx = cache.roots.indexOf(key);
 
-    _setNode(key, {
-      ...node,
-      parentKey: null,
-    });
-
     if (idx >= 0) {
+      _setNode(key, {
+        ...node,
+        parentKey: null,
+      });
+
       cache.roots.splice(idx, 1);
     }
   }
 
   function _parentOrSibling(target: Key | null, position: 'before' | 'after') {
     let index: number;
-    let parentKey = null;
+    let parentKey: Key | null = null;
 
     if (target === null) {
       index = position === 'before' ? 0 : cache.roots.length;
@@ -352,29 +351,31 @@ export function treeCache<T>() {
 
       if (targetNode.parentKey) {
         const parent = _getNode(targetNode.parentKey);
+
         parentKey = parent.key;
         index = parent.children?.findIndex((key) => key === target) ?? 0;
       } else {
         index = cache.roots.findIndex((rootKey) => rootKey === target);
       }
     }
+
     return { parentKey, index };
   }
 
   return {
-    buildLookup,
-    validateCache,
-    toTree,
     addNodes,
+    buildLookup,
     deleteNode,
+    getAllNodes,
+    getNode,
+    getVisibilityChange,
+    insert,
     move,
     moveNodes,
-    insert,
-    getVisibilityChange,
-    setViewable,
-    setAllNodes,
-    getNode,
-    getAllNodes,
     setNode,
+    setAllNodes,
+    setViewable,
+    toTree,
+    validateCache,
   };
 }
