@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { render } from '@testing-library/react';
-import { describe, it } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { Table } from '.';
 import type { TableProps } from './types';
 
@@ -19,29 +19,31 @@ function setup(
   props: Partial<TableProps<{ id: string; number: number }>> = {},
 ) {
   return {
-    ...render(<table {...props} />),
+    ...render(
+      <table {...props}>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Header 1</Table.HeaderCell>
+            <Table.HeaderCell>Header 2</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Cell 1</Table.Cell>
+            <Table.Cell>Cell 2</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </table>,
+    ),
   };
 }
 
 describe('Table', () => {
   it('should render', async () => {
-    setup({
-      children: (
-        <>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Header 1</Table.HeaderCell>
-              <Table.HeaderCell>Header 2</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>Cell 1</Table.Cell>
-              <Table.Cell>Cell 2</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </>
-      ),
-    });
+    setup();
+    expect(screen.getByText('Header 1')).toBeInTheDocument();
+    expect(screen.getByText('Header 2')).toBeInTheDocument();
+    expect(screen.getByText('Cell 1')).toBeInTheDocument();
+    expect(screen.getByText('Cell 2')).toBeInTheDocument();
   });
 });
