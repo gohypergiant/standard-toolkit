@@ -15,18 +15,24 @@ import { useCallback, useRef, useState } from 'react';
 import { Button } from '../button';
 import { Dialog } from './index';
 
-const meta: Meta<typeof Dialog> = {
+const meta: Meta<typeof Dialog.Trigger> = {
   title: 'Components/Dialog',
   component: Dialog,
   args: {
-    size: 'sm',
+    size: 'small',
     isDismissable: true,
     isKeyboardDismissDisabled: false,
   },
   argTypes: {
     size: {
       control: 'select',
-      options: ['sm', 'lg'],
+      options: ['small', 'large'],
+    },
+    isDismissable: {
+      control: 'boolean',
+    },
+    isKeyboardDismissDisabled: {
+      control: 'boolean',
     },
   },
 };
@@ -38,14 +44,16 @@ export const Default: Story = {
   render: ({ children, ...args }) => {
     return (
       <div className='relative h-[800px] w-[600px] border border-default-light p-l'>
-        <Dialog {...args}>
+        <Dialog.Trigger {...args}>
           <Button>Press Me</Button>
-          <Dialog.Body>
+          <Dialog>
             {({ close }) => {
               return (
                 <>
                   <Dialog.Title>Dialog Title</Dialog.Title>
-                  Lorum Ipsum text for the dialog shall go here.
+                  <Dialog.Content>
+                    Lorum Ipsum text for the dialog shall go here.
+                  </Dialog.Content>
                   <Dialog.Footer>
                     <Dialog.Button onPress={close} variant='flat'>
                       Action 2
@@ -55,8 +63,8 @@ export const Default: Story = {
                 </>
               );
             }}
-          </Dialog.Body>
-        </Dialog>
+          </Dialog>
+        </Dialog.Trigger>
       </div>
     );
   },
@@ -68,14 +76,16 @@ export const LocalPortal: Story = {
     return (
       <div className='flex h-[600px] w-[960px] border border-default-light'>
         <div className='w-full p-l'>
-          <Dialog parentRef={parentRef}>
+          <Dialog.Trigger parentRef={parentRef}>
             <Button>Press Me</Button>
-            <Dialog.Body>
+            <Dialog>
               {({ close }) => {
                 return (
                   <>
                     <Dialog.Title>Dialog Title</Dialog.Title>
-                    Lorum Ipsum text for the dialog shall go here.
+                    <Dialog.Content>
+                      Lorum Ipsum text for the dialog shall go here.
+                    </Dialog.Content>
                     <Dialog.Footer>
                       <Dialog.Button onPress={close} variant='flat'>
                         Action 2
@@ -85,8 +95,8 @@ export const LocalPortal: Story = {
                   </>
                 );
               }}
-            </Dialog.Body>
-          </Dialog>
+            </Dialog>
+          </Dialog.Trigger>
         </div>
         <div
           ref={parentRef}
@@ -106,14 +116,16 @@ export const Controlled: Story = {
     const handleOpenPress = useCallback(() => setOpen(true), []);
     return (
       <div className='h-[800px] w-[600px] border border-default-light p-l'>
-        <Dialog isOpen={open} onOpenChange={handleOpenChange}>
+        <Dialog.Trigger isOpen={open} onOpenChange={handleOpenChange}>
           <Button onPress={handleOpenPress}>Press Me</Button>
-          <Dialog.Body>
+          <Dialog>
             {({ close }) => {
               return (
                 <>
                   <Dialog.Title>Dialog Title</Dialog.Title>
-                  Lorum Ipsum text for the dialog shall go here.
+                  <Dialog.Content>
+                    Lorum Ipsum text for the dialog shall go here.
+                  </Dialog.Content>
                   <Dialog.Footer>
                     <Dialog.Button onPress={close} variant='flat'>
                       Action 2
@@ -123,8 +135,8 @@ export const Controlled: Story = {
                 </>
               );
             }}
-          </Dialog.Body>
-        </Dialog>
+          </Dialog>
+        </Dialog.Trigger>
       </div>
     );
   },

@@ -128,7 +128,13 @@ export type {
   DetailsListValueProps,
 } from './components/details-list/types';
 export { Dialog } from './components/dialog';
-export type { DialogProps } from './components/dialog';
+export { DialogStyles } from './components/dialog/styles';
+export type {
+  DialogContextValue,
+  DialogProps,
+  DialogSize,
+  DialogTriggerProps,
+} from './components/dialog/types';
 export {
   DrawerEventNamespace,
   DrawerEventTypes,
