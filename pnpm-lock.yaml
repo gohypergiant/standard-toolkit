@@ -942,6 +942,9 @@ importers:
       inquirer:
         specifier: 12.6.1
         version: 12.6.1(@types/node@20.19.9)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       ora:
         specifier: 8.2.0
         version: 8.2.0
@@ -958,6 +961,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../vitest-config
+      '@types/lodash':
+        specifier: 4.17.20
+        version: 4.17.20
       '@types/node':
         specifier: ^20.17.48
         version: 20.19.9
