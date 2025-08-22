@@ -164,7 +164,7 @@ const tabBaseStyles = cn(
 const tabStyles = cva(tabBaseStyles, {
   variants: {
     isSelected: {
-      true: 'fg-accent-primary-bold bg-accent-primary-muted group-orientation-horizontal:shadow-[color:var(--outline-accent-bold)]',
+      true: 'fg-accent-primary-bold bg-accent-primary-muted group-orientation-horizontal:shadow-[color:var(--outline-accent-primary-bold)]',
     },
     isHovered: {
       true: 'fg-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)]',
@@ -181,7 +181,7 @@ const tabStyles = cva(tabBaseStyles, {
       isSelected: true,
       isHovered: true,
       className:
-        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-accent-bold)]',
+        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-accent-primary-bold)]',
     },
     {
       isSelected: true,

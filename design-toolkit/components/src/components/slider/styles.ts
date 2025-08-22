@@ -47,17 +47,17 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:group-layout-grid/slider:col-start-2 group-orientation-vertical/slider:group-layout-grid/slider:row-span-3 group-orientation-vertical/slider:group-layout-grid/slider:row-start-2',
     ],
     trackBackground: [
-      'absolute rounded-full bg-default-light/40',
+      'absolute rounded-full bg-surface-muted/40',
       'group-orientation-horizontal/slider:-translate-y-1/2 group-orientation-horizontal/slider:top-1/2 group-orientation-horizontal/slider:h-xxs group-orientation-horizontal/slider:w-full',
       'group-orientation-vertical/slider:-translate-x-1/2 group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:h-full group-orientation-vertical/slider:w-xxs',
     ],
     trackValue: [
-      'absolute rounded-full bg-highlight',
+      'absolute rounded-full bg-accent-primary-bold',
       'group-orientation-horizontal/slider:-translate-y-1/2 group-orientation-horizontal/slider:top-1/2 group-orientation-horizontal/slider:right-[calc(100%-attr(data-end_%)*100)] group-orientation-horizontal/slider:left-[calc(attr(data-start_%)*100)] group-orientation-horizontal/slider:h-xxs',
       'group-orientation-vertical/slider:-translate-x-1/2 group-orientation-vertical/slider:top-[calc(100%-attr(data-end_%)*100)] group-orientation-vertical/slider:bottom-[calc(attr(data-start_%)*100)] group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:w-xxs',
     ],
     thumb: [
-      'h-m w-m rounded-full bg-highlight-bold outline-highlight-bold/40',
+      'h-m w-m rounded-full bg-accent-primary-bold outline-accent-primary-bold/40',
       'focus-visible:outline-4',
       'hover:outline-4',
       'group-orientation-horizontal/slider:top-1/2',
