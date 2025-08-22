@@ -66,7 +66,7 @@ const SpacingDisplay = (space: SpacingInfo) => {
   return (
     <div className='flex items-center gap-l' key={space.name}>
       <div
-        className={`outline outline-[#E8178A] bg-[#E8178A]/40 ${space.size}`}
+        className={`bg-[#E8178A]/40 outline outline-[#E8178A] ${space.size}`}
       />
       <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
         <span className='inline-flex gap-s'>

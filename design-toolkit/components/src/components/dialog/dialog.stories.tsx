@@ -105,7 +105,7 @@ export const Controlled: Story = {
     }, []);
     const handleOpenPress = useCallback(() => setOpen(true), []);
     return (
-      <div className='h-[800px] w-[600px] outline outline-info-bold p-l'>
+      <div className='h-[800px] w-[600px] p-l outline outline-info-bold'>
         <Dialog isOpen={open} onOpenChange={handleOpenChange}>
           <Button onPress={handleOpenPress}>Press Me</Button>
           <Dialog.Body>

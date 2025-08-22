@@ -56,7 +56,7 @@ export const StaticHeaderFooter: StoryObj<DrawerWithToggleArgs> = {
   },
   render: ({ placement, size, toggle }) => {
     return (
-      <div className='fg-primary-bold h-screen bg-surface-raised'>
+      <div className='fg-primary-bold h-screen bg-surface-muted'>
         <Drawer.Layout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
             <Drawer.Menu>
@@ -94,7 +94,7 @@ export const StaticHeaderFooter: StoryObj<DrawerWithToggleArgs> = {
 export const DynamicHeaderFooter: StoryObj<typeof Drawer> = {
   render: ({ placement, size }) => {
     return (
-      <div className='fg-primary-bold h-screen bg-surface-raised'>
+      <div className='fg-primary-bold h-screen bg-surface-muted'>
         <Drawer.Layout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
             <Drawer.Menu>
@@ -144,7 +144,7 @@ export const OpenCloseTrigger: StoryObj<typeof Drawer> = {
       <div className='fg-primary-bold h-screen'>
         <Drawer.Layout>
           <Drawer.Layout.Main>
-            <div className='flex h-full items-center justify-center bg-surface-overlay'>
+            <div className='flex h-full items-center justify-center bg-surface-muted'>
               <Drawer.Trigger for={`open:${ids.a}`}>
                 <Button>Open</Button>
               </Drawer.Trigger>

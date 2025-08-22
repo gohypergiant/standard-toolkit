@@ -61,7 +61,7 @@ export const InputStyles = tv({
       month: '',
       number: {
         input:
-          '[appearance:textfield] placeholder:fg-primary-muted [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          'placeholder:fg-primary-muted [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
       },
       password: '',
       radio: '',
