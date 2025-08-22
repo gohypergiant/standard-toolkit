@@ -1,15 +1,3 @@
-/*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-
 export const designTokens = {
   dark: {
     bg: {
@@ -21,16 +9,16 @@ export const designTokens = {
       },
       interactive: {
         bold: {
-          base: [33, 34, 35, 1],
-          hover: [47, 47, 49, 1],
-          pressed: [0, 0, 0, 1],
+          base: [239, 241, 242, 1],
+          hover: [213, 215, 217, 1],
+          pressed: [136, 138, 143, 1],
         },
         muted: {
           base: [47, 47, 49, 1],
           hover: [65, 66, 69, 1],
           pressed: [0, 0, 0, 1],
         },
-        disabled: [213, 215, 217, 1],
+        disabled: [47, 47, 49, 1],
       },
       accent: {
         primary: {
@@ -104,13 +92,13 @@ export const designTokens = {
         pressed: [28, 126, 35, 1],
       },
       serious: {
-        bold: [251, 171, 22, 1],
-        hover: [255, 211, 130, 1],
+        bold: [232, 153, 6, 1],
+        hover: [255, 193, 76, 1],
         pressed: [187, 122, 0, 1],
       },
       critical: {
         bold: [255, 46, 39, 1],
-        hover: [255, 147, 144, 1],
+        hover: [255, 109, 104, 1],
         pressed: [161, 7, 1, 1],
       },
       a11y: {
@@ -162,9 +150,9 @@ export const designTokens = {
     shadow: {
       elevation: {
         raised:
-          '0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14)',
-        overlay:
           '0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14)',
+        overlay:
+          '0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14)',
       },
     },
   },
@@ -178,8 +166,8 @@ export const designTokens = {
       },
       interactive: {
         bold: {
-          base: [195, 197, 199, 1],
-          hover: [213, 215, 217, 1],
+          base: [21, 21, 23, 1],
+          hover: [33, 34, 35, 1],
           pressed: [195, 197, 199, 1],
         },
         muted: {
@@ -194,7 +182,7 @@ export const designTokens = {
           bold: [0, 79, 126, 1],
           hover: [0, 104, 161, 1],
           pressed: [0, 33, 62, 1],
-          muted: [0, 33, 62, 1],
+          muted: [177, 233, 255, 1],
         },
       },
       info: {
@@ -207,13 +195,13 @@ export const designTokens = {
         bold: [60, 103, 160, 1],
         hover: [78, 136, 218, 1],
         pressed: [38, 64, 98, 1],
-        muted: [26, 44, 67, 1],
+        muted: [196, 222, 255, 1],
       },
       normal: {
         bold: [28, 126, 35, 1],
         hover: [38, 161, 46, 1],
         pressed: [20, 87, 24, 1],
-        muted: [14, 59, 17, 1],
+        muted: [194, 245, 197, 1],
       },
       serious: {
         bold: [187, 122, 0, 1],
@@ -231,44 +219,44 @@ export const designTokens = {
     fg: {
       primary: {
         bold: [33, 34, 35, 1],
-        muted: [195, 197, 199, 1],
+        muted: [86, 87, 89, 1],
       },
       inverse: {
-        bold: [47, 47, 49, 1],
+        bold: [255, 255, 255, 1],
         muted: [136, 138, 143, 1],
       },
-      disabled: [86, 87, 89, 1],
+      disabled: [195, 197, 199, 1],
       accent: {
         primary: {
-          bold: [0, 156, 222, 1],
+          bold: [57, 183, 250, 1],
           hover: [110, 209, 255, 1],
           pressed: [0, 104, 161, 1],
         },
       },
       info: {
-        bold: [136, 138, 143, 1],
-        hover: [213, 215, 217, 1],
-        pressed: [65, 66, 69, 1],
+        bold: [65, 66, 69, 1],
+        hover: [47, 47, 49, 1],
+        pressed: [86, 87, 89, 1],
       },
       advisory: {
         bold: [98, 166, 255, 1],
-        hover: [169, 206, 255, 1],
-        pressed: [60, 103, 160, 1],
+        hover: [60, 103, 160, 1],
+        pressed: [78, 136, 218, 1],
       },
       normal: {
         bold: [43, 191, 53, 1],
-        hover: [134, 233, 140, 1],
-        pressed: [28, 126, 35, 1],
+        hover: [28, 126, 35, 1],
+        pressed: [38, 161, 46, 1],
       },
       serious: {
-        bold: [251, 171, 22, 1],
-        hover: [255, 211, 130, 1],
+        bold: [187, 122, 0, 1],
+        hover: [142, 93, 0, 1],
         pressed: [187, 122, 0, 1],
       },
       critical: {
         bold: [255, 46, 39, 1],
-        hover: [255, 147, 144, 1],
-        pressed: [161, 7, 1, 1],
+        hover: [161, 7, 1, 1],
+        pressed: [212, 11, 4, 1],
       },
       a11y: {
         'on-accent': [255, 255, 255, 1],
@@ -285,9 +273,9 @@ export const designTokens = {
       },
       accent: {
         primary: {
-          bold: [0, 143, 208, 1],
+          bold: [57, 183, 250, 1],
           hover: [0, 104, 161, 1],
-          pressed: [0, 156, 222, 1],
+          pressed: [110, 209, 255, 1],
         },
       },
       info: {
@@ -319,9 +307,9 @@ export const designTokens = {
     shadow: {
       elevation: {
         raised:
-          '0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14)',
-        overlay:
           '0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14)',
+        overlay:
+          '0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14)',
       },
     },
   },
