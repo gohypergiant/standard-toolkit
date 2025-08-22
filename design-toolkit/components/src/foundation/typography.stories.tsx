@@ -128,7 +128,7 @@ export const Fonts: Story = {
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
         <h1 className='fg-primary-bold text-header-xl'>Fonts</h1>
-        <p className='fg-info-pressed text-body-s'>
+        <p className='fg-primary-muted text-body-s'>
           We use the Roboto and Roboto Mono fonts as the basis for this design
           system.
         </p>
@@ -167,7 +167,7 @@ export const PrimaryHeader: Story = {
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
         <h1 className='fg-primary-bold text-header-xl'>Headers</h1>
-        <p className='fg-info-pressed text-body-s'>
+        <p className='fg-primary-muted text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />
@@ -195,7 +195,7 @@ export const PrimaryBody: Story = {
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
         <h1 className='fg-primary-bold text-header-xl'>Body</h1>
-        <p className='fg-info-pressed text-body-s'>
+        <p className='fg-primary-muted text-body-s'>
           The numbers that you see in the parenthesis after each name is the
           font size and line height of each of the related entries.
           <br />

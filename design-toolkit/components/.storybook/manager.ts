@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { addons } from '@storybook/manager-api';
-import { themes } from '@storybook/theming';
+// import { addons } from '@storybook/manager-api';
+// import { themes } from '@storybook/theming';
 
-addons.setConfig({
-  theme: themes.dark,
-});
+// addons.setConfig({
+//   theme: themes.dark,
+// });

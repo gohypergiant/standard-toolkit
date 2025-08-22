@@ -11,12 +11,12 @@
  */
 
 import { withThemeByClassName } from '@storybook/addon-themes';
-import type { Preview, ReactRenderer } from '@storybook/react';
-import '../src/index.css';
 import { DocsContainer } from '@storybook/blocks';
+import type { Preview, ReactRenderer } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import { createElement } from 'react';
 import { Docs } from './docs';
+import '../src/index.css';
 
 const preview: Preview = {
   parameters: {
@@ -24,17 +24,32 @@ const preview: Preview = {
     docs: {
       container: (props: any) => {
         const el = document.querySelector('html');
-        const theme =
-          props?.context.store.userGlobals.globals.theme === 'dark'
-            ? themes.dark
-            : themes.light;
-        el!.dataset['theme'] = props?.context.store.userGlobals.globals.theme;
+        const sbTheme = props?.context.store.userGlobals.globals.theme;
+        const theme = sbTheme === 'dark' ? themes.dark : themes.light;
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        el!.dataset.theme = sbTheme;
         const newProps = { ...props, theme };
         return createElement(DocsContainer, newProps);
       },
       page: Docs,
+      story: {
+        inline: true, // withThemesByClassName applies in docs too
+      },
     },
     layout: 'centered',
+    backgrounds: {
+      default: 'dark',
+      values: [
+        {
+          name: 'light',
+          value: 'bg-surface-default',
+        },
+        {
+          name: 'dark',
+          value: 'bg-surface-default',
+        },
+      ],
+    },
     options: {
       storySort: {
         method: 'alphabetical',
@@ -46,8 +61,8 @@ const preview: Preview = {
   decorators: [
     withThemeByClassName<ReactRenderer>({
       themes: {
-        light: 'light bg-surface-default',
-        dark: 'dark bg-surface-default',
+        light: 'light !bg-surface-default', // need important because storybook uses important 🫠
+        dark: 'dark !bg-surface-default', // need important because storybook uses important 🫠
       },
       defaultTheme: 'dark',
     }),

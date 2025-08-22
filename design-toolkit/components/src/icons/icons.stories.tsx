@@ -30,7 +30,7 @@ export const UIIcons: Story = {
             <h1 className='fg-primary-bold mt-xl text-header-xl'>
               {startCase(section)}
             </h1>
-            <p className='fg-info-pressed text-body-s'>{meta.description}</p>
+            <p className='fg-primary-muted text-body-s'>{meta.description}</p>
             <div className='fg-primary-bold grid auto-cols-max grid-cols-2 justify-center gap-l font-display text-body-xs md:grid-cols-3 lg:grid-cols-4'>
               {meta.icons.map((icon) => {
                 return (

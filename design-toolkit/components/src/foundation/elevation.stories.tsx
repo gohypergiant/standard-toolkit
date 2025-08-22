@@ -58,7 +58,7 @@ export const Elevation: Story = {
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
         <h1 className='fg-primary-bold text-header-xl'>Elevation</h1>
-        <p className='fg-info-pressed text-body-s'>
+        <p className='fg-primary-muted text-body-s'>
           These are tokens primarily used as backgrounds for any element or
           component that contains content such as containers, sections, headers,
           buttons, etc.

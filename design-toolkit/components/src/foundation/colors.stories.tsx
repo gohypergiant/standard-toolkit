@@ -44,7 +44,7 @@ const ColorDisplay = (color: ColorInfo) => {
   return (
     <div className='flex items-center gap-l' key={color.name}>
       <div
-        className={`h-[90px] w-[120px] rounded-large`}
+        className='h-[90px] w-[120px] rounded-large'
         style={{ backgroundColor: color.actual }}
       />
       <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
@@ -56,8 +56,24 @@ const ColorDisplay = (color: ColorInfo) => {
   );
 };
 
+const BorderColorDisplay = (color: ColorInfo) => {
+  return (
+    <div className='flex items-center gap-l' key={color.name}>
+      <div
+        className='h-[90px] w-[120px] rounded-large'
+        style={{ border: `1px solid ${color.actual}` }}
+      />
+      <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
+        <span>{color.name}</span>
+        <span>{color.actual}</span>
+        <span className='fg-primary-muted'>Figma: {color.name}</span>
+      </div>
+    </div>
+  );
+};
+
 export const BackgroundDark: Story = {
-  globals: { backgrounds: { value: '#000000' }, theme: 'dark' },
+  globals: { backgrounds: { value: '#151517' }, theme: 'dark' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -83,7 +99,7 @@ export const BackgroundDark: Story = {
 };
 
 export const BackgroundLight: Story = {
-  globals: { backgrounds: { value: '#FFFFFF' }, theme: 'light' },
+  globals: { backgrounds: { value: '#eff1f2' }, theme: 'light' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -109,7 +125,7 @@ export const BackgroundLight: Story = {
 };
 
 export const ForegroundDark: Story = {
-  globals: { backgrounds: { value: '#000000' }, theme: 'dark' },
+  globals: { backgrounds: { value: '#151517' }, theme: 'dark' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -117,7 +133,7 @@ export const ForegroundDark: Story = {
           <h1 className='fg-primary-bold text-header-xl'>
             Semantic Foreground (Dark Mode)
           </h1>
-          <p className='fg-primary-muted'>
+          <p className='fg-primary-muted text-body-s'>
             These are tokens primarily used as fill for elements like text,
             icons, vectors, and other things that sit above a background.
           </p>
@@ -137,7 +153,7 @@ export const ForegroundDark: Story = {
 };
 
 export const ForegroundLight: Story = {
-  globals: { backgrounds: { value: '#FFFFFF' }, theme: 'light' },
+  globals: { backgrounds: { value: '#eff1f2' }, theme: 'light' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -165,7 +181,7 @@ export const ForegroundLight: Story = {
 };
 
 export const BorderDark: Story = {
-  globals: { backgrounds: { value: '#000000' }, theme: 'dark' },
+  globals: { backgrounds: { value: '#151517' }, theme: 'dark' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -179,10 +195,10 @@ export const BorderDark: Story = {
           </p>
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-          {darkTokens.outline.base.map(ColorDisplay)}
+          {darkTokens.outline.base.map(BorderColorDisplay)}
         </div>
         <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-          {darkTokens.outline.utility.map(ColorDisplay)}
+          {darkTokens.outline.utility.map(BorderColorDisplay)}
         </div>
       </div>
     );
@@ -190,7 +206,7 @@ export const BorderDark: Story = {
 };
 
 export const BorderLight: Story = {
-  globals: { backgrounds: { value: '#FFFFFF' }, theme: 'light' },
+  globals: { backgrounds: { value: '#eff1f2' }, theme: 'light' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -204,10 +220,10 @@ export const BorderLight: Story = {
           </p>
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-          {lightTokens.outline.base.map(ColorDisplay)}
+          {lightTokens.outline.base.map(BorderColorDisplay)}
         </div>
         <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-          {lightTokens.outline.utility.map(ColorDisplay)}
+          {lightTokens.outline.utility.map(BorderColorDisplay)}
         </div>
       </div>
     );

@@ -91,7 +91,7 @@ export const Spacing: Story = {
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
         <h1 className='fg-primary-bold text-header-xl'>Spacing</h1>
-        <p className='fg-info-pressed text-body-s'>
+        <p className='fg-primary-muted text-body-s'>
           These are the contextualized spacing values available for use in any
           Figma design file. It can be applied to components/elements as padding
           and/or gap for listing patterns.

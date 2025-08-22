@@ -59,7 +59,7 @@ const fullColorTokenSet = new Set([
   'fg-accent-primary-pressed',
   'fg-info-bold',
   'fg-info-hover',
-  'fg-info-pressed',
+  'fg-primary-muted',
   'fg-advisory-bold',
   'fg-advisory-hover',
   'fg-advisory-pressed',
