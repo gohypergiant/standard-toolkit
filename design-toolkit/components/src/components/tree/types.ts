@@ -10,22 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type { TreeNode } from '@/hooks/use-tree/types';
-import type {
-  DragItem as AriaDragItem,
-  DroppableCollectionInsertDropEvent,
-  DroppableCollectionOnItemDropEvent,
-  DroppableCollectionReorderEvent,
-  DroppableCollectionRootDropEvent,
-  Key,
-} from '@react-types/shared';
-import type { PropsWithChildren, ReactElement } from 'react';
+import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
+import type { Key } from '@react-types/shared';
+import type { PropsWithChildren } from 'react';
 import type {
   TextProps as AriaTextProps,
   TreeItemContentRenderProps as AriaTreeItemContentRenderProps,
   TreeItemProps as AriaTreeItemProps,
   TreeProps as AriaTreeProps,
-  DropTarget,
   RenderProps,
 } from 'react-aria-components';
 import type { TreeStyleVariants } from './styles';
@@ -42,39 +34,6 @@ type VariantProps = Pick<
   TreeStyleVariants,
   'variant' | 'isViewable' | 'isVisible'
 >;
-
-export type DragItem = AriaDragItem;
-
-export type DragAndDropConfig = {
-  getItems: (key: Set<Key>) => DragItem[];
-  /**
-   * Handler that is called when external items are dropped on the droppable collection's root.
-   */
-  onRootDrop?: (e: DroppableCollectionRootDropEvent) => void;
-  /**
-   * Handler that is called when items are reordered within the collection.
-   * This handler only allows dropping between items, not on items.
-   * It does not allow moving items to a different parent item within a tree.
-   */
-  onReorder?: (e: DroppableCollectionReorderEvent) => void;
-  /**
-   * Handler that is called when items are moved within the source collection.
-   * This handler allows dropping both on or between items, and items may be
-   * moved to a different parent item within a tree.
-   */
-  onMove?: (e: DroppableCollectionReorderEvent) => void;
-  renderDragPreview?: (items: DragItem[]) => ReactElement;
-  renderDropIndicator?: (target: DropTarget) => ReactElement;
-  acceptedDragTypes?: string[];
-  /**
-   * Handler that is called when external items are dropped "between" items.
-   */
-  onInsert?: (e: DroppableCollectionInsertDropEvent) => void;
-  /**
-   * Handler that is called when items are dropped "on" an item.
-   */
-  onItemDrop?: (e: DroppableCollectionOnItemDropEvent) => void;
-};
 
 export type TreeProps<T> = AriaTreeProps<TreeNode<T>> &
   VariantProps & {

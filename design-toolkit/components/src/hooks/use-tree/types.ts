@@ -10,9 +10,48 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Key } from '@react-types/shared';
+import type {
+  DragItem,
+  DroppableCollectionInsertDropEvent,
+  DroppableCollectionOnItemDropEvent,
+  DroppableCollectionReorderEvent,
+  DroppableCollectionRootDropEvent,
+  Key,
+} from '@react-types/shared';
+import type { ReactElement } from 'react';
 import type { Selection } from 'react-aria-components';
-import type { DragAndDropConfig } from '../../components/tree/types'; // TODO: Move, circular dependency
+import type { DropTarget } from 'react-aria-components';
+
+export type DragAndDropConfig = {
+  getItems: (key: Set<Key>) => DragItem[];
+  /**
+   * Handler that is called when external items are dropped on the droppable collection's root.
+   */
+  onRootDrop?: (e: DroppableCollectionRootDropEvent) => void;
+  /**
+   * Handler that is called when items are reordered within the collection.
+   * This handler only allows dropping between items, not on items.
+   * It does not allow moving items to a different parent item within a tree.
+   */
+  onReorder?: (e: DroppableCollectionReorderEvent) => void;
+  /**
+   * Handler that is called when items are moved within the source collection.
+   * This handler allows dropping both on or between items, and items may be
+   * moved to a different parent item within a tree.
+   */
+  onMove?: (e: DroppableCollectionReorderEvent) => void;
+  renderDragPreview?: (items: DragItem[]) => ReactElement;
+  renderDropIndicator?: (target: DropTarget) => ReactElement;
+  acceptedDragTypes?: string[];
+  /**
+   * Handler that is called when external items are dropped "between" items.
+   */
+  onInsert?: (e: DroppableCollectionInsertDropEvent) => void;
+  /**
+   * Handler that is called when items are dropped "on" an item.
+   */
+  onItemDrop?: (e: DroppableCollectionOnItemDropEvent) => void;
+};
 
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */
