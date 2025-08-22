@@ -39,7 +39,7 @@ function setup(
 }
 
 describe('Table', () => {
-  it('should render', async () => {
+  it('should render', () => {
     setup();
     expect(screen.getByText('Header 1')).toBeInTheDocument();
     expect(screen.getByText('Header 2')).toBeInTheDocument();

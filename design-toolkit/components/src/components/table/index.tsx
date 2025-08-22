@@ -167,51 +167,49 @@ export function Table<T extends { id: string | number }>({
         const isPinned = row.getIsPinned();
         return (
           enableRowActions && (
-            <>
-              <div
-                className={rowKebab({
-                  persistKebab: persistRowKebabMenu,
-                })}
-              >
-                <Menu.Trigger>
-                  <Button variant='icon' aria-label='Menu'>
-                    <Icon>
-                      <Kebab />
-                    </Icon>
-                  </Button>
-                  <Menu>
-                    <Menu.Item
-                      classNames={{ item: menuItem() }}
-                      onAction={() => {
-                        row.pin(isPinned ? false : 'top');
-                      }}
-                    >
-                      <Menu.Item.Label>
-                        {isPinned
-                          ? RowKebabMenuItems.Unpin
-                          : RowKebabMenuItems.Pin}
-                      </Menu.Item.Label>
-                    </Menu.Item>
-                    <Menu.Item
-                      classNames={{ item: menuItem() }}
-                      onAction={moveUpSelectedRows}
-                    >
-                      <Menu.Item.Label>
-                        {RowKebabMenuItems.MoveUp}
-                      </Menu.Item.Label>
-                    </Menu.Item>
-                    <Menu.Item
-                      classNames={{ item: menuItem() }}
-                      onAction={moveDownSelectedRows}
-                    >
-                      <Menu.Item.Label>
-                        {RowKebabMenuItems.MoveDown}
-                      </Menu.Item.Label>
-                    </Menu.Item>
-                  </Menu>
-                </Menu.Trigger>
-              </div>
-            </>
+            <div
+              className={rowKebab({
+                persistKebab: persistRowKebabMenu,
+              })}
+            >
+              <Menu.Trigger>
+                <Button variant='icon' aria-label='Menu'>
+                  <Icon>
+                    <Kebab />
+                  </Icon>
+                </Button>
+                <Menu>
+                  <Menu.Item
+                    classNames={{ item: menuItem() }}
+                    onAction={() => {
+                      row.pin(isPinned ? false : 'top');
+                    }}
+                  >
+                    <Menu.Item.Label>
+                      {isPinned
+                        ? RowKebabMenuItems.Unpin
+                        : RowKebabMenuItems.Pin}
+                    </Menu.Item.Label>
+                  </Menu.Item>
+                  <Menu.Item
+                    classNames={{ item: menuItem() }}
+                    onAction={moveUpSelectedRows}
+                  >
+                    <Menu.Item.Label>
+                      {RowKebabMenuItems.MoveUp}
+                    </Menu.Item.Label>
+                  </Menu.Item>
+                  <Menu.Item
+                    classNames={{ item: menuItem() }}
+                    onAction={moveDownSelectedRows}
+                  >
+                    <Menu.Item.Label>
+                      {RowKebabMenuItems.MoveDown}
+                    </Menu.Item.Label>
+                  </Menu.Item>
+                </Menu>
+              </Menu.Trigger>
+            </div>
           )
         );
       },
