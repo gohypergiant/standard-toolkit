@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { TreeNode } from '@/hooks/types';
-import { useTreeActions } from '@/hooks/use-tree-actions';
-import { useTreeState } from '@/hooks/use-tree-state';
+import { useTreeActions } from '@/hooks/use-tree/actions';
+import { useTreeState } from '@/hooks/use-tree/state';
+import type { TreeNode } from '@/hooks/use-tree/types';
 import {
   CenterOn,
   CollapseAll,

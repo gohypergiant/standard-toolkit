@@ -20,9 +20,9 @@ import type {
   Selection,
 } from '@react-types/shared';
 import { useEffect, useState } from 'react';
-import type { DragAndDropConfig } from '../../components/tree/types';
+import type { DragAndDropConfig } from '../../../components/tree/types'; // TODO: Move, circular dependency
+import { useTreeActions } from '../actions';
 import type { UseTreeState, UseTreeStateOptions } from '../types';
-import { useTreeActions } from '../use-tree-actions';
 import { processDroppedItems } from './utils';
 
 export function useTreeState<T>(

@@ -12,7 +12,7 @@
 
 import type { Key } from '@react-types/shared';
 import type { Selection } from 'react-aria-components';
-import type { DragAndDropConfig } from '../components/tree/types';
+import type { DragAndDropConfig } from '../../components/tree/types'; // TODO: Move, circular dependency
 
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */

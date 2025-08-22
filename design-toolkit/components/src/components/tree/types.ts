@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { TreeStyleVariants } from '@/components/tree/styles';
+import type { TreeNode } from '@/hooks/use-tree/types';
 import type {
   DragItem as AriaDragItem,
   DroppableCollectionInsertDropEvent,
@@ -28,7 +28,7 @@ import type {
   DropTarget,
   RenderProps,
 } from 'react-aria-components';
-import type { TreeNode } from '../../hooks/types';
+import type { TreeStyleVariants } from './styles';
 
 export type TreeSelectionType = 'visibility' | 'checkbox' | 'none';
 

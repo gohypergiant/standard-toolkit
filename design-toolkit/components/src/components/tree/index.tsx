@@ -10,8 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { TreeStyles, TreeStylesDefaults } from '@/components/tree/styles';
-import type { TreeNode } from '@/hooks/types';
+import type { TreeNode } from '@/hooks/use-tree/types';
 import { isSlottedContextValue } from '@/lib/utils';
 import { DragVert } from '@accelint/icons';
 import type { Key } from '@react-types/shared';
@@ -38,6 +37,7 @@ import { Icon } from '../icon';
 import { Lines } from '../lines';
 import { ExpandToggle } from './expand-toggle';
 import { SelectionToggle } from './selection-toggle';
+import { TreeStyles, TreeStylesDefaults } from './styles';
 import type {
   ItemContentProps,
   ItemContentRenderProps,

@@ -296,6 +296,8 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { useTreeActions } from './hooks/use-tree/actions';
+export { useTreeState } from './hooks/use-tree/state';
 export type {
   Position,
   TreeActions,
@@ -305,9 +307,7 @@ export type {
   UseTreeActionsOptions,
   UseTreeState,
   UseTreeStateOptions,
-} from './hooks/types';
-export { useTreeActions } from './hooks/use-tree-actions';
-export { useTreeState } from './hooks/use-tree-state';
+} from './hooks/use-tree/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   AriaAttributes,
