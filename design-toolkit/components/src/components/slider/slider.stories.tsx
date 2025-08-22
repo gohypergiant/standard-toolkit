@@ -17,14 +17,20 @@ const meta: Meta<typeof Slider> = {
   title: 'Components/Slider',
   component: Slider,
   args: {
-    orientation: 'horizontal',
-    layout: 'stacked',
-    label: 'Opacity',
     defaultValue: 30,
-    minValue: 0,
+    layout: 'grid',
+    label: 'Opacity',
     maxValue: 100,
+    minValue: 0,
+    orientation: 'horizontal',
+    showInput: false,
+    showLabel: true,
   },
   argTypes: {
+    layout: {
+      control: 'select',
+      options: ['grid', 'stack'],
+    },
     orientation: {
       control: 'select',
       options: ['horizontal', 'vertical'],
@@ -33,9 +39,22 @@ const meta: Meta<typeof Slider> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Slider>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof Slider> = {
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const Range: StoryObj<typeof Slider> = {
+  args: {
+    defaultValue: [20, 30],
+    showInput: true,
+  },
   render: ({ ...args }) => {
     return (
       <div className='size-[400px]'>

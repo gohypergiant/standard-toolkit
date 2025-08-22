@@ -12,7 +12,7 @@ The custom variants system ensures selectors :
 
 ## File Structure
 
-```
+```shell
 scripts
 ├── generate-tokens.mjs # Token generator logic
 
@@ -38,7 +38,7 @@ Edit `variants.json` to define your variants:
 
 _The order of implementation of these variants is critically important!_
 
-The order is from __lowest to highest priority__, meaning that a variant further down the list will "win" in the case of a style conflict
+The order is from **lowest to highest priority**, meaning that a variant further down the list will "win" in the case of a style conflict
 
 ### 2. Generating Variants
 
@@ -49,4 +49,5 @@ pnpm gen:variants
 ```
 
 This will create:
+
 - `src/tokens/variants.css` - Tailwind custom variants

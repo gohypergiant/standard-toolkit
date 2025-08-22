@@ -30,11 +30,11 @@ Use the `--spreet` flag to point to a stand-alone binary.
 
 ## Installation
 
-For global installation:
+Here are a few options:
 
-```shell
-npm install -g @accelint/smeegl
-```
+- For global installation: `npm install -g @accelint/smeegl`
+- For local installation using npm: `npm install @accelint/smeegl`
+- For local installation using pnpm: `pnpm install @accelint/smeegl`
 
 ## Usage
 
@@ -63,9 +63,9 @@ smeegl "**/*.svg" "tooling/smeegl/atlas"
 
 On successful completion, three files will be generated (assume the default name `atlas` is used):
 
-* `atlas.json` - The sprite's index file
-* `atlas.png` - The sprite's image file
-* `atlas.ts` - A file of exported constants that are available for the application
+- `atlas.json` - The sprite's index file
+- `atlas.png` - The sprite's image file
+- `atlas.ts` - A file of exported constants that are available for the application
 
 ## Source SVG Directory structure
 
@@ -73,11 +73,11 @@ The GLOB root path will be used as a base point for prefix information for the e
 
 ### Character replacements and name normalization
 
-* The generated sprite's definition file should export all of the constants using [CONSTANT_CASE](https://stringcase.org/cases/constant/).
-* The generated sprite's index file should use [SNAKE_CASE](https://stringcase.org/cases/snake/) for each of the JSON properties.
-* The following rules are applied to the directory and file names in order to achieve the desired casing:
-  * The directory separator and any spaces in the folder names will be replaced with a single underscore `_`.
-  * Parentheses are removed.
+- The generated sprite's definition file should export all of the constants using [CONSTANT_CASE](https://stringcase.org/cases/constant/).
+- The generated sprite's index file should use [SNAKE_CASE](https://stringcase.org/cases/snake/) for each of the JSON properties.
+- The following rules are applied to the directory and file names in order to achieve the desired casing:
+  - The directory separator and any spaces in the folder names will be replaced with a single underscore `_`.
+  - Parentheses are removed.
 
 For example:
 
@@ -143,6 +143,6 @@ export const Y_E2_2112 = 'y_e2_2112';
 
 ### TODO
 
-* [ ] Allow using a config file
-* [ ] Allow multiple svg globs
-* [ ] Allow searching in npm packages for svg's
+- [ ] Allow using a config file
+- [ ] Allow multiple svg globs
+- [ ] Allow searching in npm packages for svg's

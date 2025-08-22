@@ -46,10 +46,10 @@
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "esbuild-fix-imports-plugin": "1.0.21",
     "@svgr/cli": "8.1.0",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
+    "esbuild-fix-imports-plugin": "1.0.21",
     "tsup": "8.5.0"
   },
   "dependencies": {}
