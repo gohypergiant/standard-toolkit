@@ -137,13 +137,13 @@ const replacementMap = new Map([
   ['outline-serious', 'outline-serious-bold'],
   ['outline-critical', 'outline-critical-bold'],
   // border
-  ['border-static-light', 'border-static'],
-  ['border-highlight', 'border-accent-primary-bold'],
-  ['border-info', 'border-info-bold'],
-  ['border-advisory', 'border-advisory-bold'],
-  ['border-normal', 'border-normal-bold'],
-  ['border-serious', 'border-serious-bold'],
-  ['border-critical', 'border-critical-bold'],
+  ['border-static-light', 'outline-static'],
+  ['border-highlight', 'outline-accent-primary-bold'],
+  ['border-info', 'outline-info-bold'],
+  ['border-advisory', 'outline-advisory-bold'],
+  ['border-normal', 'outline-normal-bold'],
+  ['border-serious', 'outline-serious-bold'],
+  ['border-critical', 'outline-critical-bold'],
 ]);
 
 const leGlob = 'src/**/*.{ts,tsx}';
