@@ -296,5 +296,5 @@ export type {
   StyleRenderProps,
 } from './lib/types';
 export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
-export { ThemeProvider, useTheme } from './providers/themeProvider';
+export { ThemeProvider, useTheme } from './providers/theme-provider';
 export { designTokens } from './tokens/tokens';

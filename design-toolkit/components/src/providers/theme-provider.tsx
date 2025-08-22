@@ -13,34 +13,37 @@
 'use client';
 
 import 'client-only';
+import { merge } from 'lodash';
 import {
   type PropsWithChildren,
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { designTokens } from '../tokens/tokens';
 
 type Mode = 'dark' | 'light';
 
-type ThemeProviderProps = PropsWithChildren & {
-  defaultMode?: Mode;
-  onChange?: (mode: Mode) => void;
-};
-
 type UseThemeContext = {
   mode: Mode;
   tokens: (typeof designTokens)[Mode];
   toggleMode: (mode: Mode) => void;
 } | null;
-
 const ThemeContext = createContext<UseThemeContext>(null);
 
+type ThemeProviderProps = PropsWithChildren & {
+  defaultMode?: Mode;
+  onChange?: (mode: Mode) => void;
+  /** override existing values in the theme */
+  overrides?: Partial<typeof designTokens>;
+};
 export function ThemeProvider({
   children,
   defaultMode,
   onChange,
+  overrides,
 }: ThemeProviderProps) {
   const [mode, setMode] = useState<Mode>(defaultMode ?? 'dark');
 
@@ -52,11 +55,15 @@ export function ThemeProvider({
     }
   }, [mode]);
 
+  const tokens = useMemo(() => {
+    return merge(designTokens[mode], overrides);
+  }, [mode, overrides]);
+
   return (
     <ThemeContext.Provider
       value={{
         mode,
-        tokens: designTokens[mode],
+        tokens,
         toggleMode: (mode: Mode) => {
           setMode(mode);
           onChange?.(mode);
