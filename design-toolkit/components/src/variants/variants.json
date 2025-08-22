@@ -23,6 +23,7 @@
 
   "layout-grid": "[data-layout=\"grid\"]",
   "layout-stack": "[data-layout=\"stack\"]",
+  "layout-inline": "[data-layout=\"inline\"]",
 
   "orientation-horizontal": "[data-orientation=\"horizontal\"]",
   "orientation-vertical": "[data-orientation=\"vertical\"]",

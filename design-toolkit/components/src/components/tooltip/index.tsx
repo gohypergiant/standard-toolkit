@@ -76,7 +76,7 @@ export const TooltipContext =
 export function Tooltip({ ref, ...props }: TooltipProps) {
   [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
 
-  const { children, ...rest } = props;
+  const { children, delay = 250, ...rest } = props;
 
   containsExactChildren({
     children,
@@ -87,7 +87,11 @@ export function Tooltip({ ref, ...props }: TooltipProps) {
     ],
   });
 
-  return <AriaTooltipTrigger {...rest}>{children}</AriaTooltipTrigger>;
+  return (
+    <AriaTooltipTrigger {...rest} delay={delay}>
+      {children}
+    </AriaTooltipTrigger>
+  );
 }
 Tooltip.displayName = 'Tooltip';
 

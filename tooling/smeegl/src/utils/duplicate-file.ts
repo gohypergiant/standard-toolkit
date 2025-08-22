@@ -10,14 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { copyFile } from 'node:fs/promises';
+import path from 'node:path';
 
-export { Broadcast } from './broadcast';
-export type {
-  BroadcastConfig,
-  ExtractEvent,
-  Listener,
-  Payload,
-} from './broadcast/types';
+export async function duplicateFile(
+  srcFileName: string,
+  destDir: string,
+  spriteName = '',
+): Promise<string> {
+  const resolvedFileName = path.resolve(srcFileName);
+
+  const resolvedTargetFileName = spriteName
+    ? spriteName
+    : path.basename(resolvedFileName);
+
+  const tgtFilePath = path.join(destDir, resolvedTargetFileName);
+  await copyFile(resolvedFileName, tgtFilePath);
+
+  return tgtFilePath;
+}

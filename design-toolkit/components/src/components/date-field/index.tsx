@@ -14,31 +14,21 @@
 import 'client-only';
 import Calendar from '@accelint/icons/calendar';
 import type { DateValue } from '@internationalized/date';
-import type { DateSegment as TDateSegment } from '@react-stately/datepicker';
 import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,
-  type DateSegmentProps as AriaDateSegmentProps,
   Text as AriaText,
   DateSegment,
-  type DateSegmentRenderProps,
   FieldError,
   composeRenderProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
-import { DateFieldStyles } from './styles';
-import type { DateFieldProps, DateInputProps } from './types';
+import { DateFieldStyles, DateFieldStylesDefaults } from './styles';
+import type { DateFieldProps } from './types';
 
-const {
-  field,
-  dateInput,
-  dateInputContainer,
-  icon,
-  descriptionText,
-  error,
-  dateSegment,
-} = DateFieldStyles();
+const { field, label, control, input, segment, description, error } =
+  DateFieldStyles();
 
 const months = [
   'JAN',
@@ -54,80 +44,6 @@ const months = [
   'NOV',
   'DEC',
 ];
-
-const MonthDateSegment = ({
-  value,
-  isFocused,
-  isPlaceholder,
-  placeholder,
-  isReadOnly,
-  shortMonth,
-}: DateSegmentRenderProps & { shortMonth?: boolean }) => {
-  if (isPlaceholder) {
-    return placeholder;
-  }
-
-  let displayValue: string | undefined = `${value}`;
-
-  if (!isReadOnly && isFocused) {
-    displayValue = displayValue.padStart(2, '0');
-  } else if (shortMonth) {
-    displayValue = months[(value ?? 0) - 1];
-  }
-
-  return displayValue;
-};
-
-interface FormattedDateSegmentProps extends AriaDateSegmentProps {
-  segment: TDateSegment;
-  shortMonth?: boolean;
-}
-
-const FormattedDateSegment = ({
-  segment,
-  shortMonth,
-  ...props
-}: FormattedDateSegmentProps) => {
-  if (segment.type === 'literal' && segment.text !== ':') {
-    return <></>;
-  }
-
-  return (
-    <DateSegment segment={segment} className={dateSegment({})} {...props}>
-      {segment.type === 'month'
-        ? (renderProps) => (
-            <MonthDateSegment {...renderProps} shortMonth={shortMonth} />
-          )
-        : segment.text}
-    </DateSegment>
-  );
-};
-
-const DateInput = ({
-  className,
-  ref = null,
-  size,
-  ...props
-}: DateInputProps) => {
-  return (
-    <div className={dateInputContainer({})}>
-      {size === 'medium' ? (
-        <Icon className={icon({})}>
-          <Calendar />
-        </Icon>
-      ) : null}
-      <AriaDateInput
-        {...props}
-        className={composeRenderProps(className, (className) =>
-          dateInput({
-            className,
-          }),
-        )}
-        data-size={size}
-      />
-    </div>
-  );
-};
 
 /**
  * DateField - A comprehensive date input component with segmented editing
@@ -177,61 +93,112 @@ export function DateField<T extends DateValue>({
   classNames,
   description: descriptionProp,
   errorMessage: errorMessageProp,
+  inputProps,
+  label: labelProp,
+  size = 'medium',
+  shortMonth = DateFieldStylesDefaults.shortMonth,
+  shouldForceLeadingZeros = true,
   isDisabled,
   isInvalid: isInvalidProp,
-  isReadOnly,
-  label,
-  placeholder,
-  slot,
-  size = 'medium',
-  shortMonth = true,
   isRequired,
-  ...props
+  ...rest
 }: DateFieldProps<T>) {
   const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
 
   return (
     <AriaDateField<T>
-      {...props}
+      {...rest}
+      className={composeRenderProps(classNames?.field, (className) =>
+        field({ className, shortMonth }),
+      )}
+      shouldForceLeadingZeros={shouldForceLeadingZeros}
       isDisabled={isDisabled}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
-      isReadOnly={isReadOnly}
-      slot={slot}
-      className={composeRenderProps(classNames?.field, (className) =>
-        field({ className }),
-      )}
+      isRequired={isRequired}
+      aria-label={labelProp}
+      data-size={size}
     >
       {(
-        { isDisabled, isInvalid }, // Rely on internal state, not props, since state could differ from props
+        { isDisabled }, // Rely on internal state, not props, since state could differ from props
       ) => (
         <>
           {!isSmall && label && (
             <Label
-              className={classNames?.label}
+              className={label({ className: classNames?.label, shortMonth })}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >
-              {label}
+              {labelProp}
             </Label>
           )}
-          <DateInput
-            className={classNames?.input}
-            size={size}
-            isInvalid={isInvalid}
+          <div
+            className={control({ className: classNames?.control, shortMonth })}
           >
-            {(segment) => (
-              <FormattedDateSegment segment={segment} shortMonth={shortMonth} />
+            {size === 'medium' && (
+              <Icon>
+                <Calendar />
+              </Icon>
             )}
-          </DateInput>
+            <AriaDateInput
+              {...inputProps}
+              className={composeRenderProps(classNames?.input, (className) =>
+                input({
+                  className,
+                  shortMonth,
+                }),
+              )}
+            >
+              {(segmentProp) => {
+                // Remove extra space and punctuation from input display
+                if (segmentProp.type === 'literal') {
+                  return <>{segmentProp.text === ':' ? ':' : null}</>;
+                }
+
+                return (
+                  <DateSegment
+                    className={composeRenderProps(
+                      classNames?.segment,
+                      (className) => segment({ className, shortMonth }),
+                    )}
+                    segment={segmentProp}
+                  >
+                    {({
+                      placeholder,
+                      text,
+                      value,
+                      isFocused,
+                      isPlaceholder,
+                    }) => {
+                      if (isPlaceholder) {
+                        return placeholder;
+                      }
+
+                      return segmentProp.type === 'month' &&
+                        shortMonth &&
+                        !isFocused
+                        ? months[(value ?? 0) - 1]
+                        : text;
+                    }}
+                  </DateSegment>
+                );
+              }}
+            </AriaDateInput>
+          </div>
           {descriptionProp && (!(isSmall || isInvalidProp) || isDisabled) && (
-            <AriaText className={descriptionText({})} slot='description'>
+            <AriaText
+              className={description({
+                className: classNames?.description,
+                shortMonth,
+              })}
+              slot='description'
+            >
               {descriptionProp}
             </AriaText>
           )}
           <FieldError
             className={composeRenderProps(classNames?.error, (className) =>
-              error({ className }),
+              error({ className, shortMonth }),
             )}
           >
             {errorMessage}

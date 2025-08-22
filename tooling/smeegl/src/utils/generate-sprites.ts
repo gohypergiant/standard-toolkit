@@ -13,15 +13,15 @@
 import { exec } from 'node:child_process';
 import util from 'node:util';
 import { Result } from 'true-myth';
-import type { GatherResult, GenerateResult } from './types.js';
+import type { GatherSpritesResult, GenerateSpritesResult } from './types.js';
 
 const execProm = util.promisify(exec);
 
 export async function generateSprites(
-  gatherResult: GatherResult,
+  gatherResult: GatherSpritesResult,
   cmd: string,
   output: string,
-): Promise<GenerateResult> {
+): Promise<GenerateSpritesResult> {
   if (gatherResult.isErr) {
     return Result.err(gatherResult.error);
   }
@@ -36,7 +36,9 @@ export async function generateSprites(
     const json = `${output}.json`;
     const png = `${output}.png`;
 
-    return Result.ok({ tmp, json, png });
+    const { sprites } = gatherResult.unwrapOr({ tmp: '', sprites: [] });
+
+    return Result.ok({ tmp, json, png, sprites });
   } catch (err) {
     const { tmp } = gatherResult.unwrapOr({ tmp: '' });
 

@@ -10,14 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
-
-export { Broadcast } from './broadcast';
-export type {
-  BroadcastConfig,
-  ExtractEvent,
-  Listener,
-  Payload,
-} from './broadcast/types';
+declare module 'crc32-universal' {
+  const crc32: (input: string | Buffer) => number;
+  export default crc32;
+}

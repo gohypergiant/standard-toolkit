@@ -10,14 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { mkdtemp } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 
-export { Broadcast } from './broadcast';
-export type {
-  BroadcastConfig,
-  ExtractEvent,
-  Listener,
-  Payload,
-} from './broadcast/types';
+export function makeTempDirectory() {
+  return mkdtemp(path.join(os.tmpdir(), 'smeegl-'));
+}
