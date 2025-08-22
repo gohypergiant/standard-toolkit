@@ -11,64 +11,36 @@
  */
 
 'use client';
-import { cn } from '@/lib/utils';
 import { useIsSSR } from '@react-aria/ssr';
 import 'client-only';
-import { cva } from 'class-variance-authority';
 import {
   type PropsWithChildren,
-  type ReactNode,
-  type RefObject,
   createContext,
-  forwardRef,
   useContext,
   useEffect,
   useState,
 } from 'react';
 import {
-  type DialogRenderProps,
-  type DialogTriggerProps,
-  Dialog as RACDialog,
-  DialogTrigger as RACDialogTrigger,
+  Dialog as AriaDialog,
+  DialogTrigger as AriaDialogTrigger,
   Heading as RACHeading,
   Modal as RACModal,
   ModalOverlay as RACModalOverlay,
+  composeRenderProps,
 } from 'react-aria-components';
 import { Button } from '../button';
 import type { ButtonProps } from '../button/types';
+import { DialogStyles } from './styles';
+import type {
+  DialogContextValue,
+  DialogProps,
+  DialogTriggerProps,
+} from './types';
 
-const dialogClasses = cva(
-  'flex flex-col align-end font-light text-body-m text-default-dark',
-  {
-    variants: {
-      size: {
-        sm: 'min-w-[280px] max-w-[280px] rounded-medium p-l',
-        lg: 'min-w-[320px] max-w-[720px] rounded-large p-xl',
-      },
-      defaultVariants: {
-        size: 'sm',
-      },
-    },
-  },
-);
+const { overlay, modal, dialog, title, content, footer, button } =
+  DialogStyles();
 
-const buttonSizes: Record<string, ButtonProps['size']> = {
-  sm: 'small',
-  lg: 'medium',
-};
-
-type DialogSize = 'sm' | 'lg';
-
-interface DialogContextValue {
-  size: DialogSize;
-  isDismissable?: boolean;
-  isKeyboardDismissDisabled?: boolean;
-  isOpen?: boolean;
-  onOpenChange?: (isOpen: boolean) => void;
-  parentRef?: RefObject<HTMLElement | null>;
-}
-
-const DialogContext = createContext<DialogContextValue>({ size: 'sm' });
+const DialogContext = createContext<DialogContextValue | null>(null);
 
 const useDialogContext = () => {
   const ctx = useContext(DialogContext);
@@ -77,15 +49,6 @@ const useDialogContext = () => {
   }
   return ctx;
 };
-
-export interface DialogProps extends DialogTriggerProps {
-  size?: DialogSize;
-  isDismissable?: boolean;
-  isKeyboardDismissDisabled?: boolean;
-  isOpen?: boolean;
-  onOpenChange?: (isOpen: boolean) => void;
-  parentRef?: RefObject<HTMLElement | null>;
-}
 
 /**
  * Dialog - A modal dialog component for important content and interactions
@@ -96,9 +59,9 @@ export interface DialogProps extends DialogTriggerProps {
  *
  * @example
  * // Basic dialog with trigger
- * <Dialog>
+ * <Dialog.Trigger>
  *   <Button>Open Dialog</Button>
- *   <Dialog.Body>
+ *   <Dialog>
  *     {({ close }) => (
  *       <>
  *         <Dialog.Title>Confirm Action</Dialog.Title>
@@ -108,173 +71,125 @@ export interface DialogProps extends DialogTriggerProps {
  *         </Dialog.Footer>
  *       </>
  *     )}
- *   </Dialog.Body>
- * </Dialog>
+ *   </Dialog>
+ * </Dialog.Trigger>
  */
-export const Dialog = ({
+const DialogTrigger = ({
   children,
-  size,
   isOpen,
   onOpenChange,
-  isDismissable = true,
-  isKeyboardDismissDisabled = true,
+  size = 'small',
   parentRef,
-}: DialogProps) => {
+  isKeyboardDismissDisabled,
+}: DialogTriggerProps) => {
   return (
-    <RACDialogTrigger>
+    <AriaDialogTrigger>
       <DialogContext.Provider
         value={{
-          size: size ?? 'sm',
-          isDismissable,
-          isOpen,
-          onOpenChange,
+          size,
           parentRef,
           isKeyboardDismissDisabled,
+          isOpen,
+          onOpenChange,
         }}
       >
         {children}
       </DialogContext.Provider>
-    </RACDialogTrigger>
+    </AriaDialogTrigger>
   );
 };
+DialogTrigger.displayName = 'Dialog.Trigger';
+
+export const Dialog = ({ children, ref, classNames, ...rest }: DialogProps) => {
+  const { size, parentRef, isKeyboardDismissDisabled, isOpen, onOpenChange } =
+    useDialogContext();
+  const isSSR = useIsSSR();
+  const [portal, setPortal] = useState(isSSR ? null : document.body);
+
+  useEffect(() => {
+    const node = parentRef?.current;
+    /* Ensure proper ssr hydration TODO */
+    const port = isSSR ? null : document.createElement('div');
+
+    if (node && port) {
+      node.appendChild(port);
+      setPortal(port);
+    }
+
+    return () => {
+      port?.remove();
+
+      setPortal(isSSR ? null : document.body);
+    };
+  }, [isSSR, parentRef]);
+
+  return portal ? (
+    <RACModalOverlay
+      className={overlay()}
+      data-size={size}
+      isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      UNSTABLE_portalContainer={portal}
+      {...rest}
+    >
+      <RACModal ref={ref} className={modal({ className: classNames?.modal })}>
+        <AriaDialog className={dialog({ className: classNames?.dialog })}>
+          {children}
+        </AriaDialog>
+      </RACModal>
+    </RACModalOverlay>
+  ) : null;
+};
 Dialog.displayName = 'Dialog';
-
-interface DialogBodyProps {
-  children: ReactNode | ReactNode[] | ((opts: DialogRenderProps) => ReactNode);
-}
-
-const DialogBody = forwardRef<HTMLDivElement, DialogBodyProps>(
-  ({ children, ...rest }, ref) => {
-    const {
-      size,
-      isDismissable,
-      isOpen,
-      onOpenChange,
-      parentRef,
-      isKeyboardDismissDisabled,
-    } = useDialogContext();
-    const isSSR = useIsSSR();
-    const [portal, setPortal] = useState(isSSR ? null : document.body);
-
-    useEffect(() => {
-      const node = parentRef?.current;
-      /* Ensure proper ssr hydration TODO */
-      const port = isSSR ? null : document.createElement('div');
-
-      if (node && port) {
-        node.appendChild(port);
-        setPortal(port);
-      }
-
-      return () => {
-        port?.remove();
-
-        setPortal(isSSR ? null : document.body);
-      };
-    }, [isSSR, parentRef]);
-
-    return portal ? (
-      <RACModalOverlay
-        UNSTABLE_portalContainer={portal}
-        isKeyboardDismissDisabled={!isDismissable && isKeyboardDismissDisabled}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        isDismissable={isDismissable}
-        className='absolute inset-0 flex items-center justify-center'
-        {...rest}
-      >
-        <RACModal
-          ref={ref}
-          className={cn(
-            'flex flex-col justify-center bg-surface-overlay align-start',
-            size === 'sm' && 'rounded-medium',
-            size === 'lg' && 'rounded-large',
-          )}
-        >
-          <RACDialog className={dialogClasses({ size })}>{children}</RACDialog>
-        </RACModal>
-      </RACModalOverlay>
-    ) : null;
-  },
-);
-DialogBody.displayName = 'DialogBody';
 
 const DialogContent = ({
   children,
   className,
 }: PropsWithChildren<{ className?: string }>) => {
-  const { size } = useDialogContext();
-  return (
-    <div
-      className={cn(
-        'flex flex-col',
-        size === 'sm' && 'gap-xs',
-        size === 'lg' && 'gap-l',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={content({ className })}>{children}</div>;
 };
+DialogContent.displayName = 'Dialog.Content';
 
 const DialogTitle = ({
   children,
   className,
 }: PropsWithChildren<{ className?: string }>) => {
-  const { size } = useDialogContext();
   return (
-    <RACHeading
-      slot='title'
-      className={cn(
-        'text-default-light',
-        size === 'sm' && 'mb-s text-header-m',
-        size === 'lg' && 'mb-m text-header-l',
-        className,
-      )}
-    >
+    <RACHeading slot='title' className={title({ className })}>
       {children}
     </RACHeading>
   );
 };
+DialogTitle.displayName = 'Dialog.Title';
 
 const DialogButton = ({ children, className, ...props }: ButtonProps) => {
-  const { size: dialogSize } = useDialogContext();
-  const buttonSize = buttonSizes[dialogSize];
+  const { size } = useDialogContext();
   return (
     <Button
-      size={buttonSize}
+      size={size}
       {...props}
-      //overriding the style to deal with rac's pressed state inherited
-      //from the trigger state
-      className={cn('pressed:bg-initial', className)}
+      className={composeRenderProps(className, (className) =>
+        button({ className }),
+      )}
     >
       {children}
     </Button>
   );
 };
+DialogButton.displayName = 'Dialog.Button';
 
 const DialogFooter = ({
   children,
   className,
 }: PropsWithChildren<{ className?: string }>) => {
-  const { size } = useDialogContext();
-  return (
-    <div
-      className={cn(
-        'flex justify-end gap-xs',
-        size === 'sm' && 'mt-l',
-        size === 'lg' && 'mt-xl',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={footer({ className })}>{children}</div>;
 };
+
+DialogFooter.displayName = 'Dialog.Footer';
 
 Dialog.Button = DialogButton;
 Dialog.Content = DialogContent;
 Dialog.Footer = DialogFooter;
 Dialog.Title = DialogTitle;
-Dialog.Body = DialogBody;
+Dialog.Trigger = DialogTrigger;
