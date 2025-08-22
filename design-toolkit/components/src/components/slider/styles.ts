@@ -47,7 +47,7 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:group-layout-grid/slider:col-start-2 group-orientation-vertical/slider:group-layout-grid/slider:row-span-3 group-orientation-vertical/slider:group-layout-grid/slider:row-start-2',
     ],
     trackBackground: [
-      'absolute rounded-full bg-surface-muted/40',
+      'absolute rounded-full bg-surface-muted',
       'group-orientation-horizontal/slider:-translate-y-1/2 group-orientation-horizontal/slider:top-1/2 group-orientation-horizontal/slider:h-xxs group-orientation-horizontal/slider:w-full',
       'group-orientation-vertical/slider:-translate-x-1/2 group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:h-full group-orientation-vertical/slider:w-xxs',
     ],
