@@ -37,7 +37,7 @@ type Story = StoryObj<typeof Dialog>;
 export const Default: Story = {
   render: ({ children, ...args }) => {
     return (
-      <div className='relative h-[800px] w-[600px] border border-default-light p-l'>
+      <div className='relative h-[800px] w-[600px] p-l outline outline-info-bold'>
         <Dialog {...args}>
           <Button>Press Me</Button>
           <Dialog.Body>
@@ -66,7 +66,7 @@ export const LocalPortal: Story = {
   render: () => {
     const parentRef = useRef(null);
     return (
-      <div className='flex h-[600px] w-[960px] border border-default-light'>
+      <div className='flex h-[600px] w-[960px] outline outline-info-bold'>
         <div className='w-full p-l'>
           <Dialog parentRef={parentRef}>
             <Button>Press Me</Button>
@@ -105,7 +105,7 @@ export const Controlled: Story = {
     }, []);
     const handleOpenPress = useCallback(() => setOpen(true), []);
     return (
-      <div className='h-[800px] w-[600px] border border-default-light p-l'>
+      <div className='h-[800px] w-[600px] outline outline-info-bold p-l'>
         <Dialog isOpen={open} onOpenChange={handleOpenChange}>
           <Button onPress={handleOpenPress}>Press Me</Button>
           <Dialog.Body>

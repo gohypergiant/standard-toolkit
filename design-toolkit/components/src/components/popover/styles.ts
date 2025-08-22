@@ -14,7 +14,7 @@ import { tv } from '@/lib/utils';
 export const PopoverStyles = tv({
   slots: {
     content:
-      'max-w-[280px] rounded-medium border border-static bg-surface-raised p-s',
+      'max-w-[280px] rounded-medium bg-surface-raised p-s outline outline-static',
     body: 'fg-primary-muted text-body-s',
     title: 'fg-primary-bold mb-s text-header-m',
     footer: 'mt-s flex justify-end gap-s',

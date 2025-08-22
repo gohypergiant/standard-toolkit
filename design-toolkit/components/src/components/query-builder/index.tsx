@@ -199,9 +199,9 @@ export function QueryBuilder({
    */
   const defaultClassnames: Partial<Classnames> = useMemo(
     () => ({
-      queryBuilder: 'border border-transparent',
+      queryBuilder: 'outline outline-transparent',
       ruleGroup:
-        'group col-span-full flex flex-col gap-s p-s border border-info-bold rounded-medium',
+        'group col-span-full flex flex-col gap-s p-s outline outline-info-bold rounded-medium',
       header: 'flex gap-s',
       body: cn(
         'group grid gap-x-s empty:hidden',

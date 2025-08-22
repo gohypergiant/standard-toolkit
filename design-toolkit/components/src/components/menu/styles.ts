@@ -52,7 +52,7 @@ export const MenuStyles = tv({
     more: '[grid-area:action]',
     section: '',
     header: 'fg-primary-muted px-s py-xs text-header-xs',
-    separator: 'mx-3 my-1 border border-static',
+    separator: 'mx-3 my-1 outline outline-static',
     hotkey: [
       '[grid-area:action]',
       'group-hover/menu-item:fg-inverse-bold group-focus-visible/menu-item:fg-inverse-bold',

@@ -65,7 +65,7 @@ const sliderVariants = cva('grid gap-s', {
   ],
 });
 
-const minValueVariants = cva('font-display text-body-m fg-primary-muted', {
+const minValueVariants = cva('fg-primary-muted font-display text-body-m', {
   variants: {
     orientation: {
       horizontal: '',
@@ -100,7 +100,7 @@ const minValueVariants = cva('font-display text-body-m fg-primary-muted', {
   ],
 });
 
-const maxValueVariants = cva('font-display text-body-m fg-primary-muted', {
+const maxValueVariants = cva('fg-primary-muted font-display text-body-m', {
   variants: {
     orientation: {
       horizontal: '',
@@ -446,7 +446,7 @@ function SliderInput({ className }: { className?: string }) {
         >
           <Input
             className={cn(
-              'fg-primary-bold w-[50px] rounded-medium border border-interactive px-s py-xs font-display text-body-m',
+              'fg-primary-bold w-[50px] rounded-medium px-s py-xs font-display text-body-m outline outline-interactive',
               className,
             )}
           />
