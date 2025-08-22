@@ -59,6 +59,7 @@
   outline-offset: -1px;
 }
 
+/* Note: we may want to generate these typography utility classes in themes.css in the future */
 @utility text-header-xxl {
   font-size: var(--typography-header-xxl-size);
   font-weight: 500;

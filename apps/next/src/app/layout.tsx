@@ -24,13 +24,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     // TODO: fix FOUC
-    <html lang='en' className='bg-surface-raised font-primary'>
-      <body className='w-full h-svh'>
+    <html lang='en' className='bg-surface-default font-primary'>
+      <body className='w-full h-dvh flex flex-col'>
         <DSTheme>
           <Defaults>
             <DTKTheme>
               <Nav />
-              {children}
+              <div className='grow'>{children}</div>
             </DTKTheme>
           </Defaults>
         </DSTheme>
