@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import type { ColorTokens, ThemeTokens } from '@/tokens/types';
 import { merge } from 'lodash';
 import {
   type PropsWithChildren,
@@ -22,13 +23,14 @@ import {
   useMemo,
   useState,
 } from 'react';
+import type { PartialDeep } from 'type-fest';
 import { designTokens } from '../tokens/tokens';
 
 type Mode = 'dark' | 'light';
 
 type UseThemeContext = {
   mode: Mode;
-  tokens: (typeof designTokens)[Mode];
+  tokens: ColorTokens;
   toggleMode: (mode: Mode) => void;
 } | null;
 const ThemeContext = createContext<UseThemeContext>(null);
@@ -36,8 +38,8 @@ const ThemeContext = createContext<UseThemeContext>(null);
 type ThemeProviderProps = PropsWithChildren & {
   defaultMode?: Mode;
   onChange?: (mode: Mode) => void;
-  /** override existing values in the theme */
-  overrides?: Partial<typeof designTokens>;
+  /** override existing color values in the theme */
+  overrides?: PartialDeep<Pick<ThemeTokens, 'light' | 'dark'>>;
 };
 export function ThemeProvider({
   children,
@@ -55,8 +57,8 @@ export function ThemeProvider({
     }
   }, [mode]);
 
-  const tokens = useMemo(() => {
-    return merge(designTokens[mode], overrides);
+  const tokens: ColorTokens = useMemo(() => {
+    return merge(designTokens, overrides)[mode];
   }, [mode, overrides]);
 
   return (

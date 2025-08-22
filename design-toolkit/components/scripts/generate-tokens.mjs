@@ -29,7 +29,7 @@ const APPLIED_PROPERTY_MAP = {
 };
 const skipFallback = ['icon-size', 'shadow-elevation', 'font'];
 
-//#region I/O
+//#region I/O utils
 function parse(file) {
   const tokensPath = path.join(INPUT_DIR, file);
   const tokensContent = readFileSync(tokensPath, 'utf-8');
@@ -45,7 +45,7 @@ async function writeFile(filename, content) {
 }
 //#endregion
 
-//#region Conversion
+//#region Conversion utils
 function hexToRgbaTuple(hex) {
   let c = hex.replace('#', '');
 
@@ -128,7 +128,7 @@ function convert(raw) {
 }
 //#endregion
 
-//#region Tokens
+//#region Token utils
 function getTokenNames(semantic) {
   function walk(obj, prefix) {
     let names = [];
@@ -178,7 +178,7 @@ function getTokenFallback(tokenRef, primitives) {
 }
 //#endregion
 
-//#region Generation
+//#region Generation utils
 function generatePrimitives(primitives) {
   const lines = Object.entries(primitives)
     .map(([key, value]) => `  --${key}: ${value};`)
@@ -303,7 +303,8 @@ async function main() {
 
     await writeFile(
       'tokens.ts',
-      `export const designTokens = ${JSON.stringify({ ...colorTokens, ...otherTokens }, null, 2)} as const`,
+      `import type { ThemeTokens } from './types';
+export const designTokens = ${JSON.stringify({ ...colorTokens, ...otherTokens }, null, 2)} satisfies ThemeTokens;`,
     );
 
     const utilities = getTokenNames(semanticConfig.dark)

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { ThemeTokens } from './types';
 export const designTokens = {
   dark: {
     bg: {
@@ -436,4 +437,4 @@ export const designTokens = {
         '0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14)',
     },
   },
-} as const;
+} satisfies ThemeTokens;

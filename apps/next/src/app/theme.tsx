@@ -36,5 +36,30 @@ export function DSTheme({ children }: PropsWithChildren) {
 }
 
 export function DTKTheme({ children }: PropsWithChildren) {
-  return <DTKThemeProvider>{children}</DTKThemeProvider>;
+  return (
+    <DTKThemeProvider
+      overrides={{
+        light: {
+          bg: {
+            accent: {
+              primary: {
+                bold: [196, 211, 0, 1],
+              },
+            },
+          },
+        },
+        dark: {
+          bg: {
+            accent: {
+              primary: {
+                bold: [196, 211, 0, 1],
+              },
+            },
+          },
+        },
+      }}
+    >
+      {children}
+    </DTKThemeProvider>
+  );
 }

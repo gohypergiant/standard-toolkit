@@ -22,12 +22,14 @@ import {
   Switch,
   Tabs,
   TextField,
+  useTheme,
 } from '@accelint/design-toolkit';
 import Placeholder from '@accelint/icons/placeholder';
 
 const divider = <div className='h-px w-full bg-accent-primary-muted' />;
 
 export default function KitchenSink() {
+  const theme = useTheme();
   return (
     <div className='flex w-full h-full gap-xxl p-l'>
       <div className='flex flex-col gap-s items-start w-[200px]'>
@@ -135,6 +137,21 @@ export default function KitchenSink() {
             </Tabs.Tab>
           </Tabs.List>
         </Tabs>
+      </div>
+      <div>
+        <h2 className='fg-primary-bold'>Javascript token override test</h2>
+        <p className='fg-primary-muted'>
+          The two boxes should be the same color
+        </p>
+        <div className='flex gap-m'>
+          <div className='size-xxl rounded-medium bg-accent-primary-bold' />
+          <div
+            className='size-xxl rounded-medium'
+            style={{
+              backgroundColor: `rgba(${theme?.tokens.bg.accent.primary.bold.join(',')})`,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
