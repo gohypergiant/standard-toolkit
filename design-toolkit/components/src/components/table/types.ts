@@ -80,6 +80,20 @@ type ExtendedTableProps<T extends { id: string | number }> = {
    * If false, the table will not support sorting.
    */
   enableSorting?: boolean;
+
+  /**
+   * Whether to enable column ordering.
+   * If true, the table will support column ordering.
+   * If false, the table will not support column ordering.
+   */
+  enableColumnOrdering?: boolean;
+
+  /**
+   * Whether to enable actions for rows.
+   * If true, the table will support ability to take action on row.
+   * If false, the table will not support ability to take action on row.
+   */
+  enableRowActions?: boolean;
 };
 
 /**

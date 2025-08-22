@@ -153,6 +153,8 @@ const meta = {
     persistNumerals: true,
     pageSize: 5,
     enableSorting: true,
+    enableColumnOrdering: true,
+    enableRowActions: true,
   },
   argTypes: {
     kebabPosition: {
