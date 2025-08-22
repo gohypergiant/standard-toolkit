@@ -156,25 +156,24 @@ TabList.displayName = 'Tabs.List';
 Tabs.List = TabList;
 
 const tabBaseStyles = cn(
-  'fg-primary-muted cursor-pointer p-s outline-none',
+  'fg-primary-muted cursor-pointer p-s shadow-none',
   'rounded-medium group-orientation-horizontal:rounded-small group-orientation-horizontal:rounded-b-none',
-  'group-orientation-horizontal:outline-b group-orientation-horizontal:outline-static',
-  'group-orientation-vertical:border group-orientation-vertical:outline-transparent',
+  'group-orientation-horizontal:shadow-[0_1px] group-orientation-horizontal:shadow-[color:var(--outline-static)]',
 );
 
 const tabStyles = cva(tabBaseStyles, {
   variants: {
     isSelected: {
-      true: 'fg-accent-primary-bold bg-accent-primary-muted group-orientation-horizontal:outline-accent-bold',
+      true: 'fg-accent-primary-bold bg-accent-primary-muted group-orientation-horizontal:shadow-[color:var(--outline-accent-bold)]',
     },
     isHovered: {
-      true: 'fg-primary-bold group-orientation-horizontal:outline-interactive-hover',
+      true: 'fg-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)]',
     },
     isFocused: {
-      true: 'fg-primary-bold group-orientation-horizontal:outline-interactive-hover',
+      true: 'fg-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)]',
     },
     isDisabled: {
-      true: 'fg-disabled cursor-not-allowed group-orientation-horizontal:outline-interactive-disabled',
+      true: 'fg-disabled cursor-not-allowed group-orientation-horizontal:shadow-[color:var(--outline-interactive-disabled)]',
     },
   },
   compoundVariants: [
@@ -182,19 +181,19 @@ const tabStyles = cva(tabBaseStyles, {
       isSelected: true,
       isHovered: true,
       className:
-        'fg-accent-primary-bold group-orientation-horizontal:outline-accent-bold',
+        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-accent-bold)]',
     },
     {
       isSelected: true,
       isFocused: true,
       className:
-        'fg-accent-primary-bold group-orientation-horizontal:outline-interactive-hover group-orientation-vertical:outline-interactive-hover',
+        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)] group-orientation-vertical:shadow-[color:var(--outline-interactive-hover)]',
     },
     {
       isDisabled: true,
       isSelected: true,
       className:
-        'fg-disabled bg-interactive-disabled group-orientation-horizontal:outline-interactive-disabled',
+        'fg-disabled bg-interactive-disabled group-orientation-horizontal:shadow-[color:var(--outline-interactive-disabled)]',
     },
   ],
 });
