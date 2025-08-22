@@ -11,22 +11,39 @@
  */
 
 /* this @layer declaration needs to be before the stylesheet imports */
-@layer properties, base, theme, old_ds_reset, old_ds_framework, old_ds_overrides, components, utilities;
+@layer properties, theme, base, old_ds_reset, old_ds_framework, old_ds_overrides, components, utilities;
 
 @import '@accelint/design-system/styles';
 @import "@accelint/design-toolkit/styles";
 @source "../../node_modules/@accelint/design-toolkit";
 
-/* TODO
 @layer theme {
   :root {
+    --shrek-green: #C4D300;
+
     @variant light {
-      --bg-surface-default: red;
-      --something: #f5c506;
+      --bg-accent-primary-bold: var(--shrek-green);
+      --bg-accent-primary-hover: var(--shrek-green);
+      --bg-accent-primary-pressed: var(--shrek-green);
+      --bg-accent-primary-muted: var(--shrek-green);
+      --fg-accent-primary-bold: var(--shrek-green);
+      --fg-accent-primary-hover: var(--shrek-green);
+      --fg-accent-primary-pressed: var(--shrek-green);
+      --outline-accent-primary-bold: var(--shrek-green);
+      --outline-accent-primary-hover: var(--shrek-green);
+      --outline-accent-primary-pressed: var(--shrek-green);
     }
     @variant dark {
-      --bg-surface-default: blue;
-      --something: #62d1f3;
+      --bg-accent-primary-bold: var(--shrek-green);
+      --bg-accent-primary-hover: var(--shrek-green);
+      --bg-accent-primary-pressed: var(--shrek-green);
+      --bg-accent-primary-muted: var(--shrek-green);
+      --fg-accent-primary-bold: var(--shrek-green);
+      --fg-accent-primary-hover: var(--shrek-green);
+      --fg-accent-primary-pressed: var(--shrek-green);
+      --outline-accent-primary-bold: var(--shrek-green);
+      --outline-accent-primary-hover: var(--shrek-green);
+      --outline-accent-primary-pressed: var(--shrek-green);
     }
   }
-} */
+}
