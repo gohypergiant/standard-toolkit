@@ -265,7 +265,7 @@ export function treeCache<T>(nodes: TreeNode<T>[] = []) {
 
   function _addToRoot(key: Key, idx: number) {
     const node = _getNode(key);
-    const index = idx < 0 ? 0 : idx;
+    const index = Math.max(0, idx);
 
     _setNode(key, {
       ...node,

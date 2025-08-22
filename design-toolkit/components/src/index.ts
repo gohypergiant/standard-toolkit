@@ -267,8 +267,6 @@ export { ItemContent, Tree, TreeContext, TreeItem } from './components/tree';
 export { TreeStyles, TreeStylesDefaults } from './components/tree/styles';
 export type { TreeStyleVariants } from './components/tree/styles';
 export type {
-  DragAndDropConfig,
-  DragItem,
   ItemContentProps,
   ItemContentRenderProps,
   ItemTextProps,
@@ -299,6 +297,7 @@ export type {
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
+  DragAndDropConfig,
   Position,
   TreeActions,
   TreeData,
