@@ -34,8 +34,8 @@ const BaseButtonStyles = tv({
         // Info
         'enabled:color-info:fg-inverse-bold',
         'enabled:color-info:bg-interactive-muted',
-        'enabled:hover:color-info:bg-interactive-muted-hover',
-        'enabled:focus-visible:color-info:bg-interactive-muted-hover',
+        'enabled:hover:color-info:bg-interactive-bold-hover',
+        'enabled:focus-visible:color-info:bg-interactive-bold-hover',
 
         // Serious
         'enabled:color-serious:fg-inverse-bold',
@@ -100,8 +100,8 @@ const BaseButtonStyles = tv({
       variant: ['flat', 'icon'],
       className: [
         'enabled:color-info:fg-primary-bold',
-        'enabled:hover:color-info:bg-interactive-muted-hover',
-        'enabled:focus-visible:color-info:bg-interactive-muted-hover',
+        'enabled:hover:color-info:bg-interactive-bold-hover',
+        'enabled:focus-visible:color-info:bg-interactive-bold-hover',
       ],
     },
 
@@ -148,8 +148,8 @@ export const ToggleButtonStyles = tv({
       filled: [
         // Info
         'enabled:selected:color-info:bg-info-muted',
-        'enabled:selected:hover:color-info:bg-interactive-muted-hover',
-        'enabled:selected:focus-visible:color-info:bg-interactive-muted-hover',
+        'enabled:selected:hover:color-info:bg-interactive-bold-hover',
+        'enabled:selected:focus-visible:color-info:bg-interactive-bold-hover',
 
         // Serious
         'enabled:selected:color-serious:bg-serious-muted',

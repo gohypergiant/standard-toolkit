@@ -38,17 +38,7 @@ const preview: Preview = {
     },
     layout: 'centered',
     backgrounds: {
-      default: 'dark',
-      values: [
-        {
-          name: 'light',
-          value: 'bg-surface-default',
-        },
-        {
-          name: 'dark',
-          value: 'bg-surface-default',
-        },
-      ],
+      disable: true, // prevent conflict w/ addon-themes
     },
     options: {
       storySort: {
