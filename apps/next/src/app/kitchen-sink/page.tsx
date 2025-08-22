@@ -136,9 +136,6 @@ export default function KitchenSink() {
           </Tabs.List>
         </Tabs>
       </div>
-      <div className='flex flex-col gap-s items-start w-[200px]'>
-        {/* column 4 */}
-      </div>
     </div>
   );
 }
