@@ -53,17 +53,17 @@ const BaseButtonStyles = tv({
         'disabled:fg-disabled disabled:outline-interactive-disabled',
 
         // Info
-        'enabled:color-info:fg-inverse-bold enabled:color-info:outline-interactive',
+        'enabled:color-info:fg-primary-bold enabled:color-info:outline-interactive',
         'enabled:hover:color-info:outline-interactive-hover',
         'enabled:focus-visible:color-info:outline-interactive-hover',
 
         // Serious
-        'enabled:color-serious:fg-inverse-bold enabled:color-serious:outline-serious-bold',
+        'enabled:color-serious:fg-primary-bold enabled:color-serious:outline-serious-bold',
         'enabled:hover:color-serious:outline-interactive-hover',
         'enabled:focus-visible:color-serious:outline-interactive-hover',
 
         // Critical
-        'enabled:color-critical:fg-inverse-bold enabled:color-critical:outline-critical-bold',
+        'enabled:color-critical:fg-primary-bold enabled:color-critical:outline-critical-bold',
         'enabled:hover:color-critical:outline-interactive-hover',
         'enabled:focus-visible:color-critical:outline-interactive-hover',
       ],
@@ -99,9 +99,9 @@ const BaseButtonStyles = tv({
     {
       variant: ['flat', 'icon'],
       className: [
-        'enabled:color-info:fg-inverse-bold',
-        'enabled:hover:color-info:bg-interactive-bold-hover',
-        'enabled:focus-visible:color-info:bg-interactive-bold-hover',
+        'enabled:color-info:fg-primary-bold',
+        'enabled:hover:color-info:bg-interactive-muted-hover',
+        'enabled:focus-visible:color-info:bg-interactive-muted-hover',
       ],
     },
 
@@ -109,7 +109,7 @@ const BaseButtonStyles = tv({
     {
       variant: ['flat', 'icon'],
       className: [
-        'enabled:color-serious:fg-inverse-bold',
+        'enabled:color-serious:fg-primary-bold',
         'enabled:hover:color-serious:bg-serious-hover',
         'enabled:focus-visible:color-serious:bg-serious-hover',
       ],
@@ -119,7 +119,7 @@ const BaseButtonStyles = tv({
     {
       variant: ['flat', 'icon'],
       className: [
-        'enabled:color-critical:fg-inverse-bold',
+        'enabled:color-critical:fg-primary-bold',
         'enabled:hover:color-critical:bg-critical-hover',
         'enabled:focus-visible:color-critical:bg-critical-hover',
       ],
