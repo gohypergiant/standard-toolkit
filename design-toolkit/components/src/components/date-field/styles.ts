@@ -21,16 +21,16 @@ export const DateFieldStyles = tv({
     field: 'group/date-field flex flex-col gap-xs',
     dateInput: [
       'group/date-field flex w-full gap-xs rounded-medium px-s py-xs font-display outline outline-interactive',
-      'disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
-      'text-default-light placeholder:text-default-dark hover:outline-interactive-hover focus-visible-within:outline-accent-primary-bold',
+      'disabled:fg-disabled disabled:placeholder:fg-disabled disabled:outline-interactive-disabled',
+      'fg-primary-bold placeholder:fg-primary-muted hover:outline-interactive-hover focus-visible-within:outline-accent-primary-bold',
       'invalid:outline-serious-bold',
       'size-medium:pl-[32px] size-medium:text-body-s',
       'size-small:text-body-xs',
     ],
     dateInputContainer: 'relative flex',
     icon: [
-      '-translate-y-1/2 absolute top-1/2 left-s text-default-light',
-      'group-disabled/date-field:text-disabled',
+      '-translate-y-1/2 fg-primary-bold absolute top-1/2 left-s',
+      'group-disabled/date-field:fg-disabled',
     ],
     descriptionText: [
       'fg-primary-muted text-body-xs empty:hidden',
@@ -38,7 +38,7 @@ export const DateFieldStyles = tv({
     ],
     error: 'fg-serious-bold text-body-xs empty:hidden',
     dateSegment:
-      'focus-visible:bg-accent-primary-bold focus-visible:text-inverse-light focus-visible:outline-none',
+      'focus-visible:fg-inverse-bold focus-visible:bg-accent-primary-bold focus-visible:outline-none',
   },
   defaultVariants: DateFieldStylesDefault,
 });

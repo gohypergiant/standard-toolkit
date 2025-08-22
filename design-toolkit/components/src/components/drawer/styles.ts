@@ -77,10 +77,10 @@ export const DrawerStyles = tv({
     ],
     view: 'flex h-full flex-col',
     content: [
-      'flex max-h-full flex-1 flex-col overflow-y-auto text-default-light',
+      'flex max-h-full flex-1 flex-col overflow-y-auto fg-primary-bold',
     ],
     header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],
-    footer: 'mt-s flex flex-row items-center justify-end text-default-light',
+    footer: 'mt-s flex flex-row items-center justify-end fg-primary-bold',
   },
 });
 
@@ -89,7 +89,7 @@ export const DrawerTitleStylesDefaults = {
 } as const;
 
 export const DrawerTitleStyles = tv({
-  base: 'w-full text-default-light',
+  base: 'w-full fg-primary-bold',
   variants: {
     level: {
       [1]: '',

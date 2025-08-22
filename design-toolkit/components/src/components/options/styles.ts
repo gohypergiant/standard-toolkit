@@ -16,7 +16,7 @@ export const OptionsStyles = tv({
   slots: {
     list: 'group/options max-h-[200px] overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static',
     section: 'mt-s',
-    header: 'm-xs my-s text-default-dark text-header-xs',
+    header: 'm-xs my-s fg-primary-muted text-header-xs',
     item: [
       'group/options-item fg-primary-bold flex items-center gap-s p-s text-body-s outline outline-transparent',
       'group-size-small/options:pt-xs group-size-small/options:pb-xs',

@@ -17,7 +17,7 @@ export const TextAreaStyles = tv({
     field: 'group/text-area-field flex flex-col gap-xs',
     label: '',
     input: [
-      'block w-full rounded-medium p-s font-display text-default-light outline outline-interactive placeholder:text-default-dark',
+      'fg-primary-bold block w-full rounded-medium p-s font-display outline outline-interactive placeholder:fg-primary-muted',
       'group-size-medium/text-area-field:text-body-s group-size-small/text-area-field:text-body-xs',
       'group-enabled/text-area-field:focus-visible:outline-accent-primary-bold',
       'group-enabled/text-area-field:hover:outline-interactive-hover',

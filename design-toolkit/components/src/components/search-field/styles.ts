@@ -26,7 +26,7 @@ export const SearchFieldStyles = tv({
     ],
     input: [
       'hide-cancel block w-full font-display text-body-s outline-none',
-      'placeholder:text-default-dark',
+      'placeholder:fg-primary-muted',
       'disabled:cursor-not-allowed',
     ],
     clear: [

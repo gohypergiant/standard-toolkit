@@ -199,11 +199,11 @@ body {
   }
 
   *::-webkit-scrollbar-track {
-    background: var(--color-interactive);
+    background: var(--bg-interactive-muted);
   }
 
   *::-webkit-scrollbar-thumb{
-    background-color: var(--color-interactive-hover-light);
+    background-color: var(--bg-interactive-bold);
     border-radius: var(--radius-large);
     border: 5px solid transparent;
     background-clip: padding-box;

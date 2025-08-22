@@ -38,7 +38,7 @@ import { Button } from '../button';
 import type { ButtonProps } from '../button/types';
 
 const dialogClasses = cva(
-  'flex flex-col align-end font-light text-body-m text-default-dark',
+  'fg-primary-muted flex flex-col align-end font-light text-body-m',
   {
     variants: {
       size: {
@@ -227,7 +227,7 @@ const DialogTitle = ({
     <RACHeading
       slot='title'
       className={cn(
-        'text-default-light',
+        'fg-primary-bold',
         size === 'sm' && 'mb-s text-header-m',
         size === 'lg' && 'mb-m text-header-l',
         className,

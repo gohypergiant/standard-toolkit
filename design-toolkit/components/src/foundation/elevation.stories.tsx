@@ -47,7 +47,7 @@ const ElevationDisplay = (elevation: ElevationInfo) => (
     />
     <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
       <span>{elevation.shadow}</span>
-      <span className='text-default-dark'>Figma: {elevation.name}</span>
+      <span className='fg-default-dark'>Figma: {elevation.name}</span>
     </div>
   </div>
 );

@@ -11,6 +11,10 @@
  * governing permissions and limitations under the License.
  */
 
+// TODO: fine tooth comb
+// use this https://www.figma.com/design/yMWadmpVp2WC6VAOpFQwqx/CORE-Design-System?node-id=3-3040&m=dev&vars=1
+// it would be best if we could generate this somehow
+
 export const darkTokens = {
   bg: {
     base: [
@@ -35,8 +39,8 @@ export const darkTokens = {
       },
       {
         name: 'bg-interactive-bold',
-        cssvar: '--primitive-neutral-800',
-        actual: '#212223',
+        cssvar: '--primitive-neutral-100',
+        actual: '#EFF1F2',
       },
       {
         name: 'bg-interactive-bold-hover',
@@ -473,8 +477,8 @@ export const lightTokens = {
       },
       {
         name: 'bg-interactive-bold',
-        cssvar: '--primitive-neutral-300',
-        actual: '#c3c5c7',
+        cssvar: '--primitive-neutral-900',
+        actual: '#151517',
       },
       {
         name: 'bg-interactive-bold-hover',

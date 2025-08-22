@@ -27,7 +27,7 @@ export const InputStyles = tv({
       'group-size-medium/input:text-body-s group-size-small/input:text-body-xs',
     ],
     input: [
-      'block w-full rounded-medium py-xs pr-[calc(var(--room)+var(--spacing-s))] pl-s font-display text-default-light outline outline-interactive',
+      'fg-primary-bold block w-full rounded-medium py-xs pr-[calc(var(--room)+var(--spacing-s))] pl-s font-display outline outline-interactive',
       'enabled:group-focus-visible-within/input:outline-accent-primary-bold',
       'enabled:group-hover/input:outline-interactive-hover',
       'enabled:group-invalid/input:outline-serious-bold',
@@ -61,7 +61,7 @@ export const InputStyles = tv({
       month: '',
       number: {
         input:
-          '[appearance:textfield] placeholder:text-default-dark [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          '[appearance:textfield] placeholder:fg-primary-muted [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
       },
       password: '',
       radio: '',

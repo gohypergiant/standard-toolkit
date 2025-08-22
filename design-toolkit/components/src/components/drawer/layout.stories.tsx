@@ -116,7 +116,7 @@ export const Default: Story = {
           <Drawer id={ids.top.drawer} placement='top' size='medium'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.top.views.a}>
-                <ChevronDown className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronDown className='cursor-pointer fg-primary-bold group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.top.views.b}>
                 <Placeholder />
@@ -144,7 +144,7 @@ export const Default: Story = {
           <Drawer id={ids.bottom.drawer} placement='bottom'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.bottom.views.a}>
-                <ChevronUp className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronUp className='cursor-pointer fg-primary-bold group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.bottom.views.b}>
                 <Placeholder />
@@ -172,7 +172,7 @@ export const Default: Story = {
           <Drawer id={ids.left.drawer} placement='left'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.left.views.a}>
-                <ChevronRight className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronRight className='cursor-pointer fg-primary-bold group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.left.views.b}>
                 <Placeholder />
@@ -200,7 +200,7 @@ export const Default: Story = {
           <Drawer id={ids.right.drawer} placement='right'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.right.views.a}>
-                <ChevronLeft className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronLeft className='cursor-pointer fg-primary-bold group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.right.views.b}>
                 <Placeholder />
