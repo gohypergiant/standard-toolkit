@@ -18,12 +18,12 @@ import {
   defaultTree,
   nodeDefaults,
 } from './__fixtures__/cache';
-import { treeCache } from './tree-cache';
+import { treeCache } from './cache';
 
 const setup = (props: { nodes?: TreeNode<Values>[] } = {}) => {
   const { nodes = defaultTree } = props;
   const cache = treeCache();
-  cache.buildLookup<Values>(nodes ?? [], new Map());
+  cache.buildLookup(nodes ?? [], new Map());
   return cache;
 };
 

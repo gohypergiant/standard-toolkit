@@ -1041,7 +1041,7 @@ describe('useTreeActions', () => {
           },
         ],
       });
-      expect(hook.current.onVisibilityChange(new Set())).toStrictEqual([
+      expect(hook.current.onVisibilityChange(new Set(['one']))).toStrictEqual([
         {
           ...nodeDefaults,
           key: 'one',

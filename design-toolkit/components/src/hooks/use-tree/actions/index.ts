@@ -221,11 +221,9 @@ export function useTreeActions<T>({
   }
 
   function onVisibilityChange(keys: Set<Key>): TreeData<T> {
-    const { key, state } = cache.getVisibilityChange(keys, getVisibleKeys());
-
-    if (key) {
+    for (const key of keys.values()) {
       const node = cache.getNode(key);
-      const isVisible = state;
+      const isVisible = !node.isVisible;
 
       // update visibility for nodes
       cache.setNode(node.key, {

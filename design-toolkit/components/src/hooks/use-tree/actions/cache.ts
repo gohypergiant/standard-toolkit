@@ -240,25 +240,6 @@ export function treeCache<T>() {
     }
   }
 
-  // TODO: Has nothing to do with the cache
-  function getVisibilityChange(
-    current: Set<Key>,
-    previous: Set<Key>,
-  ): { key: Key | undefined; state: boolean } {
-    const removed = previous.difference(current);
-    const added = current.difference(previous);
-
-    if (removed.size) {
-      return { key: removed.keys().next().value, state: false };
-    }
-
-    if (added.size) {
-      return { key: added.keys().next().value, state: true };
-    }
-
-    return { key: undefined, state: false };
-  }
-
   /** INTERNAL CACHE HELPER FUNCTIONS **/
 
   function _getNode(key: Key) {
@@ -368,7 +349,6 @@ export function treeCache<T>() {
     deleteNode,
     getAllNodes,
     getNode,
-    getVisibilityChange,
     insert,
     move,
     moveNodes,
