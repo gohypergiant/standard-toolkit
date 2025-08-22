@@ -23,8 +23,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    // TODO: fix FOUC
-    <html lang='en' className='bg-surface-default font-primary'>
+    // Note: if theme state is coming from some persisted store, that will need to be handled
+    // from https://tailwindcss.com/docs/dark-mode#with-system-theme-support
+    //
+    //   // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    //   document.documentElement.classList.toggle(
+    //     "dark",
+    //     localStorage.theme === "dark" ||
+    //       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
+    //   );
+    <html lang='en' className='bg-surface-default font-primary dark'>
       <body className='w-full h-dvh flex flex-col'>
         <DSTheme>
           <Defaults>
