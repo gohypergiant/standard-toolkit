@@ -1,5 +1,17 @@
 # @accelint/design-toolkit
 
+## 4.0.0
+
+### Major Changes
+
+- 9660517: Removes range slider and implements style standards
+
+### Patch Changes
+
+- 2848d9b: Remove unnecessary global selectors
+- Updated dependencies [e767f7c]
+  - @accelint/bus@1.1.0
+
 ## 3.0.0
 
 ### Major Changes
