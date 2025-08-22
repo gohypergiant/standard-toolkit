@@ -298,3 +298,4 @@ export type {
 export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
 export { designTokens } from './tokens/tokens';
+export type { ColorTokens, ThemeTokens } from './tokens/types';
