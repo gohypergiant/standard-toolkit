@@ -239,11 +239,7 @@ export const DragAndDrop: Story = {
       visibleKeys,
       dragAndDropConfig,
       actions,
-    } = useTreeState({
-      items,
-      initialSelectedKeys: ['european-birds'],
-      initialExpandedKeys: ['north-american-birds'],
-    });
+    } = useTreeState({ items });
 
     return (
       <>

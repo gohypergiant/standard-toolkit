@@ -56,15 +56,6 @@ export type DragAndDropConfig = {
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */
   items: TreeNode<T>[];
-
-  /** Keys for the initially selected items. */
-  initialSelectedKeys?: Key[];
-
-  /** Keys for the initially expanded items. */
-  initialExpandedKeys?: Key[];
-
-  /** Keys for the initially visible items. */
-  initialVisibleKeys?: Key[];
 };
 
 export type UseTreeState<T> = {
@@ -129,7 +120,7 @@ export type TreeActions<T> = {
    * Retrieves a specific tree node by key
    * If not found, throws error
    */
-  getNode: (key: Key) => TreeNode<T> | undefined;
+  getNode: (key: Key) => TreeNode<T>;
 
   /**
    * Inserts nodes as children of the target node

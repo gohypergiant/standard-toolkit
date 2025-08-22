@@ -9,7 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import type {
   DragItem,
   DroppableCollectionInsertDropEvent,
@@ -19,7 +21,7 @@ import type {
   Key,
   Selection,
 } from '@react-types/shared';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTreeActions } from '../actions';
 import type {
   DragAndDropConfig,
@@ -28,65 +30,27 @@ import type {
 } from '../types';
 import { processDroppedItems } from './utils';
 
-export function useTreeState<T>(
-  options: UseTreeStateOptions<T>,
-): UseTreeState<T> {
-  const {
-    items,
-    initialExpandedKeys,
-    initialSelectedKeys,
-    initialVisibleKeys,
-  } = options;
-  const [tree, setTree] = useState(items);
-  const actions = useTreeActions<T>({ nodes: tree });
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once
-  useEffect(() => {
-    initialSelectedKeys?.length &&
-      setTree(actions.onSelectionChange(new Set(initialSelectedKeys)));
-
-    initialExpandedKeys?.length &&
-      setTree(actions.onExpandedChange(new Set(initialExpandedKeys)));
-
-    initialVisibleKeys?.length &&
-      setTree(actions.onVisibilityChange(new Set(initialVisibleKeys)));
-  }, []);
-
-  const handleSelection = (keys: Selection) =>
-    setTree(actions.onSelectionChange(new Set(keys)));
-
-  const handleExpansion = (keys: Set<Key>) =>
-    setTree(actions.onExpandedChange(keys));
-
-  const handleExpandAll = () => setTree(actions.expandAll());
-
-  const handleCollapseAll = () => setTree(actions.collapseAll());
-
-  const handleSelectAll = () => setTree(actions.selectAll());
-
-  const handleUnselectAll = () => setTree(actions.unselectAll());
-
-  const handleVisibility = (keys: Set<Key>) =>
-    setTree(actions.onVisibilityChange(keys));
-
-  const handleRevealAll = () => setTree(actions.revealAll());
-
-  const handleHideAll = () => setTree(actions.hideAll());
+export function useTreeState<T>({
+  items,
+}: UseTreeStateOptions<T>): UseTreeState<T> {
+  const [nodes, setNodes] = useState(items);
+  const actions = useTreeActions<T>({ nodes });
 
   const dragAndDropConfig: DragAndDropConfig = {
     getItems: (keys: Set<Key>): DragItem[] =>
       [...keys].map((key) => {
         const node = actions.getNode(key);
+
         return {
-          key: String(key),
-          'text/plain': JSON.stringify(node ?? ''),
+          key: `${key}`,
+          'text/plain': JSON.stringify(node),
         };
       }),
     onReorder: (e: DroppableCollectionReorderEvent) => {
       if (e.target.dropPosition === 'before') {
-        setTree(actions.moveBefore(e.target.key, e.keys));
+        setNodes(actions.moveBefore(e.target.key, e.keys));
       } else {
-        setTree(actions.moveAfter(e.target.key, e.keys));
+        setNodes(actions.moveAfter(e.target.key, e.keys));
       }
     },
     onInsert: ({ items, target }: DroppableCollectionInsertDropEvent) => {
@@ -95,25 +59,33 @@ export function useTreeState<T>(
           items,
           dragAndDropConfig.acceptedDragTypes ?? [],
         );
-        setTree(actions.remove(new Set(processedItems.map((item) => item.id))));
+
+        setNodes(
+          actions.remove(new Set(processedItems.map((item) => item.id))),
+        );
 
         if (target.dropPosition === 'before') {
-          setTree(actions.insertBefore(target.key, processedItems));
+          setNodes(actions.insertBefore(target.key, processedItems));
         } else if (target.dropPosition === 'after') {
-          setTree(actions.insertAfter(target.key, processedItems));
+          setNodes(actions.insertAfter(target.key, processedItems));
         }
       })();
     },
     onItemDrop: ({ target, items }: DroppableCollectionOnItemDropEvent) => {
       (async () => {
         const targetNode = actions.getNode(target.key);
+        const [item] = items;
 
-        if (target.dropPosition === 'on' && targetNode) {
-          // @ts-ignore TODO
-          const key = await items[0]?.getText('key');
+        if (
+          target.dropPosition === 'on' &&
+          targetNode &&
+          item &&
+          item.kind !== 'directory'
+        ) {
+          const key = await item.getText('key');
 
           if (key && !targetNode.isReadOnly) {
-            setTree(actions.moveInto(target.key, new Set([key])));
+            setNodes(actions.moveInto(target.key, new Set([key])));
           }
         }
       })();
@@ -125,31 +97,75 @@ export function useTreeState<T>(
           dragAndDropConfig.acceptedDragTypes ?? [],
         );
 
-        setTree(
+        setNodes(
           actions.remove(new Set(processedItems.map((item) => item.key))),
         );
-
-        setTree(actions.insertAfter(null, processedItems));
+        setNodes(actions.insertAfter(null, processedItems));
       })();
     },
   };
 
+  function collapseAll() {
+    setNodes(actions.collapseAll());
+  }
+
+  function expandAll() {
+    setNodes(actions.expandAll());
+  }
+
+  function onExpandedChange(keys: Set<Key>) {
+    setNodes(actions.onExpandedChange(keys));
+  }
+
+  function selectAll() {
+    setNodes(actions.selectAll());
+  }
+
+  function unselectAll() {
+    setNodes(actions.unselectAll());
+  }
+
+  function onSelectionChange(keys: Selection) {
+    if (keys === 'all') {
+      return selectAll();
+    }
+
+    setNodes(actions.onSelectionChange(keys));
+  }
+
+  function hideAll() {
+    setNodes(actions.hideAll());
+  }
+
+  function revealAll() {
+    setNodes(actions.revealAll());
+  }
+
+  function onVisibilityChange(keys: Set<Key>) {
+    setNodes(actions.onVisibilityChange(keys));
+  }
+
   return {
-    nodes: tree,
-    selectedKeys: actions.getSelectedKeys(),
-    expandedKeys: actions.getExpandedKeys(),
-    visibleKeys: actions.getVisibleKeys(),
-    dragAndDropConfig,
+    nodes,
     actions: {
-      selectAll: handleSelectAll,
-      unselectAll: handleUnselectAll,
-      expandAll: handleExpandAll,
-      collapseAll: handleCollapseAll,
-      onExpandedChange: handleExpansion,
-      onSelectionChange: handleSelection,
-      onVisibilityChange: handleVisibility,
-      revealAll: handleRevealAll,
-      hideAll: handleHideAll,
+      // Expansion
+      collapseAll,
+      expandAll,
+      onExpandedChange,
+
+      // Selection
+      selectAll,
+      unselectAll,
+      onSelectionChange,
+
+      // Visibility
+      hideAll,
+      revealAll,
+      onVisibilityChange,
     },
+    dragAndDropConfig,
+    expandedKeys: actions.getExpandedKeys(),
+    selectedKeys: actions.getSelectedKeys(),
+    visibleKeys: actions.getVisibleKeys(),
   };
 }
