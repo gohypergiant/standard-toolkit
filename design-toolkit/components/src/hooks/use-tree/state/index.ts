@@ -73,7 +73,7 @@ export function useTreeState<T>(
   const dragAndDropConfig: DragAndDropConfig = {
     getItems: (keys: Set<Key>): DragItem[] =>
       [...keys].map((key) => {
-        const node = actions.getTreeNode(key);
+        const node = actions.getNode(key);
         return {
           key: String(key),
           'text/plain': JSON.stringify(node ?? ''),
@@ -92,7 +92,7 @@ export function useTreeState<T>(
           items,
           dragAndDropConfig.acceptedDragTypes ?? [],
         );
-        setTree(actions.remove(...processedItems.map((item) => item.id)));
+        setTree(actions.remove(new Set(processedItems.map((item) => item.id))));
 
         if (target.dropPosition === 'before') {
           setTree(actions.insertBefore(target.key, processedItems));
@@ -103,7 +103,7 @@ export function useTreeState<T>(
     },
     onItemDrop: ({ target, items }: DroppableCollectionOnItemDropEvent) => {
       (async () => {
-        const targetNode = actions.getTreeNode(target.key);
+        const targetNode = actions.getNode(target.key);
 
         if (target.dropPosition === 'on' && targetNode) {
           // @ts-ignore TODO
@@ -122,7 +122,9 @@ export function useTreeState<T>(
           dragAndDropConfig.acceptedDragTypes ?? [],
         );
 
-        setTree(actions.remove(...processedItems.map((item) => item.key)));
+        setTree(
+          actions.remove(new Set(processedItems.map((item) => item.key))),
+        );
 
         setTree(actions.insertAfter(null, processedItems));
       })();

@@ -23,7 +23,7 @@ import {
 import Warning from '@accelint/icons/warning';
 import type { Key, Selection } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tree } from './index';
@@ -305,11 +305,6 @@ export const Stateless: Story = {
      */
     const [db, setDB] = useState(items);
     const actions = useTreeActions({ nodes: db });
-
-    // biome-ignore lint/correctness/useExhaustiveDependencies: only run once to normalize data
-    useEffect(() => {
-      setDB(actions.initialize());
-    }, []);
 
     const handleSelection = (keys: Selection) => {
       const updated = actions.onSelectionChange(new Set(keys));

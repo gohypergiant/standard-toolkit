@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { useUpdateEffect } from '@react-aria/utils';
 import type { Key } from '@react-types/shared';
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import type {
   TreeActions,
   TreeData,
@@ -20,20 +21,6 @@ import type {
   UseTreeActionsOptions,
 } from '../types';
 import { treeCache } from './cache';
-
-/**
- * Hook that tracks whether this is the first mount of the component
- * @returns {boolean} True if this is the first mount, false otherwise
- */
-function useIsFirstMount(): boolean {
-  const isFirst = useRef(true);
-  if (isFirst.current) {
-    isFirst.current = false;
-
-    return true;
-  }
-  return isFirst.current;
-}
 
 /**
  * Stateless hook that transforms tree data according to actions
@@ -68,39 +55,58 @@ function useIsFirstMount(): boolean {
 export function useTreeActions<T>({
   nodes,
 }: UseTreeActionsOptions<T>): TreeActions<T> {
-  const isFirstMount = useIsFirstMount();
-  const lastBuild = useRef<TreeNode<T>[] | null>(null);
+  const cache = useRef(treeCache<T>(nodes)).current;
 
-  const cache = useMemo(() => treeCache<T>(), []);
+  useUpdateEffect(() => {
+    cache.rebuild(nodes);
+  }, [nodes]);
 
-  if (isFirstMount) {
-    cache.buildLookup(nodes ?? [], new Map());
-    lastBuild.current = cache.toTree();
+  /** INSERT NODES **/
+  function insertAfter(
+    target: Key | null,
+    nodes: TreeNode<T>[],
+  ): TreeNode<T>[] {
+    cache.addNodes(target, nodes, 'after');
+
+    return cache.toTree();
   }
 
-  cache.validateCache(nodes, lastBuild.current);
+  function insertBefore(
+    target: Key | null,
+    nodes: TreeNode<T>[],
+  ): TreeNode<T>[] {
+    cache.addNodes(target, nodes, 'before');
 
-  function initialize(): TreeNode<T>[] {
-    return updateAndReturn();
+    return cache.toTree();
   }
 
-  function getTreeNode(key: Key): TreeNode<T> | undefined {
-    const node = cache.getNode(key);
-
-    if (!node) {
-      return undefined;
+  function insertInto(target: Key | null, nodes: TreeNode<T>[]): TreeNode<T>[] {
+    for (const node of nodes) {
+      cache.insert(target, node, 0);
     }
 
-    return node;
+    return cache.toTree();
   }
 
-  /** REMOVE NODES **/
-  function remove(...keys: Key[]): TreeNode<T>[] {
-    if (keys.length === 0) {
-      return lastBuild.current ?? updateAndReturn();
+  /** MOVE NODES **/
+  function moveAfter(target: Key | null, keys: Set<Key>): TreeNode<T>[] {
+    cache.moveNodes(target, keys, 'after');
+
+    return cache.toTree();
+  }
+
+  function moveBefore(target: Key | null, keys: Set<Key>): TreeNode<T>[] {
+    cache.moveNodes(target, keys, 'before');
+
+    return cache.toTree();
+  }
+
+  function moveInto(target: Key | null, keys: Set<Key>): TreeNode<T>[] {
+    for (const key of keys) {
+      cache.move(target, key, 0);
     }
-    keys.map((key) => cache.deleteNode(key));
-    return updateAndReturn();
+
+    return cache.toTree();
   }
 
   /** UPDATE NODES **/
@@ -109,117 +115,115 @@ export function useTreeActions<T>({
     callback: (node: TreeNodeBase<T>) => TreeNodeBase<T>,
   ): TreeNode<T>[] {
     const node = cache.getNode(key);
-    const newNode = callback(node);
-    cache.setNode(key, newNode);
-    return updateAndReturn();
+
+    cache.setNode(key, callback(node));
+
+    return cache.toTree();
   }
 
-  /** INSERT NODES **/
-  function insertInto(target: Key | null, nodes: TreeNode<T>[]): TreeNode<T>[] {
-    nodes.map((node) => cache.insert(target, node, 0));
-    return updateAndReturn();
-  }
+  /** REMOVE NODES **/
+  function remove(keys: Set<Key>): TreeNode<T>[] {
+    for (const key of keys.values()) {
+      cache.deleteNode(key);
+    }
 
-  function insertBefore(
-    target: Key | null,
-    nodes: TreeNode<T>[],
-  ): TreeNode<T>[] {
-    cache.addNodes(target, nodes, 'before');
-    return updateAndReturn();
-  }
-
-  function insertAfter(
-    target: Key | null,
-    nodes: TreeNode<T>[],
-  ): TreeNode<T>[] {
-    cache.addNodes(target, nodes, 'after');
-    return updateAndReturn();
-  }
-
-  /** MOVE NODES **/
-  function moveInto(target: Key | null, nodes: Set<Key>): TreeNode<T>[] {
-    Array.from(nodes).map((key) => cache.move(target, key, 0));
-    return updateAndReturn();
-  }
-
-  function moveBefore(target: Key | null, nodes: Set<Key>): TreeNode<T>[] {
-    cache.moveNodes(target, nodes, 'before');
-    return updateAndReturn();
-  }
-
-  function moveAfter(target: Key | null, nodes: Set<Key>): TreeNode<T>[] {
-    cache.moveNodes(target, nodes, 'after');
-    return updateAndReturn();
+    return cache.toTree();
   }
 
   /** SELECTION **/
   function getSelectedKeys(): Set<Key> {
-    return Array.from(cache.getAllNodes()).reduce(
-      (acc, node) => (node.isSelected ? acc.add(node.key) : acc),
-      new Set<Key>(),
-    );
+    const selected = new Set<Key>();
+
+    for (const node of cache.getAllNodes()) {
+      if (node.isSelected) {
+        selected.add(node.key);
+      }
+    }
+
+    return selected;
   }
 
   function onSelectionChange(keys: Set<Key>): TreeNode<T>[] {
-    for (const key of new Set([...keys, ...getSelectedKeys()])) {
+    unselectAll();
+
+    for (const key of keys) {
       const node = cache.getNode(key);
+
       cache.setNode(node.key, {
         ...node,
-        isSelected: keys.has(key),
+        isSelected: true,
       });
     }
 
-    return updateAndReturn();
+    return cache.toTree();
   }
 
   function selectAll(): TreeNode<T>[] {
     cache.setAllNodes({ isSelected: true });
-    return updateAndReturn();
+
+    return cache.toTree();
   }
 
   function unselectAll(): TreeNode<T>[] {
     cache.setAllNodes({ isSelected: false });
-    return updateAndReturn();
+
+    return cache.toTree();
   }
 
   /** EXPANSION **/
   function getExpandedKeys(): Set<Key> {
-    return Array.from(cache.getAllNodes()).reduce(
-      (acc, node) => (node.isExpanded ? acc.add(node.key) : acc),
-      new Set<Key>(),
-    );
+    const expanded = new Set<Key>();
+
+    for (const node of cache.getAllNodes()) {
+      if (node.isExpanded) {
+        expanded.add(node.key);
+      }
+    }
+
+    return expanded;
   }
 
   function onExpandedChange(keys: Set<Key>): TreeNode<T>[] {
-    for (const key of new Set([...keys, ...getExpandedKeys()])) {
+    collapseAll();
+
+    for (const key of keys) {
       const node = cache.getNode(key);
-      const isExpanded = keys.has(key);
+
       cache.setNode(node.key, {
         ...node,
-        isExpanded,
+        isExpanded: true,
       });
     }
-    return updateAndReturn();
+
+    return cache.toTree();
   }
 
   function expandAll(): TreeNode<T>[] {
     cache.setAllNodes({ isExpanded: true });
-    return updateAndReturn();
+
+    return cache.toTree();
   }
 
   function collapseAll(): TreeNode<T>[] {
     cache.setAllNodes({ isExpanded: false });
-    return updateAndReturn();
+
+    return cache.toTree();
   }
 
   /** VISIBILITY **/
   function getVisibleKeys(): Set<Key> {
-    return Array.from(cache.getAllNodes()).reduce(
-      (acc, node) => (node.isVisible ? acc.add(node.key) : acc),
-      new Set<Key>(),
-    );
+    const visible = new Set<Key>();
+
+    for (const node of cache.getAllNodes()) {
+      if (node.isVisible) {
+        visible.add(node.key);
+      }
+    }
+
+    return visible;
   }
 
+  // TODO: Validate heirarchy logic
   function onVisibilityChange(keys: Set<Key>): TreeData<T> {
     for (const key of keys.values()) {
       const node = cache.getNode(key);
@@ -235,50 +239,48 @@ export function useTreeActions<T>({
       node.children?.map((child) => cache.setViewable(child.key, isVisible));
     }
 
-    return updateAndReturn();
+    return cache.toTree();
   }
 
   function revealAll(): TreeNode<T>[] {
     cache.setAllNodes({ isVisible: true });
-    return updateAndReturn();
+
+    return cache.toTree();
   }
 
   function hideAll(): TreeNode<T>[] {
     cache.setAllNodes({ isVisible: false });
-    return updateAndReturn();
-  }
 
-  /**
-   * Internal function to update the last build reference and return the current tree
-   * @returns {TreeNode<T>[]} The current tree structure
-   */
-  function updateAndReturn(): TreeNode<T>[] {
-    lastBuild.current = cache.toTree();
-    return lastBuild.current;
+    return cache.toTree();
   }
 
   return {
-    initialize,
-    getTreeNode,
-    insertInto,
+    getNode: cache.getNode,
     insertAfter,
     insertBefore,
-    remove,
-    updateNode,
+    insertInto,
     moveAfter,
     moveBefore,
     moveInto,
-    getSelectedKeys,
-    onSelectionChange,
-    selectAll,
-    unselectAll,
+    remove,
+    updateNode,
+
+    // Expansion
+    collapseAll,
+    expandAll,
     getExpandedKeys,
     onExpandedChange,
-    expandAll,
-    collapseAll,
+
+    // Selection
+    getSelectedKeys,
+    selectAll,
+    unselectAll,
+    onSelectionChange,
+
+    // Visibility
     getVisibleKeys,
-    onVisibilityChange,
-    revealAll,
     hideAll,
+    revealAll,
+    onVisibilityChange,
   };
 }

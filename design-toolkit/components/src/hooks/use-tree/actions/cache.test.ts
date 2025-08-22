@@ -20,12 +20,9 @@ import {
 } from './__fixtures__/cache';
 import { treeCache } from './cache';
 
-const setup = (props: { nodes?: TreeNode<Values>[] } = {}) => {
-  const { nodes = defaultTree } = props;
-  const cache = treeCache();
-  cache.buildLookup(nodes ?? [], new Map());
-  return cache;
-};
+function setup({ nodes = defaultTree }: { nodes?: TreeNode<Values>[] } = {}) {
+  return treeCache(nodes ?? []);
+}
 
 describe('treeCache module', () => {
   it('builds a tree from a treeRef', () => {

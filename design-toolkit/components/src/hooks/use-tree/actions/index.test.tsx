@@ -32,7 +32,7 @@ describe('useTreeActions', () => {
     it('returns a node', () => {
       const { result: hook } = setup({ nodes: defaultTree });
 
-      expect(hook.current.getTreeNode('two')).toStrictEqual({
+      expect(hook.current.getNode('two')).toStrictEqual({
         ...nodeDefaults,
         key: 'two',
         parentKey: 'one',
@@ -43,7 +43,7 @@ describe('useTreeActions', () => {
     it('returns a node with children', () => {
       const { result: hook } = setup({ nodes: defaultTree });
 
-      expect(hook.current.getTreeNode('one')).toStrictEqual({
+      expect(hook.current.getNode('one')).toStrictEqual({
         ...nodeDefaults,
         key: 'one',
         label: 'One',
@@ -97,7 +97,7 @@ describe('useTreeActions', () => {
         ],
       });
 
-      expect(hook.current.getTreeNode('one')).toStrictEqual({
+      expect(hook.current.getNode('one')).toStrictEqual({
         ...nodeDefaults,
         key: 'one',
         label: 'One',
@@ -362,7 +362,7 @@ describe('useTreeActions', () => {
         ],
       });
 
-      expect(hook.current.remove('one')).toStrictEqual([
+      expect(hook.current.remove(new Set(['one']))).toStrictEqual([
         {
           ...nodeDefaults,
           key: 'three',
@@ -375,7 +375,7 @@ describe('useTreeActions', () => {
     it('should remove a single node', () => {
       const { result: hook } = setup({ nodes: defaultTree });
 
-      expect(hook.current.remove('two')).toStrictEqual([
+      expect(hook.current.remove(new Set(['two']))).toStrictEqual([
         {
           ...nodeDefaults,
           key: 'one',

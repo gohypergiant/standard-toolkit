@@ -87,17 +87,10 @@ export type UseTreeActionsOptions<T> = {
  */
 export type TreeActions<T> = {
   /**
-   * Initializes the tree cache and returns the current tree structure,
-   * with complete properties and defaults for TreeNode<T>.
-   * Use this to ensure nodes are complete.
-   */
-  initialize: () => TreeData<T>;
-
-  /**
    * Retrieves a specific tree node by key
    * If not found, throws error
    */
-  getTreeNode: (key: Key) => TreeNode<T> | undefined;
+  getNode: (key: Key) => TreeNode<T> | undefined;
 
   /**
    * Inserts nodes as children of the target node
@@ -118,7 +111,7 @@ export type TreeActions<T> = {
    * Removes one or more nodes from the tree by their keys.
    * Does nothing if the key is not found.
    */
-  remove: (...keys: Key[]) => TreeData<T>;
+  remove: (keys: Set<Key>) => TreeData<T>;
 
   /**
    * Updates a specific node using a callback function

@@ -12,7 +12,6 @@
  */
 
 import type { Key } from '@react-types/shared';
-import { isEqual } from 'lodash';
 import type { TreeNode } from '../types';
 
 type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
@@ -28,37 +27,8 @@ type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
  * This will initialize once on load with data, then
  * updated with each tree operation.
  */
-export function treeCache<T>() {
-  let cache: { lookup: Map<Key, CacheTreeNode<T>>; roots: Key[] } = {
-    lookup: new Map(),
-    roots: [],
-  };
-
-  /**
-   * Validates the cache against incoming tree data
-   * If they don't match the cache, rebuild
-   *
-   * TODO: optimization - invalidate sections, not the whole cache
-   */
-  function validateCache(
-    nodes: TreeNode<T>[],
-    lastBuild: TreeNode<T>[] | null,
-  ) {
-    if (!isEqual(nodes, lastBuild)) {
-      buildLookup(nodes, new Map());
-    }
-  }
-
-  /**
-   * Builds a tree structure from cache
-   *
-   * TODO: optimization - rebuild only from change to root
-   * Rebuild only from the changed node up the tree to avoid
-   * rebuilding the entire tree
-   */
-  function toTree(): TreeNode<T>[] {
-    return cache.roots.map((key) => buildNode(key));
-  }
+export function treeCache<T>(nodes: TreeNode<T>[] = []) {
+  let cache: { lookup: Map<Key, CacheTreeNode<T>>; roots: Key[] };
 
   /**
    * Recursively creates the cache object from tree data
@@ -67,9 +37,9 @@ export function treeCache<T>() {
    * @param lookup
    * @param parentKey
    */
-  function buildLookup(
+  function rebuild(
     nodes: TreeNode<T>[],
-    lookup: Map<Key, CacheTreeNode<T>>,
+    lookup: Map<Key, CacheTreeNode<T>> = new Map(),
     parentKey: Key | null = null,
   ) {
     nodes.map((node) => {
@@ -85,11 +55,24 @@ export function treeCache<T>() {
       });
 
       if (node.children) {
-        buildLookup(node.children, lookup, node.key);
+        rebuild(node.children, lookup, node.key);
       }
     });
 
     cache = { lookup, roots: nodes.map((node) => node.key) };
+  }
+
+  rebuild(nodes);
+
+  /**
+   * Builds a tree structure from cache
+   *
+   * TODO: optimization - rebuild only from change to root
+   * Rebuild only from the changed node up the tree to avoid
+   * rebuilding the entire tree
+   */
+  function toTree(): TreeNode<T>[] {
+    return cache.roots.map((key) => buildNode(key));
   }
 
   /**
@@ -345,17 +328,16 @@ export function treeCache<T>() {
 
   return {
     addNodes,
-    buildLookup,
     deleteNode,
     getAllNodes,
     getNode,
     insert,
     move,
     moveNodes,
+    rebuild,
     setNode,
     setAllNodes,
     setViewable,
     toTree,
-    validateCache,
   };
 }
