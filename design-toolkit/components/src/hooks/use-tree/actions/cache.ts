@@ -46,15 +46,17 @@ export class Cache<T> {
     parentKey: Key | null = null,
   ) {
     nodes.map((node) => {
+      const { children, ...rest } = node;
+
       lookup.set(node.key, {
         isDisabled: false,
         isExpanded: false,
         isSelected: false,
         isViewable: false,
         isVisible: false,
-        ...node,
+        ...rest,
         parentKey,
-        children: (node.children ?? []).map((child) => child.key),
+        ...(children ? { children: children.map((child) => child.key) } : {}),
       });
 
       if (node.children) {
@@ -285,7 +287,7 @@ export class Cache<T> {
       isVisible: false,
       ...rest,
       parentKey,
-      children: children?.map((child) => child.key),
+      ...(children ? { children: children.map((child) => child.key) } : {}),
     });
 
     node.children?.map((child, i) => this.insert(node.key, child, i));

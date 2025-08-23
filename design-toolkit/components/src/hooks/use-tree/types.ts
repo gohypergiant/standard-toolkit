@@ -104,7 +104,7 @@ export type TreeNode<T> = TreeNodeBase<T> & {
   /** The key of the parent node. */
   parentKey?: Key | null;
   /** Children of the tree node. */
-  children?: TreeNode<T>[] | null;
+  children?: TreeNode<T>[];
 };
 
 export type UseTreeActionsOptions<T> = {
