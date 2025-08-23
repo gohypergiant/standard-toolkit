@@ -133,18 +133,6 @@ export function useTreeActions<T>({
   }
 
   /** SELECTION **/
-  function getSelectedKeys(): Set<Key> {
-    const selected = new Set<Key>();
-
-    for (const node of cache.getAllNodes()) {
-      if (node.isSelected) {
-        selected.add(node.key);
-      }
-    }
-
-    return selected;
-  }
-
   function onSelectionChange(keys: Set<Key>): TreeNode<T>[] {
     unselectAll();
 
@@ -173,18 +161,6 @@ export function useTreeActions<T>({
   }
 
   /** EXPANSION **/
-  function getExpandedKeys(): Set<Key> {
-    const expanded = new Set<Key>();
-
-    for (const node of cache.getAllNodes()) {
-      if (node.isExpanded) {
-        expanded.add(node.key);
-      }
-    }
-
-    return expanded;
-  }
-
   function onExpandedChange(keys: Set<Key>): TreeNode<T>[] {
     collapseAll();
 
@@ -213,18 +189,6 @@ export function useTreeActions<T>({
   }
 
   /** VISIBILITY **/
-  function getVisibleKeys(): Set<Key> {
-    const visible = new Set<Key>();
-
-    for (const node of cache.getAllNodes()) {
-      if (node.isVisible) {
-        visible.add(node.key);
-      }
-    }
-
-    return visible;
-  }
-
   // TODO: Validate heirarchy logic
   function onVisibilityChange(keys: Set<Key>): TreeData<T> {
     for (const key of keys.values()) {
@@ -270,17 +234,14 @@ export function useTreeActions<T>({
     // Expansion
     collapseAll,
     expandAll,
-    getExpandedKeys,
     onExpandedChange,
 
     // Selection
-    getSelectedKeys,
     selectAll,
     unselectAll,
     onSelectionChange,
 
     // Visibility
-    getVisibleKeys,
     hideAll,
     revealAll,
     onVisibilityChange,

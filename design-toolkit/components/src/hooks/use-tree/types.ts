@@ -78,8 +78,6 @@ export type UseTreeState<T> = {
 
 export type TreeData<T> = TreeNode<T>[];
 
-export type Position = 'before' | 'after' | 'under';
-
 /**
  * The TreeNode is a wrapper that describes the relationship of this node
  * to other nodes in the tree.
@@ -166,11 +164,6 @@ export type TreeActions<T> = {
   moveAfter: (target: Key | null, nodes: Set<Key>) => TreeData<T>;
 
   /**
-   * Gets all currently expanded node keys
-   */
-  getExpandedKeys: () => Set<Key>;
-
-  /**
    * Updates the expansion state of nodes. If a key is not
    * in the set, it is collapsed.
    */
@@ -187,11 +180,6 @@ export type TreeActions<T> = {
   collapseAll: () => TreeData<T>;
 
   /**
-   * Gets all currently selected node keys
-   */
-  getSelectedKeys: () => Set<Key>;
-
-  /**
    * Updates the selection state of nodes. If a key is
    * not in the Set, it is unselected.
    */
@@ -206,11 +194,6 @@ export type TreeActions<T> = {
    * Unselects all nodes in the tree
    */
   unselectAll: () => TreeData<T>;
-
-  /**
-   * Gets all currently visible node keys
-   */
-  getVisibleKeys: () => Set<Key>;
 
   /**
    * Changes visibility of nodes. Updates both isVisible and isViewable properties.
