@@ -47,13 +47,13 @@ export class Cache<T> {
   ) {
     nodes.map((node) => {
       lookup.set(node.key, {
-        parentKey,
         isDisabled: false,
         isExpanded: false,
         isSelected: false,
         isViewable: false,
         isVisible: false,
         ...node,
+        parentKey,
         children: (node.children ?? []).map((child) => child.key),
       });
 
@@ -278,14 +278,14 @@ export class Cache<T> {
     const { children, ...rest } = node;
 
     this.set(node.key, {
-      parentKey,
       isDisabled: false,
       isExpanded: false,
       isSelected: false,
       isViewable: false,
       isVisible: false,
-      children: children?.map((child) => child.key),
       ...rest,
+      parentKey,
+      children: children?.map((child) => child.key),
     });
 
     node.children?.map((child, i) => this.insert(node.key, child, i));
