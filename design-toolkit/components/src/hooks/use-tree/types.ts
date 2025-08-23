@@ -60,20 +60,19 @@ export type UseTreeStateOptions<T> = {
 
 export type UseTreeState<T> = {
   nodes: TreeNode<T>[];
-  selectedKeys: Selection;
-  expandedKeys: Set<Key>;
-  visibleKeys: Set<Key>;
   dragAndDropConfig: DragAndDropConfig;
   actions: {
-    onSelectionChange: (keys: Selection) => void;
+    collapseAll: () => void;
+    expandAll: () => void;
+    onExpandedChange: (keys: Set<Key>) => void;
+
     selectAll: () => void;
     unselectAll: () => void;
-    onExpandedChange: (keys: Set<Key>) => void;
-    expandAll: () => void;
-    collapseAll: () => void;
-    onVisibilityChange: (keys: Set<Key>) => void;
-    revealAll: () => void;
+    onSelectionChange: (keys: Selection) => void;
+
     hideAll: () => void;
+    revealAll: () => void;
+    onVisibilityChange: (keys: Set<Key>) => void;
   };
 };
 

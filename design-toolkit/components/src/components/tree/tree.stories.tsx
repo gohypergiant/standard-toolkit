@@ -79,7 +79,6 @@ const items: TreeNode<ItemValues>[] = [
   {
     key: 'european-birds',
     label: 'European Birds',
-    isReadOnly: false,
     values: {
       iconPrefix: <Placeholder />,
     },
@@ -87,9 +86,8 @@ const items: TreeNode<ItemValues>[] = [
   {
     key: 'north-american-birds',
     label: 'North American Birds',
-    isVisible: true,
-    isReadOnly: false,
     isExpanded: true,
+    isVisible: true,
     values: {
       iconPrefix: <Placeholder />,
     },
@@ -98,7 +96,6 @@ const items: TreeNode<ItemValues>[] = [
         key: 'blue-jay',
         parentKey: 'north-american-birds',
         label: 'Blue jay',
-        isReadOnly: false,
         isVisible: true,
         values: {
           description: 'cyanocitta cristata',
@@ -110,7 +107,6 @@ const items: TreeNode<ItemValues>[] = [
         key: 'gray-catbird',
         parentKey: 'north-american-birds',
         label: 'Gray catbird',
-        isReadOnly: false,
         isVisible: true,
         values: {
           description: 'dumetella carolinensis',
@@ -121,7 +117,7 @@ const items: TreeNode<ItemValues>[] = [
         key: 'black-capped-chickadee',
         parentKey: 'north-american-birds',
         label: 'Black-capped chickadee',
-        isReadOnly: true,
+        isDisabled: true,
         isVisible: false,
         values: {
           description: 'Poecile atricapillus',
@@ -132,7 +128,6 @@ const items: TreeNode<ItemValues>[] = [
             key: 'northern-cardinal',
             parentKey: 'black-capped-chickadee',
             label: 'Northern Cardinal',
-            isReadOnly: false,
             values: {
               description: 'Cardinalis cardinalis',
               iconPrefix: <Placeholder />,
@@ -146,7 +141,6 @@ const items: TreeNode<ItemValues>[] = [
   {
     key: 'african-birds',
     label: 'African Birds',
-    isReadOnly: false,
     values: {
       iconPrefix: <Placeholder />,
     },
@@ -155,7 +149,6 @@ const items: TreeNode<ItemValues>[] = [
         key: 'lilac-breasted-roller',
         parentKey: 'african-birds',
         label: 'Lilac-breasted roller',
-        isReadOnly: false,
         values: {
           iconPrefix: <Placeholder />,
         },
@@ -165,14 +158,14 @@ const items: TreeNode<ItemValues>[] = [
 ];
 
 function Node({ node }: { node: TreeNode<ItemValues> }) {
-  const { isReadOnly, values } = node;
+  const { values, isDisabled } = node;
 
   return (
     <Tree.Item
       id={node.key}
       key={node.key}
       textValue={node.label}
-      isDisabled={isReadOnly}
+      isDisabled={isDisabled}
     >
       <Tree.Item.Content>
         {({ variant, isViewable, isVisible }) => {
@@ -191,7 +184,7 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
                 </Tree.Item.Description>
               )}
               <Tree.Item.Actions>
-                {isReadOnly && (
+                {isDisabled && (
                   <Icon
                     className='fg-default-dark aspect-square rounded-full bg-interactive-hover-dark p-xs'
                     size={size}

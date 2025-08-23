@@ -164,8 +164,5 @@ export function useTreeState<T>({
       onVisibilityChange,
     },
     dragAndDropConfig,
-    expandedKeys: actions.getExpandedKeys(),
-    selectedKeys: actions.getSelectedKeys(),
-    visibleKeys: actions.getVisibleKeys(),
   };
 }
