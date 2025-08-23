@@ -84,7 +84,7 @@ export function useTreeState<T>({
         ) {
           const key = await item.getText('key');
 
-          if (key && !targetNode.isReadOnly) {
+          if (key) {
             setNodes(actions.moveInto(target.key, new Set([key])));
           }
         }
