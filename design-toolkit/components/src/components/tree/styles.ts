@@ -11,11 +11,9 @@
  */
 
 import { tv } from '@/lib/utils';
-import type { VariantProps } from 'tailwind-variants';
 
 export const TreeStylesDefaults = {
   variant: 'cozy',
-  hasRuleLines: true,
 } as const;
 
 export const TreeStyles = tv({
@@ -23,7 +21,7 @@ export const TreeStyles = tv({
     tree: 'overflow-auto outline-hidden',
     item: [
       'group/tree-item rounded-medium hover:bg-interactive-hover-dark',
-      'data-[drop-target=true]:border data-[drop-target=true]:border-highlight-hover data-[drop-target=true]:bg-highlight/20',
+      'drop-target:border drop-target:border-highlight-hover drop-target:bg-highlight/20',
     ],
     content: [
       'flex items-center justify-items-start px-xs',
@@ -67,61 +65,59 @@ export const TreeStyles = tv({
         item: 'min-h-s',
       },
     },
-    isDisabled: {
-      true: {
-        item: 'cursor-not-allowed border-none hover:bg-transparent data-[drop-target=true]:bg-transparent',
-      },
-    },
-    isViewable: {
-      false: '',
-    },
-    isVisible: {
-      false: '',
-    },
+    // isDisabled: {
+    //   true: {
+    //     item: 'cursor-not-allowed border-none hover:bg-transparent data-[drop-target=true]:bg-transparent',
+    //   },
+    // },
+    // isViewable: {
+    //   false: '',
+    // },
+    // isVisible: {
+    //   false: '',
+    // },
   },
-  compoundVariants: [
-    {
-      isViewable: true,
-      isVisible: true,
-      className: {
-        content: 'fg-default-light',
-        visibility: 'fg-default-light',
-        expansion: 'fg-default-light',
-        drag: 'fg-default-light',
-      },
-    },
-    {
-      isViewable: false,
-      isVisible: true,
-      className: {
-        content: 'fg-default-dark',
-        visibility: 'enabled:fg-default-dark',
-        expansion: 'enabled:fg-default-dark',
-        drag: 'enabled:fg-default-dark',
-      },
-    },
-    {
-      isViewable: true,
-      isVisible: false,
-      className: {
-        content: 'fg-default-dark',
-        visibility: 'enabled:fg-default-dark',
-        expansion: 'enabled:fg-default-dark',
-        drag: 'enabled:fg-default-dark',
-      },
-    },
-    {
-      isViewable: false,
-      isVisible: false,
-      className: {
-        content: 'fg-default-dark',
-        visibility: 'enabled:fg-default-dark',
-        expansion: 'enabled:fg-default-dark',
-        drag: 'enabled:fg-default-dark',
-      },
-    },
-  ],
+  // compoundVariants: [
+  //   {
+  //     isViewable: true,
+  //     isVisible: true,
+  //     className: {
+  //       content: 'fg-default-light',
+  //       visibility: 'fg-default-light',
+  //       expansion: 'fg-default-light',
+  //       drag: 'fg-default-light',
+  //     },
+  //   },
+  //   {
+  //     isViewable: false,
+  //     isVisible: true,
+  //     className: {
+  //       content: 'fg-default-dark',
+  //       visibility: 'enabled:fg-default-dark',
+  //       expansion: 'enabled:fg-default-dark',
+  //       drag: 'enabled:fg-default-dark',
+  //     },
+  //   },
+  //   {
+  //     isViewable: true,
+  //     isVisible: false,
+  //     className: {
+  //       content: 'fg-default-dark',
+  //       visibility: 'enabled:fg-default-dark',
+  //       expansion: 'enabled:fg-default-dark',
+  //       drag: 'enabled:fg-default-dark',
+  //     },
+  //   },
+  //   {
+  //     isViewable: false,
+  //     isVisible: false,
+  //     className: {
+  //       content: 'fg-default-dark',
+  //       visibility: 'enabled:fg-default-dark',
+  //       expansion: 'enabled:fg-default-dark',
+  //       drag: 'enabled:fg-default-dark',
+  //     },
+  //   },
+  // ],
   defaultVariants: TreeStylesDefaults,
 });
-
-export type TreeStyleVariants = VariantProps<typeof TreeStyles>;

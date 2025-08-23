@@ -45,11 +45,12 @@ export function treeCache<T>(nodes: TreeNode<T>[] = []) {
     nodes.map((node) => {
       lookup.set(node.key, {
         parentKey,
-        isVisible: false,
-        isViewable: false,
-        isSelected: false,
+        isDisabled: false,
         isExpanded: false,
         isReadOnly: false,
+        isSelected: false,
+        isViewable: false,
+        isVisible: false,
         ...node,
         children: (node.children ?? []).map((child) => child.key),
       });
@@ -171,11 +172,12 @@ export function treeCache<T>(nodes: TreeNode<T>[] = []) {
 
     _setNode(node.key, {
       parentKey,
-      isVisible: false,
-      isViewable: false,
-      isSelected: false,
+      isDisabled: false,
       isExpanded: false,
+      isSelected: false,
       isReadOnly: false,
+      isViewable: false,
+      isVisible: false,
       children: children?.map((child) => child.key),
       ...rest,
     });

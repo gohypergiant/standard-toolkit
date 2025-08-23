@@ -12,45 +12,58 @@
 
 import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
 import type { Key } from '@react-types/shared';
-import type { PropsWithChildren } from 'react';
 import type {
-  TextProps as AriaTextProps,
   TreeItemContentRenderProps as AriaTreeItemContentRenderProps,
   TreeItemProps as AriaTreeItemProps,
   TreeProps as AriaTreeProps,
   RenderProps,
 } from 'react-aria-components';
-import type { TreeStyleVariants } from './styles';
+import type { VariantProps } from 'tailwind-variants';
+import type { TreeStyles } from './styles';
 
-export type TreeSelectionType = 'visibility' | 'checkbox' | 'none';
-
-export type TreeItemProps = Omit<AriaTreeItemProps, 'textValue'> & {
-  id: Key;
-  label: string;
-  isLastOfSet?: boolean;
-};
-
-type VariantProps = Pick<
-  TreeStyleVariants,
-  'variant' | 'isViewable' | 'isVisible'
->;
-
-export type TreeProps<T> = AriaTreeProps<TreeNode<T>> &
-  VariantProps & {
-    visibleKeys?: Set<Key>;
-    viewableKeys?: Set<Key>;
-    onVisibilityChange?: (keys: Set<Key>) => void;
+export type TreeProps<T> = Omit<
+  AriaTreeProps<TreeNode<T>>,
+  | 'defaultExpandedKeys'
+  | 'defaultSelectedKeys'
+  | 'disabledKeys'
+  | 'expandedKeys'
+  | 'selectedKeys'
+> &
+  VariantProps<typeof TreeStyles> & {
     dragAndDropConfig?: DragAndDropConfig;
     showRuleLines?: boolean;
     showVisibility?: boolean;
+    onVisibilityChange?: (keys: Set<Key>) => void;
   };
 
-export type ItemTextProps = AriaTextProps & PropsWithChildren;
+export type TreeItemProps = Omit<AriaTreeItemProps, 'id'> & {
+  id: Key;
+};
 
-export type ItemContentProps = Pick<
-  RenderProps<ItemContentRenderProps>,
+export type TreeItemContentProps = Pick<
+  RenderProps<TreeItemContentRenderProps>,
   'children'
 >;
 
-export type ItemContentRenderProps = AriaTreeItemContentRenderProps &
-  VariantProps;
+export type TreeItemContentRenderProps = AriaTreeItemContentRenderProps &
+  VariantProps<typeof TreeStyles> & {
+    isDisabled: boolean;
+    isReadOnly: boolean;
+    isSelected: boolean;
+    isViewable: boolean;
+    isVisible: boolean;
+  };
+
+export type TreeContextValue = Required<
+  Pick<
+    TreeProps<unknown>,
+    'showRuleLines' | 'showVisibility' | 'variant' | 'onVisibilityChange'
+  >
+> & {
+  disabledKeys: Set<Key>;
+  expandedKeys: Set<Key>;
+  selectedKeys: Set<Key>;
+  viewableKeys: Set<Key>;
+  visibleKeys: Set<Key>;
+  isStatic: boolean;
+};

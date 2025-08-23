@@ -93,11 +93,12 @@ export type TreeNodeBase<T> = {
   /** Label string **/
   label: string;
   values?: T;
+  isDisabled?: boolean;
   isExpanded?: boolean;
+  isReadOnly?: boolean;
   isSelected?: boolean;
   isVisible?: boolean;
   isViewable?: boolean;
-  isReadOnly?: boolean;
 };
 
 export type TreeNode<T> = TreeNodeBase<T> & {
