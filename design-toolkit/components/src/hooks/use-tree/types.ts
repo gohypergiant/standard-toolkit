@@ -95,7 +95,6 @@ export type TreeNodeBase<T> = {
   values?: T;
   isDisabled?: boolean;
   isExpanded?: boolean;
-  isReadOnly?: boolean;
   isSelected?: boolean;
   isVisible?: boolean;
   isViewable?: boolean;

@@ -18,13 +18,13 @@ import {
   defaultTree,
   nodeDefaults,
 } from './__fixtures__/cache';
-import { treeCache } from './cache';
+import { Cache } from './cache';
 
 function setup({ nodes = defaultTree }: { nodes?: TreeNode<Values>[] } = {}) {
-  return treeCache(nodes ?? []);
+  return new Cache(nodes ?? []);
 }
 
-describe('treeCache module', () => {
+describe('Cache', () => {
   it('builds a tree from a treeRef', () => {
     const cache = setup();
     expect(cache.toTree()).toStrictEqual([

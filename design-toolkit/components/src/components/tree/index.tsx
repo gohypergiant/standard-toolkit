@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { treeCache } from '@/hooks/use-tree/actions/cache';
+import { Cache } from '@/hooks/use-tree/actions/cache';
 import { isSlottedContextValue } from '@/lib/utils';
 import { DragVert } from '@accelint/icons';
 import type { Key } from '@react-types/shared';
@@ -125,7 +125,7 @@ export function Tree<T>({
     ...dragAndDropConfig,
   });
   const nodes = useMemo(
-    () => treeCache([...(items ?? [])]).getAllNodes(),
+    () => new Cache([...(items ?? [])]).getAllNodes(),
     [items],
   );
   const {

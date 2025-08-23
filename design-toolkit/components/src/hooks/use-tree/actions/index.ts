@@ -22,7 +22,7 @@ import type {
   TreeNodeBase,
   UseTreeActionsOptions,
 } from '../types';
-import { treeCache } from './cache';
+import { Cache } from './cache';
 
 /**
  * Stateless hook that transforms tree data according to actions
@@ -57,7 +57,7 @@ import { treeCache } from './cache';
 export function useTreeActions<T>({
   nodes,
 }: UseTreeActionsOptions<T>): TreeActions<T> {
-  const cache = useRef(treeCache<T>(nodes)).current;
+  const cache = useRef(new Cache<T>(nodes)).current;
 
   useUpdateEffect(() => {
     cache.rebuild(nodes);

@@ -27,17 +27,20 @@ type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
  * This will initialize once on load with data, then
  * updated with each tree operation.
  */
-export function treeCache<T>(nodes: TreeNode<T>[] = []) {
-  let cache: { lookup: Map<Key, CacheTreeNode<T>>; roots: Key[] };
+export class Cache<T> {
+  protected cache: { lookup: Map<Key, CacheTreeNode<T>>; roots: Key[] } = {
+    lookup: new Map(),
+    roots: [],
+  };
+
+  constructor(nodes: TreeNode<T>[] = []) {
+    this.rebuild(nodes);
+  }
 
   /**
    * Recursively creates the cache object from tree data
-   *
-   * @param nodes
-   * @param lookup
-   * @param parentKey
    */
-  function rebuild(
+  rebuild(
     nodes: TreeNode<T>[],
     lookup: Map<Key, CacheTreeNode<T>> = new Map(),
     parentKey: Key | null = null,
@@ -47,7 +50,6 @@ export function treeCache<T>(nodes: TreeNode<T>[] = []) {
         parentKey,
         isDisabled: false,
         isExpanded: false,
-        isReadOnly: false,
         isSelected: false,
         isViewable: false,
         isVisible: false,
@@ -56,24 +58,118 @@ export function treeCache<T>(nodes: TreeNode<T>[] = []) {
       });
 
       if (node.children) {
-        rebuild(node.children, lookup, node.key);
+        this.rebuild(node.children, lookup, node.key);
       }
     });
 
-    cache = { lookup, roots: nodes.map((node) => node.key) };
+    const cache = { lookup, roots: nodes.map((node) => node.key) };
+
+    if (!parentKey) {
+      this.cache = cache;
+    }
+
+    return cache;
   }
 
-  rebuild(nodes);
+  protected get(key: Key) {
+    const node = this.cache.lookup.get(key);
 
-  /**
-   * Builds a tree structure from cache
-   *
-   * TODO: optimization - rebuild only from change to root
-   * Rebuild only from the changed node up the tree to avoid
-   * rebuilding the entire tree
-   */
-  function toTree(): TreeNode<T>[] {
-    return cache.roots.map((key) => buildNode(key));
+    if (node === undefined) {
+      throw new Error(`Key of ${key} does not exist in tree`);
+    }
+
+    return node;
+  }
+
+  protected set(key: Key, node: CacheTreeNode<T>) {
+    this.cache.lookup.set(key, node);
+  }
+
+  protected delete(key: Key) {
+    this.cache.lookup.delete(key);
+  }
+
+  protected addToParent(parentKey: Key, childKey: Key, idx: number) {
+    const parent = this.get(parentKey);
+    const child = this.get(childKey);
+    const index = Math.max(0, idx);
+
+    this.set(childKey, {
+      ...child,
+      parentKey,
+    });
+
+    const children = (parent.children ?? []).slice(0);
+
+    children.splice(index, 0, childKey);
+
+    this.set(parentKey, {
+      ...parent,
+      children,
+    });
+  }
+
+  protected addToRoot(key: Key, idx: number) {
+    const node = this.get(key);
+    const index = Math.max(0, idx);
+
+    this.set(key, {
+      ...node,
+      parentKey: null,
+    });
+
+    this.cache.roots.splice(index, 0, key);
+  }
+
+  protected removeFromParent(parentKey: Key, childKey: Key) {
+    const parent = this.get(parentKey);
+    const child = this.get(childKey);
+
+    this.set(childKey, {
+      ...child,
+      parentKey: null,
+    });
+
+    this.cache.lookup.set(parentKey, {
+      ...parent,
+      children: parent.children?.filter((key) => key !== childKey),
+    });
+  }
+
+  protected removeFromRoot(key: Key) {
+    const node = this.get(key);
+    const idx = this.cache.roots.indexOf(key);
+
+    if (idx >= 0) {
+      this.set(key, {
+        ...node,
+        parentKey: null,
+      });
+
+      this.cache.roots.splice(idx, 1);
+    }
+  }
+
+  protected parentOrSibling(target: Key | null, position: 'before' | 'after') {
+    let index: number;
+    let parentKey: Key | null = null;
+
+    if (target === null) {
+      index = position === 'before' ? 0 : this.cache.roots.length;
+    } else {
+      const targetNode = this.get(target);
+
+      if (targetNode.parentKey) {
+        const parent = this.get(targetNode.parentKey);
+
+        parentKey = parent.key;
+        index = parent.children?.findIndex((key) => key === target) ?? 0;
+      } else {
+        index = this.cache.roots.findIndex((rootKey) => rootKey === target);
+      }
+    }
+
+    return { parentKey, index };
   }
 
   /**
@@ -81,15 +177,15 @@ export function treeCache<T>(nodes: TreeNode<T>[] = []) {
    *
    * @param key
    */
-  function buildNode(key: Key): TreeNode<T> {
-    const node = _getNode(key);
+  protected buildNode(key: Key): TreeNode<T> {
+    const node = this.get(key);
 
     const children = (node.children ?? []).reduce(
       (acc: TreeNode<T>[], child) => {
-        const childNode = cache.lookup.get(child);
+        const childNode = this.cache.lookup.get(child);
 
         if (childNode && childNode.parentKey === key) {
-          acc.push(buildNode(child));
+          acc.push(this.buildNode(child));
         }
 
         return acc;
@@ -104,242 +200,132 @@ export function treeCache<T>(nodes: TreeNode<T>[] = []) {
   }
 
   /**
+   * Builds a tree structure from cache
+   *
+   * TODO: optimization - rebuild only from change to root
+   * Rebuild only from the changed node up the tree to avoid
+   * rebuilding the entire tree
+   */
+  toTree(): TreeNode<T>[] {
+    return this.cache.roots.map((key) => this.buildNode(key));
+  }
+
+  /**
    * CACHE FUNCTIONS
    * These manage cache operations. No cache operations should ever be done
    * outside this file.
    **/
-  function getNode(key: Key): TreeNode<T> {
-    const node = _getNode(key);
+  getNode(key: Key): TreeNode<T> {
+    const node = this.get(key);
 
     return {
       ...node,
-      children: node.children?.map((key) => buildNode(key)),
+      children: node.children?.map((key) => this.buildNode(key)),
     };
   }
 
-  function getAllNodes() {
-    return cache.lookup.values();
+  getAllNodes() {
+    return this.cache.lookup.values();
   }
 
-  function setNode(key: Key, node: TreeNode<T>) {
-    _setNode(key, {
+  setNode(key: Key, node: TreeNode<T>) {
+    this.set(key, {
       ...node,
       children: (node.children ?? []).map((child) => child.key),
     });
   }
 
-  function setAllNodes({ parentKey, children, ...rest }: Partial<TreeNode<T>>) {
-    for (const node of cache.lookup.values()) {
-      _setNode(node.key, {
+  setAllNodes({ parentKey, children, ...rest }: Partial<TreeNode<T>>) {
+    for (const node of this.cache.lookup.values()) {
+      this.set(node.key, {
         ...node,
         ...rest,
       });
     }
   }
 
-  function deleteNode(key: Key) {
-    const node = cache.lookup.get(key);
+  deleteNode(key: Key) {
+    const node = this.cache.lookup.get(key);
 
     if (!node) {
       return;
     }
 
     // remove children
-    node.children?.map((key) => deleteNode(key));
+    node.children?.map((key) => this.deleteNode(key));
 
     // remove node from previous parent or root
     node.parentKey
-      ? _removeFromParent(node.parentKey, key)
-      : _removeFromRoot(key);
+      ? this.removeFromParent(node.parentKey, key)
+      : this.removeFromRoot(key);
 
     // remove the actual node
-    _deleteNode(key);
+    this.delete(key);
   }
 
-  function addNodes(
+  addNodes(
     target: Key | null,
     nodes: TreeNode<T>[],
     position: 'before' | 'after',
   ) {
-    const { parentKey, index } = _parentOrSibling(target, position);
+    const { parentKey, index } = this.parentOrSibling(target, position);
     const idx = index + (position === 'before' ? 0 : 1);
 
-    nodes.map((node, i) => insert(parentKey, node, idx + i));
+    nodes.map((node, i) => this.insert(parentKey, node, idx + i));
   }
 
-  function insert(parentKey: Key | null, node: TreeNode<T>, idx: number) {
+  insert(parentKey: Key | null, node: TreeNode<T>, idx: number) {
     const { children, ...rest } = node;
 
-    _setNode(node.key, {
+    this.set(node.key, {
       parentKey,
       isDisabled: false,
       isExpanded: false,
       isSelected: false,
-      isReadOnly: false,
       isViewable: false,
       isVisible: false,
       children: children?.map((child) => child.key),
       ...rest,
     });
 
-    node.children?.map((child, i) => insert(node.key, child, i));
+    node.children?.map((child, i) => this.insert(node.key, child, i));
 
     parentKey === null
-      ? _addToRoot(node.key, idx)
-      : _addToParent(parentKey, node.key, idx);
+      ? this.addToRoot(node.key, idx)
+      : this.addToParent(parentKey, node.key, idx);
   }
 
-  function moveNodes(
-    target: Key | null,
-    nodes: Set<Key>,
-    position: 'before' | 'after',
-  ) {
-    const { parentKey, index } = _parentOrSibling(target, position);
+  moveNodes(target: Key | null, nodes: Set<Key>, position: 'before' | 'after') {
+    const { parentKey, index } = this.parentOrSibling(target, position);
     const idx = index + (position === 'before' ? 0 : 1);
 
-    Array.from(nodes).map((key, i) => move(parentKey, key, idx + i));
+    Array.from(nodes).map((key, i) => this.move(parentKey, key, idx + i));
   }
 
-  function move(parentKey: Key | null, key: Key, idx: number) {
-    const node = _getNode(key);
+  move(parentKey: Key | null, key: Key, idx: number) {
+    const node = this.get(key);
 
     // remove from previous parent
     node.parentKey
-      ? _removeFromParent(node.parentKey, key)
-      : _removeFromRoot(key);
+      ? this.removeFromParent(node.parentKey, key)
+      : this.removeFromRoot(key);
 
     // add as child to new parent or root at position
-    parentKey ? _addToParent(parentKey, key, idx) : _addToRoot(key, idx);
+    parentKey
+      ? this.addToParent(parentKey, key, idx)
+      : this.addToRoot(key, idx);
   }
 
-  function setViewable(key: Key, state: boolean) {
-    const node = cache.lookup.get(key);
+  setViewable(key: Key, state: boolean) {
+    const node = this.cache.lookup.get(key);
 
     if (node) {
-      _setNode(key, {
+      this.set(key, {
         ...node,
         isViewable: state,
       });
 
-      node.children?.map((key) => setViewable(key, state));
+      node.children?.map((key) => this.setViewable(key, state));
     }
   }
-
-  /** INTERNAL CACHE HELPER FUNCTIONS **/
-
-  function _getNode(key: Key) {
-    const node = cache.lookup.get(key);
-
-    if (node === undefined) {
-      throw new Error(`Key of ${key} does not exist in tree`);
-    }
-
-    return node;
-  }
-
-  function _setNode(key: Key, node: CacheTreeNode<T>) {
-    cache.lookup.set(key, node);
-  }
-
-  function _deleteNode(key: Key) {
-    cache.lookup.delete(key);
-  }
-
-  function _addToParent(parentKey: Key, childKey: Key, idx: number) {
-    const parent = _getNode(parentKey);
-    const child = _getNode(childKey);
-    const index = Math.max(0, idx);
-
-    _setNode(childKey, {
-      ...child,
-      parentKey,
-    });
-
-    const children = (parent.children ?? []).slice(0);
-
-    children.splice(index, 0, childKey);
-
-    _setNode(parentKey, {
-      ...parent,
-      children,
-    });
-  }
-
-  function _addToRoot(key: Key, idx: number) {
-    const node = _getNode(key);
-    const index = Math.max(0, idx);
-
-    _setNode(key, {
-      ...node,
-      parentKey: null,
-    });
-
-    cache.roots.splice(index, 0, key);
-  }
-
-  function _removeFromParent(parentKey: Key, childKey: Key) {
-    const parent = _getNode(parentKey);
-    const child = _getNode(childKey);
-
-    _setNode(childKey, {
-      ...child,
-      parentKey: null,
-    });
-
-    cache.lookup.set(parentKey, {
-      ...parent,
-      children: parent.children?.filter((key) => key !== childKey),
-    });
-  }
-
-  function _removeFromRoot(key: Key) {
-    const node = _getNode(key);
-    const idx = cache.roots.indexOf(key);
-
-    if (idx >= 0) {
-      _setNode(key, {
-        ...node,
-        parentKey: null,
-      });
-
-      cache.roots.splice(idx, 1);
-    }
-  }
-
-  function _parentOrSibling(target: Key | null, position: 'before' | 'after') {
-    let index: number;
-    let parentKey: Key | null = null;
-
-    if (target === null) {
-      index = position === 'before' ? 0 : cache.roots.length;
-    } else {
-      const targetNode = _getNode(target);
-
-      if (targetNode.parentKey) {
-        const parent = _getNode(targetNode.parentKey);
-
-        parentKey = parent.key;
-        index = parent.children?.findIndex((key) => key === target) ?? 0;
-      } else {
-        index = cache.roots.findIndex((rootKey) => rootKey === target);
-      }
-    }
-
-    return { parentKey, index };
-  }
-
-  return {
-    addNodes,
-    deleteNode,
-    getAllNodes,
-    getNode,
-    insert,
-    move,
-    moveNodes,
-    rebuild,
-    setNode,
-    setAllNodes,
-    setViewable,
-    toTree,
-  };
 }

@@ -263,16 +263,14 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
-export { ItemContent, Tree, TreeContext, TreeItem } from './components/tree';
+export { Tree, TreeContext, TreeItem } from './components/tree';
 export { TreeStyles, TreeStylesDefaults } from './components/tree/styles';
-export type { TreeStyleVariants } from './components/tree/styles';
 export type {
-  ItemContentProps,
-  ItemContentRenderProps,
-  ItemTextProps,
+  TreeContextValue,
+  TreeItemContentProps,
+  TreeItemContentRenderProps,
   TreeItemProps,
   TreeProps,
-  TreeSelectionType,
 } from './components/tree/types';
 export {
   ViewStackEventNamespace,
@@ -311,16 +309,8 @@ export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   AriaAttributes,
   AriaAttributesWithRef,
-  ChildrenRenderProps,
-  ClassNameRenderProps,
   ProviderProps,
-  RenderProps,
-  RenderPropsChildren,
-  RenderPropsClassName,
-  RenderPropsStyle,
   SlottedValue,
-  StylePropRenderProps,
-  StyleRenderProps,
 } from './lib/types';
 export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
 export {

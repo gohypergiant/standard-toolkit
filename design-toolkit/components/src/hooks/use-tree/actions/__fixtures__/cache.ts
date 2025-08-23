@@ -21,8 +21,8 @@ export type Values = {
 export const nodeDefaults = {
   parentKey: null,
   children: [],
+  isDisabled: false,
   isExpanded: false,
-  isReadOnly: false,
   isSelected: false,
   isViewable: false,
   isVisible: false,
