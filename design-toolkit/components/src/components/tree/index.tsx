@@ -204,7 +204,7 @@ export function Tree<T>({
         variant,
         viewableKeys,
         visibleKeys,
-        isStatic: !items,
+        isStatic: typeof children !== 'function',
         onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
       }}
     >
