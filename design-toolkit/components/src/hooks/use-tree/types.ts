@@ -10,46 +10,73 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Key } from '@react-types/shared';
+import type {
+  DragItem,
+  DroppableCollectionInsertDropEvent,
+  DroppableCollectionOnItemDropEvent,
+  DroppableCollectionReorderEvent,
+  DroppableCollectionRootDropEvent,
+  Key,
+} from '@react-types/shared';
+import type { ReactElement } from 'react';
 import type { Selection } from 'react-aria-components';
-import type { DragAndDropConfig } from '../components/tree/types';
+import type { DropTarget } from 'react-aria-components';
+
+export type DragAndDropConfig = {
+  getItems: (key: Set<Key>) => DragItem[];
+  /**
+   * Handler that is called when external items are dropped on the droppable collection's root.
+   */
+  onRootDrop?: (e: DroppableCollectionRootDropEvent) => void;
+  /**
+   * Handler that is called when items are reordered within the collection.
+   * This handler only allows dropping between items, not on items.
+   * It does not allow moving items to a different parent item within a tree.
+   */
+  onReorder?: (e: DroppableCollectionReorderEvent) => void;
+  /**
+   * Handler that is called when items are moved within the source collection.
+   * This handler allows dropping both on or between items, and items may be
+   * moved to a different parent item within a tree.
+   */
+  onMove?: (e: DroppableCollectionReorderEvent) => void;
+  renderDragPreview?: (items: DragItem[]) => ReactElement;
+  renderDropIndicator?: (target: DropTarget) => ReactElement;
+  acceptedDragTypes?: string[];
+  /**
+   * Handler that is called when external items are dropped "between" items.
+   */
+  onInsert?: (e: DroppableCollectionInsertDropEvent) => void;
+  /**
+   * Handler that is called when items are dropped "on" an item.
+   */
+  onItemDrop?: (e: DroppableCollectionOnItemDropEvent) => void;
+};
 
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */
   items: TreeNode<T>[];
-
-  /** Keys for the initially selected items. */
-  initialSelectedKeys?: Key[];
-
-  /** Keys for the initially expanded items. */
-  initialExpandedKeys?: Key[];
-
-  /** Keys for the initially visible items. */
-  initialVisibleKeys?: Key[];
 };
 
 export type UseTreeState<T> = {
   nodes: TreeNode<T>[];
-  selectedKeys: Selection;
-  expandedKeys: Set<Key>;
-  visibleKeys: Set<Key>;
   dragAndDropConfig: DragAndDropConfig;
   actions: {
-    onSelectionChange: (keys: Selection) => void;
+    collapseAll: () => void;
+    expandAll: () => void;
+    onExpandedChange: (keys: Set<Key>) => void;
+
     selectAll: () => void;
     unselectAll: () => void;
-    onExpandedChange: (keys: Set<Key>) => void;
-    expandAll: () => void;
-    collapseAll: () => void;
-    onVisibilityChange: (keys: Set<Key>) => void;
-    revealAll: () => void;
+    onSelectionChange: (keys: Selection) => void;
+
     hideAll: () => void;
+    revealAll: () => void;
+    onVisibilityChange: (keys: Set<Key>) => void;
   };
 };
 
 export type TreeData<T> = TreeNode<T>[];
-
-export type Position = 'before' | 'after' | 'under';
 
 /**
  * The TreeNode is a wrapper that describes the relationship of this node
@@ -63,18 +90,18 @@ export type TreeNodeBase<T> = {
   /** Label string **/
   label: string;
   values?: T;
+  isDisabled?: boolean;
   isExpanded?: boolean;
   isSelected?: boolean;
   isVisible?: boolean;
   isViewable?: boolean;
-  isReadOnly?: boolean;
 };
 
 export type TreeNode<T> = TreeNodeBase<T> & {
   /** The key of the parent node. */
   parentKey?: Key | null;
   /** Children of the tree node. */
-  children?: TreeNode<T>[] | null;
+  children?: TreeNode<T>[];
 };
 
 export type UseTreeActionsOptions<T> = {
@@ -87,17 +114,10 @@ export type UseTreeActionsOptions<T> = {
  */
 export type TreeActions<T> = {
   /**
-   * Initializes the tree cache and returns the current tree structure,
-   * with complete properties and defaults for TreeNode<T>.
-   * Use this to ensure nodes are complete.
-   */
-  initialize: () => TreeData<T>;
-
-  /**
    * Retrieves a specific tree node by key
    * If not found, throws error
    */
-  getTreeNode: (key: Key) => TreeNode<T> | undefined;
+  getNode: (key: Key) => TreeNode<T>;
 
   /**
    * Inserts nodes as children of the target node
@@ -118,7 +138,7 @@ export type TreeActions<T> = {
    * Removes one or more nodes from the tree by their keys.
    * Does nothing if the key is not found.
    */
-  remove: (...keys: Key[]) => TreeData<T>;
+  remove: (keys: Set<Key>) => TreeData<T>;
 
   /**
    * Updates a specific node using a callback function
@@ -144,11 +164,6 @@ export type TreeActions<T> = {
   moveAfter: (target: Key | null, nodes: Set<Key>) => TreeData<T>;
 
   /**
-   * Gets all currently expanded node keys
-   */
-  getExpandedKeys: () => Set<Key>;
-
-  /**
    * Updates the expansion state of nodes. If a key is not
    * in the set, it is collapsed.
    */
@@ -165,11 +180,6 @@ export type TreeActions<T> = {
   collapseAll: () => TreeData<T>;
 
   /**
-   * Gets all currently selected node keys
-   */
-  getSelectedKeys: () => Set<Key>;
-
-  /**
    * Updates the selection state of nodes. If a key is
    * not in the Set, it is unselected.
    */
@@ -184,11 +194,6 @@ export type TreeActions<T> = {
    * Unselects all nodes in the tree
    */
   unselectAll: () => TreeData<T>;
-
-  /**
-   * Gets all currently visible node keys
-   */
-  getVisibleKeys: () => Set<Key>;
 
   /**
    * Changes visibility of nodes. Updates both isVisible and isViewable properties.

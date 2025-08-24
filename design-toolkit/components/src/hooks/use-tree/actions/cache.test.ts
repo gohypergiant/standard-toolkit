@@ -18,16 +18,13 @@ import {
   defaultTree,
   nodeDefaults,
 } from './__fixtures__/cache';
-import { treeCache } from './tree-cache';
+import { Cache } from './cache';
 
-const setup = (props: { nodes?: TreeNode<Values>[] } = {}) => {
-  const { nodes = defaultTree } = props;
-  const cache = treeCache();
-  cache.buildLookup<Values>(nodes ?? [], new Map());
-  return cache;
-};
+function setup({ nodes = defaultTree }: { nodes?: TreeNode<Values>[] } = {}) {
+  return new Cache(nodes ?? []);
+}
 
-describe('treeCache module', () => {
+describe('Cache', () => {
   it('builds a tree from a treeRef', () => {
     const cache = setup();
     expect(cache.toTree()).toStrictEqual([

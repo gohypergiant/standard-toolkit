@@ -15,7 +15,7 @@ import { TreeStyles, TreeStylesDefaults } from '@/components/tree/styles';
 import { isSlottedContextValue } from '@/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import ChevronUp from '@accelint/icons/chevron-up';
-import { type ForwardedRef, forwardRef, useContext, useMemo } from 'react';
+import { type ForwardedRef, forwardRef, useContext } from 'react';
 import { ButtonContext, useContextProps } from 'react-aria-components';
 import { Button } from '../button';
 import type { ButtonProps } from '../button/types';
@@ -34,14 +34,8 @@ type ExpandToggleProps = ButtonProps & {
 export const ExpandToggle = forwardRef(
   (props: ExpandToggleProps, ref: ForwardedRef<HTMLButtonElement>) => {
     [props] = useContextProps(props, ref, ButtonContext);
-    const {
-      hasChildItems,
-      isDisabled,
-      isExpanded,
-      isViewable,
-      isVisible,
-      size,
-    } = props;
+
+    const { hasChildItems, isExpanded, size } = props;
 
     const context = useContext(TreeContext);
 
@@ -49,22 +43,17 @@ export const ExpandToggle = forwardRef(
       (isSlottedContextValue(context) ? undefined : context?.variant) ??
       TreeStylesDefaults.variant;
 
-    const spacer = useMemo(
-      () => <div className={spacing({ variant })} />,
-      [variant],
-    );
-
     return hasChildItems ? (
       <Button
         slot='chevron'
         variant='icon'
         size={size}
-        className={expansion({ isViewable, isVisible, isDisabled })}
+        className={expansion({})}
       >
         <Icon>{isExpanded ? <ChevronDown /> : <ChevronUp />}</Icon>
       </Button>
     ) : (
-      spacer
+      <div className={spacing({ variant })} />
     );
   },
 );

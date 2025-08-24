@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { TreeNode } from '@/hooks/types';
-import { useTreeActions } from '@/hooks/use-tree-actions';
-import { useTreeState } from '@/hooks/use-tree-state';
+import { useTreeActions } from '@/hooks/use-tree/actions';
+import { useTreeState } from '@/hooks/use-tree/state';
+import type { TreeNode } from '@/hooks/use-tree/types';
 import {
   CenterOn,
   CollapseAll,
@@ -23,7 +23,7 @@ import {
 import Warning from '@accelint/icons/warning';
 import type { Key, Selection } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tree } from './index';
@@ -79,7 +79,6 @@ const items: TreeNode<ItemValues>[] = [
   {
     key: 'european-birds',
     label: 'European Birds',
-    isReadOnly: false,
     values: {
       iconPrefix: <Placeholder />,
     },
@@ -87,9 +86,8 @@ const items: TreeNode<ItemValues>[] = [
   {
     key: 'north-american-birds',
     label: 'North American Birds',
-    isVisible: true,
-    isReadOnly: false,
     isExpanded: true,
+    isVisible: true,
     values: {
       iconPrefix: <Placeholder />,
     },
@@ -98,7 +96,6 @@ const items: TreeNode<ItemValues>[] = [
         key: 'blue-jay',
         parentKey: 'north-american-birds',
         label: 'Blue jay',
-        isReadOnly: false,
         isVisible: true,
         values: {
           description: 'cyanocitta cristata',
@@ -110,7 +107,6 @@ const items: TreeNode<ItemValues>[] = [
         key: 'gray-catbird',
         parentKey: 'north-american-birds',
         label: 'Gray catbird',
-        isReadOnly: false,
         isVisible: true,
         values: {
           description: 'dumetella carolinensis',
@@ -121,7 +117,7 @@ const items: TreeNode<ItemValues>[] = [
         key: 'black-capped-chickadee',
         parentKey: 'north-american-birds',
         label: 'Black-capped chickadee',
-        isReadOnly: true,
+        isDisabled: true,
         isVisible: false,
         values: {
           description: 'Poecile atricapillus',
@@ -132,7 +128,6 @@ const items: TreeNode<ItemValues>[] = [
             key: 'northern-cardinal',
             parentKey: 'black-capped-chickadee',
             label: 'Northern Cardinal',
-            isReadOnly: false,
             values: {
               description: 'Cardinalis cardinalis',
               iconPrefix: <Placeholder />,
@@ -146,7 +141,6 @@ const items: TreeNode<ItemValues>[] = [
   {
     key: 'african-birds',
     label: 'African Birds',
-    isReadOnly: false,
     values: {
       iconPrefix: <Placeholder />,
     },
@@ -155,7 +149,6 @@ const items: TreeNode<ItemValues>[] = [
         key: 'lilac-breasted-roller',
         parentKey: 'african-birds',
         label: 'Lilac-breasted roller',
-        isReadOnly: false,
         values: {
           iconPrefix: <Placeholder />,
         },
@@ -165,14 +158,14 @@ const items: TreeNode<ItemValues>[] = [
 ];
 
 function Node({ node }: { node: TreeNode<ItemValues> }) {
-  const { isReadOnly, values } = node;
+  const { values, isDisabled } = node;
 
   return (
     <Tree.Item
       id={node.key}
       key={node.key}
-      label={node.label}
-      isDisabled={isReadOnly}
+      textValue={node.label}
+      isDisabled={isDisabled}
     >
       <Tree.Item.Content>
         {({ variant, isViewable, isVisible }) => {
@@ -191,7 +184,7 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
                 </Tree.Item.Description>
               )}
               <Tree.Item.Actions>
-                {isReadOnly && (
+                {isDisabled && (
                   <Icon
                     className='fg-default-dark aspect-square rounded-full bg-interactive-hover-dark p-xs'
                     size={size}
@@ -232,18 +225,7 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
  */
 export const DragAndDrop: Story = {
   render: (args) => {
-    const {
-      nodes,
-      selectedKeys,
-      expandedKeys,
-      visibleKeys,
-      dragAndDropConfig,
-      actions,
-    } = useTreeState({
-      items,
-      initialSelectedKeys: ['european-birds'],
-      initialExpandedKeys: ['north-american-birds'],
-    });
+    const { nodes, dragAndDropConfig, actions } = useTreeState({ items });
 
     return (
       <>
@@ -268,16 +250,13 @@ export const DragAndDrop: Story = {
 
         <Tree
           {...args}
-          style={{ width: '500px' }}
-          aria-label='Drag and Drop example'
-          expandedKeys={expandedKeys}
-          onExpandedChange={actions.onExpandedChange}
-          selectedKeys={selectedKeys}
-          onSelectionChange={actions.onSelectionChange}
           dragAndDropConfig={dragAndDropConfig}
-          visibleKeys={visibleKeys}
-          onVisibilityChange={actions.onVisibilityChange}
           items={nodes}
+          style={{ width: '500px' }}
+          onExpandedChange={actions.onExpandedChange}
+          onSelectionChange={actions.onSelectionChange}
+          onVisibilityChange={actions.onVisibilityChange}
+          aria-label='Drag and Drop example'
         >
           {(node) => <Node key={node.key} node={node} />}
         </Tree>
@@ -306,44 +285,36 @@ export const Stateless: Story = {
     const [db, setDB] = useState(items);
     const actions = useTreeActions({ nodes: db });
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: only run once to normalize data
-    useEffect(() => {
-      setDB(actions.initialize());
-    }, []);
-
     const handleSelection = (keys: Selection) => {
-      const updated = actions.onSelectionChange(new Set(keys));
-      setDB(updated);
+      if (keys === 'all') {
+        return handleSelectAll();
+      }
+
+      setDB(actions.onSelectionChange(keys));
     };
 
     const handleExpansion = (keys: Set<Key>) => {
-      const newTree = actions.onExpandedChange(keys);
-      setDB(newTree);
+      setDB(actions.onExpandedChange(keys));
     };
 
     const handleExpandAll = () => {
-      const newTree = actions.expandAll();
-      setDB(newTree);
+      setDB(actions.expandAll());
     };
 
     const handleCollapseAll = () => {
-      const newTree = actions.collapseAll();
-      setDB(newTree);
+      setDB(actions.collapseAll());
     };
 
     const handleSelectAll = () => {
-      const newTree = actions.selectAll();
-      setDB(newTree);
+      setDB(actions.selectAll());
     };
 
     const handleUnselectAll = () => {
-      const newTree = actions.unselectAll();
-      setDB(newTree);
+      setDB(actions.unselectAll());
     };
 
     const handleVisibility = (keys: Set<Key>) => {
-      const newTree = actions.onVisibilityChange(keys);
-      setDB(newTree);
+      setDB(actions.onVisibilityChange(keys));
     };
 
     return (
@@ -368,15 +339,12 @@ export const Stateless: Story = {
         </div>
         <Tree
           {...args}
-          style={{ width: '500px' }}
-          aria-label='Stateless Example'
-          expandedKeys={actions.getExpandedKeys()}
-          onExpandedChange={handleExpansion}
-          selectedKeys={actions.getSelectedKeys()}
-          onSelectionChange={handleSelection}
-          visibleKeys={actions.getVisibleKeys()}
-          onVisibilityChange={handleVisibility}
           items={db}
+          style={{ width: '500px' }}
+          onExpandedChange={handleExpansion}
+          onSelectionChange={handleSelection}
+          onVisibilityChange={handleVisibility}
+          aria-label='Stateless Example'
         >
           {(node) => <Node key={node.key} node={node} />}
         </Tree>
@@ -390,38 +358,33 @@ export const Stateless: Story = {
  */
 export const StaticCollection: Story = {
   render: (args) => {
-    const [visibility, setVisibility] = useState<Set<Key>>(new Set(['fruit']));
-
     return (
       <Tree
+        {...args}
         style={{ width: '500px' }}
         aria-label='Basic Static Example'
-        visibleKeys={visibility}
-        onVisibilityChange={setVisibility}
-        {...args}
       >
-        <Tree.Item id='fruit' label='fruit'>
+        <Tree.Item id='fruit' textValue='fruit'>
           <Tree.Item.Content>Fruit</Tree.Item.Content>
-          <Tree.Item id='apples' label='apples'>
+          <Tree.Item id='apples' textValue='apples'>
             <Tree.Item.Content>Apples</Tree.Item.Content>
-            <Tree.Item id='green' label='green-apple'>
+            <Tree.Item id='green' textValue='green-apple'>
               <Tree.Item.Content>Green Apple</Tree.Item.Content>
             </Tree.Item>
-            <Tree.Item id='red' label='red-apple' isLastOfSet>
+            <Tree.Item id='red' textValue='red-apple'>
               <Tree.Item.Content>Red Apple</Tree.Item.Content>
             </Tree.Item>
-            <Tree.Item id='yellow' label='yellow-apple' isLastOfSet>
+            <Tree.Item id='yellow' textValue='yellow-apple'>
               <Tree.Item.Content>Yellow Apple</Tree.Item.Content>
             </Tree.Item>
           </Tree.Item>
         </Tree.Item>
-
-        <Tree.Item id='vegetables' label='vegetables'>
+        <Tree.Item id='vegetables' textValue='vegetables'>
           <Tree.Item.Content>Vegetables</Tree.Item.Content>
-          <Tree.Item id='carrot' label='carrot'>
+          <Tree.Item id='carrot' textValue='carrot'>
             <Tree.Item.Content>Carrot</Tree.Item.Content>
           </Tree.Item>
-          <Tree.Item id='kale' label='kale'>
+          <Tree.Item id='kale' textValue='kale'>
             <Tree.Item.Content>Kale</Tree.Item.Content>
           </Tree.Item>
         </Tree.Item>
