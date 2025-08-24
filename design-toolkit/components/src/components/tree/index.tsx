@@ -35,6 +35,7 @@ import {
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
+import type { IconProps } from '../icon/types';
 import { Lines } from '../lines';
 import { ExpandToggle } from './expand-toggle';
 import { TreeStyles, TreeStylesDefaults } from './styles';
@@ -80,14 +81,7 @@ const TreeLines = memo(function TreeLines({
   level,
   isLastOfSet,
 }: { level: number; isLastOfSet: boolean }) {
-  const context = useContext(TreeContext);
-  const showRuleLines =
-    (isSlottedContextValue(context) ? undefined : context?.showRuleLines) ??
-    TreeStylesDefaults.hasRuleLines;
-
-  const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    TreeStylesDefaults.variant;
+  const { showRuleLines, variant } = useContext(TreeContext);
 
   return Array.from({ length: level }).map((_, i) => {
     const type = i === level - 1 ? 'branch' : 'vert';
@@ -109,15 +103,33 @@ const TreeLines = memo(function TreeLines({
 export function Tree<T>({
   children,
   className,
+  disabledKeys: disabledKeysProp,
   dragAndDropConfig,
+  expandedKeys: expandedKeysProp,
   items,
+  selectedKeys: selectedKeysProp,
   showRuleLines = true,
   showVisibility = true,
   selectionMode = 'multiple',
   variant = TreeStylesDefaults.variant,
+  viewableKeys: viewableKeysProp,
+  visibleKeys: visibleKeysProp,
   onVisibilityChange,
   ...rest
 }: TreeProps<T>) {
+  if (
+    items &&
+    (disabledKeysProp ||
+      expandedKeysProp ||
+      selectedKeysProp ||
+      viewableKeysProp ||
+      visibleKeysProp)
+  ) {
+    throw new Error(
+      'Tree should only be controlled with state from either "items" or keys props, not both',
+    );
+  }
+
   const { dragAndDropHooks } = useDragAndDrop({
     renderDropIndicator: defaultRenderDropIndicator,
     getAllowedDropOperations: () => ['move'],
@@ -125,7 +137,7 @@ export function Tree<T>({
     ...dragAndDropConfig,
   });
   const nodes = useMemo(
-    () => new Cache([...(items ?? [])]).getAllNodes(),
+    () => (items ? new Cache([...items]).getAllNodes() : null),
     [items],
   );
   const {
@@ -134,54 +146,66 @@ export function Tree<T>({
     selectedKeys,
     viewableKeys,
     visibleKeys,
-  } = useMemo(
-    () =>
-      nodes.reduce(
-        (
-          acc,
-          { key, isDisabled, isExpanded, isSelected, isViewable, isVisible },
-        ) => {
-          if (isDisabled) {
-            acc.disabledKeys.add(key);
-          }
-          if (isExpanded) {
-            acc.expandedKeys.add(key);
-          }
-          if (isSelected) {
-            acc.selectedKeys.add(key);
-          }
-          if (isViewable) {
-            acc.viewableKeys.add(key);
-          }
-          if (isVisible) {
-            acc.visibleKeys.add(key);
-          }
+  } = useMemo(() => {
+    const acc = {
+      disabledKeys: disabledKeysProp ?? new Set<Key>(),
+      expandedKeys: expandedKeysProp ?? new Set<Key>(),
+      selectedKeys: selectedKeysProp ?? new Set<Key>(),
+      viewableKeys: viewableKeysProp ?? new Set<Key>(),
+      visibleKeys: visibleKeysProp ?? new Set<Key>(),
+    };
 
-          return acc;
-        },
-        {
-          disabledKeys: new Set<Key>(),
-          expandedKeys: new Set<Key>(),
-          selectedKeys: new Set<Key>(),
-          viewableKeys: new Set<Key>(),
-          visibleKeys: new Set<Key>(),
-        },
-      ),
-    [nodes],
-  );
+    if (!nodes) {
+      return acc;
+    }
+
+    return nodes.reduce(
+      (
+        acc,
+        { key, isDisabled, isExpanded, isSelected, isViewable, isVisible },
+      ) => {
+        if (isDisabled) {
+          acc.disabledKeys.add(key);
+        }
+        if (isExpanded) {
+          acc.expandedKeys.add(key);
+        }
+        if (isSelected) {
+          acc.selectedKeys.add(key);
+        }
+        if (isViewable) {
+          acc.viewableKeys.add(key);
+        }
+        if (isVisible) {
+          acc.visibleKeys.add(key);
+        }
+
+        return acc;
+      },
+      acc,
+    );
+  }, [
+    nodes,
+    disabledKeysProp,
+    expandedKeysProp,
+    selectedKeysProp,
+    viewableKeysProp,
+    visibleKeysProp,
+  ]);
 
   return (
     <TreeContext.Provider
       value={{
         disabledKeys,
         expandedKeys,
+        selectedKeys,
         showRuleLines,
         showVisibility,
         variant,
         viewableKeys,
         visibleKeys,
         isStatic: !items,
-        onVisibilityChange,
+        onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
       }}
     >
       <AriaTree
@@ -216,19 +240,13 @@ export function TreeItem({ className, ...rest }: TreeItemProps) {
 TreeItem.displayName = 'Tree.Item';
 
 function ItemContent({ children }: TreeItemContentProps) {
-  const context = useContext(TreeContext);
-  const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    TreeStylesDefaults.variant;
-
-  const showVisibility = isSlottedContextValue(context)
-    ? true
-    : context?.showVisibility;
-
-  const onVisibilityChange = isSlottedContextValue(context)
-    ? undefined
-    : context?.onVisibilityChange;
-
+  const {
+    showVisibility,
+    variant,
+    viewableKeys,
+    visibleKeys,
+    onVisibilityChange,
+  } = useContext(TreeContext);
   const size = variant === 'cozy' ? 'medium' : 'small';
 
   return (
@@ -246,16 +264,13 @@ function ItemContent({ children }: TreeItemContentProps) {
           isExpanded,
           isSelected,
         } = renderProps;
-
         const isLastOfSet = !(
           state.collection.getItem(id)?.nextKey || hasChildItems
         );
-        console.log(state.collection.getItem(id));
         const shouldShowSelection =
           selectionBehavior === 'toggle' && selectionMode !== 'none';
-
-        const isViewable = true;
-        const isVisible = true;
+        const isViewable = viewableKeys.has(id);
+        const isVisible = visibleKeys.has(id);
 
         return (
           <Icon.Provider size={size}>
@@ -347,7 +362,7 @@ function ItemDescription({ children, className }: TextProps) {
 }
 ItemDescription.displayName = 'Tree.Item.Description';
 
-function ItemIcon({ children, className }: ItemTextProps) {
+function ItemIcon({ children, className }: IconProps) {
   return <Icon className={icon({ className })}>{children}</Icon>;
 }
 ItemIcon.displayName = 'Tree.Item.PrefixIcon';

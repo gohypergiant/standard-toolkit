@@ -30,9 +30,14 @@ export type TreeProps<T> = Omit<
   | 'selectedKeys'
 > &
   VariantProps<typeof TreeStyles> & {
+    disabledKeys?: Set<Key>;
     dragAndDropConfig?: DragAndDropConfig;
+    expandedKeys?: Set<Key>;
+    selectedKeys?: Set<Key>;
     showRuleLines?: boolean;
     showVisibility?: boolean;
+    viewableKeys?: Set<Key>;
+    visibleKeys?: Set<Key>;
     onVisibilityChange?: (keys: Set<Key>) => void;
   };
 
@@ -47,9 +52,6 @@ export type TreeItemContentProps = Pick<
 
 export type TreeItemContentRenderProps = AriaTreeItemContentRenderProps &
   VariantProps<typeof TreeStyles> & {
-    isDisabled: boolean;
-    isReadOnly: boolean;
-    isSelected: boolean;
     isViewable: boolean;
     isVisible: boolean;
   };

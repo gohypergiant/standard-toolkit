@@ -296,7 +296,6 @@ export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
   DragAndDropConfig,
-  Position,
   TreeActions,
   TreeData,
   TreeNode,
