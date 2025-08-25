@@ -22,7 +22,7 @@ That focus on flexibility requires adherence to a few guidelines:
 
 ## Contribution Guidelines
 
-The design system is expected to continue evolving as requirements and capabilities change. Changes and MRs are welcome and appreciated, as are suggestions and engagement in defining the roadmap. This guide will also evolve as more contributors take ownership and invest back into the design system, so please feel free to be your naturally opinionated self as we build this foundation together, and don't hestitate to point out opportunities for optimization or improvement.
+The design system is expected to continue evolving as requirements and capabilities change. Changes and MRs are welcome and appreciated, as are suggestions and engagement in defining the roadmap. This guide will also evolve as more contributors take ownership and invest back into the design system, so please feel free to be your naturally opinionated self as we build this foundation together, and don't hesitate to point out opportunities for optimization or improvement.
 
 ### When to contribute
 
@@ -45,7 +45,7 @@ This is the process for contribution:
 Each new component should be encapsulated in a folder named for that component inside the `src/components` folder. Each component should have, at a minimum:
 
 - file that publishes the component -- `my-component.tsx`
-- Ladle story to demonstrate usage of relavant variants, props and styles -- `my-component.stories.tsx`
+- Ladle story to demonstrate usage of relevant variants, props and styles -- `my-component.stories.tsx`
 - tests to ensure coverage -- `my-component.test.tsx`
 - `types.ts` file
 - exports in the root `my-component/index.ts` file decorated with the `// __private-exports` so that it is not double imported when the index generation runs
@@ -67,7 +67,8 @@ pnpm --filter=@accelint/design-system index
 - The `storyName`, `title`, and `meta` values need to be serializable and also need to be unique.
 - Additionally, while the library provides hot module reload, it can sometimes fail to compile changes completely, so restarting can address that issue.
 
-To run Ladle: 
+To run Ladle:
+
 ```bash
 pnpm i
 
@@ -118,7 +119,7 @@ When we create a core style for a component, it is essential to assign it to a l
 
 ### Container queries
 
-Container queries are an important concept when theming a component and allow for dynamic assigment of styles based on component state. It is critical to scope the component to a container correctly so that style assignments are appropriately instanced to the component being built and container queries executed as expected.
+Container queries are an important concept when theming a component and allow for dynamic assignment of styles based on component state. It is critical to scope the component to a container correctly so that style assignments are appropriately instanced to the component being built and container queries executed as expected.
 
 [Learn](./concepts#container-queries) more in depth about how to write container queries.
 
@@ -128,7 +129,7 @@ It might be helpful to visualize the basic architecture of a component in the de
 
 ![Component Diagram](./assets/component_diagram.png)
 
-To review the diagram in Excalidraw instead: https://app.excalidraw.com/s/1nHFfuetcLC/9KQMMIc4Wbj
+To review the diagram in [Excalidraw](https://app.excalidraw.com/s/1nHFfuetcLC/9KQMMIc4Wbj) instead.
 
 ## Unit Testing
 

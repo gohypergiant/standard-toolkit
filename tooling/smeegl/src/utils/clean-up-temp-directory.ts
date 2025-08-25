@@ -12,11 +12,14 @@
 
 import { rm } from 'node:fs/promises';
 import { Result, Unit } from 'true-myth';
-import type { CleanResult, ConstantsResult } from './types.js';
+import type {
+  CleanUpTempDirectoryResult,
+  GenerateConstantsResult,
+} from './types.js';
 
-export async function cleanUp(
-  constResult: ConstantsResult,
-): Promise<CleanResult> {
+export async function cleanUpTempDirectory(
+  constResult: GenerateConstantsResult,
+): Promise<CleanUpTempDirectoryResult> {
   try {
     let tempDir: string | null;
 

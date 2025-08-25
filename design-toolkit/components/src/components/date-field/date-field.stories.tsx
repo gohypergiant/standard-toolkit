@@ -18,35 +18,35 @@ const meta: Meta<typeof DateField> = {
   title: 'Components/DateField',
   component: DateField,
   args: {
-    className: '',
+    label: 'Label',
+    defaultValue: parseDate('2020-01-23'),
     description: 'Format: d MMM yyyy',
     errorMessage: '',
+    granularity: 'day',
+    size: 'medium',
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
-    label: 'Label',
-    defaultValue: parseDate('2020-01-23'),
-    size: 'medium',
-    granularity: 'day',
   },
   argTypes: {
-    className: { type: 'string' },
-    size: { options: ['small', 'medium'], control: 'select' },
-    granularity: {
-      options: ['day', 'hour', 'minute', 'second'],
+    size: {
       control: 'select',
+      options: ['small', 'medium'],
+    },
+    granularity: {
+      control: 'select',
+      options: ['day', 'hour', 'minute', 'second'],
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof DateField>;
 
-export const Default: Story = {
-  render: ({ children, ...args }) => <DateField {...args} />,
+export const Default: StoryObj<typeof DateField> = {
+  render: DateField,
 };
 
-export const WithoutShortMonth: Story = {
+export const WithoutShortMonth: StoryObj<typeof DateField> = {
   args: {
     ...Default.args,
     granularity: 'day',
@@ -54,15 +54,15 @@ export const WithoutShortMonth: Story = {
     description: 'Format: d MM yyyy',
     defaultValue: parseDate('2020-01-23'),
   },
-  render: ({ children, ...args }) => <DateField {...args} />,
+  render: DateField,
 };
 
-export const DateTime: Story = {
+export const DateTime: StoryObj<typeof DateField> = {
   args: {
     ...Default.args,
     granularity: 'second',
     description: 'Format: d MMM yyyy hh:mm:ss a ZZZZ',
     defaultValue: parseAbsoluteToLocal('2021-04-07T18:45:22Z'),
   },
-  render: ({ children, ...args }) => <DateField {...args} />,
+  render: DateField,
 };

@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { cleanUp } from './utils/clean-up.js';
+import { cleanUpTempDirectory } from './utils/clean-up-temp-directory.js';
 import { findSprites } from './utils/find-sprites.js';
 import { gatherSprites } from './utils/gather-sprites.js';
-import { generateConst } from './utils/generate-const.js';
+import { generateConstantsFile } from './utils/generate-constants-file.js';
 import { generateSprites } from './utils/generate-sprites.js';
 
 // NOTE: It is more ideal to use Task instead in the util functions.
@@ -24,6 +24,7 @@ export async function smeegl(
   glob: string,
   out: string,
   spreet?: string,
+  crcMode: 'HEX' | 'DEC' | null = null,
 ) {
   if (!glob) {
     throw new Error('No glob pattern provided');
@@ -31,9 +32,9 @@ export async function smeegl(
 
   // TODO: Need to add async compose to core
   const sprites = await findSprites(glob, rootPath);
-  const gathered = await gatherSprites(sprites);
+  const gathered = await gatherSprites(sprites, crcMode);
   const atlas = await generateSprites(gathered, spreet ?? 'spreet', out);
-  const genConst = await generateConst(atlas);
+  const genConst = await generateConstantsFile(atlas);
 
-  await cleanUp(genConst);
+  await cleanUpTempDirectory(genConst);
 }

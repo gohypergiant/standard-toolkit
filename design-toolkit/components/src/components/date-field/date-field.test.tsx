@@ -12,12 +12,14 @@
 
 import { parseDate } from '@internationalized/date';
 import { render, screen } from '@testing-library/react';
+import type { DateValue } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
-import { DateField, type DateFieldProps } from './index';
+import { DateField } from './index';
+import type { DateFieldProps } from './types';
 
 function setup({
   defaultValue = parseDate('2020-01-23'),
-}: Partial<DateFieldProps> = {}) {
+}: Partial<DateFieldProps<DateValue>> = {}) {
   render(<DateField defaultValue={defaultValue} />);
 }
 

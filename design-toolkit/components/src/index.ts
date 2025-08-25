@@ -114,12 +114,9 @@ export type { ComboBoxFieldProps } from './components/combobox-field/types';
 export { DateField } from './components/date-field';
 export {
   DateFieldStyles,
-  DateFieldStylesDefault,
+  DateFieldStylesDefaults,
 } from './components/date-field/styles';
-export type {
-  DateFieldProps,
-  DateInputProps,
-} from './components/date-field/types';
+export type { DateFieldProps } from './components/date-field/types';
 export { DetailsList, DetailsListContext } from './components/details-list';
 export {
   DetailsListStyles,
@@ -133,6 +130,10 @@ export type {
 export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 export {
+  DrawerEventNamespace,
+  DrawerEventTypes,
+} from './components/drawer/events';
+export {
   Drawer,
   DrawerContext,
   DrawerEventHandlers,
@@ -144,10 +145,6 @@ export {
   DrawerTitleStyles,
   DrawerTitleStylesDefaults,
 } from './components/drawer/styles';
-export {
-  DrawerEventNamespace,
-  DrawerEventTypes,
-} from './components/drawer/events';
 export type {
   DrawerContextValue,
   DrawerEvent,
@@ -234,8 +231,9 @@ export type {
   SkeletonProps,
   SkeletonStyleVariants,
 } from './components/skeleton/types';
-export { RangeSlider, Slider } from './components/slider';
-export type { RangeSliderProps, SliderProps } from './components/slider';
+export { Slider } from './components/slider';
+export { SliderStyles } from './components/slider/styles';
+export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';

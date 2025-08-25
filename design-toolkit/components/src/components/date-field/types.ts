@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ForwardedRef } from 'react';
 import type {
   DateFieldProps as AriaDateFieldProps,
-  DateInputProps as AriaDateInputProps,
+  DateInputProps,
+  DateSegmentProps,
   DateValue,
   FieldErrorProps,
   LabelProps,
@@ -21,30 +21,27 @@ import type {
 import type { VariantProps } from 'tailwind-variants';
 import type { DateFieldStyles } from './styles';
 
-export interface DateInputProps
-  extends VariantProps<typeof DateFieldStyles>,
-    Omit<AriaDateInputProps, 'size'> {
-  ref?: ForwardedRef<HTMLDivElement>;
-  size?: 'small' | 'medium';
-  isInvalid?: boolean;
-}
-
-export interface DateFieldProps<T extends DateValue>
-  extends VariantProps<typeof DateFieldStyles>,
-    Omit<AriaDateFieldProps<T>, 'style' | 'className'>,
-    Omit<AriaDateInputProps, 'children' | 'style'> {
-  classNames?: {
-    field?: AriaDateFieldProps<T>['className'];
-    label?: LabelProps['className'];
-    input?: DateInputProps['className'];
+export type DateFieldProps<T extends DateValue> = Omit<
+  AriaDateFieldProps<T>,
+  'children' | 'className' | 'placeholder'
+> &
+  VariantProps<typeof DateFieldStyles> & {
+    classNames?: {
+      field?: AriaDateFieldProps<T>['className'];
+      label?: LabelProps['className'];
+      control?: string;
+      input?: DateInputProps['className'];
+      segment?: DateSegmentProps['className'];
+      description?: string;
+      error?: FieldErrorProps['className'];
+    };
+    label?: string;
     description?: string;
-    error?: FieldErrorProps['className'];
+    errorMessage?: string;
+    inputProps?: Omit<DateInputProps, 'children' | 'className'>;
+    /**
+     * When true, will convert month value to 3 letter abbreviation when not editing
+     */
+    shortMonth?: boolean;
+    size?: 'small' | 'medium';
   };
-  size?: 'small' | 'medium';
-  description?: string;
-  errorMessage?: string;
-  label?: string;
-  placeholder?: string;
-  shortMonth?: boolean;
-  isRequired?: boolean;
-}
