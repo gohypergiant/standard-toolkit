@@ -43,7 +43,7 @@ export function DTKTheme({ children }: PropsWithChildren) {
           bg: {
             accent: {
               primary: {
-                bold: [196, 211, 0, 1],
+                bold: [255, 107, 26, 1],
               },
             },
           },
