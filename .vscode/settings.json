@@ -34,7 +34,8 @@
     "smeegl",
     "spreet",
     "spritesheet",
-    "spritesheets"
+    "spritesheets",
+    "storysource"
   ],
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit"
