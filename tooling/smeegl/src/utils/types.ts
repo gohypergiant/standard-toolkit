@@ -14,16 +14,24 @@ import type { Result, Unit } from 'true-myth';
 
 type ErrorPath = { msg: string; tmp: string | null };
 
-export type CrcMode = 'DEC' | 'HEX';
+export type CrcType = 'DEC' | 'HEX';
+export type TargetType = 'SPRITESHEET' | 'REACT';
 
 export type SpriteInfo = {
   name: string; // sprite name, no extension
-  indexName: string; // sprite definition name, used for binary naming
   fileName: string; // kebob-case name with extension
   filePath: string; // filename in the tmpDir
+  parentPath: string; // parent folder path segment compared to root
+  indexName?: string; // sprite definition name, used for binary naming
 };
 
-type GatherSpritesOutput = { tmp: string; sprites: SpriteInfo[] };
+export type FindSpritesOutput = {
+  tmp: string | null;
+  commonBasePath: string;
+  sprites: SpriteInfo[];
+};
+
+type CopySpritesOutput = { tmp: string; sprites: SpriteInfo[] };
 type GenerateSpritesOutput = {
   tmp: string;
   json: string;
@@ -31,8 +39,8 @@ type GenerateSpritesOutput = {
   sprites: SpriteInfo[];
 };
 
-export type GlobResult = Result<string[], ErrorPath>;
-export type GatherSpritesResult = Result<GatherSpritesOutput, ErrorPath>;
+export type FindSpritesResult = Result<FindSpritesOutput, ErrorPath>;
+export type CopySpritesResult = Result<CopySpritesOutput, ErrorPath>;
 export type GenerateSpritesResult = Result<GenerateSpritesOutput, ErrorPath>;
 export type GenerateConstantsResult = Result<{ tmp: string }, ErrorPath>;
 export type CleanUpTempDirectoryResult = Result<Unit, string>;

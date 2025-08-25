@@ -90,6 +90,16 @@
           }
         }
       }
+    },
+    {
+      "include": ["packages/ntds/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noSvgWithoutTitle": "off"
+          }
+        }
+      }
     }
   ]
 }

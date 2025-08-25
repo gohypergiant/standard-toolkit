@@ -1,0 +1,50 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+/**
+ * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ */
+
+import type { SVGProps } from 'react';
+interface Props {
+  title?: string;
+  titleId?: string;
+}
+export const SvgTarget = ({
+  title,
+  titleId,
+  ...props
+}: SVGProps<SVGSVGElement> & Props) => {
+  const { fill } = props;
+  const fillColor = fill ?? '#FF69B4';
+  const hasTitle = typeof title === 'string' && Boolean(title.trim());
+
+  return (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      aria-labelledby={hasTitle ? titleId : undefined}
+      {...props}
+    >
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path
+        fillRule='evenodd'
+        clipRule='evenodd'
+        d='M21.9873 3.41406L19.7363 5.66406C21.1507 7.38905 22 9.59522 22 12C22 14.4048 21.1507 16.611 19.7363 18.3359L21.9873 20.5869L20.5732 22.002L18.3193 19.748C16.5967 21.1547 14.3975 22 12 22C9.59544 22 7.38898 21.1515 5.66406 19.7373L3.40039 22.002L1.98535 20.5869L4.25098 18.3203C2.84422 16.5976 2 14.3975 2 12C2 9.60245 2.84422 7.40237 4.25098 5.67969L1.98535 3.41406L3.40039 2L5.66309 4.2627C7.38809 2.84824 9.59517 2 12 2C14.3978 2 16.5985 2.84394 18.3213 4.25098L20.5732 2L21.9873 3.41406ZM7.60645 17.7949C8.82713 18.7218 10.349 19.2725 12 19.2725C13.644 19.2725 15.1599 18.7264 16.3779 17.8066L15.043 16.4717C14.1737 17.0573 13.1271 17.4004 12 17.4004C10.8655 17.4004 9.8121 17.0536 8.93945 16.4609L7.60645 17.7949ZM16.4922 8.9082C17.0887 9.77331 17.4422 10.8184 17.4531 11.9463C17.4531 11.9551 17.4532 11.9639 17.4531 11.9727C17.4532 11.9818 17.4541 11.9909 17.4541 12C17.443 13.1416 17.0796 14.1982 16.4697 15.0693L17.7939 16.3936C18.7211 15.1728 19.2725 13.6512 19.2725 12C19.2725 10.349 18.7219 8.82713 17.7949 7.60645L16.4922 8.9082ZM6.19238 7.62109C5.27251 8.83917 4.72754 10.356 4.72754 12C4.72754 13.6442 5.27328 15.1607 6.19336 16.3789L7.51855 15.0527C6.91574 14.1848 6.55789 13.1343 6.54688 12L6.5459 11.9463C6.55671 10.8256 6.90548 9.78571 7.49512 8.92383L6.19238 7.62109ZM10.9414 14.46C11.2669 14.5972 11.6245 14.6738 12 14.6738C12.3678 14.6738 12.7179 14.5988 13.0381 14.4668L11.9863 13.415L10.9414 14.46ZM13.4004 12L14.4785 13.0781C14.633 12.7405 14.7218 12.3673 14.7256 11.9727C14.7218 11.5926 14.6402 11.232 14.4961 10.9043L13.4004 12ZM9.49414 10.9229C9.35525 11.2455 9.2771 11.6 9.27344 11.9727C9.27716 12.3599 9.3626 12.7269 9.51172 13.0596L10.5713 12L9.49414 10.9229ZM12 9.27246C11.6098 9.27246 11.239 9.35526 10.9033 9.50293L11.9863 10.5859L13.0771 9.49414C12.7466 9.35186 12.3826 9.27246 12 9.27246ZM12 4.72754C10.3488 4.72754 8.82626 5.27787 7.60547 6.20508L8.90723 7.50684C9.78609 6.90077 10.8516 6.5459 12 6.5459C13.1414 6.5459 14.2004 6.89686 15.0762 7.49609L16.3789 6.19336C15.1607 5.27328 13.6442 4.72754 12 4.72754Z'
+        fill={fillColor}
+      />
+    </svg>
+  );
+};

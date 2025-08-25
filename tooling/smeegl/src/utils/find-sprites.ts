@@ -10,9 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import type fs from 'node:fs';
+import path from 'node:path';
 import { globby } from 'globby';
 import { Result } from 'true-myth';
-import type { GlobResult } from './types.js';
+import { findCommonBasePath } from './find-common-base-path.js';
+import { readSvgFilesFromInputDirectory } from './read-svg-files-from-input-directory.js';
+import type { FindSpritesResult, SpriteInfo } from './types.js';
 
 const IGNORE_LIST = [
   // NOTE: For now, ignore. Will need later?
@@ -20,18 +24,68 @@ const IGNORE_LIST = [
   '**/__{fixtures,mocks,tests}__/**',
 ];
 
+const _fileListFromGlobby = async (glob: string, rootPath: string) => {
+  const fileList = await globby(glob, {
+    ignore: IGNORE_LIST,
+    cwd: rootPath,
+  });
+
+  const _toSpriteInfo = (filePath: string) => {
+    const parentPathArr = filePath.split(path.sep);
+    parentPathArr.pop();
+    const parentPath = parentPathArr.join(path.sep);
+    const fileName = path.basename(filePath);
+    const ext = path.extname(fileName);
+    const name = path.basename(fileName, ext);
+
+    const result: SpriteInfo = { name, parentPath, fileName, filePath };
+    return result;
+  };
+
+  return fileList.map(_toSpriteInfo);
+};
+
+const _fileListFromPath = (inputPath: string) => {
+  const files = readSvgFilesFromInputDirectory(inputPath);
+
+  const _toSpriteInfo = (it: fs.Dirent) => {
+    const { name: fileName, parentPath } = it;
+
+    const ext = path.extname(fileName);
+    const name = path.basename(fileName, ext);
+    const filePath = path.join(parentPath, fileName);
+
+    const result: SpriteInfo = { name, parentPath, fileName, filePath };
+    return result;
+  };
+
+  return files.map(_toSpriteInfo);
+};
+
+/**
+ * Find all of the svg files in the glob pattern, returning the paths as strings
+ *
+ * @param glob possibly falsy
+ * @param inputPath possibly falsy
+ * @param rootPath
+ * @returns
+ */
 export async function findSprites(
   glob: string,
+  inputPath: string,
   rootPath: string,
-): Promise<GlobResult> {
+  tmpDir: string,
+): Promise<FindSpritesResult> {
   try {
-    const result = await globby(glob, {
-      ignore: IGNORE_LIST,
-      cwd: rootPath,
-    });
+    const sprites = glob
+      ? await _fileListFromGlobby(glob, rootPath)
+      : _fileListFromPath(inputPath);
 
-    return result.length
-      ? Result.ok(result)
+    const spritesPaths = sprites.map((it) => it.filePath);
+    const commonBasePath = findCommonBasePath(spritesPaths);
+
+    return sprites.length
+      ? Result.ok({ tmp: tmpDir, sprites, commonBasePath })
       : Result.err({
           msg: `No sprites found; glob: ${glob} rootPath: ${rootPath} `,
           tmp: null,
