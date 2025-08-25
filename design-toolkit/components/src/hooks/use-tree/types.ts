@@ -93,8 +93,9 @@ export type TreeNodeBase<T> = {
   isDisabled?: boolean;
   isExpanded?: boolean;
   isSelected?: boolean;
-  isVisible?: boolean;
-  isViewable?: boolean;
+  // TODO: Update to be isVisibleToggle & isVisibleComputed
+  isViewable?: boolean; // Toggle state
+  isVisible?: boolean; // Computed state based on ancestors and self viewable state
 };
 
 export type TreeNode<T> = TreeNodeBase<T> & {

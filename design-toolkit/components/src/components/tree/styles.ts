@@ -65,6 +65,7 @@ export const TreeStyles = tv({
         item: 'min-h-s',
       },
     },
+    // TODO: Remove and use variant selectors (will need to create ones for visbility)
     // isDisabled: {
     //   true: {
     //     item: 'cursor-not-allowed border-none hover:bg-transparent data-[drop-target=true]:bg-transparent',

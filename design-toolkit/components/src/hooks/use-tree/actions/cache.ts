@@ -226,6 +226,10 @@ export class Cache<T> {
     };
   }
 
+  getAllKeys() {
+    return this.cache.lookup.keys();
+  }
+
   getAllNodes() {
     return this.cache.lookup.values();
   }
@@ -276,6 +280,7 @@ export class Cache<T> {
     nodes.map((node, i) => this.insert(parentKey, node, idx + i));
   }
 
+  // TODO: Rename methods to be consistent (include Node(s) or Key(s))
   insert(parentKey: Key | null, node: TreeNode<T>, idx: number) {
     const { children, ...rest } = node;
 
@@ -318,6 +323,8 @@ export class Cache<T> {
       : this.addToRoot(key, idx);
   }
 
+  // TODO: This shouldn't update children's viewable state but does need to trigger the tree recompute for visible state
+  // Visibility computed state is based on a every ancestor + self is viewable (same logic inside TreeItemContext)
   setViewable(key: Key, state: boolean) {
     const node = this.cache.lookup.get(key);
 

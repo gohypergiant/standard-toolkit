@@ -65,7 +65,7 @@ export type TreeContextValue = Required<
   disabledKeys: Set<Key>;
   expandedKeys: Set<Key>;
   selectedKeys: Set<Key>;
-  viewableKeys: Set<Key>;
-  visibleKeys: Set<Key>;
+  viewableKeys?: Set<Key>;
+  visibleKeys?: Set<Key>; // TODO: remove this prop, will be computed off of items, or in component when static
   isStatic: boolean;
 };

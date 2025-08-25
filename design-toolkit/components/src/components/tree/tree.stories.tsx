@@ -358,6 +358,7 @@ export const Stateless: Story = {
  */
 export const StaticCollection: Story = {
   render: (args) => {
+    // TODO: put viewability (not visibility) back in
     return (
       <Tree
         {...args}

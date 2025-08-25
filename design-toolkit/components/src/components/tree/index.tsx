@@ -126,7 +126,13 @@ export function Tree<T>({
       visibleKeysProp)
   ) {
     throw new Error(
-      'Tree should only be controlled with state from either "items" or keys props, not both',
+      'Tree should only be controlled with state from either `items` or keys props, not both',
+    );
+  }
+
+  if (!!items !== (typeof children === 'function')) {
+    throw new Error(
+      'Tree `items` and node iterator `children` must be used together',
     );
   }
 
@@ -136,10 +142,8 @@ export function Tree<T>({
     getDropOperation: () => 'move',
     ...dragAndDropConfig,
   });
-  const nodes = useMemo(
-    () => (items ? new Cache([...items]).getAllNodes() : null),
-    [items],
-  );
+  const cache = useMemo(() => (items ? new Cache([...items]) : null), [items]);
+  const nodes = useMemo(() => cache?.getAllNodes(), [cache]);
   const {
     disabledKeys,
     expandedKeys,
@@ -149,10 +153,10 @@ export function Tree<T>({
   } = useMemo(() => {
     const acc = {
       disabledKeys: disabledKeysProp ?? new Set<Key>(),
-      expandedKeys: expandedKeysProp ?? new Set<Key>(),
+      expandedKeys: expandedKeysProp ?? new Set<Key>(), // TODO: shouldn't be passed into context if static and no prop provided (want the tree to default to open / expanded=true)
       selectedKeys: selectedKeysProp ?? new Set<Key>(),
-      viewableKeys: viewableKeysProp ?? new Set<Key>(),
-      visibleKeys: visibleKeysProp ?? new Set<Key>(),
+      viewableKeys: viewableKeysProp ?? new Set<Key>(), // TODO: these shouldn't be passed into context when static
+      visibleKeys: visibleKeysProp ?? new Set<Key>(), //
     };
 
     if (!nodes) {
@@ -228,6 +232,11 @@ export function Tree<T>({
 Tree.displayName = 'Tree';
 
 export function TreeItem({ className, ...rest }: TreeItemProps) {
+  // TODO: Figure out the state of the component here
+  // Pull in the TreeContext and do calculations against keys
+  // It already does most of them: https://github.com/adobe/react-spectrum/blob/main/packages/react-aria-components/src/Tree.tsx#L660
+  // Only need to do the ones that are missing
+
   return (
     <AriaTreeItem
       {...rest}
@@ -264,6 +273,12 @@ function ItemContent({ children }: TreeItemContentProps) {
           isExpanded,
           isSelected,
         } = renderProps;
+
+        // const me = state.collection.getItem(id);
+        // const parent = state.selectionManager.getItem(me?.parentKey) // Will need to be recurive to get all ancestors
+        // const isVisible = [me, ...parents].every((key) => viewableKeys.has(key));
+        // This calculation is only neceesary when rendered as a static Tree
+
         const isLastOfSet = !(
           state.collection.getItem(id)?.nextKey || hasChildItems
         );
