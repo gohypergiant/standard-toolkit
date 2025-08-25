@@ -15,7 +15,7 @@ import { tv } from '@/lib/utils';
 export const LabelStyles = tv({
   base: [
     'group/label text-header-s',
-    'enabled:fg-default-light',
+    'enabled:fg-primary-bold',
     'disabled:fg-disabled',
   ],
 });

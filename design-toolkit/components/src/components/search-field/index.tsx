@@ -60,8 +60,8 @@ SearchFieldProvider.displayName = 'SearchField.Provider';
  *   variant="filled"
  *   placeholder="Search products"
  *   classNames={{
- *     input: "bg-gray-100",
- *     searchIcon: "text-blue-600"
+ *     input: "bg-info-bold",
+ *     searchIcon: "fg-accent-primary-bold"
  *   }}
  * />
  *

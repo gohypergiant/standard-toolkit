@@ -17,17 +17,17 @@ export const TextAreaStyles = tv({
     field: 'group/text-area-field flex flex-col gap-xs',
     label: '',
     input: [
-      'block w-full rounded-medium p-s font-display text-default-light outline outline-interactive placeholder:text-default-dark',
+      'fg-primary-bold placeholder:fg-primary-muted block w-full rounded-medium p-s font-display outline outline-interactive',
       'group-size-medium/text-area-field:text-body-s group-size-small/text-area-field:text-body-xs',
-      'group-enabled/text-area-field:focus-visible:outline-highlight',
+      'group-enabled/text-area-field:focus-visible:outline-accent-primary-bold',
       'group-enabled/text-area-field:hover:outline-interactive-hover',
-      'group-enabled/text-area-field:group-invalid/text-area-field:outline-serious',
+      'group-enabled/text-area-field:group-invalid/text-area-field:outline-serious-bold',
       'group-disabled/text-area-field:text-disabled group-disabled/text-area-field:outline-interactive-disabled group-disabled/text-area-field:placeholder:text-disabled',
     ],
     description: [
-      'fg-default-dark text-body-xs',
+      'fg-primary-muted text-body-xs',
       'group-disabled/text-area-field:fg-disabled',
     ],
-    error: 'fg-serious text-body-xs',
+    error: 'fg-serious-bold text-body-xs',
   },
 });

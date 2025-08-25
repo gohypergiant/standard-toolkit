@@ -76,3 +76,5 @@
 @custom-variant drop-target (&:where([data-drop-target]));
 @custom-variant resizing (&:where([data-resizing]));
 @custom-variant disabled (&:where([disabled], [data-disabled], :disabled));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+@custom-variant light (&:where(.light, .light *, [data-theme="light"], [data-theme="light"] *));

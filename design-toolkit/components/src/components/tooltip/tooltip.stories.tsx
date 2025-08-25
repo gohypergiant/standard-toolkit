@@ -28,7 +28,7 @@ export const Default: Story = {
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
-          <span className='fg-interactive-default'>Test</span>
+          <span className='fg-primary-bold'>Test</span>
         </Tooltip.Trigger>
         <Tooltip.Body>My tooltip</Tooltip.Body>
       </Tooltip>
@@ -41,7 +41,7 @@ export const LongTooltip: Story = {
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
-          <span className='fg-interactive-default'>Long Tooltip</span>
+          <span className='fg-primary-bold'>Long Tooltip</span>
         </Tooltip.Trigger>
         <Tooltip.Body>A floating label used to explain an element</Tooltip.Body>
       </Tooltip>
@@ -67,7 +67,7 @@ export const TooltipWithIcon: Story = {
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
-          <Icon className='fg-interactive-default h-xl w-xl'>
+          <Icon className='fg-primary-bold h-xl w-xl'>
             <Lasso />
           </Icon>
         </Tooltip.Trigger>

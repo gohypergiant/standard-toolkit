@@ -19,8 +19,8 @@ export const DetailsListStylesDefaults = {
 export const DetailsListStyles = tv({
   slots: {
     list: 'grid grid-cols-[auto_1fr] gap-x-m font-display text-body-m',
-    label: 'fg-default-dark col-start-1',
-    value: 'fg-default-light col-start-2',
+    label: 'fg-primary-muted col-start-1',
+    value: 'fg-primary-bold col-start-2',
   },
   variants: {
     align: {

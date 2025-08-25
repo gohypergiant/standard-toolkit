@@ -11,8 +11,47 @@
  */
 
 /* this @layer declaration needs to be before the stylesheet imports */
-@layer properties, theme,  base, old_ds_reset, old_ds_framework, old_ds_overrides, components, utilities;
+@layer properties, theme, base, old_ds_reset, old_ds_framework, old_ds_overrides, components, utilities;
 
 @import '@accelint/design-system/styles';
 @import "@accelint/design-toolkit/styles";
 @source "../../node_modules/@accelint/design-toolkit";
+
+@layer theme {
+  :root {
+    --fiona-orange-bold: #FF6B1A;
+    --fiona-orange-hover: #9E4820;
+    --fiona-orange-pressed: #7A361A;
+    --fiona-orange-muted: #b35123;
+
+    --shrek-green-bold: #C4D300;
+    --shrek-green-hover: #D1E000;
+    --shrek-green-pressed: #8A9400;
+    --shrek-green-muted: #4F5400;
+
+    @variant light {
+      --bg-accent-primary-bold: var(--fiona-orange-bold);
+      --bg-accent-primary-hover: var(--fiona-orange-hover);
+      --bg-accent-primary-pressed: var(--fiona-orange-pressed);
+      --bg-accent-primary-muted: var(--fiona-orange-muted);
+      --fg-accent-primary-bold: var(--fiona-orange-bold);
+      --fg-accent-primary-hover: var(--fiona-orange-hover);
+      --fg-accent-primary-pressed: var(--fiona-orange-pressed);
+      --outline-accent-primary-bold: var(--fiona-orange-bold);
+      --outline-accent-primary-hover: var(--fiona-orange-hover);
+      --outline-accent-primary-pressed: var(--fiona-orange-pressed);
+    }
+    @variant dark {
+      --bg-accent-primary-bold: var(--shrek-green-bold);
+      --bg-accent-primary-hover: var(--shrek-green-hover);
+      --bg-accent-primary-pressed: var(--shrek-green-pressed);
+      --bg-accent-primary-muted: var(--shrek-green-muted);
+      --fg-accent-primary-bold: var(--shrek-green-bold);
+      --fg-accent-primary-hover: var(--shrek-green-hover);
+      --fg-accent-primary-pressed: var(--shrek-green-pressed);
+      --outline-accent-primary-bold: var(--shrek-green-bold);
+      --outline-accent-primary-hover: var(--shrek-green-hover);
+      --outline-accent-primary-pressed: var(--shrek-green-pressed);
+    }
+  }
+}

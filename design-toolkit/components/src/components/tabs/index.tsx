@@ -156,44 +156,44 @@ TabList.displayName = 'Tabs.List';
 Tabs.List = TabList;
 
 const tabBaseStyles = cn(
-  'fg-default-dark cursor-pointer p-s outline-none',
+  'fg-primary-muted cursor-pointer p-s shadow-none',
   'rounded-medium group-orientation-horizontal:rounded-small group-orientation-horizontal:rounded-b-none',
-  'group-orientation-horizontal:border-static-light group-orientation-horizontal:border-b',
-  'group-orientation-vertical:border group-orientation-vertical:border-transparent',
+  'group-orientation-horizontal:shadow-[0_1px] group-orientation-horizontal:shadow-[color:var(--outline-static)]',
 );
 
 const tabStyles = cva(tabBaseStyles, {
   variants: {
     isSelected: {
-      true: 'fg-highlight bg-highlight-subtle group-orientation-horizontal:border-highlight',
+      true: 'fg-accent-primary-bold bg-accent-primary-muted group-orientation-horizontal:shadow-[color:var(--outline-accent-primary-bold)]',
     },
     isHovered: {
-      true: 'fg-default-light group-orientation-horizontal:border-interactive-hover',
+      true: 'fg-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)]',
     },
     isFocused: {
-      true: 'fg-default-light group-orientation-horizontal:border-interactive-hover',
+      true: 'fg-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)]',
     },
     isDisabled: {
-      true: 'fg-disabled cursor-not-allowed group-orientation-horizontal:border-interactive-disabled',
+      true: 'fg-disabled cursor-not-allowed group-orientation-horizontal:shadow-[color:var(--outline-interactive-disabled)]',
     },
   },
   compoundVariants: [
     {
       isSelected: true,
       isHovered: true,
-      className: 'fg-highlight group-orientation-horizontal:border-highlight',
+      className:
+        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-accent-primary-bold)]',
     },
     {
       isSelected: true,
       isFocused: true,
       className:
-        'fg-highlight group-orientation-horizontal:border-interactive-hover group-orientation-vertical:border-interactive-hover',
+        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)] group-orientation-vertical:shadow-[color:var(--outline-interactive-hover)]',
     },
     {
       isDisabled: true,
       isSelected: true,
       className:
-        'fg-disabled bg-interactive-disabled group-orientation-horizontal:border-interactive-disabled',
+        'fg-disabled bg-interactive-disabled group-orientation-horizontal:shadow-[color:var(--outline-interactive-disabled)]',
     },
   ],
 });
@@ -234,7 +234,7 @@ const TabPanel = ({ id, children, className, ...rest }: TabPanelProps) => {
     <AriaTabPanel
       id={id}
       className={cn(
-        'fg-default-light p-s group-orientation-vertical:pt-0 group-orientation-horizontal:pl-0',
+        'fg-primary-bold p-s group-orientation-vertical:pt-0 group-orientation-horizontal:pl-0',
         className,
       )}
       {...rest}

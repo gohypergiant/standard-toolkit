@@ -12,20 +12,54 @@
 
 'use client';
 
-import { ThemeProvider, bodies, families } from '@accelint/design-system';
+import {
+  ThemeProvider as DSThemeProvider,
+  bodies,
+  families,
+} from '@accelint/design-system';
+import { ThemeProvider as DTKThemeProvider } from '@accelint/design-toolkit';
 import { clsx } from 'clsx';
 import type { PropsWithChildren } from 'react';
 import { Defaults } from './defaults';
 import { theme, vars } from './theme.css';
 
-export function Theme({ children }: PropsWithChildren) {
+export function DSTheme({ children }: PropsWithChildren) {
   return (
-    <ThemeProvider
+    <DSThemeProvider
       className={clsx(families.sans, bodies.md)}
       theme={theme}
       vars={vars}
     >
       <Defaults>{children}</Defaults>
-    </ThemeProvider>
+    </DSThemeProvider>
+  );
+}
+
+export function DTKTheme({ children }: PropsWithChildren) {
+  return (
+    <DTKThemeProvider
+      overrides={{
+        light: {
+          bg: {
+            accent: {
+              primary: {
+                bold: [255, 107, 26, 1],
+              },
+            },
+          },
+        },
+        dark: {
+          bg: {
+            accent: {
+              primary: {
+                bold: [196, 211, 0, 1],
+              },
+            },
+          },
+        },
+      }}
+    >
+      {children}
+    </DTKThemeProvider>
   );
 }

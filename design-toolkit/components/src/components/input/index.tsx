@@ -53,7 +53,7 @@ export const InputContext =
  * // Input with clear button
  * <Input
  *   defaultValue="Clearable text"
- *   classNames={{ clear: "hover:bg-gray-100" }}
+ *   classNames={{ clear: "hover:bg-info-bold" }}
  * />
  */
 export function Input({ ref, ...props }: InputProps) {

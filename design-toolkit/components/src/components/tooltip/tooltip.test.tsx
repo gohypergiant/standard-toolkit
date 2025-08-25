@@ -25,7 +25,7 @@ function setup({
       <Tooltip.Body>My tooltip</Tooltip.Body>
       <Tooltip.Trigger>
         {/* biome-ignore lint/a11y/useSemanticElements: react-aria expects a role, biome doesn't like it */}
-        <span className='fg-interactive-default' role='button' tabIndex={0}>
+        <span className='fg-primary-bold' role='button' tabIndex={0}>
           {children}
         </span>
       </Tooltip.Trigger>
