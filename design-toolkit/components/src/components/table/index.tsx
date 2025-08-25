@@ -19,6 +19,7 @@ import { useListData } from '@react-stately/data';
 import {
   type Cell,
   type ColumnOrderState,
+  type Row,
   type RowSelectionState,
   type SortingState,
   flexRender,
@@ -57,7 +58,6 @@ const dataTableCell = <T,>(
     narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
     numeral={cell.column.id === 'numeral'}
     kebab={cell.column.id === 'kebab'}
-    style={{ width: cell.column.getSize() }}
     selectedCol={isColumnSelected}
   >
     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -109,58 +109,77 @@ export function Table<T extends { id: string | number }>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>();
 
+  const [activeRow, setActiveRow] = useState<string | number | null>(null);
+
   /**
    * moveUpSelectedRows moves the selected rows up in the table.
    * It finds the first selected row, determines its index,
    * and moves it before the previous row if it exists.
    */
-  const moveUpSelectedRows = useCallback(() => {
-    const rowSelectionKeys = Object.keys(rowSelection).filter(
-      (id) => rowSelection[id],
-    );
-    const selectedRows = data.filter((item: T) =>
-      rowSelectionKeys.includes(item.id.toString()),
-    );
+  const moveUpSelectedRows = useCallback(
+    (row: Row<T>) => {
+      const hasRowSelection = Object.keys(rowSelection).length !== 0;
+      const rowSelectionKeys = Object.keys(rowSelection).filter(
+        (id) => rowSelection[id],
+      );
 
-    const firstSelectedRowId = selectedRows[0]?.id;
-    if (firstSelectedRowId) {
-      const rowIndex = dataIds.indexOf(firstSelectedRowId);
+      const rowsToMove = hasRowSelection
+        ? data.filter((item: T) =>
+            rowSelectionKeys.includes(item.id.toString()),
+          )
+        : [row];
 
-      const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
+      const firstSelectedRowId = rowsToMove[0]?.id;
+      if (firstSelectedRowId) {
+        const rowIndex = dataIds.indexOf(firstSelectedRowId);
 
-      if (prevRowId) {
-        moveBefore?.(prevRowId, rowSelectionKeys);
+        const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
+
+        if (prevRowId) {
+          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
+          moveBefore?.(prevRowId, rowsToMoveKeys);
+        }
       }
-    }
-  }, [data, dataIds, rowSelection, moveBefore]);
+    },
+    [data, dataIds, rowSelection, moveBefore],
+  );
 
   /**
-   * moveDownSelectedRows moves the selected rows down in the table.
+   * moveDownRows moves the selected or active rows down in the table.
    * It finds the last selected row, determines its index,
    * and moves it after the next row if it exists.
    */
-  const moveDownSelectedRows = useCallback(() => {
-    const rowSelectionKeys = Object.keys(rowSelection).filter(
-      (id) => rowSelection[id],
-    );
-    const selectedRows = data.filter((item: T) =>
-      rowSelectionKeys.includes(item.id.toString()),
-    );
+  const moveDownRows = useCallback(
+    (row: Row<T>) => {
+      const hasRowSelection = Object.keys(rowSelection).length !== 0;
 
-    const lastSelectedRowId = selectedRows[selectedRows.length - 1]?.id;
-    if (lastSelectedRowId) {
-      const rowIndex = dataIds.indexOf(lastSelectedRowId);
+      const rowSelectionKeys = Object.keys(rowSelection).filter(
+        (id) => rowSelection[id],
+      );
 
-      const nextRowId =
-        dataIds[
-          rowIndex < dataIds.length - 1 ? rowIndex + 1 : dataIds.length - 1
-        ];
+      const rowsToMove = hasRowSelection
+        ? data.filter((item: T) =>
+            rowSelectionKeys.includes(item.id.toString()),
+          )
+        : [row];
 
-      if (nextRowId) {
-        moveAfter?.(nextRowId, rowSelectionKeys);
+      const lastSelectedRowId = rowsToMove[rowsToMove.length - 1]?.id;
+
+      if (lastSelectedRowId) {
+        const rowIndex = dataIds.indexOf(lastSelectedRowId);
+
+        const nextRowId =
+          dataIds[
+            rowIndex < dataIds.length - 1 ? rowIndex + 1 : dataIds.length - 1
+          ];
+        if (nextRowId) {
+          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
+          moveAfter?.(nextRowId, rowsToMoveKeys);
+        }
       }
-    }
-  }, [data, dataIds, rowSelection, moveAfter]);
+    },
+    [data, dataIds, rowSelection, moveAfter],
+  );
 
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
@@ -199,7 +218,9 @@ export function Table<T extends { id: string | number }>({
                   </Menu.Item>
                   <Menu.Item
                     classNames={{ item: menuItem() }}
-                    onAction={moveUpSelectedRows}
+                    onAction={() => {
+                      moveUpSelectedRows(row);
+                    }}
                   >
                     <Menu.Item.Label>
                       {RowKebabMenuItems.MoveUp}
@@ -207,7 +228,9 @@ export function Table<T extends { id: string | number }>({
                   </Menu.Item>
                   <Menu.Item
                     classNames={{ item: menuItem() }}
-                    onAction={moveDownSelectedRows}
+                    onAction={() => {
+                      moveDownRows(row);
+                    }}
                   >
                     <Menu.Item.Label>
                       {RowKebabMenuItems.MoveDown}
@@ -225,7 +248,7 @@ export function Table<T extends { id: string | number }>({
       moveBefore,
       moveAfter,
       moveUpSelectedRows,
-      moveDownSelectedRows,
+      moveDownRows,
       persistRowKebabMenu,
     ],
   );
