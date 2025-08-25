@@ -20,12 +20,20 @@ export function TableCell({
   numeral,
   persistent,
   kebab,
+  selectedCol,
   ...props
 }: TableCellProps) {
   return (
     <td
       ref={ref}
-      className={cellStyles({ narrow, numeral, kebab, persistent, className })}
+      className={cellStyles({
+        narrow,
+        numeral,
+        kebab,
+        persistent,
+        selectedCol,
+        className,
+      })}
       {...props}
     />
   );

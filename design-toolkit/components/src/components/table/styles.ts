@@ -44,6 +44,10 @@ export const cellStyles = tv({
       true: 'visible',
       false: 'hover:*:visible group-hover/row:*:visible',
     },
+    selectedCol: {
+      true: 'bg-highlight-subtle',
+      false: '',
+    },
   },
   defaultVariants: TableCellStylesDefaults,
   compoundVariants: [

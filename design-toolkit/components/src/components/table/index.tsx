@@ -58,7 +58,7 @@ const dataTableCell = <T,>(
     numeral={cell.column.id === 'numeral'}
     kebab={cell.column.id === 'kebab'}
     style={{ width: cell.column.getSize() }}
-    className={isColumnSelected ? 'bg-highlight-subtle' : ''}
+    selectedCol={isColumnSelected}
   >
     {flexRender(cell.column.columnDef.cell, cell.getContext())}
   </TableCell>
