@@ -1,0 +1,85 @@
+{
+  "name": "@accelint/ntds",
+  "version": "1.0.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "type": "module",
+  "files": ["dist/**"],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "bench": "pnpm vitest bench --run --dir src",
+    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsup",
+    "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
+    "build:icons:masked": "smeegl --in  ./icons/masked --out ./src/masked --crc DEC --target SPRITESHEET",
+    "preview": "pnpm storybook dev -p 6006",
+    "license": "pnpm zx ../../scripts/license.mjs --files src",
+    "dev": "pnpm tsc --watch",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
+    "format": "pnpm biome format . --write",
+    "lint": "pnpm biome lint",
+    "test": "pnpm vitest --dir=src"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^8.6.14",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-storysource": "^8.6.14",
+    "@storybook/blocks": "^8.6.14",
+    "@storybook/builder-vite": "^8.6.14",
+    "@storybook/manager-api": "^8.6.14",
+    "@storybook/react": "^8.6.14",
+    "@storybook/react-vite": "^8.6.14",
+    "@storybook/theming": "^8.6.14",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "20",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "tsup": "8.5.0",
+    "vitest": "2.1.3",
+    "@accelint/smeegl": "workspace:*",
+    "@accelint/design-system": "workspace:*",
+    "@accelint/design-toolkit": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@accelint/biome-config": "workspace:*",
+    "esbuild-fix-imports-plugin": "1.0.21",
+    "lodash": "^4.17.21",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.9",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.21",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.1.11"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "author": "https://hypergiant.com",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9"
+  }
+}
