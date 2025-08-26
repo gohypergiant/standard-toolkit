@@ -12,7 +12,7 @@
 
 import { Cache } from '@/hooks/use-tree/actions/cache';
 import { isSlottedContextValue } from '@/lib/utils';
-import { DragVert } from '@accelint/icons';
+import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
 import type { Key } from '@react-types/shared';
 import {
   type PropsWithChildren,
@@ -37,7 +37,6 @@ import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import type { IconProps } from '../icon/types';
 import { Lines } from '../lines';
-import { ExpandToggle } from './expand-toggle';
 import { TreeStyles, TreeStylesDefaults } from './styles';
 import type {
   TreeContextValue,
@@ -45,7 +44,6 @@ import type {
   TreeItemProps,
   TreeProps,
 } from './types';
-import { VisibilityToggle } from './visibility-toggle';
 
 const {
   tree,
@@ -58,6 +56,8 @@ const {
   spacing,
   description,
   drag,
+  expansion,
+  visibility,
 } = TreeStyles();
 
 export const TreeContext = createContext<TreeContextValue>({
@@ -65,6 +65,7 @@ export const TreeContext = createContext<TreeContextValue>({
   expandedKeys: new Set(),
   selectedKeys: new Set(),
   visibleKeys: new Set(),
+  visibilityComputedKeys: new Set(),
   showRuleLines: true,
   showVisibility: false,
   variant: TreeStylesDefaults.variant,
@@ -141,45 +142,63 @@ export function Tree<T>({
   });
   const cache = useMemo(() => (items ? new Cache([...items]) : null), [items]);
   const nodes = useMemo(() => cache?.getAllNodes(), [cache]);
-  const { disabledKeys, expandedKeys, selectedKeys, visibleKeys } =
-    useMemo(() => {
-      const acc = {
-        disabledKeys: disabledKeysProp ?? new Set<Key>(),
-        expandedKeys: expandedKeysProp ?? new Set<Key>(), // TODO: shouldn't be passed into context if static and no prop provided (want the tree to default to open / expanded=true)
-        selectedKeys: selectedKeysProp ?? new Set<Key>(),
-        visibleKeys: visibleKeysProp ?? new Set<Key>(), //
-      };
+  const {
+    disabledKeys,
+    expandedKeys,
+    selectedKeys,
+    visibleKeys,
+    visibilityComputedKeys,
+  } = useMemo(() => {
+    const acc = {
+      disabledKeys: disabledKeysProp ?? new Set<Key>(),
+      expandedKeys: expandedKeysProp ?? new Set<Key>(), // TODO: shouldn't be passed into context if static and no prop provided (want the tree to default to open / expanded=true)
+      selectedKeys: selectedKeysProp ?? new Set<Key>(),
+      visibleKeys: visibleKeysProp ?? new Set<Key>(),
+      visibilityComputedKeys: new Set<Key>(),
+    };
 
-      if (!nodes) {
-        return acc;
-      }
+    if (!nodes) {
+      return acc;
+    }
 
-      return nodes.reduce(
-        (acc, { key, isDisabled, isExpanded, isSelected, isVisible }) => {
-          if (isDisabled) {
-            acc.disabledKeys.add(key);
-          }
-          if (isExpanded) {
-            acc.expandedKeys.add(key);
-          }
-          if (isSelected) {
-            acc.selectedKeys.add(key);
-          }
-          if (isVisible) {
-            acc.visibleKeys.add(key);
-          }
-
-          return acc;
-        },
+    return nodes.reduce(
+      (
         acc,
-      );
-    }, [
-      nodes,
-      disabledKeysProp,
-      expandedKeysProp,
-      selectedKeysProp,
-      visibleKeysProp,
-    ]);
+        {
+          key,
+          isDisabled,
+          isExpanded,
+          isSelected,
+          isVisible,
+          isVisibleComputed,
+        },
+      ) => {
+        if (isDisabled) {
+          acc.disabledKeys.add(key);
+        }
+        if (isExpanded) {
+          acc.expandedKeys.add(key);
+        }
+        if (isSelected) {
+          acc.selectedKeys.add(key);
+        }
+        if (isVisible) {
+          acc.visibleKeys.add(key);
+        }
+        if (isVisibleComputed) {
+          acc.visibilityComputedKeys.add(key);
+        }
+        return acc;
+      },
+      acc,
+    );
+  }, [
+    nodes,
+    disabledKeysProp,
+    expandedKeysProp,
+    selectedKeysProp,
+    visibleKeysProp,
+  ]);
 
   return (
     <TreeContext.Provider
@@ -191,6 +210,7 @@ export function Tree<T>({
         showVisibility,
         variant,
         visibleKeys,
+        visibilityComputedKeys,
         isStatic: typeof children !== 'function',
         onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
       }}
@@ -214,18 +234,22 @@ export function Tree<T>({
 }
 Tree.displayName = 'Tree';
 
-export function TreeItem({ className, ...rest }: TreeItemProps) {
+export function TreeItem({ className, id, ...rest }: TreeItemProps) {
+  const { visibilityComputedKeys, visibleKeys } = useContext(TreeContext);
+  const isViewable = visibilityComputedKeys?.has(id);
+  const isVisible = visibleKeys?.has(id);
+
   // TODO: Figure out the state of the component here
-  // Pull in the TreeContext and do calculations against keys
-  // It already does most of them: https://github.com/adobe/react-spectrum/blob/main/packages/react-aria-components/src/Tree.tsx#L660
-  // Only need to do the ones that are missing
 
   return (
     <AriaTreeItem
       {...rest}
+      id={id}
       className={composeRenderProps(className, (className) =>
         item({ className }),
       )}
+      data-viewable={isViewable || null}
+      data-visible={isVisible || null}
     />
   );
 }
@@ -235,8 +259,8 @@ function ItemContent({ children }: TreeItemContentProps) {
   const {
     showVisibility,
     variant,
-    viewableKeys,
     visibleKeys,
+    visibilityComputedKeys,
     onVisibilityChange,
   } = useContext(TreeContext);
   const size = variant === 'cozy' ? 'medium' : 'small';
@@ -267,8 +291,14 @@ function ItemContent({ children }: TreeItemContentProps) {
         );
         const shouldShowSelection =
           selectionBehavior === 'toggle' && selectionMode !== 'none';
-        const isViewable = viewableKeys.has(id);
-        const isVisible = visibleKeys.has(id);
+        const isVisible = visibleKeys?.has(id) ?? false;
+        const isViewable = visibilityComputedKeys?.has(id) ?? false;
+
+        const handlePress = () => {
+          const keys = new Set<Key>(visibleKeys);
+          visibleKeys?.has(id) ? keys.delete(id) : keys.add(id);
+          onVisibilityChange?.(keys);
+        };
 
         return (
           <Icon.Provider size={size}>
@@ -277,26 +307,32 @@ function ItemContent({ children }: TreeItemContentProps) {
               data-last-of-set={isLastOfSet}
             >
               {showVisibility && (
-                <VisibilityToggle
-                  id={id}
-                  isVisible={isVisible}
-                  isViewable={isViewable}
-                  isDisabled={isDisabled}
+                <Button
+                  variant='icon'
+                  color='info'
                   size={size}
-                  onChange={onVisibilityChange}
-                />
+                  onPress={handlePress}
+                  isDisabled={isDisabled}
+                  className={visibility()}
+                >
+                  <Icon>{isVisible ? <Show /> : <Hide />}</Icon>
+                </Button>
               )}
               {level > 1 && (
                 <TreeLines level={level} isLastOfSet={isLastOfSet} />
               )}
-              <ExpandToggle
-                hasChildItems={hasChildItems}
-                isVisible={isVisible}
-                isViewable={isViewable}
-                isExpanded={isExpanded}
-                size={size}
-                isDisabled={isDisabled}
-              />
+              {hasChildItems ? (
+                <Button
+                  slot='chevron'
+                  variant='icon'
+                  size={size}
+                  className={expansion()}
+                >
+                  <Icon>{isExpanded ? <ChevronDown /> : <ChevronUp />}</Icon>
+                </Button>
+              ) : (
+                <div className={spacing({ variant })} />
+              )}
               <div className={display({ variant })}>
                 {typeof children === 'function'
                   ? children({
@@ -351,7 +387,7 @@ function ItemDescription({ children, className }: TextProps) {
 
   return variant !== 'crammed' ? (
     <AriaText
-      // data-slot='description'
+      data-slot='description'
       className={description({ className, variant })}
     >
       {children}

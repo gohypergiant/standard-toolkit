@@ -34,10 +34,9 @@ export type TreeProps<T> = Omit<
     dragAndDropConfig?: DragAndDropConfig;
     expandedKeys?: Set<Key>;
     selectedKeys?: Set<Key>;
+    visibleKeys?: Set<Key>;
     showRuleLines?: boolean;
     showVisibility?: boolean;
-    viewableKeys?: Set<Key>;
-    visibleKeys?: Set<Key>;
     onVisibilityChange?: (keys: Set<Key>) => void;
   };
 
@@ -65,7 +64,7 @@ export type TreeContextValue = Required<
   disabledKeys: Set<Key>;
   expandedKeys: Set<Key>;
   selectedKeys: Set<Key>;
-  viewableKeys?: Set<Key>;
-  visibleKeys?: Set<Key>; // TODO: remove this prop, will be computed off of items, or in component when static
+  visibleKeys?: Set<Key>;
+  visibilityComputedKeys?: Set<Key>;
   isStatic: boolean;
 };

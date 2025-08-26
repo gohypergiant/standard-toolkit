@@ -20,8 +20,10 @@ export const TreeStyles = tv({
   slots: {
     tree: 'overflow-auto outline-hidden',
     item: [
+      'not-visible:fg-default-dark not-viewable:fg-default-dark fg-default-light',
       'group/tree-item rounded-medium hover:bg-interactive-hover-dark',
       'drop-target:border drop-target:border-highlight-hover drop-target:bg-highlight/20',
+      'disabled:cursor-not-allowed disabled:border-none disabled:hover:bg-transparent disabled:data-[drop-target=true]:bg-transparent',
     ],
     content: [
       'flex items-center justify-items-start px-xs',
@@ -34,9 +36,21 @@ export const TreeStyles = tv({
     description: 'fg-default-dark text-body-s [grid-area:description]',
     actions: 'flex shrink-0 items-center [grid-area:action]',
     spacing: '',
-    visibility: '',
-    expansion: '',
-    drag: '',
+    visibility: [
+      'group-not-visible/tree-item:enabled:color-info:fg-default-dark',
+      'group-not-viewable/tree-item:enabled:color-info:fg-default-dark fg-default-light',
+      'fg-default-light',
+    ],
+    expansion: [
+      'group-not-visible/tree-item:enabled:color-info:fg-default-dark',
+      'group-not-viewable/tree-item:enabled:color-info:fg-default-dark fg-default-light',
+      'fg-default-light',
+    ],
+    drag: [
+      'group-not-visible/tree-item:enabled:color-info:fg-default-dark',
+      'group-not-viewable/tree-item:enabled:color-info:fg-default-dark fg-default-light',
+      'fg-default-light',
+    ],
   },
   variants: {
     variant: {
@@ -65,60 +79,6 @@ export const TreeStyles = tv({
         item: 'min-h-s',
       },
     },
-    // TODO: Remove and use variant selectors (will need to create ones for visbility)
-    // isDisabled: {
-    //   true: {
-    //     item: 'cursor-not-allowed border-none hover:bg-transparent data-[drop-target=true]:bg-transparent',
-    //   },
-    // },
-    // isViewable: {
-    //   false: '',
-    // },
-    // isVisible: {
-    //   false: '',
-    // },
   },
-  // compoundVariants: [
-  //   {
-  //     isViewable: true,
-  //     isVisible: true,
-  //     className: {
-  //       content: 'fg-default-light',
-  //       visibility: 'fg-default-light',
-  //       expansion: 'fg-default-light',
-  //       drag: 'fg-default-light',
-  //     },
-  //   },
-  //   {
-  //     isViewable: false,
-  //     isVisible: true,
-  //     className: {
-  //       content: 'fg-default-dark',
-  //       visibility: 'enabled:fg-default-dark',
-  //       expansion: 'enabled:fg-default-dark',
-  //       drag: 'enabled:fg-default-dark',
-  //     },
-  //   },
-  //   {
-  //     isViewable: true,
-  //     isVisible: false,
-  //     className: {
-  //       content: 'fg-default-dark',
-  //       visibility: 'enabled:fg-default-dark',
-  //       expansion: 'enabled:fg-default-dark',
-  //       drag: 'enabled:fg-default-dark',
-  //     },
-  //   },
-  //   {
-  //     isViewable: false,
-  //     isVisible: false,
-  //     className: {
-  //       content: 'fg-default-dark',
-  //       visibility: 'enabled:fg-default-dark',
-  //       expansion: 'enabled:fg-default-dark',
-  //       drag: 'enabled:fg-default-dark',
-  //     },
-  //   },
-  // ],
   defaultVariants: TreeStylesDefaults,
 });
