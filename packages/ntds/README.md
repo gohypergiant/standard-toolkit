@@ -16,9 +16,7 @@ This package contains two sets of output: a spritesheet for icons for the CBC2 C
 
 The first group is the set of masked icons that are used solely in the COP. These reside in [./icons/masked](./icons/masked). Since they will only be used as part of the deckGL rendering, these are combined into a spritesheet under [./dist/masked](./dist/masked/).
 
-<div style='display: block; margin: auto; width:35%'>
-  <img src='./src/masked.png' />
-</div>
+![Masked](./src/spritesheets/masked.png)
 
 ### React SVG Core Components
 
@@ -55,14 +53,18 @@ The next section is a simple generic icon for any color variety.
 
 The color variants are defined in [./src/constants.ts](./src/constants.ts).
 
-|                           Color Name                            |  Color  |
-| :-------------------------------------------------------------: | :-----: |
-| <span style= 'color:#0E8F37'> NTDS_COLOR_ASSUMED_FRIEND </span> | #0E8F37 |
-|     <span style= 'color:#1484F4'> NTDS_COLOR_FRIEND </span>     | #1484F4 |
-|    <span style= 'color:#FF0033'> NTDS_COLOR_HOSTILE </span>     | #FF0033 |
-|    <span style= 'color:#5B137A'> NTDS_COLOR_NEUTRAL </span>     | #5B137A |
-|    <span style= 'color:#404040'> NTDS_COLOR_PENDING </span>     | #404040 |
-|    <span style= 'color:#FFAD38'> NTDS_COLOR_SUSPECT </span>     | #FFAD38 |
-|    <span style= 'color:#EDDA0A'> NTDS_COLOR_UNKNOWN </span>     | #EDDA0A |
+![Color variants](./assets/color_definitions.png)
 
-The core SVG icons are converted into React SVG Components [./dist/core](./dist/core/).
+<!-- 
+
+|                           Color Name                           |  Color  |
+| :------------------------------------------------------------: | :-----: |
+| <span style='color:#0E8F37'> NTDS_COLOR_ASSUMED_FRIEND </span> | #0E8F37 |
+|     <span style='color:#1484F4'> NTDS_COLOR_FRIEND </span>     | #1484F4 |
+|    <span style='color:#FF0033'> NTDS_COLOR_HOSTILE </span>     | #FF0033 |
+|    <span style='color:#5B137A'> NTDS_COLOR_NEUTRAL </span>     | #5B137A |
+|    <span style='color:#404040'> NTDS_COLOR_PENDING </span>     | #404040 |
+|    <span style='color:#FFAD38'> NTDS_COLOR_SUSPECT </span>     | #FFAD38 |
+|    <span style='color:#EDDA0A'> NTDS_COLOR_UNKNOWN </span>     | #EDDA0A |
+
+-->
