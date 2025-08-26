@@ -87,44 +87,39 @@ const OutlineColorDisplay = ({ color }: { color: string }) => {
 };
 
 export const Background: Story = {
-  render: (_, { globals }) => {
-    console.log(globals.theme);
-    return (
-      <div key={globals.theme} className='flex flex-col gap-xl'>
-        <div className='flex flex-col gap-m'>
-          <h1 className='fg-primary-bold text-header-xl'>
-            Semantic Background
-          </h1>
-          <p className='fg-primary-muted text-body-s'>
-            These are tokens primarily used as backgrounds for any element or
-            component that contains content such as containers, sections,
-            headers, buttons, etc.
-          </p>
-        </div>
-        <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-          {tokens.bg.base.map((color) => (
-            <BackgroundColorDisplay
-              key={`${globals.theme}-${color}`}
-              color={color}
-            />
-          ))}
-        </div>
-        <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-          {tokens.bg.utility.map((color) => (
-            <BackgroundColorDisplay
-              key={`${globals.theme}-${color}`}
-              color={color}
-            />
-          ))}
-        </div>
+  render: (_, { globals }) => (
+    <div className='flex flex-col gap-xl'>
+      <div className='flex flex-col gap-m'>
+        <h1 className='fg-primary-bold text-header-xl'>Semantic Background</h1>
+        <p className='fg-primary-muted text-body-s'>
+          These are tokens primarily used as backgrounds for any element or
+          component that contains content such as containers, sections, headers,
+          buttons, etc.
+        </p>
       </div>
-    );
-  },
+      <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
+        {tokens.bg.base.map((color) => (
+          <BackgroundColorDisplay
+            key={`${globals.theme}-${color}`}
+            color={color}
+          />
+        ))}
+      </div>
+      <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+        {tokens.bg.utility.map((color) => (
+          <BackgroundColorDisplay
+            key={`${globals.theme}-${color}`}
+            color={color}
+          />
+        ))}
+      </div>
+    </div>
+  ),
 };
 
 export const Foreground: Story = {
   render: (_, { globals }) => (
-    <div key={globals.theme} className='flex flex-col gap-xl'>
+    <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
         <h1 className='fg-primary-bold text-header-xl'>Semantic Foreground</h1>
         <p className='fg-primary-muted text-body-s'>
@@ -162,7 +157,7 @@ export const Foreground: Story = {
 
 export const Outline: Story = {
   render: (_, { globals }) => (
-    <div key={globals.theme} className='flex flex-col gap-xl'>
+    <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
         <h1 className='fg-primary-bold text-header-xl'>Semantic Outline</h1>
         <p className='fg-primary-muted text-body-s'>
