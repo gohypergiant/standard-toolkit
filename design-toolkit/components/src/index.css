@@ -183,7 +183,6 @@ body {
 
   ::-webkit-scrollbar-track {
     background: var(--bg-interactive-muted-hover);
-    /* border-radius: inherit; */
   }
 
   ::-webkit-scrollbar-thumb{
