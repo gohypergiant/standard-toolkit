@@ -12,103 +12,22 @@
 
 import ansis from 'ansis';
 
-import ora from 'ora';
-import { Result } from 'true-myth';
+import ora, { type Ora } from 'ora';
 import { cleanUpTempDirectory } from './utils/clean-up-temp-directory.js';
 import { copySpritesToTempDirectory } from './utils/copy-sprites-to-temp-directory.js';
 import { generateConstantsFile } from './utils/generate-constants-file.js';
 import { generateSprites } from './utils/generate-sprites.js';
 import type {
-  CopySpritesResult,
   CrcType,
   FindSpritesResult,
   GenerateConstantsResult,
-  GenerateSpritesResult,
 } from './utils/types.js';
 
-export async function copyToTemp(
-  prevResults: FindSpritesResult,
-  crcMode: CrcType | null,
-) {
-  if (prevResults.isErr) {
-    return Result.err(prevResults.error);
-  }
-
-  const spinner = ora('Preparing sprites for the spritesheet');
-  spinner.start();
-
-  const {
-    tmp: tmpDir,
-    sprites,
-    commonBasePath,
-  } = prevResults.unwrapOr({ tmp: '', sprites: [], commonBasePath: '' });
-
-  if (!tmpDir) {
-    return Result.err({
-      msg: 'Temp directory is falsy',
-      tmp: null,
-    });
-  }
-
-  const result = await copySpritesToTempDirectory(
-    tmpDir,
-    sprites,
-    commonBasePath,
-    crcMode,
-    spinner,
-  );
-
-  result.match({
-    Ok: () => spinner.succeed('Spritesheet preparation complete'),
-    Err: ({ msg }) => spinner.fail(msg),
-  });
-
-  return result;
-}
-
-export async function generate(
-  prevResults: CopySpritesResult,
-  cmd: string,
-  output: string,
-) {
-  if (prevResults.isErr) {
-    return Result.err(prevResults.error);
-  }
-
-  const spinner = ora('Generating spritesheet');
-  spinner.start();
-
-  const result = await generateSprites(prevResults, cmd, output);
-
-  result.match({
-    Ok: ({ png }) =>
-      spinner.succeed(`Generated spritesheet ${ansis.italic.cyan(png)}`),
-    Err: ({ msg }) => spinner.fail(msg),
-  });
-
-  return result;
-}
-
-export async function constants(prevResults: GenerateSpritesResult) {
-  if (prevResults.isErr) {
-    return Result.err(prevResults.error);
-  }
-
-  const spinner = ora('Generating constant mapping');
-  spinner.start();
-
-  const result = await generateConstantsFile(prevResults);
-
-  result.match({
-    Ok: () => spinner.succeed(),
-    Err: ({ msg }) => spinner.fail(msg),
-  });
-
-  return result;
-}
-
-export async function clean(prevResults: GenerateConstantsResult) {
-  const spinner = ora('Cleaning up');
+export async function clean(
+  prevResults: GenerateConstantsResult,
+  spinner: Ora,
+): Promise<void> {
+  spinner.text = 'Cleaning up';
   spinner.start();
 
   const result = await cleanUpTempDirectory(prevResults);
@@ -117,8 +36,6 @@ export async function clean(prevResults: GenerateConstantsResult) {
     Ok: () => spinner.succeed(),
     Err: (e) => spinner.fail(e),
   });
-
-  return result;
 }
 
 export async function buildSpritesheet(
@@ -126,11 +43,62 @@ export async function buildSpritesheet(
   crcMode: CrcType | null,
   cmd: string,
   out: string,
-) {
-  const gatheredResult = await copyToTemp(findSpriteResult, crcMode);
-  const generatedResults = await generate(gatheredResult, cmd, out);
-  const constantsResults = await constants(generatedResults);
+): Promise<void> {
+  const spinner = ora('Preparing sprites for the spritesheet');
+  spinner.start();
 
-  await clean(constantsResults);
-  console.log('Spritesheet Build complete.');
+  const {
+    tmp: tmpDir,
+    sprites,
+    commonBasePath,
+  } = findSpriteResult.unwrapOr({ tmp: '', sprites: [], commonBasePath: '' });
+
+  if (!tmpDir) {
+    spinner.fail('Temp directory is falsy');
+    return;
+  }
+
+  const copyResult = await copySpritesToTempDirectory(
+    tmpDir,
+    sprites,
+    commonBasePath,
+    crcMode,
+    spinner,
+  );
+
+  copyResult.match({
+    Ok: () => spinner.succeed('Spritesheet preparation complete'),
+    Err: ({ msg }) => spinner.fail(msg),
+  });
+
+  if (copyResult.isErr) {
+    return await clean(copyResult, spinner);
+  }
+
+  spinner.text = 'Generating spritesheet';
+  spinner.start();
+
+  const generatedResults = await generateSprites(copyResult, cmd, out);
+  generatedResults.match({
+    Ok: ({ png }) =>
+      spinner.succeed(`Generated spritesheet ${ansis.italic.cyan(png)}`),
+    Err: ({ msg }) => spinner.fail(msg),
+  });
+
+  if (generatedResults.isErr) {
+    return await clean(generatedResults, spinner);
+  }
+
+  spinner.text = 'Generating constant mapping';
+  spinner.start();
+
+  const generateConstantsResults =
+    await generateConstantsFile(generatedResults);
+
+  generateConstantsResults.match({
+    Ok: () => spinner.succeed(),
+    Err: ({ msg }) => spinner.fail(msg),
+  });
+
+  await clean(generateConstantsResults, spinner);
 }

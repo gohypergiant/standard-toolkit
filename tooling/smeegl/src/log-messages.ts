@@ -14,13 +14,15 @@ import type { Ora } from 'ora';
 
 export const logMsg = (msg: string, spinner: Ora | null | undefined) => {
   if (spinner) {
-    spinner.text = msg;
+    spinner.start();
+    spinner.succeed(msg);
   } else {
     console.log(`✅ ${msg}`);
   }
 };
 export const logWarning = (msg: string, spinner: Ora | null | undefined) => {
   if (spinner) {
+    spinner.start();
     spinner.warn(msg);
   } else {
     console.warn(`⚠️ ${msg}`);
