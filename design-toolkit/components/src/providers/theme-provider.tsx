@@ -52,7 +52,7 @@ type ThemeProviderProps = PropsWithChildren & {
   defaultMode?: Mode;
   onChange?: (mode: Mode) => void;
   /** override existing values in the theme */
-  overrides?: PartialDeep<Pick<ThemeTokens, Mode>>;
+  overrides?: PartialDeep<ThemeTokens>;
 };
 export function ThemeProvider({
   children,
