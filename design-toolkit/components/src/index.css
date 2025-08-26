@@ -182,11 +182,12 @@ body {
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-interactive);
+    background: var(--bg-interactive-muted-hover);
+    /* border-radius: inherit; */
   }
 
   ::-webkit-scrollbar-thumb{
-    background-color: var(--color-interactive-hover-light);
+    background-color: var(--bg-interactive-muted);
     border-radius: var(--radius-large);
     border: 5px solid transparent;
     background-clip: padding-box;
