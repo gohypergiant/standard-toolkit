@@ -34,7 +34,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
     //   );
     <html
       lang='en'
-      className='bg-surface-default fg-info-bold font-primary dark'
+      className='bg-surface-overlay fg-info-bold font-primary dark'
     >
       <body className='w-full h-dvh flex flex-col'>
         <DSTheme>
