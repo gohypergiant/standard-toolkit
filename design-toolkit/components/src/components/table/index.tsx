@@ -116,7 +116,9 @@ export function Table<T extends { id: string | number }>({
    */
   const moveUpSelectedRows = useCallback(
     (row: Row<T>) => {
-      const hasRowSelection = Object.keys(rowSelection).length !== 0;
+      const hasRowSelection =
+        Object.keys(rowSelection).length !== 0 &&
+        rowSelection.hasOwnProperty(row.id);
       const rowSelectionKeys = Object.keys(rowSelection).filter(
         (id) => rowSelection[id],
       );
@@ -149,7 +151,9 @@ export function Table<T extends { id: string | number }>({
    */
   const moveDownRows = useCallback(
     (row: Row<T>) => {
-      const hasRowSelection = Object.keys(rowSelection).length !== 0;
+      const hasRowSelection =
+        Object.keys(rowSelection).length !== 0 &&
+        rowSelection.hasOwnProperty(row.id);
 
       const rowSelectionKeys = Object.keys(rowSelection).filter(
         (id) => rowSelection[id],
@@ -220,6 +224,7 @@ export function Table<T extends { id: string | number }>({
                     onAction={() => {
                       moveUpSelectedRows(row);
                     }}
+                    isDisabled={row.index === 0}
                   >
                     <Menu.Item.Label>
                       {RowKebabMenuItems.MoveUp}
@@ -230,6 +235,7 @@ export function Table<T extends { id: string | number }>({
                     onAction={() => {
                       moveDownRows(row);
                     }}
+                    isDisabled={row.index === getRowModel().rows.length - 1}
                   >
                     <Menu.Item.Label>
                       {RowKebabMenuItems.MoveDown}
@@ -312,6 +318,7 @@ export function Table<T extends { id: string | number }>({
     getTopRows,
     getCenterRows,
     getBottomRows,
+    getRowModel,
     setColumnOrder: setColumnOrderCallback,
   } = useReactTable<T>({
     data: data,
