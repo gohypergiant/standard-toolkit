@@ -32,7 +32,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
     //     localStorage.theme === "dark" ||
     //       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
     //   );
-    <html lang='en' className='bg-surface-default font-primary dark'>
+    <html
+      lang='en'
+      className='bg-surface-default fg-info-bold font-primary dark'
+    >
       <body className='w-full h-dvh flex flex-col'>
         <DSTheme>
           <Defaults>
