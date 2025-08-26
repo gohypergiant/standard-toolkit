@@ -140,6 +140,7 @@
       "no-statement": "#404040"
     },
     "classification": {
+      "missing": "#0b0b0b",
       "unclass": "#007A33",
       "cui": "#502b85",
       "confidential": "#0033a0",

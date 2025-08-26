@@ -328,7 +328,7 @@ export const designTokens = {
   },
   static: {
     classification: {
-      missing: [239, 241, 242, 1],
+      missing: [11, 11, 11, 1],
       unclass: [0, 122, 51, 1],
       cui: [80, 43, 133, 1],
       confidential: [0, 51, 160, 1],

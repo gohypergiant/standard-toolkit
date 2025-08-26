@@ -24,12 +24,12 @@ export const ClassificationBannerStyles = tv({
       missing:
         "fg-critical-bold bg-classification-missing [&:empty]:before:content-['Missing']",
       unclassified:
-        "fg-primary-bold bg-classification-unclass [&:empty]:before:content-['Unclassified']",
-      cui: "fg-primary-bold bg-classification-cui [&:empty]:before:content-['CUI']",
+        "fg-a11y-on-utility bg-classification-unclass [&:empty]:before:content-['Unclassified']",
+      cui: "fg-a11y-on-utility bg-classification-cui [&:empty]:before:content-['CUI']",
       confidential:
-        "fg-primary-bold bg-classification-confidential [&:empty]:before:content-['Confidential']",
+        "fg-a11y-on-utility bg-classification-confidential [&:empty]:before:content-['Confidential']",
       secret:
-        "fg-primary-bold bg-classification-secret [&:empty]:before:content-['Secret']",
+        "fg-a11y-on-utility bg-classification-secret [&:empty]:before:content-['Secret']",
       'top-secret':
         "fg-inverse-bold bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
       'ts-sci':

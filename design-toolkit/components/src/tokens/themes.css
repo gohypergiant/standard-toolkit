@@ -30,7 +30,7 @@
 @layer theme {
   :root {
     /** Static tokens (same values regardless of theme) **/
-        --classification-missing: var(--primitive-neutral-100, #eff1f2);
+        --classification-missing: var(--primitive-classification-missing, #0b0b0b);
     --classification-unclass: var(--primitive-classification-unclass, #007A33);
     --classification-cui: var(--primitive-classification-cui, #502b85);
     --classification-confidential: var(--primitive-classification-confidential, #0033a0);

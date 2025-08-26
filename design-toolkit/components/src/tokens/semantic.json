@@ -311,7 +311,7 @@
   },
   "static": {
     "classification": {
-      "missing": "--primitive-neutral-100",
+      "missing": "--primitive-classification-missing",
       "unclass": "--primitive-classification-unclass",
       "cui": "--primitive-classification-cui",
       "confidential": "--primitive-classification-confidential",
