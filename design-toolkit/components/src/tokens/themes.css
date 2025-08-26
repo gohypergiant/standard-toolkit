@@ -29,6 +29,23 @@
 
 @layer theme {
   :root {
+    /** Static tokens (same values regardless of theme) **/
+        --classification-missing: var(--primitive-neutral-100, #eff1f2);
+    --classification-unclass: var(--primitive-classification-unclass, #007A33);
+    --classification-cui: var(--primitive-classification-cui, #502b85);
+    --classification-confidential: var(--primitive-classification-confidential, #0033a0);
+    --classification-secret: var(--primitive-classification-secret, #c8102e);
+    --classification-top-secret: var(--primitive-classification-top-secret, #ff8c00);
+    --classification-ts-sci: var(--primitive-classification-ts-sci, #fce83a);
+    --roe-pending: var(--primitive-roe-id-pending, #404040);
+    --roe-friend: var(--primitive-roe-id-friend, #1484f4);
+    --roe-assumed-friend: var(--primitive-roe-id-assumed-friend, #0e8f37);
+    --roe-neutral: var(--primitive-roe-id-neutral, #5b137a);
+    --roe-unknown: var(--primitive-roe-id-unknown, #edda0a);
+    --roe-suspect: var(--primitive-roe-id-suspect, #ffad38);
+    --roe-hostile: var(--primitive-roe-id-hostile, #ff0033);
+    --roe-no-statement: var(--primitive-roe-id-pending, #404040);
+
     /** Dark theme **/
     @variant dark {
           --bg-surface-default: var(--primitive-neutral-900, #151517);
@@ -664,4 +681,168 @@
 
 @utility shadow-elevation-overlay {
  box-shadow: var(--shadow-elevation-overlay); 
+}
+@utility bg-classification-missing {
+  background-color: var(--classification-missing);
+}
+@utility fg-classification-missing {
+  color: var(--classification-missing);
+  --icon-color: var(--classification-missing);
+}
+@utility outline-classification-missing {
+  outline-color: var(--classification-missing);
+}
+
+@utility bg-classification-unclass {
+  background-color: var(--classification-unclass);
+}
+@utility fg-classification-unclass {
+  color: var(--classification-unclass);
+  --icon-color: var(--classification-unclass);
+}
+@utility outline-classification-unclass {
+  outline-color: var(--classification-unclass);
+}
+
+@utility bg-classification-cui {
+  background-color: var(--classification-cui);
+}
+@utility fg-classification-cui {
+  color: var(--classification-cui);
+  --icon-color: var(--classification-cui);
+}
+@utility outline-classification-cui {
+  outline-color: var(--classification-cui);
+}
+
+@utility bg-classification-confidential {
+  background-color: var(--classification-confidential);
+}
+@utility fg-classification-confidential {
+  color: var(--classification-confidential);
+  --icon-color: var(--classification-confidential);
+}
+@utility outline-classification-confidential {
+  outline-color: var(--classification-confidential);
+}
+
+@utility bg-classification-secret {
+  background-color: var(--classification-secret);
+}
+@utility fg-classification-secret {
+  color: var(--classification-secret);
+  --icon-color: var(--classification-secret);
+}
+@utility outline-classification-secret {
+  outline-color: var(--classification-secret);
+}
+
+@utility bg-classification-top-secret {
+  background-color: var(--classification-top-secret);
+}
+@utility fg-classification-top-secret {
+  color: var(--classification-top-secret);
+  --icon-color: var(--classification-top-secret);
+}
+@utility outline-classification-top-secret {
+  outline-color: var(--classification-top-secret);
+}
+
+@utility bg-classification-ts-sci {
+  background-color: var(--classification-ts-sci);
+}
+@utility fg-classification-ts-sci {
+  color: var(--classification-ts-sci);
+  --icon-color: var(--classification-ts-sci);
+}
+@utility outline-classification-ts-sci {
+  outline-color: var(--classification-ts-sci);
+}
+
+@utility bg-roe-pending {
+  background-color: var(--roe-pending);
+}
+@utility fg-roe-pending {
+  color: var(--roe-pending);
+  --icon-color: var(--roe-pending);
+}
+@utility outline-roe-pending {
+  outline-color: var(--roe-pending);
+}
+
+@utility bg-roe-friend {
+  background-color: var(--roe-friend);
+}
+@utility fg-roe-friend {
+  color: var(--roe-friend);
+  --icon-color: var(--roe-friend);
+}
+@utility outline-roe-friend {
+  outline-color: var(--roe-friend);
+}
+
+@utility bg-roe-assumed-friend {
+  background-color: var(--roe-assumed-friend);
+}
+@utility fg-roe-assumed-friend {
+  color: var(--roe-assumed-friend);
+  --icon-color: var(--roe-assumed-friend);
+}
+@utility outline-roe-assumed-friend {
+  outline-color: var(--roe-assumed-friend);
+}
+
+@utility bg-roe-neutral {
+  background-color: var(--roe-neutral);
+}
+@utility fg-roe-neutral {
+  color: var(--roe-neutral);
+  --icon-color: var(--roe-neutral);
+}
+@utility outline-roe-neutral {
+  outline-color: var(--roe-neutral);
+}
+
+@utility bg-roe-unknown {
+  background-color: var(--roe-unknown);
+}
+@utility fg-roe-unknown {
+  color: var(--roe-unknown);
+  --icon-color: var(--roe-unknown);
+}
+@utility outline-roe-unknown {
+  outline-color: var(--roe-unknown);
+}
+
+@utility bg-roe-suspect {
+  background-color: var(--roe-suspect);
+}
+@utility fg-roe-suspect {
+  color: var(--roe-suspect);
+  --icon-color: var(--roe-suspect);
+}
+@utility outline-roe-suspect {
+  outline-color: var(--roe-suspect);
+}
+
+@utility bg-roe-hostile {
+  background-color: var(--roe-hostile);
+}
+@utility fg-roe-hostile {
+  color: var(--roe-hostile);
+  --icon-color: var(--roe-hostile);
+}
+@utility outline-roe-hostile {
+  outline-color: var(--roe-hostile);
+}
+
+@utility bg-roe-no-statement {
+  background-color: var(--roe-no-statement);
+}
+@utility fg-roe-no-statement {
+  color: var(--roe-no-statement);
+  --icon-color: var(--roe-no-statement);
+}
+@utility outline-roe-no-statement {
+  outline-color: var(--roe-no-statement);
 }

@@ -24,24 +24,6 @@
 
 @import './variants/variants.css';
 
-@theme {
-  --color-classification-missing: var(--primitive-neutral-100, #0b0b0b);
-  --color-classification-unclass: var(--primitive-classification-unclass, #007A33);
-  --color-classification-cui: var(--primitive-classification-cui, #502b85);
-  --color-classification-confidential: var(--primitive-classification-confidential, #0033a0);
-  --color-classification-secret: var(--primitive-classification-secret, #c8102e);
-  --color-classification-top-secret: var(--primitive-classification-top-secret, #ff8c00);
-  --color-classification-ts-sci: var(--primitive-classification-ts-sci, #fce83a);
-  --color-roe-id-pending: var(--primitive-roe-id-pending, #404040);
-  --color-roe-id-friend: var(--primitive-roe-id-friend, #1484f4);
-  --color-roe-id-assumed-friend: var(--primitive-roe-id-assumed-friend, #0e8f37);
-  --color-roe-id-neutral: var(--primitive-roe-id-neutral, #5b137a);
-  --color-roe-id-unknown: var(--primitive-roe-id-unknown, #edda0a);
-  --color-roe-id-suspect: var(--primitive-roe-id-suspect, #ffad38);
-  --color-roe-id-hostile: var(--primitive-roe-id-hostile, #ff0033);
-  --color-roe-id-no-statement: var(--primitive-roe-id-pending, #404040);
-}
-
 /**
  * Provides an escalation selector allowing for easier bump in specificity
  * instead of having to target the same level established by a previous style.

@@ -219,10 +219,14 @@ function generateThemes(primitiveConfig, semanticConfig) {
 
   // 2. Semantic colors block (same as before)
   const primitives = flattenTokens(primitiveConfig); // needed for fallbacks
+  const statics = generateSemantics(semanticConfig.static || {}, primitives);
   const dark = generateSemantics(semanticConfig.dark || {}, primitives);
   const light = generateSemantics(semanticConfig.light || {}, primitives);
   const semanticColorsBlock = `@layer theme {
   :root {
+    /** Static tokens (same values regardless of theme) **/
+    ${statics.join('\n')}
+
     /** Dark theme **/
     @variant dark {
       ${dark.join('\n')}
@@ -307,7 +311,22 @@ async function main() {
 export const designTokens = ${JSON.stringify({ ...colorTokens, ...otherTokens }, null, 2)} satisfies ThemeTokens;`,
     );
 
-    const utilities = getTokenNames(semanticConfig.dark)
+    const staticColorUtilities = getTokenNames(semanticConfig.static)
+      .map((cssvar) => {
+        const tokenName = cssvar.replace('--', '');
+        return `@utility bg-${tokenName} {
+  background-color: var(${cssvar});
+}
+@utility fg-${tokenName} {
+  color: var(${cssvar});
+  --icon-color: var(${cssvar});
+}
+@utility outline-${tokenName} {
+  outline-color: var(${cssvar});
+}`;
+      })
+      .join('\n\n');
+    const semanticUtilities = getTokenNames(semanticConfig.dark)
       .map((cssvar) => {
         const tokenName = cssvar.replace('--', '');
         const type = tokenName.split('-').at(0);
@@ -321,7 +340,10 @@ export const designTokens = ${JSON.stringify({ ...colorTokens, ...otherTokens },
 
     // Generate semantic tokens and theme
     const themeTokens = generateThemes(primitiveConfig, semanticConfig);
-    await writeFile('themes.css', [themeTokens, utilities].join('\n'));
+    await writeFile(
+      'themes.css',
+      [themeTokens, staticColorUtilities, semanticUtilities].join('\n'),
+    );
 
     console.log('✅ Design tokens generated successfully!');
   } catch (error) {

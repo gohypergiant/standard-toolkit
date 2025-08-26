@@ -308,5 +308,26 @@
         "overlay": "--shadow-elevation-overlay"
       }
     }
+  },
+  "static": {
+    "classification": {
+      "missing": "--primitive-neutral-100",
+      "unclass": "--primitive-classification-unclass",
+      "cui": "--primitive-classification-cui",
+      "confidential": "--primitive-classification-confidential",
+      "secret": "--primitive-classification-secret",
+      "top-secret": "--primitive-classification-top-secret",
+      "ts-sci": "--primitive-classification-ts-sci"
+    },
+    "roe": {
+      "pending": "--primitive-roe-id-pending",
+      "friend": "--primitive-roe-id-friend",
+      "assumed-friend": "--primitive-roe-id-assumed-friend",
+      "neutral": "--primitive-roe-id-neutral",
+      "unknown": "--primitive-roe-id-unknown",
+      "suspect": "--primitive-roe-id-suspect",
+      "hostile": "--primitive-roe-id-hostile",
+      "no-statement": "--primitive-roe-id-pending"
+    }
   }
 }

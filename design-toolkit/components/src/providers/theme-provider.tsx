@@ -13,7 +13,11 @@
 'use client';
 
 import 'client-only';
-import type { ColorTokens, ThemeTokens } from '@/tokens/types';
+import type {
+  SemanticColorTokens,
+  StaticColorTokens,
+  ThemeTokens,
+} from '@/tokens/types';
 import { merge } from 'lodash';
 import {
   type PropsWithChildren,
@@ -27,18 +31,27 @@ import type { PartialDeep } from 'type-fest';
 import { designTokens } from '../tokens/tokens';
 
 type Mode = 'dark' | 'light';
+type ContextColorTokens = SemanticColorTokens & StaticColorTokens;
 
-type UseThemeContext = {
+type ThemeContextValue = {
   mode: Mode;
-  tokens: ColorTokens;
+  tokens: ContextColorTokens;
   toggleMode: (mode: Mode) => void;
-} | null;
-const ThemeContext = createContext<UseThemeContext>(null);
+};
+/** provide default context value to avoid optional chaining and null checks on the client */
+const defaultContextValue: ThemeContextValue = {
+  mode: 'dark',
+  tokens: { ...designTokens.dark, ...designTokens.static },
+  toggleMode: (_mode) => {
+    // no-op
+  },
+};
+const ThemeContext = createContext<ThemeContextValue>(defaultContextValue);
 
 type ThemeProviderProps = PropsWithChildren & {
   defaultMode?: Mode;
   onChange?: (mode: Mode) => void;
-  /** override existing color values in the theme */
+  /** override existing values in the theme */
   overrides?: PartialDeep<Pick<ThemeTokens, Mode>>;
 };
 export function ThemeProvider({
@@ -57,8 +70,12 @@ export function ThemeProvider({
     }
   }, [mode]);
 
-  const tokens: ColorTokens = useMemo(() => {
-    return merge(designTokens, overrides)[mode];
+  const tokens: ContextColorTokens = useMemo(() => {
+    const tokensWithOverrides = merge(designTokens, overrides);
+    return {
+      ...tokensWithOverrides[mode],
+      ...tokensWithOverrides.static,
+    };
   }, [mode, overrides]);
 
   return (

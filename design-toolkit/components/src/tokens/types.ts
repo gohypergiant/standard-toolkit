@@ -13,7 +13,29 @@
 // biome-ignore lint/style/useNamingConvention: acronym
 type RGBA = [number, number, number, number];
 
-export type ColorTokens = {
+export type StaticColorTokens = {
+  classification: {
+    missing: RGBA;
+    unclass: RGBA;
+    cui: RGBA;
+    confidential: RGBA;
+    secret: RGBA;
+    'top-secret': RGBA;
+    'ts-sci': RGBA;
+  };
+  roe: {
+    pending: RGBA;
+    friend: RGBA;
+    'assumed-friend': RGBA;
+    neutral: RGBA;
+    unknown: RGBA;
+    suspect: RGBA;
+    hostile: RGBA;
+    'no-statement': RGBA;
+  };
+};
+
+export type SemanticColorTokens = {
   bg: {
     surface: {
       default: RGBA;
@@ -170,8 +192,9 @@ export type ColorTokens = {
 };
 
 export type ThemeTokens = {
-  dark: ColorTokens;
-  light: ColorTokens;
+  static: StaticColorTokens;
+  dark: SemanticColorTokens;
+  light: SemanticColorTokens;
   typography: {
     header: {
       xxl: {

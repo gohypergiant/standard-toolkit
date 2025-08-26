@@ -326,6 +326,27 @@ export const designTokens = {
       },
     },
   },
+  static: {
+    classification: {
+      missing: [239, 241, 242, 1],
+      unclass: [0, 122, 51, 1],
+      cui: [80, 43, 133, 1],
+      confidential: [0, 51, 160, 1],
+      secret: [200, 16, 46, 1],
+      'top-secret': [255, 140, 0, 1],
+      'ts-sci': [252, 232, 58, 1],
+    },
+    roe: {
+      pending: [64, 64, 64, 1],
+      friend: [20, 132, 244, 1],
+      'assumed-friend': [14, 143, 55, 1],
+      neutral: [91, 19, 122, 1],
+      unknown: [237, 218, 10, 1],
+      suspect: [255, 173, 56, 1],
+      hostile: [255, 0, 51, 1],
+      'no-statement': [64, 64, 64, 1],
+    },
+  },
   typography: {
     header: {
       xxl: {
