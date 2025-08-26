@@ -17,12 +17,11 @@ import { Brightness } from '@accelint/icons';
 import { useCallback } from 'react';
 
 export function Nav() {
-  const theme = useTheme();
-  const mode = theme?.mode ?? 'dark';
+  const { mode, toggleMode } = useTheme();
 
-  const toggleMode = useCallback(() => {
-    theme?.toggleMode(mode === 'light' ? 'dark' : 'light');
-  }, [theme, mode]);
+  const handleModeToggle = useCallback(() => {
+    toggleMode(mode === 'light' ? 'dark' : 'light');
+  }, [mode, toggleMode]);
 
   return (
     <div className='fg-info-bold bg-surface-muted w-full flex items-center justify-between p-m'>
@@ -55,7 +54,7 @@ export function Nav() {
       <div>
         <Button
           variant='icon'
-          onPress={toggleMode}
+          onPress={handleModeToggle}
           className='sudo:fg-primary-bold'
         >
           Theme toggle

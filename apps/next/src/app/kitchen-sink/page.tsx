@@ -210,7 +210,7 @@ export default function KitchenSink() {
               <div
                 className='size-xxl rounded-medium'
                 style={{
-                  backgroundColor: `rgba(${theme?.tokens.bg.accent.primary.bold.join(',')})`,
+                  backgroundColor: `rgba(${theme.tokens.bg.accent.primary.bold.join(',')})`,
                 }}
               />
             </div>
