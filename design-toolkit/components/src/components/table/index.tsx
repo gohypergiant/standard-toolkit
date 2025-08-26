@@ -109,8 +109,6 @@ export function Table<T extends { id: string | number }>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>();
 
-  const [activeRow, setActiveRow] = useState<string | number | null>(null);
-
   /**
    * moveUpSelectedRows moves the selected rows up in the table.
    * It finds the first selected row, determines its index,
@@ -243,14 +241,7 @@ export function Table<T extends { id: string | number }>({
         );
       },
     }),
-    [
-      dataIds,
-      moveBefore,
-      moveAfter,
-      moveUpSelectedRows,
-      moveDownRows,
-      persistRowKebabMenu,
-    ],
+    [moveUpSelectedRows, moveDownRows, persistRowKebabMenu, enableRowActions],
   );
 
   /**
@@ -309,7 +300,7 @@ export function Table<T extends { id: string | number }>({
       },
       ...columns,
     ];
-  }, [showCheckbox, columnsProp, kebabPosition, actionColumn]);
+  }, [showCheckbox, columnsProp, kebabPosition, actionColumn, persistNumerals]);
 
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
     columns.map((col) => col.id as string),
