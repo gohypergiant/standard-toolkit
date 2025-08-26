@@ -14,13 +14,13 @@ import { Icon } from '@/components/icon';
 import { Tabs } from '@/components/tabs/index';
 import { Add, Check, Group } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
+import { TabListStylesDefaults } from './styles';
 
 const meta: Meta<typeof Tabs.List> = {
   title: 'Components/Tabs/Tabs.List',
   component: Tabs.List,
   args: {
-    variant: 'default',
-    drawer: undefined,
+    variant: TabListStylesDefaults.variant,
   },
   argTypes: {
     variant: {
@@ -30,11 +30,6 @@ const meta: Meta<typeof Tabs.List> = {
         defaultValue: { summary: 'default' },
         readonly: true,
       },
-    },
-    drawer: {
-      control: 'select',
-      options: [undefined, 'left', 'right', 'top', 'bottom'],
-      table: { defaultValue: { summary: 'undefined' } },
     },
   },
 };
