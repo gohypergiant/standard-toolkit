@@ -63,6 +63,11 @@ export function useTreeActions<T>({
     cache.rebuild(nodes);
   }, [nodes]);
 
+  /** GET NODE **/
+  function getNode(key: Key) {
+    return cache.getNode(key);
+  }
+
   /** INSERT NODES **/
   function insertAfter(
     target: Key | null,
@@ -221,7 +226,7 @@ export function useTreeActions<T>({
   }
 
   return {
-    getNode: cache.getNode,
+    getNode,
     insertAfter,
     insertBefore,
     insertInto,
