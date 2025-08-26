@@ -79,16 +79,20 @@ function _parseParameters({
 } {
   const cwd = process.cwd();
 
-  const outputArgResolved =
-    typeof outputArg === 'string' && outputArg !== ''
-      ? path.resolve(outputArg)
-      : path.join(cwd, 'atlas');
+  const glob = globArg ?? globOpt ?? '';
 
   const inputPath =
     typeof inOpt === 'string' && inOpt !== '' ? path.relative(cwd, inOpt) : '';
 
-  const outputPath = outOpt ?? outputArgResolved;
-  const glob = globArg ?? globOpt ?? '';
+  const outArgResolved =
+    typeof outputArg === 'string' && outputArg !== ''
+      ? path.resolve(outputArg)
+      : '';
+
+  const outDefault = path.relative(cwd, path.join(cwd, 'atlas'));
+
+  const outputPath =
+    [outOpt, outArgResolved, outDefault].filter((x) => x !== '').shift() || '';
 
   return { inputPath, outputPath, glob };
 }
@@ -114,14 +118,22 @@ export async function handleAction(
 
   validateInput(glob, inputPath);
 
+  console.log('');
   if (target === 'SPRITESHEET') {
-    console.log(`Using ${ansis.bold.cyan(cmd)} to generate spritesheet`);
+    console.log(`- Using ${ansis.bold.cyan(cmd)} to generate spritesheet`);
   } else {
-    console.log(`Using ${ansis.bold.cyan(cmd)} to generate react files`);
+    console.log(`- Using ${ansis.bold.cyan(cmd)} to generate react files`);
   }
 
-  console.log(`Pulling from ${ansis.italic.cyan(glob ?? inputPath)}`);
-  console.log(`Saving to ${ansis.italic.cyan(`${outputPath}.*`)}`);
+  if (glob) {
+    console.log(`- Pulling from '${ansis.italic.cyan(glob)}'`);
+  } else {
+    console.log(
+      `- Scanning for *.svg files in '${ansis.italic.cyan(inputPath)}'`,
+    );
+  }
+
+  console.log(`- Saving to ${ansis.italic.cyan(`${outputPath}.*`)}\n`);
 
   const tmpDir = await makeTempDirectory();
   const findSpriteResult = await find(glob, inputPath, cwd, tmpDir);

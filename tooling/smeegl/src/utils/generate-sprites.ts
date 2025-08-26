@@ -37,7 +37,7 @@ export async function generateSprites(
     const outFolder = arr.join(path.sep);
 
     // Ensure output directory exists
-    if (!fs.existsSync(outFolder)) {
+    if (outFolder && !fs.existsSync(outFolder)) {
       fs.mkdirSync(outFolder, { recursive: true });
     }
 
