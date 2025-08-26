@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@accelint/bus": "workspace:*",
+    "@accelint/core": "workspace:*",
     "@accelint/design-system": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/icons": "workspace:*",
