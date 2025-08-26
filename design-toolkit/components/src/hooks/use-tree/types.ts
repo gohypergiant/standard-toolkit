@@ -87,20 +87,33 @@ export type TreeData<T> = TreeNode<T>[];
 export type TreeNodeBase<T> = {
   /** A unique key for the tree node. */
   key: Key;
+
   /** Label string **/
   label: string;
+
+  /** Application specific values in node **/
   values?: T;
+
+  /** Whether node has interactive capability **/
   isDisabled?: boolean;
+
+  /** Whether node children are rendered **/
   isExpanded?: boolean;
+
+  /** Node selection marker **/
   isSelected?: boolean;
-  // TODO: Update to be isVisibleToggle & isVisibleComputed
-  isViewable?: boolean; // Toggle state
-  isVisible?: boolean; // Computed state based on ancestors and self viewable state
+
+  /** Whether node visibility is marked on or off **/
+  isVisible?: boolean;
+
+  /** Computed actual visibility based on ancestors and self visibility **/
+  isVisibleComputed?: boolean; //
 };
 
 export type TreeNode<T> = TreeNodeBase<T> & {
   /** The key of the parent node. */
   parentKey?: Key | null;
+
   /** Children of the tree node. */
   children?: TreeNode<T>[];
 };
@@ -110,8 +123,7 @@ export type UseTreeActionsOptions<T> = {
 };
 
 /**
- * Set of actions returned from useTreeActions
- * that are a stateless collection of transform functions
+ * Stateless collection of transform actions to simplify tree operations
  */
 export type TreeActions<T> = {
   /**

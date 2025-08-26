@@ -933,7 +933,7 @@ describe('useTreeActions', () => {
 
   /** VISIBILITY **/
   describe('visibility actions', () => {
-    it('should update node visibility with children', () => {
+    it('should compute root visibility change', () => {
       const { result: hook } = setup({
         nodes: [
           {
@@ -949,131 +949,164 @@ describe('useTreeActions', () => {
                 children: [
                   {
                     ...nodeDefaults,
-                    key: 'four',
+                    key: 'three',
                     parentKey: 'two',
-                    label: 'Four',
+                    label: 'Three',
                   },
                 ],
-              },
-              {
-                ...nodeDefaults,
-                key: 'three',
-                parentKey: 'one',
-                label: 'Three',
               },
             ],
           },
         ],
       });
+
       expect(hook.current.onVisibilityChange(new Set(['one']))).toStrictEqual([
         {
           ...nodeDefaults,
           key: 'one',
           label: 'One',
           isVisible: true,
-          isViewable: true,
+          isVisibleComputed: true,
           children: [
             {
               ...nodeDefaults,
               key: 'two',
               parentKey: 'one',
               label: 'Two',
-              isViewable: true,
+              isVisible: false,
+              isVisibleComputed: false,
               children: [
                 {
                   ...nodeDefaults,
-                  key: 'four',
+                  key: 'three',
                   parentKey: 'two',
-                  label: 'Four',
-                  isViewable: true,
+                  label: 'Three',
+                  isVisible: false,
+                  isVisibleComputed: false,
                 },
               ],
-            },
-            {
-              ...nodeDefaults,
-              key: 'three',
-              parentKey: 'one',
-              label: 'Three',
-              isViewable: true,
             },
           ],
         },
       ]);
     });
 
-    it('should set children not viewable when parent is not visible', () => {
+    it('should compute children visibility', () => {
       const { result: hook } = setup({
         nodes: [
           {
             ...nodeDefaults,
             key: 'one',
             label: 'One',
-            isVisible: true,
-            isViewable: true,
             children: [
               {
                 ...nodeDefaults,
                 key: 'two',
                 parentKey: 'one',
                 label: 'Two',
-                isViewable: true,
-                isVisible: true,
                 children: [
                   {
                     ...nodeDefaults,
-                    key: 'four',
+                    key: 'three',
                     parentKey: 'two',
-                    label: 'Four',
-                    isViewable: true,
-                    isVisible: true,
+                    label: 'Three',
                   },
                 ],
-              },
-              {
-                ...nodeDefaults,
-                key: 'three',
-                parentKey: 'one',
-                label: 'Three',
-                isViewable: true,
-                isVisible: false,
               },
             ],
           },
         ],
       });
-      expect(hook.current.onVisibilityChange(new Set(['one']))).toStrictEqual([
+
+      // change grandparent on
+      expect(
+        hook.current.onVisibilityChange(new Set(['one', 'two'])),
+      ).toStrictEqual([
         {
           ...nodeDefaults,
           key: 'one',
           label: 'One',
-          isVisible: false,
-          isViewable: false,
+          isVisible: true,
+          isVisibleComputed: true,
           children: [
             {
               ...nodeDefaults,
               key: 'two',
               parentKey: 'one',
               label: 'Two',
-              isViewable: false,
               isVisible: true,
+              isVisibleComputed: true,
               children: [
                 {
                   ...nodeDefaults,
-                  key: 'four',
+                  key: 'three',
                   parentKey: 'two',
-                  label: 'Four',
-                  isViewable: false,
-                  isVisible: true,
+                  label: 'Three',
+                  isVisible: false,
+                  isVisibleComputed: false,
                 },
               ],
             },
+          ],
+        },
+      ]);
+    });
+
+    it('should compute children visibility', () => {
+      const { result: hook } = setup({
+        nodes: [
+          {
+            ...nodeDefaults,
+            key: 'one',
+            label: 'One',
+            children: [
+              {
+                ...nodeDefaults,
+                key: 'two',
+                parentKey: 'one',
+                label: 'Two',
+                children: [
+                  {
+                    ...nodeDefaults,
+                    key: 'three',
+                    parentKey: 'two',
+                    label: 'Three',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      // change grandparent on
+      expect(
+        hook.current.onVisibilityChange(new Set(['one', 'three'])),
+      ).toStrictEqual([
+        {
+          ...nodeDefaults,
+          key: 'one',
+          label: 'One',
+          isVisible: true,
+          isVisibleComputed: true,
+          children: [
             {
               ...nodeDefaults,
-              key: 'three',
+              key: 'two',
               parentKey: 'one',
-              label: 'Three',
-              isViewable: false,
+              label: 'Two',
               isVisible: false,
+              isVisibleComputed: false,
+              children: [
+                {
+                  ...nodeDefaults,
+                  key: 'three',
+                  parentKey: 'two',
+                  label: 'Three',
+                  isVisible: true,
+                  isVisibleComputed: false,
+                },
+              ],
             },
           ],
         },
@@ -1081,3 +1114,20 @@ describe('useTreeActions', () => {
     });
   });
 });
+
+// // change parent on
+// expect(hook.current.onVisibilityChange(new Set([]))).toStrictEqual(
+//   visibilityTree,
+// );
+// // change parent off
+// expect(hook.current.onVisibilityChange(new Set([]))).toStrictEqual(
+//   visibilityTree,
+// );
+// // change grandchild on
+// expect(hook.current.onVisibilityChange(new Set([]))).toStrictEqual(
+//   visibilityTree,
+// );
+// // change grandchild off
+// expect(hook.current.onVisibilityChange(new Set([]))).toStrictEqual(
+//   visibilityTree,
+// );

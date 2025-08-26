@@ -64,7 +64,6 @@ export const TreeContext = createContext<TreeContextValue>({
   disabledKeys: new Set(),
   expandedKeys: new Set(),
   selectedKeys: new Set(),
-  viewableKeys: new Set(),
   visibleKeys: new Set(),
   showRuleLines: true,
   showVisibility: false,
@@ -112,7 +111,6 @@ export function Tree<T>({
   showVisibility = true,
   selectionMode = 'multiple',
   variant = TreeStylesDefaults.variant,
-  viewableKeys: viewableKeysProp,
   visibleKeys: visibleKeysProp,
   onVisibilityChange,
   ...rest
@@ -122,7 +120,6 @@ export function Tree<T>({
     (disabledKeysProp ||
       expandedKeysProp ||
       selectedKeysProp ||
-      viewableKeysProp ||
       visibleKeysProp)
   ) {
     throw new Error(
@@ -144,58 +141,45 @@ export function Tree<T>({
   });
   const cache = useMemo(() => (items ? new Cache([...items]) : null), [items]);
   const nodes = useMemo(() => cache?.getAllNodes(), [cache]);
-  const {
-    disabledKeys,
-    expandedKeys,
-    selectedKeys,
-    viewableKeys,
-    visibleKeys,
-  } = useMemo(() => {
-    const acc = {
-      disabledKeys: disabledKeysProp ?? new Set<Key>(),
-      expandedKeys: expandedKeysProp ?? new Set<Key>(), // TODO: shouldn't be passed into context if static and no prop provided (want the tree to default to open / expanded=true)
-      selectedKeys: selectedKeysProp ?? new Set<Key>(),
-      viewableKeys: viewableKeysProp ?? new Set<Key>(), // TODO: these shouldn't be passed into context when static
-      visibleKeys: visibleKeysProp ?? new Set<Key>(), //
-    };
+  const { disabledKeys, expandedKeys, selectedKeys, visibleKeys } =
+    useMemo(() => {
+      const acc = {
+        disabledKeys: disabledKeysProp ?? new Set<Key>(),
+        expandedKeys: expandedKeysProp ?? new Set<Key>(), // TODO: shouldn't be passed into context if static and no prop provided (want the tree to default to open / expanded=true)
+        selectedKeys: selectedKeysProp ?? new Set<Key>(),
+        visibleKeys: visibleKeysProp ?? new Set<Key>(), //
+      };
 
-    if (!nodes) {
-      return acc;
-    }
-
-    return nodes.reduce(
-      (
-        acc,
-        { key, isDisabled, isExpanded, isSelected, isViewable, isVisible },
-      ) => {
-        if (isDisabled) {
-          acc.disabledKeys.add(key);
-        }
-        if (isExpanded) {
-          acc.expandedKeys.add(key);
-        }
-        if (isSelected) {
-          acc.selectedKeys.add(key);
-        }
-        if (isViewable) {
-          acc.viewableKeys.add(key);
-        }
-        if (isVisible) {
-          acc.visibleKeys.add(key);
-        }
-
+      if (!nodes) {
         return acc;
-      },
-      acc,
-    );
-  }, [
-    nodes,
-    disabledKeysProp,
-    expandedKeysProp,
-    selectedKeysProp,
-    viewableKeysProp,
-    visibleKeysProp,
-  ]);
+      }
+
+      return nodes.reduce(
+        (acc, { key, isDisabled, isExpanded, isSelected, isVisible }) => {
+          if (isDisabled) {
+            acc.disabledKeys.add(key);
+          }
+          if (isExpanded) {
+            acc.expandedKeys.add(key);
+          }
+          if (isSelected) {
+            acc.selectedKeys.add(key);
+          }
+          if (isVisible) {
+            acc.visibleKeys.add(key);
+          }
+
+          return acc;
+        },
+        acc,
+      );
+    }, [
+      nodes,
+      disabledKeysProp,
+      expandedKeysProp,
+      selectedKeysProp,
+      visibleKeysProp,
+    ]);
 
   return (
     <TreeContext.Provider
@@ -206,7 +190,6 @@ export function Tree<T>({
         showRuleLines,
         showVisibility,
         variant,
-        viewableKeys,
         visibleKeys,
         isStatic: typeof children !== 'function',
         onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
@@ -275,7 +258,7 @@ function ItemContent({ children }: TreeItemContentProps) {
         } = renderProps;
 
         // const me = state.collection.getItem(id);
-        // const parent = state.selectionManager.getItem(me?.parentKey) // Will need to be recurive to get all ancestors
+        // const parent = state.selectionManager.getItem(me?.parentKey) // Will need to be recursive to get all ancestors
         // const isVisible = [me, ...parents].every((key) => viewableKeys.has(key));
         // This calculation is only neceesary when rendered as a static Tree
 

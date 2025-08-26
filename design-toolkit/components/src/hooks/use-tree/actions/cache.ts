@@ -52,8 +52,8 @@ export class Cache<T> {
         isDisabled: false,
         isExpanded: false,
         isSelected: false,
-        isViewable: false,
         isVisible: false,
+        isVisibleComputed: false,
         ...rest,
         parentKey,
         ...(children ? { children: children.map((child) => child.key) } : {}),
@@ -70,6 +70,7 @@ export class Cache<T> {
       this.cache = cache;
     }
 
+    this.deriveVisibility();
     return cache;
   }
 
@@ -172,6 +173,32 @@ export class Cache<T> {
     }
 
     return { parentKey, index };
+  }
+
+  protected traverse(key: Key) {
+    const node = this.get(key);
+
+    this.cache.lookup.set(key, {
+      ...node,
+      isVisibleComputed: this.calculateVisibility(key),
+    });
+
+    node.children?.map((child) => this.traverse(child));
+  }
+
+  protected calculateVisibility(key: Key) {
+    let current = this.get(key);
+    const ancestry = [current];
+
+    while (current.parentKey) {
+      const parent = this.get(current.parentKey);
+      if (parent) {
+        ancestry.push(parent);
+      }
+      current = parent;
+    }
+
+    return ancestry.every((n) => n.isVisible);
   }
 
   /**
@@ -277,25 +304,24 @@ export class Cache<T> {
     const { parentKey, index } = this.parentOrSibling(target, position);
     const idx = index + (position === 'before' ? 0 : 1);
 
-    nodes.map((node, i) => this.insert(parentKey, node, idx + i));
+    nodes.map((node, i) => this.insertNode(parentKey, node, idx + i));
   }
 
-  // TODO: Rename methods to be consistent (include Node(s) or Key(s))
-  insert(parentKey: Key | null, node: TreeNode<T>, idx: number) {
+  insertNode(parentKey: Key | null, node: TreeNode<T>, idx: number) {
     const { children, ...rest } = node;
 
     this.set(node.key, {
       isDisabled: false,
       isExpanded: false,
       isSelected: false,
-      isViewable: false,
       isVisible: false,
+      isVisibleComputed: false,
       ...rest,
       parentKey,
       ...(children ? { children: children.map((child) => child.key) } : {}),
     });
 
-    node.children?.map((child, i) => this.insert(node.key, child, i));
+    node.children?.map((child, i) => this.insertNode(node.key, child, i));
 
     parentKey === null
       ? this.addToRoot(node.key, idx)
@@ -306,10 +332,10 @@ export class Cache<T> {
     const { parentKey, index } = this.parentOrSibling(target, position);
     const idx = index + (position === 'before' ? 0 : 1);
 
-    Array.from(nodes).map((key, i) => this.move(parentKey, key, idx + i));
+    Array.from(nodes).map((key, i) => this.moveNode(parentKey, key, idx + i));
   }
 
-  move(parentKey: Key | null, key: Key, idx: number) {
+  moveNode(parentKey: Key | null, key: Key, idx: number) {
     const node = this.get(key);
 
     // remove from previous parent
@@ -323,18 +349,7 @@ export class Cache<T> {
       : this.addToRoot(key, idx);
   }
 
-  // TODO: This shouldn't update children's viewable state but does need to trigger the tree recompute for visible state
-  // Visibility computed state is based on a every ancestor + self is viewable (same logic inside TreeItemContext)
-  setViewable(key: Key, state: boolean) {
-    const node = this.cache.lookup.get(key);
-
-    if (node) {
-      this.set(key, {
-        ...node,
-        isViewable: state,
-      });
-
-      node.children?.map((key) => this.setViewable(key, state));
-    }
+  deriveVisibility() {
+    return this.cache.roots.map((key) => this.traverse(key));
   }
 }

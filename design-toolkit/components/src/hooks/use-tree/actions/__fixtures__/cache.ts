@@ -24,8 +24,8 @@ export const nodeDefaults = {
   isDisabled: false,
   isExpanded: false,
   isSelected: false,
-  isViewable: false,
   isVisible: false,
+  isVisibleComputed: false,
 };
 
 export const defaultTree: TreeNode<Values>[] = [
@@ -50,7 +50,7 @@ export const defaultTree: TreeNode<Values>[] = [
   },
 ];
 
-// Helper function to create a more complex tree for testing moveNodes
+// Helper to create a more complex tree for testing moveNodes
 export const complexTree = [
   {
     ...nodeDefaults,

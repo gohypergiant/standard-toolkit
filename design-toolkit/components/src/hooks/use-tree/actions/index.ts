@@ -89,7 +89,7 @@ export function useTreeActions<T>({
 
   function insertInto(target: Key | null, nodes: TreeNode<T>[]): TreeNode<T>[] {
     for (const node of nodes) {
-      cache.insert(target, node, 0);
+      cache.insertNode(target, node, 0);
     }
 
     return cache.toTree();
@@ -110,7 +110,7 @@ export function useTreeActions<T>({
 
   function moveInto(target: Key | null, keys: Set<Key>): TreeNode<T>[] {
     for (const key of keys) {
-      cache.move(target, key, 0);
+      cache.moveNode(target, key, 0);
     }
 
     return cache.toTree();
@@ -194,22 +194,17 @@ export function useTreeActions<T>({
   }
 
   /** VISIBILITY **/
-  // TODO: Validate heirarchy logic
   function onVisibilityChange(keys: Set<Key>): TreeData<T> {
-    for (const key of keys.values()) {
-      const node = cache.getNode(key);
-      const isVisible = !node.isVisible;
+    hideAll();
 
-      // update visibility for nodes
+    for (const key of keys) {
+      const node = cache.getNode(key);
       cache.setNode(node.key, {
         ...node,
-        isVisible,
-        isViewable: isVisible,
+        isVisible: true,
       });
-
-      node.children?.map((child) => cache.setViewable(child.key, isVisible));
     }
-
+    cache.deriveVisibility();
     return cache.toTree();
   }
 
