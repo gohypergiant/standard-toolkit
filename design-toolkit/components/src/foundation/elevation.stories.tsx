@@ -53,7 +53,6 @@ const ElevationDisplay = (elevation: ElevationInfo) => (
 );
 
 export const Elevation: Story = {
-  globals: { backgrounds: { value: '#222222' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>

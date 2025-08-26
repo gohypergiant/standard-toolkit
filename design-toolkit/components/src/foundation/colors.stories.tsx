@@ -73,7 +73,7 @@ const BorderColorDisplay = (color: ColorInfo) => {
 };
 
 export const BackgroundDark: Story = {
-  globals: { backgrounds: { value: '#151517' }, theme: 'dark' },
+  globals: { theme: 'dark' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -99,7 +99,7 @@ export const BackgroundDark: Story = {
 };
 
 export const BackgroundLight: Story = {
-  globals: { backgrounds: { value: '#eff1f2' }, theme: 'light' },
+  globals: { theme: 'light' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -125,7 +125,7 @@ export const BackgroundLight: Story = {
 };
 
 export const ForegroundDark: Story = {
-  globals: { backgrounds: { value: '#151517' }, theme: 'dark' },
+  globals: { theme: 'dark' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -153,7 +153,7 @@ export const ForegroundDark: Story = {
 };
 
 export const ForegroundLight: Story = {
-  globals: { backgrounds: { value: '#eff1f2' }, theme: 'light' },
+  globals: { theme: 'light' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -181,7 +181,7 @@ export const ForegroundLight: Story = {
 };
 
 export const BorderDark: Story = {
-  globals: { backgrounds: { value: '#151517' }, theme: 'dark' },
+  globals: { theme: 'dark' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -206,7 +206,7 @@ export const BorderDark: Story = {
 };
 
 export const BorderLight: Story = {
-  globals: { backgrounds: { value: '#eff1f2' }, theme: 'light' },
+  globals: { theme: 'light' },
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>

@@ -13,7 +13,7 @@
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { DocsContainer } from '@storybook/blocks';
 import type { Preview, ReactRenderer } from '@storybook/react';
-import { themes } from '@storybook/theming';
+import { type ThemeVars, themes } from '@storybook/theming';
 import { createElement } from 'react';
 import { Docs } from './docs';
 import '../src/index.css';
@@ -22,12 +22,22 @@ const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on.*' },
     docs: {
+      // biome-ignore lint/suspicious/noExplicitAny: this is the sb type
       container: (props: any) => {
-        const el = document.querySelector('html');
+        const rootEl = document.querySelector('html');
         const sbTheme = props?.context.store.userGlobals.globals.theme;
-        const theme = sbTheme === 'dark' ? themes.dark : themes.light;
-        // biome-ignore lint/style/noNonNullAssertion: <explanation>
-        el!.dataset.theme = sbTheme;
+
+        let theme: ThemeVars;
+        if (sbTheme === 'light') {
+          theme = themes.light;
+          rootEl?.classList.remove('dark');
+          rootEl?.classList.add('light');
+        } else {
+          theme = themes.dark;
+          rootEl?.classList.remove('light');
+          rootEl?.classList.add('dark');
+        }
+
         const newProps = { ...props, theme };
         return createElement(DocsContainer, newProps);
       },
