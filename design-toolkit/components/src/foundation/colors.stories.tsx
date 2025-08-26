@@ -160,7 +160,7 @@ export const Foreground: Story = {
   ),
 };
 
-export const OutlineDark: Story = {
+export const Outline: Story = {
   render: (_, { globals }) => (
     <div key={globals.theme} className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
