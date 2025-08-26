@@ -214,6 +214,7 @@ export function Table<T extends { id: string | number }>({
                         : RowKebabMenuItems.Pin}
                     </Menu.Item.Label>
                   </Menu.Item>
+                  <Menu.Separator />
                   <Menu.Item
                     classNames={{ item: menuItem() }}
                     onAction={() => {
@@ -546,7 +547,9 @@ export function Table<T extends { id: string | number }>({
             {getTopRows().map((row) => (
               <TableRow
                 key={row.id}
-                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                {...(row.getIsSelected()
+                  ? { 'data-selected': '' }
+                  : { 'not-selected': 'true' })}
                 data-pinned={row.getIsPinned()}
               >
                 {row.getVisibleCells().map((cell) =>
@@ -561,7 +564,9 @@ export function Table<T extends { id: string | number }>({
             {getCenterRows().map((row) => (
               <TableRow
                 key={row.id}
-                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                {...(row.getIsSelected()
+                  ? { 'data-selected': '' }
+                  : { 'not-selected': 'true' })}
                 data-pinned={row.getIsPinned()}
               >
                 {row
@@ -582,7 +587,9 @@ export function Table<T extends { id: string | number }>({
             {getBottomRows().map((row) => (
               <TableRow
                 key={row.id}
-                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                {...(row.getIsSelected()
+                  ? { 'data-selected': '' }
+                  : { 'not-selected': 'true' })}
                 data-pinned={row.getIsPinned()}
               >
                 {row

@@ -98,8 +98,8 @@ export const rowStyles = tv({
     'selected:bg-highlight-subtle',
     'selected:border-x-highlight-bold',
     /** Ensure border is applied to first and last selected rows */
-    'has-[+[data-selected="true"]]:not-selected:border-b-highlight-bold',
-    'has-[+[data-selected="false"]]:selected:border-b-highlight-bold',
+    'has-[+[data-selected]]:not-selected:border-b-highlight-bold',
+    'has-[+[not-selected="true"]]:selected:border-b-highlight-bold',
     'group-not-selected/tbody:first-of-type:border-t-static-light',
     'selected:first-of-type:border-t-highlight-bold',
     'selected:last-of-type:border-b-highlight-bold',
