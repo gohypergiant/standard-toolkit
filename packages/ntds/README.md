@@ -17,7 +17,7 @@ This package contains two sets of output: a spritesheet for icons for the CBC2 C
 The first group is the set of masked icons that are used solely in the COP. These reside in [./icons/masked](./icons/masked). Since they will only be used as part of the deckGL rendering, these are combined into a spritesheet under [./dist/masked](./dist/masked/).
 
 <div style='display: block; margin: auto; width:35%'>
-  <img src='./src/masked/masked.png' />
+  <img src='./src/masked.png' />
 </div>
 
 ### React SVG Core Components

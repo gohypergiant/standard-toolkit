@@ -21,9 +21,11 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsup",
+    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsup && pnpm copy",
     "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
-    "build:icons:masked": "smeegl --in ./icons/masked --out ./src/masked/masked --crc DEC --target SPRITESHEET",
+    "build:icons:masked": "smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
+    "copy": "pnpm copy:spritesheets",
+    "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
     "license": "pnpm zx ../../scripts/license.mjs --files src",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
