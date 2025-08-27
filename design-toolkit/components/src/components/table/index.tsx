@@ -118,7 +118,7 @@ export function Table<T extends { id: string | number }>({
     (row: Row<T>) => {
       const hasRowSelection =
         Object.keys(rowSelection).length !== 0 &&
-        rowSelection.hasOwnProperty(row.id);
+        Object.hasOwn(rowSelection, row.id);
       const rowSelectionKeys = Object.keys(rowSelection).filter(
         (id) => rowSelection[id],
       );
@@ -153,7 +153,7 @@ export function Table<T extends { id: string | number }>({
     (row: Row<T>) => {
       const hasRowSelection =
         Object.keys(rowSelection).length !== 0 &&
-        rowSelection.hasOwnProperty(row.id);
+        Object.hasOwn(rowSelection, row.id);
 
       const rowSelectionKeys = Object.keys(rowSelection).filter(
         (id) => rowSelection[id],
