@@ -13,170 +13,195 @@
 
 import path from 'node:path';
 import ansis from 'ansis';
-import { Command } from 'commander';
+import { Argument, Command, Option } from 'commander';
+
 import ora from 'ora';
-import { Result } from 'true-myth';
-import { cleanUpTempDirectory } from './utils/clean-up-temp-directory.js';
+import { buildReactFiles } from './build-react-files.js';
+import { buildSpritesheet } from './build-spritesheet.js';
 import { findSprites } from './utils/find-sprites.js';
-import { gatherSprites } from './utils/gather-sprites.js';
-import { generateConstantsFile } from './utils/generate-constants-file.js';
-import { generateSprites } from './utils/generate-sprites.js';
-import type {
-  CrcMode,
-  GatherSpritesResult,
-  GenerateConstantsResult,
-  GenerateSpritesResult,
-  GlobResult,
-} from './utils/types.js';
+import { makeTempDirectory } from './utils/make-temp-directory.js';
+import type { CrcType, TargetType } from './utils/types.js';
+import { validateInput } from './validate-input.js';
 
 const program = new Command();
 
-type CmdOptions = {
-  spreet?: string;
-  crc?: CrcMode;
+export type CmdOptions = {
+  spreet: string;
+  glob?: string;
+  crc?: CrcType;
+  in?: string;
+  out?: string;
+  target: TargetType;
 };
 
-async function find(glob: string, rootPath: string) {
+export async function find(
+  glob: string,
+  inputPath: string,
+  rootPath: string,
+  tmpDir: string,
+) {
   const spinner = ora('Finding sprites');
   spinner.start();
 
-  const result = await findSprites(glob, rootPath);
+  const result = await findSprites(glob, inputPath, rootPath, tmpDir);
 
   result.match({
-    Ok: (r) => spinner.succeed(`Found ${ansis.bold.cyan(r.length)} sprites`),
+    Ok: (r) =>
+      spinner.succeed(`Found ${ansis.bold.cyan(r.sprites.length)} sprites`),
     Err: ({ msg }) => spinner.fail(msg),
   });
 
   return result;
 }
 
-async function gather(sprites: GlobResult, crcMode: CrcMode | null) {
-  if (sprites.isErr) {
-    return Result.err(sprites.error);
-  }
+type ParseParametersProps = {
+  // positional arguments
+  globArg: string | undefined; // Glob pattern argument
+  outputArg: string | undefined; // Output argument
 
-  const spinner = ora('Gathering sprites');
-  spinner.start();
+  // Options
+  globOpt: string | undefined; // Glob pattern option
+  inOpt: string; // Input base folder option
+  outOpt: string; // Output base folder option
+};
 
-  const result = await gatherSprites(sprites, crcMode);
+function _parseParameters({
+  globArg,
+  outputArg,
 
-  result.match({
-    Ok: () => spinner.succeed(),
-    Err: ({ msg }) => spinner.fail(msg),
-  });
+  inOpt,
+  outOpt,
+  globOpt,
+}: ParseParametersProps): {
+  inputPath: string;
+  outputPath: string;
+  glob: string;
+} {
+  const cwd = process.cwd();
 
-  return result;
+  const glob = globArg ?? globOpt ?? '';
+
+  const inputPath =
+    typeof inOpt === 'string' && inOpt !== '' ? path.relative(cwd, inOpt) : '';
+
+  const outArgResolved =
+    typeof outputArg === 'string' && outputArg !== ''
+      ? path.resolve(outputArg)
+      : '';
+
+  const outDefault = path.relative(cwd, path.join(cwd, 'atlas'));
+
+  const outputPath =
+    [outOpt, outArgResolved, outDefault].filter((x) => x !== '').shift() || '';
+
+  return { inputPath, outputPath, glob };
 }
 
-async function generate(
-  input: GatherSpritesResult,
-  cmd: string,
-  output: string,
+export async function handleAction(
+  globArg: string,
+  outputArg: string | undefined,
+  options: CmdOptions,
 ) {
-  if (input.isErr) {
-    return Result.err(input.error);
+  const cwd = process.cwd();
+  const crcMode = options.crc ?? null;
+  const inOpt = options.in ?? '';
+  const outOpt = options.out ?? '';
+  const { spreet: cmd, glob: globOpt, target } = options;
+
+  const { outputPath, inputPath, glob } = _parseParameters({
+    globArg,
+    inOpt,
+    outOpt,
+    outputArg,
+    globOpt,
+  });
+
+  validateInput(glob, inputPath);
+
+  console.log('');
+  if (target === 'SPRITESHEET') {
+    console.log(`- Using ${ansis.bold.cyan(cmd)} to generate spritesheet`);
+  } else {
+    console.log(`- Using ${ansis.bold.cyan(cmd)} to generate react files`);
   }
 
-  const spinner = ora('Generating spritesheet');
-  spinner.start();
-
-  const result = await generateSprites(input, cmd, output);
-
-  result.match({
-    Ok: ({ png }) =>
-      spinner.succeed(`Generated spritesheet ${ansis.italic.cyan(png)}`),
-    Err: ({ msg }) => spinner.fail(msg),
-  });
-
-  return result;
-}
-
-async function constants(input: GenerateSpritesResult) {
-  if (input.isErr) {
-    return Result.err(input.error);
+  if (glob) {
+    console.log(`- Pulling from '${ansis.italic.cyan(glob)}'`);
+  } else {
+    console.log(
+      `- Scanning for *.svg files in '${ansis.italic.cyan(inputPath)}'`,
+    );
   }
 
-  const spinner = ora('Generating constant mapping');
-  spinner.start();
+  console.log(`- Saving to ${ansis.italic.cyan(`${outputPath}.*`)}\n`);
 
-  const result = await generateConstantsFile(input);
+  const tmpDir = await makeTempDirectory();
+  const findSpriteResult = await find(glob, inputPath, cwd, tmpDir);
 
-  result.match({
-    Ok: () => spinner.succeed(),
-    Err: ({ msg }) => spinner.fail(msg),
-  });
-
-  return result;
+  if (target === 'SPRITESHEET') {
+    await buildSpritesheet(findSpriteResult, crcMode, cmd, outputPath);
+  } else {
+    buildReactFiles(findSpriteResult, inputPath, outputPath);
+  }
 }
 
-async function clean(dir: GenerateConstantsResult) {
-  const spinner = ora('Cleaning up');
-  spinner.start();
+const USAGE = `
 
-  const result = await cleanUpTempDirectory(dir);
+  Example 1: Using a base folder. Note, the '~/' is a valid input.
 
-  result.match({
-    Ok: () => spinner.succeed(),
-    Err: (e) => spinner.fail(e),
-  });
+    > smeegl --in ~/exported_icon_set_1 --out ~/react_svg_set_1 --target REACT
+    > smeegl --in ~/exported_icon_set_2 --out ~/react_svg_set_2 --target SPRITESHEET
 
-  return result;
-}
+  Example 2: Using a glob pattern. Note, the '~/' is not a valid input for a glob pattern.
+
+    > smeegl --glob "/Users/me/exported_icon_set_3/**/*.svg" --out ~/react_svg_set_3 --target REACT
+    > smeegl --glob "/Users/me/exported_icon_set_4/**/*.svg" --out ~/react_svg_set_4 --target SPRITESHEET
+`;
 
 program
   .name('smeegl')
-  .description('CLI tool to create spritesheets from an SVG glob pattern')
-  .argument('<GLOB>', 'SVG glob pattern')
-  .argument('[OUTPUT]', 'The atlas output path, CWD if none given')
-  .option(
-    '--spreet <path>',
-    'Path to pre-built spreet binary, unneeded if installed',
+  .description(
+    'CLI tool to create spritesheets and React Components from an SVG glob pattern or base folder of SVG files',
   )
-  .option(
-    '--crc <MODE>',
-    'Sprite names will be converted to crc32, either DEC or HEX',
+  .addArgument(
+    new Argument('<GLOB>', '[DEPRECATED] SVG glob pattern').argOptional(),
   )
+  .addArgument(
+    new Argument(
+      '[OUTPUT]',
+      '[DEPRECATED] The atlas output path, CWD if none given',
+    ).argOptional(),
+  )
+  .addOption(
+    new Option(
+      '--spreet <path>',
+      'Path to pre-built spreet binary, unneeded if installed',
+    ).default('spreet'),
+  )
+  .addOption(
+    new Option(
+      '--crc <MODE>',
+      'Sprite names will be converted to crc32, either DEC or HEX',
+    ).choices(['DEC', 'HEX']),
+  )
+  .addOption(new Option('--glob <glob>', 'SVG glob pattern'))
+  .addOption(new Option('--in <path>', 'The input path to scan for svg files'))
+  .addOption(new Option('--out <path>', 'The output path, CWD if none given'))
+  .addOption(
+    new Option('--target <TYPE>', 'Spritesheet or React files')
+      .choices(['SPRITESHEET', 'REACT'])
+      .default('SPRITESHEET'),
+  )
+
+  .usage(USAGE)
+
   .action(
-    async (glob: string, out: string | undefined, options: CmdOptions) => {
-      const newOut = out
-        ? path.resolve(out)
-        : path.join(process.cwd(), 'atlas');
-      const cmd = options.spreet ?? 'spreet';
-      const crcMode = options.crc ?? null;
-
-      if (!glob) {
-        console.error(ansis.red('Error: No glob pattern provided'));
-        process.exit(1);
-      }
-
-      if (!glob.endsWith('.svg')) {
-        console.warn(
-          ansis.yellow(
-            'Warning: The glob pattern should end with .svg for best results',
-          ),
-        );
-      }
-
-      if (glob.startsWith('~/')) {
-        console.error(
-          ansis.red(
-            'Error: Please expand the glob pattern to an absolute path before running this command.',
-          ),
-        );
-        process.exit(1);
-      }
-
-      console.log(`Using ${ansis.bold.cyan(cmd)} to generate spritesheet`);
-      console.log(`Pulling from ${ansis.italic.cyan(glob)}`);
-      console.log(`Saving to ${ansis.italic.cyan(`${newOut}.*`)}`);
-
-      // TODO: Need to add async compose to core
-      const sprites = await find(glob as string, process.cwd());
-      const gathered = await gather(sprites, crcMode);
-      const atlas = await generate(gathered, cmd, newOut);
-      const genConst = await constants(atlas);
-
-      await clean(genConst);
+    async (
+      globArg: string,
+      outputArg: string | undefined,
+      options: CmdOptions,
+    ) => {
+      await handleAction(globArg, outputArg, options);
     },
   );
 
