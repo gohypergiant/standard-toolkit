@@ -75,7 +75,7 @@ export function useTreeActions<T>({
   ): TreeNode<T>[] {
     cache.addNodes(target, nodes, 'after');
 
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   function insertBefore(
@@ -84,7 +84,7 @@ export function useTreeActions<T>({
   ): TreeNode<T>[] {
     cache.addNodes(target, nodes, 'before');
 
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   function insertInto(target: Key | null, nodes: TreeNode<T>[]): TreeNode<T>[] {
@@ -92,7 +92,7 @@ export function useTreeActions<T>({
       cache.insertNode(target, node, 0);
     }
 
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   /** MOVE NODES **/
@@ -125,7 +125,7 @@ export function useTreeActions<T>({
 
     cache.setNode(key, callback(node));
 
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   /** REMOVE NODES **/
@@ -134,7 +134,7 @@ export function useTreeActions<T>({
       cache.deleteNode(key);
     }
 
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   /** SELECTION **/
@@ -204,20 +204,19 @@ export function useTreeActions<T>({
         isVisible: true,
       });
     }
-    cache.deriveVisibility();
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   function revealAll(): TreeNode<T>[] {
     cache.setAllNodes({ isVisible: true });
 
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   function hideAll(): TreeNode<T>[] {
     cache.setAllNodes({ isVisible: false });
 
-    return cache.toTree();
+    return cache.toTree(true);
   }
 
   return {

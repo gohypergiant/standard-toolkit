@@ -13,7 +13,7 @@
 import { Cache } from '@/hooks/use-tree/actions/cache';
 import { isSlottedContextValue } from '@/lib/utils';
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
-import type { Key } from '@react-types/shared';
+import type { Key, Selection } from '@react-types/shared';
 import {
   type PropsWithChildren,
   createContext,
@@ -61,10 +61,6 @@ const {
 } = TreeStyles();
 
 export const TreeContext = createContext<TreeContextValue>({
-  disabledKeys: new Set(),
-  expandedKeys: new Set(),
-  selectedKeys: new Set(),
-  visibleKeys: new Set(),
   visibilityComputedKeys: new Set(),
   showRuleLines: true,
   showVisibility: false,
@@ -114,8 +110,15 @@ export function Tree<T>({
   variant = TreeStylesDefaults.variant,
   visibleKeys: visibleKeysProp,
   onVisibilityChange,
+  onSelectionChange,
   ...rest
 }: TreeProps<T>) {
+  /**
+   * A static collection is hard-coded. Dynamic is data-driven from an external source.
+   * https://react-spectrum.adobe.com/react-aria/Tree.html#content
+   *
+   * Controlled state should only be used on a static tree.
+   */
   if (
     items &&
     (disabledKeysProp ||
@@ -128,6 +131,9 @@ export function Tree<T>({
     );
   }
 
+  /**
+   * A static tree won't support the node iterator pattern.
+   */
   if (!!items !== (typeof children === 'function')) {
     throw new Error(
       'Tree `items` and node iterator `children` must be used together',
@@ -150,10 +156,10 @@ export function Tree<T>({
     visibilityComputedKeys,
   } = useMemo(() => {
     const acc = {
-      disabledKeys: disabledKeysProp ?? new Set<Key>(),
-      expandedKeys: expandedKeysProp ?? new Set<Key>(), // TODO: shouldn't be passed into context if static and no prop provided (want the tree to default to open / expanded=true)
-      selectedKeys: selectedKeysProp ?? new Set<Key>(),
-      visibleKeys: visibleKeysProp ?? new Set<Key>(),
+      disabledKeys: nodes ? new Set<Key>() : disabledKeysProp,
+      expandedKeys: nodes ? new Set<Key>() : expandedKeysProp,
+      selectedKeys: nodes ? new Set<Key>() : selectedKeysProp,
+      visibleKeys: nodes ? new Set<Key>() : visibleKeysProp,
       visibilityComputedKeys: new Set<Key>(),
     };
 
@@ -174,16 +180,16 @@ export function Tree<T>({
         },
       ) => {
         if (isDisabled) {
-          acc.disabledKeys.add(key);
+          acc.disabledKeys?.add(key);
         }
         if (isExpanded) {
-          acc.expandedKeys.add(key);
+          acc.expandedKeys?.add(key);
         }
-        if (isSelected) {
-          acc.selectedKeys.add(key);
+        if (isSelected && selectedKeys) {
+          acc.selectedKeys?.add(key);
         }
         if (isVisible) {
-          acc.visibleKeys.add(key);
+          acc.visibleKeys?.add(key);
         }
         if (isVisibleComputed) {
           acc.visibilityComputedKeys.add(key);
@@ -199,6 +205,14 @@ export function Tree<T>({
     selectedKeysProp,
     visibleKeysProp,
   ]);
+
+  const handleSelectionChange = selectedKeys
+    ? (selection: Selection) => {
+        if (selection !== 'all') {
+          onSelectionChange?.(selection);
+        }
+      }
+    : undefined;
 
   return (
     <TreeContext.Provider
@@ -225,6 +239,7 @@ export function Tree<T>({
         expandedKeys={expandedKeys}
         items={items}
         selectedKeys={selectedKeys}
+        onSelectionChange={handleSelectionChange}
         selectionMode={selectionMode}
       >
         {children}
@@ -234,7 +249,7 @@ export function Tree<T>({
 }
 Tree.displayName = 'Tree';
 
-export function TreeItem({ className, id, ...rest }: TreeItemProps) {
+export function TreeItem({ className, id, value, ...rest }: TreeItemProps) {
   const { visibilityComputedKeys, visibleKeys } = useContext(TreeContext);
   const isViewable = visibilityComputedKeys?.has(id);
   const isVisible = visibleKeys?.has(id);
@@ -280,6 +295,9 @@ function ItemContent({ children }: TreeItemContentProps) {
           isExpanded,
           isSelected,
         } = renderProps;
+
+        // TODO: visibility for static tree
+        // TODO: "all" support in the static tree
 
         // const me = state.collection.getItem(id);
         // const parent = state.selectionManager.getItem(me?.parentKey) // Will need to be recursive to get all ancestors

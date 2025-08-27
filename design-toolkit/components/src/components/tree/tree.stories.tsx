@@ -358,12 +358,21 @@ export const Stateless: Story = {
  */
 export const StaticCollection: Story = {
   render: (args) => {
-    // TODO: put viewability (not visibility) back in
+    const [expanded, setExpanded] = useState<Set<Key>>();
+    const [selected, setSelected] = useState<Set<Key>>(new Set());
+    const [visibility, setVisibility] = useState<Set<Key>>(new Set());
+
     return (
       <Tree
         {...args}
         style={{ width: '500px' }}
         aria-label='Basic Static Example'
+        expandedKeys={expanded}
+        onExpandedChange={setExpanded}
+        selectedKeys={selected}
+        onSelectionChange={setSelected}
+        visibleKeys={visibility}
+        onVisibilityChange={setVisibility}
       >
         <Tree.Item id='fruit' textValue='fruit'>
           <Tree.Item.Content>Fruit</Tree.Item.Content>

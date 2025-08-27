@@ -201,6 +201,9 @@ export class Cache<T> {
     return ancestry.every((n) => n.isVisible);
   }
 
+  protected deriveVisibility() {
+    return this.cache.roots.map((key) => this.traverse(key));
+  }
   /**
    * Recursively builds a TreeNode from a key
    *
@@ -234,8 +237,13 @@ export class Cache<T> {
    * TODO: optimization - rebuild only from change to root
    * Rebuild only from the changed node up the tree to avoid
    * rebuilding the entire tree
+   *
+   * @param deriveVisible boolean - if true, will recompute visibility for nodes based on ancestry
    */
-  toTree(): TreeNode<T>[] {
+  toTree(deriveVisible?: boolean): TreeNode<T>[] {
+    if (deriveVisible) {
+      this.deriveVisibility();
+    }
     return this.cache.roots.map((key) => this.buildNode(key));
   }
 
@@ -347,9 +355,5 @@ export class Cache<T> {
     parentKey
       ? this.addToParent(parentKey, key, idx)
       : this.addToRoot(key, idx);
-  }
-
-  deriveVisibility() {
-    return this.cache.roots.map((key) => this.traverse(key));
   }
 }

@@ -11,7 +11,7 @@
  */
 
 import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
-import type { Key } from '@react-types/shared';
+import type { Key, Selection } from '@react-types/shared';
 import type {
   TreeItemContentRenderProps as AriaTreeItemContentRenderProps,
   TreeItemProps as AriaTreeItemProps,
@@ -28,6 +28,7 @@ export type TreeProps<T> = Omit<
   | 'disabledKeys'
   | 'expandedKeys'
   | 'selectedKeys'
+  | 'onSelectionChange'
 > &
   VariantProps<typeof TreeStyles> & {
     disabledKeys?: Set<Key>;
@@ -38,6 +39,7 @@ export type TreeProps<T> = Omit<
     showRuleLines?: boolean;
     showVisibility?: boolean;
     onVisibilityChange?: (keys: Set<Key>) => void;
+    onSelectionChange?: (keys: Set<Key>) => void;
   };
 
 export type TreeItemProps = Omit<AriaTreeItemProps, 'id'> & {
@@ -61,9 +63,9 @@ export type TreeContextValue = Required<
     'showRuleLines' | 'showVisibility' | 'variant' | 'onVisibilityChange'
   >
 > & {
-  disabledKeys: Set<Key>;
-  expandedKeys: Set<Key>;
-  selectedKeys: Set<Key>;
+  disabledKeys?: Set<Key>;
+  expandedKeys?: Set<Key>;
+  selectedKeys?: Set<Key>;
   visibleKeys?: Set<Key>;
   visibilityComputedKeys?: Set<Key>;
   isStatic: boolean;
