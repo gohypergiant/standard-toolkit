@@ -409,6 +409,9 @@ export function Table<T extends { id: string | number }>({
                         header.column.id === 'kebab'
                       }
                       style={{ width: header.getSize() }}
+                      data-selected={
+                        header.column.id === columnSelection ? '' : undefined
+                      }
                     >
                       <div
                         className={headerCellButton()}
@@ -432,7 +435,15 @@ export function Table<T extends { id: string | number }>({
                         )
                           ? null
                           : (enableColumnReordering || enableSorting) && (
-                              <Menu.Trigger>
+                              <Menu.Trigger
+                                onOpenChange={(isOpen) => {
+                                  if (isOpen) {
+                                    setColumnSelection(header.column.id);
+                                  } else {
+                                    setColumnSelection(null);
+                                  }
+                                }}
+                              >
                                 <Button variant='icon' aria-label='Menu'>
                                   <Icon>
                                     {header.column.getIsSorted() === 'asc' ? (

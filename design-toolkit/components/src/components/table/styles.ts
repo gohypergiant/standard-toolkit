@@ -92,6 +92,12 @@ export const headerCellStyles = tv({
     'active:border-r-highlight-bold',
     'active:border-l-highlight-bold',
     'active:border-t-highlight-bold',
+    'selected:bg-highlight-subtle',
+    'selected:border-t-1',
+    'selected:border-x-1',
+    'selected:border-r-highlight-bold',
+    'selected:border-l-highlight-bold',
+    'selected:border-t-highlight-bold',
   ],
   variants: {
     narrow: {
