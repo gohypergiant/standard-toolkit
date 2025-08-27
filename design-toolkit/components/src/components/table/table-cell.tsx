@@ -21,6 +21,7 @@ export function TableCell({
   persistent,
   kebab,
   selectedCol,
+  isLastSelectedRow,
   ...props
 }: TableCellProps) {
   return (
@@ -32,6 +33,7 @@ export function TableCell({
         kebab,
         persistent,
         selectedCol,
+        isLastSelectedRow,
         className,
       })}
       {...props}

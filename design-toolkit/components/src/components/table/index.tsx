@@ -51,6 +51,7 @@ const dataTableCell = <T,>(
   cell: Cell<T, unknown>,
   persistent: boolean,
   isColumnSelected: boolean,
+  isLastRow: boolean,
 ) => (
   <TableCell
     key={cell.id}
@@ -59,6 +60,7 @@ const dataTableCell = <T,>(
     numeral={cell.column.id === 'numeral'}
     kebab={cell.column.id === 'kebab'}
     selectedCol={isColumnSelected}
+    isLastSelectedRow={isColumnSelected && isLastRow}
   >
     {flexRender(cell.column.columnDef.cell, cell.getContext())}
   </TableCell>
@@ -564,6 +566,7 @@ export function Table<T extends { id: string | number }>({
                     cell,
                     cell.column.id === 'kebab' ? persistRowKebabMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown,
                     cell.column.id === columnSelection,
+                    cell.row.index === getRowModel().rows.length - 1,
                   ),
                 )}
               </TableRow>
@@ -587,6 +590,7 @@ export function Table<T extends { id: string | number }>({
                           ? persistRowKebabMenu
                           : true,
                       cell.column.id === columnSelection,
+                      cell.row.index === getRowModel().rows.length - 1,
                     ),
                   )}
               </TableRow>
@@ -606,6 +610,7 @@ export function Table<T extends { id: string | number }>({
                       cell,
                       cell.column.id === 'kebab' ? persistRowKebabMenu : true,
                       cell.column.id === columnSelection,
+                      cell.row.index === getRowModel().rows.length - 1,
                     ),
                   )}
               </TableRow>

@@ -45,7 +45,16 @@ export const cellStyles = tv({
       false: 'hover:*:visible group-hover/row:*:visible',
     },
     selectedCol: {
-      true: 'bg-highlight-subtle',
+      true: [
+        'bg-highlight-subtle',
+        'border-x-1',
+        'border-r-highlight-bold',
+        'border-l-highlight-bold',
+      ],
+      false: '',
+    },
+    isLastSelectedRow: {
+      true: ['border-b-1', 'border-b-highlight-bold'],
       false: '',
     },
   },
@@ -78,6 +87,11 @@ export const headerCellStyles = tv({
   base: [
     'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
     'active:bg-highlight-subtle',
+    'active:border-t-1',
+    'active:border-x-1',
+    'active:border-r-highlight-bold',
+    'active:border-l-highlight-bold',
+    'active:border-t-highlight-bold',
   ],
   variants: {
     narrow: {
