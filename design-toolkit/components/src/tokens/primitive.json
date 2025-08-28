@@ -257,8 +257,14 @@
   "shadow": {
     "elevation": {
       "default": "initial",
-      "overlay": "0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14)",
-      "raised": "0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14)"
+      "overlay": {
+        "bold": "0 8px 24px 0 rgba(0 0 0 / 0.80)",
+        "muted": "0 8px 24px 0 rgba(0 0 0 / 0.16)"
+      },
+      "raised": {
+        "bold": "0 1px 4px 0 rgba(0 0 0 / 0.80)",
+        "muted": "0 1px 4px 0 rgba(0 0 0 / 0.16)"
+      }
     }
   },
   "font": {

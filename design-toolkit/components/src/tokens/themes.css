@@ -131,8 +131,8 @@
     --outline-critical-bold: var(--primitive-utility-critical-400, #ff2e27);
     --outline-critical-hover: var(--primitive-utility-critical-300, #ff6d68);
     --outline-critical-pressed: var(--primitive-utility-critical-600, #a10701);
-    --shadow-elevation-raised: var(--shadow-elevation-raised, 0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14));
-    --shadow-elevation-overlay: var(--shadow-elevation-overlay, 0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14));
+    --shadow-elevation-raised: var(--shadow-elevation-raised-bold, 0 1px 4px 0 rgba(0 0 0 / 0.80));
+    --shadow-elevation-overlay: var(--shadow-elevation-overlay-bold, 0 8px 24px 0 rgba(0 0 0 / 0.80));
     }
 
     /** Light theme **/
@@ -220,8 +220,8 @@
     --outline-critical-bold: var(--primitive-utility-critical-400, #ff2e27);
     --outline-critical-hover: var(--primitive-utility-critical-600, #a10701);
     --outline-critical-pressed: var(--primitive-utility-critical-500, #d40b04);
-    --shadow-elevation-raised: var(--shadow-elevation-raised, 0 5px 5px 0 rgba(0 0 0 / 0.2), 0 3px 14px 0 rgba(0 0 0 / 0.12), 0 8px 10px 0 rgba(0 0 0 / 0.14));
-    --shadow-elevation-overlay: var(--shadow-elevation-overlay, 0 8px 10px 0 rgba(0 0 0 / 0.2), 0 6px 30px 0 rgba(0 0 0 / 0.12), 0 16px 24px 0 rgba(0 0 0 / 0.14));
+    --shadow-elevation-raised: var(--shadow-elevation-raised-muted, 0 1px 4px 0 rgba(0 0 0 / 0.16));
+    --shadow-elevation-overlay: var(--shadow-elevation-overlay-muted, 0 8px 24px 0 rgba(0 0 0 / 0.16));
     }
   }
 }
@@ -301,8 +301,10 @@
 @theme {
   /** Shadow **/
   --shadow-elevation-default: var(--shadow-elevation-default);
-  --shadow-elevation-overlay: var(--shadow-elevation-overlay);
-  --shadow-elevation-raised: var(--shadow-elevation-raised);
+  --shadow-elevation-overlay-bold: var(--shadow-elevation-overlay-bold, 0 8px 24px 0 rgba(0 0 0 / 0.80));
+  --shadow-elevation-overlay-muted: var(--shadow-elevation-overlay-muted, 0 8px 24px 0 rgba(0 0 0 / 0.16));
+  --shadow-elevation-raised-bold: var(--shadow-elevation-raised-bold, 0 1px 4px 0 rgba(0 0 0 / 0.80));
+  --shadow-elevation-raised-muted: var(--shadow-elevation-raised-muted, 0 1px 4px 0 rgba(0 0 0 / 0.16));
 }
 
 @theme {

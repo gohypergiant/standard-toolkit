@@ -149,8 +149,8 @@
     },
     "shadow": {
       "elevation": {
-        "raised": "--shadow-elevation-raised",
-        "overlay": "--shadow-elevation-overlay"
+        "raised": "--shadow-elevation-raised-bold",
+        "overlay": "--shadow-elevation-overlay-bold"
       }
     }
   },
@@ -304,8 +304,8 @@
     },
     "shadow": {
       "elevation": {
-        "raised": "--shadow-elevation-raised",
-        "overlay": "--shadow-elevation-overlay"
+        "raised": "--shadow-elevation-raised-muted",
+        "overlay": "--shadow-elevation-overlay-muted"
       }
     }
   },

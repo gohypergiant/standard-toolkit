@@ -300,8 +300,14 @@ export type ThemeTokens = {
   shadow: {
     elevation: {
       default: string;
-      overlay: string;
-      raised: string;
+      overlay: {
+        bold: string;
+        muted: string;
+      };
+      raised: {
+        bold: string;
+        muted: string;
+      };
     };
   };
 };
