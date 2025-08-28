@@ -21,7 +21,7 @@ export function ActionBar({ className, children, ...rest }: ActionBarProps) {
     <nav
       {...rest}
       className={cn(
-        'bg-surface-default p-s gap-s rounded-medium flex max-w-fit shadow-elevation-overlay',
+        'flex·max-w-fit·gap-s·rounded-medium·bg-surface-default·p-s·shadow-elevation-overlay',
         className,
       )}
     >
