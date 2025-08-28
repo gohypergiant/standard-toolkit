@@ -19,14 +19,20 @@ const meta: Meta<typeof Dialog> = {
   title: 'Components/Dialog',
   component: Dialog,
   args: {
-    size: 'sm',
+    size: 'small',
     isDismissable: true,
     isKeyboardDismissDisabled: false,
   },
   argTypes: {
     size: {
       control: 'select',
-      options: ['sm', 'lg'],
+      options: ['small', 'large'],
+    },
+    isDismissable: {
+      control: 'boolean',
+    },
+    isKeyboardDismissDisabled: {
+      control: 'boolean',
     },
   },
 };
@@ -38,25 +44,19 @@ export const Default: Story = {
   render: ({ children, ...args }) => {
     return (
       <div className='relative h-[800px] w-[600px] border border-default-light p-l'>
-        <Dialog {...args}>
+        <Dialog.Trigger>
           <Button>Press Me</Button>
-          <Dialog.Body>
-            {({ close }) => {
-              return (
-                <>
-                  <Dialog.Title>Dialog Title</Dialog.Title>
-                  Lorum Ipsum text for the dialog shall go here.
-                  <Dialog.Footer>
-                    <Dialog.Button onPress={close} variant='flat'>
-                      Action 2
-                    </Dialog.Button>
-                    <Dialog.Button onPress={close}>Action 1</Dialog.Button>
-                  </Dialog.Footer>
-                </>
-              );
-            }}
-          </Dialog.Body>
-        </Dialog>
+          <Dialog {...args}>
+            <Dialog.Title>Dialog Title</Dialog.Title>
+            <Dialog.Content>
+              Lorum Ipsum text for the dialog shall go here.
+            </Dialog.Content>
+            <Dialog.Footer>
+              <Button variant='flat'>Action 2</Button>
+              <Button>Action 1</Button>
+            </Dialog.Footer>
+          </Dialog>
+        </Dialog.Trigger>
       </div>
     );
   },
@@ -65,28 +65,23 @@ export const Default: Story = {
 export const LocalPortal: Story = {
   render: () => {
     const parentRef = useRef(null);
+
     return (
       <div className='flex h-[600px] w-[960px] border border-default-light'>
         <div className='w-full p-l'>
-          <Dialog parentRef={parentRef}>
+          <Dialog.Trigger>
             <Button>Press Me</Button>
-            <Dialog.Body>
-              {({ close }) => {
-                return (
-                  <>
-                    <Dialog.Title>Dialog Title</Dialog.Title>
-                    Lorum Ipsum text for the dialog shall go here.
-                    <Dialog.Footer>
-                      <Dialog.Button onPress={close} variant='flat'>
-                        Action 2
-                      </Dialog.Button>
-                      <Dialog.Button onPress={close}>Action 1</Dialog.Button>
-                    </Dialog.Footer>
-                  </>
-                );
-              }}
-            </Dialog.Body>
-          </Dialog>
+            <Dialog parentRef={parentRef}>
+              <Dialog.Title>Dialog Title</Dialog.Title>
+              <Dialog.Content>
+                Lorum Ipsum text for the dialog shall go here.
+              </Dialog.Content>
+              <Dialog.Footer>
+                <Button variant='flat'>Action 2</Button>
+                <Button>Action 1</Button>
+              </Dialog.Footer>
+            </Dialog>
+          </Dialog.Trigger>
         </div>
         <div
           ref={parentRef}
@@ -99,32 +94,28 @@ export const LocalPortal: Story = {
 
 export const Controlled: Story = {
   render: () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const handleOpenChange = useCallback((isOpen: boolean) => {
       setOpen(isOpen);
     }, []);
     const handleOpenPress = useCallback(() => setOpen(true), []);
+
     return (
       <div className='h-[800px] w-[600px] border border-default-light p-l'>
-        <Dialog isOpen={open} onOpenChange={handleOpenChange}>
-          <Button onPress={handleOpenPress}>Press Me</Button>
-          <Dialog.Body>
-            {({ close }) => {
-              return (
-                <>
-                  <Dialog.Title>Dialog Title</Dialog.Title>
-                  Lorum Ipsum text for the dialog shall go here.
-                  <Dialog.Footer>
-                    <Dialog.Button onPress={close} variant='flat'>
-                      Action 2
-                    </Dialog.Button>
-                    <Dialog.Button onPress={close}>Action 1</Dialog.Button>
-                  </Dialog.Footer>
-                </>
-              );
-            }}
-          </Dialog.Body>
-        </Dialog>
+        <Dialog.Trigger isOpen={open} onOpenChange={handleOpenChange}>
+          <Button isDisabled>Disabled</Button>
+          <Dialog>
+            <Dialog.Title>Dialog Title</Dialog.Title>
+            <Dialog.Content>
+              Lorum Ipsum text for the dialog shall go here.
+            </Dialog.Content>
+            <Dialog.Footer>
+              <Button variant='flat'>Action 2</Button>
+              <Button>Action 1</Button>
+            </Dialog.Footer>
+          </Dialog>
+        </Dialog.Trigger>
+        <Button onPress={handleOpenPress}>Press Me</Button>
       </div>
     );
   },
