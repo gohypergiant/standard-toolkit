@@ -27,6 +27,8 @@ export type {
   AccordionStyleVariants,
   AccordionTriggerProps,
 } from './components/accordion/types';
+export { ActionBar } from './components/action-bar';
+export type { ActionBarProps } from './components/action-bar/types';
 export { Avatar, AvatarContext } from './components/avatar';
 export { AvatarStyles } from './components/avatar/styles';
 export type { AvatarProps } from './components/avatar/types';
