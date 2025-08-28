@@ -31,9 +31,9 @@ export const ClassificationBannerStyles = tv({
       secret:
         "fg-a11y-on-utility bg-classification-secret [&:empty]:before:content-['Secret']",
       'top-secret':
-        "fg-inverse-bold bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
+        "fg-inverse-bold light:fg-primary-bold bg-classification-top-secret [&:empty]:before:content-['Top_Secret']",
       'ts-sci':
-        "fg-inverse-bold bg-classification-ts-sci [&:empty]:before:content-['Top_Secret/SCI']",
+        "fg-inverse-bold light:fg-primary-bold bg-classification-ts-sci [&:empty]:before:content-['Top_Secret/SCI']",
     },
   },
   defaultVariants: ClassificationBannerStylesDefaults,

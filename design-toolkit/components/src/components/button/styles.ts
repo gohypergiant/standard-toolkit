@@ -38,13 +38,13 @@ const BaseButtonStyles = tv({
         'enabled:focus-visible:color-info:bg-interactive-bold-hover',
 
         // Serious
-        'enabled:color-serious:fg-inverse-bold',
+        'enabled:color-serious:fg-a11y-on-utility',
         'enabled:color-serious:bg-serious-bold',
         'enabled:hover:color-serious:bg-serious-hover',
         'enabled:focus-visible:color-serious:bg-serious-hover',
 
         // Critical
-        'enabled:color-critical:fg-inverse-bold',
+        'enabled:color-critical:fg-a11y-on-utility',
         'enabled:color-critical:bg-critical-bold',
         'enabled:hover:color-critical:bg-critical-hover',
         'enabled:focus-visible:color-critical:bg-critical-hover',

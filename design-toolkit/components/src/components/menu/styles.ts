@@ -26,17 +26,17 @@ export const MenuStyles = tv({
 
       // Info
       'color-info:enabled:fg-primary-bold',
-      'color-info:enabled:focus-visible:fg-inverse-bold color-info:enabled:focus-visible:bg-accent-primary-bold',
-      'color-info:enabled:hover:fg-inverse-bold color-info:enabled:hover:bg-accent-primary-bold',
-      'color-info:enabled:open:fg-inverse-bold color-info:enabled:open:bg-accent-primary-bold',
-      'color-info:enabled:selected:fg-inverse-bold color-info:enabled:selected:bg-accent-primary-bold',
+      'color-info:enabled:focus-visible:fg-a11y-on-accent color-info:enabled:focus-visible:bg-accent-primary-bold',
+      'color-info:enabled:hover:fg-a11y-on-accent color-info:enabled:hover:bg-accent-primary-bold',
+      'color-info:enabled:open:fg-a11y-on-accent color-info:enabled:open:bg-accent-primary-bold',
+      'color-info:enabled:selected:fg-a11y-on-accent color-info:enabled:selected:bg-accent-primary-bold',
 
       // Serious
       'color-serious:enabled:fg-serious-bold',
-      'color-serious:enabled:focus-visible:fg-inverse-bold color-serious:enabled:focus-visible:bg-serious-bold',
-      'color-serious:enabled:hover:fg-inverse-bold color-serious:enabled:hover:bg-serious-bold',
-      'color-serious:enabled:open:fg-inverse-bold color-serious:enabled:open:bg-serious-bold',
-      'color-serious:enabled:selected:fg-inverse-bold color-serious:enabled:selected:bg-serious-bold',
+      'color-serious:enabled:focus-visible:fg-a11y-on-utility color-serious:enabled:focus-visible:bg-serious-bold',
+      'color-serious:enabled:hover:fg-a11y-on-utility color-serious:enabled:hover:bg-serious-bold',
+      'color-serious:enabled:open:fg-a11y-on-utility color-serious:enabled:open:bg-serious-bold',
+      'color-serious:enabled:selected:fg-a11y-on-utility color-serious:enabled:selected:bg-serious-bold',
 
       'disabled:fg-disabled disabled:bg-transparent',
     ],
@@ -46,7 +46,7 @@ export const MenuStyles = tv({
     description: [
       '[grid-area:description]',
       'fg-primary-muted truncate text-body-xs',
-      'group-hover/menu-item:fg-inverse-bold group-focus-visible/menu-item:fg-inverse-bold',
+      'group-hover/menu-item:fg-a11y-on-accent group-focus-visible/menu-item:fg-a11y-on-accent',
       'group-disabled/menu-item:fg-disabled',
     ],
     more: '[grid-area:action]',
@@ -55,7 +55,7 @@ export const MenuStyles = tv({
     separator: 'mx-3 my-1 outline outline-static',
     hotkey: [
       '[grid-area:action]',
-      'group-hover/menu-item:fg-inverse-bold group-focus-visible/menu-item:fg-inverse-bold',
+      'group-hover/menu-item:fg-a11y-on-accent group-focus-visible/menu-item:fg-a11y-on-accent',
       'group-disabled/menu-item:fg-disabled',
     ],
     popover: 'outline-none',
