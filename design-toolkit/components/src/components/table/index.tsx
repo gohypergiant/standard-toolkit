@@ -19,7 +19,6 @@ import { useListData } from '@react-stately/data';
 import {
   type Cell,
   type ColumnOrderState,
-  type Row,
   type RowSelectionState,
   type SortingState,
   flexRender,
@@ -27,7 +26,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';

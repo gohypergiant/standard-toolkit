@@ -10,17 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
+import type { ColumnOrderState, Updater } from '@tanstack/react-table';
 import { useCallback } from 'react';
 
 export function useColumnMovement(
-  setColumnOrderCallback: (updater: any) => void,
+  setColumnOrderCallback: (updater: Updater<ColumnOrderState>) => void,
 ) {
   const moveColumnLeft = useCallback(
     (oldIndex: number) => {
       setColumnOrderCallback((order: string[]) => {
         const newColumnOrder = [...order];
         const newIndex = oldIndex - 1;
-        if (newIndex < 0) return order;
+        if (newIndex < 0) {
+          return order;
+        }
 
         newColumnOrder.splice(
           newIndex,
@@ -38,7 +41,9 @@ export function useColumnMovement(
       setColumnOrderCallback((order: string[]) => {
         const newColumnOrder = [...order];
         const newIndex = oldIndex + 1;
-        if (newIndex >= newColumnOrder.length) return order;
+        if (newIndex >= newColumnOrder.length) {
+          return order;
+        }
 
         newColumnOrder.splice(
           newIndex,

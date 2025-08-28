@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Row } from '@tanstack/react-table';
 import { useCallback } from 'react';
 
 export function useRowMovement<T extends { id: string | number }>(
@@ -25,7 +26,7 @@ export function useRowMovement<T extends { id: string | number }>(
    * and moves it before the previous row if it exists.
    */
   const moveUpSelectedRows = useCallback(
-    (row: any) => {
+    (row: Row<T>) => {
       const hasRowSelection =
         Object.keys(rowSelection).length !== 0 &&
         Object.hasOwn(rowSelection, row.id);
@@ -60,7 +61,7 @@ export function useRowMovement<T extends { id: string | number }>(
   //  */
 
   const moveDownRows = useCallback(
-    (row: any) => {
+    (row: Row<T>) => {
       const hasRowSelection =
         Object.keys(rowSelection).length !== 0 &&
         Object.hasOwn(rowSelection, row.id);
