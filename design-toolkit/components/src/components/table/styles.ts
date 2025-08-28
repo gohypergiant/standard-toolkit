@@ -87,11 +87,6 @@ export const headerCellStyles = tv({
   base: [
     'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
     'active:bg-highlight-subtle',
-    'active:border-t-1',
-    'active:border-x-1',
-    'active:border-r-highlight-bold',
-    'active:border-l-highlight-bold',
-    'active:border-t-highlight-bold',
     'selected:bg-highlight-subtle',
     'selected:border-t-1',
     'selected:border-x-1',
