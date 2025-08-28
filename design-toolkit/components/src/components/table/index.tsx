@@ -32,6 +32,8 @@ import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { useColumnMovement } from './hooks/useColumnMovement';
+import { useRowMovement } from './hooks/useRowMovement';
 import { TableStyles } from './styles';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -111,80 +113,13 @@ export function Table<T extends { id: string | number }>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>();
 
-  /**
-   * moveUpSelectedRows moves the selected rows up in the table.
-   * It finds the first selected row, determines its index,
-   * and moves it before the previous row if it exists.
-   */
-  const moveUpSelectedRows = useCallback(
-    (row: Row<T>) => {
-      const hasRowSelection =
-        Object.keys(rowSelection).length !== 0 &&
-        Object.hasOwn(rowSelection, row.id);
-      const rowSelectionKeys = Object.keys(rowSelection).filter(
-        (id) => rowSelection[id],
-      );
-
-      const rowsToMove = hasRowSelection
-        ? data.filter((item: T) =>
-            rowSelectionKeys.includes(item.id.toString()),
-          )
-        : [row];
-
-      const firstSelectedRowId = rowsToMove[0]?.id;
-      if (firstSelectedRowId) {
-        const rowIndex = dataIds.indexOf(firstSelectedRowId);
-
-        const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
-
-        if (prevRowId) {
-          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
-          moveBefore?.(prevRowId, rowsToMoveKeys);
-        }
-      }
-    },
-    [data, dataIds, rowSelection, moveBefore],
+  const { moveUpSelectedRows, moveDownRows } = useRowMovement<T>(
+    data,
+    dataIds,
+    rowSelection,
+    moveBefore,
+    moveAfter,
   );
-
-  /**
-   * moveDownRows moves the selected or active rows down in the table.
-   * It finds the last selected row, determines its index,
-   * and moves it after the next row if it exists.
-   */
-  const moveDownRows = useCallback(
-    (row: Row<T>) => {
-      const hasRowSelection =
-        Object.keys(rowSelection).length !== 0 &&
-        Object.hasOwn(rowSelection, row.id);
-
-      const rowSelectionKeys = Object.keys(rowSelection).filter(
-        (id) => rowSelection[id],
-      );
-
-      const rowsToMove = hasRowSelection
-        ? data.filter((item: T) =>
-            rowSelectionKeys.includes(item.id.toString()),
-          )
-        : [row];
-
-      const lastSelectedRowId = rowsToMove[rowsToMove.length - 1]?.id;
-
-      if (lastSelectedRowId) {
-        const rowIndex = dataIds.indexOf(lastSelectedRowId);
-
-        const nextRowId =
-          dataIds[
-            rowIndex < dataIds.length - 1 ? rowIndex + 1 : dataIds.length - 1
-          ];
-        if (nextRowId) {
-          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
-          moveAfter?.(nextRowId, rowsToMoveKeys);
-        }
-      }
-    },
-    [data, dataIds, rowSelection, moveAfter],
-  );
-
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
    * It includes options to move the row up or down in the table.
@@ -353,43 +288,8 @@ export function Table<T extends { id: string | number }>({
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
   });
-
-  const moveColumnLeft = useCallback(
-    (oldIndex: number) => {
-      setColumnOrderCallback((order) => {
-        const newColumnOrder = [...order];
-        const newIndex = oldIndex - 1;
-        if (newIndex < 0) {
-          return order;
-        }
-        newColumnOrder.splice(
-          newIndex,
-          0,
-          newColumnOrder.splice(oldIndex, 1)[0] as string,
-        );
-        return newColumnOrder;
-      });
-    },
-    [setColumnOrderCallback],
-  );
-
-  const moveColumnRight = useCallback(
-    (oldIndex: number) => {
-      setColumnOrderCallback((order) => {
-        const newColumnOrder = [...order];
-        const newIndex = oldIndex + 1;
-        if (newIndex >= newColumnOrder.length) {
-          return order;
-        }
-        newColumnOrder.splice(
-          newIndex,
-          0,
-          newColumnOrder.splice(oldIndex, 1)[0] as string,
-        );
-        return newColumnOrder;
-      });
-    },
-    [setColumnOrderCallback],
+  const { moveColumnLeft, moveColumnRight } = useColumnMovement(
+    setColumnOrderCallback,
   );
 
   if (dataProp) {
