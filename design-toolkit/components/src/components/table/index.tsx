@@ -577,7 +577,8 @@ export function Table<T extends { id: string | number }>({
                     cell,
                     cell.column.id === 'kebab' ? persistRowKebabMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown,
                     cell.column.id === columnSelection,
-                    cell.row.index === getRowModel().rows.length - 1,
+                    cell.row.id ===
+                      getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
                   ),
                 )}
               </TableRow>
@@ -601,7 +602,8 @@ export function Table<T extends { id: string | number }>({
                           ? persistRowKebabMenu
                           : true,
                       cell.column.id === columnSelection,
-                      cell.row.index === getRowModel().rows.length - 1,
+                      cell.row.id ===
+                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
                     ),
                   )}
               </TableRow>
@@ -621,7 +623,8 @@ export function Table<T extends { id: string | number }>({
                       cell,
                       cell.column.id === 'kebab' ? persistRowKebabMenu : true,
                       cell.column.id === columnSelection,
-                      cell.row.index === getRowModel().rows.length - 1,
+                      cell.row.id ===
+                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
                     ),
                   )}
               </TableRow>
