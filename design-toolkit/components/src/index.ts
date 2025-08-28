@@ -238,8 +238,8 @@ export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
-export { useColumnMovement } from './components/table/hooks/useColumnMovement';
-export { useRowMovement } from './components/table/hooks/useRowMovement';
+export { useColumnMovement } from './components/table/hooks/use-column-movement';
+export { useRowMovement } from './components/table/hooks/use-row-movement';
 export { Table } from './components/table';
 export {
   TableCellStylesDefaults,

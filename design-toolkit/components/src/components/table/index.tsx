@@ -31,8 +31,8 @@ import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
-import { useColumnMovement } from './hooks/useColumnMovement';
-import { useRowMovement } from './hooks/useRowMovement';
+import { useColumnMovement } from './hooks/use-column-movement';
+import { useRowMovement } from './hooks/use-row-movement';
 import { TableStyles } from './styles';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -384,32 +384,40 @@ export function Table<T extends { id: string | number }>({
                                   </Icon>
                                 </Button>
                                 <Menu>
-                                  <Menu.Item
-                                    classNames={{ item: menuItem() }}
-                                    onAction={() => {
-                                      moveColumnLeft(header.column.getIndex());
-                                    }}
-                                    isDisabled={header.column.getIsFirstColumn(
-                                      'center',
-                                    )}
-                                  >
-                                    <Menu.Item.Label>
-                                      {ColumnKebabMenuItems.Left}
-                                    </Menu.Item.Label>
-                                  </Menu.Item>
-                                  <Menu.Item
-                                    classNames={{ item: menuItem() }}
-                                    onAction={() => {
-                                      moveColumnRight(header.column.getIndex());
-                                    }}
-                                    isDisabled={header.column.getIsLastColumn(
-                                      'center',
-                                    )}
-                                  >
-                                    <Menu.Item.Label>
-                                      {ColumnKebabMenuItems.Right}
-                                    </Menu.Item.Label>
-                                  </Menu.Item>
+                                  {enableColumnReordering && (
+                                    <>
+                                      <Menu.Item
+                                        classNames={{ item: menuItem() }}
+                                        onAction={() => {
+                                          moveColumnLeft(
+                                            header.column.getIndex(),
+                                          );
+                                        }}
+                                        isDisabled={header.column.getIsFirstColumn(
+                                          'center',
+                                        )}
+                                      >
+                                        <Menu.Item.Label>
+                                          {ColumnKebabMenuItems.Left}
+                                        </Menu.Item.Label>
+                                      </Menu.Item>
+                                      <Menu.Item
+                                        classNames={{ item: menuItem() }}
+                                        onAction={() => {
+                                          moveColumnRight(
+                                            header.column.getIndex(),
+                                          );
+                                        }}
+                                        isDisabled={header.column.getIsLastColumn(
+                                          'center',
+                                        )}
+                                      >
+                                        <Menu.Item.Label>
+                                          {ColumnKebabMenuItems.Right}
+                                        </Menu.Item.Label>
+                                      </Menu.Item>
+                                    </>
+                                  )}
                                   {enableSorting && (
                                     <>
                                       <Menu.Separator />
@@ -471,15 +479,17 @@ export function Table<T extends { id: string | number }>({
                   : { 'not-selected': 'true' })}
                 data-pinned={row.getIsPinned()}
               >
-                {row.getVisibleCells().map((cell) =>
-                  dataTableCell(
-                    cell,
-                    cell.column.id === 'kebab' ? persistRowKebabMenu : true, // not accounting for numeral here, as these rows are pinned, and numerals are not shown,
-                    cell.column.id === columnSelection,
-                    cell.row.id ===
-                      getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                  ),
-                )}
+                {row
+                  .getVisibleCells()
+                  .map((cell) =>
+                    dataTableCell(
+                      cell,
+                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
+                      cell.column.id === columnSelection,
+                      cell.row.id ===
+                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
+                    ),
+                  )}
               </TableRow>
             ))}
             {getCenterRows().map((row) => (
