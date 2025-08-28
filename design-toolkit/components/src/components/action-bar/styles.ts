@@ -9,20 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
-import { ButtonContext } from '../button';
-import { ActionBarStyles } from './styles';
-import type { ActionBarProps } from './types';
+import { tv } from 'tailwind-variants';
 
-export function ActionBar({ className, children, ...rest }: ActionBarProps) {
-  return (
-    <nav {...rest} className={ActionBarStyles({ className })}>
-      <ButtonContext.Provider value={{ variant: 'icon' }}>
-        {children}
-      </ButtonContext.Provider>
-    </nav>
-  );
-}
-ActionBar.displayName = 'ActionBar';
+export const ActionBarStyles = tv({
+  base: 'flex max-w-fit gap-s rounded-medium bg-surface-default p-s shadow-elevation-overlay',
+});
