@@ -23,7 +23,7 @@ export const DialogStyles = tv({
     ],
     dialog: [
       'focus-visible:outline-none',
-      'flex flex-col align-end font-light text-body-m fg-primary-muted',
+      'fg-primary-muted flex flex-col align-end font-light text-body-m',
       'group-size-small/dialog:w-[280px] group-size-small/dialog:rounded-medium group-size-small/dialog:p-l',
       'group-size-large/dialog:min-w-[320px] group-size-small/dialog:max-w-[720px] group-size-large/dialog:rounded-medium group-size-large/dialog:p-xl',
     ],
