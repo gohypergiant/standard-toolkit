@@ -127,8 +127,9 @@ export type {
   DetailsListProps,
   DetailsListValueProps,
 } from './components/details-list/types';
-export { Dialog } from './components/dialog';
-export type { DialogProps } from './components/dialog';
+export { Dialog, DialogContext } from './components/dialog';
+export { DialogStyles } from './components/dialog/styles';
+export type { DialogProps } from './components/dialog/types';
 export {
   DrawerEventNamespace,
   DrawerEventTypes,
@@ -295,7 +296,13 @@ export type {
   StylePropRenderProps,
   StyleRenderProps,
 } from './lib/types';
-export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
+export {
+  cn,
+  isSlottedContextValue,
+  mergeVariants,
+  tv,
+  twMerge,
+} from './lib/utils';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
 export { designTokens } from './tokens/tokens';
 export type {

@@ -1,0 +1,66 @@
+{
+  "name": "@accelint/ntds",
+  "version": "0.0.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "type": "module",
+  "files": ["dist/**"],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsup && pnpm copy",
+    "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
+    "build:icons:masked": "smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
+    "copy": "pnpm copy:spritesheets",
+    "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
+    "license": "pnpm zx ../../scripts/license.mjs --files src",
+    "dev": "pnpm tsc --watch",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
+    "format": "pnpm biome format . --write",
+    "lint": "pnpm biome lint"
+  },
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/design-system": "workspace:*",
+    "@accelint/design-toolkit": "workspace:*",
+    "@accelint/smeegl": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@types/node": "20",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "esbuild-fix-imports-plugin": "1.0.21",
+    "lodash": "^4.17.21",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "8.5.0",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.21",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "author": "https://hypergiant.com",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9"
+  }
+}

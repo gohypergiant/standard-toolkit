@@ -21,6 +21,7 @@
     "@accelint/formatters": "workspace:*",
     "@accelint/geo": "workspace:*",
     "@accelint/math": "workspace:*",
+    "@accelint/ntds": "workspace:*",
     "@accelint/predicates": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",

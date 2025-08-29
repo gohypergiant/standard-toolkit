@@ -11,50 +11,51 @@
  */
 
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 import crc32 from 'crc32-universal';
+import type { Ora } from 'ora';
 import { Result } from 'true-myth';
+import { logMsg, logWarning } from '../log-messages.js';
 import { duplicateFile } from './duplicate-file.js';
-import type { CrcMode, GatherSpritesResult, SpriteInfo } from './types.js';
+import type { CopySpritesResult, CrcType, SpriteInfo } from './types.js';
 
-export async function copySprites(
+export async function copySpritesToTempDirectory(
   tmpDir: string,
-  sourceFileNames: string[],
+  sprites: SpriteInfo[],
   commonBasePath: string,
-  crcMode: CrcMode | null,
-): Promise<GatherSpritesResult> {
+  crcMode: CrcType | null,
+  spinner?: Ora,
+): Promise<CopySpritesResult> {
   try {
-    const sprites = (
+    const updatedSprites = (
       await Promise.all<SpriteInfo>(
-        sourceFileNames.map(async (sourceFileName) => {
-          const result: SpriteInfo = {
-            name: '',
-            indexName: '',
-            fileName: '',
-            filePath: '',
-          };
-
-          if (!fs.existsSync(sourceFileName)) {
-            console.error(
-              `❌ Error: Source svg file does not exist: ${sourceFileName}. Continuing on.`,
+        sprites.map(async (sprite) => {
+          const result: SpriteInfo = { ...sprite };
+          const { filePath } = sprite;
+          if (!fs.existsSync(filePath)) {
+            logWarning(
+              `Source svg file does not exist: ${filePath}. Continuing on.`,
+              spinner,
             );
+
             return result;
           }
 
-          const srcStats = fs.statSync(sourceFileName);
+          const srcStats = fs.statSync(filePath);
 
           if (!srcStats.isFile() || srcStats.size === 0) {
-            console.error(
-              `❌ Error: Source svg file is invalid: ${sourceFileName}. Please check the file and adjust. Continuing on.`,
+            logWarning(
+              `Source svg file is invalid: ${filePath}. Please check the file and adjust. Continuing on.`,
+              spinner,
             );
+
             return result;
           }
 
-          const fnWithExportedDirectoryStructure = sourceFileName
+          result.fileName = filePath
             .toLowerCase() // normalize to lowercase
             .replace(commonBasePath, '') // remove common base path
-            .replaceAll(/^\//g, ''); // remove leading slashes
-
-          result.fileName = fnWithExportedDirectoryStructure
+            .replaceAll(/^\//g, '') // remove leading slashes
             .replaceAll(/\//g, '-') // replace directory separators with hyphens
             .replaceAll(/ /g, '-') // replace spaces with hyphens
             .replaceAll(/\(\)/g, ''); // remove parentheses
@@ -68,18 +69,25 @@ export async function copySprites(
                 ? `${crc32(Buffer.from(result.fileName)).toString(10)}`
                 : result.name;
 
+          result.fileName = `${result.indexName}.svg`;
+
           result.filePath = await duplicateFile(
-            sourceFileName,
+            filePath,
             tmpDir,
-            `${result.indexName}.svg`,
+            result.fileName,
+          );
+
+          logMsg(
+            `Copied ${path.relative(process.cwd(), filePath)} -> ${result.filePath}`,
+            spinner,
           );
 
           return result;
         }),
       )
-    ).filter((it) => it.fileName !== '');
+    ).filter((it) => Boolean(it.indexName));
 
-    return Result.ok({ tmp: tmpDir, sprites });
+    return Result.ok({ tmp: tmpDir, sprites: updatedSprites });
   } catch (err) {
     return Result.err({ msg: (err as Error).message.trim(), tmp: tmpDir });
   }
