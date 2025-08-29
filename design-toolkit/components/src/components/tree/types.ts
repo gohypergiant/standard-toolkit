@@ -69,11 +69,10 @@ export type TreeContextValue = Required<
   visibleKeys?: Set<Key>;
   visibilityComputedKeys?: Set<Key>;
   isStatic: boolean;
-  setStaticViewable?: (key: Key) => void;
-  staticViewableKeys: Set<Key>;
 };
 
 export type TreeItemContextValue = {
   isVisible?: boolean;
   isViewable?: boolean;
+  setIsStaticViewable: (isViewable: boolean) => void;
 };

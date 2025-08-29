@@ -69,8 +69,6 @@ export const TreeContext = createContext<TreeContextValue>({
   variant: TreeStylesDefaults.variant,
   isStatic: true,
   onVisibilityChange: () => undefined,
-  setStaticViewable: (key: Key) => undefined,
-  staticViewableKeys: new Set<Key>(),
 });
 
 const defaultRenderDropIndicator = (target: DropTarget) => (
@@ -143,8 +141,6 @@ export function Tree<T>({
       'Tree `items` and node iterator `children` must be used together',
     );
   }
-
-  const staticViewableKeys = useRef(new Set<Key>());
 
   const { dragAndDropHooks } = useDragAndDrop({
     renderDropIndicator: defaultRenderDropIndicator,
@@ -233,8 +229,6 @@ export function Tree<T>({
         visibilityComputedKeys,
         isStatic: typeof children !== 'function',
         onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
-        setStaticViewable: (key: Key) => staticViewableKeys.current.add(key),
-        staticViewableKeys: staticViewableKeys.current,
       }}
     >
       <AriaTree
@@ -260,14 +254,15 @@ Tree.displayName = 'Tree';
 export const TreeItemContext = createContext<TreeItemContextValue>({
   isVisible: true,
   isViewable: true,
+  setIsStaticViewable: () => undefined,
 });
 
 export function TreeItem({ className, id, ...rest }: TreeItemProps) {
-  const { visibilityComputedKeys, visibleKeys, isStatic, staticViewableKeys } =
+  const isStaticViewable = useRef<boolean>(true);
+  const { visibilityComputedKeys, visibleKeys, isStatic } =
     useContext(TreeContext);
   const isViewable =
-    visibilityComputedKeys?.has(id) ||
-    (isStatic && staticViewableKeys?.has(id));
+    visibilityComputedKeys?.has(id) || (isStatic && isStaticViewable.current);
   const isVisible = visibleKeys?.has(id);
 
   return (
@@ -275,6 +270,8 @@ export function TreeItem({ className, id, ...rest }: TreeItemProps) {
       value={{
         isVisible,
         isViewable,
+        setIsStaticViewable: (isViewable: boolean) =>
+          (isStaticViewable.current = isViewable),
       }}
     >
       <AriaTreeItem
@@ -292,14 +289,10 @@ export function TreeItem({ className, id, ...rest }: TreeItemProps) {
 TreeItem.displayName = 'Tree.Item';
 
 function ItemContent({ children }: TreeItemContentProps) {
-  const {
-    showVisibility,
-    variant,
-    visibleKeys,
-    onVisibilityChange,
-    setStaticViewable,
-  } = useContext(TreeContext);
-  const { isVisible, isViewable } = useContext(TreeItemContext);
+  const { showVisibility, variant, visibleKeys, onVisibilityChange } =
+    useContext(TreeContext);
+  const { isVisible, isViewable, setIsStaticViewable } =
+    useContext(TreeItemContext);
   const size = variant === 'cozy' ? 'medium' : 'small';
 
   return (
@@ -318,13 +311,13 @@ function ItemContent({ children }: TreeItemContentProps) {
           isSelected,
         } = renderProps;
 
-        const item = state.collection.getItem(id);
-
         const isViewableComputed = () => {
           const ancestors = [];
+          const item = state.collection.getItem(id);
           if (!item?.parentKey) {
             return !!item?.props['data-visible'];
           }
+
           let parent = state.collection.getItem(item.parentKey);
           while (parent) {
             ancestors.push(parent);
@@ -334,11 +327,11 @@ function ItemContent({ children }: TreeItemContentProps) {
           return ancestors.every((n) => n.props['data-visible']);
         };
 
-        if (isViewableComputed()) {
-          setStaticViewable?.(id);
-        }
+        setIsStaticViewable?.(isViewableComputed());
 
-        const isLastOfSet = !(item?.nextKey || hasChildItems);
+        const isLastOfSet = !(
+          state.collection.getItem(id)?.nextKey || hasChildItems
+        );
         const shouldShowSelection =
           selectionBehavior === 'toggle' && selectionMode !== 'none';
 

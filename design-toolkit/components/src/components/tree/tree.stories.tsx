@@ -358,7 +358,9 @@ export const Stateless: Story = {
  */
 export const StaticCollection: Story = {
   render: (args) => {
-    const [expanded, setExpanded] = useState<Set<Key>>();
+    const [expanded, setExpanded] = useState<Set<Key>>(
+      new Set(['fruit', 'apples']),
+    );
     const [selected, setSelected] = useState<Set<Key>>(new Set());
     const [visibility, setVisibility] = useState<Set<Key>>(new Set());
 
