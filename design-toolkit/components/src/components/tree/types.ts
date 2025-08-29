@@ -53,8 +53,8 @@ export type TreeItemContentProps = Pick<
 
 export type TreeItemContentRenderProps = AriaTreeItemContentRenderProps &
   VariantProps<typeof TreeStyles> & {
-    isViewable: boolean;
-    isVisible: boolean;
+    isViewable?: boolean;
+    isVisible?: boolean;
   };
 
 export type TreeContextValue = Required<
@@ -69,4 +69,11 @@ export type TreeContextValue = Required<
   visibleKeys?: Set<Key>;
   visibilityComputedKeys?: Set<Key>;
   isStatic: boolean;
+  setStaticViewable?: (key: Key) => void;
+  staticViewableKeys: Set<Key>;
+};
+
+export type TreeItemContextValue = {
+  isVisible?: boolean;
+  isViewable?: boolean;
 };
