@@ -22,7 +22,7 @@ import { isLesserEqual } from '../is-lesser-equal';
  *
  * @remarks
  * - Pure function with no side effects
- * - Inclusive on both ends (>= lower bound and <= upper bound)
+ * - Inclusive on both ends (`>=` lower bound and `<=` upper bound)
  * - Automatically sorts bounds, so order doesn't matter in the tuple
  *
  * @example
