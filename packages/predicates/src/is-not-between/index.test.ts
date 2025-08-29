@@ -14,7 +14,7 @@ import fc from 'fast-check';
 import { it } from 'vitest';
 import { isNotBetween } from './';
 
-it('should correctly test if the value is between the two tuple elements', () => {
+it('should correctly test if the value is not between the two tuple elements', () => {
   fc.assert(
     fc.property(
       fc.tuple(fc.integer(), fc.integer()),

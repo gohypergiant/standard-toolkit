@@ -14,6 +14,8 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+export { doesEndWith } from './does-end-with';
+export { doesNotEndWith } from './does-not-end-with';
 export { doesNotStartWith } from './does-not-start-with';
 export { doesStartWith } from './does-start-with';
 export { isBbox } from './is-bbox';

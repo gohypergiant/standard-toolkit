@@ -17,7 +17,7 @@ import { doesNotStartWith } from './';
 const STRING_GEN = /^[a-z0-9]{16}$/;
 const TESTER_GEN = /^[a-z0-9]{4}$/;
 
-it('should correctly determine if the regex is not like the string', () => {
+it('should correctly determine if the string does not start with the prefix', () => {
   fc.assert(
     fc.property(
       fc.stringMatching(STRING_GEN),
