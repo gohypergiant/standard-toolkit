@@ -14,16 +14,37 @@ import { compose, not } from '@accelint/core';
 import { isLike } from '../is-like';
 
 /**
- * Determine if second string is not like the first string/RegExp.
+ * Creates a predicate function that determines if a string does not match
+ * a given pattern or regular expression.
  *
- * @param a - The string/RegExp to use for testing.
- * @param b - The string to test against.
+ * @param pattern - The string pattern or RegExp to use for testing
+ * @param input - The string to test against the pattern
+ * @returns A function that takes a string and returns true if it does not match the pattern
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Negation of `isLike` using functional composition
+ * - Accepts both string patterns and RegExp objects
+ * - String patterns are automatically converted to RegExp using `new RegExp(pattern)`
  *
  * @example
- * isNotLike(/[jt]s/)('.js'); // false
- * isNotLike(/[jt]s/)('.md'); // true
+ * ```typescript
+ * const isNotJsFile = isNotLike(/\.(js|ts)$/);
+ * isNotJsFile('style.css'); // true
+ * isNotJsFile('app.js');    // false
+ *
+ * const hasNoNumbers = isNotLike('[0-9]');
+ * hasNoNumbers('abcdef'); // true
+ * hasNoNumbers('abc123'); // false
+ *
+ * const isNotEmail = isNotLike(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+ * isNotEmail('invalid-email');    // true
+ * isNotEmail('user@example.com'); // false
+ *
+ * // Useful with arrays
+ * const files = ['app.js', 'style.css', 'main.ts', 'README.md'];
+ * const nonScriptFiles = files.filter(isNotLike(/\.(js|ts)$/)); // ['style.css', 'README.md']
+ * ```
  */
-export const isNotLike = (a: string | RegExp) => compose(not, isLike(a));
+export const isNotLike = (pattern: string | RegExp) =>
+  compose(not, isLike(pattern));

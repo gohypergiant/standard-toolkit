@@ -13,16 +13,29 @@
 import { equality } from '@accelint/core';
 
 /**
- * Determines if the provided values are strictly equal.
+ * Creates a predicate function that determines if a value is strictly equal to a reference value.
  *
- * @param a - The first value to check against.
- * @param b - The second value to check against.
+ * @param reference - The reference value to compare against
+ * @param value - The value to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Uses strict equality (===) comparison
+ * - Useful for array filtering and functional programming
  *
  * @example
- * isEqual(5)(32); // false
- * isEqual('foo')('foo'); // true
+ * ```typescript
+ * const isZero = isEqual(0);
+ * isZero(0);   // true
+ * isZero('0'); // false (strict equality)
+ *
+ * const isFoo = isEqual('foo');
+ * isFoo('foo'); // true
+ * isFoo('bar'); // false
+ *
+ * // Useful with arrays
+ * const numbers = [1, 2, 3, 2, 4];
+ * const twos = numbers.filter(isEqual(2)); // [2, 2]
+ * ```
  */
 export const isEqual = equality;

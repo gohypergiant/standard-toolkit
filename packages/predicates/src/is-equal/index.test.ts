@@ -16,8 +16,8 @@ import { isEqual } from './';
 
 it('should correctly test for equality', () => {
   fc.assert(
-    fc.property(fc.integer(), fc.integer(), (a, b) => {
-      return isEqual(a)(b) === (a === b);
+    fc.property(fc.integer(), fc.integer(), (reference, value) => {
+      return isEqual(reference)(value) === (reference === value);
     }),
     {
       verbose: 2,

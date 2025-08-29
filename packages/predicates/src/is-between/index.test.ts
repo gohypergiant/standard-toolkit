@@ -16,10 +16,17 @@ import { isBetween } from './';
 
 it('should correctly test if the value is between the two tuple elements', () => {
   fc.assert(
-    fc.property(fc.tuple(fc.integer(), fc.integer()), fc.integer(), (a, b) => {
-      const sorted = [...a].sort();
-      return isBetween(a)(b) === (b >= sorted[0] && b <= sorted[1]);
-    }),
+    fc.property(
+      fc.tuple(fc.integer(), fc.integer()),
+      fc.integer(),
+      (bounds, value) => {
+        const sorted = [...bounds].sort();
+        return (
+          isBetween(bounds)(value) ===
+          (value >= sorted[0] && value <= sorted[1])
+        );
+      },
+    ),
     {
       verbose: 2,
       // manual cases
@@ -27,6 +34,7 @@ it('should correctly test if the value is between the two tuple elements', () =>
         [[50, 198], 100],
         [[100, 89], 50],
         [[50, 60], 50],
+        [[0, 60], 0],
       ],
     },
   );

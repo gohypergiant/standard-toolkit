@@ -19,8 +19,8 @@ it('should correctly test value is not in array', () => {
     fc.property(
       fc.array(fc.integer(), { maxLength: 1000 }),
       fc.integer(),
-      (a, b) => {
-        return isNotIn(a)(b) === !a.includes(b);
+      (array, value) => {
+        return isNotIn(array)(value) === !array.includes(value);
       },
     ),
     {
