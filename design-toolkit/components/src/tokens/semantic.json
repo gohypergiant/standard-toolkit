@@ -1,81 +1,333 @@
 {
-  "colors": {
-    "surface": {
-      "default": "--colors-neutral-10",
-      "raised": "--colors-neutral-09",
-      "overlay": "--colors-neutral-08"
-    },
-    "transparent": {
-      "dark": "--colors-alpha-black-02",
-      "light": "--colors-alpha-white-01"
-    },
-    "interactive": {
-      "base": "--colors-neutral-05",
-      "default": "--colors-neutral-02",
-      "hover": {
-        "base": "--colors-neutral-01",
-        "light": "--colors-neutral-03",
-        "dark": "--colors-neutral-08"
+  "dark": {
+    "bg": {
+      "surface": {
+        "default": "--primitive-neutral-900",
+        "raised": "--primitive-neutral-800",
+        "overlay": "--primitive-neutral-800",
+        "muted": "--primitive-alpha-white-100"
       },
-      "disabled": "--colors-neutral-07"
+      "interactive": {
+        "bold": {
+          "base": "--primitive-neutral-100",
+          "hover": "--primitive-neutral-200",
+          "pressed": "--primitive-neutral-400"
+        },
+        "muted": {
+          "base": "--primitive-neutral-700",
+          "hover": "--primitive-neutral-600",
+          "pressed": "--primitive-neutral-950"
+        },
+        "disabled": "--primitive-neutral-700"
+      },
+      "accent": {
+        "primary": {
+          "bold": "--primitive-accent-primary-700",
+          "hover": "--primitive-accent-primary-600",
+          "pressed": "--primitive-accent-primary-800",
+          "muted": "--primitive-accent-primary-800"
+        }
+      },
+      "info": {
+        "bold": "--primitive-utility-info-500",
+        "hover": "--primitive-utility-info-400",
+        "pressed": "--primitive-utility-info-600",
+        "muted": "--primitive-utility-info-800"
+      },
+      "advisory": {
+        "bold": "--primitive-utility-advisory-600",
+        "hover": "--primitive-utility-advisory-500",
+        "pressed": "--primitive-utility-advisory-700",
+        "muted": "--primitive-utility-advisory-900"
+      },
+      "normal": {
+        "bold": "--primitive-utility-normal-600",
+        "hover": "--primitive-utility-normal-500",
+        "pressed": "--primitive-utility-normal-700",
+        "muted": "--primitive-utility-normal-900"
+      },
+      "serious": {
+        "bold": "--primitive-utility-serious-600",
+        "hover": "--primitive-utility-serious-500",
+        "pressed": "--primitive-utility-serious-800",
+        "muted": "--primitive-utility-serious-900"
+      },
+      "critical": {
+        "bold": "--primitive-utility-critical-700",
+        "hover": "--primitive-utility-critical-600",
+        "pressed": "--primitive-utility-critical-800",
+        "muted": "--primitive-utility-critical-900"
+      }
     },
-    "static": {
-      "light": "--colors-neutral-07",
-      "dark": "--colors-neutral-09"
+    "fg": {
+      "primary": {
+        "bold": "--primitive-neutral-50",
+        "muted": "--primitive-neutral-300"
+      },
+      "inverse": {
+        "bold": "--primitive-neutral-800",
+        "muted": "--primitive-neutral-400"
+      },
+      "disabled": "--primitive-neutral-500",
+      "accent": {
+        "primary": {
+          "bold": "--primitive-accent-primary-400",
+          "hover": "--primitive-accent-primary-200",
+          "pressed": "--primitive-accent-primary-600"
+        }
+      },
+      "info": {
+        "bold": "--primitive-utility-info-400",
+        "hover": "--primitive-utility-info-200",
+        "pressed": "--primitive-utility-info-600"
+      },
+      "advisory": {
+        "bold": "--primitive-utility-advisory-400",
+        "hover": "--primitive-utility-advisory-200",
+        "pressed": "--primitive-utility-advisory-600"
+      },
+      "normal": {
+        "bold": "--primitive-utility-normal-400",
+        "hover": "--primitive-utility-normal-200",
+        "pressed": "--primitive-utility-normal-600"
+      },
+      "serious": {
+        "bold": "--primitive-utility-serious-500",
+        "hover": "--primitive-utility-serious-300",
+        "pressed": "--primitive-utility-serious-600"
+      },
+      "critical": {
+        "bold": "--primitive-utility-critical-400",
+        "hover": "--primitive-utility-critical-300",
+        "pressed": "--primitive-utility-critical-600"
+      },
+      "a11y": {
+        "on-accent": "--primitive-neutral-50",
+        "on-utility": "--primitive-neutral-50"
+      }
     },
-    "highlight": {
-      "base": "--colors-highlight-primary-03",
-      "bold": "--colors-highlight-primary-03",
-      "hover": "--colors-highlight-primary-04",
-      "subtle": "--colors-highlight-primary-05"
+    "outline": {
+      "static": "--primitive-neutral-600",
+      "interactive": {
+        "base": "--primitive-neutral-600",
+        "hover": "--primitive-neutral-400",
+        "pressed": "--primitive-neutral-700",
+        "disabled": "--primitive-neutral-700"
+      },
+      "accent": {
+        "primary": {
+          "bold": "--primitive-accent-primary-300",
+          "hover": "--primitive-accent-primary-200",
+          "pressed": "--primitive-accent-primary-600"
+        }
+      },
+      "info": {
+        "bold": "--primitive-utility-info-400",
+        "hover": "--primitive-utility-info-200",
+        "pressed": "--primitive-utility-info-600"
+      },
+      "advisory": {
+        "bold": "--primitive-utility-advisory-400",
+        "hover": "--primitive-utility-advisory-200",
+        "pressed": "--primitive-utility-advisory-600"
+      },
+      "normal": {
+        "bold": "--primitive-utility-normal-400",
+        "hover": "--primitive-utility-normal-200",
+        "pressed": "--primitive-utility-normal-600"
+      },
+      "serious": {
+        "bold": "--primitive-utility-serious-500",
+        "hover": "--primitive-utility-serious-200",
+        "pressed": "--primitive-utility-serious-700"
+      },
+      "critical": {
+        "bold": "--primitive-utility-critical-400",
+        "hover": "--primitive-utility-critical-300",
+        "pressed": "--primitive-utility-critical-600"
+      }
     },
-    "info": {
-      "base": "--colors-neutral-04",
-      "bold": "--colors-utility-info-03",
-      "hover": "--colors-utility-info-04",
-      "subtle": "--colors-utility-info-05"
+    "shadow": {
+      "elevation": {
+        "raised": "--shadow-elevation-raised-bold",
+        "overlay": "--shadow-elevation-overlay-bold"
+      }
+    }
+  },
+  "light": {
+    "bg": {
+      "surface": {
+        "default": "--primitive-neutral-100",
+        "raised": "--primitive-neutral-50",
+        "overlay": "--primitive-neutral-50",
+        "muted": "--primitive-alpha-black-100"
+      },
+      "interactive": {
+        "bold": {
+          "base": "--primitive-neutral-900",
+          "hover": "--primitive-neutral-800",
+          "pressed": "--primitive-neutral-300"
+        },
+        "muted": {
+          "base": "--primitive-neutral-300",
+          "hover": "--primitive-neutral-200",
+          "pressed": "--primitive-neutral-400"
+        },
+        "disabled": "--primitive-neutral-200"
+      },
+      "accent": {
+        "primary": {
+          "bold": "--primitive-accent-primary-700",
+          "hover": "--primitive-accent-primary-600",
+          "pressed": "--primitive-accent-primary-800",
+          "muted": "--primitive-accent-primary-100"
+        }
+      },
+      "info": {
+        "bold": "--primitive-utility-info-400",
+        "hover": "--primitive-utility-info-300",
+        "pressed": "--primitive-utility-info-600",
+        "muted": "--primitive-utility-info-100"
+      },
+      "advisory": {
+        "bold": "--primitive-utility-advisory-600",
+        "hover": "--primitive-utility-advisory-500",
+        "pressed": "--primitive-utility-advisory-700",
+        "muted": "--primitive-utility-advisory-100"
+      },
+      "normal": {
+        "bold": "--primitive-utility-normal-600",
+        "hover": "--primitive-utility-normal-500",
+        "pressed": "--primitive-utility-normal-700",
+        "muted": "--primitive-utility-normal-100"
+      },
+      "serious": {
+        "bold": "--primitive-utility-serious-600",
+        "hover": "--primitive-utility-serious-500",
+        "pressed": "--primitive-utility-serious-800",
+        "muted": "--primitive-utility-serious-100"
+      },
+      "critical": {
+        "bold": "--primitive-utility-critical-700",
+        "hover": "--primitive-utility-critical-600",
+        "pressed": "--primitive-utility-critical-800",
+        "muted": "--primitive-utility-critical-100"
+      }
     },
-    "advisory": {
-      "base": "--colors-utility-advisory-03",
-      "bold": "--colors-utility-advisory-03",
-      "hover": "--colors-utility-advisory-04",
-      "subtle": "--colors-utility-advisory-05"
+    "fg": {
+      "primary": {
+        "bold": "--primitive-neutral-800",
+        "muted": "--primitive-neutral-500"
+      },
+      "inverse": {
+        "bold": "--primitive-neutral-50",
+        "muted": "--primitive-neutral-400"
+      },
+      "disabled": "--primitive-neutral-300",
+      "accent": {
+        "primary": {
+          "bold": "--primitive-accent-primary-300",
+          "hover": "--primitive-accent-primary-200",
+          "pressed": "--primitive-accent-primary-600"
+        }
+      },
+      "info": {
+        "bold": "--primitive-utility-info-600",
+        "hover": "--primitive-utility-info-700",
+        "pressed": "--primitive-utility-info-500"
+      },
+      "advisory": {
+        "bold": "--primitive-utility-advisory-400",
+        "hover": "--primitive-utility-advisory-600",
+        "pressed": "--primitive-utility-advisory-500"
+      },
+      "normal": {
+        "bold": "--primitive-utility-normal-400",
+        "hover": "--primitive-utility-normal-600",
+        "pressed": "--primitive-utility-normal-500"
+      },
+      "serious": {
+        "bold": "--primitive-utility-serious-600",
+        "hover": "--primitive-utility-serious-700",
+        "pressed": "--primitive-utility-serious-600"
+      },
+      "critical": {
+        "bold": "--primitive-utility-critical-400",
+        "hover": "--primitive-utility-critical-600",
+        "pressed": "--primitive-utility-critical-500"
+      },
+      "a11y": {
+        "on-accent": "--primitive-neutral-50",
+        "on-utility": "--primitive-neutral-50"
+      }
     },
-    "normal": {
-      "base": "--colors-utility-normal-03",
-      "bold": "--colors-utility-normal-03",
-      "hover": "--colors-utility-normal-04",
-      "subtle": "--colors-utility-normal-05"
+    "outline": {
+      "static": "--primitive-neutral-300",
+      "interactive": {
+        "base": "--primitive-neutral-300",
+        "hover": "--primitive-neutral-400",
+        "pressed": "--primitive-neutral-200",
+        "disabled": "--primitive-neutral-200"
+      },
+      "accent": {
+        "primary": {
+          "bold": "--primitive-accent-primary-300",
+          "hover": "--primitive-accent-primary-600",
+          "pressed": "--primitive-accent-primary-200"
+        }
+      },
+      "info": {
+        "bold": "--primitive-utility-info-400",
+        "hover": "--primitive-utility-info-600",
+        "pressed": "--primitive-utility-info-500"
+      },
+      "advisory": {
+        "bold": "--primitive-utility-advisory-400",
+        "hover": "--primitive-utility-advisory-600",
+        "pressed": "--primitive-utility-advisory-500"
+      },
+      "normal": {
+        "bold": "--primitive-utility-normal-400",
+        "hover": "--primitive-utility-normal-600",
+        "pressed": "--primitive-utility-normal-500"
+      },
+      "serious": {
+        "bold": "--primitive-utility-serious-600",
+        "hover": "--primitive-utility-serious-700",
+        "pressed": "--primitive-utility-serious-500"
+      },
+      "critical": {
+        "bold": "--primitive-utility-critical-400",
+        "hover": "--primitive-utility-critical-600",
+        "pressed": "--primitive-utility-critical-500"
+      }
     },
-    "serious": {
-      "base": "--colors-utility-serious-03",
-      "bold": "--colors-utility-serious-03",
-      "hover": "--colors-utility-serious-04",
-      "subtle": "--colors-utility-serious-05"
-    },
-    "critical": {
-      "base": "--colors-utility-critical-03",
-      "bold": "--colors-utility-critical-03",
-      "hover": "--colors-utility-critical-04",
-      "subtle": "--colors-utility-critical-05"
-    },
-    "default": {
-      "light": "--colors-neutral-01",
-      "dark": "--colors-neutral-03"
-    },
-    "inverse": {
-      "dark": "--colors-neutral-07",
-      "light": "--colors-neutral-09"
-    },
-    "disabled": "--colors-neutral-05",
+    "shadow": {
+      "elevation": {
+        "raised": "--shadow-elevation-raised-muted",
+        "overlay": "--shadow-elevation-overlay-muted"
+      }
+    }
+  },
+  "static": {
     "classification": {
-      "missing": "--colors-neutral-10",
-      "unclass": "--colors-classification-unclass",
-      "cui": "--colors-classification-cui",
-      "confidential": "--colors-classification-confidential",
-      "secret": "--colors-classification-secret",
-      "top-secret": "--colors-classification-top-secret",
-      "ts-sci": "--colors-classification-ts-sci"
+      "missing": "--primitive-classification-missing",
+      "unclass": "--primitive-classification-unclass",
+      "cui": "--primitive-classification-cui",
+      "confidential": "--primitive-classification-confidential",
+      "secret": "--primitive-classification-secret",
+      "top-secret": "--primitive-classification-top-secret",
+      "ts-sci": "--primitive-classification-ts-sci"
+    },
+    "roe": {
+      "pending": "--primitive-roe-id-pending",
+      "friend": "--primitive-roe-id-friend",
+      "assumed-friend": "--primitive-roe-id-assumed-friend",
+      "neutral": "--primitive-roe-id-neutral",
+      "unknown": "--primitive-roe-id-unknown",
+      "suspect": "--primitive-roe-id-suspect",
+      "hostile": "--primitive-roe-id-hostile",
+      "no-statement": "--primitive-roe-id-pending"
     }
   }
 }

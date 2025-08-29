@@ -107,7 +107,7 @@ export const Default: Story = {
                 } as CSSProperties
               }
             >
-              <div className='flex w-1/2 flex-col rounded-large border-2 border-default-dark bg-surface-overlay p-xl [&>*]:my-s'>
+              <div className='flex w-1/2 flex-col rounded-large bg-surface-overlay p-xl outline-2 outline-info-bold [&>*]:my-s'>
                 <p>This page is for demo purposes only!</p>
               </div>
             </div>
@@ -116,7 +116,7 @@ export const Default: Story = {
           <Drawer id={ids.top.drawer} placement='top' size='medium'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.top.views.a}>
-                <ChevronDown className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronDown className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.top.views.b}>
                 <Placeholder />
@@ -144,7 +144,7 @@ export const Default: Story = {
           <Drawer id={ids.bottom.drawer} placement='bottom'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.bottom.views.a}>
-                <ChevronUp className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronUp className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.bottom.views.b}>
                 <Placeholder />
@@ -172,7 +172,7 @@ export const Default: Story = {
           <Drawer id={ids.left.drawer} placement='left'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.left.views.a}>
-                <ChevronRight className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.left.views.b}>
                 <Placeholder />
@@ -200,7 +200,7 @@ export const Default: Story = {
           <Drawer id={ids.right.drawer} placement='right'>
             <Drawer.Menu>
               <Drawer.Menu.Item toggle for={ids.right.views.a}>
-                <ChevronLeft className='cursor-pointer text-default-light group-open/drawer:rotate-180' />
+                <ChevronLeft className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
               <Drawer.Menu.Item for={ids.right.views.b}>
                 <Placeholder />

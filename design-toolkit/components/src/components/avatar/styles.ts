@@ -15,7 +15,7 @@ import { tv } from '@/lib/utils';
 export const AvatarStyles = tv({
   slots: {
     avatar: [
-      `group/avatar grid [grid-template-areas:'content'] rounded-full bg-surface-overlay fg-default-dark`,
+      `group/avatar grid [grid-template-areas:'content'] rounded-full bg-surface-overlay fg-primary-muted`,
       'size-medium:size-[32px] size-medium:text-header-m',
       'size-small:size-xl size-small:text-header-xs',
     ],

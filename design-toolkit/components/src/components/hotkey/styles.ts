@@ -18,8 +18,8 @@ export const HotkeyStylesDefaults = {
 
 export const HotkeyStyles = tv({
   slots: {
-    key: 'fg-default-light w-fit min-w-xl p-xs text-header-s uppercase',
-    set: 'fg-default-dark flex items-center gap-xs text-header-m',
+    key: 'fg-primary-bold w-fit min-w-xl p-xs text-header-s uppercase',
+    set: 'fg-primary-muted flex items-center gap-xs text-header-m',
   },
   variants: {
     variant: {
@@ -27,7 +27,7 @@ export const HotkeyStyles = tv({
         key: 'bg-transparent',
       },
       outline: {
-        key: 'rounded-medium border border-info border-b-[3px] bg-surface-default',
+        key: 'rounded-medium bg-surface-default shadow-[0_3px] shadow-[color:var(--outline-info-bold)] outline outline-info-bold',
       },
       icon: {
         key: '-mx-xs bg-transparent px-0',

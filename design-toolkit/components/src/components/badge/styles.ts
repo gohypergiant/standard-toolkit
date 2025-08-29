@@ -18,7 +18,7 @@ export const BadgeStylesDefaults = {
 
 export const BadgeStyles = tv({
   base: [
-    'group/badge fg-default-light inline-flex items-center justify-center rounded-full px-xs text-body-xs outline empty:size-s empty:px-none',
+    'group/badge fg-primary-bold inline-flex items-center justify-center rounded-full px-xs text-body-xs outline empty:size-s empty:px-none',
     '[&[data-placement]]:absolute',
     'placement-top:-translate-y-1/2 placement-top:top-[attr(data-offset-y_px,0px)]',
     'placement-right:right-[attr(data-offset-x_px,0px)] placement-right:translate-x-1/2',
@@ -27,11 +27,11 @@ export const BadgeStyles = tv({
   ],
   variants: {
     variant: {
-      info: 'bg-info-subtle outline-info-bold',
-      advisory: 'bg-advisory-subtle outline-advisory-bold',
-      normal: 'bg-normal-subtle outline-normal',
-      serious: 'bg-serious-subtle outline-serious',
-      critical: 'bg-critical-subtle outline-critical',
+      info: 'bg-info-muted outline-info-bold',
+      advisory: 'bg-advisory-muted outline-advisory-bold',
+      normal: 'bg-normal-muted outline-normal-bold',
+      serious: 'bg-serious-muted outline-serious-bold',
+      critical: 'bg-critical-muted outline-critical-bold',
     },
   },
   defaultVariants: BadgeStylesDefaults,

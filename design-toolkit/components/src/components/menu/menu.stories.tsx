@@ -244,7 +244,7 @@ export const ContextMenu: StoryObj<typeof Menu> = {
 
     return (
       <div
-        className='fg-default-light m-xl flex h-dvh w-dvh items-center justify-center border border-b-default-dark border-dotted bg-surface-raised'
+        className='fg-primary-bold m-xl flex h-dvh w-dvh items-center justify-center bg-surface-raised'
         onContextMenu={(e) => {
           e.preventDefault();
           setMenuPosition({ x: e.clientX, y: e.clientY });

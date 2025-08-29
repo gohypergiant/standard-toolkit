@@ -43,7 +43,7 @@ type Story = StoryObj<typeof Dialog>;
 export const Default: Story = {
   render: ({ children, ...args }) => {
     return (
-      <div className='relative h-[800px] w-[600px] border border-default-light p-l'>
+      <div className='relative h-[800px] w-[600px] p-l outline outline-info-bold'>
         <Dialog.Trigger>
           <Button>Press Me</Button>
           <Dialog {...args}>
@@ -67,7 +67,7 @@ export const LocalPortal: Story = {
     const parentRef = useRef(null);
 
     return (
-      <div className='flex h-[600px] w-[960px] border border-default-light'>
+      <div className='flex h-[600px] w-[960px] outline outline-info-bold'>
         <div className='w-full p-l'>
           <Dialog.Trigger>
             <Button>Press Me</Button>
@@ -85,7 +85,7 @@ export const LocalPortal: Story = {
         </div>
         <div
           ref={parentRef}
-          className='relative h-full w-[500px] bg-default-dark'
+          className='relative h-full w-[500px] bg-info-bold'
         />
       </div>
     );
@@ -101,7 +101,7 @@ export const Controlled: Story = {
     const handleOpenPress = useCallback(() => setOpen(true), []);
 
     return (
-      <div className='h-[800px] w-[600px] border border-default-light p-l'>
+      <div className='h-[800px] w-[600px] p-l outline outline-info-bold'>
         <Dialog.Trigger isOpen={open} onOpenChange={handleOpenChange}>
           <Button isDisabled>Disabled</Button>
           <Dialog>

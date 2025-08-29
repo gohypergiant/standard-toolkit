@@ -19,7 +19,7 @@ export const ColorPickerStyles = tv({
       'w-fit cursor-pointer outline outline-transparent',
       'focus-visible:outline-interactive-hover',
       'hover:outline-interactive-hover',
-      'selected:cursor-default selected:outline-highlight',
+      'selected:cursor-default selected:outline-accent-primary-bold',
     ],
     swatch: 'size-l',
   },

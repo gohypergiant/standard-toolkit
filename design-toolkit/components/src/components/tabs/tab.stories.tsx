@@ -49,7 +49,7 @@ export const Default: Story = {
   render: ({ id, isDisabled, children }) => (
     <div className='flex w-full flex-row flex-wrap gap-m'>
       <div className='flex w-[300px] flex-col gap-m'>
-        <h5 className='fg-default-light'>Horizontal Orientation</h5>
+        <h5 className='fg-primary-bold'>Horizontal Orientation</h5>
         <Tabs orientation='horizontal'>
           <Tabs.List>
             <Tabs.Tab id='Storybook-Tab-1'>Tab 1</Tabs.Tab>
@@ -61,7 +61,7 @@ export const Default: Story = {
         </Tabs>
       </div>
       <div className='flex w-[300px] flex-col gap-m'>
-        <h5 className='fg-default-light'>Vertical Orientation</h5>
+        <h5 className='fg-primary-bold'>Vertical Orientation</h5>
         <Tabs orientation='vertical'>
           <Tabs.List>
             <Tabs.Tab id='Storybook-Vert-Tab-1'>Tab 1</Tabs.Tab>
