@@ -239,12 +239,9 @@ export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
 export { Tabs } from './components/tabs';
-export type {
-  TabListProps,
-  TabPanelProps,
-  TabProps,
-  TabsProps,
-} from './components/tabs';
+export { TabListStylesDefaults, TabStyles } from './components/tabs/styles';
+export type { TabStyleVariants } from './components/tabs/styles';
+export type { TabListProps } from './components/tabs/types';
 export {
   TextAreaField,
   TextAreaFieldContext,
