@@ -21,6 +21,7 @@ import {
   useContext,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import {
   Text as AriaText,
@@ -258,11 +259,11 @@ export const TreeItemContext = createContext<TreeItemContextValue>({
 });
 
 export function TreeItem({ className, id, ...rest }: TreeItemProps) {
-  const isStaticViewable = useRef<boolean>(true);
+  const [isStaticViewable, setStaticViewable] = useState(true);
   const { visibilityComputedKeys, visibleKeys, isStatic } =
     useContext(TreeContext);
   const isViewable =
-    visibilityComputedKeys?.has(id) || (isStatic && isStaticViewable.current);
+    visibilityComputedKeys?.has(id) || (isStatic && isStaticViewable);
   const isVisible = visibleKeys?.has(id);
 
   return (
@@ -271,7 +272,7 @@ export function TreeItem({ className, id, ...rest }: TreeItemProps) {
         isVisible,
         isViewable,
         setIsStaticViewable: (isViewable: boolean) =>
-          (isStaticViewable.current = isViewable),
+          setStaticViewable(isViewable),
       }}
     >
       <AriaTreeItem
