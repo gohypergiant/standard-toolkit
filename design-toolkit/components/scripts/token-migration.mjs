@@ -148,7 +148,6 @@ const replacementMap = new Map([
 
 const leGlob = 'src/**/*.{ts,tsx}';
 console.log(`🔍 Finding and replacing in ${leGlob}`);
-console.log();
 
 const files = await glob(leGlob, {
   // tailor this to your needs
