@@ -11,25 +11,25 @@
  */
 
 /**
- * Creates a predicate function that determines if a string starts with a specific prefix.
+ * Creates a predicate function that determines if a string ends with a specific suffix.
  *
- * @param prefix - The substring to use as the prefix
+ * @param suffix - The substring to use as the suffix
  * @param input - The string to test
  *
  * @remarks
  * - Pure function with no side effects
  * - Case-sensitive comparison
- * - Uses String.prototype.startsWith() internally
+ * - Uses String.prototype.endsWith() internally
  * - Useful for array filtering and functional programming
  *
  * @example
  * ```typescript
- * const startsWithHttp = doesStartWith('http');
- * startsWithHttp('https://example.com'); // true
- * startsWithHttp('ftp://example.com');   // false
+ * const isJsFile = doesEndWith('.js');
+ * isJsFile('app.js');   // true
+ * isJsFile('style.css'); // false
  * ```
  */
-export const doesStartWith =
-  (prefix: string) =>
+export const doesEndWith =
+  (suffix: string) =>
   (input: string): boolean =>
-    input.startsWith(prefix);
+    input.endsWith(suffix);
