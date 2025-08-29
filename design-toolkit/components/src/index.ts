@@ -326,7 +326,13 @@ export type {
   StylePropRenderProps,
   StyleRenderProps,
 } from './lib/types';
-export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
+export {
+  cn,
+  isSlottedContextValue,
+  mergeVariants,
+  tv,
+  twMerge,
+} from './lib/utils';
 export {
   colorAdvisory,
   colorAdvisoryBold,
