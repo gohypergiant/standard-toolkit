@@ -22,16 +22,16 @@ it('should correctly determine if the regex is not like the string', () => {
     fc.property(
       fc.stringMatching(STRING_GEN),
       fc.stringMatching(TESTER_GEN),
-      (a, b) => {
-        return doesStartWith(a)(b) === a.startsWith(b);
+      (prefix, input) => {
+        return doesStartWith(prefix)(input) === input.startsWith(prefix);
       },
     ),
     {
       verbose: 2,
       // manual cases
       examples: [
-        ['b7a70c6346b5', 'b7a7'],
-        ['471aead1ae80', 'b7a7'],
+        ['b7a7', 'b7a70c6346b5'],
+        ['b7a7', '471aead1ae80'],
       ],
     },
   );
