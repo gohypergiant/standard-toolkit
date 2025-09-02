@@ -52,11 +52,7 @@ export function Nav() {
         </LinkButton>
       </div>
       <div>
-        <Button
-          variant='icon'
-          onPress={handleModeToggle}
-          className='sudo:fg-primary-bold'
-        >
+        <Button variant='icon' onPress={handleModeToggle}>
           Theme toggle
           <Icon size='large'>
             <Brightness />
