@@ -14,12 +14,19 @@ import fc from 'fast-check';
 import { it } from 'vitest';
 import { isNotBetween } from './';
 
-it('should correctly test if the value is between the two tuple elements', () => {
+it('should correctly test if the value is not between the two tuple elements', () => {
   fc.assert(
-    fc.property(fc.tuple(fc.integer(), fc.integer()), fc.integer(), (a, b) => {
-      const sorted = [...a].sort();
-      return isNotBetween(a)(b) === !(b >= sorted[0] && b <= sorted[1]);
-    }),
+    fc.property(
+      fc.tuple(fc.integer(), fc.integer()),
+      fc.integer(),
+      (bounds, value) => {
+        const sorted = [...bounds].sort();
+        return (
+          isNotBetween(bounds)(value) ===
+          !(value >= sorted[0] && value <= sorted[1])
+        );
+      },
+    ),
     {
       verbose: 2,
       // manual cases

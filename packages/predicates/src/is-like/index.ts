@@ -11,17 +11,38 @@
  */
 
 /**
- * Determine if second string is like the first string/RegExp.
+ * Creates a predicate function that determines if a string matches a given pattern or regular expression.
  *
- * @param a - The string/RegExp to use for testing.
- * @param b - The string to test against.
+ * @param pattern - The string pattern or RegExp to use for testing
+ * @param input - The string to test against the pattern
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Accepts both string patterns and RegExp objects
+ * - String patterns are automatically converted to RegExp using `new RegExp(pattern)`
+ * - Uses RegExp.prototype.test() for pattern matching
+ * - Useful for string validation and array filtering
  *
  * @example
- * isLike(/[jt]s/)('.js'); // true
- * isLike(/[jt]s/)('.md'); // false
+ * ```typescript
+ * const isJsFile = isLike(/\.(js|ts)$/);
+ * isJsFile('app.js');   // true
+ * isJsFile('style.css'); // false
+ *
+ * const hasNumbers = isLike('[0-9]');
+ * hasNumbers('abc123'); // true
+ * hasNumbers('abcdef'); // false
+ *
+ * const isEmail = isLike(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+ * isEmail('user@example.com'); // true
+ * isEmail('invalid-email');    // false
+ *
+ * // Useful with arrays
+ * const files = ['app.js', 'style.css', 'main.ts', 'README.md'];
+ * const scriptFiles = files.filter(isLike(/\.(js|ts)$/)); // ['app.js', 'main.ts']
+ * ```
  */
-export const isLike = (a: string | RegExp) => (b: string) =>
-  (a instanceof RegExp ? a : new RegExp(a)).test(b);
+export const isLike =
+  (pattern: string | RegExp) =>
+  (input: string): boolean =>
+    (pattern instanceof RegExp ? pattern : new RegExp(pattern)).test(input);

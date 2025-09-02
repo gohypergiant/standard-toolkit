@@ -11,20 +11,36 @@
  */
 
 /**
- * Determines if the value is in the provided array.
+ * Creates a predicate function that determines if a value exists in a given array.
  *
- * @param a - The array to check for the value in.
- * @param b - The value to check for.
- * @template T - The type of the value/array.
+ * @template T - The type of the array elements and value
+ * @param array - The array to search within
+ * @param value - The value to check for
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Uses Array.prototype.includes() for membership testing
+ * - Uses strict equality (===) for element comparison
+ * - Works with any type that can be compared with strict equality
+ * - Useful for array filtering and validation predicates
  *
  * @example
- * isIn([58, 93, 29, 23])(23); // true
- * isIn([58, 93, 29, 123])(23); // false
+ * ```typescript
+ * const isValidStatus = isIn(['pending', 'approved', 'rejected']);
+ * isValidStatus('pending');  // true
+ * isValidStatus('unknown');  // false
+ *
+ * const isPrime = isIn([2, 3, 5, 7, 11, 13]);
+ * isPrime(7);  // true
+ * isPrime(10); // false
+ *
+ * // Useful with arrays
+ * const userIds = [101, 102, 103, 104];
+ * const activeUsers = [101, 103, 105, 106];
+ * const validActiveUsers = activeUsers.filter(isIn(userIds)); // [101, 103]
+ * ```
  */
 export const isIn =
-  <T>(a: T[]) =>
-  (b: T) =>
-    a.includes(b);
+  <T>(array: T[]) =>
+  (value: T) =>
+    array.includes(value);

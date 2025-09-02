@@ -14,16 +14,28 @@ import { compose, not } from '@accelint/core';
 import { isBetween } from '../is-between';
 
 /**
- * Determine if the given value is not between the the values in the tuple.
+ * Creates a predicate function that determines if a number is not between two bounds (exclusive of range).
  *
- * @param a - The tuple to check against.
- * @param b - The number to check.
+ * @param bounds - The tuple containing the lower and upper bounds (order doesn't matter)
+ * @param value - The number to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Negation of `isBetween` using functional composition
+ * - Automatically sorts bounds, so order doesn't matter in the tuple
  *
  * @example
- * isBetween([42, 101])(89); // false
- * isBetween([42, 126])(7); // true
+ * ```typescript
+ * const isOutOfRange = isNotBetween([10, 90]);
+ * isOutOfRange(5);   // true (below range)
+ * isOutOfRange(95);  // true (above range)
+ * isOutOfRange(50);  // false (within range)
+ * isOutOfRange(10);  // false (on boundary, inclusive)
+ *
+ * // Useful for validation
+ * const scores = [5, 25, 75, 95, 105];
+ * const outliers = scores.filter(isNotBetween([0, 100])); // [105]
+ * ```
  */
-export const isNotBetween = (a: [number, number]) => compose(not, isBetween(a));
+export const isNotBetween = (bounds: [number, number]) =>
+  compose(not, isBetween(bounds));

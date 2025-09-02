@@ -13,16 +13,31 @@
 import { compose, equality, not } from '@accelint/core';
 
 /**
- * Determines if the provided values are not strictly equal.
+ * Creates a predicate function that determines if a value is not strictly equal to a reference value.
  *
- * @param a - The first value to check against.
- * @param b - The second value to check against.
+ * @param reference - The reference value to compare against
+ * @param value - The value to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Uses strict inequality (!==) comparison
+ * - Negation of `isEqual` using functional composition
  *
  * @example
- * isNotEqual(5)(32); // true
- * isNotEqual('foo')('foo'); // false
+ * ```typescript
+ * const isNotZero = isNotEqual(0);
+ * isNotZero(5);   // true
+ * isNotZero('0'); // true (strict inequality)
+ * isNotZero(0);   // false
+ *
+ * const isNotFoo = isNotEqual('foo');
+ * isNotFoo('bar'); // true
+ * isNotFoo('foo'); // false
+ *
+ * // Useful with arrays
+ * const values = [1, null, 2, null, 3];
+ * const nonNull = values.filter(isNotEqual(null)); // [1, 2, 3]
+ * ```
  */
-export const isNotEqual = (a: unknown) => compose(not, equality(a));
+export const isNotEqual = (reference: unknown) =>
+  compose(not, equality(reference));

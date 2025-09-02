@@ -10,29 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import fc from 'fast-check';
-import { it } from 'vitest';
-import { doesNotStartWith } from './';
-
-const STRING_GEN = /^[a-z0-9]{16}$/;
-const TESTER_GEN = /^[a-z0-9]{4}$/;
-
-it('should correctly determine if the string does not start with the prefix', () => {
-  fc.assert(
-    fc.property(
-      fc.stringMatching(STRING_GEN),
-      fc.stringMatching(TESTER_GEN),
-      (prefix, input) => {
-        return doesNotStartWith(prefix)(input) === !input.startsWith(prefix);
-      },
-    ),
-    {
-      verbose: 2,
-      // manual cases
-      examples: [
-        ['b7a7', 'b7a70c6346b5'],
-        ['b7a7', '471aead1ae80'],
-      ],
-    },
-  );
-});
+/**
+ * Creates a predicate function that determines if a string ends with a specific suffix.
+ *
+ * @param suffix - The substring to use as the suffix
+ * @param input - The string to test
+ *
+ * @remarks
+ * - Pure function with no side effects
+ * - Case-sensitive comparison
+ * - Uses String.prototype.endsWith() internally
+ * - Useful for array filtering and functional programming
+ *
+ * @example
+ * ```typescript
+ * const isJsFile = doesEndWith('.js');
+ * isJsFile('app.js');   // true
+ * isJsFile('style.css'); // false
+ * ```
+ */
+export const doesEndWith =
+  (suffix: string) =>
+  (input: string): boolean =>
+    input.endsWith(suffix);
