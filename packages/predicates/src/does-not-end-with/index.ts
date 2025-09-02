@@ -10,9 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import { addons } from '@storybook/manager-api';
-import { themes } from '@storybook/theming';
+import { compose, not } from '@accelint/core';
+import { doesEndWith } from '../does-end-with';
 
-addons.setConfig({
-  theme: themes.dark,
-});
+/**
+ * Creates a predicate function that determines if a string does not end with a specific suffix.
+ *
+ * @param suffix - The substring to use as the suffix
+ * @param input - The string to test
+ *
+ * @remarks
+ * - Pure function with no side effects
+ * - Case-sensitive comparison
+ *
+ * @example
+ * ```typescript
+ * const isJsFile = doesNotEndWith('.js');
+ * isJsFile('app.js');   // false
+ * isJsFile('style.css'); // true
+ * ```
+ */
+export const doesNotEndWith = (suffix: string) =>
+  compose(not, doesEndWith(suffix));

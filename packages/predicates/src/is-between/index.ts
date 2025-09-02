@@ -15,20 +15,30 @@ import { isGreaterEqual } from '../is-greater-equal';
 import { isLesserEqual } from '../is-lesser-equal';
 
 /**
- * Determine if the given value is between the the values in the tuple.
+ * Creates a predicate function that determines if a number is between two bounds (inclusive).
  *
- * @param a - The tuple to check against.
- * @param b - The number to check.
+ * @param bounds - The tuple containing the lower and upper bounds (order doesn't matter)
+ * @param value - The number to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Inclusive on both ends (`>=` lower bound and `<=` upper bound)
+ * - Automatically sorts bounds, so order doesn't matter in the tuple
  *
  * @example
- * isBetween([42, 101])(89); // true
- * isBetween([42, 126])(7); // false
+ * ```typescript
+ * const isValidScore = isBetween([0, 100]);
+ * isValidScore(89);  // true
+ * isValidScore(150); // false
+ * isValidScore(0);   // true (inclusive)
+ *
+ * // Order doesn't matter
+ * const isInRange = isBetween([100, 0]);
+ * isInRange(50); // true
+ * ```
  */
-export const isBetween = (a: [number, number]) => {
-  const sorted = [...a].sort() as [number, number];
+export const isBetween = (bounds: [number, number]) => {
+  const sorted = [...bounds].sort() as [number, number];
 
   return andFn(isGreaterEqual(sorted[0]))(isLesserEqual(sorted[1]));
 };

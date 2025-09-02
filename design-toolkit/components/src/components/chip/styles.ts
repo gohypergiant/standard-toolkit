@@ -20,7 +20,7 @@ export const BaseChipStyles = tv({
   slots: {
     list: 'group/chip-list flex w-content flex-wrap gap-xs',
     chip: [
-      'group/chip fg-default-light inline-flex w-content items-center justify-center rounded-full outline',
+      'group/chip fg-primary-bold inline-flex w-content items-center justify-center rounded-full outline',
       'size-medium:px-s size-medium:py-xs size-medium:text-body-s',
       'size-small:px-s size-small:py-xs size-small:text-body-xs',
     ],
@@ -34,11 +34,11 @@ export const ChipStyles = tv({
   },
   variants: {
     variant: {
-      advisory: { chip: 'bg-advisory-subtle outline-advisory-bold' },
-      critical: { chip: 'bg-critical-subtle outline-critical' },
-      serious: { chip: 'bg-serious-subtle outline-serious' },
-      normal: { chip: 'bg-normal-subtle outline-normal' },
-      info: { chip: 'bg-info-subtle outline-info-bold' },
+      advisory: { chip: 'bg-advisory-muted outline-advisory-bold' },
+      critical: { chip: 'bg-critical-muted outline-critical-bold' },
+      serious: { chip: 'bg-serious-muted outline-serious-bold' },
+      normal: { chip: 'bg-normal-muted outline-normal-bold' },
+      info: { chip: 'bg-info-muted outline-info-bold' },
     },
   },
   defaultVariants: ChipStylesDefaults,
@@ -51,7 +51,7 @@ export const SelectableChipStyles = tv({
       'cursor-pointer outline-interactive',
       'enabled:focus-visible:outline-interactive-hover',
       'enabled:hover:outline-interactive-hover',
-      'enabled:selected:bg-highlight-subtle enabled:selected:outline-highlight',
+      'enabled:selected:bg-accent-primary-muted enabled:selected:outline-accent-primary-bold',
       'enabled:selected:focus-visible:outline-interactive-hover',
       'enabled:selected:hover:outline-interactive-hover',
       'disabled:fg-disabled disabled:cursor-not-allowed disabled:outline-interactive-disabled',

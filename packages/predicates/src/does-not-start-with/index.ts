@@ -12,17 +12,24 @@
 
 import { compose, not } from '@accelint/core';
 import { doesStartWith } from '../does-start-with';
+
 /**
- * Determine if first string does not start with the second string.
+ * Creates a predicate function that determines if a string does not start with a specific prefix.
  *
- * @param a - The first string to check against.
- * @param b - The second string to check with.
+ * @param prefix - The substring to use as the prefix
+ * @param input - The string to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Case-sensitive comparison
+ * - Composed using `not` and `doesStartWith` for functional composition
  *
  * @example
- * doesNotStartWith('b7a70c6346b5')('b7a7'); // false
- * doesNotStartWith('471aead1ae80')('b7a7'); // true
+ * ```typescript
+ * const doesNotStartWithHttp = doesNotStartWith('http');
+ * doesNotStartWithHttp('https://example.com'); // false
+ * doesNotStartWithHttp('ftp://example.com');   // true
+ * ```
  */
-export const doesNotStartWith = (a: string) => compose(not, doesStartWith(a));
+export const doesNotStartWith = (prefix: string) =>
+  compose(not, doesStartWith(prefix));

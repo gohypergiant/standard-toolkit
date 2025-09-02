@@ -10,31 +10,46 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Preview } from '@storybook/react';
-import { themes } from '@storybook/theming';
-import '../src/index.css';
+import { withThemeByClassName } from '@storybook/addon-themes';
+import { DocsContainer } from '@storybook/blocks';
+import type { Preview, ReactRenderer } from '@storybook/react';
+import { type ThemeVars, themes } from '@storybook/theming';
+import { createElement } from 'react';
 import { Docs } from './docs';
+import '../src/index.css';
 
 const preview: Preview = {
-  initialGlobals: {
-    // 👇 Set the initial background color
-    backgrounds: { value: '#0b0b0b' },
-  },
   parameters: {
     actions: { argTypesRegex: '^on.*' },
-    backgrounds: {
-      values: [
-        { name: 'Black', value: '#000000' },
-        { name: 'Dark', value: '#0b0b0b' },
-        { name: 'Light', value: '#555555' },
-      ],
-      default: 'Dark',
-    },
     docs: {
-      theme: themes.dark,
+      // biome-ignore lint/suspicious/noExplicitAny: this is the sb type
+      container: (props: any) => {
+        const rootEl = document.querySelector('html');
+        const sbTheme = props?.context.store.userGlobals.globals.theme;
+
+        let theme: ThemeVars;
+        if (sbTheme === 'light') {
+          theme = themes.light;
+          rootEl?.classList.remove('dark');
+          rootEl?.classList.add('light');
+        } else {
+          theme = themes.dark;
+          rootEl?.classList.remove('light');
+          rootEl?.classList.add('dark');
+        }
+
+        const newProps = { ...props, theme };
+        return createElement(DocsContainer, newProps);
+      },
       page: Docs,
+      story: {
+        inline: true, // withThemesByClassName applies in docs too
+      },
     },
     layout: 'centered',
+    backgrounds: {
+      disable: true, // prevent conflict w/ addon-themes
+    },
     options: {
       storySort: {
         method: 'alphabetical',
@@ -43,6 +58,15 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    withThemeByClassName<ReactRenderer>({
+      themes: {
+        light: 'light !bg-surface-default', // need important because storybook uses important 🫠
+        dark: 'dark !bg-surface-default', // need important because storybook uses important 🫠
+      },
+      defaultTheme: 'dark',
+    }),
+  ],
   tags: ['autodocs'],
 };
 

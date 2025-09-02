@@ -10,7 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-declare module '*.json' {
-  const value: unknown;
-  export default value;
-}
+import fc from 'fast-check';
+import { it } from 'vitest';
+import { doesEndWith } from './';
+
+const STRING_GEN = /^[a-z0-9]{16}$/;
+const TESTER_GEN = /^[a-z0-9]{4}$/;
+
+it('should correctly determine if the string ends with the suffix', () => {
+  fc.assert(
+    fc.property(
+      fc.stringMatching(STRING_GEN),
+      fc.stringMatching(TESTER_GEN),
+      (prefix, input) => {
+        return doesEndWith(prefix)(input) === input.endsWith(prefix);
+      },
+    ),
+    {
+      verbose: 2,
+      // manual cases
+      examples: [
+        ['46b5', 'b7a70c6346b5'],
+        ['46b5', '471aead1ae80'],
+      ],
+    },
+  );
+});

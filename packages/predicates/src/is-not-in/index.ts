@@ -14,17 +14,32 @@ import { compose, not } from '@accelint/core';
 import { isIn } from '../is-in';
 
 /**
- * Determines if the value is not in the provided array.
+ * Creates a predicate function that determines if a value does not exist in a given array.
  *
- * @param a - The array to check for the value in.
- * @param b - The value to check for.
- * @template T - The type of the value/array.
+ * @template T - The type of the array elements and value
+ * @param array - The array to search within
+ * @param value - The value to check for
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Negation of `isIn` using functional composition
+ * - Uses strict equality (===) for element comparison
+ * - Works with any type that can be compared with strict equality
  *
  * @example
- * isIn([58, 93, 29, 23])(23); // false
- * isIn([58, 93, 29, 123])(23); // true
+ * ```typescript
+ * const isInvalidStatus = isNotIn(['pending', 'approved', 'rejected']);
+ * isInvalidStatus('unknown');  // true
+ * isInvalidStatus('pending');  // false
+ *
+ * const isNotPrime = isNotIn([2, 3, 5, 7, 11, 13]);
+ * isNotPrime(10); // true
+ * isNotPrime(7);  // false
+ *
+ * // Useful with arrays
+ * const allowedIds = [101, 102, 103];
+ * const allRequests = [101, 104, 102, 105];
+ * const unauthorized = allRequests.filter(isNotIn(allowedIds)); // [104, 105]
+ * ```
  */
-export const isNotIn = <T>(a: T[]) => compose(not, isIn<T>(a));
+export const isNotIn = <T>(array: T[]) => compose(not, isIn<T>(array));

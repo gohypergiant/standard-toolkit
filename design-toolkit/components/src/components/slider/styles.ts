@@ -26,7 +26,7 @@ export const SliderStyles = tv({
       'orientation-horizontal:layout-stack:w-full orientation-horizontal:layout-stack:items-center',
     ],
     label: [
-      'order-1 text-default-light',
+      'fg-primary-bold order-1',
       'group-layout-grid/slider:col-start-1',
       'group-orientation-vertical/slider:group-layout-grid/slider:col-span-2',
     ],
@@ -38,7 +38,7 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:group-layout-grid/slider:row-start-4',
     ],
     input:
-      'w-[50px] rounded-medium border border-interactive px-s py-xs font-display text-body-m text-default-light',
+      'fg-primary-bold w-[50px] rounded-medium px-s py-xs font-display text-body-m outline outline-interactive',
     track: [
       'relative order-3 h-full',
       'group-orientation-horizontal/slider:h-[20px] group-orientation-horizontal/slider:w-full',
@@ -47,24 +47,24 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:group-layout-grid/slider:col-start-2 group-orientation-vertical/slider:group-layout-grid/slider:row-span-3 group-orientation-vertical/slider:group-layout-grid/slider:row-start-2',
     ],
     trackBackground: [
-      'absolute rounded-full bg-default-light/40',
+      'absolute rounded-full bg-surface-muted',
       'group-orientation-horizontal/slider:-translate-y-1/2 group-orientation-horizontal/slider:top-1/2 group-orientation-horizontal/slider:h-xxs group-orientation-horizontal/slider:w-full',
       'group-orientation-vertical/slider:-translate-x-1/2 group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:h-full group-orientation-vertical/slider:w-xxs',
     ],
     trackValue: [
-      'absolute rounded-full bg-highlight',
+      'absolute rounded-full bg-accent-primary-bold',
       'group-orientation-horizontal/slider:-translate-y-1/2 group-orientation-horizontal/slider:top-1/2 group-orientation-horizontal/slider:right-[calc(100%-attr(data-end_%)*100)] group-orientation-horizontal/slider:left-[calc(attr(data-start_%)*100)] group-orientation-horizontal/slider:h-xxs',
       'group-orientation-vertical/slider:-translate-x-1/2 group-orientation-vertical/slider:top-[calc(100%-attr(data-end_%)*100)] group-orientation-vertical/slider:bottom-[calc(attr(data-start_%)*100)] group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:w-xxs',
     ],
     thumb: [
-      'h-m w-m rounded-full bg-highlight-bold outline-highlight-bold/40',
+      'h-m w-m rounded-full bg-accent-primary-bold outline-accent-primary-bold/40',
       'focus-visible:outline-4',
       'hover:outline-4',
       'group-orientation-horizontal/slider:top-1/2',
       'group-orientation-vertical/slider:left-1/2',
     ],
     minValue: [
-      'flex items-center font-display text-body-m text-default-dark',
+      'fg-primary-muted flex items-center font-display text-body-m',
       'group-orientation-vertical/slider:col-start-1 group-orientation-vertical/slider:row-start-4',
       'group-orientation-horizontal/slider:group-layout-grid/slider:col-start-1',
       'group-orientation-horizontal/slider:group-layout-grid/slider:row-start-3',
@@ -74,7 +74,7 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:order-4',
     ],
     maxValue: [
-      'order-4 flex items-center font-display text-body-m text-default-dark',
+      'fg-primary-muted order-4 flex items-center font-display text-body-m',
       'group-orientation-vertical/slider:order-2',
       'group-orientation-vertical/slider:group-layout-grid/slider:col-start-1 group-orientation-vertical/slider:group-layout-grid/slider:row-start-2',
       'group-orientation-vertical/slider:group-layout-grid/slider:justify-self-end',

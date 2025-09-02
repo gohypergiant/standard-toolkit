@@ -11,22 +11,37 @@
  */
 
 /**
- * Determines if the first value is lesser than or equal to the second value.
- * Right-to-left (composition) order.
+ * Creates a predicate function that determines if a value is less than or equal to a threshold.
  *
- * @param a - The right hand value.
- * @param b - The left hand value.
- * @template T - The type of the values.
+ * @template T - The type of the values (number or string)
+ * @param threshold - The threshold value to compare against
+ * @param value - The value to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Uses JavaScript's `<=` operator for comparison
+ * - Works with both numbers and strings (lexicographic comparison for strings)
+ * - Inclusive comparison (equal values return true)
+ * - Useful for array filtering and functional composition
  *
  * @example
- * isLesserEqual(42)(23); // true
- * isLesserEqual(5)(23); // false
- * isLesserEqual(5)(5); // true
+ * ```typescript
+ * const isAtMost100 = isLesserEqual(100);
+ * isAtMost100(50);  // true
+ * isAtMost100(100); // true (inclusive)
+ * isAtMost100(150); // false
+ *
+ * const isAtMostM = isLesserEqual('M');
+ * isAtMostM('A'); // true
+ * isAtMostM('M'); // true
+ * isAtMostM('Z'); // false
+ *
+ * // Useful with arrays
+ * const ages = [16, 18, 21, 25, 30];
+ * const underAge = ages.filter(isLesserEqual(20)); // [16, 18]
+ * ```
  */
 export const isLesserEqual =
-  <T>(a: T) =>
-  (b: T) =>
-    b <= a;
+  <T extends number | string>(threshold: T) =>
+  (value: T): boolean =>
+    value <= threshold;

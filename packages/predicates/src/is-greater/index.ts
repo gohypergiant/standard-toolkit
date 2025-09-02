@@ -11,21 +11,34 @@
  */
 
 /**
- * Determines if one value is greater than another value.
- * Right-to-left (composition) order.
+ * Creates a predicate function that determines if a value is greater than a threshold.
  *
- * @param a - The right hand value.
- * @param b - The left hand value.
- * @template T - The type of the values.
+ * @template T - The type of the values (number or string)
+ * @param threshold - The threshold value to compare against
+ * @param value - The value to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Uses JavaScript's `>` operator for comparison
+ * - Works with both numbers and strings (lexicographic comparison for strings)
+ * - Useful for array filtering and functional composition
  *
  * @example
- * isGreater(42)(23); // false
- * isGreater(5)(23); // true
+ * ```typescript
+ * const isGreaterThan10 = isGreater(10);
+ * isGreaterThan10(15); // true
+ * isGreaterThan10(5);  // false
+ *
+ * const isAfterM = isGreater('M');
+ * isAfterM('Z'); // true
+ * isAfterM('A'); // false
+ *
+ * // Useful with arrays
+ * const numbers = [1, 5, 10, 15, 20];
+ * const greaterThan10 = numbers.filter(isGreater(10)); // [15, 20]
+ * ```
  */
 export const isGreater =
-  <T extends number | string>(a: T) =>
-  (b: T) =>
-    b > a;
+  <T extends number | string>(threshold: T) =>
+  (value: T): boolean =>
+    value > threshold;

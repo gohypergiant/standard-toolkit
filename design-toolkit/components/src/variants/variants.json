@@ -95,5 +95,8 @@
 
   "resizing": "[data-resizing]",
 
-  "disabled": "[disabled], [data-disabled], :disabled"
+  "disabled": "[disabled], [data-disabled], :disabled",
+
+  "dark": ".dark, .dark *, [data-theme=\"dark\"], [data-theme=\"dark\"] *",
+  "light": ".light, .light *, [data-theme=\"light\"], [data-theme=\"light\"] *"
 }

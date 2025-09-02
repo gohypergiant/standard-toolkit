@@ -14,10 +14,10 @@ import fc from 'fast-check';
 import { it } from 'vitest';
 import { isNotEqual } from './';
 
-it('should correctly test for equality', () => {
+it('should correctly test for non-equality', () => {
   fc.assert(
-    fc.property(fc.integer(), fc.integer(), (a, b) => {
-      return isNotEqual(a)(b) === (a !== b);
+    fc.property(fc.integer(), fc.integer(), (reference, value) => {
+      return isNotEqual(reference)(value) === (reference !== value);
     }),
     {
       verbose: 2,

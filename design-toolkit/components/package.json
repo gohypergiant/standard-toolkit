@@ -1,6 +1,6 @@
 {
   "name": "@accelint/design-toolkit",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -8,7 +8,9 @@
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
   "type": "module",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -51,12 +53,13 @@
     "build": "pnpm generate && pnpm license && pnpm format && pnpm tsup && pnpm build:css",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
     "dev": "pnpm tsc --watch",
-    "gen:tokens": "node scripts/generate-tokens.mjs",
+    "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
     "generate": "pnpm gen:tokens && pnpm gen:variants",
     "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
     "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
     "license": "pnpm license:tokens && pnpm license:variants",
+    "temp:token-migration": "pnpm zx scripts/token-migration.mjs",
     "lint": "pnpm biome lint",
     "format": "pnpm biome format . --write",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
@@ -67,7 +70,7 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/bus": "^1.0.0",
+    "@accelint/bus": "^1.1.0",
     "@accelint/core": "^0.4.0",
     "@accelint/icons": "^2.0.3",
     "@fontsource/roboto-flex": "^5.2.6",
@@ -89,7 +92,7 @@
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
     "react": "^19.0.0",
-    "react-aria-components": "^1.11.0",
+    "react-aria-components": "^1.12.1",
     "react-dom": "^19.0.0",
     "react-querybuilder": "^8.8.1",
     "tailwind-merge": "^3.3.1",
@@ -121,6 +124,7 @@
     "@storybook/addon-actions": "^8.6.14",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-storysource": "^8.6.14",
+    "@storybook/addon-themes": "^8.6.14",
     "@storybook/blocks": "^8.6.14",
     "@storybook/builder-vite": "^8.6.14",
     "@storybook/manager-api": "^8.6.14",
@@ -147,7 +151,7 @@
     "lodash": "^4.17.21",
     "postcss": "^8.5.6",
     "react": "^19.0.0",
-    "react-aria-components": "^1.11.0",
+    "react-aria-components": "^1.12.1",
     "react-dom": "^19.0.0",
     "react-querybuilder": "^8.8.1",
     "storybook": "^8.6.14",

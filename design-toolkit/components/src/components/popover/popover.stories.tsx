@@ -46,7 +46,7 @@ export const Simple: Story = {
   render: ({ ...args }) => (
     <Popover>
       <Popover.Trigger>
-        <Icon className='text-default-light'>
+        <Icon className='fg-primary-bold'>
           <Information />
         </Icon>
       </Popover.Trigger>
@@ -97,7 +97,7 @@ export const CustomComposition: Story = {
     return (
       <Popover>
         <Popover.Trigger>
-          <span className='text-default-light'>Settings</span>
+          <span className='fg-primary-bold'>Settings</span>
         </Popover.Trigger>
         <Popover.Content className='min-w-sm'>
           {() => (

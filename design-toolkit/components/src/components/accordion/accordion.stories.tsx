@@ -56,7 +56,7 @@ export const Default: StoryObj<typeof Accordion> = {
           </Accordion.Trigger>
         </Accordion.Header>
         <Accordion.Panel>
-          <p className='fg-default-dark text-body-s'>
+          <p className='fg-primary-muted text-body-s'>
             This is a placeholder content for an accordion. Please replace with
             an actual content instance.
           </p>
@@ -86,7 +86,7 @@ export const WithMenu: StoryObj<typeof Accordion> = {
           </Menu.Trigger>
         </Accordion.Header>
         <Accordion.Panel>
-          <p className='fg-default-dark text-body-s'>
+          <p className='fg-primary-muted text-body-s'>
             This is a placeholder content for an accordion. Please replace with
             an actual content instance.
           </p>

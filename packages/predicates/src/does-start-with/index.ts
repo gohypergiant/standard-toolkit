@@ -11,19 +11,25 @@
  */
 
 /**
- * Determine if first string starts with the second string.
+ * Creates a predicate function that determines if a string starts with a specific prefix.
  *
- * @param a - The first string to check against.
- * @param b - The second string to check with.
+ * @param prefix - The substring to use as the prefix
+ * @param input - The string to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Case-sensitive comparison
+ * - Uses String.prototype.startsWith() internally
+ * - Useful for array filtering and functional programming
  *
  * @example
- * doesStartWith('b7a70c6346b5')('b7a7'); // true
- * doesStartWith('471aead1ae80')('b7a7'); // false
+ * ```typescript
+ * const startsWithHttp = doesStartWith('http');
+ * startsWithHttp('https://example.com'); // true
+ * startsWithHttp('ftp://example.com');   // false
+ * ```
  */
-export const doesStartWith = (a: string) => (b: string) => a.startsWith(b);
-// REVIEW: I think the params need to be swapped?
-// It feels like it is more likely (i.e. when used in a `filter()`)
-// that the array elements will be taking the `a` role.
+export const doesStartWith =
+  (prefix: string) =>
+  (input: string): boolean =>
+    input.startsWith(prefix);
