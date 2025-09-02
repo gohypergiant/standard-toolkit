@@ -1,5 +1,11 @@
 # @accelint/bus
 
+## 1.1.0
+
+### Minor Changes
+
+- e767f7c: Create React hooks for events with type safety and render safety
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,5 +1,23 @@
 # @accelint/design-toolkit
 
+## 4.0.0
+
+### Major Changes
+
+- 9660517: Removes range slider and implements style standards
+
+### Minor Changes
+
+- f03040f: Refactor dialog to meet style standards
+- 9d576f8: Update to latest react-aria-components version 1.12.1
+
+### Patch Changes
+
+- 2848d9b: Remove unnecessary global selectors
+- 7e56878: Added a utility method to run Tailwind Merge across variants.
+- Updated dependencies [e767f7c]
+  - @accelint/bus@1.1.0
+
 ## 3.0.0
 
 ### Major Changes

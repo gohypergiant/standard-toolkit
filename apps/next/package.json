@@ -1,6 +1,6 @@
 {
   "name": "@apps/next",
-  "version": "0.2.27",
+  "version": "0.2.28",
   "private": true,
   "type": "module",
   "scripts": {
