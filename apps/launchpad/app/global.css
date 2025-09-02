@@ -1,0 +1,46 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@import "@accelint/design-toolkit/styles";
+@source "../node_modules/@accelint/design-toolkit";
+
+:root {
+  --classification-banner-height: 20px;
+  --available-height: calc(100vh - var(--classification-banner-height));
+
+  --left-panel-closed: 0px;
+  --left-panel-open: 10%;
+  --left-panel-mini: 40px;
+
+  --right-panel-closed: 0px;
+  --right-panel-open: 25%;
+  --right-panel-mini: 32px;
+}
+
+@theme {
+  --spacing-left-panel-closed: var(--left-panel-closed);
+  --spacing-left-panel-open: var(--left-panel-open);
+  --spacing-left-panel-mini: var(--left-panel-mini);
+  --spacing-right-panel-closed: var(--right-panel-closed);
+  --spacing-right-panel-open: var(--right-panel-open);
+  --spacing-right-panel-mini: var(--right-panel-mini);
+}
+
+#maplibre {
+  /* unicorn math for classification banner */
+  height: var(--available-height);
+}
+
+/* NOTE: there is currently not a css var for the maplibre .top-left position */
+#maplibre .top-left {
+  top: 36px !important;
+}

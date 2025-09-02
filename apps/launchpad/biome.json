@@ -1,0 +1,73 @@
+{
+  "extends": [
+    "@accelint/biome-config/analyzer",
+    "@accelint/biome-config/formatter",
+    "@accelint/biome-config/linter"
+  ],
+  "files": {
+    "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
+    "ignore": [".next", "node_modules", "dist", "coverage", "build", "public/*"]
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": false,
+            "requireAscii": true
+          }
+        },
+        "noParameterAssign": {
+          "level": "warn"
+        }
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "attributes": ["classList"],
+            "functions": ["clsx", "cva", "tw", "cn", "twMerge"]
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "include": ["env/index.ts", "events/events.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": ["**/enums/**/*.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": {
+              "level": "error",
+              "options": {
+                "strictCase": true,
+                "requireAscii": true,
+                "conventions": [
+                  {
+                    "selector": {
+                      "kind": "objectLiteralProperty"
+                    },
+                    "formats": ["PascalCase"]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
