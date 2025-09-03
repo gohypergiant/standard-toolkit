@@ -48,13 +48,13 @@ export const cellStyles = tv({
       true: [
         'bg-accent-primary-muted',
         'border-x-1',
-        'border-r-highlight-bold',
-        'border-l-highlight-bold',
+        'border-r-[var(--outline-accent-primary-bold)]',
+        'border-l-[var(--outline-accent-primary-bold)]',
       ],
       false: '',
     },
     isLastSelectedRow: {
-      true: ['border-b-1', 'border-b-highlight-bold'],
+      true: ['border-b-1', 'border-b-[var(--outline-accent-primary-bold)]'],
       false: '',
     },
   },
@@ -85,14 +85,14 @@ export const TableHeaderCellStylesDefaults = {
 
 export const headerCellStyles = tv({
   base: [
-    'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 p-m text-left align-middle font-medium·text-body-s [&:has([role=checkbox])]:pr-0',
+    'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 p-m text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'active:bg-accent-primary-muted',
     'selected:bg-accent-primary-muted',
     'selected:border-t-1',
     'selected:border-x-1',
-    'selected:border-r-highlight-bold',
-    'selected:border-l-highlight-bold',
-    'selected:border-t-highlight-bold',
+    'selected:border-r-[var(--outline-accent-primary-bold)]',
+    'selected:border-l-[var(--outline-accent-primary-bold)]',
+    'selected:border-t-[var(--outline-accent-primary-bold)]',
   ],
   variants: {
     narrow: {
@@ -111,13 +111,13 @@ export const rowStyles = tv({
     'border-transparent group-not-selected/tbody:border-1',
     '[&:not([data-top])]:active:bg-accent-primary-muted',
     'selected:bg-accent-primary-muted',
-    'selected:border-x-highlight-bold',
+    'selected:border-x-[var(--outline-accent-primary-bold)]',
     /** Ensure border is applied to first and last selected rows */
-    'has-[+[data-selected]]:not-selected:border-b-highlight-bold',
-    'has-[+[not-selected="true"]]:selected:border-b-highlight-bold',
-    'group-not-selected/tbody:first-of-type:border-t-static-light',
-    'selected:first-of-type:border-t-highlight-bold',
-    'selected:last-of-type:border-b-highlight-bold',
+    'has-[+[data-selected]]:not-selected:border-b-[var(--outline-accent-primary-bold)]',
+    'has-[+[not-selected="true"]]:selected:border-b-[var(--outline-accent-primary-bold)]',
+    'group-not-selected/tbody:first-of-type:border-t-[var(--outline-static)]',
+    'selected:first-of-type:border-t-[var(--outline-accent-primary-bold)]',
+    'selected:last-of-type:border-b-[var(--outline-accent-primary-bold)]',
   ],
 });
 
