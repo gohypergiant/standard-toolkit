@@ -25,7 +25,7 @@ export const TableCellStylesDefaults = {
 
 export const cellStyles = tv({
   base: [
-    'min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s fg-primary-bold',
+    'fg-primary-bold min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s',
   ],
   variants: {
     narrow: {
@@ -85,7 +85,7 @@ export const TableHeaderCellStylesDefaults = {
 
 export const headerCellStyles = tv({
   base: [
-    'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s fg-primary-muted hover:fg-primary-bold [&:has([role=checkbox])]:pr-0 ',
+    'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 p-m text-left align-middle font-medium·text-body-s [&:has([role=checkbox])]:pr-0',
     'active:bg-accent-primary-muted',
     'selected:bg-accent-primary-muted',
     'selected:border-t-1',
