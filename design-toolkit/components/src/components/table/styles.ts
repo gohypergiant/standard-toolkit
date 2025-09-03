@@ -25,7 +25,7 @@ export const TableCellStylesDefaults = {
 
 export const cellStyles = tv({
   base: [
-    'min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s text-default-light',
+    'min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s fg-primary-bold',
   ],
   variants: {
     narrow: {
@@ -33,7 +33,7 @@ export const cellStyles = tv({
       false: 'p-m',
     },
     numeral: {
-      true: ' text-default-dark hover:text-default-light',
+      true: 'fg-primary-muted hover:fg-primary-bold',
       false: '',
     },
     kebab: {
@@ -46,7 +46,7 @@ export const cellStyles = tv({
     },
     selectedCol: {
       true: [
-        'bg-highlight-subtle',
+        'bg-accent-primary-muted',
         'border-x-1',
         'border-r-highlight-bold',
         'border-l-highlight-bold',
@@ -63,7 +63,7 @@ export const cellStyles = tv({
     {
       persistent: false,
       numeral: true,
-      className: 'text-default-dark group-not-pinned/row:*:invisible',
+      className: 'fg-primary-muted group-not-pinned/row:*:invisible',
     },
     {
       persistent: false,
@@ -85,9 +85,9 @@ export const TableHeaderCellStylesDefaults = {
 
 export const headerCellStyles = tv({
   base: [
-    'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s text-default-dark hover:text-default-light [&:has([role=checkbox])]:pr-0 ',
-    'active:bg-highlight-subtle',
-    'selected:bg-highlight-subtle',
+    'group/header-cell h-12 p-m text-left align-middle font-medium text-body-s fg-primary-muted hover:fg-primary-bold [&:has([role=checkbox])]:pr-0 ',
+    'active:bg-accent-primary-muted',
+    'selected:bg-accent-primary-muted',
     'selected:border-t-1',
     'selected:border-x-1',
     'selected:border-r-highlight-bold',
@@ -109,8 +109,8 @@ export const rowStyles = tv({
   base: [
     'group/row',
     'border-transparent group-not-selected/tbody:border-1',
-    '[&:not([data-top])]:active:bg-highlight-subtle',
-    'selected:bg-highlight-subtle',
+    '[&:not([data-top])]:active:bg-accent-primary-muted',
+    'selected:bg-accent-primary-muted',
     'selected:border-x-highlight-bold',
     /** Ensure border is applied to first and last selected rows */
     'has-[+[data-selected]]:not-selected:border-b-highlight-bold',
