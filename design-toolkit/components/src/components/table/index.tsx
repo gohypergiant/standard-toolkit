@@ -307,7 +307,6 @@ export function Table<T extends { id: string | number }>({
                         header.column.id === 'numeral' ||
                         header.column.id === 'kebab'
                       }
-                      style={{ width: header.getSize() }}
                       data-selected={
                         header.column.id === columnSelection ? '' : undefined
                       }
@@ -317,7 +316,7 @@ export function Table<T extends { id: string | number }>({
                         onMouseDown={() => setColumnSelection(header.column.id)}
                         onMouseUp={() => setColumnSelection(null)}
                       >
-                        <button type='button'>
+                        <div>
                           {header.isPlaceholder ||
                           header.column.id === 'kebab' ? null : (
                             <button type='button'>
@@ -327,7 +326,7 @@ export function Table<T extends { id: string | number }>({
                               )}
                             </button>
                           )}
-                        </button>
+                        </div>
 
                         {['numeral', 'kebab', 'selection'].includes(
                           header.column.id,
