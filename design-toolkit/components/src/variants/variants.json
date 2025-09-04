@@ -89,6 +89,8 @@
   "selected": "[data-selected], :checked",
   "selection-start": "[data-selection-start]",
   "selection-end": "[data-selection-end]",
+  "visible": "[data-visible]",
+  "viewable": "[data-viewable]",
 
   "dragging": "[data-dragging]",
   "drop-target": "[data-drop-target]",

@@ -1,0 +1,366 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as TreeStories from './tree.stories';
+
+<Meta of={TreeStories} />
+
+# Tree
+
+Tree view allows users to navigate lists of data with nested levels that can be expanded or collapsed. The Tree component provides a hierarchical structure with features like selection, expansion/collapse, visibility control, and drag-and-drop operations.
+
+It is composed of the following components:
+
+- **Tree** - parent that drives global tree behavior like selection or drag and drop
+- **Tree.Item** - defines an individual tree node item
+- **Tree.Item.Content** - composes the actual display of the tree node content. `Tree.Item` will always have `Tree.Item.Content` composed inside it.
+- **Tree.Item.Label** - places and styles the tree node label
+- **Tree.Item.Description** - places and styles the tree description
+- **Tree.Item.PrefixIcon** - places and styles the icon that optionally shows before a tree node
+- **Tree.Item.Actions** - container for unique application icons for a tree item
+
+## Basic Example, static data
+The `Tree` can be rendered with either hard-coded static data or with dynamic data from an external source like a database or an API.
+
+```jsx
+<Tree>
+  <Tree.Item id='one' textValue='one'>
+    <Tree.Item.Content>One</Tree.Item.Content>
+    <Tree.Item id='two' textValue='two'>
+      <Tree.Item.Content>Two</Tree.Item.Content>
+    </Tree.Item>
+  </Tree.Item>
+</Tree>
+```
+<Canvas of={TreeStories.StaticCollection} />
+
+## Basic Example, dynamic data
+
+For dynamic data rendering, the Tree component accepts an `items` array and a render function as children. This pattern is more efficient for trees with many nodes or when the data comes from an external source.
+
+```jsx
+const items = [
+  {
+    key: 'one',
+    label: 'One',
+    children: [
+      {
+        key: 'two',
+        label: 'Two',
+      }
+    ]
+  }
+];
+
+const Node = ({ node }) => (
+  <Tree.Item id={node.key} textValue={node.label}>
+    <Tree.Item.Content>
+      <Tree.Item.Label>{node.label}</Tree.Item.Label>
+    </Tree.Item.Content>
+    {node.children?.map(child => <Node key={child.key} node={child} />)}
+  </Tree.Item>
+);
+
+<Tree items={items}>
+  {(node) => <Node key={node.key} node={node} />}
+</Tree>
+```
+
+## Variants and Common Props
+
+* **variant** - changes display size, accepts `cozy`, `compact` or `crammed`
+* **showVisibility** - enables and disables visibility controls
+* **showRuleLines** - controls whether visual rule lines are shown to indicate hierarchy
+* **selectionMode** - manages selection controls, `multiple` and `single` enable selection and `none` will disable
+* **disabledKeys** - Set of keys for disabled tree nodes
+* **expandedKeys** - Set of keys for expanded tree nodes
+* **selectedKeys** - Set of keys for selected tree nodes
+* **visibleKeys** - Set of keys for visible tree nodes
+
+## Selection
+
+The Tree component supports different selection modes through the `selectionMode` prop:
+
+```jsx
+<Tree selectionMode="multiple">
+  {/* Tree content */}
+</Tree>
+```
+
+You can also control which items are selected using the `selectedKeys` prop and track selection changes with `onSelectionChange`:
+
+```jsx
+const [selectedKeys, setSelectedKeys] = useState(new Set(['one']));
+
+<Tree
+  selectedKeys={selectedKeys}
+  onSelectionChange={setSelectedKeys}
+  selectionMode="multiple"
+>
+  {/* Tree content */}
+</Tree>
+```
+
+## Visibility Control
+
+The Tree component allows controlling which nodes are visible using the `visibleKeys` prop and `onVisibilityChange` callback:
+
+```jsx
+const [visibleKeys, setVisibleKeys] = useState(new Set(['one', 'two']));
+
+<Tree
+  visibleKeys={visibleKeys}
+  onVisibilityChange={setVisibleKeys}
+  showVisibility={true}
+>
+  {/* Tree content */}
+</Tree>
+```
+
+## Drag and Drop
+
+The Tree component supports drag and drop operations for reordering nodes through the `dragAndDropConfig` prop. You can either handle your own custom drag and drop logic or use the `useTreeState` / `useTreeActions` hook to use tree operations helpers to manage the logic. See the `useTreeState` and `useTreeActions` hook for more details.
+
+```jsx
+const dragAndDropConfig = {
+  getItems: (keys) => [...keys].map(key => ({
+    'text/plain': key.toString()
+  })),
+  onReorder: (e) => {
+    // Handle reordering logic
+  }
+};
+
+<Tree dragAndDropConfig={dragAndDropConfig}>
+  {/* Tree content */}
+</Tree>
+```
+## TreeNode Structure
+
+When using dynamic data rendering with the `items` prop, each tree node should follow this structure. Only the `key` and `label` properties are required.
+
+```typescript
+type TreeNode<T> = {
+  // A unique key for the tree node
+  key: Key;
+
+  // Label string for display
+  label: string;
+
+  // Optional application-specific values
+  values?: T;
+
+  // Whether node has interactive capability
+  isDisabled?: boolean;
+
+  // Whether node children are rendered
+  isExpanded?: boolean;
+
+  // Whether node is included in selection
+  isSelected?: boolean;
+
+  // Whether node is shown in the tree
+  isVisible?: boolean;
+
+  // Child nodes
+  children?: TreeNode<T>[];
+};
+```
+
+## Props
+
+### Tree Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'cozy' \| 'compact' \| 'crammed'` | `'cozy'` | Controls the spacing and density of the tree items |
+| `items` | `TreeNode<T>[]` | `undefined` | Array of tree node data for dynamic rendering |
+| `children` | `ReactNode \| ((item: TreeNode<T>) => ReactNode)` | `undefined` | Static tree content or render function for dynamic data |
+| `disabledKeys` | `Set<Key>` | `undefined` | Set of keys for disabled tree nodes |
+| `expandedKeys` | `Set<Key>` | `undefined` | Set of keys for expanded tree nodes |
+| `selectedKeys` | `Set<Key>` | `undefined` | Set of keys for selected tree nodes |
+| `visibleKeys` | `Set<Key>` | `undefined` | Set of keys for visible tree nodes |
+| `showRuleLines` | `boolean` | `true` | Whether to show visual rule lines connecting parent and child nodes |
+| `showVisibility` | `boolean` | `true` | Whether to show visibility toggle controls |
+| `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'multiple'` | Determines how selection works in the tree |
+| `onSelectionChange` | `(keys: Set<Key>) => void` | `undefined` | Callback when selection changes |
+| `onVisibilityChange` | `(keys: Set<Key>) => void` | `undefined` | Callback when visibility changes |
+| `dragAndDropConfig` | `DragAndDropConfig` | `undefined` | Configuration for drag and drop behavior |
+
+### Tree.Item Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `Key` | *Required* | Unique identifier for the tree item |
+| `textValue` | `string` | `undefined` | Text representation of the item for accessibility |
+| `children` | `ReactNode` | `undefined` | Content of the tree item, including child items |
+
+
+## Managing Tree State
+
+The Tree component can be used in either controlled or uncontrolled mode. In controlled mode, you manage the state externally and pass it to the component via props. In uncontrolled mode, the component manages its own state internally.
+
+### Controlled State
+
+To use the Tree component in controlled mode, provide the appropriate state props and callbacks:
+
+```jsx
+const [expandedKeys, setExpandedKeys] = useState(new Set(['one']));
+const [selectedKeys, setSelectedKeys] = useState(new Set());
+const [visibleKeys, setVisibleKeys] = useState(new Set(['one', 'two']));
+
+<Tree
+  expandedKeys={expandedKeys}
+  selectedKeys={selectedKeys}
+  visibleKeys={visibleKeys}
+  onSelectionChange={setSelectedKeys}
+  onVisibilityChange={setVisibleKeys}
+>
+  {/* Tree content */}
+</Tree>
+```
+
+### Using with Dynamic Data
+
+When working with dynamic data, you can use the `items` prop and a render function as children to efficiently render large trees:
+
+```jsx
+const renderNode = (node) => (
+  <Tree.Item id={node.key} textValue={node.label}>
+    <Tree.Item.Content>
+      <Tree.Item.Label>{node.label}</Tree.Item.Label>
+      {node.description && (
+        <Tree.Item.Description>{node.description}</Tree.Item.Description>
+      )}
+    </Tree.Item.Content>
+    {node.children?.map(child => renderNode(child))}
+  </Tree.Item>
+);
+
+<Tree items={treeData}>
+  {(node) => renderNode(node)}
+</Tree>
+```
+
+### Static vs Dynamic Collections
+
+The Tree component supports two different collection patterns:
+
+1. **Static Collection**: Hard-coded tree structure using nested Tree.Item components
+2. **Dynamic Collection**: Data-driven tree structure using the `items` prop and a render function
+
+You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously.
+
+```jsx
+// This will throw an error
+<Tree items={items} expandedKeys={expandedKeys}>
+  {(node) => <Node key={node.key} node={node} />}
+</Tree>
+```
+
+Instead, when using dynamic data, let the component manage its state internally or use the state management hooks from the `use-tree` package.
+
+### useTreeActions
+
+The `useTreeActions` hook provides a set of utility functions for manipulating tree data. It's particularly useful when working with complex tree structures that require advanced operations like inserting, removing, or moving nodes.
+
+```jsx
+import { useTreeActions } from '@/hooks/use-tree';
+
+function MyTreeComponent() {
+  const [treeData, setTreeData] = useState(initialTreeData);
+  const { actions } = useTreeActions({ nodes: treeData });
+
+  const handleInsertNode = (targetKey, newNode) => {
+    const updatedTree = actions.insertInto(targetKey, [newNode]);
+    setTreeData(updatedTree);
+  };
+
+  const handleRemoveNode = (key) => {
+    const updatedTree = actions.remove(new Set([key]));
+    setTreeData(updatedTree);
+  };
+
+  return (
+    <Tree items={treeData}>
+      {(node) => <Node key={node.key} node={node} />}
+    </Tree>
+  );
+}
+```
+
+The `actions` object provides the following methods:
+
+- **insertInto**: Insert nodes as children of a target node
+- **insertBefore**: Insert nodes before a target node
+- **insertAfter**: Insert nodes after a target node
+- **remove**: Remove nodes from the tree
+- **updateNode**: Update a node's properties
+- **moveInto**: Move nodes to become children of a target node
+- **moveBefore**: Move nodes to be positioned before a target node
+- **moveAfter**: Move nodes to be positioned after a target node
+- **expandAll**: Expand all nodes in the tree
+- **collapseAll**: Collapse all nodes in the tree
+- **selectAll**: Select all nodes in the tree
+- **unselectAll**: Unselect all nodes in the tree
+- **revealAll**: Make all nodes visible
+- **hideAll**: Make all nodes hidden
+### useTreeState
+
+The `useTreeState` hook provides a complete state management solution for tree data. It manages expansion, selection, and visibility states, and provides actions for manipulating the tree.
+
+```jsx
+import { useTreeState } from '@/hooks/use-tree';
+
+function MyTreeComponent() {
+  const { nodes, actions, dragAndDropConfig } = useTreeState({
+    items: initialTreeData,
+  });
+
+  return (
+    <Tree
+      items={nodes}
+      dragAndDropConfig={dragAndDropConfig}
+    >
+      {(node) => <Node key={node.key} node={node} />}
+    </Tree>
+  );
+}
+```
+
+The hook returns:
+
+- **nodes**: The current tree data with state information
+- **actions**: Methods for manipulating the tree (same as useTreeActions)
+- **dragAndDropConfig**: Configuration for drag and drop operations
+
+## Accessibility
+
+The Tree component is built on top of React Aria's accessibility-focused components, ensuring proper keyboard navigation, focus management, and screen reader support.
+
+### Keyboard Navigation
+
+- **Arrow keys**: Navigate between tree items
+- **Enter/Space**: Select or activate the focused item
+- **Home/End**: Move to the first/last item in the tree
+- **Page Up/Down**: Move focus up/down by a page
+- *** (asterisk)**: Expand all siblings of the current node
+- **Right arrow**: Expand a collapsed node or move to the first child
+- **Left arrow**: Collapse an expanded node or move to the parent
+
+### ARIA Attributes
+
+The Tree component automatically applies appropriate ARIA attributes to ensure screen readers can properly interpret the tree structure:
+
+- `role="tree"` on the tree container
+- `role="treeitem"` on each tree item
+- `aria-expanded` to indicate expansion state
+- `aria-selected` to indicate selection state
+- `aria-disabled` for disabled items
+- `aria-level` to indicate the nesting level
+## Drag And Drop
+
+<Canvas of={TreeStories.DragAndDrop} />
+
+## Implementation Notes
+
+The `Tree` is build on the React Aria Tree headless component. [Docs](https://react-spectrum.adobe.com/react-aria/Tree.html)

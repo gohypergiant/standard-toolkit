@@ -72,6 +72,8 @@
 @custom-variant selected (&:where([data-selected], :checked));
 @custom-variant selection-start (&:where([data-selection-start]));
 @custom-variant selection-end (&:where([data-selection-end]));
+@custom-variant visible (&:where([data-visible]));
+@custom-variant viewable (&:where([data-viewable]));
 @custom-variant dragging (&:where([data-dragging]));
 @custom-variant drop-target (&:where([data-drop-target]));
 @custom-variant resizing (&:where([data-resizing]));
