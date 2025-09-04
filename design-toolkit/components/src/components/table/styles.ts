@@ -26,6 +26,7 @@ export const TableCellStylesDefaults = {
 export const cellStyles = tv({
   base: [
     'fg-primary-bold min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s',
+    'selection-end:border-b-1 selection-end:border-b-[var(--outline-accent-primary-bold)]',
   ],
   variants: {
     narrow: {
@@ -51,10 +52,6 @@ export const cellStyles = tv({
         'border-r-[var(--outline-accent-primary-bold)]',
         'border-l-[var(--outline-accent-primary-bold)]',
       ],
-      false: '',
-    },
-    isLastSelectedRow: {
-      true: ['border-b-1', 'border-b-[var(--outline-accent-primary-bold)]'],
       false: '',
     },
   },

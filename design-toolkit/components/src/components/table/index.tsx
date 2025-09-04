@@ -61,7 +61,7 @@ const dataTableCell = <T,>(
     numeral={cell.column.id === 'numeral'}
     kebab={cell.column.id === 'kebab'}
     selectedCol={isColumnSelected}
-    isLastSelectedRow={isColumnSelected && isLastRow}
+    data-selection-end={isColumnSelected && isLastRow ? '' : undefined}
   >
     {flexRender(cell.column.columnDef.cell, cell.getContext())}
   </TableCell>
