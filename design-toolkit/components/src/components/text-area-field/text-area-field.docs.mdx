@@ -1,0 +1,102 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as TextAreaFieldStories from './text-area-field.stories';
+
+<Meta of={TextAreaFieldStories} />
+
+# TextArea Field
+The TextArea Field component provides a multi-line text input with integrated label, description, and error handling. It's built on React Aria Components and provides excellent accessibility out of the box. Text area fields are commonly used in forms for longer text input such as comments, descriptions, feedback, and any content that requires multiple lines.
+
+## Example usage
+```tsx
+// Basic text area field
+<TextAreaField
+  label="Description"
+  placeholder="Enter your description here..."
+/>
+
+// With description and validation
+<TextAreaField
+  label="Feedback"
+  description="Please provide detailed feedback about your experience"
+  errorMessage="Feedback is required"
+  isInvalid={true}
+  isRequired={true}
+/>
+
+// Small size variant
+<TextAreaField
+  label="Notes"
+  size="small"
+  placeholder="Quick notes..."
+/>
+
+// Using context provider for default props
+<TextAreaField.Provider size="small">
+  <TextAreaField label="Field 1" />
+  <TextAreaField label="Field 2" />
+</TextAreaField.Provider>
+
+// With custom input props
+<TextAreaField
+  label="Bio"
+  inputProps={{
+    placeholder: "Tell us about yourself...",
+    rows: 4,
+    maxLength: 500
+  }}
+/>
+```
+
+## Variants
+
+* **medium** - Standard size with full label and description support (default)
+* **small** - Compact size with minimal label display and reduced text size
+
+The size can be controlled via the `size` prop or set globally using the `TextAreaField.Provider` component.
+
+<Canvas of={TextAreaFieldStories.Default} />
+
+## Props
+
+* **`label`** - Text label displayed above the text area
+* **`description`** - Helper text displayed below the text area
+* **`errorMessage`** - Error text displayed when validation fails
+* **`size`** - Size variant: `'medium'` (default) or `'small'`
+* **`isDisabled`** - Disables the text area field
+* **`isRequired`** - Marks the text area field as required
+* **`isInvalid`** - Marks the text area field as invalid
+* **`placeholder`** - Placeholder text displayed when the input is empty
+* **`inputProps`** - Additional props passed to the underlying textarea element:
+  * `rows` - Number of visible text lines
+  * `maxLength` - Maximum number of characters
+  * `placeholder` - Placeholder text
+  * `onChange` - Change event handler
+  * `onFocus` - Focus event handler
+  * `onBlur` - Blur event handler
+* **`classNames`** - Custom class names for styling:
+  * `field` - Applied to the text area field container
+  * `label` - Applied to the label element
+  * `input` - Applied to the textarea element
+  * `description` - Applied to the description text
+  * `error` - Applied to the error message
+
+## Implementation Notes
+The `TextAreaField` component wraps the `TextField` and `TextArea` components from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/TextField.html)
+
+The underlying elements are:
+- `div` for the text area field container
+- `label` for the field label
+- `textarea` for the multi-line text input
+- `div` for the description text
+- `div` for the error message
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation and focus management
+- Form integration
+- Error state announcements
+- Required field indicators
+- Proper labeling and descriptions
+
+The component includes responsive styling that adapts to different sizes and states, with appropriate visual feedback for focus, hover, error, and disabled states. The textarea automatically resizes based on content and provides smooth transitions between states.

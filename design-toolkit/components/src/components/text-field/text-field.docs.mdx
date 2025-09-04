@@ -1,0 +1,118 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as TextFieldStories from './text-field.stories';
+
+<Meta of={TextFieldStories} />
+
+# TextField
+The TextField component provides a single-line text input with integrated label, description, and error handling. It's built on React Aria Components and provides excellent accessibility out of the box. Text fields are commonly used in forms for short text input such as names, emails, usernames, and any single-line content that requires user input.
+
+It is composed of the following components:
+
+- **TextField** - Complete form field with label, input, and validation
+- **TextField.Provider** - Context provider for setting default text field props
+
+## Example usage
+```tsx
+// Basic text field
+<TextField
+  label="Username"
+  inputProps={{
+    placeholder: "Enter your username",
+    type: "text"
+  }}
+/>
+
+// With description and validation
+<TextField
+  label="Email"
+  description="We'll never share your email with anyone else"
+  errorMessage="Please enter a valid email address"
+  isInvalid={true}
+  isRequired={true}
+  inputProps={{
+    type: "email",
+    placeholder: "example@email.com"
+  }}
+/>
+
+// Small size variant
+<TextField
+  label="Nickname"
+  size="small"
+  inputProps={{
+    placeholder: "Enter nickname",
+    isClearable: true
+  }}
+/>
+
+// Using context provider for default props
+<TextField.Provider size="small">
+  <TextField label="Field 1" />
+  <TextField label="Field 2" />
+</TextField.Provider>
+
+// With custom input props
+<TextField
+  label="Search"
+  inputProps={{
+    type: "search",
+    placeholder: "Search...",
+    isClearable: true
+  }}
+/>
+```
+
+## Sizes
+
+* **medium** - Standard size with full label and description support (default)
+* **small** - Compact size with minimal label display and reduced text size
+
+The size can be controlled via the `size` prop or set globally using the `TextField.Provider` component.
+
+<Canvas of={TextFieldStories.Default} />
+
+## Props
+
+* **`label`** - Text label displayed above the text field
+* **`description`** - Helper text displayed below the text field
+* **`errorMessage`** - Error text displayed when validation fails
+* **`size`** - Size variant: `'medium'` (default) | `'small'`
+* **`isDisabled`** - Disables the text field
+* **`isRequired`** - Marks the text field as required
+* **`isInvalid`** - Marks the text field as invalid
+* **`inputProps`** - Additional props passed to the underlying Input component:
+  * `type` - Input type (text, email, password, search, etc.)
+  * `placeholder` - Placeholder text
+  * `isClearable` - Shows a clear button when input has value
+  * `onChange` - Change event handler
+  * `onFocus` - Focus event handler
+  * `onBlur` - Blur event handler
+  * `value` - Controlled input value
+  * `defaultValue` - Default input value
+* **`classNames`** - Custom class names for styling:
+  * `field` - Applied to the text field container
+  * `label` - Applied to the label element
+  * `input` - Applied to the input element
+  * `description` - Applied to the description text
+  * `error` - Applied to the error message
+
+## Implementation Notes
+The `TextField` component wraps the `TextField` component from `react-aria-components` and integrates with the `Input` component. [Docs](https://react-spectrum.adobe.com/react-spectrum/TextField.html)
+
+The underlying elements are:
+- `div` for the text field container
+- `label` for the field label
+- `input` for the single-line text input
+- `div` for the description text
+- `div` for the error message
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation and focus management
+- Form integration and validation
+- Error state announcements
+- Required field indicators
+- Proper labeling and descriptions
+
+The component includes responsive styling that adapts to different sizes and states, with appropriate visual feedback for focus, hover, error, and disabled states. The input field provides smooth transitions between states and supports various input types for different use cases.

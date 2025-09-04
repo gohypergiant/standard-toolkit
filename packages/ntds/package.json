@@ -8,9 +8,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -19,6 +17,15 @@
         "default": "./dist/index.js"
       },
       "default": "./dist/index.js"
+    },
+    "./spritesheets/*.png": "./dist/spritesheets/*.png",
+    "./spritesheets/*.json": "./dist/spritesheets/*.json",
+    "./spritesheets/*": {
+      "import": {
+        "types": "./dist/spritesheets/*.d.ts",
+        "default": "./dist/spritesheets/*.js"
+      },
+      "default": "./dist/spritesheets/*.js"
     },
     "./package.json": "./package.json"
   },

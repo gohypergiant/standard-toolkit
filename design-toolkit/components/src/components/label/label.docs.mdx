@@ -1,0 +1,184 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as LabelStories from './label.stories';
+
+<Meta of={LabelStories} />
+
+# Label
+A semantic and accessible label component that provides proper form labeling with automatic optional/required indicators. Built on top of React Aria Components, the Label component ensures proper accessibility and semantic structure for form elements while providing visual feedback about field requirements.
+
+It is composed of the following components:
+
+- **Label** - Main label component with automatic optional/required text handling
+- **Label.Provider** - Context provider for setting consistent styling across multiple labels
+
+## Example usage
+```tsx
+// Basic label
+<Label>Email Address</Label>
+
+// Required field label
+<Label isRequired={true}>Password</Label>
+
+// Disabled label
+<Label isDisabled={true}>Account Number</Label>
+
+// Label with custom styling
+<Label className="text-blue-600" isRequired={true}>
+  Full Name
+</Label>
+
+// Using Label.Provider for consistent styling
+<Label.Provider isRequired={true}>
+  <Label>Username</Label>
+  <Label>Email</Label>
+</Label.Provider>
+```
+
+## States
+
+The Label component automatically adapts its appearance based on its state:
+
+* **default** - Standard label styling with proper contrast
+* **required** - Automatically adds "(optional)" text for non-required fields
+* **disabled** - Reduced opacity and disabled styling when `isDisabled={true}`
+
+The component automatically handles the visual distinction between required and optional fields, making it clear to users what information is necessary.
+
+<Canvas of={LabelStories.Default} />
+
+## Props
+
+### Label Props
+- **`children`** - Label text content
+- **`isRequired`** - Whether the field is required (default: `false`)
+- **`isDisabled`** - Whether the label should appear disabled (default: `false`)
+- **`className`** - Custom CSS class name for additional styling
+
+### Label.Provider Props
+- **`isRequired`** - Whether all child labels should be treated as required
+- **`isDisabled`** - Whether all child labels should appear disabled
+- **`children`** - Label components that will inherit the provider's styling
+
+### HTML Attributes
+The component accepts all standard HTML attributes for `<label>` elements, such as:
+- **`id`** - Unique identifier
+- **`for`** - Associated form element ID
+- **`aria-label`** - Accessible label
+- **`data-*`** - Custom data attributes
+
+## Features
+
+### Automatic Optional/Required Indicators
+The Label component automatically adds "(optional)" text for non-required fields:
+```tsx
+<Label>Email Address</Label> {/* Shows "(optional)" */}
+<Label isRequired={true}>Password</Label> {/* No "(optional)" text */}
+```
+
+### Accessibility
+Built-in accessibility features ensure proper form labeling:
+```tsx
+<Label for="email-input">Email Address</Label>
+<input id="email-input" type="email" />
+```
+
+### Context Provider
+Use `Label.Provider` to set consistent styling for multiple labels:
+```tsx
+<Label.Provider isRequired={true}>
+  <Label>First Name</Label>
+  <Label>Last Name</Label>
+  <Label>Email</Label>
+</Label.Provider>
+```
+
+### State Management
+Visual feedback for different label states:
+```tsx
+// Normal state
+<Label>Standard Label</Label>
+
+// Required state
+<Label isRequired={true}>Required Field</Label>
+
+// Disabled state
+<Label isDisabled={true}>Disabled Field</Label>
+```
+
+## Examples
+
+### Default Label
+<Canvas of={LabelStories.Default} />
+
+### Required Field
+```tsx
+<Label isRequired={true}>Username</Label>
+```
+
+### Disabled Label
+```tsx
+<Label isDisabled={true}>Account Number</Label>
+```
+
+### Form Example
+```tsx
+<form className="space-y-4">
+  <div>
+    <Label for="name" isRequired={true}>Full Name</Label>
+    <input id="name" type="text" required />
+  </div>
+
+  <div>
+    <Label for="email">Email Address</Label>
+    <input id="email" type="email" />
+  </div>
+
+  <div>
+    <Label for="phone">Phone Number</Label>
+    <input id="phone" type="tel" />
+  </div>
+</form>
+```
+
+### Using Label.Provider
+```tsx
+<Label.Provider isRequired={true}>
+  <div className="space-y-2">
+    <Label>First Name</Label>
+    <Label>Last Name</Label>
+    <Label>Email Address</Label>
+  </div>
+</Label.Provider>
+```
+
+## Accessibility Features
+
+The Label component provides several accessibility enhancements:
+
+- **Semantic HTML**: Renders as a proper `<label>` element
+- **Automatic Association**: Works with the `for` attribute to associate with form controls
+- **Required Indicators**: Clear visual feedback about field requirements
+- **Screen Reader Support**: Proper ARIA attributes and semantic structure
+- **Focus Management**: Integrates with form focus systems
+
+## Implementation Notes
+The `Label` component is built using React Aria Components and provides semantic, accessible form labeling with automatic state management.
+
+Key features:
+- **Semantic Structure**: Proper `<label>` element with correct HTML semantics
+- **Automatic Indicators**: Built-in optional/required text handling
+- **State Management**: Visual feedback for different label states
+- **Context Provider**: Label.Provider for consistent styling across multiple labels
+- **Accessibility**: Full ARIA compliance and screen reader support
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+- **React Aria Integration**: Built on top of RAC for enhanced accessibility
+
+The underlying HTML structure creates a semantic label with proper accessibility:
+```html
+<label class="label" data-required="false" data-disabled="false">
+  Email Address (optional)
+</label>
+```
+
+This provides excellent accessibility and user experience while maintaining a clean, structured API for developers. The component automatically handles the distinction between required and optional fields, making forms more user-friendly and accessible.

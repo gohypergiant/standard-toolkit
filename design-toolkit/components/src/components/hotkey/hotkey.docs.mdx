@@ -7,6 +7,12 @@ import * as HotkeyStories from './hotkey.stories';
 # Hotkey
 This is a representation of key(s) from a keyboard that executes a specific action. Common examples of hotkeys are: Copy (CMD/Ctrl + C), Paste (CMD/Ctrl + V), Undo (CMD/Ctrl + Z), and Save (CMD/Ctrl/ + S);
 
+It is composed of the following components:
+
+- **Hotkey** - Main hotkey component for displaying heyboard shortcuts in various styles
+- **Hotkey.Set** - Container for grouping multiple hotkeys with proper spacing
+- **Hotkey.Provider** - Context provider for setting default props across multiple hotkeys
+
 ## Example usage
 ```
 <Hotkey>KEY</Hotkey>
@@ -14,9 +20,9 @@ This is a representation of key(s) from a keyboard that executes a specific acti
 
 ## Variants
 
-* **Flat** - renders plain text, appropriate for using in a `Menu.Item` component
-* **Outline** - renders with borders.
-* **Icon** - renders an icon with the right size and spacing. An icon hotkey will never have a border.
+* **flat** - Renders plain text, appropriate for using in a `Menu.Item` component
+* **outline** - Renders with borders.
+* **icon** - Renders an icon with the right size and spacing. An icon hotkey will never have a border.
 
 **Outline** is the default variant and should be used in most cases, unless the Hotkey is used as an element in a more complex parent, like an `Options` list.
 

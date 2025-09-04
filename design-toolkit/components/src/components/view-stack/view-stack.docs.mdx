@@ -6,13 +6,13 @@ import * as ViewStackStories from './view-stack.stories';
 
 # ViewStack
 
-The ViewStack component allows you to manage a stack of views. Think of it as similar to the functionality of tabs, but the triggers can be anywhere, even programmatic. The ViewStack component provides a way to push and pop views from the stack as well as clear all or reset back to the original view.
+The ViewStack component provides a flexible stack-based navigation system for managing multiple views with programmatic control. Unlike traditional tabs, ViewStack allows triggers to be placed anywhere in your application and supports complex navigation patterns including push, pop, clear, and reset operations. It's perfect for creating wizard flows, multi-step forms, navigation stacks, and any interface requiring programmatic view management with history.
 
 It is composed of the following components:
 
-- **ViewStack** - parent that encapsulates all the views and triggers
-- **ViewStack.View** - content view container
-- **ViewStack.Trigger** - fires a stack or view action
+- **ViewStack** - Parent that encapsulates all the views and triggers
+- **ViewStack.View** - Content view container
+- **ViewStack.Trigger** - Fires a stack or view action
 
 The ViewStack has no inherent sense of style or layout. It simply displays the current view, if there is one. There's a limit of a single active view per stack, but stacks can also be nested to create more complex combinations of views.
 
@@ -48,6 +48,55 @@ const ids = {
 
 <Canvas of={ViewStackStories.Default} />
 
+## Trigger Actions
+
+The ViewStack supports various trigger actions for different navigation patterns:
+
+- **push** - Pushes a new view onto the stack (default behavior for UniqueId)
+- **back** - Pops the current view, returns to the previous view
+- **clear** - Removes all views from the stack
+- **reset** - Clears stack and returns to defaultView
+
+## Props
+
+All components and subcomponents accept a `className` prop that allows for custom style overrides.
+
+
+### ViewStack Props
+
+* **`id`** - Unique identifier for the stack: `UniqueId` (required)
+* **`defaultView`** - Initial view to display: `UniqueId` (optional)
+* **`onChange`** - Callback when active view changes: `(view: UniqueId | null) => void` (optional)
+* **`children`** - ViewStack.View componentsand other content: `ReactNode`
+
+### ViewStack.View Props
+
+* **`id`** - Unique identifier for the view: `UniqueId` (required)
+* **`children`** - Content to display when this view is active: `ReactNode`
+
+### ViewStack.Trigger Props
+
+* **`for`** - Trigger action or target: `SimpleEvents | TargetedEvents | ChainedEvents` (required)
+* **`children`** - Trigger content: `ReactNode` (typically Button or other interactive element)
+
+#### Trigger `for` Values
+
+**Simple Event** (work only within ViewStack context):
+* `'back'` - Go back one view in the stack
+* `'clear'` - Clear all views from the stack
+* `'reset'` - Clear stack and return to defaultView
+* `UniqueId` - Push the specified view onto the stack
+
+**Targeted Events** (work from anywhere in the application):
+* `'back:${stackId}'` - Trigger back action on specific stack
+* `'clear:${stackId}'` - Clear specific stack
+* `'reset:${stackId}'` - Reset specific stack
+
+**Chained Events** (array of multiple actions):
+* `['clear', viewId1, viewId2]` - Execute multiple actions in sequence
+* `['reset:${stackId}', viewId]` - Reset stack then push view
+
+
 ## ViewStack.View
 
 The ViewStack.View is the content region that will be visible when that view's id is active. There's no rules around the DOM structure inside or outside of the ViewStack.View. This means the view can be as deeply nested as desired and/or can contain any content desired.
@@ -69,6 +118,16 @@ The most important prop for the ViewStack.Trigger is `for`. This dictates it's b
 
 ## Implementation Notes
 To guarantee uniqueness of ids across an application, the ViewStack implements Tagged UUID strings. This is also validated and will throw an error if a non-UUID is passed in.
+
+Key features:
+- **Global Event System**: Triggers work from anywhere in the application
+- **Stack Management**: Automatic push/pop operations with history
+- **UUID Validation**: Enforces unique identifiers to prevent conflicts
+- **Context Isolation**: Multiple ViewStacks can coexist independently
+- **Memory Management**: Automatic cleanup of event listeners and registrations
+
+### Unique Identifiers
+To guarantee uniqueness of ids across an application, the ViewStack implements Tagged UUID strings. This is validated and will throw an error if a non-UUID is passed in.
 
 Tagged (aka Branded) types: [https://github.com/sindresorhus/type-fest/blob/main/source/tagged.d.ts](https://github.com/sindresorhus/type-fest/blob/main/source/tagged.d.ts)
 

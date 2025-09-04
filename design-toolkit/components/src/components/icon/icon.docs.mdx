@@ -1,0 +1,172 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as IconStories from './icon.stories';
+
+<Meta of={IconStories} />
+
+# Icon
+A flexible icon container component that provides consistent sizing, styling, and context management for SVG icons. The Icon component automatically handles size variants and can be used with the Icon.Provider for consistent sizing across multiple icons. Perfect for displaying icons in buttons, navigation, and other UI elements with proper accessibility and styling.
+
+It is composed of the following components:
+
+- **Icon** - Wrapper component for displaying SVG icons with consistent sizing
+- **Icon.Provider** - Context provider for setting default icon sizes
+
+## Example usage
+```tsx
+// Basic icon usage
+<Icon>
+  <Add />
+</Icon>
+
+// Icon with specific size
+<Icon size="large">
+  <Settings />
+</Icon>
+
+// Icon with custom styling
+<Icon className="text-blue-500" size="small">
+  <Star />
+</Icon>
+
+// Using Icon.Provider for consistent sizing
+<Icon.Provider size="medium">
+  <Icon><Add /></Icon>
+  <Icon><Edit /></Icon>
+  <Icon><Delete /></Icon>
+</Icon.Provider>
+```
+
+## Sizes
+
+* **xsmall** - Very small icon (16px), suitable for dense interfaces and small UI elements
+* **small** - Small icon (20px), ideal for secondary actions and compact layouts
+* **medium** - Standard icon size (24px, default), perfect for most use cases
+* **large** - Large icon (32px), suitable for prominent actions and main navigation
+
+**medium** is the default size and should be used for most use cases, while the other sizes are better suited for specific interface density requirements.
+
+<Canvas of={IconStories.Default} />
+
+## Props
+
+### Icon Props
+- **`size`** - Size variant: `'xsmall'` | `'small'` | `'medium'` | `'large'` (default: `'medium'`)
+- **`children`** - SVG icon component to render
+- **`className`** - Custom CSS class name for additional styling
+
+### Icon.Provider Props
+- **`size`** - Size to apply to all child Icon components
+- **`children`** - Icon components that will inherit the provider's size
+
+### HTML Attributes
+The component accepts all standard HTML attributes for `<span>` elements, such as:
+- **`id`** - Unique identifier
+- **`aria-label`** - Accessible label
+- **`data-*`** - Custom data attributes
+
+## Features
+
+### Automatic Sizing
+The Icon component automatically applies the correct size based on the `size` prop or provider context:
+```tsx
+<Icon size="large">
+  <User />
+</Icon>
+```
+
+### Context Provider
+Use `Icon.Provider` to set consistent sizing for multiple icons:
+```tsx
+<Icon.Provider size="small">
+  <Icon><Home /></Icon>
+  <Icon><Search /></Icon>
+  <Icon><Profile /></Icon>
+</Icon.Provider>
+```
+
+### Flexible Styling
+Apply custom colors and other styles through className:
+```tsx
+<Icon className="text-blue-500 hover:text-blue-700" size="medium">
+  <Heart />
+</Icon>
+```
+
+### Accessibility
+Icons automatically inherit color from their parent context and can be labeled with aria attributes:
+```tsx
+<Icon aria-label="Add item" size="medium">
+  <Add />
+</Icon>
+```
+
+## Examples
+
+### Default Icon
+<Canvas of={IconStories.Default} />
+
+### Icon Provider
+<Canvas of={IconStories.Provider} />
+
+### Different Sizes
+```tsx
+<div className="flex items-center gap-4">
+  <Icon size="xsmall"><Add /></Icon>
+  <Icon size="small"><Add /></Icon>
+  <Icon size="medium"><Add /></Icon>
+  <Icon size="large"><Add /></Icon>
+</div>
+```
+
+### Icons in Buttons
+```tsx
+<Button>
+  <Icon size="small">
+    <Plus />
+  </Icon>
+  Add Item
+</Button>
+```
+
+### Navigation Icons
+```tsx
+<nav className="flex gap-2">
+  <Icon size="medium" className="text-gray-600 hover:text-gray-800">
+    <Home />
+  </Icon>
+  <Icon size="medium" className="text-gray-600 hover:text-gray-800">
+    <Settings />
+  </Icon>
+</nav>
+```
+
+## Size Specifications
+
+The Icon component uses CSS custom properties for consistent sizing across the design system:
+
+- **xsmall**: `--icon-size-xs` (16px)
+- **small**: `--icon-size-s` (20px)
+- **medium**: `--icon-size-m` (24px, default)
+- **large**: `--icon-size-l` (32px)
+
+## Implementation Notes
+The `Icon` component is built using React Aria Components and provides a flexible, accessible icon system with consistent sizing and styling.
+
+Key features:
+- **Consistent Sizing**: Automatic size application based on props or provider context
+- **Flexible Styling**: Custom class names and CSS custom properties for theming
+- **Context Provider**: Icon.Provider for consistent sizing across multiple icons
+- **Accessibility**: Proper semantic structure and ARIA support
+- **Responsive Design**: Size variants that adapt to different interface needs
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+- **CSS Custom Properties**: Uses design system tokens for consistent sizing
+
+The underlying HTML structure creates a semantic icon container:
+```html
+<span class="icon" data-size="medium">
+  <svg>...</svg>
+</span>
+```
+
+This provides excellent accessibility and user experience while maintaining a clean, structured API for developers. The component automatically handles sizing through CSS custom properties and provides a flexible foundation for icon-based interfaces.

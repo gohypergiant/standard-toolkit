@@ -10,21 +10,21 @@ The Drawer component provides a flexible, accessible UI pattern for displaying c
 
 It is composed of the following components:
 
-- **Drawer** – root component that manages the drawer state and view stack
-- **Drawer.Layout** – container for layout structure, supports extending specific drawer's layout and drawer's push/overlay behavior
-- **Drawer.Menu** – navigation menu for switching between views
-- **Drawer.Menu.Item** – individual menu item, can trigger open/toggle for a drawer as well as show a specific view
-- **Drawer.Panel** – main panel container for drawer content
-- **Drawer.View** – content region for a specific view, mapped to a unique id
-- **Drawer.Header** – header region, typically for titles or actions
-- **Drawer.Header.Title** – heading element, supports semantic levels and styling
-- **Drawer.Content** – main content area within a view
-- **Drawer.Footer** – footer region for actions or supplementary info
-- **Drawer.Trigger** – programmatic trigger for drawer/view actions
+- **Drawer** – Root component that manages the drawer state and view stack
+- **Drawer.Layout** – Container for layout structure, supports extending specific drawer's layout and drawer's push/overlay behavior
+- **Drawer.Menu** – Navigation menu for switching between views
+- **Drawer.Menu.Item** – Individual menu item, can trigger open/toggle for a drawer as well as show a specific view
+- **Drawer.Panel** – Main panel container for drawer content
+- **Drawer.View** – Content region for a specific view, mapped to a unique id
+- **Drawer.Header** – Header region, typically for titles or actions
+- **Drawer.Header.Title** – Heading element, supports semantic levels and styling
+- **Drawer.Content** – Main content area within a view
+- **Drawer.Footer** – Footer region for actions or supplementary info
+- **Drawer.Trigger** – Programmatic trigger for drawer/view actions
 
 The Drawer enforces a predictable child structure: only one Drawer.Panel is allowed per Drawer, and Drawer.Menu is optional.
 
-## Example usage
+## Example Usage
 
 ```
 const ids = {
@@ -78,6 +78,12 @@ Drawer.Trigger enables transitioning between views or controlling the drawer pro
 - `'open'`, `'toggle'`, `'close'`: Control the drawer state
 - A `UniqueId`: Pushes the corresponding view onto the stack
 - `[any combination of the above]` (array): Each event is fired in sequence
+
+## Variants
+
+* **small** - Compact drawer with minimal width, suitable for simple navigation
+* **medium** - Standard drawer size with balanced content space (default)
+* **large** - Spacious drawer with maximum content area for complex interfaces
 
 ## Implementation Notes
 

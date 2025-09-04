@@ -1,0 +1,95 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as SelectFieldStories from './select-field.stories';
+
+<Meta of={SelectFieldStories} />
+
+# SelectField
+The SelectField component provides a customizable dropdown select input with support for grouped options, icons, and virtualized rendering for large datasets. It's built on React Aria Components and provides excellent accessibility out of the box. Select fields are commonly used in forms, settings panels, and anywhere users need to choose from a predefined list of options.
+
+It is composed of the following components:
+
+- **SelectField** - Main select dropdown with form field features
+- **SelectField.Provider** - Context provider for setting default props across multiple select fields
+- **[Options](?path=/docs/components-options--playground)** Main container for all option items
+
+## Example usage
+```tsx
+// Basic select field
+<SelectField label="Choose a bird" placeholder="Select...">
+  <Options.Item textValue="Blue Jay">Blue Jay</Options.Item>
+  <Options.Item textValue="Gray catbird">Gray catbird</Options.Item>
+  <Options.Item textValue="Black-capped chickadee">Black-capped chickadee</Options.Item>
+</SelectField>
+
+// With grouped options and icons
+<SelectField label="Choose a bird" placeholder="Select...">
+  <Options.Section header="North American Birds">
+    <Options.Item textValue="Blue Jay">
+      <Icon><Placeholder /></Icon>
+      <Options.Item.Label>Blue Jay</Options.Item.Label>
+    </Options.Item>
+    <Options.Item textValue="Gray catbird">
+      <Icon><Placeholder /></Icon>
+      <Options.Item.Label>Gray catbird</Options.Item.Label>
+    </Options.Item>
+  </Options.Section>
+</SelectField>
+
+// Using context provider for default props
+<SelectField.Provider size="small">
+  <SelectField label="Small Select 1" />
+  <SelectField label="Small Select 2" />
+</SelectField.Provider>
+```
+
+## Variants
+
+* **medium** - Standard size with full label and description support (default)
+* **small** - Compact size with minimal label display and reduced padding
+
+The size can be controlled via the `size` prop or set globally using the `SelectField.Provider` component.
+
+<Canvas of={SelectFieldStories.Default} />
+
+## Props
+
+* **`label`** - Text label displayed above the select field
+* **`description`** - Helper text displayed below the select field
+* **`errorMessage`** - Error text displayed when validation fails
+* **`size`** - Size variant: `'medium'` (default) or `'small'`
+* **`placeholder`** - Placeholder text displayed when no option is selected
+* **`isDisabled`** - Disables the select field
+* **`isRequired`** - Marks the select field as required
+* **`isInvalid`** - Marks the select field as invalid
+* **`isReadOnly`** - Makes the select field read-only
+* **`autoFocus`** - Automatically focuses the select field on mount
+* **`layoutOptions`** - Configuration for virtualized rendering of large option lists
+* **`classNames`** - Custom class names for styling:
+  * `field` - Applied to the select field container
+  * `label` - Applied to the label element
+  * `trigger` - Applied to the select button trigger
+  * `value` - Applied to the selected value display
+  * `description` - Applied to the description text
+  * `error` - Applied to the error message
+
+## Implementation Notes
+The `SelectField` component wraps the `Select` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Select.html)
+
+The underlying elements are:
+- `div` for the select field container
+- `button` for the select trigger
+- `span` for the selected value display
+- `div` for the label and description
+- `div` for the error message
+- `div` for the popover containing options
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Arrow keys, Enter, Escape, Space)
+- Focus management
+- Form integration
+- Error state announcements
+- Option grouping and section headers
+
+The component integrates with the Options system for consistent option rendering and supports virtualized rendering for performance with large datasets (5000+ items).

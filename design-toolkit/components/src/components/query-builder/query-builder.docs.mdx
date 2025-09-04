@@ -2,12 +2,106 @@ import { Meta, Canvas, Controls } from '@storybook/blocks';
 
 import * as QueryBuilderStories from './query-builder.stories';
 
-<Meta of={ QueryBuilderStories }/>
+<Meta of={QueryBuilderStories} />
 
 # QueryBuilder
 
-The `QueryBuilder` component is a specialized instance of the [React Query Builder](https://react-querybuilder.js.org/) library that allows us to provide a UI for crafting rulesets for queries and filtering.
+The `QueryBuilder` component is a specialized instance of the [React Query Builder](https://react-querybuilder.js.org/) library that provides a UI for crafting complex query rulesets and filters.
 
-<Canvas of={ QueryBuilderStories.Default }/>
+<Canvas of={QueryBuilderStories.Default} />
 
-<Controls of={ QueryBuilderStories.Default }/>
+## Structure
+
+The QueryBuilder consists of several subcomponents that can be composed together:
+
+### Main Components
+
+```tsx
+<QueryBuilder>
+  <QueryBuilder.Rule />
+  <QueryBuilder.RuleGroup />
+  <QueryBuilder.ValueEditor />
+  <QueryBuilder.ValueSelector />
+</QueryBuilder>
+```
+
+- **QueryBuilder**: Main wrapper component that manages the query state and layout
+- **QueryBuilder.Rule**: Individual rule component containing field, operator, and value
+- **QueryBuilder.RuleGroup**: Container for organizing multiple rules with a shared combinator
+- **QueryBuilder.ValueEditor**: Input component for editing rule values
+- **QueryBuilder.ValueSelector**: Dropdown component for selecting predefined values
+
+### Supporting Components
+
+```tsx
+<QueryBuilder.RuleGroup>
+  <QueryBuilder.RuleGroupHeaderComponent />
+  <QueryBuilder.CombinatorSelector />
+  <QueryBuilder.RuleGroupFooterComponent />
+</QueryBuilder.RuleGroup>
+```
+
+- **QueryBuilder.RuleGroupHeaderComponent**: Header section containing group actions
+- **QueryBuilder.CombinatorSelector**: Controls AND/OR logic between rules
+- **QueryBuilder.RuleGroupFooterComponent**: Footer section with add rule/group actions
+
+### Action Components
+
+```tsx
+<QueryBuilder.ActionElement>
+  <QueryBuilder.RemoveRuleAction />
+  <QueryBuilder.LockAction />
+  <QueryBuilder.CloneAction />
+</QueryBuilder.ActionElement>
+```
+
+- **QueryBuilder.ActionElement**: Base component for rule and group actions
+- **QueryBuilder.RemoveRuleAction**: Button to remove a rule or group
+- **QueryBuilder.LockAction**: Button to lock/unlock a rule or group
+- **QueryBuilder.CloneAction**: Button to duplicate a rule or group
+
+## Implementation Notes
+
+- Built with React Query Builder and Standard Toolkit components
+- Supports both horizontal and vertical layouts
+- **Props use camelCase** (e.g., `showRuleLines`, `onQueryChange`)
+- **Component names use PascalCase** (e.g., `QueryBuilder`, `RuleGroup`)
+- **Descriptions begin with uppercase letters**
+
+### Default Behaviors
+- Rules can be added, removed, and grouped
+- Groups support AND/OR combinators
+- Validation occurs on value changes
+- Drag and drop is disabled by default
+
+## Usage Requirements
+
+- At least one field must be defined in the `fields` prop
+- Initial query structure must be provided via the `query` prop
+- `onQueryChange` handler is required for managing query updates
+
+## Accessibility
+
+- ARIA labels for all interactive elements
+- Keyboard navigation support for:
+  - Tab navigation between fields
+  - Space/Enter to activate buttons
+  - Arrow keys for dropdowns
+- High contrast compliant icons and borders
+- Screen reader announcements for actions
+
+## Contextual Use Cases
+
+- Database query builders
+- Advanced search interfaces
+- Filter builders for data tables
+- Complex form validation rules
+- Report builders
+
+## References
+
+- [React Query Builder Documentation](https://react-querybuilder.js.org/)
+- [Standard Toolkit Button Component](/docs/components-button--docs)
+- [Standard Toolkit Icon Component](/docs/components-icon--docs)
+
+<Controls of={QueryBuilderStories.Default} />

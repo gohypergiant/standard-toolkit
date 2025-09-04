@@ -1,0 +1,144 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import * as DrawerLayoutStories from './layout.stories';
+
+<Meta of={DrawerLayoutStories} />
+
+# Drawer.Layout
+
+A flexible layout system for managing multiple drawers that can be positioned on any side of the main content area. Supports pushing and extending behaviors with configurable sizes and placements.
+
+<Canvas of={DrawerLayoutStories.Default} />
+
+## Structure
+
+The Drawer.Layout system consists of the following components:
+
+```tsx
+<Drawer.Layout>
+  <Drawer.Layout.Main>
+    {/* Main content area */}
+  </Drawer.Layout.Main>
+
+  <Drawer>
+    <Drawer.Menu>
+      <Drawer.Menu.Item />
+    </Drawer.Menu>
+    <Drawer.Panel>
+      <Drawer.Header>
+        <Drawer.Header.Title />
+      </Drawer.Header>
+      <Drawer.Content>
+        <Drawer.View />
+      </Drawer.Content>
+    </Drawer.Panel>
+  </Drawer>
+</Drawer.Layout>
+```
+
+- **Drawer.Layout**: Container that manages drawer interactions and layout
+- **Drawer.Layout.Main**: Main content area that responds to drawer states
+- **Drawer**: Individual drawer container with configurable placement
+- **Drawer.Menu**: Navigation menu for controlling drawer views
+- **Drawer.Menu.Item**: Interactive item for toggling drawer states
+- **Drawer.Panel**: Content container for the drawer
+- **Drawer.Header**: Header section of the drawer
+- **Drawer.Header.Title**: Title component for the drawer
+- **Drawer.Content**: Main content area within the drawer
+- **Drawer.View**: Individual view container within the drawer
+
+## Props
+
+### Drawer.Layout Props
+
+- `extend`
+  - Type: select ('top bottom', 'left right', 'top', 'bottom', 'left', 'right')
+  - Default: ''
+  - Description: Specifies which drawers should extend over the main content
+
+- `push`
+  - Type: string
+  - Default: ''
+  - Description: Specifies which drawers should push the main content
+
+- `children`
+  - Type: ReactNode
+  - Required
+  - Description: Content to render within the layout
+
+### Drawer Props
+
+- `id`
+  - Type: string
+  - Required
+  - Description: Unique identifier for the drawer
+
+- `placement`
+  - Type: select ('top', 'bottom', 'left', 'right')
+  - Required
+  - Description: Position of the drawer
+
+- `size`
+  - Type: select ('medium')
+  - Default: 'medium'
+  - Description: Size of the drawer
+
+### Drawer.Menu.Item Props
+
+- `toggle`
+  - Type: boolean
+  - Default: false
+  - Description: Whether this item toggles the drawer state
+
+- `for`
+  - Type: string
+  - Required
+  - Description: ID of the view this item controls
+
+### Drawer.View Props
+
+- `id`
+  - Type: string
+  - Required
+  - Description: Unique identifier for the view
+
+## Implementation Notes
+
+- Built with TailwindCSS for styling
+- Uses CSS Grid for layout management
+- Handles transitions and animations automatically
+- **Props use camelCase** (e.g., `placement`, `size`)
+- **Component names use PascalCase** (e.g., `Drawer.Layout`)
+- **Descriptions begin with uppercase letters**
+
+## Usage Requirements
+
+- Must include exactly one `Drawer.Layout.Main` component
+- Each `Drawer` must have a unique `id`
+- Each `Drawer.View` must have a unique `id`
+- `placement` must be one of: 'top', 'bottom', 'left', 'right'
+- Menu items must reference valid view IDs
+
+## Accessibility
+
+- Keyboard navigation support for drawer controls
+- ARIA attributes for drawer states and controls
+- Focus management between drawers
+- Support for reduced motion preferences
+- Screen reader announcements for drawer state changes
+
+## Contextual Use Cases
+
+- Application navigation systems
+- Tool panels and sidebars
+- Property inspectors
+- Configuration panels
+- Multi-panel dashboards
+- Complex form layouts
+- Responsive mobile navigation
+
+## References
+
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Standard Toolkit Icon Component](/docs/components-icon--docs)
+
+<Controls of={DrawerLayoutStories.Default} />

@@ -27,6 +27,9 @@ export type {
   AccordionStyleVariants,
   AccordionTriggerProps,
 } from './components/accordion/types';
+export { ActionBar } from './components/action-bar';
+export { ActionBarStyles } from './components/action-bar/styles';
+export type { ActionBarProps } from './components/action-bar/types';
 export { Avatar, AvatarContext } from './components/avatar';
 export { AvatarStyles } from './components/avatar/styles';
 export type { AvatarProps } from './components/avatar/types';
@@ -130,6 +133,10 @@ export type {
 export { Dialog, DialogContext } from './components/dialog';
 export { DialogStyles } from './components/dialog/styles';
 export type { DialogProps } from './components/dialog/types';
+export {
+  DrawerEventNamespace,
+  DrawerEventTypes,
+} from './components/drawer/events';
 export {
   DrawerEventNamespace,
   DrawerEventTypes,

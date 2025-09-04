@@ -1,0 +1,43 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as CheckboxGroupStories from './checkbox-group.stories';
+
+<Meta of={CheckboxGroupStories} />
+
+# Checkbox Group
+A checkbox group allows a user to select multiple items from a list of options. The Checkbox.Group component provides flexible layout options with automatic spacing and responsive behavior. Horizontal orientation automatically wraps checkboxes when space is constrained, while vertical orientation provides consistent stacking with proper spacing between items.
+
+## Example Usage
+
+### Basic
+
+```tsx
+// Checkbox group with label
+<Checkbox.Group label="Notification preferences" orientation="vertical">
+  <Checkbox value="email">Email notifications</Checkbox>
+  <Checkbox value="sms">SMS notifications</Checkbox>
+  <Checkbox value="push">Push notifications</Checkbox>
+</Checkbox.Group>
+
+// Horizontal checkbox group
+<Checkbox.Group label="Features" orientation="horizontal">
+  <Checkbox value="feature1">Feature 1</Checkbox>
+  <Checkbox value="feature2">Feature 2</Checkbox>
+  <Checkbox value="feature3">Feature 3</Checkbox>
+</Checkbox.Group>
+```
+
+## Props
+All components and subcomponents accept either a `className` or a `classNames` prop that allow for custom style overrides. The `className` prop takes a string and `classNames` takes an object when there are multiple targets.
+
+The Checkbox Group supports all the `Checkbox Group` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/CheckboxGroup.html#props) plus
+
+* **`label`** - Group label displayed above the checkboxes
+* **`orientation`** - Layout direction: `'vertical'` (default) or `'horizontal'`
+* **`classNames`** - Custom class names for styling:
+* `group` - Applied to the group container
+* `label` - Applied to the group label
+
+## Implementation Notes
+The `Checkbox Group` component wraps the `CheckboxGroup` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/CheckboxGroup.html)
+
