@@ -138,10 +138,6 @@ export {
   DrawerEventTypes,
 } from './components/drawer/events';
 export {
-  DrawerEventNamespace,
-  DrawerEventTypes,
-} from './components/drawer/events';
-export {
   Drawer,
   DrawerContext,
   DrawerEventHandlers,
@@ -278,13 +274,9 @@ export type {
   TableProps,
   TableRowProps,
 } from './components/table/types';
-export { Tabs } from './components/tabs';
-export type {
-  TabListProps,
-  TabPanelProps,
-  TabProps,
-  TabsProps,
-} from './components/tabs';
+export { Tabs, TabsContext } from './components/tabs';
+export { TabStyles } from './components/tabs/styles';
+export type { TabsProps } from './components/tabs/types';
 export {
   TextAreaField,
   TextAreaFieldContext,

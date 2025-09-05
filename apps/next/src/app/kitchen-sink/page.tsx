@@ -182,21 +182,21 @@ export default function KitchenSink() {
             {divider}
             <Tabs orientation='horizontal'>
               <Tabs.List>
-                <Tabs.Tab id='uno'>Tab 1</Tabs.Tab>
-                <Tabs.Tab id='dos'>Tab 2</Tabs.Tab>
-                <Tabs.Tab id='tres' isDisabled>
+                <Tabs.List.Tab id='uno'>Tab 1</Tabs.List.Tab>
+                <Tabs.List.Tab id='dos'>Tab 2</Tabs.List.Tab>
+                <Tabs.List.Tab id='tres' isDisabled>
                   Tab 3
-                </Tabs.Tab>
+                </Tabs.List.Tab>
               </Tabs.List>
             </Tabs>
             {divider}
             <Tabs orientation='vertical'>
               <Tabs.List>
-                <Tabs.Tab id='uno'>Tab 1</Tabs.Tab>
-                <Tabs.Tab id='dos'>Tab 2</Tabs.Tab>
-                <Tabs.Tab id='tres' isDisabled>
+                <Tabs.List.Tab id='uno'>Tab 1</Tabs.List.Tab>
+                <Tabs.List.Tab id='dos'>Tab 2</Tabs.List.Tab>
+                <Tabs.List.Tab id='tres' isDisabled>
                   Tab 3
-                </Tabs.Tab>
+                </Tabs.List.Tab>
               </Tabs.List>
             </Tabs>
           </div>

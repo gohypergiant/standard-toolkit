@@ -1,0 +1,158 @@
+import { Meta } from '@storybook/blocks';
+
+import * as TabsStories from './tabs.stories';
+
+<Meta of={TabsStories}/>
+
+# Tabs
+
+Tabs organize content into multiple sections and allow users to navigate between them. They provide an accessible way to switch between different views within the same context.
+
+## Usage
+
+```tsx
+import { Tabs } from '@standard-toolkit/components';
+
+<Tabs defaultSelectedKey="tab1">
+  <Tabs.List>
+    <Tabs.List.Tab id="tab1">First Tab</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab2">Second Tab</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab3">Third Tab</Tabs.List.Tab>
+  </Tabs.List>
+  <Tabs.Panel id="tab1">Content for first tab</Tabs.Panel>
+  <Tabs.Panel id="tab2">Content for second tab</Tabs.Panel>
+  <Tabs.Panel id="tab3">Content for third tab</Tabs.Panel>
+</Tabs>
+```
+
+## Component Structure
+
+The Tabs component follows a specific structure:
+
+- **Tabs** - The main container component that manages tab selection state
+- **Tabs.List** - Container for tab items
+  - **Tabs.List.Tab** - Individual tab buttons that users can select
+- **Tabs.Panel** - Content container that displays when its corresponding tab is selected
+
+## Props
+
+### Tabs
+
+* **`defaultSelectedKey`** - The initial selected tab key
+* **`selectedKey`** - The controlled selected tab key
+* **`onSelectionChange`** - Handler called when selection changes
+* **`orientation`** - The orientation of the tabs
+* **`children`** - Must include Tabs.List and Tabs.Panel components
+
+### Tabs.List
+
+* **`variant`** - Visual style variant
+* **`children`** - Must include at least one Tabs.List.Tab component
+
+### Tabs.List.Tab
+
+* **`id`** - Unique identifier that matches a panel
+* **`children`** - Content of the tab
+* **`disabled`** - Whether the tab is disabled
+
+### Tabs.Panel
+
+* **`id`** - Unique identifier that matches a tab
+* **`children`** - Content to show when the corresponding tab is selected
+
+## Accessibility
+
+The Tabs component is built on top of React Aria's Tabs component, which provides full accessibility support:
+
+- Keyboard navigation between tabs using arrow keys
+- Proper ARIA roles and attributes
+- Focus management for keyboard users
+- Screen reader announcements for tab selection
+
+## Examples
+
+### Horizontal Tabs (Default)
+
+```tsx
+<Tabs defaultSelectedKey="tab1">
+  <Tabs.List>
+    <Tabs.List.Tab id="tab1">Overview</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab2">Details</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab3">Settings</Tabs.List.Tab>
+  </Tabs.List>
+  <Tabs.Panel id="tab1">Overview content</Tabs.Panel>
+  <Tabs.Panel id="tab2">Details content</Tabs.Panel>
+  <Tabs.Panel id="tab3">Settings content</Tabs.Panel>
+</Tabs>
+```
+
+### Vertical Tabs
+
+```tsx
+<Tabs orientation="vertical" defaultSelectedKey="tab1">
+  <Tabs.List>
+    <Tabs.List.Tab id="tab1">Profile</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab2">Account</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab3">Preferences</Tabs.List.Tab>
+  </Tabs.List>
+  <Tabs.Panel id="tab1">Profile settings</Tabs.Panel>
+  <Tabs.Panel id="tab2">Account settings</Tabs.Panel>
+  <Tabs.Panel id="tab3">Preferences settings</Tabs.Panel>
+</Tabs>
+```
+
+### Icon Tabs
+
+```tsx
+<Tabs defaultSelectedKey="home">
+  <Tabs.List variant="icons">
+    <Tabs.List.Tab id="home">
+      <Icon><Home /></Icon>
+    </Tabs.List.Tab>
+    <Tabs.List.Tab id="search">
+      <Icon><Search /></Icon>
+    </Tabs.List.Tab>
+    <Tabs.List.Tab id="settings">
+      <Icon><Settings /></Icon>
+    </Tabs.List.Tab>
+  </Tabs.List>
+  <Tabs.Panel id="home">Home content</Tabs.Panel>
+  <Tabs.Panel id="search">Search content</Tabs.Panel>
+  <Tabs.Panel id="settings">Settings content</Tabs.Panel>
+</Tabs>
+```
+
+### Disabled Tab
+
+```tsx
+<Tabs defaultSelectedKey="tab1">
+  <Tabs.List>
+    <Tabs.List.Tab id="tab1">Active Tab</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab2" disabled>Disabled Tab</Tabs.List.Tab>
+    <Tabs.List.Tab id="tab3">Another Tab</Tabs.List.Tab>
+  </Tabs.List>
+  <Tabs.Panel id="tab1">Active tab content</Tabs.Panel>
+  <Tabs.Panel id="tab2">This content won't be accessible</Tabs.Panel>
+  <Tabs.Panel id="tab3">Another tab content</Tabs.Panel>
+</Tabs>
+```
+
+## Controlled Component
+
+You can control the selected tab using the `selectedKey` and `onSelectionChange` props:
+
+```tsx
+function ControlledTabs() {
+  const [selectedKey, setSelectedKey] = React.useState('tab1');
+
+  return (
+    <Tabs selectedKey={selectedKey} onSelectionChange={setSelectedKey}>
+      <Tabs.List>
+        <Tabs.List.Tab id="tab1">First Tab</Tabs.List.Tab>
+        <Tabs.List.Tab id="tab2">Second Tab</Tabs.List.Tab>
+      </Tabs.List>
+      <Tabs.Panel id="tab1">First tab content</Tabs.Panel>
+      <Tabs.Panel id="tab2">Second tab content</Tabs.Panel>
+    </Tabs>
+  );
+}

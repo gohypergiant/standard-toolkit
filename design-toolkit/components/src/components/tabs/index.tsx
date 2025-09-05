@@ -11,22 +11,87 @@
  */
 
 'use client';
-import { containsExactChildren } from '@/lib/react';
-import { cn } from '@/lib/utils';
+
 import 'client-only';
-import { cva } from 'class-variance-authority';
+import { containsExactChildren } from '@/lib/react';
+import type { ProviderProps } from '@/lib/types';
+import { createContext } from 'react';
 import {
   Tab as AriaTab,
   TabList as AriaTabList,
-  type TabListProps as AriaTabListProps,
   TabPanel as AriaTabPanel,
-  type TabPanelProps as AriaTabPanelProps,
-  type TabProps as AriaTabProps,
   Tabs as AriaTabs,
-  type TabsProps as AriaTabsProps,
+  type ContextValue,
+  type TabListProps,
+  type TabPanelProps,
+  type TabProps,
+  composeRenderProps,
+  useContextProps,
 } from 'react-aria-components';
+import { TabStyles } from './styles';
+import type { TabsProps } from './types';
 
-export interface TabsProps extends AriaTabsProps {}
+const { tabs, list, tab, panel } = TabStyles();
+
+export const TabsContext =
+  createContext<ContextValue<TabsProps, HTMLDivElement>>(null);
+
+function TabsProvider({ children, ...props }: ProviderProps<TabsProps>) {
+  return <TabsContext.Provider value={props}>{children}</TabsContext.Provider>;
+}
+TabsProvider.displayName = 'Tabs.Provider';
+
+function Tab({ children, className, ...rest }: TabProps) {
+  return (
+    <AriaTab
+      {...rest}
+      className={composeRenderProps(className, (className) =>
+        tab({ className }),
+      )}
+    >
+      {children}
+    </AriaTab>
+  );
+}
+Tab.displayName = 'Tabs.List.Tab';
+
+function TabList<T extends object>({
+  children,
+  className,
+  ...rest
+}: TabListProps<T>) {
+  containsExactChildren({
+    children,
+    componentName: TabList.displayName,
+    restrictions: [[Tab, { min: 1 }]],
+  });
+
+  return (
+    <AriaTabList<T>
+      {...rest}
+      className={composeRenderProps(className, (className) =>
+        list({ className }),
+      )}
+    >
+      {children}
+    </AriaTabList>
+  );
+}
+TabList.displayName = 'Tabs.List';
+
+function TabPanel({ children, className, ...rest }: TabPanelProps) {
+  return (
+    <AriaTabPanel
+      {...rest}
+      className={composeRenderProps(className, (className) =>
+        panel({ className }),
+      )}
+    >
+      {children}
+    </AriaTabPanel>
+  );
+}
+TabPanel.displayName = 'Tabs.Panel';
 
 /**
  * Tabs - A tab navigation component for organizing content into sections
@@ -39,9 +104,9 @@ export interface TabsProps extends AriaTabsProps {}
  * // Basic horizontal tabs
  * <Tabs>
  *   <Tabs.List>
- *     <Tabs.Tab id="overview">Overview</Tabs.Tab>
- *     <Tabs.Tab id="details">Details</Tabs.Tab>
- *     <Tabs.Tab id="settings">Settings</Tabs.Tab>
+ *     <Tabs.List.Tab id="overview">Overview</Tabs.List.Tab>
+ *     <Tabs.List.Tab id="details">Details</Tabs.List.Tab>
+ *     <Tabs.List.Tab id="settings">Settings</Tabs.List.Tab>
  *   </Tabs.List>
  *   <Tabs.Panel id="overview">Overview content</Tabs.Panel>
  *   <Tabs.Panel id="details">Details content</Tabs.Panel>
@@ -52,8 +117,8 @@ export interface TabsProps extends AriaTabsProps {}
  * // Vertical tabs
  * <Tabs orientation="vertical">
  *   <Tabs.List>
- *     <Tabs.Tab id="profile">Profile</Tabs.Tab>
- *     <Tabs.Tab id="account">Account</Tabs.Tab>
+ *     <Tabs.List.Tab id="profile">Profile</Tabs.List.Tab>
+ *     <Tabs.List.Tab id="account">Account</Tabs.List.Tab>
  *   </Tabs.List>
  *   <Tabs.Panel id="profile">Profile settings</Tabs.Panel>
  *   <Tabs.Panel id="account">Account settings</Tabs.Panel>
@@ -63,186 +128,46 @@ export interface TabsProps extends AriaTabsProps {}
  * // Icon tabs
  * <Tabs>
  *   <Tabs.List variant="icons">
- *     <Tabs.Tab id="home">
+ *     <Tabs.List.Tab id="home">
  *       <Icon><Home /></Icon>
- *     </Tabs.Tab>
- *     <Tabs.Tab id="search">
+ *     </Tabs.List.Tab>
+ *     <Tabs.List.Tab id="search">
  *       <Icon><Search /></Icon>
- *     </Tabs.Tab>
+ *     </Tabs.List.Tab>
  *   </Tabs.List>
  *   <Tabs.Panel id="home">Home content</Tabs.Panel>
  *   <Tabs.Panel id="search">Search content</Tabs.Panel>
  * </Tabs>
  */
-export const Tabs = ({
-  children,
-  className,
-  orientation = 'horizontal',
-  isDisabled = false,
-  ...rest
-}: TabsProps) => {
+export function Tabs({ ref, ...props }: TabsProps) {
+  [props, ref] = useContextProps(props, ref ?? null, TabsContext);
+
+  const { children, className, ...rest } = props;
+
   containsExactChildren({
     children,
     componentName: Tabs.displayName,
-    restrictions: [[TabList, { min: 1, max: 1 }]],
+    restrictions: [
+      [TabList, { min: 1, max: 1 }],
+      [TabPanel, { min: 1 }],
+    ],
   });
 
   return (
     <AriaTabs
-      orientation={orientation}
-      isDisabled={isDisabled}
-      className={cn(
-        'group flex w-content flex-row orientation-horizontal:flex-col',
-        className,
-      )}
       {...rest}
+      ref={ref}
+      className={composeRenderProps(className, (className) =>
+        tabs({ className }),
+      )}
     >
       {children}
     </AriaTabs>
   );
-};
-
-Tabs.displayName = 'Tabs';
-
-export interface TabListProps extends AriaTabListProps<object> {
-  /** Whether the tabs are displaying iconography or text. */
-  variant?: 'default' | 'icons';
-  /** Whether the tabs are used as drawer controls. */
-  drawer?: 'left' | 'right' | 'top' | 'bottom';
 }
-
-const tabListStyles = cva('flex orientation-horizontal:flex-row flex-col', {
-  variants: {
-    variant: {
-      icons:
-        '[&>*]:p-xs orientation-horizontal:[&>*]:pr-s orientation-horizontal:[&>*]:pl-s [&>*]:leading-[0]',
-      default: '[&>*]:p-s [&>*]:text-header-m',
-    },
-    drawer: {
-      left: 'orientation-vertical:gap-xs rounded-r-large bg-surface-default p-s',
-      right:
-        'orientation-vertical:gap-xs rounded-l-large bg-surface-default p-s',
-      top: 'orientation-vertical:gap-xs rounded-b-large bg-surface-default p-s',
-      bottom:
-        'orientation-vertical:gap-xs rounded-t-large bg-surface-default p-s',
-    },
-  },
-});
-
-const TabList = ({
-  children,
-  className,
-  variant = 'default',
-  drawer = undefined,
-  ...rest
-}: TabListProps) => {
-  containsExactChildren({
-    children,
-    componentName: TabList.displayName,
-    restrictions: [[Tab, { min: 1 }]],
-  });
-
-  return (
-    <AriaTabList
-      className={cn(tabListStyles({ variant, drawer }), className)}
-      {...rest}
-    >
-      {children}
-    </AriaTabList>
-  );
-};
-
-TabList.displayName = 'Tabs.List';
-Tabs.List = TabList;
-
-const tabBaseStyles = cn(
-  'fg-primary-muted cursor-pointer p-s shadow-none',
-  'rounded-medium group-orientation-horizontal:rounded-small group-orientation-horizontal:rounded-b-none',
-  'group-orientation-horizontal:shadow-[0_1px] group-orientation-horizontal:shadow-[color:var(--outline-static)]',
-);
-
-const tabStyles = cva(tabBaseStyles, {
-  variants: {
-    isSelected: {
-      true: 'fg-accent-primary-bold bg-accent-primary-muted group-orientation-horizontal:shadow-[color:var(--outline-accent-primary-bold)]',
-    },
-    isHovered: {
-      true: 'fg-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)]',
-    },
-    isFocused: {
-      true: 'fg-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)]',
-    },
-    isDisabled: {
-      true: 'fg-disabled cursor-not-allowed group-orientation-horizontal:shadow-[color:var(--outline-interactive-disabled)]',
-    },
-  },
-  compoundVariants: [
-    {
-      isSelected: true,
-      isHovered: true,
-      className:
-        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-accent-primary-bold)]',
-    },
-    {
-      isSelected: true,
-      isFocused: true,
-      className:
-        'fg-accent-primary-bold group-orientation-horizontal:shadow-[color:var(--outline-interactive-hover)] group-orientation-vertical:shadow-[color:var(--outline-interactive-hover)]',
-    },
-    {
-      isDisabled: true,
-      isSelected: true,
-      className:
-        'fg-disabled bg-interactive-disabled group-orientation-horizontal:shadow-[color:var(--outline-interactive-disabled)]',
-    },
-  ],
-});
-
-export interface TabProps extends AriaTabProps {}
-
-const Tab = ({
-  id,
-  children,
-  className,
-  isDisabled = false,
-  ...rest
-}: TabProps) => {
-  return (
-    <AriaTab
-      id={id}
-      className={({ isSelected, isHovered, isFocused, isDisabled }) =>
-        cn(
-          tabStyles({ isSelected, isHovered, isFocused, isDisabled }),
-          className,
-        )
-      }
-      isDisabled={isDisabled}
-      {...rest}
-    >
-      {children}
-    </AriaTab>
-  );
-};
-
-Tab.displayName = 'Tabs.Tab';
-Tabs.Tab = Tab;
-
-export interface TabPanelProps extends AriaTabPanelProps {}
-
-const TabPanel = ({ id, children, className, ...rest }: TabPanelProps) => {
-  return (
-    <AriaTabPanel
-      id={id}
-      className={cn(
-        'fg-primary-bold p-s group-orientation-vertical:pt-0 group-orientation-horizontal:pl-0',
-        className,
-      )}
-      {...rest}
-    >
-      {children}
-    </AriaTabPanel>
-  );
-};
-
-TabPanel.displayName = 'Tabs.Panel';
+Tabs.displayName = 'Tabs';
+Tabs.Provider = TabsProvider;
+// biome-ignore lint/style/useNamingConvention: Component name
+Tabs.List = TabList as typeof TabList & { Tab: typeof Tab };
+Tabs.List.Tab = Tab;
 Tabs.Panel = TabPanel;
