@@ -1,5 +1,12 @@
 # @accelint/docs
 
+## 0.1.20
+
+### Patch Changes
+
+- Updated dependencies [0e9fadb]
+  - @accelint/ntds@0.2.0
+
 ## 0.1.19
 
 ### Patch Changes
