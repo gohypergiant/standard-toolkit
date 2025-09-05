@@ -1,0 +1,128 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as SidenavStories from './sidenav.stories';
+
+<Meta of={SidenavStories} />
+
+# Sidenav
+
+A navigation component that provides a collapsible side panel for hierarchical navigation in applications. The Sidenav component must be used within a `Drawer.Layout` to enable push/overlay functionality and proper layout management.
+
+## Layout Requirements
+
+The Sidenav component requires specific layout configuration to function properly:
+
+1. Must be wrapped in a `Drawer.Layout` component
+2. The trigger button should be placed within `Drawer.Layout.Main`
+3. The Sidenav itself should be a direct child of `Drawer.Layout`
+
+## Components
+
+It is composed of the following components:
+- **Sidenav** - Root component that manages the navigation state and layout
+- **Sidenav.Trigger** - Button component that controls the expansion/collapse of the sidenav
+- **Sidenav.Header** - Container for the navigation header, typically containing a logo and application title
+- **Sidenav.Item** - Interactive navigation item that can be selected, disabled, or contain nested items
+- **Sidenav.Divider** - Visual separator to group navigation items
+
+## Example Usage
+
+```tsx
+<div className="h-screen bg-surface-raised">
+  <Drawer.Layout push="left">
+    <Drawer.Layout.Main>
+      <Sidenav.Trigger>
+        <Button variant="icon" size="large">
+          <Icon>
+            <MenuIcon />
+          </Icon>
+        </Button>
+      </Sidenav.Trigger>
+    </Drawer.Layout.Main>
+
+    <Sidenav>
+      <Sidenav.Header>
+        <Icon size="large">
+          <AppLogo />
+        </Icon>
+        <div>
+          <Heading className="text-header-m">Application Header</Heading>
+          <Heading className="text-header-s">subheader</Heading>
+        </div>
+      </Sidenav.Header>
+
+      <Heading>Navigation</Heading>
+      <Sidenav.Item>
+        <Icon><HomeIcon /></Icon>
+        <Text>Home</Text>
+      </Sidenav.Item>
+      <Sidenav.Divider />
+      <Sidenav.Item isSelected>
+        <Icon><SettingsIcon /></Icon>
+        <Text>Settings</Text>
+      </Sidenav.Item>
+    </Sidenav>
+  </Drawer.Layout>
+</div>
+```
+
+## Props
+
+### Drawer.Layout Props
+- **`push`** `"left"` - Enables push behavior for the sidenav. When not specified, the sidenav will overlay content instead
+
+### Sidenav Props
+- **`hidden`** `boolean` - Controls the visibility of the navigation panel
+- **`children`** `ReactNode` - Content to be rendered within the navigation
+- **`className`** `string` - Custom CSS class name for the root element
+
+### Sidenav.Header Props
+- **`children`** `ReactNode` - Content to be rendered in the header section
+- **`classNames`** `object` - Optional CSS class names for styling different parts of the header
+  - **`header`** `string` - Class name for the header element
+  - **`button`** `string` - Class name for the button element
+  - **`container`** `string` - Class name for the container element
+  - **`icon`** `string` - Class name for the icon element
+
+### Sidenav.Item Props
+- **`isSelected`** `boolean` - Indicates if the item is currently selected
+- **`isDisabled`** `boolean` - Disables interaction with the item
+- **`children`** `ReactNode` - Content of the navigation item
+- **`onPress`** `(event: PressEvent) => void` - Handler for press events
+- **`classNames`** `object` - Optional CSS class names for styling
+  - **`button`** `string` - Class name for the button element
+  - **`icon`** `string` - Class name for the icon element
+
+### Sidenav.Divider Props
+- **`className`** `string` - Custom CSS class name for the divider
+
+## States and Styling
+
+The Sidenav uses the following style variants and states:
+
+### Layout States
+- `group-[&:not([data-push])]/layout:open:absolute` - Controls overlay behavior
+- `group-closed/sidenav` - Applied when sidenav is closed
+- `group-open/sidenav` - Applied when sidenav is open
+
+### Item States
+- Default: Basic navigation item styling
+- Hover: `enabled:color-info:hover:bg-interactive-bold-hover`
+- Selected: `enabled:color-info:selected:bg-accent-primary-bold`
+- Disabled: Prevents interaction and applies muted styling
+
+## Accessibility
+
+The Sidenav component implements the following accessibility features:
+- ARIA landmarks for navigation regions
+- Keyboard navigation support (Tab, Arrow keys)
+- Focus management for navigation items
+- Screen reader announcements for state changes
+- ARIA attributes for selected and disabled states
+
+## Examples
+
+### Default Sidenav
+<Canvas of={SidenavStories.Default} />
+
+

@@ -75,6 +75,7 @@ export { default as Duplicate } from './duplicate';
 export { default as Edit } from './edit';
 export { default as ElectromagneticSpectrum } from './electromagnetic-spectrum';
 export { default as ExpandAll } from './expand-all';
+export { default as ExpandLeftPanel } from './expand-left-panel';
 export { default as ExpandLeft } from './expand-left';
 export { default as ExpandRight } from './expand-right';
 export { default as ExpandWindow } from './expand-window';
