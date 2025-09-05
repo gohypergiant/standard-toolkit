@@ -33,13 +33,13 @@
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
     "lint:fs": "pnpm ls-lint",
-    "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --organize-imports-enabled=true  --write",
+    "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
   "dependencies": {
     "@accelint/biome-config": "workspace:*",
     "@babel/parser": "7.25.8",
-    "@biomejs/biome": "1.9.3",
+    "@biomejs/biome": "2.2.3",
     "@changesets/changelog-git": "0.2.0",
     "@changesets/cli": "2.27.9",
     "@ls-lint/ls-lint": "2.3.0-beta.1",

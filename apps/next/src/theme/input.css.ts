@@ -11,16 +11,16 @@
  */
 
 import {
-  type InputState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
   genericColorVars,
+  type InputState,
   inputColorVars,
   inputSpaceVars,
   inputStateVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
   typographyVars,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';

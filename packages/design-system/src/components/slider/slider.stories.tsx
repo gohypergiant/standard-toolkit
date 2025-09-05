@@ -10,14 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
 import { AriaLabel, AriaText } from '../aria';
 import { Group } from '../group';
 import { Input } from '../input';
 import { NumberField } from '../number-field';
 import { Slider, SliderBar, SliderOutput, SliderThumb, SliderTrack } from './';
-import type { SliderProps } from './types';
-import type { SliderRenderProps } from './types';
+import type { ArgTypes, Story, StoryDefault } from '@ladle/react';
+import type { SliderProps, SliderRenderProps } from './types';
 
 type SliderStoryProps = SliderProps & {
   label: string;

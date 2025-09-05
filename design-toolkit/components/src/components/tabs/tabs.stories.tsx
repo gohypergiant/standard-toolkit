@@ -9,10 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */
 
+import { Add, Check, Group } from '@accelint/icons';
 import { Icon } from '@/components/icon';
 import { Tabs } from '@/components/tabs/index';
-import { Add, Check, Group } from '@accelint/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**

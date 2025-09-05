@@ -13,18 +13,18 @@
 'use client';
 import 'client-only';
 import Calendar from '@accelint/icons/calendar';
-import type { DateValue } from '@internationalized/date';
 import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,
   Text as AriaText,
+  composeRenderProps,
   DateSegment,
   FieldError,
-  composeRenderProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { DateFieldStyles, DateFieldStylesDefaults } from './styles';
+import type { DateValue } from '@internationalized/date';
 import type { DateFieldProps } from './types';
 
 const { field, label, control, input, segment, description, error } =

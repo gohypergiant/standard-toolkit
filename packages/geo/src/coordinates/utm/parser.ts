@@ -11,7 +11,6 @@
  */
 
 import { UTM } from '@ngageoint/mgrs-js';
-
 import { type ParseResults, parse } from '../latlon/internal/parse';
 import { violation } from '../latlon/internal/violation';
 

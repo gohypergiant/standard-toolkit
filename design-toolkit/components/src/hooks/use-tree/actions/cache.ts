@@ -45,7 +45,7 @@ export class Cache<T> {
     lookup: Map<Key, CacheTreeNode<T>> = new Map(),
     parentKey: Key | null = null,
   ) {
-    nodes.map((node) => {
+    nodes.forEach((node) => {
       const { children, ...rest } = node;
 
       lookup.set(node.key, {

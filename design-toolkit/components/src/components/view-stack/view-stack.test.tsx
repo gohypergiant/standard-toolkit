@@ -13,10 +13,10 @@
 import { uuid } from '@accelint/core';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { ViewStack } from './';
+import type { ReactNode } from 'react';
 import type { ViewStackProps } from './types';
 
 const ids = {

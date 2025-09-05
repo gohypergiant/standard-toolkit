@@ -11,12 +11,11 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
-import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactNode } from 'react';
-
 import { Icon } from '../icon';
 import { Options } from '../options';
 import { ComboBoxField } from './';
+import type { Meta, StoryObj } from '@storybook/react';
+import type { ReactNode } from 'react';
 
 const meta: Meta<typeof ComboBoxField> = {
   title: 'Components/ComboBoxField',

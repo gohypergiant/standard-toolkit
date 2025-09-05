@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { AriaAttributesWithRef } from '@/lib/types';
 import type {
   ButtonProps as AriaButtonProps,
   ToggleButtonProps as AriaToggleButtonProps,
   LinkProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ButtonStyles } from './styles';
 
 export type ButtonStyleVariants = VariantProps<typeof ButtonStyles> & {

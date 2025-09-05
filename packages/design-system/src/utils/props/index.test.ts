@@ -11,8 +11,8 @@
  */
 
 import { assert, describe, expect, it } from 'vitest';
-import type { RenderProps } from '../../types/react-aria';
 import { mergeClassNames, mergeProps } from './';
+import type { RenderProps } from '../../types/react-aria';
 
 describe('utils/props', () => {
   describe('mergeClassNames', () => {

@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RenderPropsClassName } from '@/lib/types';
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type {
   ButtonRenderProps,
@@ -20,6 +19,7 @@ import type {
   Heading,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { RenderPropsClassName } from '@/lib/types';
 import type { AccordionStyles } from './styles';
 
 export type AccordionStyleVariants = VariantProps<typeof AccordionStyles>;

@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from '@storybook/react';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,6 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react';
  * governing permissions and limitations under the License.
  */
 import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'Foundation/Typography',

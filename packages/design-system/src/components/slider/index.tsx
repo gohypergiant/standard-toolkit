@@ -12,8 +12,8 @@
 
 import { clsx } from 'clsx';
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useContext,
@@ -39,15 +39,15 @@ import { inlineVars } from '../../utils/css';
 import { callRenderProps, mergeClassNames } from '../../utils/props';
 import { type AriaLabelContext, AriaTextContext } from '../aria';
 import { GroupContext } from '../group';
-import type { GroupProps } from '../group/types';
 import { NumberFieldContext } from '../number-field';
-import type { NumberFieldProps } from '../number-field/types';
 import {
   sliderClassNames,
   sliderStateVars,
   sliderThumbStateVars,
   sliderTrackStateVars,
 } from './slider.css';
+import type { GroupProps } from '../group/types';
+import type { NumberFieldProps } from '../number-field/types';
 import type {
   SliderBarProps,
   SliderOutputProps,

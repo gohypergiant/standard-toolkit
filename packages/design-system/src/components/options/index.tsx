@@ -11,10 +11,11 @@
  */
 
 import {
-  type ForwardedRef,
-  type HTMLAttributes,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
+  type RefObject,
   useCallback,
   useMemo,
 } from 'react';
@@ -53,12 +54,12 @@ import {
 } from '../aria';
 import { createCollectionRenderer } from '../collection';
 import { IconContext } from '../icon';
-import type { IconProps } from '../icon/types';
 import {
   optionsClassNames,
   optionsItemStateVars,
   optionsStateVars,
 } from './options.css';
+import type { IconProps } from '../icon/types';
 import type {
   OptionsItemProps,
   OptionsListProps,
@@ -402,7 +403,7 @@ export const OptionsItem = forwardRef(function OptionItem<T extends object>(
     <ListBoxItem<T>
       {...rest}
       id={id ?? textValue}
-      ref={ref}
+      ref={ref as RefObject<T>}
       className={classNames?.item?.container}
       style={style}
       textValue={textValue}

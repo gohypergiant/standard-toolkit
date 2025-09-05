@@ -13,22 +13,22 @@
 'use client';
 
 import 'client-only';
-import type {
-  SemanticColorTokens,
-  StaticColorTokens,
-  ThemeTokens,
-} from '@/tokens/types';
 import { merge } from 'lodash';
 import {
-  type PropsWithChildren,
   createContext,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
-import type { PartialDeep } from 'type-fest';
 import { designTokens } from '../tokens/tokens';
+import type { PartialDeep } from 'type-fest';
+import type {
+  SemanticColorTokens,
+  StaticColorTokens,
+  ThemeTokens,
+} from '@/tokens/types';
 
 type Mode = 'dark' | 'light';
 type ContextColorTokens = SemanticColorTokens & StaticColorTokens;

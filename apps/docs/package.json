@@ -25,7 +25,7 @@
     "@accelint/predicates": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
-    "@biomejs/biome": "1.9.3",
+    "@biomejs/biome": "2.2.3",
     "@codesandbox/sandpack-react": "2.20.0",
     "@docusaurus/core": "3.8.1",
     "@docusaurus/module-type-aliases": "3.8.1",
@@ -47,7 +47,11 @@
     "typescript": "^5.8.3"
   },
   "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 3 chrome version",
       "last 3 firefox version",

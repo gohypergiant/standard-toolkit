@@ -13,8 +13,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Options } from '../options';
-import type { OptionsDataItem } from '../options/types';
 import { ComboBoxField } from './';
+import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
 
 function setup({

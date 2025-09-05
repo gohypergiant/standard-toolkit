@@ -11,18 +11,17 @@
  */
 
 import * as Patterning from '@/patterning';
-
 import {
   BEARINGS,
   type Format,
   LIMITS,
   PARTIAL_PATTERNS,
-  SYMBOLS,
   SYMBOL_PATTERNS,
+  SYMBOLS,
 } from '../internal';
 import { inRange } from '../internal/in-range';
-import type { ParseResults } from '../internal/parse';
 import { createParser } from '../internal/parse-format';
+import type { ParseResults } from '../internal/parse';
 
 type DegreesMinutesSeconds = {
   bear: string;

@@ -15,12 +15,11 @@ import {
   BEARINGS,
   type Compass,
   type Format,
-  SYMBOLS,
   SYMBOL_PATTERNS,
+  SYMBOLS,
 } from '../internal';
-import type { CoordinateSystem } from '../internal/coordinate-system';
-
 import { parseDegreesMinutesSeconds } from './parser';
+import type { CoordinateSystem } from '../internal/coordinate-system';
 
 export const systemDegreesMinutesSeconds: CoordinateSystem = {
   name: 'Degrees Minutes Seconds',

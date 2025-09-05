@@ -11,19 +11,19 @@
  */
 
 import {
-  type ComboBoxState,
-  type InputState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type ComboBoxState,
   comboBoxColorVars,
   comboBoxSpaceVars,
   comboBoxStateVars,
   genericColorVars,
+  type InputState,
   inputColorVars,
   inputStateVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

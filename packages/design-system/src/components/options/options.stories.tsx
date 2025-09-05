@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { Collection, DialogTrigger } from 'react-aria-components';
 import { actions } from '../../ladle/actions';
 import {
@@ -23,6 +22,7 @@ import {
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Options, OptionsItem, OptionsList } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { OptionsListProps } from './types';
 
 type StoryProps = OptionsListProps<object>;

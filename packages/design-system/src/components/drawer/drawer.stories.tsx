@@ -9,8 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these tests */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { useState } from 'react';
 import { TooltipTrigger } from 'react-aria-components';
 import { actions } from '../../ladle';
@@ -21,6 +21,7 @@ import { Icon } from '../icon';
 import { TabPanel, TabPanels } from '../tabs';
 import { Tooltip, TooltipTarget } from '../tooltip';
 import { Drawer, DrawerDialog, DrawerTab, DrawerTabList } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { DrawerProps } from './types';
 
 export default {

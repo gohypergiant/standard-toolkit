@@ -13,8 +13,6 @@
 'use client';
 
 import 'client-only';
-import { containsExactChildren } from '@/lib/react';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   Tab as AriaTab,
@@ -22,13 +20,15 @@ import {
   TabPanel as AriaTabPanel,
   Tabs as AriaTabs,
   type ContextValue,
+  composeRenderProps,
   type TabListProps,
   type TabPanelProps,
   type TabProps,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
 import { TabStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { TabsProps } from './types';
 
 const { tabs, list, tab, panel } = TabStyles();

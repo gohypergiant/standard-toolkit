@@ -12,7 +12,6 @@
  */
 
 import { describe, expect, it } from 'vitest';
-
 import {
   createCoordinate,
   parseDecimalDegrees,
@@ -21,10 +20,9 @@ import {
   parseMGRS,
 } from '.';
 import { coordinateSystems } from './coordinates/coordinate';
-
-import type { Format } from './coordinates/latlon/internal';
 import { EXHAUSTIVE_ERRORS } from './coordinates/latlon/internal/exhaustive-errors';
 import { parseUTM } from './coordinates/utm/parser';
+import type { Format } from './coordinates/latlon/internal';
 
 describe('creating a coordinate object', () => {
   it.each`

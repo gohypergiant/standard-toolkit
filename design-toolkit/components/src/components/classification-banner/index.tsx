@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import {
   ClassificationBannerStyles,
   ClassificationBannerStylesDefaults,
 } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { ClassificationBannerProps } from './types';
 
 export const ClassificationBannerContext =

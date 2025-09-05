@@ -13,7 +13,7 @@
  */
 
 import { default as babelParser } from '@babel/parser';
-import { fs, path, chalk, echo, glob } from 'zx';
+import { chalk, echo, fs, glob, path } from 'zx';
 
 const COMPONENT_GLOB = '**/src/components/*/index.tsx';
 const SOURCE_DIRS = ['design-toolkit', 'packages'];

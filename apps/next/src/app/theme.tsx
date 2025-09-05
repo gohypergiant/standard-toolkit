@@ -13,15 +13,15 @@
 'use client';
 
 import {
-  ThemeProvider as DSThemeProvider,
   bodies,
+  ThemeProvider as DSThemeProvider,
   families,
 } from '@accelint/design-system';
 import { ThemeProvider as DTKThemeProvider } from '@accelint/design-toolkit';
 import { clsx } from 'clsx';
-import type { PropsWithChildren } from 'react';
 import { Defaults } from './defaults';
 import { theme, vars } from './theme.css';
+import type { PropsWithChildren } from 'react';
 
 export function DSTheme({ children }: PropsWithChildren) {
   return (

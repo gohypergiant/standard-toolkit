@@ -12,9 +12,8 @@
 'use client';
 
 import 'client-only';
-import { containsExactChildren } from '@/lib/react';
 import { Broadcast } from '@accelint/bus';
-import { type UniqueId, isUUID } from '@accelint/core';
+import { isUUID, type UniqueId } from '@accelint/core';
 import { Pressable } from '@react-aria/interactions';
 import {
   type ComponentPropsWithRef,
@@ -25,7 +24,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Header, Heading, composeRenderProps } from 'react-aria-components';
+import { composeRenderProps, Header, Heading } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
 import { ToggleButton } from '../button';
 import { Icon } from '../icon';
 import {
@@ -34,9 +34,9 @@ import {
   ViewStackEventHandlers,
 } from '../view-stack';
 import { ViewStackEventTypes } from '../view-stack/events';
-import type { ViewStackViewProps } from '../view-stack/types';
 import { DrawerEventTypes } from './events';
 import { DrawerMenuStyles, DrawerStyles, DrawerTitleStyles } from './styles';
+import type { ViewStackViewProps } from '../view-stack/types';
 import type {
   DrawerContextValue,
   DrawerEvent,

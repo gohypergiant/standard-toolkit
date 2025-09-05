@@ -12,7 +12,6 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   Switch as AriaSwitch,
@@ -21,6 +20,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { SwitchStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { SwitchProps } from './types';
 
 // "switch" is a reserved term in JS

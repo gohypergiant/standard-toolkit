@@ -11,9 +11,10 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
+  type RefObject,
   useCallback,
   useMemo,
 } from 'react';
@@ -181,7 +182,7 @@ export const PickerItem = forwardRef(function PickerItem<T extends object>(
   return (
     <ListBoxItem<T>
       {...rest}
-      ref={ref}
+      ref={ref as RefObject<T>}
       id={id ?? textValue}
       className={classNames?.item?.container}
       style={style}

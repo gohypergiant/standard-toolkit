@@ -12,27 +12,27 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { ChevronDown } from '@accelint/icons';
 import { createContext } from 'react';
 import {
   Button,
   ComboBox,
   type ContextValue,
+  composeRenderProps,
   FieldError,
   Input,
   ListLayout,
   Popover,
   Text,
-  Virtualizer,
-  composeRenderProps,
   useContextProps,
+  Virtualizer,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
-import type { OptionsDataItem } from '../options/types';
 import { ComboBoxStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
+import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
 
 const { field, label, control, input, trigger, description, error, popover } =

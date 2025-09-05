@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these tests */
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';

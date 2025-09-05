@@ -12,9 +12,9 @@
 
 import { parseDate } from '@internationalized/date';
 import { render, screen } from '@testing-library/react';
-import type { DateValue } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
 import { DateField } from './index';
+import type { DateValue } from 'react-aria-components';
 import type { DateFieldProps } from './types';
 
 function setup({

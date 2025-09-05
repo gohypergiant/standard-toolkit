@@ -12,15 +12,15 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
-import { designTokens } from '@/tokens/tokens';
 import { Person } from '@accelint/icons';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
+import { designTokens } from '@/tokens/tokens';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
 import { AvatarStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { AvatarProps } from './types';
 
 const { avatar, image, fallback, content } = AvatarStyles();

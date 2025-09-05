@@ -16,17 +16,17 @@ import {
   useCallback,
   useContext,
 } from 'react';
-import { type ValueEditorProps, useValueEditor } from 'react-querybuilder';
+import { useValueEditor, type ValueEditorProps } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
 import { Input } from '../input';
-import type { InputType } from '../input/types';
 import { Radio, RadioGroup } from '../radio';
 import { Switch } from '../switch';
 import { TextArea } from '../textarea';
-import { QueryBuilderContext, multiValueOperators } from './constants';
-import type { QueryBuilderValueEditors } from './types';
+import { multiValueOperators, QueryBuilderContext } from './constants';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
+import type { InputType } from '../input/types';
+import type { QueryBuilderValueEditors } from './types';
 
 function CheckboxValueEditor({
   disabled,

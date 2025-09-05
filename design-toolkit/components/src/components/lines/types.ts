@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { LinesStyles } from '@/components/lines/styles';
 import type { ComponentProps } from 'react';
 import type { VariantProps } from 'tailwind-variants';
+import type { LinesStyles } from '@/components/lines/styles';
 
 export type LinesProps = Omit<ComponentProps<'div'>, 'size'> &
   LinesStylesVariants & {

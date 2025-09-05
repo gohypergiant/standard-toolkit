@@ -11,4 +11,5 @@
  */
 
 import fc from 'fast-check';
+
 fc.configureGlobal({ numRuns: 1000, interruptAfterTimeLimit: 5000 });

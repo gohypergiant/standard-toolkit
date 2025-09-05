@@ -16,11 +16,11 @@ import { Fragment } from 'react';
 import {
   Slider as AriaSlider,
   SliderTrack as AriaSliderTrack,
+  composeRenderProps,
   Input,
   Label,
   SliderThumb,
   Text,
-  composeRenderProps,
 } from 'react-aria-components';
 import { Tooltip } from '../tooltip';
 import { SliderStyles } from './styles';

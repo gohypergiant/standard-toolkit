@@ -12,18 +12,18 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   Button as AriaButton,
   ToggleButton as AriaToggleButton,
   type ContextValue,
-  Link,
   composeRenderProps,
+  Link,
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
 export const ButtonContext =

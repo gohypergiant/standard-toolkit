@@ -11,10 +11,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Errors, Format } from '.';
-import { type Tokens, lexer } from './lexer';
+import { lexer, type Tokens } from './lexer';
 import { pipesRunner } from './pipes';
 import { violation } from './violation';
+import type { Errors, Format } from '.';
 
 export type ParseResults = [Tokens, Errors];
 

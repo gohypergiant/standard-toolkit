@@ -11,8 +11,8 @@
  */
 
 import {
-  type ForwardedRef,
   createContext,
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useMemo,
@@ -40,10 +40,10 @@ import {
   AriaTextContext,
 } from '../aria';
 import { ButtonContext } from '../button';
-import type { ButtonProps } from '../button/types';
 import { OptionsContext } from '../options';
-import type { OptionsProps } from '../options/types';
 import { selectClassNames, selectStateVars } from './select.css';
+import type { ButtonProps } from '../button/types';
+import type { OptionsProps } from '../options/types';
 import type { SelectMapping, SelectProps } from './types';
 
 const defaultMapping: SelectMapping = {

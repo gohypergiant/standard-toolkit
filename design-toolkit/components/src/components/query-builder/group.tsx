@@ -13,7 +13,6 @@
 'use client';
 
 import 'client-only';
-import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
 import {
   type RuleGroupProps,
@@ -21,6 +20,7 @@ import {
   useRuleGroup,
   useStopEventPropagation,
 } from 'react-querybuilder';
+import { cn } from '@/lib/utils';
 
 export function RuleGroup(props: RuleGroupProps) {
   const group = useRuleGroup(props);
@@ -92,6 +92,7 @@ export function RuleGroupHeaderComponent(
         key={TestID.combinators}
         testID={TestID.combinators}
         options={ruleGroup.schema.combinators}
+        ruleGroup={ruleGroup.ruleGroup}
         value={ruleGroup.combinator}
         title={ruleGroup.translations.combinators.title}
         className={ruleGroup.classNames.combinators}

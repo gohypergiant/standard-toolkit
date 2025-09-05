@@ -11,11 +11,10 @@
  */
 
 import {
-  type CheckboxGroupState,
-  type CheckboxState,
-  type ThemeContext,
   applyThemeVars,
   assignPartialVars,
+  type CheckboxGroupState,
+  type CheckboxState,
   checkboxColorVars,
   checkboxGroupStateVars,
   checkboxSpaceVars,
@@ -23,6 +22,7 @@ import {
   genericColorVars,
   semanticColorVars,
   sizeVars,
+  type ThemeContext,
 } from '@accelint/design-system/vanilla';
 import { style } from '@vanilla-extract/css';
 

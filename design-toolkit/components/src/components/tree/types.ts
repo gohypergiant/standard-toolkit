@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
 import type { Key } from '@react-types/shared';
 import type {
   TreeItemContentRenderProps as AriaTreeItemContentRenderProps,
@@ -19,6 +18,7 @@ import type {
   RenderProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
 import type { TreeStyles } from './styles';
 
 export type TreeProps<T> = Omit<

@@ -12,11 +12,11 @@
 
 import type { RefAttributes } from 'react';
 import type {
+  ListLayoutOptions as AriaListLayoutOptions,
   SelectProps as AriaSelectProps,
   VirtualizerProps as AriaVirtualizerProps,
   FieldErrorProps,
 } from 'react-aria-components';
-import type { ListLayoutOptions as AriaListLayoutOptions } from 'react-aria-components';
 import type { ButtonProps } from '../button/types';
 import type { LabelProps } from '../label/types';
 

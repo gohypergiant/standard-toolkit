@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle/actions';
 import { AriaFieldError, AriaLabel, AriaSelectValue, AriaText } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Options, OptionsItem, OptionsList } from '../options';
 import { Select } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { SelectProps } from './types';
 
 type StoryProps = SelectProps<object> & {

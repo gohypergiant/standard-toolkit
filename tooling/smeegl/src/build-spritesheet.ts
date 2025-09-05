@@ -11,7 +11,6 @@
  */
 
 import ansis from 'ansis';
-
 import ora, { type Ora } from 'ora';
 import { cleanUpTempDirectory } from './utils/clean-up-temp-directory.js';
 import { copySpritesToTempDirectory } from './utils/copy-sprites-to-temp-directory.js';

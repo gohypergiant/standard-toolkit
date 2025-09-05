@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { AriaGroup, Button, Input } from '../../components';
 import { actions } from '../../ladle/actions';
 import { AriaFieldError, AriaLabel, AriaText } from '../aria';
 import { NumberField } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { NumberFieldProps } from './types';
 
 type StoryProps = NumberFieldProps & {

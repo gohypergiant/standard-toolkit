@@ -14,9 +14,9 @@ import { useFocusRing } from '@react-aria/focus';
 import { useHover } from '@react-aria/interactions';
 import { useControlledState } from '@react-stately/utils';
 import {
+  createContext,
   type FormEvent,
   type ForwardedRef,
-  createContext,
   forwardRef,
   useCallback,
   useEffect,
@@ -186,6 +186,7 @@ export const TextArea = forwardRef(function TextArea(
   return (
     <div className={classNames?.container} style={style}>
       {/* biome-ignore lint/a11y/useFocusableInteractive: TODO: refactor */}
+      {/** biome-ignore lint/a11y/useSemanticElements: TODO: refactor */}
       <span
         {...mergedProps}
         {...hoverProps}

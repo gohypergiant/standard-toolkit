@@ -6,100 +6,58 @@
     "@accelint/biome-config/linter"
   ],
   "files": {
-    "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
-    "ignore": [
-      "node_modules",
-      ".turbo",
-      "dist",
-      "build",
-      "coverage",
-      ".next",
-      "storybook-static"
+    "includes": [
+      "**/*.js",
+      "**/*.mjs",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.json",
+      "!**/node_modules",
+      "!**/.turbo",
+      "!**/dist",
+      "!**/build",
+      "!**/coverage",
+      "!**/.next",
+      "!**/storybook-static",
+      "!**/.docusaurus"
     ]
   },
   "overrides": [
     {
-      "include": ["**"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useNamingConvention": {
-              "level": "error",
-              "options": {
-                "strictCase": false,
-                "requireAscii": true,
-                "conventions": [
-                  {
-                    "selector": {
-                      "kind": "objectLiteralMember"
-                    },
-                    "formats": ["PascalCase", "camelCase", "CONSTANT_CASE"]
-                  }
-                ]
+      "includes": ["**/apps/docs/**", "!**/.docusaurus"]
+    },
+    {
+      "includes": ["**/apps/next/**", "!**/.next"]
+    }
+  ],
+  "linter": {
+    "rules": {
+      "style": {
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error",
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": false,
+            "requireAscii": true,
+            "conventions": [
+              {
+                "selector": {
+                  "kind": "objectLiteralMember"
+                },
+                "formats": ["PascalCase", "camelCase", "CONSTANT_CASE"]
               }
-            }
-          }
-        }
-      }
-    },
-    {
-      "include": ["apps/docs/**"],
-      "ignore": [".docusaurus"]
-    },
-    {
-      "include": ["apps/next/**"],
-      "ignore": [".next"]
-    },
-    {
-      "include": ["design-toolkit/icons/**"],
-      "linter": {
-        "rules": {
-          "a11y": {
-            "noSvgWithoutTitle": "off"
-          },
-          "style": {
-            "useNamingConvention": {
-              "level": "error",
-              "options": {
-                "strictCase": false,
-                "requireAscii": true
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "include": ["packages/design-system/**", "design-toolkit/components/**"],
-      "linter": {
-        "rules": {
-          "style": {
-            "noParameterAssign": {
-              "level": "warn"
-            }
-          },
-          "nursery": {
-            "useSortedClasses": {
-              "level": "error",
-              "fix": "safe",
-              "options": {
-                "attributes": ["classList"],
-                "functions": ["clsx", "cn", "cva", "tv", "tw", "twMerge"]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "include": ["packages/ntds/**"],
-      "linter": {
-        "rules": {
-          "a11y": {
-            "noSvgWithoutTitle": "off"
+            ]
           }
         }
       }
     }
-  ]
+  }
 }

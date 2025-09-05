@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { Broadcast } from '@accelint/bus';
-import { type UniqueId, isUUID } from '@accelint/core';
+import { isUUID, type UniqueId } from '@accelint/core';
 import {
   createContext,
   useCallback,

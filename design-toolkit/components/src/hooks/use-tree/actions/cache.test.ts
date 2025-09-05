@@ -11,14 +11,14 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import type { TreeNode } from '../types';
 import {
-  type Values,
   complexTree,
   defaultTree,
   nodeDefaults,
+  type Values,
 } from './__fixtures__/cache';
 import { Cache } from './cache';
+import type { TreeNode } from '../types';
 
 function setup({ nodes = defaultTree }: { nodes?: TreeNode<Values>[] } = {}) {
   return new Cache(nodes ?? []);

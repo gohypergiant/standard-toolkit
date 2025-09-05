@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Story, StoryDefault } from '@ladle/react';
 import { actions } from '../../ladle/actions';
 import { AriaText } from '../aria';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip, ChipGroup, ChipItem, ChipList } from './';
+import type { Story, StoryDefault } from '@ladle/react';
 import type { ChipGroupProps, ChipProps } from './types';
 
 export default {

@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { Broadcast } from '@/broadcast';
 import { render, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { Payload } from '../broadcast/types';
+import { Broadcast } from '@/broadcast';
 import { useEmit, useOn } from './';
+import type { Payload } from '../broadcast/types';
 
 type FooEvent = Payload<'foo', { foo: boolean }>;
 type BarEvent = Payload<'bar', { bar: boolean }>;

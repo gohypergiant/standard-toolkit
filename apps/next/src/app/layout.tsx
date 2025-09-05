@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { Defaults } from './defaults';
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
-import { Defaults } from './defaults';
 import './globals.css';
 import { Nav } from './nav';
 import { DSTheme, DTKTheme } from './theme';
