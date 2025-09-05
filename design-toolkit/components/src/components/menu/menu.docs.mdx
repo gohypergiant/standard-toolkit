@@ -9,19 +9,18 @@ A menu displays a list of actions or options that a user can choose.
 
 Menu is a complex, composed component made up of smaller subcomponents. The subcomponents can only be used as elements of the larger `Menu` parent.
 
-It is composed of the following elements:
-- **Menu.Trigger** - the outside component that manages the open/close behavior of the `Menu`. When there is an interactive element as the first child component, the ref is passed automatically to that element to anchor the menu open location.
+It is composed of the following components:
 
-- **Menu** - wraps the entire "dropdown" portion of the menu.
+- **Menu** - Root menu component that wraps the dropdown portion
+- **Menu.Trigger** - Manages open/close behavior and anchors menu position
+- **Menu.Item** - Individual menu item with support for labels and description
+- **Menu.Item.Label** - Item display label (accessed via Text component with slot='label')
+- **Menu.Item.Description** - Item description subtext (accessed via Text component with slot='description')
+- **Menu.Separator** - Visual line separator between menu sections
+- **Menu.Section** - Visually distinct section optional title
+- **Menu.Submenu** - Nested submenu flyout for hierarchical items
 
-- **Menu.Item** - represents a single item in the menu list
-- **Menu.Item.Label** - item display label
-- **Menu.Item.Description** - item description subtext
-- **Menu.Separator** - creates a line separator to denote a visual break
-- **Menu.Section** - creates a visually distinct section with a title
-- **Menu.Submenu** - opens a submenu flyout to navigate hierarchical items
-
-Additionally, you can compose in a `Hotkey` component or `Icon` component as additional elements.
+Additionally, you can compose in a `Hotkey` component or `Icon` components within menu items.
 
 ## Static
 You can construct a static menu by using the components directly.
@@ -31,7 +30,7 @@ You can construct a static menu by using the components directly.
 For a dynamic menu, the `items` prop is passed in.
 <Canvas of={MenuStories.Dynamic} />
 
-## Example usage
+## Example Usage
 You can build a static menu with a flat list of options to select.
 
 ### Simplest Version
@@ -98,6 +97,50 @@ You can add in optional, nested Submenus
   </Menu>
 </Menu.Trigger>
 ```
+
+## Props
+The Menu supports all the [props from `react-aria-components` Menu](https://react-spectrum.adobe.com/react-aria/Menu.html#props).
+
+### Menu Props
+- **`selectionMode`** - Selection behavior: `'single'` (default) | `'multiple'` | `'none'`
+- **`variant`** - Visual variant for styling
+- **`classNames`** - Custom class names for different parts:
+  - `menu` - Applied to the menu container
+  - `popover` - Applied to the popover wrapper
+- **`popoverProps`** - Props passed to the underlying Popover component
+
+### Menu.Item Props
+- **`color`** - Color variant: `'info'` (default) | `'serious'` | `'critical'`
+- **`classNames`** - Custom class names for different parts:
+  - `item` - Applied to menu item
+  - `icon` - Applied to icons
+  - `hotkey` - Applied to hotkey display
+  - `more` - Applied to submenu indicators
+  - `text` - Applied to text content
+
+### Menu.Section Props
+- **`title`** - Optional section title
+- **`classNames`** - Custom class names for different parts:
+  - `section` - Applied to the section container
+  - `header` - Applied to the section header
+
+### Menu.Trigger Props
+The Menu.Trigger component supports all the [props from `react-aria-components` MenuTrigger](https://react-spectrum.adobe.com/react-area/Menu.html#menutrigger).
+
+### Menu.Submenu Props
+The Menu.Trigger component supports all the [props from `react-aria-components` Submenu](https://react-spectrum.adobe.com/react-area/Menu.html#submenu).
+
+### Menu.Item.Label Props
+- **`children`** - Label text content
+- **`className`** - Custom CSS class name for styling
+
+### Menu.Item.Description Props
+- **`children`** - Description text content
+- **`className`** - Custom CSS class name for styling
+
+### Menu.Separator Props
+- **`className`** - Custom CSS class name for styling
+
 
 ## Implementation Notes
 

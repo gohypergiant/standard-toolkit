@@ -27,6 +27,9 @@ export type {
   AccordionStyleVariants,
   AccordionTriggerProps,
 } from './components/accordion/types';
+export { ActionBar } from './components/action-bar';
+export { ActionBarStyles } from './components/action-bar/styles';
+export type { ActionBarProps } from './components/action-bar/types';
 export { Avatar, AvatarContext } from './components/avatar';
 export { AvatarStyles } from './components/avatar/styles';
 export type { AvatarProps } from './components/avatar/types';
@@ -127,8 +130,9 @@ export type {
   DetailsListProps,
   DetailsListValueProps,
 } from './components/details-list/types';
-export { Dialog } from './components/dialog';
-export type { DialogProps } from './components/dialog';
+export { Dialog, DialogContext } from './components/dialog';
+export { DialogStyles } from './components/dialog/styles';
+export type { DialogProps } from './components/dialog/types';
 export {
   DrawerEventNamespace,
   DrawerEventTypes,
@@ -172,6 +176,9 @@ export type { InputProps } from './components/input/types';
 export { Label, LabelContext } from './components/label';
 export { LabelStyles } from './components/label/styles';
 export type { LabelProps } from './components/label/types';
+export { Lines } from './components/lines';
+export { LinesStyles } from './components/lines/styles';
+export type { LinesProps, LinesStylesVariants } from './components/lines/types';
 export { Menu, MenuContext } from './components/menu';
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export type {
@@ -237,13 +244,9 @@ export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
-export { Tabs } from './components/tabs';
-export type {
-  TabListProps,
-  TabPanelProps,
-  TabProps,
-  TabsProps,
-} from './components/tabs';
+export { Tabs, TabsContext } from './components/tabs';
+export { TabStyles } from './components/tabs/styles';
+export type { TabsProps } from './components/tabs/types';
 export {
   TextAreaField,
   TextAreaFieldContext,
@@ -260,6 +263,21 @@ export type {
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
+export {
+  Tree,
+  TreeContext,
+  TreeItem,
+  TreeItemContext,
+} from './components/tree';
+export { TreeStyles, TreeStylesDefaults } from './components/tree/styles';
+export type {
+  TreeContextValue,
+  TreeItemContentProps,
+  TreeItemContentRenderProps,
+  TreeItemContextValue,
+  TreeItemProps,
+  TreeProps,
+} from './components/tree/types';
 export {
   ViewStackEventNamespace,
   ViewStackEventTypes,
@@ -280,6 +298,18 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { useTreeActions } from './hooks/use-tree/actions';
+export { useTreeState } from './hooks/use-tree/state';
+export type {
+  DragAndDropConfig,
+  TreeActions,
+  TreeData,
+  TreeNode,
+  TreeNodeBase,
+  UseTreeActionsOptions,
+  UseTreeState,
+  UseTreeStateOptions,
+} from './hooks/use-tree/types';
 export { containsExactChildren, expectsIconWrapper } from './lib/react';
 export type {
   AriaAttributes,
@@ -295,125 +325,17 @@ export type {
   StylePropRenderProps,
   StyleRenderProps,
 } from './lib/types';
-export { cn, isSlottedContextValue, tv, twMerge } from './lib/utils';
 export {
-  colorAdvisory,
-  colorAdvisoryBold,
-  colorAdvisoryHover,
-  colorAdvisorySubtle,
-  colorClassificationConfidential,
-  colorClassificationCui,
-  colorClassificationMissing,
-  colorClassificationSecret,
-  colorClassificationTopSecret,
-  colorClassificationTsSci,
-  colorClassificationUnclass,
-  colorCritical,
-  colorCriticalBold,
-  colorCriticalHover,
-  colorCriticalSubtle,
-  colorDefaultDark,
-  colorDefaultLight,
-  colorDisabled,
-  colorHighlight,
-  colorHighlightBold,
-  colorHighlightHover,
-  colorHighlightSubtle,
-  colorInfo,
-  colorInfoBold,
-  colorInfoHover,
-  colorInfoSubtle,
-  colorInteractive,
-  colorInteractiveDefault,
-  colorInteractiveDisabled,
-  colorInteractiveHover,
-  colorInteractiveHoverDark,
-  colorInteractiveHoverLight,
-  colorInverseDark,
-  colorInverseLight,
-  colorNormal,
-  colorNormalBold,
-  colorNormalHover,
-  colorNormalSubtle,
-  colorSerious,
-  colorSeriousBold,
-  colorSeriousHover,
-  colorSeriousSubtle,
-  colorStaticDark,
-  colorStaticLight,
-  colorSurfaceDefault,
-  colorSurfaceOverlay,
-  colorSurfaceRaised,
-  colorTransparentDark,
-  colorTransparentLight,
-  fontDisplay,
-  fontPrimary,
-  iconSizeL,
-  iconSizeM,
-  iconSizeS,
-  iconSizeXs,
-  radiusLarge,
-  radiusMedium,
-  radiusNone,
-  radiusRound,
-  radiusSmall,
-  shadowElevationDefault,
-  shadowElevationOverlay,
-  shadowElevationRaised,
-  spacing0,
-  spacingL,
-  spacingM,
-  spacingNone,
-  spacingOversized,
-  spacingS,
-  spacingXl,
-  spacingXs,
-  spacingXxl,
-  spacingXxs,
-  typographyBodyLHeight,
-  typographyBodyLSize,
-  typographyBodyLSpacing,
-  typographyBodyMHeight,
-  typographyBodyMSize,
-  typographyBodyMSpacing,
-  typographyBodySHeight,
-  typographyBodySSize,
-  typographyBodySSpacing,
-  typographyBodyXsHeight,
-  typographyBodyXsSize,
-  typographyBodyXsSpacing,
-  typographyBodyXxsHeight,
-  typographyBodyXxsSize,
-  typographyBodyXxsSpacing,
-  typographyButtonLHeight,
-  typographyButtonLSize,
-  typographyButtonLSpacing,
-  typographyButtonMHeight,
-  typographyButtonMSize,
-  typographyButtonMSpacing,
-  typographyButtonSHeight,
-  typographyButtonSSize,
-  typographyButtonSSpacing,
-  typographyButtonXsHeight,
-  typographyButtonXsSize,
-  typographyButtonXsSpacing,
-  typographyHeaderLHeight,
-  typographyHeaderLSize,
-  typographyHeaderLSpacing,
-  typographyHeaderMHeight,
-  typographyHeaderMSize,
-  typographyHeaderMSpacing,
-  typographyHeaderSHeight,
-  typographyHeaderSSize,
-  typographyHeaderSSpacing,
-  typographyHeaderXlHeight,
-  typographyHeaderXlSize,
-  typographyHeaderXlSpacing,
-  typographyHeaderXsHeight,
-  typographyHeaderXsSize,
-  typographyHeaderXsSpacing,
-  typographyHeaderXxlHeight,
-  typographyHeaderXxlSize,
-  typographyHeaderXxlSpacing,
-} from './tokens';
-export type { RGBAColor } from './tokens';
+  cn,
+  isSlottedContextValue,
+  mergeVariants,
+  tv,
+  twMerge,
+} from './lib/utils';
+export { ThemeProvider, useTheme } from './providers/theme-provider';
+export { designTokens } from './tokens/tokens';
+export type {
+  SemanticColorTokens,
+  StaticColorTokens,
+  ThemeTokens,
+} from './tokens/types';

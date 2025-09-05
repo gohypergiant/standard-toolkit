@@ -1,0 +1,107 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as DetailsListStories from './details-list.stories';
+
+<Meta of={DetailsListStories} />
+
+# DetailsList
+A semantic details list component for displaying metadata in key-value pairs. Uses CSS Grid layout with labels in the first column and values in the second column. Perfect for map object details, user profiles, or any structured information displayed in sidebars or detail panels.
+
+It is composed of the following components:
+
+- **DetailsList** - Main details list container with grid layout and alignment options
+- **DetailsList.Label** - Label component for keys/terms (renders as `<dt>`)
+- **DetailsList.Value** - Value component for descriptions/definitions (renders as `<dd>`)
+- **DetailsList.Provider** - Context provider for setting default props across multiple details lists
+
+## Example usage
+```tsx
+<DetailsList align="justify">
+  <DetailsList.Label>Key</DetailsList.Label>
+  <DetailsList.Value>Value</DetailsList.Value>
+
+  <DetailsList.Label>Ships</DetailsList.Label>
+  <DetailsList.Value>Millennium Falcon</DetailsList.Value>
+  <DetailsList.Value>USS Enterprise NCC-1701</DetailsList.Value>
+  <DetailsList.Value>Serenity</DetailsList.Value>
+
+  <DetailsList.Label>Coordinates</DetailsList.Label>
+  <DetailsList.Value>
+    <div>Great Pyramid of Giza: 29°58'44" N 31°08'02" E</div>
+    <div>Machu Picchu: 13°09'47" S 72°32'41" W</div>
+  </DetailsList.Value>
+</DetailsList>
+```
+
+## Alignments
+
+* **left** - Both labels and values are left-aligned
+* **center** - Labels are right-aligned, values are left-aligned
+* **justify** - Labels are left-aligned, values are right-aligned (default)
+
+**justify** is the default alignment and provides the most balanced visual appearance, with labels on the left and values extending to the right edge.
+
+<Canvas of={DetailsListStories.Default} />
+
+## Props
+
+### DetailsList Props
+- **`align`** - Text alignment variant: `'left'` | `'center'` | `'justify'` (default: `'justify'`)
+- **`classNames`** - Object containing custom class names for different parts:
+  - `list` - Main container (`<dl>` element)
+  - `label` - Label elements (`<dt>` elements)
+  - `value` - Value elements (`<dd>` elements)
+
+### DetailsList.Label Props
+- **`children`** - Text content for the label
+- **`className`** - Custom CSS class name
+- **`slot`** - Slot name (defaults to `'label'`)
+- **`elementType`** - HTML element type (defaults to `'dt'`)
+
+### DetailsList.Value Props
+- **`children`** - Text content for the value (supports React nodes)
+- **`className`** - Custom CSS class name
+- **`slot`** - Slot name (defaults to `'value'`)
+- **`elementType`** - HTML element type (defaults to `'dd'`)
+
+### HTML Attributes
+The component accepts all standard HTML attributes for `<dl>` elements, such as:
+- **`id`** - Unique identifier
+- **`aria-label`** - Accessible label
+- **`data-*`** - Custom data attributes
+
+## Child Component Behavior
+- **DetailsList.Label**: Minimum of 1 required
+- **DetailsList.Value**: Minimum of 1 required
+
+## Examples
+
+### Default Layout (Justify Alignment)
+<Canvas of={DetailsListStories.Default} />
+
+### Multiple Values per Label
+The component supports multiple values for a single label, which is useful for displaying lists or multiple related pieces of information.
+
+### Complex Content in Values
+Values can contain complex React components, not just text, allowing for rich content display while maintaining the structured layout.
+
+## Implementation Notes
+The `DetailsList` component is built using React Aria Components and provides a semantic HTML structure with proper accessibility features.
+
+Key features:
+- **Semantic HTML**: Uses `<dl>`, `<dt>`, and `<dd>` elements for proper document structure
+- **CSS Grid Layout**: Responsive two-column layout that automatically adjusts to content
+- **Flexible Content**: Values can contain any React content, not just text
+- **Accessibility**: Proper ARIA labeling and semantic structure
+- **Customizable Styling**: Tailwind CSS classes with custom class name support
+- **Type Safety**: Full TypeScript support with proper prop types
+
+The underlying HTML structure follows the definition list pattern:
+```html
+<dl class="grid grid-cols-[auto_1fr] gap-x-m">
+  <dt class="fg-default-dark col-start-1">Label</dt>
+  <dd class="fg-default-light col-start-2">Value</dd>
+</dl>
+```
+
+This provides excellent semantic meaning for screen readers and other assistive technologies while maintaining a clean, structured visual appearance.

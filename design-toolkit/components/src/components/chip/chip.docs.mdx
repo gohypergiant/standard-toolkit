@@ -1,0 +1,161 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ChipStories from './chip.stories';
+
+<Meta of={ChipStories} />
+
+# Chip
+The Chip component provides compact, interactive elements for displaying tags, categories, filters, and selectable items. It's built on React Aria Components and provides excellent accessibility out of the box. Chips are commonly used in search interfaces, data tables, form inputs, and anywhere you need to represent discrete pieces of information in a compact, interactive format.
+
+It is composed of the following components:
+
+- **Chip** - Main chip component for displaying tags and labels
+- **Chip.List** - Container component for grouping multiple chips with shared behavior
+- **Chip.Selectable** - Interactive chip that can be selected/deselected for filtering
+- **Chip.Deletable** - Chip with built-in remove button for dynamic content management
+- **Chip.Provider** - Context provider for setting default props across multiple chips
+
+## Example usage
+```tsx
+// Basic chip with default styling
+<Chip>Tag</Chip>
+
+// Chip with different variants
+<Chip variant="info">Information</Chip>
+<Chip variant="advisory">Warning</Chip>
+<Chip variant="normal">Success</Chip>
+<Chip variant="serious">Caution</Chip>
+<Chip variant="critical">Error</Chip>
+
+// Chip with icon
+<Chip variant="info">
+  <Icon><Placeholder /></Icon>
+  With Icon
+</Chip>
+
+// Chip with different sizes
+<Chip size="medium">Medium Chip</Chip>
+<Chip size="small">Small Chip</Chip>
+
+// Chip list for grouping
+<Chip.List>
+  <Chip variant="info">Tag 1</Chip>
+  <Chip variant="advisory">Tag 2</Chip>
+  <Chip variant="normal">Tag 3</Chip>
+</Chip.List>
+
+// Selectable chips for filtering
+<Chip.List
+  selectionMode="multiple"
+  disallowEmptySelection={false}
+>
+  <Chip.Selectable id="filter1">Filter 1</Chip.Selectable>
+  <Chip.Selectable id="filter2">Filter 2</Chip.Selectable>
+  <Chip.Selectable id="filter3">Filter 3</Chip.Selectable>
+</Chip.List>
+
+// Deletable chips with remove functionality
+<Chip.List onRemove={(keys) => console.log('Removed:', keys)}>
+  <Chip.Deletable id="chip1">Deletable 1</Chip.Deletable>
+  <Chip.Deletable id="chip2">Deletable 2</Chip.Deletable>
+  <Chip.Deletable id="chip3">Deletable 3</Chip.Deletable>
+</Chip.List>
+
+// Using context provider for default props
+<Chip.Provider size="small" variant="info">
+  <Chip>Chip 1</Chip>
+  <Chip>Chip 2</Chip>
+</Chip.Provider>
+
+// Chip with custom styling
+<Chip
+  className="custom-chip-class"
+  variant="info"
+  size="medium"
+>
+  Custom Chip
+</Chip>
+```
+
+## Variants
+
+* **info** - Blue styling for informational content (default)
+* **advisory** - Yellow styling for advisory/warning content
+* **normal** - Green styling for normal/success content
+* **serious** - Orange styling for serious issues
+* **critical** - Red styling for critical errors or alerts
+
+## Sizes
+
+* **medium** - Standard size with larger text and padding (default)
+* **small** - Compact size with smaller text and padding for space-constrained layouts
+
+<Canvas of={ChipStories.Default} />
+
+## Props
+
+### Chip Props
+* **`variant`** - Visual style variant: `'info'` (default) | `'advisory'` | `'normal'` | `'serious'` | `'critical'`
+* **`size`** - Size variant: `'medium'` (default) | `'small'`
+* **`children`** - Content to display in the chip (text, icons, etc.)
+* **`className`** - Additional CSS classes for custom styling
+
+### Chip.List Props
+* **`size`** - Global size for all child chips
+* **`items`** - Array of items to render (for controlled rendering)
+* **`dependencies`** - Dependencies for re-rendering when they change
+* **`renderEmptyState`** - Function to render when no items exist
+* **`onRemove`** - Callback when chips are removed (required for deletable chips)
+* **`selectionMode`** - Selection behavior: `'none'` | `'single'` | `'multiple'`
+* **`disallowEmptySelection`** - Whether empty selection is allowed
+* **`disabledKeys`** - Keys of disabled chips
+* **`selectedKeys`** - Currently selected chip keys
+* **`onSelectionChange`** - Callback when selection changes
+
+### Chip.Selectable Props
+* **`id`** - Unique identifier for the chip
+* **`size`** - Size variant (inherits from context if not specified)
+* **`isSelected`** - Controls the selected state
+* **`defaultSelected`** - Initial selected state
+* **`onSelectionChange`** - Callback when selection changes
+* **`className`** - Additional CSS classes for custom styling
+
+### Chip.Deletable Props
+* **`id`** - Unique identifier for the chip
+* **`size`** - Size variant (inherits from context if not specified)
+* **`textValue`** - Text value for accessibility (auto-generated from children if not provided)
+* **`classNames`** - Custom class names for styling:
+  * `chip` - Applied to the chip container
+  * `remove` - Applied to the remove button
+* **`children`** - Content to display in the chip
+
+All chip types accept standard HTML attributes and forward them to the underlying elements.
+
+## Implementation Notes
+The `Chip` component wraps the `Tag` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Tag.html)
+
+The underlying elements are:
+- `div` for basic chips
+- `div` with proper ARIA attributes for selectable chips
+- `div` with remove button for deletable chips
+- `Icon` component for visual indicators and remove buttons
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Enter, Space, Delete, Backspace)
+- Focus management
+- Selection state announcements
+- Proper labeling and descriptions
+- Group association for screen readers
+
+The component includes sophisticated state management that handles:
+- Visual feedback for hover, focus, and selected states
+- Proper contrast ratios for all variant combinations
+- Responsive sizing and spacing
+- Icon integration with automatic sizing
+
+The chip automatically adapts its appearance based on the selected variant and size, with appropriate color combinations that maintain accessibility standards. All variants use semantic color combinations that provide clear visual hierarchy for different types of information.
+
+The component integrates seamlessly with the Icon component, automatically providing appropriate icon sizing and spacing. The selectable and deletable variants provide interactive functionality while maintaining the visual consistency of the basic chip component. The list container provides flexible layout options with automatic spacing and responsive behavior.
+
+The deletable chip variant automatically includes a remove button with proper accessibility attributes and keyboard support. The selectable chip variant integrates with React Aria's selection system for comprehensive keyboard and screen reader support.

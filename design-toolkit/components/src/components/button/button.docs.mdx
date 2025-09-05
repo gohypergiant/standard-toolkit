@@ -1,0 +1,103 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ButtonStories from './button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+The Button component provides interactive elements for user actions, navigation, and form submissions. It's built on React Aria Components and provides excellent accessibility out of the box. Buttons are the primary interactive elements in user interfaces, used for submitting forms, triggering actions, navigating between pages, and providing clear calls-to-action.
+
+## Example usage
+
+### Basic
+```tsx
+<Button>Click me</Button>
+<Button variant="flat" color="info">Flat Button</Button>
+<Button variant="icon">
+  <Icon><Settings /></Icon>
+</Button>
+<Button variant="floating">
+  <Icon><Plus /></Icon>
+</Button>
+```
+
+<Canvas of={ButtonStories.Default} />
+
+### Link Button
+Used for navigating
+```tsx
+<LinkButton href="/dashboard" variant="outline">
+  Go to Dashboard
+</LinkButton>
+```
+
+### Toggle Button
+```tsx
+<ToggleButton color="info" variant="icon">
+    <Icon>
+      <Placeholder />
+    </Icon>
+</ToggleButton>
+```
+
+## Variants
+
+* **filled** - Solid background with high contrast text (default)
+* **outline** - Transparent background with border and text
+* **flat** - Transparent background with text only
+* **icon** - Square button optimized for icon-only content
+* **floating** - Circular button with shadow, perfect for floating action buttons
+
+## Colors
+
+* **info** - Blue styling for primary actions (default)
+* **serious** - Orange styling for warning or caution actions
+* **critical** - Red styling for destructive or dangerous actions
+
+## Sizes
+
+* **large** - Prominent size for primary actions
+* **medium** - Standard size for most use cases (default)
+* **small** - Compact size for secondary actions
+* **xsmall** - Minimal size for tight spaces or icon buttons
+
+## Props
+All components and subcomponents accept a `className` prop that allow for custom style overrides.
+
+The Button and LinkButton support all the `Button` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Button.html#props).
+
+The ToggleButton supports all the `ToggleButton` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/ToggleButton.html#props).
+
+* **`variant`** - Visual style: `'filled'` (default) | `'outline'` | `'flat'` | `'icon'` | `'floating'`
+* **`color`** - Color scheme: `'info'` (default) | `'serious'` | `'critical'`
+* **`size`** - Size variant: `'large'` | `'medium'` (default) | `'small'` |  `'xsmall'`
+
+All button types accept standard HTML button/anchor attributes and forward them to the underlying elements.
+
+### Button.Provider
+Context provider component that allows setting default props for multiple Button components. Useful for maintaining consistent styling across a group of buttons.
+
+```tsx
+<Button.Provider size="small" variant="outline">
+  <Button>Button 1</Button>
+  <Button>Button 2</Button>
+</Button.Provider>
+```
+
+## Implementation Notes
+The `Button` component wraps the `Button` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Button.html)
+The `ToggleButton` component wraps the `ToggleButton` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/ToggleButton.html)
+
+The underlying elements are:
+- `button` for standard buttons
+- `a` for link buttons
+- `button` with `aria-pressed` for toggle buttons
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Enter, Space, Arrow keys)
+- Focus management
+- Form integration
+- Proper labeling and descriptions
+
+All variants provide clear visual feedback for hover, focus, pressed, and disabled states. The button automatically scales icons based on the selected size variant, ensuring consistent visual hierarchy across different use cases.

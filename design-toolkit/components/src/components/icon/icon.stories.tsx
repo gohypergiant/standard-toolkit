@@ -18,7 +18,7 @@ const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',
   component: Icon,
   args: {
-    className: 'fg-default-light',
+    className: 'fg-primary-bold',
   },
   argTypes: {
     className: {

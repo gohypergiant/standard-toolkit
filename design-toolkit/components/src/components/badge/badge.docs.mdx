@@ -1,0 +1,72 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as BadgeStories from './badge.stories';
+
+<Meta of={BadgeStories} />
+
+# Badge
+The Badge component displays small status indicators, notifications, or labels that can be positioned relative to other elements. It's built with Tailwind CSS and provides excellent visual feedback for different states and priorities. Badges are commonly used to show notification counts, status indicators, priority levels, and small pieces of information that need to stand out from the surrounding content.
+
+## Example usage
+
+### Basic
+```tsx
+<Badge>New</Badge>
+```
+<Canvas of={BadgeStories.Default} />
+
+### Offset Coordinates
+When composing with other components (like [Avatar](?path=/story/components-avatar--with-badge))
+
+```tsx
+<Badge placement="bottom left" offset={{ x: 10, y: 5 }}>
+  New
+</Badge>
+```
+
+### Without Text
+```tsx
+<Badge variant="critical" />
+```
+
+### Badge.Provider
+```tsx
+<Badge.Provider variant="info">
+  <Badge>Status 1</Badge>
+  <Badge>Status 2</Badge>
+</Badge.Provider>
+```
+
+## Variants
+
+* **info** - Blue styling for informational content (default)
+* **advisory** - Yellow styling for advisory/warning content
+* **normal** - Green styling for normal/success content
+* **serious** - Orange styling for serious issues
+* **critical** - Red styling for critical errors or alerts
+
+Each variant uses appropriate color combinations with subtle backgrounds and bold outlines for optimal contrast and readability.
+
+## Props
+The Badge component accepts all standard HTML span attributes
+
+### Core Props
+* **`variant`** - Visual style variant: `'info'` (default) | `'advisory'` | `'normal'` | `'serious'` | `'critical'`
+* **`children`** - Text content to display in the badge (optional - can be empty for dot indicators)
+* **`placement`** - Position relative to parent element: `'top'` | `'bottom'` | `'left'` | `'right'` | `'top left'` | `'top right'` | `'bottom left'` | `'bottom right'`
+* **`offset`** - Distance from parent element:
+  * `number` - Uniform offset in pixels
+  * `{ x?: number, y?: number }` - Specific x and y offsets in pixels
+* **`className`** - Additional CSS classes for custom styling
+
+
+## Implementation Notes
+The `Badge` component is built with Tailwind CSS and uses CSS custom properties for dynamic positioning and offset calculations.
+
+The component accepts all standard HTML span attributes and forwards them to the underlying element.
+
+The underlying elements are:
+- `span` for the badge container with appropriate ARIA attributes
+- Text content or empty state for dot indicators
+
+The badge automatically adapts its size based on content - empty badges render as small dots, while badges with text expand to accommodate the content with appropriate padding. All variants use semantic color combinations that maintain accessibility standards while providing clear visual hierarchy for different types of information. The component integrates seamlessly with other components like Avatar, providing notification indicators and status displays with consistent styling and positioning behavior.

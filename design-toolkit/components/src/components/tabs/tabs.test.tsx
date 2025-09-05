@@ -18,7 +18,7 @@ function setup({ children }: { children: string } = { children: 'Foo' }) {
   render(
     <Tabs defaultSelectedKey={`tab-${children}`}>
       <Tabs.List>
-        <Tabs.Tab id={`tab-${children}`}>{children} Tab</Tabs.Tab>
+        <Tabs.List.Tab id={`tab-${children}`}>{children} Tab</Tabs.List.Tab>
       </Tabs.List>
       <Tabs.Panel id={`tab-${children}`}>{children} Content</Tabs.Panel>
     </Tabs>,

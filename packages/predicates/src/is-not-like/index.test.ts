@@ -23,8 +23,8 @@ it('should correctly determine if the regex is not like the string', () => {
     fc.property(
       fc.oneof(fc.stringMatching(TESTER_GEN), fc.stringMatching(ALTERNATE_GEN)),
       fc.stringMatching(STRING_GEN),
-      (a, b) => {
-        return isNotLike(a)(b) === !new RegExp(a).test(b);
+      (pattern, input) => {
+        return isNotLike(pattern)(input) === !new RegExp(pattern).test(input);
       },
     ),
     { verbose: 2 },

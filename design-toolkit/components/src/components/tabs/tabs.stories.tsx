@@ -28,7 +28,7 @@ import type { Meta, StoryObj } from '@storybook/react';
  * - `Tabs` must include a `Tabs.List`
  */
 const meta: Meta<typeof Tabs> = {
-  title: 'Components/Tabs/Tabs',
+  title: 'Components/Tabs',
   component: Tabs,
   args: {
     orientation: 'horizontal',
@@ -38,11 +38,6 @@ const meta: Meta<typeof Tabs> = {
     orientation: {
       control: 'select',
       options: ['horizontal', 'vertical'],
-      table: { defaultValue: { summary: 'horizontal' } },
-    },
-    isDisabled: {
-      control: 'boolean',
-      table: { defaultValue: { summary: 'false' } },
     },
   },
 };
@@ -56,31 +51,37 @@ export const Default: Story = {
       <div className='w-[300px]'>
         <Tabs {...args}>
           <Tabs.List>
-            <Tabs.Tab id='Storybook-Tab-1'>Tab 1</Tabs.Tab>
-            <Tabs.Tab id='Storybook-Tab-2'>Tab 2</Tabs.Tab>
-            <Tabs.Tab id='Storybook-Tab-3'>Tab 3</Tabs.Tab>
+            <Tabs.List.Tab id='Storybook-Tab-1'>Tab 1</Tabs.List.Tab>
+            <Tabs.List.Tab id='Storybook-Tab-2'>Tab 2</Tabs.List.Tab>
+            <Tabs.List.Tab id='Storybook-Tab-3'>Tab 3</Tabs.List.Tab>
           </Tabs.List>
+          <Tabs.Panel id='Storybook-Tab-1'>Panel 1</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Tab-2'>Panel 2</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Tab-3'>Panel 3</Tabs.Panel>
         </Tabs>
       </div>
       <div className='w-[300px]'>
         <Tabs {...args}>
-          <Tabs.List variant='icons'>
-            <Tabs.Tab id='Storybook-Icon-Tab-1'>
+          <Tabs.List>
+            <Tabs.List.Tab id='Storybook-Tab-1'>
               <Icon>
                 <Add />
               </Icon>
-            </Tabs.Tab>
-            <Tabs.Tab id='Storybook-Icon-Tab-2'>
+            </Tabs.List.Tab>
+            <Tabs.List.Tab id='Storybook-Tab-2'>
               <Icon>
                 <Check />
               </Icon>
-            </Tabs.Tab>
-            <Tabs.Tab id='Storybook-Icon-Tab-3'>
+            </Tabs.List.Tab>
+            <Tabs.List.Tab id='Storybook-Tab-3'>
               <Icon>
                 <Group />
               </Icon>
-            </Tabs.Tab>
+            </Tabs.List.Tab>
           </Tabs.List>
+          <Tabs.Panel id='Storybook-Tab-1'>Panel 1</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Tab-2'>Panel 2</Tabs.Panel>
+          <Tabs.Panel id='Storybook-Tab-3'>Panel 3</Tabs.Panel>
         </Tabs>
       </div>
     </div>

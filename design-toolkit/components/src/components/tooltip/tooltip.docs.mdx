@@ -1,0 +1,100 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as TooltipStories from './tooltip.stories';
+
+<Meta of={TooltipStories} />
+
+# Tooltip
+The Tooltip component provides a floating label that explains an element when users hover over or focus on it. It's built on React Aria Components and provides excellent accessibility out of the box. Tooltips are commonly used to provide additional context, explanations, or help text for UI elements without cluttering the interface.
+
+It is composed of the following components:
+
+- **Tooltip** - Main wrapper component that manages tooltip trigger and display logic
+- **Tooltip.Trigger** - The element that users interact with to show the tooltip
+- **Tooltip.Body** - The floating container that displays the tooltip content
+
+## Example usage
+```tsx
+// Basic tooltip
+<Tooltip>
+  <Tooltip.Trigger>
+    <span>Hover me</span>
+  </Tooltip.Trigger>
+  <Tooltip.Body>This is a helpful tooltip</Tooltip.Body>
+</Tooltip>
+
+// Tooltip with custom placement and offset
+<Tooltip>
+  <Tooltip.Trigger>
+    <Button>Click me</Button>
+  </Tooltip.Trigger>
+  <Tooltip.Body placement="top" offset={10}>
+    Tooltip above the button
+  </Tooltip.Body>
+</Tooltip>
+
+// Tooltip with icon
+<Tooltip>
+  <Tooltip.Trigger>
+    <Icon><Info /></Icon>
+  </Tooltip.Trigger>
+  <Tooltip.Body>Additional information</Tooltip.Body>
+</Tooltip>
+
+// Long tooltip content
+<Tooltip>
+  <Tooltip.Trigger>
+    <span>Long explanation</span>
+  </Tooltip.Trigger>
+  <Tooltip.Body>
+    This tooltip contains a longer explanation that will wrap to multiple lines
+  </Tooltip.Body>
+</Tooltip>
+```
+
+## Variants
+
+The Tooltip component has a single visual variant that automatically adapts based on its placement and content:
+* **default** - displays with a subtle background, shadow, and rounded corners
+* **placement-based** - automatically positions itself relative to the trigger element:
+  * `bottom` - appears below the trigger (default)
+  * `top` - appears above the trigger
+  * `left` - appears to the left of the trigger
+  * `right` - appears to the right of the trigger
+
+<Canvas of={TooltipStories.Default} />
+
+## Props
+
+### Tooltip Props
+* **`children`** - Must contain exactly one `Tooltip.Trigger` and one `Tooltip.Body` component
+* **`isOpen`** - Controls whether the tooltip is visible
+* **`defaultOpen`** - Initial open state
+* **`onOpenChange`** - Callback when open state changes
+
+### Tooltip.Trigger Props
+* **`children`** - The element that triggers the tooltip (can be any focusable element)
+* **`isDisabled`** - Disables the tooltip trigger
+
+### Tooltip.Body Props
+* **`children`** - The tooltip content text
+* **`placement`** - Tooltip position: `'top'`, `'bottom'`, `'left'`, `'right'` (default: `'bottom'`)
+* **`offset`** - Distance between tooltip and trigger in pixels (default: `5`)
+* **`className`** - Additional CSS classes for custom styling
+
+## Implementation Notes
+The `Tooltip` component wraps the `Tooltip` and `TooltipTrigger` components from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Tooltip.html)
+
+The underlying elements are:
+- `div` for the tooltip trigger wrapper
+- `div` for the tooltip body with floating positioning
+- `span` or other elements for the trigger content
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Tab to focus, Escape to dismiss)
+- Focus management
+- Proper labeling and descriptions
+- Screen reader announcements
+
+The component includes automatic positioning logic that ensures tooltips remain visible within the viewport, with smooth animations and proper z-index management. Tooltips automatically wrap long text content and maintain consistent styling across different placements.

@@ -1,6 +1,6 @@
 {
   "name": "@accelint/docs",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "private": true,
   "scripts": {
     "build": "pnpm run build:typedoc && pnpm run build:docusaurus",
@@ -21,6 +21,7 @@
     "@accelint/formatters": "workspace:*",
     "@accelint/geo": "workspace:*",
     "@accelint/math": "workspace:*",
+    "@accelint/ntds": "workspace:*",
     "@accelint/predicates": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
@@ -33,7 +34,7 @@
     "@docusaurus/theme-live-codeblock": "3.8.1",
     "@docusaurus/tsconfig": "3.8.1",
     "@docusaurus/types": "3.8.1",
-    "@easyops-cn/docusaurus-search-local": "0.47.0",
+    "@easyops-cn/docusaurus-search-local": "0.52.1",
     "@mdx-js/react": "3.0.0",
     "clsx": "2.0.0",
     "prism-react-renderer": "2.3.0",

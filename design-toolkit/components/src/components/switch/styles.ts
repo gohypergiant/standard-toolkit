@@ -17,18 +17,15 @@ export const SwitchStyles = tv({
     switch:
       'group/switch flex cursor-pointer items-center gap-s disabled:cursor-not-allowed',
     control: [
-      'flex rounded-round bg-transparent p-xxs outline outline-interactive before:mr-l before:block before:size-m before:rounded-full before:bg-default-dark',
-      'group-enabled/switch:group-focus-visible/switch:bg-interactive-hover-dark group-enabled/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-focus-visible/switch:before:bg-interactive-hover',
-      'group-enabled/switch:group-hover/switch:bg-interactive-hover-dark group-enabled/switch:group-hover/switch:outline-interactive-hover group-enabled/switch:group-hover/switch:before:bg-interactive-hover',
-      'group-enabled/switch:group-selected/switch:outline-highlight group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:bg-highlight',
-      'group-enabled/switch:group-selected/switch:group-focus-visible/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus-visible/switch:before:bg-highlight',
-      'group-enabled/switch:group-selected/switch:group-hover/switch:bg-highlight-subtle group-enabled/switch:group-selected/switch:group-hover/switch:outline-highlight group-enabled/switch:group-selected/switch:group-hover/switch:before:bg-highlight',
-      'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:bg-disabled',
+      'flex rounded-round bg-transparent p-xxs outline outline-interactive before:mr-l before:block before:size-m before:rounded-full before:bg-info-bold',
+      'group-enabled/switch:group-focus-visible/switch:bg-interactive-muted-hover group-enabled/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-focus-visible/switch:before:bg-interactive-bold-hover',
+      'group-enabled/switch:group-hover/switch:bg-interactive-muted-hover group-enabled/switch:group-hover/switch:outline-interactive-hover group-enabled/switch:group-hover/switch:before:bg-interactive-bold-hover',
+      'group-enabled/switch:group-selected/switch:outline-accent-primary-bold group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:bg-accent-primary-bold',
+      'group-enabled/switch:group-selected/switch:group-focus-visible/switch:bg-accent-primary-muted group-enabled/switch:group-selected/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus-visible/switch:before:bg-accent-primary-bold',
+      'group-enabled/switch:group-selected/switch:group-hover/switch:bg-accent-primary-muted group-enabled/switch:group-selected/switch:group-hover/switch:outline-accent-primary-bold group-enabled/switch:group-selected/switch:group-hover/switch:before:bg-accent-primary-bold',
+      'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:bg-interactive-disabled',
     ],
-    label: [
-      'text-body-s text-interactive-default',
-      'group-disabled/switch:text-interactive-disabled',
-    ],
+    label: ['fg-primary-bold text-body-s', 'group-disabled/switch:fg-disabled'],
   },
   variants: {
     labelPosition: {

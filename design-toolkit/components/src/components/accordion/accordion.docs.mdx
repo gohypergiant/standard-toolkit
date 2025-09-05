@@ -1,0 +1,109 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as AccordionStories from './accordion.stories';
+
+<Meta of={AccordionStories} />
+
+# Accordion
+The Accordion component provides a collapsible content section that can expand and collapse to show or hide content. Accordions are commonly used in navigation menus, FAQ sections, settings panels, and anywhere you need to organize content into expandable sections to save space and improve readability.
+
+It is composed of the following components:
+
+- **[Accordion.Group](?path=/docs/components-accordion-group--playground)** - Container component that groups multiple accordions together and provides shared configuration like variant and multiple expansion behavior.
+- **Accordion** - Main accordion component that manages the expand/collapse state and renders the header and panel.
+- **Accordion.Header** - Container for the accordion trigger and any additional header elements like menus or action buttons.
+- **Accordion.Trigger** - Button that controls the expand/collapse state.
+- **Accordion.Panel** - Collapsible content container that shows/hides based on the accordion's expanded state.
+
+## Example Usage
+
+### Basic
+```tsx
+<Accordion>
+  <Accordion.Header>
+    <Accordion.Trigger>
+      <Icon><Placeholder /></Icon>
+      Accordion title
+    </Accordion.Trigger>
+  </Accordion.Header>
+  <Accordion.Panel>
+    <p>This is the accordion content that can be expanded and collapsed.</p>
+  </Accordion.Panel>
+</Accordion>
+```
+<Canvas of={AccordionStories.Default} />
+
+### With Menu
+The accordion supports an optional [Menu](?path=/docs/components-menu--playground).
+```tsx
+<Accordion>
+  <Accordion.Header>
+    <Accordion.Trigger>
+      <Icon><Document /></Icon>
+      Document options
+    </Accordion.Trigger>
+    <Menu.Trigger>
+      <Button />
+      <Menu>
+        <Menu.Item>Edit</Menu.Item>
+        <Menu.Item>Delete</Menu.Item>
+      </Menu>
+    </Menu.Trigger>
+  </Accordion.Header>
+  <Accordion.Panel>
+    <p>Document content...</p>
+  </Accordion.Panel>
+</Accordion>
+```
+<Canvas of={AccordionStories.WithMenu} />
+
+## Variants
+* **cozy** - Standard size with larger text and spacing (default)
+* **compact** - Smaller size with reduced text and spacing for space-constrained layouts
+
+The variant can be controlled via the `variant` prop on individual accordions or set globally using the `Accordion.Group` component.
+
+## Props
+All components and subcomponents accept either a `className` or a `classNames` prop that allow for custom style overrides. The `className` prop takes a string and `classNames` takes an object when there are multiple targets.
+
+The Accordion supports all the `Disclosure` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Disclosure.html#disclosure-1) and
+* **`variant`** - Visual style: `'cozy'` (default) | `'compact'`
+
+### RenderProps Pattern
+
+The `Accordion` component accepts `ReactNode` children or a function that returns a `ReactNode`. For details of what information is available in the renderProps object, print out the props or [review the source code](https://github.com/adobe/react-spectrum/blob/7ee8d64207cb0777cd07fa98d398e1cf7cd80d3d/packages/react-aria-components/src/Disclosure.tsx#L73C18-L73C39).
+
+```tsx
+<Accordion>
+  {(renderProps) => {
+    console.log(renderProps);
+    return (<>...//</>);
+  }}
+</Accordion>
+```
+
+### Accordion.Header Props
+* **`children`** - Must contain an `Accordion.Trigger` and optionally other elements like menus
+
+### Accordion.Trigger Props
+* **`children`** - The trigger content (typically text with an icon)
+* **`classNames`** - Custom class names for styling:
+  * `heading` - Applied to the heading element
+  * `trigger` - Applied to the trigger button
+
+### Accordion.Panel Props
+* **`children`** - The content to display when expanded
+* **`className`** - Additional CSS classes for custom styling
+
+## Implementation Notes
+The `Accordion` component wraps the `Disclosure` component from `react-aria-components`. [Disclosure Docs](https://react-spectrum.adobe.com/react-spectrum/Disclosure.html)
+[Disclosure Group Docs](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html)
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Enter, Space, Arrow keys)
+- Focus management
+- Proper heading structure
+- Expanded/collapsed state announcements
+
+The component includes smooth animations for expanding/collapsing content and provides visual feedback for hover and focus states. The chevron icon automatically rotates to indicate the current state, and the component supports both single and multiple expansion modes through the group functionality.

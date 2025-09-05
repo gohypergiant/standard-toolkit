@@ -1,5 +1,11 @@
 # @accelint/predicates
 
+## 0.4.0
+
+### Minor Changes
+
+- 383c42a: Fix an issue the the argument order in a predicate. Add endsWith predicates.
+
 ## 0.3.4
 
 ### Patch Changes

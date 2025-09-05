@@ -1,0 +1,141 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as DialogStories from './dialog.stories';
+
+<Meta of={DialogStories} />
+
+# Dialog
+A modal dialog component that provides a focused, accessible overlay for user interactions. The Dialog component uses a compound component pattern to create structured, customizable dialogs with proper focus management and accessibility features.
+
+It is composed of the following components:
+- **Dialog** - Root component that manages dialog state and trigger behavior
+- **Dialog.Body** - Modal overaly container that renders the dialog portal
+- **Dialog.Title** - Semantic heading element for dialog titles
+- **Dialog.Content** - Wrapper for the main dialog content with appropriate spacing
+- **Dialog.Footer** - Container for action buttons with proper alignment
+- **Dialog.Button** - Pre-styled button component sized based on dialog size
+
+## Example usage
+```tsx
+<Dialog size="sm" isDismissable={true}>
+  <Button>Open Dialog</Button>
+  <Dialog.Body>
+    {({ close }) => (
+      <>
+        <Dialog.Title>Dialog Title</Dialog.Title>
+        <Dialog.Content>
+          Dialog content goes here...
+        </Dialog.Content>
+        <Dialog.Footer>
+          <Dialog.Button onPress={close} variant="flat">
+            Cancel
+          </Dialog.Button>
+          <Dialog.Button onPress={close}>
+            Confirm
+          </Dialog.Button>
+        </Dialog.Footer>
+      </>
+    )}
+  </Dialog.Body>
+</Dialog>
+```
+
+## Sizes
+
+* **small** - Compact dialog with minimum width of 280px, suitable for simple confirmations or brief messages
+* **large** - Spacious dialog with minimum width of 320px and maximum width of 720px, ideal for complex forms or detailed content
+
+**small** is the default size and should be used for most use cases, while **large** is better suited for content-heavy dialogs.
+
+<Canvas of={DialogStories.Default} />
+
+## Props
+
+### Dialog Props
+- **`size`** - Size variant: `'sm'` | `'lg'` (default: `'sm'`)
+- **`isDismissable`** - Whether the dialog can be dismissed by clicking outside or pressing Escape (default: `true`)
+- **`isKeyboardDismissDisabled`** - Whether to disable keyboard dismissal (default: `true`)
+- **`isOpen`** - Controlled open state for the dialog
+- **`onOpenChange`** - Callback when the open state changes
+- **`parentRef`** - Reference to a parent element for custom portal placement
+
+### Dialog.Body Props
+- **`children`** - Render function that receives dialog context including `close` function
+- **`ref`** - Forwarded ref to the modal overlay
+
+### Dialog.Title Props
+- **`children`** - Text content for the dialog title
+- **`className`** - Custom CSS class name
+
+### Dialog.Content Props
+- **`children`** - Main content of the dialog
+- **`className`** - Custom CSS class name
+
+### Dialog.Footer Props
+- **`children`** - Footer content, typically action buttons
+- **`className`** - Custom CSS class name
+
+### Dialog.Button Props
+- **`children`** - Button text or content
+- **`variant`** - Button variant (inherits from Button component)
+- **`size`** - Button size (automatically adjusted based on dialog size)
+- **`onPress`** - Button press handler
+- **`className`** - Custom CSS class name
+- **`...otherProps`** - All other Button component props
+
+## Examples
+
+### Default Dialog
+<Canvas of={DialogStories.Default} />
+
+### Local Portal Dialog
+<Canvas of={DialogStories.LocalPortal} />
+
+### Controlled Dialog
+<Canvas of={DialogStories.Controlled} />
+
+## Compound Component Structure
+The Dialog component follows a compound component pattern with the following structure:
+
+```tsx
+<Dialog>
+  <TriggerElement /> {/* Button or other trigger */}
+  <Dialog.Body>
+    {({ close }) => (
+      <>
+        <Dialog.Title>Title</Dialog.Title>
+        <Dialog.Content>Content</Dialog.Content>
+        <Dialog.Footer>
+          <Dialog.Button onPress={close}>Action</Dialog.Button>
+        </Dialog.Footer>
+      </>
+    )}
+  </Dialog.Body>
+</Dialog>
+```
+
+## Implementation Notes
+The `Dialog` component is built on top of React Aria Components, specifically wrapping the `Dialog`, `Modal`, and `ModalOverlay` components. [React Aria Dialog Docs](https://react-spectrum.adobe.com/react-spectrum/Dialog.html)
+
+Key features:
+- **Accessibility**: Full ARIA compliance with proper focus management and screen reader support
+- **Portal Management**: Automatic portal creation with support for custom parent containers
+- **Keyboard Navigation**: Proper Escape key handling and focus trapping
+- **Responsive Design**: Size variants that adapt to different content needs
+- **Compound Components**: Flexible structure using the compound component pattern
+- **SSR Support**: Proper server-side rendering with hydration handling
+
+The underlying HTML structure creates a modal overlay with proper semantic markup:
+```html
+<div class="modal-overlay">
+  <div class="modal">
+    <div class="dialog">
+      <h2 class="dialog-title">Title</h2>
+      <div class="dialog-content">Content</div>
+      <div class="dialog-footer">Actions</div>
+    </div>
+  </div>
+</div>
+```
+
+This provides excellent accessibility and user experience while maintaining a clean, structured API for developers.

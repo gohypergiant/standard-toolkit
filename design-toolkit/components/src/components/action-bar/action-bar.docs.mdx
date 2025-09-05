@@ -1,0 +1,28 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ActionBarStories from './action-bar.stories';
+
+<Meta of={ActionBarStories}/>
+
+# ActionBar
+A container component that displays a collection of actions, typically represented as buttons with icons. The ActionBar provides consistent spacing and alignment for action items, commonly used in toolbars, editors, or command interfaces.
+
+
+## Example usage
+```
+<ActionBar>
+  <Button>
+    <Icon>
+      <Copy />
+    </Icon>
+  </Button>
+  <Button>
+    <Icon>
+      <Delete />
+    </Icon>
+  </Button>
+</ActionBar>
+```
+<Canvas of={ActionBarStories.Default} />
+
+

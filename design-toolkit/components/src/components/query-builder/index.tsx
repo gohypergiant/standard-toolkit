@@ -199,9 +199,9 @@ export function QueryBuilder({
    */
   const defaultClassnames: Partial<Classnames> = useMemo(
     () => ({
-      queryBuilder: 'border border-transparent',
+      queryBuilder: 'outline outline-transparent',
       ruleGroup:
-        'group col-span-full flex flex-col gap-s p-s border border-info rounded-medium',
+        'group col-span-full flex flex-col gap-s p-s outline outline-info-bold rounded-medium',
       header: 'flex gap-s',
       body: cn(
         'group grid gap-x-s empty:hidden',
@@ -212,8 +212,8 @@ export function QueryBuilder({
       combinators: 'my-s',
       addRule: '',
       addGroup: '',
-      cloneRule: 'fg-interactive hover:fg-interactive-hover',
-      cloneGroup: 'fg-interactive hover:fg-interactive-hover',
+      cloneRule: 'fg-info-bold hover:fg-info-hover',
+      cloneGroup: 'fg-info-bold hover:fg-info-hover',
       removeGroup: '',
       rule: cn(
         'flex gap-xs py-s',
@@ -228,8 +228,8 @@ export function QueryBuilder({
       valid: '',
       invalid: '',
       disabled: '',
-      lockRule: 'fg-interactive hover:fg-interactive-hover',
-      lockGroup: 'fg-interactive hover:fg-interactive-hover',
+      lockRule: 'fg-info-bold hover:fg-info-hover',
+      lockGroup: 'fg-info-bold hover:fg-info-hover',
       valueSource: '',
       valueListItem: '',
     }),

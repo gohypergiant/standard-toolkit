@@ -1,0 +1,138 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ColorPickerStories from './color-picker.stories';
+
+<Meta of={ColorPickerStories} />
+
+# ColorPicker
+The ColorPicker component provides a grid of interactive color swatches for selecting from a predefined set of colors. It's built on React Aria Components and provides excellent accessibility out of the box. Color pickers are commonly used in design tools, theme customization interfaces, form inputs, and anywhere users need to select colors from a predefined palette.
+
+## Example usage
+```tsx
+// Basic color picker with predefined colors
+const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+<ColorPicker
+  items={colors}
+  value="#ff0000"
+  onChange={(color) => console.log('Selected:', color)}
+/>
+
+// Color picker with controlled state
+const [selectedColor, setSelectedColor] = useState('#30D27E');
+
+<ColorPicker
+  items={['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D']}
+  value={selectedColor}
+  onChange={setSelectedColor}
+/>
+
+// Color picker with custom styling
+<ColorPicker
+  items={['#ff0000', '#00ff00', '#0000ff']}
+  classNames={{
+    picker: 'gap-4',
+    item: 'rounded-lg',
+    swatch: 'w-8 h-8'
+  }}
+/>
+
+// Color picker with theme colors
+const themeColors = [
+  '#1a1a1a', // Primary
+  '#4a90e2', // Secondary
+  '#f5a623', // Accent
+  '#7ed321', // Success
+  '#d0021b', // Error
+  '#9013fe'  // Warning
+];
+
+<ColorPicker
+  items={themeColors}
+  value="#4a90e2"
+  onChange={(color) => updateTheme(color)}
+/>
+
+// Color picker with accessibility features
+<ColorPicker
+  items={['#ff0000', '#00ff00', '#0000ff']}
+  aria-label="Choose a color for the background"
+  isDisabled={false}
+  isRequired={true}
+/>
+
+// Color picker with custom color objects
+import { Color } from '@react-stately/color';
+
+const colorObjects = [
+  new Color('#ff0000'),
+  new Color('hsl(120, 100%, 50%)'),
+  new Color('rgb(0, 0, 255)')
+];
+
+<ColorPicker
+  items={colorObjects}
+  value={colorObjects[0]}
+  onChange={(color) => console.log('Selected:', color.toString('hex'))}
+/>
+```
+
+## Features
+
+* **Grid Layout** - Colors are displayed in a flexible grid layout that wraps based on container width
+* **Interactive Swatches** - Each color is displayed as a clickable swatch with hover and focus states
+* **Keyboard Navigation** - Full keyboard support for accessibility
+* **Color Validation** - Automatic parsing and validation of color values
+* **Flexible Input** - Supports both color strings and Color objects
+* **Custom Styling** - Granular control over styling through classNames prop
+
+<Canvas of={ColorPickerStories.Default} />
+
+## Props
+
+* **`items`** - Array of color values to display as selectable swatches (required)
+  * Can be color strings (hex, rgb, hsl, etc.) or Color objects
+  * Each color will be rendered as an interactive swatch
+* **`value`** - Currently selected color value
+* **`defaultValue`** - Initial selected color value
+* **`onChange`** - Callback when a color is selected
+* **`isDisabled`** - Disables the entire color picker
+* **`isRequired`** - Marks the color picker as required
+* **`validationBehavior`** - Validation behavior: `'aria'` | `'native'`
+* **`classNames`** - Custom class names for styling:
+  * `picker` - Applied to the main picker container (grid layout)
+  * `item` - Applied to individual color swatch items
+  * `swatch` - Applied to the color swatch elements
+* **`aria-label`** - Accessible label for screen readers
+* **`aria-describedby`** - ID of element that describes the color picker
+
+The component accepts all standard HTML div attributes and forwards them to the underlying element.
+
+## Implementation Notes
+The `ColorPicker` component wraps the `ColorSwatchPicker` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/ColorSwatchPicker.html)
+
+The underlying elements are:
+- `div` for the color picker container with grid layout
+- `div` for individual color swatch items with proper ARIA attributes
+- `div` for the color swatch elements with background colors
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Arrow keys, Enter, Space)
+- Focus management
+- Color value announcements
+- Proper labeling and descriptions
+- High contrast mode support
+
+The component includes sophisticated color handling that:
+- Automatically parses and validates color values
+- Supports multiple color formats (hex, rgb, hsl, etc.)
+- Provides consistent color representation across different formats
+- Handles color objects from @react-stately/color library
+- Maintains proper contrast ratios for accessibility
+
+The color picker automatically adapts its layout based on the container width, with colors arranged in a flexible grid that wraps as needed. Each color swatch provides clear visual feedback for hover, focus, and selected states, with appropriate outline colors that maintain accessibility standards.
+
+The component integrates seamlessly with React Aria's color system and provides consistent behavior across different browsers and platforms. The flexible styling system allows for easy customization while maintaining the core functionality and accessibility features.
+
+The color picker is particularly useful in design applications, theme builders, and any interface where users need to select from a predefined set of colors. The grid layout makes it easy to scan and select colors quickly, while the keyboard navigation ensures it's accessible to all users.

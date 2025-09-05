@@ -1,0 +1,66 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as RadioStories from './radio.stories';
+
+<Meta of={RadioStories} />
+
+# Radio
+The Radio component provides a set of radio buttons that allow users to select one option from a group of mutually exclusive choices. Radio buttons are commonly used in forms, settings panels, and anywhere a single selection is required from multiple options.
+
+It is composed of the following components:
+
+- **Radio** - Individual radio button component that represents a single selectable option
+- **Radio.Group** - Container component that manages radio button group state and layout
+
+## Example usage
+```tsx
+<Radio.Group label="Select an option">
+  <Radio value="1">Option 1</Radio>
+  <Radio value="2">Option 2</Radio>
+  <Radio value="3">Option 3</Radio>
+</Radio.Group>
+```
+
+## Orientations
+
+* **vertical** - radio buttons are stacked vertically (default)
+* **horizontal** - radio buttons are arranged horizontally in a row
+
+The orientation can be controlled via the `orientation` prop on the `Radio.Group` component.
+
+<Canvas of={RadioStories.Default} />
+
+## Props
+
+### Radio.Group Props
+* **`label`** - Optional string label displayed above the radio group
+* **`orientation`** - Layout direction: `'vertical'` (default) or `'horizontal'`
+* **`isDisabled`** - Disables the entire radio group
+* **`isRequired`** - Marks the radio group as required
+* **`value`** - The currently selected value
+* **`onChange`** - Callback when selection changes
+* **`classNames`** - Custom class names for styling:
+  * `group` - Applied to the radio group container
+  * `label` - Applied to the group label
+
+### Radio Props
+* **`value`** - The value associated with this radio option
+* **`isDisabled`** - Disables this specific radio option
+* **`classNames`** - Custom class names for styling:
+  * `radio` - Applied to the radio container
+  * `control` - Applied to the radio button control
+  * `label` - Applied to the radio option label
+
+## Implementation Notes
+The `Radio` component wraps the `Radio` and `RadioGroup` components from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/RadioGroup.html)
+
+The underlying elements are:
+- `div` for the radio group container
+- `input[type="radio"]` for the radio button control
+- `label` for the radio option text
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (arrow keys, space, enter)
+- Focus management
+- Form integration

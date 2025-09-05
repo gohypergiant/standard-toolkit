@@ -1,0 +1,238 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as OptionsStories from './options.stories';
+
+<Meta of={OptionsStories} />
+
+# Options
+A flexible and accessible list component that provides structured options with support for sections, icons, descriptions, and various interaction states. Built on top of React Aria Components, the Options component offers a comprehensive solution for displaying selectable items in dropdowns, menus, and other list interfaces with full accessibility compliance.
+
+It is composed of the following components:
+
+- **Options** - Main options list container with size variants and item management
+- **Options.Item** - Individual option item with support for icons, labels, and descriptions
+- **Options.Item.Label** - Primary text content component for option items
+- **Options.Item.Description** - Secondary text content for additional information
+- **Options.Item.Content** - Container for label and description content
+- **Options.Section** - Grouping container with optinal header
+
+## Example usage
+```tsx
+// Basic options list
+<Options>
+  <Options.Item textValue="Option 1">
+    <Icon><Placeholder /></Icon>
+    <Options.Item.Label>Option 1</Options.Item.Label>
+  </Options.Item>
+  <Options.Item textValue="Option 2">
+    <Icon><Placeholder /></Icon>
+    <Options.Item.Label>Option 2</Options.Item.Label>
+  </Options.Item>
+</Options>
+
+// Options with sections
+<Options>
+  <Options.Section header="Category A">
+    <Options.Item textValue="Item A1">
+      <Icon><Placeholder /></Icon>
+      <Options.Item.Label>Item A1</Options.Item.Label>
+    </Options.Item>
+  </Options.Section>
+</Options>
+
+// Options with descriptions and custom colors
+<Options size="large">
+  <Options.Item textValue="Success Item" color="info">
+    <Icon><Check /></Icon>
+    <Options.Item.Content>
+      <Options.Item.Label>Success Item</Options.Item.Label>
+      <Options.Item.Description>This is a successful action</Options.Item.Description>
+    </Options.Item.Content>
+  </Options.Item>
+</Options>
+```
+
+## Sizes
+
+* **small** - Compact options with reduced padding, suitable for dense interfaces
+* **large** - Standard options with comfortable spacing and larger text (default)
+
+**large** is the default size and should be used for most use cases, while **Small** is better suited for space-constrained interfaces or when displaying many options.
+
+<Canvas of={OptionsStories.Default} />
+
+## Props
+
+### Options Props
+- **`size`** - Size variant: `'small'` | `'large'` (default: `'large'`)
+- **`items`** - Array of data items for dynamic rendering
+- **`children`** - Option items or sections to render
+- **`className`** - Custom CSS class name for the options list
+
+### Options.Item Props
+- **`color`** - Color variant: `'info'` | `'serious'` (default: `'info'`)
+- **`textValue`** - Text value for accessibility and search
+- **`isDisabled`** - Whether the option is disabled
+- **`classNames`** - Object containing custom class names:
+  - `item` - Main item container styling
+  - `icon` - Icon styling and sizing
+
+### Options.Section Props
+- **`header`** - Section header text
+- **`items`** - Array of data items for dynamic rendering within the section
+- **`classNames`** - Object containing custom class names:
+  - `section` - Section container styling
+  - `header` - Header text styling
+
+### HTML Attributes
+The component accepts all standard HTML attributes for `<div>` elements, such as:
+- **`id`** - Unique identifier
+- **`aria-label`** - Accessible label
+- **`data-*`** - Custom data attributes
+
+## Features
+
+### Dynamic Rendering
+Support for both static and dynamic content rendering:
+```tsx
+// Dynamic rendering with items prop
+<Options items={dataItems}>
+  {(item) => (
+    <Options.Item key={item.id} textValue={item.name}>
+      <Options.Item.Label>{item.name}</Options.Item.Label>
+    </Options.Item>
+  )}
+</Options>
+```
+
+### Sectioned Content
+Organize options into logical groups with headers:
+```tsx
+<Options>
+  <Options.Section header="Popular Items">
+    <Options.Item textValue="Item 1">...</Options.Item>
+  </Options.Section>
+  <Options.Section header="All Items">
+    <Options.Item textValue="Item 2">...</Options.Item>
+  </Options.Section>
+</Options>
+```
+
+### Color Variants
+Visual distinction between different types of options:
+```tsx
+// Info color (default) - for neutral or positive actions
+<Options.Item color="info">...</Options.Item>
+
+// Serious color - for warnings or destructive actions
+<Options.Item color="serious">...</Options.Item>
+```
+
+### Icon Support
+Flexible icon placement and styling:
+```tsx
+<Options.Item textValue="With Icon">
+  <Icon><Placeholder /></Icon>
+  <Options.Item.Label>With Icon</Options.Item.Label>
+</Options.Item>
+```
+
+### Accessibility
+Built-in accessibility features ensure proper navigation and screen reader support:
+- **Keyboard Navigation**: Full arrow key and Enter key support
+- **Screen Reader Support**: Proper ARIA attributes and semantic structure
+- **Focus Management**: Automatic focus handling and visual indicators
+- **Text Value**: Search and accessibility support through `textValue` prop
+
+## Examples
+
+### Default Options
+<Canvas of={OptionsStories.Default} />
+
+### With Dynamic Sections
+<Canvas of={OptionsStories.WithDynamicSections} />
+
+### With Static Sections
+<Canvas of={OptionsStories.WithStaticSections} />
+
+### Virtualized Options
+<Canvas of={OptionsStories.Virtualized} />
+
+### Different Sizes
+```tsx
+<div className="space-y-4">
+  <Options size="small">
+    <Options.Item textValue="Small Option">
+      <Options.Item.Label>Small Option</Options.Item.Label>
+    </Options.Item>
+  </Options>
+
+  <Options size="large">
+    <Options.Item textValue="Large Option">
+      <Options.Item.Label>Large Option</Options.Item.Label>
+    </Options.Item>
+  </Options>
+</div>
+```
+
+### Options with Descriptions
+```tsx
+<Options>
+  <Options.Item textValue="Detailed Option">
+    <Icon><Info /></Icon>
+    <Options.Item.Content>
+      <Options.Item.Label>Detailed Option</Options.Item.Label>
+      <Options.Item.Description>
+        This option includes additional context and information
+      </Options.Item.Description>
+    </Options.Item.Content>
+  </Options.Item>
+</Options>
+```
+
+## Data Structure
+
+The Options component works with a flexible data structure:
+
+```tsx
+interface OptionsDataItem {
+  id: Key;
+  name: string;
+  children?: OptionsDataItem[];
+  description?: string;
+  isDisabled?: boolean;
+  prefixIcon?: ReactNode;
+  suffixIcon?: ReactNode;
+}
+```
+
+## Implementation Notes
+The `Options` component is built using React Aria Components and provides a comprehensive, accessible options interface with flexible content organization.
+
+Key features:
+- **Accessibility**: Full ARIA compliance with proper focus management and screen reader support
+- **Flexible Layout**: Support for both static and dynamic content rendering
+- **Sectioned Content**: Logical grouping with optional headers
+- **Icon Integration**: Seamless integration with the Icon component system
+- **Color Variants**: Visual distinction between different option types
+- **Responsive Design**: Size variants that adapt to different interface needs
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+- **Virtualization Support**: Built-in support for large datasets with React Aria Virtualizer
+
+The underlying HTML structure creates a semantic list with proper accessibility:
+```html
+<div class="options-list" data-size="large">
+  <div class="options-section">
+    <header class="section-header">Section Title</header>
+    <div class="options-item" data-color="info">
+      <span class="icon">...</span>
+      <div class="item-content">
+        <span class="item-label">Option Label</span>
+        <span class="item-description">Option Description</span>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+This provides excellent accessibility and user experience while maintaining a clean, structured API for developers. The component automatically handles keyboard navigation, focus management, and screen reader support through React Aria Components.

@@ -31,7 +31,7 @@ export function Buttons() {
           Primary Button
         </Button>
         <Button color='critical'>Critical Button</Button>
-        <Button className='bg-advisory-bold hover:bg-advisory-hover text-interactive-default'>
+        <Button className='bg-advisory-bold hover:bg-advisory-hover fg-info-bold'>
           Custom Button
         </Button>
       </div>
@@ -46,8 +46,7 @@ export function Buttons() {
         <DesignSystemButton
           color='primary'
           classNames={{
-            button:
-              'bg-advisory-bold hover:bg-advisory-hover text-interactive-default',
+            button: 'bg-advisory-bold hover:bg-advisory-hover fg-info-bold',
           }}
         >
           Custom Button

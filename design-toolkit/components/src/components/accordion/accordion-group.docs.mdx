@@ -1,0 +1,53 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as AccordionGroupStories from './accordion-group.stories';
+
+<Meta of={AccordionGroupStories} />
+
+# Accordion Group
+The Accordion Group component combines provides a convenient grouping for Accordion components. Use this component when you need a series of related Accordions that all track together in size and behavior. It supports both single and multiple expanded items.
+
+## Example usage
+
+### Basic
+```tsx
+// Accordion group with multiple items
+<Accordion.Group allowsMultipleExpanded={true}>
+  <Accordion>
+    <Accordion.Header>
+      <Accordion.Trigger>
+        <Icon><Settings /></Icon>
+        Settings
+      </Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Panel>
+      <p>Settings configuration options...</p>
+    </Accordion.Panel>
+  </Accordion>
+  <Accordion>
+    <Accordion.Header>
+      <Accordion.Trigger>
+        <Icon><Help /></Icon>
+        Help
+      </Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Panel>
+      <p>Help documentation...</p>
+    </Accordion.Panel>
+  </Accordion>
+</Accordion.Group>
+```
+
+<Canvas of={AccordionGroupStories.Default} />
+
+## Variants
+* **cozy** - Standard size with larger text and spacing (default)
+* **compact** - Smaller size with reduced text and spacing for space-constrained layouts
+
+### Accordion.Group Props
+The Accordion supports all the `Disclosure Group` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html#disclosuregroup-1) and
+* **`variant`** - Global variant for all child accordions.
+
+See [Accordion](?path=/docs/components-accordion--playground) for details on props for individual sections.
+
+## Implementation Notes
+The `Accordion.Group` component wraps the `DisclosureGroup` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html)

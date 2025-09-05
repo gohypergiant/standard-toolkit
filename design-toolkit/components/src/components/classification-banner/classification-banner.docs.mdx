@@ -1,0 +1,117 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ClassificationBannerStories from './classification-banner.stories';
+
+<Meta of={ClassificationBannerStories} />
+
+# ClassificationBanner
+The ClassificationBanner component displays prominent security classification banners for pages, documents, and applications. It's built with Tailwind CSS and provides standardized visual indicators for different classification levels that span the full width of their container. Classification banners are commonly used in government systems, secure environments, and anywhere you need to prominently display the security level or classification of information at the top or bottom of pages.
+
+It is composed of the following components:
+- **ClassificationBanner** - Main classification component for displaying security levels
+- **ClassificationBanner.Provider** - Context provider for setting default props across multiple classification banners
+
+## Example usage
+```tsx
+// Basic classification banner with default variant
+<ClassificationBanner />
+
+// Classification banner with custom text
+<ClassificationBanner variant="confidential">
+  CONFIDENTIAL - AUTHORIZED PERSONNEL ONLY
+</ClassificationBanner>
+
+// Different classification levels
+<ClassificationBanner variant="unclassified" />
+<ClassificationBanner variant="cui" />
+<ClassificationBanner variant="confidential" />
+<ClassificationBanner variant="secret" />
+<ClassificationBanner variant="top-secret" />
+<ClassificationBanner variant="ts-sci" />
+
+// Using context provider for default props
+<ClassificationBanner.Provider variant="confidential">
+  <ClassificationBanner />
+  <ClassificationBanner />
+</ClassificationBanner.Provider>
+
+// Classification banner with custom styling
+<ClassificationBanner
+  className="custom-banner-class"
+  variant="top-secret"
+>
+  TOP SECRET - SPECIAL ACCESS REQUIRED
+</ClassificationBanner>
+
+// Empty banner (shows default text)
+<ClassificationBanner variant="missing" />
+
+// Banner at the top of a page
+<div className="min-h-screen">
+  <ClassificationBanner variant="secret" />
+  <main className="p-4">
+    <h1>Page Content</h1>
+    <p>This content is classified as SECRET.</p>
+  </main>
+</div>
+
+// Banner at the bottom of a page
+<div className="min-h-screen flex flex-col">
+  <main className="flex-1 p-4">
+    <h1>Page Content</h1>
+    <p>This content is classified as CONFIDENTIAL.</p>
+  </main>
+  <ClassificationBanner variant="confidential" />
+</div>
+```
+
+## Variants
+
+* **missing** - Red styling for missing classification information (default)
+* **unclassified** - Gray styling for unclassified information
+* **cui** - Controlled Unclassified Information
+* **confidential** - Confidential level information
+* **secret** - Secret level information
+* **top-secret** - Top secret level information
+* **ts-sci** - Top Secret/Sensitive Compartmented Information
+
+Each variant uses appropriate color combinations and automatically displays default text when no children are provided. Banners span the full width of their container and are designed to be prominently displayed.
+
+<Canvas of={ClassificationBannerStories.Default} />
+
+## Props
+
+* **`variant`** - Classification level: `'missing'` (default), `'unclassified'`, `'cui'`, `'confidential'`, `'secret'`, `'top-secret'`, or `'ts-sci'`
+* **`children`** - Custom text content (optional - variant provides default text if empty)
+* **`className`** - Additional CSS classes for custom styling
+
+The component accepts all standard HTML div attributes and forwards them to the underlying element.
+
+## Implementation Notes
+The `ClassificationBanner` component is built with Tailwind CSS and Tailwind Variants (tv) for flexible styling and variant management.
+
+The underlying elements are:
+- `div` for the classification banner container with appropriate ARIA attributes
+- Text content or default text based on variant
+
+The component automatically handles accessibility features including:
+- Proper contrast ratios for all variant combinations
+- Semantic color usage for different classification levels
+- Responsive sizing and positioning
+- Default text generation for empty banners
+- Non-selectable text to prevent accidental copying
+
+The component includes sophisticated styling that automatically:
+- Displays appropriate default text for each classification level when no children are provided
+- Uses semantic color combinations that maintain accessibility standards
+- Provides consistent sizing and spacing across all variants
+- Maintains proper visual hierarchy for different security levels
+- Spans the full width of the container for prominent display
+
+The classification banner automatically adapts its appearance based on the selected variant, with appropriate color combinations that follow security classification standards. All variants use semantic color combinations that provide clear visual hierarchy for different security levels, with higher classification levels typically using more prominent colors.
+
+The component integrates seamlessly with other components and provides consistent visual indicators for security classification throughout your application. The automatic default text feature ensures that classification banners always display appropriate information even when no custom text is provided, making them ideal for automated systems and consistent security labeling.
+
+The classification banner is particularly useful in government, military, and secure environments where clear visual indication of information sensitivity is required at the page level. The standardized color scheme and text formatting help users quickly identify the security level of displayed information, and the full-width design ensures the classification is prominently visible.
+
+The banner component is designed to be used at the top or bottom of pages, applications, or documents to provide clear, prominent indication of the security classification level for all content within that context.

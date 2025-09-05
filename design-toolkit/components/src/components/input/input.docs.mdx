@@ -1,0 +1,172 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as InputStories from './input.stories';
+
+<Meta of={InputStories} />
+
+# Input
+A flexible and accessible form input component that provides enhanced functionality beyond standard HTML inputs. Features include auto-sizing, clear button support, validation states, and comprehensive styling variants. Built on top of React Aria Components for full accessibility compliance.
+
+## Example usage
+```tsx
+// Basic input with placeholder
+<Input placeholder="Enter your name" />
+
+// Input with clear button and validation
+<Input
+  placeholder="Search..."
+  isClearable={true}
+  isInvalid={false}
+  size="medium"
+/>
+
+// Auto-sizing input that grows with content
+<Input
+  placeholder="Type here..."
+  autoSize={true}
+  defaultValue="Initial value"
+/>
+
+// Number input with custom styling
+<Input
+  type="number"
+  placeholder="Enter amount"
+  size="small"
+/>
+```
+
+## Sizes
+
+* **small** - Compact input with smaller text and padding, suitable for dense layouts
+* **medium** - Standard input size with balanced proportions (default)
+
+**medium** is the default size and should be used for most use cases, while **small** is better suited for space-constrained interfaces or secondary form elements.
+
+<Canvas of={InputStories.Default} />
+
+## Props
+
+### Core Props
+- **`placeholder`** - Placeholder text displayed when no value is entered
+- **`defaultValue`** - Initial value for uncontrolled inputs
+- **`value`** - Controlled value for the input
+- **`onChange`** - Callback when the input value changes
+- **`type`** - Input type (default: `'text'`), supports all standard HTML input types
+- **`disabled`** - Whether the input is disabled
+- **`readOnly`** - Whether the input is read-only
+- **`required`** - Whether the input is required
+
+### Appearance & Behavior
+- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
+- **`autoSize`** - Whether the input automatically resizes based on content length (default: `false`)
+- **`isClearable`** - Whether to show a clear button (default: `false`)
+- **`isInvalid`** - Whether to show the input in an invalid state (default: `false`)
+
+### Styling
+- **`classNames`** - Object containing custom class names for different parts:
+  - `container` - Main container wrapper
+  - `sizer` - Sizer element for auto-sizing functionality
+  - `input` - The actual input element
+  - `clear` - Clear button styling
+
+### HTML Attributes
+The component accepts all standard HTML attributes for `<input>` elements, such as:
+- **`id`** - Unique identifier
+- **`name`** - Form field name
+- **`aria-label`** - Accessible label
+- **`data-*`** - Custom data attributes
+
+## Features
+
+### Auto-sizing
+When `autoSize={true}`, the input automatically adjusts its width based on content length:
+```tsx
+<Input
+  autoSize={true}
+  placeholder="This input will grow as you type"
+/>
+```
+
+### Clear Button
+The clear button appears when `isClearable={true}` and there's content in the input:
+```tsx
+<Input
+  isClearable={true}
+  placeholder="Type and then clear..."
+/>
+```
+
+### Validation States
+Visual feedback for different input states:
+```tsx
+// Invalid state
+<Input isInvalid={true} placeholder="Invalid input" />
+
+// Disabled state
+<Input disabled={true} placeholder="Disabled input" />
+
+// Read-only state
+<Input readOnly={true} value="Cannot edit this" />
+```
+
+### Input Types
+Supports all standard HTML input types with appropriate styling:
+- `text`, `email`, `password`, `number`
+- `date`, `time`, `datetime-local`
+- `search`, `tel`, `url`
+- And many more...
+
+## Examples
+
+### Default Input
+<Canvas of={InputStories.Default} />
+
+### Different Sizes
+```tsx
+<div className="space-y-4">
+  <Input size="small" placeholder="Small input" />
+  <Input size="medium" placeholder="Medium input (default)" />
+</div>
+```
+
+### Auto-sizing Input
+```tsx
+<Input
+  autoSize={true}
+  placeholder="This input grows with content"
+  defaultValue="Initial content"
+/>
+```
+
+### Clearable Input
+```tsx
+<Input
+  isClearable={true}
+  placeholder="Type something and clear it"
+  defaultValue="Start typing..."
+/>
+```
+
+## Implementation Notes
+The `Input` component is built on top of React Aria Components and provides enhanced functionality beyond standard HTML inputs.
+
+Key features:
+- **Accessibility**: Full ARIA compliance with proper focus management and screen reader support
+- **Auto-sizing**: Intelligent width adjustment based on content length
+- **Clear Button**: Built-in clear functionality with proper keyboard navigation
+- **Validation States**: Visual feedback for different input states
+- **Responsive Design**: Size variants that adapt to different interface needs
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+- **Keyboard Support**: Escape key clears the input when clearable
+
+The underlying HTML structure creates a semantic input with enhanced functionality:
+```html
+<div class="input-container" data-size="medium" data-invalid="false">
+  <div class="input-sizer">
+    <input class="input-field" type="text" placeholder="..." />
+  </div>
+  <button class="clear-button" aria-label="Clear input">×</button>
+</div>
+```
+
+This provides excellent accessibility and user experience while maintaining a clean, structured API for developers.

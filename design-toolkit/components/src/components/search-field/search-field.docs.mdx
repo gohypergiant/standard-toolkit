@@ -1,0 +1,79 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as SearchFieldStories from './search-field.stories';
+
+<Meta of={SearchFieldStories} />
+
+# SearchField
+The SearchField component provides a customizable search input with integrated search icon, loading state, and clear functionality. It's built on React Aria Components and provides excellent accessibility out of the box. Search fields are commonly used in navigation bars, data tables, and anywhere users need to filter or search through content.
+
+It is composed of the following components:
+
+- **SearchField** - Main search input with integrated icons and functionality
+- **SearchField.Provider** - Context provider for setting default props across multiple search fields
+
+## Example usage
+```tsx
+// Basic search field
+<SearchField placeholder="Search..." />
+
+// With event handlers
+<SearchField
+  placeholder="Type to search"
+  onSubmit={(value) => console.log('Search:', value)}
+  onChange={(value) => setQuery(value)}
+/>
+
+// Using context provider for default props
+<SearchField.Provider variant="filled">
+  <SearchField placeholder="Search 1" />
+  <SearchField placeholder="Search 2" />
+</SearchField.Provider>
+```
+
+## Variants
+
+* **outlined** - Renders with a border outline (default)
+* **filled** - Renders with a filled background and darker outline
+
+The variant can be controlled via the `variant` prop or set globally using the `SearchField.Provider` component.
+
+<Canvas of={SearchFieldStories.Default} />
+
+## Props
+
+* **`placeholder`** - Placeholder text displayed when the input is empty
+* **`variant`** - Visual style: `'outlined'` (default) or `'filled'`
+* **`isLoading`** - Displays a loading spinner instead of the clear button
+* **`isDisabled`** - Disables the search field
+* **`isRequired`** - Marks the search field as required
+* **`value`** - The current search value
+* **`onChange`** - Callback when the input value changes
+* **`onSubmit`** - Callback when the search is submitted (Enter key or search button)
+* **`onClear`** - Callback when the clear button is clicked
+* **`inputProps`** - Additional props passed to the underlying input element
+* **`classNames`** - Custom class names for styling:
+  * `field` - Applied to the search field container
+  * `input` - Applied to the input element
+  * `search` - Applied to the search icon
+  * `loading` - Applied to the loading spinner
+  * `clear` - Applied to the clear button
+
+## Implementation Notes
+The `SearchField` component wraps the `SearchField` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/SearchField.html)
+
+The underlying elements are:
+- `div` for the search field container
+- `input[type="search"]` for the search input
+- `button` for the clear functionality
+- `span` elements for the search and loading icons
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Enter to submit, Escape to clear)
+- Focus management
+- Form integration
+- Loading state announcements
+- Clear button visibility based on input state
+
+The component integrates with the Icon system and automatically provides the appropriate size context for all icons.

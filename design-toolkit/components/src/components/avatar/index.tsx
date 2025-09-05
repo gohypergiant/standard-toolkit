@@ -13,7 +13,7 @@
 
 import 'client-only';
 import type { ProviderProps } from '@/lib/types';
-import { spacingXs } from '@/tokens';
+import { designTokens } from '@/tokens/tokens';
 import { Person } from '@accelint/icons';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
 import { createContext } from 'react';
@@ -99,7 +99,7 @@ export function Avatar({ ref, ...props }: AvatarProps) {
             </Icon>
           )}
         </Fallback>
-        <Badge.Provider offset={spacingXs} placement='top right'>
+        <Badge.Provider offset={designTokens.spacing.xs} placement='top right'>
           <span className={content({ className: classNames?.content, size })}>
             {children}
           </span>

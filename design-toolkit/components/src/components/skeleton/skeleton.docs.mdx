@@ -1,0 +1,70 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as SkeletonStories from './skeleton.stories';
+
+<Meta of={SkeletonStories} />
+
+# Skeleton
+The Skeleton component provides a flexible skeleton loader for indicating loading states in your application. It creates placeholder content that mimics the shape and size of actual content while data is being fetched or processed. Skeleton loaders improve perceived performance and provide visual feedback to users during loading states.
+
+## Example usage
+```tsx
+// Basic rectangular placeholder
+<Skeleton />
+
+// Circular placeholder (useful for avatars)
+<Skeleton shape="circ" />
+
+// With loading text content
+<Skeleton>Loading content...</Skeleton>
+
+// Nested placeholders for complex layouts
+<Skeleton className="mb-xl p-m">
+  <br />
+  <br />
+  <Skeleton className="w-[75%]" />
+</Skeleton>
+
+// Custom styling
+<Skeleton className="w-[50%] mt-l" />
+```
+
+## Variants
+
+* **rect** - Rectangular placeholder with rounded corners (default)
+* **circ** - Circular placeholder, useful for avatars or circular elements
+
+The shape can be controlled via the `shape` prop. Both variants include a subtle pulse animation for better visual feedback.
+
+<Canvas of={SkeletonStories.Default} />
+
+## Props
+
+* **`shape`** - Visual shape: `'rect'` (default) or `'circ'`
+* **`className`** - Additional CSS classes for custom styling
+* **`children`** - Optional content to display inside the skeleton (useful for text placeholders)
+
+The component accepts all standard HTML div attributes and forwards them to the underlying element.
+
+## Implementation Notes
+The `Skeleton` component is a simple, lightweight component built with Tailwind CSS and Tailwind Variants (tv).
+
+The underlying element is a `div` with:
+- Base styling including light foreground color, transparent background, and padding
+- Pulse animation for visual feedback during loading states
+- Shape-specific styling:
+  - **Rect**: Full width with minimum height, rounded corners
+  - **Circ**: Square aspect ratio with full border radius
+
+The component automatically handles:
+- Responsive sizing based on content
+- Smooth pulse animations (respects user's motion preferences)
+- Flexible layout integration through standard CSS classes
+- Accessibility through semantic HTML structure
+
+Skeleton components are commonly used in:
+- Content loading states
+- Form field placeholders
+- Card and list item placeholders
+- Avatar and image placeholders
+- Complex layout placeholders through nesting

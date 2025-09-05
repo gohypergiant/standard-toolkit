@@ -29,31 +29,32 @@ const toExportedConstant = (spriteName: string, filename: string): string =>
   `export const ${toCapitalCase(spriteName)} = '${filename}'`;
 
 export async function generateConstantsFile(
-  generateSpritesResult: GenerateSpritesResult,
+  prevResults: GenerateSpritesResult,
 ): Promise<GenerateConstantsResult> {
-  if (generateSpritesResult.isErr) {
-    return Result.err(generateSpritesResult.error);
+  if (prevResults.isErr) {
+    return Result.err(prevResults.error);
   }
 
   try {
-    const { json, tmp, sprites } = generateSpritesResult.unwrapOr({
+    const { json, tmp, sprites } = prevResults.unwrapOr({
       tmp: '',
       json: '',
       sprites: [],
     });
 
     const exportedConstantDefinitionList = sprites
-      .map((sprite) => toExportedConstant(sprite.name, sprite.indexName))
+      .map((sprite) =>
+        toExportedConstant(sprite.name, sprite.indexName as string),
+      )
       .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     const constantsFileContent = exportedConstantDefinitionList.join('\n');
-
     const fileName = json.replace('.json', '.ts');
     const fileContent = `${GENERATED_FILE_HEADER}${constantsFileContent}`;
     await writeFile(fileName, fileContent);
 
     return Result.ok({ tmp });
   } catch (err) {
-    const { tmp } = generateSpritesResult.unwrapOr({ tmp: '' });
+    const { tmp } = prevResults.unwrapOr({ tmp: '' });
 
     return Result.err({ msg: (err as Error).message.trim(), tmp });
   }

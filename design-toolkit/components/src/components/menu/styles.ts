@@ -18,25 +18,25 @@ export const MenuStylesDefaults = {
 
 export const MenuStyles = tv({
   slots: {
-    menu: 'group/menu overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static-light',
+    menu: 'group/menu overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static',
     item: [
       'group/menu-item flex items-center gap-x-s px-s text-body-s outline outline-transparent',
       'grid grid-cols-[auto_auto_1fr_auto] [grid-template-areas:"icon_label_space_action"_"icon_description_space_action"]',
       'enabled:focus-visible:outline-interactive-hover',
 
       // Info
-      'color-info:enabled:fg-default-light',
-      'color-info:enabled:focus-visible:fg-inverse-light color-info:enabled:focus-visible:bg-highlight-bold',
-      'color-info:enabled:hover:fg-inverse-light color-info:enabled:hover:bg-highlight-bold',
-      'color-info:enabled:open:fg-inverse-light color-info:enabled:open:bg-highlight-bold',
-      'color-info:enabled:selected:fg-inverse-light color-info:enabled:selected:bg-highlight-bold',
+      'color-info:enabled:fg-primary-bold',
+      'color-info:enabled:focus-visible:fg-a11y-on-accent color-info:enabled:focus-visible:bg-accent-primary-bold',
+      'color-info:enabled:hover:fg-a11y-on-accent color-info:enabled:hover:bg-accent-primary-bold',
+      'color-info:enabled:open:fg-a11y-on-accent color-info:enabled:open:bg-accent-primary-bold',
+      'color-info:enabled:selected:fg-a11y-on-accent color-info:enabled:selected:bg-accent-primary-bold',
 
       // Serious
-      'color-serious:enabled:fg-serious',
-      'color-serious:enabled:focus-visible:fg-inverse-light color-serious:enabled:focus-visible:bg-serious-bold',
-      'color-serious:enabled:hover:fg-inverse-light color-serious:enabled:hover:bg-serious-bold',
-      'color-serious:enabled:open:fg-inverse-light color-serious:enabled:open:bg-serious-bold',
-      'color-serious:enabled:selected:fg-inverse-light color-serious:enabled:selected:bg-serious-bold',
+      'color-serious:enabled:fg-serious-bold',
+      'color-serious:enabled:focus-visible:fg-a11y-on-utility color-serious:enabled:focus-visible:bg-serious-bold',
+      'color-serious:enabled:hover:fg-a11y-on-utility color-serious:enabled:hover:bg-serious-bold',
+      'color-serious:enabled:open:fg-a11y-on-utility color-serious:enabled:open:bg-serious-bold',
+      'color-serious:enabled:selected:fg-a11y-on-utility color-serious:enabled:selected:bg-serious-bold',
 
       'disabled:fg-disabled disabled:bg-transparent',
     ],
@@ -45,17 +45,17 @@ export const MenuStyles = tv({
       'truncate [grid-area:label] group-not-has-[>_[slot=description]]/menu-item:row-span-full',
     description: [
       '[grid-area:description]',
-      'fg-default-dark truncate text-body-xs',
-      'group-hover/menu-item:fg-inverse-light group-focus-visible/menu-item:fg-inverse-light',
+      'fg-primary-muted truncate text-body-xs',
+      'group-hover/menu-item:fg-a11y-on-accent group-focus-visible/menu-item:fg-a11y-on-accent',
       'group-disabled/menu-item:fg-disabled',
     ],
     more: '[grid-area:action]',
     section: '',
-    header: 'fg-default-dark px-s py-xs text-header-xs',
-    separator: 'mx-3 my-1 border border-static-light',
+    header: 'fg-primary-muted px-s py-xs text-header-xs',
+    separator: 'mx-3 my-1 outline outline-static',
     hotkey: [
       '[grid-area:action]',
-      'group-hover/menu-item:fg-inverse-light group-focus-visible/menu-item:fg-inverse-light',
+      'group-hover/menu-item:fg-a11y-on-accent group-focus-visible/menu-item:fg-a11y-on-accent',
       'group-disabled/menu-item:fg-disabled',
     ],
     popover: 'outline-none',

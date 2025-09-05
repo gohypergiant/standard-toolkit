@@ -126,10 +126,10 @@ Do not use arbitrary properties unless you're 100% certain (and double checked) 
 
 ```jsx
 // Bad
-<div className="[background:--color-default-light]" />
+<div className="[background:--bg-interactive-disabled]" />
 
 // Good
-<div className="bg-default-light" />
+<div className="bg-interactive-disabled" />
 ```
 
 Do not use arbitrary variants, instead use TV and / or RAC state classes.
@@ -180,7 +180,7 @@ function Parent() {
       {options.map(() => (
         <Child
           // Ok
-          className="[&:nth-child(3n)]:bg-default-dark"
+          className="[&:nth-child(3n)]:bg-info-bold"
         />
       ))}
     </div>

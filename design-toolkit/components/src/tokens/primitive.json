@@ -1,0 +1,282 @@
+{
+  "primitive": {
+    "neutral": {
+      "50": "#ffffff",
+      "100": "#eff1f2",
+      "200": "#d5d7d9",
+      "300": "#c3c5c7",
+      "400": "#888a8f",
+      "500": "#565759",
+      "600": "#414245",
+      "700": "#2f2f31",
+      "800": "#212223",
+      "900": "#151517",
+      "950": "#000000"
+    },
+    "alpha": {
+      "black": {
+        "100": "rgba(0, 0, 0, 0.08)",
+        "200": "rgba(0, 0, 0, 0.16)",
+        "300": "rgba(0, 0, 0, 0.24)",
+        "400": "rgba(0, 0, 0, 0.40)",
+        "500": "rgba(0, 0, 0, 0.80)"
+      },
+      "white": {
+        "100": "rgba(255, 255, 255, 0.08)",
+        "200": "rgba(255, 255, 255, 0.16)",
+        "300": "rgba(255, 255, 255, 0.24)",
+        "400": "rgba(255, 255, 255, 0.40)",
+        "500": "rgba(255, 255, 255, 0.80)"
+      }
+    },
+    "accent": {
+      "primary": {
+        "50": "#d5f2fe",
+        "100": "#b1e9ff",
+        "200": "#6ed1ff",
+        "300": "#39b7fa",
+        "400": "#009cde",
+        "500": "#008fd0",
+        "600": "#0068a1",
+        "700": "#004f7e",
+        "800": "#00213e",
+        "900": "#000e22"
+      },
+      "secondary": {
+        "50": "#c9f6fd",
+        "100": "#97f1ff",
+        "200": "#54e5f9",
+        "300": "#22d5ed",
+        "400": "#22b4c9",
+        "500": "#188493",
+        "600": "#146974",
+        "700": "#0e474e",
+        "800": "#083035",
+        "900": "#051e21"
+      },
+      "tertiary": {
+        "50": "#f9c5e2",
+        "100": "#f49acc",
+        "200": "#f06ab3",
+        "300": "#e8178a",
+        "400": "#b90d6c",
+        "500": "#8a0e53",
+        "600": "#6f0b43",
+        "700": "#4c082e",
+        "800": "#3a0623",
+        "900": "#270417"
+      }
+    },
+    "utility": {
+      "info": {
+        "50": "#ffffff",
+        "100": "#eff1f2",
+        "200": "#d5d7d9",
+        "300": "#c3c5c7",
+        "400": "#888a8f",
+        "500": "#565759",
+        "600": "#414245",
+        "700": "#2f2f31",
+        "800": "#212223",
+        "900": "#151517"
+      },
+      "advisory": {
+        "50": "#ebf4ff",
+        "100": "#c4deff",
+        "200": "#a9ceff",
+        "300": "#8bbdff",
+        "400": "#62a6ff",
+        "500": "#4e88da",
+        "600": "#3c67a0",
+        "700": "#264062",
+        "800": "#1a2c43",
+        "900": "#0e1825"
+      },
+      "normal": {
+        "50": "#eefbef",
+        "100": "#c2f5c5",
+        "200": "#86e98c",
+        "300": "#47d750",
+        "400": "#2bbf35",
+        "500": "#26a12e",
+        "600": "#1c7e23",
+        "700": "#145718",
+        "800": "#0e3b11",
+        "900": "#08210a"
+      },
+      "serious": {
+        "50": "#fff8eb",
+        "100": "#ffeac2",
+        "200": "#ffd382",
+        "300": "#ffc14c",
+        "400": "#fbab16",
+        "500": "#e89906",
+        "600": "#bb7a00",
+        "700": "#8e5d00",
+        "800": "#634101",
+        "900": "#291b00"
+      },
+      "critical": {
+        "50": "#ffebea",
+        "100": "#ffc4c2",
+        "200": "#ff9390",
+        "300": "#ff6d68",
+        "400": "#ff2e27",
+        "500": "#d40b04",
+        "600": "#a10701",
+        "700": "#790501",
+        "800": "#540300",
+        "900": "#290200"
+      }
+    },
+    "roe-id": {
+      "pending": "#404040",
+      "friend": "#1484f4",
+      "assumed-friend": "#0e8f37",
+      "neutral": "#5b137a",
+      "unknown": "#edda0a",
+      "suspect": "#ffad38",
+      "hostile": "#ff0033",
+      "no-statement": "#404040"
+    },
+    "classification": {
+      "missing": "#0b0b0b",
+      "unclass": "#007A33",
+      "cui": "#502b85",
+      "confidential": "#0033a0",
+      "secret": "#c8102e",
+      "top-secret": "#ff8c00",
+      "ts-sci": "#fce83a"
+    },
+    "on": {
+      "accent": "#FFFFFF"
+    }
+  },
+  "typography": {
+    "header": {
+      "xxl": {
+        "size": "32px",
+        "height": "40px",
+        "spacing": "0px"
+      },
+      "xl": {
+        "size": "24px",
+        "height": "28px",
+        "spacing": "0.18px"
+      },
+      "l": {
+        "size": "20px",
+        "height": "24px",
+        "spacing": "0.18px"
+      },
+      "m": {
+        "size": "14px",
+        "height": "20px",
+        "spacing": "0.25px"
+      },
+      "s": {
+        "size": "12px",
+        "height": "16px",
+        "spacing": "0.4px"
+      },
+      "xs": {
+        "size": "10px",
+        "height": "12px",
+        "spacing": "0.25px"
+      }
+    },
+    "body": {
+      "l": {
+        "size": "16px",
+        "height": "24px",
+        "spacing": "0.5px"
+      },
+      "m": {
+        "size": "14px",
+        "height": "20px",
+        "spacing": "0.25px"
+      },
+      "s": {
+        "size": "12px",
+        "height": "16px",
+        "spacing": "0.4px"
+      },
+      "xs": {
+        "size": "10px",
+        "height": "12px",
+        "spacing": "0.5px"
+      },
+      "xxs": {
+        "size": "9px",
+        "height": "12px",
+        "spacing": "0.25px"
+      }
+    },
+    "button": {
+      "l": {
+        "size": "16px",
+        "height": "24px",
+        "spacing": "0.5px"
+      },
+      "m": {
+        "size": "14px",
+        "height": "20px",
+        "spacing": "0.25px"
+      },
+      "s": {
+        "size": "12px",
+        "height": "16px",
+        "spacing": "0.4px"
+      },
+      "xs": {
+        "size": "10px",
+        "height": "12px",
+        "spacing": "0.5px"
+      }
+    }
+  },
+  "spacing": {
+    "none": "unset",
+    "0": "0px",
+    "xxs": "2px",
+    "xs": "4px",
+    "s": "8px",
+    "m": "12px",
+    "l": "16px",
+    "xl": "24px",
+    "xxl": "40px",
+    "oversized": "80px"
+  },
+  "radius": {
+    "none": "0px",
+    "small": "2px",
+    "medium": "4px",
+    "large": "8px",
+    "round": "80px"
+  },
+  "shadow": {
+    "elevation": {
+      "default": "initial",
+      "overlay": {
+        "bold": "0 8px 24px 0 rgba(0 0 0 / 0.80)",
+        "muted": "0 8px 24px 0 rgba(0 0 0 / 0.16)"
+      },
+      "raised": {
+        "bold": "0 1px 4px 0 rgba(0 0 0 / 0.80)",
+        "muted": "0 1px 4px 0 rgba(0 0 0 / 0.16)"
+      }
+    }
+  },
+  "font": {
+    "primary": "\"Roboto Flex\", sans-serif",
+    "display": "\"Roboto Mono\", monospace"
+  },
+  "icon": {
+    "size": {
+      "l": "var(--spacing-xl)",
+      "m": "20px",
+      "s": "var(--spacing-l)",
+      "xs": "var(--spacing-m)"
+    }
+  }
+}

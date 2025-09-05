@@ -13,5 +13,5 @@
 import { tv } from '@/lib/utils';
 
 export const TooltipStyles = tv({
-  base: 'fg-default-light flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay',
+  base: 'fg-primary-bold flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay',
 });

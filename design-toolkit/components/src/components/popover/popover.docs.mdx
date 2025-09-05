@@ -1,0 +1,266 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as PopoverStories from './popover.stories';
+
+<Meta of={PopoverStories} />
+
+# Popover
+A flexible and accessible popover component that provides contextual information, actions, or content overlays. Built on top of React Aria Components, the Popover component offers a comprehensive solution for displaying additional content without disrupting the main user interface flow. Perfect for tooltips, context menus, and informational overlays.
+
+It is composed of the following components:
+
+- **Popover** - Root component that manages popover state and positioning
+- **Popover.Trigger** - Element that triggers the popover open
+- **Popover.Content** - Main popover container with positioning and backdrop
+- **Popover.Title** - Optional semantic heading for the popover
+- **Popover.Body** - Main content area for the popover
+- **Popover.Footer** - Optional footer area for actions or additional content
+
+## Example usage
+```tsx
+// Basic popover with title and content
+<Popover>
+  <Popover.Trigger>
+    <Icon><Information /></Icon>
+  </Popover.Trigger>
+  <Popover.Content>
+    <Popover.Title>Information</Popover.Title>
+    <Popover.Body>This is helpful information.</Popover.Body>
+  </Popover.Content>
+</Popover>
+
+// Popover with actions and footer
+<Popover>
+  <Popover.Trigger>
+    <Button variant="icon">
+      <Icon><Delete /></Icon>
+    </Button>
+  </Popover.Trigger>
+  <Popover.Content>
+    {({ close }) => (
+      <>
+        <Popover.Title>Delete Item</Popover.Title>
+        <Popover.Body>Are you sure you want to delete this?</Popover.Body>
+        <Popover.Footer>
+          <Button variant="flat" onPress={close}>Cancel</Button>
+          <Button variant="filled" onPress={close}>Delete</Button>
+        </Popover.Footer>
+      </>
+    )}
+  </Popover.Content>
+</Popover>
+
+// Custom placement and styling
+<Popover placement="right">
+  <Popover.Trigger>
+    <span>Settings</span>
+  </Popover.Trigger>
+  <Popover.Content className="min-w-sm">
+    <Popover.Title>Settings</Popover.Title>
+    <Popover.Body>Configure your preferences here.</Popover.Body>
+  </Popover.Content>
+</Popover>
+```
+
+## Placements
+
+The Popover component supports different placement options to position the popover relative to its trigger:
+
+* **bottom** - Popover appears below the trigger (default)
+* **top** - Popover appears above the trigger
+* **left** - Popover appears to the left of the trigger
+* **right** - Popover appears to the right of the trigger
+
+**bottom** is the default placement and should be used for most use cases, while other placements are better suited for specific layout constraints or design requirements.
+
+<Canvas of={PopoverStories.Simple} />
+
+## Props
+
+### Popover Props
+- **`placement`** - Placement variant: `'left'` | `'right'` | `'top'` | `'bottom'` (default: `'bottom'`)
+- **`children`** - Popover trigger and content components
+
+### Popover.Trigger Props
+- **`children`** - The trigger element (button, icon, text, etc.)
+- **`className`** - Custom CSS class name for additional styling
+- **`onPress`** - Press event handler for the trigger
+
+### Popover.Content Props
+- **`children`** - Popover content or render function with close callback
+- **`className`** - Custom CSS class name for the popover container
+- **`isOpen`** - Whether the popover is currently open
+- **`onOpenChange`** - Callback when open state changes
+
+### Popover.Title Props
+- **`children`** - Title text content
+- **`className`** - Custom CSS class name for the title
+
+### Popover.Body Props
+- **`children`** - Body content
+- **`className`** - Custom CSS class name for the body
+
+### Popover.Footer Props
+- **`children`** - Footer content (typically action buttons)
+- **`className`** - Custom CSS class name for the footer
+
+### HTML Attributes
+The component accepts all standard HTML attributes for the respective elements, such as:
+- **`id`** - Unique identifier
+- **`aria-label`** - Accessible label
+- **`data-*`** - Custom data attributes
+
+## Features
+
+### Flexible Content Rendering
+Support for both static content and dynamic render functions:
+```tsx
+// Static content
+<Popover.Content>
+  <Popover.Title>Static Title</Popover.Title>
+  <Popover.Body>Static content</Popover.Body>
+</Popover.Content>
+
+// Dynamic content with close callback
+<Popover.Content>
+  {({ close }) => (
+    <>
+      <Popover.Title>Dynamic Title</Popover.Title>
+      <Popover.Body>Dynamic content</Popover.Body>
+      <Popover.Footer>
+        <Button onPress={close}>Close</Button>
+      </Popover.Footer>
+    </>
+  )}
+</Popover.Content>
+```
+
+### Placement Control
+Automatic positioning with multiple placement options:
+```tsx
+// Different placements for different use cases
+<Popover placement="top">...</Popover>    // Above trigger
+<Popover placement="right">...</Popover>  // To the right
+<Popover placement="left">...</Popover>   // To the left
+<Popover placement="bottom">...</Popover> // Below trigger (default)
+```
+
+### Accessibility
+Built-in accessibility features ensure proper interaction and screen reader support:
+- **Focus Management**: Automatic focus handling when opening/closing
+- **Screen Reader Support**: Proper ARIA attributes and semantic structure
+- **Keyboard Navigation**: Escape key closes the popover
+- **Backdrop Interaction**: Clicking outside closes the popover
+- **Trigger Association**: Proper connection between trigger and content
+
+### Custom Styling
+Flexible styling through className props:
+```tsx
+<Popover.Content className="min-w-sm max-w-md">
+  <Popover.Title className="text-lg font-bold">Custom Title</Popover.Title>
+  <Popover.Body className="text-sm">Custom body styling</Popover.Body>
+</Popover.Content>
+```
+
+## Examples
+
+### Simple Popover
+<Canvas of={PopoverStories.Simple} />
+
+### With Actions
+<Canvas of={PopoverStories.WithActions} />
+
+### Custom Composition
+<Canvas of={PopoverStories.CustomComposition} />
+
+### Different Placements
+```tsx
+<div className="flex gap-4">
+  <Popover placement="top">
+    <Popover.Trigger><Button>Top</Button></Popover.Trigger>
+    <Popover.Content>
+      <Popover.Body>Appears above</Popover.Body>
+    </Popover.Content>
+  </Popover>
+
+  <Popover placement="right">
+    <Popover.Trigger><Button>Right</Button></Popover.Trigger>
+    <Popover.Content>
+      <Popover.Body>Appears to the right</Popover.Body>
+    </Popover.Content>
+  </Popover>
+</div>
+```
+
+### Form in Popover
+```tsx
+<Popover>
+  <Popover.Trigger>
+    <Button>Edit Profile</Button>
+  </Popover.Trigger>
+  <Popover.Content>
+    <Popover.Title>Edit Profile</Popover.Title>
+    <Popover.Body>
+      <form className="space-y-4">
+        <input placeholder="Name" />
+        <input placeholder="Email" />
+      </form>
+    </Popover.Body>
+    <Popover.Footer>
+      <Button variant="flat">Cancel</Button>
+      <Button variant="filled">Save</Button>
+    </Popover.Footer>
+  </Popover.Content>
+</Popover>
+```
+
+### Information Tooltip
+```tsx
+<Popover>
+  <Popover.Trigger>
+    <Icon className="text-blue-500"><Question /></Icon>
+  </Popover.Trigger>
+  <Popover.Content>
+    <Popover.Body>
+      This feature allows you to customize your experience.
+    </Popover.Body>
+  </Popover.Content>
+</Popover>
+```
+
+## Use Cases
+
+The Popover component is ideal for:
+
+- **Tooltips**: Providing additional context for UI elements
+- **Context Menus**: Quick actions related to specific content
+- **Form Extensions**: Additional input fields or options
+- **Information Overlays**: Help text, descriptions, or metadata
+- **Action Confirmation**: Quick confirmations without page navigation
+- **Settings Panels**: Compact configuration options
+
+## Implementation Notes
+The `Popover` component is built using React Aria Components and provides a flexible, accessible popover system with comprehensive positioning and content management.
+
+Key features:
+- **Accessibility**: Full ARIA compliance with proper focus management and screen reader support
+- **Flexible Positioning**: Multiple placement options with automatic positioning
+- **Content Management**: Support for static and dynamic content rendering
+- **Trigger Integration**: Seamless integration with various trigger elements
+- **Responsive Design**: Automatic positioning that adapts to viewport constraints
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+- **React Aria Integration**: Built on top of RAC for enhanced accessibility
+
+The underlying HTML structure creates a semantic popover with proper accessibility:
+```html
+<div class="popover-trigger">
+  <button>Trigger</button>
+</div>
+<div class="popover-content" role="dialog" aria-modal="true">
+  <h3 class="popover-title">Title</h3>
+  <div class="popover-body">Content</div>
+  <div class="popover-footer">Actions</div>
+</div>
+```
+
+This provides excellent accessibility and user experience while maintaining a clean, structured API for developers. The component automatically handles positioning, focus management, and screen reader support through React Aria Components.

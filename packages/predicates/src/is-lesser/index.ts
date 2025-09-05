@@ -11,21 +11,34 @@
  */
 
 /**
- * Determines if one value is lesser than another value.
- * Right-to-left (composition) order.
+ * Creates a predicate function that determines if a value is less than a threshold.
  *
- * @param a - The right hand value.
- * @param b - The left hand value.
- * @template T - The type of the values.
+ * @template T - The type of the values (number or string)
+ * @param threshold - The threshold value to compare against
+ * @param value - The value to test
  *
  * @remarks
- * pure function
+ * - Pure function with no side effects
+ * - Uses JavaScript's `<` operator for comparison
+ * - Works with both numbers and strings (lexicographic comparison for strings)
+ * - Useful for array filtering and functional composition
  *
  * @example
- * isLesser(42)(23); // true
- * isLesser(5)(23); // false
+ * ```typescript
+ * const isBelowLimit = isLesser(100);
+ * isBelowLimit(50);  // true
+ * isBelowLimit(150); // false
+ *
+ * const isBeforeM = isLesser('M');
+ * isBeforeM('A'); // true
+ * isBeforeM('Z'); // false
+ *
+ * // Useful with arrays
+ * const temperatures = [15, 25, 35, 45];
+ * const cool = temperatures.filter(isLesser(30)); // [15, 25]
+ * ```
  */
 export const isLesser =
-  <T>(a: T) =>
-  (b: T) =>
-    b < a;
+  <T extends number | string>(threshold: T) =>
+  (value: T): boolean =>
+    value < threshold;

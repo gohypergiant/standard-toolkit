@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@accelint/typescript-config/tsc/dom/library",
+  "include": ["./src", "./icons", "./.storybook/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "**/*.bench.ts",
+    "**/*.test.ts",
+    "**/*.test-d.ts"
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "rootDir": ".",
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node"]
+  }
+}

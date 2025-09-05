@@ -1,0 +1,196 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ComboBoxStories from './combobox-field.stories';
+
+<Meta of={ComboBoxStories} />
+
+# ComboBoxField
+
+A comprehensive combobox component that provides an accessible input field with dropdown options. Built on top of React Aria Components, the ComboBoxField offers a complete solution for searchable select interfaces with full accessibility compliance, virtualization support, and flexible content organization.
+
+Iti is composed of the following components:
+
+- **ComboBoxField** - Main combobox component with searchable dropdown functionality
+- **[Options](?path=/docs/components-options--playground)** - Main container for all option items
+
+## Example usage
+```tsx
+// Basic combobox with dynamic items
+<ComboBoxField<CustomItem> defaultItems={items}>
+  {(item) => (
+    <Options.Item key={item.id} textValue={item.name}>
+      <Icon>{item.prefixIcon}</Icon>
+      <Options.Item.Content>
+        <Options.Item.Label>{item.name}</Options.Item.Label>
+        <Options.Item.Description>{item.description}</Options.Item.Description>
+      </Options.Item.Content>
+    </Options.Item>
+  )}
+</ComboBoxField>
+
+// Combobox with sections
+<ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
+  {(section) => (
+    <Options.Section header={section.name} items={section.children}>
+      {(item) => (
+        <Options.Item key={item.id} textValue={item.name}>
+          <Options.Item.Label>{item.name}</Options.Item.Label>
+        </Options.Item>
+      )}
+    </Options.Section>
+  )}
+</ComboBoxField>
+```
+
+## Sizes
+
+* **small** - Compact combobox with reduced padding and no visible label, suitable for dense interfaces
+* **medium** - Standard combobox with comfortable spacing and visible label (default)
+
+**medium** is the default size and should be used for most use cases, while **small** is better suited for space-constrained interfaces or when the combobox is part of a more complex form layout.
+
+<Canvas of={ComboBoxStories.Default} />
+
+## Props
+
+### ComboBoxField Props
+- **`label`** - Label text displayed above the input field (hidden in small size)
+- **`description`** - Helper text displayed below the input field (hidden in small size or when invalid)
+- **`errorMessage`** - Error message displayed when the field is invalid
+- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
+- **`isDisabled`** - Whether the combobox is disabled
+- **`isInvalid`** - Whether the combobox is in an invalid state
+- **`isRequired`** - Whether the field is required
+- **`menuTrigger`** - When to open the menu: `'focus'` | `'input'` | `'manual'` (default: `'focus'`)
+- **`inputProps`** - Additional props passed to the input element
+- **`layoutOptions`** - Configuration for virtualization (e.g., `{ estimatedRowHeight: 46 }`)
+- **`classNames`** - Object containing custom class names for styling:
+  - `field` - Main field container
+  - `label` - Label styling
+  - `control` - Input and trigger button container
+  - `input` - Input field styling
+  - `trigger` - Dropdown trigger button styling
+  - `description` - Description text styling
+  - `error` - Error message styling
+  - `popover` - Dropdown popover styling
+
+### Data Structure
+The component works with a flexible data structure:
+
+```tsx
+interface CustomOptionsItem {
+  id: number | string;
+  name: string;
+  description?: string;
+  isDisabled?: boolean;
+  prefixIcon?: ReactNode;
+  suffixIcon?: ReactNode;
+  children?: CustomOptionsItem[]; // For sections
+}
+```
+
+### HTML Attributes
+The component accepts all standard HTML attributes for form elements, such as:
+- **`id`** - Unique identifier
+- **`aria-label`** - Accessible label
+- **`data-*`** - Custom data attributes
+
+## Features
+
+### Dynamic Rendering
+Support for both static and dynamic content rendering:
+```tsx
+// Dynamic rendering with defaultItems prop
+<ComboBoxField<CustomItem> defaultItems={items}>
+  {(item) => (
+    <Options.Item key={item.id} textValue={item.name}>
+      <Options.Item.Label>{item.name}</Options.Item.Label>
+    </Options.Item>
+  )}
+</ComboBoxField>
+```
+
+### Sectioned Content
+Organize options into logical groups with headers:
+```tsx
+<ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
+  {(section) => (
+    <Options.Section header={section.name} items={section.children}>
+      {(item) => (
+        <Options.Item key={item.id} textValue={item.name}>
+          <Options.Item.Label>{item.name}</Options.Item.Label>
+        </Options.Item>
+      )}
+    </Options.Section>
+  )}
+</ComboBoxField>
+```
+
+### Virtualization Support
+Handle large datasets efficiently with built-in virtualization:
+```tsx
+<ComboBoxField
+  layoutOptions={{ estimatedRowHeight: 32 }}
+  defaultItems={manyItems}
+>
+  {(item) => (
+    <Options.Item key={item.id} textValue={item.name}>
+      <Options.Item.Label>{item.name}</Options.Item.Label>
+    </Options.Item>
+  )}
+</ComboBoxField>
+```
+
+### Rich Content Options
+Support for icons, descriptions, and complex layouts:
+```tsx
+<ComboBoxField<CustomItem> defaultItems={items}>
+  {(item) => (
+    <Options.Item key={item.id} textValue={item.name}>
+      {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+      <Options.Item.Content>
+        <Options.Item.Label>{item.name}</Options.Item.Label>
+        {item.description && (
+          <Options.Item.Description>{item.description}</Options.Item.Description>
+        )}
+      </Options.Item.Content>
+    </Options.Item>
+  )}
+</ComboBoxField>
+```
+
+## Implementation Notes
+
+The `ComboBoxField` component is built using React Aria Components and provides a comprehensive, accessible combobox interface with flexible content organization.
+
+Key features:
+- **Accessibility**: Full ARIA compliance with proper focus management, screen reader support, and keyboard navigation
+- **Flexible Layout**: Support for both static and dynamic content rendering
+- **Sectioned Content**: Logical grouping with optional headers using the Options component system
+- **Icon Integration**: Seamless integration with the Icon component system
+- **Virtualization**: Built-in support for large datasets with React Aria Virtualizer
+- **Responsive Design**: Size variants that adapt to different interface needs
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+- **Form Integration**: Proper form validation states and error handling
+
+The underlying HTML structure creates a semantic form field with proper accessibility:
+```html
+<div class="combobox-field" data-size="medium">
+  <label class="field-label">Label</label>
+  <div class="field-control">
+    <input class="field-input" placeholder="Search..." />
+    <button class="field-trigger">
+      <span class="icon"><ChevronDown /></span>
+    </button>
+  </div>
+  <div class="field-description">Helper text</div>
+  <div class="field-error">Error message</div>
+  <div class="field-popover">
+    <div class="options-list">
+      <!-- Options content -->
+    </div>
+  </div>
+</div>
+```
+
+The component wraps the `ComboBox` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/ComboBox.html)

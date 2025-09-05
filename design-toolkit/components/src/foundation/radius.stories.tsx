@@ -20,73 +20,48 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-type RadiusInfo = {
-  name: string;
-  rounded: string;
-};
+const radiiVariants: string[] = ['none', 'small', 'medium', 'large', 'round'];
 
-const radii: RadiusInfo[] = [
-  {
-    name: 'radius/none',
-    rounded: 'rounded-none',
-  },
-  {
-    name: 'radius/small',
-    rounded: 'rounded-small',
-  },
-  {
-    name: 'radius/medium',
-    rounded: 'rounded-medium',
-  },
-  {
-    name: 'radius/large',
-    rounded: 'rounded-large',
-  },
-  {
-    name: 'radius/round',
-    rounded: 'rounded-round',
-  },
-];
-
-const RadiusDisplay = (radius: RadiusInfo) => {
-  const rootElement = document.documentElement;
+const RadiusDisplay = (radiusVariant: string) => {
+  const { documentElement } = document;
+  const radiusClassName = `rounded-${radiusVariant}`;
+  const radiusPropertyValue = getComputedStyle(
+    documentElement,
+  ).getPropertyValue(`--radius-${radiusVariant}`);
 
   return (
-    <div className='flex items-center gap-l' key={radius.name}>
+    <div className='flex items-center gap-l' key={radiusVariant}>
       <div
-        className={`block h-[40px] w-[80px] border border-interactive-hover ${radius.rounded}`}
+        className='block h-[40px] w-[80px] outline outline-interactive-hover'
+        style={{ borderRadius: radiusPropertyValue }}
       />
-      <div className='fg-interactive-default flex flex-col gap-s font-display text-body-xs'>
+      <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
         <span className='inline-flex gap-s'>
-          {radius.rounded}
+          {radiusClassName}
           <span className='fg-disabled text-body-xxs'>
-            (
-            {getComputedStyle(rootElement).getPropertyValue(
-              `--${radius.name.replace('/', '-')}`,
-            )}
-            )
+            ({radiusPropertyValue})
           </span>
         </span>
-
-        <span className='fg-default-dark'>Figma: {radius.name}</span>
+        <span className='fg-default-dark'>Figma: {radiusClassName}</span>
       </div>
     </div>
   );
 };
 
 export const Radius: Story = {
-  globals: { backgrounds: { value: '#000000' } },
   render: () => (
     <div className='flex flex-col gap-xl'>
       <div className='flex flex-col gap-m'>
-        <h1 className='fg-interactive-default text-header-xl'>Radius</h1>
-        <p className='fg-interactive-hover-light text-body-s'>
+        <h1 className='fg-primary-bold text-header-xl'>Radius</h1>
+        <p className='fg-primary-muted text-body-s'>
           These are the contextualized spacing values available for use in any
           Figma design file. It can be applied to components/elements as padding
           and/or gap for listing patterns.
         </p>
       </div>
-      <div className='flex flex-col gap-y-xxl'>{radii.map(RadiusDisplay)}</div>
+      <div className='flex flex-col gap-y-xxl'>
+        {radiiVariants.map(RadiusDisplay)}
+      </div>
     </div>
   ),
 };

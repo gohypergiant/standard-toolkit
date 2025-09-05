@@ -77,10 +77,10 @@ export const DrawerStyles = tv({
     ],
     view: 'flex h-full flex-col',
     content: [
-      'flex max-h-full flex-1 flex-col overflow-y-auto text-default-light',
+      'fg-primary-bold flex max-h-full flex-1 flex-col overflow-y-auto',
     ],
     header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],
-    footer: 'mt-s flex flex-row items-center justify-end text-default-light',
+    footer: 'fg-primary-bold mt-s flex flex-row items-center justify-end',
   },
 });
 
@@ -89,7 +89,7 @@ export const DrawerTitleStylesDefaults = {
 } as const;
 
 export const DrawerTitleStyles = tv({
-  base: 'w-full text-default-light',
+  base: 'fg-primary-bold w-full',
   variants: {
     level: {
       [1]: '',
@@ -135,14 +135,14 @@ export const DrawerMenuStyles = tv({
     ],
     item: [
       'flex flex-col items-center justify-center',
-      'fg-default-dark !p-xs cursor-pointer outline-none',
+      'sudo:fg-primary-muted !p-xs cursor-pointer outline-none',
       'rounded-medium',
       //hover
-      'hover:fg-default-light hover:!bg-transparent',
+      'sudo:hover:fg-primary-bold hover:!bg-transparent',
       //selected
-      'selected:fg-highlight selected:bg-highlight-subtle',
+      'selected:fg-accent-primary-bold selected:bg-accent-primary-muted',
       //focused
-      'focus:fg-default-light',
+      'focus:fg-primary-bold',
       //disabled
       'disabled:fg-disabled disabled:cursor-not-allowed',
     ],
