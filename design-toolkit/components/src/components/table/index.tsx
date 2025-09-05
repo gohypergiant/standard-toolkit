@@ -316,17 +316,15 @@ export function Table<T extends { id: string | number }>({
                         onMouseDown={() => setColumnSelection(header.column.id)}
                         onMouseUp={() => setColumnSelection(null)}
                       >
-                        <div>
-                          {header.isPlaceholder ||
-                          header.column.id === 'kebab' ? null : (
-                            <button type='button'>
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                            </button>
-                          )}
-                        </div>
+                        {header.isPlaceholder ||
+                        header.column.id === 'kebab' ? null : (
+                          <button type='button'>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                          </button>
+                        )}
 
                         {['numeral', 'kebab', 'selection'].includes(
                           header.column.id,

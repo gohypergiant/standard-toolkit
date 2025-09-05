@@ -30,11 +30,11 @@ export const cellStyles = tv({
   ],
   variants: {
     narrow: {
-      true: 'px-0 py-m text-center',
+      true: 'py-m text-center',
       false: 'p-m',
     },
     numeral: {
-      true: 'fg-primary-muted hover:fg-primary-bold',
+      true: 'px-s fg-primary-muted hover:fg-primary-bold',
       false: '',
     },
     kebab: {
@@ -82,8 +82,7 @@ export const TableHeaderCellStylesDefaults = {
 
 export const headerCellStyles = tv({
   base: [
-    'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 p-m text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
-    'active:bg-accent-primary-muted',
+    'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'selected:bg-accent-primary-muted',
     'selected:border-t-1',
     'selected:border-x-1',
@@ -106,7 +105,6 @@ export const rowStyles = tv({
   base: [
     'group/row',
     'border-transparent group-not-selected/tbody:border-1',
-    '[&:not([data-top])]:active:bg-accent-primary-muted',
     'selected:bg-accent-primary-muted',
     'selected:border-x-[var(--outline-accent-primary-bold)]',
     /** Ensure border is applied to first and last selected rows */
