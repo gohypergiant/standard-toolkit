@@ -1,5 +1,21 @@
 # @apps/next
 
+## 0.3.0
+
+### Minor Changes
+
+- 7ab50ad: Implement light mode and accent override example
+
+### Patch Changes
+
+- Updated dependencies [8505551]
+- Updated dependencies [0f49fbd]
+- Updated dependencies [a793f6d]
+- Updated dependencies [7ab50ad]
+- Updated dependencies [a526c71]
+- Updated dependencies [37fb8af]
+  - @accelint/design-toolkit@5.0.0
+
 ## 0.2.28
 
 ### Patch Changes

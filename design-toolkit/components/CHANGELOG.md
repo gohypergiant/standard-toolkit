@@ -1,5 +1,24 @@
 # @accelint/design-toolkit
 
+## 5.0.0
+
+### Major Changes
+
+- 7ab50ad: Major theme updates --
+  - Adding theme support for light mode
+  - Renaming selected design tokens for light mode compatibility
+  - Script for token naming migrations
+  - Default accent color update from seafoam green to accelint skyfoam blue
+  - Shift to using tailwind utility classes for color to better align with token names
+
+### Minor Changes
+
+- 8505551: Add ActionBar component
+- 0f49fbd: Implement both button and toggle button providers
+- a793f6d: Add missing doc blocks and update existing doc blocks to follow standards
+- a526c71: adds <Tree> component
+- 37fb8af: Refactor the Tabs compononent to meet style standards
+
 ## 4.0.0
 
 ### Major Changes
