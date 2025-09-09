@@ -34,6 +34,8 @@
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/icons": "workspace:*",
     "@accelint/logger": "workspace:*",
+    "@loglayer/plugin-opentelemetry": "^2.1.2",
+    "@loglayer/transport-http": "^1.0.3",
     "@tailwindcss/postcss": "4.1.4",
     "@vanilla-extract/css": "1.16.0",
     "@vanilla-extract/dynamic": "2.1.2",
