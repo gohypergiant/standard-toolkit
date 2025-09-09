@@ -10,20 +10,160 @@
  * governing permissions and limitations under the License.
  */
 
-import { headerCellStyles } from './styles';
-import type { TableHeaderCellProps } from './types';
+import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
+import { flexRender } from '@tanstack/react-table';
+import { useState } from 'react';
+import { Button } from '../button';
+import { Icon } from '../icon';
+import { Menu } from '../menu';
+import { TableStyles, headerCellStyles } from './styles';
+import { ColumnKebabMenuItems, type TableHeaderCellProps } from './types';
+
+const { headerCellButton, headerKebab, menuItem } = TableStyles();
 
 export function HeaderCell({
   ref,
   className,
   narrow,
+  header,
+  enableColumnReordering,
+  enableSorting,
+  moveColumnLeft,
+  moveColumnRight,
+  persistHeaderKebabMenu,
   ...props
-}: TableHeaderCellProps) {
+}: TableHeaderCellProps<any>) {
+  const [columnSelection, setColumnSelection] = useState<string | null>();
+  const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
+
   return (
     <th
       ref={ref}
       className={headerCellStyles({ narrow, className })}
       {...props}
-    />
+    >
+      <div
+        className={headerCellButton()}
+        onMouseDown={() => setColumnSelection(header?.column.id)}
+        onMouseUp={() => setColumnSelection(null)}
+      >
+        {header?.column.id === 'kebab' ? null : (
+          <button type='button'>
+            {header?.getContext() &&
+              flexRender(header?.column.columnDef.header, header.getContext())}
+          </button>
+        )}
+
+        {['numeral', 'kebab', 'selection'].includes(header?.column.id ?? '')
+          ? null
+          : (enableColumnReordering || enableSorting) && (
+              <Menu.Trigger
+                onOpenChange={(isOpen) => {
+                  if (isOpen) {
+                    setColumnSelection(header?.column.id);
+                  } else {
+                    setColumnSelection(null);
+                  }
+                }}
+              >
+                <Button variant='icon' aria-label='Menu'>
+                  <Icon>
+                    {header?.column.getIsSorted() === 'asc' ? (
+                      <div
+                        onMouseEnter={() => setHoveredArrow(true)}
+                        onMouseLeave={() => setHoveredArrow(false)}
+                      >
+                        {hoveredArrow ? <Kebab /> : <ArrowUp />}
+                      </div>
+                    ) : header?.column.getIsSorted() === 'desc' ? (
+                      <div
+                        onMouseEnter={() => setHoveredArrow(true)}
+                        onMouseLeave={() => setHoveredArrow(false)}
+                      >
+                        {hoveredArrow ? <Kebab /> : <ArrowDown />}
+                      </div>
+                    ) : (
+                      <div
+                        className={headerKebab({
+                          persistKebab: persistHeaderKebabMenu,
+                        })}
+                      >
+                        <Kebab />
+                      </div>
+                    )}
+                  </Icon>
+                </Button>
+                <Menu>
+                  {enableColumnReordering && (
+                    <>
+                      <Menu.Item
+                        classNames={{ item: menuItem() }}
+                        onAction={() => {
+                          moveColumnLeft
+                            ? moveColumnLeft(header?.column.getIndex() ?? -1)
+                            : null;
+                        }}
+                        isDisabled={header?.column.getIsFirstColumn('center')}
+                      >
+                        <Menu.Item.Label>
+                          {ColumnKebabMenuItems.Left}
+                        </Menu.Item.Label>
+                      </Menu.Item>
+                      <Menu.Item
+                        classNames={{ item: menuItem() }}
+                        onAction={() => {
+                          moveColumnRight
+                            ? moveColumnRight(header?.column.getIndex() ?? -1)
+                            : null;
+                        }}
+                        isDisabled={header?.column.getIsLastColumn('center')}
+                      >
+                        <Menu.Item.Label>
+                          {ColumnKebabMenuItems.Right}
+                        </Menu.Item.Label>
+                      </Menu.Item>
+                    </>
+                  )}
+                  {enableSorting && (
+                    <>
+                      <Menu.Separator />
+                      <Menu.Item
+                        classNames={{ item: menuItem() }}
+                        onAction={() => {
+                          header?.column.toggleSorting(false);
+                        }}
+                        isDisabled={header?.column.getIsSorted() === 'asc'}
+                      >
+                        <Menu.Item.Label>
+                          {ColumnKebabMenuItems.Asc}
+                        </Menu.Item.Label>
+                      </Menu.Item>
+                      <Menu.Item
+                        onAction={() => {
+                          header?.column.toggleSorting(true);
+                        }}
+                        isDisabled={header?.column.getIsSorted() === 'desc'}
+                      >
+                        <Menu.Item.Label>
+                          {ColumnKebabMenuItems.Desc}
+                        </Menu.Item.Label>
+                      </Menu.Item>
+                      <Menu.Item
+                        onAction={() => {
+                          header?.column.clearSorting();
+                        }}
+                        isDisabled={!header?.column.getIsSorted()}
+                      >
+                        <Menu.Item.Label>
+                          {ColumnKebabMenuItems.Clear}
+                        </Menu.Item.Label>
+                      </Menu.Item>
+                    </>
+                  )}
+                </Menu>
+              </Menu.Trigger>
+            )}
+      </div>
+    </th>
   );
 }

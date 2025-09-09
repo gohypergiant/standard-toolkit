@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Header } from '@tanstack/react-table';
 import type {
   HTMLAttributes,
   RefAttributes,
@@ -184,9 +184,16 @@ export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
  * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps = ThHTMLAttributes<HTMLTableCellElement> &
+export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
   VariantProps<typeof headerCellStyles> &
-  RefAttributes<HTMLTableCellElement>;
+  RefAttributes<HTMLTableCellElement> & {
+    header?: Header<T, unknown>;
+    enableColumnReordering?: boolean;
+    enableSorting?: boolean;
+    moveColumnLeft?: (index: number) => void;
+    moveColumnRight?: (index: number) => void;
+    persistHeaderKebabMenu?: boolean;
+  };
 
 /**
  * Props for the table header (`<thead>`) component.

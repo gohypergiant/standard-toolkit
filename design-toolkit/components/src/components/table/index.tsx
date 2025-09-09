@@ -298,7 +298,6 @@ export function Table<T extends { id: string | number }>({
           <TableHeader>
             {getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} data-top>
-                {/* biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation> */}
                 {headerGroup.headers.map((header) => {
                   return (
                     <HeaderCell
@@ -310,158 +309,13 @@ export function Table<T extends { id: string | number }>({
                       data-selected={
                         header.column.id === columnSelection ? '' : undefined
                       }
-                    >
-                      <div
-                        className={headerCellButton()}
-                        onMouseDown={() => setColumnSelection(header.column.id)}
-                        onMouseUp={() => setColumnSelection(null)}
-                      >
-                        {header.isPlaceholder ||
-                        header.column.id === 'kebab' ? null : (
-                          <button type='button'>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                          </button>
-                        )}
-
-                        {['numeral', 'kebab', 'selection'].includes(
-                          header.column.id,
-                        )
-                          ? null
-                          : (enableColumnReordering || enableSorting) && (
-                              <Menu.Trigger
-                                onOpenChange={(isOpen) => {
-                                  if (isOpen) {
-                                    setColumnSelection(header.column.id);
-                                  } else {
-                                    setColumnSelection(null);
-                                  }
-                                }}
-                              >
-                                <Button variant='icon' aria-label='Menu'>
-                                  <Icon>
-                                    {header.column.getIsSorted() === 'asc' ? (
-                                      <div
-                                        onMouseEnter={() =>
-                                          setHoveredArrow(true)
-                                        }
-                                        onMouseLeave={() =>
-                                          setHoveredArrow(false)
-                                        }
-                                      >
-                                        {hoveredArrow ? <Kebab /> : <ArrowUp />}
-                                      </div>
-                                    ) : header.column.getIsSorted() ===
-                                      'desc' ? (
-                                      <div
-                                        onMouseEnter={() =>
-                                          setHoveredArrow(true)
-                                        }
-                                        onMouseLeave={() =>
-                                          setHoveredArrow(false)
-                                        }
-                                      >
-                                        {hoveredArrow ? (
-                                          <Kebab />
-                                        ) : (
-                                          <ArrowDown />
-                                        )}
-                                      </div>
-                                    ) : (
-                                      <div
-                                        className={headerKebab({
-                                          persistKebab: persistHeaderKebabMenu,
-                                        })}
-                                      >
-                                        <Kebab />
-                                      </div>
-                                    )}
-                                  </Icon>
-                                </Button>
-                                <Menu>
-                                  {enableColumnReordering && (
-                                    <>
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          moveColumnLeft(
-                                            header.column.getIndex(),
-                                          );
-                                        }}
-                                        isDisabled={header.column.getIsFirstColumn(
-                                          'center',
-                                        )}
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Left}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          moveColumnRight(
-                                            header.column.getIndex(),
-                                          );
-                                        }}
-                                        isDisabled={header.column.getIsLastColumn(
-                                          'center',
-                                        )}
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Right}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                    </>
-                                  )}
-                                  {enableSorting && (
-                                    <>
-                                      <Menu.Separator />
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          header.column.toggleSorting(false);
-                                        }}
-                                        isDisabled={
-                                          header.column.getIsSorted() === 'asc'
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Asc}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        onAction={() => {
-                                          header.column.toggleSorting(true);
-                                        }}
-                                        isDisabled={
-                                          header.column.getIsSorted() === 'desc'
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Desc}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        onAction={() => {
-                                          header.column.clearSorting();
-                                        }}
-                                        isDisabled={
-                                          !header.column.getIsSorted()
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Clear}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                    </>
-                                  )}
-                                </Menu>
-                              </Menu.Trigger>
-                            )}
-                      </div>
-                    </HeaderCell>
+                      header={header}
+                      enableColumnReordering={enableColumnReordering}
+                      enableSorting={enableSorting}
+                      moveColumnLeft={moveColumnLeft}
+                      moveColumnRight={moveColumnRight}
+                      persistHeaderKebabMenu={persistHeaderKebabMenu}
+                    ></HeaderCell>
                   );
                 })}
               </TableRow>
