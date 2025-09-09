@@ -11,7 +11,6 @@
  */
 
 import type { LogLayerPlugin, LogLayerPluginParams } from '@loglayer/plugin';
-import { rsc } from 'rsc-env';
 
 export interface EnvironmentPluginOptions extends LogLayerPluginParams {
   isServer: boolean;
@@ -29,7 +28,7 @@ export function environmentPlugin(
     onBeforeDataOut({ data = {} }) {
       return {
         ...data,
-        server: options.isServer || rsc,
+        server: options.isServer,
       };
     },
   };
