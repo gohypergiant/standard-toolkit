@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { DetailsList } from './';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof DetailsList> = {
   title: 'Components/DetailsList',

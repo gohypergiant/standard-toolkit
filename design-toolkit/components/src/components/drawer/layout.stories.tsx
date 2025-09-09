@@ -17,9 +17,9 @@ import {
   ChevronUp,
   Placeholder,
 } from '@accelint/icons';
+import { Drawer } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties } from 'react';
-import { Drawer } from './index';
 import type { DrawerLayoutProps } from './types';
 
 const ids = {

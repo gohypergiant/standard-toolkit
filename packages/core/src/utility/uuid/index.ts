@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Tagged } from 'type-fest';
 import { v4 } from 'uuid';
 import { z } from 'zod';
+import type { Tagged } from 'type-fest';
 
 export type UniqueId = Tagged<string, 'UUID'>;
 

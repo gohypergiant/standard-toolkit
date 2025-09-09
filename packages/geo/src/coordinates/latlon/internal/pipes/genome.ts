@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { SYMBOLS, SYMBOL_PATTERNS } from '..';
+import { SYMBOL_PATTERNS, SYMBOLS } from '..';
 import type { Tokens } from '../lexer';
 
 const GENOME_PATTERN =

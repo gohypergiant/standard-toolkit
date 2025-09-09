@@ -14,5 +14,7 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+
 export { create, expose } from './worker';
 export type { Action } from './worker';

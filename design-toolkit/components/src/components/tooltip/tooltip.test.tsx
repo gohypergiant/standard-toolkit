@@ -11,9 +11,8 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-
-import type { TooltipTriggerComponentProps } from 'react-aria-components';
 import { Tooltip } from './';
+import type { TooltipTriggerComponentProps } from 'react-aria-components';
 
 function setup({
   children = 'Foo',

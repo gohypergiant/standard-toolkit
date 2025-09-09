@@ -14,17 +14,17 @@
 
 import 'client-only';
 import { useCallback } from 'react';
-import { type ValueEditorProps, useValueEditor } from 'react-querybuilder';
+import { useValueEditor, type ValueEditorProps } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
-import type { InputProps } from '../input/types';
 import { Radio } from '../radio';
 import { Switch } from '../switch';
 import { TextAreaField } from '../text-area-field';
 import { TextField } from '../text-field';
 import { multiValueOperators } from './constants';
-import type { QueryBuilderValueEditors } from './types';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
+import type { InputProps } from '../input/types';
+import type { QueryBuilderValueEditors } from './types';
 
 function CheckboxValueEditor({
   disabled,

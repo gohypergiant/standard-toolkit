@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { Radio } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Radio.Group> = {
   title: 'Components/Radio',

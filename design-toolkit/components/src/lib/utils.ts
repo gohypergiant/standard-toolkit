@@ -11,22 +11,22 @@
  */
 
 import { type ClassValue, clsx } from 'clsx';
-import type { ForwardedRef } from 'react';
-import type { ContextValue } from 'react-aria-components';
 import {
   type ClassNameValue,
   extendTailwindMerge,
   validators,
 } from 'tailwind-merge';
 import {
+  createTV,
   type TVCompoundSlots,
   type TVCompoundVariants,
   type TVDefaultVariants,
   type TVProps,
   type TVReturnType,
   type TVVariants,
-  createTV,
 } from 'tailwind-variants';
+import type { ForwardedRef } from 'react';
+import type { ContextValue } from 'react-aria-components';
 
 type AdditionalClassGroupIds = 'icon' | 'icon-size' | 'fg';
 

@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { LogLayerPlugin, LogLayerPluginParams } from '@loglayer/plugin';
 import callsites from 'callsites';
+import type { LogLayerPlugin, LogLayerPluginParams } from '@loglayer/plugin';
 
 const LEVEL_REGEX = /(info|warn|error|debug|trace|fatal)/;
 

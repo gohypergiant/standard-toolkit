@@ -11,11 +11,11 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
-import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactNode } from 'react';
 import { Icon } from '../icon';
 import { Options } from '../options';
 import { SelectField } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
+import type { ReactNode } from 'react';
 
 const meta: Meta<typeof SelectField> = {
   title: 'Components/SelectField',

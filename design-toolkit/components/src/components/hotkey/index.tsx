@@ -13,7 +13,6 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   type ContextValue,
@@ -22,6 +21,7 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { HotkeyStyles, HotkeyStylesDefaults } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { HotkeyProps, HotkeySetProps } from './types';
 
 const { key, set } = HotkeyStyles();

@@ -12,10 +12,9 @@
 
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
-import { Defaults } from './defaults';
 import './globals.css';
 import { Nav } from './nav';
-import { DSTheme, DTKTheme } from './theme';
+import { DTKTheme } from './theme';
 
 export const metadata: Metadata = {
   title: 'Next App',
@@ -37,14 +36,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
       className='bg-surface-overlay fg-info-bold font-primary dark'
     >
       <body className='w-full h-dvh flex flex-col'>
-        <DSTheme>
-          <Defaults>
-            <DTKTheme>
-              <Nav />
-              <div className='grow'>{children}</div>
-            </DTKTheme>
-          </Defaults>
-        </DSTheme>
+        <DTKTheme>
+          <Nav />
+          <div className='grow'>{children}</div>
+        </DTKTheme>
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -17,7 +17,12 @@
         "noUndeclaredVariables": "error",
         "useExhaustiveDependencies": "warn",
         "noUnusedImports": "error",
-        "noUnusedVariables": "error",
+        "noUnusedVariables": {
+          "level": "error",
+          "options": {
+            "ignoreRestSiblings": true
+          }
+        },
         "useHookAtTopLevel": "error"
       },
       "performance": {
@@ -34,9 +39,7 @@
             "syntax": "shorthand"
           }
         },
-        "noParameterAssign": {
-          "level": "error"
-        },
+        "noParameterAssign": "error",
         "useNamingConvention": {
           "level": "error",
           "options": {
@@ -57,9 +60,7 @@
         "noArrayIndexKey": "warn",
         "noEmptyBlockStatements": "error",
         "useAwait": "error",
-        "noExplicitAny": "warn"
-      },
-      "nursery": {
+        "noExplicitAny": "warn",
         "noDuplicateElseIf": "error"
       }
     }

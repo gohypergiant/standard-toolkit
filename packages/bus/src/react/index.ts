@@ -13,8 +13,8 @@
 
 import { useEffect, useRef } from 'react';
 import { Broadcast } from '../broadcast';
-import type { ExtractEvent, Payload } from '../broadcast/types';
 import { useEffectEvent } from './ponyfill';
+import type { ExtractEvent, Payload } from '../broadcast/types';
 
 /**
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having

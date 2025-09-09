@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { useCallback, useRef, useState } from 'react';
 import { Button } from '../button';
 import { Dialog } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Dialog> = {
   title: 'Components/Dialog',

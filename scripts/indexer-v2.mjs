@@ -15,7 +15,7 @@
 import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { parseFileSync } from '@swc/core';
-import { path, chalk, glob } from 'zx';
+import { chalk, glob, path } from 'zx';
 
 const HEADER_MSG =
   '/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n\n';
@@ -73,11 +73,13 @@ function getTypeExports(ast) {
   });
 }
 
+/**
 function isOnlyExports(ast) {
   return ast.body.every((node) => {
     return node.type === 'ExportNamedDeclaration' && node?.specifiers?.length;
   });
 }
+*/
 
 function extractExportName(node) {
   switch (node.declaration.type) {
@@ -115,7 +117,7 @@ const potentialNotJustExports = await glob(
 // Collect existing export only index.ts files to include in ignore list
 const additionalIgnores = potentialNotJustExports.filter(async (file) => {
   const firstLine = await getFirstLine(file);
-  const ast = parse(file);
+  //const ast = parse(file);
 
   // console.log(firstLine.match(PRIVATE_REGEX));
 

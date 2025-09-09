@@ -32,14 +32,14 @@ jobs:
           cache: "pnpm"
       - run: pnpm install
       - run: pnpm run build
-      - name: Ladle/Storybook
+      - name: Storybook
         id: build
         run: pnpm build:design-preview
       - name: Upload
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/design-system/build
+          path: design-toolkit/build
   deploy:
     needs: build
     permissions:

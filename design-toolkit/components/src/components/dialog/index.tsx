@@ -12,7 +12,6 @@
 'use client';
 
 import 'client-only';
-import { isSlottedContextValue } from '@/lib/utils';
 import { UNSAFE_PortalProvider } from '@react-aria/overlays';
 import { useIsSSR } from '@react-aria/ssr';
 import {
@@ -25,15 +24,16 @@ import {
 import {
   Dialog as AriaDialog,
   type ContextValue,
+  composeRenderProps,
   DialogTrigger,
   Heading,
   type HeadingProps,
   Modal,
   ModalOverlay,
   OverlayTriggerStateContext,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { isSlottedContextValue } from '@/lib/utils';
 import { ButtonContext } from '../button';
 import { DialogStyles } from './styles';
 import type { DialogProps } from './types';

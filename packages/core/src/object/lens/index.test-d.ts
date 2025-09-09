@@ -11,9 +11,9 @@
  */
 
 import { describe, expectTypeOf, test } from 'vitest';
-import { lens } from '.';
 import { associateDeep } from '../associate';
 import { property } from '../property';
+import { lens } from '.';
 import { type Person, personStore } from './__fixtures__/lens-objects';
 
 const nameLens = lens(

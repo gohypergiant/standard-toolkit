@@ -11,10 +11,10 @@
  */
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import { IconStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { IconProps } from './types';
 
 export const IconContext =

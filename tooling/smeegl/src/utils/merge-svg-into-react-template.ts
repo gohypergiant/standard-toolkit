@@ -18,6 +18,7 @@ const fileTemplate = `
  */
 
 import type { SVGProps } from 'react';
+
 interface Props {
   title?: string;
   titleId?: string;
@@ -43,8 +44,8 @@ export const mergeSvgIntoReactTemplate = (
   rawSvgContent: string,
 ) => {
   const content = fileTemplate
-    .replace(/\_\_REPLACE_WITH_COMPONENT_NAME\_\_/g, componentName)
-    .replace(/\_\_REPLACE_WITH_SVG_CONTENT\_\_/g, rawSvgContent)
+    .replace(/__REPLACE_WITH_COMPONENT_NAME__/g, componentName)
+    .replace(/__REPLACE_WITH_SVG_CONTENT__/g, rawSvgContent)
     .replaceAll('fill-rule', 'fillRule')
     .replaceAll('clip-rule', 'clipRule')
     .replaceAll('clip-path', 'clipPath')

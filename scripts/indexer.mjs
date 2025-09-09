@@ -15,7 +15,7 @@
 import { createRequire } from 'node:module';
 import { URL } from 'node:url';
 import { default as babelParser } from '@babel/parser';
-import { fs, path, $, argv, chalk, echo, glob, spinner } from 'zx';
+import { $, argv, chalk, echo, fs, glob, path, spinner } from 'zx';
 import { getFormattedHeader } from './license.js';
 
 const INDEX_REGEX = /[\\/]index\.[tj]sx?$/;
@@ -24,6 +24,9 @@ const PRIVATE_REGEX = /^\/\/ __private-exports\n/;
 const CLIENT_DIRECTIVE = `'use client';\n`;
 
 const HEADER_MSG = `${getFormattedHeader('.ts')}\n\n/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n`;
+
+const BIOME_IGNORE =
+  '\n// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.\n\n';
 
 const IGNORE_LIST = [
   '**/node_modules',
@@ -59,7 +62,7 @@ function getProjectRoot(pathSegs) {
     : getProjectRoot(pathSegs.slice(0, -1));
 }
 
-async function getWorkspaceGlob(root) {
+function getWorkspaceGlob(root) {
   const packageFile = require(`${root}/package.json`);
   const workspaces = packageFile.workspaces.map((w) => w.replace('/*', ''));
 
@@ -69,7 +72,6 @@ async function getWorkspaceGlob(root) {
 }
 
 /** Generates an AST from the given file */
-// biome-ignore lint/style/useNamingConvention: it's okay
 async function getAST(filePath) {
   const contents = await fs.readFile(filePath, 'utf-8');
 
@@ -306,7 +308,7 @@ function getNewExportList(root, tree) {
 }
 
 /** Write the index files for all of the workspaces */
-async function writeAllIndexes(indexes, ext, client) {
+function writeAllIndexes(indexes, ext, client) {
   return Promise.all(
     indexes.map(([file, content]) => {
       const newFile = file.replace(EXT_REGEX, ext);
@@ -314,12 +316,12 @@ async function writeAllIndexes(indexes, ext, client) {
       echo(chalk.green(`Writing ${content.length} exports in ${newFile}...`));
 
       const body = (client ? [CLIENT_DIRECTIVE] : [])
-        .concat([HEADER_MSG, ...content])
+        .concat([HEADER_MSG, BIOME_IGNORE, ...content])
         .join('\n');
 
       fs.writeFile(newFile, body, 'utf-8');
 
-      return $`pnpm biome format ${newFile} --write`;
+      return $`pnpm biome check ${newFile} --linter-enabled=false --write`;
     }),
   );
 }

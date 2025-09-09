@@ -12,8 +12,6 @@
 'use client';
 
 import 'client-only';
-import { containsExactChildren } from '@/lib/react';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   type ContextValue,
@@ -22,7 +20,9 @@ import {
   TextContext,
   useContextProps,
 } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
 import { DetailsListStyles, DetailsListStylesDefaults } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type {
   DetailsListLabelProps,
   DetailsListProps,

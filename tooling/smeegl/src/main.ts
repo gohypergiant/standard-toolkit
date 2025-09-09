@@ -14,14 +14,13 @@
 import path from 'node:path';
 import ansis from 'ansis';
 import { Argument, Command, Option } from 'commander';
-
 import ora from 'ora';
 import { buildReactFiles } from './build-react-files.js';
 import { buildSpritesheet } from './build-spritesheet.js';
 import { findSprites } from './utils/find-sprites.js';
 import { makeTempDirectory } from './utils/make-temp-directory.js';
-import type { CrcType, TargetType } from './utils/types.js';
 import { validateInput } from './validate-input.js';
+import type { CrcType, TargetType } from './utils/types.js';
 
 const program = new Command();
 

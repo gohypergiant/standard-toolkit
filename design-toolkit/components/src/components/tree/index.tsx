@@ -10,13 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { Cache } from '@/hooks/use-tree/actions/cache';
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
-import type { Key, Selection } from '@react-types/shared';
 import {
-  type PropsWithChildren,
   createContext,
   memo,
+  type PropsWithChildren,
   useContext,
   useMemo,
 } from 'react';
@@ -24,19 +22,21 @@ import {
   Tree as AriaTree,
   TreeItem as AriaTreeItem,
   TreeItemContent as AriaTreeItemContent,
+  composeRenderProps,
   DropIndicator,
   type DropTarget,
   Text,
   type TextProps,
-  composeRenderProps,
   useDragAndDrop,
 } from 'react-aria-components';
+import { Cache } from '@/hooks/use-tree/actions/cache';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
-import type { IconProps } from '../icon/types';
 import { Lines } from '../lines';
 import { TreeStyles, TreeStylesDefaults } from './styles';
+import type { Key, Selection } from '@react-types/shared';
+import type { IconProps } from '../icon/types';
 import type {
   TreeContextValue,
   TreeItemContentProps,
@@ -76,7 +76,10 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
 const TreeLines = memo(function TreeLines({
   level,
   isLastOfSet,
-}: { level: number; isLastOfSet: boolean }) {
+}: {
+  level: number;
+  isLastOfSet: boolean;
+}) {
   const { showRuleLines, variant } = useContext(TreeContext);
 
   return Array.from({ length: level }).map((_, i) => {

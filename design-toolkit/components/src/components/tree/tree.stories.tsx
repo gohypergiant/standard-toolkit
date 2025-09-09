@@ -9,10 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */
 
-import { useTreeActions } from '@/hooks/use-tree/actions';
-import { useTreeState } from '@/hooks/use-tree/state';
-import type { TreeNode } from '@/hooks/use-tree/types';
 import {
   CenterOn,
   CollapseAll,
@@ -21,12 +19,15 @@ import {
   Placeholder,
 } from '@accelint/icons';
 import Warning from '@accelint/icons/warning';
-import type { Key, Selection } from '@react-types/shared';
-import type { Meta, StoryObj } from '@storybook/react';
 import { type ReactNode, useState } from 'react';
+import { useTreeActions } from '@/hooks/use-tree/actions';
+import { useTreeState } from '@/hooks/use-tree/state';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tree } from './index';
+import type { Key, Selection } from '@react-types/shared';
+import type { Meta, StoryObj } from '@storybook/react';
+import type { TreeNode } from '@/hooks/use-tree/types';
 
 const meta: Meta<typeof Tree> = {
   title: 'Components/Tree',

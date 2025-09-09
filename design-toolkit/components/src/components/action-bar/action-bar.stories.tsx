@@ -1,4 +1,7 @@
 import { Placeholder } from '@accelint/icons';
+import { Button, ToggleButton } from '../button';
+import { Icon } from '../icon';
+import { ActionBar } from './index';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,9 +14,6 @@ import { Placeholder } from '@accelint/icons';
  * governing permissions and limitations under the License.
  */
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, ToggleButton } from '../button';
-import { Icon } from '../icon';
-import { ActionBar } from './index';
 
 const meta: Meta<typeof ActionBar> = {
   title: 'Components/ActionBar',

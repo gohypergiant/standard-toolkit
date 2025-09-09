@@ -20,14 +20,14 @@ import {
   type Format,
   SYMBOLS,
 } from './latlon/internal';
-import type { CoordinateSystem } from './latlon/internal/coordinate-system';
 import {
   type CoordinateCache,
   createCache,
 } from './latlon/internal/create-cache';
-import type { Tokens } from './latlon/internal/lexer';
 import { systemMGRS } from './mgrs/system';
 import { systemUTM } from './utm/system';
+import type { CoordinateSystem } from './latlon/internal/coordinate-system';
+import type { Tokens } from './latlon/internal/lexer';
 
 type Coordinate = {
   /** {@interitDoc Formatter} */

@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type fs from 'node:fs';
 import path from 'node:path';
 import { globby } from 'globby';
 import { Result } from 'true-myth';
 import { findCommonBasePath } from './find-common-base-path.js';
 import { readSvgFilesFromInputDirectory } from './read-svg-files-from-input-directory.js';
+import type fs from 'node:fs';
 import type { FindSpritesResult, SpriteInfo } from './types.js';
 
 const IGNORE_LIST = [

@@ -11,11 +11,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { type Format, SYMBOLS, SYMBOL_PATTERNS } from '..';
-import type { Tokens } from '../lexer';
+import { type Format, SYMBOL_PATTERNS, SYMBOLS } from '..';
 import { pipesResult } from '../pipes';
-
 import { simpler } from './simpler';
+import type { Tokens } from '../lexer';
 
 /**
  * Look for groupings of numbers that are ambiguous; no indicators, or no

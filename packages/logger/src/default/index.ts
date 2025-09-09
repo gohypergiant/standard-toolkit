@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { LogLayerPlugin } from '@loglayer/plugin';
-import type { LogLayerTransport } from '@loglayer/transport';
 import { getSimplePrettyTerminal } from '@loglayer/transport-simple-pretty-terminal';
 import {
   ConsoleTransport,
@@ -22,6 +20,8 @@ import {
 import { serializeError } from 'serialize-error';
 import { callsitePlugin } from '../plugins/callsite';
 import { environmentPlugin } from '../plugins/environment';
+import type { LogLayerPlugin } from '@loglayer/plugin';
+import type { LogLayerTransport } from '@loglayer/transport';
 
 let logInstance: ILogLayer;
 

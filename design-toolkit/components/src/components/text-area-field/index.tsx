@@ -13,19 +13,19 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import {
   type ContextValue,
+  composeRenderProps,
   FieldError,
   Text,
   TextArea,
   TextField,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
 import { TextAreaStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { TextAreaFieldProps } from './types';
 
 const { field, label, input, description, error } = TextAreaStyles();
