@@ -36,7 +36,7 @@ function getCallsite() {
    */
   for (let i = 0; i < sites.length; i++) {
     const site = sites[i];
-    const name = site?.getFunctionName() ?? '';
+    const name = site?.getFunctionName() || '';
 
     if (LEVEL_REGEX.test(name)) {
       levelLine = i;
