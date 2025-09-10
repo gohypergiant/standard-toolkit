@@ -10,8 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  createSizeControl,
+  createStandardParameters,
+} from '^storybook/shared-controls';
+import { createStatesStory } from '^storybook/story-templates';
 import { Placeholder } from '@accelint/icons';
 import { composeRenderProps } from 'react-aria-components';
+import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
+import { SIZE_VARIANTS } from '@/constants/size-variants';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
 import { ButtonStylesDefaults } from './styles';
@@ -29,32 +36,24 @@ const meta: Meta<typeof Button> = {
   },
   argTypes: {
     color: {
-      control: 'select',
-      options: ['info', 'serious', 'critical'],
-    },
-    size: {
-      control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
-    },
-    variant: {
-      control: 'select',
-      options: ['filled', 'outline', 'flat', 'icon', 'floating'],
-    },
-  },
-  parameters: {
-    controls: {
-      exclude: [
-        'form',
-        'formAction',
-        'formEncType',
-        'formMethod',
-        'formNoValidate',
-        'formTarget',
-        'name',
-        'value',
+      control: { type: 'select' },
+      options: [
+        CRITICALITY_VARIANTS.info,
+        CRITICALITY_VARIANTS.serious,
+        CRITICALITY_VARIANTS.critical,
       ],
     },
+    size: createSizeControl('FULL'), // Button supports all size variants
+    variant: {
+      control: { type: 'select' },
+      options: ['filled', 'outline', 'flat', 'icon', 'floating'],
+    },
+    isDisabled: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
   },
+  parameters: createStandardParameters('form'),
 };
 
 export default meta;
@@ -77,7 +76,7 @@ export const Default: StoryObj<typeof Button> = {
 
 export const Link: StoryObj<typeof LinkButton> = {
   render: ({ children, ...props }) => (
-    <LinkButton {...props} href='/'>
+    <LinkButton {...props} href='#' onClick={(e) => e.preventDefault()}>
       {composeRenderProps(children, (children) =>
         props.variant === 'icon' || props.variant === 'floating' ? (
           <Icon>
@@ -105,4 +104,42 @@ export const Toggle: StoryObj<typeof ToggleButton> = {
       )}
     </ToggleButton>
   ),
+};
+
+export const States: StoryObj<typeof Button> = createStatesStory({
+  Component: Button,
+  baseProps: { children: 'Button' },
+  stateProps: {
+    disabled: { isDisabled: true, children: 'Disabled' },
+    loading: { isPending: true, children: 'Loading...' },
+  },
+});
+
+export const AllVariants: StoryObj<typeof Button> = {
+  render: () => (
+    <div className='flex gap-xl'>
+      {['filled', 'outline', 'flat', 'icon', 'floating'].map((variant) => (
+        <div key={variant} className='space-y-s'>
+          <h4 className='text-header-l fg-primary-bold capitalize'>
+            {variant}
+          </h4>
+          <div className='space-y-xs'>
+            {Object.values(SIZE_VARIANTS).map((size) => (
+              <Button
+                className='capitalize'
+                size={size}
+                variant={variant as any}
+              >
+                {variant === 'floating' ? size[0] : size}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };

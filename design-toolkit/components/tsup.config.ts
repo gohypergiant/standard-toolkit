@@ -27,7 +27,7 @@ export default defineConfig({
     'src/**/*.{ts,tsx,css}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
-    '!storybook-static',
+    '^storybook-static',
     '!src/test',
   ],
   loader: {
