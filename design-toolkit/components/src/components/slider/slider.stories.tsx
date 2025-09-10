@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createArgTypeSelect,
+  createParameters,
+} from '^storybook/utils';
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -27,13 +33,19 @@ const meta: Meta<typeof Slider> = {
     showLabel: true,
   },
   argTypes: {
-    layout: {
-      control: 'select',
-      options: ['grid', 'stack'],
-    },
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
+    layout: createArgTypeSelect(
+      'Layout arrangement of label and slider',
+      ['grid', 'stack'],
+      'grid',
+    ),
+    orientation: COMMON_ARG_TYPES.orientation,
+    showInput: createArgTypeBool('Whether to show numeric input field'),
+    showLabel: createArgTypeBool('Whether to show the label'),
+  },
+  parameters: {
+    ...createParameters('centered', 'formatOptions'),
+    docs: {
+      subtitle: 'Range input control for selecting numeric values.',
     },
   },
 };

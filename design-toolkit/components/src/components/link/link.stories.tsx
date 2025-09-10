@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createParameters,
+} from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Link } from './index';
@@ -26,11 +31,16 @@ const meta: Meta<typeof Link> = {
     isVisited: false,
   },
   argTypes: {
-    allowsVisited: {
-      control: 'boolean',
-    },
-    isDisabled: {
-      control: 'boolean',
+    children: COMMON_ARG_TYPES.children,
+    allowsVisited: createArgTypeBool(
+      'Whether the link can be styled when visited',
+    ),
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'Accessible link component for navigation and actions.',
     },
   },
 };

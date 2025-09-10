@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_ARG_TYPES, createParameters } from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Accordion } from './';
@@ -28,12 +29,10 @@ const meta: Meta<typeof Accordion.Group> = {
     isDisabled: false,
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
+    variant: COMMON_ARG_TYPES.spacingVariant,
   },
   parameters: {
+    ...createParameters('centered', 'id'),
     docs: {
       subtitle: 'Group together multiple <Accordion> components.',
     },
@@ -42,8 +41,15 @@ const meta: Meta<typeof Accordion.Group> = {
 
 export default meta;
 
+const CONTENT = (
+  <p className='fg-primary-muted text-body-s'>
+    This is a placeholder content for an accordion. Please replace with an
+    actual content instance.
+  </p>
+);
+
 export const Default: StoryObj<typeof Accordion.Group> = {
-  render: ({ children, ...args }) => (
+  render: ({ ...args }) => (
     <div className='w-[280px]'>
       <Accordion.Group {...args}>
         <Accordion>
@@ -55,12 +61,7 @@ export const Default: StoryObj<typeof Accordion.Group> = {
               Accordion one
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel>
-            <p className='fg-primary-muted text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </Accordion.Panel>
+          <Accordion.Panel>{CONTENT}</Accordion.Panel>
         </Accordion>
         <Accordion>
           <Accordion.Header>
@@ -71,12 +72,7 @@ export const Default: StoryObj<typeof Accordion.Group> = {
               Accordion two
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel>
-            <p className='fg-primary-muted text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </Accordion.Panel>
+          <Accordion.Panel>{CONTENT}</Accordion.Panel>
         </Accordion>
         <Accordion>
           <Accordion.Header>
@@ -87,12 +83,7 @@ export const Default: StoryObj<typeof Accordion.Group> = {
               Accordion three
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel>
-            <p className='fg-primary-muted text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </Accordion.Panel>
+          <Accordion.Panel>{CONTENT}</Accordion.Panel>
         </Accordion>
       </Accordion.Group>
     </div>

@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createParameters,
+} from '^storybook/utils';
 import { useState } from 'react';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
@@ -30,14 +35,11 @@ const meta: Meta<typeof QueryBuilder> = {
     showRuleLines: true,
   },
   argTypes: {
-    orientation: { options: ['horizontal', 'vertical'] },
-    disabled: {
-      control: {
-        type: 'boolean',
-      },
-    },
+    orientation: COMMON_ARG_TYPES.orientation,
+    disabled: createArgTypeBool('Disable the whole thing'),
   },
   parameters: {
+    ...createParameters('centered'),
     controls: {
       include: [
         'disabled',

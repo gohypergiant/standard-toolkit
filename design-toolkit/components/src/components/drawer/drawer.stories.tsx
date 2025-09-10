@@ -9,6 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+} from '^storybook/utils';
 import { uuid } from '@accelint/core';
 import { Cancel } from '@accelint/icons';
 import { Button } from '../button';
@@ -20,26 +26,24 @@ import type { DrawerMenuProps, DrawerProps } from './types';
 const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
   title: 'Components/Drawer',
   component: Drawer,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     placement: 'left',
     size: 'medium',
     position: 'center',
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'medium', 'large'],
-    },
-    placement: {
-      control: 'select',
-      options: ['top', 'bottom', 'left', 'right'],
-    },
-    position: {
-      control: 'select',
-      options: ['start', 'center', 'end'],
+    size: COMMON_ARG_TYPES.size.standard,
+    placement: COMMON_ARG_TYPES.placement,
+    position: createArgTypeSelect('Placement of drawer "tabs"', [
+      'start',
+      'center',
+      'end',
+    ]),
+  },
+  parameters: {
+    ...createParameters('fullscreen', 'defaultView', 'onChange'),
+    docs: {
+      subtitle: 'Sliding panel for navigation and content organization.',
     },
   },
 };
@@ -57,7 +61,7 @@ type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
     toggle?: boolean;
   };
 
-export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+export const Default: StoryObj<DrawerWithAdditionalArgs> = {
   args: {
     toggle: false,
   },

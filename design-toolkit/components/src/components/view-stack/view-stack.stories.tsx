@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createParameters, hideControls } from '^storybook/utils';
 import { uuid } from '@accelint/core';
 import { ChevronLeft } from '@accelint/icons';
 import { Button } from '../button';
@@ -17,19 +18,22 @@ import { Icon } from '../icon';
 import { ViewStack } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
+const description = `
+The ViewStack component allows you to manage a stack of views. Think of it as similar to the
+functionality of tabs, but the triggers can be anywhere, even programmatic. The ViewStack
+component provides a way to push and pop views from the stack as well as clear all or reset back
+to the original view.
+`;
+
 const meta: Meta<typeof ViewStack> = {
   title: 'Components/ViewStack',
   component: ViewStack,
   parameters: {
+    ...createParameters('centered'),
     docs: {
-      description: {
-        component: `
-          The ViewStack component allows you to manage a stack of views. Think of it as similar to the
-          functionality of tabs, but the triggers can be anywhere, even programmatic. The ViewStack
-          component provides a way to push and pop views from the stack as well as clear all or reset back
-          to the original view.
-        `,
-      },
+      subtitle:
+        'A component for managing multiple views with navigation transitions',
+      description: { component: description },
     },
   },
 };
@@ -96,4 +100,5 @@ export const Default: StoryObj<typeof ViewStack> = {
       </div>
     </>
   ),
+  ...hideControls(meta),
 };

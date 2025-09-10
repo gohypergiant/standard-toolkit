@@ -10,16 +10,27 @@
  * governing permissions and limitations under the License.
  */
 
+import { createArgTypeBool, createParameters } from '^storybook/utils';
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Hero } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Hero> = {
-  title: 'Components/Hero',
   component: Hero,
+  title: 'Components/Hero',
   args: {
     compact: false,
+  },
+  argTypes: {
+    compact: createArgTypeBool('Whether to use compact layout'),
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle:
+        'Displays an icon alongside primary and secondary content with flexible layouts.',
+    },
   },
 };
 
@@ -32,9 +43,9 @@ export const Default: StoryObj<typeof Hero> = {
         <Icon>
           <Placeholder />
         </Icon>
-        <Hero.Title>{'{object.name}'}</Hero.Title>
-        <Hero.Subtitle>additional-metadata-01</Hero.Subtitle>
-        <Hero.Subtitle>additional-metadata-002</Hero.Subtitle>
+        <Hero.Title>Project Dashboard</Hero.Title>
+        <Hero.Subtitle>Main Overview</Hero.Subtitle>
+        <Hero.Subtitle>Last updated today</Hero.Subtitle>
       </Hero>
     </div>
   ),

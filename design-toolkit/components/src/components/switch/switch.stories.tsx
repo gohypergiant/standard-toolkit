@@ -10,6 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+  createStatesStory,
+  hideControls,
+} from '^storybook/utils';
 import { Switch } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,9 +24,20 @@ const meta: Meta<typeof Switch> = {
   title: 'Components/Switch',
   component: Switch,
   args: {
-    children: 'Label',
+    children: 'Enable notifications',
     isDisabled: false,
     labelPosition: 'end',
+  },
+  argTypes: {
+    children: COMMON_ARG_TYPES.children,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    labelPosition: createArgTypeSelect('Label positioning', ['start', 'end']),
+  },
+  parameters: {
+    ...createParameters('centered', 'FORM'),
+    docs: {
+      subtitle: 'A toggle control for binary state changes',
+    },
   },
 };
 
@@ -27,4 +45,38 @@ export default meta;
 
 export const Default: StoryObj<typeof Switch> = {
   render: Switch,
+};
+
+export const States: StoryObj<typeof Switch> = createStatesStory({
+  Component: Switch,
+  baseProps: { children: 'Toggle setting' },
+  stateProps: {
+    disabled: { isDisabled: true, children: 'Disabled setting' },
+  },
+});
+
+export const LabelPositions: StoryObj<typeof Switch> = {
+  // name: 'Label Positions',
+  render: () => (
+    <div className='flex flex-col gap-l'>
+      <Switch labelPosition='start'>Label at start</Switch>
+      <Switch labelPosition='end'>Label at end</Switch>
+    </div>
+  ),
+  ...hideControls(meta),
+};
+
+export const WithoutLabel: StoryObj<typeof Switch> = {
+  name: 'External Label',
+  render: (args) => (
+    <div className='flex items-center gap-m'>
+      <span className='fg-primary-bold text-body-m'>Dark mode</span>
+      <Switch {...args} />
+    </div>
+  ),
+  args: {
+    children: undefined,
+    'aria-label': 'Toggle dark mode',
+  },
+  ...hideControls(meta),
 };
