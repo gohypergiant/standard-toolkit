@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createParameters,
+} from '^storybook/utils';
 import { useState } from 'react';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
@@ -19,7 +24,7 @@ import type { RuleGroupType } from './types';
 /**
  * A custom port of the React QueryBuilder component: https://react-querybuilder.js.org/
  */
-const meta: Meta<typeof QueryBuilder> = {
+const meta = {
   title: 'Components/QueryBuilder',
   component: QueryBuilder,
   args: {
@@ -30,14 +35,11 @@ const meta: Meta<typeof QueryBuilder> = {
     showRuleLines: true,
   },
   argTypes: {
-    orientation: { options: ['horizontal', 'vertical'] },
-    disabled: {
-      control: {
-        type: 'boolean',
-      },
-    },
+    orientation: COMMON_ARG_TYPES.orientation,
+    disabled: createArgTypeBool('Disable the whole thing'),
   },
   parameters: {
+    ...createParameters('centered'),
     controls: {
       include: [
         'disabled',
@@ -51,17 +53,14 @@ const meta: Meta<typeof QueryBuilder> = {
       subtitle: 'Builds a complex formatted query for filtering a dataset',
     },
   },
-};
+} satisfies Meta<typeof QueryBuilder>;
 
 export default meta;
-type Story = StoryObj<typeof QueryBuilder>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => {
     const [query, setQuery] = useState<RuleGroupType>(defaultQuery);
-
-    /** Output of the query filter **/
-    console.log(query);
 
     return (
       <QueryBuilder

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import path from 'node:path';
 import baseConfig from '@accelint/vitest-config/dom';
 import { defineConfig, mergeConfig } from 'vitest/config';
 
@@ -22,6 +23,12 @@ export default mergeConfig(
       setupFiles: './src/test/setup.ts',
       environment: 'jsdom',
       exclude: ['./storybook-static'],
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+        '^storybook': path.resolve(__dirname, './.storybook'),
+      },
     },
   }),
 );

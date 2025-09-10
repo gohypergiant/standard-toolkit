@@ -10,60 +10,75 @@
  * governing permissions and limitations under the License.
  */
 
+import { createParameters, MOCK_DATA } from '^storybook/utils';
 import { Lasso } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tooltip } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Tooltip> = {
+const meta = {
   title: 'Components/Tooltip',
-};
+  component: Tooltip,
+  args: {
+    children: null,
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'Brief contextual information displayed on hover or focus.',
+    },
+  },
+} satisfies Meta<typeof Tooltip>;
 
 export default meta;
-type Story = StoryObj<typeof Tooltip>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
           <span className='fg-primary-bold'>Test</span>
         </Tooltip.Trigger>
-        <Tooltip.Body>My tooltip</Tooltip.Body>
+        <Tooltip.Body>{MOCK_DATA.TEXT_CONTENT.SHORT}</Tooltip.Body>
       </Tooltip>
     </div>
   ),
 };
 
 export const LongTooltip: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
           <span className='fg-primary-bold'>Long Tooltip</span>
         </Tooltip.Trigger>
-        <Tooltip.Body>A floating label used to explain an element</Tooltip.Body>
+        <Tooltip.Body>{MOCK_DATA.TEXT_CONTENT.MEDIUM}</Tooltip.Body>
       </Tooltip>
     </div>
   ),
 };
 
 export const TooltipWithButton: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
-          <Button>My Button</Button>
+          <Button>Save</Button>
         </Tooltip.Trigger>
-        <Tooltip.Body>My tooltip</Tooltip.Body>
+        <Tooltip.Body>Save current changes</Tooltip.Body>
       </Tooltip>
     </div>
   ),
 };
 
 export const TooltipWithIcon: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>

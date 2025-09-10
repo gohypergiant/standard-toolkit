@@ -10,13 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createParameters,
+} from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Link } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
 
-const meta: Meta<typeof Link> = {
+const meta = {
   title: 'Components/Link',
   component: Link,
   args: {
@@ -26,22 +31,28 @@ const meta: Meta<typeof Link> = {
     isVisited: false,
   },
   argTypes: {
-    allowsVisited: {
-      control: 'boolean',
-    },
-    isDisabled: {
-      control: 'boolean',
+    children: COMMON_ARG_TYPES.children,
+    allowsVisited: createArgTypeBool(
+      'Whether the link can be styled when visited',
+    ),
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'Accessible link component for navigation and actions.',
     },
   },
-};
+} satisfies Meta<typeof Link>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Link> = {
+export const Default: Story = {
   render: Link,
 };
 
-export const CustomVisitedStyles: StoryObj<typeof Link> = {
+export const CustomVisitedStyles: Story = {
   args: {
     allowsVisited: true,
   },
@@ -55,7 +66,7 @@ export const CustomVisitedStyles: StoryObj<typeof Link> = {
   ),
 };
 
-export const Multiple: StoryObj<typeof Link> = {
+export const Multiple: Story = {
   render: ({ children, ...args }) => (
     <>
       <p className='fg-primary-bold'>

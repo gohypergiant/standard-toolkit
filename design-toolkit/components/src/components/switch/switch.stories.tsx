@@ -10,21 +10,72 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+  createStatesStory,
+  hideControls,
+} from '^storybook/utils';
 import { Switch } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Switch> = {
+const meta = {
   title: 'Components/Switch',
   component: Switch,
   args: {
-    children: 'Label',
+    children: 'Enable notifications',
     isDisabled: false,
     labelPosition: 'end',
   },
-};
+  argTypes: {
+    children: COMMON_ARG_TYPES.children,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    labelPosition: createArgTypeSelect('Label positioning', ['start', 'end']),
+  },
+  parameters: {
+    ...createParameters('centered', 'FORM'),
+    docs: {
+      subtitle: 'A toggle control for binary state changes',
+    },
+  },
+} satisfies Meta<typeof Switch>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Switch> = {
+export const Default: Story = {
   render: Switch,
+};
+
+export const States: Story = createStatesStory({
+  Component: Switch,
+  baseProps: { children: 'Toggle setting' },
+  stateProps: {
+    disabled: { isDisabled: true, children: 'Disabled setting' },
+  },
+});
+
+export const LabelPositions: Story = {
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
+    <div className='flex flex-col gap-l'>
+      <Switch labelPosition='start'>Label at start</Switch>
+      <Switch labelPosition='end'>Label at end</Switch>
+    </div>
+  ),
+  ...hideControls(meta),
+};
+
+export const WithoutLabel: Story = {
+  render: (args) => (
+    <div className='flex items-center gap-m'>
+      <span className='fg-primary-bold text-body-m'>Dark mode</span>
+      <Switch {...args} />
+    </div>
+  ),
+  args: {
+    children: undefined,
+  },
+  ...hideControls(meta),
 };

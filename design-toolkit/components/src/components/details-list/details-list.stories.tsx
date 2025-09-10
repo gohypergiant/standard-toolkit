@@ -10,36 +10,40 @@
  * governing permissions and limitations under the License.
  */
 
+import { createArgTypeSelect, createParameters } from '^storybook/utils';
 import { DetailsList } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof DetailsList> = {
+const meta = {
   title: 'Components/DetailsList',
   component: DetailsList,
+  args: {
+    align: 'justify',
+  },
+  argTypes: {
+    align: createArgTypeSelect('Selection behavior for the component', [
+      'left',
+      'justify',
+      'center',
+    ]),
+  },
   parameters: {
-    layout: 'padded',
+    ...createParameters('padded'),
     docs: {
+      subtitle:
+        'A structured list component for displaying detailed information',
       description: {
         component:
           'A semantic details list component for displaying metadata in key-value pairs. Perfect for map object details, user profiles, or any structured information displayed in sidebars or detail panels.',
       },
     },
   },
-  args: {
-    align: 'justify',
-  },
-  argTypes: {
-    align: {
-      control: 'select',
-      options: ['left', 'justify', 'center'],
-    },
-  },
-  tags: ['autodocs'],
-};
+} satisfies Meta<typeof DetailsList>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof DetailsList> = {
+export const Default: Story = {
   render: (args) => (
     <DetailsList {...args}>
       <DetailsList.Label>Key</DetailsList.Label>
