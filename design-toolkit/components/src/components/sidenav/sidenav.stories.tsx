@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createParameters } from '^storybook/utils';
 import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
 import React, { type ComponentProps, useState } from 'react';
@@ -25,19 +26,23 @@ type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
   pushLayout?: boolean;
 };
 
-const meta: Meta<SidenavWithLayoutArgs> = {
+const meta = {
   title: 'Components/Sidenav',
   component: Sidenav,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     pushLayout: true,
     isHiddenWhenClosed: false,
   },
-};
+  parameters: {
+    ...createParameters('fullscreen'),
+    docs: {
+      subtitle: 'Side navigation component for hierarchical navigation.',
+    },
+  },
+} satisfies Meta<SidenavWithLayoutArgs>;
 
 export default meta;
+type Story = StoryObj<SidenavWithLayoutArgs>;
 
 const sections = {
   'Title A': [
@@ -61,7 +66,7 @@ const sections = {
 
 const id = uuid();
 
-export const Default: StoryObj<SidenavWithLayoutArgs> = {
+export const Default: Story = {
   render: ({ isHiddenWhenClosed, pushLayout }) => {
     const [activeItem, setActiveItem] = useState(
       sections['Title A'][2]?.id ?? null,

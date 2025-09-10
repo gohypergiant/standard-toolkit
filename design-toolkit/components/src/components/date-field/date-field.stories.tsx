@@ -10,17 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+} from '^storybook/utils';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 import { DateField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof DateField> = {
+const meta = {
   title: 'Components/DateField',
   component: DateField,
   args: {
     label: 'Label',
     defaultValue: parseDate('2020-01-23'),
-    description: 'Format: d MMM yyyy',
+    description: 'Format: MM DD yyyy',
     errorMessage: '',
     granularity: 'day',
     size: 'medium',
@@ -29,27 +34,52 @@ const meta: Meta<typeof DateField> = {
     isRequired: true,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'medium'],
-    },
-    granularity: {
-      control: 'select',
-      options: ['day', 'hour', 'minute', 'second'],
+    label: COMMON_ARG_TYPES.label,
+    description: COMMON_ARG_TYPES.description,
+    errorMessage: COMMON_ARG_TYPES.errorMessage,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isInvalid: COMMON_ARG_TYPES.isInvalid,
+    isRequired: COMMON_ARG_TYPES.isRequired,
+    size: COMMON_ARG_TYPES.size.compact,
+    granularity: createArgTypeSelect('Date granularity', [
+      'day',
+      'hour',
+      'minute',
+      'second',
+    ]),
+  },
+  parameters: {
+    ...createParameters(
+      'centered',
+
+      // exclude
+      'FORM',
+      'autoComplete',
+      'hideTimeZone',
+      'isDateUnavailable',
+      'maxValue',
+      'minValue',
+      'placeholderValue',
+      'shouldForceLeadingZeros',
+      'shortMonth',
+    ),
+    docs: {
+      subtitle:
+        'Date input field with granular control over date/time selection.',
     },
   },
-};
+} satisfies Meta<typeof DateField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof DateField> = {
+export const Default: Story = {
   render: DateField,
 };
 
-export const WithoutShortMonth: StoryObj<typeof DateField> = {
+export const WithoutShortMonth: Story = {
   args: {
     ...Default.args,
-    granularity: 'day',
     shortMonth: false,
     description: 'Format: d MM yyyy',
     defaultValue: parseDate('2020-01-23'),
@@ -57,7 +87,7 @@ export const WithoutShortMonth: StoryObj<typeof DateField> = {
   render: DateField,
 };
 
-export const DateTime: StoryObj<typeof DateField> = {
+export const DateTime: Story = {
   args: {
     ...Default.args,
     granularity: 'second',

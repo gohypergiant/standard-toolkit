@@ -9,6 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+} from '^storybook/utils';
 import { uuid } from '@accelint/core';
 import { Button } from '../button';
 import { Drawer } from './index';
@@ -16,34 +22,39 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { ComponentProps } from 'react';
 import type { DrawerMenuProps, DrawerProps } from './types';
 
-const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
+const meta = {
   title: 'Components/Drawer',
   component: Drawer,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     placement: 'left',
     size: 'medium',
     position: 'center',
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'medium', 'large'],
-    },
-    placement: {
-      control: 'select',
-      options: ['top', 'bottom', 'left', 'right'],
-    },
-    position: {
-      control: 'select',
-      options: ['start', 'center', 'end'],
+    size: COMMON_ARG_TYPES.size.standard,
+    placement: COMMON_ARG_TYPES.placement,
+    position: createArgTypeSelect('Placement of drawer "tabs"', [
+      'start',
+      'center',
+      'end',
+    ]),
+  },
+  parameters: {
+    ...createParameters('fullscreen', 'defaultView', 'onChange'),
+    docs: {
+      subtitle: 'Sliding panel for navigation and content organization.',
     },
   },
-};
+} satisfies Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>>;
 
 export default meta;
+type Story = StoryObj<
+  ComponentProps<typeof Drawer> &
+    Pick<DrawerMenuProps, 'position'> & {
+      toggle?: boolean;
+    }
+>;
+
 const ids = {
   drawer: uuid(),
   a: uuid(),
@@ -51,12 +62,7 @@ const ids = {
   c: uuid(),
 };
 
-type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
-  Pick<DrawerMenuProps, 'position'> & {
-    toggle?: boolean;
-  };
-
-export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+export const Default: Story = {
   args: {
     toggle: false,
   },
@@ -95,7 +101,7 @@ export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const DynamicHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+export const DynamicHeaderFooter: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
@@ -142,7 +148,7 @@ export const DynamicHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
+export const OpenCloseTrigger: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen'>
@@ -177,7 +183,7 @@ export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const SimpleStack: StoryObj<DrawerWithAdditionalArgs> = {
+export const SimpleStack: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>

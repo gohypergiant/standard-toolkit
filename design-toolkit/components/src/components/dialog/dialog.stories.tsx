@@ -10,12 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  createArgTypeBool,
+  createArgTypeSelect,
+  createParameters,
+  MOCK_DATA,
+} from '^storybook/utils';
 import { useCallback, useRef, useState } from 'react';
 import { Button } from '../button';
 import { Dialog } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Dialog> = {
+const meta = {
   title: 'Components/Dialog',
   component: Dialog,
   args: {
@@ -24,26 +30,41 @@ const meta: Meta<typeof Dialog> = {
     isKeyboardDismissDisabled: false,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'large'],
-    },
-    isDismissable: {
-      control: 'boolean',
-    },
-    isKeyboardDismissDisabled: {
-      control: 'boolean',
+    size: createArgTypeSelect('Dialog size', ['small', 'large']),
+    isDismissable: createArgTypeBool(
+      'Whether the component can be dismissed',
+      'true',
+    ),
+    isKeyboardDismissDisabled: createArgTypeBool(
+      'Whether keyboard dismissal is disabled',
+      'false',
+    ),
+  },
+  parameters: {
+    ...createParameters(
+      'centered',
+
+      // exclude these
+      'isEntering',
+      'isExiting',
+      'UNSTABLE_portalContainer',
+      'parentRef',
+    ),
+    docs: {
+      subtitle:
+        'A modal dialog component for important content and interactions',
     },
   },
-};
+} satisfies Meta<typeof Dialog>;
 
 export default meta;
-type Story = StoryObj<typeof Dialog>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => {
     // NOTE: the ref here is only for Storybook -- you can omit that in your application code
     const ref = useRef(null);
+
     return (
       <div
         className='relative h-[800px] w-[600px] p-l outline outline-info-bold'
@@ -53,9 +74,7 @@ export const Default: Story = {
           <Button>Press Me</Button>
           <Dialog {...args} parentRef={ref}>
             <Dialog.Title>Dialog Title</Dialog.Title>
-            <Dialog.Content>
-              Lorum Ipsum text for the dialog shall go here.
-            </Dialog.Content>
+            <Dialog.Content>{MOCK_DATA.TEXT_CONTENT.MEDIUM}</Dialog.Content>
             <Dialog.Footer>
               <Button variant='flat'>Action 2</Button>
               <Button>Action 1</Button>
@@ -68,7 +87,7 @@ export const Default: Story = {
 };
 
 export const LocalPortal: Story = {
-  render: () => {
+  render: ({ children, ...args }) => {
     const parentRef = useRef(null);
 
     return (
@@ -76,7 +95,7 @@ export const LocalPortal: Story = {
         <div className='w-full p-l'>
           <Dialog.Trigger>
             <Button>Press Me</Button>
-            <Dialog parentRef={parentRef}>
+            <Dialog {...args} parentRef={parentRef}>
               <Dialog.Title>Dialog Title</Dialog.Title>
               <Dialog.Content>
                 Lorum Ipsum text for the dialog shall go here.
@@ -98,7 +117,7 @@ export const LocalPortal: Story = {
 };
 
 export const Controlled: Story = {
-  render: () => {
+  render: ({ children, ...args }) => {
     const [open, setOpen] = useState(false);
     const handleOpenChange = (isOpen: boolean) => setOpen(isOpen);
     const handleOpenPress = useCallback(() => setOpen(true), []);
@@ -107,7 +126,7 @@ export const Controlled: Story = {
       <div className='h-[800px] w-[600px] p-l outline outline-info-bold'>
         <Dialog.Trigger isOpen={open} onOpenChange={handleOpenChange}>
           <Button isDisabled>Disabled</Button>
-          <Dialog>
+          <Dialog {...args}>
             <Dialog.Title>Dialog Title</Dialog.Title>
             <Dialog.Content>
               Lorum Ipsum text for the dialog shall go here.

@@ -10,25 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
+import { createArgTypeSelect, createParameters } from '^storybook/utils';
 import { Skeleton } from './';
 import { SkeletonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Skeleton> = {
+const meta = {
+  title: 'Components/Skeleton',
+  component: Skeleton,
   args: SkeletonStylesDefaults,
   argTypes: {
-    shape: {
-      control: 'select',
-      options: ['circ', 'rect'],
+    shape: createArgTypeSelect(
+      'Shape of the skeleton placeholder',
+      ['circ', 'rect'],
+      'rect',
+    ),
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'Placeholder animations for loading content.',
     },
   },
-  component: Skeleton,
-  title: 'Components/Skeleton',
-};
+} satisfies Meta<typeof Skeleton>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Skeleton> = {
+export const Default: Story = {
   render: (args) => (
     <div className='w-[280px]'>
       <Skeleton {...args} />
@@ -36,7 +45,7 @@ export const Default: StoryObj<typeof Skeleton> = {
   ),
 };
 
-export const Nested: StoryObj<typeof Skeleton> = {
+export const Nested: Story = {
   render: (args) => (
     <div className='w-[280px]'>
       <Skeleton className='mb-xl p-m' {...args}>
@@ -53,7 +62,7 @@ export const Nested: StoryObj<typeof Skeleton> = {
   ),
 };
 
-export const Text: StoryObj<typeof Skeleton> = {
+export const Text: Story = {
   render: (args) => (
     <div className='w-[280px]'>
       <Skeleton {...args}>Loading content...</Skeleton>

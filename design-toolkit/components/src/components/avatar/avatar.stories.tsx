@@ -10,51 +10,49 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createParameters,
+  MOCK_DATA,
+} from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
 import { Avatar } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Avatar> = {
+const meta = {
   title: 'Components/Avatar',
   component: Avatar,
   args: {
     children: '',
     imageProps: {
-      alt: 'Dog',
-      src: 'https://placedog.net/100x100?id=144',
+      alt: 'User avatar',
+      src: MOCK_DATA.USERS[0]?.avatar,
     },
     size: 'medium',
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
+    size: COMMON_ARG_TYPES.size.compact,
   },
   parameters: {
-    controls: {
-      include: [
-        'children',
-        'imageProps',
-        'size',
-        'classNames',
-        'fallbackProps',
-      ],
+    ...createParameters('centered', 'fallbackProps'),
+    docs: {
+      subtitle: 'A user profile image component with fallback support',
     },
   },
-};
+} satisfies Meta<typeof Avatar>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Avatar> = {
+export const Default: Story = {
   render: Avatar,
 };
 
-export const WithBadge: StoryObj<typeof Avatar> = {
+export const WithBadge: Story = {
   render: ({ children, ...args }) => (
-    <div className='flex items-center gap-m'>
+    <div className='flex items-center gap-l'>
       <Avatar {...args}>
         <Badge variant='critical'>99+</Badge>
       </Avatar>
@@ -68,21 +66,28 @@ export const WithBadge: StoryObj<typeof Avatar> = {
   ),
 };
 
-export const WithContent: StoryObj<typeof Avatar> = {
+export const WithContent: Story = {
   args: {
-    children: <span className='fg-primary-bold text-shadow-2xs'>DS</span>,
+    // Note: this is to turn off some defaults for this story specifically
+    children: <span className='fg-primary-bold text-shadow-2xs'>SC</span>,
+    imageProps: undefined,
   },
   render: ({ children, ...args }) => (
-    <div className='flex items-center gap-m'>
+    <div className='flex items-center gap-l'>
+      {/* Text initials */}
       <Avatar {...args}>{children}</Avatar>
+
+      {/* Icon fallback */}
       <Avatar {...args}>
         <Icon className='fg-primary-bold'>
           <Placeholder />
         </Icon>
       </Avatar>
+
+      {/* Status indicator */}
       <Avatar {...args} classNames={{ content: 'items-end' }}>
-        <Badge offset={0} placement='bottom' variant='critical'>
-          Offline
+        <Badge offset={0} placement='bottom' variant='normal'>
+          Online
         </Badge>
       </Avatar>
     </div>
@@ -99,8 +104,9 @@ const fallbackPropsIcon = {
 };
 const fallbackPropsInitials = { children: <>DS</> };
 
-export const WithFallback: StoryObj<typeof Avatar> = {
+export const WithFallback: Story = {
   args: {
+    // Note: this is to turn off some defaults for this story specifically
     imageProps: { alt: 'broken url', src: 'http://not-here' },
   },
   render: ({ children, ...args }) => (

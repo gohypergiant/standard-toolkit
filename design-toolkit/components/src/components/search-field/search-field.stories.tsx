@@ -10,10 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+  createStatesStory,
+  hideControls,
+} from '^storybook/utils';
 import { SearchField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof SearchField> = {
+const meta = {
   title: 'Components/SearchField',
   component: SearchField,
   args: {
@@ -25,31 +32,60 @@ const meta: Meta<typeof SearchField> = {
     isLoading: false,
   },
   argTypes: {
-    isDisabled: {
-      control: 'boolean',
-      table: { defaultValue: { summary: 'false' } },
-    },
-    variant: {
-      control: 'select',
-      options: ['outlined', 'filled'],
-      table: { defaultValue: { summary: 'outlined' } },
-    },
-    isLoading: {
-      control: 'boolean',
-      table: { defaultValue: { summary: 'false' } },
-    },
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isLoading: COMMON_ARG_TYPES.isLoading,
+    variant: createArgTypeSelect('Style variant', ['outlined', 'filled']),
   },
   parameters: {
-    controls: {
-      exclude: ['children', 'slot', 'validationBehavior'],
+    ...createParameters('centered', 'FORM'),
+    docs: {
+      subtitle:
+        'A customizable search input component built on React Aria Components',
     },
   },
-};
+} satisfies Meta<typeof SearchField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof SearchField> = {
-  render: ({ ...args }) => (
-    <SearchField {...args} aria-label='Storybook Search Field Component' />
+export const Default: Story = {
+  render: (args) => <SearchField {...args} aria-label='Search field' />,
+};
+
+export const States: Story = createStatesStory({
+  Component: ({ ...props }) => (
+    <SearchField {...props} aria-label='Search field' />
   ),
+  baseProps: {
+    inputProps: { placeholder: 'Search products...' },
+  },
+  stateProps: {
+    disabled: { isDisabled: true },
+    loading: { isLoading: true },
+  },
+});
+
+export const Variants: Story = {
+  render: () => (
+    <div className='max-w-sm space-y-l'>
+      <div className='space-y-s'>
+        <h4 className='fg-primary-bold text-header-s'>Outlined</h4>
+        <SearchField
+          variant='outlined'
+          inputProps={{ placeholder: 'Search with outline...' }}
+          aria-label='Outlined search field'
+        />
+      </div>
+
+      <div className='space-y-s'>
+        <h4 className='fg-primary-bold text-header-s'>Filled</h4>
+        <SearchField
+          variant='filled'
+          inputProps={{ placeholder: 'Search with fill...' }}
+          aria-label='Filled search field'
+        />
+      </div>
+    </div>
+  ),
+  ...hideControls(meta),
 };

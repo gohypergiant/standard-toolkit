@@ -10,10 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createArgTypeSelect,
+  createParameters,
+} from '^storybook/utils';
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Slider> = {
+const meta = {
   title: 'Components/Slider',
   component: Slider,
   args: {
@@ -27,20 +33,27 @@ const meta: Meta<typeof Slider> = {
     showLabel: true,
   },
   argTypes: {
-    layout: {
-      control: 'select',
-      options: ['grid', 'stack'],
-    },
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
+    layout: createArgTypeSelect(
+      'Layout arrangement of label and slider',
+      ['grid', 'stack'],
+      'grid',
+    ),
+    orientation: COMMON_ARG_TYPES.orientation,
+    showInput: createArgTypeBool('Whether to show numeric input field'),
+    showLabel: createArgTypeBool('Whether to show the label'),
+  },
+  parameters: {
+    ...createParameters('centered', 'formatOptions'),
+    docs: {
+      subtitle: 'Range input control for selecting numeric values.',
     },
   },
-};
+} satisfies Meta<typeof Slider>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Slider> = {
+export const Default: Story = {
   render: ({ ...args }) => {
     return (
       <div className='size-[400px]'>
@@ -50,7 +63,7 @@ export const Default: StoryObj<typeof Slider> = {
   },
 };
 
-export const Range: StoryObj<typeof Slider> = {
+export const Range: Story = {
   args: {
     defaultValue: [20, 30],
     showInput: true,

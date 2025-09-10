@@ -10,6 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  COMMON_STATE_PROPS,
+  createParameters,
+  createStatesStory,
+  MOCK_DATA,
+} from '^storybook/utils';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useId, useState } from 'react';
 import { Icon } from '../icon';
@@ -18,34 +25,53 @@ import { SelectField } from './index';
 import type { Key } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof SelectField> = {
+const meta = {
   title: 'Components/SelectField',
   component: SelectField,
   args: {
-    label: 'Label',
-    description: 'Helper text',
+    label: 'Select an option',
+    description: 'Choose from the available options',
     errorMessage: '',
     size: 'medium',
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
-    autoFocus: true,
+    autoFocus: false,
     placeholder: 'Select...',
     layoutOptions: {
       estimatedRowHeight: 46,
     },
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    size: COMMON_ARG_TYPES.size.compact,
+    label: COMMON_ARG_TYPES.label,
+    description: COMMON_ARG_TYPES.description,
+    errorMessage: COMMON_ARG_TYPES.errorMessage,
+    placeholder: COMMON_ARG_TYPES.placeholder,
+    autoFocus: COMMON_ARG_TYPES.autoFocus,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isInvalid: COMMON_ARG_TYPES.isInvalid,
+    isRequired: COMMON_ARG_TYPES.isRequired,
+  },
+  parameters: {
+    ...createParameters(
+      'centered',
+
+      // exclude
+      'FORM',
+      'isReadOnly',
+    ),
+    docs: {
+      subtitle:
+        'A dropdown selection component with comprehensive form field features',
     },
   },
-};
+} satisfies Meta<typeof SelectField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof SelectField> = {
+export const Default: Story = {
   render: (args) => {
     return (
       <SelectField {...args}>
@@ -94,7 +120,7 @@ export const Default: StoryObj<typeof SelectField> = {
   },
 };
 
-export const ControlledSelection: StoryObj<typeof SelectField> = {
+export const ControlledSelection: Story = {
   render: (args) => {
     const koalaId = useId();
     const kangarooId = useId();
@@ -142,13 +168,35 @@ export const ControlledSelection: StoryObj<typeof SelectField> = {
     );
   },
 };
+export const States: Story = createStatesStory({
+  Component: ({ children, ...props }) => (
+    <SelectField {...props}>
+      {MOCK_DATA.SIMPLE_OPTIONS.map((option) => (
+        <Options.Item key={option.id} textValue={option.name}>
+          <Options.Item.Label>{option.name}</Options.Item.Label>
+        </Options.Item>
+      ))}
+    </SelectField>
+  ),
+  baseProps: {
+    label: 'Category',
+    placeholder: 'Select a category',
+  },
+  stateProps: {
+    ...COMMON_STATE_PROPS.FORM_FIELD,
+    error: {
+      isInvalid: true,
+      errorMessage: MOCK_DATA.ERROR_MESSAGES.REQUIRED,
+    },
+  },
+});
 
 const manyItems: { id: number; name: string; prefixIcon: ReactNode }[] = [];
 for (let i = 0; i < 5000; i++) {
   manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });
 }
 
-export const WithManyItems: StoryObj<typeof SelectField> = {
+export const WithManyItems: Story = {
   render: (args) => (
     <SelectField {...args}>
       {manyItems.map((item) => (

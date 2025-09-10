@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_ARG_TYPES, createParameters } from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { type FC, useState } from 'react';
 import { Button } from '../button';
@@ -22,35 +23,34 @@ import type {
   SelectableChipProps,
 } from './types';
 
-const meta: Meta<typeof Chip> = {
+const meta = {
   title: 'Components/Chip',
   component: Chip,
   args: {
     size: 'medium',
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    children: COMMON_ARG_TYPES.children,
+    size: COMMON_ARG_TYPES.size.compact,
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'Interactive chip components for selections and actions.',
     },
   },
-};
+} satisfies Meta<typeof Chip>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Chip> = {
+export const Default: Story = {
   args: {
     children: 'Chip',
     variant: 'info',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
-    },
+    variant: COMMON_ARG_TYPES.criticality,
   },
   render: ({ children, ...args }) => (
     <Chip {...args}>
@@ -62,15 +62,12 @@ export const Default: StoryObj<typeof Chip> = {
   ),
 };
 
-export const List: StoryObj<typeof Chip> = {
+export const List: Story = {
   args: {
     variant: 'info',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
-    },
+    variant: COMMON_ARG_TYPES.criticality,
   },
   parameters: {
     controls: {
@@ -112,10 +109,7 @@ export const SelectableChipList: StoryObj<
     isDisabled: false,
   },
   argTypes: {
-    selectionMode: {
-      control: 'select',
-      options: ['none', 'single', 'multiple'],
-    },
+    selectionMode: COMMON_ARG_TYPES.selectionMode,
   },
   parameters: {
     controls: {

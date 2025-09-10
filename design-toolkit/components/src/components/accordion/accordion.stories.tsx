@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createParameters,
+  MOCK_DATA,
+} from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -21,7 +26,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 /**
  * The accordion will stretch to fill the entire width of its parent container.
  */
-const meta: Meta<typeof Accordion> = {
+const meta = {
   title: 'Components/Accordion',
   component: Accordion,
   args: {
@@ -29,21 +34,27 @@ const meta: Meta<typeof Accordion> = {
     variant: AccordionStylesDefaults.variant,
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
+    variant: COMMON_ARG_TYPES.spacingVariant,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
   },
   parameters: {
+    ...createParameters('centered', 'id'),
     docs: {
       subtitle: 'Content that can expand and collapse.',
     },
   },
-};
+} satisfies Meta<typeof Accordion>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Accordion> = {
+const CONTENT = (
+  <p className='fg-primary-muted text-body-s'>
+    {MOCK_DATA.TEXT_CONTENT.MEDIUM}
+  </p>
+);
+
+export const Default: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <Accordion {...args}>
@@ -55,18 +66,13 @@ export const Default: StoryObj<typeof Accordion> = {
             Accordion title
           </Accordion.Trigger>
         </Accordion.Header>
-        <Accordion.Panel>
-          <p className='fg-primary-muted text-body-s'>
-            This is a placeholder content for an accordion. Please replace with
-            an actual content instance.
-          </p>
-        </Accordion.Panel>
+        <Accordion.Panel>{CONTENT}</Accordion.Panel>
       </Accordion>
     </div>
   ),
 };
 
-export const WithMenu: StoryObj<typeof Accordion> = {
+export const WithMenu: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <Accordion {...args}>
@@ -80,17 +86,12 @@ export const WithMenu: StoryObj<typeof Accordion> = {
           <Menu.Trigger>
             <Button />
             <Menu>
-              <Menu.Item>Foo</Menu.Item>
-              <Menu.Item>Bar</Menu.Item>
+              <Menu.Item>Edit</Menu.Item>
+              <Menu.Item>Delete</Menu.Item>
             </Menu>
           </Menu.Trigger>
         </Accordion.Header>
-        <Accordion.Panel>
-          <p className='fg-primary-muted text-body-s'>
-            This is a placeholder content for an accordion. Please replace with
-            an actual content instance.
-          </p>
-        </Accordion.Panel>
+        <Accordion.Panel>{CONTENT}</Accordion.Panel>
       </Accordion>
     </div>
   ),
