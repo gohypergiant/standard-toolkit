@@ -61,11 +61,10 @@ function bootstrap({
         appendObjectData: true,
       });
 
-  const appliedTransports = [
+const appliedTransports: LogLayerTransport[] = [
     stdoutTransport,
-
     ...transports,
-  ].filter(Boolean) as LogLayerTransport[];
+  ].filter(Boolean);
 
   const appliedPlugins = [
     callsitePlugin({ isProductionEnv }),
