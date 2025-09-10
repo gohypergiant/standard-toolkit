@@ -10,14 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ComponentProps } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { LinesStyles } from '@/components/lines/styles';
-import type { SIZE_RANGES, SizeVariant } from '@/constants/size-variants';
+type Variants = typeof CRITICALITY_VARIANTS;
 
-export type LinesProps = Omit<ComponentProps<'div'>, 'size'> &
-  LinesStylesVariants & {
-    size?: Extract<SizeVariant, (typeof SIZE_RANGES.STANDARD)[number]>;
-  };
+export type CriticalityVariant = Variants[keyof Variants];
+export type InfoAndSerious =
+  | typeof CRITICALITY_VARIANTS.info
+  | typeof CRITICALITY_VARIANTS.serious;
 
-export type LinesStylesVariants = VariantProps<typeof LinesStyles>;
+export const CRITICALITY_VARIANTS = Object.freeze({
+  advisory: 'advisory',
+  critical: 'critical',
+  info: 'info',
+  normal: 'normal',
+  serious: 'serious',
+} as const);

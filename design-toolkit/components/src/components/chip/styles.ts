@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
 import { tv } from '@/lib/utils';
 
 export const ChipStylesDefaults = {
-  variant: 'info',
+  variant: CRITICALITY_VARIANTS.info,
 } as const;
 
 export const BaseChipStyles = tv({

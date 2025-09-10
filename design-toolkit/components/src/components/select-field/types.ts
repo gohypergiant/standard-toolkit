@@ -17,6 +17,7 @@ import type {
   VirtualizerProps as AriaVirtualizerProps,
   FieldErrorProps,
 } from 'react-aria-components';
+import type { SIZE_RANGES, SizeVariant } from '@/constants/size-variants';
 import type { ButtonProps } from '../button/types';
 import type { LabelProps } from '../label/types';
 
@@ -35,6 +36,6 @@ export type SelectFieldProps = Omit<AriaSelectProps, 'className'> &
     label?: string;
     description?: string;
     errorMessage?: string;
-    size?: 'medium' | 'small';
+    size?: Extract<SizeVariant, (typeof SIZE_RANGES.COMPACT)[number]>;
     isReadOnly?: boolean;
   };

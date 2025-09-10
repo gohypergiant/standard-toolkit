@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
 import { tv } from '@/lib/utils';
 
 export const ButtonStylesDefaults = {
-  color: 'info',
+  color: CRITICALITY_VARIANTS.info,
   variant: 'filled',
 } as const;
 

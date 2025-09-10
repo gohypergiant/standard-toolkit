@@ -18,6 +18,8 @@ import type {
   ListBoxSectionProps,
   TextProps,
 } from 'react-aria-components';
+import type { InfoAndSerious } from '@/constants/criticality-variants';
+import type { SIZE_RANGES, SizeVariant } from '@/constants/size-variants';
 import type { IconProps } from '../icon/types';
 
 export type OptionsDataItem = {
@@ -35,7 +37,7 @@ export type OptionsItemProps<T extends OptionsDataItem> = Omit<
       item?: ListBoxItemProps['className'];
       icon?: IconProps['className'];
     };
-    color?: 'info' | 'serious';
+    color?: InfoAndSerious;
   };
 
 export type OptionsProps<T extends OptionsDataItem> = Omit<
@@ -43,7 +45,7 @@ export type OptionsProps<T extends OptionsDataItem> = Omit<
   'orientation' | 'layout'
 > &
   RefAttributes<HTMLDivElement> & {
-    size?: 'small' | 'large';
+    size?: Extract<SizeVariant, (typeof SIZE_RANGES.BINARY)[number]>;
   };
 
 export type OptionsSectionProps<T extends OptionsDataItem> = Omit<

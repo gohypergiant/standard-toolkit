@@ -20,6 +20,7 @@ import type {
   PopoverProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { InfoAndSerious } from '@/constants/criticality-variants';
 import type { IconProps } from '../icon/types';
 import type { MenuStyles } from './styles';
 
@@ -41,7 +42,7 @@ export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {
     icon?: IconProps['className'];
     hotkey?: string;
   };
-  color?: 'info' | 'serious';
+  color?: InfoAndSerious;
 };
 
 export type MenuSectionProps<T> = Omit<AriaMenuSectionProps<T>, 'className'> & {

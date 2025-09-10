@@ -16,12 +16,14 @@ import type {
   LinkProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { CriticalityVariant } from '@/constants/criticality-variants';
+import type { SizeVariant } from '@/constants/size-variants';
 import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ButtonStyles } from './styles';
 
 export type ButtonStyleVariants = VariantProps<typeof ButtonStyles> & {
-  size?: 'large' | 'medium' | 'small' | 'xsmall';
-  color?: 'info' | 'serious' | 'critical';
+  size?: SizeVariant;
+  color?: CriticalityVariant;
 };
 
 export type ButtonProps = AriaButtonProps &
