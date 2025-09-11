@@ -10,9 +10,39 @@
  * governing permissions and limitations under the License.
  */
 
+import { flexRender } from '@tanstack/react-table';
 import { rowStyles } from './styles';
+import { TableCell } from './table-cell';
 import type { TableRowProps } from './types';
 
-export function TableRow({ ref, className, ...props }: TableRowProps) {
-  return <tr ref={ref} className={rowStyles({ className })} {...props} />;
+export function TableRow({
+  ref,
+  className,
+  row,
+  persistRowKebabMenu,
+  persistNumerals,
+  ...props
+}: TableRowProps<any>) {
+  return (
+    <tr ref={ref} className={rowStyles({ className })} {...props}>
+      {row &&
+        row.getVisibleCells().map((cell) => (
+          <TableCell
+            key={cell.id}
+            persistent={
+              cell.column.id === 'numeral'
+                ? persistNumerals
+                : cell.column.id === 'kebab'
+                  ? persistRowKebabMenu
+                  : true
+            }
+            narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
+            numeral={cell.column.id === 'numeral'}
+            kebab={cell.column.id === 'kebab'}
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+    </tr>
+  );
 }

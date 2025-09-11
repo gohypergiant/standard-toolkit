@@ -10,7 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ColumnDef, Header } from '@tanstack/react-table';
+import type {
+  ColumnDef,
+  Header,
+  HeaderGroup,
+  Row,
+} from '@tanstack/react-table';
 import type {
   HTMLAttributes,
   RefAttributes,
@@ -149,8 +154,12 @@ export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps = HTMLAttributes<HTMLTableRowElement> &
-  RefAttributes<HTMLTableRowElement>;
+export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
+  RefAttributes<HTMLTableRowElement> & {
+    row?: Row<T>;
+    persistRowKebabMenu?: boolean;
+    persistNumerals?: boolean;
+  };
 
 /**
  * Props for a table cell component.

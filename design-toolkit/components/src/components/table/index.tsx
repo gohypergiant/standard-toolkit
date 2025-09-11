@@ -13,15 +13,13 @@
 'use client';
 import 'client-only';
 
-import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
+import { Kebab } from '@accelint/icons';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
-  type Cell,
   type ColumnOrderState,
   type RowSelectionState,
   type SortingState,
-  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
@@ -39,33 +37,9 @@ import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import {
-  ColumnKebabMenuItems,
-  RowKebabMenuItems,
-  type TableProps,
-} from './types';
+import { RowKebabMenuItems, type TableProps } from './types';
 
-const { headerCellButton, pinIcon, rowCell, rowKebab, headerKebab, menuItem } =
-  TableStyles();
-
-const dataTableCell = <T,>(
-  cell: Cell<T, unknown>,
-  persistent: boolean,
-  isColumnSelected: boolean,
-  isLastRow: boolean,
-) => (
-  <TableCell
-    key={cell.id}
-    persistent={persistent}
-    narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
-    numeral={cell.column.id === 'numeral'}
-    kebab={cell.column.id === 'kebab'}
-    selectedCol={isColumnSelected}
-    data-selection-end={isColumnSelected && isLastRow ? '' : undefined}
-  >
-    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-  </TableCell>
-);
+const { pinIcon, rowCell, rowKebab, menuItem } = TableStyles();
 
 const TableDefaultProps = {
   kebabPosition: 'right',
@@ -107,7 +81,6 @@ export function Table<T extends { id: string | number }>({
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>();
@@ -260,9 +233,6 @@ export function Table<T extends { id: string | number }>({
     data: data,
     columns,
     enableSorting,
-    initialState: {
-      pagination: { pageIndex: 0, pageSize },
-    },
     state: {
       rowSelection,
       sorting,
@@ -287,6 +257,7 @@ export function Table<T extends { id: string | number }>({
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
   });
+
   const { moveColumnLeft, moveColumnRight } = useColumnMovement(
     setColumnOrderCallback,
   );
@@ -297,7 +268,7 @@ export function Table<T extends { id: string | number }>({
         <table {...props}>
           <TableHeader>
             {getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} data-top>
+              <tr>
                 {headerGroup.headers.map((header) => {
                   return (
                     <HeaderCell
@@ -318,70 +289,39 @@ export function Table<T extends { id: string | number }>({
                     ></HeaderCell>
                   );
                 })}
-              </TableRow>
+              </tr>
             ))}
           </TableHeader>
           <TableBody>
             {getTopRows().map((row) => (
               <TableRow
                 key={row.id}
+                row={row}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                persistRowKebabMenu={persistHeaderKebabMenu}
+                persistNumerals={persistNumerals}
                 data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
+              ></TableRow>
             ))}
             {getCenterRows().map((row) => (
               <TableRow
                 key={row.id}
+                row={row}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                persistRowKebabMenu={persistHeaderKebabMenu}
+                persistNumerals={persistNumerals}
                 data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'numeral'
-                        ? persistNumerals
-                        : cell.column.id === 'kebab'
-                          ? persistRowKebabMenu
-                          : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
+              ></TableRow>
             ))}
             {getBottomRows().map((row) => (
               <TableRow
                 key={row.id}
+                row={row}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                persistRowKebabMenu={persistHeaderKebabMenu}
+                persistNumerals={persistNumerals}
                 data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
+              ></TableRow>
             ))}
           </TableBody>
         </table>
