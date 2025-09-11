@@ -317,7 +317,10 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
-export { CRITICALITY_VARIANTS } from './constants/criticality-variants';
+export {
+  CRITICALITY_VALUES,
+  CRITICALITY_VARIANTS,
+} from './constants/criticality-variants';
 export type { CriticalityVariant } from './constants/criticality-variants';
 export { SIZE_RANGES, SIZE_VARIANTS } from './constants/size-variants';
 export type { SizeVariant } from './constants/size-variants';

@@ -117,6 +117,50 @@ function extractMeta(ast) {
 }
 
 /**
+ * Extract exported stories from AST
+ */
+function extractExportedStories(ast) {
+  if (ast.error) {
+    return [];
+  }
+
+  const exports = ast.program.body.filter(
+    (node) =>
+      node.type === 'ExportNamedDeclaration' ||
+      (node.type === 'ExportDefaultDeclaration' &&
+        node.declaration?.type === 'VariableDeclaration'),
+  );
+
+  const storyExports = [];
+
+  exports.forEach((exportNode) => {
+    if (exportNode.type === 'ExportNamedDeclaration') {
+      // Handle variable declarations: export const Default = { ... }
+      if (exportNode.declaration?.type === 'VariableDeclaration') {
+        exportNode.declaration.declarations.forEach((declaration) => {
+          if (declaration.id?.name && declaration.id.name !== 'meta') {
+            storyExports.push(declaration.id.name);
+          }
+        });
+      }
+      // Handle export specifiers: export { Default, Primary }
+      else if (exportNode.specifiers) {
+        exportNode.specifiers.forEach((specifier) => {
+          if (
+            specifier.exported?.name &&
+            specifier.exported.name !== 'default'
+          ) {
+            storyExports.push(specifier.exported.name);
+          }
+        });
+      }
+    }
+  });
+
+  return storyExports;
+}
+
+/**
  * Extract value from object property (simplified)
  */
 function extractObjectValue(node) {
@@ -351,6 +395,24 @@ function checkArgTypes(argTypes) {
 }
 
 /**
+ * Check if story exports include a Default story
+ */
+function checkDefaultStoryExport(storyExports) {
+  const issues = [];
+
+  if (!storyExports.includes('Default')) {
+    issues.push({
+      type: 'missing_default_story',
+      severity: 'warning',
+      message: 'Missing Default story export',
+      fix: 'Add a Default story export: export const Default: StoryObj<typeof meta> = { ... }',
+    });
+  }
+
+  return issues;
+}
+
+/**
  * Audit a single story file
  */
 function auditStoryFile(filePath) {
@@ -374,6 +436,7 @@ function auditStoryFile(filePath) {
 
   const imports = extractImports(ast);
   const meta = extractMeta(ast);
+  const storyExports = extractExportedStories(ast);
   const issues = [];
 
   // Check imports
@@ -382,12 +445,16 @@ function auditStoryFile(filePath) {
   // Check meta structure
   issues.push(...checkMetaStructure(meta, filePath));
 
+  // Check for Default story export
+  issues.push(...checkDefaultStoryExport(storyExports));
+
   return Promise.resolve({
     file: filePath,
     component: componentName,
     issues,
     meta: meta ? Object.keys(meta) : [],
     imports: imports.map((imp) => imp.source),
+    storyExports,
   });
 }
 
