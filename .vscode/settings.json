@@ -54,5 +54,12 @@
   },
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
-  }
+  },
+  "files.associations": {
+    "*.stories.ts": "typescript",
+    "*.stories.tsx": "typescriptreact"
+  },
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.autoImports": true,
+  "typescript.preferences.quoteStyle": "single"
 }

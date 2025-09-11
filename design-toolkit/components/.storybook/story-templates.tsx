@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+/** biome-ignore-all lint/suspicious/noExplicitAny: `any` is necessary in these cases */
+
 import type { StoryObj } from '@storybook/react';
 
 /**
@@ -17,6 +19,7 @@ import type { StoryObj } from '@storybook/react';
  */
 
 export interface StateTemplateProps {
+  // biome-ignore lint/style/useNamingConvention: Component is a React component
   Component: React.ComponentType<any>;
   baseProps?: Record<string, any>;
   stateProps?: {
@@ -39,34 +42,34 @@ export const createStatesStory = ({
   render: () => (
     <div className='flex gap-xl p-l'>
       <div className='space-y-m'>
-        <h3 className='text-header-s fg-primary-bold'>Default</h3>
+        <h3 className='fg-primary-bold text-header-s'>Default</h3>
         <Component {...baseProps} />
       </div>
 
       {stateProps.disabled && (
         <div className='space-y-m'>
-          <h3 className='text-header-s fg-primary-bold'>Disabled</h3>
+          <h3 className='fg-primary-bold text-header-s'>Disabled</h3>
           <Component {...baseProps} {...stateProps.disabled} />
         </div>
       )}
 
       {stateProps.loading && (
         <div className='space-y-m'>
-          <h3 className='text-header-s fg-primary-bold'>Loading</h3>
+          <h3 className='fg-primary-bold text-header-s'>Loading</h3>
           <Component {...baseProps} {...stateProps.loading} />
         </div>
       )}
 
       {stateProps.error && (
         <div className='space-y-m'>
-          <h3 className='text-header-s fg-primary-bold'>Error</h3>
+          <h3 className='fg-primary-bold text-header-s'>Error</h3>
           <Component {...baseProps} {...stateProps.error} />
         </div>
       )}
 
       {stateProps.empty && (
         <div className='space-y-m'>
-          <h3 className='text-header-s fg-primary-bold'>Empty</h3>
+          <h3 className='fg-primary-bold text-header-s'>Empty</h3>
           <Component {...baseProps} {...stateProps.empty} />
         </div>
       )}
@@ -90,7 +93,7 @@ export const COMMON_STATE_PROPS = {
 
   BUTTON: {
     disabled: { isDisabled: true },
-    loading: { isLoading: true, children: 'Loading...' },
+    loading: { isPending: true, children: 'Loading...' },
   },
 
   DATA_COMPONENT: {
@@ -101,10 +104,77 @@ export const COMMON_STATE_PROPS = {
 };
 
 /**
+ * Creates a comprehensive variants showcase story
+ */
+export const createVariantsStory = <T extends Record<string, any>>({
+  Component,
+  variantProps,
+  baseProps = {},
+  columns = 3,
+}: {
+  // biome-ignore lint/style/useNamingConvention: Component is a React component
+  Component: React.ComponentType<any>;
+  variantProps: Record<string, T>;
+  baseProps?: Record<string, any>;
+  columns?: number;
+}): StoryObj<any> => ({
+  name: 'All Variants',
+  render: () => (
+    <div
+      className={'grid gap-xl'}
+      style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+    >
+      {Object.entries(variantProps).map(([name, props]) => (
+        <div key={name} className='space-y-s'>
+          <h4 className='fg-primary-bold text-header-s capitalize'>{name}</h4>
+          <Component {...baseProps} {...props} />
+        </div>
+      ))}
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
+});
+
+/**
+ * Creates a size variants story for components with size props
+ */
+export const createSizeVariantsStory = ({
+  Component,
+  sizes,
+  baseProps = {},
+  variantProp = 'size',
+}: {
+  // biome-ignore lint/style/useNamingConvention: Component is a React component
+  Component: React.ComponentType<any>;
+  sizes: readonly string[];
+  baseProps?: Record<string, any>;
+  variantProp?: string;
+}): StoryObj<any> => ({
+  name: 'All Sizes',
+  render: () => (
+    <div className='flex items-end gap-xl'>
+      {sizes.map((size) => (
+        <div key={size} className='space-y-s text-center'>
+          <Component {...baseProps} {...{ [variantProp]: size }} />
+          <span className='fg-secondary text-body-s capitalize'>{size}</span>
+        </div>
+      ))}
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
+});
+
+/**
  * Decorator for stories that need consistent spacing/layout
  */
 export const withStoryContainer = (Story: React.ComponentType) => (
-  <div className='p-l space-y-m max-w-md'>
+  <div className='max-w-md space-y-m p-l'>
     <Story />
   </div>
 );

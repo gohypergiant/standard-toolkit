@@ -10,6 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import {
+  createSizeControl,
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
+import {
+  COMMON_STATE_PROPS,
+  createStatesStory,
+} from '^storybook/story-templates';
 import { TextAreaField } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,35 +27,85 @@ const meta: Meta<typeof TextAreaField> = {
   title: 'Components/TextAreaField',
   component: TextAreaField,
   args: {
-    label: 'Label',
-    description: 'Helper text',
+    label: 'Description',
+    description: 'Provide additional details',
     errorMessage: '',
     size: 'medium',
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
     inputProps: {
-      placeholder: 'Placeholder',
+      placeholder: 'Enter your description...',
     },
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    size: createSizeControl('COMPACT'),
+    label: STANDARD_ARG_TYPES.label,
+    description: STANDARD_ARG_TYPES.description,
+    errorMessage: STANDARD_ARG_TYPES.errorMessage,
+    isDisabled: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
     isInvalid: {
-      control: 'boolean',
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
-    inputProps: {
-      placeholder: {
-        control: 'text',
-      },
+    isRequired: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
   },
+  parameters: createStandardParameters('form'),
 };
 
 export default meta;
 
 export const Default: StoryObj<typeof TextAreaField> = {
-  render: TextAreaField,
+  render: (args) => <TextAreaField {...args} />,
+};
+
+export const States: StoryObj<typeof TextAreaField> = createStatesStory({
+  Component: TextAreaField,
+  baseProps: {
+    label: 'Feedback',
+    inputProps: { placeholder: 'Share your thoughts...' },
+  },
+  stateProps: {
+    ...COMMON_STATE_PROPS.FORM_FIELD,
+    error: {
+      isInvalid: true,
+      errorMessage: MOCK_DATA.ERROR_MESSAGES.REQUIRED,
+    },
+  },
+});
+
+export const WithContent: StoryObj<typeof TextAreaField> = {
+  name: 'With Sample Content',
+  render: (args) => (
+    <div className='max-w-lg space-y-l'>
+      <TextAreaField
+        {...args}
+        label='Short response'
+        inputProps={{
+          placeholder: 'Brief description...',
+          rows: 3,
+          defaultValue: MOCK_DATA.TEXT_CONTENT.SHORT,
+        }}
+      />
+      <TextAreaField
+        {...args}
+        label='Detailed response'
+        inputProps={{
+          placeholder: 'Detailed explanation...',
+          rows: 6,
+          defaultValue: MOCK_DATA.TEXT_CONTENT.MEDIUM,
+        }}
+      />
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };

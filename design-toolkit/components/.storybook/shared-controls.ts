@@ -99,7 +99,7 @@ export const STANDARD_CONTROLS = {
  */
 export const createSizeControl = (range: keyof typeof SIZE_RANGES) => {
   const options = SIZE_RANGES[range];
-  const defaultSize = options.includes('medium' as any) ? 'medium' : options[0];
+  const defaultSize = options.find((item) => item === 'medium') ?? options[0];
 
   return {
     control: { type: 'select' as const },
@@ -123,6 +123,7 @@ export const createStandardParameters = (
         ...COMMON_CONTROL_EXCLUSIONS.REACT_PROPS,
         ...COMMON_CONTROL_EXCLUSIONS.ARIA_INTERNAL,
         ...COMMON_CONTROL_EXCLUSIONS.STYLING_PROPS,
+        ...COMMON_CONTROL_EXCLUSIONS.EVENT_HANDLERS,
       ],
     },
   };
@@ -144,6 +145,15 @@ export const createStandardParameters = (
       return {
         ...baseParams,
         layout: 'fullscreen',
+        controls: {
+          ...baseParams.controls,
+          exclude: [
+            ...baseParams.controls.exclude,
+            'parentRef',
+            'isDismissable',
+            'isKeyboardDismissDisabled',
+          ],
+        },
       };
 
     case 'container':
@@ -155,4 +165,46 @@ export const createStandardParameters = (
     default:
       return baseParams;
   }
+};
+
+/**
+ * Helper to create variant controls with consistent options
+ */
+export const createVariantControl = (options: readonly string[]) => ({
+  control: { type: 'select' as const },
+  options: [...options],
+  table: {
+    type: { summary: options.join(' | ') },
+    defaultValue: { summary: options[0] },
+  },
+});
+
+/**
+ * Standard argType configurations for common props
+ */
+export const STANDARD_ARG_TYPES = {
+  children: {
+    control: { type: 'text' as const },
+    table: { type: { summary: 'ReactNode' } },
+  },
+
+  label: {
+    control: { type: 'text' as const },
+    table: { type: { summary: 'string' } },
+  },
+
+  placeholder: {
+    control: { type: 'text' as const },
+    table: { type: { summary: 'string' } },
+  },
+
+  description: {
+    control: { type: 'text' as const },
+    table: { type: { summary: 'string' } },
+  },
+
+  errorMessage: {
+    control: { type: 'text' as const },
+    table: { type: { summary: 'string' } },
+  },
 };

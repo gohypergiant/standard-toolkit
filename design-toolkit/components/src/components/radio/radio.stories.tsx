@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  createStandardParameters,
+  createVariantControl,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
+import { createStatesStory } from '^storybook/story-templates';
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -20,19 +26,21 @@ const meta: Meta<typeof Radio.Group> = {
     orientation: 'vertical',
     isDisabled: false,
     isRequired: false,
-    label: 'Header',
+    label: 'Choose an option',
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
+    orientation: createVariantControl(['horizontal', 'vertical']),
+    label: STANDARD_ARG_TYPES.label,
+    isDisabled: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isRequired: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: {
-    controls: {
-      exclude: ['children', 'validationBehavior'],
-    },
-  },
+  parameters: createStandardParameters('form'),
 };
 
 export default meta;
@@ -40,9 +48,53 @@ export default meta;
 export const Default: StoryObj<typeof Radio.Group> = {
   render: ({ children, label, ...args }) => (
     <Radio.Group label={label} {...args}>
-      <Radio value='1'>Radio text</Radio>
-      <Radio value='2'>Radio text</Radio>
-      <Radio value='3'>Radio text</Radio>
+      <Radio value='small'>Small</Radio>
+      <Radio value='medium'>Medium</Radio>
+      <Radio value='large'>Large</Radio>
     </Radio.Group>
   ),
+};
+
+export const States: StoryObj<typeof Radio.Group> = createStatesStory({
+  Component: ({ ...props }) => (
+    <Radio.Group {...props}>
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </Radio.Group>
+  ),
+  baseProps: {
+    label: 'Select preference',
+  },
+  stateProps: {
+    disabled: { isDisabled: true, label: 'Disabled options' },
+  },
+});
+
+export const Orientations: StoryObj<typeof Radio.Group> = {
+  render: () => (
+    <div className='space-y-xl'>
+      <div className='space-y-s'>
+        <h4 className='fg-primary-bold text-header-s'>Vertical</h4>
+        <Radio.Group label='Vertical layout' orientation='vertical'>
+          <Radio value='v1'>First option</Radio>
+          <Radio value='v2'>Second option</Radio>
+          <Radio value='v3'>Third option</Radio>
+        </Radio.Group>
+      </div>
+
+      <div className='space-y-s'>
+        <h4 className='fg-primary-bold text-header-s'>Horizontal</h4>
+        <Radio.Group label='Horizontal layout' orientation='horizontal'>
+          <Radio value='h1'>Option A</Radio>
+          <Radio value='h2'>Option B</Radio>
+          <Radio value='h3'>Option C</Radio>
+        </Radio.Group>
+      </div>
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };

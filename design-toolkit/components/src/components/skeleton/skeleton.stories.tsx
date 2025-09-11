@@ -10,20 +10,32 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { Skeleton } from './';
 import { SkeletonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Skeleton> = {
+  title: 'Components/Skeleton',
+  component: Skeleton,
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle: 'Placeholder animations for loading content.',
+    },
+  },
   args: SkeletonStylesDefaults,
   argTypes: {
     shape: {
       control: 'select',
       options: ['circ', 'rect'],
+      table: {
+        defaultValue: { summary: 'rect' },
+        category: 'Visual',
+      },
+      description: 'Shape of the skeleton placeholder',
     },
   },
-  component: Skeleton,
-  title: 'Components/Skeleton',
 };
 
 export default meta;

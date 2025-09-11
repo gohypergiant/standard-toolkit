@@ -10,6 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import {
+  createSizeControl,
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
+import {
+  COMMON_STATE_PROPS,
+  createStatesStory,
+} from '^storybook/story-templates';
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Options } from '../options';
@@ -21,11 +31,11 @@ const meta: Meta<typeof ComboBoxField> = {
   title: 'Components/ComboBoxField',
   component: ComboBoxField,
   args: {
-    description: 'Helper text',
+    description: 'Type to search and select an option',
     errorMessage: '',
-    label: 'Label',
+    label: 'Choose an option',
     inputProps: {
-      placeholder: 'Placeholder',
+      placeholder: 'Type to search...',
     },
     size: 'medium',
     layoutOptions: {
@@ -36,11 +46,24 @@ const meta: Meta<typeof ComboBoxField> = {
     isRequired: true,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    size: createSizeControl('COMPACT'),
+    label: STANDARD_ARG_TYPES.label,
+    description: STANDARD_ARG_TYPES.description,
+    errorMessage: STANDARD_ARG_TYPES.errorMessage,
+    isDisabled: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isInvalid: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isRequired: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
   },
+  parameters: createStandardParameters('form'),
 };
 
 export default meta;
@@ -164,6 +187,35 @@ export const Default: StoryObj<typeof ComboBoxField> = {
     </ComboBoxField>
   ),
 };
+
+export const States: StoryObj<typeof ComboBoxField> = createStatesStory({
+  Component: ({ children, ...props }) => (
+    <ComboBoxField<{ id: string; name: string }>
+      {...props}
+      defaultItems={MOCK_DATA.SIMPLE_OPTIONS.map((opt) => ({
+        id: opt.id,
+        name: opt.name,
+      }))}
+    >
+      {(item) => (
+        <Options.Item key={item.id} textValue={item.name}>
+          <Options.Item.Label>{item.name}</Options.Item.Label>
+        </Options.Item>
+      )}
+    </ComboBoxField>
+  ),
+  baseProps: {
+    label: 'Select category',
+    inputProps: { placeholder: 'Type to search categories...' },
+  },
+  stateProps: {
+    ...COMMON_STATE_PROPS.FORM_FIELD,
+    error: {
+      isInvalid: true,
+      errorMessage: MOCK_DATA.ERROR_MESSAGES.REQUIRED,
+    },
+  },
+});
 
 export const WithDynamicSections: StoryObj<typeof ComboBoxField> = {
   args: {

@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import {
+  createStandardParameters,
+  createVariantControl,
+} from '^storybook/shared-controls';
+import { createVariantsStory } from '^storybook/story-templates';
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useRef, useState } from 'react';
@@ -28,15 +34,10 @@ const meta: Meta<typeof Menu> = {
     selectionMode: 'single',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
-    selectionMode: {
-      control: 'select',
-      options: ['single', 'multiple', 'none'],
-    },
+    variant: createVariantControl(['cozy', 'compact']),
+    selectionMode: createVariantControl(['single', 'multiple', 'none']),
   },
+  parameters: createStandardParameters('container'),
 };
 
 export default meta;
@@ -107,6 +108,75 @@ const menuItems: MenuItem[] = [
     ],
   },
 ];
+
+export const Default: StoryObj<typeof Menu> = {
+  render: (args) => (
+    <Menu.Trigger>
+      <Button variant='icon' aria-label='Open menu'>
+        <Icon>
+          <Kebab />
+        </Icon>
+      </Button>
+      <Menu {...args}>
+        {MOCK_DATA.MENU_ITEMS.map((section) => (
+          <Menu.Submenu key={section.id}>
+            <Menu.Item>
+              {section.prefixIcon && <Icon>{section.prefixIcon}</Icon>}
+              <Menu.Item.Label>{section.name}</Menu.Item.Label>
+            </Menu.Item>
+            <Menu>
+              {section.children?.map((item) => (
+                <Menu.Item key={item.id} isDisabled={item.isDisabled}>
+                  {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                  {item.description && (
+                    <Menu.Item.Description>
+                      {item.description}
+                    </Menu.Item.Description>
+                  )}
+                  {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
+                </Menu.Item>
+              ))}
+            </Menu>
+          </Menu.Submenu>
+        ))}
+      </Menu>
+    </Menu.Trigger>
+  ),
+};
+
+export const AllVariants: StoryObj<typeof Menu> = createVariantsStory({
+  Component: ({ variant, ...props }) => (
+    <Menu.Trigger>
+      <Button variant='outline'>{variant} Menu</Button>
+      <Menu variant={variant} {...props}>
+        <Menu.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Menu.Item.Label>First item</Menu.Item.Label>
+        </Menu.Item>
+        <Menu.Item>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Menu.Item.Label>Second item</Menu.Item.Label>
+        </Menu.Item>
+        <Menu.Item isDisabled>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Menu.Item.Label>Disabled item</Menu.Item.Label>
+        </Menu.Item>
+      </Menu>
+    </Menu.Trigger>
+  ),
+  variantProps: {
+    cozy: { variant: 'cozy' },
+    compact: { variant: 'compact' },
+  },
+  columns: 2,
+});
 
 export const Basic: StoryObj<typeof Menu> = {
   render: (args) => (

@@ -9,6 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import { createStandardParameters } from '^storybook/shared-controls';
 import { uuid } from '@accelint/core';
 import { Cancel } from '@accelint/icons';
 import { Button } from '../button';
@@ -22,6 +24,10 @@ const meta: Meta<DrawerProps> = {
   component: Drawer,
   parameters: {
     layout: 'fullscreen',
+    ...createStandardParameters('overlay'),
+    docs: {
+      subtitle: 'Sliding panel for navigation and content organization.',
+    },
   },
   args: {
     placement: 'left',
@@ -31,10 +37,20 @@ const meta: Meta<DrawerProps> = {
     size: {
       control: 'select',
       options: ['small', 'medium', 'large'],
+      table: {
+        defaultValue: { summary: 'medium' },
+        category: 'Visual',
+      },
+      description: 'Size of the drawer',
     },
     placement: {
       control: 'select',
       options: ['top', 'bottom', 'left', 'right'],
+      table: {
+        defaultValue: { summary: 'left' },
+        category: 'Behavior',
+      },
+      description: 'Position of the drawer relative to the viewport',
     },
   },
 };

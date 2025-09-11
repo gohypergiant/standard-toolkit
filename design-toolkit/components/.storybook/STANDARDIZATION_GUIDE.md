@@ -13,7 +13,7 @@ import {
   createStandardParameters, 
   createSizeControl,
   STANDARD_CONTROLS 
-} from '../../../.storybook/shared-controls';
+} from '^storybook/shared-controls';
 import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
 
 // Use standard parameters for component type
