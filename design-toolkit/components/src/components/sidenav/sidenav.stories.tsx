@@ -53,10 +53,13 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
         </Drawer.Layout.Main>
         <Sidenav isHiddenWhenClosed={isHiddenWhenClosed}>
           <Sidenav.Header>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            <Heading>Application Header</Heading>
+            <Sidenav.Avatar>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Heading>Application Header</Heading>
+              <Text>Secondary Text</Text>
+            </Sidenav.Avatar>
           </Sidenav.Header>
           <Heading>Title</Heading>
           <Sidenav.Item>
@@ -97,6 +100,15 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
             </Icon>
             <Text>Nav item</Text>
           </Sidenav.Item>
+          <Sidenav.Footer>
+            <Sidenav.Avatar>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Heading>Application Header</Heading>
+              <Text>Secondary Text</Text>
+            </Sidenav.Avatar>
+          </Sidenav.Footer>
         </Sidenav>
       </Drawer.Layout>
     </div>

@@ -18,6 +18,7 @@ import { createContext, useState } from 'react';
 import {
   Button,
   Header,
+  Heading,
   HeadingContext,
   Pressable,
   Provider,
@@ -30,16 +31,31 @@ import { Icon, IconContext } from '../icon';
 import { SidenavEventTypes } from './events';
 import { SidenavStyles } from './styles';
 import type {
+  SidenavAvatarProps,
   SidenavContextValue,
   SidenavDividerProps,
+  SidenavFooterProps,
   SidenavHeaderProps,
   SidenavItemProps,
   SidenavProps,
   SidenavTriggerProps,
 } from './types';
 
-const { sidenav, header, toggle, heading, divider, item, text, transient } =
-  SidenavStyles();
+const {
+  sidenav,
+  header,
+  footer,
+  toggle,
+  heading,
+  divider,
+  item,
+  text,
+  transient,
+  avatar,
+  avatarHeading,
+  avatarIcon,
+  avatarText,
+} = SidenavStyles();
 
 const SidenavContext = createContext<SidenavContextValue | null>(null);
 
@@ -82,7 +98,7 @@ function SidenavHeader({ children, classNames, ...rest }: SidenavHeaderProps) {
         className={toggle({ className: classNames?.button })}
         onPress={() => emit(undefined)}
       >
-        <Icon.Provider size='large'>{children}</Icon.Provider>
+        {children}
         <Icon className={transient()}>
           <ChevronLeft />
         </Icon>
@@ -91,6 +107,15 @@ function SidenavHeader({ children, classNames, ...rest }: SidenavHeaderProps) {
   );
 }
 SidenavHeader.displayName = 'Sidenav.Header';
+
+function SidenavFooter({ children, className, ...rest }: SidenavFooterProps) {
+  return (
+    <footer {...rest} className={footer({ className })}>
+      {children}
+    </footer>
+  );
+}
+SidenavFooter.displayName = 'Sidenav.Footer';
 
 function SidenavTrigger({ children, ...rest }: SidenavTriggerProps) {
   const emit = useEmit(SidenavEventTypes.toggle);
@@ -136,7 +161,38 @@ function SidenavDivider({ className, ...rest }: SidenavDividerProps) {
 }
 SidenavDivider.displayName = 'Sidenav.Divider';
 
+function SidenavAvatar({ children, className, ...rest }: SidenavAvatarProps) {
+  containsExactChildren({
+    children,
+    componentName: SidenavAvatar.displayName,
+    restrictions: [
+      [Icon, { min: 1, max: 1 }],
+      [Heading, { min: 1, max: 1 }],
+      [Text, { min: 1, max: 1 }],
+    ],
+  });
+  return (
+    <Provider
+      values={[
+        [IconContext, { size: 'large', className: avatarIcon() }],
+        [
+          HeadingContext,
+          { className: avatarHeading({ className: transient() }) },
+        ],
+        [TextContext, { className: avatarText({ className: transient() }) }],
+      ]}
+    >
+      <div {...rest} className={avatar({ className })}>
+        {children}
+      </div>
+    </Provider>
+  );
+}
+SidenavAvatar.displayName = 'Sidenav.Avatar';
+
 Sidenav.Trigger = SidenavTrigger;
 Sidenav.Header = SidenavHeader;
 Sidenav.Item = SidenavItem;
 Sidenav.Divider = SidenavDivider;
+Sidenav.Avatar = SidenavAvatar;
+Sidenav.Footer = SidenavFooter;

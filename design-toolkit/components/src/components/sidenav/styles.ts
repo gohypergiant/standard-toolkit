@@ -20,11 +20,18 @@ export const SidenavStyles = tv({
       'group-data-[push~=left]/layout:relative',
     ],
     header: 'mb-m flex justify-center',
+    footer: 'absolute bottom-m',
+    avatar:
+      'grid grid-cols-[1fr_auto] grid-rows-2 items-center gap-x-m group-closed/sidenav:flex',
+    avatarIcon: 'col-start-1 row-span-2',
+    avatarHeading: 'fg-primary-bold col-start-2 row-start-1 text-body-m',
+    avatarText:
+      'fg-primary-muted col-start-2 row-start-2 grow-1 text-left text-body-s',
     toggle: [
-      'flex cursor-pointer items-center gap-s rounded-medium p-xs',
+      'flex cursor-pointer items-center gap-s rounded-medium p-xs group-open/sidenav:px-s',
       'enabled:hover:bg-interactive-muted-hover',
       'enabled:focus-visible:bg-interactive-muted-hover enabled:focus-visible:outline-none',
-      'enabled:pressed:bg-accent-primary-pressed',
+      'enabled:pressed:bg-interactive-muted-pressed',
     ],
     divider:
       'my-s h-[1px] w-full shrink-0 grow-0 border-0 bg-[var(--outline-static)]',
