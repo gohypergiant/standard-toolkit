@@ -49,8 +49,7 @@ function detailedErrors(input: string) {
   return error('Uncaught error condition.');
 }
 
-// biome-ignore lint/style/useNamingConvention: <explanation>
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: `any` because I am too lazy to dive deep into this codebase
 export function parseUTM(_format: any, input: string) {
   try {
     const point = UTM.parse(input).toPoint();

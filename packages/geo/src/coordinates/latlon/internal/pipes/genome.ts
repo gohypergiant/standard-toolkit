@@ -75,6 +75,6 @@ export function getGenomeIndex(tokens: Tokens) {
   const seq = tokens.reduce(genomeSequencer, '');
 
   return GENOME_PATTERN.test(seq)
-    ? Number.parseInt(seq.replace(GENOME_PATTERN, dividerIndexer))
+    ? Number.parseInt(seq.replace(GENOME_PATTERN, dividerIndexer), 10)
     : 0;
 }
