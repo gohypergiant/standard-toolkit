@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import Placeholder from '@accelint/icons/placeholder';
 import {
   ListLayout as AriaListLayout,
@@ -29,6 +30,12 @@ const meta: Meta<typeof Options> = {
   argTypes: {
     size: {
       control: 'select',
+    },
+  },
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle: 'Options list component for selection interfaces.',
     },
   },
 };

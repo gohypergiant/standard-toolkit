@@ -36,7 +36,12 @@ export const COMMON_CONTROL_EXCLUSIONS = {
   REACT_PROPS: ['children', 'key', 'ref'],
 
   // React Aria internal props
-  ARIA_INTERNAL: ['slot', 'validationBehavior', 'validationErrors'],
+  ARIA_INTERNAL: [
+    'slot',
+    'validationBehavior',
+    'validationErrors',
+    'elementType',
+  ],
 
   // Layout/styling props that are better controlled via code
   STYLING_PROPS: ['className', 'classNames', 'style'],
@@ -206,5 +211,55 @@ export const STANDARD_ARG_TYPES = {
   errorMessage: {
     control: { type: 'text' as const },
     table: { type: { summary: 'string' } },
+  },
+
+  isDisabled: {
+    control: { type: 'boolean' as const },
+    table: {
+      type: { summary: 'boolean' },
+      defaultValue: { summary: 'false' },
+      category: 'State',
+    },
+    description: 'Whether the component is disabled',
+  },
+
+  isRequired: {
+    control: { type: 'boolean' as const },
+    table: {
+      type: { summary: 'boolean' },
+      defaultValue: { summary: 'false' },
+      category: 'State',
+    },
+    description: 'Whether the component is required',
+  },
+
+  isInvalid: {
+    control: { type: 'boolean' as const },
+    table: {
+      type: { summary: 'boolean' },
+      defaultValue: { summary: 'false' },
+      category: 'State',
+    },
+    description: 'Whether the component is in an invalid state',
+  },
+
+  isLoading: {
+    control: { type: 'boolean' as const },
+    table: {
+      type: { summary: 'boolean' },
+      defaultValue: { summary: 'false' },
+      category: 'State',
+    },
+    description: 'Whether the component is in a loading state',
+  },
+
+  isReadOnly: {
+    control: { type: 'boolean' as const },
+    table: {
+      type: { summary: 'boolean' },
+      defaultValue: { summary: 'false' },
+      category: 'State',
+    },
+    description: 'Whether the component is read-only',
   },
 };

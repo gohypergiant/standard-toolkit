@@ -11,6 +11,7 @@
  */
 /** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import {
   CenterOn,
   CollapseAll,
@@ -49,6 +50,7 @@ const meta: Meta<typeof Tree> = {
     },
   },
   parameters: {
+    ...createStandardParameters('content'),
     controls: {
       include: ['showRuleLines', 'showVisibility', 'variant', 'selectionMode'],
     },

@@ -1,4 +1,3 @@
-import { uuid } from '@accelint/core';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,6 +9,9 @@ import { uuid } from '@accelint/core';
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import { createStandardParameters } from '^storybook/shared-controls';
+import { uuid } from '@accelint/core';
 import {
   ChevronDown,
   ChevronLeft,
@@ -65,7 +67,7 @@ const meta: Meta<DrawerLayoutProps> = {
   title: 'Components/Drawer.Layout',
   component: Drawer.Layout,
   parameters: {
-    layout: 'fullscreen',
+    ...createStandardParameters('overlay'),
   },
   args: {
     extend: 'left right',

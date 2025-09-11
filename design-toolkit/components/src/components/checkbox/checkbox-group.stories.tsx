@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { Checkbox } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -38,9 +39,7 @@ const meta: Meta<typeof Checkbox.Group> = {
     },
   },
   parameters: {
-    controls: {
-      exclude: ['validationBehavior'],
-    },
+    ...createStandardParameters('form'),
   },
 };
 

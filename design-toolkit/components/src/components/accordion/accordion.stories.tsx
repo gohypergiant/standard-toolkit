@@ -14,6 +14,7 @@ import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
   createVariantControl,
+  STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { Placeholder } from '@accelint/icons';
 import { Button } from '../button';
@@ -40,15 +41,8 @@ const meta: Meta<typeof Accordion> = {
     variant: AccordionStylesDefaults.variant,
   },
   argTypes: {
-    ...createVariantControl(['cozy', 'compact']),
-    isDisabled: {
-      control: 'boolean',
-      table: {
-        defaultValue: { summary: 'false' },
-        category: 'State',
-      },
-      description: 'Whether the accordion is disabled',
-    },
+    variant: createVariantControl(['cozy', 'compact']),
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },
 };
 

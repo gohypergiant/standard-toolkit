@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { ColorPicker } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -41,6 +42,13 @@ const meta: Meta<typeof ColorPicker> = {
     },
     items: {
       description: 'Array of color options to choose from.',
+    },
+  },
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'Color picker component for selecting colors from a predefined palette.',
     },
   },
 };

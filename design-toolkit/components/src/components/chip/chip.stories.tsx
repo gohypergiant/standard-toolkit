@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { Placeholder } from '@accelint/icons';
 import { type FC, useState } from 'react';
 import { Button } from '../button';
@@ -35,6 +36,12 @@ const meta: Meta<typeof Chip> = {
     size: {
       control: 'select',
       options: ['medium', 'small'],
+    },
+  },
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle: 'Interactive chip components for selections and actions.',
     },
   },
 };
