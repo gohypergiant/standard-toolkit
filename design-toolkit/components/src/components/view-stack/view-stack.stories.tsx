@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { uuid } from '@accelint/core';
 import { ChevronLeft } from '@accelint/icons';
 import { Button } from '../button';
@@ -21,6 +22,7 @@ const meta: Meta<typeof ViewStack> = {
   title: 'Components/ViewStack',
   component: ViewStack,
   parameters: {
+    ...createStandardParameters('content'),
     docs: {
       description: {
         component: `

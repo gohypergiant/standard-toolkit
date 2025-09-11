@@ -1,0 +1,15 @@
+# Pre-commit hook for story standardization
+#
+# Add this to your .git/hooks/pre-commit file:
+# #!/bin/bash
+# pnpm audit:stories:ci || exit 1
+#
+# Or with lefthook (already configured in your project):
+
+pre-commit:
+  commands:
+    story-audit:
+      glob: "design-toolkit/components/src/**/*.stories.{ts,tsx}"
+      run: pnpm audit:stories:ci
+      stage_fixed: true
+      fail_text: "Story structure validation failed. Run 'pnpm audit:stories' for details."

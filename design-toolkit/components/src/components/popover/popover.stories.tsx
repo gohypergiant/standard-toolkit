@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import { createStandardParameters } from '^storybook/shared-controls';
 import { Delete, Information } from '@accelint/icons';
 import { Button } from '@/components/button';
 import { Checkbox } from '../checkbox';
@@ -27,6 +29,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Popover> = {
   title: 'Components/Popover',
   component: Popover,
+  parameters: {
+    ...createStandardParameters('overlay'),
+    docs: {
+      subtitle: 'Contextual overlay for additional information and actions.',
+    },
+  },
   args: {
     placement: 'bottom',
   },
@@ -34,7 +42,11 @@ const meta: Meta<typeof Popover> = {
     placement: {
       control: 'select',
       options: ['left', 'right', 'top', 'bottom'],
-      table: { defaultValue: { summary: 'bottom' } },
+      table: {
+        defaultValue: { summary: 'bottom' },
+        category: 'Behavior',
+      },
+      description: 'Position of the popover relative to its trigger',
     },
   },
 };
@@ -51,10 +63,8 @@ export const Simple: Story = {
         </Icon>
       </Popover.Trigger>
       <Popover.Content {...args}>
-        <Popover.Title>Popover Title</Popover.Title>
-        <Popover.Body>
-          Lorum Ipsum text for the dialog shall go here.
-        </Popover.Body>
+        <Popover.Title>Information</Popover.Title>
+        <Popover.Body>{MOCK_DATA.TEXT_CONTENT.SHORT}</Popover.Body>
       </Popover.Content>
     </Popover>
   ),
@@ -82,7 +92,7 @@ export const WithActions: Story = {
                 Cancel
               </Button>
               <Button variant='filled' onPress={close}>
-                CTA
+                Delete
               </Button>
             </Popover.Footer>
           </>

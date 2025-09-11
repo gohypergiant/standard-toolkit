@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import {
+  createSizeControl,
+  createStandardParameters,
+} from '^storybook/shared-controls';
+import { createSizeVariantsStory } from '^storybook/story-templates';
 import { Placeholder } from '@accelint/icons';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
@@ -22,28 +28,26 @@ const meta: Meta<typeof Avatar> = {
   args: {
     children: '',
     imageProps: {
-      alt: 'Dog',
-      src: 'https://placedog.net/100x100?id=144',
+      alt: 'User avatar',
+      src: MOCK_DATA.USERS[0]?.avatar,
     },
     size: 'medium',
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
+    size: createSizeControl('COMPACT'),
   },
+  parameters: createStandardParameters('content'),
 };
 
 export default meta;
 
 export const Default: StoryObj<typeof Avatar> = {
-  render: Avatar,
+  render: (args) => <Avatar {...args} />,
 };
 
 export const WithBadge: StoryObj<typeof Avatar> = {
   render: ({ children, ...args }) => (
-    <div className='flex items-center gap-m'>
+    <div className='flex items-center gap-l'>
       <Avatar {...args}>
         <Badge variant='critical'>99+</Badge>
       </Avatar>
@@ -55,27 +59,87 @@ export const WithBadge: StoryObj<typeof Avatar> = {
       </Avatar>
     </div>
   ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };
 
 export const WithContent: StoryObj<typeof Avatar> = {
   args: {
-    children: <span className='fg-primary-bold text-shadow-2xs'>DS</span>,
+    children: <span className='fg-primary-bold text-shadow-2xs'>SC</span>,
+    imageProps: undefined,
   },
   render: ({ children, ...args }) => (
-    <div className='flex items-center gap-m'>
+    <div className='flex items-center gap-l'>
+      {/* Text initials */}
       <Avatar {...args}>{children}</Avatar>
+
+      {/* Icon fallback */}
       <Avatar {...args}>
         <Icon className='fg-primary-bold'>
           <Placeholder />
         </Icon>
       </Avatar>
+
+      {/* Status indicator */}
       <Avatar {...args} classNames={{ content: 'items-end' }}>
-        <Badge offset={0} placement='bottom' variant='critical'>
-          Offline
+        <Badge offset={0} placement='bottom' variant='normal'>
+          Online
         </Badge>
       </Avatar>
     </div>
   ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
+};
+
+export const AllSizes: StoryObj<typeof Avatar> = createSizeVariantsStory({
+  Component: Avatar,
+  sizes: ['small', 'medium'],
+  baseProps: {
+    imageProps: {
+      alt: 'User avatar',
+      src: MOCK_DATA.USERS[0]?.avatar,
+    },
+  },
+});
+
+export const UserGallery: StoryObj<typeof Avatar> = {
+  name: 'User Examples',
+  render: () => (
+    <div className='flex items-center gap-m'>
+      {MOCK_DATA.USERS.map((user) => (
+        <div key={user.id} className='flex flex-col items-center gap-s'>
+          <Avatar
+            imageProps={{
+              alt: user.name,
+              src: user.avatar,
+            }}
+          >
+            <Badge
+              variant={
+                user.status === 'online'
+                  ? 'normal'
+                  : user.status === 'away'
+                    ? 'advisory'
+                    : 'critical'
+              }
+            />
+          </Avatar>
+          <span className='fg-primary-bold text-center text-body-s'>
+            {user.name}
+          </span>
+        </div>
+      ))}
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };
 
 // Needs to be static (or memoized) to not cause max call stack error with rerendering Fallback (Storybook only issue?)

@@ -10,18 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import path from 'node:path';
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
-import tsConfigPaths from 'vite-tsconfig-paths';
+export type CriticalityVariant =
+  (typeof CRITICALITY_VARIANTS)[keyof typeof CRITICALITY_VARIANTS];
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [tsConfigPaths(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '^storybook': path.resolve(__dirname, './.storybook'),
-    },
-  },
-});
+export const CRITICALITY_VARIANTS = Object.freeze({
+  advisory: 'advisory',
+  critical: 'critical',
+  info: 'info',
+  normal: 'normal',
+  serious: 'serious',
+} as const);

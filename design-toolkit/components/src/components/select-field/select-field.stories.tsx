@@ -10,6 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import {
+  createSizeControl,
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
+import {
+  COMMON_STATE_PROPS,
+  createStatesStory,
+} from '^storybook/story-templates';
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Options } from '../options';
@@ -21,25 +31,39 @@ const meta: Meta<typeof SelectField> = {
   title: 'Components/SelectField',
   component: SelectField,
   args: {
-    label: 'Label',
-    description: 'Helper text',
+    label: 'Select an option',
+    description: 'Choose from the available options',
     errorMessage: '',
     size: 'medium',
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
-    autoFocus: true,
+    autoFocus: false,
     placeholder: 'Select...',
     layoutOptions: {
       estimatedRowHeight: 46,
     },
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    size: createSizeControl('COMPACT'),
+    label: STANDARD_ARG_TYPES.label,
+    description: STANDARD_ARG_TYPES.description,
+    errorMessage: STANDARD_ARG_TYPES.errorMessage,
+    placeholder: STANDARD_ARG_TYPES.placeholder,
+    isDisabled: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isInvalid: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isRequired: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
   },
+  parameters: createStandardParameters('form'),
 };
 
 export default meta;
@@ -92,6 +116,29 @@ export const Default: StoryObj<typeof SelectField> = {
     );
   },
 };
+
+export const States: StoryObj<typeof SelectField> = createStatesStory({
+  Component: ({ children, ...props }) => (
+    <SelectField {...props}>
+      {MOCK_DATA.SIMPLE_OPTIONS.map((option) => (
+        <Options.Item key={option.id} textValue={option.name}>
+          <Options.Item.Label>{option.name}</Options.Item.Label>
+        </Options.Item>
+      ))}
+    </SelectField>
+  ),
+  baseProps: {
+    label: 'Category',
+    placeholder: 'Select a category',
+  },
+  stateProps: {
+    ...COMMON_STATE_PROPS.FORM_FIELD,
+    error: {
+      isInvalid: true,
+      errorMessage: MOCK_DATA.ERROR_MESSAGES.REQUIRED,
+    },
+  },
+});
 
 const manyItems: { id: number; name: string; prefixIcon: ReactNode }[] = [];
 for (let i = 0; i < 5000; i++) {

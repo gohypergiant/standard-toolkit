@@ -1,0 +1,56 @@
+name: Story Structure Validation
+
+on:
+  pull_request:
+    paths:
+      - 'design-toolkit/components/src/**/*.stories.ts'
+      - 'design-toolkit/components/src/**/*.stories.tsx'
+      - '.storybook/**'
+
+jobs:
+  validate-stories:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate story structure
+        run: |
+          cd design-toolkit/components
+          pnpm audit:stories:ci
+
+      - name: Comment PR on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📚 Story Structure Validation Failed
+
+              The Storybook story structure validation found issues that need to be addressed.
+
+              **To fix:**
+              1. Run \`pnpm audit:stories\` locally to see detailed issues
+              2. Review the [Story Guidelines](design-toolkit/components/.storybook/STORY_GUIDELINES.md)
+              3. Use shared utilities from \`shared-controls.ts\`
+              4. Ensure all stories follow the standardized patterns
+
+              **Common issues:**
+              - Missing \`createStandardParameters\` import
+              - Missing story categories in argTypes
+              - Missing component documentation
+              - Inconsistent control configurations`
+            });

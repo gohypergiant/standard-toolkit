@@ -10,12 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { ClassificationBanner } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ClassificationBanner> = {
   title: 'Components/ClassificationBanner',
   component: ClassificationBanner,
+  parameters: {
+    layout: 'fullscreen',
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle:
+        'Displays security classification banners for pages and documents.',
+    },
+  },
   args: {
     className: undefined,
     children: '',
@@ -24,6 +33,12 @@ const meta: Meta<typeof ClassificationBanner> = {
   argTypes: {
     children: {
       control: 'text',
+      table: {
+        category: 'Content',
+        type: { summary: 'ReactNode' },
+      },
+      description:
+        'Custom text content (optional - variant provides default text if empty)',
     },
     variant: {
       control: 'select',
@@ -36,10 +51,13 @@ const meta: Meta<typeof ClassificationBanner> = {
         'top-secret',
         'ts-sci',
       ],
+      table: {
+        defaultValue: { summary: 'missing' },
+        category: 'Visual',
+      },
+      description:
+        'Security classification level with appropriate colors and default text',
     },
-  },
-  parameters: {
-    layout: 'fullscreen',
   },
 };
 

@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import { createStandardParameters } from '^storybook/shared-controls';
 import { Lasso } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -18,6 +20,14 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',
+  component: Tooltip,
+  parameters: {
+    ...createStandardParameters('overlay'),
+    docs: {
+      subtitle: 'Brief contextual information displayed on hover or focus.',
+    },
+  },
+  argTypes: {},
 };
 
 export default meta;
@@ -30,7 +40,7 @@ export const Default: Story = {
         <Tooltip.Trigger>
           <span className='fg-primary-bold'>Test</span>
         </Tooltip.Trigger>
-        <Tooltip.Body>My tooltip</Tooltip.Body>
+        <Tooltip.Body>{MOCK_DATA.TEXT_CONTENT.SHORT}</Tooltip.Body>
       </Tooltip>
     </div>
   ),
@@ -43,7 +53,7 @@ export const LongTooltip: Story = {
         <Tooltip.Trigger>
           <span className='fg-primary-bold'>Long Tooltip</span>
         </Tooltip.Trigger>
-        <Tooltip.Body>A floating label used to explain an element</Tooltip.Body>
+        <Tooltip.Body>{MOCK_DATA.TEXT_CONTENT.MEDIUM}</Tooltip.Body>
       </Tooltip>
     </div>
   ),
@@ -54,9 +64,9 @@ export const TooltipWithButton: Story = {
     <div className='p-m'>
       <Tooltip>
         <Tooltip.Trigger>
-          <Button>My Button</Button>
+          <Button>Save</Button>
         </Tooltip.Trigger>
-        <Tooltip.Body>My tooltip</Tooltip.Body>
+        <Tooltip.Body>Save current changes</Tooltip.Body>
       </Tooltip>
     </div>
   ),

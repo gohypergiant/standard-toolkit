@@ -10,12 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Slider> = {
   title: 'Components/Slider',
   component: Slider,
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle: 'Range input control for selecting numeric values.',
+    },
+  },
   args: {
     defaultValue: 30,
     layout: 'grid',
@@ -30,10 +37,36 @@ const meta: Meta<typeof Slider> = {
     layout: {
       control: 'select',
       options: ['grid', 'stack'],
+      table: {
+        defaultValue: { summary: 'grid' },
+        category: 'Layout',
+      },
+      description: 'Layout arrangement of label and slider',
     },
     orientation: {
       control: 'select',
       options: ['horizontal', 'vertical'],
+      table: {
+        defaultValue: { summary: 'horizontal' },
+        category: 'Behavior',
+      },
+      description: 'Orientation of the slider control',
+    },
+    showInput: {
+      control: 'boolean',
+      table: {
+        defaultValue: { summary: 'false' },
+        category: 'Features',
+      },
+      description: 'Whether to show numeric input field',
+    },
+    showLabel: {
+      control: 'boolean',
+      table: {
+        defaultValue: { summary: 'true' },
+        category: 'Features',
+      },
+      description: 'Whether to show the label',
     },
   },
 };

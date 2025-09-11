@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 import { DateField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -36,6 +37,13 @@ const meta: Meta<typeof DateField> = {
     granularity: {
       control: 'select',
       options: ['day', 'hour', 'minute', 'second'],
+    },
+  },
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'Date input field with granular control over date/time selection.',
     },
   },
 };

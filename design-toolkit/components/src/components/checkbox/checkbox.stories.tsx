@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
+import { createStatesStory } from '^storybook/story-templates';
 import { Checkbox } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,20 +22,57 @@ const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox',
   component: Checkbox,
   args: {
-    children: 'Checkbox',
+    children: 'I agree to the terms and conditions',
     isDisabled: false,
     isIndeterminate: false,
   },
-  parameters: {
-    controls: {
-      exclude: ['inputRef', 'validationBehavior'],
+  argTypes: {
+    children: STANDARD_ARG_TYPES.children,
+    isDisabled: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isIndeterminate: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
   },
+  parameters: createStandardParameters('form'),
 };
 
 export default meta;
 type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
+  render: (args) => <Checkbox {...args} />,
+};
+
+export const States: Story = createStatesStory({
+  Component: Checkbox,
+  baseProps: { children: 'Enable notifications' },
+  stateProps: {
+    disabled: { isDisabled: true, children: 'Disabled option' },
+  },
+});
+
+export const CheckStates: Story = {
+  name: 'Check States',
+  render: () => (
+    <div className='space-y-m'>
+      <Checkbox>Unchecked</Checkbox>
+      <Checkbox defaultSelected>Checked</Checkbox>
+      <Checkbox isIndeterminate>Indeterminate</Checkbox>
+      <Checkbox isDisabled>Disabled unchecked</Checkbox>
+      <Checkbox isDisabled defaultSelected>
+        Disabled checked
+      </Checkbox>
+      <Checkbox isDisabled isIndeterminate>
+        Disabled indeterminate
+      </Checkbox>
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };

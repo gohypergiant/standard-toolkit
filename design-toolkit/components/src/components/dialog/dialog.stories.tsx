@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import {
+  createStandardParameters,
+  createVariantControl,
+} from '^storybook/shared-controls';
 import { useCallback, useRef, useState } from 'react';
 import { Button } from '../button';
 import { Dialog } from './index';
@@ -24,17 +29,17 @@ const meta: Meta<typeof Dialog> = {
     isKeyboardDismissDisabled: false,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'large'],
-    },
+    size: createVariantControl(['small', 'large']),
     isDismissable: {
-      control: 'boolean',
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
     isKeyboardDismissDisabled: {
-      control: 'boolean',
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
   },
+  parameters: createStandardParameters('overlay'),
 };
 
 export default meta;
@@ -45,20 +50,61 @@ export const Default: Story = {
     return (
       <div className='relative h-[800px] w-[600px] p-l outline outline-info-bold'>
         <Dialog.Trigger>
-          <Button>Press Me</Button>
+          <Button>Open Dialog</Button>
           <Dialog {...args}>
-            <Dialog.Title>Dialog Title</Dialog.Title>
-            <Dialog.Content>
-              Lorum Ipsum text for the dialog shall go here.
-            </Dialog.Content>
+            <Dialog.Title>Confirmation Required</Dialog.Title>
+            <Dialog.Content>{MOCK_DATA.TEXT_CONTENT.MEDIUM}</Dialog.Content>
             <Dialog.Footer>
-              <Button variant='flat'>Action 2</Button>
-              <Button>Action 1</Button>
+              <Button variant='flat'>Cancel</Button>
+              <Button>Confirm</Button>
             </Dialog.Footer>
           </Dialog>
         </Dialog.Trigger>
       </div>
     );
+  },
+  parameters: {
+    layout: 'centered',
+  },
+};
+
+export const Sizes: Story = {
+  render: () => (
+    <div className='flex gap-m'>
+      <div className='relative h-[600px] w-[400px] p-l outline outline-info-bold'>
+        <Dialog.Trigger>
+          <Button>Small Dialog</Button>
+          <Dialog size='small'>
+            <Dialog.Title>Small Dialog</Dialog.Title>
+            <Dialog.Content>
+              This is a compact dialog for simple interactions.
+            </Dialog.Content>
+            <Dialog.Footer>
+              <Button variant='flat'>Cancel</Button>
+              <Button>OK</Button>
+            </Dialog.Footer>
+          </Dialog>
+        </Dialog.Trigger>
+      </div>
+
+      <div className='relative h-[600px] w-[800px] p-l outline outline-info-bold'>
+        <Dialog.Trigger>
+          <Button>Large Dialog</Button>
+          <Dialog size='large'>
+            <Dialog.Title>Large Dialog</Dialog.Title>
+            <Dialog.Content>{MOCK_DATA.TEXT_CONTENT.LONG}</Dialog.Content>
+            <Dialog.Footer>
+              <Button variant='flat'>Cancel</Button>
+              <Button>Save Changes</Button>
+            </Dialog.Footer>
+          </Dialog>
+        </Dialog.Trigger>
+      </div>
+    </div>
+  ),
+  parameters: {
+    layout: 'fullscreen',
+    controls: { disable: true },
   },
 };
 
@@ -70,15 +116,16 @@ export const LocalPortal: Story = {
       <div className='flex h-[600px] w-[960px] outline outline-info-bold'>
         <div className='w-full p-l'>
           <Dialog.Trigger>
-            <Button>Press Me</Button>
+            <Button>Open in Local Portal</Button>
             <Dialog parentRef={parentRef}>
-              <Dialog.Title>Dialog Title</Dialog.Title>
+              <Dialog.Title>Local Portal Dialog</Dialog.Title>
               <Dialog.Content>
-                Lorum Ipsum text for the dialog shall go here.
+                This dialog is rendered within the blue container instead of the
+                document body.
               </Dialog.Content>
               <Dialog.Footer>
-                <Button variant='flat'>Action 2</Button>
-                <Button>Action 1</Button>
+                <Button variant='flat'>Cancel</Button>
+                <Button>OK</Button>
               </Dialog.Footer>
             </Dialog>
           </Dialog.Trigger>
@@ -89,6 +136,10 @@ export const LocalPortal: Story = {
         />
       </div>
     );
+  },
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
   },
 };
 

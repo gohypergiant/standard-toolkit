@@ -14,7 +14,8 @@
     "rootDir": "./",
     "outDir": "dist",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "^storybook/*": ["./.storybook/*"]
     },
     "types": ["@testing-library/jest-dom", "node"]
   }

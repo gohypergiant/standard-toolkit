@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { DetailsList } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,6 +18,7 @@ const meta: Meta<typeof DetailsList> = {
   title: 'Components/DetailsList',
   component: DetailsList,
   parameters: {
+    ...createStandardParameters('container'),
     layout: 'padded',
     docs: {
       description: {

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import MouseRightClick from '@accelint/icons/mouse-right-click';
 import { Icon } from '../icon';
 import { Hotkey } from './index';
@@ -18,6 +19,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Hotkey> = {
   title: 'Components/Hotkey',
   component: Hotkey,
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle: 'Visual representation of keyboard shortcuts and hotkeys.',
+    },
+  },
 };
 
 export default meta;
@@ -31,6 +38,11 @@ export const Default: StoryObj<typeof Hotkey> = {
     variant: {
       control: 'select',
       options: ['outline', 'flat', 'icon'],
+      table: {
+        defaultValue: { summary: 'outline' },
+        category: 'Visual',
+      },
+      description: 'Visual style of the hotkey display',
     },
   },
   render: ({ children, variant }) => {

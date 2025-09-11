@@ -10,6 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  createSizeControl,
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
+import {
+  createSizeVariantsStory,
+  createStatesStory,
+} from '^storybook/story-templates';
 import { Input } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -19,21 +28,69 @@ const meta: Meta<typeof Input> = {
   args: {
     autoSize: false,
     disabled: false,
-    placeholder: 'Placeholder',
+    placeholder: 'Enter text...',
     size: 'medium',
     isClearable: true,
     isInvalid: false,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    size: createSizeControl('COMPACT'),
+    placeholder: STANDARD_ARG_TYPES.placeholder,
+    disabled: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isInvalid: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    isClearable: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
+    },
+    autoSize: {
+      control: { type: 'boolean' },
+      table: { type: { summary: 'boolean' } },
     },
   },
+  parameters: createStandardParameters('form'),
 };
 
 export default meta;
 
 export const Default: StoryObj<typeof Input> = {
-  render: Input,
+  render: (args) => <Input {...args} />,
+};
+
+export const States: StoryObj<typeof Input> = createStatesStory({
+  Component: Input,
+  baseProps: { placeholder: 'Type here...' },
+  stateProps: {
+    disabled: { disabled: true, placeholder: 'Disabled input' },
+    error: { isInvalid: true, placeholder: 'Invalid input' },
+  },
+});
+
+export const AllSizes: StoryObj<typeof Input> = createSizeVariantsStory({
+  Component: Input,
+  sizes: ['small', 'medium'],
+  baseProps: { placeholder: 'Sample text' },
+});
+
+export const InputTypes: StoryObj<typeof Input> = {
+  name: 'Input Types',
+  render: () => (
+    <div className='max-w-sm space-y-m'>
+      <Input type='text' placeholder='Text input' />
+      <Input type='email' placeholder='Email input' />
+      <Input type='password' placeholder='Password input' />
+      <Input type='number' placeholder='Number input' />
+      <Input type='search' placeholder='Search input' />
+      <Input type='url' placeholder='URL input' />
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };

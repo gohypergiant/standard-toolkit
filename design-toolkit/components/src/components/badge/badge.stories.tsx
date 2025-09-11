@@ -10,6 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  createStandardParameters,
+  createVariantControl,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
+import { createVariantsStory } from '^storybook/story-templates';
+import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
 import { Badge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,29 +24,48 @@ const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
   component: Badge,
   args: {
-    className: undefined,
-    children: undefined,
+    children: '99+',
     variant: 'info',
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
-    },
+    children: STANDARD_ARG_TYPES.children,
+    variant: createVariantControl(Object.values(CRITICALITY_VARIANTS)),
   },
+  parameters: createStandardParameters('content'),
 };
 
 export default meta;
 
 export const Default: StoryObj<typeof Badge> = {
-  render: Badge,
+  render: (args) => <Badge {...args} />,
 };
 
-export const WithText: StoryObj<typeof Badge> = {
-  render: ({ children, ...rest }) => (
-    <Badge {...rest}>{children || '99+'}</Badge>
+export const WithoutText: StoryObj<typeof Badge> = {
+  name: 'Indicator Only',
+  render: (args) => (
+    <div className='flex items-center gap-m'>
+      <span className='text-body-m'>You have new notifications</span>
+      <Badge {...args} />
+    </div>
   ),
+  args: {
+    children: undefined,
+  },
+  parameters: {
+    layout: 'centered',
+  },
 };
+
+export const AllVariants: StoryObj<typeof Badge> = createVariantsStory({
+  Component: Badge,
+  variantProps: {
+    'With Count': { children: '99+', variant: 'critical' },
+    Normal: { children: '5', variant: 'normal' },
+    Info: { children: 'New', variant: 'info' },
+    Advisory: { children: '!', variant: 'advisory' },
+    Serious: { children: '⚠', variant: 'serious' },
+    Critical: { children: '✕', variant: 'critical' },
+    'Indicator Only': { variant: 'normal' },
+  },
+  columns: 4,
+});

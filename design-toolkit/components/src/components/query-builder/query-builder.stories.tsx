@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { useState } from 'react';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
@@ -38,6 +39,7 @@ const meta: Meta<typeof QueryBuilder> = {
     },
   },
   parameters: {
+    ...createStandardParameters('form'),
     controls: {
       include: [
         'disabled',

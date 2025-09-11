@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import { MOCK_DATA } from '^storybook/mock-data';
+import {
+  createStandardParameters,
+  createVariantControl,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { Placeholder } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -24,20 +30,19 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Accordion> = {
   title: 'Components/Accordion',
   component: Accordion,
+  parameters: {
+    ...createStandardParameters('container'),
+    docs: {
+      subtitle: 'Content that can expand and collapse.',
+    },
+  },
   args: {
     isDisabled: false,
     variant: AccordionStylesDefaults.variant,
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
-  },
-  parameters: {
-    docs: {
-      subtitle: 'Content that can expand and collapse.',
-    },
+    variant: createVariantControl(['cozy', 'compact']),
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },
 };
 
@@ -52,13 +57,12 @@ export const Default: StoryObj<typeof Accordion> = {
             <Icon>
               <Placeholder />
             </Icon>
-            Accordion title
+            Settings
           </Accordion.Trigger>
         </Accordion.Header>
         <Accordion.Panel>
           <p className='fg-primary-muted text-body-s'>
-            This is a placeholder content for an accordion. Please replace with
-            an actual content instance.
+            {MOCK_DATA.TEXT_CONTENT.MEDIUM}
           </p>
         </Accordion.Panel>
       </Accordion>
@@ -75,20 +79,19 @@ export const WithMenu: StoryObj<typeof Accordion> = {
             <Icon>
               <Placeholder />
             </Icon>
-            Accordion title
+            Document Options
           </Accordion.Trigger>
           <Menu.Trigger>
             <Button />
             <Menu>
-              <Menu.Item>Foo</Menu.Item>
-              <Menu.Item>Bar</Menu.Item>
+              <Menu.Item>Edit</Menu.Item>
+              <Menu.Item>Delete</Menu.Item>
             </Menu>
           </Menu.Trigger>
         </Accordion.Header>
         <Accordion.Panel>
           <p className='fg-primary-muted text-body-s'>
-            This is a placeholder content for an accordion. Please replace with
-            an actual content instance.
+            {MOCK_DATA.TEXT_CONTENT.SHORT}
           </p>
         </Accordion.Panel>
       </Accordion>
