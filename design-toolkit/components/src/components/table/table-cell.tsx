@@ -10,19 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
+import { flexRender } from '@tanstack/react-table';
 import { cellStyles } from './styles';
 import type { TableCellProps } from './types';
 
 export function TableCell({
   ref,
   className,
-  narrow,
-  numeral,
+  cell,
   persistent,
-  kebab,
   selectedCol,
   ...props
-}: TableCellProps) {
+}: TableCellProps<any>) {
+  const persistNum = cell && cell.column.id === 'numeral' ? persistent : true;
+  const kebab = cell && cell.column.id === 'kebab';
+  const narrow =
+    (cell && cell.column.id === 'numeral') ||
+    (cell && cell.column.id === 'kebab');
+  const numeral = cell && cell.column.id === 'numeral';
+
   return (
     <td
       ref={ref}
@@ -30,11 +36,14 @@ export function TableCell({
         narrow,
         numeral,
         kebab,
-        persistent,
+        persistNum,
         selectedCol,
         className,
       })}
       {...props}
-    />
+    >
+      {props.children ||
+        (cell && flexRender(cell.column.columnDef.cell, cell.getContext()))}
+    </td>
   );
 }

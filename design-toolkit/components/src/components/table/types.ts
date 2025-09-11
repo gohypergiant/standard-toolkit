@@ -10,12 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type {
-  ColumnDef,
-  Header,
-  HeaderGroup,
-  Row,
-} from '@tanstack/react-table';
+import type { Cell, ColumnDef, Header, Row } from '@tanstack/react-table';
 import type {
   HTMLAttributes,
   RefAttributes,
@@ -179,9 +174,12 @@ export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
  *   If true, the cell is always visible.
  *   If false, the cell content is only visible on hover or when the row is hovered.
  */
-export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
+export type TableCellProps<T> = TdHTMLAttributes<HTMLTableCellElement> &
   VariantProps<typeof cellStyles> &
-  RefAttributes<HTMLTableCellElement>;
+  RefAttributes<HTMLTableCellElement> & {
+    cell?: Cell<T, unknown>;
+    persistent?: boolean | undefined;
+  };
 
 /**
  * Props for a table header cell component.

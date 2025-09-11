@@ -41,7 +41,7 @@ export const cellStyles = tv({
       true: '',
       false: '',
     },
-    persistent: {
+    persistNum: {
       true: 'visible',
       false: 'hover:*:visible group-hover/row:*:visible',
     },
