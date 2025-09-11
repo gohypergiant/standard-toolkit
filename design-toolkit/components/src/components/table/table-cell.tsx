@@ -28,7 +28,7 @@ export function TableCell({
     (cell && cell.column.id === 'numeral') ||
     (cell && cell.column.id === 'kebab');
   const numeral = cell && cell.column.id === 'numeral';
-  const selectedCol = cell?.column.id === selectedColumn;
+  const selectedCol = cell && cell?.column.id === selectedColumn;
 
   return (
     <td
