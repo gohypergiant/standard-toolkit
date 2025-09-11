@@ -48,9 +48,7 @@ export const cellStyles = tv({
     selectedCol: {
       true: [
         'bg-accent-primary-muted',
-        'border-x-1',
-        'border-r-[var(--outline-accent-primary-bold)]',
-        'border-l-[var(--outline-accent-primary-bold)]',
+        'shadow-[1px_1px_0_0_var(--outline-accent-primary-bold),-1px_0_0_0_var(--outline-accent-primary-bold)]',
       ],
       false: '',
     },
@@ -84,11 +82,7 @@ export const headerCellStyles = tv({
   base: [
     'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'selected:bg-accent-primary-muted',
-    'selected:border-t-1',
-    'selected:border-x-1',
-    'selected:border-r-[var(--outline-accent-primary-bold)]',
-    'selected:border-l-[var(--outline-accent-primary-bold)]',
-    'selected:border-t-[var(--outline-accent-primary-bold)]',
+    'selected:shadow-[1px_0_0_0_var(--outline-accent-primary-bold),-1px_-1px_0_0_var(--outline-accent-primary-bold)]',
   ],
   variants: {
     narrow: {
