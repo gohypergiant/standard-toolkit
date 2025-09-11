@@ -19,7 +19,7 @@ export function TableCell({
   className,
   cell,
   persistent,
-  selectedCol,
+  selectedColumn,
   ...props
 }: TableCellProps<any>) {
   const persistNum = cell && cell.column.id === 'numeral' ? persistent : true;
@@ -28,6 +28,7 @@ export function TableCell({
     (cell && cell.column.id === 'numeral') ||
     (cell && cell.column.id === 'kebab');
   const numeral = cell && cell.column.id === 'numeral';
+  const selectedCol = cell?.column.id === selectedColumn;
 
   return (
     <td

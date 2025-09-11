@@ -83,7 +83,7 @@ export function Table<T extends { id: string | number }>({
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [columnSelection, setColumnSelection] = useState<string | null>();
+  const [columnSelection, setColumnSelection] = useState<string | null>(null);
 
   const { moveUpSelectedRows, moveDownRows } = useRowMovement<T>(
     data,
@@ -286,6 +286,7 @@ export function Table<T extends { id: string | number }>({
                       moveColumnLeft={moveColumnLeft}
                       moveColumnRight={moveColumnRight}
                       persistHeaderKebabMenu={persistHeaderKebabMenu}
+                      setColumnSelection={setColumnSelection}
                     ></HeaderCell>
                   );
                 })}
@@ -298,8 +299,8 @@ export function Table<T extends { id: string | number }>({
                 key={row.id}
                 row={row}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                persistRowKebabMenu={persistHeaderKebabMenu}
                 persistNumerals={persistNumerals}
+                selectedCol={columnSelection}
                 data-pinned={row.getIsPinned()}
               ></TableRow>
             ))}
@@ -308,8 +309,8 @@ export function Table<T extends { id: string | number }>({
                 key={row.id}
                 row={row}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                persistRowKebabMenu={persistHeaderKebabMenu}
                 persistNumerals={persistNumerals}
+                selectedCol={columnSelection}
                 data-pinned={row.getIsPinned()}
               ></TableRow>
             ))}
@@ -318,8 +319,8 @@ export function Table<T extends { id: string | number }>({
                 key={row.id}
                 row={row}
                 {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                persistRowKebabMenu={persistHeaderKebabMenu}
                 persistNumerals={persistNumerals}
+                selectedCol={columnSelection}
                 data-pinned={row.getIsPinned()}
               ></TableRow>
             ))}

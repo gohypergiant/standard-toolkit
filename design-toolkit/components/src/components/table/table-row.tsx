@@ -18,8 +18,8 @@ export function TableRow({
   ref,
   className,
   row,
-  persistRowKebabMenu,
   persistNumerals,
+  selectedCol,
   ...props
 }: TableRowProps<any>) {
   return (
@@ -33,6 +33,7 @@ export function TableRow({
                 key={cell.id}
                 cell={cell}
                 persistent={persistNumerals}
+                selectedColumn={selectedCol}
               ></TableCell>
             )))}
     </tr>

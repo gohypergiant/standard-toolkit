@@ -154,6 +154,7 @@ export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
     row?: Row<T>;
     persistRowKebabMenu?: boolean;
     persistNumerals?: boolean;
+    selectedCol: string | null;
   };
 
 /**
@@ -179,6 +180,7 @@ export type TableCellProps<T> = TdHTMLAttributes<HTMLTableCellElement> &
   RefAttributes<HTMLTableCellElement> & {
     cell?: Cell<T, unknown>;
     persistent?: boolean | undefined;
+    selectedColumn: string | null;
   };
 
 /**
@@ -200,6 +202,7 @@ export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
     moveColumnLeft?: (index: number) => void;
     moveColumnRight?: (index: number) => void;
     persistHeaderKebabMenu?: boolean;
+    setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
   };
 
 /**

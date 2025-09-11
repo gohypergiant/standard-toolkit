@@ -31,9 +31,9 @@ export function HeaderCell({
   moveColumnLeft,
   moveColumnRight,
   persistHeaderKebabMenu,
+  setColumnSelection,
   ...props
 }: TableHeaderCellProps<any>) {
-  const [columnSelection, setColumnSelection] = useState<string | null>();
   const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
   return (
@@ -44,30 +44,26 @@ export function HeaderCell({
     >
       {props.children ||
         (header && (
-          <div
-            className={headerCellButton()}
-            onMouseDown={() => setColumnSelection(header?.column.id)}
-            onMouseUp={() => setColumnSelection(null)}
-          >
-            {header?.column.id === 'kebab' ? null : (
+          <div className={headerCellButton()}>
+            {header.column.id === 'kebab' ? null : (
               <button type='button'>
-                {header?.getContext() &&
+                {header.getContext() &&
                   flexRender(
-                    header?.column.columnDef.header,
+                    header.column.columnDef.header,
                     header.getContext(),
                   )}
               </button>
             )}
 
-            {['numeral', 'kebab', 'selection'].includes(header?.column.id ?? '')
+            {['numeral', 'kebab', 'selection'].includes(header.column.id ?? '')
               ? null
               : (enableColumnReordering || enableSorting) && (
                   <Menu.Trigger
                     onOpenChange={(isOpen) => {
                       if (isOpen) {
-                        setColumnSelection(header?.column.id);
+                        setColumnSelection?.(header.column.id);
                       } else {
-                        setColumnSelection(null);
+                        setColumnSelection?.(null);
                       }
                     }}
                   >
@@ -105,12 +101,10 @@ export function HeaderCell({
                             classNames={{ item: menuItem() }}
                             onAction={() => {
                               moveColumnLeft
-                                ? moveColumnLeft(
-                                    header?.column.getIndex() ?? -1,
-                                  )
+                                ? moveColumnLeft(header.column.getIndex() ?? -1)
                                 : null;
                             }}
-                            isDisabled={header?.column.getIsFirstColumn(
+                            isDisabled={header.column.getIsFirstColumn(
                               'center',
                             )}
                           >
@@ -123,13 +117,11 @@ export function HeaderCell({
                             onAction={() => {
                               moveColumnRight
                                 ? moveColumnRight(
-                                    header?.column.getIndex() ?? -1,
+                                    header.column.getIndex() ?? -1,
                                   )
                                 : null;
                             }}
-                            isDisabled={header?.column.getIsLastColumn(
-                              'center',
-                            )}
+                            isDisabled={header.column.getIsLastColumn('center')}
                           >
                             <Menu.Item.Label>
                               {ColumnKebabMenuItems.Right}
@@ -143,9 +135,9 @@ export function HeaderCell({
                           <Menu.Item
                             classNames={{ item: menuItem() }}
                             onAction={() => {
-                              header?.column.toggleSorting(false);
+                              header.column.toggleSorting(false);
                             }}
-                            isDisabled={header?.column.getIsSorted() === 'asc'}
+                            isDisabled={header.column.getIsSorted() === 'asc'}
                           >
                             <Menu.Item.Label>
                               {ColumnKebabMenuItems.Asc}
@@ -153,9 +145,9 @@ export function HeaderCell({
                           </Menu.Item>
                           <Menu.Item
                             onAction={() => {
-                              header?.column.toggleSorting(true);
+                              header.column.toggleSorting(true);
                             }}
-                            isDisabled={header?.column.getIsSorted() === 'desc'}
+                            isDisabled={header.column.getIsSorted() === 'desc'}
                           >
                             <Menu.Item.Label>
                               {ColumnKebabMenuItems.Desc}
@@ -165,7 +157,7 @@ export function HeaderCell({
                             onAction={() => {
                               header?.column.clearSorting();
                             }}
-                            isDisabled={!header?.column.getIsSorted()}
+                            isDisabled={!header.column.getIsSorted()}
                           >
                             <Menu.Item.Label>
                               {ColumnKebabMenuItems.Clear}
