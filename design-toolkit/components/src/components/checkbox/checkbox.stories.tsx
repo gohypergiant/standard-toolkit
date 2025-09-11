@@ -37,7 +37,13 @@ const meta: Meta<typeof Checkbox> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A form control for binary or multiple selection with group support',
+    },
+  },
 };
 
 export default meta;

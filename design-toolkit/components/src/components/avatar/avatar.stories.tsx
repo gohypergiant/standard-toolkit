@@ -36,7 +36,12 @@ const meta: Meta<typeof Avatar> = {
   argTypes: {
     size: createSizeControl('COMPACT'),
   },
-  parameters: createStandardParameters('content'),
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle: 'A user profile image component with fallback support',
+    },
+  },
 };
 
 export default meta;

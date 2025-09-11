@@ -10,10 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  CRITICALITY_VARIANTS,
-  type CriticalityVariant,
-} from '@/constants/criticality-variants';
+import { CRITICALITY_VALUES } from '@/constants/criticality-variants';
 import { SIZE_RANGES } from '@/constants/size-variants';
 
 /**
@@ -90,7 +87,7 @@ export const STANDARD_CONTROLS = {
    */
   COLOR: {
     control: { type: 'select' as const },
-    options: Object.values(CRITICALITY_VARIANTS) satisfies CriticalityVariant[],
+    options: CRITICALITY_VALUES,
   },
 
   BOOLEAN: {
@@ -190,76 +187,76 @@ export const createVariantControl = (options: readonly string[]) => ({
 export const STANDARD_ARG_TYPES = {
   children: {
     control: { type: 'text' as const },
+    description: 'Content to be displayed inside the component',
     table: { type: { summary: 'ReactNode' } },
-  },
-
-  label: {
-    control: { type: 'text' as const },
-    table: { type: { summary: 'string' } },
-  },
-
-  placeholder: {
-    control: { type: 'text' as const },
-    table: { type: { summary: 'string' } },
   },
 
   description: {
     control: { type: 'text' as const },
+    description: 'Descriptive text to provide additional context',
     table: { type: { summary: 'string' } },
   },
 
   errorMessage: {
     control: { type: 'text' as const },
+    description: 'Error message to display when validation fails',
     table: { type: { summary: 'string' } },
   },
 
   isDisabled: {
     control: { type: 'boolean' as const },
+    description: 'Whether the component is disabled',
     table: {
       type: { summary: 'boolean' },
       defaultValue: { summary: 'false' },
-      category: 'State',
     },
-    description: 'Whether the component is disabled',
   },
 
   isRequired: {
     control: { type: 'boolean' as const },
+    description: 'Whether the component is required',
     table: {
       type: { summary: 'boolean' },
       defaultValue: { summary: 'false' },
-      category: 'State',
     },
-    description: 'Whether the component is required',
   },
 
   isInvalid: {
     control: { type: 'boolean' as const },
+    description: 'Whether the component is in an invalid state',
     table: {
       type: { summary: 'boolean' },
       defaultValue: { summary: 'false' },
-      category: 'State',
     },
-    description: 'Whether the component is in an invalid state',
   },
 
   isLoading: {
     control: { type: 'boolean' as const },
+    description: 'Whether the component is in a loading state',
     table: {
       type: { summary: 'boolean' },
       defaultValue: { summary: 'false' },
-      category: 'State',
     },
-    description: 'Whether the component is in a loading state',
   },
 
   isReadOnly: {
     control: { type: 'boolean' as const },
+    description: 'Whether the component is read-only',
     table: {
       type: { summary: 'boolean' },
       defaultValue: { summary: 'false' },
-      category: 'State',
     },
-    description: 'Whether the component is read-only',
+  },
+
+  label: {
+    control: { type: 'text' as const },
+    description: 'Text label for the component',
+    table: { type: { summary: 'string' } },
+  },
+
+  placeholder: {
+    control: { type: 'text' as const },
+    description: 'Placeholder text shown when the input is empty',
+    table: { type: { summary: 'string' } },
   },
 };

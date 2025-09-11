@@ -23,6 +23,10 @@ const meta: Meta<typeof ActionBar> = {
   parameters: {
     ...createStandardParameters('container'),
     layout: 'fullscreen',
+    docs: {
+      subtitle:
+        'A horizontal toolbar component for grouping actions and controls',
+    },
   },
 };
 

@@ -35,7 +35,12 @@ const meta: Meta<typeof Switch> = {
     },
     labelPosition: createVariantControl(['start', 'end']),
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle: 'A toggle control for binary state changes',
+    },
+  },
 };
 
 export default meta;

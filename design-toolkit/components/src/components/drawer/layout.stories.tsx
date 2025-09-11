@@ -68,6 +68,10 @@ const meta: Meta<DrawerLayoutProps> = {
   component: Drawer.Layout,
   parameters: {
     ...createStandardParameters('overlay'),
+    docs: {
+      subtitle:
+        'A slide-out panel component for navigation and secondary content',
+    },
   },
   args: {
     extend: 'left right',

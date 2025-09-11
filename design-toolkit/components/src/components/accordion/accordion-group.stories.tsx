@@ -32,7 +32,12 @@ const meta: Meta<typeof Accordion.Group> = {
     isDisabled: false,
   },
   argTypes: {
-    variant: createVariantControl(['cozy', 'compact']),
+    variant: {
+      ...createVariantControl(['cozy', 'compact']),
+      table: {
+        category: 'Layout',
+      },
+    },
   },
   parameters: {
     ...createStandardParameters('container'),

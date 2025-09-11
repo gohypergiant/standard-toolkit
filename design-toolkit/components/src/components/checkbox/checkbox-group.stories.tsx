@@ -40,6 +40,10 @@ const meta: Meta<typeof Checkbox.Group> = {
   },
   parameters: {
     ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A grouped collection of checkbox controls for multiple selections',
+    },
   },
 };
 

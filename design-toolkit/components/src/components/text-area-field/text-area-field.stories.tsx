@@ -56,7 +56,12 @@ const meta: Meta<typeof TextAreaField> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle: 'A multi-line text input component with label and validation',
+    },
+  },
 };
 
 export default meta;

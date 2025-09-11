@@ -197,7 +197,7 @@ To migrate existing stories:
 
 ## 🔗 Related Files
 
-- `/scripts/audit-stories.mjs` - Main audit script
+- `/.storybook/audit-stories.mjs` - Main audit script
 - `/.storybook/shared-controls.ts` - Shared control utilities
 - `/.storybook/mock-data.tsx` - Consistent mock data
 - `/.storybook/story-templates.tsx` - Reusable story patterns

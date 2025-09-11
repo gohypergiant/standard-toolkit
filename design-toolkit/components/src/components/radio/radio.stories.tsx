@@ -40,7 +40,13 @@ const meta: Meta<typeof Radio.Group> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A form control for exclusive selection within a group of options',
+    },
+  },
 };
 
 export default meta;

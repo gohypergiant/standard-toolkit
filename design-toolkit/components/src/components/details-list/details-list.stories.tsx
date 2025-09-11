@@ -21,6 +21,8 @@ const meta: Meta<typeof DetailsList> = {
     ...createStandardParameters('container'),
     layout: 'padded',
     docs: {
+      subtitle:
+        'A structured list component for displaying detailed information',
       description: {
         component:
           'A semantic details list component for displaying metadata in key-value pairs. Perfect for map object details, user profiles, or any structured information displayed in sidebars or detail panels.',

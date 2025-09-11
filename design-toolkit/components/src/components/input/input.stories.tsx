@@ -53,7 +53,12 @@ const meta: Meta<typeof Input> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle: 'A flexible text input component with enhanced features',
+    },
+  },
 };
 
 export default meta;

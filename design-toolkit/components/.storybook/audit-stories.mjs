@@ -127,7 +127,11 @@ function extractObjectValue(node) {
       const obj = {};
 
       node.properties.forEach((prop) => {
-        if (prop.key?.name) {
+        if (prop.type === 'SpreadElement') {
+          // Handle spread elements by adding them as special properties
+          const spreadKey = `__spread_${Object.keys(obj).length}`;
+          obj[spreadKey] = extractObjectValue(prop);
+        } else if (prop.key?.name) {
           obj[prop.key.name] = extractObjectValue(prop.value);
         }
       });
@@ -171,9 +175,61 @@ function checkSharedImports(imports) {
 }
 
 /**
+ * Check if parameters uses createStandardParameters
+ */
+function hasCreateStandardParametersUsage(parameters) {
+  if (!parameters || typeof parameters !== 'object') {
+    return false;
+  }
+
+  const paramsStr = JSON.stringify(parameters);
+
+  // Check for direct string mentions (fallback)
+  if (
+    paramsStr.includes('createStandardParameters') ||
+    paramsStr.includes('function_call')
+  ) {
+    return true;
+  }
+
+  // Check for spread elements containing createStandardParameters
+  function checkValue(value) {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
+
+    // Check if this is a spread of createStandardParameters
+    if (
+      value.type === 'spread' &&
+      value.argument?.type === 'function_call' &&
+      value.argument?.name === 'createStandardParameters'
+    ) {
+      return true;
+    }
+
+    // Check if this is a direct call to createStandardParameters
+    if (
+      value.type === 'function_call' &&
+      value.name === 'createStandardParameters'
+    ) {
+      return true;
+    }
+
+    // Recursively check nested objects
+    if (typeof value === 'object') {
+      return Object.values(value).some(checkValue);
+    }
+
+    return false;
+  }
+
+  return Object.values(parameters).some(checkValue);
+}
+
+/**
  * Check meta object structure
  */
-function checkMetaStructure(meta) {
+function checkMetaStructure(meta, _filepath) {
   const issues = [];
 
   if (!meta) {
@@ -207,13 +263,7 @@ function checkMetaStructure(meta) {
 
   if (meta.parameters) {
     // Check if parameters uses createStandardParameters
-    const paramsStr = JSON.stringify(meta.parameters);
-    if (
-      !(
-        paramsStr.includes('createStandardParameters') ||
-        paramsStr.includes('function_call')
-      )
-    ) {
+    if (!hasCreateStandardParametersUsage(meta.parameters)) {
       issues.push({
         type: 'missing_standard_parameters',
         severity: 'warning',
@@ -223,6 +273,7 @@ function checkMetaStructure(meta) {
     }
 
     // Check for docs subtitle
+    const paramsStr = JSON.stringify(meta.parameters);
     if (!(meta.parameters?.docs?.subtitle || paramsStr.includes('subtitle'))) {
       issues.push({
         type: 'missing_docs_subtitle',
@@ -264,15 +315,16 @@ function checkArgTypes(argTypes) {
       return;
     }
 
-    // Check for table.category
-    if (!config.table?.category) {
-      issues.push({
-        type: 'missing_category',
-        severity: 'warning',
-        message: `ArgType '${propName}' missing table.category`,
-        fix: `Add table: { category: 'Visual|Behavior|Layout|Features|State|Content|Styling' }`,
-      });
-    }
+    // NOTE: maybe we want to enable this in the future??
+    // // Check for table.category
+    // if (!config.table?.category) {
+    //   issues.push({
+    //     type: 'missing_category',
+    //     severity: 'warning',
+    //     message: `ArgType '${propName}' missing table.category`,
+    //     fix: `Add table: { category: 'Visual|Behavior|Layout|Features|State|Content|Styling' }`,
+    //   });
+    // }
 
     // Check for description
     if (!config.description) {
@@ -374,7 +426,12 @@ function generateReport(results) {
       result.issues.some((issue) => issue.severity === 'warning') &&
       !result.issues.some((issue) => issue.severity === 'error'),
   );
-  const cleanFiles = results.filter((result) => result.issues.length === 0);
+  const infoFiles = results.filter(
+    (result) =>
+      result.issues.some((issue) => issue.severity === 'info') &&
+      !result.issues.some((issue) => issue.severity === 'error') &&
+      !result.issues.some((issue) => issue.severity === 'warning'),
+  );
 
   if (errorFiles.length > 0) {
     console.log(chalk.red.bold('🚨 FILES WITH ERRORS:'));
@@ -410,10 +467,21 @@ function generateReport(results) {
     });
   }
 
-  if (cleanFiles.length > 0) {
-    console.log(chalk.green.bold('\n✅ STANDARDIZED FILES:'));
-    cleanFiles.forEach((result) => {
-      console.log(chalk.green(`✅ ${result.component}`));
+  // Show info issues when there are no errors or warnings
+  if (errorCount === 0 && warningCount === 0 && infoFiles.length > 0) {
+    console.log(chalk.blue.bold('\nℹ️  FILES WITH INFO SUGGESTIONS:'));
+    infoFiles.forEach((result) => {
+      console.log(
+        chalk.blue(
+          `\nℹ️  ${result.component} (${path.relative(process.cwd(), result.file)})`,
+        ),
+      );
+      result.issues
+        .filter((issue) => issue.severity === 'info')
+        .forEach((issue) => {
+          console.log(chalk.blue(`   • ${issue.message}`));
+          console.log(chalk.gray(`     Fix: ${issue.fix}`));
+        });
     });
   }
 

@@ -53,7 +53,13 @@ const meta: Meta<typeof Button> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A versatile interactive button component with multiple variants',
+    },
+  },
 };
 
 export default meta;
@@ -120,15 +126,24 @@ export const AllVariants: StoryObj<typeof Button> = {
     <div className='flex gap-xl'>
       {['filled', 'outline', 'flat', 'icon', 'floating'].map((variant) => (
         <div key={variant} className='space-y-s'>
-          <h4 className='text-header-l fg-primary-bold capitalize'>
+          <h4 className='fg-primary-bold text-header-l capitalize'>
             {variant}
           </h4>
           <div className='space-y-xs'>
             {Object.values(SIZE_VARIANTS).map((size) => (
               <Button
                 className='capitalize'
+                key={size}
                 size={size}
-                variant={variant as any}
+                variant={
+                  `${variant ?? 'filled'}` as
+                    | 'flat'
+                    | 'icon'
+                    | 'filled'
+                    | 'outline'
+                    | 'floating'
+                    | undefined
+                }
               >
                 {variant === 'floating' ? size[0] : size}
               </Button>

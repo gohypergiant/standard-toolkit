@@ -20,3 +20,7 @@ export const CRITICALITY_VARIANTS = Object.freeze({
   normal: 'normal',
   serious: 'serious',
 } as const);
+
+export const CRITICALITY_VALUES = Object.freeze(
+  Object.values(CRITICALITY_VARIANTS),
+) satisfies readonly CriticalityVariant[];

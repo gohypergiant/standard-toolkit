@@ -24,6 +24,8 @@ const meta: Meta<typeof ViewStack> = {
   parameters: {
     ...createStandardParameters('content'),
     docs: {
+      subtitle:
+        'A component for managing multiple views with navigation transitions',
       description: {
         component: `
           The ViewStack component allows you to manage a stack of views. Think of it as similar to the

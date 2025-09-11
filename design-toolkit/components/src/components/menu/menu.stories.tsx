@@ -37,7 +37,13 @@ const meta: Meta<typeof Menu> = {
     variant: createVariantControl(['cozy', 'compact']),
     selectionMode: createVariantControl(['single', 'multiple', 'none']),
   },
-  parameters: createStandardParameters('container'),
+  parameters: {
+    ...createStandardParameters('container'),
+    docs: {
+      subtitle:
+        'A dropdown menu component with keyboard navigation and selection',
+    },
+  },
 };
 
 export default meta;

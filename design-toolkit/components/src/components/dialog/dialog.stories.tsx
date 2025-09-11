@@ -39,7 +39,13 @@ const meta: Meta<typeof Dialog> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('overlay'),
+  parameters: {
+    ...createStandardParameters('overlay'),
+    docs: {
+      subtitle:
+        'A modal dialog component for important content and interactions',
+    },
+  },
 };
 
 export default meta;

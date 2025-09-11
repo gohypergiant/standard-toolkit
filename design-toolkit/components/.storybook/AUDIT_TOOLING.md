@@ -5,7 +5,7 @@ This document provides a complete overview of the audit tooling created to maint
 ## 🛠️ Available Tools
 
 ### 1. Primary Audit Script
-**Location**: `scripts/audit-stories.mjs`
+**Location**: `.storybook/audit-stories.mjs`
 
 **Purpose**: AST-based analysis of story files to ensure compliance with standardized patterns.
 
@@ -18,12 +18,12 @@ pnpm audit:stories
 pnpm audit:stories:ci
 
 # Direct execution with custom directory
-node scripts/audit-stories.mjs <directory> [--ci] [--json]
+node .storybook/audit-stories.mjs <directory> [--ci] [--json]
 
 # Examples
-node scripts/audit-stories.mjs .          # Current directory
-node scripts/audit-stories.mjs . --ci     # CI mode
-node scripts/audit-stories.mjs . --json   # JSON output
+node .storybook/audit-stories.mjs .          # Current directory
+node .storybook/audit-stories.mjs . --ci     # CI mode
+node .storybook/audit-stories.mjs . --json   # JSON output
 ```
 
 **Features**:
@@ -87,6 +87,8 @@ node scripts/audit-stories.mjs . --json   # JSON output
 - Missing default value documentation
 - Opportunities for better mock data usage
 - Control optimization suggestions
+
+**Display Behavior**: Info issues are only shown in the audit output when there are **no errors or warnings** present. This progressive disclosure approach helps developers focus on critical issues first, then improve documentation and polish when the code is otherwise compliant.
 
 ## 📋 Quick Reference
 

@@ -63,7 +63,13 @@ const meta: Meta<typeof ComboBoxField> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A searchable dropdown input component with autocomplete functionality',
+    },
+  },
 };
 
 export default meta;

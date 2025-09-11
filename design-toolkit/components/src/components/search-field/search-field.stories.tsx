@@ -40,7 +40,13 @@ const meta: Meta<typeof SearchField> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A customizable search input component built on React Aria Components',
+    },
+  },
 };
 
 export default meta;

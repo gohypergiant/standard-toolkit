@@ -63,7 +63,13 @@ const meta: Meta<typeof SelectField> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A dropdown selection component with comprehensive form field features',
+    },
+  },
 };
 
 export default meta;

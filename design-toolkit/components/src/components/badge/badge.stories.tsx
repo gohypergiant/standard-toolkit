@@ -29,9 +29,19 @@ const meta: Meta<typeof Badge> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    variant: createVariantControl(Object.values(CRITICALITY_VARIANTS)),
+    variant: {
+      ...createVariantControl(Object.values(CRITICALITY_VARIANTS)),
+      description:
+        'Badge color variant indicating different levels of importance',
+    },
   },
-  parameters: createStandardParameters('content'),
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle:
+        'A small status indicator component for labeling and notifications',
+    },
+  },
 };
 
 export default meta;

@@ -48,6 +48,12 @@ const meta: Meta<typeof Accordion> = {
 
 export default meta;
 
+const CONTENT = (
+  <p className='fg-primary-muted text-body-s'>
+    {MOCK_DATA.TEXT_CONTENT.MEDIUM}
+  </p>
+);
+
 export const Default: StoryObj<typeof Accordion> = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
@@ -60,11 +66,7 @@ export const Default: StoryObj<typeof Accordion> = {
             Settings
           </Accordion.Trigger>
         </Accordion.Header>
-        <Accordion.Panel>
-          <p className='fg-primary-muted text-body-s'>
-            {MOCK_DATA.TEXT_CONTENT.MEDIUM}
-          </p>
-        </Accordion.Panel>
+        <Accordion.Panel>{CONTENT}</Accordion.Panel>
       </Accordion>
     </div>
   ),
@@ -89,11 +91,7 @@ export const WithMenu: StoryObj<typeof Accordion> = {
             </Menu>
           </Menu.Trigger>
         </Accordion.Header>
-        <Accordion.Panel>
-          <p className='fg-primary-muted text-body-s'>
-            {MOCK_DATA.TEXT_CONTENT.SHORT}
-          </p>
-        </Accordion.Panel>
+        <Accordion.Panel>{CONTENT}</Accordion.Panel>
       </Accordion>
     </div>
   ),

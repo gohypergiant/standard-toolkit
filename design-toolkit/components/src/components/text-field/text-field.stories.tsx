@@ -58,7 +58,13 @@ const meta: Meta<typeof TextField> = {
       table: { type: { summary: 'boolean' } },
     },
   },
-  parameters: createStandardParameters('form'),
+  parameters: {
+    ...createStandardParameters('form'),
+    docs: {
+      subtitle:
+        'A complete form field component with label, input, and validation',
+    },
+  },
 };
 
 export default meta;
