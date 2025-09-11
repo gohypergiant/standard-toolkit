@@ -89,6 +89,10 @@ export const headerCellStyles = tv({
       true: 'px-0 py-m ',
       false: 'p-m',
     },
+    showKebab: {
+      true: 'pr-0',
+      false: '',
+    },
   },
   defaultVariants: {
     narrow: TableHeaderCellStylesDefaults.narrow,

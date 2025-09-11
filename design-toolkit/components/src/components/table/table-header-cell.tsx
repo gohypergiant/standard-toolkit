@@ -36,10 +36,12 @@ export function HeaderCell({
 }: TableHeaderCellProps<any>) {
   const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
+  const showKebab = enableColumnReordering || enableSorting;
+
   return (
     <th
       ref={ref}
-      className={headerCellStyles({ narrow, className })}
+      className={headerCellStyles({ narrow, className, showKebab })}
       {...props}
     >
       {props.children ||
@@ -67,7 +69,7 @@ export function HeaderCell({
                       }
                     }}
                   >
-                    <Button variant='icon' aria-label='Menu'>
+                    <Button variant='icon' aria-label='Menu' className='p-s'>
                       <Icon>
                         {header?.column.getIsSorted() === 'asc' ? (
                           <div
