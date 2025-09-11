@@ -25,24 +25,27 @@ export function TableRow({
 }: TableRowProps<any>) {
   return (
     <tr ref={ref} className={rowStyles({ className })} {...props}>
-      {row &&
-        row.getVisibleCells().map((cell) => (
-          <TableCell
-            key={cell.id}
-            persistent={
-              cell.column.id === 'numeral'
-                ? persistNumerals
-                : cell.column.id === 'kebab'
-                  ? persistRowKebabMenu
-                  : true
-            }
-            narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
-            numeral={cell.column.id === 'numeral'}
-            kebab={cell.column.id === 'kebab'}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </TableCell>
-        ))}
+      {props.children ||
+        (row &&
+          row.getVisibleCells().map((cell) => (
+            <TableCell
+              key={cell.id}
+              persistent={
+                cell.column.id === 'numeral'
+                  ? persistNumerals
+                  : cell.column.id === 'kebab'
+                    ? persistRowKebabMenu
+                    : true
+              }
+              narrow={
+                cell.column.id === 'numeral' || cell.column.id === 'kebab'
+              }
+              numeral={cell.column.id === 'numeral'}
+              kebab={cell.column.id === 'kebab'}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </TableCell>
+          )))}
     </tr>
   );
 }

@@ -329,7 +329,7 @@ export function Table<T extends { id: string | number }>({
     );
   }
 
-  return <table {...props} />;
+  return <table {...props}>{props.children}</table>;
 }
 
 Table.displayName = 'Table';
