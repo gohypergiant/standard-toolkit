@@ -17,6 +17,7 @@
     "@accelint/constants": "workspace:*",
     "@accelint/converters": "workspace:*",
     "@accelint/core": "workspace:*",
+    "@accelint/dependency-cruiser": "workspace:*",
     "@accelint/formatters": "workspace:*",
     "@accelint/geo": "workspace:*",
     "@accelint/math": "workspace:*",
