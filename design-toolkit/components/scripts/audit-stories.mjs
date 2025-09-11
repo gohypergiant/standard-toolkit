@@ -365,13 +365,6 @@ function generateReport(results) {
     0,
   );
 
-  console.log(chalk.bold.blue('\n📊 STORYBOOK AUDIT REPORT\n'));
-  console.log(`${chalk.gray('Files audited:')} ${totalFiles}`);
-  console.log(`${chalk.gray('Total issues:')} ${totalIssues}`);
-  console.log(`${chalk.red('Errors:')} ${errorCount}`);
-  console.log(`${chalk.yellow('Warnings:')} ${warningCount}`);
-  console.log(`${chalk.blue('Info:')} ${infoCount}\n`);
-
   // Group by severity
   const errorFiles = results.filter((result) =>
     result.issues.some((issue) => issue.severity === 'error'),
@@ -425,12 +418,22 @@ function generateReport(results) {
   }
 
   return {
-    totalFiles,
-    totalIssues,
     errorCount,
-    warningCount,
     infoCount,
     success: errorCount === 0,
+    summary(location) {
+      console.log(chalk.bold.blue('\n📊 STORYBOOK AUDIT REPORT\n'));
+      console.log(`${chalk.gray('Location:')} ${location}`);
+      console.log(`${chalk.gray('Files audited:')} ${totalFiles}`);
+      console.log('');
+      console.log(`${chalk.red('Errors:')} ${errorCount}`);
+      console.log(`${chalk.yellow('Warnings:')} ${warningCount}`);
+      console.log(`${chalk.blue('Info:')} ${infoCount}\n`);
+      console.log(`${chalk.gray('Total issues:')} ${totalIssues}\n`);
+    },
+    totalFiles,
+    totalIssues,
+    warningCount,
   };
 }
 
@@ -453,10 +456,6 @@ async function auditStories() {
     return;
   }
 
-  console.log(
-    chalk.gray(`Found ${storyFiles.length} story files in "${targetDir}"\n`),
-  );
-
   const results = [];
   for (const filePath of storyFiles) {
     const result = await auditStoryFile(filePath);
@@ -466,7 +465,9 @@ async function auditStories() {
   const report = generateReport(results);
 
   if (process.argv.includes('--json')) {
-    console.log('\n' + JSON.stringify(results, null, 2));
+    console.log(`\n${JSON.stringify(results, null, 2)}`);
+  } else {
+    report.summary(path.resolve(targetDir).replace(path.resolve('$HOME'), ''));
   }
 
   if (process.argv.includes('--ci') && !report.success) {
