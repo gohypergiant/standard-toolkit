@@ -40,10 +40,7 @@ const meta: Meta<typeof Input> = {
       control: { type: 'boolean' },
       table: { type: { summary: 'boolean' } },
     },
-    isInvalid: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isInvalid: STANDARD_ARG_TYPES.isInvalid,
     isClearable: {
       control: { type: 'boolean' },
       table: { type: { summary: 'boolean' } },

@@ -15,6 +15,7 @@ import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
   createVariantControl,
+  STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { createStatesStory } from '^storybook/story-templates';
 import { Add, Check, Group } from '@accelint/icons';
@@ -49,15 +50,7 @@ const meta: Meta<typeof Tabs> = {
   },
   argTypes: {
     orientation: createVariantControl(['horizontal', 'vertical']),
-    isDisabled: {
-      control: { type: 'boolean' },
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-        category: 'State',
-      },
-      description: 'Whether the tabs are disabled',
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },
 };
 

@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Link } from './index';
@@ -27,12 +30,11 @@ const meta: Meta<typeof Link> = {
     isVisited: false,
   },
   argTypes: {
+    children: STANDARD_ARG_TYPES.children,
     allowsVisited: {
       control: 'boolean',
     },
-    isDisabled: {
-      control: 'boolean',
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },
   parameters: {
     ...createStandardParameters('content'),

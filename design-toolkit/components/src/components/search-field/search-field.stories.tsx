@@ -13,6 +13,7 @@
 import {
   createStandardParameters,
   createVariantControl,
+  STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { createStatesStory } from '^storybook/story-templates';
 import { SearchField } from './index';
@@ -31,14 +32,8 @@ const meta: Meta<typeof SearchField> = {
   },
   argTypes: {
     variant: createVariantControl(['outlined', 'filled']),
-    isDisabled: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
-    isLoading: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
+    isLoading: STANDARD_ARG_TYPES.isLoading,
   },
   parameters: {
     ...createStandardParameters('form'),

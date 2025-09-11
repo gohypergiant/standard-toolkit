@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { Placeholder } from '@accelint/icons';
 import { type FC, useState } from 'react';
 import { Button } from '../button';
@@ -30,9 +33,7 @@ const meta: Meta<typeof Chip> = {
     size: 'medium',
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
+    children: STANDARD_ARG_TYPES.children,
     size: {
       control: 'select',
       options: ['medium', 'small'],

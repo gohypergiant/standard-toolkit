@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 import { DateField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -21,7 +24,7 @@ const meta: Meta<typeof DateField> = {
   args: {
     label: 'Label',
     defaultValue: parseDate('2020-01-23'),
-    description: 'Format: d MMM yyyy',
+    description: 'Format: MM DD yyyy',
     errorMessage: '',
     granularity: 'day',
     size: 'medium',
@@ -30,6 +33,12 @@ const meta: Meta<typeof DateField> = {
     isRequired: true,
   },
   argTypes: {
+    label: STANDARD_ARG_TYPES.label,
+    description: STANDARD_ARG_TYPES.description,
+    errorMessage: STANDARD_ARG_TYPES.errorMessage,
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
+    isInvalid: STANDARD_ARG_TYPES.isInvalid,
+    isRequired: STANDARD_ARG_TYPES.isRequired,
     size: {
       control: 'select',
       options: ['small', 'medium'],

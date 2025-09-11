@@ -45,18 +45,9 @@ const meta: Meta<typeof TextField> = {
     label: STANDARD_ARG_TYPES.label,
     description: STANDARD_ARG_TYPES.description,
     errorMessage: STANDARD_ARG_TYPES.errorMessage,
-    isDisabled: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
-    isInvalid: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
-    isRequired: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
+    isInvalid: STANDARD_ARG_TYPES.isInvalid,
+    isRequired: STANDARD_ARG_TYPES.isRequired,
   },
   parameters: {
     ...createStandardParameters('form'),

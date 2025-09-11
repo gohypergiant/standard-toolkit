@@ -31,14 +31,8 @@ const meta: Meta<typeof Radio.Group> = {
   argTypes: {
     orientation: createVariantControl(['horizontal', 'vertical']),
     label: STANDARD_ARG_TYPES.label,
-    isDisabled: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
-    isRequired: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
+    isRequired: STANDARD_ARG_TYPES.isRequired,
   },
   parameters: {
     ...createStandardParameters('form'),

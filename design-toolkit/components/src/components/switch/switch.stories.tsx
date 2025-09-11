@@ -29,10 +29,7 @@ const meta: Meta<typeof Switch> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    isDisabled: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
     labelPosition: createVariantControl(['start', 'end']),
   },
   parameters: {

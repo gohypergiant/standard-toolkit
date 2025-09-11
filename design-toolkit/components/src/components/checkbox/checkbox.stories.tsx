@@ -28,10 +28,7 @@ const meta: Meta<typeof Checkbox> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    isDisabled: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
     isIndeterminate: {
       control: { type: 'boolean' },
       table: { type: { summary: 'boolean' } },

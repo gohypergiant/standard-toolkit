@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { Label } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -21,6 +24,11 @@ const meta: Meta<typeof Label> = {
     children: 'Label',
     isDisabled: false,
     isRequired: false,
+  },
+  argTypes: {
+    children: STANDARD_ARG_TYPES.children,
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
+    isRequired: STANDARD_ARG_TYPES.isRequired,
   },
   parameters: {
     ...createStandardParameters('form'),

@@ -44,13 +44,3 @@ export const SIZE_RANGES = Object.freeze({
   /** Binary range for components with simple size toggle */
   BINARY: [SIZE_VARIANTS.small, SIZE_VARIANTS.large],
 } as const);
-
-/**
- * Size ordering from smallest to largest
- */
-const ORDER = [
-  SIZE_VARIANTS.xsmall,
-  SIZE_VARIANTS.small,
-  SIZE_VARIANTS.medium,
-  SIZE_VARIANTS.large,
-] as const;

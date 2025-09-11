@@ -18,8 +18,8 @@ const meta: Meta<typeof ClassificationBanner> = {
   title: 'Components/ClassificationBanner',
   component: ClassificationBanner,
   parameters: {
-    layout: 'fullscreen',
     ...createStandardParameters('content'),
+    layout: 'fullscreen',
     docs: {
       subtitle:
         'Displays security classification banners for pages and documents.',

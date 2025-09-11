@@ -13,6 +13,7 @@
 import {
   createSizeControl,
   createStandardParameters,
+  STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { createStatesStory } from '^storybook/story-templates';
 import { Placeholder } from '@accelint/icons';
@@ -35,6 +36,7 @@ const meta: Meta<typeof Button> = {
     isDisabled: false,
   },
   argTypes: {
+    children: STANDARD_ARG_TYPES.children,
     color: {
       control: { type: 'select' },
       options: [
@@ -48,10 +50,7 @@ const meta: Meta<typeof Button> = {
       control: { type: 'select' },
       options: ['filled', 'outline', 'flat', 'icon', 'floating'],
     },
-    isDisabled: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },
   parameters: {
     ...createStandardParameters('form'),
