@@ -9,6 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import { createStandardParameters } from '^storybook/shared-controls';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
 import { Heading, Text } from 'react-aria-components';
 import { Button } from '../button';
@@ -26,7 +28,10 @@ const meta: Meta<SidenavWithLayoutArgs> = {
   title: 'Components/Sidenav',
   component: Sidenav,
   parameters: {
-    layout: 'fullscreen',
+    ...createStandardParameters('overlay'),
+    docs: {
+      subtitle: 'Side navigation component for hierarchical navigation.',
+    },
   },
   args: {
     pushLayout: true,

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createStandardParameters } from '^storybook/shared-controls';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Link } from './index';
@@ -31,6 +32,12 @@ const meta: Meta<typeof Link> = {
     },
     isDisabled: {
       control: 'boolean',
+    },
+  },
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle: 'Accessible link component for navigation and actions.',
     },
   },
 };
