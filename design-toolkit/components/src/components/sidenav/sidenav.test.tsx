@@ -26,22 +26,32 @@ function setup(
     children = (
       <>
         <Sidenav.Header>
-          <Icon size='large' data-testid='logo'>
-            <Placeholder />
-          </Icon>
-          <div>
+          <Sidenav.Avatar>
+            <Icon data-testid='logo'>
+              <Placeholder />
+            </Icon>
             <Heading>Application Header</Heading>
-            <Heading>subheader</Heading>
-          </div>
+            <Text>subheader</Text>
+          </Sidenav.Avatar>
         </Sidenav.Header>
-
-        <Heading>Title</Heading>
-        <Sidenav.Item>
-          <Icon>
-            <Placeholder />
-          </Icon>
-          <Text>Nav item</Text>
-        </Sidenav.Item>
+        <Sidenav.Content>
+          <Heading>Title</Heading>
+          <Sidenav.Item>
+            <Icon>
+              <Placeholder />
+            </Icon>
+            <Text>Nav item</Text>
+          </Sidenav.Item>
+        </Sidenav.Content>
+        <Sidenav.Footer>
+          <Sidenav.Avatar>
+            <Icon data-testid='avatar'>
+              <Placeholder />
+            </Icon>
+            <Heading>FullName</Heading>
+            <Text>test@example.com</Text>
+          </Sidenav.Avatar>
+        </Sidenav.Footer>
       </>
     ),
     ...rest
@@ -74,6 +84,8 @@ describe('Sidenav', () => {
     expect(screen.queryByText('subheader')).toHaveClass(/hidden/);
     expect(screen.queryByText('Title')).toHaveClass(/hidden/);
     expect(screen.queryByText('Nav item')).toHaveClass(/hidden/);
+    expect(screen.queryByText('FullName')).toHaveClass(/hidden/);
+    expect(screen.queryByText('test@example.com')).toHaveClass(/hidden/);
   });
 
   it('should open externally', async () => {
