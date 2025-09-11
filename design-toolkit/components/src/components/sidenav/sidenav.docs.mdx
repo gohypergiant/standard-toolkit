@@ -25,7 +25,8 @@ It is composed of the following components:
 - **Sidenav.Avatar** - Icon display component with icon, heading, and text
 - **Sidenav.Item** - Interactive navigation item that can be selected, disabled, or contain nested items
 - **Sidenav.Divider** - Visual separator to group navigation items
-- **Sidenav.Footer** - Container for footer content properly positioned
+- **Sidenav.Content** - Container for content
+- **Sidenav.Footer** - Container for footer content
 
 ## Example Usage
 
@@ -51,16 +52,19 @@ It is composed of the following components:
         </Sidenav.Avatar>
       </Sidenav.Header>
 
-      <Heading>Navigation</Heading>
-      <Sidenav.Item>
-        <Icon><HomeIcon /></Icon>
-        <Text>Home</Text>
-      </Sidenav.Item>
-      <Sidenav.Divider />
-      <Sidenav.Item isSelected>
-        <Icon><SettingsIcon /></Icon>
-        <Text>Settings</Text>
-      </Sidenav.Item>
+      <Sidenav.Content>
+        <Heading>Navigation</Heading>
+        <Sidenav.Item>
+          <Icon><HomeIcon /></Icon>
+          <Text>Home</Text>
+        </Sidenav.Item>
+        <Sidenav.Divider />
+        <Sidenav.Item isSelected>
+          <Icon><SettingsIcon /></Icon>
+          <Text>Settings</Text>
+        </Sidenav.Item>
+      </Sidenav.Content>
+
       <Sidenav.Footer>
         <Sidenav.Avatar>
           <Icon><UserIcon /></Icon>
@@ -80,7 +84,7 @@ It is composed of the following components:
 
 ### Sidenav Props
 - **`hidden`** `boolean` - Controls the visibility of the navigation panel
-- **`children`** `ReactNode` - Content to be rendered within the navigation
+- **`children`** `ReactNode` - Must contain exactly one `Sidenav.Header`, `Sidenav.Content`, and `Sidenav.Footer`
 - **`className`** `string` - Custom CSS class name for the root element
 
 ### Sidenav.Header Props
@@ -103,6 +107,10 @@ It is composed of the following components:
 ### Sidenav.Avatar Props
 - **`children`** `ReactNode` - Must contain exactly one `Icon`, `Heading`, and `Text` component
 - **`className`** `string` - Class name for the avatar container
+
+### Sidenav.Content Props
+- **`children`** `ReactNode` - Content to be rendered in the footer section
+- **`className`** `string` - Class name for the footer container
 
 ### Sidenav.Footer Props
 - **`children`** `ReactNode` - Content to be rendered in the footer section

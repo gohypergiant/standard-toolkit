@@ -19,6 +19,7 @@ export type SidenavProps = ComponentPropsWithRef<'nav'> & {
 export type SidenavDividerProps = ComponentPropsWithRef<'hr'>;
 export type SidenavFooterProps = ComponentPropsWithRef<'footer'>;
 export type SidenavAvatarProps = ComponentPropsWithRef<'div'>;
+export type SidenavContentProps = ComponentPropsWithRef<'div'>;
 
 export type SidenavTriggerProps = ComponentPropsWithRef<typeof Pressable>;
 

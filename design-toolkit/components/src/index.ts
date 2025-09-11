@@ -242,6 +242,7 @@ export { Sidenav } from './components/sidenav';
 export { SidenavStyles } from './components/sidenav/styles';
 export type {
   SidenavAvatarProps,
+  SidenavContentProps,
   SidenavContextValue,
   SidenavDividerProps,
   SidenavFooterProps,

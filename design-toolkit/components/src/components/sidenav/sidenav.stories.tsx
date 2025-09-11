@@ -61,45 +61,47 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
               <Text>Secondary Text</Text>
             </Sidenav.Avatar>
           </Sidenav.Header>
-          <Heading>Title</Heading>
-          <Sidenav.Item>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            <Text>Nav item</Text>
-          </Sidenav.Item>
-          <Sidenav.Item>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            <Text>Nav item</Text>
-          </Sidenav.Item>
-          <Sidenav.Item>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            <Text>Nav item</Text>
-          </Sidenav.Item>
-          <Sidenav.Divider />
-          <Heading>Title</Heading>
-          <Sidenav.Item isDisabled>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            <Text>Nav item</Text>
-          </Sidenav.Item>
-          <Sidenav.Item>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            <Text>Nav item</Text>
-          </Sidenav.Item>
-          <Sidenav.Item isSelected>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            <Text>Nav item</Text>
-          </Sidenav.Item>
+          <Sidenav.Content>
+            <Heading>Title</Heading>
+            <Sidenav.Item>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Text>Nav item</Text>
+            </Sidenav.Item>
+            <Sidenav.Item>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Text>Nav item</Text>
+            </Sidenav.Item>
+            <Sidenav.Item>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Text>Nav item</Text>
+            </Sidenav.Item>
+            <Sidenav.Divider />
+            <Heading>Title</Heading>
+            <Sidenav.Item isDisabled>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Text>Nav item</Text>
+            </Sidenav.Item>
+            <Sidenav.Item>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Text>Nav item</Text>
+            </Sidenav.Item>
+            <Sidenav.Item isSelected>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <Text>Nav item</Text>
+            </Sidenav.Item>
+          </Sidenav.Content>
           <Sidenav.Footer>
             <Sidenav.Avatar>
               <Icon>

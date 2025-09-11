@@ -32,6 +32,7 @@ import { SidenavEventTypes } from './events';
 import { SidenavStyles } from './styles';
 import type {
   SidenavAvatarProps,
+  SidenavContentProps,
   SidenavContextValue,
   SidenavDividerProps,
   SidenavFooterProps,
@@ -43,8 +44,8 @@ import type {
 
 const {
   sidenav,
+  content,
   header,
-  footer,
   toggle,
   heading,
   divider,
@@ -62,8 +63,18 @@ const SidenavContext = createContext<SidenavContextValue | null>(null);
 export function Sidenav({
   className,
   isHiddenWhenClosed,
+  children,
   ...rest
 }: SidenavProps) {
+  containsExactChildren({
+    children,
+    componentName: Sidenav.displayName,
+    restrictions: [
+      [SidenavHeader, { min: 1, max: 1 }],
+      [SidenavContent, { min: 1, max: 1 }],
+      [SidenavFooter, { min: 0, max: 1 }],
+    ],
+  });
   const [open, setOpen] = useState(false);
 
   useOn(SidenavEventTypes.toggle, () => setOpen((prev) => !prev));
@@ -83,11 +94,22 @@ export function Sidenav({
         {...rest}
         className={sidenav({ className })}
         data-open={open || null}
-      />
+      >
+        {children}
+      </nav>
     </Provider>
   );
 }
 Sidenav.displayName = 'Sidenav';
+
+function SidenavContent({ className, children, ...rest }: SidenavContentProps) {
+  return (
+    <div {...rest} className={content({ className })}>
+      {children}
+    </div>
+  );
+}
+SidenavContent.displayName = 'Sidenav.Content';
 
 function SidenavHeader({ children, classNames, ...rest }: SidenavHeaderProps) {
   const emit = useEmit(SidenavEventTypes.toggle);
@@ -108,12 +130,8 @@ function SidenavHeader({ children, classNames, ...rest }: SidenavHeaderProps) {
 }
 SidenavHeader.displayName = 'Sidenav.Header';
 
-function SidenavFooter({ children, className, ...rest }: SidenavFooterProps) {
-  return (
-    <footer {...rest} className={footer({ className })}>
-      {children}
-    </footer>
-  );
+function SidenavFooter(props: SidenavFooterProps) {
+  return <footer {...props} />;
 }
 SidenavFooter.displayName = 'Sidenav.Footer';
 
@@ -196,3 +214,4 @@ Sidenav.Item = SidenavItem;
 Sidenav.Divider = SidenavDivider;
 Sidenav.Avatar = SidenavAvatar;
 Sidenav.Footer = SidenavFooter;
+Sidenav.Content = SidenavContent;

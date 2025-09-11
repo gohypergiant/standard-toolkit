@@ -19,14 +19,15 @@ export const SidenavStyles = tv({
       'closed:items-center',
       'group-data-[push~=left]/layout:relative',
     ],
+    content: 'flex flex-col h-full max-h-full overflow-y-auto',
     header: 'mb-m flex justify-center',
-    footer: 'absolute bottom-m',
-    avatar:
-      'grid grid-cols-[1fr_auto] grid-rows-2 items-center gap-x-m group-closed/sidenav:flex',
-    avatarIcon: 'col-start-1 row-span-2',
-    avatarHeading: 'fg-primary-bold col-start-2 row-start-1 text-body-m',
+    avatar: [
+      'grid grid-cols-[auto_1fr] grid-rows-2 items-center gap-x-m group-closed/sidenav:flex [grid-template-areas:"icon_heading"_"icon_text"]',
+    ],
+    avatarIcon: '[grid-area:icon]',
+    avatarHeading: 'fg-primary-bold text-body-m [grid-area:heading]',
     avatarText:
-      'fg-primary-muted col-start-2 row-start-2 grow-1 text-left text-body-s',
+      'fg-primary-muted  grow-1 text-left text-body-s [grid-area:text]',
     toggle: [
       'flex cursor-pointer items-center gap-s rounded-medium p-xs group-open/sidenav:px-s',
       'enabled:hover:bg-interactive-muted-hover',
