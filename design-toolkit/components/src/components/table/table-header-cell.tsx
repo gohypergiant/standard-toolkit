@@ -38,6 +38,17 @@ export function HeaderCell({
 
   const showKebab = enableColumnReordering || enableSorting;
 
+  const showHeaderIcon = (isAsc: boolean) => {
+    return (
+      <div
+        onMouseEnter={() => setHoveredArrow(true)}
+        onMouseLeave={() => setHoveredArrow(false)}
+      >
+        {hoveredArrow ? <Kebab /> : isAsc ? <ArrowUp /> : <ArrowDown />}
+      </div>
+    );
+  };
+
   return (
     <th
       ref={ref}
@@ -72,19 +83,9 @@ export function HeaderCell({
                     <Button variant='icon' aria-label='Menu' className='p-s'>
                       <Icon>
                         {header?.column.getIsSorted() === 'asc' ? (
-                          <div
-                            onMouseEnter={() => setHoveredArrow(true)}
-                            onMouseLeave={() => setHoveredArrow(false)}
-                          >
-                            {hoveredArrow ? <Kebab /> : <ArrowUp />}
-                          </div>
+                          showHeaderIcon(true)
                         ) : header?.column.getIsSorted() === 'desc' ? (
-                          <div
-                            onMouseEnter={() => setHoveredArrow(true)}
-                            onMouseLeave={() => setHoveredArrow(false)}
-                          >
-                            {hoveredArrow ? <Kebab /> : <ArrowDown />}
-                          </div>
+                          showHeaderIcon(false)
                         ) : (
                           <div
                             className={headerKebab({

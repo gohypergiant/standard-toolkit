@@ -109,8 +109,6 @@ export const rowStyles = tv({
     'has-[+[data-selected]]:not-selected:border-b-[var(--outline-accent-primary-bold)]',
     'not-has-[+[data-selected]]:data-selected:border-b-[var(--outline-accent-primary-bold)]',
     'group-not-selected/tbody:first-of-type:border-t-[var(--outline-static)]',
-    'selected:first-of-type:border-t-[var(--outline-accent-primary-bold)]',
-    'selected:last-of-type:border-b-[var(--outline-accent-primary-bold)]',
   ],
 });
 

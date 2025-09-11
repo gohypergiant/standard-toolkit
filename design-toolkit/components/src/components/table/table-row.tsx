@@ -34,7 +34,7 @@ export function TableRow({
                 cell={cell}
                 persistent={persistNumerals}
                 selectedColumn={selectedCol}
-              ></TableCell>
+              />
             )))}
     </tr>
   );
