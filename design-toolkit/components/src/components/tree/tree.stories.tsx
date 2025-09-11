@@ -222,58 +222,11 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
 }
 
 /**
- * This story is using the optional useTreeState hook, which returns
- * which is a convenience helper that will control state for the tree.
- * The useTreeState hook also provides drag and drop hooks.
- */
-export const DragAndDrop: Story = {
-  render: (args) => {
-    const { nodes, dragAndDropConfig, actions } = useTreeState({ items });
-
-    return (
-      <>
-        <div className='flex items-center gap-m'>
-          <Button size='small' variant='flat' onPress={actions.selectAll}>
-            Select All
-          </Button>
-          <Button size='small' variant='flat' onPress={actions.unselectAll}>
-            Unselect All
-          </Button>
-          <Button size='small' variant='icon' onPress={actions.expandAll}>
-            <Icon>
-              <ExpandAll />
-            </Icon>
-          </Button>
-          <Button size='small' variant='icon' onPress={actions.collapseAll}>
-            <Icon>
-              <CollapseAll />
-            </Icon>
-          </Button>
-        </div>
-
-        <Tree
-          {...args}
-          dragAndDropConfig={dragAndDropConfig}
-          items={nodes}
-          style={{ width: '500px' }}
-          onExpandedChange={actions.onExpandedChange}
-          onSelectionChange={actions.onSelectionChange}
-          onVisibilityChange={actions.onVisibilityChange}
-          aria-label='Drag and Drop example'
-        >
-          {(node) => <Node key={node.key} node={node} />}
-        </Tree>
-      </>
-    );
-  },
-};
-
-/**
  * A Stateless tree uses data from a remote source to drive tree display
  * and operations. An optional useTreeActions hook will provide basic tree
  * data operations.
  */
-export const Stateless: Story = {
+export const Default: Story = {
   render: (args) => {
     /**
      *  IMPORTANT: This useState is just a cheap way to represent
@@ -348,6 +301,53 @@ export const Stateless: Story = {
           onSelectionChange={handleSelection}
           onVisibilityChange={handleVisibility}
           aria-label='Stateless Example'
+        >
+          {(node) => <Node key={node.key} node={node} />}
+        </Tree>
+      </>
+    );
+  },
+};
+
+/**
+ * This story is using the optional useTreeState hook, which returns
+ * which is a convenience helper that will control state for the tree.
+ * The useTreeState hook also provides drag and drop hooks.
+ */
+export const DragAndDrop: Story = {
+  render: (args) => {
+    const { nodes, dragAndDropConfig, actions } = useTreeState({ items });
+
+    return (
+      <>
+        <div className='flex items-center gap-m'>
+          <Button size='small' variant='flat' onPress={actions.selectAll}>
+            Select All
+          </Button>
+          <Button size='small' variant='flat' onPress={actions.unselectAll}>
+            Unselect All
+          </Button>
+          <Button size='small' variant='icon' onPress={actions.expandAll}>
+            <Icon>
+              <ExpandAll />
+            </Icon>
+          </Button>
+          <Button size='small' variant='icon' onPress={actions.collapseAll}>
+            <Icon>
+              <CollapseAll />
+            </Icon>
+          </Button>
+        </div>
+
+        <Tree
+          {...args}
+          dragAndDropConfig={dragAndDropConfig}
+          items={nodes}
+          style={{ width: '500px' }}
+          onExpandedChange={actions.onExpandedChange}
+          onSelectionChange={actions.onSelectionChange}
+          onVisibilityChange={actions.onVisibilityChange}
+          aria-label='Drag and Drop example'
         >
           {(node) => <Node key={node.key} node={node} />}
         </Tree>

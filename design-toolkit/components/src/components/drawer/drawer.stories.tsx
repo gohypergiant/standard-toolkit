@@ -66,7 +66,7 @@ const ids = {
 type DrawerWithToggleArgs = ComponentProps<typeof Drawer> & {
   toggle?: boolean;
 };
-export const StaticHeaderFooter: StoryObj<DrawerWithToggleArgs> = {
+export const Default: StoryObj<DrawerWithToggleArgs> = {
   args: {
     toggle: false,
   },
