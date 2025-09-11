@@ -332,7 +332,11 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
-export { containsExactChildren, expectsIconWrapper } from './lib/react';
+export {
+  containsAnyOfExactChildren,
+  containsExactChildren,
+  expectsIconWrapper,
+} from './lib/react';
 export type {
   AriaAttributes,
   AriaAttributesWithRef,

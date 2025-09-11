@@ -38,7 +38,7 @@ export const SidenavStyles = tv({
       'my-s h-[1px] w-full shrink-0 grow-0 border-0 bg-[var(--outline-static)]',
     heading: 'text-body-xs uppercase',
     item: [
-      'flex cursor-pointer items-center gap-s rounded-medium p-xs text-body-m',
+      'flex w-full cursor-pointer items-center gap-s rounded-medium p-xs text-body-m',
       'group-open/sidenav:px-s',
       'enabled:hover:bg-interactive-muted-hover',
       'enabled:focus-visible:bg-interactive-muted-hover enabled:focus-visible:outline-none',

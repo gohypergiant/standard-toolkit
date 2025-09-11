@@ -26,7 +26,7 @@ import {
   TextContext,
   ToggleButton,
 } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
+import { containsAnyOfExactChildren, containsExactChildren } from '@/lib/react';
 import { Icon, IconContext } from '../icon';
 import { SidenavEventTypes } from './events';
 import { SidenavStyles } from './styles';
@@ -147,12 +147,15 @@ function SidenavTrigger({ children, ...rest }: SidenavTriggerProps) {
 SidenavTrigger.displayName = 'Sidenav.Trigger';
 
 function SidenavItem({ children, classNames, ...rest }: SidenavItemProps) {
-  containsExactChildren({
+  containsAnyOfExactChildren({
     children,
     componentName: SidenavItem.displayName,
     restrictions: [
-      [Icon, { min: 1, max: 1 }],
-      [Text, { min: 1, max: 1 }],
+      [[SidenavAvatar, { min: 1, max: 1 }]],
+      [
+        [Icon, { min: 1, max: 1 }],
+        [Text, { min: 1, max: 1 }],
+      ],
     ],
   });
 

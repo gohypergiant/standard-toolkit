@@ -102,14 +102,17 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
               <Text>Nav item</Text>
             </Sidenav.Item>
           </Sidenav.Content>
+
           <Sidenav.Footer>
-            <Sidenav.Avatar>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Heading>Application Header</Heading>
-              <Text>Secondary Text</Text>
-            </Sidenav.Avatar>
+            <Sidenav.Item>
+              <Sidenav.Avatar>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <Heading>Application Header</Heading>
+                <Text>Secondary Text</Text>
+              </Sidenav.Avatar>
+            </Sidenav.Item>
           </Sidenav.Footer>
         </Sidenav>
       </Drawer.Layout>
