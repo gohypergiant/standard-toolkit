@@ -118,7 +118,7 @@ function SidenavHeader({ children, classNames, ...rest }: SidenavHeaderProps) {
     <Header {...rest} className={header({ className: classNames?.header })}>
       <Button
         className={toggle({ className: classNames?.button })}
-        onPress={() => emit(undefined)}
+        onPress={() => emit()}
       >
         {children}
         <Icon className={transient()}>
@@ -139,7 +139,7 @@ function SidenavTrigger({ children, ...rest }: SidenavTriggerProps) {
   const emit = useEmit(SidenavEventTypes.toggle);
 
   return (
-    <Pressable {...rest} onPress={() => emit(undefined)}>
+    <Pressable {...rest} onPress={() => emit()}>
       {children}
     </Pressable>
   );

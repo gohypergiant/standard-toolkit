@@ -26,7 +26,7 @@ export function BusExample() {
   const workerRef = useRef<Worker>(null);
 
   const doInc = useCallback(() => {
-    bus.emit('inc', {});
+    bus.emit('inc');
   }, []);
 
   const openWindow = useCallback(() => {
