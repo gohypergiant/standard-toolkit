@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { Cache } from '@/hooks/use-tree/actions/cache';
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
+import type { Key, Selection } from '@react-types/shared';
 import {
   createContext,
   memo,
@@ -29,14 +31,12 @@ import {
   type TextProps,
   useDragAndDrop,
 } from 'react-aria-components';
-import { Cache } from '@/hooks/use-tree/actions/cache';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
+import type { IconProps } from '../icon/types';
 import { Lines } from '../lines';
 import { TreeStyles, TreeStylesDefaults } from './styles';
-import type { Key, Selection } from '@react-types/shared';
-import type { IconProps } from '../icon/types';
 import type {
   TreeContextValue,
   TreeItemContentProps,
@@ -333,7 +333,7 @@ function ItemContent({ children }: TreeItemContentProps) {
               {showVisibility && (
                 <Button
                   variant='icon'
-                  color='info'
+                  color='mono-muted'
                   size={size}
                   onPress={handlePress}
                   isDisabled={isDisabled}

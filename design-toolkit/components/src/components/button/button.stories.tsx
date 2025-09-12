@@ -10,48 +10,48 @@
  * governing permissions and limitations under the License.
  */
 
-import { Placeholder } from '@accelint/icons';
-import { composeRenderProps } from 'react-aria-components';
-import { Icon } from '../icon';
-import { Button, LinkButton, ToggleButton } from './';
-import { ButtonStylesDefaults } from './styles';
-import type { Meta, StoryObj } from '@storybook/react';
+import { Placeholder } from "@accelint/icons";
+import type { Meta, StoryObj } from "@storybook/react";
+import { composeRenderProps } from "react-aria-components";
+import { Icon } from "../icon";
+import { Button, LinkButton, ToggleButton } from "./";
+import { ButtonStylesDefaults } from "./styles";
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
+  title: "Components/Button",
   component: Button,
   args: {
-    children: 'Button',
+    children: "Button",
     color: ButtonStylesDefaults.color,
-    size: 'medium',
+    size: "medium",
     variant: ButtonStylesDefaults.variant,
     isDisabled: false,
   },
   argTypes: {
     color: {
-      control: 'select',
-      options: ['info', 'serious', 'critical'],
+      control: "select",
+      options: ["mono-muted", "mono-bold", "accent", "serious", "critical"],
     },
     size: {
-      control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
+      control: "select",
+      options: ["large", "medium", "small", "xsmall"],
     },
     variant: {
-      control: 'select',
-      options: ['filled', 'outline', 'flat', 'icon', 'floating'],
+      control: "select",
+      options: ["filled", "outline", "flat", "icon", "floating"],
     },
   },
   parameters: {
     controls: {
       exclude: [
-        'form',
-        'formAction',
-        'formEncType',
-        'formMethod',
-        'formNoValidate',
-        'formTarget',
-        'name',
-        'value',
+        "form",
+        "formAction",
+        "formEncType",
+        "formMethod",
+        "formNoValidate",
+        "formTarget",
+        "name",
+        "value",
       ],
     },
   },
@@ -60,10 +60,14 @@ const meta: Meta<typeof Button> = {
 export default meta;
 
 export const Default: StoryObj<typeof Button> = {
+  args: {
+    color: "mono-bold",
+  },
+
   render: ({ children, ...props }) => (
     <Button {...props}>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === "icon" || props.variant === "floating" ? (
           <Icon>
             <Placeholder />
           </Icon>
@@ -77,9 +81,9 @@ export const Default: StoryObj<typeof Button> = {
 
 export const Link: StoryObj<typeof LinkButton> = {
   render: ({ children, ...props }) => (
-    <LinkButton {...props} href='/'>
+    <LinkButton {...props} href="/">
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === "icon" || props.variant === "floating" ? (
           <Icon>
             <Placeholder />
           </Icon>
@@ -95,7 +99,7 @@ export const Toggle: StoryObj<typeof ToggleButton> = {
   render: ({ children, ...props }) => (
     <ToggleButton {...props}>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === "icon" || props.variant === "floating" ? (
           <Icon>
             <Placeholder />
           </Icon>
