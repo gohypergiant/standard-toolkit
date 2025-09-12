@@ -13,15 +13,13 @@
 'use client';
 import 'client-only';
 
-import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
+import { Kebab } from '@accelint/icons';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
-  type Cell,
   type ColumnOrderState,
   type RowSelectionState,
   type SortingState,
-  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
@@ -39,33 +37,9 @@ import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import {
-  ColumnKebabMenuItems,
-  RowKebabMenuItems,
-  type TableProps,
-} from './types';
+import { RowKebabMenuItems, type TableProps } from './types';
 
-const { headerCellButton, pinIcon, rowCell, rowKebab, headerKebab, menuItem } =
-  TableStyles();
-
-const dataTableCell = <T,>(
-  cell: Cell<T, unknown>,
-  persistent: boolean,
-  isColumnSelected: boolean,
-  isLastRow: boolean,
-) => (
-  <TableCell
-    key={cell.id}
-    persistent={persistent}
-    narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
-    numeral={cell.column.id === 'numeral'}
-    kebab={cell.column.id === 'kebab'}
-    selectedCol={isColumnSelected}
-    data-selection-end={isColumnSelected && isLastRow ? '' : undefined}
-  >
-    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-  </TableCell>
-);
+const { pinIcon, rowCell, rowKebab, menuItem } = TableStyles();
 
 const TableDefaultProps = {
   kebabPosition: 'right',
@@ -107,10 +81,9 @@ export function Table<T extends { id: string | number }>({
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [columnSelection, setColumnSelection] = useState<string | null>();
+  const [columnSelection, setColumnSelection] = useState<string | null>(null);
 
   const { moveUpSelectedRows, moveDownRows } = useRowMovement<T>(
     data,
@@ -260,9 +233,6 @@ export function Table<T extends { id: string | number }>({
     data: data,
     columns,
     enableSorting,
-    initialState: {
-      pagination: { pageIndex: 0, pageSize },
-    },
     state: {
       rowSelection,
       sorting,
@@ -287,6 +257,7 @@ export function Table<T extends { id: string | number }>({
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
   });
+
   const { moveColumnLeft, moveColumnRight } = useColumnMovement(
     setColumnOrderCallback,
   );
@@ -295,245 +266,46 @@ export function Table<T extends { id: string | number }>({
     return (
       <div>
         <table {...props}>
-          <TableHeader>
-            {getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} data-top>
-                {/* biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation> */}
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <HeaderCell
-                      key={header.id}
-                      narrow={
-                        header.column.id === 'numeral' ||
-                        header.column.id === 'kebab'
-                      }
-                      data-selected={
-                        header.column.id === columnSelection ? '' : undefined
-                      }
-                    >
-                      <div
-                        className={headerCellButton()}
-                        onMouseDown={() => setColumnSelection(header.column.id)}
-                        onMouseUp={() => setColumnSelection(null)}
-                      >
-                        {header.isPlaceholder ||
-                        header.column.id === 'kebab' ? null : (
-                          <button type='button'>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                          </button>
-                        )}
-
-                        {['numeral', 'kebab', 'selection'].includes(
-                          header.column.id,
-                        )
-                          ? null
-                          : (enableColumnReordering || enableSorting) && (
-                              <Menu.Trigger
-                                onOpenChange={(isOpen) => {
-                                  if (isOpen) {
-                                    setColumnSelection(header.column.id);
-                                  } else {
-                                    setColumnSelection(null);
-                                  }
-                                }}
-                              >
-                                <Button variant='icon' aria-label='Menu'>
-                                  <Icon>
-                                    {header.column.getIsSorted() === 'asc' ? (
-                                      <div
-                                        onMouseEnter={() =>
-                                          setHoveredArrow(true)
-                                        }
-                                        onMouseLeave={() =>
-                                          setHoveredArrow(false)
-                                        }
-                                      >
-                                        {hoveredArrow ? <Kebab /> : <ArrowUp />}
-                                      </div>
-                                    ) : header.column.getIsSorted() ===
-                                      'desc' ? (
-                                      <div
-                                        onMouseEnter={() =>
-                                          setHoveredArrow(true)
-                                        }
-                                        onMouseLeave={() =>
-                                          setHoveredArrow(false)
-                                        }
-                                      >
-                                        {hoveredArrow ? (
-                                          <Kebab />
-                                        ) : (
-                                          <ArrowDown />
-                                        )}
-                                      </div>
-                                    ) : (
-                                      <div
-                                        className={headerKebab({
-                                          persistKebab: persistHeaderKebabMenu,
-                                        })}
-                                      >
-                                        <Kebab />
-                                      </div>
-                                    )}
-                                  </Icon>
-                                </Button>
-                                <Menu>
-                                  {enableColumnReordering && (
-                                    <>
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          moveColumnLeft(
-                                            header.column.getIndex(),
-                                          );
-                                        }}
-                                        isDisabled={header.column.getIsFirstColumn(
-                                          'center',
-                                        )}
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Left}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          moveColumnRight(
-                                            header.column.getIndex(),
-                                          );
-                                        }}
-                                        isDisabled={header.column.getIsLastColumn(
-                                          'center',
-                                        )}
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Right}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                    </>
-                                  )}
-                                  {enableSorting && (
-                                    <>
-                                      <Menu.Separator />
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          header.column.toggleSorting(false);
-                                        }}
-                                        isDisabled={
-                                          header.column.getIsSorted() === 'asc'
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Asc}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        onAction={() => {
-                                          header.column.toggleSorting(true);
-                                        }}
-                                        isDisabled={
-                                          header.column.getIsSorted() === 'desc'
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Desc}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        onAction={() => {
-                                          header.column.clearSorting();
-                                        }}
-                                        isDisabled={
-                                          !header.column.getIsSorted()
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Clear}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                    </>
-                                  )}
-                                </Menu>
-                              </Menu.Trigger>
-                            )}
-                      </div>
-                    </HeaderCell>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
+          <TableHeader
+            getHeaderGroups={getHeaderGroups}
+            moveColumnLeft={moveColumnLeft}
+            moveColumnRight={moveColumnRight}
+            persistHeaderKebabMenu={persistHeaderKebabMenu}
+            setColumnSelection={setColumnSelection}
+            columnSelection={columnSelection}
+            enableColumnReordering={enableColumnReordering}
+            enableSorting={enableSorting}
+          />
           <TableBody>
             {getTopRows().map((row) => (
               <TableRow
                 key={row.id}
-                {...(row.getIsSelected()
-                  ? { 'data-selected': '' }
-                  : { 'not-selected': 'true' })}
+                row={row}
+                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                persistNumerals={persistNumerals}
+                selectedCol={columnSelection}
                 data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
+              ></TableRow>
             ))}
             {getCenterRows().map((row) => (
               <TableRow
                 key={row.id}
-                {...(row.getIsSelected()
-                  ? { 'data-selected': '' }
-                  : { 'not-selected': 'true' })}
+                row={row}
+                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                persistNumerals={persistNumerals}
+                selectedCol={columnSelection}
                 data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'numeral'
-                        ? persistNumerals
-                        : cell.column.id === 'kebab'
-                          ? persistRowKebabMenu
-                          : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
+              ></TableRow>
             ))}
             {getBottomRows().map((row) => (
               <TableRow
                 key={row.id}
-                {...(row.getIsSelected()
-                  ? { 'data-selected': '' }
-                  : { 'not-selected': 'true' })}
+                row={row}
+                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+                persistNumerals={persistNumerals}
+                selectedCol={columnSelection}
                 data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
+              ></TableRow>
             ))}
           </TableBody>
         </table>
@@ -541,7 +313,7 @@ export function Table<T extends { id: string | number }>({
     );
   }
 
-  return <table {...props} />;
+  return <table {...props}>{props.children}</table>;
 }
 
 Table.displayName = 'Table';

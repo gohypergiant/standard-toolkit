@@ -11,8 +11,31 @@
  */
 
 import { rowStyles } from './styles';
+import { TableCell } from './table-cell';
 import type { TableRowProps } from './types';
 
-export function TableRow({ ref, className, ...props }: TableRowProps) {
-  return <tr ref={ref} className={rowStyles({ className })} {...props} />;
+export function TableRow({
+  ref,
+  className,
+  row,
+  persistNumerals,
+  selectedCol,
+  ...props
+}: TableRowProps<any>) {
+  return (
+    <tr ref={ref} className={rowStyles({ className })} {...props}>
+      {props.children ||
+        (row &&
+          row
+            .getVisibleCells()
+            .map((cell) => (
+              <TableCell
+                key={cell.id}
+                cell={cell}
+                persistent={persistNumerals}
+                selectedColumn={selectedCol}
+              />
+            )))}
+    </tr>
+  );
 }

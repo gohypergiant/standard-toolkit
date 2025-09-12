@@ -41,16 +41,14 @@ export const cellStyles = tv({
       true: '',
       false: '',
     },
-    persistent: {
+    persistNum: {
       true: 'visible',
       false: 'hover:*:visible group-hover/row:*:visible',
     },
     selectedCol: {
       true: [
         'bg-accent-primary-muted',
-        'border-x-1',
-        'border-r-[var(--outline-accent-primary-bold)]',
-        'border-l-[var(--outline-accent-primary-bold)]',
+        'shadow-[1px_1px_0_0_var(--outline-accent-primary-bold),-1px_0_0_0_var(--outline-accent-primary-bold)]',
       ],
       false: '',
     },
@@ -84,16 +82,16 @@ export const headerCellStyles = tv({
   base: [
     'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'selected:bg-accent-primary-muted',
-    'selected:border-t-1',
-    'selected:border-x-1',
-    'selected:border-r-[var(--outline-accent-primary-bold)]',
-    'selected:border-l-[var(--outline-accent-primary-bold)]',
-    'selected:border-t-[var(--outline-accent-primary-bold)]',
+    'selected:shadow-[1px_0_0_0_var(--outline-accent-primary-bold),-1px_-1px_0_0_var(--outline-accent-primary-bold)]',
   ],
   variants: {
     narrow: {
       true: 'px-0 py-m ',
       false: 'p-m',
+    },
+    showKebab: {
+      true: 'pr-0',
+      false: '',
     },
   },
   defaultVariants: {
@@ -109,10 +107,9 @@ export const rowStyles = tv({
     'selected:border-x-[var(--outline-accent-primary-bold)]',
     /** Ensure border is applied to first and last selected rows */
     'has-[+[data-selected]]:not-selected:border-b-[var(--outline-accent-primary-bold)]',
-    'has-[+[not-selected="true"]]:selected:border-b-[var(--outline-accent-primary-bold)]',
+    'not-has-[+[data-selected]]:data-selected:border-b-[var(--outline-accent-primary-bold)]',
     'group-not-selected/tbody:first-of-type:border-t-[var(--outline-static)]',
     'selected:first-of-type:border-t-[var(--outline-accent-primary-bold)]',
-    'selected:last-of-type:border-b-[var(--outline-accent-primary-bold)]',
   ],
 });
 

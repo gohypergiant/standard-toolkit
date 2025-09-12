@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ColumnDef } from '@tanstack/react-table';
+import type { Cell, ColumnDef, Header, Row } from '@tanstack/react-table';
 import type {
   HTMLAttributes,
   RefAttributes,
@@ -149,8 +149,13 @@ export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps = HTMLAttributes<HTMLTableRowElement> &
-  RefAttributes<HTMLTableRowElement>;
+export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
+  RefAttributes<HTMLTableRowElement> & {
+    row?: Row<T>;
+    persistRowKebabMenu?: boolean;
+    persistNumerals?: boolean;
+    selectedCol: string | null;
+  };
 
 /**
  * Props for a table cell component.
@@ -170,9 +175,13 @@ export type TableRowProps = HTMLAttributes<HTMLTableRowElement> &
  *   If true, the cell is always visible.
  *   If false, the cell content is only visible on hover or when the row is hovered.
  */
-export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
+export type TableCellProps<T> = TdHTMLAttributes<HTMLTableCellElement> &
   VariantProps<typeof cellStyles> &
-  RefAttributes<HTMLTableCellElement>;
+  RefAttributes<HTMLTableCellElement> & {
+    cell?: Cell<T, unknown>;
+    persistent?: boolean | undefined;
+    selectedColumn: string | null;
+  };
 
 /**
  * Props for a table header cell component.
@@ -184,9 +193,17 @@ export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
  * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps = ThHTMLAttributes<HTMLTableCellElement> &
+export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
   VariantProps<typeof headerCellStyles> &
-  RefAttributes<HTMLTableCellElement>;
+  RefAttributes<HTMLTableCellElement> & {
+    header?: Header<T, unknown>;
+    enableColumnReordering?: boolean;
+    enableSorting?: boolean;
+    moveColumnLeft?: (index: number) => void;
+    moveColumnRight?: (index: number) => void;
+    persistHeaderKebabMenu?: boolean;
+    setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
+  };
 
 /**
  * Props for the table header (`<thead>`) component.
@@ -197,7 +214,16 @@ export type TableHeaderCellProps = ThHTMLAttributes<HTMLTableCellElement> &
  * @see {@link RefAttributes}
  */
 export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement>;
+  RefAttributes<HTMLTableSectionElement> & {
+    getHeaderGroups: any;
+    moveColumnLeft?: (index: number) => void;
+    moveColumnRight?: (index: number) => void;
+    setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
+    persistHeaderKebabMenu?: boolean;
+    enableColumnReordering?: boolean;
+    enableSorting?: boolean;
+    columnSelection: string | any;
+  };
 
 export enum RowKebabMenuItems {
   Pin = 'Pin',
