@@ -10,18 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { connection } from 'next/server';
-import { BusExample } from './bus';
-import { testLogs } from './log-test';
+/**
+ * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ */
 
-export default async function Home() {
-  await connection();
+// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
-  testLogs();
-
-  return (
-    <div className='flex flex-col items-center justify-center h-full'>
-      <BusExample />
-    </div>
-  );
-}
+export { getLogger } from './default';
+export { callsitePlugin } from './plugins/callsite';
+export type { CallsitePluginOptions } from './plugins/callsite';
+export { environmentPlugin } from './plugins/environment';
+export type { EnvironmentPluginOptions } from './plugins/environment';

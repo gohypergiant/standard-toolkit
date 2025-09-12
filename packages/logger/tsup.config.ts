@@ -10,18 +10,30 @@
  * governing permissions and limitations under the License.
  */
 
-import { connection } from 'next/server';
-import { BusExample } from './bus';
-import { testLogs } from './log-test';
+import {
+  fixAliasPlugin,
+  fixExtensionsPlugin,
+  fixFolderImportsPlugin,
+} from 'esbuild-fix-imports-plugin';
+import { defineConfig } from 'tsup';
 
-export default async function Home() {
-  await connection();
-
-  testLogs();
-
-  return (
-    <div className='flex flex-col items-center justify-center h-full'>
-      <BusExample />
-    </div>
-  );
-}
+export default defineConfig({
+  esbuildPlugins: [
+    fixAliasPlugin(),
+    fixFolderImportsPlugin(),
+    fixExtensionsPlugin(),
+  ],
+  entry: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
+    '!**/__fixtures__',
+  ],
+  bundle: false,
+  clean: true,
+  dts: true,
+  format: 'esm',
+  sourcemap: true,
+  splitting: true,
+  treeshake: true,
+  metafile: true,
+});

@@ -10,18 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { connection } from 'next/server';
-import { BusExample } from './bus';
-import { testLogs } from './log-test';
+import { logger } from '@/app/log-test';
+import type { NextRequest } from 'next/server';
 
-export default async function Home() {
-  await connection();
+export async function POST(request: NextRequest) {
+  const res = await request.json();
 
-  testLogs();
+  logger.withMetadata(res).info('OTEL ROUTE');
 
-  return (
-    <div className='flex flex-col items-center justify-center h-full'>
-      <BusExample />
-    </div>
-  );
+  return Response.json({ data: 'ok!' });
 }

@@ -10,18 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import { connection } from 'next/server';
-import { BusExample } from './bus';
-import { testLogs } from './log-test';
+import type { LogLayerPlugin, LogLayerPluginParams } from '@loglayer/plugin';
 
-export default async function Home() {
-  await connection();
+export interface EnvironmentPluginOptions extends LogLayerPluginParams {
+  isServer: boolean;
+  // NOTE: currently not used as of right now but reserving for later
+  isProductionEnv: boolean;
+}
 
-  testLogs();
+export function environmentPlugin(
+  options: EnvironmentPluginOptions,
+): LogLayerPlugin {
+  return {
+    id: options.id,
+    disabled: options.disabled,
 
-  return (
-    <div className='flex flex-col items-center justify-center h-full'>
-      <BusExample />
-    </div>
-  );
+    onBeforeDataOut({ data = {} }) {
+      return {
+        ...data,
+        server: options.isServer,
+      };
+    },
+  };
 }

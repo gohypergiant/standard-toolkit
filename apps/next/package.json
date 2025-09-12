@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
+    "build": "NODE_ENV=production next build",
+    "dev": "NODE_ENV=development next dev",
+    "start": "NODE_ENV=production next start",
     "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {
@@ -31,6 +32,9 @@
     "@accelint/core": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/icons": "workspace:*",
+    "@accelint/logger": "workspace:*",
+    "@loglayer/plugin-opentelemetry": "^2.1.2",
+    "@loglayer/transport-http": "^1.0.3",
     "@tailwindcss/postcss": "4.1.4",
     "@vanilla-extract/css": "1.16.0",
     "@vanilla-extract/dynamic": "2.1.2",
