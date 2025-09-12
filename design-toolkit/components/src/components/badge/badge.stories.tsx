@@ -14,8 +14,8 @@ import {
   createStandardParameters,
   createVariantControl,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
-import { createVariantsStory } from '^storybook/story-templates';
+} from '^storybook/utils/controls';
+import { createVariantsStory } from '^storybook/utils/templates';
 import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
 import { Badge } from './';
 import type { Meta, StoryObj } from '@storybook/react';

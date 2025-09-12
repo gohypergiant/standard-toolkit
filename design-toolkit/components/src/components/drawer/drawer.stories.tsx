@@ -13,7 +13,7 @@
 import {
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import { uuid } from '@accelint/core';
 import { Cancel } from '@accelint/icons';
 import { Button } from '../button';
@@ -38,13 +38,13 @@ const meta: Meta<DrawerProps> = {
   },
   argTypes: {
     size: {
-      control: 'select',
+      control: { type: 'select' as const },
+      description: 'Size of the component',
       options: ['small', 'medium', 'large'],
       table: {
         defaultValue: { summary: 'medium' },
-        category: 'Visual',
+        type: { summary: 'small | medium | large' },
       },
-      description: 'Size of the drawer',
     },
     placement: STANDARD_ARG_TYPES.placement,
   },

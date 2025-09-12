@@ -14,11 +14,11 @@ import {
   createSizeControl,
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import {
   createSizeVariantsStory,
   createStatesStory,
-} from '^storybook/story-templates';
+} from '^storybook/utils/templates';
 import { Input } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 

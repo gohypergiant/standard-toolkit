@@ -13,7 +13,7 @@
 import {
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import { useState } from 'react';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';

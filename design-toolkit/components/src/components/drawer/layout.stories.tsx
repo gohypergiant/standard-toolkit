@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import { createStandardParameters } from '^storybook/utils/controls';
 import { uuid } from '@accelint/core';
 import {
   ChevronDown,
@@ -79,11 +79,21 @@ const meta: Meta<DrawerLayoutProps> = {
   },
   argTypes: {
     extend: {
-      control: 'select',
+      control: { type: 'select' as const },
       options: ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
+      description: 'Extend options',
+      table: {
+        type: {
+          summary: 'top bottom | left right | top | bottom | left | right',
+        },
+        defaultValue: { summary: 'bottom' },
+      },
     },
     push: {
-      control: 'text',
+      // TODO: this could likely be better represented; possibly with four radios?
+      control: { type: 'text' as const },
+      description: 'Which panels should "push" (not "overlay") the content',
+      table: { type: { summary: 'string' } },
     },
   },
 };
@@ -104,9 +114,9 @@ export const Default: Story = {
                   '--single': '40px',
                   '--double': 'calc(2 * var(--single))',
                   backgroundImage: `
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
-          `,
+                    radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
+                    radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
+                  `,
                   backgroundSize: 'var(--double) var(--double)',
                   backgroundPosition:
                     'center, calc(50% + var(--single)) calc(50% + var(--single))',

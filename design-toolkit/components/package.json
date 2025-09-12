@@ -49,8 +49,8 @@
     }
   },
   "scripts": {
-    "audit:stories:ci": "node ./.storybook/audit-stories.mjs . --ci",
-    "audit:stories": "node ./.storybook/audit-stories.mjs .",
+    "audit:stories:ci": "node ./.storybook/scripts/audit/index.mjs . --ci",
+    "audit:stories": "node ./.storybook/scripts/audit/index.mjs .",
     "bench": "pnpm vitest bench --run --dir src",
     "build-storybook": "pnpm storybook build",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",

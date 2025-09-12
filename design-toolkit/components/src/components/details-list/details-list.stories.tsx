@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import { createStandardParameters } from '^storybook/utils/controls';
 import { DetailsList } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -34,8 +34,13 @@ const meta: Meta<typeof DetailsList> = {
   },
   argTypes: {
     align: {
-      control: 'select',
+      control: { type: 'select' as const },
       options: ['left', 'justify', 'center'],
+      description: 'Selection behavior for the component',
+      table: {
+        type: { summary: 'left | justify | center' },
+        defaultValue: { summary: 'none' },
+      },
     },
   },
   tags: ['autodocs'],

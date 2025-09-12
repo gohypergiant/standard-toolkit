@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
   createVariantControl,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
+import { MOCK_DATA } from '^storybook/utils/mock-data';
 import { useCallback, useRef, useState } from 'react';
 import { Button } from '../button';
 import { Dialog } from './index';

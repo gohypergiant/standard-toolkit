@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
   createVariantControl,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
-import { createVariantsStory } from '^storybook/story-templates';
+} from '^storybook/utils/controls';
+import { MOCK_DATA } from '^storybook/utils/mock-data';
+import { createVariantsStory } from '^storybook/utils/templates';
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useRef, useState } from 'react';

@@ -13,7 +13,7 @@
 import {
   createSizeControl,
   createStandardParameters,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import { Add } from '@accelint/icons';
 import { Icon } from './';
 import type { Meta, StoryObj } from '@storybook/react';

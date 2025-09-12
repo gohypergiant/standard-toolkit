@@ -10,16 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createSizeControl,
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
+import { MOCK_DATA } from '^storybook/utils/mock-data';
 import {
   COMMON_STATE_PROPS,
   createStatesStory,
-} from '^storybook/story-templates';
+} from '^storybook/utils/templates';
 import { TextAreaField } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 

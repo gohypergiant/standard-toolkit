@@ -14,7 +14,7 @@
 import {
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import {
   CenterOn,
   CollapseAll,
@@ -44,7 +44,7 @@ const meta: Meta<typeof Tree> = {
   },
   argTypes: {
     variant: {
-      control: 'select',
+      control: { type: 'select' as const },
       options: ['cozy', 'compact', 'crammed'],
     },
     selectionMode: STANDARD_ARG_TYPES.selectionMode,

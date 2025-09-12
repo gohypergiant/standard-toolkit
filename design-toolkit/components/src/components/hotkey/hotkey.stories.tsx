@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import { createStandardParameters } from '^storybook/utils/controls';
 import MouseRightClick from '@accelint/icons/mouse-right-click';
 import { Icon } from '../icon';
 import { Hotkey } from './index';

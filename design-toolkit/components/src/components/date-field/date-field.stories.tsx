@@ -15,7 +15,7 @@ import {
   createStandardParameters,
   createVariantControl,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 import { DateField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';

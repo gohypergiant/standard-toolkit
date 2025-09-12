@@ -13,7 +13,7 @@
 import {
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -38,7 +38,7 @@ const meta: Meta<typeof Slider> = {
   },
   argTypes: {
     layout: {
-      control: 'select',
+      control: { type: 'select' as const },
       options: ['grid', 'stack'],
       table: {
         defaultValue: { summary: 'grid' },
@@ -48,7 +48,7 @@ const meta: Meta<typeof Slider> = {
     },
     orientation: STANDARD_ARG_TYPES.orientation,
     showInput: {
-      control: 'boolean',
+      control: { type: 'boolean' as const },
       table: {
         defaultValue: { summary: 'false' },
         category: 'Features',
@@ -56,7 +56,7 @@ const meta: Meta<typeof Slider> = {
       description: 'Whether to show numeric input field',
     },
     showLabel: {
-      control: 'boolean',
+      control: { type: 'boolean' as const },
       table: {
         defaultValue: { summary: 'true' },
         category: 'Features',

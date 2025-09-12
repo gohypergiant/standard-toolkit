@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import { createStandardParameters } from '^storybook/utils/controls';
 import { Skeleton } from './';
 import { SkeletonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -27,7 +27,7 @@ const meta: Meta<typeof Skeleton> = {
   args: SkeletonStylesDefaults,
   argTypes: {
     shape: {
-      control: 'select',
+      control: { type: 'select' as const },
       options: ['circ', 'rect'],
       table: {
         defaultValue: { summary: 'rect' },

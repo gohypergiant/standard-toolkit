@@ -5,7 +5,7 @@ This document provides a complete overview of the audit tooling created to maint
 ## 🛠️ Available Tools
 
 ### 1. Primary Audit Script
-**Location**: `.storybook/audit-stories.mjs`
+**Location**: `.storybook/scripts/audit/index.mjs`
 
 **Purpose**: AST-based analysis of story files to ensure compliance with standardized patterns.
 
@@ -18,12 +18,13 @@ pnpm audit:stories
 pnpm audit:stories:ci
 
 # Direct execution with custom directory
-node .storybook/audit-stories.mjs <directory> [--ci] [--json]
+# Detailed command line usage
+node .storybook/scripts/audit/index.mjs <directory> [--ci] [--json]
 
 # Examples
-node .storybook/audit-stories.mjs .          # Current directory
-node .storybook/audit-stories.mjs . --ci     # CI mode
-node .storybook/audit-stories.mjs . --json   # JSON output
+node .storybook/scripts/audit/index.mjs .          # Current directory
+node .storybook/scripts/audit/index.mjs . --ci     # CI mode
+node .storybook/scripts/audit/index.mjs . --json   # JSON output
 ```
 
 **Features**:
@@ -96,7 +97,7 @@ node .storybook/audit-stories.mjs . --json   # JSON output
 
 1. **Add Required Import**:
 ```typescript
-import { createStandardParameters } from '^storybook/shared-controls';
+import { createStandardParameters } from '^storybook/utils/controls';
 ```
 
 2. **Standard Meta Structure**:
@@ -143,8 +144,8 @@ pnpm audit:stories:ci
 ## 📚 Related Documentation
 
 - [Story Guidelines](design-toolkit/components/.storybook/STORY_GUIDELINES.md) - Comprehensive development guide
-- [Shared Controls](design-toolkit/components/.storybook/shared-controls.ts) - Utility functions and constants
-- [Mock Data](design-toolkit/components/.storybook/mock-data.tsx) - Standardized test data
+- [Shared Controls](design-toolkit/components/.storybook/utils/controls/) - Utility functions and constants
+- [Mock Data](design-toolkit/components/.storybook/utils/mock-data/) - Standardized test data
 
 ## 🔄 Maintenance
 

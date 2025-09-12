@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
   createVariantControl,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
+import { MOCK_DATA } from '^storybook/utils/mock-data';
 import { Placeholder } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';

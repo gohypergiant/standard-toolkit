@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import { createStandardParameters } from '^storybook/utils/controls';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
 import { Heading, Text } from 'react-aria-components';
 import { Button } from '../button';

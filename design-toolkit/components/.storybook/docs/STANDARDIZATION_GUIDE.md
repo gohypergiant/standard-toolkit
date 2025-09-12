@@ -14,7 +14,7 @@ import {
   createSizeControl,
   createVariantControl,
   STANDARD_ARG_TYPES
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 
 // Use standard parameters for component type
 parameters: createStandardParameters('form'), // 'form' | 'overlay' | 'container' | 'content'

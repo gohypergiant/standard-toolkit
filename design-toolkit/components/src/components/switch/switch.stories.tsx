@@ -14,8 +14,8 @@ import {
   createStandardParameters,
   createVariantControl,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
-import { createStatesStory } from '^storybook/story-templates';
+} from '^storybook/utils/controls';
+import { createStatesStory } from '^storybook/utils/templates';
 import { Switch } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 

@@ -11,40 +11,11 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import type { ReactNode } from 'react';
+import type { MockMenuItem, MockTableData, MockUser } from './interfaces';
 
 /**
  * Shared mock data for consistent Storybook examples
  */
-
-export interface MockMenuItem {
-  id: number;
-  name: string;
-  description?: string;
-  prefixIcon?: ReactNode;
-  children?: MockMenuItem[];
-  isDisabled?: boolean;
-  hotkey?: string;
-}
-
-export interface MockUser {
-  id: number;
-  name: string;
-  email: string;
-  avatar?: string;
-  role: string;
-  status: 'online' | 'offline' | 'away';
-}
-
-export interface MockTableData {
-  id: number;
-  name: string;
-  status: 'active' | 'inactive' | 'pending';
-  category: string;
-  lastModified: Date;
-  progress: number;
-}
-
 export const MOCK_DATA = {
   /**
    * Standard menu items for dropdown/navigation components
@@ -199,51 +170,5 @@ export const MOCK_DATA = {
     INVALID_FORMAT: 'Please check the format and try again',
     NETWORK_ERROR: 'Unable to connect. Please try again later.',
     PERMISSION_DENIED: 'You do not have permission to perform this action',
-  },
-};
-
-/**
- * Helper to generate large datasets for performance testing
- */
-export const generateMockData = {
-  menuItems: (count: number): MockMenuItem[] => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i + 1,
-      name: `Item ${i + 1}`,
-      description: `Description for item ${i + 1}`,
-      prefixIcon: <Placeholder />,
-    }));
-  },
-
-  users: (count: number): MockUser[] => {
-    const roles = ['Developer', 'Designer', 'Manager', 'Analyst'];
-    const statuses: MockUser['status'][] = ['online', 'offline', 'away'];
-
-    return Array.from({ length: count }, (_, i) => ({
-      id: i + 1,
-      name: `User ${i + 1}`,
-      email: `user${i + 1}@example.com`,
-      avatar: `https://i.pravatar.cc/100?img=${(i % 70) + 1}`,
-      role: roles[i % roles.length] || 'Developer',
-      status: statuses[i % statuses.length] || 'offline',
-    }));
-  },
-
-  tableData: (count: number): MockTableData[] => {
-    const statuses: MockTableData['status'][] = [
-      'active',
-      'inactive',
-      'pending',
-    ];
-    const categories = ['Web App', 'Mobile', 'Desktop', 'API'];
-
-    return Array.from({ length: count }, (_, i) => ({
-      id: i + 1,
-      name: `Project ${String.fromCharCode(65 + (i % 26))}`,
-      status: statuses[i % statuses.length] || 'active',
-      category: categories[i % categories.length] || 'Web App',
-      lastModified: new Date(2024, 2, (i % 28) + 1),
-      progress: Math.floor(Math.random() * 100),
-    }));
   },
 };

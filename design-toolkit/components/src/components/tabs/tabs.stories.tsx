@@ -11,12 +11,12 @@
  */
 /** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */
 
-import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
-import { createStatesStory } from '^storybook/story-templates';
+} from '^storybook/utils/controls';
+import { MOCK_DATA } from '^storybook/utils/mock-data';
+import { createStatesStory } from '^storybook/utils/templates';
 import { Add, Check, Group } from '@accelint/icons';
 import { Icon } from '@/components/icon';
 import { Tabs } from '@/components/tabs/index';

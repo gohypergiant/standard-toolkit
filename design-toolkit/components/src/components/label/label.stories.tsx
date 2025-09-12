@@ -13,7 +13,7 @@
 import {
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import { Label } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 

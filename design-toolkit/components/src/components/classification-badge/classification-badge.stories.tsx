@@ -14,7 +14,7 @@ import {
   createSizeControl,
   createStandardParameters,
   STANDARD_ARG_TYPES,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import { ClassificationBadge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -27,9 +27,7 @@ const meta: Meta<typeof ClassificationBadge> = {
     variant: 'missing',
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
+    children: STANDARD_ARG_TYPES.children,
     size: createSizeControl('COMPACT'),
     variant: STANDARD_ARG_TYPES.classificationVariant,
   },

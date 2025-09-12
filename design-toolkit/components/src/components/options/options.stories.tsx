@@ -13,7 +13,7 @@
 import {
   createSizeControl,
   createStandardParameters,
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 import Placeholder from '@accelint/icons/placeholder';
 import {
   ListLayout as AriaListLayout,

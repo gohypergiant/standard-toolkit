@@ -24,8 +24,8 @@ Every story file must include:
 ### 1. Imports
 ```typescript
 import { ComponentName } from './';
-import { createStandardParameters } from '^storybook/shared-controls';
-import { MOCK_DATA } from '^storybook/mock-data';
+import { createStandardParameters } from '^storybook/utils/controls';
+import { MOCK_DATA } from '^storybook/utils/mock-data';
 import type { Meta, StoryObj } from '@storybook/react';
 ```
 
@@ -99,13 +99,13 @@ import {
   createVariantControl,
   createSizeControl,
   STANDARD_ARG_TYPES 
-} from '^storybook/shared-controls';
+} from '^storybook/utils/controls';
 ```
 
 ### Mock Data
 Use `MOCK_DATA` for consistent, realistic content:
 ```typescript
-import { MOCK_DATA } from '^storybook/mock-data';
+import { MOCK_DATA } from '^storybook/utils/mock-data';
 
 // Use in stories
 <Component items={MOCK_DATA.MENU_ITEMS} />
@@ -125,7 +125,7 @@ export const Default: StoryObj<typeof Component> = {
 ### State Stories
 Use shared templates for consistent state stories:
 ```typescript
-import { createStatesStory } from '^storybook/story-templates';
+import { createStatesStory } from '^storybook/utils/templates';
 
 export const States: StoryObj<typeof Component> = createStatesStory({
   Component,
@@ -197,7 +197,7 @@ To migrate existing stories:
 
 ## 🔗 Related Files
 
-- `/.storybook/audit-stories.mjs` - Main audit script
-- `/.storybook/shared-controls.ts` - Shared control utilities
-- `/.storybook/mock-data.tsx` - Consistent mock data
-- `/.storybook/story-templates.tsx` - Reusable story patterns
+- `/.storybook/scripts/audit/index.mjs` - Main audit script
+- `/.storybook/utils/controls/` - Shared control utilities
+- `/.storybook/utils/mock-data/` - Consistent mock data
+- `/.storybook/utils/templates/` - Reusable story patterns

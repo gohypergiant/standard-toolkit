@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import { createStandardParameters } from '^storybook/utils/controls';
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Hero } from './';
