@@ -1,5 +1,14 @@
 # @accelint/docs
 
+## 0.1.20
+
+### Patch Changes
+
+- Updated dependencies [f2d1601]
+- Updated dependencies [0e9fadb]
+  - @accelint/biome-config@1.0.0
+  - @accelint/ntds@0.2.0
+
 ## 0.1.19
 
 ### Patch Changes
