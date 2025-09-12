@@ -37,16 +37,9 @@ const meta: Meta<typeof ColorPicker> = {
       },
       description: 'The currently selected color.',
     },
-    onChange: {
-      action: 'changed',
-      description: 'Callback function when the color is changed.',
-    },
-    items: {
-      description: 'Array of color options to choose from.',
-    },
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'Color picker component for selecting colors from a predefined palette.',

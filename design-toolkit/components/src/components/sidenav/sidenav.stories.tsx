@@ -27,15 +27,15 @@ type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
 const meta: Meta<SidenavWithLayoutArgs> = {
   title: 'Components/Sidenav',
   component: Sidenav,
-  parameters: {
-    ...createStandardParameters('overlay'),
-    docs: {
-      subtitle: 'Side navigation component for hierarchical navigation.',
-    },
-  },
   args: {
     pushLayout: true,
     isHiddenWhenClosed: false,
+  },
+  parameters: {
+    ...createStandardParameters('fullscreen'),
+    docs: {
+      subtitle: 'Side navigation component for hierarchical navigation.',
+    },
   },
 };
 

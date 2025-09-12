@@ -11,8 +11,8 @@
  */
 
 import {
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
 } from '^storybook/utils/controls';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
@@ -32,15 +32,14 @@ const meta: Meta<typeof Accordion.Group> = {
     isDisabled: false,
   },
   argTypes: {
-    variant: {
-      ...createVariantControl(['cozy', 'compact']),
-      table: {
-        category: 'Layout',
-      },
-    },
+    variant: createArgTypeSelect(
+      'How tight spacing should be',
+      ['cozy', 'compact'],
+      AccordionStylesDefaults.variant,
+    ),
   },
   parameters: {
-    ...createStandardParameters('container'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Group together multiple <Accordion> components.',
     },

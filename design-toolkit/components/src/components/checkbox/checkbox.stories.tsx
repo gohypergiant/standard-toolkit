@@ -35,7 +35,7 @@ const meta: Meta<typeof Checkbox> = {
     },
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A form control for binary or multiple selection with group support',

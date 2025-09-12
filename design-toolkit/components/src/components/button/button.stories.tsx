@@ -11,9 +11,8 @@
  */
 
 import {
-  createSizeControl,
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import { createStatesStory } from '^storybook/utils/templates';
@@ -25,12 +24,6 @@ import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
 import { ButtonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
-
-const CUSTOM_CRITICALITIES = [
-  CRITICALITY_VARIANTS.info,
-  CRITICALITY_VARIANTS.serious,
-  CRITICALITY_VARIANTS.critical,
-];
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -44,18 +37,18 @@ const meta: Meta<typeof Button> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    color: {
-      control: { type: 'select' },
-      description: 'Color variant indicating different levels of importance',
-      options: CUSTOM_CRITICALITIES,
-      table: {
-        type: { summary: CUSTOM_CRITICALITIES.join(' | ') },
-        defaultValue: { summary: 'info' },
-      },
-    },
+    color: createArgTypeSelect(
+      'Color variant indicating different levels of importance',
+      [
+        CRITICALITY_VARIANTS.info,
+        CRITICALITY_VARIANTS.serious,
+        CRITICALITY_VARIANTS.critical,
+      ],
+      'info',
+    ),
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
-    size: createSizeControl('FULL'), // Button supports all size variants
-    variant: createVariantControl([
+    size: STANDARD_ARG_TYPES.size.full, // Button supports all size variants
+    variant: createArgTypeSelect('Button variant', [
       'filled',
       'outline',
       'flat',
@@ -64,7 +57,7 @@ const meta: Meta<typeof Button> = {
     ]),
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A versatile interactive button component with multiple variants',

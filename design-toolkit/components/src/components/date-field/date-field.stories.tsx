@@ -11,9 +11,8 @@
  */
 
 import {
-  createSizeControl,
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
@@ -41,11 +40,16 @@ const meta: Meta<typeof DateField> = {
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
     isInvalid: STANDARD_ARG_TYPES.isInvalid,
     isRequired: STANDARD_ARG_TYPES.isRequired,
-    size: createSizeControl('COMPACT'),
-    granularity: createVariantControl(['day', 'hour', 'minute', 'second']),
+    size: STANDARD_ARG_TYPES.size.compact,
+    granularity: createArgTypeSelect('Date granularity', [
+      'day',
+      'hour',
+      'minute',
+      'second',
+    ]),
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'Date input field with granular control over date/time selection.',

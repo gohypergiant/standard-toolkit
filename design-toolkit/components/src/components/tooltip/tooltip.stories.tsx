@@ -22,12 +22,11 @@ const meta: Meta<typeof Tooltip> = {
   title: 'Components/Tooltip',
   component: Tooltip,
   parameters: {
-    ...createStandardParameters('overlay'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Brief contextual information displayed on hover or focus.',
     },
   },
-  argTypes: {},
 };
 
 export default meta;

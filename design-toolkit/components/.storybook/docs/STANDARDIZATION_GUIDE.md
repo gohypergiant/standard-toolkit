@@ -11,8 +11,6 @@ This guide establishes consistent patterns for Storybook stories across the desi
 ```typescript
 import { 
   createStandardParameters, 
-  createSizeControl,
-  createVariantControl,
   STANDARD_ARG_TYPES
 } from '^storybook/utils/controls';
 
@@ -21,12 +19,12 @@ parameters: createStandardParameters('form'), // 'form' | 'overlay' | 'container
 
 // Use helper functions for consistent controls
 argTypes: {
-  size: createSizeControl('FULL'),     // For Button, Icon (xsmall-large)
-  size: createSizeControl('COMPACT'),  // For form fields (small-medium)
-  size: createSizeControl('STANDARD'), // For most components (small-large)
-  size: createSizeControl('BINARY'),   // For simple toggles (small, large)
+  size: STANDARD_ARG_TYPES.size.full,     // For Button, Icon (xsmall-large)
+  size: STANDARD_ARG_TYPES.size.compact,  // For form fields (small-medium)
+  size: STANDARD_ARG_TYPES.size.standard, // For most components (small-large)
+  size: STANDARD_ARG_TYPES.size.binary,   // For simple toggles (small, large)
   
-  variant: createVariantControl(['filled', 'outline', 'flat']),
+  variant: createArgTypeSelect('Description of argType', ['filled', 'outline', 'flat']),
   
   // Use standard argTypes for common props
   children: STANDARD_ARG_TYPES.children,

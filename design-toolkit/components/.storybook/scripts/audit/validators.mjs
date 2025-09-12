@@ -156,14 +156,7 @@ export function checkArgTypes(argTypes) {
   }
 
   // Check for common props that should be excluded
-  const commonPropsToExclude = [
-    'children',
-    'className',
-    'style',
-    'key',
-    'ref',
-    'slot',
-  ];
+  const commonPropsToExclude = ['className', 'style', 'key', 'ref', 'slot'];
 
   commonPropsToExclude.forEach((prop) => {
     if (argTypes[prop]) {

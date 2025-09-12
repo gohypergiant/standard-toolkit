@@ -11,6 +11,8 @@
  */
 
 import {
+  createArgTypeBool,
+  createArgTypeSelect,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
@@ -20,12 +22,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Slider> = {
   title: 'Components/Slider',
   component: Slider,
-  parameters: {
-    ...createStandardParameters('form'),
-    docs: {
-      subtitle: 'Range input control for selecting numeric values.',
-    },
-  },
   args: {
     defaultValue: 30,
     layout: 'grid',
@@ -37,31 +33,19 @@ const meta: Meta<typeof Slider> = {
     showLabel: true,
   },
   argTypes: {
-    layout: {
-      control: { type: 'select' as const },
-      options: ['grid', 'stack'],
-      table: {
-        defaultValue: { summary: 'grid' },
-        category: 'Layout',
-      },
-      description: 'Layout arrangement of label and slider',
-    },
+    layout: createArgTypeSelect(
+      'Layout arrangement of label and slider',
+      ['grid', 'stack'],
+      'grid',
+    ),
     orientation: STANDARD_ARG_TYPES.orientation,
-    showInput: {
-      control: { type: 'boolean' as const },
-      table: {
-        defaultValue: { summary: 'false' },
-        category: 'Features',
-      },
-      description: 'Whether to show numeric input field',
-    },
-    showLabel: {
-      control: { type: 'boolean' as const },
-      table: {
-        defaultValue: { summary: 'true' },
-        category: 'Features',
-      },
-      description: 'Whether to show the label',
+    showInput: createArgTypeBool('Whether to show numeric input field'),
+    showLabel: createArgTypeBool('Whether to show the label'),
+  },
+  parameters: {
+    ...createStandardParameters('centered'),
+    docs: {
+      subtitle: 'Range input control for selecting numeric values.',
     },
   },
 };

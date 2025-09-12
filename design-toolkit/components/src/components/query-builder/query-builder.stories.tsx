@@ -11,6 +11,7 @@
  */
 
 import {
+  createArgTypeBool,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
@@ -35,14 +36,10 @@ const meta: Meta<typeof QueryBuilder> = {
   },
   argTypes: {
     orientation: STANDARD_ARG_TYPES.orientation,
-    disabled: {
-      control: {
-        type: 'boolean',
-      },
-    },
+    disabled: createArgTypeBool('Disable the whole thing'),
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     controls: {
       include: [
         'disabled',

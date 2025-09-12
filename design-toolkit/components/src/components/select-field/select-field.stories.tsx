@@ -11,7 +11,6 @@
  */
 
 import {
-  createSizeControl,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
@@ -45,7 +44,7 @@ const meta: Meta<typeof SelectField> = {
     },
   },
   argTypes: {
-    size: createSizeControl('COMPACT'),
+    size: STANDARD_ARG_TYPES.size.compact,
     label: STANDARD_ARG_TYPES.label,
     description: STANDARD_ARG_TYPES.description,
     errorMessage: STANDARD_ARG_TYPES.errorMessage,
@@ -56,7 +55,7 @@ const meta: Meta<typeof SelectField> = {
     isRequired: STANDARD_ARG_TYPES.isRequired,
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A dropdown selection component with comprehensive form field features',

@@ -34,7 +34,7 @@ const meta: Meta<typeof Radio.Group> = {
     isRequired: STANDARD_ARG_TYPES.isRequired,
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A form control for exclusive selection within a group of options',

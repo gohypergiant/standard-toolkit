@@ -20,25 +20,20 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof ClassificationBanner> = {
   title: 'Components/ClassificationBanner',
   component: ClassificationBanner,
-  parameters: {
-    ...createStandardParameters('content'),
-    layout: 'fullscreen',
-    docs: {
-      subtitle:
-        'Displays security classification banners for pages and documents.',
-    },
-  },
   args: {
     children: '',
     variant: 'missing',
   },
   argTypes: {
-    children: {
-      ...STANDARD_ARG_TYPES.children,
-      description:
-        'Custom text content (optional - variant provides default text if empty)',
-    },
+    children: STANDARD_ARG_TYPES.children,
     variant: STANDARD_ARG_TYPES.classificationVariant,
+  },
+  parameters: {
+    ...createStandardParameters('fullscreen'),
+    docs: {
+      subtitle:
+        'Displays security classification banners for pages and documents.',
+    },
   },
 };
 

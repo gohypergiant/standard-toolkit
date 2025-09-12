@@ -11,6 +11,7 @@
  */
 
 import {
+  createArgTypeBool,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
@@ -31,18 +32,14 @@ const meta: Meta<typeof Link> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    allowsVisited: {
-      control: { type: 'boolean' },
-      description: 'Whether the link can be styled when visited',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-      },
-    },
+    allowsVisited: createArgTypeBool(
+      'Whether the link can be styled when visited',
+    ),
+
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Accessible link component for navigation and actions.',
     },

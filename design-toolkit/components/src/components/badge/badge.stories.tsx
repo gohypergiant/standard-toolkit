@@ -11,12 +11,11 @@
  */
 
 import {
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
-import { createVariantsStory } from '^storybook/utils/templates';
-import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
+import { CRITICALITY_VALUES } from '@/constants/criticality-variants';
 import { Badge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -29,14 +28,13 @@ const meta: Meta<typeof Badge> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    variant: {
-      ...createVariantControl(Object.values(CRITICALITY_VARIANTS)),
-      description:
-        'Badge color variant indicating different levels of importance',
-    },
+    variant: createArgTypeSelect(
+      'Badge color variant indicating different levels of importance',
+      CRITICALITY_VALUES,
+    ),
   },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A small status indicator component for labeling and notifications',
@@ -65,17 +63,3 @@ export const WithoutText: StoryObj<typeof Badge> = {
     layout: 'centered',
   },
 };
-
-export const AllVariants: StoryObj<typeof Badge> = createVariantsStory({
-  Component: Badge,
-  variantProps: {
-    'With Count': { children: '99+', variant: 'critical' },
-    Normal: { children: '5', variant: 'normal' },
-    Info: { children: 'New', variant: 'info' },
-    Advisory: { children: '!', variant: 'advisory' },
-    Serious: { children: '⚠', variant: 'serious' },
-    Critical: { children: '✕', variant: 'critical' },
-    'Indicator Only': { variant: 'normal' },
-  },
-  columns: 4,
-});

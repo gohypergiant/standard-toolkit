@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/utils/controls';
+import {
+  createArgTypeBool,
+  createStandardParameters,
+} from '^storybook/utils/controls';
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Hero } from './';
@@ -23,17 +26,10 @@ const meta: Meta<typeof Hero> = {
     compact: false,
   },
   argTypes: {
-    compact: {
-      control: { type: 'boolean' },
-      description: 'Whether to use compact layout',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-      },
-    },
+    compact: createArgTypeBool('Whether to use compact layout'),
   },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'Displays an icon alongside primary and secondary content with flexible layouts.',

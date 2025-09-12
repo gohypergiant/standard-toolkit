@@ -11,8 +11,8 @@
  */
 
 import {
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import { MOCK_DATA } from '^storybook/utils/mock-data';
@@ -30,19 +30,23 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Accordion> = {
   title: 'Components/Accordion',
   component: Accordion,
-  parameters: {
-    ...createStandardParameters('container'),
-    docs: {
-      subtitle: 'Content that can expand and collapse.',
-    },
-  },
   args: {
     isDisabled: false,
     variant: AccordionStylesDefaults.variant,
   },
   argTypes: {
-    variant: createVariantControl(['cozy', 'compact']),
+    variant: createArgTypeSelect(
+      'How tight spacing should be',
+      ['cozy', 'compact'],
+      AccordionStylesDefaults.variant,
+    ),
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
+  },
+  parameters: {
+    ...createStandardParameters('centered'),
+    docs: {
+      subtitle: 'Content that can expand and collapse.',
+    },
   },
 };
 

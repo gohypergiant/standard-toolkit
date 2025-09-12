@@ -10,7 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/utils/controls';
+import {
+  createArgTypeSelect,
+  createArgTypeText,
+  createStandardParameters,
+} from '^storybook/utils/controls';
 import { uuid } from '@accelint/core';
 import {
   ChevronDown,
@@ -66,34 +70,26 @@ const ids = {
 const meta: Meta<DrawerLayoutProps> = {
   title: 'Components/Drawer.Layout',
   component: Drawer.Layout,
-  parameters: {
-    ...createStandardParameters('overlay'),
-    docs: {
-      subtitle:
-        'A slide-out panel component for navigation and secondary content',
-    },
-  },
   args: {
     extend: 'left right',
     push: 'left right',
   },
   argTypes: {
-    extend: {
-      control: { type: 'select' as const },
-      options: ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
-      description: 'Extend options',
-      table: {
-        type: {
-          summary: 'top bottom | left right | top | bottom | left | right',
-        },
-        defaultValue: { summary: 'bottom' },
-      },
-    },
-    push: {
-      // TODO: this could likely be better represented; possibly with four radios?
-      control: { type: 'text' as const },
-      description: 'Which panels should "push" (not "overlay") the content',
-      table: { type: { summary: 'string' } },
+    extend: createArgTypeSelect(
+      'Extend options',
+      ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
+      'bottom',
+    ),
+    // TODO: this - "push" - could likely be better represented; possibly with four radios?
+    push: createArgTypeText(
+      'Which panels should "push" (not "overlay") the content',
+    ),
+  },
+  parameters: {
+    ...createStandardParameters('fullscreen'),
+    docs: {
+      subtitle:
+        'A slide-out panel component for navigation and secondary content',
     },
   },
 };

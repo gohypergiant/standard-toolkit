@@ -113,7 +113,7 @@ export function generateReport(results) {
     infoCount,
     success: errorCount === 0,
     summary(location) {
-      console.log(chalk.bold.blue('\n📊 STORYBOOK AUDIT REPORT\n'));
+      console.log(chalk.bold.blue('\nSTORYBOOK AUDIT REPORT\n'));
       console.log(`${chalk.gray('Location:')} ${location}`);
       console.log(`${chalk.gray('Files audited:')} ${totalFiles}`);
       console.log('');

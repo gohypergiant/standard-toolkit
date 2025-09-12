@@ -11,8 +11,9 @@
  */
 
 import {
+  createArgTypeBool,
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
 } from '^storybook/utils/controls';
 import { MOCK_DATA } from '^storybook/utils/mock-data';
 import { useCallback, useRef, useState } from 'react';
@@ -29,26 +30,18 @@ const meta: Meta<typeof Dialog> = {
     isKeyboardDismissDisabled: false,
   },
   argTypes: {
-    size: createVariantControl(['small', 'large']),
-    isDismissable: {
-      control: { type: 'boolean' },
-      description: 'Whether the component can be dismissed',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'true' },
-      },
-    },
-    isKeyboardDismissDisabled: {
-      control: { type: 'boolean' },
-      description: 'Whether keyboard dismissal is disabled',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-      },
-    },
+    size: createArgTypeSelect('Dialog size', ['small', 'large']),
+    isDismissable: createArgTypeBool(
+      'Whether the component can be dismissed',
+      'true',
+    ),
+    isKeyboardDismissDisabled: createArgTypeBool(
+      'Whether keyboard dismissal is disabled',
+      'false',
+    ),
   },
   parameters: {
-    ...createStandardParameters('overlay'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A modal dialog component for important content and interactions',

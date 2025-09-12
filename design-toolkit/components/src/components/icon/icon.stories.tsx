@@ -11,8 +11,8 @@
  */
 
 import {
-  createSizeControl,
   createStandardParameters,
+  STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import { Add } from '@accelint/icons';
 import { Icon } from './';
@@ -21,14 +21,14 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',
   component: Icon,
+  argTypes: {
+    size: STANDARD_ARG_TYPES.size.full,
+  },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Scalable vector graphics with consistent sizing and coloring.',
     },
-  },
-  argTypes: {
-    size: createSizeControl('FULL'),
   },
 };
 

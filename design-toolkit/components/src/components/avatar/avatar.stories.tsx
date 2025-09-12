@@ -11,11 +11,10 @@
  */
 
 import {
-  createSizeControl,
   createStandardParameters,
+  STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import { MOCK_DATA } from '^storybook/utils/mock-data';
-import { createSizeVariantsStory } from '^storybook/utils/templates';
 import { Placeholder } from '@accelint/icons';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
@@ -34,10 +33,10 @@ const meta: Meta<typeof Avatar> = {
     size: 'medium',
   },
   argTypes: {
-    size: createSizeControl('COMPACT'),
+    size: STANDARD_ARG_TYPES.size.compact,
   },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'A user profile image component with fallback support',
     },
@@ -93,52 +92,6 @@ export const WithContent: StoryObj<typeof Avatar> = {
           Online
         </Badge>
       </Avatar>
-    </div>
-  ),
-  parameters: {
-    layout: 'centered',
-    controls: { disable: true },
-  },
-};
-
-export const AllSizes: StoryObj<typeof Avatar> = createSizeVariantsStory({
-  Component: Avatar,
-  sizes: ['small', 'medium'],
-  baseProps: {
-    imageProps: {
-      alt: 'User avatar',
-      src: MOCK_DATA.USERS[0]?.avatar,
-    },
-  },
-});
-
-export const UserGallery: StoryObj<typeof Avatar> = {
-  name: 'User Examples',
-  render: () => (
-    <div className='flex items-center gap-m'>
-      {MOCK_DATA.USERS.map((user) => (
-        <div key={user.id} className='flex flex-col items-center gap-s'>
-          <Avatar
-            imageProps={{
-              alt: user.name,
-              src: user.avatar,
-            }}
-          >
-            <Badge
-              variant={
-                user.status === 'online'
-                  ? 'normal'
-                  : user.status === 'away'
-                    ? 'advisory'
-                    : 'critical'
-              }
-            />
-          </Avatar>
-          <span className='fg-primary-bold text-center text-body-s'>
-            {user.name}
-          </span>
-        </div>
-      ))}
     </div>
   ),
   parameters: {

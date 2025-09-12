@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/utils/controls';
+import {
+  createArgTypeSelect,
+  createStandardParameters,
+} from '^storybook/utils/controls';
 import { Skeleton } from './';
 import { SkeletonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -18,22 +21,18 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Skeleton> = {
   title: 'Components/Skeleton',
   component: Skeleton,
-  parameters: {
-    ...createStandardParameters('content'),
-    docs: {
-      subtitle: 'Placeholder animations for loading content.',
-    },
-  },
   args: SkeletonStylesDefaults,
   argTypes: {
-    shape: {
-      control: { type: 'select' as const },
-      options: ['circ', 'rect'],
-      table: {
-        defaultValue: { summary: 'rect' },
-        category: 'Visual',
-      },
-      description: 'Shape of the skeleton placeholder',
+    shape: createArgTypeSelect(
+      'Shape of the skeleton placeholder',
+      ['circ', 'rect'],
+      'rect',
+    ),
+  },
+  parameters: {
+    ...createStandardParameters('centered'),
+    docs: {
+      subtitle: 'Placeholder animations for loading content.',
     },
   },
 };

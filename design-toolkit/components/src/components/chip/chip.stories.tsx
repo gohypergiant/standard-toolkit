@@ -11,7 +11,6 @@
  */
 
 import {
-  createSizeControl,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
@@ -35,10 +34,10 @@ const meta: Meta<typeof Chip> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    size: createSizeControl('COMPACT'),
+    size: STANDARD_ARG_TYPES.size.compact,
   },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Interactive chip components for selections and actions.',
     },

@@ -10,16 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/utils/controls';
+import {
+  createArgTypeSelect,
+  createStandardParameters,
+} from '^storybook/utils/controls';
 import { DetailsList } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof DetailsList> = {
   title: 'Components/DetailsList',
   component: DetailsList,
+  args: {
+    align: 'justify',
+  },
+  argTypes: {
+    align: createArgTypeSelect('Selection behavior for the component', [
+      'left',
+      'justify',
+      'center',
+    ]),
+  },
   parameters: {
-    ...createStandardParameters('container'),
-    layout: 'padded',
+    ...createStandardParameters('padded'),
     docs: {
       subtitle:
         'A structured list component for displaying detailed information',
@@ -29,21 +41,6 @@ const meta: Meta<typeof DetailsList> = {
       },
     },
   },
-  args: {
-    align: 'justify',
-  },
-  argTypes: {
-    align: {
-      control: { type: 'select' as const },
-      options: ['left', 'justify', 'center'],
-      description: 'Selection behavior for the component',
-      table: {
-        type: { summary: 'left | justify | center' },
-        defaultValue: { summary: 'none' },
-      },
-    },
-  },
-  tags: ['autodocs'],
 };
 
 export default meta;

@@ -37,12 +37,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Tabs> = {
   title: 'Components/Tabs',
   component: Tabs,
-  parameters: {
-    ...createStandardParameters('container'),
-    docs: {
-      subtitle: 'Organize content into multiple panels.',
-    },
-  },
   args: {
     orientation: 'horizontal',
     isDisabled: false,
@@ -50,6 +44,12 @@ const meta: Meta<typeof Tabs> = {
   argTypes: {
     orientation: STANDARD_ARG_TYPES.orientation,
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
+  },
+  parameters: {
+    ...createStandardParameters('centered'),
+    docs: {
+      subtitle: 'Organize content into multiple panels.',
+    },
   },
 };
 

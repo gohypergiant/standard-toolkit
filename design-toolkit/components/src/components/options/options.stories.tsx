@@ -11,8 +11,8 @@
  */
 
 import {
-  createSizeControl,
   createStandardParameters,
+  STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import Placeholder from '@accelint/icons/placeholder';
 import {
@@ -31,10 +31,10 @@ const meta: Meta<typeof Options> = {
     size: 'large',
   },
   argTypes: {
-    size: createSizeControl('BINARY'),
+    size: STANDARD_ARG_TYPES.size.binary,
   },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Options list component for selection interfaces.',
     },

@@ -11,8 +11,8 @@
  */
 
 import {
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import { createStatesStory } from '^storybook/utils/templates';
@@ -31,12 +31,12 @@ const meta: Meta<typeof SearchField> = {
     isLoading: false,
   },
   argTypes: {
-    variant: createVariantControl(['outlined', 'filled']),
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
     isLoading: STANDARD_ARG_TYPES.isLoading,
+    variant: createArgTypeSelect('Style variant', ['outlined', 'filled']),
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A customizable search input component built on React Aria Components',

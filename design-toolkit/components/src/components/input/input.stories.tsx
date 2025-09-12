@@ -11,14 +11,11 @@
  */
 
 import {
-  createSizeControl,
+  createArgTypeBool,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
-import {
-  createSizeVariantsStory,
-  createStatesStory,
-} from '^storybook/utils/templates';
+import { createStatesStory } from '^storybook/utils/templates';
 import { Input } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -34,26 +31,17 @@ const meta: Meta<typeof Input> = {
     isInvalid: false,
   },
   argTypes: {
-    size: createSizeControl('COMPACT'),
-    placeholder: STANDARD_ARG_TYPES.placeholder,
-    disabled: {
-      // using a manual definition because React Aria components use
-      // `disabled` and we can not standardize on `isDisabled` as a result
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    autoSize: createArgTypeBool('Autosize component to fit content'),
+    // using a manual definition because React Aria components use
+    // `disabled` and we can not standardize on `isDisabled` as a result
+    disabled: createArgTypeBool('Disable the input'),
     isInvalid: STANDARD_ARG_TYPES.isInvalid,
-    isClearable: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
-    autoSize: {
-      control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
-    },
+    isClearable: createArgTypeBool('Provide a button to clear the input'),
+    size: STANDARD_ARG_TYPES.size.compact,
+    placeholder: STANDARD_ARG_TYPES.placeholder,
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'A flexible text input component with enhanced features',
     },
@@ -73,12 +61,6 @@ export const States: StoryObj<typeof Input> = createStatesStory({
     disabled: { disabled: true, placeholder: 'Disabled input' },
     error: { isInvalid: true, placeholder: 'Invalid input' },
   },
-});
-
-export const AllSizes: StoryObj<typeof Input> = createSizeVariantsStory({
-  Component: Input,
-  sizes: ['small', 'medium'],
-  baseProps: { placeholder: 'Sample text' },
 });
 
 export const InputTypes: StoryObj<typeof Input> = {

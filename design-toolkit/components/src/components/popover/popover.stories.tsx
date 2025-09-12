@@ -32,17 +32,17 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Popover> = {
   title: 'Components/Popover',
   component: Popover,
-  parameters: {
-    ...createStandardParameters('overlay'),
-    docs: {
-      subtitle: 'Contextual overlay for additional information and actions.',
-    },
-  },
   args: {
     placement: 'bottom',
   },
   argTypes: {
     placement: STANDARD_ARG_TYPES.placement,
+  },
+  parameters: {
+    ...createStandardParameters('centered'),
+    docs: {
+      subtitle: 'Contextual overlay for additional information and actions.',
+    },
   },
 };
 

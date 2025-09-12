@@ -12,6 +12,7 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */
 
 import {
+  createArgTypeSelect,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
@@ -43,14 +44,15 @@ const meta: Meta<typeof Tree> = {
     showVisibility: true,
   },
   argTypes: {
-    variant: {
-      control: { type: 'select' as const },
-      options: ['cozy', 'compact', 'crammed'],
-    },
     selectionMode: STANDARD_ARG_TYPES.selectionMode,
+    variant: createArgTypeSelect('Spacing inside component', [
+      'cozy',
+      'compact',
+      'crammed',
+    ]),
   },
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     controls: {
       include: ['showRuleLines', 'showVisibility', 'variant', 'selectionMode'],
     },

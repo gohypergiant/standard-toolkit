@@ -11,8 +11,8 @@
  */
 
 import {
+  createArgTypeSelect,
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/utils/controls';
 import { createStatesStory } from '^storybook/utils/templates';
@@ -30,10 +30,10 @@ const meta: Meta<typeof Switch> = {
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
-    labelPosition: createVariantControl(['start', 'end']),
+    labelPosition: createArgTypeSelect('Label positioning', ['start', 'end']),
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'A toggle control for binary state changes',
     },
@@ -43,7 +43,7 @@ const meta: Meta<typeof Switch> = {
 export default meta;
 
 export const Default: StoryObj<typeof Switch> = {
-  render: (args) => <Switch {...args} />,
+  render: Switch,
 };
 
 export const States: StoryObj<typeof Switch> = createStatesStory({

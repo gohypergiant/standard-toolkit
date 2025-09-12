@@ -27,6 +27,12 @@ export type SizeVariant = (typeof SIZE_VARIANTS)[keyof typeof SIZE_VARIANTS];
  * Common size ranges for different component types
  */
 export const SIZE_RANGES = Object.freeze({
+  /** Binary range for components with simple size toggle */
+  BINARY: [SIZE_VARIANTS.small, SIZE_VARIANTS.large],
+
+  /** Compact range for form fields and dense interfaces */
+  COMPACT: [SIZE_VARIANTS.small, SIZE_VARIANTS.medium],
+
   /** Full size range for components that support all sizes (Button, Icon) */
   FULL: [
     SIZE_VARIANTS.xsmall,
@@ -35,12 +41,6 @@ export const SIZE_RANGES = Object.freeze({
     SIZE_VARIANTS.large,
   ],
 
-  /** Compact range for form fields and dense interfaces */
-  COMPACT: [SIZE_VARIANTS.small, SIZE_VARIANTS.medium],
-
   /** Standard range for most components */
   STANDARD: [SIZE_VARIANTS.small, SIZE_VARIANTS.medium, SIZE_VARIANTS.large],
-
-  /** Binary range for components with simple size toggle */
-  BINARY: [SIZE_VARIANTS.small, SIZE_VARIANTS.large],
 } as const);

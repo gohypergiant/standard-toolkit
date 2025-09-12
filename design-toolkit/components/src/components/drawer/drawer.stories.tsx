@@ -25,28 +25,19 @@ import type { DrawerProps } from './types';
 const meta: Meta<DrawerProps> = {
   title: 'Components/Drawer',
   component: Drawer,
-  parameters: {
-    layout: 'fullscreen',
-    ...createStandardParameters('overlay'),
-    docs: {
-      subtitle: 'Sliding panel for navigation and content organization.',
-    },
-  },
   args: {
     placement: 'left',
     size: 'medium',
   },
   argTypes: {
-    size: {
-      control: { type: 'select' as const },
-      description: 'Size of the component',
-      options: ['small', 'medium', 'large'],
-      table: {
-        defaultValue: { summary: 'medium' },
-        type: { summary: 'small | medium | large' },
-      },
-    },
+    size: STANDARD_ARG_TYPES.size.standard,
     placement: STANDARD_ARG_TYPES.placement,
+  },
+  parameters: {
+    ...createStandardParameters('fullscreen'),
+    docs: {
+      subtitle: 'Sliding panel for navigation and content organization.',
+    },
   },
 };
 

@@ -13,7 +13,18 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: `any` is necessary in these cases */
 
 import type { StoryObj } from '@storybook/react';
-import type { StateTemplateProps } from './types';
+
+interface StateTemplateProps {
+  // biome-ignore lint/style/useNamingConvention: Component is a React component
+  Component: React.ComponentType<any>;
+  baseProps?: Record<string, any>;
+  stateProps?: {
+    loading?: Record<string, any>;
+    error?: Record<string, any>;
+    disabled?: Record<string, any>;
+    empty?: Record<string, any>;
+  };
+}
 
 /**
  * Creates a standard "States" story that shows all common component states
@@ -65,25 +76,3 @@ export const createStatesStory = ({
     controls: { disable: true },
   },
 });
-
-/**
- * Common state prop configurations for different component types
- */
-export const COMMON_STATE_PROPS = {
-  FORM_FIELD: {
-    disabled: { isDisabled: true },
-    error: { isInvalid: true, errorMessage: 'This field is required' },
-    loading: { isLoading: true },
-  },
-
-  BUTTON: {
-    disabled: { isDisabled: true },
-    loading: { isPending: true, children: 'Loading...' },
-  },
-
-  DATA_COMPONENT: {
-    loading: { isLoading: true },
-    error: { error: 'Failed to load data' },
-    empty: { data: [] },
-  },
-};

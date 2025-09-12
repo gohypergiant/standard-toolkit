@@ -10,60 +10,60 @@
  * governing permissions and limitations under the License.
  */
 
-import { COMMON_CONTROL_EXCLUSIONS } from './exclusions';
+type Layout = 'centered' | 'fullscreen' | 'padded';
+
+const EXCLUSIONS = {
+  // React Aria internal props
+  ARIA: ['slot', 'validationBehavior', 'validationErrors', 'elementType'],
+
+  // Layout/styling props that are better controlled via code
+  CONTAINED: ['parentRef', 'isDismissable', 'isKeyboardDismissDisabled'],
+
+  // Event handlers (keep only the most relevant for interaction testing)
+  EVENT: [
+    'onFocus',
+    'onBlur',
+    'onKeyDown',
+    'onKeyUp',
+    'onMouseEnter',
+    'onMouseLeave',
+  ],
+
+  // React Aria form-related props that create visual noise
+  FORM: [
+    'form',
+    'formAction',
+    'formEncType',
+    'formMethod',
+    'formNoValidate',
+    'formTarget',
+    'inputRef', // ?
+    'name',
+    'value',
+  ],
+
+  // React internal props
+  REACT: ['key', 'ref'],
+
+  STYLING: ['className', 'classNames', 'style'],
+};
 
 /**
  * Helper to create consistent parameters for different component types
  */
 export const createStandardParameters = (
-  type: 'form' | 'overlay' | 'container' | 'content',
-) => {
-  const baseParams = {
-    controls: {
-      exclude: [
-        ...COMMON_CONTROL_EXCLUSIONS.REACT_PROPS,
-        ...COMMON_CONTROL_EXCLUSIONS.ARIA_INTERNAL,
-        ...COMMON_CONTROL_EXCLUSIONS.STYLING_PROPS,
-        ...COMMON_CONTROL_EXCLUSIONS.EVENT_HANDLERS,
-      ],
-    },
-  };
-
-  switch (type) {
-    case 'form':
-      return {
-        ...baseParams,
-        controls: {
-          ...baseParams.controls,
-          exclude: [
-            ...baseParams.controls.exclude,
-            ...COMMON_CONTROL_EXCLUSIONS.FORM_PROPS,
-          ],
-        },
-      };
-
-    case 'overlay':
-      return {
-        ...baseParams,
-        layout: 'fullscreen',
-        controls: {
-          ...baseParams.controls,
-          exclude: [
-            ...baseParams.controls.exclude,
-            'parentRef',
-            'isDismissable',
-            'isKeyboardDismissDisabled',
-          ],
-        },
-      };
-
-    case 'container':
-      return {
-        ...baseParams,
-        layout: 'padded',
-      };
-
-    default:
-      return baseParams;
-  }
-};
+  layout: Layout,
+  ...exclusions: (keyof typeof EXCLUSIONS)[]
+) => ({
+  controls: {
+    exclude: [
+      // 'children', // perhaps controversial; so keep???
+      ...EXCLUSIONS.REACT,
+      ...EXCLUSIONS.ARIA,
+      ...EXCLUSIONS.STYLING,
+      ...EXCLUSIONS.EVENT,
+      ...exclusions.flatMap((key) => EXCLUSIONS[key]),
+    ],
+  },
+  layout,
+});

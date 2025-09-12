@@ -31,7 +31,7 @@ const meta: Meta<typeof Label> = {
     isRequired: STANDARD_ARG_TYPES.isRequired,
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Label component for form elements.',
     },

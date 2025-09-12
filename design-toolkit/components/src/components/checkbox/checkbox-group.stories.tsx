@@ -42,7 +42,7 @@ const meta: Meta<typeof Checkbox.Group> = {
     orientation: STANDARD_ARG_TYPES.orientation,
   },
   parameters: {
-    ...createStandardParameters('form'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle:
         'A grouped collection of checkbox controls for multiple selections',

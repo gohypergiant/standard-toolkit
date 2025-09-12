@@ -104,7 +104,7 @@ function auditStoryFile(filePath) {
  * Main audit function
  */
 async function auditStories() {
-  console.log(chalk.blue('🔍 Auditing Storybook structure...\n'));
+  console.log(chalk.blue('Auditing Storybook structure...\n'));
 
   const targetDir = getTargetDirectory();
 

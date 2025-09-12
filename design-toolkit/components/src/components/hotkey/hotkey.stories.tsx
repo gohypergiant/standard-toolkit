@@ -20,7 +20,7 @@ const meta: Meta<typeof Hotkey> = {
   title: 'Components/Hotkey',
   component: Hotkey,
   parameters: {
-    ...createStandardParameters('content'),
+    ...createStandardParameters('centered'),
     docs: {
       subtitle: 'Visual representation of keyboard shortcuts and hotkeys.',
     },

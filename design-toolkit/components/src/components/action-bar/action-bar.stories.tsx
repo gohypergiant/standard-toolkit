@@ -21,8 +21,7 @@ const meta: Meta<typeof ActionBar> = {
   title: 'Components/ActionBar',
   component: ActionBar,
   parameters: {
-    ...createStandardParameters('container'),
-    layout: 'fullscreen',
+    ...createStandardParameters('fullscreen'),
     docs: {
       subtitle:
         'A horizontal toolbar component for grouping actions and controls',
