@@ -266,33 +266,16 @@ export function Table<T extends { id: string | number }>({
     return (
       <div>
         <table {...props}>
-          <TableHeader>
-            {getHeaderGroups().map((headerGroup) => (
-              <tr>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <HeaderCell
-                      key={header.id}
-                      narrow={
-                        header.column.id === 'numeral' ||
-                        header.column.id === 'kebab'
-                      }
-                      data-selected={
-                        header.column.id === columnSelection ? '' : undefined
-                      }
-                      header={header}
-                      enableColumnReordering={enableColumnReordering}
-                      enableSorting={enableSorting}
-                      moveColumnLeft={moveColumnLeft}
-                      moveColumnRight={moveColumnRight}
-                      persistHeaderKebabMenu={persistHeaderKebabMenu}
-                      setColumnSelection={setColumnSelection}
-                    ></HeaderCell>
-                  );
-                })}
-              </tr>
-            ))}
-          </TableHeader>
+          <TableHeader
+            getHeaderGroups={getHeaderGroups}
+            moveColumnLeft={moveColumnLeft}
+            moveColumnRight={moveColumnRight}
+            persistHeaderKebabMenu={persistHeaderKebabMenu}
+            setColumnSelection={setColumnSelection}
+            columnSelection={columnSelection}
+            enableColumnReordering={enableColumnReordering}
+            enableSorting={enableSorting}
+          />
           <TableBody>
             {getTopRows().map((row) => (
               <TableRow

@@ -11,10 +11,48 @@
  */
 
 import { tableHeaderStyles } from './styles';
+import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
 
-export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
+export function TableHeader({
+  className,
+  ref,
+  getHeaderGroups,
+  moveColumnLeft,
+  moveColumnRight,
+  persistHeaderKebabMenu,
+  setColumnSelection,
+  enableColumnReordering,
+  enableSorting,
+  columnSelection,
+  ...props
+}: TableHeaderProps) {
   return (
-    <thead {...props} ref={ref} className={tableHeaderStyles(className)} />
+    <thead {...props} ref={ref} className={tableHeaderStyles(className)}>
+      {getHeaderGroups().map((headerGroup: any) => (
+        <tr>
+          {headerGroup.headers.map((header: any) => {
+            return (
+              <HeaderCell
+                key={header.id}
+                narrow={
+                  header.column.id === 'numeral' || header.column.id === 'kebab'
+                }
+                data-selected={
+                  header.column.id === columnSelection ? '' : undefined
+                }
+                header={header}
+                enableColumnReordering={enableColumnReordering}
+                enableSorting={enableSorting}
+                moveColumnLeft={moveColumnLeft}
+                moveColumnRight={moveColumnRight}
+                persistHeaderKebabMenu={persistHeaderKebabMenu}
+                setColumnSelection={setColumnSelection}
+              ></HeaderCell>
+            );
+          })}
+        </tr>
+      ))}
+    </thead>
   );
 }

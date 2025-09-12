@@ -214,7 +214,16 @@ export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
  * @see {@link RefAttributes}
  */
 export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement>;
+  RefAttributes<HTMLTableSectionElement> & {
+    getHeaderGroups: any;
+    moveColumnLeft?: (index: number) => void;
+    moveColumnRight?: (index: number) => void;
+    setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
+    persistHeaderKebabMenu?: boolean;
+    enableColumnReordering?: boolean;
+    enableSorting?: boolean;
+    columnSelection: string | any;
+  };
 
 export enum RowKebabMenuItems {
   Pin = 'Pin',
