@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { uuid } from '@accelint/core';
 import { Cancel } from '@accelint/icons';
 import { Button } from '../button';
@@ -43,15 +46,7 @@ const meta: Meta<DrawerProps> = {
       },
       description: 'Size of the drawer',
     },
-    placement: {
-      control: 'select',
-      options: ['top', 'bottom', 'left', 'right'],
-      table: {
-        defaultValue: { summary: 'left' },
-        category: 'Behavior',
-      },
-      description: 'Position of the drawer relative to the viewport',
-    },
+    placement: STANDARD_ARG_TYPES.placement,
   },
 };
 

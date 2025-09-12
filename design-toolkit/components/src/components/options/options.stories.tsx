@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createSizeControl,
+  createStandardParameters,
+} from '^storybook/shared-controls';
 import Placeholder from '@accelint/icons/placeholder';
 import {
   ListLayout as AriaListLayout,
@@ -28,9 +31,7 @@ const meta: Meta<typeof Options> = {
     size: 'large',
   },
   argTypes: {
-    size: {
-      control: 'select',
-    },
+    size: createSizeControl('BINARY'),
   },
   parameters: {
     ...createStandardParameters('content'),

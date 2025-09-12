@@ -39,10 +39,7 @@ const meta: Meta<typeof Checkbox.Group> = {
     label: STANDARD_ARG_TYPES.label,
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
     isRequired: STANDARD_ARG_TYPES.isRequired,
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
+    orientation: STANDARD_ARG_TYPES.orientation,
   },
   parameters: {
     ...createStandardParameters('form'),

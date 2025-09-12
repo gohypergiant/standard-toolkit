@@ -13,6 +13,7 @@
 import {
   createSizeControl,
   createStandardParameters,
+  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { createStatesStory } from '^storybook/story-templates';
@@ -24,6 +25,12 @@ import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
 import { ButtonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
+
+const CUSTOM_CRITICALITIES = [
+  CRITICALITY_VARIANTS.info,
+  CRITICALITY_VARIANTS.serious,
+  CRITICALITY_VARIANTS.critical,
+];
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -39,18 +46,22 @@ const meta: Meta<typeof Button> = {
     children: STANDARD_ARG_TYPES.children,
     color: {
       control: { type: 'select' },
-      options: [
-        CRITICALITY_VARIANTS.info,
-        CRITICALITY_VARIANTS.serious,
-        CRITICALITY_VARIANTS.critical,
-      ],
-    },
-    size: createSizeControl('FULL'), // Button supports all size variants
-    variant: {
-      control: { type: 'select' },
-      options: ['filled', 'outline', 'flat', 'icon', 'floating'],
+      description: 'Color variant indicating different levels of importance',
+      options: CUSTOM_CRITICALITIES,
+      table: {
+        type: { summary: CUSTOM_CRITICALITIES.join(' | ') },
+        defaultValue: { summary: 'info' },
+      },
     },
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
+    size: createSizeControl('FULL'), // Button supports all size variants
+    variant: createVariantControl([
+      'filled',
+      'outline',
+      'flat',
+      'icon',
+      'floating',
+    ]),
   },
   parameters: {
     ...createStandardParameters('form'),

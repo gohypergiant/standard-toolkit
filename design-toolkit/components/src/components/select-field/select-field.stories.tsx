@@ -50,6 +50,7 @@ const meta: Meta<typeof SelectField> = {
     description: STANDARD_ARG_TYPES.description,
     errorMessage: STANDARD_ARG_TYPES.errorMessage,
     placeholder: STANDARD_ARG_TYPES.placeholder,
+    autoFocus: STANDARD_ARG_TYPES.autoFocus,
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
     isInvalid: STANDARD_ARG_TYPES.isInvalid,
     isRequired: STANDARD_ARG_TYPES.isRequired,

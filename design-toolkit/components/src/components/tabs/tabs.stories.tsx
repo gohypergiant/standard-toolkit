@@ -14,7 +14,6 @@
 import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { createStatesStory } from '^storybook/story-templates';
@@ -49,7 +48,7 @@ const meta: Meta<typeof Tabs> = {
     isDisabled: false,
   },
   argTypes: {
-    orientation: createVariantControl(['horizontal', 'vertical']),
+    orientation: STANDARD_ARG_TYPES.orientation,
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },
 };

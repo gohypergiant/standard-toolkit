@@ -14,6 +14,7 @@ import { MOCK_DATA } from '^storybook/mock-data';
 import {
   createStandardParameters,
   createVariantControl,
+  STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { createVariantsStory } from '^storybook/story-templates';
 import Kebab from '@accelint/icons/kebab';
@@ -35,7 +36,7 @@ const meta: Meta<typeof Menu> = {
   },
   argTypes: {
     variant: createVariantControl(['cozy', 'compact']),
-    selectionMode: createVariantControl(['single', 'multiple', 'none']),
+    selectionMode: STANDARD_ARG_TYPES.selectionMode,
   },
   parameters: {
     ...createStandardParameters('container'),

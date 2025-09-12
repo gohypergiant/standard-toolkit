@@ -11,7 +11,9 @@
  */
 
 import {
+  createSizeControl,
   createStandardParameters,
+  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
@@ -39,14 +41,8 @@ const meta: Meta<typeof DateField> = {
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
     isInvalid: STANDARD_ARG_TYPES.isInvalid,
     isRequired: STANDARD_ARG_TYPES.isRequired,
-    size: {
-      control: 'select',
-      options: ['small', 'medium'],
-    },
-    granularity: {
-      control: 'select',
-      options: ['day', 'hour', 'minute', 'second'],
-    },
+    size: createSizeControl('COMPACT'),
+    granularity: createVariantControl(['day', 'hour', 'minute', 'second']),
   },
   parameters: {
     ...createStandardParameters('form'),

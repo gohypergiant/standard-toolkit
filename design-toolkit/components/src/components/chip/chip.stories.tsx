@@ -11,6 +11,7 @@
  */
 
 import {
+  createSizeControl,
   createStandardParameters,
   STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
@@ -34,10 +35,7 @@ const meta: Meta<typeof Chip> = {
   },
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
+    size: createSizeControl('COMPACT'),
   },
   parameters: {
     ...createStandardParameters('content'),
@@ -55,10 +53,7 @@ export const Default: StoryObj<typeof Chip> = {
     variant: 'info',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
-    },
+    variant: STANDARD_ARG_TYPES.criticality,
   },
   render: ({ children, ...args }) => (
     <Chip {...args}>
@@ -75,10 +70,7 @@ export const List: StoryObj<typeof Chip> = {
     variant: 'info',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
-    },
+    variant: STANDARD_ARG_TYPES.criticality,
   },
   parameters: {
     controls: {
@@ -120,10 +112,7 @@ export const SelectableChipList: StoryObj<
     isDisabled: false,
   },
   argTypes: {
-    selectionMode: {
-      control: 'select',
-      options: ['none', 'single', 'multiple'],
-    },
+    selectionMode: STANDARD_ARG_TYPES.selectionMode,
   },
   parameters: {
     controls: {

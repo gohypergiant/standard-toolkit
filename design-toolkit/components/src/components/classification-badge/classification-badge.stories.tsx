@@ -10,7 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createSizeControl,
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { ClassificationBadge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -18,7 +22,6 @@ const meta: Meta<typeof ClassificationBadge> = {
   title: 'Components/ClassificationBadge',
   component: ClassificationBadge,
   args: {
-    className: undefined,
     children: '',
     size: 'medium',
     variant: 'missing',
@@ -27,22 +30,8 @@ const meta: Meta<typeof ClassificationBadge> = {
     children: {
       control: 'text',
     },
-    variant: {
-      control: 'select',
-      options: [
-        'missing',
-        'unclassified',
-        'cui',
-        'confidential',
-        'secret',
-        'top-secret',
-        'ts-sci',
-      ],
-    },
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
+    size: createSizeControl('COMPACT'),
+    variant: STANDARD_ARG_TYPES.classificationVariant,
   },
   parameters: {
     ...createStandardParameters('content'),

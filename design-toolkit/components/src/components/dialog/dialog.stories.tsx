@@ -32,11 +32,19 @@ const meta: Meta<typeof Dialog> = {
     size: createVariantControl(['small', 'large']),
     isDismissable: {
       control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
+      description: 'Whether the component can be dismissed',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
     },
     isKeyboardDismissDisabled: {
       control: { type: 'boolean' },
-      table: { type: { summary: 'boolean' } },
+      description: 'Whether keyboard dismissal is disabled',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
   },
   parameters: {

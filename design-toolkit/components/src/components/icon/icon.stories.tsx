@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createSizeControl,
+  createStandardParameters,
+} from '^storybook/shared-controls';
 import { Add } from '@accelint/icons';
 import { Icon } from './';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -24,27 +27,8 @@ const meta: Meta<typeof Icon> = {
       subtitle: 'Scalable vector graphics with consistent sizing and coloring.',
     },
   },
-  args: {
-    className: 'fg-primary-bold',
-  },
   argTypes: {
-    className: {
-      control: 'text',
-      table: {
-        category: 'Styling',
-        type: { summary: 'string' },
-      },
-      description: 'CSS classes for styling the icon (colors, spacing, etc.)',
-    },
-    size: {
-      control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
-      table: {
-        defaultValue: { summary: 'medium' },
-        category: 'Visual',
-      },
-      description: 'Size of the icon',
-    },
+    size: createSizeControl('FULL'),
   },
 };
 
@@ -52,20 +36,18 @@ export default meta;
 
 export const Default: StoryObj<typeof Icon> = {
   render: (args) => (
-    <Icon {...args}>
+    <Icon className={'fg-primary-bold'} {...args}>
       <Add />
     </Icon>
   ),
 };
 
 export const Provider: StoryObj<typeof Icon> = {
-  render: ({ className, size }) => (
-    <Icon.Provider size={size}>
-      <div className={className}>
-        <Icon>
-          <Add />
-        </Icon>
-      </div>
+  render: (args) => (
+    <Icon.Provider className={'fg-primary-bold'} {...args}>
+      <Icon>
+        <Add />
+      </Icon>
     </Icon.Provider>
   ),
 };

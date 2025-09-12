@@ -12,7 +12,6 @@
 
 import {
   createStandardParameters,
-  createVariantControl,
   STANDARD_ARG_TYPES,
 } from '^storybook/shared-controls';
 import { createStatesStory } from '^storybook/story-templates';
@@ -29,7 +28,7 @@ const meta: Meta<typeof Radio.Group> = {
     label: 'Choose an option',
   },
   argTypes: {
-    orientation: createVariantControl(['horizontal', 'vertical']),
+    orientation: STANDARD_ARG_TYPES.orientation,
     label: STANDARD_ARG_TYPES.label,
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
     isRequired: STANDARD_ARG_TYPES.isRequired,

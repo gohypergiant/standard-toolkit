@@ -32,7 +32,12 @@ const meta: Meta<typeof Link> = {
   argTypes: {
     children: STANDARD_ARG_TYPES.children,
     allowsVisited: {
-      control: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Whether the link can be styled when visited',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
     },
     isDisabled: STANDARD_ARG_TYPES.isDisabled,
   },

@@ -11,7 +11,10 @@
  */
 
 import { MOCK_DATA } from '^storybook/mock-data';
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { Delete, Information } from '@accelint/icons';
 import { Button } from '@/components/button';
 import { Checkbox } from '../checkbox';
@@ -39,15 +42,7 @@ const meta: Meta<typeof Popover> = {
     placement: 'bottom',
   },
   argTypes: {
-    placement: {
-      control: 'select',
-      options: ['left', 'right', 'top', 'bottom'],
-      table: {
-        defaultValue: { summary: 'bottom' },
-        category: 'Behavior',
-      },
-      description: 'Position of the popover relative to its trigger',
-    },
+    placement: STANDARD_ARG_TYPES.placement,
   },
 };
 

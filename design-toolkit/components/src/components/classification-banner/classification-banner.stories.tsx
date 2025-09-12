@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { ClassificationBanner } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -26,38 +29,16 @@ const meta: Meta<typeof ClassificationBanner> = {
     },
   },
   args: {
-    className: undefined,
     children: '',
     variant: 'missing',
   },
   argTypes: {
     children: {
-      control: 'text',
-      table: {
-        category: 'Content',
-        type: { summary: 'ReactNode' },
-      },
+      ...STANDARD_ARG_TYPES.children,
       description:
         'Custom text content (optional - variant provides default text if empty)',
     },
-    variant: {
-      control: 'select',
-      options: [
-        'missing',
-        'unclassified',
-        'cui',
-        'confidential',
-        'secret',
-        'top-secret',
-        'ts-sci',
-      ],
-      table: {
-        defaultValue: { summary: 'missing' },
-        category: 'Visual',
-      },
-      description:
-        'Security classification level with appropriate colors and default text',
-    },
+    variant: STANDARD_ARG_TYPES.classificationVariant,
   },
 };
 

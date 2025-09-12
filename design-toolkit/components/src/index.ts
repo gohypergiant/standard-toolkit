@@ -317,6 +317,7 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { CLASSIFICATION_VALUES } from './constants/classifications';
 export {
   CRITICALITY_VALUES,
   CRITICALITY_VARIANTS,

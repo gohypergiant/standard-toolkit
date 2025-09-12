@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CLASSIFICATION_VALUES } from '@/constants/classifications';
 import { CRITICALITY_VALUES } from '@/constants/criticality-variants';
 import { SIZE_RANGES } from '@/constants/size-variants';
 
@@ -106,6 +107,7 @@ export const createSizeControl = (range: keyof typeof SIZE_RANGES) => {
   return {
     control: { type: 'select' as const },
     options,
+    description: 'Size variant of the component',
     table: {
       type: { summary: options.join(' | ') },
       defaultValue: { summary: defaultSize },
@@ -175,6 +177,7 @@ export const createStandardParameters = (
 export const createVariantControl = (options: readonly string[]) => ({
   control: { type: 'select' as const },
   options: [...options],
+  description: 'Visual variant of the component',
   table: {
     type: { summary: options.join(' | ') },
     defaultValue: { summary: options[0] },
@@ -185,10 +188,40 @@ export const createVariantControl = (options: readonly string[]) => ({
  * Standard argType configurations for common props
  */
 export const STANDARD_ARG_TYPES = {
+  autoFocus: {
+    control: { type: 'boolean' as const },
+    description: 'Whether the component should automatically receive focus',
+    table: {
+      type: { summary: 'boolean' },
+      defaultValue: { summary: 'false' },
+    },
+  },
+
   children: {
     control: { type: 'text' as const },
     description: 'Content to be displayed inside the component',
     table: { type: { summary: 'ReactNode' } },
+  },
+
+  classificationVariant: {
+    control: { type: 'select' as const },
+    options: CLASSIFICATION_VALUES,
+    description:
+      'Security classification level with appropriate colors and default text',
+    table: {
+      type: { summary: CLASSIFICATION_VALUES.join(' | ') },
+      defaultValue: { summary: 'missing' },
+    },
+  },
+
+  criticality: {
+    control: { type: 'select' as const },
+    description: 'Color variant indicating different levels of importance',
+    options: CRITICALITY_VALUES,
+    table: {
+      type: { summary: CRITICALITY_VALUES.join(' | ') },
+      defaultValue: { summary: 'info' },
+    },
   },
 
   description: {
@@ -254,9 +287,52 @@ export const STANDARD_ARG_TYPES = {
     table: { type: { summary: 'string' } },
   },
 
+  orientation: {
+    control: { type: 'select' as const },
+    options: ['horizontal', 'vertical'],
+    description: 'Layout orientation of the component',
+    table: {
+      type: { summary: 'horizontal | vertical' },
+      defaultValue: { summary: 'horizontal' },
+    },
+  },
+
   placeholder: {
     control: { type: 'text' as const },
     description: 'Placeholder text shown when the input is empty',
     table: { type: { summary: 'string' } },
+  },
+
+  placement: {
+    control: { type: 'select' as const },
+    options: ['top', 'bottom', 'left', 'right'],
+    description: 'Position of the component relative to its trigger',
+    table: {
+      type: { summary: 'top | bottom | left | right' },
+      defaultValue: { summary: 'bottom' },
+    },
+  },
+
+  selectionMode: {
+    control: { type: 'select' as const },
+    options: ['none', 'single', 'multiple'],
+    description: 'Selection behavior for the component',
+    table: {
+      type: { summary: 'none | single | multiple' },
+      defaultValue: { summary: 'none' },
+    },
+  },
+
+  value: {
+    control: { type: 'text' as const },
+    description: 'Current value of the component',
+    table: { type: { summary: 'string' } },
+  },
+
+  variant: {
+    control: { type: 'select' as const },
+    description: 'Visual variant of the component',
+    table: { type: { summary: 'string' } },
+    // Note: options should be provided per component
   },
 };

@@ -11,7 +11,10 @@
  */
 /** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import {
   CenterOn,
   CollapseAll,
@@ -44,10 +47,7 @@ const meta: Meta<typeof Tree> = {
       control: 'select',
       options: ['cozy', 'compact', 'crammed'],
     },
-    selectionMode: {
-      control: 'select',
-      options: ['none', 'multiple', 'single'],
-    },
+    selectionMode: STANDARD_ARG_TYPES.selectionMode,
   },
   parameters: {
     ...createStandardParameters('content'),

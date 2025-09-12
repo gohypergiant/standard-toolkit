@@ -17,26 +17,26 @@ import { Hero } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Hero> = {
-  title: 'Components/Hero',
   component: Hero,
-  parameters: {
-    ...createStandardParameters('content'),
-    docs: {
-      subtitle:
-        'Displays an icon alongside primary and secondary content with flexible layouts.',
-    },
-  },
+  title: 'Components/Hero',
   args: {
     compact: false,
   },
   argTypes: {
     compact: {
-      control: 'boolean',
+      control: { type: 'boolean' },
+      description: 'Whether to use compact layout',
       table: {
+        type: { summary: 'boolean' },
         defaultValue: { summary: 'false' },
-        category: 'Layout',
       },
-      description: 'Whether to use compact grid layout instead of stack layout',
+    },
+  },
+  parameters: {
+    ...createStandardParameters('content'),
+    docs: {
+      subtitle:
+        'Displays an icon alongside primary and secondary content with flexible layouts.',
     },
   },
 };

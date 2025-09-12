@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { createStandardParameters } from '^storybook/shared-controls';
+import {
+  createStandardParameters,
+  STANDARD_ARG_TYPES,
+} from '^storybook/shared-controls';
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -43,15 +46,7 @@ const meta: Meta<typeof Slider> = {
       },
       description: 'Layout arrangement of label and slider',
     },
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-      table: {
-        defaultValue: { summary: 'horizontal' },
-        category: 'Behavior',
-      },
-      description: 'Orientation of the slider control',
-    },
+    orientation: STANDARD_ARG_TYPES.orientation,
     showInput: {
       control: 'boolean',
       table: {

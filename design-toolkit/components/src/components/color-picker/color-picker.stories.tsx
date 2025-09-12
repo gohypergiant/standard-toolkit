@@ -14,25 +14,26 @@ import { createStandardParameters } from '^storybook/shared-controls';
 import { ColorPicker } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
+const PRESETS = [
+  '#ECECE6',
+  '#898989',
+  '#62a6ff',
+  '#30D27E',
+  '#FCA400',
+  '#D4231D',
+];
+
 const meta: Meta<typeof ColorPicker> = {
   title: 'Components/ColorPicker',
   component: ColorPicker,
   args: {
-    items: ['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D'],
+    items: PRESETS,
   },
   argTypes: {
-    className: { type: 'string' },
     value: {
       control: {
         type: 'color',
-        presetColors: [
-          '#ECECE6',
-          '#898989',
-          '#62a6ff',
-          '#30D27E',
-          '#FCA400',
-          '#D4231D',
-        ],
+        presetColors: PRESETS,
       },
       description: 'The currently selected color.',
     },

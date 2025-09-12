@@ -37,6 +37,8 @@ const meta: Meta<typeof Input> = {
     size: createSizeControl('COMPACT'),
     placeholder: STANDARD_ARG_TYPES.placeholder,
     disabled: {
+      // using a manual definition because React Aria components use
+      // `disabled` and we can not standardize on `isDisabled` as a result
       control: { type: 'boolean' },
       table: { type: { summary: 'boolean' } },
     },
