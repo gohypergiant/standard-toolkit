@@ -169,21 +169,3 @@ export const createSizeVariantsStory = ({
     controls: { disable: true },
   },
 });
-
-/**
- * Decorator for stories that need consistent spacing/layout
- */
-export const withStoryContainer = (Story: React.ComponentType) => (
-  <div className='max-w-md space-y-m p-l'>
-    <Story />
-  </div>
-);
-
-/**
- * Decorator for overlay components (dialogs, tooltips, etc.)
- */
-export const withOverlayContainer = (Story: React.ComponentType) => (
-  <div className='relative h-[600px] w-[800px] p-l outline outline-1 outline-info-bold'>
-    <Story />
-  </div>
-);

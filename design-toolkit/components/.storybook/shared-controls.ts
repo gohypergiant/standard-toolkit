@@ -56,48 +56,6 @@ export const COMMON_CONTROL_EXCLUSIONS = {
 };
 
 /**
- * Standard control types for consistent UI patterns
- */
-export const STANDARD_CONTROLS = {
-  /**
-   * Standard size variants - sourced from shared constants
-   * Use SIZE_RANGES for component-specific size options:
-   * - FULL: ['xsmall', 'small', 'medium', 'large'] for Button, Icon
-   * - COMPACT: ['small', 'medium'] for form fields
-   * - STANDARD: ['small', 'medium', 'large'] for most components
-   * - BINARY: ['small', 'large'] for simple size toggles
-   */
-  SIZE: {
-    control: { type: 'select' as const },
-    options: SIZE_RANGES.FULL, // Default to full range, override per component
-  },
-
-  VARIANT: {
-    control: { type: 'select' as const },
-    // Options should be defined per component
-  },
-
-  /**
-   * Semantic criticality variants - sourced from shared constants
-   * These represent the standard criticality levels used across the design system:
-   * - normal: Green styling for normal/success content
-   * - info: Blue styling for informational content
-   * - advisory: Yellow styling for advisory/warning content
-   * - serious: Orange styling for serious issues
-   * - critical: Red styling for critical errors or alerts
-   */
-  COLOR: {
-    control: { type: 'select' as const },
-    options: CRITICALITY_VALUES,
-  },
-
-  BOOLEAN: {
-    control: { type: 'boolean' as const },
-    table: { type: { summary: 'boolean' } },
-  },
-};
-
-/**
  * Helper to create size controls for specific component types
  */
 export const createSizeControl = (range: keyof typeof SIZE_RANGES) => {
@@ -114,6 +72,19 @@ export const createSizeControl = (range: keyof typeof SIZE_RANGES) => {
     },
   };
 };
+
+/**
+ * Helper to create variant controls with consistent options
+ */
+export const createVariantControl = (options: readonly string[]) => ({
+  control: { type: 'select' as const },
+  options: [...options],
+  description: 'Visual variant of the component',
+  table: {
+    type: { summary: options.join(' | ') },
+    defaultValue: { summary: options[0] },
+  },
+});
 
 /**
  * Helper to create consistent parameters for different component types
@@ -170,19 +141,6 @@ export const createStandardParameters = (
       return baseParams;
   }
 };
-
-/**
- * Helper to create variant controls with consistent options
- */
-export const createVariantControl = (options: readonly string[]) => ({
-  control: { type: 'select' as const },
-  options: [...options],
-  description: 'Visual variant of the component',
-  table: {
-    type: { summary: options.join(' | ') },
-    defaultValue: { summary: options[0] },
-  },
-});
 
 /**
  * Standard argType configurations for common props
@@ -327,12 +285,5 @@ export const STANDARD_ARG_TYPES = {
     control: { type: 'text' as const },
     description: 'Current value of the component',
     table: { type: { summary: 'string' } },
-  },
-
-  variant: {
-    control: { type: 'select' as const },
-    description: 'Visual variant of the component',
-    table: { type: { summary: 'string' } },
-    // Note: options should be provided per component
   },
 };

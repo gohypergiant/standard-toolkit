@@ -12,24 +12,27 @@ This guide establishes consistent patterns for Storybook stories across the desi
 import { 
   createStandardParameters, 
   createSizeControl,
-  STANDARD_CONTROLS 
+  createVariantControl,
+  STANDARD_ARG_TYPES
 } from '^storybook/shared-controls';
-import { CRITICALITY_VARIANTS } from '@/constants/criticality-variants';
 
 // Use standard parameters for component type
 parameters: createStandardParameters('form'), // 'form' | 'overlay' | 'container' | 'content'
 
-// Use size controls based on component capabilities
+// Use helper functions for consistent controls
 argTypes: {
   size: createSizeControl('FULL'),     // For Button, Icon (xsmall-large)
   size: createSizeControl('COMPACT'),  // For form fields (small-medium)
   size: createSizeControl('STANDARD'), // For most components (small-large)
   size: createSizeControl('BINARY'),   // For simple toggles (small, large)
   
-  color: {
-    control: { type: 'select' },
-    options: Object.values(CRITICALITY_VARIANTS), // All semantic colors
-  },
+  variant: createVariantControl(['filled', 'outline', 'flat']),
+  
+  // Use standard argTypes for common props
+  children: STANDARD_ARG_TYPES.children,
+  isDisabled: STANDARD_ARG_TYPES.isDisabled,
+  label: STANDARD_ARG_TYPES.label,
+  criticality: STANDARD_ARG_TYPES.criticality,
 }
 ```
 
@@ -89,12 +92,32 @@ isDisabled: boolean // NOT disabled
 
 ### 5. **Args and ArgTypes Best Practices**
 
+#### Standard ArgTypes Usage
+```typescript
+// Use STANDARD_ARG_TYPES for common props
+argTypes: {
+  children: STANDARD_ARG_TYPES.children,
+  label: STANDARD_ARG_TYPES.label,
+  description: STANDARD_ARG_TYPES.description,
+  errorMessage: STANDARD_ARG_TYPES.errorMessage,
+  isDisabled: STANDARD_ARG_TYPES.isDisabled,
+  isRequired: STANDARD_ARG_TYPES.isRequired,
+  isInvalid: STANDARD_ARG_TYPES.isInvalid,
+  orientation: STANDARD_ARG_TYPES.orientation,
+  placement: STANDARD_ARG_TYPES.placement,
+  placeholder: STANDARD_ARG_TYPES.placeholder,
+  selectionMode: STANDARD_ARG_TYPES.selectionMode,
+  criticality: STANDARD_ARG_TYPES.criticality,
+  classificationVariant: STANDARD_ARG_TYPES.classificationVariant,
+}
+```
+
 #### Required Args Configuration
 ```typescript
 args: {
   // Set meaningful defaults
   children: 'Button Text',
-  variant: ComponentDefaults.variant,
+  variant: 'filled',
   size: 'medium',
   isDisabled: false,
 }
@@ -116,27 +139,3 @@ args: {
 - [ ] **Layout**: Set appropriate layout parameter for component type
 - [ ] **Args**: Set meaningful defaults and proper types
 - [ ] **Documentation**: Add component description and prop documentation
-
-### Global Improvements:
-
-- [ ] **Shared utilities**: Implement `shared-controls.ts` and `story-templates.tsx`
-- [ ] **Consistency audit**: Review all stories for control noise and missing states
-- [ ] **Documentation**: Update component docs with state examples
-- [ ] **Testing**: Verify stories work correctly with new patterns
-
-## 📋 Common Issues Addressed
-
-1. **Control Noise**: Removed irrelevant props from controls panel
-2. **Inconsistent States**: Standardized loading, error, disabled state naming
-3. **Missing Patterns**: Added state demonstration stories
-4. **Layout Confusion**: Clarified layout parameter usage by component type
-5. **Variant Discovery**: Added comprehensive variant showcase stories
-
-## 🔧 Migration Strategy
-
-1. **Phase 1**: Implement shared utilities (shared-controls.ts, story-templates.tsx)
-2. **Phase 2**: Update high-traffic components (Button, Input, Dialog)
-3. **Phase 3**: Systematically update remaining components
-4. **Phase 4**: Remove deprecated patterns and add linting rules
-
-This standardization improves the Storybook experience by reducing cognitive overhead and providing consistent patterns for component exploration and testing.
