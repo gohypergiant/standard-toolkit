@@ -19,7 +19,7 @@ export const SidenavStyles = tv({
       'closed:items-center',
       'group-data-[push~=left]/layout:relative',
     ],
-    content: 'flex h-full max-h-full flex-col overflow-y-auto',
+    content: 'flex h-full max-h-full flex-col gap-xs overflow-y-auto',
     header: 'mb-m flex justify-center',
     avatar: [
       'grid grid-cols-[auto_1fr] grid-rows-2 items-center gap-x-m [grid-template-areas:"icon_heading"_"icon_text"] group-closed/sidenav:flex',
