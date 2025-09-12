@@ -248,6 +248,7 @@ export type {
   SidenavFooterProps,
   SidenavHeaderProps,
   SidenavItemProps,
+  SidenavLinkProps,
   SidenavProps,
   SidenavTriggerProps,
 } from './components/sidenav/types';

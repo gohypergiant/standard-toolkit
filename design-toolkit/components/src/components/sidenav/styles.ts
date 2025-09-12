@@ -39,6 +39,7 @@ export const SidenavStyles = tv({
     heading: 'text-body-xs uppercase',
     item: [
       'flex w-full cursor-pointer items-center gap-s rounded-medium p-xs text-body-m',
+      'group/item',
       'group-open/sidenav:px-s',
       'enabled:hover:bg-interactive-muted-hover',
       'enabled:focus-visible:bg-interactive-muted-hover enabled:focus-visible:outline-none',
@@ -51,5 +52,15 @@ export const SidenavStyles = tv({
     ],
     text: 'grow-1 text-left text-body-s',
     transient: 'group-closed/sidenav:hidden',
+    link: [
+      'group/link',
+      'flex cursor-pointer items-center size-medium:gap-s rounded-medium text-body-m',
+      'group-open/sidenav:w-full',
+      'enabled:pressed:bg-interactive-muted-pressed',
+    ],
+    tooltip: [
+      'absolute flex items-center gap-s whitespace-nowrap text-body-s',
+      'group-disabled/item:fg-disabled group-disabled/link:fg-disabled group-open/sidenav:hidden',
+    ],
   },
 });

@@ -24,6 +24,7 @@ It is composed of the following components:
 - **Sidenav.Header** - Container for the navigation header, typically containing a logo and application title
 - **Sidenav.Avatar** - Icon display component with icon, heading, and text
 - **Sidenav.Item** - Interactive navigation item that can be selected, disabled, or contain nested items
+- **Sidenav.Link** - Interactive navigation item that can be selected, disabled, or contain nested items
 - **Sidenav.Divider** - Visual separator to group navigation items
 - **Sidenav.Content** - Container for content
 - **Sidenav.Footer** - Container for footer content
@@ -96,13 +97,13 @@ It is composed of the following components:
   - **`icon`** `string` - Class name for the icon element
 
 ### Sidenav.Item Props
-- **`isSelected`** `boolean` - Indicates if the item is currently selected
-- **`isDisabled`** `boolean` - Disables interaction with the item
-- **`children`** `ReactNode` - Content of the navigation item
-- **`onPress`** `(event: PressEvent) => void` - Handler for press events
+Supports all the `ToggleButton` [props and events](?path=/story/components-button--toggle).
 - **`classNames`** `object` - Optional CSS class names for styling
   - **`button`** `string` - Class name for the button element
   - **`icon`** `string` - Class name for the icon element
+
+### Sidenav.Link Props
+Supports all the `LinkButton` [props and events](?path=/story/components-button--link).
 
 ### Sidenav.Avatar Props
 - **`children`** `ReactNode` - Must contain exactly one `Icon`, `Heading`, and `Text` component
@@ -129,8 +130,13 @@ The Sidenav uses the following style variants and states:
 
 ### Item States
 - Default: Basic navigation item styling
-- Hover: `enabled:color-info:hover:bg-interactive-bold-hover`
-- Selected: `enabled:color-info:selected:bg-accent-primary-bold`
+- Hover: `enabled:hover:bg-interactive-bold-hover`
+- Selected: `enabled:selected:bg-accent-primary-bold`
+- Disabled: Prevents interaction and applies muted styling
+
+### Link States
+- Default: Basic navigation item styling
+- Hover: `enabled:hover:bg-interactive-muted-hover`
 - Disabled: Prevents interaction and applies muted styling
 
 ## Accessibility

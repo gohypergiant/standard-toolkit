@@ -13,8 +13,8 @@
 
 import 'client-only';
 import { useEmit, useOn } from '@accelint/bus/react';
-import { ChevronLeft } from '@accelint/icons';
-import { createContext, useState } from 'react';
+import { ArrowNortheast, ChevronLeft } from '@accelint/icons';
+import { createContext, createRef, useEffect, useState } from 'react';
 import {
   Button,
   Header,
@@ -27,7 +27,9 @@ import {
   ToggleButton,
 } from 'react-aria-components';
 import { containsAnyOfExactChildren, containsExactChildren } from '@/lib/react';
+import { LinkButton } from '../button';
 import { Icon, IconContext } from '../icon';
+import { Tooltip } from '../tooltip';
 import { SidenavEventTypes } from './events';
 import { SidenavStyles } from './styles';
 import type {
@@ -38,6 +40,7 @@ import type {
   SidenavFooterProps,
   SidenavHeaderProps,
   SidenavItemProps,
+  SidenavLinkProps,
   SidenavProps,
   SidenavTriggerProps,
 } from './types';
@@ -56,6 +59,8 @@ const {
   avatarHeading,
   avatarIcon,
   avatarText,
+  link,
+  tooltip,
 } = SidenavStyles();
 
 const SidenavContext = createContext<SidenavContextValue | null>(null);
@@ -158,24 +163,100 @@ function SidenavItem({ children, classNames, ...rest }: SidenavItemProps) {
       ],
     ],
   });
+  const ref = createRef<HTMLButtonElement>();
+  const textRef = createRef<HTMLElement>();
+
+  const [toolTipText, setTooltipText] = useState('');
+
+  useEffect(() => {
+    setTooltipText(textRef.current?.innerText ?? '');
+  }, [textRef.current]);
 
   return (
     <Provider
       values={[
         [IconContext, { size: 'medium' }],
-        [TextContext, { className: text({ className: transient() }) }],
+        [
+          TextContext,
+          { ref: textRef, className: text({ className: transient() }) },
+        ],
       ]}
     >
-      <ToggleButton
-        {...rest}
-        className={item({ className: classNames?.button })}
-      >
-        {children}
-      </ToggleButton>
+      <Tooltip>
+        <Tooltip.Trigger>
+          <ToggleButton
+            {...rest}
+            ref={ref}
+            className={item({ className: classNames?.button })}
+          >
+            {children}
+          </ToggleButton>
+        </Tooltip.Trigger>
+        <Tooltip.Body parentRef={ref} placement='right' className={tooltip()}>
+          {toolTipText}
+        </Tooltip.Body>
+      </Tooltip>
     </Provider>
   );
 }
 SidenavItem.displayName = 'Sidenav.Item';
+
+function SidenavLink({ children, classNames, ...rest }: SidenavLinkProps) {
+  containsExactChildren({
+    children,
+    componentName: SidenavLink.displayName,
+    restrictions: [
+      [Icon, { min: 1, max: 1 }],
+      [Text, { min: 1, max: 1 }],
+    ],
+  });
+
+  const ref = createRef<HTMLAnchorElement>();
+  const textRef = createRef<HTMLElement>();
+
+  const [toolTipText, setTooltipText] = useState('');
+
+  useEffect(() => {
+    setTooltipText(textRef.current?.innerText ?? '');
+  }, [textRef.current]);
+
+  return (
+    <Provider
+      values={[
+        [IconContext, { size: 'medium', slot: 'icon' }],
+        [
+          TextContext,
+          { ref: textRef, className: text({ className: transient() }) },
+        ],
+      ]}
+    >
+      <Tooltip>
+        <Tooltip.Trigger>
+          <LinkButton
+            {...rest}
+            ref={ref}
+            variant='icon'
+            className={link({ className: classNames?.button })}
+          >
+            <>
+              {children}
+              <Icon size='medium' className={transient()}>
+                <ArrowNortheast />
+              </Icon>
+            </>
+          </LinkButton>
+        </Tooltip.Trigger>
+        <Tooltip.Body parentRef={ref} placement='right' className={tooltip()}>
+          {toolTipText}
+          <Icon size='medium'>
+            <ArrowNortheast />
+          </Icon>
+        </Tooltip.Body>
+      </Tooltip>
+    </Provider>
+  );
+}
+SidenavLink.displayName = 'Sidenav.Link';
 
 function SidenavDivider({ className, ...rest }: SidenavDividerProps) {
   return <hr {...rest} className={divider({ className })} />;
@@ -214,6 +295,7 @@ SidenavAvatar.displayName = 'Sidenav.Avatar';
 Sidenav.Trigger = SidenavTrigger;
 Sidenav.Header = SidenavHeader;
 Sidenav.Item = SidenavItem;
+Sidenav.Link = SidenavLink;
 Sidenav.Divider = SidenavDivider;
 Sidenav.Avatar = SidenavAvatar;
 Sidenav.Footer = SidenavFooter;

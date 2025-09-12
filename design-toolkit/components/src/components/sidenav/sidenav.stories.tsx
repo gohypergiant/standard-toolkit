@@ -43,23 +43,6 @@ const sections = {
     {
       id: uuid(),
       text: 'Nav item',
-      disabled: false,
-    },
-    {
-      id: uuid(),
-      text: 'Nav item',
-      disabled: false,
-    },
-    {
-      id: uuid(),
-      text: 'Nav item',
-      disabled: false,
-    },
-  ],
-  'Title B': [
-    {
-      id: uuid(),
-      text: 'Nav item',
       disabled: true,
     },
     {
@@ -78,7 +61,7 @@ const sections = {
 export const Default: StoryObj<SidenavWithLayoutArgs> = {
   render: ({ isHiddenWhenClosed, pushLayout }) => {
     const [activeItem, setActiveItem] = useState(
-      sections['Title B'][2]?.id ?? null,
+      sections['Title A'][2]?.id ?? null,
     );
     return (
       <div className='h-screen bg-surface-raised text-default-light'>
@@ -128,6 +111,20 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
                   )}
                 </React.Fragment>
               ))}
+              <Sidenav.Divider />
+              <Heading>External</Heading>
+              <Sidenav.Link href='#'>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <Text>Nav Link</Text>
+              </Sidenav.Link>
+              <Sidenav.Link isDisabled href='#'>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <Text>Nav Link</Text>
+              </Sidenav.Link>
             </Sidenav.Content>
 
             <Sidenav.Footer>

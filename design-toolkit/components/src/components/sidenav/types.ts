@@ -9,8 +9,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
 import type { Pressable, ToggleButtonProps } from 'react-aria-components';
+import type { LinkButtonProps } from '../button/types';
 
 export type SidenavProps = ComponentPropsWithRef<'nav'> & {
   isHiddenWhenClosed?: boolean;
@@ -24,6 +26,13 @@ export type SidenavContentProps = ComponentPropsWithRef<'div'>;
 export type SidenavTriggerProps = ComponentPropsWithRef<typeof Pressable>;
 
 export type SidenavItemProps = ToggleButtonProps & {
+  classNames?: {
+    button?: string;
+    icon?: string;
+  };
+};
+
+export type SidenavLinkProps = LinkButtonProps & {
   classNames?: {
     button?: string;
     icon?: string;
