@@ -15,9 +15,9 @@ import { Button } from '../button';
 import { Drawer } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ComponentProps } from 'react';
-import type { DrawerProps } from './types';
+import type { DrawerMenuProps, DrawerProps } from './types';
 
-const meta: Meta<DrawerProps> = {
+const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
   title: 'Components/Drawer',
   component: Drawer,
   parameters: {
@@ -26,6 +26,7 @@ const meta: Meta<DrawerProps> = {
   args: {
     placement: 'left',
     size: 'medium',
+    position: 'center',
   },
   argTypes: {
     size: {
@@ -35,6 +36,10 @@ const meta: Meta<DrawerProps> = {
     placement: {
       control: 'select',
       options: ['top', 'bottom', 'left', 'right'],
+    },
+    position: {
+      control: 'select',
+      options: ['start', 'center', 'end'],
     },
   },
 };
@@ -47,19 +52,21 @@ const ids = {
   c: uuid(),
 };
 
-type DrawerWithToggleArgs = ComponentProps<typeof Drawer> & {
-  toggle?: boolean;
-};
-export const StaticHeaderFooter: StoryObj<DrawerWithToggleArgs> = {
+type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
+  Pick<DrawerMenuProps, 'position'> & {
+    toggle?: boolean;
+  };
+
+export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
   args: {
     toggle: false,
   },
-  render: ({ placement, size, toggle }) => {
+  render: ({ placement, size, toggle, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <Drawer.Layout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
-            <Drawer.Menu>
+            <Drawer.Menu position={position}>
               <Drawer.Menu.Item toggle={toggle} for={ids.a}>
                 A
               </Drawer.Menu.Item>
@@ -91,13 +98,13 @@ export const StaticHeaderFooter: StoryObj<DrawerWithToggleArgs> = {
   },
 };
 
-export const DynamicHeaderFooter: StoryObj<typeof Drawer> = {
-  render: ({ placement, size }) => {
+export const DynamicHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+  render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <Drawer.Layout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
-            <Drawer.Menu>
+            <Drawer.Menu position={position}>
               <Drawer.Menu.Item toggle for={ids.a}>
                 A
               </Drawer.Menu.Item>
@@ -138,8 +145,8 @@ export const DynamicHeaderFooter: StoryObj<typeof Drawer> = {
   },
 };
 
-export const OpenCloseTrigger: StoryObj<typeof Drawer> = {
-  render: ({ placement, size }) => {
+export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
+  render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen'>
         <Drawer.Layout>
@@ -151,7 +158,7 @@ export const OpenCloseTrigger: StoryObj<typeof Drawer> = {
             </div>
           </Drawer.Layout.Main>
           <Drawer id={ids.drawer} placement={placement} size={size}>
-            <Drawer.Menu>
+            <Drawer.Menu position={position}>
               <Drawer.Menu.Item toggle for={ids.a}>
                 A
               </Drawer.Menu.Item>
