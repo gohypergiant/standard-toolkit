@@ -9,14 +9,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
+import React, { type ComponentProps, useState } from 'react';
 import { Heading, Text } from 'react-aria-components';
 import { Button } from '../button';
 import { Drawer } from '../drawer';
 import { Icon } from '../icon';
 import { Sidenav } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { ComponentProps } from 'react';
 
 type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
   pushLayout?: boolean;
@@ -36,75 +38,64 @@ const meta: Meta<SidenavWithLayoutArgs> = {
 
 export default meta;
 
-export const Default: StoryObj<SidenavWithLayoutArgs> = {
-  render: ({ isHiddenWhenClosed, pushLayout }) => (
-    <div className='h-screen bg-surface-raised text-default-light'>
-      <Drawer.Layout push={pushLayout ? 'left' : undefined}>
-        <Drawer.Layout.Main>
-          <nav className='flex items-center bg-surface-default p-m'>
-            <Sidenav.Trigger>
-              <Button variant='icon' size='large'>
-                <Icon>
-                  <ExpandLeftPanel />
-                </Icon>
-              </Button>
-            </Sidenav.Trigger>
-          </nav>
-        </Drawer.Layout.Main>
-        <Sidenav isHiddenWhenClosed={isHiddenWhenClosed}>
-          <Sidenav.Header>
-            <Sidenav.Avatar>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Heading>Application Header</Heading>
-              <Text>Secondary Text</Text>
-            </Sidenav.Avatar>
-          </Sidenav.Header>
-          <Sidenav.Content>
-            <Heading>Title</Heading>
-            <Sidenav.Item>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Text>Nav item</Text>
-            </Sidenav.Item>
-            <Sidenav.Item>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Text>Nav item</Text>
-            </Sidenav.Item>
-            <Sidenav.Item>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Text>Nav item</Text>
-            </Sidenav.Item>
-            <Sidenav.Divider />
-            <Heading>Title</Heading>
-            <Sidenav.Item isDisabled>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Text>Nav item</Text>
-            </Sidenav.Item>
-            <Sidenav.Item>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Text>Nav item</Text>
-            </Sidenav.Item>
-            <Sidenav.Item isSelected>
-              <Icon>
-                <Placeholder />
-              </Icon>
-              <Text>Nav item</Text>
-            </Sidenav.Item>
-          </Sidenav.Content>
+const sections = {
+  'Title A': [
+    {
+      id: uuid(),
+      text: 'Nav item',
+      disabled: false,
+    },
+    {
+      id: uuid(),
+      text: 'Nav item',
+      disabled: false,
+    },
+    {
+      id: uuid(),
+      text: 'Nav item',
+      disabled: false,
+    },
+  ],
+  'Title B': [
+    {
+      id: uuid(),
+      text: 'Nav item',
+      disabled: true,
+    },
+    {
+      id: uuid(),
+      text: 'Nav item',
+      disabled: false,
+    },
+    {
+      id: uuid(),
+      text: 'Nav item',
+      disabled: false,
+    },
+  ],
+};
 
-          <Sidenav.Footer>
-            <Sidenav.Item>
+export const Default: StoryObj<SidenavWithLayoutArgs> = {
+  render: ({ isHiddenWhenClosed, pushLayout }) => {
+    const [activeItem, setActiveItem] = useState(
+      sections['Title B'][2]?.id ?? null,
+    );
+    return (
+      <div className='h-screen bg-surface-raised text-default-light'>
+        <Drawer.Layout push={pushLayout ? 'left' : undefined}>
+          <Drawer.Layout.Main>
+            <nav className='flex items-center bg-surface-default p-m'>
+              <Sidenav.Trigger>
+                <Button variant='icon' size='large'>
+                  <Icon>
+                    <ExpandLeftPanel />
+                  </Icon>
+                </Button>
+              </Sidenav.Trigger>
+            </nav>
+          </Drawer.Layout.Main>
+          <Sidenav isHiddenWhenClosed={isHiddenWhenClosed}>
+            <Sidenav.Header>
               <Sidenav.Avatar>
                 <Icon>
                   <Placeholder />
@@ -112,10 +103,47 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
                 <Heading>Application Header</Heading>
                 <Text>Secondary Text</Text>
               </Sidenav.Avatar>
-            </Sidenav.Item>
-          </Sidenav.Footer>
-        </Sidenav>
-      </Drawer.Layout>
-    </div>
-  ),
+            </Sidenav.Header>
+            <Sidenav.Content>
+              {Object.entries(sections).map(([section, items], i) => (
+                <React.Fragment key={section}>
+                  <Heading>{section}</Heading>
+                  {items.map((item) => (
+                    <Sidenav.Item
+                      key={item.id}
+                      isSelected={activeItem === item.id}
+                      isDisabled={item.disabled}
+                      onPress={() =>
+                        setActiveItem(activeItem === item.id ? null : item.id)
+                      }
+                    >
+                      <Icon>
+                        <Placeholder />
+                      </Icon>
+                      <Text>{item.text}</Text>
+                    </Sidenav.Item>
+                  ))}
+                  {i !== Object.entries(sections).length - 1 && (
+                    <Sidenav.Divider />
+                  )}
+                </React.Fragment>
+              ))}
+            </Sidenav.Content>
+
+            <Sidenav.Footer>
+              <Sidenav.Item>
+                <Sidenav.Avatar>
+                  <Icon>
+                    <Placeholder />
+                  </Icon>
+                  <Heading>Application Header</Heading>
+                  <Text>Secondary Text</Text>
+                </Sidenav.Avatar>
+              </Sidenav.Item>
+            </Sidenav.Footer>
+          </Sidenav>
+        </Drawer.Layout>
+      </div>
+    );
+  },
 };
