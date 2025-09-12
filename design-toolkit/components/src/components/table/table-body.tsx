@@ -10,10 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Row } from '@tanstack/react-table';
 import { tableBodyStyles } from './styles';
+import { TableRow } from './table-row';
 import type { TableBodyProps } from './types';
 
-export function TableBody({ className, ref, ...props }: TableBodyProps) {
+export function TableBody({
+  className,
+  ref,
+  getTopRows,
+  getCenterRows,
+  getBottomRows,
+  persistNumerals,
+  columnSelection,
+  ...props
+}: TableBodyProps) {
   return (
     <tbody
       ref={ref}
@@ -21,6 +32,37 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
         className,
       })}
       {...props}
-    />
+    >
+      {getTopRows().map((row: Row<any>) => (
+        <TableRow
+          key={row.id}
+          row={row}
+          {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+          persistNumerals={persistNumerals}
+          selectedCol={columnSelection}
+          data-pinned={row.getIsPinned()}
+        ></TableRow>
+      ))}
+      {getCenterRows().map((row: Row<any>) => (
+        <TableRow
+          key={row.id}
+          row={row}
+          {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+          persistNumerals={persistNumerals}
+          selectedCol={columnSelection}
+          data-pinned={row.getIsPinned()}
+        ></TableRow>
+      ))}
+      {getBottomRows().map((row: Row<any>) => (
+        <TableRow
+          key={row.id}
+          row={row}
+          {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+          persistNumerals={persistNumerals}
+          selectedCol={columnSelection}
+          data-pinned={row.getIsPinned()}
+        ></TableRow>
+      ))}
+    </tbody>
   );
 }

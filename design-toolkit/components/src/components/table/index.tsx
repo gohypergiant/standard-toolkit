@@ -276,38 +276,13 @@ export function Table<T extends { id: string | number }>({
             enableColumnReordering={enableColumnReordering}
             enableSorting={enableSorting}
           />
-          <TableBody>
-            {getTopRows().map((row) => (
-              <TableRow
-                key={row.id}
-                row={row}
-                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                persistNumerals={persistNumerals}
-                selectedCol={columnSelection}
-                data-pinned={row.getIsPinned()}
-              ></TableRow>
-            ))}
-            {getCenterRows().map((row) => (
-              <TableRow
-                key={row.id}
-                row={row}
-                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                persistNumerals={persistNumerals}
-                selectedCol={columnSelection}
-                data-pinned={row.getIsPinned()}
-              ></TableRow>
-            ))}
-            {getBottomRows().map((row) => (
-              <TableRow
-                key={row.id}
-                row={row}
-                {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-                persistNumerals={persistNumerals}
-                selectedCol={columnSelection}
-                data-pinned={row.getIsPinned()}
-              ></TableRow>
-            ))}
-          </TableBody>
+          <TableBody
+            getTopRows={getTopRows}
+            getCenterRows={getCenterRows}
+            getBottomRows={getBottomRows}
+            persistNumerals={persistNumerals}
+            columnSelection={columnSelection}
+          ></TableBody>
         </table>
       </div>
     );

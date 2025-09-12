@@ -138,7 +138,14 @@ export type TableProps<T extends { id: string | number }> = BaseTableProps &
  * @see {@link RefAttributes}
  */
 export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement>;
+  RefAttributes<HTMLTableSectionElement> & {
+    getTopRows: any;
+    getCenterRows: any;
+    getBottomRows: any;
+    persistRowKebabMenu?: boolean;
+    persistNumerals?: boolean;
+    columnSelection: string | any;
+  };
 
 /**
  * Props for a table row (`<tr>`) component.
