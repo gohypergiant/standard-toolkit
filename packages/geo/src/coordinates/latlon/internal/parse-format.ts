@@ -17,9 +17,9 @@ import { violation } from './violation';
 
 type FormatParserConfig<T> = {
   formats: {
-    // biome-ignore lint/style/useNamingConvention: <explanation>
+    // biome-ignore lint/style/useNamingConvention: Name is chosen to stand out amongst other formats
     LATLON: RegExp;
-    // biome-ignore lint/style/useNamingConvention: <explanation>
+    // biome-ignore lint/style/useNamingConvention: Name is chosen to stand out amongst other formats
     LONLAT: RegExp;
   };
   identifyErrors: (format: Format) => (arg: T, i: number) => ParseResults;
