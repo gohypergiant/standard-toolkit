@@ -1,5 +1,35 @@
 # @accelint/design-toolkit
 
+## 5.0.0
+
+### Major Changes
+
+- 7ab50ad: Major theme updates --
+  - Adding theme support for light mode
+  - Renaming selected design tokens for light mode compatibility
+  - Script for token naming migrations
+  - Default accent color update from seafoam green to accelint skyfoam blue
+  - Shift to using tailwind utility classes for color to better align with token names
+
+### Minor Changes
+
+- 8505551: Add ActionBar component
+- 851cf04: Add Sidenav.Avatar component
+- 0f49fbd: Implement both button and toggle button providers
+- c433ae0: Add sidenav component with header, item, and divider
+- aab4161: Add Sidenav.Link component
+- 14102a3: Add link component
+- a793f6d: Add missing doc blocks and update existing doc blocks to follow standards
+- a526c71: adds <Tree> component
+- 37fb8af: Refactor the Tabs compononent to meet style standards
+
+### Patch Changes
+
+- d82e2fe: fix: remove extraneous parameters for event bus
+- Updated dependencies [55718af]
+  - @accelint/bus@1.2.0
+  - @accelint/icons@2.0.3
+
 ## 4.0.0
 
 ### Major Changes

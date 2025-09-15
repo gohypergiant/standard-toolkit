@@ -1,5 +1,11 @@
 # @accelint/smeegl
 
+## 0.3.1
+
+### Patch Changes
+
+- db83f28: added newline to react template
+
 ## 0.3.0
 
 ### Minor Changes
