@@ -9,20 +9,21 @@
   "semverGroups": [
     {
       "dependencies": [
+        "tsup",
+        "@types/react*",
+        "react"
+      ],
+      "packages": [],
+      "range": ""
+    },
+    {
+      "dependencies": [
         "**"
       ],
       "packages": [
         "**"
       ],
       "range": "^"
-    }
-,    {
-      "dependencies": [
-        "tsup"
-      ],
-      "packages": [
-      ],
-      "range": ""
     }
   ],
   "sortFirst": [
@@ -57,25 +58,27 @@
       "pinVersion": "workspace:*"
     },
     {
-      "label": "Manually set typescript version based on dependencies",
       "dependencies": [
         "typescript"
       ],
-      "isIgnored": true
+      "isIgnored": true,
+      "label": "Manually set typescript version based on dependencies"
     },
     {
-      "label": "Keep react components in sync since this project is using node v18.*",
       "dependencies": [
-        "react*", "jsdom", "@types/react*"
+        "react*",
+        "jsdom",
+        "@types/react*"
       ],
-      "isIgnored": true
+      "isIgnored": true,
+      "label": "Keep react components in sync since this project is using node v18.*"
     },
     {
-      "label": "Tailwind specific",
       "dependencies": [
         "tailwind*"
       ],
-      "isIgnored": true
+      "isIgnored": true,
+      "label": "Tailwind specific"
     }
   ]
 }
