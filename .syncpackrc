@@ -11,7 +11,9 @@
       "dependencies": [
         "tsup",
         "@types/react*",
-        "react"
+        "react",
+        "typescript",
+        "jsdom"
       ],
       "packages": [],
       "range": ""

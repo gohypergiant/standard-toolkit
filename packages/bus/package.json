@@ -52,7 +52,7 @@
     "vitest-broadcast-channel-mock": "^0.1.0"
   },
   "dependencies": {
-    "typescript": "^5.8.3"
+    "typescript": "5.8.3"
   },
   "optionalDependencies": {
     "react": "^19.0.0"
