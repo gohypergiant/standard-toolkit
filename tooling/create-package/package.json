@@ -22,12 +22,12 @@
   "devDependencies": {
     "@types/lodash": "4.17.20",
     "@types/node": "^20.17.48",
-    "esbuild-fix-imports-plugin": "^1.0.22",
+    "esbuild-fix-imports-plugin": "^1.0.21",
     "tsup": "8.5.0"
   },
   "packageManager": "pnpm@10.9.0",
   "dependencies": {
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "^2.2.3",
     "ansis": "4.0.0",
     "commander": "14.0.0",
     "esbuild-plugin-file-path-extensions": "2.1.3",
