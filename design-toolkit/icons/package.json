@@ -42,8 +42,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
