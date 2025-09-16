@@ -14,6 +14,14 @@
       "packages": [
         "**"
       ],
+      "range": "^"
+    }
+,    {
+      "dependencies": [
+        "tsup"
+      ],
+      "packages": [
+      ],
       "range": ""
     }
   ],
@@ -52,6 +60,20 @@
       "label": "Manually set typescript version based on dependencies",
       "dependencies": [
         "typescript"
+      ],
+      "isIgnored": true
+    },
+    {
+      "label": "Keep react components in sync since this project is using node v18.*",
+      "dependencies": [
+        "react*", "jsdom", "@types/react*"
+      ],
+      "isIgnored": true
+    },
+    {
+      "label": "Tailwind specific",
+      "dependencies": [
+        "tailwind*"
       ],
       "isIgnored": true
     }
