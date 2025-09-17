@@ -13,8 +13,7 @@
 'use client';
 import 'client-only';
 
-import { Kebab } from '@accelint/icons';
-import Pin from '@accelint/icons/pin';
+import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
 import {
   type ColumnOrderState,

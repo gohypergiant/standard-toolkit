@@ -36,7 +36,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
         <TableRow
           key={row.id}
           row={row}
-          {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+          data-selected={row.getIsSelected() || null}
           data-pinned={row.getIsPinned()}
         />
       ))}
@@ -44,7 +44,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
         <TableRow
           key={row.id}
           row={row}
-          {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+          data-selected={row.getIsSelected() || null}
           data-pinned={row.getIsPinned()}
         />
       ))}
@@ -52,7 +52,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
         <TableRow
           key={row.id}
           row={row}
-          {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
+          data-selected={row.getIsSelected() || null}
           data-pinned={row.getIsPinned()}
         />
       ))}
