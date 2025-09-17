@@ -50,16 +50,16 @@ export const TableContext = createContext<TableContextValue<RowData>>({
   getHeaders: () => [],
   moveColumnLeft: () => undefined,
   moveColumnRight: () => undefined,
+  getTopRows: () => [],
+  getCenterRows: () => [],
+  getBottomRows: () => [],
+  setColumnSelection: () => null,
+  columnSelection: null,
   persistRowKebabMenu: true,
   persistHeaderKebabMenu: true,
   enableSorting: true,
   enableColumnReordering: true,
   enableRowActions: true,
-  getTopRows: () => [],
-  getCenterRows: () => [],
-  getBottomRows: () => [],
-  columnSelection: undefined,
-  setColumnSelection: () => null,
 });
 
 const TableDefaultProps = {
@@ -285,7 +285,6 @@ export function Table<T extends { id: string | number }>({
     return <table {...props}>{props.children}</table>;
   }
 
-  // if (dataProp) {
   return (
     <TableContext.Provider
       value={{
@@ -312,7 +311,6 @@ export function Table<T extends { id: string | number }>({
       </div>
     </TableContext.Provider>
   );
-  // }
 }
 
 Table.displayName = 'Table';

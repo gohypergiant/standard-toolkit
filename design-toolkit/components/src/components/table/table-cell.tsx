@@ -22,9 +22,8 @@ export function TableCell({
   cell,
   ...props
 }: TableCellProps<any>) {
-  const { persistent, columnSelection } = useContext(TableContext);
+  const { columnSelection } = useContext(TableContext);
 
-  const persistNum = cell && cell.column.id === 'numeral' ? persistent : true;
   const kebab = cell && cell.column.id === 'kebab';
   const narrow =
     (cell && cell.column.id === 'numeral') ||
@@ -39,7 +38,6 @@ export function TableCell({
         narrow,
         numeral,
         kebab,
-        persistNum,
         selectedCol,
         className,
       })}
