@@ -52,7 +52,6 @@ export const TableContext = createContext<TableContextValue<RowData>>({
   moveColumnRight: () => undefined,
   persistRowKebabMenu: true,
   persistHeaderKebabMenu: true,
-  persistNumerals: false,
   enableSorting: true,
   enableColumnReordering: true,
   enableRowActions: true,
@@ -60,8 +59,7 @@ export const TableContext = createContext<TableContextValue<RowData>>({
   getCenterRows: () => [],
   getBottomRows: () => [],
   columnSelection: undefined,
-  selectedColumn: null,
-  selectedCol: null,
+  setColumnSelection: () => null,
 });
 
 const TableDefaultProps = {
@@ -296,7 +294,6 @@ export function Table<T extends { id: string | number }>({
         moveColumnRight,
         persistRowKebabMenu,
         persistHeaderKebabMenu,
-        persistNumerals,
         enableSorting,
         enableColumnReordering,
         enableRowActions,
@@ -304,29 +301,13 @@ export function Table<T extends { id: string | number }>({
         getCenterRows,
         getBottomRows,
         columnSelection,
-        selectedColumn: null,
-        selectedCol: null,
+        setColumnSelection,
       }}
     >
       <div>
         <table {...props}>
-          <TableHeader
-          // getHeaderGroups={getHeaderGroups}
-          // moveColumnLeft={moveColumnLeft}
-          // moveColumnRight={moveColumnRight}
-          // persistHeaderKebabMenu={persistHeaderKebabMenu}
-          // setColumnSelection={setColumnSelection}
-          // columnSelection={columnSelection}
-          // enableColumnReordering={enableColumnReordering}
-          // enableSorting={enableSorting}
-          />
-          <TableBody
-          // getTopRows={getTopRows}
-          // getCenterRows={getCenterRows}
-          // getBottomRows={getBottomRows}
-          // persistNumerals={persistNumerals}
-          // columnSelection={columnSelection}
-          ></TableBody>
+          <TableHeader />
+          <TableBody></TableBody>
         </table>
       </div>
     </TableContext.Provider>

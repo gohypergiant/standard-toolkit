@@ -246,7 +246,7 @@ export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
 export { useColumnMovement } from './components/table/hooks/use-column-movement';
 export { useRowMovement } from './components/table/hooks/use-row-movement';
-export { Table } from './components/table';
+export { Table, TableContext } from './components/table';
 export {
   TableCellStylesDefaults,
   TableHeaderCellStylesDefaults,
@@ -269,6 +269,7 @@ export {
 export type {
   TableBodyProps,
   TableCellProps,
+  TableContextValue,
   TableHeaderCellProps,
   TableHeaderProps,
   TableProps,

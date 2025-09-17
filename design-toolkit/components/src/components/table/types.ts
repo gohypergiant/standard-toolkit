@@ -75,12 +75,6 @@ type ExtendedTableProps<T extends { id: string | number }> = {
   persistNumerals?: boolean;
 
   /**
-   * Optional page size for pagination.
-   * If provided, the table will support pagination with the specified page size.
-   */
-  pageSize?: number;
-
-  /**
    * Whether to enable sorting.
    * If true, the table will support sorting.
    * If false, the table will not support sorting.
@@ -246,10 +240,7 @@ export type TableContextValue<RowData> = {
   enableSorting?: boolean;
   columnSelection: string | any;
   persistent?: boolean | undefined;
-  selectedColumn: string | null;
   persistRowKebabMenu?: boolean;
-  persistNumerals?: boolean;
-  selectedCol: string | null;
   enableRowActions?: boolean;
   getTopRows: () => Row<RowData>[];
   getCenterRows: () => Row<RowData>[];

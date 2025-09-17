@@ -17,23 +17,9 @@ import { tableBodyStyles } from './styles';
 import { TableRow } from './table-row';
 import type { TableBodyProps } from './types';
 
-export function TableBody({
-  className,
-  ref,
-  // getTopRows,
-  // getCenterRows,
-  // getBottomRows,
-  // persistNumerals,
-  // columnSelection,
-  ...props
-}: TableBodyProps) {
-  let {
-    getTopRows,
-    getCenterRows,
-    getBottomRows,
-    persistNumerals,
-    columnSelection,
-  } = useContext(TableContext);
+export function TableBody({ className, ref, ...props }: TableBodyProps) {
+  const { getTopRows, getCenterRows, getBottomRows } = useContext(TableContext);
+
   return (
     <tbody
       ref={ref}
@@ -47,8 +33,6 @@ export function TableBody({
           key={row.id}
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-          persistNumerals={persistNumerals}
-          selectedCol={columnSelection}
           data-pinned={row.getIsPinned()}
         ></TableRow>
       ))}
@@ -57,8 +41,6 @@ export function TableBody({
           key={row.id}
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-          // persistNumerals={persistNumerals}
-          // selectedCol={columnSelection}
           data-pinned={row.getIsPinned()}
         ></TableRow>
       ))}
@@ -67,8 +49,6 @@ export function TableBody({
           key={row.id}
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-          // persistNumerals={persistNumerals}
-          // selectedCol={columnSelection}
           data-pinned={row.getIsPinned()}
         ></TableRow>
       ))}

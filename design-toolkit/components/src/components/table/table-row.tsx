@@ -18,22 +18,15 @@ export function TableRow({
   ref,
   className,
   row,
-  // persistNumerals,
-  // selectedCol,
   ...props
 }: TableRowProps<any>) {
   return (
     <tr ref={ref} className={rowStyles({ className })} {...props}>
       {props.children ||
         (row &&
-          row.getVisibleCells().map((cell) => (
-            <TableCell
-              key={cell.id}
-              cell={cell}
-              // persistent={persistNumerals}
-              // selectedColumn={selectedCol}
-            />
-          )))}
+          row
+            .getVisibleCells()
+            .map((cell) => <TableCell key={cell.id} cell={cell} />))}
     </tr>
   );
 }

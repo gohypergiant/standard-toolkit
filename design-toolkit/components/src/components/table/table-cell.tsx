@@ -11,6 +11,8 @@
  */
 
 import { flexRender } from '@tanstack/react-table';
+import { useContext } from 'react';
+import { TableContext } from '.';
 import { cellStyles } from './styles';
 import type { TableCellProps } from './types';
 
@@ -18,17 +20,17 @@ export function TableCell({
   ref,
   className,
   cell,
-  persistent,
-  selectedColumn,
   ...props
 }: TableCellProps<any>) {
+  const { persistent, columnSelection } = useContext(TableContext);
+
   const persistNum = cell && cell.column.id === 'numeral' ? persistent : true;
   const kebab = cell && cell.column.id === 'kebab';
   const narrow =
     (cell && cell.column.id === 'numeral') ||
     (cell && cell.column.id === 'kebab');
   const numeral = cell && cell.column.id === 'numeral';
-  const selectedCol = cell && cell?.column.id === selectedColumn;
+  const selectedCol = cell && cell?.column.id === columnSelection;
 
   return (
     <td

@@ -27,12 +27,6 @@ export function HeaderCell({
   className,
   narrow,
   header,
-  // enableColumnReordering,
-  // enableSorting,
-  // moveColumnLeft,
-  // moveColumnRight,
-  // persistHeaderKebabMenu,
-  // setColumnSelection,
   ...props
 }: TableHeaderCellProps<any>) {
   const {
@@ -43,6 +37,7 @@ export function HeaderCell({
     persistHeaderKebabMenu,
     setColumnSelection,
   } = useContext(TableContext);
+
   const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
   const showKebab = enableColumnReordering || enableSorting;

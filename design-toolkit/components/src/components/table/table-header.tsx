@@ -17,25 +17,13 @@ import { tableHeaderStyles } from './styles';
 import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
 
-export function TableHeader({
-  className,
-  ref,
-  // getHeaderGroups,
-  // moveColumnLeft,
-  // moveColumnRight,
-  // persistHeaderKebabMenu,
-  // setColumnSelection,
-  // enableColumnReordering,
-  // enableSorting,
-  // columnSelection,
-  ...props
-}: TableHeaderProps) {
-  let { getHeaders, columnSelection } = useContext(TableContext);
+export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
+  const { getHeaders, columnSelection } = useContext(TableContext);
 
   return (
     <thead {...props} ref={ref} className={tableHeaderStyles(className)}>
       {getHeaders().map((headerGroup: HeaderGroup<any>) => (
-        <tr>
+        <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
             return (
               <HeaderCell
@@ -47,12 +35,6 @@ export function TableHeader({
                   header.column.id === columnSelection ? '' : undefined
                 }
                 header={header}
-                // enableColumnReordering={enableColumnReordering}
-                // enableSorting={enableSorting}
-                // moveColumnLeft={moveColumnLeft}
-                // moveColumnRight={moveColumnRight}
-                // persistHeaderKebabMenu={persistHeaderKebabMenu}
-                // setColumnSelection={setColumnSelection}
               ></HeaderCell>
             );
           })}
