@@ -38,7 +38,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
           data-pinned={row.getIsPinned()}
-        ></TableRow>
+        />
       ))}
       {getCenterRows().map((row: Row<RowData>) => (
         <TableRow
@@ -46,7 +46,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
           data-pinned={row.getIsPinned()}
-        ></TableRow>
+        />
       ))}
       {getBottomRows().map((row: Row<RowData>) => (
         <TableRow
@@ -54,7 +54,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
           data-pinned={row.getIsPinned()}
-        ></TableRow>
+        />
       ))}
     </tbody>
   );

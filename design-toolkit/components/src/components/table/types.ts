@@ -24,6 +24,7 @@ import type {
   TdHTMLAttributes,
   ThHTMLAttributes,
 } from 'react';
+import type React from 'react';
 import type { VariantProps } from 'tailwind-variants';
 import type { cellStyles, headerCellStyles } from './styles';
 

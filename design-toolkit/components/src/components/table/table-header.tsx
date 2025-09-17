@@ -39,7 +39,7 @@ export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
                   header.column.id === columnSelection ? '' : undefined
                 }
                 header={header}
-              ></HeaderCell>
+              />
             );
           })}
         </tr>

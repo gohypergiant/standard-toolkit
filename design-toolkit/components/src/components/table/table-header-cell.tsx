@@ -11,7 +11,7 @@
  */
 
 import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
-import { type Header, flexRender } from '@tanstack/react-table';
+import { flexRender } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { TableContext } from '.';
 import { Button } from '../button';
@@ -38,10 +38,6 @@ export function HeaderCell({
     setColumnSelection,
   } = useContext(TableContext);
 
-  if (!moveColumnLeft) {
-    return <th>{props.children}</th>;
-  }
-
   const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
   const showKebab = enableColumnReordering || enableSorting;
@@ -58,7 +54,7 @@ export function HeaderCell({
   };
 
   const tableMenu = (header: any) => {
-    if (!enableSorting && !enableColumnReordering) {
+    if (!(enableSorting || enableColumnReordering)) {
       return;
     }
     return (

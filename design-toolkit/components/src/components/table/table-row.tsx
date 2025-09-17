@@ -23,10 +23,9 @@ export function TableRow({
   return (
     <tr ref={ref} className={rowStyles({ className })} {...props}>
       {props.children ||
-        (row &&
-          row
-            .getVisibleCells()
-            .map((cell) => <TableCell key={cell.id} cell={cell} />))}
+        row
+          ?.getVisibleCells()
+          .map((cell) => <TableCell key={cell.id} cell={cell} />)}
     </tr>
   );
 }

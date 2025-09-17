@@ -306,7 +306,7 @@ export function Table<T extends { id: string | number }>({
       <div>
         <table {...props}>
           <TableHeader />
-          <TableBody></TableBody>
+          <TableBody />
         </table>
       </div>
     </TableContext.Provider>

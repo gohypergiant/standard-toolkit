@@ -34,7 +34,7 @@ export const cellStyles = tv({
       false: 'p-m',
     },
     numeral: {
-      true: 'px-s fg-primary-muted hover:fg-primary-bold',
+      true: 'fg-primary-muted hover:fg-primary-bold px-s',
       false: '',
     },
     kebab: {
