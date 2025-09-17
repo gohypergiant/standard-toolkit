@@ -11,6 +11,8 @@
  */
 
 import type { HeaderGroup } from '@tanstack/react-table';
+import { useContext } from 'react';
+import { TableContext } from '.';
 import { tableHeaderStyles } from './styles';
 import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
@@ -18,19 +20,21 @@ import type { TableHeaderProps } from './types';
 export function TableHeader({
   className,
   ref,
-  getHeaderGroups,
-  moveColumnLeft,
-  moveColumnRight,
-  persistHeaderKebabMenu,
-  setColumnSelection,
-  enableColumnReordering,
-  enableSorting,
-  columnSelection,
+  // getHeaderGroups,
+  // moveColumnLeft,
+  // moveColumnRight,
+  // persistHeaderKebabMenu,
+  // setColumnSelection,
+  // enableColumnReordering,
+  // enableSorting,
+  // columnSelection,
   ...props
 }: TableHeaderProps) {
+  let { getHeaders, columnSelection } = useContext(TableContext);
+
   return (
     <thead {...props} ref={ref} className={tableHeaderStyles(className)}>
-      {getHeaderGroups().map((headerGroup: HeaderGroup<any>) => (
+      {getHeaders().map((headerGroup: HeaderGroup<any>) => (
         <tr>
           {headerGroup.headers.map((header) => {
             return (
@@ -43,12 +47,12 @@ export function TableHeader({
                   header.column.id === columnSelection ? '' : undefined
                 }
                 header={header}
-                enableColumnReordering={enableColumnReordering}
-                enableSorting={enableSorting}
-                moveColumnLeft={moveColumnLeft}
-                moveColumnRight={moveColumnRight}
-                persistHeaderKebabMenu={persistHeaderKebabMenu}
-                setColumnSelection={setColumnSelection}
+                // enableColumnReordering={enableColumnReordering}
+                // enableSorting={enableSorting}
+                // moveColumnLeft={moveColumnLeft}
+                // moveColumnRight={moveColumnRight}
+                // persistHeaderKebabMenu={persistHeaderKebabMenu}
+                // setColumnSelection={setColumnSelection}
               ></HeaderCell>
             );
           })}

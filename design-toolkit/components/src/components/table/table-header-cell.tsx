@@ -12,7 +12,8 @@
 
 import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
 import { flexRender } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { TableContext } from '.';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
@@ -26,14 +27,22 @@ export function HeaderCell({
   className,
   narrow,
   header,
-  enableColumnReordering,
-  enableSorting,
-  moveColumnLeft,
-  moveColumnRight,
-  persistHeaderKebabMenu,
-  setColumnSelection,
+  // enableColumnReordering,
+  // enableSorting,
+  // moveColumnLeft,
+  // moveColumnRight,
+  // persistHeaderKebabMenu,
+  // setColumnSelection,
   ...props
 }: TableHeaderCellProps<any>) {
+  const {
+    enableColumnReordering,
+    enableSorting,
+    moveColumnLeft,
+    moveColumnRight,
+    persistHeaderKebabMenu,
+    setColumnSelection,
+  } = useContext(TableContext);
   const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
 
   const showKebab = enableColumnReordering || enableSorting;

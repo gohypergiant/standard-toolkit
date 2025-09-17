@@ -11,6 +11,8 @@
  */
 
 import type { Row } from '@tanstack/react-table';
+import { useContext } from 'react';
+import { TableContext } from '.';
 import { tableBodyStyles } from './styles';
 import { TableRow } from './table-row';
 import type { TableBodyProps } from './types';
@@ -18,13 +20,20 @@ import type { TableBodyProps } from './types';
 export function TableBody({
   className,
   ref,
-  getTopRows,
-  getCenterRows,
-  getBottomRows,
-  persistNumerals,
-  columnSelection,
+  // getTopRows,
+  // getCenterRows,
+  // getBottomRows,
+  // persistNumerals,
+  // columnSelection,
   ...props
 }: TableBodyProps) {
+  let {
+    getTopRows,
+    getCenterRows,
+    getBottomRows,
+    persistNumerals,
+    columnSelection,
+  } = useContext(TableContext);
   return (
     <tbody
       ref={ref}
@@ -48,8 +57,8 @@ export function TableBody({
           key={row.id}
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-          persistNumerals={persistNumerals}
-          selectedCol={columnSelection}
+          // persistNumerals={persistNumerals}
+          // selectedCol={columnSelection}
           data-pinned={row.getIsPinned()}
         ></TableRow>
       ))}
@@ -58,8 +67,8 @@ export function TableBody({
           key={row.id}
           row={row}
           {...(row.getIsSelected() ? { 'data-selected': '' } : {})}
-          persistNumerals={persistNumerals}
-          selectedCol={columnSelection}
+          // persistNumerals={persistNumerals}
+          // selectedCol={columnSelection}
           data-pinned={row.getIsPinned()}
         ></TableRow>
       ))}

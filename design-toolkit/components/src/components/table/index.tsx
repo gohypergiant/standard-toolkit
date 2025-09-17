@@ -18,13 +18,14 @@ import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
   type ColumnOrderState,
+  type RowData,
   type RowSelectionState,
   type SortingState,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { createContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
@@ -37,16 +38,37 @@ import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import { RowKebabMenuItems, type TableProps } from './types';
+import {
+  RowKebabMenuItems,
+  type TableContextValue,
+  type TableProps,
+} from './types';
 
 const { pinIcon, rowCell, rowKebab, menuItem } = TableStyles();
+
+export const TableContext = createContext<TableContextValue<RowData>>({
+  getHeaders: () => [],
+  moveColumnLeft: () => undefined,
+  moveColumnRight: () => undefined,
+  persistRowKebabMenu: true,
+  persistHeaderKebabMenu: true,
+  persistNumerals: false,
+  enableSorting: true,
+  enableColumnReordering: true,
+  enableRowActions: true,
+  getTopRows: () => [],
+  getCenterRows: () => [],
+  getBottomRows: () => [],
+  columnSelection: undefined,
+  selectedColumn: null,
+  selectedCol: null,
+});
 
 const TableDefaultProps = {
   kebabPosition: 'right',
   persistRowKebabMenu: true,
   persistHeaderKebabMenu: true,
   persistNumerals: false,
-  pageSize: 10,
   enableSorting: true,
   enableColumnReordering: true,
   enableRowActions: true,
@@ -60,7 +82,6 @@ export function Table<T extends { id: string | number }>({
   persistRowKebabMenu = TableDefaultProps.persistRowKebabMenu,
   persistHeaderKebabMenu = TableDefaultProps.persistHeaderKebabMenu,
   persistNumerals = TableDefaultProps.persistNumerals,
-  pageSize = TableDefaultProps.pageSize,
   enableSorting = TableDefaultProps.enableSorting,
   enableColumnOrdering:
     enableColumnReordering = TableDefaultProps.enableColumnReordering,
@@ -262,33 +283,55 @@ export function Table<T extends { id: string | number }>({
     setColumnOrderCallback,
   );
 
-  if (dataProp) {
-    return (
+  if (!dataProp) {
+    return <table {...props}>{props.children}</table>;
+  }
+
+  // if (dataProp) {
+  return (
+    <TableContext.Provider
+      value={{
+        getHeaders: getHeaderGroups,
+        moveColumnLeft,
+        moveColumnRight,
+        persistRowKebabMenu,
+        persistHeaderKebabMenu,
+        persistNumerals,
+        enableSorting,
+        enableColumnReordering,
+        enableRowActions,
+        getTopRows,
+        getCenterRows,
+        getBottomRows,
+        columnSelection,
+        selectedColumn: null,
+        selectedCol: null,
+      }}
+    >
       <div>
         <table {...props}>
           <TableHeader
-            getHeaderGroups={getHeaderGroups}
-            moveColumnLeft={moveColumnLeft}
-            moveColumnRight={moveColumnRight}
-            persistHeaderKebabMenu={persistHeaderKebabMenu}
-            setColumnSelection={setColumnSelection}
-            columnSelection={columnSelection}
-            enableColumnReordering={enableColumnReordering}
-            enableSorting={enableSorting}
+          // getHeaderGroups={getHeaderGroups}
+          // moveColumnLeft={moveColumnLeft}
+          // moveColumnRight={moveColumnRight}
+          // persistHeaderKebabMenu={persistHeaderKebabMenu}
+          // setColumnSelection={setColumnSelection}
+          // columnSelection={columnSelection}
+          // enableColumnReordering={enableColumnReordering}
+          // enableSorting={enableSorting}
           />
           <TableBody
-            getTopRows={getTopRows}
-            getCenterRows={getCenterRows}
-            getBottomRows={getBottomRows}
-            persistNumerals={persistNumerals}
-            columnSelection={columnSelection}
+          // getTopRows={getTopRows}
+          // getCenterRows={getCenterRows}
+          // getBottomRows={getBottomRows}
+          // persistNumerals={persistNumerals}
+          // columnSelection={columnSelection}
           ></TableBody>
         </table>
       </div>
-    );
-  }
-
-  return <table {...props}>{props.children}</table>;
+    </TableContext.Provider>
+  );
+  // }
 }
 
 Table.displayName = 'Table';

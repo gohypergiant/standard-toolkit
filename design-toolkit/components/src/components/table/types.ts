@@ -10,7 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Cell, ColumnDef, Header, Row } from '@tanstack/react-table';
+import type {
+  Cell,
+  ColumnDef,
+  Header,
+  HeaderGroup,
+  Row,
+} from '@tanstack/react-table';
 import type {
   HTMLAttributes,
   RefAttributes,
@@ -139,12 +145,12 @@ export type TableProps<T extends { id: string | number }> = BaseTableProps &
  */
 export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
   RefAttributes<HTMLTableSectionElement> & {
-    getTopRows: any;
-    getCenterRows: any;
-    getBottomRows: any;
-    persistRowKebabMenu?: boolean;
-    persistNumerals?: boolean;
-    columnSelection: string | any;
+    // getTopRows: any;
+    // getCenterRows: any;
+    // getBottomRows: any;
+    // persistRowKebabMenu?: boolean;
+    // persistNumerals?: boolean;
+    // columnSelection: string | any;
   };
 
 /**
@@ -159,9 +165,9 @@ export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
 export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
   RefAttributes<HTMLTableRowElement> & {
     row?: Row<T>;
-    persistRowKebabMenu?: boolean;
-    persistNumerals?: boolean;
-    selectedCol: string | null;
+    // persistRowKebabMenu?: boolean;
+    // persistNumerals?: boolean;
+    // selectedCol: string | null;
   };
 
 /**
@@ -186,8 +192,6 @@ export type TableCellProps<T> = TdHTMLAttributes<HTMLTableCellElement> &
   VariantProps<typeof cellStyles> &
   RefAttributes<HTMLTableCellElement> & {
     cell?: Cell<T, unknown>;
-    persistent?: boolean | undefined;
-    selectedColumn: string | null;
   };
 
 /**
@@ -204,12 +208,6 @@ export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
   VariantProps<typeof headerCellStyles> &
   RefAttributes<HTMLTableCellElement> & {
     header?: Header<T, unknown>;
-    enableColumnReordering?: boolean;
-    enableSorting?: boolean;
-    moveColumnLeft?: (index: number) => void;
-    moveColumnRight?: (index: number) => void;
-    persistHeaderKebabMenu?: boolean;
-    setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
   };
 
 /**
@@ -221,16 +219,7 @@ export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
  * @see {@link RefAttributes}
  */
 export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement> & {
-    getHeaderGroups: any;
-    moveColumnLeft?: (index: number) => void;
-    moveColumnRight?: (index: number) => void;
-    setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
-    persistHeaderKebabMenu?: boolean;
-    enableColumnReordering?: boolean;
-    enableSorting?: boolean;
-    columnSelection: string | any;
-  };
+  RefAttributes<HTMLTableSectionElement> & {};
 
 export enum RowKebabMenuItems {
   Pin = 'Pin',
@@ -246,3 +235,23 @@ export enum ColumnKebabMenuItems {
   Desc = 'Sort Descending',
   Clear = 'Clear Sort',
 }
+
+export type TableContextValue<RowData> = {
+  getHeaders: () => HeaderGroup<RowData>[];
+  moveColumnLeft?: (index: number) => void;
+  moveColumnRight?: (index: number) => void;
+  setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
+  persistHeaderKebabMenu?: boolean;
+  enableColumnReordering?: boolean;
+  enableSorting?: boolean;
+  columnSelection: string | any;
+  persistent?: boolean | undefined;
+  selectedColumn: string | null;
+  persistRowKebabMenu?: boolean;
+  persistNumerals?: boolean;
+  selectedCol: string | null;
+  enableRowActions?: boolean;
+  getTopRows: () => Row<RowData>[];
+  getCenterRows: () => Row<RowData>[];
+  getBottomRows: () => Row<RowData>[];
+};
