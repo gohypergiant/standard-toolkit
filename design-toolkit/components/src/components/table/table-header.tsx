@@ -35,9 +35,7 @@ export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
                 narrow={
                   header.column.id === 'numeral' || header.column.id === 'kebab'
                 }
-                data-selected={
-                  header.column.id === columnSelection ? '' : undefined
-                }
+                data-selected={header.column.id === columnSelection || null}
                 header={header}
               />
             );

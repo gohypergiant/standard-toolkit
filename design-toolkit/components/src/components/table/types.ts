@@ -216,21 +216,6 @@ export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
 export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
   RefAttributes<HTMLTableSectionElement> & {};
 
-export enum RowKebabMenuItems {
-  Pin = 'Pin',
-  MoveUp = 'Move Up',
-  MoveDown = 'Move Down',
-  Unpin = 'Unpin',
-}
-
-export enum ColumnKebabMenuItems {
-  Left = 'Move Column Left',
-  Right = 'Move Column Right',
-  Asc = 'Sort Ascending',
-  Desc = 'Sort Descending',
-  Clear = 'Clear Sort',
-}
-
 export type TableContextValue<RowData> = {
   getHeaders: () => HeaderGroup<RowData>[];
   moveColumnLeft?: (index: number) => void;

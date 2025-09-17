@@ -18,7 +18,7 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
 import { TableStyles, headerCellStyles } from './styles';
-import { ColumnKebabMenuItems, type TableHeaderCellProps } from './types';
+import { type TableHeaderCellProps } from './types';
 
 const { headerCellButton, headerKebab, menuItem } = TableStyles();
 
@@ -42,7 +42,7 @@ export function HeaderCell({
 
   const showKebab = enableColumnReordering || enableSorting;
 
-  const showHeaderIcon = (isAsc: boolean) => {
+  const headerActionIcon = (isAsc: boolean) => {
     return (
       <div
         onMouseEnter={() => setHoveredArrow(true)}
@@ -60,19 +60,15 @@ export function HeaderCell({
     return (
       <Menu.Trigger
         onOpenChange={(isOpen) => {
-          if (isOpen) {
-            setColumnSelection?.(header.column.id);
-          } else {
-            setColumnSelection?.(null);
-          }
+          setColumnSelection?.(isOpen ? header.column.id : null);
         }}
       >
         <Button variant='icon' aria-label='Menu' className='p-s'>
           <Icon>
             {header?.column.getIsSorted() === 'asc' ? (
-              showHeaderIcon(true)
+              headerActionIcon(true)
             ) : header?.column.getIsSorted() === 'desc' ? (
-              showHeaderIcon(false)
+              headerActionIcon(false)
             ) : (
               <div
                 className={headerKebab({
@@ -90,24 +86,20 @@ export function HeaderCell({
               <Menu.Item
                 classNames={{ item: menuItem() }}
                 onAction={() => {
-                  moveColumnLeft
-                    ? moveColumnLeft(header.column.getIndex() ?? -1)
-                    : null;
+                  moveColumnLeft?.(header.column.getIndex() ?? -1);
                 }}
                 isDisabled={header.column.getIsFirstColumn('center')}
               >
-                <Menu.Item.Label>{ColumnKebabMenuItems.Left}</Menu.Item.Label>
+                <Menu.Item.Label>Move Column Left</Menu.Item.Label>
               </Menu.Item>
               <Menu.Item
                 classNames={{ item: menuItem() }}
                 onAction={() => {
-                  moveColumnRight
-                    ? moveColumnRight(header.column.getIndex() ?? -1)
-                    : null;
+                  moveColumnRight?.(header.column.getIndex() ?? -1);
                 }}
                 isDisabled={header.column.getIsLastColumn('center')}
               >
-                <Menu.Item.Label>{ColumnKebabMenuItems.Right}</Menu.Item.Label>
+                <Menu.Item.Label>Move Column Right</Menu.Item.Label>
               </Menu.Item>
             </>
           )}
@@ -121,7 +113,7 @@ export function HeaderCell({
                 }}
                 isDisabled={header.column.getIsSorted() === 'asc'}
               >
-                <Menu.Item.Label>{ColumnKebabMenuItems.Asc}</Menu.Item.Label>
+                <Menu.Item.Label>Sort Ascending</Menu.Item.Label>
               </Menu.Item>
               <Menu.Item
                 onAction={() => {
@@ -129,7 +121,7 @@ export function HeaderCell({
                 }}
                 isDisabled={header.column.getIsSorted() === 'desc'}
               >
-                <Menu.Item.Label>{ColumnKebabMenuItems.Desc}</Menu.Item.Label>
+                <Menu.Item.Label>Sort Descending</Menu.Item.Label>
               </Menu.Item>
               <Menu.Item
                 onAction={() => {
@@ -137,7 +129,7 @@ export function HeaderCell({
                 }}
                 isDisabled={!header.column.getIsSorted()}
               >
-                <Menu.Item.Label>{ColumnKebabMenuItems.Clear}</Menu.Item.Label>
+                <Menu.Item.Label>Clear Sort</Menu.Item.Label>
               </Menu.Item>
             </>
           )}

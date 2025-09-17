@@ -140,9 +140,7 @@ export function Table<T extends { id: string | number }>({
                     }}
                   >
                     <Menu.Item.Label>
-                      {isPinned
-                        ? RowKebabMenuItems.Unpin
-                        : RowKebabMenuItems.Pin}
+                      {isPinned ? 'Unpin' : 'Pin'}
                     </Menu.Item.Label>
                   </Menu.Item>
                   <Menu.Separator />
@@ -153,9 +151,7 @@ export function Table<T extends { id: string | number }>({
                     }}
                     isDisabled={row.index === 0}
                   >
-                    <Menu.Item.Label>
-                      {RowKebabMenuItems.MoveUp}
-                    </Menu.Item.Label>
+                    <Menu.Item.Label>Move Up</Menu.Item.Label>
                   </Menu.Item>
                   <Menu.Item
                     classNames={{ item: menuItem() }}
@@ -164,9 +160,7 @@ export function Table<T extends { id: string | number }>({
                     }}
                     isDisabled={row.index === getRowModel().rows.length - 1}
                   >
-                    <Menu.Item.Label>
-                      {RowKebabMenuItems.MoveDown}
-                    </Menu.Item.Label>
+                    <Menu.Item.Label>Move Down</Menu.Item.Label>
                   </Menu.Item>
                 </Menu>
               </Menu.Trigger>
