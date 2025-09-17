@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Row } from '@tanstack/react-table';
+import type { Row, RowData } from '@tanstack/react-table';
 import { useContext } from 'react';
 import { TableContext } from '.';
 import { tableBodyStyles } from './styles';
@@ -20,6 +20,10 @@ import type { TableBodyProps } from './types';
 export function TableBody({ className, ref, ...props }: TableBodyProps) {
   const { getTopRows, getCenterRows, getBottomRows } = useContext(TableContext);
 
+  if (!getCenterRows.length) {
+    return <tbody>{props.children}</tbody>;
+  }
+
   return (
     <tbody
       ref={ref}
@@ -28,7 +32,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
       })}
       {...props}
     >
-      {getTopRows().map((row: Row<any>) => (
+      {getTopRows().map((row: Row<RowData>) => (
         <TableRow
           key={row.id}
           row={row}
@@ -36,7 +40,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
           data-pinned={row.getIsPinned()}
         ></TableRow>
       ))}
-      {getCenterRows().map((row: Row<any>) => (
+      {getCenterRows().map((row: Row<RowData>) => (
         <TableRow
           key={row.id}
           row={row}
@@ -44,7 +48,7 @@ export function TableBody({ className, ref, ...props }: TableBodyProps) {
           data-pinned={row.getIsPinned()}
         ></TableRow>
       ))}
-      {getBottomRows().map((row: Row<any>) => (
+      {getBottomRows().map((row: Row<RowData>) => (
         <TableRow
           key={row.id}
           row={row}

@@ -20,6 +20,10 @@ import type { TableHeaderProps } from './types';
 export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
   const { getHeaders, columnSelection } = useContext(TableContext);
 
+  if (!getHeaders.length) {
+    return <thead>{props.children}</thead>;
+  }
+
   return (
     <thead {...props} ref={ref} className={tableHeaderStyles(className)}>
       {getHeaders().map((headerGroup: HeaderGroup<any>) => (

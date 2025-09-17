@@ -282,7 +282,7 @@ export function Table<T extends { id: string | number }>({
   );
 
   if (!dataProp) {
-    return <table {...props}>{props.children}</table>;
+    return <table>{props.children}</table>;
   }
 
   return (
