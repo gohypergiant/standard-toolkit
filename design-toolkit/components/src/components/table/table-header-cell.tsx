@@ -70,13 +70,11 @@ export function HeaderCell({
             ) : header?.column.getIsSorted() === 'desc' ? (
               headerActionIcon(false)
             ) : (
-              <div
+              <Kebab
                 className={headerKebab({
                   persistKebab: persistHeaderKebabMenu,
                 })}
-              >
-                <Kebab />
-              </div>
+              />
             )}
           </Icon>
         </Button>
