@@ -242,14 +242,20 @@ export { Sidenav } from './components/sidenav';
 export { SidenavStyles } from './components/sidenav/styles';
 export type {
   SidenavAvatarProps,
+  SidenavCloseEvent,
   SidenavContentProps,
   SidenavContextValue,
   SidenavDividerProps,
+  SidenavEvent,
   SidenavFooterProps,
   SidenavHeaderProps,
   SidenavItemProps,
   SidenavLinkProps,
+  SidenavMenuItemProps,
+  SidenavMenuProps,
+  SidenavOpenEvent,
   SidenavProps,
+  SidenavToggleEvent,
   SidenavTriggerProps,
 } from './components/sidenav/types';
 export { Skeleton } from './components/skeleton';

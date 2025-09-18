@@ -10,21 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Payload } from '@accelint/bus';
+import type { UniqueId } from '@accelint/core';
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
 import type {
+  ButtonProps,
+  DisclosurePanelProps,
+  DisclosureProps,
   LinkProps,
+  PopoverProps,
   Pressable,
   ToggleButtonProps,
 } from 'react-aria-components';
+import type { SidenavEventTypes } from './events';
 
 export type SidenavProps = ComponentPropsWithRef<'nav'> & {
+  id: UniqueId;
   isHiddenWhenClosed?: boolean;
 };
 
 export type SidenavHeaderProps = PropsWithChildren<{
   classNames?: {
     header?: string;
-    button?: string;
+    button?: ButtonProps['className'];
     container?: string;
     icon?: string;
   };
@@ -34,15 +42,15 @@ export type SidenavContentProps = ComponentPropsWithRef<'div'>;
 
 export type SidenavItemProps = ToggleButtonProps & {
   classNames?: {
-    button?: string;
+    button?: ToggleButtonProps['className'];
     icon?: string;
   };
-  textValue: string;
+  textValue?: string;
 };
 
 export type SidenavLinkProps = LinkProps & {
   classNames?: {
-    button?: string;
+    button?: LinkProps['className'];
     icon?: string;
   };
   textValue: string;
@@ -54,8 +62,58 @@ export type SidenavDividerProps = ComponentPropsWithRef<'hr'>;
 
 export type SidenavFooterProps = ComponentPropsWithRef<'footer'>;
 
-export type SidenavTriggerProps = ComponentPropsWithRef<typeof Pressable>;
+export type SidenavCloseEvent = Payload<
+  typeof SidenavEventTypes.close,
+  {
+    id: UniqueId;
+  }
+>;
+
+export type SidenavOpenEvent = Payload<
+  typeof SidenavEventTypes.open,
+  {
+    id: UniqueId;
+  }
+>;
+
+export type SidenavToggleEvent = Payload<
+  typeof SidenavEventTypes.toggle,
+  {
+    id: UniqueId;
+  }
+>;
+
+export type SidenavEvent =
+  | SidenavOpenEvent
+  | SidenavToggleEvent
+  | SidenavCloseEvent;
+
+type TargetedEvents =
+  | `close:${UniqueId}`
+  | `open:${UniqueId}`
+  | `toggle:${UniqueId}`;
+
+export type SidenavTriggerProps = ComponentPropsWithRef<typeof Pressable> & {
+  for: TargetedEvents | UniqueId;
+};
 
 export type SidenavContextValue = {
-  open: boolean;
+  id: UniqueId;
+  isOpen: boolean;
 };
+
+export type SidenavMenuProps = {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  classNames?: {
+    menu?: DisclosureProps['className'];
+    button?: ButtonProps['className'];
+    icon?: string;
+    disclosurePanel?: DisclosurePanelProps['className'];
+    popoverPanel?: PopoverProps['className'];
+    panelContent?: string;
+  };
+};
+
+export type SidenavMenuItemProps = ToggleButtonProps;

@@ -13,15 +13,21 @@
 
 import 'client-only';
 import { useEmit, useOn } from '@accelint/bus/react';
-import { ArrowNortheast, ChevronLeft } from '@accelint/icons';
+import { isUUID, type UniqueId, uuid } from '@accelint/core';
+import { ArrowNortheast, ChevronDown, ChevronLeft } from '@accelint/icons';
 import { createContext, useContext, useRef, useState } from 'react';
 import {
   Button,
   composeRenderProps,
+  DEFAULT_SLOT,
+  DialogTrigger,
+  Disclosure,
+  DisclosurePanel,
   Header,
   Heading,
   HeadingContext,
   Link,
+  Popover,
   Pressable,
   Provider,
   Text,
@@ -29,20 +35,27 @@ import {
   ToggleButton,
 } from 'react-aria-components';
 import { containsAnyOfExactChildren, containsExactChildren } from '@/lib/react';
+import { Avatar, AvatarContext } from '../avatar';
 import { Icon, IconContext } from '../icon';
 import { Tooltip } from '../tooltip';
 import { SidenavEventTypes } from './events';
 import { SidenavStyles } from './styles';
 import type {
   SidenavAvatarProps,
+  SidenavCloseEvent,
   SidenavContentProps,
   SidenavContextValue,
   SidenavDividerProps,
+  SidenavEvent,
   SidenavFooterProps,
   SidenavHeaderProps,
   SidenavItemProps,
   SidenavLinkProps,
+  SidenavMenuItemProps,
+  SidenavMenuProps,
+  SidenavOpenEvent,
   SidenavProps,
+  SidenavToggleEvent,
   SidenavTriggerProps,
 } from './types';
 
@@ -62,11 +75,22 @@ const {
   avatarText,
   link,
   tooltip,
+  menu,
+  menuButton,
+  menuHeading,
+  menuPanel,
+  menuItem,
+  panelHeading,
+  panelContent,
 } = SidenavStyles();
 
-const SidenavContext = createContext<SidenavContextValue>({ open: false });
+const SidenavContext = createContext<SidenavContextValue>({
+  id: uuid(),
+  isOpen: false,
+});
 
 export function Sidenav({
+  id,
   className,
   isHiddenWhenClosed,
   children,
@@ -81,25 +105,52 @@ export function Sidenav({
       [SidenavFooter, { min: 0, max: 1 }],
     ],
   });
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  useOn(SidenavEventTypes.toggle, () => setOpen((prev) => !prev));
+  useOn(SidenavEventTypes.toggle, (data: SidenavToggleEvent) => {
+    if (data.payload.id === id) {
+      setIsOpen((prev) => !prev);
+    }
+  });
 
-  if (isHiddenWhenClosed && !open) {
+  useOn(SidenavEventTypes.open, (data: SidenavOpenEvent) => {
+    if (!isOpen && data.payload.id === id) {
+      setIsOpen(true);
+    }
+  });
+
+  useOn(SidenavEventTypes.close, (data: SidenavCloseEvent) => {
+    if (isOpen && data.payload.id === id) {
+      setIsOpen(false);
+    }
+  });
+
+  if (isHiddenWhenClosed && !isOpen) {
     return null;
   }
 
   return (
     <Provider
       values={[
-        [HeadingContext, { className: heading({ className: transient() }) }],
-        [SidenavContext, { open }],
+        [
+          HeadingContext,
+          {
+            slots: {
+              [DEFAULT_SLOT]: {
+                className: heading({ className: transient() }),
+              },
+              menu: { className: menuHeading({ className: transient() }) },
+              panel: { className: panelHeading() },
+            },
+          },
+        ],
+        [SidenavContext, { id, isOpen }],
       ]}
     >
       <nav
         {...rest}
         className={sidenav({ className })}
-        data-open={open || null}
+        data-open={isOpen || null}
       >
         {children}
       </nav>
@@ -118,13 +169,16 @@ function SidenavContent({ className, children, ...rest }: SidenavContentProps) {
 SidenavContent.displayName = 'Sidenav.Content';
 
 function SidenavHeader({ children, classNames, ...rest }: SidenavHeaderProps) {
-  const emit = useEmit(SidenavEventTypes.toggle);
+  const emit = useEmit<SidenavToggleEvent>(SidenavEventTypes.toggle);
+  const { id } = useContext(SidenavContext);
 
   return (
     <Header {...rest} className={header({ className: classNames?.header })}>
       <Button
-        className={toggle({ className: classNames?.button })}
-        onPress={() => emit()}
+        className={composeRenderProps(classNames?.button, (className) =>
+          toggle({ className }),
+        )}
+        onPress={() => emit({ id })}
       >
         {children}
         <Icon className={transient()}>
@@ -141,11 +195,15 @@ function SidenavFooter(props: SidenavFooterProps) {
 }
 SidenavFooter.displayName = 'Sidenav.Footer';
 
-function SidenavTrigger({ children, ...rest }: SidenavTriggerProps) {
-  const emit = useEmit(SidenavEventTypes.toggle);
+function SidenavTrigger({ children, for: type, ...rest }: SidenavTriggerProps) {
+  const [event, id] = (isUUID(type) ? ['toggle', type] : type.split(':')) as [
+    'close' | 'open' | 'toggle',
+    UniqueId,
+  ];
+  const emit = useEmit<SidenavEvent>(SidenavEventTypes[event]);
 
   return (
-    <Pressable {...rest} onPress={() => emit()}>
+    <Pressable {...rest} onPress={() => emit({ id })}>
       {children}
     </Pressable>
   );
@@ -170,7 +228,7 @@ function SidenavItem({
     ],
   });
 
-  const { open } = useContext(SidenavContext);
+  const { isOpen } = useContext(SidenavContext);
 
   // Implement ref to place tooltip inside Button DOM to enable contextual styling
   const ref = useRef(null);
@@ -182,12 +240,14 @@ function SidenavItem({
         [TextContext, { className: text({ className: transient() }) }],
       ]}
     >
-      <Tooltip isDisabled={open}>
+      <Tooltip isDisabled={isOpen}>
         <Tooltip.Trigger>
           <ToggleButton
             {...rest}
             ref={ref}
-            className={item({ className: classNames?.button })}
+            className={composeRenderProps(classNames?.button, (className) =>
+              item({ className }),
+            )}
           >
             {children}
           </ToggleButton>
@@ -216,29 +276,28 @@ function SidenavLink({
     ],
   });
 
-  const { open } = useContext(SidenavContext);
+  const { isOpen } = useContext(SidenavContext);
 
   // Implement ref to place tooltip inside Link DOM to enable contextual styling
   const ref = useRef(null);
 
   return (
     <Provider
-      values={[
-        [IconContext, { size: 'medium', slot: 'icon' }],
-        [TextContext, { className: text({ className: transient() }) }],
-      ]}
+      values={[[TextContext, { className: text({ className: transient() }) }]]}
     >
-      <Tooltip isDisabled={open}>
+      <Tooltip isDisabled={isOpen}>
         <Tooltip.Trigger>
           <Link
             {...rest}
             ref={ref}
-            className={link({ className: classNames?.button })}
+            className={composeRenderProps(classNames?.button, (className) =>
+              link({ className }),
+            )}
           >
             {composeRenderProps(children, (children) => (
               <>
                 {children}
-                <Icon size='medium' className={transient()}>
+                <Icon className={transient()}>
                   <ArrowNortheast />
                 </Icon>
               </>
@@ -247,7 +306,7 @@ function SidenavLink({
         </Tooltip.Trigger>
         <Tooltip.Body parentRef={ref} placement='right' className={tooltip()}>
           {textValue}
-          <Icon size='medium'>
+          <Icon>
             <ArrowNortheast />
           </Icon>
         </Tooltip.Body>
@@ -263,13 +322,20 @@ function SidenavDivider({ className, ...rest }: SidenavDividerProps) {
 SidenavDivider.displayName = 'Sidenav.Divider';
 
 function SidenavAvatar({ children, className, ...rest }: SidenavAvatarProps) {
-  containsExactChildren({
+  containsAnyOfExactChildren({
     children,
     componentName: SidenavAvatar.displayName,
     restrictions: [
-      [Icon, { min: 1, max: 1 }],
-      [Heading, { min: 1, max: 1 }],
-      [Text, { min: 1, max: 1 }],
+      [
+        [Avatar, { min: 1, max: 1 }],
+        [Heading, { min: 1, max: 1 }],
+        [Text, { min: 0, max: 1 }],
+      ],
+      [
+        [Icon, { min: 1, max: 1 }],
+        [Heading, { min: 1, max: 1 }],
+        [Text, { min: 0, max: 1 }],
+      ],
     ],
   });
 
@@ -282,6 +348,7 @@ function SidenavAvatar({ children, className, ...rest }: SidenavAvatarProps) {
           { className: avatarHeading({ className: transient() }) },
         ],
         [TextContext, { className: avatarText({ className: transient() }) }],
+        [AvatarContext, { classNames: { avatar: avatarIcon() } }],
       ]}
     >
       <div {...rest} className={avatar({ className })}>
@@ -292,6 +359,113 @@ function SidenavAvatar({ children, className, ...rest }: SidenavAvatarProps) {
 }
 SidenavAvatar.displayName = 'Sidenav.Avatar';
 
+function SidenavMenu({
+  icon,
+  title,
+  classNames,
+  children,
+  ...rest
+}: SidenavMenuProps) {
+  containsExactChildren({
+    children,
+    componentName: SidenavMenu.displayName,
+    restrictions: [[SidenavMenuItem, { min: 2 }]],
+  });
+
+  const { isOpen } = useContext(SidenavContext);
+  const ref = useRef(null);
+
+  return isOpen ? (
+    <Disclosure
+      className={composeRenderProps(classNames?.menu, (className) =>
+        menu({ className }),
+      )}
+    >
+      <Button
+        {...rest}
+        slot='trigger'
+        className={composeRenderProps(classNames?.button, (className) =>
+          menuButton({ className }),
+        )}
+      >
+        {icon}
+        <Heading slot='menu'>{title}</Heading>
+        <Icon className={transient({ className: classNames?.icon })}>
+          <ChevronDown className='transform group-expanded/menu:rotate-180' />
+        </Icon>
+      </Button>
+      <DisclosurePanel
+        className={composeRenderProps(
+          classNames?.disclosurePanel,
+          (className) => className ?? '',
+        )}
+      >
+        <div className={panelContent({ className: classNames?.panelContent })}>
+          {children}
+        </div>
+      </DisclosurePanel>
+    </Disclosure>
+  ) : (
+    <DialogTrigger>
+      <Tooltip isDisabled={isOpen}>
+        <Tooltip.Trigger>
+          <Button
+            {...rest}
+            ref={ref}
+            className={composeRenderProps(classNames?.button, (className) =>
+              menuButton({ className }),
+            )}
+          >
+            {icon}
+          </Button>
+        </Tooltip.Trigger>
+        <Tooltip.Body parentRef={ref} placement='right' className={tooltip()}>
+          {title}
+        </Tooltip.Body>
+      </Tooltip>
+      <Popover
+        className={composeRenderProps(classNames?.popoverPanel, (className) =>
+          menuPanel({ className }),
+        )}
+        placement='right top'
+        shouldFlip={false}
+      >
+        <Heading slot='panel'>{title}</Heading>
+        <div className={panelContent({ className: classNames?.panelContent })}>
+          {children}
+        </div>
+      </Popover>
+    </DialogTrigger>
+  );
+}
+SidenavMenu.displayName = 'Sidenav.Menu';
+
+function SidenavMenuItem({
+  className,
+  children,
+  ...rest
+}: SidenavMenuItemProps) {
+  containsExactChildren({
+    children,
+    componentName: SidenavMenuItem.displayName,
+    restrictions: [[Text, { min: 1, max: 1 }]],
+  });
+
+  return (
+    <ToggleButton
+      {...rest}
+      className={composeRenderProps(className, (className) =>
+        menuItem({ className }),
+      )}
+    >
+      {children}
+    </ToggleButton>
+  );
+}
+SidenavMenuItem.displayName = 'Sidenav.Menu.Item';
+
+SidenavMenu.Item = SidenavMenuItem;
+
 Sidenav.Trigger = SidenavTrigger;
 Sidenav.Header = SidenavHeader;
 Sidenav.Item = SidenavItem;
@@ -300,3 +474,4 @@ Sidenav.Divider = SidenavDivider;
 Sidenav.Avatar = SidenavAvatar;
 Sidenav.Footer = SidenavFooter;
 Sidenav.Content = SidenavContent;
+Sidenav.Menu = SidenavMenu;

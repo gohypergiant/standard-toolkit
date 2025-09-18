@@ -19,13 +19,14 @@ export const SidenavStyles = tv({
       'closed:items-center',
       'group-data-[push~=left]/layout:relative',
     ],
-    content: 'flex h-full max-h-full flex-col gap-xs overflow-y-auto',
+    content:
+      'flex h-full max-h-full w-fit flex-col gap-xs group-open/sidenav:w-full group-closed/sidenav:items-center',
     header: 'mb-m flex justify-center',
     avatar: [
-      'grid grid-cols-[auto_1fr] grid-rows-2 items-center gap-x-m [grid-template-areas:"icon_heading"_"icon_text"] group-closed/sidenav:flex',
+      'grid w-full grid-cols-[auto_1fr] grid-rows-2 items-center gap-x-m [grid-template-areas:"content_heading"_"content_text"] group-closed/sidenav:flex',
     ],
-    avatarIcon: '[grid-area:icon]',
-    avatarHeading: 'fg-primary-bold text-body-m [grid-area:heading]',
+    avatarIcon: '[grid-area:content]',
+    avatarHeading: 'fg-primary-bold text-left text-body-m [grid-area:heading]',
     avatarText:
       'fg-primary-muted grow-1 text-left text-body-s [grid-area:text]',
     toggle: [
@@ -38,8 +39,8 @@ export const SidenavStyles = tv({
       'my-s h-[1px] w-full shrink-0 grow-0 border-0 bg-[var(--outline-static)]',
     heading: 'text-body-xs uppercase',
     item: [
-      'group/item flex w-full cursor-pointer items-center gap-s rounded-medium p-xs text-body-m',
-      'group-open/sidenav:px-s',
+      'group/item flex w-full cursor-pointer items-center justify-center gap-s rounded-medium p-xs text-body-m',
+      'group-open/sidenav:px-s group-closed/sidenav:max-w-fit',
       'enabled:hover:bg-interactive-muted-hover',
       'enabled:focus-visible:bg-interactive-muted-hover enabled:focus-visible:outline-none',
       'enabled:pressed:bg-accent-primary-pressed',
@@ -52,8 +53,8 @@ export const SidenavStyles = tv({
     text: 'grow-1 text-left text-body-s',
     transient: 'group-closed/sidenav:hidden',
     link: [
-      'group/link flex w-full cursor-pointer items-center gap-s rounded-medium p-xs text-body-m',
-      'group-open/sidenav:w-full',
+      'group/link flex w-full cursor-pointer items-center justify-center gap-s rounded-medium p-xs text-body-m',
+      'group-open/sidenav:w-full group-closed/sidenav:max-w-fit',
       'enabled:hover:bg-interactive-muted-hover',
       'enabled:focus-visible:bg-interactive-muted-hover enabled:focus-visible:outline-none',
       'enabled:pressed:bg-accent-primary-pressed',
@@ -63,5 +64,31 @@ export const SidenavStyles = tv({
       'absolute flex items-center gap-s whitespace-nowrap text-body-s',
       'group-disabled/item:fg-disabled group-disabled/link:fg-disabled',
     ],
+    menu: 'group/menu relative text-body-s',
+    menuButton: [
+      'flex w-full cursor-pointer items-center justify-center gap-s rounded-medium p-xs',
+      'group-closed/sidenav:max-w-fit',
+      'enabled:hover:bg-interactive-muted-hover',
+      'enabled:pressed:bg-interactive-muted-hover enabled:focus-visible:bg-interactive-muted-hover enabled:focus-visible:outline-none',
+    ],
+    menuHeading: 'flex-1 text-left',
+    menuPanel: [
+      'fg-primary-bold rounded-medium bg-surface-raised outline outline-static',
+    ],
+    menuItem: [
+      'flex w-full cursor-pointer items-center gap-s rounded-medium p-s text-left text-body-s',
+      'group-expanded/menu:block group-open/sidenav:group-expanded/menu:pl-[32px]',
+      'enabled:hover:bg-interactive-muted-hover',
+      'enabled:focus-visible:bg-interactive-muted-hover enabled:focus-visible:outline-none',
+      'enabled:pressed:bg-accent-primary-pressed',
+      'enabled:selected:bg-accent-primary-bold',
+      'enabled:selected:hover:bg-accent-primary-hover',
+      'enabled:selected:focus-visible:bg-accent-primary-hover',
+      'enabled:selected:pressed:bg-accent-primary-pressed',
+      'disabled:fg-disabled disabled:cursor-not-allowed',
+    ],
+    panelHeading:
+      'min-w-[172px] rounded-t-medium bg-surface-overlay px-m py-s text-body-s',
+    panelContent: 'flex flex-col gap-xs bg-surface-default px-xs py-xs',
   },
 });
