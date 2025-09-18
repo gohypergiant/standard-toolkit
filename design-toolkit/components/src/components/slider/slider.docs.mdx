@@ -20,7 +20,7 @@ It is composed of the following components:
   defaultValue={30}
   minValue={0}
   maxValue={100}
-  layout="stacked"
+  layout="stack"
 />
 
 // Range slider with input fields
@@ -30,21 +30,21 @@ It is composed of the following components:
   minValue={0}
   maxValue={100}
   showInput={true}
-  layout="inline"
+  layout="grid"
 />
 
 // Vertical orientation
 <Slider
   label="Volume"
   orientation="vertical"
-  layout="stacked"
+  layout="stack"
   defaultValue={50}
 />
 
 // With custom styling
 <Slider
   label="Custom Slider"
-  className="w-full max-w-md"
+  classNames={{slider: 'w-full max-w-md'}}
   showLabel={true}
   showInput={false}
 />
@@ -53,8 +53,8 @@ It is composed of the following components:
 ## Variants
 
 ### Layouts
-* **stacked** - Label, input (optional), slider, and min/max values are arranged vertically
-* **inline** - All elements are arranged horizontally in a single row
+* **stack** - uses flex to lay out slider elements
+* **grid** - uses CSS Grid to lay out slider elements
 
 ### Orientations
 * **horizontal** - Slider moves left to right (default)
@@ -66,26 +66,33 @@ It is composed of the following components:
 
 ### Common Props
 * **`label`** - Text label displayed above or beside the slider
-* **`layout`** - Layout arrangement: `'stacked'` | `'inline'`
+* **`layout`** - Layout arrangement: `'stack'` | `'inline'`
 * **`orientation`** - Slider direction: `'horizontal'` (default) | `'vertical'`
 * **`minValue`** - Minimum allowed value (default: 0)
 * **`maxValue`** - Maximum allowed value (default: 100)
 * **`showLabel`** - Whether to display the label (default: true)
 * **`showInput`** - Whether to display numeric input fields (default: false)
-* **`className`** - Additional CSS classes for custom styling
-
-### Single Slider Props
-* **`value`** - Controlled value
-* **`defaultValue`** - Initial value
-* **`onChange`** - Callback when value changes
-
-### Range Slider Props
 * **`value`** - Controlled range value as `[min, max]`
 * **`defaultValue`** - Initial range value as `[min, max]`
 * **`onChange`** - Callback when range values change
+* **`classNames`** - Additional CSS classes for custom styling
+ * - `slider` - Applied to the main slider container
+ * - `track` - Applied to the slider track
+ * - `trackValue` - Applied to the slider track value
+ * - `trackBackground` - Applied to the slider track background
+ * - `thumb` - Applied to the slider thumb
+ * - `inputs` - Applied to the input fields wrapper div
+ * - `input` - Applied to the input field
+ * - `label` - Applied to the label
+ * - `minValue` - Applied to the minimum value
+ * - `maxValue` - Applied to the maximum value
 
 ## Implementation Notes
-The `Slider` component wraps the `Slider` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Slider.html)
+The `Slider` component wraps the `Slider` component from `react-aria-components`.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/Slider.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/slider)
 
 The underlying elements are:
 - `div` for the slider container with grid-based layout
