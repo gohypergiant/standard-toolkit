@@ -53,6 +53,7 @@ export const TableContext = createContext<TableContextValue>({
 });
 
 export function Table<T extends { id: string | number }>({
+  children,
   columns: columnsProp,
   data: dataProp,
   showCheckbox,
@@ -63,7 +64,7 @@ export function Table<T extends { id: string | number }>({
   enableSorting = true,
   enableColumnOrdering: enableColumnReordering = true,
   enableRowActions = true,
-  ...props
+  ...rest
 }: TableProps<T>) {
   const {
     items: data,
@@ -349,8 +350,8 @@ export function Table<T extends { id: string | number }>({
     [setColumnOrderCallback],
   );
 
-  if (!dataProp) {
-    return <table>{props.children}</table>;
+  if (children) {
+    return <table {...rest}>{children}</table>;
   }
 
   return (
@@ -367,7 +368,7 @@ export function Table<T extends { id: string | number }>({
         setColumnSelection,
       }}
     >
-      <table {...props}>
+      <table {...rest}>
         <TableHeader
           headerGroups={getHeaderGroups()}
           columnSelection={columnSelection}
