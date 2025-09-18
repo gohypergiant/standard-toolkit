@@ -11,7 +11,7 @@
  */
 
 import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
-import { flexRender } from '@tanstack/react-table';
+import { type Header, flexRender } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { TableContext } from '.';
 import { Button } from '../button';
@@ -38,7 +38,7 @@ export function HeaderCell({
     setColumnSelection,
   } = useContext(TableContext);
 
-  const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
+  const [hoveredArrow, setHoveredArrow] = useState(false);
 
   const showKebab = enableColumnReordering || enableSorting;
 
@@ -53,7 +53,7 @@ export function HeaderCell({
     );
   };
 
-  const tableMenu = (header: any) => {
+  const tableMenu = (header: Header<any, any>) => {
     if (!(enableSorting || enableColumnReordering)) {
       return;
     }
@@ -63,7 +63,7 @@ export function HeaderCell({
           setColumnSelection?.(isOpen ? header.column.id : null);
         }}
       >
-        <Button variant='icon' aria-label='Menu' className='p-s'>
+        <Button variant='icon' aria-label='Menu'>
           <Icon>
             {header?.column.getIsSorted() === 'asc' ? (
               headerActionIcon(true)
@@ -140,21 +140,21 @@ export function HeaderCell({
 
   return (
     <th
+      {...props}
       ref={ref}
       className={headerCellStyles({ narrow, className, showKebab })}
-      {...props}
     >
       {props.children ||
         (header && (
           <div className={headerCellButton()}>
             {header.column.id === 'kebab' ? null : (
-              <button type='button'>
+              <div>
                 {header.getContext() &&
                   flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
                   )}
-              </button>
+              </div>
             )}
 
             {['numeral', 'kebab', 'selection'].includes(header.column.id ?? '')
