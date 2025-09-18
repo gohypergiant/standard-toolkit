@@ -206,11 +206,12 @@ export type TableCellProps<T> = TdHTMLAttributes<HTMLTableCellElement> &
  * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
-  VariantProps<typeof headerCellStyles> &
-  RefAttributes<HTMLTableCellElement> & {
-    header?: Header<T, unknown>;
-  };
+export type TableHeaderCellProps<TData> =
+  ThHTMLAttributes<HTMLTableCellElement> &
+    VariantProps<typeof headerCellStyles> &
+    RefAttributes<HTMLTableCellElement> & {
+      header?: Header<TData, unknown>;
+    };
 
 /**
  * Props for the table header (`<thead>`) component.

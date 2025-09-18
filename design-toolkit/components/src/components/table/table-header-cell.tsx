@@ -22,13 +22,13 @@ import { type TableHeaderCellProps } from './types';
 
 const { headerCellButton, headerKebab, menuItem } = TableStyles();
 
-export function HeaderCell({
+export function HeaderCell<TData>({
   ref,
   className,
   narrow,
   header,
   ...props
-}: TableHeaderCellProps<any>) {
+}: TableHeaderCellProps<TData>) {
   const {
     enableColumnReordering,
     enableSorting,
@@ -53,7 +53,7 @@ export function HeaderCell({
     );
   };
 
-  const tableMenu = (header: Header<any, any>) => {
+  const tableMenu = (header: Header<TData, unknown>) => {
     if (!(enableSorting || enableColumnReordering)) {
       return;
     }
