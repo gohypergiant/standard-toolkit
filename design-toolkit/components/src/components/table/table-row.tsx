@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { rowStyles } from './styles';
+import { TableRowStyles } from './styles';
 import { TableCell } from './table-cell';
 import type { TableRowProps } from './types';
 
@@ -28,7 +28,7 @@ export function TableRow<T>({
     <tr
       {...rest}
       ref={ref}
-      className={rowStyles({ className })}
+      className={TableRowStyles({ className })}
       data-pinned={row?.getIsPinned() || null}
       data-selected={row?.getIsSelected() || null}
     >

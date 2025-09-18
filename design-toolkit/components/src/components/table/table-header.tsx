@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { tableHeaderStyles } from './styles';
+import { TableHeaderStyles } from './styles';
 import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
 
@@ -24,7 +24,7 @@ export function TableHeader<T>({
   ...rest
 }: TableHeaderProps<T>) {
   return (
-    <thead {...rest} ref={ref} className={tableHeaderStyles(className)}>
+    <thead {...rest} ref={ref} className={TableHeaderStyles(className)}>
       {children ||
         headerGroups?.map((headerGroup) => (
           <tr key={headerGroup.id}>

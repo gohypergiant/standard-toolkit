@@ -18,7 +18,7 @@ import { TableContext } from '.';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
-import { TableStyles, headerCellStyles } from './styles';
+import { HeaderCellStyles, TableStyles } from './styles';
 import type { TableHeaderCellProps } from './types';
 
 const { headerKebab, menuItem } = TableStyles();
@@ -125,7 +125,7 @@ export function HeaderCell<T>({
   return (
     <th {...rest} ref={ref}>
       <div
-        className={headerCellStyles({ narrow, className, showKebab })}
+        className={HeaderCellStyles({ narrow, className, showKebab })}
         data-selected={header?.column.id === columnSelection || null}
       >
         {children ||

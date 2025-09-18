@@ -246,14 +246,14 @@ export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
 export { Table, TableContext } from './components/table';
 export {
+  HeaderCellStyles,
+  TableBodyStyles,
+  TableCellStyles,
   TableCellStylesDefaults,
   TableHeaderCellStylesDefaults,
+  TableHeaderStyles,
+  TableRowStyles,
   TableStyles,
-  cellStyles,
-  headerCellStyles,
-  rowStyles,
-  tableBodyStyles,
-  tableHeaderStyles,
 } from './components/table/styles';
 export type {
   TableBodyProps,

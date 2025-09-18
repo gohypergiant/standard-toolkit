@@ -12,7 +12,7 @@
 
 import { tv } from '@/lib/utils';
 
-export const tableHeaderStyles = tv({
+export const TableHeaderStyles = tv({
   base: ['group/theader'],
 });
 
@@ -23,7 +23,7 @@ export const TableCellStylesDefaults = {
   persistent: true,
 } as const;
 
-export const cellStyles = tv({
+export const TableCellStyles = tv({
   base: [
     'fg-primary-bold min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s',
     'selection-end:border-b-1 selection-end:border-b-[var(--outline-accent-primary-bold)]',
@@ -54,7 +54,7 @@ export const TableHeaderCellStylesDefaults = {
   narrow: false,
 } as const;
 
-export const headerCellStyles = tv({
+export const HeaderCellStyles = tv({
   base: [
     'group/header-cell group fg-primary-muted hover:fg-primary-bold flex h-12 items-center justify-between gap-xxs text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'selected:bg-accent-primary-muted',
@@ -75,7 +75,7 @@ export const headerCellStyles = tv({
   },
 });
 
-export const rowStyles = tv({
+export const TableRowStyles = tv({
   base: [
     'group/row',
     'border-transparent group-not-selected/tbody:border-1',
@@ -89,7 +89,7 @@ export const rowStyles = tv({
   ],
 });
 
-export const tableBodyStyles = tv({
+export const TableBodyStyles = tv({
   base: ['group/tbody'],
 });
 

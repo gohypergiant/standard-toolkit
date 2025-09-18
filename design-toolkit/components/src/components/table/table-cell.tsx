@@ -14,7 +14,7 @@
 import { flexRender } from '@tanstack/react-table';
 import { useContext } from 'react';
 import { TableContext } from '.';
-import { cellStyles } from './styles';
+import { TableCellStyles } from './styles';
 import type { TableCellProps } from './types';
 
 export function TableCell<T>({
@@ -34,7 +34,7 @@ export function TableCell<T>({
     <td
       {...rest}
       ref={ref}
-      className={cellStyles({
+      className={TableCellStyles({
         className,
         narrow,
         isKebab,

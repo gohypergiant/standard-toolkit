@@ -22,7 +22,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import type { ComponentPropsWithRef } from 'react';
 import type { PropsWithChildren } from 'react';
 import type { VariantProps } from 'tailwind-variants';
-import type { cellStyles, headerCellStyles } from './styles';
+import type { HeaderCellStyles, TableCellStyles } from './styles';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
@@ -169,7 +169,7 @@ export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
  *   If false, the cell content is only visible on hover or when the row is hovered.
  */
 export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
-  VariantProps<typeof cellStyles> & {
+  VariantProps<typeof TableCellStyles> & {
     cell?: Cell<T, unknown>;
   };
 
@@ -183,7 +183,7 @@ export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
  * @see {@link RefAttributes}
  */
 export type TableHeaderCellProps<T> = ComponentPropsWithRef<'thead'> &
-  VariantProps<typeof headerCellStyles> & {
+  VariantProps<typeof HeaderCellStyles> & {
     header?: Header<T, unknown>;
   };
 

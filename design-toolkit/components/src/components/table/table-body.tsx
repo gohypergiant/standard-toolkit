@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { tableBodyStyles } from './styles';
+import { TableBodyStyles } from './styles';
 import { TableRow } from './table-row';
 import type { TableBodyProps } from './types';
 
@@ -26,7 +26,7 @@ export function TableBody<T>({
     <tbody
       {...rest}
       ref={ref}
-      className={tableBodyStyles({
+      className={TableBodyStyles({
         className,
       })}
     >
