@@ -17,13 +17,13 @@ import { cellStyles } from './styles';
 import type { TableCellProps } from './types';
 
 export function TableCell({
+  children,
   ref,
   className,
   cell,
-  ...props
+  ...rest
 }: TableCellProps<any>) {
   const { columnSelection } = useContext(TableContext);
-
   const kebab = cell && cell.column.id === 'kebab';
   const narrow =
     (cell && cell.column.id === 'numeral') ||
@@ -33,6 +33,7 @@ export function TableCell({
 
   return (
     <td
+      {...rest}
       ref={ref}
       className={cellStyles({
         narrow,
@@ -41,9 +42,8 @@ export function TableCell({
         selectedCol,
         className,
       })}
-      {...props}
     >
-      {props.children ||
+      {children ||
         (cell && flexRender(cell.column.columnDef.cell, cell.getContext()))}
     </td>
   );

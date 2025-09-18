@@ -18,18 +18,19 @@ import type {
   Row,
 } from '@tanstack/react-table';
 import type {
+  Dispatch,
   HTMLAttributes,
   RefAttributes,
-  TableHTMLAttributes,
+  SetStateAction,
   TdHTMLAttributes,
   ThHTMLAttributes,
 } from 'react';
-import type React from 'react';
+import type { ComponentPropsWithRef } from 'react';
+import type { PropsWithChildren } from 'react';
 import type { VariantProps } from 'tailwind-variants';
 import type { cellStyles, headerCellStyles } from './styles';
 
-type BaseTableProps = TableHTMLAttributes<HTMLTableElement> &
-  RefAttributes<HTMLTableElement>;
+type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
 type ExtendedTableProps<T extends { id: string | number }> = {
   /**
@@ -124,9 +125,9 @@ export type TableProps<T extends { id: string | number }> = BaseTableProps &
     | (ExtendedTableProps<T> & {
         children?: never;
       })
-    | {
+    | PropsWithChildren<{
         [K in keyof ExtendedTableProps<T>]?: never;
-      }
+      }>
   );
 
 /**
@@ -140,12 +141,18 @@ export type TableProps<T extends { id: string | number }> = BaseTableProps &
  */
 export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
   RefAttributes<HTMLTableSectionElement> & {
-    // getTopRows: any;
-    // getCenterRows: any;
-    // getBottomRows: any;
-    // persistRowKebabMenu?: boolean;
-    // persistNumerals?: boolean;
-    // columnSelection: string | any;
+    /**
+     * Array of top (pinned) rows of the table
+     */
+    topRows?: Row<any>[];
+    /**
+     * Array of center (regular) rows of the table
+     */
+    centerRows?: Row<any>[];
+    /**
+     * Array of bottom rows of the table
+     */
+    bottomRows?: Row<any>[];
   };
 
 /**
@@ -159,10 +166,10 @@ export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
  */
 export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
   RefAttributes<HTMLTableRowElement> & {
-    row?: Row<T>;
-    // persistRowKebabMenu?: boolean;
-    // persistNumerals?: boolean;
-    // selectedCol: string | null;
+    /**
+     * Array of cells to render in the row
+     */
+    cells?: Cell<T, unknown>[];
   };
 
 /**
@@ -214,16 +221,21 @@ export type TableHeaderCellProps<T> = ThHTMLAttributes<HTMLTableCellElement> &
  * @see {@link RefAttributes}
  */
 export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement> & {};
+  RefAttributes<HTMLTableSectionElement> & {
+    /**
+     * Array of header groups of the table
+     */
+    headerGroups?: HeaderGroup<any>[];
+    /**
+     * The currently selected column ID
+     */
+    columnSelection?: string | null;
+  };
 
-export type TableContextValue<RowData> = {
-  getHeaders: () => HeaderGroup<RowData>[];
+export type TableContextValue = {
   moveColumnLeft?: (index: number) => void;
   moveColumnRight?: (index: number) => void;
-  getTopRows: () => Row<RowData>[];
-  getCenterRows: () => Row<RowData>[];
-  getBottomRows: () => Row<RowData>[];
-  setColumnSelection?: React.Dispatch<React.SetStateAction<string | null>>;
+  setColumnSelection?: Dispatch<SetStateAction<string | null>>;
   columnSelection: string | null;
   persistHeaderKebabMenu?: boolean;
   persistRowKebabMenu?: boolean;

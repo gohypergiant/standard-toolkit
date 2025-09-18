@@ -11,51 +11,42 @@
  */
 
 import type { Row, RowData } from '@tanstack/react-table';
-import { useContext } from 'react';
-import { TableContext } from '.';
 import { tableBodyStyles } from './styles';
 import { TableRow } from './table-row';
 import type { TableBodyProps } from './types';
 
-export function TableBody({ className, ref, ...props }: TableBodyProps) {
-  const { getTopRows, getCenterRows, getBottomRows } = useContext(TableContext);
-
-  if (!getCenterRows.length) {
-    return <tbody>{props.children}</tbody>;
-  }
+export function TableBody({
+  children,
+  className,
+  ref,
+  topRows,
+  centerRows,
+  bottomRows,
+  ...rest
+}: TableBodyProps) {
+  const allRows = [
+    ...(topRows ?? []),
+    ...(centerRows ?? []),
+    ...(bottomRows ?? []),
+  ];
 
   return (
     <tbody
+      {...rest}
       ref={ref}
       className={tableBodyStyles({
         className,
       })}
-      {...props}
     >
-      {getTopRows().map((row: Row<RowData>) => (
-        <TableRow
-          key={row.id}
-          row={row}
-          data-selected={row.getIsSelected() || null}
-          data-pinned={row.getIsPinned()}
-        />
-      ))}
-      {getCenterRows().map((row: Row<RowData>) => (
-        <TableRow
-          key={row.id}
-          row={row}
-          data-selected={row.getIsSelected() || null}
-          data-pinned={row.getIsPinned()}
-        />
-      ))}
-      {getBottomRows().map((row: Row<RowData>) => (
-        <TableRow
-          key={row.id}
-          row={row}
-          data-selected={row.getIsSelected() || null}
-          data-pinned={row.getIsPinned()}
-        />
-      ))}
+      {children ||
+        allRows.map((row: Row<RowData>) => (
+          <TableRow
+            key={row.id}
+            data-selected={row.getIsSelected() || null}
+            data-pinned={row.getIsPinned() || null}
+            cells={row.getVisibleCells()}
+          />
+        ))}
     </tbody>
   );
 }

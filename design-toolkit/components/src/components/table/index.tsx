@@ -11,26 +11,24 @@
  */
 
 'use client';
-import 'client-only';
 
+import 'client-only';
 import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
 import {
   type ColumnOrderState,
-  type RowData,
+  type Row,
   type RowSelectionState,
   type SortingState,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
-import { useColumnMovement } from './hooks/use-column-movement';
-import { useRowMovement } from './hooks/use-row-movement';
 import { TableStyles } from './styles';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -41,13 +39,10 @@ import { type TableContextValue, type TableProps } from './types';
 
 const { pinIcon, rowCell, rowKebab, menuItem } = TableStyles();
 
-export const TableContext = createContext<TableContextValue<RowData>>({
-  getHeaders: () => [],
+// Only keep values in context that are needed across multiple component levels
+export const TableContext = createContext<TableContextValue>({
   moveColumnLeft: () => undefined,
   moveColumnRight: () => undefined,
-  getTopRows: () => [],
-  getCenterRows: () => [],
-  getBottomRows: () => [],
   setColumnSelection: () => null,
   columnSelection: null,
   persistRowKebabMenu: true,
@@ -57,28 +52,17 @@ export const TableContext = createContext<TableContextValue<RowData>>({
   enableRowActions: true,
 });
 
-const TableDefaultProps = {
-  kebabPosition: 'right',
-  persistRowKebabMenu: true,
-  persistHeaderKebabMenu: true,
-  persistNumerals: false,
-  enableSorting: true,
-  enableColumnReordering: true,
-  enableRowActions: true,
-} as const;
-
 export function Table<T extends { id: string | number }>({
   columns: columnsProp,
   data: dataProp,
   showCheckbox,
-  kebabPosition = TableDefaultProps.kebabPosition,
-  persistRowKebabMenu = TableDefaultProps.persistRowKebabMenu,
-  persistHeaderKebabMenu = TableDefaultProps.persistHeaderKebabMenu,
-  persistNumerals = TableDefaultProps.persistNumerals,
-  enableSorting = TableDefaultProps.enableSorting,
-  enableColumnOrdering:
-    enableColumnReordering = TableDefaultProps.enableColumnReordering,
-  enableRowActions = TableDefaultProps.enableRowActions,
+  kebabPosition = 'right',
+  persistRowKebabMenu = true,
+  persistHeaderKebabMenu = true,
+  persistNumerals = false,
+  enableSorting = true,
+  enableColumnOrdering: enableColumnReordering = true,
+  enableRowActions = true,
   ...props
 }: TableProps<T>) {
   const {
@@ -88,23 +72,81 @@ export function Table<T extends { id: string | number }>({
   } = useListData({
     initialItems: dataProp,
   });
-
-  const dataIds = useMemo<(string | number)[]>(
-    () => data?.map((item: T) => item.id),
-    [data],
-  );
-
+  const dataIds = useMemo(() => data?.map((item: T) => item.id), [data]);
   const [sorting, setSorting] = useState<SortingState>([]);
-
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
 
-  const { moveUpSelectedRows, moveDownRows } = useRowMovement<T>(
-    data,
-    dataIds,
-    rowSelection,
-    moveBefore,
-    moveAfter,
+  /**
+   * moveUpSelectedRows moves the selected rows up in the table.
+   * It finds the first selected row, determines its index,
+   * and moves it before the previous row if it exists.
+   */
+  const moveUpSelectedRows = useCallback(
+    (row: Row<T>) => {
+      const hasRowSelection =
+        Object.keys(rowSelection).length !== 0 &&
+        Object.hasOwn(rowSelection, row.id);
+      const rowSelectionKeys = Object.keys(rowSelection).filter(
+        (id) => rowSelection[id],
+      );
+      const rowsToMove = hasRowSelection
+        ? data.filter((item: T) =>
+            rowSelectionKeys.includes(item.id.toString()),
+          )
+        : [row];
+      const firstSelectedRowId = rowsToMove[0]?.id;
+
+      if (firstSelectedRowId) {
+        const rowIndex = dataIds.indexOf(firstSelectedRowId);
+        const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
+
+        if (prevRowId) {
+          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
+
+          moveBefore?.(prevRowId, rowsToMoveKeys);
+        }
+      }
+    },
+    [data, dataIds, rowSelection, moveBefore],
+  );
+
+  // /**
+  //  * moveDownRows moves the selected or active rows down in the table.
+  //  * It finds the last selected row, determines its index,
+  //  * and moves it after the next row if it exists.
+  //  */
+
+  const moveDownRows = useCallback(
+    (row: Row<T>) => {
+      const hasRowSelection =
+        Object.keys(rowSelection).length !== 0 &&
+        Object.hasOwn(rowSelection, row.id);
+      const rowSelectionKeys = Object.keys(rowSelection).filter(
+        (id) => rowSelection[id],
+      );
+      const rowsToMove = hasRowSelection
+        ? data.filter((item: T) =>
+            rowSelectionKeys.includes(item.id.toString()),
+          )
+        : [row];
+      const lastSelectedRowId = rowsToMove[rowsToMove.length - 1]?.id;
+
+      if (lastSelectedRowId) {
+        const rowIndex = dataIds.indexOf(lastSelectedRowId);
+        const nextRowId =
+          dataIds[
+            rowIndex < dataIds.length - 1 ? rowIndex + 1 : dataIds.length - 1
+          ];
+
+        if (nextRowId) {
+          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
+
+          moveAfter?.(nextRowId, rowsToMoveKeys);
+        }
+      }
+    },
+    [data, dataIds, rowSelection, moveAfter],
   );
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
@@ -115,6 +157,7 @@ export function Table<T extends { id: string | number }>({
       id: 'kebab',
       cell: ({ row }) => {
         const isPinned = row.getIsPinned();
+
         return (
           enableRowActions && (
             <div
@@ -266,8 +309,44 @@ export function Table<T extends { id: string | number }>({
     getSortedRowModel: getSortedRowModel<T>(),
   });
 
-  const { moveColumnLeft, moveColumnRight } = useColumnMovement(
-    setColumnOrderCallback,
+  const moveColumnLeft = useCallback(
+    (oldIndex: number) => {
+      setColumnOrderCallback((order: string[]) => {
+        const newColumnOrder = [...order];
+        const newIndex = oldIndex - 1;
+        if (newIndex < 0) {
+          return order;
+        }
+
+        newColumnOrder.splice(
+          newIndex,
+          0,
+          newColumnOrder.splice(oldIndex, 1)[0] ?? '',
+        );
+        return newColumnOrder;
+      });
+    },
+    [setColumnOrderCallback],
+  );
+
+  const moveColumnRight = useCallback(
+    (oldIndex: number) => {
+      setColumnOrderCallback((order: string[]) => {
+        const newColumnOrder = [...order];
+        const newIndex = oldIndex + 1;
+        if (newIndex >= newColumnOrder.length) {
+          return order;
+        }
+
+        newColumnOrder.splice(
+          newIndex,
+          0,
+          newColumnOrder.splice(oldIndex, 1)[0] ?? '',
+        );
+        return newColumnOrder;
+      });
+    },
+    [setColumnOrderCallback],
   );
 
   if (!dataProp) {
@@ -277,7 +356,6 @@ export function Table<T extends { id: string | number }>({
   return (
     <TableContext.Provider
       value={{
-        getHeaders: getHeaderGroups,
         moveColumnLeft,
         moveColumnRight,
         persistRowKebabMenu,
@@ -285,19 +363,21 @@ export function Table<T extends { id: string | number }>({
         enableSorting,
         enableColumnReordering,
         enableRowActions,
-        getTopRows,
-        getCenterRows,
-        getBottomRows,
         columnSelection,
         setColumnSelection,
       }}
     >
-      <div>
-        <table {...props}>
-          <TableHeader />
-          <TableBody />
-        </table>
-      </div>
+      <table {...props}>
+        <TableHeader
+          headerGroups={getHeaderGroups()}
+          columnSelection={columnSelection}
+        />
+        <TableBody
+          topRows={getTopRows()}
+          centerRows={getCenterRows()}
+          bottomRows={getBottomRows()}
+        />
+      </table>
     </TableContext.Provider>
   );
 }
