@@ -36,7 +36,7 @@ type LoggerOptions = {
 };
 
 function bootstrap({
-  enabled = true,
+  enabled,
   plugins = [],
   transports = [],
   level = 'debug',
@@ -61,7 +61,7 @@ function bootstrap({
         appendObjectData: true,
       });
 
-const appliedTransports: LogLayerTransport[] = [
+  const appliedTransports: LogLayerTransport[] = [
     stdoutTransport,
     ...transports,
   ].filter(Boolean);
