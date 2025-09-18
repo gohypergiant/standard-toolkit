@@ -19,7 +19,6 @@ import type {
 } from '@tanstack/react-table';
 import type {
   Dispatch,
-  HTMLAttributes,
   RefAttributes,
   SetStateAction,
   ThHTMLAttributes,
@@ -203,17 +202,16 @@ export type TableHeaderCellProps<TData> =
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement> & {
-    /**
-     * Array of header groups of the table
-     */
-    headerGroups?: HeaderGroup<any>[];
-    /**
-     * The currently selected column ID
-     */
-    columnSelection?: string | null;
-  };
+export type TableHeaderProps<T> = ComponentPropsWithRef<'thead'> & {
+  /**
+   * Array of header groups of the table
+   */
+  headerGroups?: HeaderGroup<T>[];
+  /**
+   * The currently selected column ID
+   */
+  columnSelection?: string | null;
+};
 
 export type TableContextValue = {
   columnSelection: string | null;

@@ -15,29 +15,24 @@ import { tableHeaderStyles } from './styles';
 import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
 
-export function TableHeader({
-  className,
+export function TableHeader<T>({
   ref,
+  children,
+  className,
   headerGroups,
   columnSelection,
-  ...props
-}: TableHeaderProps) {
+  ...rest
+}: TableHeaderProps<T>) {
   return (
-    <thead {...props} ref={ref} className={tableHeaderStyles(className)}>
-      {headerGroups?.map((headerGroup) => (
-        <tr key={headerGroup.id}>
-          {headerGroup.headers.map((header) => (
-            <HeaderCell
-              key={header.id}
-              narrow={
-                header.column.id === 'numeral' || header.column.id === 'kebab'
-              }
-              data-selected={header.column.id === columnSelection || null}
-              header={header}
-            />
-          ))}
-        </tr>
-      ))}
+    <thead {...rest} ref={ref} className={tableHeaderStyles(className)}>
+      {children ||
+        headerGroups?.map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <HeaderCell key={header.id} header={header} />
+            ))}
+          </tr>
+        ))}
     </thead>
   );
 }

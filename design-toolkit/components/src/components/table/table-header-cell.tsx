@@ -112,19 +112,22 @@ export function HeaderCell<T>({
   ref,
   children,
   className,
-  narrow,
   header,
   ...rest
 }: TableHeaderCellProps<T>) {
-  const { enableColumnReordering, enableSorting } = useContext(TableContext);
+  const { columnSelection, enableColumnReordering, enableSorting } =
+    useContext(TableContext);
   const showKebab = enableColumnReordering || enableSorting;
   const renderProps = header?.getContext();
+  const narrow =
+    header?.column.id === 'numeral' || header?.column.id === 'kebab';
 
   return (
     <th
       {...rest}
       ref={ref}
       className={headerCellStyles({ narrow, className, showKebab })}
+      data-selected={header?.column.id === columnSelection || null}
     >
       {children ||
         (header && (
