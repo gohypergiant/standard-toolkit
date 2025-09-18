@@ -123,21 +123,21 @@ export function HeaderCell<T>({
     header?.column.id === 'numeral' || header?.column.id === 'kebab';
 
   return (
-    <th
-      {...rest}
-      ref={ref}
-      className={headerCellStyles({ narrow, className, showKebab })}
-      data-selected={header?.column.id === columnSelection || null}
-    >
-      {children ||
-        (header && (
-          <>
-            {header.column.id !== 'kebab' &&
-              renderProps &&
-              flexRender(header.column.columnDef.header, renderProps)}
-            <HeaderCellMenu header={header} />
-          </>
-        ))}
+    <th {...rest} ref={ref}>
+      <div
+        className={headerCellStyles({ narrow, className, showKebab })}
+        data-selected={header?.column.id === columnSelection || null}
+      >
+        {children ||
+          (header && (
+            <>
+              {header.column.id !== 'kebab' &&
+                renderProps &&
+                flexRender(header.column.columnDef.header, renderProps)}
+              <HeaderCellMenu header={header} />
+            </>
+          ))}
+      </div>
     </th>
   );
 }

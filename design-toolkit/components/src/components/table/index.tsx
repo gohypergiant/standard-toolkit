@@ -16,15 +16,19 @@ import 'client-only';
 import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
 import {
-  type ColumnOrderState,
   type Row,
   type RowSelectionState,
-  type SortingState,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { createContext, useCallback, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
@@ -52,6 +56,64 @@ export const TableContext = createContext<TableContextValue>({
   enableRowActions: true,
 });
 
+type RowActionsMenuProps<T> = {
+  row: Row<T>;
+  rows: Row<T>[];
+  moveRowsDown: (row: Row<T>, rows: Row<T>[]) => void;
+  moveRowsUp: (row: Row<T>, rows: Row<T>[]) => void;
+};
+
+function RowActionsMenu<T>({
+  moveRowsDown,
+  moveRowsUp,
+  row,
+  rows,
+}: RowActionsMenuProps<T>) {
+  const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
+  const isPinned = row.getIsPinned();
+
+  return (
+    enableRowActions && (
+      <div
+        className={rowKebab({
+          persistKebab: persistRowKebabMenu,
+        })}
+      >
+        <Menu.Trigger>
+          <Button variant='icon' aria-label='Menu'>
+            <Icon>
+              <Kebab />
+            </Icon>
+          </Button>
+          <Menu>
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => row.pin(isPinned ? false : 'top')}
+            >
+              {isPinned ? 'Unpin' : 'Pin'}
+            </Menu.Item>
+            <Menu.Separator />
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => moveRowsUp(row, rows)}
+              isDisabled={row.index === 0}
+            >
+              Move Up
+            </Menu.Item>
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => moveRowsDown(row, rows)}
+              isDisabled={row.index === rows.length - 1}
+            >
+              Move Down
+            </Menu.Item>
+          </Menu>
+        </Menu.Trigger>
+      </div>
+    )
+  );
+}
+
 export function Table<T extends { id: string | number }>({
   children,
   columns: columnsProp,
@@ -73,8 +135,6 @@ export function Table<T extends { id: string | number }>({
   } = useListData({
     initialItems: dataProp,
   });
-  const dataIds = useMemo(() => data?.map((item: T) => item.id), [data]);
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
 
@@ -83,72 +143,63 @@ export function Table<T extends { id: string | number }>({
    * It finds the first selected row, determines its index,
    * and moves it before the previous row if it exists.
    */
-  const moveUpSelectedRows = useCallback(
-    (row: Row<T>) => {
-      const hasRowSelection =
-        Object.keys(rowSelection).length !== 0 &&
-        Object.hasOwn(rowSelection, row.id);
-      const rowSelectionKeys = Object.keys(rowSelection).filter(
-        (id) => rowSelection[id],
-      );
-      const rowsToMove = hasRowSelection
-        ? data.filter((item: T) =>
-            rowSelectionKeys.includes(item.id.toString()),
-          )
+  const moveRowsUp = useCallback(
+    (row: Row<T>, rows: Row<T>[]) => {
+      const isSelected = rowSelection[row.id];
+      const rowsToMove = isSelected
+        ? rows.filter(({ id }) => rowSelection[id])
         : [row];
-      const firstSelectedRowId = rowsToMove[0]?.id;
+      const firstRowToMove = rowsToMove[0];
 
-      if (firstSelectedRowId) {
-        const rowIndex = dataIds.indexOf(firstSelectedRowId);
-        const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
-
-        if (prevRowId) {
-          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
-
-          moveBefore?.(prevRowId, rowsToMoveKeys);
-        }
+      if (!firstRowToMove || firstRowToMove.index === 0) {
+        return;
       }
+
+      const prevRowId = rows[firstRowToMove.index - 1]?.id;
+
+      if (!prevRowId) {
+        return;
+      }
+
+      moveBefore(
+        prevRowId,
+        rowsToMove.map(({ id }) => id),
+      );
     },
-    [data, dataIds, rowSelection, moveBefore],
+    [rowSelection, moveBefore],
   );
 
-  // /**
-  //  * moveDownRows moves the selected or active rows down in the table.
-  //  * It finds the last selected row, determines its index,
-  //  * and moves it after the next row if it exists.
-  //  */
-
-  const moveDownRows = useCallback(
-    (row: Row<T>) => {
-      const hasRowSelection =
-        Object.keys(rowSelection).length !== 0 &&
-        Object.hasOwn(rowSelection, row.id);
-      const rowSelectionKeys = Object.keys(rowSelection).filter(
-        (id) => rowSelection[id],
-      );
-      const rowsToMove = hasRowSelection
-        ? data.filter((item: T) =>
-            rowSelectionKeys.includes(item.id.toString()),
-          )
+  /**
+   * moveDownRows moves the selected or active rows down in the table.
+   * It finds the last selected row, determines its index,
+   * and moves it after the next row if it exists.
+   */
+  const moveRowsDown = useCallback(
+    (row: Row<T>, rows: Row<T>[]) => {
+      const isSelected = rowSelection[row.id];
+      const rowsToMove = isSelected
+        ? rows.filter(({ id }) => rowSelection[id])
         : [row];
-      const lastSelectedRowId = rowsToMove[rowsToMove.length - 1]?.id;
+      const lastRowToMove = rowsToMove[rowsToMove.length - 1];
 
-      if (lastSelectedRowId) {
-        const rowIndex = dataIds.indexOf(lastSelectedRowId);
-        const nextRowId =
-          dataIds[
-            rowIndex < dataIds.length - 1 ? rowIndex + 1 : dataIds.length - 1
-          ];
-
-        if (nextRowId) {
-          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
-
-          moveAfter?.(nextRowId, rowsToMoveKeys);
-        }
+      if (!lastRowToMove || lastRowToMove.index === rows.length - 1) {
+        return;
       }
+
+      const nextRowId = rows[lastRowToMove.index + 1]?.id;
+
+      if (!nextRowId) {
+        return;
+      }
+
+      moveAfter(
+        nextRowId,
+        rowsToMove.map(({ id }) => id),
+      );
     },
-    [data, dataIds, rowSelection, moveAfter],
+    [rowSelection, moveAfter],
   );
+
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
    * It includes options to move the row up or down in the table.
@@ -156,60 +207,16 @@ export function Table<T extends { id: string | number }>({
   const actionColumn: NonNullable<typeof columnsProp>[number] = useMemo(
     () => ({
       id: 'kebab',
-      cell: ({ row }) => {
-        const isPinned = row.getIsPinned();
-
-        return (
-          enableRowActions && (
-            <div
-              className={rowKebab({
-                persistKebab: persistRowKebabMenu,
-              })}
-            >
-              <Menu.Trigger>
-                <Button variant='icon' aria-label='Menu'>
-                  <Icon>
-                    <Kebab />
-                  </Icon>
-                </Button>
-                <Menu>
-                  <Menu.Item
-                    classNames={{ item: menuItem() }}
-                    onAction={() => {
-                      row.pin(isPinned ? false : 'top');
-                    }}
-                  >
-                    <Menu.Item.Label>
-                      {isPinned ? 'Unpin' : 'Pin'}
-                    </Menu.Item.Label>
-                  </Menu.Item>
-                  <Menu.Separator />
-                  <Menu.Item
-                    classNames={{ item: menuItem() }}
-                    onAction={() => {
-                      moveUpSelectedRows(row);
-                    }}
-                    isDisabled={row.index === 0}
-                  >
-                    <Menu.Item.Label>Move Up</Menu.Item.Label>
-                  </Menu.Item>
-                  <Menu.Item
-                    classNames={{ item: menuItem() }}
-                    onAction={() => {
-                      moveDownRows(row);
-                    }}
-                    isDisabled={row.index === getRowModel().rows.length - 1}
-                  >
-                    <Menu.Item.Label>Move Down</Menu.Item.Label>
-                  </Menu.Item>
-                </Menu>
-              </Menu.Trigger>
-            </div>
-          )
-        );
-      },
+      cell: ({ row }) => (
+        <RowActionsMenu
+          moveRowsUp={moveRowsUp}
+          moveRowsDown={moveRowsDown}
+          row={row}
+          rows={getRowModel().rows}
+        />
+      ),
     }),
-    [moveUpSelectedRows, moveDownRows, persistRowKebabMenu, enableRowActions],
+    [moveRowsUp, moveRowsDown],
   );
 
   /**
@@ -218,38 +225,8 @@ export function Table<T extends { id: string | number }>({
    * The kebab menu position can be set to 'left' or 'right'.
    * If showCheckbox is true, a checkbox column is added.
    */
-  const columns = useMemo<NonNullable<typeof columnsProp>>(() => {
-    const columns = [...(columnsProp || [])];
-
-    if (kebabPosition === 'left') {
-      columns.unshift(actionColumn);
-    } else if (kebabPosition === 'right') {
-      columns.push(actionColumn);
-    }
-
-    if (showCheckbox) {
-      columns.unshift({
-        id: 'selection',
-        header: ({ table }) => (
-          <Checkbox
-            isSelected={table.getIsAllRowsSelected()}
-            isIndeterminate={table.getIsSomeRowsSelected()}
-            onChange={table.toggleAllRowsSelected}
-            slot='selection'
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            isSelected={row.getIsSelected()}
-            isIndeterminate={row.getIsSomeSelected()}
-            onChange={row.toggleSelected}
-            slot='selection'
-          />
-        ),
-      });
-    }
-
-    return [
+  const columns = useMemo<NonNullable<typeof columnsProp>>(
+    () => [
       {
         id: 'numeral',
         cell: ({ row }) =>
@@ -266,12 +243,32 @@ export function Table<T extends { id: string | number }>({
             </span>
           ),
       },
-      ...columns,
-    ];
-  }, [showCheckbox, columnsProp, kebabPosition, actionColumn, persistNumerals]);
-
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
-    columns.map((col) => col.id as string),
+      ...(showCheckbox
+        ? ([
+            {
+              id: 'selection',
+              header: ({ table }) => (
+                <Checkbox
+                  isSelected={table.getIsAllRowsSelected()}
+                  isIndeterminate={table.getIsSomeRowsSelected()}
+                  onChange={table.toggleAllRowsSelected}
+                />
+              ),
+              cell: ({ row }) => (
+                <Checkbox
+                  isSelected={row.getIsSelected()}
+                  isIndeterminate={row.getIsSomeSelected()}
+                  onChange={row.toggleSelected}
+                />
+              ),
+            },
+          ] satisfies NonNullable<typeof columnsProp>)
+        : []),
+      ...(kebabPosition === 'left' ? [actionColumn] : []),
+      ...(columnsProp ?? []),
+      ...(kebabPosition === 'right' ? [actionColumn] : []),
+    ],
+    [showCheckbox, columnsProp, kebabPosition, actionColumn, persistNumerals],
   );
 
   const {
@@ -280,15 +277,17 @@ export function Table<T extends { id: string | number }>({
     getCenterRows,
     getBottomRows,
     getRowModel,
-    setColumnOrder: setColumnOrderCallback,
+    setColumnOrder,
   } = useReactTable<T>({
-    data: data,
+    data,
     columns,
     enableSorting,
+    initialState: {
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      columnOrder: columns.map((col) => col.id!),
+    },
     state: {
       rowSelection,
-      sorting,
-      columnOrder,
       columnPinning: {
         left: [
           'numeral',
@@ -303,51 +302,51 @@ export function Table<T extends { id: string | number }>({
       return row.id ? row.id.toString() : index.toString();
     },
     enableRowSelection: true,
-    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
-    onColumnOrderChange: setColumnOrder,
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
   });
 
   const moveColumnLeft = useCallback(
     (oldIndex: number) => {
-      setColumnOrderCallback((order: string[]) => {
+      setColumnOrder((order) => {
         const newColumnOrder = [...order];
         const newIndex = oldIndex - 1;
+
         if (newIndex < 0) {
           return order;
         }
 
-        newColumnOrder.splice(
-          newIndex,
-          0,
-          newColumnOrder.splice(oldIndex, 1)[0] ?? '',
-        );
+        [newColumnOrder[oldIndex], newColumnOrder[newIndex]] = [
+          newColumnOrder[newIndex] as string,
+          newColumnOrder[oldIndex] as string,
+        ];
+
         return newColumnOrder;
       });
     },
-    [setColumnOrderCallback],
+    [setColumnOrder],
   );
 
   const moveColumnRight = useCallback(
     (oldIndex: number) => {
-      setColumnOrderCallback((order: string[]) => {
+      setColumnOrder((order) => {
         const newColumnOrder = [...order];
         const newIndex = oldIndex + 1;
-        if (newIndex >= newColumnOrder.length) {
+
+        if (newIndex >= order.length) {
           return order;
         }
 
-        newColumnOrder.splice(
-          newIndex,
-          0,
-          newColumnOrder.splice(oldIndex, 1)[0] ?? '',
-        );
+        [newColumnOrder[oldIndex], newColumnOrder[newIndex]] = [
+          newColumnOrder[newIndex] as string,
+          newColumnOrder[oldIndex] as string,
+        ];
+
         return newColumnOrder;
       });
     },
-    [setColumnOrderCallback],
+    [setColumnOrder],
   );
 
   if (children) {
