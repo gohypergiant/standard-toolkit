@@ -66,7 +66,7 @@ export const TableHeaderCellStylesDefaults = {
 
 export const headerCellStyles = tv({
   base: [
-    'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
+    'group/header-cell group fg-primary-muted hover:fg-primary-bold flex h-12 items-center justify-between gap-xxs text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'selected:bg-accent-primary-muted',
     'selected:shadow-[1px_0_0_0_var(--outline-accent-primary-bold),-1px_-1px_0_0_var(--outline-accent-primary-bold)]',
   ],
@@ -106,7 +106,6 @@ export const tableBodyStyles = tv({
 export const TableStyles = tv({
   slots: {
     base: 'group/table',
-    headerCellButton: 'group flex items-center justify-between gap-xxs',
     pinIcon: 'mx-auto block',
     rowCell: '',
     rowKebab: '',

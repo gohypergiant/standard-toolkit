@@ -216,13 +216,13 @@ export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
   };
 
 export type TableContextValue = {
-  moveColumnLeft?: (index: number) => void;
-  moveColumnRight?: (index: number) => void;
-  setColumnSelection?: Dispatch<SetStateAction<string | null>>;
   columnSelection: string | null;
-  persistHeaderKebabMenu?: boolean;
-  persistRowKebabMenu?: boolean;
-  enableColumnReordering?: boolean;
-  enableSorting?: boolean;
-  enableRowActions?: boolean;
+  enableColumnReordering: boolean;
+  enableSorting: boolean;
+  enableRowActions: boolean;
+  persistHeaderKebabMenu: boolean;
+  persistRowKebabMenu: boolean;
+  moveColumnLeft: (index: number) => void;
+  moveColumnRight: (index: number) => void;
+  setColumnSelection: Dispatch<SetStateAction<string | null>>;
 };
