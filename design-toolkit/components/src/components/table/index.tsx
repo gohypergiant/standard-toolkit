@@ -35,7 +35,7 @@ import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import { type TableContextValue, type TableProps } from './types';
+import type { TableContextValue, TableProps } from './types';
 
 const { pinIcon, rowCell, rowKebab, menuItem } = TableStyles();
 
@@ -373,9 +373,7 @@ export function Table<T extends { id: string | number }>({
           columnSelection={columnSelection}
         />
         <TableBody
-          topRows={getTopRows()}
-          centerRows={getCenterRows()}
-          bottomRows={getBottomRows()}
+          rows={[...getTopRows(), ...getCenterRows(), ...getBottomRows()]}
         />
       </table>
     </TableContext.Provider>

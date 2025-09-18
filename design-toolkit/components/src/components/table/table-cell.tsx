@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -16,32 +17,30 @@ import { TableContext } from '.';
 import { cellStyles } from './styles';
 import type { TableCellProps } from './types';
 
-export function TableCell({
+export function TableCell<T>({
   children,
   ref,
   className,
   cell,
   ...rest
-}: TableCellProps<any>) {
+}: TableCellProps<T>) {
   const { columnSelection } = useContext(TableContext);
-  const kebab = cell && cell.column.id === 'kebab';
-  const narrow =
-    (cell && cell.column.id === 'numeral') ||
-    (cell && cell.column.id === 'kebab');
-  const numeral = cell && cell.column.id === 'numeral';
-  const selectedCol = cell && cell?.column.id === columnSelection;
+  const isKebab = cell?.column.id === 'kebab';
+  const isNumeral = cell?.column.id === 'numeral';
+  const isSelected = cell?.column.id === columnSelection;
+  const narrow = isNumeral || isKebab;
 
   return (
     <td
       {...rest}
       ref={ref}
       className={cellStyles({
-        narrow,
-        numeral,
-        kebab,
-        selectedCol,
         className,
+        narrow,
+        isKebab,
+        isNumeral,
       })}
+      data-selected={isSelected || null}
     >
       {children ||
         (cell && flexRender(cell.column.columnDef.cell, cell.getContext()))}

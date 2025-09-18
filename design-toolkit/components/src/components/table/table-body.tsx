@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,26 +11,17 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Row, RowData } from '@tanstack/react-table';
 import { tableBodyStyles } from './styles';
 import { TableRow } from './table-row';
 import type { TableBodyProps } from './types';
 
-export function TableBody({
+export function TableBody<T>({
   children,
   className,
   ref,
-  topRows,
-  centerRows,
-  bottomRows,
+  rows,
   ...rest
-}: TableBodyProps) {
-  const allRows = [
-    ...(topRows ?? []),
-    ...(centerRows ?? []),
-    ...(bottomRows ?? []),
-  ];
-
+}: TableBodyProps<T>) {
   return (
     <tbody
       {...rest}
@@ -38,15 +30,7 @@ export function TableBody({
         className,
       })}
     >
-      {children ||
-        allRows.map((row: Row<RowData>) => (
-          <TableRow
-            key={row.id}
-            data-selected={row.getIsSelected() || null}
-            data-pinned={row.getIsPinned() || null}
-            cells={row.getVisibleCells()}
-          />
-        ))}
+      {children || rows?.map((row) => <TableRow key={row.id} row={row} />)}
     </tbody>
   );
 }

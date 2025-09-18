@@ -255,11 +255,6 @@ export {
   tableBodyStyles,
   tableHeaderStyles,
 } from './components/table/styles';
-export { TableBody } from './components/table/table-body';
-export { TableCell } from './components/table/table-cell';
-export { HeaderCell } from './components/table/table-header-cell';
-export { TableHeader } from './components/table/table-header';
-export { TableRow } from './components/table/table-row';
 export type {
   TableBodyProps,
   TableCellProps,

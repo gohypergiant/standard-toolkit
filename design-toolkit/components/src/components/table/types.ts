@@ -22,7 +22,6 @@ import type {
   HTMLAttributes,
   RefAttributes,
   SetStateAction,
-  TdHTMLAttributes,
   ThHTMLAttributes,
 } from 'react';
 import type { ComponentPropsWithRef } from 'react';
@@ -139,21 +138,9 @@ export type TableProps<T extends { id: string | number }> = BaseTableProps &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement> & {
-    /**
-     * Array of top (pinned) rows of the table
-     */
-    topRows?: Row<any>[];
-    /**
-     * Array of center (regular) rows of the table
-     */
-    centerRows?: Row<any>[];
-    /**
-     * Array of bottom rows of the table
-     */
-    bottomRows?: Row<any>[];
-  };
+export type TableBodyProps<T> = ComponentPropsWithRef<'tbody'> & {
+  rows?: Row<T>[];
+};
 
 /**
  * Props for a table row (`<tr>`) component.
@@ -164,13 +151,9 @@ export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
-  RefAttributes<HTMLTableRowElement> & {
-    /**
-     * Array of cells to render in the row
-     */
-    cells?: Cell<T, unknown>[];
-  };
+export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
+  row?: Row<T>;
+};
 
 /**
  * Props for a table cell component.
@@ -190,9 +173,8 @@ export type TableRowProps<T> = HTMLAttributes<HTMLTableRowElement> &
  *   If true, the cell is always visible.
  *   If false, the cell content is only visible on hover or when the row is hovered.
  */
-export type TableCellProps<T> = TdHTMLAttributes<HTMLTableCellElement> &
-  VariantProps<typeof cellStyles> &
-  RefAttributes<HTMLTableCellElement> & {
+export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
+  VariantProps<typeof cellStyles> & {
     cell?: Cell<T, unknown>;
   };
 

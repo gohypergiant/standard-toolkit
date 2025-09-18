@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -14,15 +15,23 @@ import { rowStyles } from './styles';
 import { TableCell } from './table-cell';
 import type { TableRowProps } from './types';
 
-export function TableRow({
-  children,
+export function TableRow<T>({
   ref,
+  children,
   className,
-  cells,
+  row,
   ...rest
-}: TableRowProps<any>) {
+}: TableRowProps<T>) {
+  const cells = row?.getAllCells();
+
   return (
-    <tr {...rest} ref={ref} className={rowStyles({ className })}>
+    <tr
+      {...rest}
+      ref={ref}
+      className={rowStyles({ className })}
+      data-pinned={row?.getIsPinned() || null}
+      data-selected={row?.getIsSelected() || null}
+    >
       {children ||
         cells?.map((cell) => <TableCell key={cell.id} cell={cell} />)}
     </tr>

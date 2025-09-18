@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -18,17 +19,17 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
 import { TableStyles, headerCellStyles } from './styles';
-import { type TableHeaderCellProps } from './types';
+import type { TableHeaderCellProps } from './types';
 
 const { headerCellButton, headerKebab, menuItem } = TableStyles();
 
-export function HeaderCell<TData>({
+export function HeaderCell<T>({
   ref,
   className,
   narrow,
   header,
   ...props
-}: TableHeaderCellProps<TData>) {
+}: TableHeaderCellProps<T>) {
   const {
     enableColumnReordering,
     enableSorting,
@@ -53,7 +54,7 @@ export function HeaderCell<TData>({
     );
   };
 
-  const tableMenu = (header: Header<TData, unknown>) => {
+  const tableMenu = (header: Header<T, unknown>) => {
     if (!(enableSorting || enableColumnReordering)) {
       return;
     }

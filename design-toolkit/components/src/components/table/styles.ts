@@ -33,19 +33,16 @@ export const cellStyles = tv({
       true: 'py-m text-center',
       false: 'p-m',
     },
-    numeral: {
-      true: 'fg-primary-muted hover:fg-primary-bold px-s',
+    isNumeral: {
+      true: 'fg-primary-muted hover:fg-primary-bold px-s group-not-pinned/row:*:invisible',
       false: '',
     },
-    kebab: {
-      true: '',
+    isKebab: {
+      true: 'group-not-pinned/row:*:invisible',
       false: '',
     },
-    persistNum: {
-      true: 'visible',
-      false: 'hover:*:visible group-hover/row:*:visible',
-    },
-    selectedCol: {
+    isSelected: {
+      // TODO: selected:
       true: [
         'bg-accent-primary-muted',
         'shadow-[1px_1px_0_0_var(--outline-accent-primary-bold),-1px_0_0_0_var(--outline-accent-primary-bold)]',
@@ -56,20 +53,9 @@ export const cellStyles = tv({
   defaultVariants: TableCellStylesDefaults,
   compoundVariants: [
     {
-      persistent: false,
-      numeral: true,
-      className: 'fg-primary-muted group-not-pinned/row:*:invisible',
-    },
-    {
-      persistent: false,
-      numeral: false,
-      kebab: false,
+      isNumeral: false,
+      isKebab: false,
       className: '*:invisible',
-    },
-    {
-      persistent: false,
-      kebab: true,
-      className: 'group-not-pinned/row:*:invisible',
     },
   ],
 });
