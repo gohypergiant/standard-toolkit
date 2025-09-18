@@ -17,16 +17,24 @@ import { tableHeaderStyles } from './styles';
 import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
 
-export function TableHeader({ className, ref, ...props }: TableHeaderProps) {
-  const { getHeaders, columnSelection } = useContext(TableContext);
-
-  if (!getHeaders.length) {
+export function TableHeader({
+  className,
+  ref,
+  headerGroups,
+  columnSelection,
+  ...props
+}: TableHeaderProps) {
+  if (
+    !headerGroups ||
+    !Array.isArray(headerGroups) ||
+    headerGroups.length === 0
+  ) {
     return <thead>{props.children}</thead>;
   }
 
   return (
     <thead {...props} ref={ref} className={tableHeaderStyles(className)}>
-      {getHeaders().map((headerGroup: HeaderGroup<any>) => (
+      {headerGroups.map((headerGroup: HeaderGroup<any>) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
             return (

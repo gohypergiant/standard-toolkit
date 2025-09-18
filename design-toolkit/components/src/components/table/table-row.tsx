@@ -15,17 +15,16 @@ import { TableCell } from './table-cell';
 import type { TableRowProps } from './types';
 
 export function TableRow({
+  children,
   ref,
   className,
-  row,
-  ...props
+  cells,
+  ...rest
 }: TableRowProps<any>) {
   return (
-    <tr ref={ref} className={rowStyles({ className })} {...props}>
-      {props.children ||
-        row
-          ?.getVisibleCells()
-          .map((cell) => <TableCell key={cell.id} cell={cell} />)}
+    <tr {...rest} ref={ref} className={rowStyles({ className })}>
+      {children ||
+        (cells && cells.map((cell) => <TableCell key={cell.id} cell={cell} />))}
     </tr>
   );
 }
