@@ -15,6 +15,7 @@
 import 'client-only';
 import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
+import type { Key } from '@react-types/shared';
 import {
   type Row,
   type RowSelectionState,
@@ -114,7 +115,7 @@ function RowActionsMenu<T>({
   );
 }
 
-export function Table<T extends { id: string | number }>({
+export function Table<T extends { id: Key }>({
   children,
   columns: columnsProp,
   data: dataProp,

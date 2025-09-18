@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Key } from '@react-types/shared';
 import type {
   Cell,
   ColumnDef,
@@ -17,12 +18,7 @@ import type {
   HeaderGroup,
   Row,
 } from '@tanstack/react-table';
-import type {
-  Dispatch,
-  RefAttributes,
-  SetStateAction,
-  ThHTMLAttributes,
-} from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import type { ComponentPropsWithRef } from 'react';
 import type { PropsWithChildren } from 'react';
 import type { VariantProps } from 'tailwind-variants';
@@ -30,7 +26,7 @@ import type { cellStyles, headerCellStyles } from './styles';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
-type ExtendedTableProps<T extends { id: string | number }> = {
+type ExtendedTableProps<T extends { id: Key }> = {
   /**
    * An array of column definitions, one for each key in `T`.
    */
@@ -118,7 +114,7 @@ type ExtendedTableProps<T extends { id: string | number }> = {
  *
  * @see {@link BaseTableProps}
  */
-export type TableProps<T extends { id: string | number }> = BaseTableProps &
+export type TableProps<T extends { id: Key }> = BaseTableProps &
   (
     | (ExtendedTableProps<T> & {
         children?: never;
@@ -183,16 +179,13 @@ export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
  * This type combines standard HTML `<th>` element attributes, style variant props,
  * and ref attributes for a table header cell.
  *
- * @see {@link ThHTMLAttributes}
  * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps<TData> =
-  ThHTMLAttributes<HTMLTableCellElement> &
-    VariantProps<typeof headerCellStyles> &
-    RefAttributes<HTMLTableCellElement> & {
-      header?: Header<TData, unknown>;
-    };
+export type TableHeaderCellProps<T> = ComponentPropsWithRef<'thead'> &
+  VariantProps<typeof headerCellStyles> & {
+    header?: Header<T, unknown>;
+  };
 
 /**
  * Props for the table header (`<thead>`) component.
