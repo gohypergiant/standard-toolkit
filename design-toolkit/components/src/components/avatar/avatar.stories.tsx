@@ -33,6 +33,17 @@ const meta: Meta<typeof Avatar> = {
       options: ['medium', 'small'],
     },
   },
+  parameters: {
+    controls: {
+      include: [
+        'children',
+        'imageProps',
+        'size',
+        'classNames',
+        'fallbackProps',
+      ],
+    },
+  },
 };
 
 export default meta;

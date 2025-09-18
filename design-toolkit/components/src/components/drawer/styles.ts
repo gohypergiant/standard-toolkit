@@ -21,7 +21,8 @@ export const DrawerStyles = tv({
       '[--drawer-main-row-end:4]', //bottom overlay
       'data-[push~=bottom]:[--drawer-main-row-end:3]',
       '[--drawer-main-col-start:1]', //left overlay
-      'data-[push~=left]:[--drawer-main-col-start:2]',
+      // biome-ignore lint/style/noUnusedTemplateLiteral: This is necessary to properly evaulate \/
+      `data-[push~=left]:[--drawer-main-col-start:2] has-[.group\\/sidenav]:[--drawer-main-col-start:2]`,
       '[--drawer-main-col-end:4]', //right overlay
       'data-[push~=right]:[--drawer-main-col-end:3]',
 
@@ -42,11 +43,11 @@ export const DrawerStyles = tv({
       'transition-[grid-template-columns,grid-template-rows]',
       'h-full max-h-full w-full',
     ],
-    main: 'relative z-1 col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
+    main: 'relative col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
     drawer: [
       'group/drawer',
       'bg-surface-default text-body-m',
-      'relative z-5 flex h-full min-h-0 flex-col',
+      'relative flex h-full min-h-0 flex-col',
       'pointer-events-none [&>*]:pointer-events-auto',
 
       //Base positioning
@@ -92,12 +93,12 @@ export const DrawerTitleStyles = tv({
   base: 'fg-primary-bold w-full',
   variants: {
     level: {
-      [1]: '',
-      [2]: '',
-      [3]: '',
-      [4]: '',
-      [5]: '',
-      [6]: '',
+      1: '',
+      2: '',
+      3: '',
+      4: '',
+      5: '',
+      6: '',
     },
   },
   compoundVariants: [

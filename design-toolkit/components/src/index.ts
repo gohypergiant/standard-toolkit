@@ -181,6 +181,9 @@ export type { LabelProps } from './components/label/types';
 export { Lines } from './components/lines';
 export { LinesStyles } from './components/lines/styles';
 export type { LinesProps, LinesStylesVariants } from './components/lines/types';
+export { Link } from './components/link';
+export { LinkStyles } from './components/link/styles';
+export type { LinkProps } from './components/link/types';
 export { Menu, MenuContext } from './components/menu';
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export type {
@@ -231,6 +234,24 @@ export type {
 export { SelectField, SelectFieldContext } from './components/select-field';
 export { SelectFieldStyles } from './components/select-field/styles';
 export type { SelectFieldProps } from './components/select-field/types';
+export {
+  SidenavEventNamespace,
+  SidenavEventTypes,
+} from './components/sidenav/events';
+export { Sidenav } from './components/sidenav';
+export { SidenavStyles } from './components/sidenav/styles';
+export type {
+  SidenavAvatarProps,
+  SidenavContentProps,
+  SidenavContextValue,
+  SidenavDividerProps,
+  SidenavFooterProps,
+  SidenavHeaderProps,
+  SidenavItemProps,
+  SidenavLinkProps,
+  SidenavProps,
+  SidenavTriggerProps,
+} from './components/sidenav/types';
 export { Skeleton } from './components/skeleton';
 export {
   SkeletonStyles,
@@ -312,7 +333,11 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
-export { containsExactChildren, expectsIconWrapper } from './lib/react';
+export {
+  containsAnyOfExactChildren,
+  containsExactChildren,
+  expectsIconWrapper,
+} from './lib/react';
 export type {
   AriaAttributes,
   AriaAttributesWithRef,

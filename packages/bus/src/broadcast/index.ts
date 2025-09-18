@@ -14,7 +14,10 @@ import { DEFAULT_CONFIG } from './constants';
 import type { BroadcastConfig, ExtractEvent, Listener, Payload } from './types';
 
 /** Broadcast event class allows for emitting and listening for events */
-export class Broadcast<P extends Payload = Payload> {
+export class Broadcast<
+  // biome-ignore lint/suspicious/noExplicitAny: intentional
+  P extends { type: string; payload?: unknown } = Payload<string, any>,
+> {
   protected channelName: string;
   protected channel: BroadcastChannel | null = null;
   protected listeners: Record<string, Listener<P>[]> = {};
@@ -35,7 +38,10 @@ export class Broadcast<P extends Payload = Payload> {
    *
    * @param config - Optional custom configuration.
    */
-  static getInstance<T extends Payload = Payload>(config?: BroadcastConfig) {
+  static getInstance<
+    // biome-ignore lint/suspicious/noExplicitAny: intentional
+    T extends { type: string; payload?: unknown } = Payload<string, any>,
+  >(config?: BroadcastConfig) {
     Broadcast.instance ??= new Broadcast<T>(config);
 
     return Broadcast.instance as Broadcast<T>;
@@ -193,7 +199,19 @@ export class Broadcast<P extends Payload = Payload> {
    *   },
    * );
    */
-  emit<T extends P['type']>(type: T, payload: ExtractEvent<P, T>['payload']) {
+  emit<T extends P['type']>(type: T): void;
+  emit<T extends P['type']>(
+    type: T,
+    payload: ExtractEvent<P, T> extends { payload: infer Data }
+      ? Data
+      : undefined,
+  ): void;
+  emit<T extends P['type']>(
+    type: T,
+    payload?: ExtractEvent<P, T> extends { payload: infer Data }
+      ? Data
+      : undefined,
+  ) {
     if (!this.channel) {
       console.warn('Cannot emit: BroadcastChannel is not initialized.');
       return;

@@ -16,7 +16,7 @@ import type { VariantProps } from 'tailwind-variants';
 import type { AvatarStyles } from './styles';
 
 export type AvatarProps = Omit<ComponentPropsWithRef<'span'>, 'className'> &
-  Omit<ComponentPropsWithRef<typeof Avatar>, 'className'> &
+  Omit<ComponentPropsWithRef<typeof Avatar>, 'className' | 'asChild'> &
   VariantProps<typeof AvatarStyles> & {
     classNames?: {
       avatar?: string;

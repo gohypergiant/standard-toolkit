@@ -12,7 +12,7 @@
 
 import { bench, describe } from 'vitest';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: Generic callable type
 type Callable = (...a: any[]) => any;
 
 const TEST_VALUES = [
@@ -155,7 +155,7 @@ describe('variations on isFalse|isNo|isOff|isOn|isTrue|isYes implementation', ()
 
   /**/ // <--- remove space to disable block comment
   bench('cached lowercase literal values with setup', () => {
-    const cachedValues = {
+    const cachedValues: Record<string, boolean> = {
       0: false,
       false: false,
       n: false,
@@ -212,7 +212,7 @@ describe('variations on isFalse|isNo|isOff|isOn|isTrue|isYes implementation', ()
 
   /**/ // <--- remove space to disable block comment
   bench('explicit literal values with setup', () => {
-    const cachedValues = {
+    const cachedValues: Record<string, boolean> = {
       0: false,
       false: false,
       n: false,

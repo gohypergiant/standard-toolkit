@@ -42,11 +42,16 @@ type Story = StoryObj<typeof Dialog>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => {
+    // NOTE: the ref here is only for Storybook -- you can omit that in your application code
+    const ref = useRef(null);
     return (
-      <div className='relative h-[800px] w-[600px] p-l outline outline-info-bold'>
+      <div
+        className='relative h-[800px] w-[600px] p-l outline outline-info-bold'
+        ref={ref}
+      >
         <Dialog.Trigger>
           <Button>Press Me</Button>
-          <Dialog {...args}>
+          <Dialog {...args} parentRef={ref}>
             <Dialog.Title>Dialog Title</Dialog.Title>
             <Dialog.Content>
               Lorum Ipsum text for the dialog shall go here.
@@ -95,9 +100,7 @@ export const LocalPortal: Story = {
 export const Controlled: Story = {
   render: () => {
     const [open, setOpen] = useState(false);
-    const handleOpenChange = useCallback((isOpen: boolean) => {
-      setOpen(isOpen);
-    }, []);
+    const handleOpenChange = (isOpen: boolean) => setOpen(isOpen);
     const handleOpenPress = useCallback(() => setOpen(true), []);
 
     return (

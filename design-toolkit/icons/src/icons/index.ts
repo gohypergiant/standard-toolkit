@@ -77,6 +77,7 @@ export { default as ElectromagneticSpectrum } from './electromagnetic-spectrum';
 export { default as Expand } from './expand';
 export { default as ExpandAll } from './expand-all';
 export { default as ExpandLeft } from './expand-left';
+export { default as ExpandLeftPanel } from './expand-left-panel';
 export { default as ExpandRight } from './expand-right';
 export { default as ExpandWindow } from './expand-window';
 export { default as ExploreData } from './explore-data';
