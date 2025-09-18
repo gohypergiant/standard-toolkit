@@ -250,7 +250,7 @@ export enum ColumnKebabMenuItems {
   Clear = 'Clear Sort',
 }
 
-export type TableContextValue<RowData> = {
+export type TableContextValue = {
   moveColumnLeft?: (index: number) => void;
   moveColumnRight?: (index: number) => void;
   setColumnSelection?: Dispatch<SetStateAction<string | null>>;

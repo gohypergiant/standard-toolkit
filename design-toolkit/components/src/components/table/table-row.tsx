@@ -24,7 +24,7 @@ export function TableRow({
   return (
     <tr {...rest} ref={ref} className={rowStyles({ className })}>
       {children ||
-        (cells && cells.map((cell) => <TableCell key={cell.id} cell={cell} />))}
+        cells?.map((cell) => <TableCell key={cell.id} cell={cell} />)}
     </tr>
   );
 }

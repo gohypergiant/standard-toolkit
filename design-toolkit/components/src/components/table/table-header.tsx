@@ -10,9 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HeaderGroup } from '@tanstack/react-table';
-import { useContext } from 'react';
-import { TableContext } from '.';
 import { tableHeaderStyles } from './styles';
 import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
@@ -24,17 +21,9 @@ export function TableHeader({
   columnSelection,
   ...props
 }: TableHeaderProps) {
-  if (
-    !headerGroups ||
-    !Array.isArray(headerGroups) ||
-    headerGroups.length === 0
-  ) {
-    return <thead>{props.children}</thead>;
-  }
-
   return (
     <thead {...props} ref={ref} className={tableHeaderStyles(className)}>
-      {headerGroups.map((headerGroup: HeaderGroup<any>) => (
+      {headerGroups?.map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
             return (

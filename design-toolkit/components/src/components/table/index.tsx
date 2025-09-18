@@ -11,13 +11,13 @@
  */
 
 'use client';
-import 'client-only';
 
+import 'client-only';
 import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
 import {
   type ColumnOrderState,
-  type RowData,
+  type Row,
   type RowSelectionState,
   type SortingState,
   getCoreRowModel,
@@ -29,8 +29,6 @@ import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
-
-import { useRowMovement } from './hooks/use-row-movement';
 import { TableStyles } from './styles';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
@@ -46,7 +44,7 @@ import {
 const { pinIcon, rowCell, rowKebab, menuItem } = TableStyles();
 
 // Only keep values in context that are needed across multiple component levels
-export const TableContext = createContext<TableContextValue<RowData>>({
+export const TableContext = createContext<TableContextValue>({
   moveColumnLeft: () => undefined,
   moveColumnRight: () => undefined,
   setColumnSelection: () => null,
@@ -78,23 +76,81 @@ export function Table<T extends { id: string | number }>({
   } = useListData({
     initialItems: dataProp,
   });
-
-  const dataIds = useMemo<(string | number)[]>(
-    () => data?.map((item: T) => item.id),
-    [data],
-  );
-
+  const dataIds = useMemo(() => data?.map((item: T) => item.id), [data]);
   const [sorting, setSorting] = useState<SortingState>([]);
-
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
 
-  const { moveUpSelectedRows, moveDownRows } = useRowMovement<T>(
-    data,
-    dataIds,
-    rowSelection,
-    moveBefore,
-    moveAfter,
+  /**
+   * moveUpSelectedRows moves the selected rows up in the table.
+   * It finds the first selected row, determines its index,
+   * and moves it before the previous row if it exists.
+   */
+  const moveUpSelectedRows = useCallback(
+    (row: Row<T>) => {
+      const hasRowSelection =
+        Object.keys(rowSelection).length !== 0 &&
+        Object.hasOwn(rowSelection, row.id);
+      const rowSelectionKeys = Object.keys(rowSelection).filter(
+        (id) => rowSelection[id],
+      );
+      const rowsToMove = hasRowSelection
+        ? data.filter((item: T) =>
+            rowSelectionKeys.includes(item.id.toString()),
+          )
+        : [row];
+      const firstSelectedRowId = rowsToMove[0]?.id;
+
+      if (firstSelectedRowId) {
+        const rowIndex = dataIds.indexOf(firstSelectedRowId);
+        const prevRowId = dataIds[rowIndex ? rowIndex - 1 : 0];
+
+        if (prevRowId) {
+          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
+
+          moveBefore?.(prevRowId, rowsToMoveKeys);
+        }
+      }
+    },
+    [data, dataIds, rowSelection, moveBefore],
+  );
+
+  // /**
+  //  * moveDownRows moves the selected or active rows down in the table.
+  //  * It finds the last selected row, determines its index,
+  //  * and moves it after the next row if it exists.
+  //  */
+
+  const moveDownRows = useCallback(
+    (row: Row<T>) => {
+      const hasRowSelection =
+        Object.keys(rowSelection).length !== 0 &&
+        Object.hasOwn(rowSelection, row.id);
+      const rowSelectionKeys = Object.keys(rowSelection).filter(
+        (id) => rowSelection[id],
+      );
+      const rowsToMove = hasRowSelection
+        ? data.filter((item: T) =>
+            rowSelectionKeys.includes(item.id.toString()),
+          )
+        : [row];
+      const lastSelectedRowId = rowsToMove[rowsToMove.length - 1]?.id;
+
+      if (lastSelectedRowId) {
+        const rowIndex = dataIds.indexOf(lastSelectedRowId);
+        const nextRowId =
+          dataIds[
+            rowIndex < dataIds.length - 1 ? rowIndex + 1 : dataIds.length - 1
+          ];
+
+        if (nextRowId) {
+          const rowsToMoveKeys = hasRowSelection ? rowSelectionKeys : [row.id];
+
+          moveAfter?.(nextRowId, rowsToMoveKeys);
+        }
+      }
+    },
+    [data, dataIds, rowSelection, moveAfter],
   );
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
@@ -105,6 +161,7 @@ export function Table<T extends { id: string | number }>({
       id: 'kebab',
       cell: ({ row }) => {
         const isPinned = row.getIsPinned();
+
         return (
           enableRowActions && (
             <div
@@ -320,19 +377,17 @@ export function Table<T extends { id: string | number }>({
         setColumnSelection,
       }}
     >
-      <div>
-        <table {...props}>
-          <TableHeader
-            headerGroups={getHeaderGroups()}
-            columnSelection={columnSelection}
-          />
-          <TableBody
-            topRows={getTopRows()}
-            centerRows={getCenterRows()}
-            bottomRows={getBottomRows()}
-          />
-        </table>
-      </div>
+      <table {...props}>
+        <TableHeader
+          headerGroups={getHeaderGroups()}
+          columnSelection={columnSelection}
+        />
+        <TableBody
+          topRows={getTopRows()}
+          centerRows={getCenterRows()}
+          bottomRows={getBottomRows()}
+        />
+      </table>
     </TableContext.Provider>
   );
 }

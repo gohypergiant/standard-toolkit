@@ -12,7 +12,6 @@
 
 import type { Row, RowData } from '@tanstack/react-table';
 import { tableBodyStyles } from './styles';
-import { TableCell } from './table-cell';
 import { TableRow } from './table-row';
 import type { TableBodyProps } from './types';
 
