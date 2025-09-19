@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_ARG_TYPES, createParameters } from '^storybook/utils';
 import { Checkbox } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -32,14 +33,16 @@ const meta: Meta<typeof Checkbox.Group> = {
     isRequired: false,
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
+    label: COMMON_ARG_TYPES.label,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isRequired: COMMON_ARG_TYPES.isRequired,
+    orientation: COMMON_ARG_TYPES.orientation,
   },
   parameters: {
-    controls: {
-      exclude: ['validationBehavior'],
+    ...createParameters('centered', 'FORM'),
+    docs: {
+      subtitle:
+        'A grouped collection of checkbox controls for multiple selections',
     },
   },
 };

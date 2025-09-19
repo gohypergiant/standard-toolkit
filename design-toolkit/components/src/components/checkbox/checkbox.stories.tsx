@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createParameters,
+  createStatesStory,
+} from '^storybook/utils';
 import { Checkbox } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,13 +23,20 @@ const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox',
   component: Checkbox,
   args: {
-    children: 'Checkbox',
+    children: 'I agree to the terms and conditions',
     isDisabled: false,
     isIndeterminate: false,
   },
+  argTypes: {
+    children: COMMON_ARG_TYPES.children,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isIndeterminate: createArgTypeBool('Can be ternary: yes, no, partial'),
+  },
   parameters: {
-    controls: {
-      exclude: ['inputRef', 'validationBehavior'],
+    ...createParameters('centered', 'FORM'),
+    docs: {
+      subtitle:
+        'A form control for binary or multiple selection with group support',
     },
   },
 };
@@ -32,5 +45,35 @@ export default meta;
 type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
+  render: (args) => <Checkbox {...args} />,
+};
+
+export const States: Story = createStatesStory({
+  Component: Checkbox,
+  baseProps: { children: 'Enable notifications' },
+  stateProps: {
+    disabled: { isDisabled: true, children: 'Disabled option' },
+  },
+});
+
+export const CheckStates: Story = {
+  name: 'Check States',
+  render: () => (
+    <div className='space-y-m'>
+      <Checkbox>Unchecked</Checkbox>
+      <Checkbox defaultSelected>Checked</Checkbox>
+      <Checkbox isIndeterminate>Indeterminate</Checkbox>
+      <Checkbox isDisabled>Disabled unchecked</Checkbox>
+      <Checkbox isDisabled defaultSelected>
+        Disabled checked
+      </Checkbox>
+      <Checkbox isDisabled isIndeterminate>
+        Disabled indeterminate
+      </Checkbox>
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };

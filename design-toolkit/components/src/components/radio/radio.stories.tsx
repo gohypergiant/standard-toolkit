@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createParameters,
+  createStatesStory,
+} from '^storybook/utils';
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -20,17 +25,19 @@ const meta: Meta<typeof Radio.Group> = {
     orientation: 'vertical',
     isDisabled: false,
     isRequired: false,
-    label: 'Header',
+    label: 'Choose an option',
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
+    orientation: COMMON_ARG_TYPES.orientation,
+    label: COMMON_ARG_TYPES.label,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isRequired: COMMON_ARG_TYPES.isRequired,
   },
   parameters: {
-    controls: {
-      exclude: ['children', 'validationBehavior'],
+    ...createParameters('centered'),
+    docs: {
+      subtitle:
+        'A form control for exclusive selection within a group of options',
     },
   },
 };
@@ -40,9 +47,30 @@ export default meta;
 export const Default: StoryObj<typeof Radio.Group> = {
   render: ({ children, label, ...args }) => (
     <Radio.Group label={label} {...args}>
-      <Radio value='1'>Radio text</Radio>
-      <Radio value='2'>Radio text</Radio>
-      <Radio value='3'>Radio text</Radio>
+      <Radio value='h1'>Option A</Radio>
+      <Radio value='h2'>Option B</Radio>
+      <Radio value='h3'>Option C</Radio>
+      <Radio value='h3'>Option D</Radio>
+      <Radio value='h3'>Option E</Radio>
+      <Radio value='h3'>Option F</Radio>
+      <Radio value='h3'>Option G</Radio>
+      <Radio value='h3'>Option H</Radio>
     </Radio.Group>
   ),
 };
+
+export const States: StoryObj<typeof Radio.Group> = createStatesStory({
+  Component: ({ ...props }) => (
+    <Radio.Group {...props}>
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </Radio.Group>
+  ),
+  baseProps: {
+    label: 'Select preference',
+  },
+  stateProps: {
+    disabled: { isDisabled: true, label: 'Disabled options' },
+  },
+});

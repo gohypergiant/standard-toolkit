@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createParameters } from '^storybook/utils';
 import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
 import React, { type ComponentProps, useState } from 'react';
@@ -28,12 +29,15 @@ type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
 const meta: Meta<SidenavWithLayoutArgs> = {
   title: 'Components/Sidenav',
   component: Sidenav,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     pushLayout: true,
     isHiddenWhenClosed: false,
+  },
+  parameters: {
+    ...createParameters('fullscreen'),
+    docs: {
+      subtitle: 'Side navigation component for hierarchical navigation.',
+    },
   },
 };
 

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_ARG_TYPES, createParameters } from '^storybook/utils';
 import { ClassificationBanner } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,29 +18,19 @@ const meta: Meta<typeof ClassificationBanner> = {
   title: 'Components/ClassificationBanner',
   component: ClassificationBanner,
   args: {
-    className: undefined,
     children: '',
     variant: 'missing',
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: [
-        'missing',
-        'unclassified',
-        'cui',
-        'confidential',
-        'secret',
-        'top-secret',
-        'ts-sci',
-      ],
-    },
+    children: COMMON_ARG_TYPES.children,
+    variant: COMMON_ARG_TYPES.classificationVariant,
   },
   parameters: {
-    layout: 'fullscreen',
+    ...createParameters('fullscreen'),
+    docs: {
+      subtitle:
+        'Displays security classification banners for pages and documents.',
+    },
   },
 };
 

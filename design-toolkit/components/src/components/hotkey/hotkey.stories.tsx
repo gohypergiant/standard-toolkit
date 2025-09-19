@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createArgTypeSelect, createParameters } from '^storybook/utils';
 import MouseRightClick from '@accelint/icons/mouse-right-click';
 import { Icon } from '../icon';
 import { Hotkey } from './index';
@@ -18,21 +19,28 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta: Meta<typeof Hotkey> = {
   title: 'Components/Hotkey',
   component: Hotkey,
-};
-
-export default meta;
-
-export const Default: StoryObj<typeof Hotkey> = {
   args: {
     children: 'ctrl',
     variant: 'outline',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['outline', 'flat', 'icon'],
+    variant: createArgTypeSelect('Visual style of the hotkey display', [
+      'outline',
+      'flat',
+      'icon',
+    ]),
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'Visual representation of keyboard shortcuts and hotkeys.',
     },
   },
+};
+
+export default meta;
+
+export const Default: StoryObj<typeof Hotkey> = {
   render: ({ children, variant }) => {
     return (
       <div className='flex flex-col gap-xl'>
@@ -51,11 +59,11 @@ export const Default: StoryObj<typeof Hotkey> = {
 };
 
 export const KeysSet: StoryObj<typeof Hotkey> = {
-  render: () => {
+  render: ({ variant }) => {
     return (
       <div className='flex flex-col gap-xl'>
         <Hotkey.Set>
-          <Hotkey>CMD</Hotkey>
+          <Hotkey variant={variant}>CMD</Hotkey>
           <span>+</span>
           <Hotkey variant='icon'>
             <Icon>
@@ -63,10 +71,10 @@ export const KeysSet: StoryObj<typeof Hotkey> = {
             </Icon>
           </Hotkey>
           <span>+</span>
-          <Hotkey>⌘V</Hotkey>
+          <Hotkey variant={variant}>⌘V</Hotkey>
         </Hotkey.Set>
         <Hotkey.Set>
-          <Hotkey>CMD</Hotkey>
+          <Hotkey variant={variant}>CMD</Hotkey>
           <span>or</span>
           <Hotkey variant='icon'>
             <Icon>
@@ -74,7 +82,7 @@ export const KeysSet: StoryObj<typeof Hotkey> = {
             </Icon>
           </Hotkey>
           <span>+</span>
-          <Hotkey>⌘V</Hotkey>
+          <Hotkey variant={variant}>⌘V</Hotkey>
         </Hotkey.Set>
       </div>
     );

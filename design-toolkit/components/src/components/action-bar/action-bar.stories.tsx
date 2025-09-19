@@ -1,7 +1,3 @@
-import { Placeholder } from '@accelint/icons';
-import { Button, ToggleButton } from '../button';
-import { Icon } from '../icon';
-import { ActionBar } from './index';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -13,13 +9,23 @@ import { ActionBar } from './index';
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import { createParameters } from '^storybook/utils';
+import { Placeholder } from '@accelint/icons';
+import { Button, ToggleButton } from '../button';
+import { Icon } from '../icon';
+import { ActionBar } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ActionBar> = {
   title: 'Components/ActionBar',
   component: ActionBar,
   parameters: {
-    layout: 'fullscreen',
+    ...createParameters('fullscreen'),
+    docs: {
+      subtitle:
+        'A horizontal toolbar component for grouping actions and controls',
+    },
   },
 };
 
