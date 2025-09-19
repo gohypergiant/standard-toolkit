@@ -42,7 +42,7 @@ import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
 import type { TableContextValue, TableProps } from './types';
 
-const { pinIcon, rowKebab, menuItem } = TableStyles();
+const { menuItem, notPersistRowKebab } = TableStyles();
 
 // Only keep values in context that are needed across multiple component levels
 export const TableContext = createContext<TableContextValue>({
@@ -72,15 +72,11 @@ function RowActionsMenu<T>({
   rows,
 }: RowActionsMenuProps<T>) {
   const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
-  const isPinned = row.getIsPinned();
+  const isPinned = row.getIsPinned() ? true : false;
 
   return (
     enableRowActions && (
-      <div
-        className={rowKebab({
-          persistKebab: persistRowKebabMenu,
-        })}
-      >
+      <div className={!persistRowKebabMenu ? notPersistRowKebab() : ''}>
         <Menu.Trigger>
           <Button variant='icon' aria-label='Menu'>
             <Icon>
@@ -98,14 +94,14 @@ function RowActionsMenu<T>({
             <Menu.Item
               classNames={{ item: menuItem() }}
               onAction={() => moveRowsUp(row, rows)}
-              isDisabled={row.index === 0}
+              isDisabled={isPinned || row.index === 0}
             >
               Move Up
             </Menu.Item>
             <Menu.Item
               classNames={{ item: menuItem() }}
               onAction={() => moveRowsDown(row, rows)}
-              isDisabled={row.index === rows.length - 1}
+              isDisabled={isPinned || row.index === rows.length - 1}
             >
               Move Down
             </Menu.Item>
@@ -233,7 +229,7 @@ export function Table<T extends { id: Key }>({
         id: 'numeral',
         cell: ({ row }) =>
           row.getIsPinned() ? (
-            <Icon size='small' className={pinIcon()}>
+            <Icon size='small'>
               <Pin />
             </Icon>
           ) : (

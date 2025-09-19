@@ -38,10 +38,6 @@ export const TableCellStyles = tv({
       true: 'fg-primary-muted hover:fg-primary-bold px-s group-not-pinned/row:*:invisible',
       false: '',
     },
-    isKebab: {
-      true: 'group-not-pinned/row:*:invisible',
-      false: '',
-    },
     notPersistNums: {
       true: 'invisible hover:*:visible group-hover/row:*:visible',
       false: '',
@@ -54,7 +50,7 @@ export const TableHeaderCellStylesDefaults = {
   narrow: false,
 } as const;
 
-export const HeaderCellStyles = tv({
+export const TableHeaderCellStyles = tv({
   base: [
     'group/header-cell group fg-primary-muted hover:fg-primary-bold flex h-12 items-center justify-between gap-xxs text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'selected:bg-accent-primary-muted',
@@ -65,7 +61,7 @@ export const HeaderCellStyles = tv({
       true: 'px-0 py-m ',
       false: 'p-m',
     },
-    showHeaderKebab: {
+    isKebabEnabled: {
       true: 'pr-0',
       false: '',
     },
@@ -100,18 +96,7 @@ export const TableBodyStyles = tv({
 export const TableStyles = tv({
   slots: {
     base: 'group/table',
-    pinIcon: 'mx-auto block',
-    rowKebab: '',
     menuItem: 'cursor-pointer disabled:cursor-auto',
-  },
-  variants: {
-    persistKebab: {
-      true: {
-        rowKebab: '',
-      },
-      false: {
-        rowKebab: 'opacity-0 hover:opacity-100',
-      },
-    },
+    notPersistRowKebab: 'opacity-0 hover:opacity-100',
   },
 });

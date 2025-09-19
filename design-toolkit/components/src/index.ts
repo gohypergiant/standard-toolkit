@@ -246,10 +246,10 @@ export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
 export { Table, TableContext } from './components/table';
 export {
-  HeaderCellStyles,
   TableBodyStyles,
   TableCellStyles,
   TableCellStylesDefaults,
+  TableHeaderCellStyles,
   TableHeaderCellStylesDefaults,
   TableHeaderStyles,
   TableRowStyles,

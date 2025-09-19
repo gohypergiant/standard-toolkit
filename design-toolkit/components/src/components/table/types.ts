@@ -22,7 +22,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import type { ComponentPropsWithRef } from 'react';
 import type { PropsWithChildren } from 'react';
 import type { VariantProps } from 'tailwind-variants';
-import type { HeaderCellStyles, TableCellStyles } from './styles';
+import type { TableCellStyles, TableHeaderCellStyles } from './styles';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
@@ -183,7 +183,7 @@ export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
  * @see {@link RefAttributes}
  */
 export type TableHeaderCellProps<T> = ComponentPropsWithRef<'thead'> &
-  VariantProps<typeof HeaderCellStyles> & {
+  VariantProps<typeof TableHeaderCellStyles> & {
     header?: Header<T, unknown>;
   };
 

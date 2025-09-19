@@ -18,7 +18,7 @@ import { TableContext } from '.';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
-import { HeaderCellStyles, TableStyles } from './styles';
+import { TableHeaderCellStyles, TableStyles } from './styles';
 import type { TableHeaderCellProps } from './types';
 
 const { menuItem } = TableStyles();
@@ -54,7 +54,7 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
         variant='icon'
         aria-label='Menu'
         onHoverChange={setHoveredArrow}
-        className={HeaderCellStyles({
+        className={TableHeaderCellStyles({
           notPersistHeaderKebab: !persistHeaderKebabMenu,
         })}
       >
@@ -126,10 +126,10 @@ export function HeaderCell<T>({
   return (
     <th {...rest} ref={ref}>
       <div
-        className={HeaderCellStyles({
+        className={TableHeaderCellStyles({
           narrow,
           className,
-          showHeaderKebab: showKebab,
+          isKebabEnabled: showKebab,
         })}
         data-selected={header?.column.id === columnSelection || null}
       >
