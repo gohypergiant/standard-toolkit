@@ -30,7 +30,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     color: {
       control: 'select',
-      options: ['info', 'serious', 'critical'],
+      options: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],
     },
     size: {
       control: 'select',
@@ -60,6 +60,10 @@ const meta: Meta<typeof Button> = {
 export default meta;
 
 export const Default: StoryObj<typeof Button> = {
+  args: {
+    color: 'mono-muted',
+  },
+
   render: ({ children, ...props }) => (
     <Button {...props}>
       {composeRenderProps(children, (children) =>

@@ -11,6 +11,9 @@
  */
 
 @custom-variant color-info (&:where([data-color="info"]));
+@custom-variant color-mono-muted (&:where([data-color="mono-muted"]));
+@custom-variant color-mono-bold (&:where([data-color="mono-bold"]));
+@custom-variant color-accent (&:where([data-color="accent"]));
 @custom-variant color-advisory (&:where([data-color="advisory"]));
 @custom-variant color-normal (&:where([data-color="normal"]));
 @custom-variant color-serious (&:where([data-color="serious"]));

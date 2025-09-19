@@ -335,7 +335,6 @@ function ItemContent({ children }: TreeItemContentProps) {
               {showVisibility && (
                 <Button
                   variant='icon'
-                  color='info'
                   size={size}
                   onPress={handlePress}
                   isDisabled={isDisabled}
