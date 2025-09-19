@@ -209,7 +209,6 @@ export const CustomFirstNameColumnWidth: Story = {
     persistHeaderKebabMenu: true,
     persistRowKebabMenu: true,
     persistNumerals: true,
-    pageSize: 5,
     enableSorting: true,
     // @ts-expect-error - firstNameColumnWidth is not a valid prop for Table
     firstNameColumnWidth: 250,

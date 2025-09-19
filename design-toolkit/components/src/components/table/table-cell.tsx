@@ -24,11 +24,12 @@ export function TableCell<T>({
   cell,
   ...rest
 }: TableCellProps<T>) {
-  const { columnSelection } = useContext(TableContext);
+  const { columnSelection, persistNumerals } = useContext(TableContext);
   const isKebab = cell?.column.id === 'kebab';
   const isNumeral = cell?.column.id === 'numeral';
   const isSelected = cell?.column.id === columnSelection;
   const narrow = isNumeral || isKebab;
+  const notPersistNums = isNumeral && !persistNumerals;
 
   return (
     <td
@@ -39,6 +40,7 @@ export function TableCell<T>({
         narrow,
         isKebab,
         isNumeral,
+        notPersistNums,
       })}
       data-selected={isSelected || null}
     >

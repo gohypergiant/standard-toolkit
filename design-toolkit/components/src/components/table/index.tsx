@@ -52,6 +52,7 @@ export const TableContext = createContext<TableContextValue>({
   columnSelection: null,
   persistRowKebabMenu: true,
   persistHeaderKebabMenu: true,
+  persistNumerals: true,
   enableSorting: true,
   enableColumnReordering: true,
   enableRowActions: true,
@@ -236,12 +237,7 @@ export function Table<T extends { id: Key }>({
               <Pin />
             </Icon>
           ) : (
-            <span
-              className={rowCell({ persistNums: persistNumerals })}
-              data-testid='numeral'
-            >
-              {row.index + 1}
-            </span>
+            <span data-testid='numeral'>{row.index + 1}</span>
           ),
       },
       ...(showCheckbox
@@ -357,15 +353,16 @@ export function Table<T extends { id: Key }>({
   return (
     <TableContext.Provider
       value={{
-        moveColumnLeft,
-        moveColumnRight,
         persistRowKebabMenu,
         persistHeaderKebabMenu,
+        persistNumerals,
         enableSorting,
         enableColumnReordering,
         enableRowActions,
         columnSelection,
         setColumnSelection,
+        moveColumnLeft,
+        moveColumnRight,
       }}
     >
       <table {...rest}>

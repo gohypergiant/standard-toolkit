@@ -42,9 +42,9 @@ export const TableCellStyles = tv({
       true: 'group-not-pinned/row:*:invisible',
       false: '',
     },
-    persistNum: {
-      true: 'visible',
-      false: 'hover:*:visible group-hover/row:*:visible',
+    notPersistNums: {
+      true: 'invisible hover:*:visible group-hover/row:*:visible',
+      false: '',
     },
   },
   defaultVariants: TableCellStylesDefaults,
@@ -103,15 +103,6 @@ export const TableStyles = tv({
     menuItem: 'cursor-pointer disabled:cursor-auto',
   },
   variants: {
-    persistNums: {
-      true: {
-        rowCell: 'mx-auto block text-center',
-      },
-      false: {
-        rowCell:
-          'invisible group-hover/table:mx-auto group-hover/table:block group-hover/table:text-center',
-      },
-    },
     persistKebab: {
       true: {
         rowKebab: '',

@@ -213,6 +213,7 @@ export type TableContextValue = {
   enableRowActions: boolean;
   persistHeaderKebabMenu: boolean;
   persistRowKebabMenu: boolean;
+  persistNumerals: boolean;
   moveColumnLeft: (index: number) => void;
   moveColumnRight: (index: number) => void;
   setColumnSelection: Dispatch<SetStateAction<string | null>>;
