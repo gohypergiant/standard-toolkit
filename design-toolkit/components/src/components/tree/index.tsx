@@ -9,7 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
 import {
   createContext,
