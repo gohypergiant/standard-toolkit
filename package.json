@@ -46,7 +46,7 @@
     "@swc/core": "1.7.36",
     "lefthook": "1.9.3",
     "rimraf": "5.0.10",
-    "syncpack": "13.0.0",
+    "syncpack": "13.0.4",
     "taze": "0.17.2",
     "tsx": "4.19.1",
     "turbo": "2.1.3",
