@@ -1,5 +1,20 @@
 # @accelint/design-toolkit
 
+## 5.1.0
+
+### Minor Changes
+
+- 011a70a: Fix missing client-only import for classification banner
+  Normalize tailwind-variant usage across components
+- 030bfde: Add Sidenav.Menu component
+- 9c4c834: Preserve 'use client' directive
+
+### Patch Changes
+
+- 5206880: Linting fixes only.
+- Updated dependencies [5206880]
+  - @accelint/core@0.4.1
+
 ## 5.0.0
 
 ### Major Changes
