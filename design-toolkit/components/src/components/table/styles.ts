@@ -65,8 +65,12 @@ export const HeaderCellStyles = tv({
       true: 'px-0 py-m ',
       false: 'p-m',
     },
-    showKebab: {
+    showHeaderKebab: {
       true: 'pr-0',
+      false: '',
+    },
+    notPersistHeaderKebab: {
+      true: 'opacity-0 hover:opacity-100',
       false: '',
     },
   },
@@ -97,20 +101,16 @@ export const TableStyles = tv({
   slots: {
     base: 'group/table',
     pinIcon: 'mx-auto block',
-    rowCell: '',
     rowKebab: '',
-    headerKebab: '',
     menuItem: 'cursor-pointer disabled:cursor-auto',
   },
   variants: {
     persistKebab: {
       true: {
         rowKebab: '',
-        headerKebab: '',
       },
       false: {
         rowKebab: 'opacity-0 hover:opacity-100',
-        headerKebab: 'opacity-0 group-hover:opacity-100',
       },
     },
   },

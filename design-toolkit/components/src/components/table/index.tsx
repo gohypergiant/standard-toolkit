@@ -42,7 +42,7 @@ import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
 import type { TableContextValue, TableProps } from './types';
 
-const { pinIcon, rowCell, rowKebab, menuItem } = TableStyles();
+const { pinIcon, rowKebab, menuItem } = TableStyles();
 
 // Only keep values in context that are needed across multiple component levels
 export const TableContext = createContext<TableContextValue>({
@@ -265,7 +265,7 @@ export function Table<T extends { id: Key }>({
       ...(columnsProp ?? []),
       ...(kebabPosition === 'right' ? [actionColumn] : []),
     ],
-    [showCheckbox, columnsProp, kebabPosition, actionColumn, persistNumerals],
+    [showCheckbox, columnsProp, kebabPosition, actionColumn],
   );
 
   const {

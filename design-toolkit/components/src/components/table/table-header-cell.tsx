@@ -21,7 +21,7 @@ import { Menu } from '../menu';
 import { HeaderCellStyles, TableStyles } from './styles';
 import type { TableHeaderCellProps } from './types';
 
-const { headerKebab, menuItem } = TableStyles();
+const { menuItem } = TableStyles();
 
 function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   const {
@@ -50,15 +50,16 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
         setColumnSelection(isOpen ? header.column.id : null)
       }
     >
-      <Button variant='icon' aria-label='Menu' onHoverChange={setHoveredArrow}>
+      <Button
+        variant='icon'
+        aria-label='Menu'
+        onHoverChange={setHoveredArrow}
+        className={HeaderCellStyles({
+          notPersistHeaderKebab: !persistHeaderKebabMenu,
+        })}
+      >
         <Icon>
-          {(!sort || hoveredArrow) && (
-            <Kebab
-              className={headerKebab({
-                persistKebab: persistHeaderKebabMenu,
-              })}
-            />
-          )}
+          {(!sort || hoveredArrow) && <Kebab />}
           {!hoveredArrow && sort === 'desc' && <ArrowDown />}
           {!hoveredArrow && sort === 'asc' && <ArrowUp />}
         </Icon>
@@ -125,7 +126,11 @@ export function HeaderCell<T>({
   return (
     <th {...rest} ref={ref}>
       <div
-        className={HeaderCellStyles({ narrow, className, showKebab })}
+        className={HeaderCellStyles({
+          narrow,
+          className,
+          showHeaderKebab: showKebab,
+        })}
         data-selected={header?.column.id === columnSelection || null}
       >
         {children ||
