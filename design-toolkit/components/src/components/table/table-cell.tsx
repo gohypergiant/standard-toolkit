@@ -13,7 +13,7 @@
 
 import { flexRender } from '@tanstack/react-table';
 import { useContext } from 'react';
-import { TableContext } from '.';
+import { TableContext } from './context';
 import { TableCellStyles } from './styles';
 import type { TableCellProps } from './types';
 

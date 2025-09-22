@@ -23,40 +23,21 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { TableContext } from './context';
 import { TableStyles } from './styles';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import type { TableContextValue, TableProps } from './types';
+import type { TableProps } from './types';
 
 const { menuItem, notPersistRowKebab } = TableStyles();
-
-// Only keep values in context that are needed across multiple component levels
-export const TableContext = createContext<TableContextValue>({
-  moveColumnLeft: () => undefined,
-  moveColumnRight: () => undefined,
-  setColumnSelection: () => null,
-  columnSelection: null,
-  persistRowKebabMenu: true,
-  persistHeaderKebabMenu: true,
-  persistNumerals: true,
-  enableSorting: true,
-  enableColumnReordering: true,
-  enableRowActions: true,
-});
 
 type RowActionsMenuProps<T> = {
   row: Row<T>;

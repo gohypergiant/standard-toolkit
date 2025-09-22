@@ -14,10 +14,10 @@
 import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
 import { type Header, flexRender } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
-import { TableContext } from '.';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { TableContext } from './context';
 import { TableHeaderCellStyles, TableStyles } from './styles';
 import type { TableHeaderCellProps } from './types';
 
