@@ -72,11 +72,11 @@ function RowActionsMenu<T>({
   rows,
 }: RowActionsMenuProps<T>) {
   const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
-  const isPinned = row.getIsPinned() ? true : false;
+  const isPinned = !!row.getIsPinned();
 
   return (
     enableRowActions && (
-      <div className={!persistRowKebabMenu ? notPersistRowKebab() : ''}>
+      <div className={persistRowKebabMenu ? '' : notPersistRowKebab()}>
         <Menu.Trigger>
           <Button variant='icon' aria-label='Menu'>
             <Icon>
