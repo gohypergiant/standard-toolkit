@@ -13,17 +13,28 @@
 
 import { useEffect, useRef } from 'react';
 import { Broadcast } from '../broadcast';
-import type { ExtractEvent, Payload } from '../broadcast/types';
 import { useEffectEvent } from './ponyfill';
+import type { ExtractEvent, Payload } from '../broadcast/types';
 
 /**
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having
  * to reimplement generics each time
  */
-export function useBus<P extends Payload = Payload>() {
+export function useBus<
+  // biome-ignore lint/suspicious/noExplicitAny: intentional
+  P extends { type: string; payload?: unknown } = Payload<string, any>,
+>() {
+  // casting here because we lose inference on the type parameter
   return {
-    useEmit: useEmit<P>,
-    useOn: useOn<P>,
+    useEmit: useEmit as <T extends P['type']>(
+      type: T,
+    ) => ExtractEvent<P, T> extends { payload: infer Data }
+      ? (payload: Data) => void
+      : () => void,
+    useOn: useOn as <T extends P['type']>(
+      type: T,
+      callback: (data: ExtractEvent<P, T>) => void,
+    ) => void,
   };
 }
 
@@ -35,14 +46,27 @@ export function useBus<P extends Payload = Payload>() {
  * @returns callback that will accept the cooresponding payload to the previously entered event type
  */
 export function useEmit<
-  P extends Payload = Payload,
+  // biome-ignore lint/suspicious/noExplicitAny: intentional
+  P extends { type: string; payload?: unknown } = Payload<string, any>,
   T extends P['type'] = P['type'],
->(type: T) {
+>(
+  type: T,
+): ExtractEvent<P, T> extends { payload: infer Data }
+  ? (payload: Data) => void
+  : () => void {
   const bus = useRef(Broadcast.getInstance<P>());
 
-  return useEffectEvent((payload: ExtractEvent<P, T>['payload']) => {
-    bus.current.emit(type, payload);
-  });
+  return useEffectEvent(
+    (
+      payload: ExtractEvent<P, T> extends { payload: infer Data }
+        ? Data
+        : never,
+    ) => {
+      bus.current.emit(type, payload);
+    },
+  ) as ExtractEvent<P, T> extends { payload: infer Data }
+    ? (payload: Data) => void
+    : () => void;
 }
 
 /**
@@ -51,7 +75,8 @@ export function useEmit<
  * @param callback handler that matches event type and receives cooresponding payload
  */
 export function useOn<
-  P extends Payload = Payload,
+  // biome-ignore lint/suspicious/noExplicitAny: intentional
+  P extends { type: string; payload?: unknown } = Payload<string, any>,
   T extends P['type'] = P['type'],
 >(type: T, callback: (data: ExtractEvent<P, T>) => void) {
   const bus = useRef(Broadcast.getInstance<P>());

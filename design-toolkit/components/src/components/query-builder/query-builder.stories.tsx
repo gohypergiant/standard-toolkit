@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
+import type { Meta, StoryObj } from '@storybook/react';
 import type { RuleGroupType } from './types';
 
 /**

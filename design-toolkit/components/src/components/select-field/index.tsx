@@ -12,26 +12,26 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { createContext } from 'react';
 import {
+  Popover as AriaPopover,
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
   type ContextValue,
+  composeRenderProps,
   FieldError,
   ListLayout,
   Text,
-  Virtualizer,
-  composeRenderProps,
   useContextProps,
+  Virtualizer,
 } from 'react-aria-components';
-import { Popover as AriaPopover } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
 import { SelectFieldStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { SelectFieldProps } from './types';
 
 const { description, error, trigger, label, field, value } =

@@ -45,7 +45,7 @@ export class Cache<T> {
     lookup: Map<Key, CacheTreeNode<T>> = new Map(),
     parentKey: Key | null = null,
   ) {
-    nodes.map((node) => {
+    nodes.forEach((node) => {
       const { children, ...rest } = node;
 
       lookup.set(node.key, {
@@ -166,9 +166,9 @@ export class Cache<T> {
         const parent = this.get(targetNode.parentKey);
 
         parentKey = parent.key;
-        index = parent.children?.findIndex((key) => key === target) ?? 0;
+        index = parent.children?.indexOf(target) ?? 0;
       } else {
-        index = this.cache.roots.findIndex((rootKey) => rootKey === target);
+        index = this.cache.roots.indexOf(target);
       }
     }
 

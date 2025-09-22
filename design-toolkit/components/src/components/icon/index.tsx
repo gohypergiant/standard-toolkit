@@ -9,12 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import { IconStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { IconProps } from './types';
 
 export const IconContext =

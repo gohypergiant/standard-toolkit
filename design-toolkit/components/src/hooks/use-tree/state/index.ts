@@ -12,6 +12,9 @@
 'use client';
 
 import 'client-only';
+import { useState } from 'react';
+import { useTreeActions } from '../actions';
+import { processDroppedItems } from './utils';
 import type {
   DragItem,
   DroppableCollectionInsertDropEvent,
@@ -21,14 +24,11 @@ import type {
   Key,
   Selection,
 } from '@react-types/shared';
-import { useState } from 'react';
-import { useTreeActions } from '../actions';
 import type {
   DragAndDropConfig,
   UseTreeState,
   UseTreeStateOptions,
 } from '../types';
-import { processDroppedItems } from './utils';
 
 export function useTreeState<T>({
   items,

@@ -13,20 +13,23 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { Icon } from '@accelint/design-system';
 import { Button } from '@accelint/design-toolkit/button';
+import { Icon } from '@accelint/design-toolkit/icon';
 import { Add, ExpandWindow } from '@accelint/icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { testLogs } from './log-test';
 
 const bus = Broadcast.getInstance();
 
 export function BusExample() {
+  testLogs();
+
   // NOTE: state is still local to each page, doing this for example sake
   const [value, setValue] = useState(0);
   const workerRef = useRef<Worker>(null);
 
   const doInc = useCallback(() => {
-    bus.emit('inc', {});
+    bus.emit('inc');
   }, []);
 
   const openWindow = useCallback(() => {

@@ -11,12 +11,12 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
 import { Accordion } from './';
 import { AccordionStylesDefaults } from './styles';
+import type { Meta, StoryObj } from '@storybook/react';
 
 /**
  * The accordion will stretch to fill the entire width of its parent container.

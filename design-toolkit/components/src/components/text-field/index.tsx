@@ -16,16 +16,15 @@ import { createContext } from 'react';
 import {
   TextField as AriaTextField,
   type ContextValue,
+  composeRenderProps,
   FieldError,
   Text,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-
-import type { ProviderProps } from '@/lib/types';
 import { Input } from '../input';
 import { Label } from '../label';
 import { TextFieldStyles } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { TextFieldProps } from './types';
 
 const { field, label, description, error } = TextFieldStyles();

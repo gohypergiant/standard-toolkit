@@ -11,7 +11,6 @@
  */
 
 import { UTM } from '@ngageoint/mgrs-js';
-
 import { type ParseResults, parse } from '../latlon/internal/parse';
 import { violation } from '../latlon/internal/violation';
 
@@ -50,8 +49,7 @@ function detailedErrors(input: string) {
   return error('Uncaught error condition.');
 }
 
-// biome-ignore lint/style/useNamingConvention: <explanation>
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: Format is unused
 export function parseUTM(_format: any, input: string) {
   try {
     const point = UTM.parse(input).toPoint();

@@ -13,13 +13,10 @@
 
 import { Point } from '@ngageoint/grid-js';
 import { MGRS } from '@ngageoint/mgrs-js';
-
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
+import { parseMGRS } from './parser';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
-import { parseMGRS } from './parser';
-
-// biome-ignore lint/style/useNamingConvention: acronym
 export const systemMGRS: CoordinateSystem = {
   name: 'Military Grid Reference System',
 

@@ -54,6 +54,7 @@
 @custom-variant indeterminate (&:where([data-indeterminate], :indeterminate));
 @custom-variant placeholder-shown (&:where([data-placeholder], :placeholder-shown));
 @custom-variant current (&:where([data-current]));
+@custom-variant visited (&:where([data-visited], :visited));
 @custom-variant optional (&:where(:not([required], [data-required]), :optional));
 @custom-variant required (&:where([required], [data-required], :required));
 @custom-variant unavailable (&:where([data-unavailable]));

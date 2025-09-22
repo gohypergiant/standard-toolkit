@@ -60,7 +60,6 @@ The Switch component has a single visual variant that automatically adapts based
 * **`defaultSelected`** - Initial selected state
 * **`onSelectionChange`** - Callback when selection changes
 * **`isDisabled`** - Disables the switch
-* **`isReadOnly`** - Makes the switch read-only
 * **`autoFocus`** - Automatically focuses the switch on mount
 * **`classNames`** - Custom class names for styling:
   * `switch` - Applied to the switch container
@@ -70,7 +69,11 @@ The Switch component has a single visual variant that automatically adapts based
 The component accepts all standard HTML label attributes and forwards them to the underlying element.
 
 ## Implementation Notes
-The `Switch` component wraps the `Switch` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Switch.html)
+The `Switch` component wraps the `Switch` component from `react-aria-components`.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/Switch.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/switch)
 
 The underlying elements are:
 - `label` for the switch container (includes both control and text)

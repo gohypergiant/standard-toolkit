@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -7,8 +7,7 @@
     "lineWidth": 80,
     "lineEnding": "lf",
     "attributePosition": "auto",
-    "formatWithErrors": false,
-    "ignore": []
+    "formatWithErrors": false
   },
   "javascript": {
     "formatter": {

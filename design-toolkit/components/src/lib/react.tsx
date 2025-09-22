@@ -13,9 +13,9 @@
 import {
   Children,
   Fragment,
+  isValidElement,
   type JSXElementConstructor,
   type ReactNode,
-  isValidElement,
 } from 'react';
 
 class ComponentStructureError extends Error {
@@ -69,40 +69,28 @@ function getChildren(children: ChildrenTypes) {
   return childrenArray;
 }
 
+type Restriction = [
+  // biome-ignore lint/suspicious/noExplicitAny: allow all props
+  string | JSXElementConstructor<any>,
+  { min: number; max?: number },
+];
+
 type ContainsExactChildrenProps = {
   componentName: string;
   children: ChildrenTypes;
-  restrictions: [
-    // biome-ignore lint/suspicious/noExplicitAny: allow all props
-    string | JSXElementConstructor<any>,
-    { min: number; max?: number },
-  ][];
+  restrictions: Restriction[];
 };
 
-/**
- * Validates the intended composite component structure.
- *
- * @param children the children of the component
- * @param componentName the displayName of the component
- * @param restrictions the record of validation rules
- */
-export function containsExactChildren({
-  children,
-  componentName,
-  restrictions,
-}: ContainsExactChildrenProps) {
-  if (process.env.NODE_ENV === 'production') {
-    return;
-  }
+type ContainsAnyOfExactChildrenProps = {
+  componentName: string;
+  children: ChildrenTypes;
+  restrictions: Restriction[][];
+};
 
-  const childrenComponents = getChildren(children);
-
-  if (!childrenComponents.every(isValidElement)) {
-    throw new ComponentStructureError(
-      `<${componentName}> received invalid children.`,
-    );
-  }
-
+function validateChildren(
+  childrenComponents: ReturnType<typeof getChildren>,
+  restrictions: Restriction[],
+) {
   const accumulationResults = childrenComponents.reduce(
     (acc: Record<string, number>, child) => {
       const name =
@@ -138,6 +126,38 @@ export function containsExactChildren({
     }
   }
 
+  return { missingComponentsArray, excessComponentsArray };
+}
+
+/**
+ * Validates the intended composite component structure.
+ *
+ * @param children the children of the component
+ * @param componentName the displayName of the component
+ * @param restrictions the record of validation rules
+ */
+export function containsExactChildren({
+  children,
+  componentName,
+  restrictions,
+}: ContainsExactChildrenProps) {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+
+  const childrenComponents = getChildren(children);
+
+  if (!childrenComponents.every(isValidElement)) {
+    throw new ComponentStructureError(
+      `<${componentName}> received invalid children.`,
+    );
+  }
+
+  const { missingComponentsArray, excessComponentsArray } = validateChildren(
+    childrenComponents,
+    restrictions,
+  );
+
   if (missingComponentsArray.length || excessComponentsArray.length) {
     const formatList = (label: string, items: string[]) =>
       items.length ? `\t${label}:\n\t\t${items.join(', ')}\n` : '';
@@ -148,6 +168,56 @@ export function containsExactChildren({
       `${formatList('Excess of the following', excessComponentsArray)}`;
 
     throw new ComponentStructureError(errorMessage.trim());
+  }
+}
+
+/**
+ * Validates the intended composite component structure.
+ *
+ * @param children the children of the component
+ * @param componentName the displayName of the component
+ * @param restrictions the record of validation rules
+ */
+export function containsAnyOfExactChildren({
+  children,
+  componentName,
+  restrictions,
+}: ContainsAnyOfExactChildrenProps) {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+
+  const childrenComponents = getChildren(children);
+
+  if (!childrenComponents.every(isValidElement)) {
+    throw new ComponentStructureError(
+      `<${componentName}> received invalid children.`,
+    );
+  }
+
+  const errorMessages = [];
+
+  for (const restriction of restrictions) {
+    const { missingComponentsArray, excessComponentsArray } = validateChildren(
+      childrenComponents,
+      restriction,
+    );
+
+    if (missingComponentsArray.length || excessComponentsArray.length) {
+      const formatList = (label: string, items: string[]) =>
+        items.length ? `\t${label}:\n\t\t${items.join(', ')}` : '';
+
+      errorMessages.push(
+        `${formatList('Missing the following', missingComponentsArray)}` +
+          `${formatList('Excess of the following', excessComponentsArray)}`,
+      );
+    }
+  }
+
+  if (errorMessages.length === restrictions.length) {
+    const errorMessage = `Invalid <${componentName}> structure \n ${errorMessages.join('\n\tOR\n')}`;
+
+    throw new ComponentStructureError(errorMessage);
   }
 }
 
@@ -181,7 +251,7 @@ export function expectsIconWrapper({
     children as ReactNode | ReactNode[],
   );
 
-  childrenComponents.map((child) => {
+  childrenComponents.forEach((child) => {
     if (isValidElement(child)) {
       // icons should never be a direct child of the parent
       // @ts-expect-error Accessing undocumented / untyped properties of React components

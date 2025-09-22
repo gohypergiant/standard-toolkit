@@ -9,14 +9,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
-import type { ProviderProps } from '@/lib/types';
+import 'client-only';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import {
   ClassificationBadgeStyles,
   ClassificationBadgeStylesDefaults,
 } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { ClassificationBadgeProps } from './types';
 
 export const ClassificationBadgeContext =

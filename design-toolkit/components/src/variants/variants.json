@@ -60,6 +60,8 @@
 
   "current": "[data-current]",
 
+  "visited": "[data-visited], :visited",
+
   "optional": ":not([required], [data-required]), :optional",
   "required": "[required], [data-required], :required",
 

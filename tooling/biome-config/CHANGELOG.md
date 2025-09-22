@@ -1,5 +1,11 @@
 # @accelint/biome-config
 
+## 1.0.0
+
+### Major Changes
+
+- f2d1601: upgraded to Biome V2
+
 ## 0.1.2
 
 ### Patch Changes

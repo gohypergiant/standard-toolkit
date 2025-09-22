@@ -16,7 +16,9 @@ import type {
   TooltipTriggerComponentProps,
 } from 'react-aria-components';
 
-export type TooltipBodyProps = AriaTooltipProps;
+export type TooltipBodyProps = AriaTooltipProps & {
+  parentRef?: React.RefObject<HTMLElement | null>;
+};
 
 export type TooltipProps = Omit<ComponentPropsWithRef<'div'>, 'className'> &
   TooltipTriggerComponentProps;

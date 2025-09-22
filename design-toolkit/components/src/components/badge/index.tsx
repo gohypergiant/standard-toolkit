@@ -12,10 +12,10 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { createContext } from 'react';
 import { type ContextValue, useContextProps } from 'react-aria-components';
 import { BadgeStyles, BadgeStylesDefaults } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type { BadgeProps } from './types';
 
 export const BadgeContext =

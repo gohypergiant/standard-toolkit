@@ -13,10 +13,10 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import crc32 from 'crc32-universal';
-import type { Ora } from 'ora';
 import { Result } from 'true-myth';
 import { logMsg, logWarning } from '../log-messages.js';
 import { duplicateFile } from './duplicate-file.js';
+import type { Ora } from 'ora';
 import type { CopySpritesResult, CrcType, SpriteInfo } from './types.js';
 
 export async function copySpritesToTempDirectory(

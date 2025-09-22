@@ -1,5 +1,13 @@
 # @accelint/predicates
 
+## 0.4.1
+
+### Patch Changes
+
+- 5206880: Linting fixes only.
+- Updated dependencies [5206880]
+  - @accelint/core@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes

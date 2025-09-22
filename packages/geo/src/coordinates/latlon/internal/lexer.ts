@@ -12,8 +12,7 @@
  */
 
 import * as Patterning from '@/patterning';
-
-import { SYMBOLS, SYMBOL_PATTERNS } from '.';
+import { SYMBOL_PATTERNS, SYMBOLS } from '.';
 
 export type Tokens = ReturnType<typeof lexer>;
 
@@ -25,7 +24,7 @@ export type Tokens = ReturnType<typeof lexer>;
  * about deducing where a divider could be added or would not be valid.
  */
 const DIVIDERS = /[,/]/g;
-const FLOATS = /^(-?)([\d\.]+)([^.\d]?)$/;
+const FLOATS = /^(-?)([\d.]+)([^.\d]?)$/;
 /** Positional indicators for: degrees, minutes, and seconds */
 const POSITIONAL = new RegExp(
   Patterning.merge(/\s*/, Patterning.capture(SYMBOL_PATTERNS.DMS), /\s*/),

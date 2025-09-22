@@ -12,7 +12,6 @@
  */
 
 import { describe, expect, it } from 'vitest';
-
 import { parseMGRS } from './parser';
 
 describe('MGRS', () => {

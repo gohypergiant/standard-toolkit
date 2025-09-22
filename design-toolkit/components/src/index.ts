@@ -14,6 +14,8 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+
 export { Accordion, AccordionContext } from './components/accordion';
 export {
   AccordionStyles,
@@ -36,6 +38,9 @@ export type { AvatarProps } from './components/avatar/types';
 export { Badge, BadgeContext } from './components/badge';
 export { BadgeStyles, BadgeStylesDefaults } from './components/badge/styles';
 export type { BadgeProps } from './components/badge/types';
+export { Breadcrumbs } from './components/breadcrumbs';
+export { BreadcrumbsStyles } from './components/breadcrumbs/styles';
+export type { BreadcrumbItemProps } from './components/breadcrumbs/types';
 export {
   Button,
   ButtonContext,
@@ -179,6 +184,9 @@ export type { LabelProps } from './components/label/types';
 export { Lines } from './components/lines';
 export { LinesStyles } from './components/lines/styles';
 export type { LinesProps, LinesStylesVariants } from './components/lines/types';
+export { Link } from './components/link';
+export { LinkStyles } from './components/link/styles';
+export type { LinkProps } from './components/link/types';
 export { Menu, MenuContext } from './components/menu';
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export type {
@@ -229,6 +237,30 @@ export type {
 export { SelectField, SelectFieldContext } from './components/select-field';
 export { SelectFieldStyles } from './components/select-field/styles';
 export type { SelectFieldProps } from './components/select-field/types';
+export {
+  SidenavEventNamespace,
+  SidenavEventTypes,
+} from './components/sidenav/events';
+export { Sidenav } from './components/sidenav';
+export { SidenavStyles } from './components/sidenav/styles';
+export type {
+  SidenavAvatarProps,
+  SidenavCloseEvent,
+  SidenavContentProps,
+  SidenavContextValue,
+  SidenavDividerProps,
+  SidenavEvent,
+  SidenavFooterProps,
+  SidenavHeaderProps,
+  SidenavItemProps,
+  SidenavLinkProps,
+  SidenavMenuItemProps,
+  SidenavMenuProps,
+  SidenavOpenEvent,
+  SidenavProps,
+  SidenavToggleEvent,
+  SidenavTriggerProps,
+} from './components/sidenav/types';
 export { Skeleton } from './components/skeleton';
 export {
   SkeletonStyles,
@@ -340,7 +372,11 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
-export { containsExactChildren, expectsIconWrapper } from './lib/react';
+export {
+  containsAnyOfExactChildren,
+  containsExactChildren,
+  expectsIconWrapper,
+} from './lib/react';
 export type {
   AriaAttributes,
   AriaAttributesWithRef,

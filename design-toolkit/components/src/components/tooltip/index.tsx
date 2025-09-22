@@ -10,17 +10,20 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-import { createContext } from 'react';
+
 import 'client-only';
-import { containsExactChildren } from '@/lib/react';
+import { UNSAFE_PortalProvider } from '@react-aria/overlays';
+import { useIsSSR } from '@react-aria/ssr';
+import { createContext, useEffect, useState } from 'react';
 import {
   Tooltip as AriaTooltip,
   TooltipTrigger as AriaTooltipTrigger,
   type ContextValue,
-  Focusable,
   composeRenderProps,
+  Focusable,
   useContextProps,
 } from 'react-aria-components';
+import { containsExactChildren } from '@/lib/react';
 import { TooltipStyles } from './styles';
 import type {
   TooltipBodyProps,
@@ -102,22 +105,47 @@ TooltipTrigger.displayName = 'Tooltip.Trigger';
 
 function TooltipBody({
   children,
+  parentRef,
   className,
   offset = 5,
   placement = 'bottom',
   ...props
 }: TooltipBodyProps) {
+  const isSSR = useIsSSR();
+  const [portal, setPortal] = useState(isSSR ? null : document.body);
+
+  useEffect(() => {
+    const node = parentRef?.current;
+    // TODO: Ensure proper ssr hydration
+    const port = isSSR ? null : document.createElement('div');
+    port?.setAttribute('style', 'position: absolute;');
+
+    if (node && port) {
+      node.appendChild(port);
+
+      setPortal(port);
+    }
+
+    return () => {
+      port?.remove();
+
+      setPortal(isSSR ? null : document.body);
+    };
+  }, [isSSR, parentRef]);
+
   return (
-    <AriaTooltip
-      {...props}
-      className={composeRenderProps(className, (className) =>
-        TooltipStyles({ className }),
-      )}
-      offset={offset}
-      placement={placement}
-    >
-      {children}
-    </AriaTooltip>
+    <UNSAFE_PortalProvider getContainer={() => portal}>
+      <AriaTooltip
+        {...props}
+        className={composeRenderProps(className, (className) =>
+          TooltipStyles({ className }),
+        )}
+        offset={offset}
+        placement={placement}
+      >
+        {children}
+      </AriaTooltip>
+    </UNSAFE_PortalProvider>
   );
 }
 TooltipBody.displayName = 'Tooltip.Body';

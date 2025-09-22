@@ -1,0 +1,168 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as LinkStories from './link.stories';
+
+<Meta of={LinkStories} />
+
+# Link
+A flexible and accessible link component that provides navigation and action triggers with proper state management. The Link component is built on React Aria Components and automatically handles visited state, accessibility features, and icon integration.
+
+It is composed of the following components:
+- **Link** - Main interactive link component with accessibility and state management
+- **Link.Provider** - Context provider for setting default props across multiple links
+
+## Example usage
+
+### Basic Link
+```tsx
+<Link href="/dashboard">
+  Go to Dashboard
+</Link>
+
+
+<Link href="https://example.com" target="_blank">
+  External Link
+</Link>
+
+```
+
+<Canvas of={LinkStories.Default} />
+
+### Custom Visited State
+```tsx
+<Link allowsVisited href="/styled-visited">
+  This link tracks visited state
+</Link>
+
+// Custom visited styling
+<Link.Provider allowsVisited className="enabled:visited:fg-accent-primary-pressed enabled:visited:underline">
+  <Link href="/styled-visited">
+    Custom visited styles
+  </Link>
+</Link.Provider>
+```
+
+<Canvas of={LinkStories.CustomVisitedStyles} />
+
+### Injected Links
+Links can be seamlessly integrated into text content:
+
+```tsx
+<p>
+  Learn more about our
+  <Link href="/features">amazing features</Link>
+  and get started today.
+</p>
+```
+
+<Canvas of={LinkStories.Multiple} />
+
+## Props
+
+### Link Props
+- **`href`** - URL or path for navigation (required for actual links)
+- **`target`** - Target window for navigation (`'_blank'` | `'_self'` | `'_parent'` | `'_top'`)
+- **`allowsVisited`** - Whether to track and show visited state (default: `false`)
+- **`isVisited`** - Initial visited state (default: `false`)
+- **`isDisabled`** - Disabled state for the link
+- **`children`** - Link content (text, icons, or mixed content)
+- **`className`** - Custom CSS class name for additional styling
+
+### Link.Provider Props
+- **`allowsVisited`** - Default visited tracking for all child links
+- **`className`** - Default styling to apply to all child links
+- **`children`** - Link components that will inherit the provider's props
+
+## Features
+
+### Visited State Management
+The Link component can optionally track visited state:
+```tsx
+<Link allowsVisited href="/visited-link">
+  This link remembers being clicked
+</Link>
+```
+
+### Automatic Icon Sizing
+Icons within links are automatically sized appropriately:
+```tsx
+<Link href="/settings">
+  <Icon>
+    <Settings />
+  </Icon>
+  Settings
+</Link>
+```
+
+### Context Provider
+Use `Link.Provider` to set consistent props for multiple links:
+```tsx
+<Link.Provider allowsVisited className="visited:fg-accent-primary-pressed visited:underline">
+  <Link href="/link1">Link One</Link>
+  <Link href="/link2">Link Two</Link>
+</Link.Provider>
+```
+
+### Accessibility
+Links automatically provide accessibility features:
+- Proper semantic HTML structure
+- Keyboard navigation support (Enter, Space)
+- Screen reader compatibility
+- Focus management
+- Aria attributes for state communication
+
+## Usage Guidelines
+
+### In-Content Links
+Links can be embedded within paragraphs and other content:
+```tsx
+<p>
+  Check out our
+  <Link href="/documentation">documentation</Link>
+  for more information.
+</p>
+```
+
+### Disabled Links
+Use `isDisabled` for temporarily unavailable links:
+```tsx
+<Link href="/coming-soon" isDisabled>
+  Coming Soon
+</Link>
+```
+
+## Styling
+
+### Default Styling
+Apply custom styles trough **className** prop:
+```tsx
+<Link href="/custom" className="fg-accent-primary hover:underline">
+  Custom Styled Link
+</Link>
+```
+
+### Visited State Styling
+Customize visited link appearance:
+```tsx
+<Link.Provider className="visited:fg-accent-primary-pressed visited:underline">
+  <Link allowsVisited href="/styled-visited">
+    Styled Visited Link
+  </Link>
+</Link.Provider>
+```
+
+## Implementation Notes
+The `Link` component is built on React Aria Components' `Link` and provides enhanced functionality for modern web applications.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/Link.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/link)
+
+Key Features:
+- **Accessibility**: Full ARIA support, keyboard navigation, and screen reader compatibility
+- **State Management**: Optional visited state tracking with customizable styling
+- **Icon Integration**: Automatic icon sizing through `Icon.Provider` context
+- **Context Provider**: `Link.Provider` for consistent props across multiple links
+- **Type Safety**: Full Typescript support with comprehensive prop types
+
+

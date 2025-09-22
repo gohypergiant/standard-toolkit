@@ -14,6 +14,8 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+
 export { doesEndWith } from './does-end-with';
 export { doesNotEndWith } from './does-not-end-with';
 export { doesNotStartWith } from './does-not-start-with';

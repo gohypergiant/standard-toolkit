@@ -13,10 +13,10 @@
 import { uuid } from '@accelint/core';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Drawer } from './';
+import type { ReactNode } from 'react';
 import type { DrawerProps } from './types';
 
 const ids = {
@@ -28,9 +28,15 @@ const ids = {
 const alternate = (
   <>
     <Drawer.Menu>
-      <Drawer.Menu.Item for={ids.a}>A</Drawer.Menu.Item>
-      <Drawer.Menu.Item for={ids.b}>B</Drawer.Menu.Item>
-      <Drawer.Menu.Item for={ids.c}>C</Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.a} textValue='Menu A'>
+        A
+      </Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.c} textValue='Menu C'>
+        C
+      </Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.b} textValue='Menu B'>
+        B
+      </Drawer.Menu.Item>
     </Drawer.Menu>
     <Drawer.Panel>
       <Drawer.View id={ids.a}>
@@ -64,9 +70,15 @@ function setup(
     children = (
       <>
         <Drawer.Menu>
-          <Drawer.Menu.Item for={ids.a}>A</Drawer.Menu.Item>
-          <Drawer.Menu.Item for={ids.b}>B</Drawer.Menu.Item>
-          <Drawer.Menu.Item for={ids.c}>C</Drawer.Menu.Item>
+          <Drawer.Menu.Item for={ids.a} textValue='Menu A'>
+            A
+          </Drawer.Menu.Item>
+          <Drawer.Menu.Item for={ids.b} textValue='Menu B'>
+            B
+          </Drawer.Menu.Item>
+          <Drawer.Menu.Item for={ids.c} textValue='Menu C'>
+            C
+          </Drawer.Menu.Item>
         </Drawer.Menu>
         <Drawer.Panel>
           <Drawer.Header>

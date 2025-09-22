@@ -1,6 +1,15 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [{ "type": false }]
+          }
+        }
+      }
+    }
   }
 }

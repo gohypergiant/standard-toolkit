@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { SYMBOLS, SYMBOL_PATTERNS } from '..';
+import { SYMBOL_PATTERNS, SYMBOLS } from '..';
 import type { Tokens } from '../lexer';
 
 const GENOME_PATTERN =
@@ -75,6 +75,6 @@ export function getGenomeIndex(tokens: Tokens) {
   const seq = tokens.reduce(genomeSequencer, '');
 
   return GENOME_PATTERN.test(seq)
-    ? Number.parseInt(seq.replace(GENOME_PATTERN, dividerIndexer))
+    ? Number.parseInt(seq.replace(GENOME_PATTERN, dividerIndexer), 10)
     : 0;
 }

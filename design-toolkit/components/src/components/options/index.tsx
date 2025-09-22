@@ -16,12 +16,12 @@ import { createContext } from 'react';
 import {
   Collection,
   type ContextValue,
+  composeRenderProps,
   Header,
   ListBox,
   ListBoxItem,
   ListBoxSection,
   Text,
-  composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';

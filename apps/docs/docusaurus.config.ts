@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type * as Preset from '@docusaurus/preset-classic';
-import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import type * as Preset from '@docusaurus/preset-classic';
+import type { Config } from '@docusaurus/types';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 

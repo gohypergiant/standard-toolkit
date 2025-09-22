@@ -11,7 +11,7 @@
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
     "build": "turbo build",
-    "build:design-preview": "pnpm --filter=@accelint/design-system exec ladle build && pnpm --filter=@accelint/design-toolkit build-storybook -o ../../packages/design-system/build/design-toolkit",
+    "build:design-preview": "pnpm --filter=@accelint/design-toolkit build-storybook -o ../../design-toolkit/build",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version",
@@ -33,13 +33,13 @@
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
     "lint:fs": "pnpm ls-lint",
-    "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --organize-imports-enabled=true  --write",
+    "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
   "dependencies": {
     "@accelint/biome-config": "workspace:*",
     "@babel/parser": "7.25.8",
-    "@biomejs/biome": "1.9.3",
+    "@biomejs/biome": "2.2.3",
     "@changesets/changelog-git": "0.2.0",
     "@changesets/cli": "2.27.9",
     "@ls-lint/ls-lint": "2.3.0-beta.1",
@@ -57,7 +57,7 @@
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "engines": {
     "node": ">=18",
-    "pnpm": ">=9"
+    "pnpm": ">=10"
   },
   "packageManager": "pnpm@10.9.0",
   "pnpm": {

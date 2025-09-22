@@ -13,8 +13,9 @@
 
 import 'client-only';
 import { useUpdateEffect } from '@react-aria/utils';
-import type { Key } from '@react-types/shared';
 import { useRef } from 'react';
+import { Cache } from './cache';
+import type { Key } from '@react-types/shared';
 import type {
   TreeActions,
   TreeData,
@@ -22,7 +23,6 @@ import type {
   TreeNodeBase,
   UseTreeActionsOptions,
 } from '../types';
-import { Cache } from './cache';
 
 /**
  * Stateless hook that transforms tree data according to actions

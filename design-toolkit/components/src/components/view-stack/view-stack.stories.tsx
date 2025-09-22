@@ -12,10 +12,10 @@
 
 import { uuid } from '@accelint/core';
 import { ChevronLeft } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { ViewStack } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ViewStack> = {
   title: 'Components/ViewStack',

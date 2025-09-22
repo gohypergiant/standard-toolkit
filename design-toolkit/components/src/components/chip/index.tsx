@@ -12,7 +12,6 @@
 'use client';
 
 import 'client-only';
-import type { ProviderProps } from '@/lib/types';
 import { CancelFill } from '@accelint/icons';
 import { createContext, useContext } from 'react';
 import {
@@ -31,6 +30,7 @@ import {
   DeletableChipStyles,
   SelectableChipStyles,
 } from './styles';
+import type { ProviderProps } from '@/lib/types';
 import type {
   BaseChipProps,
   ChipListProps,

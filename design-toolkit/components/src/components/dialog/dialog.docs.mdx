@@ -47,8 +47,6 @@ It is composed of the following components:
 
 **small** is the default size and should be used for most use cases, while **large** is better suited for content-heavy dialogs.
 
-<Canvas of={DialogStories.Default} />
-
 ## Props
 
 ### Dialog Props
@@ -58,6 +56,10 @@ It is composed of the following components:
 - **`isOpen`** - Controlled open state for the dialog
 - **`onOpenChange`** - Callback when the open state changes
 - **`parentRef`** - Reference to a parent element for custom portal placement
+- **`classNames`** - Object containing custom class names for different parts:
+  - `overlay` - Overlay container
+  - `modal` - Modal container
+  - `dialog` - Dialog container
 
 ### Dialog.Body Props
 - **`children`** - Render function that receives dialog context including `close` function
@@ -89,33 +91,42 @@ It is composed of the following components:
 <Canvas of={DialogStories.Default} />
 
 ### Local Portal Dialog
+The dialog can be opened in a custom portal using the `parentRef` prop. This allows you to open a dialog in a different parent container if you do not want it to be rendered in the center of the viewport.
 <Canvas of={DialogStories.LocalPortal} />
 
 ### Controlled Dialog
-<Canvas of={DialogStories.Controlled} />
+Dialogs can be opened as a controlled component with state by passing `isOpen` and `onOpenChange` props to the `Dialog` component.
 
-## Compound Component Structure
-The Dialog component follows a compound component pattern with the following structure:
+```
+const MyComponent = () => {
+    const [open, setOpen] = useState(false);
+    const handleOpenChange = (isOpen: boolean) => setOpen(isOpen);
+    const handleOpenPress = useCallback(() => setOpen(true), []);
 
-```tsx
-<Dialog>
-  <TriggerElement /> {/* Button or other trigger */}
-  <Dialog.Body>
-    {({ close }) => (
+    return (
       <>
-        <Dialog.Title>Title</Dialog.Title>
-        <Dialog.Content>Content</Dialog.Content>
-        <Dialog.Footer>
-          <Dialog.Button onPress={close}>Action</Dialog.Button>
-        </Dialog.Footer>
+        <Button onPress={handleOpenPress}>Press Me</Button>
+        <Dialog.Trigger isOpen={open} onOpenChange={handleOpenChange}>
+          <Dialog>
+            <Dialog.Title>Dialog Title</Dialog.Title>
+            <Dialog.Content>
+              Lorum Ipsum text for the dialog shall go here.
+            </Dialog.Content>
+            <Dialog.Footer>
+              <Button variant='flat'>Action 2</Button>
+              <Button>Action 1</Button>
+            </Dialog.Footer>
+          </Dialog>
+        </Dialog.Trigger>
       </>
-    )}
-  </Dialog.Body>
-</Dialog>
+    );
+  },
 ```
 
 ## Implementation Notes
-The `Dialog` component is built on top of React Aria Components, specifically wrapping the `Dialog`, `Modal`, and `ModalOverlay` components. [React Aria Dialog Docs](https://react-spectrum.adobe.com/react-spectrum/Dialog.html)
+The `Dialog` component is built on top of React Aria Components, specifically wrapping the `Dialog`, `Modal`, and `ModalOverlay` components. [React Aria Dialog Docs](https://react-spectrum.adobe.com/react-aria/Dialog.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/dialog)
 
 Key features:
 - **Accessibility**: Full ARIA compliance with proper focus management and screen reader support
@@ -126,6 +137,7 @@ Key features:
 - **SSR Support**: Proper server-side rendering with hydration handling
 
 The underlying HTML structure creates a modal overlay with proper semantic markup:
+
 ```html
 <div class="modal-overlay">
   <div class="modal">
@@ -137,5 +149,3 @@ The underlying HTML structure creates a modal overlay with proper semantic marku
   </div>
 </div>
 ```
-
-This provides excellent accessibility and user experience while maintaining a clean, structured API for developers.

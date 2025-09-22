@@ -12,7 +12,7 @@
 
 import { bench, describe } from 'vitest';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: Generic callable type
 type Callable = (...a: any[]) => any;
 
 const TEST_VALUES = [
@@ -155,7 +155,7 @@ describe('variations on isFalse|isNo|isOff|isOn|isTrue|isYes implementation', ()
 
   /**/ // <--- remove space to disable block comment
   bench('cached lowercase literal values with setup', () => {
-    const cachedValues = {
+    const cachedValues: Record<string, boolean> = {
       0: false,
       false: false,
       n: false,
@@ -212,48 +212,37 @@ describe('variations on isFalse|isNo|isOff|isOn|isTrue|isYes implementation', ()
 
   /**/ // <--- remove space to disable block comment
   bench('explicit literal values with setup', () => {
-    const cachedValues = {
+    const cachedValues: Record<string, boolean> = {
       0: false,
       false: false,
       n: false,
       N: false,
       no: false,
       NO: false,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       No: false,
       nO: false,
       off: false,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       Off: false,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       OFf: false,
       OFF: false,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       oFF: false,
       ofF: false,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       OfF: false,
       oFf: false,
-
       1: true,
       true: true,
       on: true,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       On: true,
       ON: true,
       oN: true,
       y: true,
       Y: true,
       yes: true,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       Yes: true,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       YEs: true,
       YES: true,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       yES: true,
       yeS: true,
-      // biome-ignore lint/style/useNamingConvention: <explanation>
       YeS: true,
       yEs: true,
     } as const;
