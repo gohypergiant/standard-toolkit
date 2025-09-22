@@ -58,7 +58,7 @@ export const TableHeaderCellStyles = tv({
   ],
   variants: {
     narrow: {
-      true: 'px-0 py-m ',
+      true: 'px-0 py-m',
       false: 'p-m',
     },
     isKebabEnabled: {
