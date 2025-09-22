@@ -38,7 +38,6 @@ export function TableCell<T>({
       className={TableCellStyles({
         className,
         narrow,
-        isKebab,
         isNumeral,
         notPersistNums,
       })}
