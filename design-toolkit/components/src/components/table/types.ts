@@ -182,7 +182,7 @@ export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
  * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps<T> = ComponentPropsWithRef<'thead'> &
+export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> &
   VariantProps<typeof TableHeaderCellStyles> & {
     header?: Header<T, unknown>;
   };
