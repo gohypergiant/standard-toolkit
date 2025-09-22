@@ -49,10 +49,10 @@
     "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@svgr/cli": "8.1.0",
-    "@types/react": "19.1.2",
-    "@types/react-dom": "19.1.2",
-    "esbuild-fix-imports-plugin": "1.0.21",
+    "@svgr/cli": "^8.1.0",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.7",
+    "esbuild-fix-imports-plugin": "^1.0.22",
     "tsup": "8.5.0"
   },
   "dependencies": {}
