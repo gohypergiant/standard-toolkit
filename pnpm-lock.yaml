@@ -698,8 +698,8 @@ importers:
         specifier: ^16.3.0
         version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       esbuild-fix-imports-plugin:
-        specifier: 1.0.21
-        version: 1.0.21
+        specifier: ^1.0.22
+        version: 1.0.22
       loglayer:
         specifier: ^6.6.0
         version: 6.7.0
@@ -707,7 +707,7 @@ importers:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.0)(postcss@8.5.6)(tsx@4.20.5)(typescript@5.8.3)(yaml@2.8.1)
       vitest:
-        specifier: 2.1.3
+        specifier: ^2.1.3
         version: 2.1.3(@types/node@24.5.2)(jsdom@26.1.0)(lightningcss@1.30.1)(terser@5.44.0)
 
   packages/math:
@@ -6037,9 +6037,6 @@ packages:
 
   esast-util-from-js@2.0.1:
     resolution: {integrity: sha512-8Ja+rNJ0Lt56Pcf3TAmpBZjmx8ZcK5Ts4cAzIOjsjevg9oSXJnl6SUQ2EevU8tv3h6ZLWmoKL5H4fgWvdvfETw==}
-
-  esbuild-fix-imports-plugin@1.0.21:
-    resolution: {integrity: sha512-Ee4W4fU5nPL2klGqtPciRm8Ke553EIa6By1jsw/aG7lvHtlrtuqxBEFD7BttsCVb0eUWW5bag3KA2BVwxMAZxQ==}
 
   esbuild-fix-imports-plugin@1.0.22:
     resolution: {integrity: sha512-8Q8FDsnZgDwa+dHu0/bpU6gOmNrxmqgsIG1s7p1xtv6CQccRKc3Ja8o09pLNwjFgkOWtmwjS0bZmSWN7ATgdJQ==}
@@ -16498,8 +16495,6 @@ snapshots:
       acorn: 8.15.0
       esast-util-from-estree: 2.0.0
       vfile-message: 4.0.3
-
-  esbuild-fix-imports-plugin@1.0.21: {}
 
   esbuild-fix-imports-plugin@1.0.22: {}
 

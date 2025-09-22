@@ -70,9 +70,9 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/bus": "^1.2.0",
-    "@accelint/core": "^0.4.1",
-    "@accelint/icons": "^2.0.3",
+    "@accelint/bus": "workspace:*",
+    "@accelint/core": "workspace:*",
+    "@accelint/icons": "workspace:*",
     "@fontsource/roboto-flex": "^5.2.6",
     "@fontsource/roboto-mono": "^5.2.6",
     "@internationalized/date": "^3.8.2",
