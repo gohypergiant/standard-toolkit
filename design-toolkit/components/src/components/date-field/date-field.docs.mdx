@@ -35,7 +35,6 @@ A form input component for entering and editing date and time values. The DateFi
 - **`placeholder`** - Placeholder text shown when no value is entered
 - **`isRequired`** - Whether the field is required (adds required indicator to label)
 - **`isDisabled`** - Whether the field is disabled
-- **`isReadOnly`** - Whether the field is read-only
 - **`isInvalid`** - Whether to show the field in an invalid state
 
 ### Size & Appearance
@@ -73,7 +72,11 @@ A form input component for entering and editing date and time values. The DateFi
 <Canvas of={DateFieldStories.DateTime} />
 
 ## Implementation Notes
-The `DateField` component is built on top of React Aria Components, specifically wrapping the `DateField` and `DateInput` components. [React Aria DateField Docs](https://react-spectrum.adobe.com/react-spectrum/DateField.html)
+The `DateField` component is built on top of React Aria Components, specifically wrapping the `DateField` and `DateInput` components.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/DateField.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/date-field)
 
 Key features:
 - **Internationalization**: Uses `@internationalized/date` for robust date handling across locales

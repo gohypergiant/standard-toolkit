@@ -13,15 +13,15 @@
 'use client';
 
 import 'client-only';
-import type { Key } from '@react-types/shared';
 import { useCallback, useMemo } from 'react';
 import {
-  type ValueSelectorProps,
   isOptionGroupArray,
   useValueSelector,
+  type ValueSelectorProps,
 } from 'react-querybuilder';
 import { ComboBoxField } from '../combobox-field';
 import { Options } from '../options';
+import type { Key } from '@react-types/shared';
 
 export function ValueSelector(props: ValueSelectorProps) {
   const {

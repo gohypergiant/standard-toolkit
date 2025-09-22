@@ -10,9 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import { connection } from 'next/server';
 import { BusExample } from './bus';
+import { testLogs } from './log-test';
 
-export default function Home() {
+export default async function Home() {
+  await connection();
+
+  testLogs();
+
   return (
     <div className='flex flex-col items-center justify-center h-full'>
       <BusExample />

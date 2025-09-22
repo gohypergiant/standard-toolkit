@@ -14,8 +14,8 @@ import { buildReactFiles } from './build-react-files.js';
 import { buildSpritesheet } from './build-spritesheet.js';
 import { findSprites } from './utils/find-sprites.js';
 import { makeTempDirectory } from './utils/make-temp-directory.js';
-import type { CrcType, TargetType } from './utils/types.js';
 import { validateInput } from './validate-input.js';
+import type { CrcType, TargetType } from './utils/types.js';
 
 // NOTE: It is more ideal to use Task instead in the util functions.
 // But it seems under construction at the moment? Or something isn't exposed properly.

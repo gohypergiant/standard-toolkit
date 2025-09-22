@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { FindSpritesResult } from './utils/types.js';
-
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,6 +17,7 @@ import ora from 'ora';
 import { logMsg } from './log-messages.js';
 import { mergeSvgIntoReactTemplate } from './utils/merge-svg-into-react-template.js';
 import { pascalCase } from './utils/pascal-case.js';
+import type { FindSpritesResult } from './utils/types.js';
 
 // Paths
 const __filename = fileURLToPath(import.meta.url);

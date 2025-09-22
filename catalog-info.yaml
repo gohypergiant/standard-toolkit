@@ -15,7 +15,6 @@ metadata:
     github.com/project-slug: gohypergiant/standard-toolkit
   tags:
     - backend
-    - design-system
     - design-toolkit
     - devtk
     - frontend

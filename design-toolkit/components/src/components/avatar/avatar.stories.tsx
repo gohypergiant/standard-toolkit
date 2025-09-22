@@ -11,10 +11,10 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
 import { Avatar } from './';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
@@ -31,6 +31,17 @@ const meta: Meta<typeof Avatar> = {
     size: {
       control: 'select',
       options: ['medium', 'small'],
+    },
+  },
+  parameters: {
+    controls: {
+      include: [
+        'children',
+        'imageProps',
+        'size',
+        'classNames',
+        'fallbackProps',
+      ],
     },
   },
 };

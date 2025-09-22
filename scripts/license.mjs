@@ -12,7 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { fs, path, argv, glob } from 'zx';
+import { argv, fs, glob, path } from 'zx';
 import { COMMENT_STYLES, getFormattedHeader } from './license.js';
 
 const filesToParse = argv.files?.split(' ');

@@ -19,8 +19,7 @@ import type {
   Key,
 } from '@react-types/shared';
 import type { ReactElement } from 'react';
-import type { Selection } from 'react-aria-components';
-import type { DropTarget } from 'react-aria-components';
+import type { DropTarget, Selection } from 'react-aria-components';
 
 export type DragAndDropConfig = {
   getItems: (key: Set<Key>) => DragItem[];

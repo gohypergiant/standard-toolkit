@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RuleType } from 'react-querybuilder';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { getValidationResult } from './utils';
+import type { RuleType } from 'react-querybuilder';
 
 describe('queryBuilder/utils', () => {
   describe('getValidationResult', () => {

@@ -17,20 +17,29 @@ export type BroadcastConfig = {
 };
 
 /** Listener object type. */
-export type Listener<P extends Payload = Payload> = {
-  callback: (data: P) => void;
-  once?: boolean;
-  id: number;
-};
+export type Listener<P extends { type: string; payload?: unknown } = Payload> =
+  {
+    callback: (data: P) => void;
+    once?: boolean;
+    id: number;
+  };
 
 /** Listener callback payload type. */
-export type Payload<T extends string = string, P = unknown> = {
-  type: T;
-  payload: P;
-};
+export type Payload<
+  T extends string = string,
+  P = undefined,
+> = P extends undefined
+  ? {
+      type: T;
+    }
+  : {
+      type: T;
+      payload: P;
+    };
 
 export type ExtractEvent<
-  P extends Payload = Payload,
+  // biome-ignore lint/suspicious/noExplicitAny: proper use of `any`
+  P extends { type: string; payload?: unknown } = Payload<string, any>,
   T extends P['type'] = P['type'],
 > = {
   [K in P['type']]: Extract<P, { type: K }>;

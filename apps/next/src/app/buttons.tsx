@@ -11,7 +11,6 @@
  */
 
 'use client';
-import { Button as DesignSystemButton } from '@accelint/design-system';
 import { Button } from '@accelint/design-toolkit/button';
 import { Icon } from '@accelint/design-toolkit/icon';
 import Placeholder from '@accelint/icons/placeholder';
@@ -34,23 +33,6 @@ export function Buttons() {
         <Button className='bg-advisory-bold hover:bg-advisory-hover fg-info-bold'>
           Custom Button
         </Button>
-      </div>
-      <h2 className='text-header-l text-default-light'>
-        Design System (old!) buttons
-      </h2>
-      <div className='p-m flex gap-m items-center'>
-        <DesignSystemButton color='primary'>Primary Button</DesignSystemButton>
-        <DesignSystemButton color='critical'>
-          Critical Button
-        </DesignSystemButton>
-        <DesignSystemButton
-          color='primary'
-          classNames={{
-            button: 'bg-advisory-bold hover:bg-advisory-hover fg-info-bold',
-          }}
-        >
-          Custom Button
-        </DesignSystemButton>
       </div>
     </>
   );

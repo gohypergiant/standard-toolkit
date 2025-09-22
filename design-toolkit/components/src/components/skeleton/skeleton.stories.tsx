@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react';
 import { Skeleton } from './';
 import { SkeletonStylesDefaults } from './styles';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Skeleton> = {
   args: SkeletonStylesDefaults,

@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for each element */
 
 'use client';
 import { uuid } from '@accelint/core';
@@ -188,6 +189,9 @@ export default function KitchenSink() {
                   Tab 3
                 </Tabs.List.Tab>
               </Tabs.List>
+              <Tabs.Panel id='uno'>Content 1</Tabs.Panel>
+              <Tabs.Panel id='dos'>Content 2</Tabs.Panel>
+              <Tabs.Panel id='tres'>Content 3</Tabs.Panel>
             </Tabs>
             {divider}
             <Tabs orientation='vertical'>
@@ -198,6 +202,9 @@ export default function KitchenSink() {
                   Tab 3
                 </Tabs.List.Tab>
               </Tabs.List>
+              <Tabs.Panel id='uno'>Content 1</Tabs.Panel>
+              <Tabs.Panel id='dos'>Content 2</Tabs.Panel>
+              <Tabs.Panel id='tres'>Content 3</Tabs.Panel>
             </Tabs>
           </div>
           <div>
@@ -218,13 +225,13 @@ export default function KitchenSink() {
         </Drawer.Layout.Main>
         <Drawer id={drawerIds.drawer} placement='right' size='large'>
           <Drawer.Menu>
-            <Drawer.Menu.Item toggle for={drawerIds.a}>
+            <Drawer.Menu.Item toggle for={drawerIds.a} textValue='Menu A'>
               A
             </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.b}>
+            <Drawer.Menu.Item toggle for={drawerIds.b} textValue='Menu B'>
               B
             </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.c}>
+            <Drawer.Menu.Item toggle for={drawerIds.c} textValue='Menu C'>
               C
             </Drawer.Menu.Item>
           </Drawer.Menu>

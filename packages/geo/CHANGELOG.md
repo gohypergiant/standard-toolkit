@@ -1,5 +1,13 @@
 # @accelint/geo
 
+## 0.2.9
+
+### Patch Changes
+
+- 5206880: Linting fixes only.
+- Updated dependencies [5206880]
+  - @accelint/predicates@0.4.1
+
 ## 0.2.8
 
 ### Patch Changes

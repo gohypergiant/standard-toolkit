@@ -11,7 +11,7 @@ Tabs organize content into multiple sections and allow users to navigate between
 ## Usage
 
 ```tsx
-import { Tabs } from '@standard-toolkit/components';
+import { Tabs } from '@accelint/design-toolkit';
 
 <Tabs defaultSelectedKey="tab1">
   <Tabs.List>
@@ -156,3 +156,11 @@ function ControlledTabs() {
     </Tabs>
   );
 }
+```
+## Implementation Details
+
+Tabs uses React Aria's `Tabs` component for its implementation.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/Tabs.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/tabs)

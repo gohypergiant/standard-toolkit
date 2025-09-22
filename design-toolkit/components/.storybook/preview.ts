@@ -12,10 +12,10 @@
 
 import { withThemeByClassName } from '@storybook/addon-themes';
 import { DocsContainer } from '@storybook/blocks';
-import type { Preview, ReactRenderer } from '@storybook/react';
 import { type ThemeVars, themes } from '@storybook/theming';
 import { createElement } from 'react';
 import { Docs } from './docs';
+import type { Preview, ReactRenderer } from '@storybook/react';
 import '../src/index.css';
 
 const preview: Preview = {

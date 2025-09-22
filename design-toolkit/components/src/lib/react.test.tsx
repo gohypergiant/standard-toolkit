@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { containsExactChildren } from '@/lib/react';
 import { render, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
+import { containsExactChildren } from '@/lib/react';
+import type { ReactNode } from 'react';
 
 const TestParent = ({ children }: { children: ReactNode }) => {
   containsExactChildren({

@@ -10,12 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import fs from 'node:fs/promises';
 import {
   fixAliasPlugin,
   fixExtensionsPlugin,
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
+import { glob } from 'tinyglobby';
 import { defineConfig } from 'tsup';
+
+const CHECK = /client-only/gm;
 
 export default defineConfig({
   esbuildPlugins: [
@@ -43,4 +47,16 @@ export default defineConfig({
   sourcemap: true,
   splitting: true,
   treeshake: true,
+  onSuccess: async () => {
+    const files = await glob(['dist/**/*.js', '!dist/**/*.js.map']);
+
+    for (let i = 0; i < files.length; i++) {
+      const path = files[i];
+      const content = await fs.readFile(path, 'utf-8');
+
+      if (CHECK.test(content)) {
+        fs.writeFile(path, `${"'use client';"}\n\n${content}`);
+      }
+    }
+  },
 });

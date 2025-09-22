@@ -12,10 +12,10 @@
  */
 
 import { type Format, SYMBOLS } from '..';
-import type { Tokens } from '../lexer';
-import type { PipeResult } from '../pipes';
 import { getGenomeIndex } from './genome';
 import { simpler } from './simpler';
+import type { Tokens } from '../lexer';
+import type { PipeResult } from '../pipes';
 
 // N = number
 // B = bearing

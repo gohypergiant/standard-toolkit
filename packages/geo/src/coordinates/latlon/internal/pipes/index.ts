@@ -12,12 +12,11 @@
  */
 
 import { type Format, SYMBOL_PATTERNS } from '..';
-import type { Tokens } from '../lexer';
-
 import { checkAmbiguousGrouping } from './check-ambiguous';
 import { checkNumberValues } from './check-numbers';
 import { fixBearings } from './fix-bearings';
 import { fixDivider } from './fix-dividers';
+import type { Tokens } from '../lexer';
 
 type Pipe = (t: Tokens, f?: Format) => [Tokens, boolean | string];
 

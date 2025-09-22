@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from 'tailwind-variants';
+import { tv } from '@/lib/utils';
 
 export const DrawerStyles = tv({
   slots: {
@@ -21,7 +21,8 @@ export const DrawerStyles = tv({
       '[--drawer-main-row-end:4]', //bottom overlay
       'data-[push~=bottom]:[--drawer-main-row-end:3]',
       '[--drawer-main-col-start:1]', //left overlay
-      'data-[push~=left]:[--drawer-main-col-start:2]',
+      // biome-ignore lint/style/noUnusedTemplateLiteral: This is necessary to properly evaulate \/
+      `data-[push~=left]:[--drawer-main-col-start:2] has-[.group\\/sidenav]:[--drawer-main-col-start:2]`,
       '[--drawer-main-col-end:4]', //right overlay
       'data-[push~=right]:[--drawer-main-col-end:3]',
 
@@ -42,11 +43,11 @@ export const DrawerStyles = tv({
       'transition-[grid-template-columns,grid-template-rows]',
       'h-full max-h-full w-full',
     ],
-    main: 'relative z-1 col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
+    main: 'relative col-[var(--drawer-main-cols)] row-[var(--drawer-main-rows)]',
     drawer: [
       'group/drawer',
       'bg-surface-default text-body-m',
-      'relative z-5 flex h-full min-h-0 flex-col',
+      'relative flex h-full min-h-0 flex-col',
       'pointer-events-none [&>*]:pointer-events-auto',
 
       //Base positioning
@@ -79,7 +80,9 @@ export const DrawerStyles = tv({
     content: [
       'fg-primary-bold flex max-h-full flex-1 flex-col overflow-y-auto',
     ],
-    header: ['mb-s flex flex-row items-center justify-between pt-px pr-px'],
+    header: [
+      'mb-s flex flex-row items-center justify-between gap-s pt-px pr-px',
+    ],
     footer: 'fg-primary-bold mt-s flex flex-row items-center justify-end',
   },
 });
@@ -92,12 +95,12 @@ export const DrawerTitleStyles = tv({
   base: 'fg-primary-bold w-full',
   variants: {
     level: {
-      [1]: '',
-      [2]: '',
-      [3]: '',
-      [4]: '',
-      [5]: '',
-      [6]: '',
+      1: '',
+      2: '',
+      3: '',
+      4: '',
+      5: '',
+      6: '',
     },
   },
   compoundVariants: [
@@ -135,10 +138,10 @@ export const DrawerMenuStyles = tv({
     ],
     item: [
       'flex flex-col items-center justify-center',
-      'sudo:fg-primary-muted !p-xs cursor-pointer outline-none',
+      'enabled:color-info:fg-primary-muted cursor-pointer outline-none',
       'rounded-medium',
       //hover
-      'sudo:hover:fg-primary-bold hover:!bg-transparent',
+      'enabled:color-info:hover:fg-primary-bold enabled:hover:color-info:bg-transparent',
       //selected
       'selected:fg-accent-primary-bold selected:bg-accent-primary-muted',
       //focused
@@ -151,26 +154,26 @@ export const DrawerMenuStyles = tv({
     position: {
       start: {
         menu: [
-          'group-placement-left/drawer:-translate-y-1/2 group-placement-left/drawer:top-1/8',
-          'group-placement-right/drawer:-translate-y-1/2 group-placement-right/drawer:top-1/8',
-          'group-placement-top/drawer:left-1/8 group-placement-top/drawer:translate-x-1/4',
-          'group-placement-bottom/drawer:left-1/8 group-placement-bottom/drawer:translate-x-1/4',
+          'group-placement-left/drawer:top-0 group-placement-left/drawer:translate-y-1/4',
+          'group-placement-right/drawer:top-0 group-placement-right/drawer:translate-y-1/4',
+          'group-placement-top/drawer:left-0 group-placement-top/drawer:translate-x-3/4',
+          'group-placement-bottom/drawer:left-0 group-placement-bottom/drawer:translate-x-3/4',
         ],
       },
       center: {
         menu: [
           'group-placement-left/drawer:-translate-y-1/2 group-placement-left/drawer:top-1/2',
           'group-placement-right/drawer:-translate-y-1/2 group-placement-right/drawer:top-1/2',
-          'group-placement-top/drawer:-translate-x-1/8 group-placement-top/drawer:left-1/2',
-          'group-placement-bottom/drawer:-translate-x-1/8 group-placement-bottom/drawer:left-1/2',
+          'group-placement-top/drawer:left-1/2 group-placement-top/drawer:translate-x-1',
+          'group-placement-bottom/drawer:left-1/2 group-placement-bottom/drawer:translate-x-1',
         ],
       },
       end: {
         menu: [
-          'group-placement-left/drawer:-translate-y-7/2 group-placement-left/drawer:top-7/8',
-          'group-placement-right/drawer:-translate-y-7/8 group-placement-right/drawer:top-7/8',
-          'group-placement-top/drawer:-translate-x-1/2 group-placement-top/drawer:left-7/8',
-          'group-placement-bottom/drawer:-translate-x-1/2 group-placement-bottom/drawer:left-7/8',
+          'group-placement-left/drawer:-translate-y-1/4 group-placement-left/drawer:bottom-0',
+          'group-placement-right/drawer:-translate-y-1/4 group-placement-right/drawer:bottom-0',
+          'group-placement-top/drawer:-translate-x-3/4 group-placement-top/drawer:left-full',
+          'group-placement-bottom/drawer:-translate-x-3/4 group-placement-bottom/drawer:left-full',
         ],
       },
     },

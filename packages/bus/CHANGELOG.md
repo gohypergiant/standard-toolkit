@@ -1,5 +1,11 @@
 # @accelint/bus
 
+## 1.2.0
+
+### Minor Changes
+
+- 55718af: made event payload optional
+
 ## 1.1.0
 
 ### Minor Changes
