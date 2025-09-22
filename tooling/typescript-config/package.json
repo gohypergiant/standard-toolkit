@@ -1,13 +1,21 @@
 {
   "name": "@accelint/typescript-config",
+  "title": "TypeScript Configuration",
   "version": "0.1.2",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "The shared TypeScript configuration used across Accelint projects.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "type": "module",
+  "owner": "default/pathfinder",
+  "subPath": "tooling/typescript-config",
   "exports": {
     "./tsc": "./tsc/dom/app.json",
     "./tsc/dom": "./tsc/dom/app.json",
@@ -27,7 +35,8 @@
     "./bundler/no-dom/app": "./bundler/no-dom.json",
     "./bundler/no-dom/library": "./bundler/no-dom.json",
     "./bundler/no-dom/library-monorepo": "./bundler/no-dom.json",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./catalog-info.yaml": "./catalog-info.yaml"
   },
   "scripts": {
     "lint": "pnpm biome lint"
