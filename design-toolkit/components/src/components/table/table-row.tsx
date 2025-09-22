@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,9 +11,29 @@
  * governing permissions and limitations under the License.
  */
 
-import { rowStyles } from './styles';
+import { TableRowStyles } from './styles';
+import { TableCell } from './table-cell';
 import type { TableRowProps } from './types';
 
-export function TableRow({ ref, className, ...props }: TableRowProps) {
-  return <tr ref={ref} className={rowStyles({ className })} {...props} />;
+export function TableRow<T>({
+  ref,
+  children,
+  className,
+  row,
+  ...rest
+}: TableRowProps<T>) {
+  const cells = row?.getAllCells();
+
+  return (
+    <tr
+      {...rest}
+      ref={ref}
+      className={TableRowStyles({ className })}
+      data-pinned={row?.getIsPinned() || null}
+      data-selected={row?.getIsSelected() || null}
+    >
+      {children ||
+        cells?.map((cell) => <TableCell key={cell.id} cell={cell} />)}
+    </tr>
+  );
 }

@@ -11,87 +11,101 @@
  */
 
 'use client';
-import 'client-only';
 
-import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
-import Pin from '@accelint/icons/pin';
+import 'client-only';
+import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
+import type { Key } from '@react-types/shared';
 import {
-  type Cell,
-  type ColumnOrderState,
+  type Row,
   type RowSelectionState,
-  type SortingState,
-  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
-import { useColumnMovement } from './hooks/use-column-movement';
-import { useRowMovement } from './hooks/use-row-movement';
+import { TableContext } from './context';
 import { TableStyles } from './styles';
 import { TableBody } from './table-body';
 import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
-import {
-  ColumnKebabMenuItems,
-  RowKebabMenuItems,
-  type TableProps,
-} from './types';
+import type { TableProps } from './types';
 
-const { headerCellButton, pinIcon, rowCell, rowKebab, headerKebab, menuItem } =
-  TableStyles();
+const { menuItem, notPersistRowKebab } = TableStyles();
 
-const dataTableCell = <T,>(
-  cell: Cell<T, unknown>,
-  persistent: boolean,
-  isColumnSelected: boolean,
-  isLastRow: boolean,
-) => (
-  <TableCell
-    key={cell.id}
-    persistent={persistent}
-    narrow={cell.column.id === 'numeral' || cell.column.id === 'kebab'}
-    numeral={cell.column.id === 'numeral'}
-    kebab={cell.column.id === 'kebab'}
-    selectedCol={isColumnSelected}
-    data-selection-end={isColumnSelected && isLastRow ? '' : undefined}
-  >
-    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-  </TableCell>
-);
+type RowActionsMenuProps<T> = {
+  row: Row<T>;
+  rows: Row<T>[];
+  moveRowsDown: (row: Row<T>, rows: Row<T>[]) => void;
+  moveRowsUp: (row: Row<T>, rows: Row<T>[]) => void;
+};
 
-const TableDefaultProps = {
-  kebabPosition: 'right',
-  persistRowKebabMenu: true,
-  persistHeaderKebabMenu: true,
-  persistNumerals: false,
-  pageSize: 10,
-  enableSorting: true,
-  enableColumnReordering: true,
-  enableRowActions: true,
-} as const;
+function RowActionsMenu<T>({
+  moveRowsDown,
+  moveRowsUp,
+  row,
+  rows,
+}: RowActionsMenuProps<T>) {
+  const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
+  const isPinned = !!row.getIsPinned();
 
-export function Table<T extends { id: string | number }>({
+  return (
+    enableRowActions && (
+      <div className={persistRowKebabMenu ? '' : notPersistRowKebab()}>
+        <Menu.Trigger>
+          <Button variant='icon' aria-label='Menu'>
+            <Icon>
+              <Kebab />
+            </Icon>
+          </Button>
+          <Menu>
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => row.pin(isPinned ? false : 'top')}
+            >
+              {isPinned ? 'Unpin' : 'Pin'}
+            </Menu.Item>
+            <Menu.Separator />
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => moveRowsUp(row, rows)}
+              isDisabled={isPinned || row.index === 0}
+            >
+              Move Up
+            </Menu.Item>
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => moveRowsDown(row, rows)}
+              isDisabled={isPinned || row.index === rows.length - 1}
+            >
+              Move Down
+            </Menu.Item>
+          </Menu>
+        </Menu.Trigger>
+      </div>
+    )
+  );
+}
+
+export function Table<T extends { id: Key }>({
+  children,
   columns: columnsProp,
   data: dataProp,
   showCheckbox,
-  kebabPosition = TableDefaultProps.kebabPosition,
-  persistRowKebabMenu = TableDefaultProps.persistRowKebabMenu,
-  persistHeaderKebabMenu = TableDefaultProps.persistHeaderKebabMenu,
-  persistNumerals = TableDefaultProps.persistNumerals,
-  pageSize = TableDefaultProps.pageSize,
-  enableSorting = TableDefaultProps.enableSorting,
-  enableColumnOrdering:
-    enableColumnReordering = TableDefaultProps.enableColumnReordering,
-  enableRowActions = TableDefaultProps.enableRowActions,
-  ...props
+  kebabPosition = 'right',
+  persistRowKebabMenu = true,
+  persistHeaderKebabMenu = true,
+  persistNumerals = false,
+  enableSorting = true,
+  enableColumnOrdering: enableColumnReordering = true,
+  enableRowActions = true,
+  ...rest
 }: TableProps<T>) {
   const {
     items: data,
@@ -100,25 +114,71 @@ export function Table<T extends { id: string | number }>({
   } = useListData({
     initialItems: dataProp,
   });
-
-  const dataIds = useMemo<(string | number)[]>(
-    () => data?.map((item: T) => item.id),
-    [data],
-  );
-
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [hoveredArrow, setHoveredArrow] = useState<boolean>(false);
-
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [columnSelection, setColumnSelection] = useState<string | null>();
+  const [columnSelection, setColumnSelection] = useState<string | null>(null);
 
-  const { moveUpSelectedRows, moveDownRows } = useRowMovement<T>(
-    data,
-    dataIds,
-    rowSelection,
-    moveBefore,
-    moveAfter,
+  /**
+   * moveUpSelectedRows moves the selected rows up in the table.
+   * It finds the first selected row, determines its index,
+   * and moves it before the previous row if it exists.
+   */
+  const moveRowsUp = useCallback(
+    (row: Row<T>, rows: Row<T>[]) => {
+      const isSelected = rowSelection[row.id];
+      const rowsToMove = isSelected
+        ? rows.filter(({ id }) => rowSelection[id])
+        : [row];
+      const firstRowToMove = rowsToMove[0];
+
+      if (!firstRowToMove || firstRowToMove.index === 0) {
+        return;
+      }
+
+      const prevRowId = rows[firstRowToMove.index - 1]?.id;
+
+      if (!prevRowId) {
+        return;
+      }
+
+      moveBefore(
+        prevRowId,
+        rowsToMove.map(({ id }) => id),
+      );
+    },
+    [rowSelection, moveBefore],
   );
+
+  /**
+   * moveDownRows moves the selected or active rows down in the table.
+   * It finds the last selected row, determines its index,
+   * and moves it after the next row if it exists.
+   */
+  const moveRowsDown = useCallback(
+    (row: Row<T>, rows: Row<T>[]) => {
+      const isSelected = rowSelection[row.id];
+      const rowsToMove = isSelected
+        ? rows.filter(({ id }) => rowSelection[id])
+        : [row];
+      const lastRowToMove = rowsToMove[rowsToMove.length - 1];
+
+      if (!lastRowToMove || lastRowToMove.index === rows.length - 1) {
+        return;
+      }
+
+      const nextRowId = rows[lastRowToMove.index + 1]?.id;
+
+      if (!nextRowId) {
+        return;
+      }
+
+      moveAfter(
+        nextRowId,
+        rowsToMove.map(({ id }) => id),
+      );
+    },
+    [rowSelection, moveAfter],
+  );
+
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
    * It includes options to move the row up or down in the table.
@@ -126,65 +186,16 @@ export function Table<T extends { id: string | number }>({
   const actionColumn: NonNullable<typeof columnsProp>[number] = useMemo(
     () => ({
       id: 'kebab',
-      cell: ({ row }) => {
-        const isPinned = row.getIsPinned();
-        return (
-          enableRowActions && (
-            <div
-              className={rowKebab({
-                persistKebab: persistRowKebabMenu,
-              })}
-            >
-              <Menu.Trigger>
-                <Button variant='icon' aria-label='Menu'>
-                  <Icon>
-                    <Kebab />
-                  </Icon>
-                </Button>
-                <Menu>
-                  <Menu.Item
-                    classNames={{ item: menuItem() }}
-                    onAction={() => {
-                      row.pin(isPinned ? false : 'top');
-                    }}
-                  >
-                    <Menu.Item.Label>
-                      {isPinned
-                        ? RowKebabMenuItems.Unpin
-                        : RowKebabMenuItems.Pin}
-                    </Menu.Item.Label>
-                  </Menu.Item>
-                  <Menu.Separator />
-                  <Menu.Item
-                    classNames={{ item: menuItem() }}
-                    onAction={() => {
-                      moveUpSelectedRows(row);
-                    }}
-                    isDisabled={row.index === 0}
-                  >
-                    <Menu.Item.Label>
-                      {RowKebabMenuItems.MoveUp}
-                    </Menu.Item.Label>
-                  </Menu.Item>
-                  <Menu.Item
-                    classNames={{ item: menuItem() }}
-                    onAction={() => {
-                      moveDownRows(row);
-                    }}
-                    isDisabled={row.index === getRowModel().rows.length - 1}
-                  >
-                    <Menu.Item.Label>
-                      {RowKebabMenuItems.MoveDown}
-                    </Menu.Item.Label>
-                  </Menu.Item>
-                </Menu>
-              </Menu.Trigger>
-            </div>
-          )
-        );
-      },
+      cell: ({ row }) => (
+        <RowActionsMenu
+          moveRowsUp={moveRowsUp}
+          moveRowsDown={moveRowsDown}
+          row={row}
+          rows={getRowModel().rows}
+        />
+      ),
     }),
-    [moveUpSelectedRows, moveDownRows, persistRowKebabMenu, enableRowActions],
+    [moveRowsUp, moveRowsDown],
   );
 
   /**
@@ -193,60 +204,45 @@ export function Table<T extends { id: string | number }>({
    * The kebab menu position can be set to 'left' or 'right'.
    * If showCheckbox is true, a checkbox column is added.
    */
-  const columns = useMemo<NonNullable<typeof columnsProp>>(() => {
-    const columns = [...(columnsProp || [])];
-
-    if (kebabPosition === 'left') {
-      columns.unshift(actionColumn);
-    } else if (kebabPosition === 'right') {
-      columns.push(actionColumn);
-    }
-
-    if (showCheckbox) {
-      columns.unshift({
-        id: 'selection',
-        header: ({ table }) => (
-          <Checkbox
-            isSelected={table.getIsAllRowsSelected()}
-            isIndeterminate={table.getIsSomeRowsSelected()}
-            onChange={table.toggleAllRowsSelected}
-            slot='selection'
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            isSelected={row.getIsSelected()}
-            isIndeterminate={row.getIsSomeSelected()}
-            onChange={row.toggleSelected}
-            slot='selection'
-          />
-        ),
-      });
-    }
-
-    return [
+  const columns = useMemo<NonNullable<typeof columnsProp>>(
+    () => [
       {
         id: 'numeral',
         cell: ({ row }) =>
           row.getIsPinned() ? (
-            <Icon size='small' className={pinIcon()}>
+            <Icon size='small'>
               <Pin />
             </Icon>
           ) : (
-            <span
-              className={rowCell({ persistNums: persistNumerals })}
-              data-testid='numeral'
-            >
-              {row.index + 1}
-            </span>
+            <span data-testid='numeral'>{row.index + 1}</span>
           ),
       },
-      ...columns,
-    ];
-  }, [showCheckbox, columnsProp, kebabPosition, actionColumn, persistNumerals]);
-
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(
-    columns.map((col) => col.id as string),
+      ...(showCheckbox
+        ? ([
+            {
+              id: 'selection',
+              header: ({ table }) => (
+                <Checkbox
+                  isSelected={table.getIsAllRowsSelected()}
+                  isIndeterminate={table.getIsSomeRowsSelected()}
+                  onChange={table.toggleAllRowsSelected}
+                />
+              ),
+              cell: ({ row }) => (
+                <Checkbox
+                  isSelected={row.getIsSelected()}
+                  isIndeterminate={row.getIsSomeSelected()}
+                  onChange={row.toggleSelected}
+                />
+              ),
+            },
+          ] satisfies NonNullable<typeof columnsProp>)
+        : []),
+      ...(kebabPosition === 'left' ? [actionColumn] : []),
+      ...(columnsProp ?? []),
+      ...(kebabPosition === 'right' ? [actionColumn] : []),
+    ],
+    [showCheckbox, columnsProp, kebabPosition, actionColumn],
   );
 
   const {
@@ -255,18 +251,17 @@ export function Table<T extends { id: string | number }>({
     getCenterRows,
     getBottomRows,
     getRowModel,
-    setColumnOrder: setColumnOrderCallback,
+    setColumnOrder,
   } = useReactTable<T>({
-    data: data,
+    data,
     columns,
     enableSorting,
     initialState: {
-      pagination: { pageIndex: 0, pageSize },
+      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      columnOrder: columns.map((col) => col.id!),
     },
     state: {
       rowSelection,
-      sorting,
-      columnOrder,
       columnPinning: {
         left: [
           'numeral',
@@ -281,267 +276,83 @@ export function Table<T extends { id: string | number }>({
       return row.id ? row.id.toString() : index.toString();
     },
     enableRowSelection: true,
-    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
-    onColumnOrderChange: setColumnOrder,
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
   });
-  const { moveColumnLeft, moveColumnRight } = useColumnMovement(
-    setColumnOrderCallback,
+
+  const moveColumnLeft = useCallback(
+    (oldIndex: number) => {
+      setColumnOrder((order) => {
+        const newColumnOrder = [...order];
+        const newIndex = oldIndex - 1;
+
+        if (newIndex < 0) {
+          return order;
+        }
+
+        [newColumnOrder[oldIndex], newColumnOrder[newIndex]] = [
+          newColumnOrder[newIndex] as string,
+          newColumnOrder[oldIndex] as string,
+        ];
+
+        return newColumnOrder;
+      });
+    },
+    [setColumnOrder],
   );
 
-  if (dataProp) {
-    return (
-      <div>
-        <table {...props}>
-          <TableHeader>
-            {getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} data-top>
-                {/* biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation> */}
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <HeaderCell
-                      key={header.id}
-                      narrow={
-                        header.column.id === 'numeral' ||
-                        header.column.id === 'kebab'
-                      }
-                      data-selected={
-                        header.column.id === columnSelection ? '' : undefined
-                      }
-                    >
-                      <div
-                        className={headerCellButton()}
-                        onMouseDown={() => setColumnSelection(header.column.id)}
-                        onMouseUp={() => setColumnSelection(null)}
-                      >
-                        {header.isPlaceholder ||
-                        header.column.id === 'kebab' ? null : (
-                          <button type='button'>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                          </button>
-                        )}
+  const moveColumnRight = useCallback(
+    (oldIndex: number) => {
+      setColumnOrder((order) => {
+        const newColumnOrder = [...order];
+        const newIndex = oldIndex + 1;
 
-                        {['numeral', 'kebab', 'selection'].includes(
-                          header.column.id,
-                        )
-                          ? null
-                          : (enableColumnReordering || enableSorting) && (
-                              <Menu.Trigger
-                                onOpenChange={(isOpen) => {
-                                  if (isOpen) {
-                                    setColumnSelection(header.column.id);
-                                  } else {
-                                    setColumnSelection(null);
-                                  }
-                                }}
-                              >
-                                <Button variant='icon' aria-label='Menu'>
-                                  <Icon>
-                                    {header.column.getIsSorted() === 'asc' ? (
-                                      <div
-                                        onMouseEnter={() =>
-                                          setHoveredArrow(true)
-                                        }
-                                        onMouseLeave={() =>
-                                          setHoveredArrow(false)
-                                        }
-                                      >
-                                        {hoveredArrow ? <Kebab /> : <ArrowUp />}
-                                      </div>
-                                    ) : header.column.getIsSorted() ===
-                                      'desc' ? (
-                                      <div
-                                        onMouseEnter={() =>
-                                          setHoveredArrow(true)
-                                        }
-                                        onMouseLeave={() =>
-                                          setHoveredArrow(false)
-                                        }
-                                      >
-                                        {hoveredArrow ? (
-                                          <Kebab />
-                                        ) : (
-                                          <ArrowDown />
-                                        )}
-                                      </div>
-                                    ) : (
-                                      <div
-                                        className={headerKebab({
-                                          persistKebab: persistHeaderKebabMenu,
-                                        })}
-                                      >
-                                        <Kebab />
-                                      </div>
-                                    )}
-                                  </Icon>
-                                </Button>
-                                <Menu>
-                                  {enableColumnReordering && (
-                                    <>
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          moveColumnLeft(
-                                            header.column.getIndex(),
-                                          );
-                                        }}
-                                        isDisabled={header.column.getIsFirstColumn(
-                                          'center',
-                                        )}
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Left}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          moveColumnRight(
-                                            header.column.getIndex(),
-                                          );
-                                        }}
-                                        isDisabled={header.column.getIsLastColumn(
-                                          'center',
-                                        )}
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Right}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                    </>
-                                  )}
-                                  {enableSorting && (
-                                    <>
-                                      <Menu.Separator />
-                                      <Menu.Item
-                                        classNames={{ item: menuItem() }}
-                                        onAction={() => {
-                                          header.column.toggleSorting(false);
-                                        }}
-                                        isDisabled={
-                                          header.column.getIsSorted() === 'asc'
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Asc}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        onAction={() => {
-                                          header.column.toggleSorting(true);
-                                        }}
-                                        isDisabled={
-                                          header.column.getIsSorted() === 'desc'
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Desc}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                      <Menu.Item
-                                        onAction={() => {
-                                          header.column.clearSorting();
-                                        }}
-                                        isDisabled={
-                                          !header.column.getIsSorted()
-                                        }
-                                      >
-                                        <Menu.Item.Label>
-                                          {ColumnKebabMenuItems.Clear}
-                                        </Menu.Item.Label>
-                                      </Menu.Item>
-                                    </>
-                                  )}
-                                </Menu>
-                              </Menu.Trigger>
-                            )}
-                      </div>
-                    </HeaderCell>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {getTopRows().map((row) => (
-              <TableRow
-                key={row.id}
-                {...(row.getIsSelected()
-                  ? { 'data-selected': '' }
-                  : { 'not-selected': 'true' })}
-                data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
-            ))}
-            {getCenterRows().map((row) => (
-              <TableRow
-                key={row.id}
-                {...(row.getIsSelected()
-                  ? { 'data-selected': '' }
-                  : { 'not-selected': 'true' })}
-                data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'numeral'
-                        ? persistNumerals
-                        : cell.column.id === 'kebab'
-                          ? persistRowKebabMenu
-                          : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
-            ))}
-            {getBottomRows().map((row) => (
-              <TableRow
-                key={row.id}
-                {...(row.getIsSelected()
-                  ? { 'data-selected': '' }
-                  : { 'not-selected': 'true' })}
-                data-pinned={row.getIsPinned()}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    dataTableCell(
-                      cell,
-                      cell.column.id === 'kebab' ? persistRowKebabMenu : true,
-                      cell.column.id === columnSelection,
-                      cell.row.id ===
-                        getRowModel().rows?.[getRowModel().rows.length - 1]?.id,
-                    ),
-                  )}
-              </TableRow>
-            ))}
-          </TableBody>
-        </table>
-      </div>
-    );
+        if (newIndex >= order.length) {
+          return order;
+        }
+
+        [newColumnOrder[oldIndex], newColumnOrder[newIndex]] = [
+          newColumnOrder[newIndex] as string,
+          newColumnOrder[oldIndex] as string,
+        ];
+
+        return newColumnOrder;
+      });
+    },
+    [setColumnOrder],
+  );
+
+  if (children) {
+    return <table {...rest}>{children}</table>;
   }
 
-  return <table {...props} />;
+  return (
+    <TableContext.Provider
+      value={{
+        persistRowKebabMenu,
+        persistHeaderKebabMenu,
+        persistNumerals,
+        enableSorting,
+        enableColumnReordering,
+        enableRowActions,
+        columnSelection,
+        setColumnSelection,
+        moveColumnLeft,
+        moveColumnRight,
+      }}
+    >
+      <table {...rest}>
+        <TableHeader
+          headerGroups={getHeaderGroups()}
+          columnSelection={columnSelection}
+        />
+        <TableBody
+          rows={[...getTopRows(), ...getCenterRows(), ...getBottomRows()]}
+        />
+      </table>
+    </TableContext.Provider>
+  );
 }
 
 Table.displayName = 'Table';

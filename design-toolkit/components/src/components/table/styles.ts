@@ -12,7 +12,7 @@
 
 import { tv } from '@/lib/utils';
 
-export const tableHeaderStyles = tv({
+export const TableHeaderStyles = tv({
   base: ['group/theader'],
 });
 
@@ -23,77 +23,51 @@ export const TableCellStylesDefaults = {
   persistent: true,
 } as const;
 
-export const cellStyles = tv({
+export const TableCellStyles = tv({
   base: [
     'fg-primary-bold min-w-l row:bg-surface-raised text-left align-middle font-display text-body-s',
     'selection-end:border-b-1 selection-end:border-b-[var(--outline-accent-primary-bold)]',
+    'selected:bg-accent-primary-muted selected:shadow-[1px_1px_0_0_var(--outline-accent-primary-bold),-1px_0_0_0_var(--outline-accent-primary-bold)]',
   ],
   variants: {
     narrow: {
       true: 'py-m text-center',
       false: 'p-m',
     },
-    numeral: {
-      true: 'px-s fg-primary-muted hover:fg-primary-bold',
+    isNumeral: {
+      true: 'fg-primary-muted hover:fg-primary-bold px-s group-not-pinned/row:*:invisible',
       false: '',
     },
-    kebab: {
-      true: '',
-      false: '',
-    },
-    persistent: {
-      true: 'visible',
-      false: 'hover:*:visible group-hover/row:*:visible',
-    },
-    selectedCol: {
-      true: [
-        'bg-accent-primary-muted',
-        'border-x-1',
-        'border-r-[var(--outline-accent-primary-bold)]',
-        'border-l-[var(--outline-accent-primary-bold)]',
-      ],
+    notPersistNums: {
+      true: 'invisible hover:*:visible group-hover/row:*:visible',
       false: '',
     },
   },
   defaultVariants: TableCellStylesDefaults,
-  compoundVariants: [
-    {
-      persistent: false,
-      numeral: true,
-      className: 'fg-primary-muted group-not-pinned/row:*:invisible',
-    },
-    {
-      persistent: false,
-      numeral: false,
-      kebab: false,
-      className: '*:invisible',
-    },
-    {
-      persistent: false,
-      kebab: true,
-      className: 'group-not-pinned/row:*:invisible',
-    },
-  ],
 });
 
 export const TableHeaderCellStylesDefaults = {
   narrow: false,
 } as const;
 
-export const headerCellStyles = tv({
+export const TableHeaderCellStyles = tv({
   base: [
-    'group/header-cell fg-primary-muted hover:fg-primary-bold h-12 text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
+    'group/header-cell group fg-primary-muted hover:fg-primary-bold flex h-12 items-center justify-between gap-xxs text-left align-middle font-medium text-body-s [&:has([role=checkbox])]:pr-0',
     'selected:bg-accent-primary-muted',
-    'selected:border-t-1',
-    'selected:border-x-1',
-    'selected:border-r-[var(--outline-accent-primary-bold)]',
-    'selected:border-l-[var(--outline-accent-primary-bold)]',
-    'selected:border-t-[var(--outline-accent-primary-bold)]',
+    'selected:shadow-[1px_0_0_0_var(--outline-accent-primary-bold),-1px_-1px_0_0_var(--outline-accent-primary-bold)]',
   ],
   variants: {
     narrow: {
-      true: 'px-0 py-m ',
+      true: 'px-0 py-m',
       false: 'p-m',
+    },
+    isKebabEnabled: {
+      true: 'pr-0',
+      false: '',
+    },
+    notPersistHeaderKebab: {
+      true: 'opacity-0 hover:opacity-100',
+      false: '',
     },
   },
   defaultVariants: {
@@ -101,7 +75,7 @@ export const headerCellStyles = tv({
   },
 });
 
-export const rowStyles = tv({
+export const TableRowStyles = tv({
   base: [
     'group/row',
     'border-transparent group-not-selected/tbody:border-1',
@@ -109,46 +83,20 @@ export const rowStyles = tv({
     'selected:border-x-[var(--outline-accent-primary-bold)]',
     /** Ensure border is applied to first and last selected rows */
     'has-[+[data-selected]]:not-selected:border-b-[var(--outline-accent-primary-bold)]',
-    'has-[+[not-selected="true"]]:selected:border-b-[var(--outline-accent-primary-bold)]',
+    'not-has-[+[data-selected]]:data-selected:border-b-[var(--outline-accent-primary-bold)]',
     'group-not-selected/tbody:first-of-type:border-t-[var(--outline-static)]',
     'selected:first-of-type:border-t-[var(--outline-accent-primary-bold)]',
-    'selected:last-of-type:border-b-[var(--outline-accent-primary-bold)]',
   ],
 });
 
-export const tableBodyStyles = tv({
+export const TableBodyStyles = tv({
   base: ['group/tbody'],
 });
 
 export const TableStyles = tv({
   slots: {
     base: 'group/table',
-    headerCellButton: 'group flex items-center justify-between gap-xxs',
-    pinIcon: 'mx-auto block',
-    rowCell: '',
-    rowKebab: '',
-    headerKebab: '',
     menuItem: 'cursor-pointer disabled:cursor-auto',
-  },
-  variants: {
-    persistNums: {
-      true: {
-        rowCell: 'mx-auto block text-center',
-      },
-      false: {
-        rowCell:
-          'invisible group-hover/table:mx-auto group-hover/table:block group-hover/table:text-center',
-      },
-    },
-    persistKebab: {
-      true: {
-        rowKebab: '',
-        headerKebab: '',
-      },
-      false: {
-        rowKebab: 'opacity-0 hover:opacity-100',
-        headerKebab: 'opacity-0 group-hover:opacity-100',
-      },
-    },
+    notPersistRowKebab: 'opacity-0 hover:opacity-100',
   },
 });

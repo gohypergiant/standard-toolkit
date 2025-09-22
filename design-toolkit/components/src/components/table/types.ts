@@ -10,21 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ColumnDef } from '@tanstack/react-table';
+import type { Key } from '@react-types/shared';
 import type {
-  HTMLAttributes,
-  RefAttributes,
-  TableHTMLAttributes,
-  TdHTMLAttributes,
-  ThHTMLAttributes,
-} from 'react';
+  Cell,
+  ColumnDef,
+  Header,
+  HeaderGroup,
+  Row,
+} from '@tanstack/react-table';
+import type { Dispatch, SetStateAction } from 'react';
+import type { ComponentPropsWithRef } from 'react';
+import type { PropsWithChildren } from 'react';
 import type { VariantProps } from 'tailwind-variants';
-import type { cellStyles, headerCellStyles } from './styles';
+import type { TableCellStyles, TableHeaderCellStyles } from './styles';
 
-type BaseTableProps = TableHTMLAttributes<HTMLTableElement> &
-  RefAttributes<HTMLTableElement>;
+type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
-type ExtendedTableProps<T extends { id: string | number }> = {
+type ExtendedTableProps<T extends { id: Key }> = {
   /**
    * An array of column definitions, one for each key in `T`.
    */
@@ -67,12 +69,6 @@ type ExtendedTableProps<T extends { id: string | number }> = {
    * If false, they are only visible on hover or when the row is hovered.
    */
   persistNumerals?: boolean;
-
-  /**
-   * Optional page size for pagination.
-   * If provided, the table will support pagination with the specified page size.
-   */
-  pageSize?: number;
 
   /**
    * Whether to enable sorting.
@@ -118,14 +114,14 @@ type ExtendedTableProps<T extends { id: string | number }> = {
  *
  * @see {@link BaseTableProps}
  */
-export type TableProps<T extends { id: string | number }> = BaseTableProps &
+export type TableProps<T extends { id: Key }> = BaseTableProps &
   (
     | (ExtendedTableProps<T> & {
         children?: never;
       })
-    | {
+    | PropsWithChildren<{
         [K in keyof ExtendedTableProps<T>]?: never;
-      }
+      }>
   );
 
 /**
@@ -137,8 +133,9 @@ export type TableProps<T extends { id: string | number }> = BaseTableProps &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement>;
+export type TableBodyProps<T> = ComponentPropsWithRef<'tbody'> & {
+  rows?: Row<T>[];
+};
 
 /**
  * Props for a table row (`<tr>`) component.
@@ -149,8 +146,9 @@ export type TableBodyProps = HTMLAttributes<HTMLTableSectionElement> &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps = HTMLAttributes<HTMLTableRowElement> &
-  RefAttributes<HTMLTableRowElement>;
+export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
+  row?: Row<T>;
+};
 
 /**
  * Props for a table cell component.
@@ -170,9 +168,10 @@ export type TableRowProps = HTMLAttributes<HTMLTableRowElement> &
  *   If true, the cell is always visible.
  *   If false, the cell content is only visible on hover or when the row is hovered.
  */
-export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
-  VariantProps<typeof cellStyles> &
-  RefAttributes<HTMLTableCellElement>;
+export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
+  VariantProps<typeof TableCellStyles> & {
+    cell?: Cell<T, unknown>;
+  };
 
 /**
  * Props for a table header cell component.
@@ -180,13 +179,13 @@ export type TableCellProps = TdHTMLAttributes<HTMLTableCellElement> &
  * This type combines standard HTML `<th>` element attributes, style variant props,
  * and ref attributes for a table header cell.
  *
- * @see {@link ThHTMLAttributes}
  * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps = ThHTMLAttributes<HTMLTableCellElement> &
-  VariantProps<typeof headerCellStyles> &
-  RefAttributes<HTMLTableCellElement>;
+export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> &
+  VariantProps<typeof TableHeaderCellStyles> & {
+    header?: Header<T, unknown>;
+  };
 
 /**
  * Props for the table header (`<thead>`) component.
@@ -196,20 +195,26 @@ export type TableHeaderCellProps = ThHTMLAttributes<HTMLTableCellElement> &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableHeaderProps = HTMLAttributes<HTMLTableSectionElement> &
-  RefAttributes<HTMLTableSectionElement>;
+export type TableHeaderProps<T> = ComponentPropsWithRef<'thead'> & {
+  /**
+   * Array of header groups of the table
+   */
+  headerGroups?: HeaderGroup<T>[];
+  /**
+   * The currently selected column ID
+   */
+  columnSelection?: string | null;
+};
 
-export enum RowKebabMenuItems {
-  Pin = 'Pin',
-  MoveUp = 'Move Up',
-  MoveDown = 'Move Down',
-  Unpin = 'Unpin',
-}
-
-export enum ColumnKebabMenuItems {
-  Left = 'Move Column Left',
-  Right = 'Move Column Right',
-  Asc = 'Sort Ascending',
-  Desc = 'Sort Descending',
-  Clear = 'Clear Sort',
-}
+export type TableContextValue = {
+  columnSelection: string | null;
+  enableColumnReordering: boolean;
+  enableSorting: boolean;
+  enableRowActions: boolean;
+  persistHeaderKebabMenu: boolean;
+  persistRowKebabMenu: boolean;
+  persistNumerals: boolean;
+  moveColumnLeft: (index: number) => void;
+  moveColumnRight: (index: number) => void;
+  setColumnSelection: Dispatch<SetStateAction<string | null>>;
+};

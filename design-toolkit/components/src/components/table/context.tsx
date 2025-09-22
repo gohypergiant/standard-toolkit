@@ -1,4 +1,3 @@
-// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,26 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import { TableBodyStyles } from './styles';
-import { TableRow } from './table-row';
-import type { TableBodyProps } from './types';
+import { createContext } from 'react';
+import type { TableContextValue } from './types';
 
-export function TableBody<T>({
-  children,
-  className,
-  ref,
-  rows,
-  ...rest
-}: TableBodyProps<T>) {
-  return (
-    <tbody
-      {...rest}
-      ref={ref}
-      className={TableBodyStyles({
-        className,
-      })}
-    >
-      {children || rows?.map((row) => <TableRow key={row.id} row={row} />)}
-    </tbody>
-  );
-}
+// Only keep values in context that are needed across multiple component levels
+export const TableContext = createContext<TableContextValue>({
+  moveColumnLeft: () => undefined,
+  moveColumnRight: () => undefined,
+  setColumnSelection: () => null,
+  columnSelection: null,
+  persistRowKebabMenu: true,
+  persistHeaderKebabMenu: true,
+  persistNumerals: true,
+  enableSorting: true,
+  enableColumnReordering: true,
+  enableRowActions: true,
+});

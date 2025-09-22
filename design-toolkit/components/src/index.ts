@@ -276,31 +276,22 @@ export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
-export { useColumnMovement } from './components/table/hooks/use-column-movement';
-export { useRowMovement } from './components/table/hooks/use-row-movement';
+export { TableContext } from './components/table/context';
 export { Table } from './components/table';
 export {
+  TableBodyStyles,
+  TableCellStyles,
   TableCellStylesDefaults,
+  TableHeaderCellStyles,
   TableHeaderCellStylesDefaults,
+  TableHeaderStyles,
+  TableRowStyles,
   TableStyles,
-  cellStyles,
-  headerCellStyles,
-  rowStyles,
-  tableBodyStyles,
-  tableHeaderStyles,
 } from './components/table/styles';
-export { TableBody } from './components/table/table-body';
-export { TableCell } from './components/table/table-cell';
-export { HeaderCell } from './components/table/table-header-cell';
-export { TableHeader } from './components/table/table-header';
-export { TableRow } from './components/table/table-row';
-export {
-  ColumnKebabMenuItems,
-  RowKebabMenuItems,
-} from './components/table/types';
 export type {
   TableBodyProps,
   TableCellProps,
+  TableContextValue,
   TableHeaderCellProps,
   TableHeaderProps,
   TableProps,

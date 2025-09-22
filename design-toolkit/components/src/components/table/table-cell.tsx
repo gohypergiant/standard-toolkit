@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,31 +11,40 @@
  * governing permissions and limitations under the License.
  */
 
-import { cellStyles } from './styles';
+import { flexRender } from '@tanstack/react-table';
+import { useContext } from 'react';
+import { TableContext } from './context';
+import { TableCellStyles } from './styles';
 import type { TableCellProps } from './types';
 
-export function TableCell({
+export function TableCell<T>({
+  children,
   ref,
   className,
-  narrow,
-  numeral,
-  persistent,
-  kebab,
-  selectedCol,
-  ...props
-}: TableCellProps) {
+  cell,
+  ...rest
+}: TableCellProps<T>) {
+  const { columnSelection, persistNumerals } = useContext(TableContext);
+  const isKebab = cell?.column.id === 'kebab';
+  const isNumeral = cell?.column.id === 'numeral';
+  const isSelected = cell?.column.id === columnSelection;
+  const narrow = isNumeral || isKebab;
+  const notPersistNums = isNumeral && !persistNumerals;
+
   return (
     <td
+      {...rest}
       ref={ref}
-      className={cellStyles({
-        narrow,
-        numeral,
-        kebab,
-        persistent,
-        selectedCol,
+      className={TableCellStyles({
         className,
+        narrow,
+        isNumeral,
+        notPersistNums,
       })}
-      {...props}
-    />
+      data-selected={isSelected || null}
+    >
+      {children ||
+        (cell && flexRender(cell.column.columnDef.cell, cell.getContext()))}
+    </td>
   );
 }

@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,20 +11,138 @@
  * governing permissions and limitations under the License.
  */
 
-import { headerCellStyles } from './styles';
+import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
+import { type Header, flexRender } from '@tanstack/react-table';
+import { useContext, useState } from 'react';
+import { Button } from '../button';
+import { Icon } from '../icon';
+import { Menu } from '../menu';
+import { TableContext } from './context';
+import { TableHeaderCellStyles, TableStyles } from './styles';
 import type { TableHeaderCellProps } from './types';
 
-export function HeaderCell({
-  ref,
-  className,
-  narrow,
-  ...props
-}: TableHeaderCellProps) {
+const { menuItem } = TableStyles();
+
+function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
+  const {
+    enableColumnReordering,
+    enableSorting,
+    moveColumnLeft,
+    moveColumnRight,
+    persistHeaderKebabMenu,
+    setColumnSelection,
+  } = useContext(TableContext);
+
+  const [hoveredArrow, setHoveredArrow] = useState(false);
+
+  if (
+    ['numeral', 'kebab', 'selection'].includes(header.column.id) ||
+    !(enableSorting || enableColumnReordering)
+  ) {
+    return null;
+  }
+
+  const sort = header.column.getIsSorted();
+
   return (
-    <th
-      ref={ref}
-      className={headerCellStyles({ narrow, className })}
-      {...props}
-    />
+    <Menu.Trigger
+      onOpenChange={(isOpen) =>
+        setColumnSelection(isOpen ? header.column.id : null)
+      }
+    >
+      <Button
+        variant='icon'
+        aria-label='Menu'
+        onHoverChange={setHoveredArrow}
+        className={TableHeaderCellStyles({
+          notPersistHeaderKebab: !persistHeaderKebabMenu,
+        })}
+      >
+        <Icon>
+          {(!sort || hoveredArrow) && <Kebab />}
+          {!hoveredArrow && sort === 'desc' && <ArrowDown />}
+          {!hoveredArrow && sort === 'asc' && <ArrowUp />}
+        </Icon>
+      </Button>
+      <Menu>
+        {enableColumnReordering && (
+          <>
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => moveColumnLeft(header.column.getIndex())}
+              isDisabled={header.column.getIsFirstColumn('center')}
+            >
+              Move Column Left
+            </Menu.Item>
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => moveColumnRight(header.column.getIndex())}
+              isDisabled={header.column.getIsLastColumn('center')}
+            >
+              Move Column Right
+            </Menu.Item>
+          </>
+        )}
+        {enableColumnReordering && enableSorting && <Menu.Separator />}
+        {enableSorting && (
+          <>
+            <Menu.Item
+              classNames={{ item: menuItem() }}
+              onAction={() => header.column.toggleSorting(false)}
+              isDisabled={sort === 'asc'}
+            >
+              Sort Ascending
+            </Menu.Item>
+            <Menu.Item
+              onAction={() => header.column.toggleSorting(true)}
+              isDisabled={sort === 'desc'}
+            >
+              Sort Descending
+            </Menu.Item>
+            <Menu.Item onAction={header.column.clearSorting} isDisabled={!sort}>
+              Clear Sort
+            </Menu.Item>
+          </>
+        )}
+      </Menu>
+    </Menu.Trigger>
+  );
+}
+
+export function HeaderCell<T>({
+  ref,
+  children,
+  className,
+  header,
+  ...rest
+}: TableHeaderCellProps<T>) {
+  const { columnSelection, enableColumnReordering, enableSorting } =
+    useContext(TableContext);
+  const showKebab = enableColumnReordering || enableSorting;
+  const renderProps = header?.getContext();
+  const narrow =
+    header?.column.id === 'numeral' || header?.column.id === 'kebab';
+
+  return (
+    <th {...rest} ref={ref}>
+      <div
+        className={TableHeaderCellStyles({
+          narrow,
+          className,
+          isKebabEnabled: showKebab,
+        })}
+        data-selected={header?.column.id === columnSelection || null}
+      >
+        {children ||
+          (header && (
+            <>
+              {header.column.id !== 'kebab' &&
+                renderProps &&
+                flexRender(header.column.columnDef.header, renderProps)}
+              <HeaderCellMenu header={header} />
+            </>
+          ))}
+      </div>
+    </th>
   );
 }
