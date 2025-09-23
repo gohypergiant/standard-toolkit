@@ -35,6 +35,7 @@
     "format": "pnpm biome format . --write",
     "license": "pnpm zx ../../scripts/license.mjs",
     "test": "pnpm vitest --dir=test",
+    "test:coverage": "pnpm vitest --dir=test --coverage",
     "postinstall": "pnpm run build"
   },
   "devDependencies": {
