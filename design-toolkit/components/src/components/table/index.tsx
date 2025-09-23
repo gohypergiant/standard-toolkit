@@ -261,15 +261,7 @@ export function Table<T extends { id: Key }>({
       columnOrder: columns.map((col) => col.id!),
     },
     state: {
-      rowSelection,
-      columnPinning: {
-        left: [
-          'numeral',
-          'selection',
-          ...(kebabPosition === 'left' ? ['kebab'] : []),
-        ],
-        right: kebabPosition === 'left' ? [] : ['kebab'],
-      },
+      rowSelection
     },
     getRowId: (row, index) => {
       // Use the index as the row ID if no unique identifier is available
