@@ -30,7 +30,7 @@ import type {
   ThemeTokens,
 } from '@/tokens/types';
 
-type Mode = 'dark' | 'light';
+export type Mode = 'dark' | 'light';
 type ContextColorTokens = SemanticColorTokens & StaticColorTokens;
 
 type ThemeContextValue = {
@@ -54,6 +54,7 @@ type ThemeProviderProps = PropsWithChildren & {
   /** override existing values in the theme */
   overrides?: PartialDeep<ThemeTokens>;
 };
+
 export function ThemeProvider({
   children,
   defaultMode,

@@ -369,6 +369,7 @@ export {
   twMerge,
 } from './lib/utils';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
+export type { Mode } from './providers/theme-provider';
 export { designTokens } from './tokens/tokens';
 export type {
   SemanticColorTokens,
