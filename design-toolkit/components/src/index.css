@@ -166,6 +166,8 @@
 
 body {
   @apply font-primary;
+  @apply bg-surface-default;
+  @apply fg-primary-bold;
 }
 
 @layer components {
