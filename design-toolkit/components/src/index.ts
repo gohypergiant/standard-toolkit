@@ -330,6 +330,14 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { CLASSIFICATION_VALUES } from './constants/classifications';
+export {
+  CRITICALITY_VALUES,
+  CRITICALITY_VARIANTS,
+} from './constants/criticality-variants';
+export type { CriticalityVariant } from './constants/criticality-variants';
+export { SIZE_RANGES, SIZE_VARIANTS } from './constants/size-variants';
+export type { SizeVariant } from './constants/size-variants';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {

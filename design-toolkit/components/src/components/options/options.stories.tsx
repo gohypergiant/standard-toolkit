@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+} from '^storybook/utils';
 import Placeholder from '@accelint/icons/placeholder';
 import {
   ListLayout as AriaListLayout,
@@ -20,20 +25,37 @@ import { Options } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
 
-const meta: Meta<typeof Options> = {
+const meta = {
   title: 'Components/Options',
   component: Options,
   args: {
     size: 'large',
+    selectionBehavior: 'replace',
   },
   argTypes: {
-    size: {
-      control: 'select',
+    size: COMMON_ARG_TYPES.size.binary,
+    selectionBehavior: createArgTypeSelect('Chose the behavior for selection', [
+      'replace',
+      'toggle',
+    ]),
+  },
+  parameters: {
+    ...createParameters(
+      'centered',
+
+      // exclude these
+      'dependencies',
+      'dragAndDropHooks',
+      'renderEmptyState',
+    ),
+    docs: {
+      subtitle: 'Options list component for selection interfaces.',
     },
   },
-};
+} satisfies Meta<typeof Options>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
 interface CustomOptionsItem {
   id: number;
@@ -132,7 +154,7 @@ const itemsWithSections: CustomOptionsItem[] = [
   },
 ];
 
-export const Default: StoryObj<typeof Options> = {
+export const Default: Story = {
   render: ({ children, ...args }) => (
     <Options {...args} items={items}>
       {(item) => (
@@ -158,7 +180,7 @@ export const Default: StoryObj<typeof Options> = {
   ),
 };
 
-export const WithDynamicSections: StoryObj<typeof Options> = {
+export const WithDynamicSections: Story = {
   render: ({ children, ...args }) => (
     <Options {...args} items={itemsWithSections}>
       {(section) => (
@@ -183,7 +205,7 @@ export const WithDynamicSections: StoryObj<typeof Options> = {
   ),
 };
 
-export const WithStaticSections: StoryObj<typeof Options> = {
+export const WithStaticSections: Story = {
   render: ({ children, ...args }) => (
     <Options {...args}>
       <Options.Section
@@ -239,7 +261,7 @@ const manyItems = Array.from({ length: 5000 }, (_, index) => ({
   icon: <Placeholder />,
 }));
 
-export const Virtualized: StoryObj<typeof Options> = {
+export const Virtualized: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[200px]'>
       <AriaVirtualizer

@@ -10,42 +10,94 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  COMMON_STATE_PROPS,
+  createParameters,
+  createStatesStory,
+  hideControls,
+  MOCK_DATA,
+} from '^storybook/utils';
 import { TextAreaField } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof TextAreaField> = {
+const meta = {
   title: 'Components/TextAreaField',
   component: TextAreaField,
   args: {
-    label: 'Label',
-    description: 'Helper text',
+    label: 'Description',
+    description: 'Provide additional details',
     errorMessage: '',
     size: 'medium',
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
     inputProps: {
-      placeholder: 'Placeholder',
+      placeholder: 'Enter your description...',
     },
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
-    isInvalid: {
-      control: 'boolean',
-    },
-    inputProps: {
-      placeholder: {
-        control: 'text',
-      },
+    size: COMMON_ARG_TYPES.size.compact,
+    label: COMMON_ARG_TYPES.label,
+    description: COMMON_ARG_TYPES.description,
+    errorMessage: COMMON_ARG_TYPES.errorMessage,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isInvalid: COMMON_ARG_TYPES.isInvalid,
+    isRequired: COMMON_ARG_TYPES.isRequired,
+  },
+  parameters: {
+    ...createParameters('centered', 'FORM'),
+    docs: {
+      subtitle: 'A multi-line text input component with label and validation',
     },
   },
-};
+} satisfies Meta<typeof TextAreaField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof TextAreaField> = {
-  render: TextAreaField,
+export const Default: Story = {
+  render: (args) => <TextAreaField {...args} />,
+};
+
+export const States: Story = createStatesStory({
+  Component: TextAreaField,
+  baseProps: {
+    label: 'Feedback',
+    inputProps: { placeholder: 'Share your thoughts...' },
+  },
+  stateProps: {
+    ...COMMON_STATE_PROPS.FORM_FIELD,
+    error: {
+      isInvalid: true,
+      errorMessage: MOCK_DATA.ERROR_MESSAGES.REQUIRED,
+    },
+  },
+});
+
+export const WithContent: Story = {
+  name: 'With Sample Content',
+  render: (args) => (
+    <div className='max-w-lg space-y-l'>
+      <TextAreaField
+        {...args}
+        label='Short response'
+        inputProps={{
+          placeholder: 'Brief description...',
+          rows: 3,
+          defaultValue: MOCK_DATA.TEXT_CONTENT.SHORT,
+        }}
+      />
+      <TextAreaField
+        {...args}
+        label='Detailed response'
+        inputProps={{
+          placeholder: 'Detailed explanation...',
+          rows: 6,
+          defaultValue: MOCK_DATA.TEXT_CONTENT.MEDIUM,
+        }}
+      />
+    </div>
+  ),
+  ...hideControls(meta),
 };

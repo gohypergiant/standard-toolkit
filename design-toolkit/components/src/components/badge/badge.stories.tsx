@@ -10,36 +10,57 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeSelect,
+  createParameters,
+} from '^storybook/utils';
+import { CRITICALITY_VALUES } from '@/constants/criticality-variants';
 import { Badge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Badge> = {
+const meta = {
   title: 'Components/Badge',
   component: Badge,
   args: {
-    className: undefined,
-    children: undefined,
+    children: '',
     variant: 'info',
   },
   argTypes: {
-    children: {
-      control: 'text',
-    },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
+    children: COMMON_ARG_TYPES.children,
+    variant: createArgTypeSelect(
+      'Badge color variant indicating different levels of importance',
+      CRITICALITY_VALUES,
+    ),
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle:
+        'A small status indicator component for labeling and notifications',
     },
   },
-};
+} satisfies Meta<typeof Badge>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Badge> = {
-  render: Badge,
+export const Default: Story = {
+  render: (args) => <Badge {...args} />,
 };
 
-export const WithText: StoryObj<typeof Badge> = {
-  render: ({ children, ...rest }) => (
-    <Badge {...rest}>{children || '99+'}</Badge>
+export const WithText: Story = {
+  name: 'With Text',
+  render: (args) => (
+    <div className='flex items-center gap-m'>
+      <span className='fg-primary-bold text-body-m'>
+        You have new notifications
+      </span>
+      <Badge {...args} />
+    </div>
   ),
+  args: {
+    // Note: this is to override defaults for this story specifically
+    children: '99+',
+  },
 };

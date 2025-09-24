@@ -10,18 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_ARG_TYPES, createParameters } from '^storybook/utils';
 import { Breadcrumbs } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Breadcrumbs> = {
+const meta = {
   title: 'Components/Breadcrumbs',
   component: Breadcrumbs,
-};
+  args: {
+    isDisabled: false,
+  },
+  argTypes: {
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+  },
+  parameters: {
+    ...createParameters('centered', 'dependencies', 'onAction'),
+    docs: {
+      subtitle:
+        'Display a list of directories to indicate to the user where they are at.',
+    },
+  },
+} satisfies Meta<typeof Breadcrumbs>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Breadcrumbs> = {
-  render: () => (
+export const Default: Story = {
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <Breadcrumbs>
       <Breadcrumbs.Item linkProps={{ href: '/ ' }}>Root</Breadcrumbs.Item>
       <Breadcrumbs.Item linkProps={{ href: '/home' }}>Child</Breadcrumbs.Item>

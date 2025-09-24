@@ -10,30 +10,76 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  createArgTypeBool,
+  createParameters,
+  createStatesStory,
+} from '^storybook/utils';
 import { Input } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Input> = {
+const meta = {
   title: 'Components/Input',
   component: Input,
   args: {
     autoSize: false,
     disabled: false,
-    placeholder: 'Placeholder',
+    placeholder: 'Enter text...',
     size: 'medium',
     isClearable: true,
     isInvalid: false,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    autoSize: createArgTypeBool('Autosize component to fit content'),
+    isInvalid: COMMON_ARG_TYPES.isInvalid,
+    isClearable: createArgTypeBool('Provide a button to clear the input'),
+    size: COMMON_ARG_TYPES.size.compact,
+    placeholder: COMMON_ARG_TYPES.placeholder,
+
+    // using a manual definition specifically for `disabled`
+    // because React Aria components use `disabled`
+    // and we can not standardize on `isDisabled` as a result
+    disabled: createArgTypeBool('Disable the input'),
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'A flexible text input component with enhanced features',
     },
   },
-};
+} satisfies Meta<typeof Input>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Input> = {
-  render: Input,
+export const Default: Story = {
+  render: (args) => <Input {...args} />,
+};
+
+export const States: Story = createStatesStory({
+  Component: Input,
+  baseProps: { placeholder: 'Type here...' },
+  stateProps: {
+    disabled: { disabled: true, placeholder: 'Disabled input' },
+    error: { isInvalid: true, placeholder: 'Invalid input' },
+  },
+});
+
+export const InputTypes: Story = {
+  name: 'Input Types',
+  render: () => (
+    <div className='max-w-sm space-y-m'>
+      <Input type='text' placeholder='Text input' />
+      <Input type='email' placeholder='Email input' />
+      <Input type='password' placeholder='Password input' />
+      <Input type='number' placeholder='Number input' />
+      <Input type='search' placeholder='Search input' />
+      <Input type='url' placeholder='URL input' />
+    </div>
+  ),
+  parameters: {
+    layout: 'centered',
+    controls: { disable: true },
+  },
 };

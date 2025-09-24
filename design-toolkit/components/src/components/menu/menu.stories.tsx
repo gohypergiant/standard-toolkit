@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_ARG_TYPES, createParameters } from '^storybook/utils';
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useRef, useState } from 'react';
@@ -20,7 +21,7 @@ import { Menu } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { MenuItemProps } from './types';
 
-const meta: Meta<typeof Menu> = {
+const meta = {
   title: 'Components/Menu',
   component: Menu,
   args: {
@@ -28,18 +29,27 @@ const meta: Meta<typeof Menu> = {
     selectionMode: 'single',
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
-    selectionMode: {
-      control: 'select',
-      options: ['single', 'multiple', 'none'],
+    selectionMode: COMMON_ARG_TYPES.selectionMode,
+    variant: COMMON_ARG_TYPES.spacingVariant,
+  },
+  parameters: {
+    ...createParameters(
+      'centered',
+
+      // exclude these
+      'dependencies',
+      'popoverProps',
+      'renderEmptyState',
+    ),
+    docs: {
+      subtitle:
+        'A dropdown menu component with keyboard navigation and selection',
     },
   },
-};
+} satisfies Meta<typeof Menu>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
 type MenuItem = {
   id: number;
@@ -108,7 +118,7 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-export const Basic: StoryObj<typeof Menu> = {
+export const Default: Story = {
   render: (args) => (
     <Menu.Trigger>
       <Button variant='icon' aria-label='Menu'>
@@ -181,7 +191,7 @@ export const Basic: StoryObj<typeof Menu> = {
   ),
 };
 
-export const Dynamic: StoryObj<typeof Menu> = {
+export const Dynamic: Story = {
   render: (args) => (
     <Menu.Trigger>
       <Button variant='icon' aria-label='Menu'>
@@ -234,7 +244,7 @@ export const Dynamic: StoryObj<typeof Menu> = {
   ),
 };
 
-export const ContextMenu: StoryObj<typeof Menu> = {
+export const ContextMenu: Story = {
   render: () => {
     const [menuPosition, setMenuPosition] = useState<{
       x: number;

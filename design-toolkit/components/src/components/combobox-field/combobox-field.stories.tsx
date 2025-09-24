@@ -10,6 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_ARG_TYPES,
+  COMMON_STATE_PROPS,
+  createParameters,
+  createStatesStory,
+  MOCK_DATA,
+} from '^storybook/utils';
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Options } from '../options';
@@ -17,33 +24,51 @@ import { ComboBoxField } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
 
-const meta: Meta<typeof ComboBoxField> = {
+const meta = {
   title: 'Components/ComboBoxField',
   component: ComboBoxField,
   args: {
-    description: 'Helper text',
+    label: 'Choose an option',
+    description: 'Type to search and select an option',
     errorMessage: '',
-    label: 'Label',
     inputProps: {
-      placeholder: 'Placeholder',
+      placeholder: 'Type to search...',
     },
     size: 'medium',
-    layoutOptions: {
-      estimatedRowHeight: 46,
-    },
+    allowsEmptyCollection: false,
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    description: COMMON_ARG_TYPES.description,
+    errorMessage: COMMON_ARG_TYPES.errorMessage,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isInvalid: COMMON_ARG_TYPES.isInvalid,
+    isRequired: COMMON_ARG_TYPES.isRequired,
+    label: COMMON_ARG_TYPES.label,
+    size: COMMON_ARG_TYPES.size.compact,
+  },
+  parameters: {
+    ...createParameters(
+      'centered',
+
+      // exclude these
+      'FORM',
+      'allowsEmptyCollection',
+      'defaultFilter',
+      'formValue',
+      'layoutOptions',
+    ),
+    docs: {
+      subtitle:
+        'A searchable dropdown input component with autocomplete functionality',
     },
   },
-};
+} satisfies Meta<typeof ComboBoxField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
 interface CustomOptionsItem {
   id: number | string;
@@ -141,7 +166,7 @@ const itemsWithSections: CustomOptionsItem[] = [
   },
 ];
 
-export const Default: StoryObj<typeof ComboBoxField> = {
+export const Default: Story = {
   render: ({ children, ...args }) => (
     <ComboBoxField<CustomOptionsItem> {...args} defaultItems={items}>
       {(item) => (
@@ -165,7 +190,36 @@ export const Default: StoryObj<typeof ComboBoxField> = {
   ),
 };
 
-export const WithDynamicSections: StoryObj<typeof ComboBoxField> = {
+export const States: Story = createStatesStory({
+  Component: ({ children, ...props }) => (
+    <ComboBoxField<{ id: string; name: string }>
+      {...props}
+      defaultItems={MOCK_DATA.SIMPLE_OPTIONS.map((opt) => ({
+        id: opt.id,
+        name: opt.name,
+      }))}
+    >
+      {(item) => (
+        <Options.Item key={item.id} textValue={item.name}>
+          <Options.Item.Label>{item.name}</Options.Item.Label>
+        </Options.Item>
+      )}
+    </ComboBoxField>
+  ),
+  baseProps: {
+    label: 'Select category',
+    inputProps: { placeholder: 'Type to search categories...' },
+  },
+  stateProps: {
+    ...COMMON_STATE_PROPS.FORM_FIELD,
+    error: {
+      isInvalid: true,
+      errorMessage: MOCK_DATA.ERROR_MESSAGES.REQUIRED,
+    },
+  },
+});
+
+export const WithDynamicSections: Story = {
   args: {
     ...Default.args,
     layoutOptions: {
@@ -198,7 +252,7 @@ export const WithDynamicSections: StoryObj<typeof ComboBoxField> = {
   ),
 };
 
-export const WithStaticSections: StoryObj<typeof ComboBoxField> = {
+export const WithStaticSections: Story = {
   args: {
     ...Default.args,
     layoutOptions: {
@@ -256,7 +310,7 @@ for (let i = 0; i < 5000; i++) {
   manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });
 }
 
-export const WithManyItems: StoryObj<typeof ComboBoxField> = {
+export const WithManyItems: Story = {
   args: {
     ...Default.args,
     layoutOptions: {

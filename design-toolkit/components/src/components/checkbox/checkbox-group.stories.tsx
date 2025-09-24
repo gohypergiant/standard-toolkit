@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_ARG_TYPES, createParameters } from '^storybook/utils';
 import { Checkbox } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -22,6 +23,8 @@ import type { Meta, StoryObj } from '@storybook/react';
  * By default, it lays its children out in a stacked Flexbox layout, but you can customize the `className` to change the layout
  * behavior.
  */
+// NOTE: breaking the Storybook-suggested pattern - using `satisfies`, to instead use a type
+// assertion - here because `Checkbox.Group` - the `component` prop in `meta` - is not a named export
 const meta: Meta<typeof Checkbox.Group> = {
   title: 'Components/Checkbox.Group',
   component: Checkbox.Group,
@@ -32,20 +35,22 @@ const meta: Meta<typeof Checkbox.Group> = {
     isRequired: false,
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
+    label: COMMON_ARG_TYPES.label,
+    isDisabled: COMMON_ARG_TYPES.isDisabled,
+    isRequired: COMMON_ARG_TYPES.isRequired,
+    orientation: COMMON_ARG_TYPES.orientation,
   },
   parameters: {
-    controls: {
-      exclude: ['validationBehavior'],
+    ...createParameters('centered', 'FORM'),
+    docs: {
+      subtitle:
+        'A grouped collection of checkbox controls for multiple selections',
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof Checkbox.Group>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => (
