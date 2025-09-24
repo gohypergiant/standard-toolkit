@@ -1,15 +1,25 @@
 {
   "name": "@accelint/design-toolkit",
+  "title": "Design Toolkit",
   "version": "5.0.0",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "design-tk",
+    "ui",
+    "tooling"
+  ],
+  "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "design-toolkit/components",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -52,6 +62,7 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm generate && pnpm license && pnpm format && tsup && pnpm build:css",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
+    "constellation-tracker": "node ../../tooling/constellation-tracker/dist/main.js",
     "dev": "pnpm tsc --watch",
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",

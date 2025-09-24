@@ -22,6 +22,7 @@
     "clean:buildinfo": "pnpm exec find . -name 'tsconfig.tsbuildinfo' -delete",
     "clean:pnpm": "pnpm rimraf pnpm-lock.yaml",
     "clean:turbo": "pnpm -r exec  rimraf .turbo && exec pnpm rimraf .turbo",
+    "constellation-tracker": "turbo constellation-tracker",
     "deps:format-packages": "pnpm syncpack format",
     "deps:mismatch-fix": "pnpm syncpack fix-mismatches",
     "deps:version-major": "pnpm taze major -r",

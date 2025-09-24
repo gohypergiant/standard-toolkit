@@ -16,13 +16,20 @@
   "owner": "default/pathfinder",
   "subPath": "tooling/vitest-config",
   "type": "module",
+  "files": [
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./dom.js",
+    "./no-dom.js",
+    "./package.json",
+    "./README.md"
+  ],
   "exports": {
     "./dom": "./dom.js",
-    "./no-dom": "./no-dom.js",
-    "./package.json": "./package.json",
-    "./catalog-info.yaml": "./catalog-info.yaml"
+    "./no-dom": "./no-dom.js"
   },
   "scripts": {
+    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
   "dependencies": {

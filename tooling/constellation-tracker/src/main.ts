@@ -54,6 +54,8 @@ function _parseParameters({
 const DESCRIPTION_REGEX = /\n\s*Dependencies:[\s\S]*/;
 
 export function handleAction(options: CmdOptions) {
+  console.log(...arguments);
+
   const {
     catalogInfo,
     nodeModules,

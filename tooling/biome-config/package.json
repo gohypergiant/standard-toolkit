@@ -1,20 +1,37 @@
 {
   "name": "@accelint/biome-config",
+  "title": "Biome Configuration",
   "version": "1.0.0",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "The shared Biome configuration used across Accelint projects.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "tooling/biome-config",
   "type": "module",
+  "files": [
+    "./analyzer.json",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./formatter.json",
+    "./linter.json",
+    "./package.json",
+    "./README.md"
+  ],
   "exports": {
     "./analyzer": "./analyzer.json",
     "./formatter": "./formatter.json",
-    "./linter": "./linter.json",
-    "./package.json": "./package.json"
+    "./linter": "./linter.json"
   },
   "scripts": {
+    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
   "$schema": "https://json.schemastore.org/package",

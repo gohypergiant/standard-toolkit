@@ -16,6 +16,14 @@
   "type": "module",
   "owner": "default/pathfinder",
   "subPath": "tooling/typescript-config",
+  "files": [
+    "./tsc/**",
+    "./bundler/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
   "exports": {
     "./tsc": "./tsc/dom/app.json",
     "./tsc/dom": "./tsc/dom/app.json",
@@ -34,11 +42,10 @@
     "./bundler/no-dom": "./bundler/no-dom.json",
     "./bundler/no-dom/app": "./bundler/no-dom.json",
     "./bundler/no-dom/library": "./bundler/no-dom.json",
-    "./bundler/no-dom/library-monorepo": "./bundler/no-dom.json",
-    "./package.json": "./package.json",
-    "./catalog-info.yaml": "./catalog-info.yaml"
+    "./bundler/no-dom/library-monorepo": "./bundler/no-dom.json"
   },
   "scripts": {
+    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
   "$schema": "https://json.schemastore.org/package",

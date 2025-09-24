@@ -1,7 +1,7 @@
 {
   "name": "@accelint/constellation-tracker",
   "title": "Constellation Tracker",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": false,
   "license": "Apache-2.0",
   "keywords": [
@@ -19,6 +19,13 @@
   "bin": {
     "constellation-tracker": "./dist/main.js"
   },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
   "exports": {
     ".": {
       "import": {
@@ -26,11 +33,11 @@
         "default": "./dist/lib.js"
       },
       "default": "./dist/lib.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "build": "pnpm tsc && pnpm license && pnpm format",
+    "constellation-tracker": "node ./dist/main.js",
     "lint": "pnpm biome lint",
     "format": "pnpm biome format . --write",
     "license": "pnpm zx ../../scripts/license.mjs",
