@@ -11,6 +11,7 @@
  */
 'use client';
 
+import type { ProviderProps } from '@/lib/types';
 import 'client-only';
 import { createContext } from 'react';
 import {
@@ -23,7 +24,6 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
 export const ButtonContext =
@@ -76,7 +76,7 @@ export function Button({ ref, ...props }: ButtonProps) {
   const {
     children,
     className,
-    color = 'info',
+    color = 'mono-muted',
     size = 'medium',
     variant,
     ...rest
@@ -159,7 +159,7 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
   const {
     children,
     className,
-    color = 'info',
+    color = 'mono-muted',
     size = 'medium',
     variant,
     ...rest
@@ -215,7 +215,7 @@ ToggleButtonProvider.displayName = 'ToggleButton.Provider';
  *
  * @example
  * // Controlled toggle button with different variants
- * <ToggleButton variant="filled" isSelected={isEnabled} onChange={setIsEnabled}>
+ * <ToggleButton variant="flat" isSelected={isEnabled} onChange={setIsEnabled}>
  *   Enable Notifications
  * </ToggleButton>
  *
@@ -244,7 +244,7 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   const {
     children,
     className,
-    color = 'info',
+    color = 'mono-muted',
     size = 'medium',
     variant,
     ...rest

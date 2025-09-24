@@ -60,6 +60,7 @@ export type {
   ButtonStyleVariants,
   LinkButtonProps,
   ToggleButtonProps,
+  ToggleButtonStyleVariants,
 } from './components/button/types';
 export {
   Checkbox,
