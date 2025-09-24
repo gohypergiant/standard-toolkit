@@ -1,5 +1,11 @@
 # @accelint/bus
 
+## 1.2.1
+
+### Patch Changes
+
+- b11870c: - **Fixed** Updated documentation to correctly reference React hooks from the `@accelint/bus/react` module.
+
 ## 1.2.0
 
 ### Minor Changes

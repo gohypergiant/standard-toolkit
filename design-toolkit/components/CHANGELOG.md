@@ -1,5 +1,20 @@
 # @accelint/design-toolkit
 
+## 5.2.0
+
+### Minor Changes
+
+- fc4d913: Add tooltip to Drawer.Menu.Item via textValue prop
+- ff7094f: Removed non-functional `isReadOnly` prop from `SelectField`
+- d5ee78f: Fix Drawer.Menu overflow
+- b4348ac: Refactor header to add opinionated variant
+- 4026632: Add Breadcrumb component
+
+### Patch Changes
+
+- Updated dependencies [b11870c]
+  - @accelint/bus@1.2.1
+
 ## 5.1.0
 
 ### Minor Changes
