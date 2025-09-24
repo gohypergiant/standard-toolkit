@@ -15,8 +15,8 @@ import { tv } from '@/lib/utils';
 export const DividerStyles = tv({
   base: [
     'shrink-0 grow-0 border-0 bg-[var(--outline-static)]',
-    'orientation-horizontal:h-[1px] orientation-horizontal:w-full',
-    'orientation-vertical:h-full orientation-vertical:w-[1px]',
+    'orientation-horizontal:h-px orientation-horizontal:w-full',
+    'orientation-vertical:h-full orientation-vertical:w-px',
     // CSS flexbox breaks height: 100%, so we utilize align-self: stretch & height: auto instead. While width isn't broken, for consistency it's implemented the same way
     '[&:where(.flex>&)]:self-stretch',
     '[&:where(.flex>&)]:orientation-horizontal:w-auto',

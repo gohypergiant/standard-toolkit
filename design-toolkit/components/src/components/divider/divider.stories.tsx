@@ -42,7 +42,7 @@ export const Horizontal: StoryObj<typeof Divider> = {
     orientation: 'horizontal',
   },
   render: (args) => (
-    <div>
+    <div className='fg-primary-bold'>
       <div>Content above</div>
       <Divider {...args} />
       <div>Content below</div>
@@ -55,7 +55,7 @@ export const Vertical: StoryObj<typeof Divider> = {
     orientation: 'vertical',
   },
   render: (args) => (
-    <div className='flex gap-s p-s'>
+    <div className='fg-primary-bold flex gap-s p-s'>
       <div>Content left</div>
       <Divider {...args} />
       <div>Content right</div>
