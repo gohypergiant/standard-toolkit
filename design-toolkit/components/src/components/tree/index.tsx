@@ -11,8 +11,10 @@
  */
 'use client';
 
-import 'client-only';
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
+import { Cache } from '@/hooks/use-tree/actions/cache';
+import type { Key, Selection } from '@react-types/shared';
+import 'client-only';
 import {
   createContext,
   memo,
@@ -31,13 +33,11 @@ import {
   type TextProps,
   useDragAndDrop,
 } from 'react-aria-components';
-import { Cache } from '@/hooks/use-tree/actions/cache';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Lines } from '../lines';
 import { TreeStyles, TreeStylesDefaults } from './styles';
-import type { Key, Selection } from '@react-types/shared';
 import type { IconProps } from '../icon/types';
 import type {
   TreeContextValue,
@@ -335,7 +335,7 @@ function ItemContent({ children }: TreeItemContentProps) {
               {showVisibility && (
                 <Button
                   variant='icon'
-                  color='info'
+                  color='mono-bold'
                   size={size}
                   onPress={handlePress}
                   isDisabled={isDisabled}

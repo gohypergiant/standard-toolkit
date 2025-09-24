@@ -1,0 +1,61 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as DividerStories from './divider.stories';
+
+<Meta of={DividerStories} />
+
+# Divider
+
+The Divider component provides a simple visual separator between content sections. It supports both horizontal and vertical orientations, making it versatile for various layout needs. Built with accessibility in mind, it uses the semantic `<hr>` element with appropriate styling.
+
+## Example usage
+
+### Basic
+```tsx
+<Divider />
+```
+<Canvas of={DividerStories.Default} />
+
+### Horizontal
+```tsx
+<div>
+  <div>Content above</div>
+  <Divider />
+  <div>Content below</div>
+</div>
+```
+<Canvas of={DividerStories.Horizontal} />
+
+### Vertical
+```tsx
+<div className='flex gap-s p-s'>
+  <div>Content left</div>
+  <Divider orientation="vertical" />
+  <div>Content right</div>
+</div>
+```
+<Canvas of={DividerStories.Vertical} />
+
+### Divider.Provider
+```tsx
+<Divider.Provider orientation="vertical">
+  <Divider />
+  <Divider />
+</Divider.Provider>
+```
+
+## Props
+
+The Divider component accepts all standard HTML hr attributes.
+
+### Core Props
+* **`orientation`** - Direction of the divider: `'horizontal'` (default) | `'vertical'`
+* **`className`** - Additional CSS classes for custom styling
+
+## Implementation Notes
+
+The `Divider` component is built using a semantic `<hr>` element, ensuring proper accessibility. It uses the `data-orientation` attribute to control styling based on orientation.
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/divider)
+
+The component accepts all standard HTML hr attributes and forwards them to the underlying element. The divider automatically adapts its appearance based on the orientation - horizontal dividers span the full width with minimal height, while vertical dividers span the full height with minimal width.
