@@ -97,6 +97,6 @@ export const TableStyles = tv({
   slots: {
     base: 'group/table',
     menuItem: 'cursor-pointer disabled:cursor-auto',
-    notPersistRowKebab: 'opacity-0 hover:opacity-100',
+    notPersistRowKebab: 'invisible hover:*:visible group-hover/row:*:visible',
   },
 });
