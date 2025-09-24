@@ -20,7 +20,7 @@ export const MenuStyles = tv({
   slots: {
     menu: 'group/menu overflow-y-auto overflow-x-clip rounded-medium bg-surface-overlay shadow-elevation-overlay outline outline-static',
     item: [
-      'group/menu-item flex items-center gap-x-s px-s text-body-s outline outline-transparent',
+      'group/menu-item flex cursor-pointer items-center gap-x-s px-s text-body-s outline outline-transparent',
       'grid grid-cols-[auto_auto_1fr_auto] [grid-template-areas:"icon_label_space_action"_"icon_description_space_action"]',
       'enabled:focus-visible:outline-interactive-hover',
 
