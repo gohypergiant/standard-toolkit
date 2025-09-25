@@ -14,7 +14,7 @@
 import { useEffect, useRef } from 'react';
 import { Broadcast } from '../broadcast';
 import { useEffectEvent } from './ponyfill';
-import type { ExtractEvent, Payload } from '../broadcast/types';
+import type { EmitOptions, ExtractEvent, Payload } from '../broadcast/types';
 
 /**
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having
@@ -51,6 +51,7 @@ export function useEmit<
   T extends P['type'] = P['type'],
 >(
   type: T,
+  options?: EmitOptions,
 ): ExtractEvent<P, T> extends { payload: infer Data }
   ? (payload: Data) => void
   : () => void {
@@ -62,7 +63,7 @@ export function useEmit<
         ? Data
         : never,
     ) => {
-      bus.current.emit(type, payload);
+      bus.current.emit(type, payload, options);
     },
   ) as ExtractEvent<P, T> extends { payload: infer Data }
     ? (payload: Data) => void
