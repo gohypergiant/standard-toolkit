@@ -44,3 +44,7 @@ export type ExtractEvent<
 > = {
   [K in P['type']]: Extract<P, { type: K }>;
 }[T];
+
+export type EmitOptions = {
+  echo: boolean;
+};

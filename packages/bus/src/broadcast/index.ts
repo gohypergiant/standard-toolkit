@@ -11,7 +11,13 @@
  */
 
 import { DEFAULT_CONFIG } from './constants';
-import type { BroadcastConfig, ExtractEvent, Listener, Payload } from './types';
+import type {
+  BroadcastConfig,
+  EmitOptions,
+  ExtractEvent,
+  Listener,
+  Payload,
+} from './types';
 
 /** Broadcast event class allows for emitting and listening for events */
 export class Broadcast<
@@ -187,6 +193,7 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param payload - The event payload.
+   * @param options.echo - If true (default), also deliver to this context via channel.onmessage.
    *
    * @example
    * bus.emit(
@@ -205,12 +212,14 @@ export class Broadcast<
     payload: ExtractEvent<P, T> extends { payload: infer Data }
       ? Data
       : undefined,
+    options?: EmitOptions,
   ): void;
   emit<T extends P['type']>(
     type: T,
     payload?: ExtractEvent<P, T> extends { payload: infer Data }
       ? Data
       : undefined,
+    options?: EmitOptions,
   ) {
     if (!this.channel) {
       console.warn('Cannot emit: BroadcastChannel is not initialized.');
@@ -227,7 +236,9 @@ export class Broadcast<
     }
 
     // NOTE: this allows the context that emitted the event to also listen for it
-    this.channel.onmessage({ data: message } as MessageEvent<P>);
+    if (options?.echo) {
+      this.channel.onmessage({ data: message } as MessageEvent<P>);
+    }
   }
 
   /**
