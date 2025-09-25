@@ -38,7 +38,7 @@ export const MenuStyles = tv({
       'color-serious:enabled:open:fg-a11y-on-utility color-serious:enabled:open:bg-serious-bold',
       'color-serious:enabled:selected:fg-a11y-on-utility color-serious:enabled:selected:bg-serious-bold',
 
-      'disabled:fg-disabled disabled:bg-transparent',
+      'disabled:fg-disabled disabled:bg-transparent disabled:cursor-not-allowed',
     ],
     icon: '[grid-area:icon]',
     label:
