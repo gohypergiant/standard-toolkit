@@ -17,6 +17,7 @@ import userEvent from '@testing-library/user-event';
 import { Heading, Text } from 'react-aria-components';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
+import { Divider } from '../divider';
 import { Icon } from '../icon';
 import { Sidenav } from './';
 import type { ReactNode } from 'react';
@@ -45,7 +46,7 @@ function setup(
             </Icon>
             <Text>Nav item</Text>
           </Sidenav.Item>
-          <Sidenav.Divider />
+          <Divider />
           <Heading>External</Heading>
           <Sidenav.Link href='#' textValue='Link item'>
             <Icon>
@@ -53,7 +54,7 @@ function setup(
             </Icon>
             <Text>Link item</Text>
           </Sidenav.Link>
-          <Sidenav.Divider />
+          <Divider />
           <Heading>Menu</Heading>
           <Sidenav.Menu
             data-testid='menu'

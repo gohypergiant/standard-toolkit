@@ -139,6 +139,9 @@ export type {
 export { Dialog, DialogContext } from './components/dialog';
 export { DialogStyles } from './components/dialog/styles';
 export type { DialogProps } from './components/dialog/types';
+export { Divider, DividerContext } from './components/divider';
+export { DividerStyles } from './components/divider/styles';
+export type { DividerProps } from './components/divider/types';
 export {
   DrawerEventNamespace,
   DrawerEventTypes,

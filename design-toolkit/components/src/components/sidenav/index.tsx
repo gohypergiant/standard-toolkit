@@ -36,6 +36,7 @@ import {
 } from 'react-aria-components';
 import { containsAnyOfExactChildren, containsExactChildren } from '@/lib/react';
 import { Avatar, AvatarContext } from '../avatar';
+import { DividerContext } from '../divider';
 import { Icon, IconContext } from '../icon';
 import { Tooltip } from '../tooltip';
 import { SidenavEventTypes } from './events';
@@ -45,7 +46,6 @@ import type {
   SidenavCloseEvent,
   SidenavContentProps,
   SidenavContextValue,
-  SidenavDividerProps,
   SidenavEvent,
   SidenavFooterProps,
   SidenavHeaderProps,
@@ -161,9 +161,11 @@ Sidenav.displayName = 'Sidenav';
 
 function SidenavContent({ className, children, ...rest }: SidenavContentProps) {
   return (
-    <div {...rest} className={content({ className })}>
-      {children}
-    </div>
+    <Provider values={[[DividerContext, { className: divider() }]]}>
+      <div {...rest} className={content({ className })}>
+        {children}
+      </div>
+    </Provider>
   );
 }
 SidenavContent.displayName = 'Sidenav.Content';
@@ -316,11 +318,6 @@ function SidenavLink({
 }
 SidenavLink.displayName = 'Sidenav.Link';
 
-function SidenavDivider({ className, ...rest }: SidenavDividerProps) {
-  return <hr {...rest} className={divider({ className })} />;
-}
-SidenavDivider.displayName = 'Sidenav.Divider';
-
 function SidenavAvatar({ children, className, ...rest }: SidenavAvatarProps) {
   containsAnyOfExactChildren({
     children,
@@ -470,7 +467,6 @@ Sidenav.Trigger = SidenavTrigger;
 Sidenav.Header = SidenavHeader;
 Sidenav.Item = SidenavItem;
 Sidenav.Link = SidenavLink;
-Sidenav.Divider = SidenavDivider;
 Sidenav.Avatar = SidenavAvatar;
 Sidenav.Footer = SidenavFooter;
 Sidenav.Content = SidenavContent;
