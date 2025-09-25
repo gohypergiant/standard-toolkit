@@ -1,5 +1,8 @@
 {
   "color-info": "[data-color=\"info\"]",
+  "color-mono-muted": "[data-color=\"mono-muted\"]",
+  "color-mono-bold": "[data-color=\"mono-bold\"]",
+  "color-accent": "[data-color=\"accent\"]",
   "color-advisory": "[data-color=\"advisory\"]",
   "color-normal": "[data-color=\"normal\"]",
   "color-serious": "[data-color=\"serious\"]",

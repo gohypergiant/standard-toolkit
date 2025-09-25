@@ -40,15 +40,15 @@ off(); // unsubscribe from event
 ### React
 
 ```tsx
-import { useEvent, useOn } from '@accelint/bus';
+import { useEmit, useOn } from '@accelint/bus/react';
 
 function MyComponent(props) {
   const { foo } = props;
   const [thing, setMyThing] = useState(false);
 
-  const emit = useOn<MyEvent>('some-event');
+  const emit = useEmit<MyEvent>('some-event');
 
-  useEvent<MyEvent>('some-event', (payload) => {
+  useOn<MyEvent>('some-event', (payload) => {
     // this callback is stable and you can access props / state without
     // the values becoming stale. Event is automatically cleaned up.
 
@@ -68,17 +68,17 @@ function MyComponent(props) {
 ```
 
 ```tsx
-import { useBus } from '@accelint/bus';
+import { useBus } from '@accelint/bus/react';
 
 function MyComponent(props) {
   const { foo } = props;
   const [thing, setMyThing] = useState(false);
 
-  const { useOn, useEvent } = useBus<MyEvent>();
+  const { useOn, useEmit } = useBus<MyEvent>();
 
   const emit = useEmit('some-event');
 
-  useEvent('some-event', (payload) => {
+  useOn('some-event', (payload) => {
     // this callback is stable and you can access props / state without
     // the values becoming stale. Event is automatically cleaned up.
 

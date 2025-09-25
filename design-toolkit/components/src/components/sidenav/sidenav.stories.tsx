@@ -16,6 +16,7 @@ import React, { type ComponentProps, useState } from 'react';
 import { Heading, Text } from 'react-aria-components';
 import { Avatar } from '../avatar';
 import { Button } from '../button';
+import { Divider } from '../divider';
 import { Drawer } from '../drawer';
 import { Icon } from '../icon';
 import { Sidenav } from './index';
@@ -110,12 +111,10 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
                       <Text>{item.text}</Text>
                     </Sidenav.Item>
                   ))}
-                  {i !== Object.entries(sections).length - 1 && (
-                    <Sidenav.Divider />
-                  )}
+                  {i !== Object.entries(sections).length - 1 && <Divider />}
                 </React.Fragment>
               ))}
-              <Sidenav.Divider />
+              <Divider />
               <Heading>External</Heading>
               <Sidenav.Link href='#' textValue='Nav Link'>
                 <Icon>
@@ -130,7 +129,7 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
                 <Text>Nav Link</Text>
               </Sidenav.Link>
 
-              <Sidenav.Divider />
+              <Divider />
               <Heading>Menu</Heading>
               <Sidenav.Menu
                 icon={

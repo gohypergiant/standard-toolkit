@@ -27,7 +27,6 @@ It is composed of the following components:
 - **Sidenav.Link** - Interactive navigation item that can be selected, disabled, or contain nested items
 - **Sidenav.Menu** - Expandable menu component that contains nested navigation items
 - **Sidenav.Menu.Item** - Individual navigation item within a Sidenav.Menu
-- **Sidenav.Divider** - Visual separator to group navigation items
 - **Sidenav.Content** - Container for content
 - **Sidenav.Footer** - Container for footer content
 
@@ -61,12 +60,12 @@ It is composed of the following components:
           <Icon><HomeIcon /></Icon>
           <Text>Home</Text>
         </Sidenav.Item>
-        <Sidenav.Divider />
+        <Divider />
         <Sidenav.Item isSelected>
           <Icon><SettingsIcon /></Icon>
           <Text>Settings</Text>
         </Sidenav.Item>
-        <Sidenav.Divider />
+        <Divider />
         <Sidenav.Menu title="More Options" icon={<Icon><MenuIcon /></Icon>}>
           <Sidenav.Menu.Item>
             <Text>Sub Item 1</Text>
@@ -142,9 +141,6 @@ Supports all the `ToggleButton` [props and events](?path=/story/components-butto
 ### Sidenav.Footer Props
 - **`children`** `ReactNode` - Content to be rendered in the footer section
 - **`className`** `string` - Class name for the footer container
-
-### Sidenav.Divider Props
-- **`className`** `string` - Custom CSS class name for the divider
 
 ## States and Styling
 
