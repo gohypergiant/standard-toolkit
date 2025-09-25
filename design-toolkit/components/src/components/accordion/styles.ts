@@ -23,7 +23,9 @@ export const AccordionStyles = tv({
     header: [
       'fg-primary-bold flex w-full items-center gap-s rounded-medium px-s py-xs outline-none',
       'group-enabled/accordion:focus-visible-within:bg-interactive-muted-hover group-enabled/accordion:hover:bg-interactive-muted-hover',
+      'group-enabled/accordion:pressed:bg-interactive-muted-pressed',
       'group-disabled/accordion:fg-disabled group-disabled/accordion:cursor-not-allowed',
+      'transition-color duration-[80ms]',
     ],
     heading: 'grow',
     trigger: [
