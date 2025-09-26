@@ -185,9 +185,11 @@ export type SemanticColorTokens = {
       pressed: RGBA;
     };
     mono: {
-      bold: RGBA;
-      hover: RGBA;
-      pressed: RGBA;
+      bold: {
+        base: RGBA;
+        hover: RGBA;
+        pressed: RGBA;
+      };
     };
   };
   shadow: {

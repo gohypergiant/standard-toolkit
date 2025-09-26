@@ -9,9 +9,9 @@
       },
       "interactive": {
         "bold": {
-          "base": "--primitive-neutral-100",
-          "hover": "--primitive-neutral-200",
-          "pressed": "--primitive-neutral-400"
+          "base": "--primitive-neutral-50",
+          "hover": "--primitive-neutral-100",
+          "pressed": "--primitive-neutral-300"
         },
         "muted": {
           "base": "--primitive-neutral-700",
@@ -149,9 +149,11 @@
         "pressed": "--primitive-utility-critical-600"
       },
       "mono": {
-        "bold": "--primitive-neutral-50",
-        "hover": "--primitive-neutral-100",
-        "pressed": "--primitive-neutral-300"
+        "bold": {
+          "base": "--primitive-neutral-50",
+          "hover": "--primitive-neutral-100",
+          "pressed": "--primitive-neutral-300"
+        }
       }
     },
     "shadow": {
@@ -311,9 +313,11 @@
         "pressed": "--primitive-utility-critical-500"
       },
       "mono": {
-        "bold": "--primitive-neutral-900",
-        "hover": "--primitive-neutral-700",
-        "pressed": "--primitive-neutral-600"
+        "bold": {
+          "base": "--primitive-neutral-900",
+          "hover": "--primitive-neutral-700",
+          "pressed": "--primitive-neutral-600"
+        }
       }
     },
     "shadow": {
