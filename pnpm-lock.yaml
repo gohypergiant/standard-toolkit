@@ -301,7 +301,7 @@ importers:
         specifier: ^3.25.3
         version: 3.25.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/overlays':
-        specifier: ^3.29.0
+        specifier: ^3.29.1
         version: 3.29.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/ssr':
         specifier: ^3.9.10
