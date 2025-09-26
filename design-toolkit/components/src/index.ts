@@ -280,6 +280,27 @@ export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
+export { TableContext } from './components/table/context';
+export { Table } from './components/table';
+export {
+  TableBodyStyles,
+  TableCellStyles,
+  TableCellStylesDefaults,
+  TableHeaderCellStyles,
+  TableHeaderCellStylesDefaults,
+  TableHeaderStyles,
+  TableRowStyles,
+  TableStyles,
+} from './components/table/styles';
+export type {
+  TableBodyProps,
+  TableCellProps,
+  TableContextValue,
+  TableHeaderCellProps,
+  TableHeaderProps,
+  TableProps,
+  TableRowProps,
+} from './components/table/types';
 export { Tabs, TabsContext } from './components/tabs';
 export { TabStyles } from './components/tabs/styles';
 export type { TabsProps } from './components/tabs/types';
