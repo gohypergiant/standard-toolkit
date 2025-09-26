@@ -20,9 +20,13 @@ npm install @accelint/map-toolkit
 
   - [misc files, ex: package.json, etc]
 
+## Installing New Packages
 Similar to DesignTK, all features within a technology MUST work together, to help guarantee this we will not publish them as individual packages, but as part of a single package.
 
-The one open question will be around how to not force unnecessary dependencies on consumers. If we choose to use optionalDependencies, instead of peerDependencies (ref: @accelint/bus/react & https://github.com/gohypergiant/standard-toolkit/blob/main/packages/bus/package.json#L57 ) it will make it more flexible (but also more challenging). We’ll need to document that this is the plan (unless another option is found) on a per feature basis so that consumers know which dependencies to install
+In an effort to reduce the number of unnecessary dependencies being installed by consumers, we are opting to use `optionalDependencies`, instead of `peerDependencies`. This allows us for more flexibility, but also requires us to be more mindful of how these packages are being used.
+
+### Example
+`pnpm i --save-optional deckgl@latest`
 
 ## Usage
 - Under Construction 🚧
