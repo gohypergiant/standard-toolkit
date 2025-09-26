@@ -313,6 +313,12 @@ export type { TextAreaFieldProps } from './components/text-area-field/types';
 export { TextField, TextFieldContext } from './components/text-field';
 export { TextFieldStyles } from './components/text-field/styles';
 export type { TextFieldProps } from './components/text-field/types';
+export { TimeField } from './components/time-field';
+export {
+  TimeFieldStyles,
+  TimeFieldSylesDefaults,
+} from './components/time-field/styles';
+export type { TimeFieldProps } from './components/time-field/types';
 export { Tooltip, TooltipContext } from './components/tooltip';
 export { TooltipStyles } from './components/tooltip/styles';
 export type {
