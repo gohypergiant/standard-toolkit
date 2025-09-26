@@ -30,7 +30,7 @@ describe('useOn', () => {
 
     expect(callback).not.toHaveBeenCalled();
 
-    bus.emit('foo', { foo: true }, { echo: true });
+    bus.emit('foo', { foo: true });
 
     expect(callback).toHaveBeenCalledOnce();
     expect(callback).toHaveBeenCalledWith({
@@ -46,7 +46,7 @@ describe('useEmit', () => {
 
     const off = bus.on('bar', callback);
 
-    const { result } = renderHook(() => useEmit<Events>('bar', { echo: true }));
+    const { result } = renderHook(() => useEmit<Events>('bar'));
 
     result.current({ bar: true });
 

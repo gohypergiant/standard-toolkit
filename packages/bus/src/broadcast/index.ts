@@ -236,7 +236,7 @@ export class Broadcast<
     }
 
     // NOTE: this allows the context that emitted the event to also listen for it
-    if (options?.echo) {
+    if (options?.echo ?? true) {
       this.channel.onmessage({ data: message } as MessageEvent<P>);
     }
   }
