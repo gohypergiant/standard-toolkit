@@ -1,0 +1,481 @@
+[
+  {
+    "fid": "1",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-122.4194, 37.7749]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": true,
+      "is_special_process": false,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "173029 mvsa",
+      "track_number_system": "17",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 245,
+      "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "is_exercise": false,
+      "speed_mps": 89.53825682369292396
+    }
+  },
+  {
+    "fid": "2",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [2.3522, 48.8566]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": false,
+      "is_special_process": true,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "23",
+      "track_number_system": "23",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 12,
+      "uuid": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+      "is_exercise": true,
+      "speed_mps": 156.3,
+      "sidc": "10051000311300000000"
+    }
+  },
+  {
+    "fid": "3",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [139.6917, 35.6895]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": false,
+      "is_special_process": false,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "8",
+      "track_number_system": "8",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 178,
+      "uuid": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+      "is_exercise": false,
+      "speed_mps": 203.7,
+      "sidc": "10031000131112000000"
+    }
+  },
+  {
+    "fid": "4",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-74.0059, 40.7128]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": true,
+      "is_special_process": false,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "41",
+      "track_number_system": "41",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 332,
+      "uuid": "d4e5f6a7-b8c9-0123-def4-56789012345a",
+      "is_exercise": true,
+      "speed_mps": 45.2,
+      "sidc": "10031000161317000000"
+    }
+  },
+  {
+    "fid": "5",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [151.2093, -33.8688]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": false,
+      "is_special_process": true,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "56",
+      "track_number_system": "56",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 87,
+      "uuid": "e5f6a7b8-c9d0-1234-ef56-789012345bcd",
+      "is_exercise": false,
+      "speed_mps": 124.8,
+      "sidc": "10031000141215000000"
+    }
+  },
+  {
+    "fid": "6",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-0.1276, 51.5074]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": false,
+      "is_special_process": false,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "72",
+      "track_number_system": "72",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 156,
+      "uuid": "f6a7b8c9-d0e1-2345-f678-90123456cdef",
+      "is_exercise": true,
+      "speed_mps": 78.9,
+      "sidc": "10031000121113000000"
+    }
+  },
+  {
+    "fid": "7",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [13.405, 52.52]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": true,
+      "is_special_process": true,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "93",
+      "track_number_system": "93",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 267,
+      "uuid": "a7b8c9d0-e1f2-3456-789a-0123456def01",
+      "is_exercise": false,
+      "speed_mps": 191.4,
+      "sidc": "10031000171218000000"
+    }
+  },
+  {
+    "fid": "8",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [55.3781, 25.0343]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": true,
+      "is_special_process": false,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "15",
+      "track_number_system": "15",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 34,
+      "uuid": "b8c9d0e1-f2a3-4567-89bc-123456ef0123",
+      "is_exercise": true,
+      "speed_mps": 67.1,
+      "sidc": "10031000181119000000"
+    }
+  },
+  {
+    "fid": "9",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [103.8198, 1.3521]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": false,
+      "is_special_process": false,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "28",
+      "track_number_system": "28",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 298,
+      "uuid": "c9d0e1f2-a3b4-5678-9cde-23456f012345",
+      "is_exercise": false,
+      "speed_mps": 145.6,
+      "sidc": "10031000111016000000"
+    }
+  },
+  {
+    "fid": "10",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-79.3832, 43.6532]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": false,
+      "is_special_process": true,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "64",
+      "track_number_system": "64",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 123,
+      "uuid": "d0e1f2a3-b4c5-6789-def0-3456012345ab",
+      "is_exercise": true,
+      "speed_mps": 98.3,
+      "sidc": "10031000191220000000"
+    }
+  },
+  {
+    "fid": "11",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [37.6173, 55.7558]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": true,
+      "is_special_process": false,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "39",
+      "track_number_system": "39",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 215,
+      "uuid": "e1f2a3b4-c5d6-789a-ef01-456789abcdef",
+      "is_exercise": false,
+      "speed_mps": 172.8,
+      "sidc": "10031000201121000000"
+    }
+  },
+  {
+    "fid": "12",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [116.4074, 39.9042]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": true,
+      "is_special_process": true,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "81",
+      "track_number_system": "81",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 56,
+      "uuid": "f2a3b4c5-d6e7-89ab-f012-56789abcdef0",
+      "is_exercise": true,
+      "speed_mps": 112.5,
+      "sidc": "10031000131022000000"
+    }
+  },
+  {
+    "fid": "13",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-87.6298, 41.8781]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": false,
+      "is_special_process": false,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "52",
+      "track_number_system": "52",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 189,
+      "uuid": "a3b4c5d6-e7f8-9abc-0123-6789abcdef01",
+      "is_exercise": false,
+      "speed_mps": 83.7,
+      "sidc": "10031000141123000000"
+    }
+  },
+  {
+    "fid": "14",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [121.4737, 31.2304]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": false,
+      "is_special_process": true,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "76",
+      "track_number_system": "76",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 314,
+      "uuid": "b4c5d6e7-f8a9-bcde-1234-789abcdef012",
+      "is_exercise": true,
+      "speed_mps": 204.1,
+      "sidc": "10031000151224000000"
+    }
+  },
+  {
+    "fid": "15",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [72.8777, 19.076]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": true,
+      "is_special_process": false,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "33",
+      "track_number_system": "33",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 67,
+      "uuid": "c5d6e7f8-a9ba-cdef-2345-89abcdef0123",
+      "is_exercise": false,
+      "speed_mps": 134.9,
+      "sidc": "10031000161125000000"
+    }
+  },
+  {
+    "fid": "16",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-46.6333, -23.5505]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": true,
+      "is_special_process": true,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "91",
+      "track_number_system": "91",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 223,
+      "uuid": "d6e7f8a9-bacb-def0-3456-9abcdef01234",
+      "is_exercise": true,
+      "speed_mps": 58.4,
+      "sidc": "10031000171226000000"
+    }
+  },
+  {
+    "fid": "17",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [144.9631, -37.8136]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": false,
+      "is_special_process": false,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "47",
+      "track_number_system": "47",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 145,
+      "uuid": "e7f8a9ba-cbdc-ef01-4567-abcdef012345",
+      "is_exercise": false,
+      "speed_mps": 167.2,
+      "sidc": "10031000181127000000"
+    }
+  },
+  {
+    "fid": "18",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [31.2357, 30.0444]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": false,
+      "is_special_process": true,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "65",
+      "track_number_system": "65",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 278,
+      "uuid": "f8a9bacb-dced-f012-5678-bcdef0123456",
+      "is_exercise": true,
+      "speed_mps": 91.6,
+      "sidc": "10031000191028000000"
+    }
+  },
+  {
+    "fid": "19",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [126.978, 37.5665]
+    },
+    "properties": {
+      "is_emergency": false,
+      "is_force_tell": true,
+      "is_special_process": false,
+      "is_simulation": true,
+      "environment": "AIR",
+      "track_number": "18",
+      "track_number_system": "18",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 102,
+      "uuid": "a9bacbdc-edf0-1234-6789-cdef01234567",
+      "is_exercise": false,
+      "speed_mps": 186.3,
+      "sidc": "10031000201129000000"
+    }
+  },
+  {
+    "fid": "20",
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [18.4241, -33.9249]
+    },
+    "properties": {
+      "is_emergency": true,
+      "is_force_tell": true,
+      "is_special_process": false,
+      "is_simulation": false,
+      "environment": "AIR",
+      "track_number": "84",
+      "track_number_system": "84",
+      "site": "UNCLASSIFIED",
+      "platform_type": "MSCS",
+      "course": 356,
+      "uuid": "bacbdced-f012-3456-789a-def012345678",
+      "is_exercise": true,
+      "speed_mps": 129.7,
+      "sidc": "10231500001100000000"
+    }
+  }
+]

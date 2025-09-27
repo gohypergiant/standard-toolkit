@@ -10,26 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-import { initialize, mswLoader } from 'msw-storybook-addon';
-import type { Preview } from '@storybook/react-vite';
-
-/*
- * Initializes MSW
- * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
- * to learn how to customize it
- */
-initialize();
-
-const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
-  loaders: [mswLoader],
+export const INITIAL_VIEW_STATE = {
+  longitude: -77.0369,
+  latitude: 38.9072,
+  zoom: 4,
+  minZoom: 1,
+  maxZoom: 22,
+  pitch: 0,
+  bearing: 0,
 };
 
-export default preview;
+export const MAP_STYLE =
+  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+
+export const PARAMETERS = {
+  depthWriteEnabled: true,
+  depthCompare: 'always',
+  depthBias: 0,
+  blend: true,
+  depthTest: false,
+  blendColorSrcFactor: 'src-alpha',
+  blendColorDstFactor: 'one-minus-src-alpha',
+  blendAlphaSrcFactor: 'one',
+  blendAlphaDstFactor: 'one-minus-src-alpha',
+  blendColorOperation: 'add',
+  blendAlphaOperation: 'add',
+};

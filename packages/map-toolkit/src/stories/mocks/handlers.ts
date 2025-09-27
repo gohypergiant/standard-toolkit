@@ -10,26 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { initialize, mswLoader } from 'msw-storybook-addon';
-import type { Preview } from '@storybook/react-vite';
+import { HttpResponse, http } from 'msw';
+import { default as data } from '../../stories/_fixtures/data.json';
 
-/*
- * Initializes MSW
- * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
- * to learn how to customize it
- */
-initialize();
-
-const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
-  loaders: [mswLoader],
-};
-
-export default preview;
+export const handlers = [
+  http.get('/tracks', () => {
+    return HttpResponse.json(data);
+  }),
+];

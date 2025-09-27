@@ -10,26 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { initialize, mswLoader } from 'msw-storybook-addon';
-import type { Preview } from '@storybook/react-vite';
+import { describe, expect, it } from 'vitest';
 
-/*
- * Initializes MSW
- * See https://github.com/mswjs/msw-storybook-addon#configuring-msw
- * to learn how to customize it
- */
-initialize();
-
-const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
-  loaders: [mswLoader],
-};
-
-export default preview;
+describe('hello world test', () => {
+  it('should run test', () => {
+    expect(true).toBe(true);
+  });
+});
