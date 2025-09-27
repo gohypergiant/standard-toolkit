@@ -45,7 +45,16 @@
     "vitest-broadcast-channel-mock": "0.1.0"
   },
   "dependencies": {
+    "@deck.gl/core": "9.1.14",
+    "@deck.gl/layers": "9.1.14",
+    "@deckgl-fiber-renderer/dom": "1.4.0",
+    "milsymbol": "3.0.2",
     "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@deck.gl/core": "9.1.14",
+    "@deck.gl/layers": "9.1.14",
+    "@deckgl-fiber-renderer/dom": "1.4.0"
   },
   "optionalDependencies": {
     "react": "^19.0.0"

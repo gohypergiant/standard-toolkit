@@ -15,12 +15,11 @@
 import 'client-only';
 import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
-import type { Key } from '@react-types/shared';
 import {
-  type Row,
-  type RowSelectionState,
   getCoreRowModel,
   getSortedRowModel,
+  type Row,
+  type RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -35,6 +34,7 @@ import { TableCell } from './table-cell';
 import { TableHeader } from './table-header';
 import { HeaderCell } from './table-header-cell';
 import { TableRow } from './table-row';
+import type { Key } from '@react-types/shared';
 import type { TableProps } from './types';
 
 const { menuItem, notPersistRowKebab } = TableStyles();
@@ -261,7 +261,7 @@ export function Table<T extends { id: Key }>({
       columnOrder: columns.map((col) => col.id!),
     },
     state: {
-      rowSelection
+      rowSelection,
     },
     getRowId: (row, index) => {
       // Use the index as the row ID if no unique identifier is available
