@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { type UniqueId } from '@accelint/core';
+
 /** Broadcast configuration type. */
 export type BroadcastConfig = {
   channelName: string;
@@ -31,9 +33,11 @@ export type Payload<
 > = P extends undefined
   ? {
       type: T;
+      target?: UniqueId;
     }
   : {
       type: T;
+      target?: UniqueId;
       payload: P;
     };
 
@@ -44,3 +48,7 @@ export type ExtractEvent<
 > = {
   [K in P['type']]: Extract<P, { type: K }>;
 }[T];
+
+export type EmitOptions = {
+  target: 'self' | 'others' | 'all' | UniqueId;
+};

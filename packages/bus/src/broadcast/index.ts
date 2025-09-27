@@ -10,13 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
+import { type UniqueId, uuid } from '@accelint/core';
 import { DEFAULT_CONFIG } from './constants';
-import type { BroadcastConfig, ExtractEvent, Listener, Payload } from './types';
+import type {
+  BroadcastConfig,
+  EmitOptions,
+  ExtractEvent,
+  Listener,
+  Payload,
+} from './types';
 
 /** Broadcast event class allows for emitting and listening for events */
 export class Broadcast<
-  // biome-ignore lint/suspicious/noExplicitAny: intentional
-  P extends { type: string; payload?: unknown } = Payload<string, any>,
+  P extends { type: string; payload?: unknown; target?: UniqueId } = Payload<
+    string,
+    // biome-ignore lint/suspicious/noExplicitAny: intentional
+    any
+  >,
 > {
   protected channelName: string;
   protected channel: BroadcastChannel | null = null;
@@ -25,10 +35,12 @@ export class Broadcast<
 
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
   private static instance: Broadcast<any> | null = null;
+  #uuid: UniqueId;
 
   /** Broadcast class constructor. */
   constructor(config?: BroadcastConfig) {
     this.channelName = config?.channelName ?? DEFAULT_CONFIG.channelName;
+    this.#uuid = uuid();
 
     this.init();
   }
@@ -47,6 +59,10 @@ export class Broadcast<
     return Broadcast.instance as Broadcast<T>;
   }
 
+  get uuid(): UniqueId {
+    return this.#uuid;
+  }
+
   /**
    * Initialize the BroadcastChannel and set up event listeners.
    */
@@ -56,12 +72,17 @@ export class Broadcast<
     this.channel.onmessageerror = this.onError.bind(this);
   }
 
+  private matchesContext(contextId?: UniqueId) {
+    return !contextId || contextId === this.#uuid;
+  }
+
   /**
    * Process incoming messages.
    *
    * @param event - Incoming message event.
    */
   protected onMessage(event: MessageEvent<P>) {
+    console.log(event);
     this.handleListeners(event.data);
   }
 
@@ -70,19 +91,35 @@ export class Broadcast<
    *
    * @param error - Error event.
    */
-  protected onError(error: MessageEvent) {
+  protected onError(error: MessageEvent<Error>) {
     console.error('BroadcastChannel message error', error);
   }
 
   /**
    * Iterate through listeners for the given topic and invoke callbacks if criteria match.
    *
-   * @param payload - The event payload containing type, payload, targets, and topic.
+   * @param data - The event payload containing `type`, optional `payload`, and optional `targetId`.
+   *
+   * @remarks
+   * If `targetId` is provided, delivery is scoped to a specific browser context.
+   * We assume exactly one bus instance per context, so events are delivered only when
+   * `target === this.uuid`. If omitted, the event is treated as a broadcast within
+   * this context (audience filtering may occur elsewhere).
    */
   protected handleListeners(data: P) {
+    console.log(this.listeners);
     const handler = this.listeners[data.type];
 
     if (!handler) {
+      return;
+    }
+
+    /**
+     * Note: We assume here that if a `targetId` is passed it is intended to specify a specific browser context.
+     * Since there is only one bus per browser context we can infer based on the instance member uuid.
+     *
+     */
+    if (!this.matchesContext(data.target)) {
       return;
     }
 
@@ -187,6 +224,7 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param payload - The event payload.
+   * @param options.echo - If true (default), also deliver to this context via channel.onmessage.
    *
    * @example
    * bus.emit(
@@ -205,29 +243,48 @@ export class Broadcast<
     payload: ExtractEvent<P, T> extends { payload: infer Data }
       ? Data
       : undefined,
+    options?: EmitOptions,
   ): void;
   emit<T extends P['type']>(
     type: T,
     payload?: ExtractEvent<P, T> extends { payload: infer Data }
       ? Data
       : undefined,
+    options?: EmitOptions,
   ) {
     if (!this.channel) {
       console.warn('Cannot emit: BroadcastChannel is not initialized.');
       return;
     }
 
-    const message = { type, payload } as Payload as P;
-
-    this.channel.postMessage(message);
-
     if (!this.channel.onmessage) {
       console.warn('No listeners registered for this event type:', type);
       return;
     }
 
-    // NOTE: this allows the context that emitted the event to also listen for it
-    this.channel.onmessage({ data: message } as MessageEvent<P>);
+    const target = options?.target ?? 'all';
+    const message = { type, payload } as Payload as P;
+
+    switch (target) {
+      case 'all':
+        this.channel.postMessage(message);
+        this.channel.onmessage({ data: message } as MessageEvent<P>);
+        break;
+      case 'self':
+        this.channel.onmessage({ data: message } as MessageEvent<P>);
+        break;
+      case 'others':
+        this.channel.postMessage(message);
+        break;
+      default: {
+        const withTarget = { ...message, target };
+        // Note: handles the case where target id matches this browser context.
+        this.matchesContext(target)
+          ? this.channel.onmessage({ data: withTarget } as MessageEvent<P>)
+          : this.channel.postMessage(withTarget);
+        break;
+      }
+    }
   }
 
   /**

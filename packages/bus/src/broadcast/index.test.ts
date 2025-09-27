@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   mockBroadcastChannel,
@@ -31,7 +32,7 @@ describe('broadcast', () => {
     const fn = vi.fn();
 
     bus.on('test', fn);
-    bus.emit('test', 'test');
+    bus.emit('test', 'test', { echo: true });
 
     expect(fn).toHaveBeenCalled();
     expect(fn).toHaveBeenCalledWith({
@@ -80,5 +81,67 @@ describe('broadcast', () => {
 
     expect(fn).not.toHaveBeenCalled();
     expect(bus.getEvents()).toEqual([]);
+  });
+
+  it('should deliver to self', () => {
+    const bus = Broadcast.getInstance();
+    const fn = vi.fn();
+
+    bus.on('test', fn);
+    bus.emit('test', 'self', { target: 'self' });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith({ type: 'test', payload: 'self' });
+  });
+
+  it('should deliver to others', () => {
+    const bus = Broadcast.getInstance();
+    const fn = vi.fn();
+
+    bus.on('test', fn);
+    bus.emit('test', 'echo', { target: 'others' });
+
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('should deliver to all', () => {
+    const bus = Broadcast.getInstance();
+    const fn = vi.fn();
+
+    bus.on('test', fn);
+    bus.emit('test', 'all', { target: 'all' });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith({ type: 'test', payload: 'all' });
+  });
+
+  it('should default to all as target audience', () => {
+    const bus = Broadcast.getInstance();
+    const fn = vi.fn();
+
+    bus.on('test', fn);
+    bus.emit('test', 'default');
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith({ type: 'test', payload: 'default' });
+  });
+
+  it('should deliver to specific target', () => {
+    const bus = Broadcast.getInstance();
+    const fn = vi.fn();
+
+    bus.on('test', fn);
+    bus.emit('test', 'test', { target: bus.uuid });
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith({
+      type: 'test',
+      payload: 'test',
+      target: bus.uuid,
+    });
+
+    bus.emit('test', 'test', { target: uuid() });
+
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });
