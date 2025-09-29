@@ -9,6 +9,7 @@
     "**/*.test-d.ts"
   ],
   "compilerOptions": {
+    "jsx": "react",
     "rootDir": "src",
     "outDir": "dist",
     "paths": {

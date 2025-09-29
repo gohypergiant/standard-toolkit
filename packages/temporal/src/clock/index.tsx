@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { setClockInterval } from '@/timers';
 
 const timeFormatter = new Intl.DateTimeFormat('en-US', {
@@ -19,6 +19,9 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: false,
 });
 
+/**
+ * Outputs the current time in UTC as a span
+ */
 export function Clock() {
   const el = useRef<HTMLSpanElement>(null);
 
