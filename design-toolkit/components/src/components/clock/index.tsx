@@ -16,11 +16,13 @@ import { setClockInterval } from '@accelint/temporal';
 import { useEffect, useMemo, useState } from 'react';
 import type { ClockProps } from './types';
 
-const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
+const DEFAULT_OPTIONS: Intl.DateTimeFormatOptions = {
   timeStyle: 'long',
   timeZone: 'UTC',
   hour12: false,
-});
+};
+
+const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', DEFAULT_OPTIONS);
 
 /**
  * Clock - An auto-updating UTC time component.
@@ -48,10 +50,9 @@ export function Clock({ ref, options, ...rest }: ClockProps) {
   const formatter = useMemo(() => {
     return !options
       ? DEFAULT_FORMATTER
-      : new Intl.DateTimeFormat('en-US', options);
+      : new Intl.DateTimeFormat('en-US', { ...DEFAULT_OPTIONS, ...options });
   }, [options]);
 
-  // !options ? DEFAULT_FORMATTER : new Intl.DateTimeFormat('en-US', options)
   const [time, setTime] = useState<string>();
 
   useEffect(() => {
