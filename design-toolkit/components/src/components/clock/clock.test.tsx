@@ -10,14 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Clock } from '.';
 
 describe('clock', () => {
-  it('should render', () => {
+  it('should render', async () => {
     render(<Clock />);
-
-    expect(screen.getByText('UTC', { exact: false })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('UTC', { exact: false })).toBeInTheDocument();
+    });
   });
 });
