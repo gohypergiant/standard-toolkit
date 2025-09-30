@@ -1,0 +1,60 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as TimeFieldStories from './time-field.stories';
+
+<Meta of={TimeFieldStories} />
+
+# TimeField
+A form input component for entering and editing time values. 
+
+## Example usage
+```tsx
+<TimeField
+  label="Time"
+  defaultValue={parseTime('2020-01-23')}
+  granularity="second"
+  description="Format: hh:mm:ssz"
+/>
+```
+
+## Sizes
+
+* **small** - Compact size with smaller text and no time icon, ideal for dense layouts
+* **medium** - Standard size with time icon and larger text, suitable for most use cases
+
+**medium** is the default size and should be used in most cases, unless space constraints require the smaller variant.
+
+<Canvas of={TimeFieldStories.Default} />
+
+## Props
+
+### Core Props
+- **`label`** - Text label displayed above the input field
+- **`description`** - Helper text displayed below the input field
+- **`errorMessage`** - Error message displayed when validation fails
+- **`placeholder`** - Placeholder text shown when no value is entered
+- **`isRequired`** - Whether the field is required (adds optional label if not required)
+- **`isDisabled`** - Whether the field is disabled
+- **`isInvalid`** - Whether to show the field in an invalid state
+
+### Size & Appearance
+- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
+
+### Time Configuration
+- **`granularity`** - Time precision: `'hour'` | `'minute'` | `'second'` (default: `'second'`)
+- **`defaultValue`** - Initial time value
+- **`value`** - Controlled time value
+- **`onChange`** - Callback when time value changes
+
+## Examples
+
+### (Default)
+<Canvas of={TimeFieldStories.Default} />
+
+
+## Implementation Notes
+The `TimeField` component is built on top of React Aria Components, specifically wrapping the `TimeField` and `DateInput` components.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/TimeField.html)
+
+
