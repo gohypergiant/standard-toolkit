@@ -30,6 +30,7 @@ export const InputStyles = tv({
       'fg-primary-bold block w-full rounded-medium py-xs pr-[calc(var(--room)+var(--spacing-s))] pl-s font-display outline outline-interactive',
       'enabled:group-focus-visible-within/input:outline-accent-primary-bold',
       'enabled:group-hover/input:outline-interactive-hover',
+      'enabled:group-pressed/input:outline-interactive-pressed',
       'enabled:group-invalid/input:outline-serious-bold',
       'disabled:cursor-not-allowed disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
     ],
