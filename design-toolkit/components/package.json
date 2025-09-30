@@ -73,6 +73,7 @@
     "@accelint/bus": "^1.2.0",
     "@accelint/core": "^0.4.1",
     "@accelint/icons": "^2.0.3",
+    "@accelint/temporal": "^0.1.0",
     "@fontsource/roboto-flex": "^5.2.6",
     "@fontsource/roboto-mono": "^5.2.6",
     "@internationalized/date": "^3.8.2",
