@@ -47,6 +47,8 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', DEFAULT_OPTIONS);
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locale_options| DateTimeFormatOptions MDN}
  */
 export function Clock({ ref, options, ...rest }: ClockProps) {
+  const [time, setTime] = useState<string>('XX:XX:XX UTC');
+
   const stableOptions = useMemo(() => options, [JSON.stringify(options)]);
   const formatter = useMemo(() => {
     return !!stableOptions
@@ -56,8 +58,6 @@ export function Clock({ ref, options, ...rest }: ClockProps) {
         })
       : DEFAULT_FORMATTER;
   }, [stableOptions]);
-
-  const [time, setTime] = useState<string>();
 
   useEffect(() => {
     const cleanup = setClockInterval(() => {
@@ -69,7 +69,7 @@ export function Clock({ ref, options, ...rest }: ClockProps) {
 
   return (
     <time {...rest} ref={ref}>
-      {time || '00:00:00 UTC'}
+      {time}
     </time>
   );
 }
