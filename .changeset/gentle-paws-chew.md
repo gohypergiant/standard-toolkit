@@ -1,5 +1,5 @@
 ---
-"@accelint/design-system": minor
+"@accelint/design-toolkit": minor
 ---
 - Update styling and states for Button, IconButton, ToggleButton
 - Remove support for color variant 'info'
