@@ -35,7 +35,11 @@ const DEFAULT_OPTIONS: Intl.DateTimeFormatOptions = {
  * <Clock /> // <time>15:54:14 UTC</time>
  *
  * @example
- * // Custom Clock
+ * // Styled
+ * <Clock className="fg-accent-primary-bold" />
+ *
+ * @example
+ * // Custom Format
  * <Clock options={{ dateStyle: "short" }} /> // <time>9/30/25, 15:54:14 UTC</time>
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locale_options| DateTimeFormatOptions MDN}
