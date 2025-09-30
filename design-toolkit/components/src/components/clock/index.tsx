@@ -13,14 +13,14 @@
 'use client';
 import 'client-only';
 import { setClockInterval } from '@accelint/temporal';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ClockProps } from './types';
 
-const DEFAULT_OPTIONS: Intl.DateTimeFormatOptions = {
+const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
   timeStyle: 'long',
   timeZone: 'UTC',
   hour12: false,
-};
+});
 
 /**
  * Clock - An auto-updating UTC time component.
@@ -45,17 +45,18 @@ const DEFAULT_OPTIONS: Intl.DateTimeFormatOptions = {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locale_options| DateTimeFormatOptions MDN}
  */
 export function Clock({ ref, options, ...rest }: ClockProps) {
-  const formatOptions = {
-    ...DEFAULT_OPTIONS,
-    ...options,
-  };
-  const timeFormatter = new Intl.DateTimeFormat('en-US', formatOptions);
+  const formatter = useMemo(() => {
+    return !options
+      ? DEFAULT_FORMATTER
+      : new Intl.DateTimeFormat('en-US', options);
+  }, [options]);
 
+  // !options ? DEFAULT_FORMATTER : new Intl.DateTimeFormat('en-US', options)
   const [time, setTime] = useState<string>();
 
   useEffect(() => {
     const cleanup = setClockInterval(() => {
-      setTime(timeFormatter.format(new Date()));
+      setTime(formatter.format(new Date()));
     }, 1000);
 
     return () => cleanup();
