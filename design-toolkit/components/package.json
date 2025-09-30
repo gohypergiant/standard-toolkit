@@ -107,6 +107,7 @@
     "@accelint/bus": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/icons": "workspace:*",
+    "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@fontsource/roboto-flex": "^5.2.6",

@@ -276,6 +276,9 @@ importers:
       '@accelint/icons':
         specifier: workspace:*
         version: link:../icons
+      '@accelint/temporal':
+        specifier: workspace:*
+        version: link:../../packages/temporal
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -814,12 +817,6 @@ importers:
 
   packages/temporal:
     dependencies:
-      react:
-        specifier: ^19.1.1
-        version: 19.1.1
-      react-dom:
-        specifier: ^19.1.1
-        version: 19.1.1(react@19.1.1)
       typescript:
         specifier: ^5.8.3
         version: 5.9.2
@@ -830,9 +827,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@types/react':
-        specifier: ^19.1.15
-        version: 19.1.15
       esbuild-fix-imports-plugin:
         specifier: 1.0.21
         version: 1.0.21
@@ -3282,7 +3276,6 @@ packages:
 
   '@ls-lint/ls-lint@2.3.0-beta.1':
     resolution: {integrity: sha512-NmujBNFslP4GhFsB92zh1evSSBadcg+RMsQ5FM70OrU36C3AbQYaVXDn4reC28GM6DFoOtiETRdKV6ie1TfP7g==}
-    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -12698,7 +12691,7 @@ snapshots:
 
   '@docusaurus/react-loadable@6.0.0(react@19.1.1)':
     dependencies:
-      '@types/react': 19.1.12
+      '@types/react': 19.1.15
       react: 19.1.1
 
   '@docusaurus/theme-classic@3.8.1(@swc/core@1.7.36(@swc/helpers@0.5.17))(@types/react@19.1.15)(esbuild@0.25.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':

@@ -10,32 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import React, { useEffect, useRef } from 'react';
-import { setClockInterval } from '@/timers';
+import type { ComponentPropsWithRef } from 'react';
 
-const timeFormatter = new Intl.DateTimeFormat('en-US', {
-  timeStyle: 'long',
-  timeZone: 'UTC',
-  hour12: false,
-});
-
-/**
- * Outputs the current time in UTC as a span
- */
-export function Clock() {
-  const el = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const cleanup = setClockInterval(() => {
-      if (el.current) {
-        const time = timeFormatter.format(new Date());
-
-        el.current.textContent = time;
-      }
-    }, 1000);
-
-    return () => cleanup();
-  }, []);
-
-  return <span ref={el}>00:00:00 UTC</span>;
-}
+export type ClockProps = ComponentPropsWithRef<'time'> & {
+  options?: Parameters<typeof Intl.DateTimeFormat>[1];
+};
