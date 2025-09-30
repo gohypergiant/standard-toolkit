@@ -9,11 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 'use client';
+
 import 'client-only';
 import { setClockInterval } from '@accelint/temporal';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ClockProps } from './types';
 
 const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
@@ -50,26 +50,13 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locale_options| DateTimeFormatOptions MDN}
  */
-export function Clock({
-  ref,
-  formatter = DEFAULT_FORMATTER,
-  ...rest
-}: ClockProps) {
-  const [time, setTime] = useState<string>('XX:XX:XX UTC');
+export function Clock({ formatter = DEFAULT_FORMATTER, ...rest }: ClockProps) {
+  const now = useCallback(() => formatter.format(Date.now()), [formatter]);
 
-  useEffect(() => {
-    const cleanup = setClockInterval(() => {
-      setTime(formatter.format(new Date()));
-    }, 1000);
+  const [time, setTime] = useState<string>(now());
 
-    return () => cleanup();
-  }, []);
+  useEffect(() => setClockInterval(() => setTime(now()), 1000), [now]);
 
-  return (
-    <time {...rest} ref={ref}>
-      {time}
-    </time>
-  );
+  return <time {...rest}>{time}</time>;
 }
-
 Clock.displayName = 'Clock';
