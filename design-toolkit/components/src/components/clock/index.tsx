@@ -13,7 +13,7 @@
 'use client';
 import 'client-only';
 import { setClockInterval } from '@accelint/temporal';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ClockProps } from './types';
 
 const DEFAULT_OPTIONS: Intl.DateTimeFormatOptions = {
