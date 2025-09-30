@@ -69,7 +69,7 @@ export function Clock({ ref, options, ...rest }: ClockProps) {
 
   return (
     <time {...rest} ref={ref}>
-      {time}
+      {time || '00:00:00 UTC'}
     </time>
   );
 }
