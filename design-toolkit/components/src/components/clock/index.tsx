@@ -16,19 +16,17 @@ import { setClockInterval } from '@accelint/temporal';
 import { useEffect, useMemo, useState } from 'react';
 import type { ClockProps } from './types';
 
-const DEFAULT_OPTIONS: Intl.DateTimeFormatOptions = {
+const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
   timeStyle: 'long',
   timeZone: 'UTC',
   hour12: false,
-};
-
-const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', DEFAULT_OPTIONS);
+});
 
 /**
  * Clock - An auto-updating UTC time component.
  *
- * Uses a standard Intl.DateTimeFormatOptions,
- * but can be overridden via `options` prop.
+ * Uses a en-US formatter configured with `{ timeStyle: 'long, timeZone: 'UTC', hour12: false }` by default,
+ * but can be overridden with the `formatter` prop
  *
  * NOTE: This component comes **unstyled by default**.
  *
@@ -42,22 +40,22 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', DEFAULT_OPTIONS);
  *
  * @example
  * // Custom Format
- * <Clock options={{ dateStyle: "short" }} /> // <time>9/30/25, 15:54:14 UTC</time>
+ * const formatter = new Intl.DateTimeFormat('en-US', {
+ *   dateStyle: "short",
+ *   timeStyle: 'long',
+ *   timeZone: 'UTC',
+ *   hour12: false
+ * });
+ * <Clock formatter={formatter} /> // <time>9/30/25, 15:54:14 UTC</time>
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locale_options| DateTimeFormatOptions MDN}
  */
-export function Clock({ ref, options, ...rest }: ClockProps) {
+export function Clock({
+  ref,
+  formatter = DEFAULT_FORMATTER,
+  ...rest
+}: ClockProps) {
   const [time, setTime] = useState<string>('XX:XX:XX UTC');
-
-  const stableOptions = useMemo(() => options, [JSON.stringify(options)]);
-  const formatter = useMemo(() => {
-    return !!stableOptions
-      ? new Intl.DateTimeFormat('en-US', {
-          ...DEFAULT_OPTIONS,
-          ...stableOptions,
-        })
-      : DEFAULT_FORMATTER;
-  }, [stableOptions]);
 
   useEffect(() => {
     const cleanup = setClockInterval(() => {

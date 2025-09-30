@@ -13,5 +13,5 @@
 import type { ComponentPropsWithRef } from 'react';
 
 export type ClockProps = ComponentPropsWithRef<'time'> & {
-  options?: Intl.DateTimeFormatOptions;
+  formatter?: Intl.DateTimeFormat;
 };

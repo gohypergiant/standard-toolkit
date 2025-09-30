@@ -18,21 +18,16 @@ const meta: Meta<typeof Clock> = {
   component: Clock,
   args: {
     className: undefined,
-    options: undefined,
+    formatter: undefined,
   },
   argTypes: {
     className: {
       control: 'text',
     },
-    options: {
+    formatter: {
       control: 'object',
       description:
-        '<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locale_options">MDN Reference</a>',
-      table: {
-        defaultValue: {
-          summary: "{ timeStyle: 'long', timeZone: 'UTC', hour12: false,}",
-        },
-      },
+        '<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">MDN Reference</a>',
     },
   },
 };
@@ -47,8 +42,13 @@ export const Styling: StoryObj<typeof Clock> = {
   render: () => <Clock className='fg-accent-primary-bold' />,
 };
 
+const customFormatter = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'short',
+  timeStyle: 'long',
+  timeZone: 'UTC',
+  hour12: false,
+});
+
 export const CustomFormat: StoryObj<typeof Clock> = {
-  render: ({ options, ...rest }) => (
-    <Clock {...rest} options={{ dateStyle: 'short' }} />
-  ),
+  render: ({ ...rest }) => <Clock {...rest} formatter={customFormatter} />,
 };
