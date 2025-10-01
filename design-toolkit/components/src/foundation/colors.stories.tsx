@@ -105,7 +105,7 @@ export const Background: Story = {
           />
         ))}
       </div>
-      <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+      <div className='mt-oversized grid grid-cols-4 gap-x-l gap-y-xl'>
         {tokens.bg.utility.map((color) => (
           <BackgroundColorDisplay
             key={`${globals.theme}-${color}`}
