@@ -11,6 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
+import { PROXIMITY } from '@/constants/proximity';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
@@ -31,7 +32,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['cozy', 'compact'],
+      options: Object.values(PROXIMITY),
     },
   },
   parameters: {

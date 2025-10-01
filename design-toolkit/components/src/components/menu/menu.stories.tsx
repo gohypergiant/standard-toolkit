@@ -13,6 +13,7 @@
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useRef, useState } from 'react';
+import { PROXIMITY } from '@/constants/proximity';
 import { Button } from '../button';
 import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
@@ -30,7 +31,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['cozy', 'compact'],
+      options: Object.values(PROXIMITY),
     },
     selectionMode: {
       control: 'select',
