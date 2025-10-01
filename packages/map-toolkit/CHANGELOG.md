@@ -4,4 +4,4 @@
 
 ### Patch Changes
 
-- 56d5af8: Add initial changeset for new package.
+- 56d5af8: Initialization of Map Toolkit (MapTK) library

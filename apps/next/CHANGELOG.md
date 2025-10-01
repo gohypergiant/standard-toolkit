@@ -18,7 +18,7 @@
 - Updated dependencies [69b9aff]
 - Updated dependencies [b4ef537]
 - Updated dependencies [f216426]
-  - @accelint/design-toolkit@6.0.0
+  - @accelint/design-toolkit@5.2.0
   - @accelint/bus@1.3.0
 
 ## 0.3.1
