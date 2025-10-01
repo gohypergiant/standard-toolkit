@@ -20,6 +20,7 @@ import {
 } from '@accelint/icons';
 import Warning from '@accelint/icons/warning';
 import { type ReactNode, useState } from 'react';
+import { PROXIMITY } from '@/constants/proximity';
 import { useTreeActions } from '@/hooks/use-tree/actions';
 import { useTreeState } from '@/hooks/use-tree/state';
 import { Button } from '../button';
@@ -41,7 +42,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['cozy', 'compact', 'crammed'],
+      options: [...Object.values(PROXIMITY), 'crammed'],
     },
     selectionMode: {
       control: 'select',
@@ -170,7 +171,7 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
     >
       <Tree.Item.Content>
         {({ variant, isViewable, isVisible }) => {
-          const size = variant === 'cozy' ? 'medium' : 'small';
+          const size = variant === PROXIMITY.COZY ? 'medium' : 'small';
           return (
             <>
               {values?.iconPrefix && (

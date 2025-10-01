@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { PROXIMITY, type Proximity } from '@/constants/proximity';
 import { tv } from '@/lib/utils';
 
 export const AccordionStylesDefaults = {
-  variant: 'cozy',
+  variant: PROXIMITY.COZY,
 } as const;
 
 export const AccordionStyles = tv({
@@ -35,13 +36,13 @@ export const AccordionStyles = tv({
   },
   variants: {
     variant: {
-      cozy: {
+      [PROXIMITY.COZY]: {
         trigger: 'gap-s text-header-m',
       },
-      compact: {
+      [PROXIMITY.COMPACT]: {
         trigger: 'gap-xs text-header-s',
       },
-    },
+    } satisfies Record<Proximity, { trigger: string }>,
   },
   defaultVariants: AccordionStylesDefaults,
 });

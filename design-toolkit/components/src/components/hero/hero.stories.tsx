@@ -11,6 +11,7 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
+import { PROXIMITY } from '@/constants/proximity';
 import { Icon } from '../icon';
 import { Hero } from './';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -19,7 +20,7 @@ const meta = {
   title: 'Components/Hero',
   component: Hero,
   args: {
-    compact: false,
+    [PROXIMITY.COMPACT]: false,
   },
 } satisfies Meta<typeof Hero>;
 
