@@ -52,6 +52,6 @@ const customFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: false,
 });
 
-export const CustomFormat: StoryObj<typeof Clock> = {
+export const CustomFormat: Story = {
   render: ({ ...rest }) => <Clock {...rest} formatter={customFormatter} />,
 };
