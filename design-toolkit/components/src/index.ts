@@ -380,6 +380,8 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { PROXIMITY } from './constants/proximity';
+export type { Proximity, ProximityKey } from './constants/proximity';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
