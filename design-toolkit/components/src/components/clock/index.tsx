@@ -25,8 +25,8 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
 /**
  * Clock - An auto-updating UTC time component.
  *
- * Uses a en-US formatter configured with `{ timeStyle: 'long, timeZone: 'UTC', hour12: false }` by default,
- * but can be overridden with the `formatter` prop
+ * Uses a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat|DateTimeFormat} configured with `'en-US', { timeStyle: 'long, timeZone: 'UTC', hour12: false }` by default,
+ * but can be overridden with the `formatter` prop.
  *
  * NOTE: This component comes **unstyled by default**.
  *
@@ -46,9 +46,10 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
  *   timeZone: 'UTC',
  *   hour12: false
  * });
+ *
  * <Clock formatter={formatter} /> // <time>9/30/25, 15:54:14 UTC</time>
  *
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locale_options| DateTimeFormatOptions MDN}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat| DateTimeFormat MDN}
  */
 export function Clock({ formatter = DEFAULT_FORMATTER, ...rest }: ClockProps) {
   const now = useCallback(() => formatter.format(Date.now()), [formatter]);

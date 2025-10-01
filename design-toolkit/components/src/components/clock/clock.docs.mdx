@@ -1,0 +1,41 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as ClockStories from './clock.stories';
+
+<Meta of={ClockStories} />
+
+# Clock
+The Clock component is an _**unstyled**_, self-updating `<time>` element formatted as `XX:XX:XX UTC`.
+
+<Canvas of={ClockStories.Default} />
+
+## Example usage
+```tsx
+// Basic Clock
+<Clock />
+
+// Styled Clock
+<Clock className="fg-accent-primary-bold" />
+
+// Custom Format
+const formatter = new Intl.DateTimeFormat('en-US', {
+  dateStyle: "short",
+  timeStyle: 'long',
+  timeZone: 'UTC',
+  hour12: false
+});
+
+<Clock formatter={formatter} />
+```
+
+## Props
+* **`className`** - Additional CSS classes for custom styling
+* **`formatter`** - [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat)
+  ```tsx
+  // Default Formatter
+  new Intl.DateTimeFormat('en-US', {
+    timeStyle: 'long',
+    timeZone: 'UTC',
+    hour12: false
+  });
+  ```

@@ -13,7 +13,7 @@
 import { Clock } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Clock> = {
+const meta = {
   title: 'Components/Clock',
   component: Clock,
   args: {
@@ -25,20 +25,21 @@ const meta: Meta<typeof Clock> = {
       control: 'text',
     },
     formatter: {
-      control: 'object',
+      control: 'select', // no 'function' control, setting this as 'object' will blow up if a user actually opens the control
       description:
         '<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">MDN Reference</a>',
     },
   },
-};
+} satisfies Meta<typeof Clock>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Clock> = {
+export const Default: Story = {
   render: Clock,
 };
 
-export const Styling: StoryObj<typeof Clock> = {
+export const Styling: Story = {
   render: () => <Clock className='fg-accent-primary-bold' />,
 };
 
