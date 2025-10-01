@@ -13,6 +13,7 @@
 import { Placeholder } from '@accelint/icons';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { PROXIMITY } from '@/constants/proximity';
 import { Icon } from '../icon';
 import { Hero } from './';
 import type { HeroProps } from './types';
@@ -58,7 +59,7 @@ describe('Hero', () => {
   });
 
   it('applies grid layout when compact is true', () => {
-    setup({ compact: true });
+    setup({ [PROXIMITY.COMPACT]: true });
 
     expect(screen.getByRole('banner')).toHaveAttribute('data-layout', 'grid');
   });
