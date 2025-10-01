@@ -2,10 +2,6 @@
 
 ## 5.2.0
 
-### Major Changes
-
-
-
 ### Minor Changes
 
 - c6881e4: Adds Table component to DesignTK
