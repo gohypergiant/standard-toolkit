@@ -18,9 +18,12 @@ import type {
   HeaderGroup,
   Row,
 } from '@tanstack/react-table';
-import type { Dispatch, SetStateAction } from 'react';
-import type { ComponentPropsWithRef } from 'react';
-import type { PropsWithChildren } from 'react';
+import type {
+  ComponentPropsWithRef,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+} from 'react';
 import type { VariantProps } from 'tailwind-variants';
 import type { TableCellStyles, TableHeaderCellStyles } from './styles';
 

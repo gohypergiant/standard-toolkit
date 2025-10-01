@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from "@storybook/react";
-import { createColumnHelper } from "@tanstack/react-table";
-import { Table } from "./index";
+import { createColumnHelper } from '@tanstack/react-table';
+import { Table } from './index';
+import type { Meta, StoryObj } from '@storybook/react';
 
 type Person = {
   id: string;
@@ -26,84 +26,84 @@ type Person = {
 
 const defaultData: Person[] = [
   {
-    id: "tanner",
-    firstName: "tanner",
-    lastName: "linsley",
+    id: 'tanner',
+    firstName: 'tanner',
+    lastName: 'linsley',
     age: 24,
     visits: 100,
-    status: "In Relationship",
+    status: 'In Relationship',
     progress: 50,
   },
   {
-    id: "tandy",
-    firstName: "tandy",
-    lastName: "miller",
+    id: 'tandy',
+    firstName: 'tandy',
+    lastName: 'miller',
     age: 40,
     visits: 40,
-    status: "Single",
+    status: 'Single',
     progress: 80,
   },
   {
-    id: "joe",
-    firstName: "joe",
-    lastName: "dirte",
+    id: 'joe',
+    firstName: 'joe',
+    lastName: 'dirte',
     age: 45,
     visits: 20,
-    status: "Complicated",
+    status: 'Complicated',
     progress: 10,
   },
   {
-    id: "jane",
-    firstName: "jane",
-    lastName: "doe",
+    id: 'jane',
+    firstName: 'jane',
+    lastName: 'doe',
     age: 30,
     visits: 60,
-    status: "Married",
+    status: 'Married',
     progress: 70,
   },
   {
-    id: "john",
-    firstName: "john",
-    lastName: "smith",
+    id: 'john',
+    firstName: 'john',
+    lastName: 'smith',
     age: 35,
     visits: 80,
-    status: "Single",
+    status: 'Single',
     progress: 90,
   },
   {
-    id: "alice",
-    firstName: "alice",
-    lastName: "johnson",
+    id: 'alice',
+    firstName: 'alice',
+    lastName: 'johnson',
     age: 28,
     visits: 50,
-    status: "In Relationship",
+    status: 'In Relationship',
     progress: 40,
   },
   {
-    id: "bob",
-    firstName: "bob",
-    lastName: "brown",
+    id: 'bob',
+    firstName: 'bob',
+    lastName: 'brown',
     age: 32,
     visits: 70,
-    status: "Complicated",
+    status: 'Complicated',
     progress: 20,
   },
   {
-    id: "charlie",
-    firstName: "charlie",
-    lastName: "white",
+    id: 'charlie',
+    firstName: 'charlie',
+    lastName: 'white',
     age: 29,
     visits: 90,
-    status: "Single",
+    status: 'Single',
     progress: 30,
   },
   {
-    id: "dave",
-    firstName: "dave",
-    lastName: "green",
+    id: 'dave',
+    firstName: 'dave',
+    lastName: 'green',
     age: 38,
     visits: 110,
-    status: "In Relationship",
+    status: 'In Relationship',
     progress: 60,
   },
 ];
@@ -111,43 +111,43 @@ const defaultData: Person[] = [
 const columnHelper = createColumnHelper<Person>();
 
 const columns = [
-  columnHelper.accessor("firstName", {
-    id: "firstName",
+  columnHelper.accessor('firstName', {
+    id: 'firstName',
     cell: (info) => info.getValue(),
     header: () => <span>First Name</span>,
   }),
   columnHelper.accessor((row) => row.lastName, {
-    id: "lastName",
+    id: 'lastName',
     cell: (info) => <i>{info.getValue()}</i>,
     header: () => <span>Last Name</span>,
   }),
-  columnHelper.accessor("age", {
-    id: "age",
+  columnHelper.accessor('age', {
+    id: 'age',
     cell: (info) => info.renderValue(),
-    header: () => "Age",
+    header: () => 'Age',
   }),
-  columnHelper.accessor("visits", {
-    id: "visits",
+  columnHelper.accessor('visits', {
+    id: 'visits',
     header: () => <span>Visits</span>,
   }),
-  columnHelper.accessor("status", {
-    id: "status",
-    header: "Status",
+  columnHelper.accessor('status', {
+    id: 'status',
+    header: 'Status',
   }),
-  columnHelper.accessor("progress", {
-    id: "progress",
-    header: "Profile Progress",
+  columnHelper.accessor('progress', {
+    id: 'progress',
+    header: 'Profile Progress',
   }),
 ];
 
 const meta = {
-  title: "Components/Table",
+  title: 'Components/Table',
   component: Table,
   args: {
     columns: columns,
     data: defaultData,
     showCheckbox: true,
-    kebabPosition: "right",
+    kebabPosition: 'right',
     persistHeaderKebabMenu: true,
     persistRowKebabMenu: true,
     persistNumerals: true,
@@ -158,12 +158,12 @@ const meta = {
   argTypes: {
     kebabPosition: {
       control: {
-        type: "radio",
-        options: ["left", "right"],
+        type: 'radio',
+        options: ['left', 'right'],
       },
     },
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
 } satisfies Meta<typeof Table<Person>>;
 
 export default meta;
@@ -171,7 +171,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    kebabPosition: "right",
+    kebabPosition: 'right',
     enableSorting: false,
   },
 
@@ -180,13 +180,13 @@ export const Default: Story = {
 
 export const SortableColumns: Story = {
   args: {
-    kebabPosition: "left",
+    kebabPosition: 'left',
   },
   parameters: {
     docs: {
       description: {
         story:
-          "Columns are sortable by clicking the headers. Click a header to sort ascending, descending, or clear sorting.",
+          'Columns are sortable by clicking the headers. Click a header to sort ascending, descending, or clear sorting.',
       },
     },
   },

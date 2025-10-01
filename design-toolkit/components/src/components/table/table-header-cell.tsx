@@ -12,7 +12,7 @@
  */
 
 import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
-import { type Header, flexRender } from '@tanstack/react-table';
+import { flexRender, type Header } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
