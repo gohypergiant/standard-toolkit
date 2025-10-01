@@ -24,10 +24,10 @@ const meta = {
     className: {
       control: 'text',
     },
-    formatter: {
-      control: 'select', // no 'function' control, setting this as 'object' will blow up if a user actually opens the control
-      description:
-        '<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat">MDN Reference</a>',
+  },
+  parameters: {
+    controls: {
+      exclude: ['formatter'],
     },
   },
 } satisfies Meta<typeof Clock>;
@@ -40,7 +40,9 @@ export const Default: Story = {
 };
 
 export const Styling: Story = {
-  render: () => <Clock className='fg-accent-primary-bold' />,
+  render: ({ ...rest }) => (
+    <Clock {...rest} className='fg-accent-primary-bold' />
+  ),
 };
 
 const customFormatter = new Intl.DateTimeFormat('en-US', {
