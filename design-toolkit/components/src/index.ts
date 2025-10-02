@@ -182,6 +182,33 @@ export type { IconProps } from './components/icon/types';
 export { Input, InputContext } from './components/input';
 export { InputStyles, InputStylesDefaults } from './components/input/styles';
 export type { InputProps } from './components/input/types';
+export { KanbanProvider, useKanban } from './components/kanban/context';
+export type {
+  KanbanContextData,
+  KanbanProviderProps,
+  MoveCard,
+} from './components/kanban/context';
+export { Kanban } from './components/kanban';
+export { columnData } from './components/kanban/mock-data';
+export {
+  CardInnerStyles,
+  CardPositionIndicatorStyles,
+  ColumnStyles,
+  KanbanStyles,
+} from './components/kanban/styles';
+export type {
+  CardPositionProps,
+  KanbanCardData,
+  KanbanCardProps,
+  KanbanColContentActionProps,
+  KanbanColContentProps,
+  KanbanColProps,
+  KanbanColumnData,
+  KanbanComponentProps,
+  KanbanMenuProps,
+  KanbanProps,
+  KanbanSearchProps,
+} from './components/kanban/types';
 export { Label, LabelContext } from './components/label';
 export { LabelStyles } from './components/label/styles';
 export type { LabelProps } from './components/label/types';
@@ -373,6 +400,8 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
+export { useCardInteractions } from './hooks/useCardInteractions';
+export { useColumnInteractions } from './hooks/useColumnInteractions';
 export {
   containsAnyOfExactChildren,
   containsExactChildren,
