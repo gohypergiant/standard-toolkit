@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CLASSIFICATION } from '@/constants/classification';
 import { ClassificationBadge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -28,15 +29,7 @@ const meta = {
     },
     variant: {
       control: 'select',
-      options: [
-        'missing',
-        'unclassified',
-        'cui',
-        'confidential',
-        'secret',
-        'top-secret',
-        'ts-sci',
-      ],
+      options: Object.values(CLASSIFICATION),
     },
     size: {
       control: 'select',

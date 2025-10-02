@@ -10,18 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
+import type { CLASSIFICATION } from '@/constants/classification';
+
 // biome-ignore lint/style/useNamingConvention: acronym
 type RGBA = [number, number, number, number];
 
 export type StaticColorTokens = {
   classification: {
-    missing: RGBA;
-    unclass: RGBA;
-    cui: RGBA;
-    confidential: RGBA;
-    secret: RGBA;
-    'top-secret': RGBA;
-    'ts-sci': RGBA;
+    [CLASSIFICATION.MISSING]: RGBA;
+    [CLASSIFICATION.UNCLASSIFIED]: RGBA;
+    [CLASSIFICATION.CUI]: RGBA;
+    [CLASSIFICATION.CONFIDENTIAL]: RGBA;
+    [CLASSIFICATION.SECRET]: RGBA;
+    [CLASSIFICATION.TOP_SECRET]: RGBA;
+    [CLASSIFICATION.TS_SCI]: RGBA;
   };
   roe: {
     pending: RGBA;
