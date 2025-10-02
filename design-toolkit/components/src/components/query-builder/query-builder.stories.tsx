@@ -11,6 +11,7 @@
  */
 
 import { useState } from 'react';
+import { AXIS } from '@/constants/axis';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -30,7 +31,7 @@ const meta = {
     showRuleLines: true,
   },
   argTypes: {
-    orientation: { options: ['horizontal', 'vertical'] },
+    orientation: { options: Object.values(AXIS) },
     disabled: {
       control: {
         type: 'boolean',

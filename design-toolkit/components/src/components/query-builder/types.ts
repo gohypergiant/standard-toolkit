@@ -22,6 +22,7 @@ import type {
   ValueEditorProps,
 } from 'react-querybuilder';
 import type { LiteralUnion } from 'type-fest';
+import type { Axis } from '@/constants/axis';
 
 export type RuleGroupType = RQBRuleGroupType;
 export type Field = RQBField;
@@ -55,7 +56,7 @@ export type QueryBuilderProps = Partial<
     | 'showNotToggle'
     | 'showShiftActions'
   > & {
-    orientation?: 'horizontal' | 'vertical';
+    orientation?: Axis;
     showRuleLines?: boolean;
   }
 >;
