@@ -27,6 +27,7 @@ import {
   useState,
 } from 'react';
 import { composeRenderProps, Header, Heading } from 'react-aria-components';
+import { PLACEMENT } from '@/constants/placement';
 import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
@@ -165,10 +166,10 @@ DrawerLayout.displayName = 'Drawer.Layout';
 DrawerLayout.Main = DrawerLayoutMain;
 
 const tooltipPlacementMap = {
-  left: 'right',
-  right: 'left',
-  top: 'bottom',
-  bottom: 'top',
+  [PLACEMENT.LEFT]: PLACEMENT.RIGHT,
+  [PLACEMENT.RIGHT]: PLACEMENT.LEFT,
+  [PLACEMENT.TOP]: PLACEMENT.BOTTOM,
+  [PLACEMENT.BOTTOM]: PLACEMENT.TOP,
 } as const;
 
 function DrawerMenuItem({

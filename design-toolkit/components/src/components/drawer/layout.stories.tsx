@@ -17,6 +17,7 @@ import {
   ChevronUp,
   Placeholder,
 } from '@accelint/icons';
+import { PLACEMENT, type Placement } from '@/constants/placement';
 import { Drawer } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties } from 'react';
@@ -24,8 +25,14 @@ import type { DrawerLayoutProps } from './types';
 
 type Alias = React.FC<DrawerLayoutProps>;
 
+type Uuid = ReturnType<typeof uuid>;
+type DrawerConfig = {
+  drawer: Uuid;
+  views: Record<'a' | 'b' | 'c' | 'd', Uuid>;
+};
+
 const ids = {
-  top: {
+  [PLACEMENT.TOP]: {
     drawer: uuid(),
     views: {
       a: uuid(),
@@ -34,7 +41,7 @@ const ids = {
       d: uuid(),
     },
   },
-  bottom: {
+  [PLACEMENT.BOTTOM]: {
     drawer: uuid(),
     views: {
       a: uuid(),
@@ -43,7 +50,7 @@ const ids = {
       d: uuid(),
     },
   },
-  left: {
+  [PLACEMENT.LEFT]: {
     drawer: uuid(),
     views: {
       a: uuid(),
@@ -52,7 +59,7 @@ const ids = {
       d: uuid(),
     },
   },
-  right: {
+  [PLACEMENT.RIGHT]: {
     drawer: uuid(),
     views: {
       a: uuid(),
@@ -61,7 +68,7 @@ const ids = {
       d: uuid(),
     },
   },
-} as const;
+} as const satisfies Record<Placement, DrawerConfig>;
 
 const meta = {
   title: 'Components/Drawer.Layout',
@@ -73,7 +80,14 @@ const meta = {
   argTypes: {
     extend: {
       control: 'select',
-      options: ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
+      options: [
+        `${PLACEMENT.TOP} ${PLACEMENT.BOTTOM}`,
+        `${PLACEMENT.LEFT} ${PLACEMENT.RIGHT}`,
+        `${PLACEMENT.TOP}`,
+        `${PLACEMENT.BOTTOM}`,
+        `${PLACEMENT.LEFT}`,
+        `${PLACEMENT.RIGHT}`,
+      ],
     },
     push: {
       control: 'text',
