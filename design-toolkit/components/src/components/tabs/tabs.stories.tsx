@@ -14,6 +14,7 @@
 import { Add, Check, Group } from '@accelint/icons';
 import { Icon } from '@/components/icon';
 import { Tabs } from '@/components/tabs/index';
+import { AXIS } from '@/constants/axis';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**
@@ -38,7 +39,7 @@ const meta = {
   argTypes: {
     orientation: {
       control: 'select',
-      options: ['horizontal', 'vertical'],
+      options: Object.values(AXIS),
     },
   },
 } satisfies Meta<typeof Tabs>;
