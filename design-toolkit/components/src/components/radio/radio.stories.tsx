@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { AXIS } from '@/constants/axis';
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { RadioGroupProps } from './types';
@@ -28,7 +29,7 @@ const meta = {
   argTypes: {
     orientation: {
       control: 'select',
-      options: ['horizontal', 'vertical'],
+      options: Object.values(AXIS),
     },
   },
   parameters: {
