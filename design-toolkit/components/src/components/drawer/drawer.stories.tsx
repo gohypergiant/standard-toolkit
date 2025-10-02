@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { uuid } from '@accelint/core';
+import { PLACEMENT } from '@/constants/placement';
 import { Button } from '../button';
 import { Drawer } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -38,7 +39,7 @@ const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
     },
     placement: {
       control: 'select',
-      options: ['top', 'bottom', 'left', 'right'],
+      options: Object.values(PLACEMENT),
     },
     position: {
       control: 'select',
