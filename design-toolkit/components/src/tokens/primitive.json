@@ -141,7 +141,7 @@
     },
     "classification": {
       "missing": "#0b0b0b",
-      "unclass": "#007A33",
+      "unclassified": "#007A33",
       "cui": "#502b85",
       "confidential": "#0033a0",
       "secret": "#c8102e",
