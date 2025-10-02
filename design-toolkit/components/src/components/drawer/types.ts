@@ -15,18 +15,20 @@ import type { FocusableElement } from '@react-types/shared';
 import type { ComponentPropsWithRef, DOMAttributes, ReactElement } from 'react';
 import type { HeadingProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { PLACEMENT } from '@/constants/placement';
 import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackEvent } from '../view-stack/types';
 import type { DrawerEventTypes } from './events';
 import type { DrawerTitleStyles } from './styles';
 
-type Top = 'top';
-type Bottom = 'bottom';
+type Top = typeof PLACEMENT.TOP;
+type Bottom = typeof PLACEMENT.BOTTOM;
+type Right = typeof PLACEMENT.RIGHT;
+type Left = typeof PLACEMENT.LEFT;
+
 type YAxisUnion = Top | Bottom;
 type YAxisIntersection = `${Top} ${Bottom}` | `${Bottom} ${Top}`;
-type Right = 'right';
-type Left = 'left';
 type XAxisUnion = Right | Left;
 type XAxisIntersection = `${Right} ${Left}` | `${Left} ${Right}`;
 

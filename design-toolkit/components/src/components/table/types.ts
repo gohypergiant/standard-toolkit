@@ -25,6 +25,7 @@ import type {
   SetStateAction,
 } from 'react';
 import type { VariantProps } from 'tailwind-variants';
+import type { PLACEMENT } from '@/constants/placement';
 import type { TableCellStyles, TableHeaderCellStyles } from './styles';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
@@ -50,7 +51,7 @@ type ExtendedTableProps<T extends { id: Key }> = {
   /**
    * Position of the kebab menu, either 'left' or 'right'.
    */
-  kebabPosition?: 'left' | 'right';
+  kebabPosition?: typeof PLACEMENT.LEFT | typeof PLACEMENT.RIGHT;
 
   /**
    * Whether to persist the header kebab menu.

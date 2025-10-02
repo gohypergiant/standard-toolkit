@@ -12,6 +12,7 @@
 
 import { Delete, Information } from '@accelint/icons';
 import { Button } from '@/components/button';
+import { PLACEMENT } from '@/constants/placement';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Popover } from './index';
@@ -33,8 +34,8 @@ const meta = {
   argTypes: {
     placement: {
       control: 'select',
-      options: ['left', 'right', 'top', 'bottom'],
-      table: { defaultValue: { summary: 'bottom' } },
+      options: Object.values(PLACEMENT),
+      table: { defaultValue: { summary: PLACEMENT.BOTTOM } },
     },
   },
 } satisfies Meta<typeof Popover>;

@@ -11,6 +11,7 @@
  */
 
 import { createColumnHelper } from '@tanstack/react-table';
+import { PLACEMENT } from '@/constants/placement';
 import { Table } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -159,7 +160,7 @@ const meta = {
     kebabPosition: {
       control: {
         type: 'radio',
-        options: ['left', 'right'],
+        options: [PLACEMENT.LEFT, PLACEMENT.RIGHT],
       },
     },
   },
