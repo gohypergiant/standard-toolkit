@@ -10,13 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ComponentPropsWithRef } from 'react';
-import type { Axis } from '@/constants/axis';
+export type AxisKey = keyof typeof AXIS;
+export type Axis = (typeof AXIS)[AxisKey];
 
-export type DividerProps = ComponentPropsWithRef<'hr'> & {
-  /**
-   * The orientation of the divider.
-   * @default 'horizontal'
-   */
-  orientation?: Axis;
-};
+export const AXIS = Object.freeze({
+  HORIZONTAL: 'horizontal',
+  VERTICAL: 'vertical',
+} as const);

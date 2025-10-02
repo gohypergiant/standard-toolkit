@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { AXIS } from '@/constants/axis';
 import { Checkbox } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { CheckboxGroupProps } from './types';
@@ -37,7 +38,7 @@ const meta = {
   argTypes: {
     orientation: {
       control: 'select',
-      options: ['horizontal', 'vertical'],
+      options: Object.values(AXIS),
     },
   },
   parameters: {

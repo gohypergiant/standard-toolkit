@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { AXIS } from '@/constants/axis';
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -34,7 +35,7 @@ const meta = {
     },
     orientation: {
       control: 'select',
-      options: ['horizontal', 'vertical'],
+      options: Object.values(AXIS),
     },
   },
 } satisfies Meta<typeof Slider>;
