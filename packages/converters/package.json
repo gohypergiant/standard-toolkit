@@ -1,15 +1,27 @@
 {
   "name": "@accelint/converters",
+  "title": "Accelint Converters",
   "version": "0.3.2",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "A lightweight JavaScript utility for converting between various value types, including numbers, strings, booleans, dates, and more.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/converters",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -26,12 +38,12 @@
         "default": "./dist/*/index.js"
       },
       "default": "./dist/*/index.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "constellation-tracker": "node ../../tooling/constellation-tracker/dist/main.js",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/converters",
     "lint": "pnpm biome lint",

@@ -19,6 +19,10 @@
     "build": {
       "dependsOn": ["index", "^build"],
       "outputs": ["dist", "build"]
+    },
+    "constellation-tracker": {
+      "cache": false,
+      "dependsOn": ["build", "^constellation-tracker"]
     }
   }
 }

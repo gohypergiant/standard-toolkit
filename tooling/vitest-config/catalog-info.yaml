@@ -1,0 +1,24 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@accelint/vitest-config"
+  title: Vitest Configuration
+  description: The shared Vitest configuration used across Accelint projects.
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/tooling/vitest-config/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 0.1.3
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/vitest-config
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder

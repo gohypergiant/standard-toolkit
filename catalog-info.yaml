@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: standard-toolkit
-  title: Development Toolkit (DevTK)
+  title: Standard Toolkit
   description: >
     A public monorepo of reusable frontend and backend modules, design
     primitives, and tooling used to standardize and accelerate application

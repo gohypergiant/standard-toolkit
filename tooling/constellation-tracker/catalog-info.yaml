@@ -1,0 +1,34 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@accelint/constellation-tracker"
+  title: Constellation Tracker
+  description: >-
+    A tool used to keep a project's catalog-info.yaml file up to date for use in
+    Constellation.
+
+
+    Dependencies:
+
+    @accelint/typescript-config@0.1.2, @accelint/vitest-config@0.1.3
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/tooling/constellation-tracker/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 0.0.0
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/constellation-tracker
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:@accelint/typescript-config
+    - component:@accelint/vitest-config

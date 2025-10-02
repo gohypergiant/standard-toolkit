@@ -1,19 +1,35 @@
 {
   "name": "@accelint/vitest-config",
+  "title": "Vitest Configuration",
   "version": "0.1.3",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "The shared Vitest configuration used across Accelint projects.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "tooling/vitest-config",
   "type": "module",
+  "files": [
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./dom.js",
+    "./no-dom.js",
+    "./package.json",
+    "./README.md"
+  ],
   "exports": {
     "./dom": "./dom.js",
-    "./no-dom": "./no-dom.js",
-    "./package.json": "./package.json"
+    "./no-dom": "./no-dom.js"
   },
   "scripts": {
+    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
   "dependencies": {
