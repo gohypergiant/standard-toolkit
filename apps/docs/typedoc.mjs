@@ -16,6 +16,7 @@ import { OptionDefaults } from 'typedoc';
 export default {
   disableSources: true,
   entryPoints: ['../../packages/*'],
+  exclude: ['../../packages/icons'],
   entryPointStrategy: 'packages',
   hideBreadcrumbs: true,
   hidePageHeader: true,
