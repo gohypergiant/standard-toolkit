@@ -34,7 +34,8 @@
     "lint": "turbo lint",
     "lint:fs": "pnpm ls-lint",
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
-    "test": "turbo test"
+    "test": "turbo test",
+    "type-check": "pnpm --filter=@accelint/design-toolkit run type-check"
   },
   "dependencies": {
     "@accelint/biome-config": "workspace:*",
