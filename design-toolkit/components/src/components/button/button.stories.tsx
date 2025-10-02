@@ -10,46 +10,59 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_CONTROL,
+  createControl,
+  createStatesStory,
+  EXCLUSIONS,
+  hideControls,
+} from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { composeRenderProps } from 'react-aria-components';
+import { SIZE } from '@/constants/size';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
+import { COLORS } from './colors';
+import { SIZES } from './sizes';
+import { VARIANTS } from './variants';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { Variant } from './types';
 
 const meta = {
   title: 'Components/Button',
   component: Button,
   args: {
     children: 'Button',
-    size: 'medium',
+    color: COLORS.MONO_MUTED,
     isDisabled: false,
+    size: SIZES.MEDIUM,
+    variant: VARIANTS.FLAT,
   },
   argTypes: {
-    color: {
-      control: 'select',
-      options: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],
-    },
-    size: {
-      control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
-    },
-    variant: {
-      control: 'select',
-      options: ['filled', 'outline', 'flat', 'icon', 'floating'],
-    },
+    children: COMMON_CONTROL.children,
+    color: createControl.select(
+      'Color variant indicating different levels of importance',
+      Object.values(COLORS),
+      COLORS.ACCENT,
+    ),
+    isDisabled: COMMON_CONTROL.isDisabled,
+    size: createControl.select(
+      'Size variant of the component',
+      Object.values(SIZES),
+    ),
+    variant: createControl.select(
+      'Button variant',
+      Object.values(VARIANTS),
+      VARIANTS.OUTLINE,
+    ),
   },
   parameters: {
     controls: {
-      exclude: [
-        'form',
-        'formAction',
-        'formEncType',
-        'formMethod',
-        'formNoValidate',
-        'formTarget',
-        'name',
-        'value',
-      ],
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle:
+        'A versatile interactive button component with multiple variants',
     },
   },
 } satisfies Meta<typeof Button>;
@@ -70,14 +83,11 @@ type StoryForLink = StoryObj<typeof metaForLink>;
 type StoryForToggle = StoryObj<typeof metaForToggle>;
 
 export const Default: Story = {
-  args: {
-    color: 'mono-muted',
-    variant: 'flat',
-  },
   render: ({ children, ...props }) => (
     <Button {...props}>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === VARIANTS.ICON ||
+        props.variant === VARIANTS.FLOATING ? (
           <Icon>
             <Placeholder />
           </Icon>
@@ -90,14 +100,11 @@ export const Default: Story = {
 };
 
 export const Link: StoryForLink = {
-  args: {
-    color: 'mono-muted',
-    variant: 'flat',
-  },
   render: ({ children, ...props }) => (
-    <LinkButton {...props} href='/'>
+    <LinkButton {...props} href='#' onClick={(e) => e.preventDefault()}>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === VARIANTS.ICON ||
+        props.variant === VARIANTS.FLOATING ? (
           <Icon>
             <Placeholder />
           </Icon>
@@ -110,20 +117,18 @@ export const Link: StoryForLink = {
 };
 
 export const Toggle: StoryForToggle = {
-  args: {
-    color: 'mono-muted',
-    variant: 'flat',
-  },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['outline', 'flat', 'icon'],
-    },
+    // NOTE: custom variant options specifically for Toggle
+    variant: createControl.select('Button variant', [
+      VARIANTS.OUTLINE,
+      VARIANTS.FLAT,
+      VARIANTS.ICON,
+    ]),
   },
   render: ({ children, ...props }) => (
     <ToggleButton {...props}>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' ? (
+        props.variant === VARIANTS.ICON ? (
           <Icon>
             <Placeholder />
           </Icon>
@@ -133,4 +138,40 @@ export const Toggle: StoryForToggle = {
       )}
     </ToggleButton>
   ),
+};
+
+export const States: Story = createStatesStory({
+  Component: Button,
+  baseProps: { children: 'Button' },
+  stateProps: {
+    disabled: { isDisabled: true, children: 'Disabled' },
+    loading: { isPending: true, children: 'Loading...' },
+  },
+});
+
+export const AllVariants: Story = {
+  render: () => (
+    <div className='flex gap-xl'>
+      {Object.values(VARIANTS).map((variant: Variant[keyof Variant]) => (
+        <div key={variant} className='space-y-s'>
+          <h4 className='fg-primary-bold text-header-l capitalize'>
+            {variant}
+          </h4>
+          <div className='space-y-xs'>
+            {Object.values(SIZE).map((size) => (
+              <Button
+                className='capitalize'
+                key={size}
+                size={size}
+                variant={variant}
+              >
+                {variant === VARIANTS.FLOATING ? size[0] : size}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+  ...hideControls(meta),
 };

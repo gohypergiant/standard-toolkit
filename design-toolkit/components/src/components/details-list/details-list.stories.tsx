@@ -10,29 +10,41 @@
  * governing permissions and limitations under the License.
  */
 
+import { createControl, EXCLUSIONS } from '^storybook/utils';
 import { DetailsList } from './';
 import type { Meta, StoryObj } from '@storybook/react';
+
+const ALIGN = Object.freeze({
+  CENTER: 'center',
+  JUSTIFY: 'justify',
+  LEFT: 'left',
+} as const satisfies Record<string, string>);
 
 const meta = {
   title: 'Components/DetailsList',
   component: DetailsList,
   args: {
-    align: 'justify',
+    align: ALIGN.JUSTIFY,
   },
   argTypes: {
-    align: {
-      control: 'select',
-      options: ['left', 'justify', 'center'],
-    },
+    align: createControl.select(
+      'Selection behavior for the component',
+      Object.values(ALIGN),
+    ),
   },
   parameters: {
-    layout: 'padded',
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
     docs: {
+      subtitle:
+        'A structured list component for displaying detailed information',
       description: {
         component:
           'A semantic details list component for displaying metadata in key-value pairs. Perfect for map object details, user profiles, or any structured information displayed in sidebars or detail panels.',
       },
     },
+    layout: 'padded',
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof DetailsList>;
