@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CRITICALITY, type Criticality } from '@/constants/criticality';
 import { tv } from '@/lib/utils';
 
 export const BadgeStylesDefaults = {
@@ -27,12 +28,12 @@ export const BadgeStyles = tv({
   ],
   variants: {
     variant: {
-      info: 'bg-info-muted outline-info-bold',
-      advisory: 'bg-advisory-muted outline-advisory-bold',
-      normal: 'bg-normal-muted outline-normal-bold',
-      serious: 'bg-serious-muted outline-serious-bold',
-      critical: 'bg-critical-muted outline-critical-bold',
-    },
+      [CRITICALITY.INFO]: 'bg-info-muted outline-info-bold',
+      [CRITICALITY.ADVISORY]: 'bg-advisory-muted outline-advisory-bold',
+      [CRITICALITY.NORMAL]: 'bg-normal-muted outline-normal-bold',
+      [CRITICALITY.SERIOUS]: 'bg-serious-muted outline-serious-bold',
+      [CRITICALITY.CRITICAL]: 'bg-critical-muted outline-critical-bold',
+    } satisfies Record<Criticality, string>,
   },
   defaultVariants: BadgeStylesDefaults,
 });

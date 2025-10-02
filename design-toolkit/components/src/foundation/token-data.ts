@@ -11,6 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { CRITICALITY } from '@/constants/criticality';
+
 // These tokens drive the storybook stories.
 // future: generate these
 
@@ -33,28 +35,12 @@ export const tokens = {
       'bg-accent-primary-pressed',
       'bg-accent-primary-muted',
     ],
-    utility: [
-      'bg-info-bold',
-      'bg-info-hover',
-      'bg-info-pressed',
-      'bg-info-muted',
-      'bg-advisory-bold',
-      'bg-advisory-hover',
-      'bg-advisory-pressed',
-      'bg-advisory-muted',
-      'bg-normal-bold',
-      'bg-normal-hover',
-      'bg-normal-pressed',
-      'bg-normal-muted',
-      'bg-serious-bold',
-      'bg-serious-hover',
-      'bg-serious-pressed',
-      'bg-serious-muted',
-      'bg-critical-bold',
-      'bg-critical-hover',
-      'bg-critical-pressed',
-      'bg-critical-muted',
-    ],
+    utility: Object.values(CRITICALITY).flatMap((crit) => [
+      `bg-${crit}-bold`,
+      `bg-${crit}-hover`,
+      `bg-${crit}-pressed`,
+      `bg-${crit}-muted`,
+    ]),
   },
   fg: {
     base: [
@@ -70,21 +56,11 @@ export const tokens = {
       'fg-accent-primary-bold',
       'fg-accent-primary-hover',
       'fg-accent-primary-pressed',
-      'fg-info-bold',
-      'fg-info-hover',
-      'fg-info-pressed',
-      'fg-advisory-bold',
-      'fg-advisory-hover',
-      'fg-advisory-pressed',
-      'fg-normal-bold',
-      'fg-normal-hover',
-      'fg-normal-pressed',
-      'fg-serious-bold',
-      'fg-serious-hover',
-      'fg-serious-pressed',
-      'fg-critical-bold',
-      'fg-critical-hover',
-      'fg-critical-pressed',
+      ...Object.values(CRITICALITY).flatMap((crit) => [
+        `bg-${crit}-bold`,
+        `bg-${crit}-hover`,
+        `bg-${crit}-pressed`,
+      ]),
     ],
     a11y: ['fg-a11y-on-accent', 'fg-a11y-on-utility'],
   },
@@ -100,24 +76,14 @@ export const tokens = {
       'outline-accent-primary-pressed',
     ],
     utility: [
-      'outline-info-bold',
-      'outline-info-hover',
-      'outline-info-pressed',
-      'outline-advisory-bold',
-      'outline-advisory-hover',
-      'outline-advisory-pressed',
-      'outline-normal-bold',
-      'outline-normal-hover',
-      'outline-normal-pressed',
       'outline-mono-bold',
       'outline-mono-bold-hover',
       'outline-mono-bold-pressed',
-      'outline-serious-bold',
-      'outline-serious-hover',
-      'outline-serious-pressed',
-      'outline-critical-bold',
-      'outline-critical-hover',
-      'outline-critical-pressed',
+      ...Object.values(CRITICALITY).flatMap((crit) => [
+        `bg-${crit}-bold`,
+        `bg-${crit}-hover`,
+        `bg-${crit}-pressed`,
+      ]),
     ],
   },
 };

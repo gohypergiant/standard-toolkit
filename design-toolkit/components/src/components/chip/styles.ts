@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CRITICALITY, type Criticality } from '@/constants/criticality';
 import { tv } from '@/lib/utils';
 
 export const ChipStylesDefaults = {
@@ -34,12 +35,16 @@ export const ChipStyles = tv({
   },
   variants: {
     variant: {
-      advisory: { chip: 'bg-advisory-muted outline-advisory-bold' },
-      critical: { chip: 'bg-critical-muted outline-critical-bold' },
-      serious: { chip: 'bg-serious-muted outline-serious-bold' },
-      normal: { chip: 'bg-normal-muted outline-normal-bold' },
-      info: { chip: 'bg-info-muted outline-info-bold' },
-    },
+      [CRITICALITY.ADVISORY]: {
+        chip: 'bg-advisory-muted outline-advisory-bold',
+      },
+      [CRITICALITY.CRITICAL]: {
+        chip: 'bg-critical-muted outline-critical-bold',
+      },
+      [CRITICALITY.SERIOUS]: { chip: 'bg-serious-muted outline-serious-bold' },
+      [CRITICALITY.NORMAL]: { chip: 'bg-normal-muted outline-normal-bold' },
+      [CRITICALITY.INFO]: { chip: 'bg-info-muted outline-info-bold' },
+    } satisfies Record<Criticality, { chip: string }>,
   },
   defaultVariants: ChipStylesDefaults,
 });
