@@ -251,7 +251,7 @@ export const designTokens = {
       accent: {
         primary: {
           bold: [57, 183, 250, 1],
-          hover: [110, 209, 255, 1],
+          hover: [0, 79, 126, 1],
           pressed: [0, 104, 161, 1],
         },
       },
