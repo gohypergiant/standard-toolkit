@@ -10,7 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_CONTROL,
+  createControl,
+  createParameters,
+} from '^storybook/utils';
 import { useState } from 'react';
+import { AXIS } from '@/constants/axis';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -23,21 +29,19 @@ const meta = {
   title: 'Components/QueryBuilder',
   component: QueryBuilder,
   args: {
-    orientation: 'horizontal',
+    // orientation: 'horizontal',
+    orientation: AXIS.HORIZONTAL,
     disabled: false,
     showCloneButtons: false,
     showLockButtons: false,
     showRuleLines: true,
   },
   argTypes: {
-    orientation: { options: ['horizontal', 'vertical'] },
-    disabled: {
-      control: {
-        type: 'boolean',
-      },
-    },
+    orientation: COMMON_CONTROL.orientation,
+    disabled: createControl.boolean('Disable the whole thing'),
   },
   parameters: {
+    ...createParameters('centered'),
     controls: {
       include: [
         'disabled',

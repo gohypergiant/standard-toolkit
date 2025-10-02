@@ -10,9 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createParameters } from '^storybook/utils';
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useRef, useState } from 'react';
+import { SELECTION } from '@/constants/selection';
 import { Button } from '../button';
 import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
@@ -25,16 +27,24 @@ const meta = {
   component: Menu,
   args: {
     variant: 'cozy',
-    selectionMode: 'single',
+    selectionMode: SELECTION.SINGLE,
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
-    selectionMode: {
-      control: 'select',
-      options: ['single', 'multiple', 'none'],
+    selectionMode: COMMON_CONTROL.selectionMode,
+    variant: COMMON_CONTROL.spacingVariant,
+  },
+  parameters: {
+    ...createParameters(
+      'centered',
+
+      // exclude these
+      'dependencies',
+      'popoverProps',
+      'renderEmptyState',
+    ),
+    docs: {
+      subtitle:
+        'A dropdown menu component with keyboard navigation and selection',
     },
   },
 } satisfies Meta<typeof Menu>;
@@ -109,7 +119,7 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-export const Basic: Story = {
+export const Default: Story = {
   render: (args) => (
     <Menu.Trigger>
       <Button variant='icon' aria-label='Menu'>
