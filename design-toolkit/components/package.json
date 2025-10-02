@@ -64,6 +64,7 @@
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "type-check": "pnpm tsc -p tsconfig.test.json",
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
     "generate": "pnpm gen:tokens && pnpm gen:variants",
