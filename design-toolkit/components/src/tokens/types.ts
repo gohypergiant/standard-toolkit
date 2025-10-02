@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import type { CRITICALITY } from '@/constants/criticality';
+
 // biome-ignore lint/style/useNamingConvention: acronym
 type RGBA = [number, number, number, number];
 
@@ -64,31 +66,31 @@ export type SemanticColorTokens = {
         muted: RGBA;
       };
     };
-    info: {
+    [CRITICALITY.INFO]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
       muted: RGBA;
     };
-    advisory: {
+    [CRITICALITY.ADVISORY]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
       muted: RGBA;
     };
-    normal: {
+    [CRITICALITY.NORMAL]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
       muted: RGBA;
     };
-    serious: {
+    [CRITICALITY.SERIOUS]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
       muted: RGBA;
     };
-    critical: {
+    [CRITICALITY.CRITICAL]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
@@ -114,27 +116,27 @@ export type SemanticColorTokens = {
         pressed: RGBA;
       };
     };
-    info: {
+    [CRITICALITY.INFO]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    advisory: {
+    [CRITICALITY.ADVISORY]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    normal: {
+    [CRITICALITY.NORMAL]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    serious: {
+    [CRITICALITY.SERIOUS]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    critical: {
+    [CRITICALITY.CRITICAL]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
@@ -159,27 +161,27 @@ export type SemanticColorTokens = {
         pressed: RGBA;
       };
     };
-    info: {
+    [CRITICALITY.INFO]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    advisory: {
+    [CRITICALITY.ADVISORY]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    normal: {
+    [CRITICALITY.NORMAL]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    serious: {
+    [CRITICALITY.SERIOUS]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;
     };
-    critical: {
+    [CRITICALITY.CRITICAL]: {
       bold: RGBA;
       hover: RGBA;
       pressed: RGBA;

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CRITICALITY } from '@/constants/criticality';
 import type { ThemeTokens } from './types';
 export const designTokens = {
   dark: {
@@ -41,31 +42,31 @@ export const designTokens = {
           muted: [0, 44, 82, 1],
         },
       },
-      info: {
+      [CRITICALITY.INFO]: {
         bold: [86, 87, 89, 1],
         hover: [136, 138, 143, 1],
         pressed: [65, 66, 69, 1],
         muted: [33, 34, 35, 1],
       },
-      advisory: {
+      [CRITICALITY.ADVISORY]: {
         bold: [60, 103, 160, 1],
         hover: [78, 136, 218, 1],
         pressed: [38, 64, 98, 1],
         muted: [14, 24, 37, 1],
       },
-      normal: {
+      [CRITICALITY.NORMAL]: {
         bold: [28, 126, 35, 1],
         hover: [38, 161, 46, 1],
         pressed: [20, 87, 24, 1],
         muted: [8, 33, 10, 1],
       },
-      serious: {
+      [CRITICALITY.SERIOUS]: {
         bold: [187, 122, 0, 1],
         hover: [230, 150, 0, 1],
         pressed: [99, 65, 1, 1],
         muted: [65, 43, 0, 1],
       },
-      critical: {
+      [CRITICALITY.CRITICAL]: {
         bold: [121, 5, 1, 1],
         hover: [161, 7, 1, 1],
         pressed: [84, 3, 0, 1],
@@ -91,27 +92,27 @@ export const designTokens = {
           pressed: [0, 104, 161, 1],
         },
       },
-      info: {
+      [CRITICALITY.INFO]: {
         bold: [136, 138, 143, 1],
         hover: [225, 225, 225, 1],
         pressed: [65, 66, 69, 1],
       },
-      advisory: {
+      [CRITICALITY.ADVISORY]: {
         bold: [98, 166, 255, 1],
         hover: [169, 206, 255, 1],
         pressed: [60, 103, 160, 1],
       },
-      normal: {
+      [CRITICALITY.NORMAL]: {
         bold: [43, 191, 53, 1],
         hover: [134, 233, 140, 1],
         pressed: [28, 126, 35, 1],
       },
-      serious: {
+      [CRITICALITY.SERIOUS]: {
         bold: [230, 150, 0, 1],
         hover: [255, 193, 76, 1],
         pressed: [187, 122, 0, 1],
       },
-      critical: {
+      [CRITICALITY.CRITICAL]: {
         bold: [255, 46, 39, 1],
         hover: [255, 109, 104, 1],
         pressed: [161, 7, 1, 1],
@@ -136,27 +137,27 @@ export const designTokens = {
           pressed: [0, 104, 161, 1],
         },
       },
-      info: {
+      [CRITICALITY.INFO]: {
         bold: [136, 138, 143, 1],
         hover: [225, 225, 225, 1],
         pressed: [65, 66, 69, 1],
       },
-      advisory: {
+      [CRITICALITY.ADVISORY]: {
         bold: [98, 166, 255, 1],
         hover: [169, 206, 255, 1],
         pressed: [60, 103, 160, 1],
       },
-      normal: {
+      [CRITICALITY.NORMAL]: {
         bold: [43, 191, 53, 1],
         hover: [134, 233, 140, 1],
         pressed: [28, 126, 35, 1],
       },
-      serious: {
+      [CRITICALITY.SERIOUS]: {
         bold: [230, 150, 0, 1],
         hover: [255, 211, 130, 1],
         pressed: [142, 93, 0, 1],
       },
-      critical: {
+      [CRITICALITY.CRITICAL]: {
         bold: [255, 46, 39, 1],
         hover: [255, 109, 104, 1],
         pressed: [161, 7, 1, 1],
@@ -205,31 +206,31 @@ export const designTokens = {
           muted: [177, 233, 255, 1],
         },
       },
-      info: {
+      [CRITICALITY.INFO]: {
         bold: [136, 138, 143, 1],
         hover: [195, 197, 199, 1],
         pressed: [65, 66, 69, 1],
         muted: [239, 241, 242, 1],
       },
-      advisory: {
+      [CRITICALITY.ADVISORY]: {
         bold: [60, 103, 160, 1],
         hover: [78, 136, 218, 1],
         pressed: [38, 64, 98, 1],
         muted: [196, 222, 255, 1],
       },
-      normal: {
+      [CRITICALITY.NORMAL]: {
         bold: [28, 126, 35, 1],
         hover: [38, 161, 46, 1],
         pressed: [20, 87, 24, 1],
         muted: [194, 245, 197, 1],
       },
-      serious: {
+      [CRITICALITY.SERIOUS]: {
         bold: [187, 122, 0, 1],
         hover: [230, 150, 0, 1],
         pressed: [99, 65, 1, 1],
         muted: [255, 234, 194, 1],
       },
-      critical: {
+      [CRITICALITY.CRITICAL]: {
         bold: [121, 5, 1, 1],
         hover: [161, 7, 1, 1],
         pressed: [84, 3, 0, 1],
@@ -255,27 +256,27 @@ export const designTokens = {
           pressed: [0, 104, 161, 1],
         },
       },
-      info: {
+      [CRITICALITY.INFO]: {
         bold: [65, 66, 69, 1],
         hover: [56, 57, 58, 1],
         pressed: [86, 87, 89, 1],
       },
-      advisory: {
+      [CRITICALITY.ADVISORY]: {
         bold: [98, 166, 255, 1],
         hover: [60, 103, 160, 1],
         pressed: [78, 136, 218, 1],
       },
-      normal: {
+      [CRITICALITY.NORMAL]: {
         bold: [43, 191, 53, 1],
         hover: [28, 126, 35, 1],
         pressed: [38, 161, 46, 1],
       },
-      serious: {
+      [CRITICALITY.SERIOUS]: {
         bold: [187, 122, 0, 1],
         hover: [142, 93, 0, 1],
         pressed: [187, 122, 0, 1],
       },
-      critical: {
+      [CRITICALITY.CRITICAL]: {
         bold: [255, 46, 39, 1],
         hover: [161, 7, 1, 1],
         pressed: [212, 11, 4, 1],
@@ -300,27 +301,27 @@ export const designTokens = {
           pressed: [110, 209, 255, 1],
         },
       },
-      info: {
+      [CRITICALITY.INFO]: {
         bold: [136, 138, 143, 1],
         hover: [65, 66, 69, 1],
         pressed: [86, 87, 89, 1],
       },
-      advisory: {
+      [CRITICALITY.ADVISORY]: {
         bold: [98, 166, 255, 1],
         hover: [60, 103, 160, 1],
         pressed: [78, 136, 218, 1],
       },
-      normal: {
+      [CRITICALITY.NORMAL]: {
         bold: [43, 191, 53, 1],
         hover: [28, 126, 35, 1],
         pressed: [38, 161, 46, 1],
       },
-      serious: {
+      [CRITICALITY.SERIOUS]: {
         bold: [187, 122, 0, 1],
         hover: [142, 93, 0, 1],
         pressed: [230, 150, 0, 1],
       },
-      critical: {
+      [CRITICALITY.CRITICAL]: {
         bold: [255, 46, 39, 1],
         hover: [161, 7, 1, 1],
         pressed: [212, 11, 4, 1],
