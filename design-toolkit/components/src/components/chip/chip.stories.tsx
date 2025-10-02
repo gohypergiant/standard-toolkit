@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, EXCLUSIONS } from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { useState } from 'react';
+import { CRITICALITY } from '@/constants/criticality';
+import { SIZE } from '@/constants/size';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
@@ -30,15 +33,21 @@ const meta = {
   title: 'Components/Chip',
   component: Chip,
   args: {
-    size: 'medium',
+    children: 'Chip',
+    size: SIZE.MEDIUM,
+    variant: CRITICALITY.INFO,
   },
   argTypes: {
-    children: {
-      control: 'text',
+    children: COMMON_CONTROL.children,
+    size: COMMON_CONTROL.size.compact,
+    variant: COMMON_CONTROL.criticality,
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
     },
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    docs: {
+      subtitle: 'Interactive chip components for selections and actions.',
     },
   },
 } satisfies Meta<typeof Chip>;

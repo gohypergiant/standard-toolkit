@@ -10,18 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
+import { createControl, EXCLUSIONS, hideControls } from '^storybook/utils';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Table } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 type Person = {
-  id: string;
-  firstName: string;
-  lastName: string;
   age: number;
-  visits: number;
-  status: string;
+  firstName: string;
+  id: string;
+  lastName: string;
   progress: number;
+  status: string;
+  visits: number;
 };
 
 const defaultData: Person[] = [
@@ -146,21 +147,24 @@ const meta = {
   args: {
     columns: columns,
     data: defaultData,
-    showCheckbox: true,
-    kebabPosition: 'right',
-    persistHeaderKebabMenu: true,
-    persistRowKebabMenu: true,
-    persistNumerals: true,
-    enableSorting: true,
     enableColumnOrdering: true,
     enableRowActions: true,
+    enableSorting: false,
+    kebabPosition: 'right',
+    persistHeaderKebabMenu: true,
+    persistNumerals: true,
+    persistRowKebabMenu: true,
+    showCheckbox: true,
   },
   argTypes: {
-    kebabPosition: {
-      control: {
-        type: 'radio',
-        options: ['left', 'right'],
-      },
+    kebabPosition: createControl.radio('Kebab position', ['left', 'right']),
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON, 'columns', 'data'],
+    },
+    docs: {
+      subtitle: 'TODO',
     },
   },
   tags: ['autodocs'],
@@ -170,25 +174,43 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    kebabPosition: 'right',
-    enableSorting: false,
-  },
-
-  render: (args) => <Table {...args} />,
+  // render: Table, // default
 };
 
 export const SortableColumns: Story = {
   args: {
+    enableSorting: true,
     kebabPosition: 'left',
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Columns are sortable by clicking the headers. Click a header to sort ascending, descending, or clear sorting.',
-      },
-    },
-  },
-  render: (args) => <Table {...args} />,
+  // render: Table, // default
+};
+
+export const Static: Story = {
+  render: (...args) => (
+    <Table {...args}>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>First Name</Table.HeaderCell>
+          <Table.HeaderCell>Last Name</Table.HeaderCell>
+          <Table.HeaderCell>Age</Table.HeaderCell>
+          <Table.HeaderCell>Visits</Table.HeaderCell>
+          <Table.HeaderCell>Status</Table.HeaderCell>
+          <Table.HeaderCell>Progress</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {defaultData.map((person) => (
+          <Table.Row key={person.id}>
+            <Table.Cell>{person.firstName}</Table.Cell>
+            <Table.Cell>{person.lastName}</Table.Cell>
+            <Table.Cell>{person.age}</Table.Cell>
+            <Table.Cell>{person.visits}</Table.Cell>
+            <Table.Cell>{person.status}</Table.Cell>
+            <Table.Cell>{person.progress}%</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  ),
+  ...hideControls(meta),
 };

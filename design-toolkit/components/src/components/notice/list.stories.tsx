@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createControl, EXCLUSIONS } from '^storybook/utils';
 import { useBus, useEmit } from '@accelint/bus/react';
 import { type UniqueId, uuid } from '@accelint/core';
 import { useEffect, useState } from 'react';
@@ -27,10 +28,6 @@ import type {
 const meta: Meta<typeof Notice.List> = {
   title: 'Components/Notice.List',
   component: Notice.List,
-  parameters: {
-    layout: 'fullscreen',
-  },
-
   args: {
     defaultColor: 'info',
     size: 'medium',
@@ -38,22 +35,27 @@ const meta: Meta<typeof Notice.List> = {
     limit: 3,
   },
   argTypes: {
-    defaultColor: {
-      control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
-    },
-    placement: {
-      control: 'select',
-      options: [
-        'top left',
-        'top',
-        'top right',
-        'right',
-        'bottom right',
-        'bottom',
-        'bottom left',
-        'left',
-      ],
+    defaultColor: createControl.select('Default color', [
+      'info',
+      'advisory',
+      'normal',
+      'serious',
+      'critical',
+    ]),
+    placement: createControl.select('Placement of ...', [
+      'top left',
+      'top',
+      'top right',
+      'right',
+      'bottom right',
+      'bottom',
+      'bottom left',
+      'left',
+    ]),
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON, 'id', 'defaultTimeout', 'global'],
     },
   },
 };

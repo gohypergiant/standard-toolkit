@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createControl, EXCLUSIONS } from '^storybook/utils';
 import { Notice } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -18,15 +19,33 @@ const meta: Meta<typeof Notice> = {
   component: Notice,
   args: {
     color: 'info',
+    hideIcon: false,
     message:
       'This is a flexible snackbar that can be either a single or double line that will wrap accordingly when it gets too long for a single line.',
-    size: 'medium',
     showClose: true,
+    size: 'medium',
   },
   argTypes: {
-    color: {
-      control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
+    color: createControl.select('Color of the notice', [
+      'info',
+      'advisory',
+      'normal',
+      'serious',
+      'critical',
+    ]),
+  },
+  parameters: {
+    controls: {
+      exclude: [
+        ...EXCLUSIONS.COMMON,
+        'id',
+        'onClose',
+        'onPrimaryAction',
+        'onSecondaryAction',
+        'primary',
+        'secondary',
+        'shouldCloseOnAction',
+      ],
     },
   },
 };

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, EXCLUSIONS, MOCK_DATA } from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -29,12 +30,13 @@ const meta = {
     variant: AccordionStylesDefaults.variant,
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
+    variant: COMMON_CONTROL.spacingVariant,
+    isDisabled: COMMON_CONTROL.isDisabled,
   },
   parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON, 'id'],
+    },
     docs: {
       subtitle: 'Content that can expand and collapse.',
     },
@@ -43,6 +45,12 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+const CONTENT = (
+  <p className='fg-primary-muted text-body-s'>
+    {MOCK_DATA.TEXT_CONTENT.MEDIUM}
+  </p>
+);
 
 export const Default: Story = {
   render: ({ children, ...args }) => (
@@ -56,12 +64,7 @@ export const Default: Story = {
             Accordion title
           </Accordion.Trigger>
         </Accordion.Header>
-        <Accordion.Panel>
-          <p className='fg-primary-muted text-body-s'>
-            This is a placeholder content for an accordion. Please replace with
-            an actual content instance.
-          </p>
-        </Accordion.Panel>
+        <Accordion.Panel>{CONTENT}</Accordion.Panel>
       </Accordion>
     </div>
   ),
@@ -81,17 +84,12 @@ export const WithMenu: Story = {
           <Menu.Trigger>
             <Button />
             <Menu>
-              <Menu.Item>Foo</Menu.Item>
-              <Menu.Item>Bar</Menu.Item>
+              <Menu.Item>Edit</Menu.Item>
+              <Menu.Item>Delete</Menu.Item>
             </Menu>
           </Menu.Trigger>
         </Accordion.Header>
-        <Accordion.Panel>
-          <p className='fg-primary-muted text-body-s'>
-            This is a placeholder content for an accordion. Please replace with
-            an actual content instance.
-          </p>
-        </Accordion.Panel>
+        <Accordion.Panel>{CONTENT}</Accordion.Panel>
       </Accordion>
     </div>
   ),
