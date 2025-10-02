@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, EXCLUSIONS, MOCK_DATA } from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
+import { SIZE } from '@/constants/size';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
 import { Avatar } from './';
@@ -22,27 +24,22 @@ const meta = {
   args: {
     children: '',
     imageProps: {
-      alt: 'Dog',
-      src: 'https://placedog.net/100x100?id=144',
+      alt: 'User avatar',
+      src: MOCK_DATA.USERS[0]?.avatar,
     },
-    size: 'medium',
+    size: SIZE.MEDIUM,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
-    },
+    size: COMMON_CONTROL.size.compact,
   },
   parameters: {
     controls: {
-      include: [
-        'children',
-        'imageProps',
-        'size',
-        'classNames',
-        'fallbackProps',
-      ],
+      exclude: [...EXCLUSIONS.COMMON, 'fallbackProps'],
     },
+    docs: {
+      subtitle: 'A user profile image component with fallback support',
+    },
+    layout: 'centered',
   },
 } satisfies Meta<typeof Avatar>;
 
@@ -55,7 +52,7 @@ export const Default: Story = {
 
 export const WithBadge: Story = {
   render: ({ children, ...args }) => (
-    <div className='flex items-center gap-m'>
+    <div className='flex items-center gap-l'>
       <Avatar {...args}>
         <Badge variant='critical'>99+</Badge>
       </Avatar>
@@ -71,19 +68,26 @@ export const WithBadge: Story = {
 
 export const WithContent: Story = {
   args: {
-    children: <span className='fg-primary-bold text-shadow-2xs'>DS</span>,
+    // Note: this is to turn off some defaults for this story specifically
+    children: <span className='fg-primary-bold text-shadow-2xs'>SC</span>,
+    imageProps: undefined,
   },
   render: ({ children, ...args }) => (
-    <div className='flex items-center gap-m'>
+    <div className='flex items-center gap-l'>
+      {/* Text initials */}
       <Avatar {...args}>{children}</Avatar>
+
+      {/* Icon fallback */}
       <Avatar {...args}>
         <Icon className='fg-primary-bold'>
           <Placeholder />
         </Icon>
       </Avatar>
+
+      {/* Status indicator */}
       <Avatar {...args} classNames={{ content: 'items-end' }}>
-        <Badge offset={0} placement='bottom' variant='critical'>
-          Offline
+        <Badge offset={0} placement='bottom' variant='normal'>
+          Online
         </Badge>
       </Avatar>
     </div>
@@ -102,6 +106,7 @@ const fallbackPropsInitials = { children: <>DS</> };
 
 export const WithFallback: Story = {
   args: {
+    // Note: this is to turn off some defaults for this story specifically
     imageProps: { alt: 'broken url', src: 'http://not-here' },
   },
   render: ({ children, ...args }) => (

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { EXCLUSIONS, MOCK_DATA } from '^storybook/utils';
 import { Lasso } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -19,35 +20,49 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta = {
   title: 'Components/Tooltip',
   component: Tooltip,
+  args: {
+    children: null,
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle: 'Brief contextual information displayed on hover or focus.',
+    },
+  },
 } satisfies Meta<typeof Tooltip>;
 
 export default meta;
-type Story = StoryObj<typeof Tooltip>; // NOTE: intentional pattern deviation because no `args` in `meta`
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip.Trigger>
         <span className='fg-primary-bold'>Test</span>
-        <Tooltip>My tooltip</Tooltip>
+        <Tooltip>{MOCK_DATA.TEXT_CONTENT.SHORT}</Tooltip>
       </Tooltip.Trigger>
     </div>
   ),
 };
 
 export const LongTooltip: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip.Trigger>
         <span className='fg-primary-bold'>Long Tooltip</span>
-        <Tooltip>A floating label used to explain an element</Tooltip>
+        <Tooltip>{MOCK_DATA.TEXT_CONTENT.MEDIUM}</Tooltip>
       </Tooltip.Trigger>
     </div>
   ),
 };
 
 export const TooltipWithButton: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip.Trigger>
         <Button>My Button</Button>
@@ -58,7 +73,8 @@ export const TooltipWithButton: Story = {
 };
 
 export const TooltipWithIcon: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <div className='p-m'>
       <Tooltip.Trigger>
         <Icon className='fg-primary-bold h-xl w-xl'>

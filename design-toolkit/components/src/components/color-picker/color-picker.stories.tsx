@@ -10,37 +10,41 @@
  * governing permissions and limitations under the License.
  */
 
+import { EXCLUSIONS } from '^storybook/utils';
 import { ColorPicker } from './';
 import type { Meta, StoryObj } from '@storybook/react';
+
+const PRESETS = [
+  '#ECECE6',
+  '#898989',
+  '#62a6ff',
+  '#30D27E',
+  '#FCA400',
+  '#D4231D',
+];
 
 const meta = {
   title: 'Components/ColorPicker',
   component: ColorPicker,
   args: {
-    items: ['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D'],
+    items: PRESETS,
   },
   argTypes: {
-    className: { type: 'string' },
     value: {
       control: {
         type: 'color',
-        presetColors: [
-          '#ECECE6',
-          '#898989',
-          '#62a6ff',
-          '#30D27E',
-          '#FCA400',
-          '#D4231D',
-        ],
+        presetColors: PRESETS,
       },
       description: 'The currently selected color.',
     },
-    onChange: {
-      action: 'changed',
-      description: 'Callback function when the color is changed.',
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
     },
-    items: {
-      description: 'Array of color options to choose from.',
+    docs: {
+      subtitle:
+        'Color picker component for selecting colors from a predefined palette.',
     },
   },
 } satisfies Meta<typeof ColorPicker>;

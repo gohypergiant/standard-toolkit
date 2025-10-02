@@ -10,31 +10,46 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createControl, EXCLUSIONS } from '^storybook/utils';
+import { AXIS } from '@/constants/axis';
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
+
+const LAYOUT = Object.freeze({
+  GRID: 'grid',
+  STACK: 'stack',
+} as const);
 
 const meta = {
   title: 'Components/Slider',
   component: Slider,
   args: {
     defaultValue: 30,
-    layout: 'grid',
+    layout: LAYOUT.GRID,
     label: 'Opacity',
     maxValue: 100,
     minValue: 0,
-    orientation: 'horizontal',
+    orientation: AXIS.HORIZONTAL,
     showInput: false,
     showLabel: true,
     isDisabled: false,
   },
   argTypes: {
-    layout: {
-      control: 'select',
-      options: ['grid', 'stack'],
+    layout: createControl.select(
+      'Layout arrangement of label and slider',
+      Object.values(LAYOUT),
+      LAYOUT.GRID,
+    ),
+    orientation: COMMON_CONTROL.orientation,
+    showInput: createControl.boolean('Whether to show numeric input field'),
+    showLabel: createControl.boolean('Whether to show the label'),
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON, 'formatOptions'],
     },
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
+    docs: {
+      subtitle: 'Range input control for selecting numeric values.',
     },
   },
 } satisfies Meta<typeof Slider>;

@@ -10,11 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createControl, EXCLUSIONS } from '^storybook/utils';
 import Placeholder from '@accelint/icons/placeholder';
 import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
 } from 'react-aria-components';
+import { SIZE } from '@/constants/size';
 import { Icon } from '../icon';
 import { Options } from './';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -24,11 +26,27 @@ const meta = {
   title: 'Components/Options',
   component: Options,
   args: {
-    size: 'large',
+    size: SIZE.LARGE,
+    selectionBehavior: 'replace',
   },
   argTypes: {
-    size: {
-      control: 'select',
+    size: COMMON_CONTROL.size.binary,
+    selectionBehavior: createControl.select(
+      'Chose the behavior for selection',
+      ['replace', 'toggle'],
+    ),
+  },
+  parameters: {
+    controls: {
+      exclude: [
+        ...EXCLUSIONS.COMMON,
+        'dependencies',
+        'dragAndDropHooks',
+        'renderEmptyState',
+      ],
+    },
+    docs: {
+      subtitle: 'Options list component for selection interfaces.',
     },
   },
 } satisfies Meta<typeof Options>;

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, EXCLUSIONS } from '^storybook/utils';
 import { Add } from '@accelint/icons';
 import { Icon } from './';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -17,16 +18,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta = {
   title: 'Components/Icon',
   component: Icon,
-  args: {
-    className: 'fg-primary-bold',
-  },
   argTypes: {
-    className: {
-      type: 'string',
+    size: COMMON_CONTROL.size.full,
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
     },
-    size: {
-      control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
+    docs: {
+      subtitle: 'Scalable vector graphics with consistent sizing and coloring.',
     },
   },
 } satisfies Meta<typeof Icon>;
@@ -36,26 +36,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => (
-    <Icon {...args}>
+    <Icon className={'fg-primary-bold'} {...args}>
       <Add />
     </Icon>
   ),
 };
 
 export const Provider: Story = {
-  render: ({ className, size }) => (
-    <Icon.Provider size={size}>
-      <div className={className}>
-        <Icon>
-          <Add />
-        </Icon>
-        <Icon>
-          <Add />
-        </Icon>
-        <Icon>
-          <Add />
-        </Icon>
-      </div>
+  render: (args) => (
+    <Icon.Provider className={'fg-primary-bold'} {...args}>
+      <Icon>
+        <Add />
+      </Icon>
     </Icon.Provider>
   ),
 };

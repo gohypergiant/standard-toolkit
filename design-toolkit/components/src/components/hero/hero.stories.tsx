@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createControl, EXCLUSIONS } from '^storybook/utils';
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Hero } from './';
@@ -20,6 +21,18 @@ const meta = {
   component: Hero,
   args: {
     compact: false,
+  },
+  argTypes: {
+    compact: createControl.boolean('Whether to use compact layout'),
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle:
+        'Displays an icon alongside primary and secondary content with flexible layouts.',
+    },
   },
 } satisfies Meta<typeof Hero>;
 
@@ -33,9 +46,9 @@ export const Default: Story = {
         <Icon>
           <Placeholder />
         </Icon>
-        <Hero.Title>{'{object.name}'}</Hero.Title>
-        <Hero.Subtitle>additional-metadata-01</Hero.Subtitle>
-        <Hero.Subtitle>additional-metadata-002</Hero.Subtitle>
+        <Hero.Title>Project Dashboard</Hero.Title>
+        <Hero.Subtitle>Main Overview</Hero.Subtitle>
+        <Hero.Subtitle>Last updated today</Hero.Subtitle>
       </Hero>
     </div>
   ),

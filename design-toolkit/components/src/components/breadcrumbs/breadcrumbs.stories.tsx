@@ -10,19 +10,36 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, EXCLUSIONS } from '^storybook/utils';
 import { Breadcrumbs } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
   title: 'Components/Breadcrumbs',
   component: Breadcrumbs,
+  args: {
+    isDisabled: false,
+  },
+  argTypes: {
+    isDisabled: COMMON_CONTROL.isDisabled,
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON, 'dependencies', 'onAction'],
+    },
+    docs: {
+      subtitle:
+        'Display a list of directories to indicate to the user where they are at.',
+    },
+  },
 } satisfies Meta<typeof Breadcrumbs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
+  // NOTE: `_args` is purely so that Storybook will use the "controls" from `meta`
+  render: (_args) => (
     <Breadcrumbs>
       <Breadcrumbs.Item linkProps={{ href: '/ ' }}>Root</Breadcrumbs.Item>
       <Breadcrumbs.Item linkProps={{ href: '/home' }}>Child</Breadcrumbs.Item>

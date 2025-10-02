@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, EXCLUSIONS } from '^storybook/utils';
+import { AXIS } from '@/constants/axis';
 import { Divider } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,12 +19,17 @@ const meta = {
   title: 'Components/Divider',
   component: Divider,
   args: {
-    orientation: 'horizontal',
+    orientation: AXIS.HORIZONTAL,
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
+    orientation: COMMON_CONTROL.orientation,
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle: 'TODO',
     },
   },
 } satisfies Meta<typeof Divider>;
@@ -40,7 +47,7 @@ export const Default: Story = {
 
 export const Horizontal: Story = {
   args: {
-    orientation: 'horizontal',
+    orientation: AXIS.HORIZONTAL,
   },
   render: (args) => (
     <div className='fg-primary-bold'>
@@ -53,7 +60,7 @@ export const Horizontal: Story = {
 
 export const Vertical: Story = {
   args: {
-    orientation: 'vertical',
+    orientation: AXIS.VERTICAL,
   },
   render: (args) => (
     <div className='fg-primary-bold flex gap-s p-s'>

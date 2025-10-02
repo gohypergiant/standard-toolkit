@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { EXCLUSIONS } from '^storybook/utils';
 import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
 import React, { type ComponentProps, useState } from 'react';
@@ -28,7 +29,7 @@ type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
   pushLayout?: boolean;
 };
 
-const meta: Meta<SidenavWithLayoutArgs> = {
+const meta = {
   title: 'Components/Sidenav',
   component: Sidenav,
   args: {
@@ -36,9 +37,15 @@ const meta: Meta<SidenavWithLayoutArgs> = {
     isHiddenWhenClosed: false,
   },
   parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle: 'Side navigation component for hierarchical navigation.',
+    },
     layout: 'fullscreen',
   },
-};
+} satisfies Meta<SidenavWithLayoutArgs>;
 
 export default meta;
 type Story = StoryObj<SidenavWithLayoutArgs>;

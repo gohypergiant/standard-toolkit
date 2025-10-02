@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createControl, EXCLUSIONS } from '^storybook/utils';
+import { CRITICALITY } from '@/constants/criticality';
 import { Badge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,17 +19,23 @@ const meta = {
   title: 'Components/Badge',
   component: Badge,
   args: {
-    className: undefined,
-    children: undefined,
-    variant: 'info',
+    children: '',
+    variant: CRITICALITY.INFO,
   },
   argTypes: {
-    children: {
-      control: 'text',
+    children: COMMON_CONTROL.children,
+    variant: createControl.select(
+      'Badge color variant indicating different levels of importance',
+      Object.values(CRITICALITY),
+    ),
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
     },
-    variant: {
-      control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
+    docs: {
+      subtitle:
+        'A small status indicator component for labeling and notifications',
     },
   },
 } satisfies Meta<typeof Badge>;
@@ -40,7 +48,9 @@ export const Default: Story = {
 };
 
 export const WithText: Story = {
-  render: ({ children, ...rest }) => (
-    <Badge {...rest}>{children || '99+'}</Badge>
-  ),
+  args: {
+    // Note: this is to override defaults for this story specifically
+    children: '99+',
+  },
+  render: Badge,
 };

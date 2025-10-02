@@ -23,6 +23,8 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
+import { COLORS } from './colors';
+import { SIZES } from './sizes';
 import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
@@ -76,8 +78,8 @@ export function Button({ ref, ...props }: ButtonProps) {
   const {
     children,
     className,
-    color = 'mono-muted',
-    size = 'medium',
+    color = COLORS.MONO_MUTED,
+    size = SIZES.MEDIUM,
     variant,
     ...rest
   } = props;
@@ -159,8 +161,8 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
   const {
     children,
     className,
-    color = 'mono-muted',
-    size = 'medium',
+    color = COLORS.MONO_MUTED,
+    size = SIZES.MEDIUM,
     variant,
     ...rest
   } = props;
@@ -244,8 +246,8 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   const {
     children,
     className,
-    color = 'mono-muted',
-    size = 'medium',
+    color = COLORS.MONO_MUTED,
+    size = SIZES.MEDIUM,
     variant,
     ...rest
   } = props;

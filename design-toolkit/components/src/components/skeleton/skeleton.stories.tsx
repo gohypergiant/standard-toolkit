@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { createControl, EXCLUSIONS } from '^storybook/utils';
 import { Skeleton } from './';
+import { SHAPE } from './shape';
 import { SkeletonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -19,9 +21,18 @@ const meta = {
   component: Skeleton,
   args: SkeletonStylesDefaults,
   argTypes: {
-    shape: {
-      control: 'select',
-      options: ['circ', 'rect'],
+    shape: createControl.select(
+      'Shape of the skeleton placeholder',
+      Object.values(SHAPE),
+      SHAPE.RECT,
+    ),
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle: 'Placeholder animations for loading content.',
     },
   },
 } satisfies Meta<typeof Skeleton>;
