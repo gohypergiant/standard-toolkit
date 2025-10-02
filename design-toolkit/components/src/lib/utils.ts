@@ -84,7 +84,7 @@ const twMergeConfig = {
       'serious',
       'critical',
       'classification-missing',
-      'classification-unclass',
+      'classification-unclassified',
       'classification-cui',
       'classification-confidential',
       'classification-secret',

@@ -330,7 +330,7 @@
   "static": {
     "classification": {
       "missing": "--primitive-classification-missing",
-      "unclass": "--primitive-classification-unclass",
+      "unclassified": "--primitive-classification-unclassified",
       "cui": "--primitive-classification-cui",
       "confidential": "--primitive-classification-confidential",
       "secret": "--primitive-classification-secret",
