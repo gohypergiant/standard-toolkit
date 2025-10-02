@@ -20,6 +20,13 @@
       },
       "default": "./dist/*/index.js"
     },
+    "./*/fiber": {
+      "import": {
+        "types": "./dist/*/fiber.d.ts",
+        "default": "./dist/*/fiber.js"
+      },
+      "default": "./dist/*/fiber.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

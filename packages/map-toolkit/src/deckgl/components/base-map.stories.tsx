@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { withDeckGL } from '../decorators/deckgl';
+import '@/deckgl-layer-symbol/fiber';
+import { MOCK_DATA } from '@/deckgl/constants';
+import { withDeckGL } from '@/deckgl/decorators/deckgl';
 import type { Meta, StoryObj } from '@storybook/react';
+import { useId } from 'react';
 
 const meta: Meta = {
   title: 'DeckGL',
@@ -28,3 +31,18 @@ export const BaseMap: Story = {
   // Using the deckGL decorator, blank base map.
   render: () => null as any,
 };
+
+export const SymbolLayer: Story = {
+  render: () => {
+    return (
+      <symbolLayer
+        id={useId()}
+        data={MOCK_DATA}
+        defaultSymbolOptions={{
+          colorMode: 'Dark',
+          square: true,
+        }}
+      />
+    );
+  }
+}
