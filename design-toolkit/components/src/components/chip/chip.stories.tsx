@@ -12,6 +12,7 @@
 
 import { Placeholder } from '@accelint/icons';
 import { useState } from 'react';
+import { SELECTION } from '@/constants/selection';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
@@ -129,7 +130,7 @@ export const SelectableChipList: StoryForSelectable = {
   argTypes: {
     selectionMode: {
       control: 'select',
-      options: ['none', 'single', 'multiple'],
+      options: Object.values(SELECTION),
     },
   },
   parameters: {

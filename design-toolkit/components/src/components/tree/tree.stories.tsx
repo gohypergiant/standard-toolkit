@@ -20,6 +20,7 @@ import {
 } from '@accelint/icons';
 import Warning from '@accelint/icons/warning';
 import { type ReactNode, useState } from 'react';
+import { SELECTION } from '@/constants/selection';
 import { useTreeActions } from '@/hooks/use-tree/actions';
 import { useTreeState } from '@/hooks/use-tree/state';
 import { Button } from '../button';
@@ -45,7 +46,7 @@ const meta = {
     },
     selectionMode: {
       control: 'select',
-      options: ['none', 'multiple', 'single'],
+      options: Object.values(SELECTION),
     },
   },
   parameters: {
