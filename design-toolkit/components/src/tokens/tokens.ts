@@ -22,23 +22,23 @@ export const designTokens = {
       },
       interactive: {
         bold: {
-          base: [239, 241, 242, 1],
-          hover: [213, 215, 217, 1],
-          pressed: [136, 138, 143, 1],
+          base: [255, 255, 255, 1],
+          hover: [239, 241, 242, 1],
+          pressed: [195, 197, 199, 1],
         },
         muted: {
-          base: [47, 47, 49, 1],
+          base: [56, 57, 58, 1],
           hover: [65, 66, 69, 1],
           pressed: [0, 0, 0, 1],
         },
-        disabled: [47, 47, 49, 1],
+        disabled: [56, 57, 58, 1],
       },
       accent: {
         primary: {
           bold: [0, 79, 126, 1],
           hover: [0, 104, 161, 1],
-          pressed: [0, 33, 62, 1],
-          muted: [0, 33, 62, 1],
+          pressed: [0, 44, 82, 1],
+          muted: [0, 44, 82, 1],
         },
       },
       info: {
@@ -61,9 +61,9 @@ export const designTokens = {
       },
       serious: {
         bold: [187, 122, 0, 1],
-        hover: [232, 153, 6, 1],
+        hover: [230, 150, 0, 1],
         pressed: [99, 65, 1, 1],
-        muted: [41, 27, 0, 1],
+        muted: [65, 43, 0, 1],
       },
       critical: {
         bold: [121, 5, 1, 1],
@@ -73,6 +73,8 @@ export const designTokens = {
       },
     },
     fg: {
+      hover: [255, 255, 255, 1],
+      pressed: [136, 138, 143, 1],
       primary: {
         bold: [255, 255, 255, 1],
         muted: [195, 197, 199, 1],
@@ -84,14 +86,14 @@ export const designTokens = {
       disabled: [86, 87, 89, 1],
       accent: {
         primary: {
-          bold: [0, 156, 222, 1],
+          bold: [57, 183, 250, 1],
           hover: [110, 209, 255, 1],
           pressed: [0, 104, 161, 1],
         },
       },
       info: {
         bold: [136, 138, 143, 1],
-        hover: [213, 215, 217, 1],
+        hover: [225, 225, 225, 1],
         pressed: [65, 66, 69, 1],
       },
       advisory: {
@@ -105,7 +107,7 @@ export const designTokens = {
         pressed: [28, 126, 35, 1],
       },
       serious: {
-        bold: [232, 153, 6, 1],
+        bold: [230, 150, 0, 1],
         hover: [255, 193, 76, 1],
         pressed: [187, 122, 0, 1],
       },
@@ -124,8 +126,8 @@ export const designTokens = {
       interactive: {
         base: [65, 66, 69, 1],
         hover: [136, 138, 143, 1],
-        pressed: [47, 47, 49, 1],
-        disabled: [47, 47, 49, 1],
+        pressed: [56, 57, 58, 1],
+        disabled: [56, 57, 58, 1],
       },
       accent: {
         primary: {
@@ -136,7 +138,7 @@ export const designTokens = {
       },
       info: {
         bold: [136, 138, 143, 1],
-        hover: [213, 215, 217, 1],
+        hover: [225, 225, 225, 1],
         pressed: [65, 66, 69, 1],
       },
       advisory: {
@@ -150,7 +152,7 @@ export const designTokens = {
         pressed: [28, 126, 35, 1],
       },
       serious: {
-        bold: [232, 153, 6, 1],
+        bold: [230, 150, 0, 1],
         hover: [255, 211, 130, 1],
         pressed: [142, 93, 0, 1],
       },
@@ -158,6 +160,13 @@ export const designTokens = {
         bold: [255, 46, 39, 1],
         hover: [255, 109, 104, 1],
         pressed: [161, 7, 1, 1],
+      },
+      mono: {
+        bold: {
+          base: [255, 255, 255, 1],
+          hover: [239, 241, 242, 1],
+          pressed: [195, 197, 199, 1],
+        },
       },
     },
     shadow: {
@@ -183,16 +192,16 @@ export const designTokens = {
         },
         muted: {
           base: [195, 197, 199, 1],
-          hover: [213, 215, 217, 1],
+          hover: [225, 225, 225, 1],
           pressed: [136, 138, 143, 1],
         },
-        disabled: [213, 215, 217, 1],
+        disabled: [225, 225, 225, 1],
       },
       accent: {
         primary: {
           bold: [0, 79, 126, 1],
           hover: [0, 104, 161, 1],
-          pressed: [0, 33, 62, 1],
+          pressed: [0, 44, 82, 1],
           muted: [177, 233, 255, 1],
         },
       },
@@ -216,7 +225,7 @@ export const designTokens = {
       },
       serious: {
         bold: [187, 122, 0, 1],
-        hover: [232, 153, 6, 1],
+        hover: [230, 150, 0, 1],
         pressed: [99, 65, 1, 1],
         muted: [255, 234, 194, 1],
       },
@@ -228,6 +237,8 @@ export const designTokens = {
       },
     },
     fg: {
+      hover: [33, 34, 35, 1],
+      pressed: [86, 87, 89, 1],
       primary: {
         bold: [33, 34, 35, 1],
         muted: [86, 87, 89, 1],
@@ -246,7 +257,7 @@ export const designTokens = {
       },
       info: {
         bold: [65, 66, 69, 1],
-        hover: [47, 47, 49, 1],
+        hover: [56, 57, 58, 1],
         pressed: [86, 87, 89, 1],
       },
       advisory: {
@@ -279,8 +290,8 @@ export const designTokens = {
       interactive: {
         base: [195, 197, 199, 1],
         hover: [136, 138, 143, 1],
-        pressed: [213, 215, 217, 1],
-        disabled: [213, 215, 217, 1],
+        pressed: [225, 225, 225, 1],
+        disabled: [225, 225, 225, 1],
       },
       accent: {
         primary: {
@@ -307,12 +318,19 @@ export const designTokens = {
       serious: {
         bold: [187, 122, 0, 1],
         hover: [142, 93, 0, 1],
-        pressed: [232, 153, 6, 1],
+        pressed: [230, 150, 0, 1],
       },
       critical: {
         bold: [255, 46, 39, 1],
         hover: [161, 7, 1, 1],
         pressed: [212, 11, 4, 1],
+      },
+      mono: {
+        bold: {
+          base: [21, 21, 23, 1],
+          hover: [56, 57, 58, 1],
+          pressed: [65, 66, 69, 1],
+        },
       },
     },
     shadow: {

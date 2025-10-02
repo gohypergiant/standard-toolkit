@@ -19,7 +19,7 @@ import type { RuleGroupType } from './types';
 /**
  * A custom port of the React QueryBuilder component: https://react-querybuilder.js.org/
  */
-const meta: Meta<typeof QueryBuilder> = {
+const meta = {
   title: 'Components/QueryBuilder',
   component: QueryBuilder,
   args: {
@@ -51,17 +51,14 @@ const meta: Meta<typeof QueryBuilder> = {
       subtitle: 'Builds a complex formatted query for filtering a dataset',
     },
   },
-};
+} satisfies Meta<typeof QueryBuilder>;
 
 export default meta;
-type Story = StoryObj<typeof QueryBuilder>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => {
     const [query, setQuery] = useState<RuleGroupType>(defaultQuery);
-
-    /** Output of the query filter **/
-    console.log(query);
 
     return (
       <QueryBuilder

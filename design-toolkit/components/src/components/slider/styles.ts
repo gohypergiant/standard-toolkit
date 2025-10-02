@@ -1,5 +1,3 @@
-import { tv } from 'tailwind-variants';
-
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,6 +9,7 @@ import { tv } from 'tailwind-variants';
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import { tv } from '@/lib/utils';
 
 export const SliderStyles = tv({
   slots: {
@@ -21,7 +20,6 @@ export const SliderStyles = tv({
       'orientation-vertical:h-full orientation-vertical:w-fit',
       'orientation-vertical:layout-grid:grid-cols-[auto_auto_auto] orientation-vertical:layout-grid:grid-rows-[auto_auto_1fr_auto]',
       'orientation-vertical:layout-stack:flex-col',
-      'orientation-horizontal:h-xl',
       'orientation-horizontal:layout-grid:grid-cols-[auto_1fr_auto] orientation-horizontal:layout-grid:grid-rows-[auto_auto_auto]',
       'orientation-horizontal:layout-stack:w-full orientation-horizontal:layout-stack:items-center',
     ],

@@ -13,7 +13,7 @@
 import { ClassificationBadge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ClassificationBadge> = {
+const meta = {
   title: 'Components/ClassificationBadge',
   component: ClassificationBadge,
   args: {
@@ -43,10 +43,11 @@ const meta: Meta<typeof ClassificationBadge> = {
       options: ['medium', 'small'],
     },
   },
-};
+} satisfies Meta<typeof ClassificationBadge>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof ClassificationBadge> = {
+export const Default: Story = {
   render: ClassificationBadge,
 };

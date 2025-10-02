@@ -13,7 +13,7 @@
 import { Checkbox } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Checkbox> = {
+const meta = {
   title: 'Components/Checkbox',
   component: Checkbox,
   args: {
@@ -26,10 +26,10 @@ const meta: Meta<typeof Checkbox> = {
       exclude: ['inputRef', 'validationBehavior'],
     },
   },
-};
+} satisfies Meta<typeof Checkbox>;
 
 export default meta;
-type Story = StoryObj<typeof Checkbox>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,

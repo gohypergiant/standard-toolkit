@@ -11,7 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
@@ -22,7 +22,11 @@ import type {
   SelectableChipProps,
 } from './types';
 
-const meta: Meta<typeof Chip> = {
+type AliasBase = ChipListProps<unknown> & { isDisabled: boolean };
+type AliasSelectable = React.FC<AliasBase & SelectableChipProps>;
+type AliasDeletable = React.FC<AliasBase & DeletableChipProps>;
+
+const meta = {
   title: 'Components/Chip',
   component: Chip,
   args: {
@@ -37,11 +41,24 @@ const meta: Meta<typeof Chip> = {
       options: ['medium', 'small'],
     },
   },
-};
+} satisfies Meta<typeof Chip>;
+
+const metaFromSelectable = {
+  ...meta,
+  component: Chip.List as AliasSelectable,
+} satisfies Meta<AliasSelectable>;
+
+const metaFromDeletable = {
+  ...meta,
+  component: Chip.List as AliasDeletable,
+} satisfies Meta<AliasDeletable>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
+type StoryForSelectable = StoryObj<typeof metaFromSelectable>;
+type StoryForDeletable = StoryObj<typeof metaFromDeletable>;
 
-export const Default: StoryObj<typeof Chip> = {
+export const Default: Story = {
   args: {
     children: 'Chip',
     variant: 'info',
@@ -62,7 +79,7 @@ export const Default: StoryObj<typeof Chip> = {
   ),
 };
 
-export const List: StoryObj<typeof Chip> = {
+export const List: Story = {
   args: {
     variant: 'info',
   },
@@ -103,9 +120,7 @@ const selectableData = [
   },
 ];
 
-export const SelectableChipList: StoryObj<
-  FC<ChipListProps<unknown> & SelectableChipProps & { isDisabled: boolean }>
-> = {
+export const SelectableChipList: StoryForSelectable = {
   args: {
     disallowEmptySelection: false,
     selectionMode: 'multiple',
@@ -140,9 +155,7 @@ const deletableChips = new Set([
   'Deletable chip 3',
 ]);
 
-export const DeletableChipList: StoryObj<
-  FC<ChipListProps<unknown> & DeletableChipProps & { isDisabled: boolean }>
-> = {
+export const DeletableChipList: StoryForDeletable = {
   args: {
     isDisabled: false,
   },

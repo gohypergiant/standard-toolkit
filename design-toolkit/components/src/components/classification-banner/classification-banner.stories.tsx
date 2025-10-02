@@ -13,7 +13,7 @@
 import { ClassificationBanner } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ClassificationBanner> = {
+const meta = {
   title: 'Components/ClassificationBanner',
   component: ClassificationBanner,
   args: {
@@ -41,10 +41,11 @@ const meta: Meta<typeof ClassificationBanner> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+} satisfies Meta<typeof ClassificationBanner>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof ClassificationBanner> = {
+export const Default: Story = {
   render: ClassificationBanner,
 };

@@ -22,6 +22,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
 
+type Alias = React.FC<DrawerLayoutProps>;
+
 const ids = {
   top: {
     drawer: uuid(),
@@ -61,12 +63,9 @@ const ids = {
   },
 } as const;
 
-const meta: Meta<DrawerLayoutProps> = {
+const meta = {
   title: 'Components/Drawer.Layout',
-  component: Drawer.Layout,
-  parameters: {
-    layout: 'fullscreen',
-  },
+  component: Drawer.Layout as Alias,
   args: {
     extend: 'left right',
     push: 'left right',
@@ -80,10 +79,13 @@ const meta: Meta<DrawerLayoutProps> = {
       control: 'text',
     },
   },
-};
+  parameters: {
+    layout: 'fullscreen',
+  },
+} satisfies Meta<Alias>;
 
 export default meta;
-type Story = StoryObj<typeof Drawer.Layout>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ extend, push }) => {
@@ -115,16 +117,16 @@ export const Default: Story = {
 
           <Drawer id={ids.top.drawer} placement='top' size='medium'>
             <Drawer.Menu>
-              <Drawer.Menu.Item toggle for={ids.top.views.a}>
+              <Drawer.Menu.Item toggle for={ids.top.views.a} textValue='Menu A'>
                 <ChevronDown className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.top.views.b}>
+              <Drawer.Menu.Item for={ids.top.views.b} textValue='Menu B'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.top.views.c}>
+              <Drawer.Menu.Item for={ids.top.views.c} textValue='Menu C'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.top.views.d}>
+              <Drawer.Menu.Item for={ids.top.views.d} textValue='Menu D'>
                 <Placeholder />
               </Drawer.Menu.Item>
             </Drawer.Menu>
@@ -143,16 +145,20 @@ export const Default: Story = {
 
           <Drawer id={ids.bottom.drawer} placement='bottom'>
             <Drawer.Menu>
-              <Drawer.Menu.Item toggle for={ids.bottom.views.a}>
+              <Drawer.Menu.Item
+                toggle
+                for={ids.bottom.views.a}
+                textValue='Menu A'
+              >
                 <ChevronUp className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.bottom.views.b}>
+              <Drawer.Menu.Item for={ids.bottom.views.b} textValue='Menu B'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.bottom.views.c}>
+              <Drawer.Menu.Item for={ids.bottom.views.c} textValue='Menu C'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.bottom.views.d}>
+              <Drawer.Menu.Item for={ids.bottom.views.d} textValue='Menu D'>
                 <Placeholder />
               </Drawer.Menu.Item>
             </Drawer.Menu>
@@ -171,16 +177,20 @@ export const Default: Story = {
 
           <Drawer id={ids.left.drawer} placement='left'>
             <Drawer.Menu>
-              <Drawer.Menu.Item toggle for={ids.left.views.a}>
+              <Drawer.Menu.Item
+                toggle
+                for={ids.left.views.a}
+                textValue='Menu A'
+              >
                 <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.left.views.b}>
+              <Drawer.Menu.Item for={ids.left.views.b} textValue='Menu B'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.left.views.c}>
+              <Drawer.Menu.Item for={ids.left.views.c} textValue='Menu C'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.left.views.d}>
+              <Drawer.Menu.Item for={ids.left.views.d} textValue='Menu D'>
                 <Placeholder />
               </Drawer.Menu.Item>
             </Drawer.Menu>
@@ -199,16 +209,20 @@ export const Default: Story = {
 
           <Drawer id={ids.right.drawer} placement='right'>
             <Drawer.Menu>
-              <Drawer.Menu.Item toggle for={ids.right.views.a}>
+              <Drawer.Menu.Item
+                toggle
+                for={ids.right.views.a}
+                textValue='Menu A'
+              >
                 <ChevronLeft className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.right.views.b}>
+              <Drawer.Menu.Item for={ids.right.views.b} textValue='Menu B'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.right.views.c}>
+              <Drawer.Menu.Item for={ids.right.views.c} textValue='Menu C'>
                 <Placeholder />
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.right.views.d}>
+              <Drawer.Menu.Item for={ids.right.views.d} textValue='Menu D'>
                 <Placeholder />
               </Drawer.Menu.Item>
             </Drawer.Menu>

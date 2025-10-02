@@ -16,7 +16,7 @@ import { Icon } from '../icon';
 import { Avatar } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Avatar> = {
+const meta = {
   title: 'Components/Avatar',
   component: Avatar,
   args: {
@@ -44,15 +44,16 @@ const meta: Meta<typeof Avatar> = {
       ],
     },
   },
-};
+} satisfies Meta<typeof Avatar>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Avatar> = {
+export const Default: Story = {
   render: Avatar,
 };
 
-export const WithBadge: StoryObj<typeof Avatar> = {
+export const WithBadge: Story = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
       <Avatar {...args}>
@@ -68,7 +69,7 @@ export const WithBadge: StoryObj<typeof Avatar> = {
   ),
 };
 
-export const WithContent: StoryObj<typeof Avatar> = {
+export const WithContent: Story = {
   args: {
     children: <span className='fg-primary-bold text-shadow-2xs'>DS</span>,
   },
@@ -99,7 +100,7 @@ const fallbackPropsIcon = {
 };
 const fallbackPropsInitials = { children: <>DS</> };
 
-export const WithFallback: StoryObj<typeof Avatar> = {
+export const WithFallback: Story = {
   args: {
     imageProps: { alt: 'broken url', src: 'http://not-here' },
   },

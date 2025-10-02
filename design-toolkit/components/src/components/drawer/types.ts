@@ -148,7 +148,10 @@ export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
  * Drawer.Menu.Item implements Drawer.Trigger with the default behavior of
  * the trigger's `open` event type, which resets the stack before pushing the new view
  */
-export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
+export type DrawerMenuItemProps = Omit<
+  ToggleButtonProps,
+  'id' | 'isSelected' | 'className'
+> & {
   /**
    * The unique identifier of the view that this menu item controls.
    *
@@ -159,12 +162,6 @@ export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
    * If the menu item is intended to control multiple views, use the `views` prop for additional associations; do not include the `for` id in the `views` array.
    */
   for: UniqueId;
-  /**
-   * An optional array of additional view identifiers. If provided, the menu item will display as active when any of these views are active.
-   *
-   * You do not need to include the `id` already passed in the `for` prop.
-   */
-  views?: UniqueId[];
 
   /**
    * If set to `true`, the menu item will toggle the visibility of the associated view each time it is activated.
@@ -172,6 +169,19 @@ export type DrawerMenuItemProps = Omit<ToggleButtonProps, 'id'> & {
    * By default, the menu item only opens the view. Use this prop to enable toggling between open and closed states.
    */
   toggle?: boolean;
+
+  /**
+   * When set this will be the text for the tooltip
+   */
+  textValue: string;
+
+  /**
+   * Class names to be applied to the item and tooltip
+   */
+  classNames?: {
+    item?: string;
+    tooltip?: string;
+  };
 };
 
 export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
@@ -238,4 +248,5 @@ export type DrawerTriggerProps = {
 export type DrawerContextValue = {
   register: (view: UniqueId) => void;
   unregister: (view: UniqueId) => void;
+  placement: XAxisUnion | YAxisUnion;
 };

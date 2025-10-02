@@ -1,5 +1,15 @@
 # @accelint/bus
 
+## 1.3.0
+
+### Minor Changes
+
+- 6374c68: Update event bus to target audiences such as 'all', 'others', 'self'. As well as individual contexts via a uuid.
+
+### Patch Changes
+
+- b11870c: - **Fixed** Updated documentation to correctly reference React hooks from the `@accelint/bus/react` module.
+
 ## 1.2.0
 
 ### Minor Changes

@@ -52,19 +52,19 @@ The size can be controlled via the `size` prop or set globally using the `Select
 
 <Canvas of={SelectFieldStories.Default} />
 
-## Props
+## Controlled Selection
+Setting a selected option is supported via the `selectedKey` and `onSelectionChange` prop. The selected key corresponds to the id prop of an item, so note that the items in your option list must have an `id` property. When Select is used with a dynamic collection (an `items` prop on `Options`), the id of each item is derived from the data.
+<Canvas of={SelectFieldStories.ControlledSelection} />
 
+## Props
+All the props from the `Select` headless component are available in the `SelectField` component (except `className` which is expanded to `classNames`). [Details can be found in the docs](https://react-spectrum.adobe.com/react-aria/Select.html#props).
+
+There are additional props that are specific to our implementation of `SelectField`:
 * **`label`** - Text label displayed above the select field
 * **`description`** - Helper text displayed below the select field
 * **`errorMessage`** - Error text displayed when validation fails
 * **`size`** - Size variant: `'medium'` (default) or `'small'`
-* **`placeholder`** - Placeholder text displayed when no option is selected
-* **`isDisabled`** - Disables the select field
-* **`isRequired`** - Marks the select field as required
-* **`isInvalid`** - Marks the select field as invalid
-* **`isReadOnly`** - Makes the select field read-only
-* **`autoFocus`** - Automatically focuses the select field on mount
-* **`layoutOptions`** - Configuration for virtualized rendering of large option lists
+* **`layoutOptions`** - Configuration for virtualized rendering of large option lists ([more details here](https://react-spectrum.adobe.com/react-aria/Virtualizer.html#listlayout))
 * **`classNames`** - Custom class names for styling:
   * `field` - Applied to the select field container
   * `label` - Applied to the label element
@@ -74,7 +74,11 @@ The size can be controlled via the `size` prop or set globally using the `Select
   * `error` - Applied to the error message
 
 ## Implementation Notes
-The `SelectField` component wraps the `Select` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-spectrum/Select.html)
+The `SelectField` component wraps the `Select` component from `react-aria-components`.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/Select.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/search-field)
 
 The underlying elements are:
 - `div` for the select field container

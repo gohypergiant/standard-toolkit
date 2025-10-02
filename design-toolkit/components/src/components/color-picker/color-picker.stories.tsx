@@ -13,7 +13,7 @@
 import { ColorPicker } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ColorPicker> = {
+const meta = {
   title: 'Components/ColorPicker',
   component: ColorPicker,
   args: {
@@ -43,15 +43,16 @@ const meta: Meta<typeof ColorPicker> = {
       description: 'Array of color options to choose from.',
     },
   },
-};
+} satisfies Meta<typeof ColorPicker>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof ColorPicker> = {
+export const Default: Story = {
   render: ColorPicker,
 };
 
-export const Controlled: StoryObj<typeof ColorPicker> = {
+export const Controlled: Story = {
   args: {
     value: '#30D27E',
   },

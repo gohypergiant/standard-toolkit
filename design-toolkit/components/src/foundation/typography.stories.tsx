@@ -12,13 +12,13 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+const meta = {
   title: 'Foundation/Typography',
   tags: ['!autodocs'],
-};
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 type TypographyInfo = {
   name: string;

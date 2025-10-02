@@ -17,9 +17,20 @@ import { Icon } from '../icon';
 import { ViewStack } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ViewStack> = {
+const ids = {
+  stack: uuid(),
+  a: uuid(),
+  b: uuid(),
+  c: uuid(),
+};
+
+const meta = {
   title: 'Components/ViewStack',
   component: ViewStack,
+  args: {
+    id: ids.stack,
+    defaultView: ids.a,
+  },
   parameters: {
     docs: {
       description: {
@@ -32,18 +43,12 @@ const meta: Meta<typeof ViewStack> = {
       },
     },
   },
-};
+} satisfies Meta<typeof ViewStack>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-const ids = {
-  stack: uuid(),
-  a: uuid(),
-  b: uuid(),
-  c: uuid(),
-};
-
-export const Default: StoryObj<typeof ViewStack> = {
+export const Default: Story = {
   render: () => (
     <>
       <ViewStack id={ids.stack} defaultView={ids.a}>

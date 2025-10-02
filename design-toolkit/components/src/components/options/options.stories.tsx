@@ -20,7 +20,7 @@ import { Options } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
 
-const meta: Meta<typeof Options> = {
+const meta = {
   title: 'Components/Options',
   component: Options,
   args: {
@@ -31,9 +31,10 @@ const meta: Meta<typeof Options> = {
       control: 'select',
     },
   },
-};
+} satisfies Meta<typeof Options>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
 interface CustomOptionsItem {
   id: number;
@@ -132,7 +133,7 @@ const itemsWithSections: CustomOptionsItem[] = [
   },
 ];
 
-export const Default: StoryObj<typeof Options> = {
+export const Default: Story = {
   render: ({ children, ...args }) => (
     <Options {...args} items={items}>
       {(item) => (
@@ -158,7 +159,7 @@ export const Default: StoryObj<typeof Options> = {
   ),
 };
 
-export const WithDynamicSections: StoryObj<typeof Options> = {
+export const WithDynamicSections: Story = {
   render: ({ children, ...args }) => (
     <Options {...args} items={itemsWithSections}>
       {(section) => (
@@ -183,7 +184,7 @@ export const WithDynamicSections: StoryObj<typeof Options> = {
   ),
 };
 
-export const WithStaticSections: StoryObj<typeof Options> = {
+export const WithStaticSections: Story = {
   render: ({ children, ...args }) => (
     <Options {...args}>
       <Options.Section
@@ -239,7 +240,7 @@ const manyItems = Array.from({ length: 5000 }, (_, index) => ({
   icon: <Placeholder />,
 }));
 
-export const Virtualized: StoryObj<typeof Options> = {
+export const Virtualized: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[200px]'>
       <AriaVirtualizer

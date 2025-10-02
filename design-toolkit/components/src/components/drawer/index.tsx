@@ -14,6 +14,7 @@
 import 'client-only';
 import { Broadcast } from '@accelint/bus';
 import { isUUID, type UniqueId } from '@accelint/core';
+import { Cancel, ChevronLeft } from '@accelint/icons';
 import { Pressable } from '@react-aria/interactions';
 import {
   type ComponentPropsWithRef,
@@ -26,8 +27,9 @@ import {
 } from 'react';
 import { composeRenderProps, Header, Heading } from 'react-aria-components';
 import { containsExactChildren } from '@/lib/react';
-import { ToggleButton } from '../button';
+import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
+import { Tooltip } from '../tooltip';
 import {
   ViewStack,
   ViewStackContext,
@@ -58,6 +60,7 @@ const bus = Broadcast.getInstance<DrawerEvent>();
 export const DrawerContext = createContext<DrawerContextValue>({
   register: () => undefined,
   unregister: () => undefined,
+  placement: 'left',
 });
 
 export const DrawerEventHandlers = {
@@ -91,6 +94,35 @@ function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
 }
 DrawerTrigger.displayName = 'Drawer.Trigger';
 
+function DrawerClose() {
+  return (
+    <Drawer.Trigger for='close'>
+      <Button variant='icon'>
+        <Icon>
+          <Cancel />
+        </Icon>
+      </Button>
+    </Drawer.Trigger>
+  );
+}
+
+DrawerClose.displayName = 'Drawer.Close';
+
+function DrawerBack() {
+  const { stack } = useContext(ViewStackContext);
+  return stack.length > 1 ? (
+    <Drawer.Trigger for='back'>
+      <Button variant='icon'>
+        <Icon>
+          <ChevronLeft />
+        </Icon>
+      </Button>
+    </Drawer.Trigger>
+  ) : null;
+}
+
+DrawerBack.displayName = 'Drawer.Back';
+
 function DrawerLayoutMain({
   className,
   ...rest
@@ -117,38 +149,60 @@ function DrawerLayout({
 DrawerLayout.displayName = 'Drawer.Layout';
 DrawerLayout.Main = DrawerLayoutMain;
 
+const tooltipPlacementMap = {
+  left: 'right',
+  right: 'left',
+  top: 'bottom',
+  bottom: 'top',
+} as const;
+
 function DrawerMenuItem({
   for: id,
   children,
-  className,
+  classNames,
   toggle,
-  views,
+  textValue,
   ...rest
 }: DrawerMenuItemProps) {
   const { parent, stack } = useContext(ViewStackContext);
+  const { placement } = useContext(DrawerContext);
   const view = stack.at(-1);
   const action = toggle ? 'toggle' : 'open';
+  const tooltipRef = useRef(null);
 
   if (!parent) {
     return null;
   }
 
   return (
-    <DrawerTrigger for={`${action}:${id}`}>
-      <ToggleButton
-        {...rest}
-        className={composeRenderProps(className, (className) =>
-          item({ className }),
-        )}
-        role='tab'
-        variant='icon'
-        isSelected={id === view || !!views?.some((view) => id === view)}
+    <Tooltip>
+      <Tooltip.Trigger>
+        <DrawerTrigger for={`${action}:${id}`}>
+          <ToggleButton
+            {...rest}
+            ref={tooltipRef}
+            className={composeRenderProps(classNames?.item, (className) =>
+              item({ className }),
+            )}
+            role='tab'
+            variant='icon'
+            isSelected={id === view || (stack.length > 1 && stack.includes(id))}
+          >
+            {composeRenderProps(children, (children) => (
+              <Icon>{children}</Icon>
+            ))}
+          </ToggleButton>
+        </DrawerTrigger>
+      </Tooltip.Trigger>
+      <Tooltip.Body
+        triggerRef={tooltipRef}
+        placement={tooltipPlacementMap[placement]}
+        offset={6}
+        className={classNames?.tooltip}
       >
-        {composeRenderProps(children, (children) => (
-          <Icon>{children}</Icon>
-        ))}
-      </ToggleButton>
-    </DrawerTrigger>
+        {textValue}
+      </Tooltip.Body>
+    </Tooltip>
   );
 }
 DrawerMenuItem.displayName = 'Drawer.Menu.Item';
@@ -227,9 +281,32 @@ function DrawerHeaderTitle({ className, level, ...rest }: DrawerTitleProps) {
 }
 DrawerHeaderTitle.displayName = 'Drawer.Title';
 
-function DrawerHeader({ className, ...rest }: ComponentPropsWithRef<'header'>) {
-  return <Header {...rest} className={header({ className })} />;
+function DrawerHeader({
+  className,
+  title,
+  children,
+  ...rest
+}: ComponentPropsWithRef<'header'>) {
+  const { stack } = useContext(ViewStackContext);
+  const level = stack.length > 1 ? 4 : 1;
+
+  return (
+    <Header {...rest} className={header({ className })}>
+      {title ? (
+        <>
+          <Drawer.Back />
+          <Drawer.Header.Title level={level} className='w-fit'>
+            {title}
+          </Drawer.Header.Title>
+          <Drawer.Close />
+        </>
+      ) : (
+        children
+      )}
+    </Header>
+  );
 }
+
 DrawerHeader.displayName = 'Drawer.Header';
 DrawerHeader.Title = DrawerHeaderTitle;
 
@@ -306,6 +383,7 @@ export function Drawer({
       value={{
         register: (view: UniqueId) => views.current.add(view),
         unregister: (view: UniqueId) => views.current.delete(view),
+        placement,
       }}
     >
       <ViewStack
@@ -339,3 +417,5 @@ Drawer.Header = DrawerHeader;
 Drawer.Content = DrawerContent;
 Drawer.Footer = DrawerFooter;
 Drawer.Trigger = DrawerTrigger;
+Drawer.Close = DrawerClose;
+Drawer.Back = DrawerBack;

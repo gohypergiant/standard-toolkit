@@ -13,7 +13,7 @@
 import { Slider } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Slider> = {
+const meta = {
   title: 'Components/Slider',
   component: Slider,
   args: {
@@ -36,11 +36,12 @@ const meta: Meta<typeof Slider> = {
       options: ['horizontal', 'vertical'],
     },
   },
-};
+} satisfies Meta<typeof Slider>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Slider> = {
+export const Default: Story = {
   render: ({ ...args }) => {
     return (
       <div className='size-[400px]'>
@@ -50,7 +51,7 @@ export const Default: StoryObj<typeof Slider> = {
   },
 };
 
-export const Range: StoryObj<typeof Slider> = {
+export const Range: Story = {
   args: {
     defaultValue: [20, 30],
     showInput: true,

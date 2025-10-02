@@ -15,14 +15,15 @@ import { Icon } from '../icon';
 import { Hotkey } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Hotkey> = {
+const meta = {
   title: 'Components/Hotkey',
   component: Hotkey,
-};
+} satisfies Meta<typeof Hotkey>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Hotkey> = {
+export const Default: Story = {
   args: {
     children: 'ctrl',
     variant: 'outline',
@@ -50,7 +51,7 @@ export const Default: StoryObj<typeof Hotkey> = {
   },
 };
 
-export const KeysSet: StoryObj<typeof Hotkey> = {
+export const KeysSet: Story = {
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>

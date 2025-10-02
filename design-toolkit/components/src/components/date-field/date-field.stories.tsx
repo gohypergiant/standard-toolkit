@@ -14,7 +14,7 @@ import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
 import { DateField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof DateField> = {
+const meta = {
   title: 'Components/DateField',
   component: DateField,
   args: {
@@ -38,15 +38,16 @@ const meta: Meta<typeof DateField> = {
       options: ['day', 'hour', 'minute', 'second'],
     },
   },
-};
+} satisfies Meta<typeof DateField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof DateField> = {
+export const Default: Story = {
   render: DateField,
 };
 
-export const WithoutShortMonth: StoryObj<typeof DateField> = {
+export const WithoutShortMonth: Story = {
   args: {
     ...Default.args,
     granularity: 'day',
@@ -57,7 +58,7 @@ export const WithoutShortMonth: StoryObj<typeof DateField> = {
   render: DateField,
 };
 
-export const DateTime: StoryObj<typeof DateField> = {
+export const DateTime: Story = {
   args: {
     ...Default.args,
     granularity: 'second',

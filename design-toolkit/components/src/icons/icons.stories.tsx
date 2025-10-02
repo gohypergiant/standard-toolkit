@@ -14,12 +14,12 @@ import { Icon } from '../components/icon';
 import { default as catalog } from './catalog';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+const meta = {
   title: 'Foundation/Icons',
-};
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 export const UIIcons: Story = {
   render: () => {

@@ -14,12 +14,16 @@ import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
 import React, { type ComponentProps, useState } from 'react';
 import { Heading, Text } from 'react-aria-components';
+import { Avatar } from '../avatar';
 import { Button } from '../button';
+import { Divider } from '../divider';
 import { Drawer } from '../drawer';
 import { Icon } from '../icon';
 import { Sidenav } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
+// TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
+// this story has a mix of controls from different components
 type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
   pushLayout?: boolean;
 };
@@ -27,16 +31,17 @@ type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
 const meta: Meta<SidenavWithLayoutArgs> = {
   title: 'Components/Sidenav',
   component: Sidenav,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     pushLayout: true,
     isHiddenWhenClosed: false,
   },
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export default meta;
+type Story = StoryObj<SidenavWithLayoutArgs>;
 
 const sections = {
   'Title A': [
@@ -58,7 +63,9 @@ const sections = {
   ],
 };
 
-export const Default: StoryObj<SidenavWithLayoutArgs> = {
+const id = uuid();
+
+export const Default: Story = {
   render: ({ isHiddenWhenClosed, pushLayout }) => {
     const [activeItem, setActiveItem] = useState(
       sections['Title A'][2]?.id ?? null,
@@ -68,16 +75,16 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
         <Drawer.Layout push={pushLayout ? 'left' : undefined}>
           <Drawer.Layout.Main>
             <nav className='flex items-center bg-surface-default p-m'>
-              <Sidenav.Trigger>
+              <Sidenav.Trigger for={id}>
                 <Button variant='icon' size='large'>
                   <Icon>
-                    <ExpandLeftPanel />
+                    <ExpandLeftPanel className='' />
                   </Icon>
                 </Button>
               </Sidenav.Trigger>
             </nav>
           </Drawer.Layout.Main>
-          <Sidenav isHiddenWhenClosed={isHiddenWhenClosed}>
+          <Sidenav id={id} isHiddenWhenClosed={isHiddenWhenClosed}>
             <Sidenav.Header>
               <Sidenav.Avatar>
                 <Icon>
@@ -107,12 +114,10 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
                       <Text>{item.text}</Text>
                     </Sidenav.Item>
                   ))}
-                  {i !== Object.entries(sections).length - 1 && (
-                    <Sidenav.Divider />
-                  )}
+                  {i !== Object.entries(sections).length - 1 && <Divider />}
                 </React.Fragment>
               ))}
-              <Sidenav.Divider />
+              <Divider />
               <Heading>External</Heading>
               <Sidenav.Link href='#' textValue='Nav Link'>
                 <Icon>
@@ -126,13 +131,37 @@ export const Default: StoryObj<SidenavWithLayoutArgs> = {
                 </Icon>
                 <Text>Nav Link</Text>
               </Sidenav.Link>
+
+              <Divider />
+              <Heading>Menu</Heading>
+              <Sidenav.Menu
+                icon={
+                  <Icon>
+                    <Placeholder />
+                  </Icon>
+                }
+                title='Nav Item'
+              >
+                <Sidenav.Menu.Item>
+                  <Text>Sub item</Text>
+                </Sidenav.Menu.Item>
+                <Sidenav.Menu.Item>
+                  <Text>Sub item</Text>
+                </Sidenav.Menu.Item>
+                <Sidenav.Menu.Item isDisabled>
+                  <Text>Sub item</Text>
+                </Sidenav.Menu.Item>
+              </Sidenav.Menu>
             </Sidenav.Content>
             <Sidenav.Footer>
               <Sidenav.Item textValue='Application Footer'>
                 <Sidenav.Avatar>
-                  <Icon>
-                    <Placeholder />
-                  </Icon>
+                  <Avatar
+                    imageProps={{
+                      alt: 'Dog',
+                      src: 'https://placedog.net/100x100?id=144',
+                    }}
+                  />
                   <Heading>Application Footer</Heading>
                   <Text>Secondary Text</Text>
                 </Sidenav.Avatar>

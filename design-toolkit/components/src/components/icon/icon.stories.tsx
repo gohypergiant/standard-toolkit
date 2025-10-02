@@ -14,7 +14,7 @@ import { Add } from '@accelint/icons';
 import { Icon } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Icon> = {
+const meta = {
   title: 'Components/Icon',
   component: Icon,
   args: {
@@ -29,11 +29,12 @@ const meta: Meta<typeof Icon> = {
       options: ['large', 'medium', 'small', 'xsmall'],
     },
   },
-};
+} satisfies Meta<typeof Icon>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Icon> = {
+export const Default: Story = {
   render: (args) => (
     <Icon {...args}>
       <Add />
@@ -41,7 +42,7 @@ export const Default: StoryObj<typeof Icon> = {
   ),
 };
 
-export const Provider: StoryObj<typeof Icon> = {
+export const Provider: Story = {
   render: ({ className, size }) => (
     <Icon.Provider size={size}>
       <div className={className}>

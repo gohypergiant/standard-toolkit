@@ -14,13 +14,13 @@ import { useEffect, useState } from 'react';
 import { tokens } from './token-data';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+const meta = {
   title: 'Foundation/Colors',
   tags: ['!autodocs'],
-};
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 function useColorValue(color: string) {
   const [colorValue, setColorValue] = useState<string>('');
@@ -105,7 +105,7 @@ export const Background: Story = {
           />
         ))}
       </div>
-      <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+      <div className='mt-oversized grid grid-cols-4 gap-x-l gap-y-xl'>
         {tokens.bg.utility.map((color) => (
           <BackgroundColorDisplay
             key={`${globals.theme}-${color}`}

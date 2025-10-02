@@ -13,7 +13,7 @@
 import { SearchField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof SearchField> = {
+const meta = {
   title: 'Components/SearchField',
   component: SearchField,
   args: {
@@ -44,11 +44,12 @@ const meta: Meta<typeof SearchField> = {
       exclude: ['children', 'slot', 'validationBehavior'],
     },
   },
-};
+} satisfies Meta<typeof SearchField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof SearchField> = {
+export const Default: Story = {
   render: ({ ...args }) => (
     <SearchField {...args} aria-label='Storybook Search Field Component' />
   ),

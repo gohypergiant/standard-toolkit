@@ -15,17 +15,18 @@ import { Icon } from '../icon';
 import { Hero } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Hero> = {
+const meta = {
   title: 'Components/Hero',
   component: Hero,
   args: {
     compact: false,
   },
-};
+} satisfies Meta<typeof Hero>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Hero> = {
+export const Default: Story = {
   render: (args) => (
     <div className='w-[480px]'>
       <Hero {...args}>

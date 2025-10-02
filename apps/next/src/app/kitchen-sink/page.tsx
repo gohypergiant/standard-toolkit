@@ -225,13 +225,13 @@ export default function KitchenSink() {
         </Drawer.Layout.Main>
         <Drawer id={drawerIds.drawer} placement='right' size='large'>
           <Drawer.Menu>
-            <Drawer.Menu.Item toggle for={drawerIds.a}>
+            <Drawer.Menu.Item toggle for={drawerIds.a} textValue='Menu A'>
               A
             </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.b}>
+            <Drawer.Menu.Item toggle for={drawerIds.b} textValue='Menu B'>
               B
             </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.c}>
+            <Drawer.Menu.Item toggle for={drawerIds.c} textValue='Menu C'>
               C
             </Drawer.Menu.Item>
           </Drawer.Menu>

@@ -166,9 +166,9 @@ export class Cache<T> {
         const parent = this.get(targetNode.parentKey);
 
         parentKey = parent.key;
-        index = parent.children?.findIndex((key) => key === target) ?? 0;
+        index = parent.children?.indexOf(target) ?? 0;
       } else {
-        index = this.cache.roots.findIndex((rootKey) => rootKey === target);
+        index = this.cache.roots.indexOf(target);
       }
     }
 

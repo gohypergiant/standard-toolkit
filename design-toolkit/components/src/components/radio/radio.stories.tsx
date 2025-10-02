@@ -12,10 +12,13 @@
 
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { RadioGroupProps } from './types';
 
-const meta: Meta<typeof Radio.Group> = {
+type Alias = React.FC<RadioGroupProps>;
+
+const meta = {
   title: 'Components/Radio',
-  component: Radio.Group,
+  component: Radio.Group as Alias,
   args: {
     orientation: 'vertical',
     isDisabled: false,
@@ -33,11 +36,12 @@ const meta: Meta<typeof Radio.Group> = {
       exclude: ['children', 'validationBehavior'],
     },
   },
-};
+} satisfies Meta<Alias>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Radio.Group> = {
+export const Default: Story = {
   render: ({ children, label, ...args }) => (
     <Radio.Group label={label} {...args}>
       <Radio value='1'>Radio text</Radio>

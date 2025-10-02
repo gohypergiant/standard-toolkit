@@ -14,23 +14,20 @@ import { Placeholder } from '@accelint/icons';
 import { composeRenderProps } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
-import { ButtonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Button> = {
+const meta = {
   title: 'Components/Button',
   component: Button,
   args: {
     children: 'Button',
-    color: ButtonStylesDefaults.color,
     size: 'medium',
-    variant: ButtonStylesDefaults.variant,
     isDisabled: false,
   },
   argTypes: {
     color: {
       control: 'select',
-      options: ['info', 'serious', 'critical'],
+      options: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],
     },
     size: {
       control: 'select',
@@ -55,11 +52,28 @@ const meta: Meta<typeof Button> = {
       ],
     },
   },
-};
+} satisfies Meta<typeof Button>;
+
+const metaForLink = {
+  ...meta,
+  component: LinkButton,
+} satisfies Meta<typeof LinkButton>;
+
+const metaForToggle = {
+  ...meta,
+  component: ToggleButton,
+} satisfies Meta<typeof ToggleButton>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
+type StoryForLink = StoryObj<typeof metaForLink>;
+type StoryForToggle = StoryObj<typeof metaForToggle>;
 
-export const Default: StoryObj<typeof Button> = {
+export const Default: Story = {
+  args: {
+    color: 'mono-muted',
+    variant: 'flat',
+  },
   render: ({ children, ...props }) => (
     <Button {...props}>
       {composeRenderProps(children, (children) =>
@@ -75,7 +89,11 @@ export const Default: StoryObj<typeof Button> = {
   ),
 };
 
-export const Link: StoryObj<typeof LinkButton> = {
+export const Link: StoryForLink = {
+  args: {
+    color: 'mono-muted',
+    variant: 'flat',
+  },
   render: ({ children, ...props }) => (
     <LinkButton {...props} href='/'>
       {composeRenderProps(children, (children) =>
@@ -91,11 +109,21 @@ export const Link: StoryObj<typeof LinkButton> = {
   ),
 };
 
-export const Toggle: StoryObj<typeof ToggleButton> = {
+export const Toggle: StoryForToggle = {
+  args: {
+    color: 'mono-muted',
+    variant: 'flat',
+  },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['outline', 'flat', 'icon'],
+    },
+  },
   render: ({ children, ...props }) => (
     <ToggleButton {...props}>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === 'icon' ? (
           <Icon>
             <Placeholder />
           </Icon>

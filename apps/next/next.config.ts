@@ -16,6 +16,9 @@ import type { NextConfig } from 'next';
 const withVanillaExtract = createVanillaExtractPlugin();
 
 const nextConfig: NextConfig = {
+  transpilePackages: ['@accelint/design-system'],
+  productionBrowserSourceMaps: true,
+
   webpack(config, { dev, nextRuntime, webpack, isServer }) {
     if (!isServer) {
       config.optimization.providedExports = true;

@@ -11,13 +11,14 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
+import { type ReactNode, useId, useState } from 'react';
 import { Icon } from '../icon';
 import { Options } from '../options';
 import { SelectField } from './index';
+import type { Key } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactNode } from 'react';
 
-const meta: Meta<typeof SelectField> = {
+const meta = {
   title: 'Components/SelectField',
   component: SelectField,
   args: {
@@ -40,11 +41,12 @@ const meta: Meta<typeof SelectField> = {
       options: ['medium', 'small'],
     },
   },
-};
+} satisfies Meta<typeof SelectField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof SelectField> = {
+export const Default: Story = {
   render: (args) => {
     return (
       <SelectField {...args}>
@@ -93,12 +95,61 @@ export const Default: StoryObj<typeof SelectField> = {
   },
 };
 
+export const ControlledSelection: Story = {
+  render: (args) => {
+    const koalaId = useId();
+    const kangarooId = useId();
+    const platypusId = useId();
+    const bisonId = useId();
+    const [value, setValue] = useState<Key>(bisonId);
+
+    const handleSelection = (key: Key | null) => {
+      if (key) {
+        setValue(key);
+      }
+    };
+
+    return (
+      <SelectField
+        {...args}
+        selectedKey={value}
+        onSelectionChange={handleSelection}
+      >
+        <Options.Item id={koalaId} textValue='Koala'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Koala</Options.Item.Label>
+        </Options.Item>
+        <Options.Item id={kangarooId} textValue='Kangaroo'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Kangaroo</Options.Item.Label>
+        </Options.Item>
+        <Options.Item id={platypusId} textValue='Platypus'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Platypus</Options.Item.Label>
+        </Options.Item>
+        <Options.Item id={bisonId} textValue='Bison'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <Options.Item.Label>Bison</Options.Item.Label>
+        </Options.Item>
+      </SelectField>
+    );
+  },
+};
+
 const manyItems: { id: number; name: string; prefixIcon: ReactNode }[] = [];
 for (let i = 0; i < 5000; i++) {
   manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });
 }
 
-export const WithManyItems: StoryObj<typeof SelectField> = {
+export const WithManyItems: Story = {
   render: (args) => (
     <SelectField {...args}>
       {manyItems.map((item) => (

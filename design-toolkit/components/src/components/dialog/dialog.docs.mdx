@@ -56,6 +56,10 @@ It is composed of the following components:
 - **`isOpen`** - Controlled open state for the dialog
 - **`onOpenChange`** - Callback when the open state changes
 - **`parentRef`** - Reference to a parent element for custom portal placement
+- **`classNames`** - Object containing custom class names for different parts:
+  - `overlay` - Overlay container
+  - `modal` - Modal container
+  - `dialog` - Dialog container
 
 ### Dialog.Body Props
 - **`children`** - Render function that receives dialog context including `close` function
@@ -120,7 +124,9 @@ const MyComponent = () => {
 ```
 
 ## Implementation Notes
-The `Dialog` component is built on top of React Aria Components, specifically wrapping the `Dialog`, `Modal`, and `ModalOverlay` components. [React Aria Dialog Docs](https://react-spectrum.adobe.com/react-spectrum/Dialog.html)
+The `Dialog` component is built on top of React Aria Components, specifically wrapping the `Dialog`, `Modal`, and `ModalOverlay` components. [React Aria Dialog Docs](https://react-spectrum.adobe.com/react-aria/Dialog.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/dialog)
 
 Key features:
 - **Accessibility**: Full ARIA compliance with proper focus management and screen reader support

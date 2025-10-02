@@ -28,9 +28,15 @@ const ids = {
 const alternate = (
   <>
     <Drawer.Menu>
-      <Drawer.Menu.Item for={ids.a}>A</Drawer.Menu.Item>
-      <Drawer.Menu.Item for={ids.b}>B</Drawer.Menu.Item>
-      <Drawer.Menu.Item for={ids.c}>C</Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.a} textValue='Menu A'>
+        A
+      </Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.c} textValue='Menu C'>
+        C
+      </Drawer.Menu.Item>
+      <Drawer.Menu.Item for={ids.b} textValue='Menu B'>
+        B
+      </Drawer.Menu.Item>
     </Drawer.Menu>
     <Drawer.Panel>
       <Drawer.View id={ids.a}>
@@ -64,9 +70,15 @@ function setup(
     children = (
       <>
         <Drawer.Menu>
-          <Drawer.Menu.Item for={ids.a}>A</Drawer.Menu.Item>
-          <Drawer.Menu.Item for={ids.b}>B</Drawer.Menu.Item>
-          <Drawer.Menu.Item for={ids.c}>C</Drawer.Menu.Item>
+          <Drawer.Menu.Item for={ids.a} textValue='Menu A'>
+            A
+          </Drawer.Menu.Item>
+          <Drawer.Menu.Item for={ids.b} textValue='Menu B'>
+            B
+          </Drawer.Menu.Item>
+          <Drawer.Menu.Item for={ids.c} textValue='Menu C'>
+            C
+          </Drawer.Menu.Item>
         </Drawer.Menu>
         <Drawer.Panel>
           <Drawer.Header>

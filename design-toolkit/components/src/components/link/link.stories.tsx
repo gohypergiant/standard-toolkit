@@ -16,7 +16,7 @@ import { Link } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
 
-const meta: Meta<typeof Link> = {
+const meta = {
   title: 'Components/Link',
   component: Link,
   args: {
@@ -33,15 +33,16 @@ const meta: Meta<typeof Link> = {
       control: 'boolean',
     },
   },
-};
+} satisfies Meta<typeof Link>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Link> = {
+export const Default: Story = {
   render: Link,
 };
 
-export const CustomVisitedStyles: StoryObj<typeof Link> = {
+export const CustomVisitedStyles: Story = {
   args: {
     allowsVisited: true,
   },
@@ -55,7 +56,7 @@ export const CustomVisitedStyles: StoryObj<typeof Link> = {
   ),
 };
 
-export const Multiple: StoryObj<typeof Link> = {
+export const Multiple: Story = {
   render: ({ children, ...args }) => (
     <>
       <p className='fg-primary-bold'>

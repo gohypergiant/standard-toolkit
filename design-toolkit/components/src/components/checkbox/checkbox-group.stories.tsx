@@ -12,6 +12,9 @@
 
 import { Checkbox } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { CheckboxGroupProps } from './types';
+
+type Alias = React.FC<CheckboxGroupProps>;
 
 /**
  * The `<Checkbox.Group>` component is a direct wrapper around the equiavalent component from
@@ -22,9 +25,9 @@ import type { Meta, StoryObj } from '@storybook/react';
  * By default, it lays its children out in a stacked Flexbox layout, but you can customize the `className` to change the layout
  * behavior.
  */
-const meta: Meta<typeof Checkbox.Group> = {
+const meta = {
   title: 'Components/Checkbox.Group',
-  component: Checkbox.Group,
+  component: Checkbox.Group as Alias,
   args: {
     label: 'Header',
     orientation: 'vertical',
@@ -42,10 +45,10 @@ const meta: Meta<typeof Checkbox.Group> = {
       exclude: ['validationBehavior'],
     },
   },
-};
+} satisfies Meta<Alias>;
 
 export default meta;
-type Story = StoryObj<typeof Checkbox.Group>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => (

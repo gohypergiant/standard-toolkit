@@ -20,7 +20,7 @@ import { Menu } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { MenuItemProps } from './types';
 
-const meta: Meta<typeof Menu> = {
+const meta = {
   title: 'Components/Menu',
   component: Menu,
   args: {
@@ -37,9 +37,10 @@ const meta: Meta<typeof Menu> = {
       options: ['single', 'multiple', 'none'],
     },
   },
-};
+} satisfies Meta<typeof Menu>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
 type MenuItem = {
   id: number;
@@ -108,7 +109,7 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-export const Basic: StoryObj<typeof Menu> = {
+export const Basic: Story = {
   render: (args) => (
     <Menu.Trigger>
       <Button variant='icon' aria-label='Menu'>
@@ -181,7 +182,7 @@ export const Basic: StoryObj<typeof Menu> = {
   ),
 };
 
-export const Dynamic: StoryObj<typeof Menu> = {
+export const Dynamic: Story = {
   render: (args) => (
     <Menu.Trigger>
       <Button variant='icon' aria-label='Menu'>
@@ -234,7 +235,7 @@ export const Dynamic: StoryObj<typeof Menu> = {
   ),
 };
 
-export const ContextMenu: StoryObj<typeof Menu> = {
+export const ContextMenu: Story = {
   render: () => {
     const [menuPosition, setMenuPosition] = useState<{
       x: number;

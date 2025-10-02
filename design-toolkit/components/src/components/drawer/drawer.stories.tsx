@@ -10,19 +10,22 @@
  * governing permissions and limitations under the License.
  */
 import { uuid } from '@accelint/core';
-import { Cancel } from '@accelint/icons';
 import { Button } from '../button';
 import { Drawer } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ComponentProps } from 'react';
 import type { DrawerMenuProps, DrawerProps } from './types';
 
+// TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
+// this story has a mix of controls from different components
+type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
+  Pick<DrawerMenuProps, 'position'> & {
+    toggle?: boolean;
+  };
+
 const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
   title: 'Components/Drawer',
   component: Drawer,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     placement: 'left',
     size: 'medium',
@@ -42,9 +45,14 @@ const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
       options: ['start', 'center', 'end'],
     },
   },
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export default meta;
+type Story = StoryObj<DrawerWithAdditionalArgs>;
+
 const ids = {
   drawer: uuid(),
   a: uuid(),
@@ -52,12 +60,7 @@ const ids = {
   c: uuid(),
 };
 
-type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
-  Pick<DrawerMenuProps, 'position'> & {
-    toggle?: boolean;
-  };
-
-export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+export const StaticHeaderFooter: Story = {
   args: {
     toggle: false,
   },
@@ -67,22 +70,20 @@ export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
         <Drawer.Layout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
             <Drawer.Menu position={position}>
-              <Drawer.Menu.Item toggle={toggle} for={ids.a}>
+              <Drawer.Menu.Item toggle={toggle} for={ids.a} textValue='Menu A'>
                 A
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle={toggle} for={ids.b}>
+              <Drawer.Menu.Item toggle={toggle} for={ids.b} textValue='Menu B'>
                 B
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle={toggle} for={ids.c}>
+              <Drawer.Menu.Item toggle={toggle} for={ids.c} textValue='Menu C'>
                 C
               </Drawer.Menu.Item>
             </Drawer.Menu>
             <Drawer.Panel>
               <Drawer.Header>
                 <Drawer.Header.Title>Title</Drawer.Header.Title>
-                <Drawer.Trigger for='close'>
-                  <Button>Close</Button>
-                </Drawer.Trigger>
+                <Drawer.Close />
               </Drawer.Header>
               <Drawer.Content>
                 <Drawer.View id={ids.a}>View A</Drawer.View>
@@ -98,20 +99,20 @@ export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const DynamicHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+export const DynamicHeaderFooter: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <Drawer.Layout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
             <Drawer.Menu position={position}>
-              <Drawer.Menu.Item toggle for={ids.a}>
+              <Drawer.Menu.Item toggle for={ids.a} textValue='Menu A'>
                 A
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle for={ids.b}>
+              <Drawer.Menu.Item toggle for={ids.b} textValue='Menu B'>
                 B
               </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle for={ids.c}>
+              <Drawer.Menu.Item toggle for={ids.c} textValue='Menu C'>
                 C
               </Drawer.Menu.Item>
             </Drawer.Menu>
@@ -145,7 +146,7 @@ export const DynamicHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
+export const OpenCloseTrigger: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen'>
@@ -159,7 +160,7 @@ export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
           </Drawer.Layout.Main>
           <Drawer id={ids.drawer} placement={placement} size={size}>
             <Drawer.Menu position={position}>
-              <Drawer.Menu.Item toggle for={ids.a}>
+              <Drawer.Menu.Item toggle for={ids.a} textValue='Menu A'>
                 A
               </Drawer.Menu.Item>
             </Drawer.Menu>
@@ -167,12 +168,44 @@ export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
               <Drawer.View id={ids.a}>
                 <Drawer.Header>
                   <Drawer.Header.Title>Title A</Drawer.Header.Title>
-                  <Drawer.Trigger for='close'>
-                    <Cancel className='size-m' />
-                  </Drawer.Trigger>
+                  <Drawer.Close />
                 </Drawer.Header>
                 <Drawer.Content>Content A</Drawer.Content>
                 <Drawer.Footer>Footer A</Drawer.Footer>
+              </Drawer.View>
+            </Drawer.Panel>
+          </Drawer>
+        </Drawer.Layout>
+      </div>
+    );
+  },
+};
+
+export const SimpleStack: Story = {
+  render: ({ placement, size, position }) => {
+    return (
+      <div className='fg-primary-bold h-screen bg-surface-muted'>
+        <Drawer.Layout>
+          <Drawer id={ids.drawer} placement={placement} size={size}>
+            <Drawer.Menu position={position}>
+              <Drawer.Menu.Item toggle for={ids.a} textValue='Menu A'>
+                A
+              </Drawer.Menu.Item>
+            </Drawer.Menu>
+            <Drawer.Panel>
+              <Drawer.View id={ids.a}>
+                <Drawer.Header title='Title A' />
+                <Drawer.Content>Content A</Drawer.Content>
+                <Drawer.Footer>
+                  <Drawer.Trigger for={ids.b}>
+                    <Button variant='outline'>Show B</Button>
+                  </Drawer.Trigger>
+                </Drawer.Footer>
+              </Drawer.View>
+              <Drawer.View id={ids.b}>
+                <Drawer.Header title='Title B' />
+                <Drawer.Content>Content B</Drawer.Content>
+                <Drawer.Footer>Footer B</Drawer.Footer>
               </Drawer.View>
             </Drawer.Panel>
           </Drawer>

@@ -1,0 +1,96 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as TableStories from './table.stories';
+
+<Meta of={TableStories} />
+
+# Table
+The Table component standardizes table setup, configuration, and behavior (e.g. sorting, column ordering, row selecting, etc.) across the app. 
+It's built using Tanstack React Table and simplifies table usage by requiring only columns and data props and supports customizations via optional configuration props.
+
+It is composed of the following components:
+
+- **Table** - The root wrapper component that renders the full table structure.
+- **TableHeader** - Renders the table header section `(<thead>)` and maps over header groups provided by TanStack React Table.
+- **TableHeaderCell** - Represents an individual header cell `(<th>)`, often with optional support for sorting, filtering, or custom labels.
+- **TableBody** - Renders the table body section `(<tbody>)` and maps over the visible rows from the table instance.
+- **TableRow** - Represents a single table row `(<tr>)`, rendered using the row model from TanStack.
+- **TableCell** - An individual data cell `(<td>)` within a row, rendering cell content using the column’s cell accessor or custom render logic.
+
+## Example usage
+```tsx
+const columnHelper = createColumnHelper<Person>();
+
+const columnsExample = [
+columnHelper.accessor("firstName", {
+    id: "firstName",
+    cell: (info) => info.getValue(),
+    header: () => <span>First Name</span>,
+}),
+columnHelper.accessor((row) => row.lastName, {
+    id: "lastName",
+    cell: (info) => <i>{info.getValue()}</i>,
+    header: () => <span>Last Name</span>,
+}),
+];
+
+const dataExample = [
+    {
+        id: "tanner",
+        firstName: "tanner",
+        lastName: "linsley",
+    },
+    {
+        id: "joe",
+        firstName: "joe",
+        lastName: "dirte",
+    },
+    {
+        id: "jane",
+        firstName: "jane",
+        lastName: "doe",
+    },
+];
+
+<Table columns={columnsExample} data={dataExample}/>
+
+//Static 
+<Table {...args}>
+    <Table.Header>
+    <Table.Row>
+        <Table.HeaderCell>First Name</Table.HeaderCell>
+        <Table.HeaderCell>Last Name</Table.HeaderCell>
+    </Table.Row>
+    </Table.Header>
+    <Table.Body>
+    {dataExample.map((person) => (
+        <Table.Row key={person.id}>
+        <Table.Cell>{person.firstName}</Table.Cell>
+        <Table.Cell>{person.lastName}</Table.Cell>
+        </Table.Row>
+    ))}
+    </Table.Body>
+</Table>
+
+```
+
+<Canvas of={TableStories.Default} />
+
+### Common Props
+* **`columns`** - Array of column defintions 
+* **`data`** - Array of data objects 
+* **`showCheckBox`** - Boolean to determine if we should show checkbox column
+* **`kebabPosition`** - Position of the kebab menu, either 'left' or 'right'.
+* **`persistHeaderKebabMenu`** - Boolean to persist header kebab
+* **`persistRowKebabMenu`** - Boolean to persist row kebab
+* **`persistNumerals`** - Boolean to persist numeral columns
+* **`enableSorting`** - Boolean to enable sorting 
+* **`enableColumnOrdering`** - Boolean to enable column ordering 
+* **`enableRowActions`** - Boolean to enable row actions 
+
+## Implementation Notes
+The `Table` component uses Tanstack React Table from `Tanstack`.
+
+[Docs](https://tanstack.com/table/latest)
+
+[Github Source](https://github.com/tanstack/table)
