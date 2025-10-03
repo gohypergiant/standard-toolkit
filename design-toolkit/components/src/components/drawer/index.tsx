@@ -19,6 +19,7 @@ import { Pressable } from '@react-aria/interactions';
 import {
   type ComponentPropsWithRef,
   createContext,
+  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -70,28 +71,34 @@ export const DrawerEventHandlers = {
   toggle: (view: UniqueId) => bus.emit(DrawerEventTypes.toggle, { view }),
 } as const;
 
-function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
-  const { parent } = useContext(ViewStackContext);
+const DrawerTrigger = forwardRef<HTMLElement, DrawerTriggerProps>(
+  ({ children, for: events }, ref) => {
+    const { parent } = useContext(ViewStackContext);
 
-  function handlePress() {
-    for (const type of Array.isArray(events) ? events : [events]) {
-      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
-        'back' | 'clear' | 'close' | 'open' | 'push' | 'reset' | 'toggle',
-        UniqueId | undefined | null,
-      ];
+    function handlePress() {
+      for (const type of Array.isArray(events) ? events : [events]) {
+        let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
+          'back' | 'clear' | 'close' | 'open' | 'push' | 'reset' | 'toggle',
+          UniqueId | undefined | null,
+        ];
 
-      id ??= parent;
+        id ??= parent;
 
-      if (!id) {
-        continue;
+        if (!id) {
+          continue;
+        }
+
+        DrawerEventHandlers[event](id);
       }
-
-      DrawerEventHandlers[event](id);
     }
-  }
 
-  return <Pressable onPress={handlePress}>{children}</Pressable>;
-}
+    return (
+      <Pressable ref={ref} onPress={handlePress}>
+        {children}
+      </Pressable>
+    );
+  },
+);
 DrawerTrigger.displayName = 'Drawer.Trigger';
 
 function DrawerClose() {

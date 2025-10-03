@@ -60,7 +60,10 @@ function CombinatorSelector({
         <Radio key={option.label} value={option.label}>
           <Tooltip>
             <Tooltip.Trigger>
-              <span>{option.label}</span>
+              {/* biome-ignore lint/a11y/useSemanticElements: react-aria Focusable expects a role and tabIndex */}
+              <span role='button' tabIndex={0}>
+                {option.label}
+              </span>
             </Tooltip.Trigger>
             <Tooltip.Body placement='top'>
               {operatorDescriptions[option.label]}
