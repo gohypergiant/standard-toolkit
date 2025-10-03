@@ -11,6 +11,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import { SIZE_RANGE } from '@/constants/size';
 import { Button } from '../button';
 import { Dialog } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -26,7 +27,7 @@ const meta = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['small', 'large'],
+      options: SIZE_RANGE.BINARY,
     },
     isDismissable: {
       control: 'boolean',

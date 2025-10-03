@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { SIZE_RANGE } from '@/constants/size';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -20,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const radiiVariants: string[] = ['none', 'small', 'medium', 'large', 'round'];
+const radiiVariants = ['none', ...SIZE_RANGE.STANDARD, 'round'];
 
 const RadiusDisplay = (radiusVariant: string) => {
   const { documentElement } = document;
