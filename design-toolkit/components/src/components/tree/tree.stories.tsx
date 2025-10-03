@@ -20,6 +20,7 @@ import {
 } from '@accelint/icons';
 import Warning from '@accelint/icons/warning';
 import { type ReactNode, useState } from 'react';
+import { SIZE } from '@/constants/size';
 import { useTreeActions } from '@/hooks/use-tree/actions';
 import { useTreeState } from '@/hooks/use-tree/state';
 import { Button } from '../button';
@@ -170,7 +171,8 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
     >
       <Tree.Item.Content>
         {({ variant, isViewable, isVisible }) => {
-          const size = variant === 'cozy' ? 'medium' : 'small';
+          const size = variant === 'cozy' ? SIZE.MEDIUM : SIZE.SMALL;
+
           return (
             <>
               {values?.iconPrefix && (

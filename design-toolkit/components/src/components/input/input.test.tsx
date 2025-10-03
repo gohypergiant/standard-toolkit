@@ -13,6 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { SIZE } from '@/constants/size';
 import { Input } from './';
 import type { InputProps } from './types';
 
@@ -108,6 +109,6 @@ describe('Input', () => {
     const value = 'Foo';
     const { container } = setup({ value });
 
-    expect(container.firstChild).toHaveAttribute('data-size', 'medium');
+    expect(container.firstChild).toHaveAttribute('data-size', SIZE.MEDIUM);
   });
 });

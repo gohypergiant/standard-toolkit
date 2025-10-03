@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { uuid } from '@accelint/core';
+import { SIZE_RANGE } from '@/constants/size';
 import { Button } from '../button';
 import { Drawer } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -34,7 +35,7 @@ const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['small', 'medium', 'large'],
+      options: SIZE_RANGE.STANDARD,
     },
     placement: {
       control: 'select',

@@ -19,6 +19,7 @@ import type {
   LabelProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { SizeRangeCompact } from '@/constants/size';
 import type { DateFieldStyles } from './styles';
 
 export type DateFieldProps<T extends DateValue> = Omit<
@@ -43,5 +44,5 @@ export type DateFieldProps<T extends DateValue> = Omit<
      * When true, will convert month value to 3 letter abbreviation when not editing
      */
     shortMonth?: boolean;
-    size?: 'small' | 'medium';
+    size?: SizeRangeCompact;
   };
