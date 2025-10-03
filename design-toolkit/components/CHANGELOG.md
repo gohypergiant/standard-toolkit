@@ -1,5 +1,17 @@
 # @accelint/design-toolkit
 
+## 5.3.0
+
+### Minor Changes
+
+- eba4ac3: Adds Clock component
+
+### Patch Changes
+
+- d625d2b: Apply story patterns: satisfies, story type alias, meta property ordering
+- 5643ee1: Fixed buttons min/max widths being incorrectly applied
+- 4d96d59: Fixes an issue where the Slider component had a fixed height instead of being sized according to its content.
+
 ## 5.2.0
 
 ### Minor Changes
