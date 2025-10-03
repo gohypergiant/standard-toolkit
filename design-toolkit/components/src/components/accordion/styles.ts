@@ -25,7 +25,6 @@ export const AccordionStyles = tv({
       'group-enabled/accordion:focus-visible-within:bg-interactive-muted-hover group-enabled/accordion:hover:bg-interactive-muted-hover',
       'group-enabled/accordion:pressed:bg-interactive-muted-pressed',
       'group-disabled/accordion:fg-disabled group-disabled/accordion:cursor-not-allowed',
-      'transition-color duration-[80ms]',
     ],
     heading: 'grow',
     trigger: [
@@ -36,10 +35,10 @@ export const AccordionStyles = tv({
   variants: {
     variant: {
       cozy: {
-        trigger: 'gap-s text-header-m',
+        trigger: '!gap-s text-header-m',
       },
       compact: {
-        trigger: 'gap-xs text-header-s',
+        trigger: '!gap-xs text-header-s',
       },
     },
   },
