@@ -13,13 +13,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Dialog } from './';
-import type { DialogTriggerProps } from './types';
+import type { PropsWithChildren } from 'react';
+import type { DialogProps } from './types';
 
 function setup({
   children = 'Foo',
   isOpen = true,
   ...rest
-}: Partial<DialogTriggerProps> = {}) {
+}: Partial<DialogProps & PropsWithChildren> = {}) {
   render(
     <Dialog.Trigger {...rest} isOpen={isOpen}>
       {children}
