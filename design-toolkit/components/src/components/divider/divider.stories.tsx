@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { AXIS } from '@/constants/axis';
 import { Divider } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -22,7 +23,7 @@ const meta = {
   argTypes: {
     orientation: {
       control: 'select',
-      options: ['horizontal', 'vertical'],
+      options: Object.values(AXIS),
     },
   },
 } satisfies Meta<typeof Divider>;
@@ -39,9 +40,6 @@ export const Default: Story = {
 };
 
 export const Horizontal: Story = {
-  args: {
-    orientation: 'horizontal',
-  },
   render: (args) => (
     <div className='fg-primary-bold'>
       <div>Content above</div>
