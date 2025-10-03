@@ -33,6 +33,7 @@ import {
   type TextProps,
   useDragAndDrop,
 } from 'react-aria-components';
+import { SIZE } from '@/constants/size';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
@@ -87,7 +88,7 @@ const TreeLines = memo(function TreeLines({
   return Array.from({ length: level }).map((_, i) => {
     const type = i === level - 1 ? 'branch' : 'vert';
     const line = isLastOfSet && i > 0 ? 'last' : type;
-    const size = variant === 'crammed' ? 'medium' : 'large';
+    const size = variant === 'crammed' ? SIZE.MEDIUM : SIZE.LARGE;
 
     return (
       <Lines
@@ -317,7 +318,7 @@ function ItemContent({ children }: TreeItemContentProps) {
   const { showVisibility, variant, visibleKeys, onVisibilityChange } =
     useContext(TreeContext);
   const { isVisible, isViewable } = useContext(TreeItemContext);
-  const size = variant === 'cozy' ? 'medium' : 'small';
+  const size = variant === 'cozy' ? SIZE.MEDIUM : SIZE.SMALL;
 
   return (
     <AriaTreeItemContent>

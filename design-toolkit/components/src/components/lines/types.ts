@@ -13,10 +13,11 @@
 import type { ComponentProps } from 'react';
 import type { VariantProps } from 'tailwind-variants';
 import type { LinesStyles } from '@/components/lines/styles';
+import type { SizeRangeStandard } from '@/constants/size';
 
 export type LinesProps = Omit<ComponentProps<'div'>, 'size'> &
   LinesStylesVariants & {
-    size?: 'large' | 'medium' | 'small';
+    size?: SizeRangeStandard;
   };
 
 export type LinesStylesVariants = VariantProps<typeof LinesStyles>;

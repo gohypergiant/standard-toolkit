@@ -11,6 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
+import { SIZE_RANGE } from '@/constants/size';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
 import { Avatar } from './';
@@ -30,7 +31,7 @@ const meta = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['medium', 'small'],
+      options: SIZE_RANGE.COMPACT,
     },
   },
   parameters: {
