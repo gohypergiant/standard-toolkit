@@ -6,21 +6,13 @@
     "@accelint/biome-config/linter"
   ],
   "files": {
-    "includes": [
-      "**/*.js",
-      "**/*.mjs",
-      "**/*.ts",
-      "**/*.tsx",
-      "**/*.json",
-      "!**/node_modules",
-      "!**/.turbo",
-      "!**/dist",
-      "!**/build",
-      "!**/coverage",
-      "!**/.next",
-      "!**/storybook-static",
-      "!**/.docusaurus"
-    ]
+    "includes": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
+    "ignoreUnknown": true
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   },
   "overrides": [
     {
