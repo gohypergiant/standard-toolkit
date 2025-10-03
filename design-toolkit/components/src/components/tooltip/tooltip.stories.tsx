@@ -11,7 +11,6 @@
  */
 
 import { Lasso } from '@accelint/icons';
-import { Focusable } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tooltip } from './index';
@@ -29,11 +28,9 @@ export const Default: Story = {
   render: () => (
     <div className='p-m'>
       <Tooltip.Trigger>
-        <Focusable>
-          <button type='button' className='fg-primary-bold'>
-            Test
-          </button>
-        </Focusable>
+        <button type='button' className='fg-primary-bold'>
+          Test
+        </button>
         <Tooltip>My tooltip</Tooltip>
       </Tooltip.Trigger>
     </div>
@@ -44,11 +41,9 @@ export const LongTooltip: Story = {
   render: () => (
     <div className='p-m'>
       <Tooltip.Trigger>
-        <Focusable>
-          <button type='button' className='fg-primary-bold'>
-            Long Tooltip
-          </button>
-        </Focusable>
+        <button type='button' className='fg-primary-bold'>
+          Long Tooltip
+        </button>
         <Tooltip>A floating label used to explain an element</Tooltip>
       </Tooltip.Trigger>
     </div>
@@ -70,11 +65,9 @@ export const TooltipWithIcon: Story = {
   render: () => (
     <div className='p-m'>
       <Tooltip.Trigger>
-        <Focusable>
-          <Icon role='button' className='fg-primary-bold h-xl w-xl'>
-            <Lasso />
-          </Icon>
-        </Focusable>
+        <Icon role='button' className='fg-primary-bold h-xl w-xl'>
+          <Lasso />
+        </Icon>
         <Tooltip>Lasso Selection</Tooltip>
       </Tooltip.Trigger>
     </div>
