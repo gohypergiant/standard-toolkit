@@ -12,7 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Checkbox, type CheckboxProps } from './index';
+import { Checkbox } from './index';
+import type { CheckboxProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<CheckboxProps> = {}) {
   render(<Checkbox {...rest}>{children}</Checkbox>);
