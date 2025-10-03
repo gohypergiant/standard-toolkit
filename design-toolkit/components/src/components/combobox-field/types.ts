@@ -20,6 +20,7 @@ import type {
   PopoverProps,
   VirtualizerProps,
 } from 'react-aria-components';
+import type { SizeRangeCompact } from '@/constants/size';
 import type { ButtonProps } from '../button/types';
 import type { OptionsDataItem, OptionsProps } from '../options/types';
 
@@ -44,5 +45,5 @@ export type ComboBoxFieldProps<T extends OptionsDataItem> = Omit<
     inputProps?: Omit<InputProps, 'className'>;
     description?: string;
     errorMessage?: string;
-    size?: 'small' | 'medium';
+    size?: SizeRangeCompact;
   };
