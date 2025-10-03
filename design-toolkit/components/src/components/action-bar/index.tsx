@@ -17,6 +17,17 @@ import { ButtonContext, ToggleButtonContext } from '../button';
 import { ActionBarStyles } from './styles';
 import type { ActionBarProps } from './types';
 
+/**
+ * ActionBar - Container for icon action buttons
+ *
+ * A container component that displays a collection of action buttons (typically icon-only)
+ * and provides consistent spacing and alignment for toolbar-style actions.
+ *
+ * @example
+ * <ActionBar>
+ *   <Button><Icon><Copy/></Icon></Button>
+ * </ActionBar>
+ */
 export function ActionBar({ className, ...rest }: ActionBarProps) {
   return (
     <Provider
