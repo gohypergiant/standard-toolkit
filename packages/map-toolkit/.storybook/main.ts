@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import type { StorybookConfig } from '@storybook/react-vite';
 
 /**
@@ -30,6 +30,16 @@ const config: StorybookConfig = {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
+  viteFinal: async (config) => ({
+    ...config,
+    resolve: {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+        '@': resolve(__dirname, '../src'),
+      },
+    },
+  }),
 };
 
 export default config;
