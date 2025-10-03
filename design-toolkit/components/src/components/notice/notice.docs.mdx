@@ -1,0 +1,117 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as NoticeStories from './notice.stories';
+
+<Meta of={NoticeStories} />
+
+# Notice
+The Notice component provides message notification functionality for displaying temporary messages, alerts, and user feedback. It's built on React Aria Components and provides excellent accessibility out of the box. Notices are commonly used to show system status updates, user action confirmations, error messages, and important announcements that need to capture user attention without interrupting their workflow.
+
+## Example usage
+
+### Basic
+```tsx
+<Notice
+  id="7a3b6dfd-6596-472c-af1a-06d433958705"
+  message="This is a basic notice message"
+/>
+```
+
+<Canvas of={NoticeStories.Default} />
+
+### With Actions
+```tsx
+<Notice
+  id="39f174fc-ead3-46f4-9131-239ac2a7ed27"
+  color="serious"
+  message="Are you sure you want to delete this item?"
+  primary={{ children: "Delete" }}
+  secondary={{ children: "Cancel" }}
+  shouldCloseOnAction={true}
+  onPrimaryAction={() => {
+    console.log('Primary action: Delete was pressed')
+  }}
+  onSecondaryAction={() => {
+    console.log('Secondary action: Cancel was pressed')
+  }}
+/>
+```
+
+### With Close Button
+```tsx
+<Notice
+  id="7765f06c-dc2a-4041-b8c0-3f64f8cd2c34"
+  color="critical"
+  message="An error occurred while processing your request"
+  showClose={true}
+  onClose={() => {
+    console.log('Close was pressed')
+  }}
+/>
+```
+
+## Colors
+
+* **info** - Blue styling for informational content (default)
+* **advisory** - Yellow styling for advisory/warning content
+* **normal** - Green styling for normal/success content
+* **serious** - Orange styling for serious issues
+* **critical** - Red styling for critical errors or alerts
+
+## Sizes
+The min/max width for a notice will only be applied in a list with `placement`. This allows the notice to fill the container when it is used inline.
+* **medium** - Standard size with larger text and padding (default)
+* **small** - Compact size with smaller text and padding for space-constrained layouts
+
+## Props
+The Notice component accepts all standard HTML div attributes
+
+### Core Props
+* **`id`** - Unique identifier for the notice (required)
+* **`message`** - Text content to display in the notice (required)
+* **`color`** - Visual style variant: `'info'` (default) | `'advisory'` | `'normal'` | `'serious'` | `'critical'`
+* **`size`** - Size variant: `'medium'` (default) | `'small'`
+* **`primary`** - Primary action button configuration:
+  * `children` - Button text (required)
+  * `color` - Button color variant
+  * `variant` - Button style variant
+* **`secondary`** - Secondary action button configuration (same properties as primary)
+* **`hideIcon`** - Whether to hide the icon: `boolean`
+* **`showClose`** - Whether to display close button: `boolean`
+* **`onPrimaryAction`** - Callback called when the primary button is pressed: `() => void`
+* **`onSecondaryAction`** - Callback called when the secondary button is pressed: `() => void`
+* **`onClose`** - Callback called when the close button is pressed: `() => void`
+* **`shouldCloseOnAction`** - Whether notice should close when action buttons are pressed: `boolean`
+- **`classNames`** - Optional class names for custom styling
+  - `notice` - Class name applied to the container element
+  - `content` - Class name applied to the content container
+  - `message` - Class name applied to the notice message
+  - `actions` - Class name applied to the actions container
+
+## Implementation Notes
+The `Notice` component wraps the `Toast` components from `react-aria-components` and integrates with a custom event bus system for user interactions.
+
+[React Aria Toast Docs](https://react-spectrum.adobe.com/react-aria/Toast.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/notice)
+
+The underlying elements are:
+- `div` for the notice container with appropriate data attributes
+- `ToastContent` with description text
+- `Button` components for actions and close functionality
+- `Icon` component for status indicators
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation (Enter, Space, Escape)
+- Focus management and restoration
+- Live region announcements for dynamic content
+- Proper labeling and descriptions
+
+The notice automatically displays appropriate icons based on the color variant:
+- **info/advisory**: Information icon
+- **normal**: Success/checkmark icon
+- **serious**: Warning icon
+- **critical**: Problem/error icon
+
+All variants provide clear visual feedback and maintain accessibility standards while offering flexible customization options. The event-driven architecture enables decoupled communication between notice components and application logic, making it ideal for user interaction tracking and analytics.

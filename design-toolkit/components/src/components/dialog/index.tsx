@@ -12,15 +12,7 @@
 'use client';
 
 import 'client-only';
-import { UNSAFE_PortalProvider } from '@react-aria/overlays';
-import { useIsSSR } from '@react-aria/ssr';
-import {
-  type ComponentProps,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { type ComponentProps, createContext, useContext } from 'react';
 import {
   Dialog as AriaDialog,
   type ContextValue,
@@ -34,6 +26,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { isSlottedContextValue } from '@/lib/utils';
+import { PortalProvider } from '@/providers/portal';
 import { ButtonContext } from '../button';
 import { DialogStyles } from './styles';
 import type { DialogProps } from './types';
@@ -106,31 +99,11 @@ DialogFooter.displayName = 'Dialog.Footer';
 export function Dialog({ ref, ...props }: DialogProps) {
   [props, ref] = useContextProps(props, ref ?? null, DialogContext);
 
-  const isSSR = useIsSSR();
-  const [portal, setPortal] = useState(isSSR ? null : document.body);
   const { children, classNames, parentRef, size = 'small', ...rest } = props;
-
-  useEffect(() => {
-    const node = parentRef?.current;
-    // TODO: Ensure proper ssr hydration
-    const port = isSSR ? null : document.createElement('div');
-
-    if (node && port) {
-      node.appendChild(port);
-
-      setPortal(port);
-    }
-
-    return () => {
-      port?.remove();
-
-      setPortal(isSSR ? null : document.body);
-    };
-  }, [isSSR, parentRef]);
 
   return (
     <DialogContext.Provider value={props}>
-      <UNSAFE_PortalProvider getContainer={() => portal}>
+      <PortalProvider parentRef={parentRef}>
         <ModalOverlay
           {...rest}
           ref={ref}
@@ -149,7 +122,7 @@ export function Dialog({ ref, ...props }: DialogProps) {
             </AriaDialog>
           </Modal>
         </ModalOverlay>
-      </UNSAFE_PortalProvider>
+      </PortalProvider>
     </DialogContext.Provider>
   );
 }

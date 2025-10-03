@@ -12,9 +12,8 @@
 'use client';
 
 import 'client-only';
-import { UNSAFE_PortalProvider } from '@react-aria/overlays';
 import { useIsSSR } from '@react-aria/ssr';
-import { createContext, useEffect, useState } from 'react';
+import { createContext } from 'react';
 import {
   Tooltip as AriaTooltip,
   TooltipTrigger as AriaTooltipTrigger,
@@ -24,6 +23,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { containsExactChildren } from '@/lib/react';
+import { PortalProvider } from '@/providers/portal';
 import { TooltipStyles } from './styles';
 import type {
   TooltipBodyProps,
@@ -112,29 +112,10 @@ function TooltipBody({
   ...props
 }: TooltipBodyProps) {
   const isSSR = useIsSSR();
-  const [portal, setPortal] = useState(isSSR ? null : document.body);
-
-  useEffect(() => {
-    const node = parentRef?.current;
-    // TODO: Ensure proper ssr hydration
-    const port = isSSR ? null : document.createElement('div');
-    port?.setAttribute('style', 'position: absolute;');
-
-    if (node && port) {
-      node.appendChild(port);
-
-      setPortal(port);
-    }
-
-    return () => {
-      port?.remove();
-
-      setPortal(isSSR ? null : document.body);
-    };
-  }, [isSSR, parentRef]);
-
+  const overlayContainer = isSSR ? null : document.createElement('div');
+  overlayContainer?.setAttribute('class', 'absolute');
   return (
-    <UNSAFE_PortalProvider getContainer={() => portal}>
+    <PortalProvider parentRef={parentRef} inject={overlayContainer}>
       <AriaTooltip
         {...props}
         className={composeRenderProps(className, (className) =>
@@ -145,7 +126,7 @@ function TooltipBody({
       >
         {children}
       </AriaTooltip>
-    </UNSAFE_PortalProvider>
+    </PortalProvider>
   );
 }
 TooltipBody.displayName = 'Tooltip.Body';

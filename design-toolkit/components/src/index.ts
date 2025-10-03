@@ -200,6 +200,22 @@ export type {
   MenuProps,
   MenuSectionProps,
 } from './components/menu/types';
+export {
+  NoticeEventNamespace,
+  NoticeEventTypes,
+} from './components/notice/events';
+export { Notice } from './components/notice';
+export { NoticeStyles } from './components/notice/styles';
+export type {
+  NoticeActionEvent,
+  NoticeColor,
+  NoticeContent,
+  NoticeDequeueEvent,
+  NoticeIconProps,
+  NoticeListProps,
+  NoticeProps,
+  NoticeQueueEvent,
+} from './components/notice/types';
 export { Options, OptionsContext } from './components/options';
 export { OptionsStyles } from './components/options/styles';
 export type {
@@ -401,6 +417,7 @@ export {
   tv,
   twMerge,
 } from './lib/utils';
+export { PortalProvider } from './providers/portal';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
 export { designTokens } from './tokens/tokens';
 export type {
