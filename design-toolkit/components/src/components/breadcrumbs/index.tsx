@@ -28,6 +28,18 @@ import type { BreadcrumbItemProps } from './types';
 
 const { list, item, link, separator } = BreadcrumbsStyles();
 
+/**
+ * Breadcrumbs - Accessible breadcrumb navigation
+ *
+ * Displays the user's location within an application hierarchy and provides
+ * links back to parent pages. The final item represents the current page.
+ *
+ * @example
+ * <Breadcrumbs>
+ *   <Breadcrumbs.Item linkProps={{ href: '/' }}>Home</Breadcrumbs.Item>
+ *   <Breadcrumbs.Item>Current</Breadcrumbs.Item>
+ * </Breadcrumbs>
+ */
 export function Breadcrumbs({
   children,
   className,

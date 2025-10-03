@@ -89,6 +89,26 @@ const SidenavContext = createContext<SidenavContextValue>({
   isOpen: false,
 });
 
+/**
+ * Sidenav - Collapsible side navigation panel
+ *
+ * Provides a hierarchical collapsible side navigation intended to be used
+ * inside a Drawer.Layout. Supports headers, avatars, nested menus, and items.
+ *
+ * @example
+ * <Drawer.Layout push="left">
+ *   <Sidenav>
+ *     <Sidenav.Header>
+ *     </Sidenav.Header>
+ *
+ *     <Sidenav.Content>
+ *     </Sidenav.Content>
+ *
+ *     <Sidenav.Footer>
+ *     </Sidenav.Footer>
+ *   </Sidenav>
+ * </Drawer.Layout>
+ */
 export function Sidenav({
   id,
   className,

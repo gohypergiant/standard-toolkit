@@ -320,6 +320,33 @@ function DrawerFooter({ className, ...rest }: ComponentPropsWithRef<'footer'>) {
 }
 DrawerFooter.displayName = 'Drawer.Footer';
 
+/**
+ * Drawer - Slide-in panel for navigation or contextual content
+ *
+ * A flexible panel that slides in from the viewport edge and supports
+ * stacked views, headers, footers, and programmatic triggers.
+ *
+ * @example
+ * @example
+ * const ids = { drawer: uuid(), a: uuid() };
+ *
+ * <Drawer.Layout push="left">
+ *   <Drawer.Layout.Main>
+ *     <Drawer.Trigger for={`open:${ids.a}`}>
+ *       <Button variant="icon">Open</Button>
+ *     </Drawer.Trigger>
+ *   </Drawer.Layout.Main>
+ *
+ *   <Drawer id={ids.drawer} defaultView={ids.a}>
+ *     <Drawer.Panel>
+ *       <Drawer.View id={ids.a}>
+ *         <Drawer.Header title="Title A" />
+ *         <Drawer.Content>Content for View A</Drawer.Content>
+ *       </Drawer.View>
+ *     </Drawer.Panel>
+ *   </Drawer>
+ * </Drawer.Layout>
+ */
 export function Drawer({
   id,
   children,
