@@ -12,26 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { Button } from '../button';
 import { Dialog } from './';
-import type { DialogTriggerProps } from './types';
-
-function setup({
-  children = 'Foo',
-  isOpen = true,
-  ...rest
-}: Partial<DialogTriggerProps> = {}) {
-  render(
-    <Dialog.Trigger {...rest} isOpen={isOpen}>
-      {children}
-    </Dialog.Trigger>,
-  );
-
-  return {
-    ...rest,
-    children,
-    isOpen,
-  };
-}
 
 describe('Dialog', () => {
   it('should render', () => {
@@ -39,15 +21,16 @@ describe('Dialog', () => {
     const content = 'World';
     const footer = 'Foobar';
 
-    setup({
-      children: (
+    render(
+      <Dialog.Trigger isOpen={true}>
+        <Button>Open</Button>
         <Dialog>
           <Dialog.Title>{title}</Dialog.Title>
           {content}
           <Dialog.Footer>{footer}</Dialog.Footer>
         </Dialog>
-      ),
-    });
+      </Dialog.Trigger>,
+    );
 
     expect(screen.getByText(title)).toBeInTheDocument();
     expect(screen.getByText(content)).toBeInTheDocument();

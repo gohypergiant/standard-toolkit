@@ -52,7 +52,7 @@ describe('TextField', () => {
     setup({
       size: 'small',
       description,
-      label: 'Label',
+      'aria-label': 'Label',
     });
 
     expect(screen.queryByText(description)).not.toBeInTheDocument();

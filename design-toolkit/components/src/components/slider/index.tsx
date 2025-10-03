@@ -127,22 +127,30 @@ export const Slider = ({
                     state.values.length === 1 ? 0 : 1,
                   )}
                 />
-                <Tooltip
-                  isDisabled={!showInput || state.isThumbDragging(index)}
-                >
-                  <Tooltip.Trigger>
-                    <SliderThumb
-                      index={index}
-                      className={composeRenderProps(
-                        classNames?.thumb,
-                        (className) => thumb({ className }),
-                      )}
-                    />
-                  </Tooltip.Trigger>
-                  <Tooltip.Body placement='top'>
-                    {state.getThumbValue(index)}
-                  </Tooltip.Body>
-                </Tooltip>
+                {showInput ? (
+                  <Tooltip isDisabled={state.isThumbDragging(index)}>
+                    <Tooltip.Trigger>
+                      <SliderThumb
+                        index={index}
+                        className={composeRenderProps(
+                          classNames?.thumb,
+                          (className) => thumb({ className }),
+                        )}
+                      />
+                    </Tooltip.Trigger>
+                    <Tooltip.Body placement='top'>
+                      {state.getThumbValue(index)}
+                    </Tooltip.Body>
+                  </Tooltip>
+                ) : (
+                  <SliderThumb
+                    index={index}
+                    className={composeRenderProps(
+                      classNames?.thumb,
+                      (className) => thumb({ className }),
+                    )}
+                  />
+                )}
               </Fragment>
             ))}
           </AriaSliderTrack>
