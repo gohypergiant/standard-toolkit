@@ -12,28 +12,64 @@
 'use client';
 
 import 'client-only';
+import { useFocusable } from '@react-aria/interactions';
 import { UNSAFE_PortalProvider } from '@react-aria/overlays';
 import { useIsSSR } from '@react-aria/ssr';
-import { createContext, useEffect, useState } from 'react';
+import { mergeProps, mergeRefs, useObjectRef } from '@react-aria/utils';
+import {
+  Children,
+  cloneElement,
+  createContext,
+  type DOMAttributes,
+  type ReactElement,
+  type ReactNode,
+  useEffect,
+  useState,
+  version,
+} from 'react';
 import {
   Tooltip as AriaTooltip,
   TooltipTrigger as AriaTooltipTrigger,
   type ContextValue,
   composeRenderProps,
-  Focusable,
   useContextProps,
 } from 'react-aria-components';
 import { containsExactChildren } from '@/lib/react';
 import { TooltipStyles } from './styles';
+import type { FocusableElement } from '@react-types/shared';
 import type {
-  TooltipBodyProps,
+  TooltipFocusableProps,
   TooltipProps,
   TooltipTriggerProps,
 } from './types';
 
 export const TooltipContext =
-  createContext<ContextValue<TooltipProps, HTMLDivElement>>(null);
+  createContext<ContextValue<TooltipTriggerProps, HTMLDivElement>>(null);
 
+function TooltipFocusable({ children, ref, ...props }: TooltipFocusableProps) {
+  ref = useObjectRef(ref);
+
+  const { focusableProps } = useFocusable(props, ref);
+  const [trigger, tooltip] = Children.toArray(children) as [
+    ReactElement<DOMAttributes<FocusableElement>, string>,
+    ReactNode,
+  ];
+
+  const childRef =
+    //@ts-expect-error
+    Number.parseInt(version, 10) < 19 ? trigger.ref : trigger.props.ref;
+
+  return (
+    <>
+      {cloneElement(trigger, {
+        ...mergeProps(focusableProps, trigger.props),
+        //@ts-expect-error
+        ref: mergeRefs(childRef, ref),
+      })}
+      {tooltip}
+    </>
+  );
+}
 /**
  * Tooltip - A contextual popup component for providing additional information
  *
@@ -43,74 +79,60 @@ export const TooltipContext =
  *
  * @example
  * // Basic tooltip
- * <Tooltip>
- *   <Tooltip.Trigger>
- *     <Button>Hover me</Button>
- *   </Tooltip.Trigger>
- *   <Tooltip.Body>
+ * <Tooltip.Trigger>
+ *   <Button>Hover me</Button>
+ *   <Tooltip>
  *     This is helpful information
- *   </Tooltip.Body>
- * </Tooltip>
+ *   </Tooltip>
+ * </Tooltip.Trigger>
  *
  * @example
  * // Tooltip with custom positioning
- * <Tooltip>
- *   <Tooltip.Trigger>
- *     <Button>Hover for info</Button>
- *   </Tooltip.Trigger>
- *   <Tooltip.Body placement="top" offset={10}>
+ * <Tooltip.Trigger>
+ *   <Button>Hover for info</Button>
+ *   <Tooltip placement="top" offset={10}>
  *     Positioned above with custom offset
- *   </Tooltip.Body>
- * </Tooltip>
+ *   </Tooltip>
+ * </Tooltip.Trigger>
  *
  * @example
  * // Icon with tooltip
- * <Tooltip>
- *   <Tooltip.Trigger>
- *     <Button variant="icon">
- *       <Icon><Info /></Icon>
- *     </Button>
- *   </Tooltip.Trigger>
- *   <Tooltip.Body>
+ * <Tooltip.Trigger>
+ *   <Button variant="icon">
+ *     <Icon><Info /></Icon>
+ *   </Button>
+ *   <Tooltip>
  *     Additional context for this action
- *   </Tooltip.Body>
- * </Tooltip>
+ *   </Tooltip>
+ * </Tooltip.Trigger>
  */
-export function Tooltip({ ref, ...props }: TooltipProps) {
+function TooltipTrigger({ ref, ...props }: TooltipTriggerProps) {
   [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
 
   const { children, delay = 250, ...rest } = props;
 
   containsExactChildren({
     children,
-    componentName: Tooltip.displayName,
-    restrictions: [
-      [TooltipTrigger, { min: 1, max: 1 }],
-      [TooltipBody, { min: 1, max: 1 }],
-    ],
+    componentName: TooltipTrigger.displayName,
+    restrictions: [[Tooltip, { min: 1, max: 1 }]],
   });
 
   return (
     <AriaTooltipTrigger {...rest} delay={delay}>
-      {children}
+      <TooltipFocusable ref={ref}>{children}</TooltipFocusable>
     </AriaTooltipTrigger>
   );
 }
-Tooltip.displayName = 'Tooltip';
-
-function TooltipTrigger({ children, ...props }: TooltipTriggerProps) {
-  return <Focusable {...props}>{children}</Focusable>;
-}
 TooltipTrigger.displayName = 'Tooltip.Trigger';
 
-function TooltipBody({
+export function Tooltip({
   children,
   parentRef,
   className,
   offset = 5,
   placement = 'bottom',
   ...props
-}: TooltipBodyProps) {
+}: TooltipProps) {
   const isSSR = useIsSSR();
   const [portal, setPortal] = useState(isSSR ? null : document.body);
 
@@ -148,7 +170,6 @@ function TooltipBody({
     </UNSAFE_PortalProvider>
   );
 }
-TooltipBody.displayName = 'Tooltip.Body';
+Tooltip.displayName = 'Tooltip';
 
 Tooltip.Trigger = TooltipTrigger;
-Tooltip.Body = TooltipBody;

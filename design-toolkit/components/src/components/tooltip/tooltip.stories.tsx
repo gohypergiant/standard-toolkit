@@ -27,12 +27,10 @@ type Story = StoryObj<typeof Tooltip>; // NOTE: intentional pattern deviation be
 export const Default: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip>
-        <Tooltip.Trigger>
-          <span className='fg-primary-bold'>Test</span>
-        </Tooltip.Trigger>
-        <Tooltip.Body>My tooltip</Tooltip.Body>
-      </Tooltip>
+      <Tooltip.Trigger>
+        <span className='fg-primary-bold'>Test</span>
+        <Tooltip>My tooltip</Tooltip>
+      </Tooltip.Trigger>
     </div>
   ),
 };
@@ -40,12 +38,10 @@ export const Default: Story = {
 export const LongTooltip: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip>
-        <Tooltip.Trigger>
-          <span className='fg-primary-bold'>Long Tooltip</span>
-        </Tooltip.Trigger>
-        <Tooltip.Body>A floating label used to explain an element</Tooltip.Body>
-      </Tooltip>
+      <Tooltip.Trigger>
+        <span className='fg-primary-bold'>Long Tooltip</span>
+        <Tooltip>A floating label used to explain an element</Tooltip>
+      </Tooltip.Trigger>
     </div>
   ),
 };
@@ -53,12 +49,10 @@ export const LongTooltip: Story = {
 export const TooltipWithButton: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip>
-        <Tooltip.Trigger>
-          <Button>My Button</Button>
-        </Tooltip.Trigger>
-        <Tooltip.Body>My tooltip</Tooltip.Body>
-      </Tooltip>
+      <Tooltip.Trigger>
+        <Button>My Button</Button>
+        <Tooltip>My tooltip</Tooltip>
+      </Tooltip.Trigger>
     </div>
   ),
 };
@@ -66,14 +60,12 @@ export const TooltipWithButton: Story = {
 export const TooltipWithIcon: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip>
-        <Tooltip.Trigger>
-          <Icon className='fg-primary-bold h-xl w-xl'>
-            <Lasso />
-          </Icon>
-        </Tooltip.Trigger>
-        <Tooltip.Body>Lasso Selection</Tooltip.Body>
-      </Tooltip>
+      <Tooltip.Trigger>
+        <Icon className='fg-primary-bold h-xl w-xl'>
+          <Lasso />
+        </Icon>
+        <Tooltip>Lasso Selection</Tooltip>
+      </Tooltip.Trigger>
     </div>
   ),
 };
