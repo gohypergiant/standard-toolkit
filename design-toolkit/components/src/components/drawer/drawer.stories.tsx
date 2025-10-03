@@ -9,7 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import {
+  COMMON_CONTROL,
+  createControl,
+  createParameters,
+} from '^storybook/utils';
 import { uuid } from '@accelint/core';
+import { PLACEMENT } from '@/constants/placement';
+import { SIZE } from '@/constants/size';
 import { Button } from '../button';
 import { Drawer } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -23,32 +31,30 @@ type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
     toggle?: boolean;
   };
 
-const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
+const meta = {
   title: 'Components/Drawer',
   component: Drawer,
   args: {
-    placement: 'left',
-    size: 'medium',
+    placement: PLACEMENT.LEFT,
+    size: SIZE.MEDIUM,
     position: 'center',
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'medium', 'large'],
-    },
-    placement: {
-      control: 'select',
-      options: ['top', 'bottom', 'left', 'right'],
-    },
-    position: {
-      control: 'select',
-      options: ['start', 'center', 'end'],
-    },
+    size: COMMON_CONTROL.size.standard,
+    placement: COMMON_CONTROL.placement,
+    position: createControl.select('Location of drawer "tabs"', [
+      'start',
+      'center',
+      'end',
+    ]),
   },
   parameters: {
-    layout: 'fullscreen',
+    ...createParameters('fullscreen', 'defaultView', 'onChange'),
+    docs: {
+      subtitle: 'Sliding panel for navigation and content organization.',
+    },
   },
-};
+} satisfies Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>>;
 
 export default meta;
 type Story = StoryObj<DrawerWithAdditionalArgs>;
@@ -60,7 +66,7 @@ const ids = {
   c: uuid(),
 };
 
-export const StaticHeaderFooter: Story = {
+export const Default: Story = {
   args: {
     toggle: false,
   },

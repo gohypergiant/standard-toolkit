@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createParameters } from '^storybook/utils';
 import { Label } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -20,6 +21,17 @@ const meta = {
     children: 'Label',
     isDisabled: false,
     isRequired: false,
+  },
+  argTypes: {
+    children: COMMON_CONTROL.children,
+    isDisabled: COMMON_CONTROL.isDisabled,
+    isRequired: COMMON_CONTROL.isRequired,
+  },
+  parameters: {
+    ...createParameters('centered'),
+    docs: {
+      subtitle: 'Label component for form elements.',
+    },
   },
 } satisfies Meta<typeof Label>;
 

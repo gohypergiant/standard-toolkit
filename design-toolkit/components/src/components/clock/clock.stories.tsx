@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { createParameters } from '^storybook/utils';
 import { Clock } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,41 +18,31 @@ const meta = {
   title: 'Components/Clock',
   component: Clock,
   args: {
-    className: undefined,
-    formatter: undefined,
-  },
-  argTypes: {
-    className: {
-      control: 'text',
-    },
+    className: 'fg-primary-bold',
   },
   parameters: {
-    controls: {
-      exclude: ['formatter'],
-    },
+    ...createParameters('centered', 'formatter'),
   },
 } satisfies Meta<typeof Clock>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: Clock,
-};
+export const Default: Story = {};
 
 export const Styling: Story = {
-  render: ({ ...rest }) => (
-    <Clock {...rest} className='fg-accent-primary-bold' />
-  ),
+  args: {
+    className: 'fg-accent-primary-bold',
+  },
 };
 
-const customFormatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'short',
-  timeStyle: 'long',
-  timeZone: 'UTC',
-  hour12: false,
-});
-
 export const CustomFormat: Story = {
-  render: ({ ...rest }) => <Clock {...rest} formatter={customFormatter} />,
+  args: {
+    formatter: new Intl.DateTimeFormat('en-US', {
+      dateStyle: 'short',
+      timeStyle: 'long',
+      timeZone: 'UTC',
+      hour12: false,
+    }),
+  },
 };

@@ -1,0 +1,88 @@
+{
+  "Standard Story Template": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "story",
+    "body": [
+      "import type { Meta, StoryObj } from '@storybook/react';",
+      "import { createParameters } from '^storybook/utils';",
+      "import { ${1:ComponentName} } from './${1:ComponentName}';",
+      "",
+      "const meta: Meta<typeof ${1:ComponentName}> = {",
+      "  title: 'Components/${1:ComponentName}',",
+      "  component: ${1:ComponentName},",
+      "  parameters: createParameters('${2:category}'),",
+      "  argTypes: {",
+      "    // Add component-specific controls here",
+      "    ${3:// Use STANDARD_ARG_TYPES and createVariantControl from shared-controls}",
+      "  },",
+      "};",
+      "",
+      "export default meta;",
+      "type Story = StoryObj<typeof meta>;",
+      "",
+      "export const Default: Story = {",
+      "  args: {",
+      "    ${4:// Add default props here}",
+      "  },",
+      "};",
+      "",
+      "export const ${5:Variant}: Story = {",
+      "  args: {",
+      "    ...Default.args,",
+      "    ${6:// Add variant-specific props here}",
+      "  },",
+      "};"
+    ],
+    "description": "Standard Storybook story template with shared utilities"
+  },
+
+  "Story with Mock Data": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "story-mock",
+    "body": [
+      "import type { Meta, StoryObj } from '@storybook/react';",
+      "import { createParameters } from '^storybook/utils';",
+      "import { MOCK_DATA } from '^storybook/mock-data';",
+      "import { ${1:ComponentName} } from './${1:ComponentName}';",
+      "",
+      "const meta: Meta<typeof ${1:ComponentName}> = {",
+      "  title: 'Components/${1:ComponentName}',",
+      "  component: ${1:ComponentName},",
+      "  parameters: createParameters('${2:category}'),",
+      "  argTypes: {",
+      "    // Add component-specific controls here",
+      "  },",
+      "};",
+      "",
+      "export default meta;",
+      "type Story = StoryObj<typeof meta>;",
+      "",
+      "export const Default: Story = {",
+      "  args: {",
+      "    ${3:data: MOCK_DATA.${4:users}}",
+      "  },",
+      "};"
+    ],
+    "description": "Story template with mock data import"
+  },
+
+  "Standard ArgTypes": {
+    "scope": "typescript,typescriptreact",
+    "prefix": "argtypes",
+    "body": [
+      "argTypes: {",
+      "  ${1:propName}: {",
+      "    control: '${2:select}',",
+      "    options: [${3:'option1', 'option2'}],",
+      "    description: '${4:Description of the prop}',",
+      "    table: {",
+      "      category: '${5:Appearance}',",
+      "      type: { summary: '${6:string}' },",
+      "      defaultValue: { summary: '${7:default}' },",
+      "    },",
+      "  },",
+      "},"
+    ],
+    "description": "Standard argTypes configuration"
+  }
+}

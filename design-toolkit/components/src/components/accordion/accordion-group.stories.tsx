@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createParameters } from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Accordion } from './';
@@ -31,12 +32,10 @@ const meta = {
     isDisabled: false,
   },
   argTypes: {
-    variant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
+    variant: COMMON_CONTROL.spacingVariant,
   },
   parameters: {
+    ...createParameters('centered', 'id'),
     docs: {
       subtitle: 'Group together multiple <Accordion> components.',
     },
@@ -45,6 +44,13 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+const CONTENT = (
+  <p className='fg-primary-muted text-body-s'>
+    This is a placeholder content for an accordion. Please replace with an
+    actual content instance.
+  </p>
+);
 
 export const Default: Story = {
   render: ({ children, ...args }) => (
@@ -59,12 +65,7 @@ export const Default: Story = {
               Accordion one
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel>
-            <p className='fg-primary-muted text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </Accordion.Panel>
+          <Accordion.Panel>{CONTENT}</Accordion.Panel>
         </Accordion>
         <Accordion>
           <Accordion.Header>
@@ -75,12 +76,7 @@ export const Default: Story = {
               Accordion two
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel>
-            <p className='fg-primary-muted text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </Accordion.Panel>
+          <Accordion.Panel>{CONTENT}</Accordion.Panel>
         </Accordion>
         <Accordion>
           <Accordion.Header>
@@ -91,12 +87,7 @@ export const Default: Story = {
               Accordion three
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Panel>
-            <p className='fg-primary-muted text-body-s'>
-              This is a placeholder content for an accordion. Please replace
-              with an actual content instance.
-            </p>
-          </Accordion.Panel>
+          <Accordion.Panel>{CONTENT}</Accordion.Panel>
         </Accordion>
       </Accordion.Group>
     </div>

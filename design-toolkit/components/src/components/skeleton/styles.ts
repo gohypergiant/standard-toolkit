@@ -11,9 +11,10 @@
  */
 
 import { tv } from '@/lib/utils';
+import { SHAPE, type Shape } from './shape';
 
 export const SkeletonStylesDefaults = {
-  shape: 'rect',
+  shape: SHAPE.RECT,
 } as const;
 
 export const SkeletonStyles = tv({
@@ -22,7 +23,7 @@ export const SkeletonStyles = tv({
     shape: {
       circ: 'aspect-square w-[1lh] rounded-full',
       rect: 'min-h-[1lh] w-full rounded-small',
-    },
+    } satisfies Record<Shape, string>,
   },
   defaultVariants: SkeletonStylesDefaults,
 });
