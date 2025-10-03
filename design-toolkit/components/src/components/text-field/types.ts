@@ -15,6 +15,7 @@ import type {
   TextFieldProps as AriaTextFieldProps,
   FieldErrorProps,
 } from 'react-aria-components';
+import type { SizeRangeCompact } from '@/constants/size';
 import type { InputProps } from '../input/types';
 import type { LabelProps } from '../label/types';
 
@@ -34,5 +35,5 @@ export type TextFieldProps = Omit<
     inputProps?: InputProps;
     description?: string;
     errorMessage?: string;
-    size?: 'medium' | 'small';
+    size?: SizeRangeCompact;
   };

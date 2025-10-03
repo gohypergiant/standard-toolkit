@@ -15,6 +15,7 @@ import type { FocusableElement } from '@react-types/shared';
 import type { ComponentPropsWithRef, DOMAttributes, ReactElement } from 'react';
 import type { HeadingProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { SizeRangeStandard } from '@/constants/size';
 import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackEvent } from '../view-stack/types';
@@ -132,7 +133,7 @@ export type DrawerProps = Omit<ComponentPropsWithRef<'div'>, 'onChange'> & {
    * The size of the drawer.
    * @default 'medium'
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: SizeRangeStandard;
   onChange?: (view: UniqueId | null) => void;
 };
 

@@ -12,6 +12,7 @@
 
 import { Placeholder } from '@accelint/icons';
 import { useState } from 'react';
+import { SIZE_RANGE } from '@/constants/size';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
@@ -38,7 +39,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['medium', 'small'],
+      options: SIZE_RANGE.COMPACT,
     },
   },
 } satisfies Meta<typeof Chip>;

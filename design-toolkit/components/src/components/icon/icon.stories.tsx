@@ -11,6 +11,7 @@
  */
 
 import { Add } from '@accelint/icons';
+import { SIZE_RANGE } from '@/constants/size';
 import { Icon } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -26,7 +27,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
+      options: SIZE_RANGE.FULL,
     },
   },
 } satisfies Meta<typeof Icon>;
