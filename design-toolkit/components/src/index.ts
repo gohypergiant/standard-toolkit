@@ -380,6 +380,15 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { SIZE, SIZE_RANGE } from './constants/size';
+export type {
+  SizeRangeBinary,
+  SizeRangeCompact,
+  SizeRangeFull,
+  SizeRangeStandard,
+  SizeVariant,
+  SizeVariantKey,
+} from './constants/size';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {

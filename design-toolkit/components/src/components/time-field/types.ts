@@ -19,6 +19,7 @@ import type {
   TimeValue,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { SizeRangeCompact } from '@/constants/size';
 import type { TimeFieldStyles } from './styles';
 
 export type TimeFieldProps<T extends TimeValue> = Omit<
@@ -38,6 +39,6 @@ export type TimeFieldProps<T extends TimeValue> = Omit<
     label?: string;
     description?: string;
     errorMessage?: string;
-    size?: 'small' | 'medium';
+    size?: SizeRangeCompact;
     inputProps?: Omit<DateInputProps, 'children' | 'className'>;
   };

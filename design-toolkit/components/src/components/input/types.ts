@@ -13,6 +13,7 @@
 import type { RefAttributes } from 'react';
 import type { InputProps as AriaInputProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { SizeRangeCompact } from '@/constants/size';
 import type { ButtonProps } from '../button/types';
 import type { InputStyles } from './styles';
 
@@ -25,7 +26,7 @@ export type InputProps = Omit<AriaInputProps, 'className' | 'size' | 'type'> &
       input?: AriaInputProps['className'];
       clear?: ButtonProps['className'];
     };
-    size?: 'medium' | 'small';
+    size?: SizeRangeCompact;
     isClearable?: boolean;
     isInvalid?: boolean;
   };

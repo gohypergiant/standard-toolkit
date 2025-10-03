@@ -15,6 +15,7 @@ import type {
   DialogProps as AriaDialogProps,
   ModalOverlayProps,
 } from 'react-aria-components';
+import type { SizeRangeBinary } from '@/constants/size';
 
 export type DialogProps = Omit<ModalOverlayProps, 'children' | 'className'> &
   Pick<AriaDialogProps, 'children'> &
@@ -25,5 +26,5 @@ export type DialogProps = Omit<ModalOverlayProps, 'children' | 'className'> &
       dialog?: AriaDialogProps['className'];
     };
     parentRef?: RefObject<HTMLElement | null>;
-    size?: 'small' | 'large';
+    size?: SizeRangeBinary;
   };

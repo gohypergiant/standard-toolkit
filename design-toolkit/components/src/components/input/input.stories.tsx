@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { SIZE_RANGE } from '@/constants/size';
 import { Input } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -27,7 +28,7 @@ const meta = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['medium', 'small'],
+      options: SIZE_RANGE.COMPACT,
     },
   },
 } satisfies Meta<typeof Input>;

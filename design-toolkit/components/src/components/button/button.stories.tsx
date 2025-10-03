@@ -12,6 +12,7 @@
 
 import { Placeholder } from '@accelint/icons';
 import { composeRenderProps } from 'react-aria-components';
+import { SIZE_RANGE } from '@/constants/size';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -31,7 +32,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
+      options: SIZE_RANGE.FULL,
     },
     variant: {
       control: 'select',

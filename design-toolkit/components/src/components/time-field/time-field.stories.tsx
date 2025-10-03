@@ -11,6 +11,7 @@
  */
 
 import { parseTime } from '@internationalized/date';
+import { SIZE_RANGE } from '@/constants/size';
 import { TimeField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -30,7 +31,7 @@ const meta = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['small', 'medium'],
+      options: SIZE_RANGE.COMPACT,
     },
     granularity: {
       control: 'select',
