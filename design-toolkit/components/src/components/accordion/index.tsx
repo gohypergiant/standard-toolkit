@@ -137,10 +137,14 @@ function AccordionTrigger({
         )}
         variant='flat'
       >
-        <Icon>
-          <ChevronDown className='transform group-expanded/accordion:rotate-180' />
-        </Icon>
-        {children}
+        <IconContext.Provider
+          value={{ size: variant === 'compact' ? 'small' : 'medium' }}
+        >
+          <Icon>
+            <ChevronDown className='transform group-expanded/accordion:rotate-180' />
+          </Icon>
+          {children}
+        </IconContext.Provider>
       </Button>
     </Heading>
   );
