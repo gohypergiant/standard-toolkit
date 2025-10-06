@@ -18,6 +18,7 @@ import type {
   MapHoverEvent,
 } from '../components/mapClient/types';
 
+// TODO: need to use the react library: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/bus/README.md#react or manage the memory leak
 export function useMapEvents() {
   const [hover, setHover] = useState<Partial<MapHoverEvent['payload']>>();
   const [click, setClick] = useState<Partial<MapClickEvent['payload']>>();

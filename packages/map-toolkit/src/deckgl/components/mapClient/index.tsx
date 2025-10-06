@@ -50,6 +50,7 @@ export function MapClient({ children }: MapClientProps) {
     });
   };
 
+  // TODO: need a callback prop for onClick and onHover so that devs can pass in their own behavior
   const handleMapClick = useCallback((pickingInfo: PickingInfo) => {
     bus.emit(MapEvents.click, {
       layer: pickingInfo.layer,
@@ -57,6 +58,8 @@ export function MapClient({ children }: MapClientProps) {
     });
   }, []);
 
+  // TODO: the div shouldn't hard code the height and width, need a className prop
+  // TODO: all the deckgl instance props need to be spread in
   return (
     <div style={{ height: '100vh', width: '100%' }} id='map-client'>
       <Deckgl
