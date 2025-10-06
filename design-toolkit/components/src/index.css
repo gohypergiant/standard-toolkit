@@ -164,10 +164,13 @@
   --icon-color: --value(--color- *);
 }
 
-body {
-  @apply font-primary;
+html {
   @apply bg-surface-default;
   @apply fg-primary-bold;
+}
+
+body {
+  @apply font-primary;
 }
 
 @layer components {
