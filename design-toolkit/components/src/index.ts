@@ -369,6 +369,8 @@ export type {
   TreeItemProps,
   TreeProps,
 } from './components/tree/types';
+export { VictoryChart } from './components/victory-chart';
+export type { VictoryChartProps } from './components/victory-chart';
 export {
   ViewStackEventNamespace,
   ViewStackEventTypes,
