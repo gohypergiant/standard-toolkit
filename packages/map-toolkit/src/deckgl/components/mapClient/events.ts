@@ -1,5 +1,3 @@
-// __private-exports
-
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -12,15 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { MapClient } from '../components/mapClient';
-import type { Decorator } from '@storybook/react';
+export const MapEventsNamespace = 'MapClient';
 
-export const withDeckGL = (): Decorator => {
-  return (Story) => {
-    return (
-      <MapClient>
-        <Story />
-      </MapClient>
-    );
-  };
-};
+export const MapEvents = {
+  click: `${MapEventsNamespace}:click`,
+  hover: `${MapEventsNamespace}:hover`,
+} as const;

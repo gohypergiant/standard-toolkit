@@ -16,4 +16,20 @@
 
 // biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
-export { INITIAL_VIEW_STATE, MAP_STYLE, PARAMETERS } from './deckgl/constants';
+export {
+  INITIAL_VIEW_STATE,
+  MAP_STYLE,
+  PARAMETERS,
+} from './deckgl/components/mapClient/constants';
+export {
+  MapEvents,
+  MapEventsNamespace,
+} from './deckgl/components/mapClient/events';
+export { MapClient, bus } from './deckgl/components/mapClient';
+export type {
+  MapClickEvent,
+  MapEventType,
+  MapHoverEvent,
+} from './deckgl/components/mapClient/types';
+export { useMapEvents } from './deckgl/hooks/use-map-events';
+export { useMapLibre } from './deckgl/hooks/use-maplibre';

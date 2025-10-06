@@ -769,6 +769,9 @@ importers:
       '@types/react':
         specifier: ^19.1.9
         version: 19.1.15
+      client-only:
+        specifier: ^0.0.1
+        version: 0.0.1
       esbuild-fix-imports-plugin:
         specifier: 1.0.21
         version: 1.0.21
@@ -788,6 +791,9 @@ importers:
         specifier: 0.1.0
         version: 0.1.0(vitest@2.1.3(@types/node@24.3.1)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.11.3(@types/node@24.3.1)(typescript@5.9.2))(terser@5.44.0))
     optionalDependencies:
+      '@accelint/bus':
+        specifier: ^1.3.0
+        version: 1.3.0(@accelint/core@0.4.1(type-fest@4.41.0)(typescript@5.9.2)(uuid@11.1.0)(zod@4.1.5))(typescript@5.9.2)
       '@deck.gl/core':
         specifier: 9.1.14
         version: 9.1.14
@@ -1068,6 +1074,20 @@ importers:
         version: 2.1.3(@types/node@24.3.1)(jsdom@26.1.0)(lightningcss@1.30.1)(msw@2.11.3(@types/node@24.3.1)(typescript@5.9.2))(terser@5.44.0)
 
 packages:
+
+  '@accelint/bus@1.3.0':
+    resolution: {integrity: sha512-UJtbl0jOVhzNZ9dswhv6BQf48LtwnLsEJM81gvCsn1sNL7f2tsttM2liapMxwsuKzqOv8zHpgWte/sCYtw5Wjw==}
+    peerDependencies:
+      '@accelint/core': ^0.4.1
+      typescript: ^5.8.3
+
+  '@accelint/core@0.4.1':
+    resolution: {integrity: sha512-lftZJp3/X0rYyHl0QdVybMZuOAYoLtPhJQ6HNQCkW+m69EafbaOgnm8BL0/RbbLR5Ov8lwrS+1eGBZX1ZBvi1g==}
+    peerDependencies:
+      type-fest: ^4.41.0
+      typescript: ^5.8.3
+      uuid: ^11.1.0
+      zod: ^4.0.15
 
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
@@ -11206,6 +11226,22 @@ packages:
     hasBin: true
 
 snapshots:
+
+  '@accelint/bus@1.3.0(@accelint/core@0.4.1(type-fest@4.41.0)(typescript@5.9.2)(uuid@11.1.0)(zod@4.1.5))(typescript@5.9.2)':
+    dependencies:
+      '@accelint/core': 0.4.1(type-fest@4.41.0)(typescript@5.9.2)(uuid@11.1.0)(zod@4.1.5)
+      typescript: 5.9.2
+    optionalDependencies:
+      react: 19.1.1
+    optional: true
+
+  '@accelint/core@0.4.1(type-fest@4.41.0)(typescript@5.9.2)(uuid@11.1.0)(zod@4.1.5)':
+    dependencies:
+      type-fest: 4.41.0
+      typescript: 5.9.2
+      uuid: 11.1.0
+      zod: 4.1.5
+    optional: true
 
   '@adobe/css-tools@4.4.4': {}
 

@@ -11,11 +11,12 @@
  */
 
 import { withDeckGL } from '../decorators/deckgl';
+import { useMapEvents } from '../hooks/use-map-events';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'DeckGL',
-  decorators: [withDeckGL({})],
+  decorators: [withDeckGL()],
   parameters: {
     layout: 'fullscreen',
   },
@@ -26,5 +27,9 @@ type Story = StoryObj<typeof meta>;
 
 export const BaseMap: Story = {
   // Using the deckGL decorator, blank base map.
-  render: () => null as any,
+  render: () => {
+    const { click, hover } = useMapEvents();
+    console.log({ click, hover });
+    return null as any;
+  },
 };
