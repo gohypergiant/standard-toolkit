@@ -167,9 +167,6 @@
 html {
   @apply bg-surface-default;
   @apply fg-primary-bold;
-}
-
-body {
   @apply font-primary;
 }
 
