@@ -30,21 +30,28 @@ export const TabStyles = tv({
       'group-orientation-horizontal/tabs:after:absolute group-orientation-horizontal/tabs:after:bottom-0 group-orientation-horizontal/tabs:after:left-0 group-orientation-horizontal/tabs:after:block group-orientation-horizontal/tabs:after:h-[1px] group-orientation-horizontal/tabs:after:w-full group-orientation-horizontal/tabs:after:bg-[color:var(--outline-static)]',
 
       'enabled:hover:fg-primary-bold',
-      'enabled:hover:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-bold)]',
+      'enabled:hover:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-interactive-hover)]',
 
       'enabled:focus:fg-primary-bold',
       'enabled:focus:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-bold)]',
 
-      'enabled:selected:fg-accent-primary-bold selected:bg-accent-primary-muted',
+      'enabled:pressed:fg-pressed',
+      'enabled:pressed:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-interactive-pressed)]',
+
+      'enabled:selected:fg-accent-primary-bold enabled:selected:bg-accent-primary-muted',
       'enabled:selected:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-bold)]',
 
-      'enabled:selected:hover:fg-accent-primary-bold',
-      'enabled:selected:hover:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-bold)]',
+      'enabled:selected:hover:fg-accent-primary-hover enabled:selected:hover:bg-accent-primary-hover',
+      'enabled:selected:hover:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-hover)]',
 
-      'enabled:selected:focus:fg-accent-primary-bold',
-      'enabled:selected:focus:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-bold)]',
+      'enabled:selected:focus-visible:fg-accent-primary-hover enabled:selected:focus-visible:bg-accent-primary-hover',
+      'enabled:selected:focus-visible:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-hover)]',
 
-      'disabled:fg-disabled disabled:cursor-not-allowed disabled:bg-interactive-disabled',
+      'enabled:selected:pressed:fg-accent-primary-pressed enabled:selected:pressed:bg-interactive-muted-pressed',
+      'enabled:selected:pressed:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-accent-primary-pressed)]',
+
+      'disabled:fg-disabled disabled:cursor-not-allowed',
+      'disabled:selected:bg-interactive-disabled',
       'disabled:group-orientation-horizontal/tabs:after:bg-[color:var(--outline-interactive-disabled)]',
     ],
     panel: 'fg-primary-bold p-s',
