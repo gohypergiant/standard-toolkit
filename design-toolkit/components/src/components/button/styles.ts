@@ -18,7 +18,7 @@ export const ButtonStylesDefaults = {
 
 const BaseButtonStyles = tv({
   base: [
-    'group/button flex w-content cursor-pointer items-center justify-center rounded-medium outline outline-transparent',
+    'group/button flex w-content shrink-0 cursor-pointer items-center justify-center rounded-medium outline outline-transparent',
     'disabled:cursor-not-allowed',
     'size-large:min-w-[96px] size-large:gap-xs size-large:px-l size-large:py-s size-large:text-button-l',
     'size-medium:min-w-[68px] size-medium:gap-xs size-medium:px-m size-medium:py-xs size-medium:text-button-m',

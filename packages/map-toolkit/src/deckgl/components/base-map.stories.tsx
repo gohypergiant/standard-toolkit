@@ -10,10 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { withDeckGL } from '../decorators/deckgl';
+import type { Meta, StoryObj } from '@storybook/react';
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+const meta: Meta = {
+  title: 'DeckGL',
+  decorators: [withDeckGL({})],
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
 
-export { INITIAL_VIEW_STATE, MAP_STYLE, PARAMETERS } from './deckgl/constants';
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const BaseMap: Story = {
+  // Using the deckGL decorator, blank base map.
+  render: () => null as any,
+};
