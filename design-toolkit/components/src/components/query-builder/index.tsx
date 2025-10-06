@@ -58,14 +58,12 @@ function CombinatorSelector({
       <Label>Combinator</Label>
       {options.map((option) => (
         <Radio key={option.label} value={option.label}>
-          <Tooltip>
-            <Tooltip.Trigger>
-              <span>{option.label}</span>
-            </Tooltip.Trigger>
-            <Tooltip.Body placement='top'>
+          <Tooltip.Trigger>
+            <button type='button'>{option.label}</button>
+            <Tooltip placement='top'>
               {operatorDescriptions[option.label]}
-            </Tooltip.Body>
-          </Tooltip>
+            </Tooltip>
+          </Tooltip.Trigger>
         </Radio>
       ))}
     </Radio.Group>

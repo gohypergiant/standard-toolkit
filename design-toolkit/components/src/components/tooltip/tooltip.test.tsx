@@ -20,15 +20,10 @@ function setup({
   ...rest
 }: Partial<TooltipTriggerComponentProps> = {}) {
   render(
-    <Tooltip isOpen={isOpen}>
-      <Tooltip.Body>My tooltip</Tooltip.Body>
-      <Tooltip.Trigger>
-        {/* biome-ignore lint/a11y/useSemanticElements: react-aria expects a role, biome doesn't like it */}
-        <span className='fg-primary-bold' role='button' tabIndex={0}>
-          {children}
-        </span>
-      </Tooltip.Trigger>
-    </Tooltip>,
+    <Tooltip.Trigger isOpen={isOpen}>
+      <span className='fg-primary-bold'>{children}</span>
+      <Tooltip>My tooltip</Tooltip>
+    </Tooltip.Trigger>,
   );
 
   return {

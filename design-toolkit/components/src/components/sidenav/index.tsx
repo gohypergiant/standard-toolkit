@@ -242,22 +242,20 @@ function SidenavItem({
         [TextContext, { className: text({ className: transient() }) }],
       ]}
     >
-      <Tooltip isDisabled={isOpen}>
-        <Tooltip.Trigger>
-          <ToggleButton
-            {...rest}
-            ref={ref}
-            className={composeRenderProps(classNames?.button, (className) =>
-              item({ className }),
-            )}
-          >
-            {children}
-          </ToggleButton>
-        </Tooltip.Trigger>
-        <Tooltip.Body parentRef={ref} placement='right' className={tooltip()}>
+      <Tooltip.Trigger isDisabled={isOpen}>
+        <ToggleButton
+          {...rest}
+          ref={ref}
+          className={composeRenderProps(classNames?.button, (className) =>
+            item({ className }),
+          )}
+        >
+          {children}
+        </ToggleButton>
+        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
           {textValue}
-        </Tooltip.Body>
-      </Tooltip>
+        </Tooltip>
+      </Tooltip.Trigger>
     </Provider>
   );
 }
@@ -287,32 +285,30 @@ function SidenavLink({
     <Provider
       values={[[TextContext, { className: text({ className: transient() }) }]]}
     >
-      <Tooltip isDisabled={isOpen}>
-        <Tooltip.Trigger>
-          <Link
-            {...rest}
-            ref={ref}
-            className={composeRenderProps(classNames?.button, (className) =>
-              link({ className }),
-            )}
-          >
-            {composeRenderProps(children, (children) => (
-              <>
-                {children}
-                <Icon className={transient()}>
-                  <ArrowNortheast />
-                </Icon>
-              </>
-            ))}
-          </Link>
-        </Tooltip.Trigger>
-        <Tooltip.Body parentRef={ref} placement='right' className={tooltip()}>
+      <Tooltip.Trigger isDisabled={isOpen}>
+        <Link
+          {...rest}
+          ref={ref}
+          className={composeRenderProps(classNames?.button, (className) =>
+            link({ className }),
+          )}
+        >
+          {composeRenderProps(children, (children) => (
+            <>
+              {children}
+              <Icon className={transient()}>
+                <ArrowNortheast />
+              </Icon>
+            </>
+          ))}
+        </Link>
+        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
           {textValue}
           <Icon>
             <ArrowNortheast />
           </Icon>
-        </Tooltip.Body>
-      </Tooltip>
+        </Tooltip>
+      </Tooltip.Trigger>
     </Provider>
   );
 }
@@ -404,22 +400,20 @@ function SidenavMenu({
     </Disclosure>
   ) : (
     <DialogTrigger>
-      <Tooltip isDisabled={isOpen}>
-        <Tooltip.Trigger>
-          <Button
-            {...rest}
-            ref={ref}
-            className={composeRenderProps(classNames?.button, (className) =>
-              menuButton({ className }),
-            )}
-          >
-            {icon}
-          </Button>
-        </Tooltip.Trigger>
-        <Tooltip.Body parentRef={ref} placement='right' className={tooltip()}>
+      <Tooltip.Trigger isDisabled={isOpen}>
+        <Button
+          {...rest}
+          ref={ref}
+          className={composeRenderProps(classNames?.button, (className) =>
+            menuButton({ className }),
+          )}
+        >
+          {icon}
+        </Button>
+        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
           {title}
-        </Tooltip.Body>
-      </Tooltip>
+        </Tooltip>
+      </Tooltip.Trigger>
       <Popover
         className={composeRenderProps(classNames?.popoverPanel, (className) =>
           menuPanel({ className }),
