@@ -1,0 +1,146 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as VictoryMeta from './victory-chart.stories';
+
+<Meta of={VictoryMeta} />
+
+<Canvas of={VictoryMeta.Default} />
+
+# VICTORY Chart
+
+__Visual Integration of Coordination, Timing, Objectives, and Responsibilities__
+
+The VICTORY chart is a mission planning and execution support tool designed to represent complex, time-dependent activities across multiple participants and units. It facilitates a clear operational picture by aligning strategic Vision with tactical execution layers: Coordination, Timing, Objectives, and individual Responsibilities.
+
+Each chart presents mission-critical sequences across units (personnel, vehicles, or systems), ensuring synchronized operations and alignment with strategic intent. Activities are visualized within a structured timeline, enabling planners and operators to anticipate dependencies, mitigate conflict, and confirm readiness across all phases of execution.
+
+> The VICTORY chart supports commanders and mission planners in achieving unity of effort and operational precision.
+>
+> Before engagement, check your VI.<br/>
+> Your VICTORY chart is the blueprint for success.
+
+  - __VI__: Vision         (chart)
+  - __C__:  Coordination   (row)
+  - __T__:  Timing         (timeline)
+  - __O__:  Objective      (group)
+  - __RY__: Responsibility (action/event)
+
+## Overview
+
+This library exposes two primary components: __core__ and __standard__.
+
+  - __core__ provides minimal structure and functionality—intended as a lightweight, flexible foundation.
+  - __standard__ builds on core to demonstrate a full-featured, styled implementation. It serves as both:
+      - A working default for most use cases.
+      - A reference for building custom implementations atop core.
+
+This separation enables multiple products to share functionality without being locked into a single visual design or component contract.
+
+## Basic Use
+
+In the simplest case only `data` is required.
+
+```tsx
+import 'server-only';
+
+import { VictoryChart } from '@accelint/victory-chart';
+
+async function Chart() {
+  const data = await fetch('https://some.data');
+
+  return <VictoryChart data={data} />;
+}
+
+// React Server Component
+export default function Page() {
+  return <Chart />;
+}
+
+// a more customized implementation
+export default function Page() {
+  return (
+    <Chart
+      data={[...]}
+      plugins={{
+        timing
+        title: false,
+      }}
+      />
+  );
+}
+```
+
+A more customized implementation would look something like this:
+
+```tsx
+import 'server-only';
+
+import { VictoryChart } from '@accelint/victory-chart';
+import { Timing } from '@components/charting/custom/timing'
+
+async function Chart() {
+  const data = await fetch('https://some.data');
+
+  return (
+    <VictoryChart
+      data={data}
+      plugins={{
+        timing: Timing,
+        title: 'Excellent Things',
+      }}
+      state={{ focus: 2, zoom: 200 }}
+      />
+  );
+}
+
+// React Server Component
+export default function Page() {
+  return <Chart />;
+}
+```
+
+## Customization & Initialization
+
+The chart accepts several properties to control its behavior and appearance:
+
+__Required__
+
+  - `data` - The data source for the chart. Supports both flat and nested (recursive) structures.
+
+__Optional__
+
+  - `plugins` - An object of custom React components to override specific chart elements.
+  - `state` - Values used to initialize internal chart state (e.g., selected time "focus" or zoom level).
+
+---
+
+## Legend / Terms
+
+- __VI__ (Vision)
+    - The whole chart
+    - High-level strategic objective
+        - Coordination(s): __rows__
+        - Timing(s): __timeline__
+        - Objective(s): __groups__ within a row
+        - Responsibility(s): __actions__ within a group
+    - Contains 1 or more: Coordinations (rows)
+- __C__ (Coordinations)
+    - Vertical axis
+    - Participating unit or role
+    - Subdivisions of Chart; is contained by Chart
+    - Represents disconnected/parallel collections of Objectives (groups)
+    - Contains 1 or more: Objectives (groups)
+    - Detail (left) and Timing (right)
+- __T__ (Timing)
+    - Horizontal axis; to the right of the "Coordination Detail"
+    - Left-to-right sequence
+- __O__ (Objectives)
+    - Sub-divisions of the horizontal axis; within the "Coordination Timing"
+    - A phase or milestone goal
+    - Subdivisions of Coordination; is contained by Coordination
+    - Groups of Responsibilities (actions)
+    - Contains 1 or more: Responsibilities (actions)
+- __RY__ (Responsibilities)
+    - A single accomplishable action within an Objective
+    - Concrete, assigned actions
+    - Subdivisions of Objectives
