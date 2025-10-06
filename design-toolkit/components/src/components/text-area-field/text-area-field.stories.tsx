@@ -13,7 +13,7 @@
 import { TextAreaField } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof TextAreaField> = {
+const meta = {
   title: 'Components/TextAreaField',
   component: TextAreaField,
   args: {
@@ -42,10 +42,11 @@ const meta: Meta<typeof TextAreaField> = {
       },
     },
   },
-};
+} satisfies Meta<typeof TextAreaField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof TextAreaField> = {
+export const Default: Story = {
   render: TextAreaField,
 };

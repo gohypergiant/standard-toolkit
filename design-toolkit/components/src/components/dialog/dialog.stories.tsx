@@ -15,7 +15,7 @@ import { Button } from '../button';
 import { Dialog } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Dialog> = {
+const meta = {
   title: 'Components/Dialog',
   component: Dialog,
   args: {
@@ -35,10 +35,10 @@ const meta: Meta<typeof Dialog> = {
       control: 'boolean',
     },
   },
-};
+} satisfies Meta<typeof Dialog>;
 
 export default meta;
-type Story = StoryObj<typeof Dialog>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => {

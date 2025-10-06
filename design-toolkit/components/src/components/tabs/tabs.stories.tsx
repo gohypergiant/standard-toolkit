@@ -28,7 +28,7 @@ import type { Meta, StoryObj } from '@storybook/react';
  *
  * - `Tabs` must include a `Tabs.List`
  */
-const meta: Meta<typeof Tabs> = {
+const meta = {
   title: 'Components/Tabs',
   component: Tabs,
   args: {
@@ -41,10 +41,10 @@ const meta: Meta<typeof Tabs> = {
       options: ['horizontal', 'vertical'],
     },
   },
-};
+} satisfies Meta<typeof Tabs>;
 
 export default meta;
-type Story = StoryObj<typeof Tabs>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ ...args }) => (

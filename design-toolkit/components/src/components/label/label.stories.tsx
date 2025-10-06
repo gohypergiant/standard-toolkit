@@ -13,7 +13,7 @@
 import { Label } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Label> = {
+const meta = {
   title: 'Components/Label',
   component: Label,
   args: {
@@ -21,10 +21,11 @@ const meta: Meta<typeof Label> = {
     isDisabled: false,
     isRequired: false,
   },
-};
+} satisfies Meta<typeof Label>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Label> = {
+export const Default: Story = {
   render: Label,
 };

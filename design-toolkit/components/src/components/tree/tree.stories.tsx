@@ -29,7 +29,7 @@ import type { Key, Selection } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { TreeNode } from '@/hooks/use-tree/types';
 
-const meta: Meta<typeof Tree> = {
+const meta = {
   title: 'Components/Tree',
   component: Tree,
   args: {
@@ -57,10 +57,10 @@ const meta: Meta<typeof Tree> = {
         'Tree component that provides users with a way to navigate nested hierarchical information, with support for keyboard navigation and selection.',
     },
   },
-};
+} satisfies Meta<typeof Tree>;
 
 export default meta;
-type Story = StoryObj<typeof Tree>;
+type Story = StoryObj<typeof meta>;
 
 /**
  * This type is for customizing and using application-specific values.
@@ -321,10 +321,10 @@ export const Stateless: Story = {
     return (
       <>
         <div className='flex items-center gap-m'>
-          <Button size='small' variant='icon' onPress={handleSelectAll}>
+          <Button size='small' variant='flat' onPress={handleSelectAll}>
             Select All
           </Button>
-          <Button size='small' variant='icon' onPress={handleUnselectAll}>
+          <Button size='small' variant='flat' onPress={handleUnselectAll}>
             Unselect All
           </Button>
           <Button size='small' variant='icon' onPress={handleExpandAll}>

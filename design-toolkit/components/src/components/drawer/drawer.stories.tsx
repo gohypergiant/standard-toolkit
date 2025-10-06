@@ -16,12 +16,16 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { ComponentProps } from 'react';
 import type { DrawerMenuProps, DrawerProps } from './types';
 
+// TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
+// this story has a mix of controls from different components
+type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
+  Pick<DrawerMenuProps, 'position'> & {
+    toggle?: boolean;
+  };
+
 const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
   title: 'Components/Drawer',
   component: Drawer,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     placement: 'left',
     size: 'medium',
@@ -41,9 +45,14 @@ const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
       options: ['start', 'center', 'end'],
     },
   },
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export default meta;
+type Story = StoryObj<DrawerWithAdditionalArgs>;
+
 const ids = {
   drawer: uuid(),
   a: uuid(),
@@ -51,12 +60,7 @@ const ids = {
   c: uuid(),
 };
 
-type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
-  Pick<DrawerMenuProps, 'position'> & {
-    toggle?: boolean;
-  };
-
-export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+export const StaticHeaderFooter: Story = {
   args: {
     toggle: false,
   },
@@ -95,7 +99,7 @@ export const StaticHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const DynamicHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
+export const DynamicHeaderFooter: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
@@ -142,7 +146,7 @@ export const DynamicHeaderFooter: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
+export const OpenCloseTrigger: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen'>
@@ -177,7 +181,7 @@ export const OpenCloseTrigger: StoryObj<DrawerWithAdditionalArgs> = {
   },
 };
 
-export const SimpleStack: StoryObj<DrawerWithAdditionalArgs> = {
+export const SimpleStack: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>

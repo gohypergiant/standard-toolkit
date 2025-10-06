@@ -15,13 +15,16 @@ import { Icon } from '../icon';
 import { Accordion } from './';
 import { AccordionStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { AccordionGroupProps } from './types';
+
+type Alias = React.FC<AccordionGroupProps>;
 
 /**
  * The accordion group will stretch to fill the entire width of its parent container.
  */
-const meta: Meta<typeof Accordion.Group> = {
+const meta = {
   title: 'Components/Accordion.Group',
-  component: Accordion.Group,
+  component: Accordion.Group as Alias,
   args: {
     allowsMultipleExpanded: false,
     variant: AccordionStylesDefaults.variant,
@@ -38,11 +41,12 @@ const meta: Meta<typeof Accordion.Group> = {
       subtitle: 'Group together multiple <Accordion> components.',
     },
   },
-};
+} satisfies Meta<Alias>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Accordion.Group> = {
+export const Default: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <Accordion.Group {...args}>

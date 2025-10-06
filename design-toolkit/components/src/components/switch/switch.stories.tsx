@@ -13,7 +13,7 @@
 import { Switch } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Switch> = {
+const meta = {
   title: 'Components/Switch',
   component: Switch,
   args: {
@@ -21,10 +21,11 @@ const meta: Meta<typeof Switch> = {
     isDisabled: false,
     labelPosition: 'end',
   },
-};
+} satisfies Meta<typeof Switch>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Switch> = {
+export const Default: Story = {
   render: Switch,
 };

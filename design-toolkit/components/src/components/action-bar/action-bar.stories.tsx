@@ -15,17 +15,18 @@ import { ActionBar } from './index';
  */
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof ActionBar> = {
+const meta = {
   title: 'Components/ActionBar',
   component: ActionBar,
   parameters: {
     layout: 'fullscreen',
   },
-};
+} satisfies Meta<typeof ActionBar>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof ActionBar> = {
+export const Default: Story = {
   render: () => {
     return (
       <div className='relative h-[400px] bg-surface-overlay'>
@@ -51,7 +52,7 @@ export const Default: StoryObj<typeof ActionBar> = {
   },
 };
 
-export const Toggle: StoryObj<typeof ActionBar> = {
+export const Toggle: Story = {
   render: () => {
     return (
       <div className='relative h-[400px] bg-surface-overlay'>

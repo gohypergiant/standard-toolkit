@@ -5,7 +5,7 @@ import * as SwitchStories from './switch.stories';
 <Meta of={SwitchStories} />
 
 # Switch
-The Switch component provides a toggle input control that allows users to turn an option on or off. It's built on React Aria Components and provides excellent accessibility out of the box. Switches are commonly used in settings panels, feature toggles, notifications preferences, and anywhere users need to enable or disable a feature with immediate visual feedback.
+The Switch component provides a toggle input control that allows users to turn an option on or off. Switches are commonly used in settings panels, feature toggles, notifications preferences, and anywhere users need to enable or disable a feature with immediate visual feedback.
 
 It is composed of the following components:
 
@@ -18,7 +18,7 @@ It is composed of the following components:
 <Switch>Enable notifications</Switch>
 
 // Controlled switch
-<Switch isSelected={isEnabled} onSelectionChange={setIsEnabled}>
+<Switch isSelected={isEnabled} onChange={setIsEnabled}>
   Dark mode
 </Switch>
 
@@ -58,7 +58,7 @@ The Switch component has a single visual variant that automatically adapts based
 * **`children`** - Label text displayed next to the switch
 * **`isSelected`** - Controlled selected state
 * **`defaultSelected`** - Initial selected state
-* **`onSelectionChange`** - Callback when selection changes
+* **`onChange`** - Callback when selection changes
 * **`isDisabled`** - Disables the switch
 * **`autoFocus`** - Automatically focuses the switch on mount
 * **`classNames`** - Custom class names for styling:

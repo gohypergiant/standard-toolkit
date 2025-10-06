@@ -13,9 +13,11 @@
 
 import 'client-only';
 import { Broadcast } from '@accelint/bus';
+import { useEmit, useOn } from '@accelint/bus/react';
 import { isUUID, type UniqueId } from '@accelint/core';
 import {
   createContext,
+  Fragment,
   useCallback,
   useContext,
   useEffect,
@@ -53,8 +55,23 @@ export const ViewStackEventHandlers = {
   reset: (stack: UniqueId) => bus.emit(ViewStackEventTypes.reset, { stack }),
 } as const;
 
+export function useViewStackEmit() {
+  const emitBack = useEmit<ViewStackEvent>(ViewStackEventTypes.back);
+  const emitClear = useEmit<ViewStackEvent>(ViewStackEventTypes.clear);
+  const emitPush = useEmit<ViewStackEvent>(ViewStackEventTypes.push);
+  const emitReset = useEmit<ViewStackEvent>(ViewStackEventTypes.reset);
+
+  return {
+    back: (stack: UniqueId) => emitBack({ stack }),
+    clear: (stack: UniqueId) => emitClear({ stack }),
+    push: (view: UniqueId) => emitPush({ view }),
+    reset: (stack: UniqueId) => emitReset({ stack }),
+  } as const;
+}
+
 function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
   const { parent } = useContext(ViewStackContext);
+  const viewStackEmit = useViewStackEmit();
 
   function handlePress() {
     for (const type of Array.isArray(types) ? types : [types]) {
@@ -69,7 +86,7 @@ function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
         continue;
       }
 
-      ViewStackEventHandlers[event](id);
+      viewStackEmit[event](id);
     }
   }
 
@@ -91,10 +108,10 @@ function ViewStackView({ id, children }: ViewStackViewProps) {
   useEffect(() => {
     register(id);
 
-    () => unregister(id);
+    return () => unregister(id);
   }, [register, unregister, id]);
 
-  return view === id ? children : null;
+  return view === id ? <Fragment key={id}>{children}</Fragment> : null;
 }
 ViewStackView.displayName = 'ViewStack.View';
 
@@ -159,21 +176,10 @@ export function ViewStack({
     },
     [id, defaultView, onChange],
   );
-
-  useEffect(() => {
-    const listeners = [
-      bus.on(ViewStackEventTypes.back, handleBack),
-      bus.on(ViewStackEventTypes.clear, handleClear),
-      bus.on(ViewStackEventTypes.push, handlePush),
-      bus.on(ViewStackEventTypes.reset, handleReset),
-    ];
-
-    return () => {
-      for (const off of listeners) {
-        off();
-      }
-    };
-  }, [handleBack, handleClear, handlePush, handleReset]);
+  useOn(ViewStackEventTypes.back, handleBack);
+  useOn(ViewStackEventTypes.clear, handleClear);
+  useOn(ViewStackEventTypes.push, handlePush);
+  useOn(ViewStackEventTypes.reset, handleReset);
 
   return (
     <ViewStackContext.Provider

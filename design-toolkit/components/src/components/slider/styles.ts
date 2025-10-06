@@ -20,7 +20,6 @@ export const SliderStyles = tv({
       'orientation-vertical:h-full orientation-vertical:w-fit',
       'orientation-vertical:layout-grid:grid-cols-[auto_auto_auto] orientation-vertical:layout-grid:grid-rows-[auto_auto_1fr_auto]',
       'orientation-vertical:layout-stack:flex-col',
-      'orientation-horizontal:h-xl',
       'orientation-horizontal:layout-grid:grid-cols-[auto_1fr_auto] orientation-horizontal:layout-grid:grid-rows-[auto_auto_auto]',
       'orientation-horizontal:layout-stack:w-full orientation-horizontal:layout-stack:items-center',
     ],

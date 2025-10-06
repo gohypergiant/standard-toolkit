@@ -22,6 +22,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
 
+type Alias = React.FC<DrawerLayoutProps>;
+
 const ids = {
   top: {
     drawer: uuid(),
@@ -61,12 +63,9 @@ const ids = {
   },
 } as const;
 
-const meta: Meta<DrawerLayoutProps> = {
+const meta = {
   title: 'Components/Drawer.Layout',
-  component: Drawer.Layout,
-  parameters: {
-    layout: 'fullscreen',
-  },
+  component: Drawer.Layout as Alias,
   args: {
     extend: 'left right',
     push: 'left right',
@@ -80,10 +79,13 @@ const meta: Meta<DrawerLayoutProps> = {
       control: 'text',
     },
   },
-};
+  parameters: {
+    layout: 'fullscreen',
+  },
+} satisfies Meta<Alias>;
 
 export default meta;
-type Story = StoryObj<typeof Drawer.Layout>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ extend, push }) => {

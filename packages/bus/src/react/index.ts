@@ -14,24 +14,36 @@
 import { useEffect, useRef } from 'react';
 import { Broadcast } from '../broadcast';
 import { useEffectEvent } from './ponyfill';
-import type { ExtractEvent, Payload } from '../broadcast/types';
+import type { EmitOptions, ExtractEvent, Payload } from '../broadcast/types';
 
 /**
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having
  * to reimplement generics each time
+ * @param options emit options that will be applied for all emits of all events
  */
 export function useBus<
   // biome-ignore lint/suspicious/noExplicitAny: intentional
   P extends { type: string; payload?: unknown } = Payload<string, any>,
->() {
+>(options?: EmitOptions | null) {
+  const bus = useRef(Broadcast.getInstance<P>());
+
+  useEffect(() => {
+    if (options !== undefined) {
+      bus.current.setGlobalEmitOptions(options);
+    }
+  }, [options]);
+
   // casting here because we lose inference on the type parameter
   return {
     useEmit: useEmit as <T extends P['type']>(
       type: T,
-    ) => ExtractEvent<P, T> extends { payload: infer Data }
-      ? (payload: Data) => void
-      : () => void,
+      options?: EmitOptions | null,
+    ) => ReturnType<typeof useEmit<P, T>>,
     useOn: useOn as <T extends P['type']>(
+      type: T,
+      callback: (data: ExtractEvent<P, T>) => void,
+    ) => void,
+    useOnce: useOnce as <T extends P['type']>(
       type: T,
       callback: (data: ExtractEvent<P, T>) => void,
     ) => void,
@@ -43,7 +55,8 @@ export function useBus<
  * @template P union of event types
  * @template T type of event
  * @param type of type T, one of the event types
- * @returns callback that will accept the cooresponding payload to the previously entered event type
+ * @param options emit options that will be applied for all emits of this event
+ * @returns callback that will accept the cooresponding payload to the previously entered event type, callback will accept options as well that are not applied to all emits of this event type
  */
 export function useEmit<
   // biome-ignore lint/suspicious/noExplicitAny: intentional
@@ -51,22 +64,28 @@ export function useEmit<
   T extends P['type'] = P['type'],
 >(
   type: T,
+  options?: EmitOptions | null,
 ): ExtractEvent<P, T> extends { payload: infer Data }
-  ? (payload: Data) => void
-  : () => void {
+  ? (payload: Data, options?: EmitOptions) => void
+  : (payload?: undefined, options?: EmitOptions) => void {
   const bus = useRef(Broadcast.getInstance<P>());
+
+  useEffect(() => {
+    if (options !== undefined) {
+      bus.current.setEventEmitOptions(type, options);
+    }
+  }, [options, type]);
 
   return useEffectEvent(
     (
       payload: ExtractEvent<P, T> extends { payload: infer Data }
         ? Data
         : never,
+      options?: EmitOptions,
     ) => {
-      bus.current.emit(type, payload);
+      bus.current.emit(type, payload, options);
     },
-  ) as ExtractEvent<P, T> extends { payload: infer Data }
-    ? (payload: Data) => void
-    : () => void;
+  ) as ReturnType<typeof useEmit<P, T>>;
 }
 
 /**
@@ -84,4 +103,21 @@ export function useOn<
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: onCallback is stable
   useEffect(() => bus.current.on(type, onCallback), [type]);
+}
+
+/**
+ * React hook to attach event bus listener with type safe callback, once
+ * @param type event type
+ * @param callback handler that matches event type and receives cooresponding payload
+ */
+export function useOnce<
+  // biome-ignore lint/suspicious/noExplicitAny: intentional
+  P extends { type: string; payload?: unknown } = Payload<string, any>,
+  T extends P['type'] = P['type'],
+>(type: T, callback: (data: ExtractEvent<P, T>) => void) {
+  const bus = useRef(Broadcast.getInstance<P>());
+  const onCallback = useEffectEvent(callback);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: onCallback is stable
+  useEffect(() => bus.current.once(type, onCallback), [type]);
 }

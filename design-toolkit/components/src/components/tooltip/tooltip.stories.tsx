@@ -16,12 +16,13 @@ import { Icon } from '../icon';
 import { Tooltip } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Tooltip> = {
+const meta = {
   title: 'Components/Tooltip',
-};
+  component: Tooltip,
+} satisfies Meta<typeof Tooltip>;
 
 export default meta;
-type Story = StoryObj<typeof Tooltip>;
+type Story = StoryObj<typeof Tooltip>; // NOTE: intentional pattern deviation because no `args` in `meta`
 
 export const Default: Story = {
   render: () => (

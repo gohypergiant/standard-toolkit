@@ -13,7 +13,7 @@
 import { Input } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Input> = {
+const meta = {
   title: 'Components/Input',
   component: Input,
   args: {
@@ -30,10 +30,11 @@ const meta: Meta<typeof Input> = {
       options: ['medium', 'small'],
     },
   },
-};
+} satisfies Meta<typeof Input>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Input> = {
+export const Default: Story = {
   render: Input,
 };

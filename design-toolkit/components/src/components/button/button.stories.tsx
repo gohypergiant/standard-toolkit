@@ -16,7 +16,7 @@ import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Button> = {
+const meta = {
   title: 'Components/Button',
   component: Button,
   args: {
@@ -52,16 +52,28 @@ const meta: Meta<typeof Button> = {
       ],
     },
   },
-};
+} satisfies Meta<typeof Button>;
+
+const metaForLink = {
+  ...meta,
+  component: LinkButton,
+} satisfies Meta<typeof LinkButton>;
+
+const metaForToggle = {
+  ...meta,
+  component: ToggleButton,
+} satisfies Meta<typeof ToggleButton>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
+type StoryForLink = StoryObj<typeof metaForLink>;
+type StoryForToggle = StoryObj<typeof metaForToggle>;
 
-export const Default: StoryObj<typeof Button> = {
+export const Default: Story = {
   args: {
     color: 'mono-muted',
     variant: 'flat',
   },
-
   render: ({ children, ...props }) => (
     <Button {...props}>
       {composeRenderProps(children, (children) =>
@@ -77,7 +89,7 @@ export const Default: StoryObj<typeof Button> = {
   ),
 };
 
-export const Link: StoryObj<typeof LinkButton> = {
+export const Link: StoryForLink = {
   args: {
     color: 'mono-muted',
     variant: 'flat',
@@ -97,7 +109,7 @@ export const Link: StoryObj<typeof LinkButton> = {
   ),
 };
 
-export const Toggle: StoryObj<typeof ToggleButton> = {
+export const Toggle: StoryForToggle = {
   args: {
     color: 'mono-muted',
     variant: 'flat',

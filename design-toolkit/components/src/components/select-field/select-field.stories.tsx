@@ -18,7 +18,7 @@ import { SelectField } from './index';
 import type { Key } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof SelectField> = {
+const meta = {
   title: 'Components/SelectField',
   component: SelectField,
   args: {
@@ -41,11 +41,12 @@ const meta: Meta<typeof SelectField> = {
       options: ['medium', 'small'],
     },
   },
-};
+} satisfies Meta<typeof SelectField>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof SelectField> = {
+export const Default: Story = {
   render: (args) => {
     return (
       <SelectField {...args}>
@@ -94,7 +95,7 @@ export const Default: StoryObj<typeof SelectField> = {
   },
 };
 
-export const ControlledSelection: StoryObj<typeof SelectField> = {
+export const ControlledSelection: Story = {
   render: (args) => {
     const koalaId = useId();
     const kangarooId = useId();
@@ -148,7 +149,7 @@ for (let i = 0; i < 5000; i++) {
   manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });
 }
 
-export const WithManyItems: StoryObj<typeof SelectField> = {
+export const WithManyItems: Story = {
   render: (args) => (
     <SelectField {...args}>
       {manyItems.map((item) => (

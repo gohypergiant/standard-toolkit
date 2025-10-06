@@ -15,6 +15,7 @@ coverage
 *.tsbuildinfo
 
 # Build directories
+.docusaurus
 .next
 build
 dist
@@ -28,3 +29,5 @@ storybook-static
 .idea
 
 
+
+*storybook.log

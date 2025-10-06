@@ -111,6 +111,8 @@ export type {
   ClassificationBannerProps,
   ClassificationBannerStyleVariants,
 } from './components/classification-banner/types';
+export { Clock } from './components/clock';
+export type { ClockProps } from './components/clock/types';
 export { ColorPicker } from './components/color-picker';
 export { ColorPickerStyles } from './components/color-picker/styles';
 export type { ColorPickerProps } from './components/color-picker/types';
@@ -150,6 +152,7 @@ export {
   Drawer,
   DrawerContext,
   DrawerEventHandlers,
+  useDrawerEmit,
 } from './components/drawer';
 export {
   DrawerMenuStyles,
@@ -198,6 +201,22 @@ export type {
   MenuProps,
   MenuSectionProps,
 } from './components/menu/types';
+export {
+  NoticeEventNamespace,
+  NoticeEventTypes,
+} from './components/notice/events';
+export { Notice } from './components/notice';
+export { NoticeStyles } from './components/notice/styles';
+export type {
+  NoticeActionEvent,
+  NoticeColor,
+  NoticeContent,
+  NoticeDequeueEvent,
+  NoticeIconProps,
+  NoticeListProps,
+  NoticeProps,
+  NoticeQueueEvent,
+} from './components/notice/types';
 export { Options, OptionsContext } from './components/options';
 export { OptionsStyles } from './components/options/styles';
 export type {
@@ -280,6 +299,27 @@ export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
+export { TableContext } from './components/table/context';
+export { Table } from './components/table';
+export {
+  TableBodyStyles,
+  TableCellStyles,
+  TableCellStylesDefaults,
+  TableHeaderCellStyles,
+  TableHeaderCellStylesDefaults,
+  TableHeaderStyles,
+  TableRowStyles,
+  TableStyles,
+} from './components/table/styles';
+export type {
+  TableBodyProps,
+  TableCellProps,
+  TableContextValue,
+  TableHeaderCellProps,
+  TableHeaderProps,
+  TableProps,
+  TableRowProps,
+} from './components/table/types';
 export { Tabs, TabsContext } from './components/tabs';
 export { TabStyles } from './components/tabs/styles';
 export type { TabsProps } from './components/tabs/types';
@@ -292,6 +332,12 @@ export type { TextAreaFieldProps } from './components/text-area-field/types';
 export { TextField, TextFieldContext } from './components/text-field';
 export { TextFieldStyles } from './components/text-field/styles';
 export type { TextFieldProps } from './components/text-field/types';
+export { TimeField } from './components/time-field';
+export {
+  TimeFieldStyles,
+  TimeFieldSylesDefaults,
+} from './components/time-field/styles';
+export type { TimeFieldProps } from './components/time-field/types';
 export { Tooltip, TooltipContext } from './components/tooltip';
 export { TooltipStyles } from './components/tooltip/styles';
 export type {
@@ -322,6 +368,7 @@ export {
   ViewStack,
   ViewStackContext,
   ViewStackEventHandlers,
+  useViewStackEmit,
 } from './components/view-stack';
 export type {
   ViewStackBackEvent,
@@ -372,6 +419,7 @@ export {
   tv,
   twMerge,
 } from './lib/utils';
+export { PortalProvider } from './providers/portal';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
 export type { ThemeMode } from './providers/theme-provider';
 export { designTokens } from './tokens/tokens';

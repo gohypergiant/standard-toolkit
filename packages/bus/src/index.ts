@@ -19,6 +19,7 @@
 export { Broadcast } from './broadcast';
 export type {
   BroadcastConfig,
+  EmitOptions,
   ExtractEvent,
   Listener,
   Payload,

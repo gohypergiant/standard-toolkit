@@ -1,5 +1,34 @@
 # @accelint/design-toolkit
 
+## 5.2.0
+
+### Minor Changes
+
+- c6881e4: Adds Table component to DesignTK
+- fc4d913: Adds Tooltip to Drawer.Menu.Item via textValue prop
+- ff7094f: Removes non-functional `isReadOnly` prop from `SelectField`
+- 438fd64: - Fixes discrepancies in color tokens to be more closely aligned with Figma.
+  - Updates certain color token primitives to reflect changes.
+  - Updates styling for the accordion component to reflect new changes in the Button component, specifically in the pressed state.
+  - Removes the hover state for disabled icon button/toggle button
+- a302ed8: - Update styling and states for Button, IconButton, ToggleButton
+  - Removes support for color variant 'info'
+  - Removes support for floating and filled variants for ToggleButton
+- d5ee78f: Fixes Drawer.Menu overflow
+- b4348ac: Refactors header to add opinionated variant
+- 4026632: Adds Breadcrumb component
+- b4ef537: Adds Divider component
+  - Utilizes Divider in Sidenav as a replacement for custom implementation
+
+### Patch Changes
+
+- 87d6eb1: Applies pressed state style to search-field
+- 69b9aff: Adds correct cursor styling to menu-items
+- f216426: Creates a pressed state for input
+- Updated dependencies [b11870c]
+- Updated dependencies [6374c68]
+  - @accelint/bus@1.3.0
+
 ## 5.1.0
 
 ### Minor Changes

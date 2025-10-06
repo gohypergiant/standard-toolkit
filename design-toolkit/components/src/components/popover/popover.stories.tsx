@@ -24,7 +24,7 @@ import type { Meta, StoryObj } from '@storybook/react';
  * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/Popover.html">here</a>.
  */
 
-const meta: Meta<typeof Popover> = {
+const meta = {
   title: 'Components/Popover',
   component: Popover,
   args: {
@@ -37,10 +37,10 @@ const meta: Meta<typeof Popover> = {
       table: { defaultValue: { summary: 'bottom' } },
     },
   },
-};
+} satisfies Meta<typeof Popover>;
 
 export default meta;
-type Story = StoryObj<typeof Popover>;
+type Story = StoryObj<typeof meta>;
 
 export const Simple: Story = {
   render: ({ ...args }) => (

@@ -12,13 +12,13 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+const meta = {
   title: 'Foundation/Elevation',
   tags: ['!autodocs'],
-};
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 type ElevationInfo = {
   name: string;

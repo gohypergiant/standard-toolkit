@@ -13,12 +13,12 @@
 :root {
   --primitive-neutral-50: #ffffff;
   --primitive-neutral-100: #eff1f2;
-  --primitive-neutral-200: #d5d7d9;
+  --primitive-neutral-200: #e1e1e1;
   --primitive-neutral-300: #c3c5c7;
   --primitive-neutral-400: #888a8f;
   --primitive-neutral-500: #565759;
   --primitive-neutral-600: #414245;
-  --primitive-neutral-700: #2f2f31;
+  --primitive-neutral-700: #38393A;
   --primitive-neutral-800: #212223;
   --primitive-neutral-900: #151517;
   --primitive-neutral-950: #000000;
@@ -40,8 +40,8 @@
   --primitive-accent-primary-500: #008fd0;
   --primitive-accent-primary-600: #0068a1;
   --primitive-accent-primary-700: #004f7e;
-  --primitive-accent-primary-800: #00213e;
-  --primitive-accent-primary-900: #000e22;
+  --primitive-accent-primary-800: #002C52;
+  --primitive-accent-primary-900: #001129;
   --primitive-accent-secondary-50: #c9f6fd;
   --primitive-accent-secondary-100: #97f1ff;
   --primitive-accent-secondary-200: #54e5f9;
@@ -64,12 +64,12 @@
   --primitive-accent-tertiary-900: #270417;
   --primitive-utility-info-50: #ffffff;
   --primitive-utility-info-100: #eff1f2;
-  --primitive-utility-info-200: #d5d7d9;
+  --primitive-utility-info-200: #E1E1E1;
   --primitive-utility-info-300: #c3c5c7;
   --primitive-utility-info-400: #888a8f;
   --primitive-utility-info-500: #565759;
   --primitive-utility-info-600: #414245;
-  --primitive-utility-info-700: #2f2f31;
+  --primitive-utility-info-700: #38393A;
   --primitive-utility-info-800: #212223;
   --primitive-utility-info-900: #151517;
   --primitive-utility-advisory-50: #ebf4ff;
@@ -97,11 +97,11 @@
   --primitive-utility-serious-200: #ffd382;
   --primitive-utility-serious-300: #ffc14c;
   --primitive-utility-serious-400: #fbab16;
-  --primitive-utility-serious-500: #e89906;
+  --primitive-utility-serious-500: #E69600;
   --primitive-utility-serious-600: #bb7a00;
   --primitive-utility-serious-700: #8e5d00;
   --primitive-utility-serious-800: #634101;
-  --primitive-utility-serious-900: #291b00;
+  --primitive-utility-serious-900: #412B00;
   --primitive-utility-critical-50: #ffebea;
   --primitive-utility-critical-100: #ffc4c2;
   --primitive-utility-critical-200: #ff9390;

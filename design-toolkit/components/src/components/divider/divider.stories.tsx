@@ -13,7 +13,7 @@
 import { Divider } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Divider> = {
+const meta = {
   title: 'Components/Divider',
   component: Divider,
   args: {
@@ -25,11 +25,12 @@ const meta: Meta<typeof Divider> = {
       options: ['horizontal', 'vertical'],
     },
   },
-};
+} satisfies Meta<typeof Divider>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Divider> = {
+export const Default: Story = {
   render: (args) => (
     <div className='size-[200px]'>
       <Divider {...args} />
@@ -37,7 +38,7 @@ export const Default: StoryObj<typeof Divider> = {
   ),
 };
 
-export const Horizontal: StoryObj<typeof Divider> = {
+export const Horizontal: Story = {
   args: {
     orientation: 'horizontal',
   },
@@ -50,7 +51,7 @@ export const Horizontal: StoryObj<typeof Divider> = {
   ),
 };
 
-export const Vertical: StoryObj<typeof Divider> = {
+export const Vertical: Story = {
   args: {
     orientation: 'vertical',
   },

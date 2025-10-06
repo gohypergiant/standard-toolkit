@@ -13,14 +13,15 @@
 import { Breadcrumbs } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta<typeof Breadcrumbs> = {
+const meta = {
   title: 'Components/Breadcrumbs',
   component: Breadcrumbs,
-};
+} satisfies Meta<typeof Breadcrumbs>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof Breadcrumbs> = {
+export const Default: Story = {
   render: () => (
     <Breadcrumbs>
       <Breadcrumbs.Item linkProps={{ href: '/ ' }}>Root</Breadcrumbs.Item>

@@ -22,6 +22,8 @@ import { Icon } from '../icon';
 import { Sidenav } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
+// TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
+// this story has a mix of controls from different components
 type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
   pushLayout?: boolean;
 };
@@ -29,16 +31,17 @@ type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
 const meta: Meta<SidenavWithLayoutArgs> = {
   title: 'Components/Sidenav',
   component: Sidenav,
-  parameters: {
-    layout: 'fullscreen',
-  },
   args: {
     pushLayout: true,
     isHiddenWhenClosed: false,
   },
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export default meta;
+type Story = StoryObj<SidenavWithLayoutArgs>;
 
 const sections = {
   'Title A': [
@@ -62,7 +65,7 @@ const sections = {
 
 const id = uuid();
 
-export const Default: StoryObj<SidenavWithLayoutArgs> = {
+export const Default: Story = {
   render: ({ isHiddenWhenClosed, pushLayout }) => {
     const [activeItem, setActiveItem] = useState(
       sections['Title A'][2]?.id ?? null,

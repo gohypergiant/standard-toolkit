@@ -12,13 +12,13 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta: Meta = {
+const meta = {
   title: 'Foundation/Radius',
   tags: ['!autodocs'],
-};
+} satisfies Meta;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 const radiiVariants: string[] = ['none', 'small', 'medium', 'large', 'round'];
 
