@@ -36,6 +36,7 @@ describe('useOn', () => {
     expect(callback).toHaveBeenCalledWith({
       type: 'foo',
       payload: { foo: true },
+      source: bus.id,
     });
   });
 });
@@ -54,6 +55,7 @@ describe('useEmit', () => {
     expect(callback).toHaveBeenCalledWith({
       type: 'bar',
       payload: { bar: true },
+      source: bus.id,
     });
 
     off();

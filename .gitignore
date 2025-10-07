@@ -15,6 +15,7 @@ coverage
 *.tsbuildinfo
 
 # Build directories
+.docusaurus
 .next
 build
 dist

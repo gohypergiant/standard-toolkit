@@ -54,6 +54,17 @@ function ComboBoxFieldProvider<T extends OptionsDataItem>({
 }
 ComboBoxFieldProvider.displayName = 'ComboBoxField.Provider';
 
+/**
+ * ComboBoxField - Accessible searchable combobox with dropdown options
+ *
+ * A combobox field that provides a searchable input with virtualized dropdown
+ * options and support for sections, icons, and rich content.
+ *
+ * @example
+ * <ComboBoxField defaultItems={items}>
+ *   {(item) => <Options.Item key={item.id} textValue={item.name}>{item.name}</Options.Item>}
+ * </ComboBoxField>
+ */
 export function ComboBoxField<T extends OptionsDataItem>({
   ref,
   ...props

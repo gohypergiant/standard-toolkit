@@ -304,11 +304,14 @@ importers:
         specifier: ^3.25.3
         version: 3.25.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/overlays':
-        specifier: ^3.29.0
+        specifier: ^3.29.1
         version: 3.29.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/ssr':
         specifier: ^3.9.10
         version: 3.9.10(react@19.1.1)
+      '@react-aria/toast':
+        specifier: ^3.0.7
+        version: 3.0.7(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@react-aria/utils':
         specifier: ^3.30.0
         version: 3.30.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -318,6 +321,9 @@ importers:
       '@react-stately/datepicker':
         specifier: 3.13.0
         version: 3.13.0(react@19.1.1)
+      '@react-stately/toast':
+        specifier: ^3.1.2
+        version: 3.1.2(react@19.1.1)
       '@react-stately/utils':
         specifier: ^3.10.8
         version: 3.10.8(react@19.1.1)

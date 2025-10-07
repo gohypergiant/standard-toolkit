@@ -164,7 +164,9 @@
   --icon-color: --value(--color- *);
 }
 
-body {
+html {
+  @apply bg-surface-default;
+  @apply fg-primary-bold;
   @apply font-primary;
 }
 
