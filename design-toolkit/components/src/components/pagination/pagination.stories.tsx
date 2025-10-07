@@ -10,3 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
+import { Pagination } from '.';
+import type { Meta, StoryObj } from '@storybook/react';
+import type { BasePaginationProps } from './types';
+
+type Alias = React.FC<BasePaginationProps>;
+
+const meta = {
+  title: 'Components/Pagination',
+  component: Pagination as Alias,
+  args: {
+    currentPage: 1,
+    pages: 4,
+  },
+} satisfies Meta<Alias>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+export const Default: Story = {
+  render: ({ children, ...args }) => {
+    return (
+      <Pagination.Provider value={{ ...args }}>
+        <Pagination>
+          <Pagination.Previous />
+          <Pagination.NumberContainer />
+          <Pagination.Next />
+        </Pagination>
+      </Pagination.Provider>
+    );
+  },
+};

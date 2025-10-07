@@ -10,3 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import { tv } from '@/lib/utils';
+
+export const PaginationStyles = tv({
+  slots: {
+    container: 'group/pagination-group flex flex-row gap-s',
+    button: '!w-[33px]',
+    navButton: 'fg-primary-bold',
+  },
+});

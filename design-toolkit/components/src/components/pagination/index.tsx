@@ -15,15 +15,51 @@
 import ChevronLeft from '@accelint/icons/chevron-left';
 import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
-import { createContext } from 'react';
+import { range } from 'lodash';
+import { createContext, useContext } from 'react';
 import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
+import { PaginationStyles } from './styles';
 import type { ProviderProps } from 'react';
-import type { ContextValue } from 'react-aria-components';
-import type { BasePaginationProps, PaginationControlProps } from './types';
+import type { BasePaginationProps, PaginationPageNumberProps } from './types';
 
-export const PaginationContext =
-  createContext<ContextValue<BasePaginationProps, HTMLDivElement>>(null);
+/*
+  Notes.
+
+  If page count > 5, we truncate.
+  - i-2 i-1 i i+1 i+2, i is current index,
+    - unless current index first/second, penultimate/last.
+    - _.range(min, max)
+  - isActive, i === currentIndex.
+    - Raises the question, are we handling the state for the item,
+      or is it an external thing.
+  - onPageSelected(index:number) => void;
+  - onPreviousSelected()/onNextSelected() => void;
+*/
+
+const { container, button, navButton } = PaginationStyles();
+
+// Return min max range for visible pages.
+function getPaginationRange(pages: number, currentPage: number) {
+  if (!(pages && currentPage)) {
+    return;
+  }
+
+  if (pages <= 5) {
+    return {
+      minRange: 1,
+      maxRange: pages,
+    };
+  }
+
+  const minRange = 1;
+  const maxRange = 5;
+
+  return { minRange, maxRange };
+}
+
+// ContextValue<BasePaginationProps>?
+const PaginationContext = createContext<BasePaginationProps>({});
 
 function PaginationProvider({
   children,
@@ -37,37 +73,84 @@ function PaginationProvider({
 }
 PaginationProvider.displayName = 'Pagination.Provider';
 
-function Pagination(props: any) {
+export function Pagination({ children, ...rest }: BasePaginationProps) {
   return (
-    <div className='flex flex-row gap-s'>
-      <PaginationControl direction='left' />
-      <ToggleButton variant='flat' color='accent'>
-        1
-      </ToggleButton>
-      <PaginationControl direction='right' />
+    // TODO: Update types to pass in classNames.container etc
+    <div className={container()} {...rest}>
+      {children}
     </div>
   );
 }
 Pagination.displayName = 'Pagination';
 
-function PaginationControl({ direction }: PaginationControlProps) {
+// TODO: onPreviousPress() => void
+function PaginationPrevious() {
   return (
-    <Button>
-      <Icon>{direction === 'left' ? <ChevronLeft /> : <ChevronRight />}</Icon>
+    <Button color='accent' variant='icon' className={button()}>
+      <Icon>
+        <ChevronLeft />
+      </Icon>
     </Button>
   );
 }
-PaginationControl.displayName = 'Pagination.Control';
+PaginationPrevious.displayName = 'Pagination.Previous';
 
-function PaginationNumberContainer() {
+// TODO: onNextPress()
+function PaginationNext() {
   return (
-    <div className='flex flex-row'>
-      {/* Get count of numbers, forEach map */}
-    </div>
+    <Button color='accent' variant='icon'>
+      <Icon>
+        <ChevronRight />
+      </Icon>
+    </Button>
   );
 }
+PaginationNext.displayName = 'Pagination.Next';
+
+function PaginationPageNumber({
+  isSelected,
+  index,
+}: PaginationPageNumberProps) {
+  return (
+    <ToggleButton
+      color='accent'
+      variant='icon'
+      isSelected={isSelected}
+      className={button()}
+    >
+      {index}
+    </ToggleButton>
+  );
+}
+PaginationPageNumber.displayName = 'Pagination.PageNumber';
+
+//
+function PaginationNumberContainer() {
+  // include logic here for numbers?
+  // get pageCount and currentIndex.
+  // display 5 numbers relative to current index.
+  // check 1/2 last-1/last
+
+  // TODO: Abstract to a hook, we want to return a min and max range based
+  // on the pageCount and relative currentPage
+  const { pages, currentPage } = useContext(PaginationContext);
+  if (!(pages && currentPage)) {
+    return;
+  }
+
+  const { minRange, maxRange } = getPaginationRange(pages, currentPage);
+
+  return range(minRange, maxRange).map((pageNumber, _index: number) => (
+    <PaginationPageNumber
+      index={pageNumber}
+      key={`page-${pageNumber}`}
+      isSelected={pageNumber === currentPage}
+    />
+  ));
+}
+PaginationNumberContainer.displayName = 'Pagination.NumberContainer';
 
 Pagination.Provider = PaginationProvider;
-Pagination.Control = PaginationControl;
-// pagination-number-container
-// uses flat-toggle button, accent
+Pagination.Previous = PaginationPrevious;
+Pagination.NumberContainer = PaginationNumberContainer;
+Pagination.Next = PaginationNext;

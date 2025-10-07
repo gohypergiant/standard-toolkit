@@ -10,11 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-export type BasePaginationProps = {
+import type { PropsWithChildren } from 'react';
+
+export type BasePaginationProps = PropsWithChildren & {
   pages?: number;
   currentPage?: number;
 };
 
+export type PaginationNavProps = {
+  enabled?: boolean;
+};
+
 export type PaginationControlProps = {
   direction: 'left' | 'right';
+};
+
+export type PaginationPageNumberProps = {
+  index: number;
+  isSelected: boolean;
 };

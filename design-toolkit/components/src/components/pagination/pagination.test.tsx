@@ -10,3 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+import { Pagination } from './index';
+import type { BasePaginationProps } from './types';
+
+function _setup({ currentPage, pages }: Partial<BasePaginationProps> = {}) {
+  return (
+    <Pagination.Provider value={{ currentPage, pages }}>
+      <Pagination>
+        <Pagination.Previous />
+        <Pagination.NumberContainer />
+        <Pagination.Next />
+      </Pagination>
+    </Pagination.Provider>
+  );
+}
