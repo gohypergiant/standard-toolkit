@@ -1,0 +1,48 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+/**
+ * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ */
+
+import type { SVGProps } from 'react';
+
+interface SVGRProps {
+  title?: string;
+  titleId?: string;
+}
+const SvgLandmine = ({
+  title,
+  titleId,
+  ...props
+}: SVGProps<SVGSVGElement> & SVGRProps) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    fill='none'
+    viewBox='0 0 24 24'
+    aria-labelledby={titleId}
+    {...props}
+  >
+    {title ? <title id={titleId}>{title}</title> : null}
+    <path
+      fill='currentColor'
+      d='M21 18.5c0-1.5-1.5-1.5-1.5-1.5h-15S3 17 3 18.5V20h18zM7 14h10v1.5H7z'
+    />
+    <path
+      fill='currentColor'
+      fillRule='evenodd'
+      d='M11.25 10V4h1.5v6zM15 11.121l4.243-4.242 1.06 1.06-4.242 4.243zM8.243 12.121 4 7.88l1.06-1.061 4.243 4.243z'
+      clipRule='evenodd'
+    />
+  </svg>
+);
+export default SvgLandmine;
