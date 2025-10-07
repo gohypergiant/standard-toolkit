@@ -28,8 +28,12 @@ type Story = StoryObj<typeof meta>;
 export const BaseMap: Story = {
   // Using the deckGL decorator, blank base map.
   render: () => {
-    const { click, hover } = useMapEvents();
-    console.log({ click, hover });
-    return null as any;
+    useMapEvents({
+      onHover: (payload) => console.log('hover', payload),
+      onClick: (payload) => console.log('click', payload),
+    });
+
+    // biome-ignore lint/complexity/noUselessFragments: testing
+    return <></>;
   },
 };

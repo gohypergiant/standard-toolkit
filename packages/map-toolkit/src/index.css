@@ -10,17 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Payload } from '@accelint/bus';
-import type { PickingInfo } from '@deck.gl/core';
-import type { MapEvents } from './events';
+@import "tailwindcss";
+@import "@accelint/design-toolkit/styles";
+@source "../node_modules/@accelint/design-toolkit";
 
-export type MapClickEvent = Payload<
-  typeof MapEvents.click,
-  Partial<PickingInfo>
->;
-export type MapHoverEvent = Payload<
-  typeof MapEvents.hover,
-  Partial<PickingInfo>
->;
-
-export type MapEventType = MapClickEvent | MapHoverEvent;
+html {
+  margin: 0;
+  padding: 0;
+  border: '2px solid red';
+}

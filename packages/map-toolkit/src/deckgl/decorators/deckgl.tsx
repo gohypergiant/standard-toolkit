@@ -12,13 +12,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { MapClient } from '../components/mapClient';
+import { MapClient } from '../components/map';
 import type { Decorator } from '@storybook/react';
 
 export const withDeckGL = (): Decorator => {
   return (Story) => {
     return (
-      <MapClient>
+      <MapClient className='h-dvh w-dvw'>
         <Story />
       </MapClient>
     );

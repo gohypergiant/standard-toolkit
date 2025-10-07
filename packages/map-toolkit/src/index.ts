@@ -20,16 +20,15 @@ export {
   INITIAL_VIEW_STATE,
   MAP_STYLE,
   PARAMETERS,
-} from './deckgl/components/mapClient/constants';
-export {
-  MapEvents,
-  MapEventsNamespace,
-} from './deckgl/components/mapClient/events';
-export { MapClient, bus } from './deckgl/components/mapClient';
+} from './deckgl/components/map/constants';
+export { MapEvents, MapEventsNamespace } from './deckgl/components/map/events';
+export { MapClient, bus } from './deckgl/components/map';
 export type {
   MapClickEvent,
+  MapClickPayload,
   MapEventType,
   MapHoverEvent,
-} from './deckgl/components/mapClient/types';
+  MapHoverPayload,
+} from './deckgl/components/map/types';
 export { useMapEvents } from './deckgl/hooks/use-map-events';
 export { useMapLibre } from './deckgl/hooks/use-maplibre';

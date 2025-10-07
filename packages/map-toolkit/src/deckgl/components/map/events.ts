@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-export const MapEventsNamespace = 'MapClient';
+export const MapEventsNamespace = 'map';
 
 export const MapEvents = {
   click: `${MapEventsNamespace}:click`,

@@ -10,36 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Decorator, Preview } from '@storybook/react';
-import '../src/index.css';
+import path from 'node:path';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
-const withGlobalStyles: Decorator = (Story) => {
-  return (
-    <>
-      <style>
-        {`
-          body, html {
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-        `}
-      </style>
-      <Story />
-    </>
-  );
-};
-
-const preview: Preview = {
-  decorators: [withGlobalStyles],
-  parameters: {
-    layout: 'fullscreen',
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
   },
-};
-
-export default preview;
+});

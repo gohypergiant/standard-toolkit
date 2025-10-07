@@ -10,24 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import { useState } from 'react';
-import { bus } from '../components/mapClient';
-import { MapEvents } from '../components/mapClient/events';
+import { useOn } from '@accelint/bus/react';
+import { MapEvents } from '../components/map/events';
 import type {
   MapClickEvent,
+  MapClickPayload,
   MapHoverEvent,
-} from '../components/mapClient/types';
+  MapHoverPayload,
+} from '../components/map/types';
 
-// TODO: need to use the react library: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/bus/README.md#react or manage the memory leak
-export function useMapEvents() {
-  const [hover, setHover] = useState<Partial<MapHoverEvent['payload']>>();
-  const [click, setClick] = useState<Partial<MapClickEvent['payload']>>();
+type UseMapEventsProps = {
+  onHover?: (payload: MapHoverPayload) => void;
+  onClick?: (payload: MapClickPayload) => void;
+};
 
-  bus.on(MapEvents.hover, (data: MapHoverEvent) => setHover(data.payload));
-  bus.on(MapEvents.click, (data: MapClickEvent) => setClick(data.payload));
+export function useMapEvents({ onHover, onClick }: UseMapEventsProps) {
+  useOn<MapClickEvent>(MapEvents.click, (data: MapClickEvent) => {
+    onClick?.(data.payload);
+  });
 
-  return {
-    hover,
-    click,
-  };
+  useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
+    onHover?.(data.payload);
+  });
 }
