@@ -10,27 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Decorator, Preview } from '@storybook/react';
+import type { Preview } from '@storybook/react';
 import '../src/index.css';
 
-const withGlobalStyles: Decorator = (Story) => {
-  return (
-    <>
-      <style>
-        {`
-          body, html {
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-        `}
-      </style>
-      <Story />
-    </>
-  );
-};
-
 const preview: Preview = {
-  decorators: [withGlobalStyles],
   parameters: {
     layout: 'fullscreen',
     controls: {

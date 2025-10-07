@@ -15,7 +15,5 @@
 @source "../node_modules/@accelint/design-toolkit";
 
 html {
-  margin: 0;
-  padding: 0;
-  border: '2px solid red';
+  overflow: hidden;
 }
