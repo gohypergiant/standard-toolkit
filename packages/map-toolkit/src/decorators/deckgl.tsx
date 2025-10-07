@@ -12,15 +12,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { MapClient } from '../deckgl/components/map';
+import { BaseMap } from '../deckgl/base-map';
 import type { Decorator } from '@storybook/react';
 
 export const withDeckGL = (): Decorator => {
   return (Story) => {
     return (
-      <MapClient className='h-dvh w-dvw'>
+      <BaseMap className='h-dvh w-dvw'>
         <Story />
-      </MapClient>
+      </BaseMap>
     );
   };
 };

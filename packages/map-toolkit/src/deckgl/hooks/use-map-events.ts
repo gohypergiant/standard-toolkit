@@ -11,13 +11,13 @@
  */
 
 import { useOn } from '@accelint/bus/react';
-import { MapEvents } from './map/events';
+import { MapEvents } from '../base-map/events';
 import type {
   MapClickEvent,
   MapClickPayload,
   MapHoverEvent,
   MapHoverPayload,
-} from './map/types';
+} from '../base-map/types';
 
 type UseMapEventsProps = {
   onHover?: (payload: MapHoverPayload) => void;

@@ -17,9 +17,9 @@ import { Broadcast } from '@accelint/bus';
 import { useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId } from 'react';
-import { INITIAL_VIEW_STATE } from '../../../maplibre/constants';
-import { useMapLibre } from '../../../maplibre/hooks/use-maplibre';
-import { MAP_STYLE, PARAMETERS } from './constants';
+import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
+import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
+import { BASE_MAP_STYLE, PARAMETERS } from './constants';
 import { MapEvents } from './events';
 import type { PickingInfo } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
@@ -27,23 +27,23 @@ import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapClickEvent, MapEventType, MapHoverEvent } from './types';
 
-type MapProps = DeckglProps & { className?: string };
+type BaseMapProps = DeckglProps & { className?: string };
 
 export const bus = Broadcast.getInstance<MapEventType>();
 
-export function MapClient({
+export function BaseMap({
   children,
   onClick,
   onHover,
   className,
   parameters,
   ...rest
-}: MapProps) {
+}: BaseMapProps) {
   const deckglInstance = useDeckgl();
   const container = useId();
 
   // Use the custom hook to handle MapLibre
-  useMapLibre(deckglInstance as IControl, MAP_STYLE, {
+  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, {
     container,
     center: [INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude],
     zoom: INITIAL_VIEW_STATE.zoom,

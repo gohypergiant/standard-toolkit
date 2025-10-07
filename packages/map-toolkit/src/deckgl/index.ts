@@ -10,4 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
+export { BaseMap as MapClient, bus } from './base-map';
+export {
+  BASE_MAP_STYLE as MAP_STYLE,
+  PARAMETERS,
+} from './base-map/constants';
+export { MapEvents, MapEventsNamespace } from './base-map/events';
+export { useMapEvents } from './hooks/use-map-events';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
+export type {
+  MapClickEvent,
+  MapClickPayload,
+  MapEventType,
+  MapHoverEvent,
+  MapHoverPayload,
+} from './base-map/types';

@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-export const MAP_STYLE =
+export const BASE_MAP_STYLE =
   'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 export const PARAMETERS = {
