@@ -60,6 +60,7 @@ export function MapClient({
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
 
+      // the bus cannot serialize functions, so we omit them from the event payloads
       const { viewport, ...infoRest } = info;
       const {
         stopImmediatePropagation,
@@ -86,6 +87,7 @@ export function MapClient({
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
 
+      // the bus cannot serialize functions, so we omit them from the event payloads
       const { viewport, ...infoRest } = info;
       const {
         stopImmediatePropagation,
