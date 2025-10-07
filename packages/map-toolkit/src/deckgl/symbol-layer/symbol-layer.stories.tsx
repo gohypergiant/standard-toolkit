@@ -10,12 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { withDeckGL } from '../decorators/deckgl';
-import { useMapEvents } from '../hooks/use-map-events';
+import '@/deckgl/symbol-layer/fiber';
+import { useId } from 'react';
+import { MOCK_DATA } from '@/deckgl/symbol-layer/constants';
+import { withDeckGL } from '@/decorators/deckgl';
+import { useMapEvents } from '../components/use-map-events';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
-  title: 'DeckGL',
+  title: 'DeckGL/Symbol Layer',
   decorators: [withDeckGL()],
   parameters: {
     layout: 'fullscreen',
@@ -25,15 +28,22 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BaseMap: Story = {
-  // Using the deckGL decorator, blank base map.
+export const SymbolLayer: Story = {
   render: () => {
     useMapEvents({
       onHover: (payload) => console.log('hover', payload),
       onClick: (payload) => console.log('click', payload),
     });
 
-    // biome-ignore lint/complexity/noUselessFragments: testing
-    return <></>;
+    return (
+      <symbolLayer
+        id={useId()}
+        data={MOCK_DATA}
+        defaultSymbolOptions={{
+          colorMode: 'Dark',
+          square: true,
+        }}
+      />
+    );
   },
 };

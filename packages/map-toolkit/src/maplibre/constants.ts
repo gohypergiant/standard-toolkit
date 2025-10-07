@@ -1,4 +1,3 @@
-// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,19 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-export const MAP_STYLE =
-  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+// __private-exports
 
-export const PARAMETERS = {
-  depthWriteEnabled: true,
-  depthCompare: 'always',
-  depthBias: 0,
-  blend: true,
-  depthTest: false,
-  blendColorSrcFactor: 'src-alpha',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendAlphaSrcFactor: 'one',
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendAlphaOperation: 'add',
+export const INITIAL_VIEW_STATE = {
+  longitude: -77.0369,
+  latitude: 38.9072,
+  zoom: 4,
+  minZoom: 1,
+  maxZoom: 22,
+  pitch: 0,
+  bearing: 0,
 };

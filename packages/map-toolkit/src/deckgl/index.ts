@@ -10,26 +10,4 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
-import { MapEvents } from '../components/map/events';
-import type {
-  MapClickEvent,
-  MapClickPayload,
-  MapHoverEvent,
-  MapHoverPayload,
-} from '../components/map/types';
-
-type UseMapEventsProps = {
-  onHover?: (payload: MapHoverPayload) => void;
-  onClick?: (payload: MapClickPayload) => void;
-};
-
-export function useMapEvents({ onHover, onClick }: UseMapEventsProps) {
-  useOn<MapClickEvent>(MapEvents.click, (data: MapClickEvent) => {
-    onClick?.(data.payload);
-  });
-
-  useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
-    onHover?.(data.payload);
-  });
-}
+export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';

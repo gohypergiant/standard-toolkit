@@ -1,5 +1,3 @@
-// __private-exports
-
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -12,15 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import { MapClient } from '../components/map';
-import type { Decorator } from '@storybook/react';
+import { extend } from '@deckgl-fiber-renderer/dom';
+import { SymbolLayer, type SymbolLayerProps } from './index';
 
-export const withDeckGL = (): Decorator => {
-  return (Story) => {
-    return (
-      <MapClient className='h-dvh w-dvw'>
-        <Story />
-      </MapClient>
-    );
-  };
-};
+extend({ SymbolLayer });
+
+declare global {
+  namespace React {
+    // biome-ignore lint/style/useNamingConvention: Built-in React namespace.
+    namespace JSX {
+      interface IntrinsicElements {
+        symbolLayer: SymbolLayerProps;
+      }
+    }
+  }
+}

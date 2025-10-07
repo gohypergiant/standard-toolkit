@@ -1,4 +1,3 @@
-// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,19 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-export const MAP_STYLE =
-  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+import { useOn } from '@accelint/bus/react';
+import { MapEvents } from './map/events';
+import type {
+  MapClickEvent,
+  MapClickPayload,
+  MapHoverEvent,
+  MapHoverPayload,
+} from './map/types';
 
-export const PARAMETERS = {
-  depthWriteEnabled: true,
-  depthCompare: 'always',
-  depthBias: 0,
-  blend: true,
-  depthTest: false,
-  blendColorSrcFactor: 'src-alpha',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendAlphaSrcFactor: 'one',
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendAlphaOperation: 'add',
+type UseMapEventsProps = {
+  onHover?: (payload: MapHoverPayload) => void;
+  onClick?: (payload: MapClickPayload) => void;
 };
+
+export function useMapEvents({ onHover, onClick }: UseMapEventsProps) {
+  useOn<MapClickEvent>(MapEvents.click, (data: MapClickEvent) => {
+    onClick?.(data.payload);
+  });
+
+  useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
+    onHover?.(data.payload);
+  });
+}

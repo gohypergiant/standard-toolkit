@@ -1,4 +1,5 @@
 // __private-exports
+
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,19 +12,15 @@
  * governing permissions and limitations under the License.
  */
 
-export const MAP_STYLE =
-  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+import { MapClient } from '../deckgl/components/map';
+import type { Decorator } from '@storybook/react';
 
-export const PARAMETERS = {
-  depthWriteEnabled: true,
-  depthCompare: 'always',
-  depthBias: 0,
-  blend: true,
-  depthTest: false,
-  blendColorSrcFactor: 'src-alpha',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendAlphaSrcFactor: 'one',
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendAlphaOperation: 'add',
+export const withDeckGL = (): Decorator => {
+  return (Story) => {
+    return (
+      <MapClient className='h-dvh w-dvw'>
+        <Story />
+      </MapClient>
+    );
+  };
 };
