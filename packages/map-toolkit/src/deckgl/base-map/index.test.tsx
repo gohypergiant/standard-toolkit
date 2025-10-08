@@ -10,13 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
-import { render, renderHook } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { MapEvents } from './events';
 import { BaseMap } from './index';
-import type { MapClickEvent, MapHoverEvent } from './types';
 
 // Mock MapLibre hook since it requires browser APIs
 vi.mock('../../maplibre/hooks/use-maplibre', () => ({
