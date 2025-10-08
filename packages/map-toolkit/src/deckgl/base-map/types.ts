@@ -16,6 +16,8 @@ import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
 
 // the bus cannot serialize functions, so we omit them from the event payloads
+type NonFuncPickingInfo = Omit<PickingInfo, 'viewport'>;
+
 type NonFuncMjolnirGestureEvent = Omit<
   MjolnirGestureEvent,
   | 'stopPropagation'
@@ -39,12 +41,12 @@ type NonFuncMjolnirPointerEvent = Omit<
 >;
 
 export type MapClickPayload = {
-  info: PickingInfo;
+  info: NonFuncPickingInfo;
   event: NonFuncMjolnirGestureEvent;
 };
 
 export type MapHoverPayload = {
-  info: PickingInfo;
+  info: NonFuncPickingInfo;
   event: NonFuncMjolnirPointerEvent;
 };
 

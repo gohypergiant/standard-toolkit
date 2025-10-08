@@ -10,9 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { useMapEvents } from '../hooks/use-map-events';
-import { BaseMap } from './index';
+import { useOn } from '@accelint/bus/react';
+import { MapEvents } from './events';
+import { BaseMap as BaseMapComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { MapClickEvent, MapHoverEvent } from '../base-map/types';
 
 const meta: Meta = {
   title: 'DeckGL',
@@ -24,15 +26,16 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BaseMapStory: Story = {
-  // Using the deckGL decorator, blank base map.
+export const BaseMap: Story = {
   render: () => {
-    useMapEvents({
-      onHover: (payload) => console.log('hover', payload),
-      onClick: (payload) => console.log('click', payload),
+    useOn<MapClickEvent>(MapEvents.click, (data: MapClickEvent) => {
+      console.log('click:', data.payload);
     });
 
-    // biome-ignore lint/complexity/noUselessFragments: testing
-    return <BaseMap className='h-dvh w-dvw'></BaseMap>;
+    useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
+      console.log('hover:', data.payload);
+    });
+
+    return <BaseMapComponent className='h-dvh w-dvw' />;
   },
 };

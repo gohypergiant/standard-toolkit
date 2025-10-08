@@ -10,17 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-export { BaseMap, bus } from './base-map';
-export {
-  BASE_MAP_STYLE,
-  PARAMETERS,
-} from './base-map/constants';
-export { MapEvents, MapEventsNamespace } from './base-map/events';
-export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
-export type {
-  MapClickEvent,
-  MapClickPayload,
-  MapEventType,
-  MapHoverEvent,
-  MapHoverPayload,
-} from './base-map/types';
+import { describe, expect, it } from 'vitest';
+
+describe('hello world test', () => {
+  it('should run test', () => {
+    expect(true).toBe(true);
+  });
+});

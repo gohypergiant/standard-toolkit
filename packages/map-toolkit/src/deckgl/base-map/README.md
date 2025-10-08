@@ -55,26 +55,7 @@ export function InteractiveMap() {
 
 ### Using the Event Bus
 
-The BaseMap component emits events through a centralized bus that can be subscribed to from anywhere in your application. You can use the `useMapEvents` hook for a convenient way to subscribe to all map events:
-
-```typescript
-import { useMapEvents } from '@accelint/map-toolkit/deckgl-hooks';
-
-export function MapListener() {
-  useMapEvents({
-    onClick: (payload) => {
-      console.log('Map clicked:', payload.info, payload.event);
-    },
-    onHover: (payload) => {
-      console.log('Map hover:', payload.info, payload.event);
-    },
-  });
-
-  return null;
-}
-```
-
-Alternatively, you can subscribe to individual events using the `useOn` hook from [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus):
+The BaseMap component emits events through a centralized bus that can be subscribed to from anywhere in your application. You can subscribe to individual events using the `useOn` hook from [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus):
 
 ```typescript
 import { useOn } from '@accelint/bus/react';
@@ -154,7 +135,7 @@ The BaseMap component comes with the following defaults:
 
 ```typescript
 type MapClickPayload = {
-  info: PickingInfo;
+  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
   event: NonFuncMjolnirGestureEvent; // Event with functions omitted for serialization
 };
 ```
@@ -163,9 +144,9 @@ type MapClickPayload = {
 
 ```typescript
 type MapHoverPayload = {
-  info: PickingInfo;
+  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
   event: NonFuncMjolnirPointerEvent; // Event with functions omitted for serialization
 };
 ```
 
-Note: Function properties are omitted from event payloads to allow proper serialization through the event bus.
+Note: Function properties and the viewport are omitted from event payloads to allow proper serialization through the event bus.
