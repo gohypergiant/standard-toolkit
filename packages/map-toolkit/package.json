@@ -33,7 +33,6 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
     "dev": "pnpm tsc --watch",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/map-toolkit",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch",
