@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { useState } from 'react';
 import { Pagination } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { BasePaginationProps } from './types';
@@ -21,7 +22,7 @@ const meta = {
   component: Pagination as Alias,
   args: {
     currentPage: 1,
-    pages: 4,
+    pageCount: 4,
   },
 } satisfies Meta<Alias>;
 
@@ -30,12 +31,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: ({ children, ...args }) => {
+    const [currentPage, setCurrentPage] = useState(args.currentPage);
+
     return (
-      <Pagination.Provider value={{ ...args }}>
+      <Pagination.Provider value={{ currentPage, pageCount: args.pageCount }}>
         <Pagination>
-          <Pagination.Previous />
-          <Pagination.NumberContainer />
-          <Pagination.Next />
+          <Pagination.Previous
+            onPress={() => setCurrentPage(currentPage! - 1)}
+          />
+          <Pagination.NumberContainer
+            onPress={(pageNumber) => setCurrentPage(pageNumber)}
+          />
+          <Pagination.Next onPress={() => setCurrentPage(currentPage! + 1)} />
         </Pagination>
       </Pagination.Provider>
     );

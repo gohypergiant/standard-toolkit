@@ -1,0 +1,58 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as PaginationStories from './pagination.stories';
+
+<Meta of={PaginationStories} />
+
+# Pagination
+The Pagination component provides a simple way to navigate multiple pages while leveraging existing Button components.
+
+It is composed of the following components:
+
+- **Pagination** - A wrapper component for containing all pagination buttons.
+- **Pagination.Provider** - Context provider for pagination display state.
+- **Pagination.Previous** - Button to navigate backwards in page count.
+- **Pagination.Next** - Button to navigate forwards in page count.
+- **Pagination.NumberContainer - Wrapper for page buttons, displaying a maximum range of 5 pages.
+
+
+## Example usage
+```tsx
+<Pagination.Provider>
+  <Pagination>
+    <Pagination.Previous />
+    <Pagination.NumberContainer />
+    <Pagination.Next />
+  </Pagination>
+</Pagination.Provider>
+```
+
+<Canvas of={PaginationStories.Default} />
+
+## Props
+
+### Pagination.Provider Props
+* **`pageCount`** - Total number of pages.
+* **`currentPage`** - Current page. Not zero-indexed.
+
+### Pagination.Previous Props
+* **`onPress`** - Function to handle the onPress function for Button component.
+* **`classNames`** - Custom class names for styling:
+  * TODO: Update these.
+
+### Pagination.Next Props
+* **`onPress`** - Function to handle the onPress function for Button component.
+* **`classNames`** - Custom class names for styling:
+  * TODO: Update these.
+
+### Pagination.NumberContainer Props
+* **`onPress`** - Function to handle the onPress function for Button component.
+* **`classNames`** - Custom class names for styling:
+  * TODO: Update these.
+
+## Implementation Notes
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/pagination)
+
+The underlying elements are:
+- TODO: Update.

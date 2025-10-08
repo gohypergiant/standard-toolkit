@@ -15,9 +15,12 @@ import { describe, expect, it } from 'vitest';
 import { Pagination } from './index';
 import type { BasePaginationProps } from './types';
 
-function setup({ currentPage, pages }: Partial<BasePaginationProps> = {}) {
+function setup({
+  currentPage,
+  pageCount: pages,
+}: Partial<BasePaginationProps> = {}) {
   return (
-    <Pagination.Provider value={{ currentPage, pages }}>
+    <Pagination.Provider value={{ currentPage, pageCount: pages }}>
       <Pagination>
         <Pagination.Previous />
         <Pagination.NumberContainer />
@@ -29,7 +32,7 @@ function setup({ currentPage, pages }: Partial<BasePaginationProps> = {}) {
 
 describe('Pagination', () => {
   it('should render', () => {
-    setup({ currentPage: 1, pages: 5 });
+    setup({ currentPage: 1, pageCount: 5 });
     // What do we want to scan for here
     expect(screen.getByText('1')).toBeInTheDocument();
   });

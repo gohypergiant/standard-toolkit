@@ -13,19 +13,30 @@
 import type { PropsWithChildren } from 'react';
 
 export type BasePaginationProps = PropsWithChildren & {
-  pages?: number;
+  pageCount?: number;
   currentPage?: number;
 };
 
 export type PaginationNavProps = {
   enabled?: boolean;
+  onPress?: () => void;
 };
 
 export type PaginationControlProps = {
   direction: 'left' | 'right';
 };
 
+export type PageNumberContainerProps = {
+  onPress?: (pageNumber: number) => void;
+};
+
 export type PaginationPageNumberProps = {
-  index: number;
+  pageNumber: number;
   isSelected: boolean;
+  onPress?: () => void;
+};
+
+export type PaginationRange = {
+  minRange: number;
+  maxRange: number;
 };
