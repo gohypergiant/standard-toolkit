@@ -12,7 +12,7 @@ A React component that provides a Deck.gl-powered base map with MapLibre GL inte
 ## Usage
 
 ```typescript
-import { BaseMap } from '@accelint/map-toolkit/deckgl-base-map';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { View } from '@deckgl-fiber-renderer/dom';
 
 export function MapView() {
@@ -28,7 +28,7 @@ export function MapView() {
 ### With Event Handlers
 
 ```typescript
-import { BaseMap } from '@accelint/map-toolkit/deckgl-base-map';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import type { PickingInfo } from '@deck.gl/core';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 
@@ -78,7 +78,7 @@ Alternatively, you can subscribe to individual events using the `useOn` hook fro
 
 ```typescript
 import { useOn } from '@accelint/bus/react';
-import { MapEvents } from '@accelint/map-toolkit/deckgl-base-map';
+import { MapEvents } from '@accelint/map-toolkit/deckgl';
 
 export function MapListener() {
   useOn(MapEvents.click, (data) => {
@@ -119,7 +119,7 @@ The centralized broadcast instance for map events. Use the `useOn` hook from [`@
 
 ```typescript
 import { useOn } from '@accelint/bus/react';
-import { MapEvents } from '@accelint/map-toolkit/deckgl-base-map';
+import { MapEvents } from '@accelint/map-toolkit/deckgl';
 
 // In a React component
 useOn(MapEvents.click, (payload) => {

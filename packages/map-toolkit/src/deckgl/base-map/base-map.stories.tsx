@@ -10,13 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { withDeckGL } from '../../decorators/deckgl';
 import { useMapEvents } from '../hooks/use-map-events';
+import { BaseMap } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta = {
   title: 'DeckGL',
-  decorators: [withDeckGL()],
   parameters: {
     layout: 'fullscreen',
   },
@@ -25,7 +24,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const BaseMap: Story = {
+export const BaseMapStory: Story = {
   // Using the deckGL decorator, blank base map.
   render: () => {
     useMapEvents({
@@ -34,6 +33,6 @@ export const BaseMap: Story = {
     });
 
     // biome-ignore lint/complexity/noUselessFragments: testing
-    return <></>;
+    return <BaseMap className='h-dvh w-dvw'></BaseMap>;
   },
 };

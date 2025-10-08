@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-export { BaseMap as MapClient, bus } from './base-map';
+export { BaseMap, bus } from './base-map';
 export {
-  BASE_MAP_STYLE as MAP_STYLE,
+  BASE_MAP_STYLE,
   PARAMETERS,
 } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';

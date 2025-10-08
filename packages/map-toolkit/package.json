@@ -73,6 +73,7 @@
     "esbuild-fix-imports-plugin": "1.0.21",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "3.0.2",
+    "mjolnir.js": "^3.0.0",
     "node-fetch": "2.6.7",
     "react": "^19.0.0",
     "storybook": "^8.6.14",
