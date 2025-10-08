@@ -402,6 +402,7 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { useCardInteractions, useColumnInteractions } from './hooks/kanban';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
@@ -414,8 +415,6 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
-export { useCardInteractions } from './hooks/useCardInteractions';
-export { useColumnInteractions } from './hooks/useColumnInteractions';
 export {
   containsAnyOfExactChildren,
   containsExactChildren,
