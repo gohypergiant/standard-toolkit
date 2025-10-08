@@ -12,9 +12,15 @@
 
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import {
+  draggable,
   dropTargetForElements,
   monitorForElements,
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import {
+  attachClosestEdge,
+  type Edge,
+  extractClosestEdge,
+} from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { useEffect, useRef, useState } from 'react';
 import { useKanban } from '@/components/kanban/context';
 import type {
@@ -95,4 +101,91 @@ export function useColumnInteractions(column: KanbanColumnData) {
   }, [column, moveCard]);
 
   return { ref, isHighlighted, isActive };
+}
+
+export function useCardInteractions(card: KanbanCardData) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+  const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
+  const { moveCard } = useKanban();
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) {
+      return;
+    }
+
+    return combine(
+      draggable({
+        element,
+        getInitialData() {
+          return card;
+        },
+        //Removing this for now since it creates an extra detached element
+        //onGenerateDragPreview({ nativeSetDragImage }) {
+        //  setCustomNativeDragPreview({
+        //    nativeSetDragImage,
+        //    render({ container }) {
+        //      setIsPreview(true);
+        //      setContainer(container);
+        //    },
+        //  });
+        //},
+        onDragStart() {
+          setIsDragging(true);
+        },
+        onDrop() {
+          setIsDragging(false);
+          setIsPreview(false);
+          setContainer(null);
+        },
+      }),
+      dropTargetForElements({
+        element,
+        getData({ element, input }) {
+          const data = card;
+          return attachClosestEdge(data, {
+            element,
+            input,
+            allowedEdges: ['top', 'bottom'],
+          });
+        },
+        onDrop({ source, self: target }) {
+          if (!moveCard) {
+            return;
+          }
+
+          const sourceData = source.data as KanbanCardData | undefined;
+          const targetData = target.data as KanbanCardData | undefined;
+
+          if (!(sourceData && targetData)) {
+            return;
+          }
+
+          moveCard(
+            sourceData.id,
+            targetData.columnId,
+            targetData.position,
+            closestEdge as Edge,
+          );
+          setClosestEdge(null);
+        },
+        onDrag({ self }) {
+          const closestEdge = extractClosestEdge(self.data);
+          if (!closestEdge) {
+            return;
+          }
+
+          setClosestEdge(closestEdge);
+        },
+        onDragLeave() {
+          setClosestEdge(null);
+        },
+      }),
+    );
+  }, [card, moveCard, closestEdge]);
+
+  return { ref, isDragging, isPreview, container, closestEdge };
 }
