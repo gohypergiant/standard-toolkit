@@ -10,15 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import * as matchers from '@testing-library/jest-dom/matchers';
-import { cleanup } from '@testing-library/react';
-import { afterEach, expect } from 'vitest';
+export const MapEventsNamespace = 'map';
 
-expect.extend(matchers);
-
-// Add browser globals that jsdom doesn't provide
-globalThis.reportError = console.error;
-
-afterEach(() => {
-  cleanup();
-});
+export const MapEvents = {
+  click: `${MapEventsNamespace}:click`,
+  hover: `${MapEventsNamespace}:hover`,
+} as const;

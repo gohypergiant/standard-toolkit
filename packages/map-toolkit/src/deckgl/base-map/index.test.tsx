@@ -10,11 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import { render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { BaseMap } from './index';
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+// Mock MapLibre hook since it requires browser APIs
+vi.mock('../../maplibre/hooks/use-maplibre', () => ({
+  useMapLibre: vi.fn(),
+}));
 
-export { SymbolLayer } from './deckgl/symbol-layer';
-export type { SymbolLayerProps } from './deckgl/symbol-layer';
+describe('BaseMap', () => {
+  it('should apply className to container', () => {
+    const { container } = render(<BaseMap className='custom-map-class' />);
+
+    const mapContainer = container.querySelector('.custom-map-class');
+    expect(mapContainer).toBeInTheDocument();
+  });
+});

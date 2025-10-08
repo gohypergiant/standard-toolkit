@@ -12,43 +12,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { MAP_STYLE, PARAMETERS } from '../deckgl/constants';
-import { useMapLibre } from '../maplibre/hooks/use-maplibre';
+import { BaseMap } from '../deckgl/base-map';
 import type { Decorator } from '@storybook/react';
-import type { IControl } from 'maplibre-gl';
 
-interface MapDecoratorProps {
-  center?: [number, number]; // [longitude, latitude]
-  zoom?: number;
-}
-
-/**
- * A decorator that wraps stories in a map container with configurable properties
- *
- * @param options - Configuration options for the map container
- * @returns A Storybook decorator function
- */
-export const withDeckGL = (mapOptions: MapDecoratorProps = {}): Decorator => {
+export const withDeckGL = (): Decorator => {
   return (Story) => {
-    const deckglInstance = useDeckgl();
-
-    // Use the custom hook to handle MapLibre
-    useMapLibre(deckglInstance as IControl, MAP_STYLE, mapOptions);
-
     return (
-      // biome-ignore lint/correctness/useUniqueElementIds: Needed for maplibre.
-      <div style={{ height: '100vh', width: '100%' }} id='maplibre'>
-        <Deckgl
-          controller
-          interleaved
-          useDevicePixels={false}
-          // @ts-expect-error issue with deckgl type
-          parameters={PARAMETERS}
-        >
-          <Story />
-        </Deckgl>
-      </div>
+      <BaseMap className='h-dvh w-dvw'>
+        <Story />
+      </BaseMap>
     );
   };
 };

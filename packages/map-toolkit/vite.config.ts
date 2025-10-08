@@ -10,15 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import * as matchers from '@testing-library/jest-dom/matchers';
-import { cleanup } from '@testing-library/react';
-import { afterEach, expect } from 'vitest';
+import path from 'node:path';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
 
-expect.extend(matchers);
-
-// Add browser globals that jsdom doesn't provide
-globalThis.reportError = console.error;
-
-afterEach(() => {
-  cleanup();
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
 });
