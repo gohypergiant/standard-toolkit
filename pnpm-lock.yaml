@@ -285,12 +285,12 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@fontsource/roboto-flex':
-        specifier: ^5.2.6
-        version: 5.2.7
-      '@fontsource/roboto-mono':
-        specifier: ^5.2.6
-        version: 5.2.6
+      '@fontsource-variable/roboto-flex':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource-variable/roboto-mono':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@internationalized/date':
         specifier: 3.8.0
         version: 3.8.0
@@ -2934,11 +2934,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource/roboto-flex@5.2.7':
-    resolution: {integrity: sha512-H3GmkgrTcZrUxK5dVN45asLjTMe4zhdo+KmOZ3mXXfC77Z55Kf0T1TpqObCBdXVUHyPezfTt4v4Ss1gSoCB6Pw==}
+  '@fontsource-variable/roboto-flex@5.2.8':
+    resolution: {integrity: sha512-Q9zbz+P2VrDeIxBu9YAIG+eYpLmQF5FIJEEwAWn8En9Lao1TOISnoYcywGV+jSv7LGsHEndCR8hveXPnvCBEQQ==}
 
-  '@fontsource/roboto-mono@5.2.6':
-    resolution: {integrity: sha512-fLCa3zs9XruKE8Fdbq0UWB0wqTi5dzi09QsnW7HgTwwnSVDZ3nH+X7Qg7l0yeIZs+E472cKE3RUD21ZnaXk4Zg==}
+  '@fontsource-variable/roboto-mono@5.2.8':
+    resolution: {integrity: sha512-6M2U3wGIUxYNKRrUoKls8BRRIPDA57T8J0agqwyDkiEHrLEEAqptsxcUl3eTm6tnRNEn6yEm4pCefvtnujebDA==}
 
   '@formatjs/ecma402-abstract@2.3.4':
     resolution: {integrity: sha512-qrycXDeaORzIqNhBOx0btnhpD1c+/qFIHAN9znofuMJX6QBwtbrmlpWfD4oiUUD2vJUOIYFA/gYtg2KAMGG7sA==}
@@ -3414,6 +3414,7 @@ packages:
 
   '@ls-lint/ls-lint@2.3.0-beta.1':
     resolution: {integrity: sha512-NmujBNFslP4GhFsB92zh1evSSBadcg+RMsQ5FM70OrU36C3AbQYaVXDn4reC28GM6DFoOtiETRdKV6ie1TfP7g==}
+    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -13938,9 +13939,9 @@ snapshots:
   '@esbuild/win32-x64@0.25.10':
     optional: true
 
-  '@fontsource/roboto-flex@5.2.7': {}
+  '@fontsource-variable/roboto-flex@5.2.8': {}
 
-  '@fontsource/roboto-mono@5.2.6': {}
+  '@fontsource-variable/roboto-mono@5.2.8': {}
 
   '@formatjs/ecma402-abstract@2.3.4':
     dependencies:

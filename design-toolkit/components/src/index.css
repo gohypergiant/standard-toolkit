@@ -11,8 +11,8 @@
  */
 
 /* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'); */
-@import '@fontsource/roboto-flex';
-@import '@fontsource/roboto-mono';
+@import '@fontsource-variable/roboto-flex';
+@import '@fontsource-variable/roboto-mono';
 @import 'tailwindcss';
 
 /* Import generated themes.css */
