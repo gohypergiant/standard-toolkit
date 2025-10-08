@@ -15,24 +15,25 @@ export const KanbanStyles = tv({
   slots: {
     container: 'h-full w-full',
     header: 'flex flex-row justify-between p-m',
-    headerTitle: 'flex flex-row justify-between py-3',
+    headerTitle: 'fg-primary-bold flex flex-row justify-between py-3',
     headerActions: 'flex flex-row items-center',
     colContainer:
       'col-container flex h-full w-full flex-row gap-s overflow-x-scroll p-m',
     colHeader:
-      'fg-default-light flex w-full items-center justify-between gap-m bg-surface-default p-s text-header-m shadow-elevation-raised',
+      'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default p-s text-header-m shadow-elevation-raised',
     colHeaderActions: 'flex flex-row items-center gap-s',
-    colHeaderTitle: 'flex flex-row items-center gap-s font-medium text-sm',
+    colHeaderTitle:
+      'fg-primary-bold flex flex-row items-center gap-s font-medium text-sm',
     colContent:
       'col relative my-s flex h-full w-full flex-grow flex-col flex-nowrap gap-s overflow-y-scroll px-s',
     colContentActions:
-      'fg-default-light box-shadow w-full items-center justify-start gap-2 bg-surface-default py-3 font-medium text-sm hover:cursor-pointer',
-    colIsActive: 'z-10 rounded-large outline outline-highlight',
-    colIsHighlighted: 'rounded-large outline outline-default-light',
+      'fg-primary-bold box-shadow w-full items-center justify-start gap-2 bg-surface-default py-3 font-medium text-sm hover:cursor-pointer',
+    colIsActive: 'z-10 rounded-large outline outline-accent-primary-bold',
+    colIsHighlighted: 'rounded-large outline outline-interactive-hover',
     cardContainerOuter: 'flex w-full flex-col',
     cardHeader: 'flex flex-row justify-between gap-s p-0',
-    cardBody: 'fg-default-dark',
-    cardTitle: 'font-medium text-default-light',
+    cardBody: 'fg-primary-bold',
+    cardTitle: 'fg-primary-bold font-medium',
     cardActions: 'flex flex-row items-center',
   },
 });
@@ -41,7 +42,7 @@ export const ColumnStyles = tv({
   base: 'col mx-s my-s flex h-full w-[210px] flex-col items-center overflow-auto outline outline-transparent',
   variants: {
     isHighlighted: {
-      true: 'rounded-large outline outline-default-light',
+      true: 'rounded-large outline outline-interactive-hover',
     },
     isActive: {
       true: 'rounded-large outline-b outline-highlight',
@@ -50,10 +51,10 @@ export const ColumnStyles = tv({
 });
 
 export const CardInnerStyles = tv({
-  base: 'flex w-full flex-col text-wrap rounded bg-surface-raised p-s outline outline-transparent transition-all hover:outline-default-light',
+  base: 'flex w-full flex-col text-wrap rounded bg-surface-raised p-s outline outline-transparent transition-all hover:outline-interactive-hover',
   variants: {
     isActive: {
-      true: 'w-[210px] bg-highlight-subtle outline outline-highlight',
+      true: 'w-[210px] bg-accent-primary-muted outline outline-highlight',
     },
     dragging: {
       true: 'hidden',
