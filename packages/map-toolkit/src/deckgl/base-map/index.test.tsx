@@ -10,21 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { withDeckGL } from '../decorators/deckgl';
-import type { Meta, StoryObj } from '@storybook/react';
+import { render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { BaseMap } from './index';
 
-const meta: Meta = {
-  title: 'DeckGL',
-  decorators: [withDeckGL({})],
-  parameters: {
-    layout: 'fullscreen',
-  },
-};
+// Mock MapLibre hook since it requires browser APIs
+vi.mock('../../maplibre/hooks/use-maplibre', () => ({
+  useMapLibre: vi.fn(),
+}));
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+describe('BaseMap', () => {
+  it('should apply className to container', () => {
+    const { container } = render(<BaseMap className='custom-map-class' />);
 
-export const BaseMap: Story = {
-  // Using the deckGL decorator, blank base map.
-  render: () => null as any,
-};
+    const mapContainer = container.querySelector('.custom-map-class');
+    expect(mapContainer).toBeInTheDocument();
+  });
+});

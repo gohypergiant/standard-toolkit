@@ -30,6 +30,15 @@ import type { TimeFieldProps } from './types';
 const { field, label, control, input, description, error, segment } =
   TimeFieldStyles();
 
+/**
+ * TimeField - Form input for time values
+ *
+ * A time input field with configurable granularity and size, built on React
+ * Aria components and suitable for forms requiring time entry.
+ *
+ * @example
+ * <TimeField label="Time" granularity="second" />
+ */
 export function TimeField<T extends TimeValue>({
   classNames,
   description: descriptionProp,

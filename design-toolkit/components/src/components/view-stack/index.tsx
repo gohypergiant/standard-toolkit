@@ -115,6 +115,40 @@ function ViewStackView({ id, children }: ViewStackViewProps) {
 }
 ViewStackView.displayName = 'ViewStack.View';
 
+/**
+ * ViewStack - Stack-based view manager for pushing/popping views
+ *
+ * Manages a stack of views that can be pushed, popped, or reset programmatically
+ * and is intended for building nested or stacked UIs such as Drawer views.
+ *
+ * @example
+ * const ids = {
+ *   stack: uuid(),
+ *   a: uuid(),
+ *   b: uuid(),
+ * };
+ *
+ * <ViewStack id={ids.stack} defaultView={ids.a}>
+ *   <ViewStack.View id={ids.a}>
+ *     <ViewStack.Trigger for={ids.b}>
+ *       <Button>
+ *         Push View B
+ *       </Button>
+ *     </ViewStack.Trigger>
+ *     <h1>View A</h1>
+ *   </ViewStack.View>
+ *   <ViewStack.View id={ids.b}>
+ *     <ViewStack.Trigger for='back'>
+ *       <Button variant='icon'>
+ *         <Icon>
+ *           <ChevronLeft />
+ *         </Icon>
+ *       </Button>
+ *     </ViewStack.Trigger>
+ *     <h1>View B</h1>
+ *   </ViewStack.View>
+ * </ViewStack>
+ */
 export function ViewStack({
   id,
   children,

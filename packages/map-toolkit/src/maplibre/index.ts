@@ -10,10 +10,5 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, it } from 'vitest';
-
-describe('hello world test', () => {
-  it('should run test', () => {
-    expect(true).toBe(true);
-  });
-});
+export { INITIAL_VIEW_STATE } from './constants';
+export { useMapLibre } from './hooks/use-maplibre';

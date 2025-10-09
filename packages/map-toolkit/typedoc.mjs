@@ -13,4 +13,5 @@
 /** @type {Partial<import("typedoc").TypeDocOptions>} */
 export default {
   name: '@accelint/map-toolkit',
+  entryPoints: ['./src/deckgl/index.ts', './src/maplibre/index.ts'],
 };

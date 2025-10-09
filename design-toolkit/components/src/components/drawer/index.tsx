@@ -191,34 +191,32 @@ function DrawerMenuItem({
   }
 
   return (
-    <Tooltip>
-      <Tooltip.Trigger>
-        <DrawerTrigger for={`${action}:${id}`}>
-          <ToggleButton
-            {...rest}
-            ref={tooltipRef}
-            className={composeRenderProps(classNames?.item, (className) =>
-              item({ className }),
-            )}
-            role='tab'
-            variant='icon'
-            isSelected={id === view || (stack.length > 1 && stack.includes(id))}
-          >
-            {composeRenderProps(children, (children) => (
-              <Icon>{children}</Icon>
-            ))}
-          </ToggleButton>
-        </DrawerTrigger>
-      </Tooltip.Trigger>
-      <Tooltip.Body
+    <Tooltip.Trigger>
+      <DrawerTrigger for={`${action}:${id}`}>
+        <ToggleButton
+          {...rest}
+          ref={tooltipRef}
+          className={composeRenderProps(classNames?.item, (className) =>
+            item({ className }),
+          )}
+          role='tab'
+          variant='icon'
+          isSelected={id === view || (stack.length > 1 && stack.includes(id))}
+        >
+          {composeRenderProps(children, (children) => (
+            <Icon>{children}</Icon>
+          ))}
+        </ToggleButton>
+      </DrawerTrigger>
+      <Tooltip
         triggerRef={tooltipRef}
         placement={tooltipPlacementMap[placement]}
         offset={6}
         className={classNames?.tooltip}
       >
         {textValue}
-      </Tooltip.Body>
-    </Tooltip>
+      </Tooltip>
+    </Tooltip.Trigger>
   );
 }
 DrawerMenuItem.displayName = 'Drawer.Menu.Item';
@@ -336,6 +334,32 @@ function DrawerFooter({ className, ...rest }: ComponentPropsWithRef<'footer'>) {
 }
 DrawerFooter.displayName = 'Drawer.Footer';
 
+/**
+ * Drawer - Slide-in panel for navigation or contextual content
+ *
+ * A flexible panel that slides in from the viewport edge and supports
+ * stacked views, headers, footers, and programmatic triggers.
+ *
+ * @example
+ * const ids = { drawer: uuid(), a: uuid() };
+ *
+ * <Drawer.Layout push="left">
+ *   <Drawer.Layout.Main>
+ *     <Drawer.Trigger for={`open:${ids.a}`}>
+ *       <Button variant="icon">Open</Button>
+ *     </Drawer.Trigger>
+ *   </Drawer.Layout.Main>
+ *
+ *   <Drawer id={ids.drawer} defaultView={ids.a}>
+ *     <Drawer.Panel>
+ *       <Drawer.View id={ids.a}>
+ *         <Drawer.Header title="Title A" />
+ *         <Drawer.Content>Content for View A</Drawer.Content>
+ *       </Drawer.View>
+ *     </Drawer.Panel>
+ *   </Drawer>
+ * </Drawer.Layout>
+ */
 export function Drawer({
   id,
   children,

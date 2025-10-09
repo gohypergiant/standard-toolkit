@@ -40,8 +40,9 @@ describe('broadcast', () => {
 
     expect(fn).toHaveBeenCalled();
     expect(fn).toHaveBeenCalledWith({
-      payload: 'test',
       type: 'test',
+      payload: 'test',
+      source: bus.id,
     });
   });
 
@@ -56,8 +57,9 @@ describe('broadcast', () => {
 
     expect(fn).toHaveBeenCalledOnce();
     expect(fn).toHaveBeenCalledWith({
-      payload: 'test',
       type: 'test',
+      payload: 'test',
+      source: bus.id,
     });
   });
 
@@ -75,22 +77,26 @@ describe('broadcast', () => {
 
     expect(on).toHaveBeenCalledTimes(3);
     expect(on).toHaveBeenNthCalledWith(1, {
-      payload: 'A',
       type: 'test',
+      payload: 'A',
+      source: bus.id,
     });
     expect(on).toHaveBeenNthCalledWith(2, {
-      payload: 'B',
       type: 'test',
+      payload: 'B',
+      source: bus.id,
     });
     expect(on).toHaveBeenNthCalledWith(3, {
-      payload: 'C',
       type: 'test',
+      payload: 'C',
+      source: bus.id,
     });
 
     expect(once).toHaveBeenCalledOnce();
     expect(once).toHaveBeenCalledWith({
-      payload: 'A',
       type: 'test',
+      payload: 'A',
+      source: bus.id,
     });
   });
 
@@ -124,7 +130,11 @@ describe('broadcast', () => {
     bus.emit('test', 'all', { target: 'all' });
 
     expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith({ type: 'test', payload: 'all' });
+    expect(fn).toHaveBeenCalledWith({
+      type: 'test',
+      payload: 'all',
+      source: bus.id,
+    });
   });
 
   it('should deliver to self', () => {
@@ -137,8 +147,9 @@ describe('broadcast', () => {
     expect(fn).toHaveBeenCalledTimes(1);
     expect(fn).toHaveBeenCalledWith({
       type: 'test',
-      target: bus.id,
       payload: 'self',
+      source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -160,7 +171,11 @@ describe('broadcast', () => {
     bus.emit('test', 'default');
 
     expect(fn).toHaveBeenCalledTimes(1);
-    expect(fn).toHaveBeenCalledWith({ type: 'test', payload: 'default' });
+    expect(fn).toHaveBeenCalledWith({
+      type: 'test',
+      payload: 'default',
+      source: bus.id,
+    });
   });
 
   it('should deliver to specific target', () => {
@@ -176,8 +191,9 @@ describe('broadcast', () => {
     // @ts-expect-error Accessing protected property
     expect(bus.channel.postMessage).toHaveBeenCalledWith({
       type: 'test',
-      target,
       payload: 'test',
+      source: bus.id,
+      target,
     });
   });
 });

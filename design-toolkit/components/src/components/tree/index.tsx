@@ -102,6 +102,27 @@ const TreeLines = memo(function TreeLines({
   });
 });
 
+/**
+ * Tree - Hierarchical tree view with optional drag-and-drop and visibility
+ *
+ * Renders a selectable tree with support for nested items, drag-and-drop,
+ * selection modes, and visibility controls. Use Tree.Item to define nodes.
+ *
+ * @example
+ * <Tree items={items} expandedKeys={expandedKeys}>
+ *   {(node) => <Node key={node.key} node={node} />}
+ * </Tree>
+ *
+ * @example
+ * <Tree>
+ *   <Tree.Item id='one' textValue='one'>
+ *     <Tree.Item.Content>One</Tree.Item.Content>
+ *     <Tree.Item id='two' textValue='two'>
+ *       <Tree.Item.Content>Two</Tree.Item.Content>
+ *     </Tree.Item>
+ *   </Tree.Item>
+ * </Tree>
+ */
 export function Tree<T>({
   children,
   className,
@@ -261,7 +282,7 @@ export const TreeItemContext = createContext<TreeItemContextValue>({
   ancestors: [],
 });
 
-export function TreeItem({ className, id, ...rest }: TreeItemProps) {
+function TreeItem({ className, id, ...rest }: TreeItemProps) {
   const { visibilityComputedKeys, visibleKeys, isStatic } =
     useContext(TreeContext);
   const { ancestors } = useContext(TreeItemContext);
