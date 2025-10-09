@@ -14,12 +14,16 @@ import 'client-only';
 
 import { Add, DragVert } from '@accelint/icons';
 import {
+  type CollisionDetection,
   closestCenter,
   DndContext,
   type DragEndEvent,
   DragOverlay,
   type DragStartEvent,
   PointerSensor,
+  pointerWithin,
+  rectIntersection,
+  useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -81,6 +85,23 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
     }),
   );
 
+  const collisionDetectionStrategy: CollisionDetection = (args) => {
+    // First, try pointer within for direct pointer detection
+    const pointerCollisions = pointerWithin(args);
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+
+    // Then try rectangle intersection for better coverage
+    const rectCollisions = rectIntersection(args);
+    if (rectCollisions.length > 0) {
+      return rectCollisions;
+    }
+
+    // Fall back to closest center
+    return closestCenter(args);
+  };
+
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
@@ -103,12 +124,10 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
 
     // Moving card to column
     if (overData?.cards !== undefined) {
-      moveCard(
-        active.id as string,
-        over?.id as string,
-        overData.cards.length,
-        undefined,
-      );
+      // Extract column ID (handle both column and content droppables)
+      const columnId =
+        overData.id || (over?.id as string).replace('-content', '');
+      moveCard(active.id as string, columnId, overData.cards.length, undefined);
     } else {
       // Moving card to card position
       const closestEdge: 'top' | 'bottom' = 'bottom'; // Simplified edge detection
@@ -131,7 +150,7 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={collisionDetectionStrategy}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
@@ -278,9 +297,19 @@ const ColContent = ({
 }: KanbanColContentProps) => {
   const cardIds = column?.cards?.map((card) => card.id) || [];
 
+  // Make the content area droppable when empty to ensure it can receive drops
+  const { setNodeRef: setDroppableRef } = useDroppable({
+    id: `${column?.id}-content`,
+    data: column,
+  });
+
   return (
     <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
-      <div className={colContent({ className })} {...rest}>
+      <div
+        ref={setDroppableRef}
+        className={colContent({ className })}
+        {...rest}
+      >
         {children}
       </div>
     </SortableContext>
