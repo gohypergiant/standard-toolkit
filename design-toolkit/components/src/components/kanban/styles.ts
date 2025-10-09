@@ -24,7 +24,7 @@ export const KanbanStyles = tv({
     colHeaderTitle:
       'fg-primary-bold flex flex-row items-center gap-s font-medium text-sm',
     colContent:
-      'col relative my-s flex h-full min-h-[200px] w-full flex-1 flex-grow flex-col flex-nowrap gap-s overflow-y-auto px-[1px]',
+      'relative my-s flex h-full min-h-[200px] w-full flex-1 flex-grow flex-col flex-nowrap gap-s overflow-y-auto px-[1px]',
     colContentActions:
       'fg-primary-bold box-shadow w-full items-center justify-start gap-2 bg-surface-default py-3 font-medium text-sm hover:cursor-pointer',
     cardContainerOuter: 'flex w-full flex-col',
@@ -68,4 +68,8 @@ export const CardPositionIndicatorStyles = tv({
       bottom: 'mt-m',
     },
   },
+});
+
+export const DropPlaceholderStyles = tv({
+  base: 'w-full rounded-large border-2 border-accent-primary-default border-dashed bg-accent-primary-default/10 transition-all',
 });
