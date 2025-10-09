@@ -15,22 +15,22 @@ import type { PropsWithChildren } from 'react';
 export type BasePaginationProps = PropsWithChildren & {
   pageCount?: number;
   currentPage?: number;
+  className?: string;
 };
 
 export type PaginationNavProps = {
+  className?: string;
   enabled?: boolean;
   onPress?: () => void;
 };
 
-export type PaginationControlProps = {
-  direction: 'left' | 'right';
-};
-
 export type PageNumberContainerProps = {
+  className?: string;
   onPress?: (pageNumber: number) => void;
 };
 
 export type PaginationPageNumberProps = {
+  className?: string;
   pageNumber: number;
   isSelected: boolean;
   onPress?: () => void;

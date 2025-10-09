@@ -230,9 +230,10 @@ export { Pagination } from './components/pagination';
 export { PaginationStyles } from './components/pagination/styles';
 export type {
   BasePaginationProps,
-  PaginationControlProps,
+  PageNumberContainerProps,
   PaginationNavProps,
   PaginationPageNumberProps,
+  PaginationRange,
 } from './components/pagination/types';
 export { Popover } from './components/popover';
 export { PopoverStyles } from './components/popover/styles';

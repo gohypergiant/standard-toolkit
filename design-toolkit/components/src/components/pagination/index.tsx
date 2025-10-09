@@ -20,7 +20,7 @@ import { createContext, useContext } from 'react';
 import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
 import { PaginationStyles } from './styles';
-import type { ProviderProps, ReactElement } from 'react';
+import type { ProviderProps } from 'react';
 import type {
   BasePaginationProps,
   PaginationNavProps,
@@ -36,31 +36,34 @@ const DEFAULT_MAX_RANGE = 5;
 // Return min max range for visible pages. As per our design, we limit
 // the range of numbers to a spread of 5 maximum, getting the lower and upper bounds.
 function getPaginationRange(
-  pages: number,
+  pageCount: number,
   currentPage: number,
 ): PaginationRange {
-  if (!(pages && currentPage)) {
+  if (!(pageCount && currentPage)) {
     return { minRange: DEFAULT_MIN_RANGE, maxRange: DEFAULT_MAX_RANGE };
   }
 
-  if (pages < 5) {
+  // Below max display.
+  if (pageCount < 5) {
     return {
       minRange: 1,
-      maxRange: pages,
+      maxRange: pageCount,
     };
   }
 
-  if (currentPage >= 3 && currentPage <= pages - 3) {
+  // Middle.
+  if (currentPage >= 3 && currentPage <= pageCount - 3) {
     return {
       minRange: currentPage - 2,
       maxRange: currentPage + 2,
     };
   }
 
-  if (currentPage > pages - 3) {
+  // End of page count.
+  if (currentPage > pageCount - 3) {
     return {
-      minRange: pages - 4,
-      maxRange: pages,
+      minRange: pageCount - 4,
+      maxRange: pageCount,
     };
   }
 
@@ -97,31 +100,34 @@ PaginationProvider.displayName = 'Pagination.Provider';
  *    </Pagination>
  * </Pagination.Provider>
  */
-export function Pagination({ children, ...rest }: BasePaginationProps) {
+export function Pagination({
+  children,
+  className,
+  ...rest
+}: BasePaginationProps) {
   return (
-    // TODO: Update types to pass in classNames.container etc
-    <div className={container()} {...rest}>
+    <div className={container({ className })} {...rest}>
       {children}
     </div>
   );
 }
 Pagination.displayName = 'Pagination';
 
-/**
- *
- * Pagination.Previous - A component that enables us to retrace our steps.
- *
- */
-function PaginationPrevious({ onPress }: PaginationNavProps) {
+function PaginationPrevious({
+  className,
+  onPress,
+  ...rest
+}: PaginationNavProps) {
   const { currentPage } = useContext(PaginationContext);
 
   return (
     <Button
       color='accent'
       variant='icon'
-      className={button()}
+      className={button({ className })}
       isDisabled={currentPage === 1}
       onPress={() => onPress?.()}
+      {...rest}
     >
       <Icon>
         <ChevronLeft />
@@ -131,12 +137,7 @@ function PaginationPrevious({ onPress }: PaginationNavProps) {
 }
 PaginationPrevious.displayName = 'Pagination.Previous';
 
-/**
- *
- * @param param0
- * @returns
- */
-function PaginationNext({ onPress }: PaginationNavProps) {
+function PaginationNext({ className, onPress, ...rest }: PaginationNavProps) {
   const { currentPage, pageCount: pages } = useContext(PaginationContext);
 
   return (
@@ -145,7 +146,8 @@ function PaginationNext({ onPress }: PaginationNavProps) {
       variant='icon'
       isDisabled={currentPage === pages}
       onPress={() => onPress?.()}
-      className={button()}
+      className={button({ className })}
+      {...rest}
     >
       <Icon>
         <ChevronRight />
@@ -159,13 +161,14 @@ function PaginationPageNumber({
   isSelected,
   pageNumber,
   onPress,
-}: PaginationPageNumberProps): ReactElement<any, any> {
+  className,
+}: PaginationPageNumberProps) {
   return (
     <ToggleButton
-      color='accent'
+      color={isSelected ? 'accent' : 'mono-bold'}
       variant='flat'
       isSelected={isSelected}
-      className={button()}
+      className={button({ className })}
       onPress={() => onPress?.()}
     >
       {pageNumber}
@@ -176,6 +179,7 @@ PaginationPageNumber.displayName = 'Pagination.PageNumber';
 
 function PaginationNumberContainer({
   onPress,
+  className,
 }: PaginationNumberContainerProps) {
   const { pageCount: pages, currentPage } = useContext(PaginationContext);
   if (!(pages && currentPage)) {
@@ -184,14 +188,17 @@ function PaginationNumberContainer({
 
   const { minRange, maxRange } = getPaginationRange(pages, currentPage);
 
-  // range is not inclusive of upper limit
+  // range is not inclusive of upper limit, + 1
   return range(minRange, maxRange + 1).map((pageNumber) => (
-    <PaginationPageNumber
-      pageNumber={pageNumber}
-      key={`page-${pageNumber}`}
-      isSelected={pageNumber === currentPage}
-      onPress={() => onPress?.(pageNumber)}
-    />
+    <>
+      <PaginationPageNumber
+        pageNumber={pageNumber}
+        key={`page-${pageNumber}`}
+        isSelected={pageNumber === currentPage}
+        onPress={() => onPress?.(pageNumber)}
+        className={className}
+      />
+    </>
   ));
 }
 PaginationNumberContainer.displayName = 'Pagination.NumberContainer';

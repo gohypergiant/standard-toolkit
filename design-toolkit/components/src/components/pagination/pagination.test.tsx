@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Pagination } from './index';
 import type { BasePaginationProps } from './types';
@@ -19,21 +19,20 @@ function setup({
   currentPage,
   pageCount: pages,
 }: Partial<BasePaginationProps> = {}) {
-  return (
+  render(
     <Pagination.Provider value={{ currentPage, pageCount: pages }}>
       <Pagination>
         <Pagination.Previous />
         <Pagination.NumberContainer />
         <Pagination.Next />
       </Pagination>
-    </Pagination.Provider>
+    </Pagination.Provider>,
   );
 }
 
 describe('Pagination', () => {
   it('should render', () => {
     setup({ currentPage: 1, pageCount: 5 });
-    // What do we want to scan for here
     expect(screen.getByText('1')).toBeInTheDocument();
   });
 });
