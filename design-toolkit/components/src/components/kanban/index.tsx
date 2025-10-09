@@ -269,7 +269,7 @@ const ColHeaderActions = ({
 }: KanbanMenuProps) => {
   return (
     <div className={colHeaderActions({ className })} {...rest}>
-      <div className='text-sm'>{cardCount ?? 0}</div>
+      <div className='w-[24px] text-center text-sm'>{cardCount ?? 0}</div>
       {children}
     </div>
   );
