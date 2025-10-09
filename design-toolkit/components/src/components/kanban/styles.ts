@@ -43,7 +43,7 @@ export const ColumnStyles = tv({
       true: 'rounded-large outline outline-interactive-hover',
     },
     isActive: {
-      true: 'rounded-large outline-2 outline-accent-primary-hover',
+      true: 'rounded-large outline outline-accent-primary-bold',
     },
   },
 });

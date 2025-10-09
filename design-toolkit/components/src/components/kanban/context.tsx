@@ -91,9 +91,8 @@ export function parseDropTarget(event: DragEndEvent): DropTargetInfo | null {
 
   // Dropping on a column (empty space or column container)
   if (overData.cards !== undefined) {
-    const columnId = overData.id || (over.id as string).replace('-content', '');
     return {
-      columnId,
+      columnId: overData.id,
       position: overData.cards.length,
       edge: undefined,
     };
