@@ -38,41 +38,43 @@ export const Default: Story = {
     const [columns, setColumns] = useState<KanbanColumnData[]>(columnData);
 
     return (
-      <KanbanProvider columns={columns} updateColumnState={setColumns}>
-        <Kanban>
-          <Kanban.Header>
-            <Kanban.Header.Title>Project Board</Kanban.Header.Title>
-          </Kanban.Header>
+      <div className='h-screen'>
+        <KanbanProvider columns={columns} updateColumnState={setColumns}>
+          <Kanban>
+            <Kanban.Header>
+              <Kanban.Header.Title>Project Board</Kanban.Header.Title>
+            </Kanban.Header>
 
-          <Kanban.Column.Container>
-            {columns.map((column) => (
-              <Kanban.Column key={column.id} column={column}>
-                <Kanban.Column.Header>
-                  <Kanban.Column.Header.Title>
-                    {column.title}
-                  </Kanban.Column.Header.Title>
-                  <Kanban.Column.Header.Actions
-                    cardCount={column.cards.length}
-                  />
-                </Kanban.Column.Header>
+            <Kanban.Column.Container>
+              {columns.map((column) => (
+                <Kanban.Column key={column.id} column={column}>
+                  <Kanban.Column.Header>
+                    <Kanban.Column.Header.Title>
+                      {column.title}
+                    </Kanban.Column.Header.Title>
+                    <Kanban.Column.Header.Actions
+                      cardCount={column.cards.length}
+                    />
+                  </Kanban.Column.Header>
 
-                <Kanban.Column.Content>
-                  {column.cards.map((card) => (
-                    <Kanban.Card key={card.id} card={card}>
-                      <Kanban.Card.Header>
-                        <Kanban.Card.Header.Title>
-                          {card.title}
-                        </Kanban.Card.Header.Title>
-                      </Kanban.Card.Header>
-                      <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
-                    </Kanban.Card>
-                  ))}
-                </Kanban.Column.Content>
-              </Kanban.Column>
-            ))}
-          </Kanban.Column.Container>
-        </Kanban>
-      </KanbanProvider>
+                  <Kanban.Column.Content>
+                    {column.cards.map((card) => (
+                      <Kanban.Card key={card.id} card={card}>
+                        <Kanban.Card.Header>
+                          <Kanban.Card.Header.Title>
+                            {card.title}
+                          </Kanban.Card.Header.Title>
+                        </Kanban.Card.Header>
+                        <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
+                      </Kanban.Card>
+                    ))}
+                  </Kanban.Column.Content>
+                </Kanban.Column>
+              ))}
+            </Kanban.Column.Container>
+          </Kanban>
+        </KanbanProvider>
+      </div>
     );
   },
 };
@@ -143,79 +145,81 @@ export const CompleteExample: Story = {
     };
 
     return (
-      <KanbanProvider columns={columns} updateColumnState={setColumns}>
-        <Kanban>
-          <Kanban.Header>
-            <Kanban.Header.Title>Complete Kanban Board</Kanban.Header.Title>
-            <Kanban.Header.Actions className='space-x-s'>
-              <Kanban.Header.Search
-                onInput={(e) => setSearchTerm(e.currentTarget.value)}
-                inputProps={{
-                  placeholder: 'Search',
-                }}
-              />
-              <Button onPress={handleAddColumn}>
-                <Icon>
-                  <Add />
-                </Icon>
-                Add Column
-              </Button>
-            </Kanban.Header.Actions>
-          </Kanban.Header>
-
-          <Kanban.Column.Container>
-            {filteredColumns.map((column) => (
-              <Kanban.Column key={column.id} column={column}>
-                <Kanban.Column.Header>
-                  <Kanban.Column.Header.Title>
-                    {column.title}
-                  </Kanban.Column.Header.Title>
-                  <Kanban.Column.Header.Actions
-                    cardCount={column.cards.length}
-                  />
-                </Kanban.Column.Header>
-
-                <Kanban.Column.Content>
-                  {column.cards.map((card) => (
-                    <Kanban.Card key={card.id} card={card}>
-                      <Kanban.Card.Header>
-                        <Kanban.Card.Header.Title>
-                          {card.title}
-                        </Kanban.Card.Header.Title>
-                        <Kanban.Card.Header.Actions>
-                          <Menu.Trigger>
-                            <Button variant='icon'>
-                              <Icon size='small'>
-                                <Kebab />
-                              </Icon>
-                            </Button>
-                            <Menu>
-                              <Menu.Item
-                                onAction={() => handleEditCard(card.id)}
-                              >
-                                Edit
-                              </Menu.Item>
-                              <Menu.Item
-                                onAction={() => handleDeleteCard(card.id)}
-                              >
-                                Delete
-                              </Menu.Item>
-                            </Menu>
-                          </Menu.Trigger>
-                        </Kanban.Card.Header.Actions>
-                      </Kanban.Card.Header>
-                      <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
-                    </Kanban.Card>
-                  ))}
-                </Kanban.Column.Content>
-                <Kanban.Column.Actions
-                  onAddCard={() => handleAddCard(column.id)}
+      <div className='h-screen'>
+        <KanbanProvider columns={columns} updateColumnState={setColumns}>
+          <Kanban>
+            <Kanban.Header>
+              <Kanban.Header.Title>Complete Kanban Board</Kanban.Header.Title>
+              <Kanban.Header.Actions className='space-x-s'>
+                <Kanban.Header.Search
+                  onInput={(e) => setSearchTerm(e.currentTarget.value)}
+                  inputProps={{
+                    placeholder: 'Search',
+                  }}
                 />
-              </Kanban.Column>
-            ))}
-          </Kanban.Column.Container>
-        </Kanban>
-      </KanbanProvider>
+                <Button onPress={handleAddColumn}>
+                  <Icon>
+                    <Add />
+                  </Icon>
+                  Add Column
+                </Button>
+              </Kanban.Header.Actions>
+            </Kanban.Header>
+
+            <Kanban.Column.Container>
+              {filteredColumns.map((column) => (
+                <Kanban.Column key={column.id} column={column}>
+                  <Kanban.Column.Header>
+                    <Kanban.Column.Header.Title>
+                      {column.title}
+                    </Kanban.Column.Header.Title>
+                    <Kanban.Column.Header.Actions
+                      cardCount={column.cards.length}
+                    />
+                  </Kanban.Column.Header>
+
+                  <Kanban.Column.Content>
+                    {column.cards.map((card) => (
+                      <Kanban.Card key={card.id} card={card}>
+                        <Kanban.Card.Header>
+                          <Kanban.Card.Header.Title>
+                            {card.title}
+                          </Kanban.Card.Header.Title>
+                          <Kanban.Card.Header.Actions>
+                            <Menu.Trigger>
+                              <Button variant='icon'>
+                                <Icon size='small'>
+                                  <Kebab />
+                                </Icon>
+                              </Button>
+                              <Menu>
+                                <Menu.Item
+                                  onAction={() => handleEditCard(card.id)}
+                                >
+                                  Edit
+                                </Menu.Item>
+                                <Menu.Item
+                                  onAction={() => handleDeleteCard(card.id)}
+                                >
+                                  Delete
+                                </Menu.Item>
+                              </Menu>
+                            </Menu.Trigger>
+                          </Kanban.Card.Header.Actions>
+                        </Kanban.Card.Header>
+                        <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
+                      </Kanban.Card>
+                    ))}
+                  </Kanban.Column.Content>
+                  <Kanban.Column.Actions
+                    onAddCard={() => handleAddCard(column.id)}
+                  />
+                </Kanban.Column>
+              ))}
+            </Kanban.Column.Container>
+          </Kanban>
+        </KanbanProvider>
+      </div>
     );
   },
 };
