@@ -86,7 +86,7 @@ export function ViewportScale({
           bounds,
           unit,
         });
-        ref.current.innerText = viewportScale.toString();
+        ref.current.innerText = viewportScale;
       }
     },
   );
