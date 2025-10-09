@@ -17,9 +17,9 @@ export const KanbanStyles = tv({
     header: 'flex flex-row items-center justify-between p-m',
     headerTitle: 'fg-primary-bold text-header-l',
     headerActions: 'flex flex-row items-center',
-    colContainer: 'flex h-full w-full flex-row gap-s overflow-x-auto p-m',
+    colContainer: 'flex h-full w-full flex-row gap-xs overflow-x-auto p-m',
     colHeader:
-      'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default p-s text-header-m shadow-elevation-raised',
+      'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default p-s text-header-m',
     colHeaderActions: 'flex flex-row items-center gap-s',
     colHeaderTitle:
       'fg-primary-bold flex flex-row items-center gap-s font-medium text-sm',
@@ -37,7 +37,7 @@ export const KanbanStyles = tv({
 });
 
 export const ColumnStyles = tv({
-  base: 'mx-s my-s flex h-full min-w-[210px] flex-1 flex-col items-center overflow-y-auto overflow-x-hidden outline outline-transparent',
+  base: 'flex h-full min-w-[210px] flex-1 flex-col items-center overflow-y-auto overflow-x-hidden p-xs outline outline-transparent',
   variants: {
     isHighlighted: {
       true: 'rounded-large outline outline-interactive-hover',
