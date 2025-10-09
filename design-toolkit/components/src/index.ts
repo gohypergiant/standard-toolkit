@@ -197,6 +197,7 @@ export {
   CardInnerStyles,
   CardPositionIndicatorStyles,
   ColumnStyles,
+  DropPlaceholderStyles,
   KanbanStyles,
 } from './components/kanban/styles';
 export type {

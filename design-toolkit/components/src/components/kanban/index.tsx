@@ -31,7 +31,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { Heading } from 'react-aria-components';
 import { useKanban } from '@/components/kanban/context';
 import { useCardInteractions, useColumnInteractions } from '@/hooks/kanban';
@@ -42,6 +42,7 @@ import {
   CardInnerStyles,
   CardPositionIndicatorStyles,
   ColumnStyles,
+  DropPlaceholderStyles,
   KanbanStyles,
 } from './styles';
 import type {
@@ -73,6 +74,13 @@ const {
   cardActions,
 } = KanbanStyles();
 
+// Context for sharing active drag state
+const DragContext = createContext<{ activeId: string | null }>({
+  activeId: null,
+});
+
+const useDragContext = () => useContext(DragContext);
+
 export function Kanban({ children, className, ...rest }: KanbanProps) {
   const { moveCard, columns } = useKanban();
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -102,6 +110,26 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
     return closestCenter(args);
   };
 
+  const calculateClosestEdge = (
+    over: DragEndEvent['over'],
+    active: DragEndEvent['active'],
+  ): 'top' | 'bottom' => {
+    if (!over?.rect) {
+      return 'bottom';
+    }
+
+    const translated = active?.rect?.current?.translated;
+    if (!translated) {
+      return 'bottom';
+    }
+
+    const overRect = over.rect;
+    const midpoint = overRect.top + overRect.height / 2;
+    const draggedItemCenter = translated.top + translated.height / 2;
+
+    return draggedItemCenter < midpoint ? 'top' : 'bottom';
+  };
+
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
@@ -109,28 +137,34 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!(over || moveCard)) {
+    if (!over) {
+      setActiveId(null);
+      return;
+    }
+
+    if (!moveCard) {
       setActiveId(null);
       return;
     }
 
     const activeData = active.data.current;
-    const overData = over?.data.current;
+    const overData = over.data.current;
 
-    if (!(activeData || overData)) {
-      setActiveId(null);
-      return;
+    if (!activeData) {
+      if (!overData) {
+        setActiveId(null);
+        return;
+      }
     }
 
     // Moving card to column
     if (overData?.cards !== undefined) {
-      // Extract column ID (handle both column and content droppables)
       const columnId =
-        overData.id || (over?.id as string).replace('-content', '');
+        overData.id || (over.id as string).replace('-content', '');
       moveCard(active.id as string, columnId, overData.cards.length, undefined);
     } else {
       // Moving card to card position
-      const closestEdge: 'top' | 'bottom' = 'bottom'; // Simplified edge detection
+      const closestEdge = calculateClosestEdge(over, active);
       moveCard(
         active.id as string,
         overData?.columnId,
@@ -148,26 +182,28 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
     : null;
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={collisionDetectionStrategy}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <div className={container({ className })} {...rest}>
-        {children}
-      </div>
-      <DragOverlay>
-        {activeCard ? (
-          <div className={CardInnerStyles({ isActive: true })}>
-            <div className={cardHeader()}>
-              <span className={cardTitle()}>{activeCard.title}</span>
+    <DragContext.Provider value={{ activeId }}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={collisionDetectionStrategy}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className={container({ className })} {...rest}>
+          {children}
+        </div>
+        <DragOverlay>
+          {activeCard ? (
+            <div className={CardInnerStyles({ isActive: true })}>
+              <div className={cardHeader()}>
+                <span className={cardTitle()}>{activeCard.title}</span>
+              </div>
+              <div className={cardBody()}>{activeCard.body}</div>
             </div>
-            <div className={cardBody()}>{activeCard.body}</div>
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </DragContext.Provider>
   );
 }
 Kanban.displayName = 'Kanban.Container';
@@ -345,10 +381,19 @@ function KanbanCard({
 }: KanbanCardProps) {
   const { isDragging, closestEdge, ref, style, attributes, listeners } =
     useCardInteractions(card);
+  const { activeId } = useDragContext();
+
+  // Check if we should show the drop placeholder
+  const showPlaceholder = activeId && activeId !== card.id && closestEdge;
 
   return (
     <div className={cardContainerOuter()} ref={ref} style={style}>
-      {closestEdge === 'top' && <CardPositionIndicator position='top' />}
+      {showPlaceholder && closestEdge === 'top' && (
+        <>
+          <DropPlaceholder />
+          <CardPositionIndicator position='top' />
+        </>
+      )}
 
       <div
         className={CardInnerStyles({
@@ -364,7 +409,12 @@ function KanbanCard({
         {children}
       </div>
 
-      {closestEdge === 'bottom' && <CardPositionIndicator position='bottom' />}
+      {showPlaceholder && closestEdge === 'bottom' && (
+        <>
+          <CardPositionIndicator position='bottom' />
+          <DropPlaceholder />
+        </>
+      )}
     </div>
   );
 }
@@ -412,6 +462,14 @@ CardBody.displayname = 'Kanban.Card.Body';
 const CardPositionIndicator = ({ position }: CardPositionProps) => (
   <div className={CardPositionIndicatorStyles({ position })} />
 );
+
+// Drop placeholder that shows the space where a card will be placed
+const DropPlaceholder = ({ height }: { height?: number }) => {
+  const style = height
+    ? { height: `${height}px`, minHeight: `${height}px` }
+    : { minHeight: '80px' };
+  return <div className={DropPlaceholderStyles()} style={style} />;
+};
 
 // Kanban Composition
 CardHeader.Title = CardTitle;

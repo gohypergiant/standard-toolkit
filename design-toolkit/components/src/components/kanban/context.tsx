@@ -41,11 +41,14 @@ const getInsertIndex = (
   targetPosition: number,
   closestEdge?: 'top' | 'bottom',
 ) => {
-  if (targetPosition <= 0) {
-    return closestEdge === 'bottom' ? 1 : 0;
+  // If no edge is specified, use the target position as-is
+  if (!closestEdge) {
+    return targetPosition;
   }
 
-  return targetPosition;
+  // If dropping on top edge, insert at the target position (before the card)
+  // If dropping on bottom edge, insert after the target position (position + 1)
+  return closestEdge === 'top' ? targetPosition : targetPosition + 1;
 };
 
 const KanbanContext = createContext<KanbanContextData>({
@@ -54,6 +57,19 @@ const KanbanContext = createContext<KanbanContextData>({
   moveCard: () => null,
   getColumnById: () => undefined,
 });
+
+const findCard = (
+  columns: KanbanColumnData[],
+  cardId: string,
+): { column: KanbanColumnData; card: KanbanCardData; index: number } | null => {
+  for (const column of columns) {
+    const index = column.cards.findIndex((c) => c.id === cardId);
+    if (index !== -1 && column.cards[index]) {
+      return { column, card: column.cards[index], index };
+    }
+  }
+  return null;
+};
 
 export const KanbanProvider = ({
   children,
@@ -69,55 +85,63 @@ export const KanbanProvider = ({
     ) => {
       const newColumns = [...columns];
 
-      let sourceColumn: KanbanColumnData | undefined;
-      let card: KanbanCardData | undefined;
-      let sourceCardIndex = -1;
-
-      // Find current card.
-      for (const column of newColumns) {
-        sourceCardIndex = column.cards.findIndex((c) => c.id === cardId);
-        if (sourceCardIndex !== -1) {
-          sourceColumn = column;
-          card = column?.cards?.[sourceCardIndex];
-          break;
-        }
-      }
-
-      if (!(sourceColumn && card)) {
-        console.error('Error: Source card not found.');
-        updateColumnState(columns);
+      // Find source card
+      const source = findCard(newColumns, cardId);
+      if (!source) {
         return;
       }
 
       // Find target column
       const targetColumn = newColumns.find((col) => col.id === targetColumnId);
-
       if (!targetColumn) {
-        console.error('Error: Target column not found.');
-        updateColumnState(columns);
         return;
       }
 
-      // Remove card from current column.
-      const newSourceColumn = { ...sourceColumn };
-      newSourceColumn.cards.splice(sourceCardIndex, 1);
+      const isSameColumn = source.column.id === targetColumn.id;
 
-      // Get index for insert.
-      const index = getInsertIndex(targetPosition, closestEdge);
+      // Remove card from source column
+      const newSourceColumn = {
+        ...source.column,
+        cards: [...source.column.cards],
+      };
+      newSourceColumn.cards.splice(source.index, 1);
 
-      // Insert card.
-      const newTargetColumn = { ...targetColumn };
+      // Calculate insert index
+      let index = getInsertIndex(targetPosition, closestEdge);
+
+      // If moving within the same column and moving down, adjust index
+      if (isSameColumn && source.index < index) {
+        index -= 1;
+      }
+
+      // Insert card into target column
+      const newTargetColumn = isSameColumn
+        ? newSourceColumn
+        : { ...targetColumn, cards: [...targetColumn.cards] };
+
       newTargetColumn.cards.splice(index, 0, {
-        ...card,
+        ...source.card,
         columnId: targetColumnId,
       });
 
-      // Rewrite new positions for affected columns.
+      // Update positions
       updatePositions(newTargetColumn);
-      if (newSourceColumn !== newTargetColumn) {
-        updatePositions(sourceColumn);
+      if (!isSameColumn) {
+        updatePositions(newSourceColumn);
       }
-      updateColumnState([...newColumns]);
+
+      // Update the columns array with the modified columns
+      const updatedColumns = newColumns.map((col) => {
+        if (col.id === source.column.id) {
+          return newSourceColumn;
+        }
+        if (col.id === targetColumn.id) {
+          return newTargetColumn;
+        }
+        return col;
+      });
+
+      updateColumnState(updatedColumns);
     },
     [columns, updateColumnState],
   );
