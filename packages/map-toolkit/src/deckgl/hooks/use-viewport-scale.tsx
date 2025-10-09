@@ -68,7 +68,6 @@ export function getViewportScale({
 
 type ViewportScaleProps = ComponentProps<'span'> & {
   unit?: AllowedUnit;
-  className?: string;
 };
 
 export function ViewportScale({
