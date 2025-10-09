@@ -13,8 +13,23 @@
 import 'client-only';
 
 import { Add, DragVert } from '@accelint/icons';
+import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  DragOverlay,
+  type DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { useState } from 'react';
 import { Heading } from 'react-aria-components';
-import { createPortal } from 'react-dom';
+import { useKanban } from '@/components/kanban/context';
 import { useCardInteractions, useColumnInteractions } from '@/hooks/kanban';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -55,10 +70,85 @@ const {
 } = KanbanStyles();
 
 export function Kanban({ children, className, ...rest }: KanbanProps) {
+  const { moveCard, columns } = useKanban();
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+  );
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!(over || moveCard)) {
+      setActiveId(null);
+      return;
+    }
+
+    const activeData = active.data.current;
+    const overData = over?.data.current;
+
+    if (!(activeData || overData)) {
+      setActiveId(null);
+      return;
+    }
+
+    // Moving card to column
+    if (overData?.cards !== undefined) {
+      moveCard(
+        active.id as string,
+        over?.id as string,
+        overData.cards.length,
+        undefined,
+      );
+    } else {
+      // Moving card to card position
+      const closestEdge: 'top' | 'bottom' = 'bottom'; // Simplified edge detection
+      moveCard(
+        active.id as string,
+        overData?.columnId,
+        overData?.position,
+        closestEdge,
+      );
+    }
+
+    setActiveId(null);
+  };
+
+  // Find the active card for the drag overlay
+  const activeCard = activeId
+    ? columns.flatMap((col) => col.cards).find((card) => card.id === activeId)
+    : null;
+
   return (
-    <div className={container({ className })} {...rest}>
-      {children}
-    </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      <div className={container({ className })} {...rest}>
+        {children}
+      </div>
+      <DragOverlay>
+        {activeCard ? (
+          <div className={CardInnerStyles({ isActive: true })}>
+            <div className={cardHeader()}>
+              <span className={cardTitle()}>{activeCard.title}</span>
+            </div>
+            <div className={cardBody()}>{activeCard.body}</div>
+          </div>
+        ) : null}
+      </DragOverlay>
+    </DndContext>
   );
 }
 Kanban.displayName = 'Kanban.Container';
@@ -150,7 +240,7 @@ const ColDragHandle = () => (
     <DragVert />
   </Icon>
 );
-ColHeader.displayName = 'Kanban.Column.Header.DragHandle';
+ColDragHandle.displayName = 'Kanban.Column.Header.DragHandle';
 
 const ColHeaderTitle = ({
   children,
@@ -183,12 +273,17 @@ ColHeaderActions.displayName = 'Kanban.Column.Header.Actions';
 const ColContent = ({
   children,
   className,
+  column,
   ...rest
 }: KanbanColContentProps) => {
+  const cardIds = column?.cards?.map((card) => card.id) || [];
+
   return (
-    <div className={colContent({ className })} {...rest}>
-      {children}
-    </div>
+    <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
+      <div className={colContent({ className })} {...rest}>
+        {children}
+      </div>
+    </SortableContext>
   );
 };
 ColContent.displayName = 'Kanban.Column.Content';
@@ -209,7 +304,7 @@ const ColActions = ({
     </div>
   );
 };
-ColContent.displayName = 'Kanban.Column.Content.Actions';
+ColActions.displayName = 'Kanban.Column.Content.Actions';
 
 // Kanban Card
 function KanbanCard({
@@ -219,11 +314,11 @@ function KanbanCard({
   isActive,
   ...rest
 }: KanbanCardProps) {
-  const { isDragging, isPreview, container, closestEdge, ref } =
+  const { isDragging, closestEdge, ref, style, attributes, listeners } =
     useCardInteractions(card);
 
   return (
-    <div className={cardContainerOuter()} ref={ref}>
+    <div className={cardContainerOuter()} ref={ref} style={style}>
       {closestEdge === 'top' && <CardPositionIndicator position='top' />}
 
       <div
@@ -233,12 +328,11 @@ function KanbanCard({
           dragging: isDragging,
         })}
         data-dragging={isDragging}
+        {...attributes}
+        {...listeners}
         {...rest}
       >
         {children}
-        {isPreview
-          ? createPortal(<CardPreview card={card} />, container as HTMLElement)
-          : null}
       </div>
 
       {closestEdge === 'bottom' && <CardPositionIndicator position='bottom' />}
@@ -290,17 +384,6 @@ const CardPositionIndicator = ({ position }: CardPositionProps) => (
   <div className={CardPositionIndicatorStyles({ position })} />
 );
 
-function CardPreview({ card }: KanbanCardProps) {
-  return (
-    <KanbanCard card={card} isActive>
-      <CardHeader>
-        <CardTitle>{card.title}</CardTitle>
-      </CardHeader>
-      <CardBody>{card.body}</CardBody>
-    </KanbanCard>
-  );
-}
-
 // Kanban Composition
 CardHeader.Title = CardTitle;
 CardHeader.Actions = CardActions;
@@ -318,6 +401,8 @@ ColHeader.Actions = ColHeaderActions;
 
 ColHeader.Title = ColHeaderTitle;
 ColHeader.Actions = ColHeaderActions;
+
+ColContent.Actions = ColActions;
 
 Col.Content = ColContent;
 Col.Container = ColContainer;

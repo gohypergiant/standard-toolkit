@@ -10,182 +10,72 @@
  * governing permissions and limitations under the License.
  */
 
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
-import {
-  draggable,
-  dropTargetForElements,
-  monitorForElements,
-} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
-import {
-  attachClosestEdge,
-  type Edge,
-  extractClosestEdge,
-} from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { useEffect, useRef, useState } from 'react';
-import { useKanban } from '@/components/kanban/context';
+import { useDroppable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type {
   KanbanCardData,
   KanbanColumnData,
 } from '@/components/kanban/types';
 
 export function useColumnInteractions(column: KanbanColumnData) {
-  const [isHighlighted, setIsHighlighted] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const { moveCard } = useKanban();
-  const ref = useRef(null);
+  const { setNodeRef, isOver, active } = useDroppable({
+    id: column.id,
+    data: column,
+  });
 
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return;
-    }
+  const isHighlighted = Boolean(
+    isOver ||
+      (active &&
+        active.data.current?.columnId !== column.id &&
+        column.canDrop !== false),
+  );
 
-    return combine(
-      monitorForElements({
-        onDragStart(data) {
-          // Checking to see if the active card is in the current column.
-          if (
-            data?.source &&
-            data.source.data?.columnId !== column.id &&
-            column.canDrop !== false
-          ) {
-            // Only highlight other active columns.
-            setIsHighlighted(true);
-          }
-        },
-        onDrag({ location }) {
-          const target = location.current.dropTargets[0];
-          if (!target) {
-            return;
-          }
-        },
-        onDrop() {
-          setIsHighlighted(false);
-        },
-      }),
-      dropTargetForElements({
-        element,
-        getData: () => column,
-        onDragEnter() {
-          setIsActive(column.canDrop !== false);
-        },
-        onDragLeave() {
-          setIsActive(false);
-        },
-        onDrop({ source, self: target, location }) {
-          setIsActive(false);
+  const isActive = isOver && column.canDrop !== false;
 
-          if (location.current?.dropTargets?.[0]?.data.columnId !== undefined) {
-            return;
-          }
-
-          if (!moveCard) {
-            return;
-          }
-
-          const sourceData = source.data as KanbanCardData | undefined;
-          const targetData = target.data as KanbanColumnData | undefined;
-
-          if (!(sourceData && targetData)) {
-            return;
-          }
-
-          if (targetData.canDrop === false) {
-            return;
-          }
-
-          moveCard(sourceData.id, targetData.id, targetData.cards.length + 1);
-        },
-      }),
-    );
-  }, [column, moveCard]);
-
-  return { ref, isHighlighted, isActive };
+  return {
+    ref: setNodeRef,
+    isHighlighted,
+    isActive,
+  };
 }
 
 export function useCardInteractions(card: KanbanCardData) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [isPreview, setIsPreview] = useState(false);
-  const [container, setContainer] = useState<HTMLElement | null>(null);
-  const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
-  const { moveCard } = useKanban();
-  const ref = useRef(null);
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+    over,
+  } = useSortable({
+    id: card.id,
+    data: card,
+  });
 
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return;
-    }
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
-    return combine(
-      draggable({
-        element,
-        getInitialData() {
-          return card;
-        },
-        onGenerateDragPreview({ nativeSetDragImage }) {
-          setCustomNativeDragPreview({
-            nativeSetDragImage,
-            render({ container }) {
-              setIsPreview(true);
-              setContainer(container);
-            },
-          });
-        },
-        onDragStart() {
-          setIsDragging(true);
-        },
-        onDrop() {
-          setIsDragging(false);
-          setIsPreview(false);
-          setContainer(null);
-        },
-      }),
-      dropTargetForElements({
-        element,
-        getData({ element, input }) {
-          const data = card;
-          return attachClosestEdge(data, {
-            element,
-            input,
-            allowedEdges: ['top', 'bottom'],
-          });
-        },
-        onDrop({ source, self: target }) {
-          if (!moveCard) {
-            return;
-          }
+  // Determine closest edge based on over position
+  let closestEdge: 'top' | 'bottom' | null = null;
 
-          const sourceData = source.data as KanbanCardData | undefined;
-          const targetData = target.data as KanbanCardData | undefined;
+  if (over && over.id !== card.id) {
+    // For simplicity, we'll use the middle of the card as the threshold
+    // dnd-kit doesn't provide exact edge detection like Atlaskit,
+    // but we can approximate based on the transform values
+    closestEdge = transform && transform.y < 0 ? 'top' : 'bottom';
+  }
 
-          if (!(sourceData && targetData)) {
-            return;
-          }
-
-          moveCard(
-            sourceData.id,
-            targetData.columnId,
-            targetData.position,
-            closestEdge as Edge,
-          );
-          setClosestEdge(null);
-        },
-        onDrag({ self }) {
-          const closestEdge = extractClosestEdge(self.data);
-          if (!closestEdge) {
-            return;
-          }
-
-          setClosestEdge(closestEdge);
-        },
-        onDragLeave() {
-          setClosestEdge(null);
-        },
-      }),
-    );
-  }, [card, moveCard, closestEdge]);
-
-  return { ref, isDragging, isPreview, container, closestEdge };
+  return {
+    ref: setNodeRef,
+    isDragging,
+    container: null,
+    closestEdge,
+    style,
+    attributes,
+    listeners,
+  };
 }

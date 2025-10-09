@@ -10,14 +10,13 @@
  * governing permissions and limitations under the License.
  */
 import { createContext, type ReactNode, useCallback, useContext } from 'react';
-import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import type { KanbanCardData, KanbanColumnData } from './types';
 
 export type MoveCard = (
   cardId: string,
   targetColumnId: string,
   targetPosition: number,
-  closestEdge?: Edge,
+  closestEdge?: 'top' | 'bottom',
 ) => void;
 export interface KanbanContextData {
   columns: KanbanColumnData[];
@@ -38,7 +37,10 @@ const updatePositions = (column: KanbanColumnData) => {
   });
 };
 
-const getInsertIndex = (targetPosition: number, closestEdge?: Edge) => {
+const getInsertIndex = (
+  targetPosition: number,
+  closestEdge?: 'top' | 'bottom',
+) => {
   if (targetPosition <= 0) {
     return closestEdge === 'bottom' ? 1 : 0;
   }
@@ -63,7 +65,7 @@ export const KanbanProvider = ({
       cardId: string,
       targetColumnId: string,
       targetPosition: number,
-      closestEdge: Edge | undefined,
+      closestEdge: 'top' | 'bottom' | undefined,
     ) => {
       const newColumns = [...columns];
 

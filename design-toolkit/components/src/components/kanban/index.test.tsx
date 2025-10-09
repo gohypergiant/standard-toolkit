@@ -39,7 +39,7 @@ function TestKanban() {
                 </Kanban.Column.Header.Title>
                 <Kanban.Column.Header.Actions />
               </Kanban.Column.Header>
-              <Kanban.Column.Content>
+              <Kanban.Column.Content column={column}>
                 {column.cards.map((card) => (
                   <Kanban.Card key={card.id} card={card}>
                     <Kanban.Card.Header>
