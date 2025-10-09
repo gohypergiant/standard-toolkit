@@ -36,17 +36,11 @@ import { Heading } from 'react-aria-components';
 import { parseDropTarget, useKanban } from '@/components/kanban/context';
 import { useCardInteractions, useColumnInteractions } from '@/hooks/kanban';
 import { Button } from '../button';
+import { Divider } from '../divider';
 import { Icon } from '../icon';
 import { SearchField } from '../search-field';
-import {
-  CardInnerStyles,
-  CardPositionIndicatorStyles,
-  ColumnStyles,
-  DropPlaceholderStyles,
-  KanbanStyles,
-} from './styles';
+import { CardInnerStyles, ColumnStyles, KanbanStyles } from './styles';
 import type {
-  CardPositionProps,
   KanbanCardProps,
   KanbanColContentActionProps,
   KanbanColContentProps,
@@ -347,10 +341,7 @@ function KanbanCard({
   return (
     <div className={cardContainerOuter()} ref={ref} style={style}>
       {showPlaceholder && closestEdge === 'top' && (
-        <>
-          <DropPlaceholder />
-          <CardPositionIndicator position='top' />
-        </>
+        <Divider className='mb-s h-xxs bg-accent-primary-bold' />
       )}
 
       <div
@@ -368,10 +359,7 @@ function KanbanCard({
       </div>
 
       {showPlaceholder && closestEdge === 'bottom' && (
-        <>
-          <CardPositionIndicator position='bottom' />
-          <DropPlaceholder />
-        </>
+        <Divider className='mt-s h-xxs bg-accent-primary-bold' />
       )}
     </div>
   );
@@ -416,18 +404,6 @@ const CardBody = ({ children, className, ...rest }: KanbanComponentProps) => {
   );
 };
 CardBody.displayname = 'Kanban.Card.Body';
-
-const CardPositionIndicator = ({ position }: CardPositionProps) => (
-  <div className={CardPositionIndicatorStyles({ position })} />
-);
-
-// Drop placeholder that shows the space where a card will be placed
-const DropPlaceholder = ({ height }: { height?: number }) => {
-  const style = height
-    ? { height: `${height}px`, minHeight: `${height}px` }
-    : { minHeight: '80px' };
-  return <div className={DropPlaceholderStyles()} style={style} />;
-};
 
 // Kanban Composition
 CardHeader.Title = CardTitle;
