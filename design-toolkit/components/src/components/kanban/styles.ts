@@ -43,7 +43,7 @@ export const ColumnStyles = tv({
       true: 'rounded-large outline outline-interactive-hover',
     },
     isActive: {
-      true: 'rounded-large outline outline-accent-primary-hover',
+      true: 'rounded-large outline-2 outline-accent-primary-hover',
     },
   },
 });
@@ -58,18 +58,4 @@ export const CardInnerStyles = tv({
       true: 'hidden',
     },
   },
-});
-
-export const CardPositionIndicatorStyles = tv({
-  base: 'mx-s flex h-xxs flex-col items-center justify-center bg-highlight',
-  variants: {
-    position: {
-      top: 'mb-m',
-      bottom: 'mt-m',
-    },
-  },
-});
-
-export const DropPlaceholderStyles = tv({
-  base: 'w-full rounded-large border-2 border-accent-primary-default border-dashed bg-accent-primary-default/10 transition-all',
 });

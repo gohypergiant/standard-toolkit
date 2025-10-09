@@ -201,13 +201,10 @@ export { Kanban } from './components/kanban';
 export { columnData } from './components/kanban/mock-data';
 export {
   CardInnerStyles,
-  CardPositionIndicatorStyles,
   ColumnStyles,
-  DropPlaceholderStyles,
   KanbanStyles,
 } from './components/kanban/styles';
 export type {
-  CardPositionProps,
   KanbanCardData,
   KanbanCardProps,
   KanbanColContentActionProps,

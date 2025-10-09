@@ -64,7 +64,3 @@ export interface KanbanCardProps extends KanbanComponentProps {
   isActive?: boolean;
   card: KanbanCardData;
 }
-
-export interface CardPositionProps {
-  position: 'top' | 'bottom';
-}
