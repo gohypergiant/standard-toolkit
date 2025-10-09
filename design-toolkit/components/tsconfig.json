@@ -16,6 +16,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["@testing-library/jest-dom", "node"]
+    "types": ["@testing-library/jest-dom", "node"],
+    "plugins": [{ "transform": "@accelint/ts-transformer-compound-components" }]
   }
 }

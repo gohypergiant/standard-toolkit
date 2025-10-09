@@ -80,6 +80,9 @@ function TooltipFocusable({
  * Provides accessible tooltip functionality with proper positioning, keyboard
  * navigation, and screen reader support for enhanced user experience.
  *
+ * @compound-component
+ * @requires Tooltip exactly 1
+ *
  * @example
  * // Basic tooltip
  * <Tooltip.Trigger>

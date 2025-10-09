@@ -121,6 +121,7 @@
     "@accelint/core": "workspace:*",
     "@accelint/icons": "workspace:*",
     "@accelint/temporal": "workspace:*",
+    "@accelint/ts-transformer-compound-components": "workspace:^",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@fontsource-variable/roboto-flex": "^5.2.8",
