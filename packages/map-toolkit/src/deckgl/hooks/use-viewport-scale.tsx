@@ -50,7 +50,7 @@ export function getViewportScale({
   const width = formatter.format(
     Math.round(
       distance([minY, minX], [minY, maxX], {
-        units: 'nauticalmiles',
+        units: UNIT_MAP[unit],
       }),
     ),
   );
@@ -58,7 +58,7 @@ export function getViewportScale({
   const height = formatter.format(
     Math.round(
       distance([minX, minY], [minX, maxY], {
-        units: 'nauticalmiles',
+        units: UNIT_MAP[unit],
       }),
     ),
   );
