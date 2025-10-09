@@ -1,0 +1,22 @@
+{
+  "name": "@accelint/ts-transformer-compound-components",
+  "type": "module",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.13",
+    "typescript": "^5.9.2",
+    "vitest": "^0.34.0"
+  }
+}

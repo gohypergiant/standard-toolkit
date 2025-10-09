@@ -13,6 +13,7 @@
 import type { RefAttributes, RefObject } from 'react';
 import type {
   DialogProps as AriaDialogProps,
+  DialogTriggerProps as AriaDialogTriggerProps,
   ModalOverlayProps,
 } from 'react-aria-components';
 
@@ -27,3 +28,5 @@ export type DialogProps = Omit<ModalOverlayProps, 'children' | 'className'> &
     parentRef?: RefObject<HTMLElement | null>;
     size?: 'small' | 'large';
   };
+
+export type DialogTriggerProps = AriaDialogTriggerProps;

@@ -96,6 +96,12 @@ DialogFooter.displayName = 'Dialog.Footer';
  *   </Dialog>
  * </Dialog.Trigger>
  */
+/**
+ * @compound-component
+ * @requires title exactly 1
+ * @requires content exactly 1
+ * @requires footer exactly 1
+ */
 export function Dialog({ ref, ...props }: DialogProps) {
   [props, ref] = useContextProps(props, ref ?? null, DialogContext);
 
