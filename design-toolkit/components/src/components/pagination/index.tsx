@@ -70,7 +70,6 @@ function getPaginationRange(
   return { minRange: DEFAULT_MIN_RANGE, maxRange: DEFAULT_MAX_RANGE };
 }
 
-// ContextValue<BasePaginationProps>?
 const PaginationContext = createContext<BasePaginationProps>({});
 
 function PaginationProvider({
@@ -87,9 +86,7 @@ PaginationProvider.displayName = 'Pagination.Provider';
 
 /**
  *
- * Pagination - Group of buddons.
- *
- * Allows user to paginate multiple items.
+ * Pagination - A lightweight implementation for page navigation.
  *
  * @example
  * <Pagination.Provider value={{ currentPage: 1, pageCount: 5}}>
