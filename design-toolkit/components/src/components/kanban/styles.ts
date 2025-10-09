@@ -20,7 +20,7 @@ export const KanbanStyles = tv({
     colContainer:
       'col-container flex h-full w-full flex-row gap-s overflow-x-auto p-m',
     colHeader:
-      'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default p-s text-header-m shadow-elevation-raised',
+      'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default bg-surface-default p-s text-header-m shadow-elevation-raised',
     colHeaderActions: 'flex flex-row items-center gap-s',
     colHeaderTitle:
       'fg-primary-bold flex flex-row items-center gap-s font-medium text-sm',
