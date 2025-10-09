@@ -26,6 +26,8 @@ import { Label } from '../label';
 import { CheckboxStyles } from './styles';
 import type { CheckboxGroupProps, CheckboxProps } from './types';
 
+export type { CheckboxGroupProps, CheckboxProps };
+
 const { group, groupLabel, checkbox, control, label } = CheckboxStyles();
 
 export const CheckboxGroupContext =
