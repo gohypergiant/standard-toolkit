@@ -13,7 +13,7 @@
 import { ZoomWidget } from '@deck.gl/widgets';
 import { BaseMap } from '../base-map';
 import { ViewportSyncWidget } from '../widgets/viewport-sync';
-import { ViewportScale } from './use-viewport-scale';
+import { ViewportScale as ViewportScaleComponent } from './use-viewport-scale';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const WIDGETS = [
@@ -22,7 +22,7 @@ const WIDGETS = [
 ];
 
 const meta: Meta = {
-  title: 'DeckGL/Hooks',
+  title: 'DeckGL',
   decorators: [],
   parameters: {
     layout: '',
@@ -32,13 +32,13 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const UseViewportScale: Story = {
+export const ViewportScale: Story = {
   render: () => {
     return (
       <div>
-        <ViewportScale className='absolute right-4 bottom-4 bg-gray-400 p-4' />
+        <ViewportScaleComponent className='absolute right-4 bottom-4 bg-gray-400 p-4' />
         <BaseMap
-          interleaved={false} // setting it to true breaks out the widget somehow
+          interleaved={false} // setting it to true breaks the widget somehow
           widgets={WIDGETS}
           className='h-dvh w-dvw'
         />
