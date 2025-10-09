@@ -150,6 +150,9 @@ export const CompleteExample: Story = {
             <Kanban.Header.Actions className='space-x-s'>
               <Kanban.Header.Search
                 onInput={(e) => setSearchTerm(e.currentTarget.value)}
+                inputProps={{
+                  placeholder: 'Search',
+                }}
               />
               <Button onPress={handleAddColumn}>
                 <Icon>
@@ -204,10 +207,10 @@ export const CompleteExample: Story = {
                       <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
                     </Kanban.Card>
                   ))}
-                  <Kanban.Column.Content.Actions
-                    onAddCard={() => handleAddCard(column.id)}
-                  />
                 </Kanban.Column.Content>
+                <Kanban.Column.Actions
+                  onAddCard={() => handleAddCard(column.id)}
+                />
               </Kanban.Column>
             ))}
           </Kanban.Column.Container>
