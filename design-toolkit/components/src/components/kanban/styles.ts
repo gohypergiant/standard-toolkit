@@ -53,7 +53,7 @@ export const CardInnerStyles = tv({
   base: 'flex w-full flex-col text-wrap rounded-large bg-surface-raised p-s pb-m outline outline-transparent transition-all hover:outline-interactive-hover',
   variants: {
     isActive: {
-      true: 'w-[210px] bg-accent-primary-bold outline outline-highlight',
+      true: 'bg-accent-primary-bold outline-accent-primary-pressed',
     },
     dragging: {
       true: 'hidden',

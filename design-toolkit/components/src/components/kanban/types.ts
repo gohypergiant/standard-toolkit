@@ -48,6 +48,7 @@ export interface KanbanColContentActionProps extends KanbanComponentProps {
 export interface KanbanColContentProps {
   children?: ReactNode | ReactNode[];
   className?: string;
+  column?: KanbanColumnData;
 }
 
 export type KanbanCardData = {
