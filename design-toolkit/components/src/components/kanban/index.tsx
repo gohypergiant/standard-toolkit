@@ -47,7 +47,6 @@ const {
   colHeaderActions,
   colHeaderTitle,
   colContent,
-  colContentActions,
   cardContainerOuter,
   cardHeader,
   cardTitle,
@@ -194,23 +193,20 @@ const ColContent = ({
 };
 ColContent.displayName = 'Kanban.Column.Content';
 
-const ColContentActions = ({
+const ColActions = ({
   className,
   onAddCard,
   ...rest
 }: KanbanColContentActionProps) => {
   return (
-    <Button
-      variant='flat'
-      className={colContentActions({ className })}
-      onPress={onAddCard}
-      {...rest}
-    >
-      <Icon>
-        <Add />
-      </Icon>
-      Add Card
-    </Button>
+    <div className={colHeader({ className })} {...rest}>
+      <Button variant='flat' onPress={onAddCard} {...rest}>
+        <Icon>
+          <Add />
+        </Icon>
+        Add Card
+      </Button>
+    </div>
   );
 };
 ColContent.displayName = 'Kanban.Column.Content.Actions';
@@ -322,12 +318,12 @@ ColHeader.Actions = ColHeaderActions;
 
 ColHeader.Title = ColHeaderTitle;
 ColHeader.Actions = ColHeaderActions;
-ColContent.Actions = ColContentActions;
 
 Col.Content = ColContent;
 Col.Container = ColContainer;
 Col.Header = ColHeader;
 Col.DragHandle = ColDragHandle;
+Col.Actions = ColActions;
 
 Kanban.Card = KanbanCard;
 

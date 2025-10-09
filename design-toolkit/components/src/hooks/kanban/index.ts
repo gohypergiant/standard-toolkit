@@ -16,6 +16,7 @@ import {
   dropTargetForElements,
   monitorForElements,
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import {
   attachClosestEdge,
   type Edge,
@@ -123,16 +124,15 @@ export function useCardInteractions(card: KanbanCardData) {
         getInitialData() {
           return card;
         },
-        //Removing this for now since it creates an extra detached element
-        //onGenerateDragPreview({ nativeSetDragImage }) {
-        //  setCustomNativeDragPreview({
-        //    nativeSetDragImage,
-        //    render({ container }) {
-        //      setIsPreview(true);
-        //      setContainer(container);
-        //    },
-        //  });
-        //},
+        onGenerateDragPreview({ nativeSetDragImage }) {
+          setCustomNativeDragPreview({
+            nativeSetDragImage,
+            render({ container }) {
+              setIsPreview(true);
+              setContainer(container);
+            },
+          });
+        },
         onDragStart() {
           setIsDragging(true);
         },
