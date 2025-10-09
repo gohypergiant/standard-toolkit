@@ -33,7 +33,7 @@ import {
 } from '@dnd-kit/sortable';
 import { createContext, useContext, useState } from 'react';
 import { Heading } from 'react-aria-components';
-import { useKanban } from '@/components/kanban/context';
+import { parseDropTarget, useKanban } from '@/components/kanban/context';
 import { useCardInteractions, useColumnInteractions } from '@/hooks/kanban';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -110,70 +110,28 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
     return closestCenter(args);
   };
 
-  const calculateClosestEdge = (
-    over: DragEndEvent['over'],
-    active: DragEndEvent['active'],
-  ): 'top' | 'bottom' => {
-    if (!over?.rect) {
-      return 'bottom';
-    }
-
-    const translated = active?.rect?.current?.translated;
-    if (!translated) {
-      return 'bottom';
-    }
-
-    const overRect = over.rect;
-    const midpoint = overRect.top + overRect.height / 2;
-    const draggedItemCenter = translated.top + translated.height / 2;
-
-    return draggedItemCenter < midpoint ? 'top' : 'bottom';
-  };
-
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) {
-      setActiveId(null);
-      return;
-    }
+    setActiveId(null);
 
     if (!moveCard) {
-      setActiveId(null);
       return;
     }
 
-    const activeData = active.data.current;
-    const overData = over.data.current;
-
-    if (!activeData) {
-      if (!overData) {
-        setActiveId(null);
-        return;
-      }
+    const dropTarget = parseDropTarget(event);
+    if (!dropTarget) {
+      return;
     }
 
-    // Moving card to column
-    if (overData?.cards !== undefined) {
-      const columnId =
-        overData.id || (over.id as string).replace('-content', '');
-      moveCard(active.id as string, columnId, overData.cards.length, undefined);
-    } else {
-      // Moving card to card position
-      const closestEdge = calculateClosestEdge(over, active);
-      moveCard(
-        active.id as string,
-        overData?.columnId,
-        overData?.position,
-        closestEdge,
-      );
-    }
-
-    setActiveId(null);
+    moveCard(
+      event.active.id as string,
+      dropTarget.columnId,
+      dropTarget.position,
+      dropTarget.edge,
+    );
   };
 
   // Find the active card for the drag overlay

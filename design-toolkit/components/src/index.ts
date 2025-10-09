@@ -185,8 +185,14 @@ export type { IconProps } from './components/icon/types';
 export { Input, InputContext } from './components/input';
 export { InputStyles, InputStylesDefaults } from './components/input/styles';
 export type { InputProps } from './components/input/types';
-export { KanbanProvider, useKanban } from './components/kanban/context';
+export {
+  KanbanProvider,
+  calculateClosestEdge,
+  parseDropTarget,
+  useKanban,
+} from './components/kanban/context';
 export type {
+  DropTargetInfo,
   KanbanContextData,
   KanbanProviderProps,
   MoveCard,

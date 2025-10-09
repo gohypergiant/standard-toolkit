@@ -9,7 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 import { createContext, type ReactNode, useCallback, useContext } from 'react';
+import type { DragEndEvent } from '@dnd-kit/core';
 import type { KanbanCardData, KanbanColumnData } from './types';
 
 export type MoveCard = (
@@ -29,6 +31,81 @@ export interface KanbanProviderProps {
   columns: KanbanColumnData[];
   updateColumnState: (columns: KanbanColumnData[]) => void;
   children: ReactNode;
+}
+
+/**
+ * Result of parsing a drop target from a drag event
+ */
+export interface DropTargetInfo {
+  /** The ID of the column where the card should be dropped */
+  columnId: string;
+  /** The position/index within the column */
+  position: number;
+  /** The edge to drop relative to (undefined when dropping on empty column) */
+  edge: 'top' | 'bottom' | undefined;
+}
+
+/**
+ * Calculates which edge of a drop target is closest to the dragged item
+ * @param over - The drop target from dnd-kit
+ * @param active - The active dragged item from dnd-kit
+ * @returns 'top' if the dragged item's center is above the midpoint, 'bottom' otherwise
+ */
+export function calculateClosestEdge(
+  over: DragEndEvent['over'],
+  active: DragEndEvent['active'],
+): 'top' | 'bottom' {
+  if (!over?.rect) {
+    return 'bottom';
+  }
+
+  const translated = active?.rect?.current?.translated;
+  if (!translated) {
+    return 'bottom';
+  }
+
+  const overRect = over.rect;
+  const midpoint = overRect.top + overRect.height / 2;
+  const draggedItemCenter = translated.top + translated.height / 2;
+
+  return draggedItemCenter < midpoint ? 'top' : 'bottom';
+}
+
+/**
+ * Parses a drag event to determine where a card should be dropped
+ * @param event - The drag end event from dnd-kit
+ * @returns Normalized drop target information or null if invalid drop
+ */
+export function parseDropTarget(event: DragEndEvent): DropTargetInfo | null {
+  const { active, over } = event;
+
+  if (!over) {
+    return null;
+  }
+
+  const overData = over.data.current;
+
+  if (!overData) {
+    return null;
+  }
+
+  // Dropping on a column (empty space or column container)
+  if (overData.cards !== undefined) {
+    const columnId = overData.id || (over.id as string).replace('-content', '');
+    return {
+      columnId,
+      position: overData.cards.length,
+      edge: undefined,
+    };
+  }
+
+  // Dropping on a card position
+  const edge = calculateClosestEdge(over, active);
+  return {
+    columnId: overData.columnId,
+    position: overData.position,
+    edge,
+  };
 }
 
 const updatePositions = (column: KanbanColumnData) => {
