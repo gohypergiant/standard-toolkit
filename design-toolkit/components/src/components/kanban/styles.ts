@@ -19,12 +19,12 @@ export const KanbanStyles = tv({
     headerActions: 'flex flex-row items-center',
     colContainer: 'flex h-full w-full flex-row gap-s overflow-x-auto p-m',
     colHeader:
-      'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default bg-surface-default p-s text-header-m shadow-elevation-raised',
+      'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default p-s text-header-m shadow-elevation-raised',
     colHeaderActions: 'flex flex-row items-center gap-s',
     colHeaderTitle:
       'fg-primary-bold flex flex-row items-center gap-s font-medium text-sm',
     colContent:
-      'col relative my-s flex h-full w-full flex-1 flex-grow flex-col flex-nowrap gap-s overflow-y-auto px-[1px]',
+      'col relative my-s flex h-full min-h-[200px] w-full flex-1 flex-grow flex-col flex-nowrap gap-s overflow-y-auto px-[1px]',
     colContentActions:
       'fg-primary-bold box-shadow w-full items-center justify-start gap-2 bg-surface-default py-3 font-medium text-sm hover:cursor-pointer',
     cardContainerOuter: 'flex w-full flex-col',
@@ -37,7 +37,7 @@ export const KanbanStyles = tv({
 });
 
 export const ColumnStyles = tv({
-  base: 'mx-s my-s flex min-w-[210px] flex-1 flex-col items-center overflow-y-auto overflow-x-hidden outline outline-transparent',
+  base: 'mx-s my-s flex h-full min-w-[210px] flex-1 flex-col items-center overflow-y-auto overflow-x-hidden outline outline-transparent',
   variants: {
     isHighlighted: {
       true: 'rounded-large outline outline-interactive-hover',
