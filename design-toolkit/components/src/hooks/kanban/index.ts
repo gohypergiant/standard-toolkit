@@ -13,6 +13,7 @@
 import { useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { calculateClosestEdge } from '@/components/kanban/context';
 import type {
   KanbanCardData,
   KanbanColumnData,
@@ -49,7 +50,6 @@ export function useCardInteractions(card: KanbanCardData) {
     transition,
     isDragging,
     over,
-    rect,
     active,
   } = useSortable({
     id: card.id,
@@ -64,17 +64,8 @@ export function useCardInteractions(card: KanbanCardData) {
   // Determine closest edge based on over position
   let closestEdge: 'top' | 'bottom' | null = null;
 
-  if (over && over.id === card.id && rect.current) {
-    // Calculate if pointer is in the top or bottom half of the card
-    const cardRect = rect.current;
-    const midpoint = cardRect.top + cardRect.height / 2;
-
-    // Get the active dragging element's center position
-    if (active?.rect?.current?.translated) {
-      const translated = active.rect.current.translated;
-      const draggedItemCenter = translated.top + translated.height / 2;
-      closestEdge = draggedItemCenter < midpoint ? 'top' : 'bottom';
-    }
+  if (over && over.id === card.id && active) {
+    closestEdge = calculateClosestEdge(over, active);
   }
 
   return {
