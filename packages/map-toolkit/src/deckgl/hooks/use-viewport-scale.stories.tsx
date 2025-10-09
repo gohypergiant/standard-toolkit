@@ -10,18 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
+import { ZoomWidget } from '@deck.gl/widgets';
 import { BaseMap } from '../base-map';
 import { ViewportSyncWidget } from '../widgets/viewport-sync';
 import { ViewportScale } from './use-viewport-scale';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const WIDGETS = [new ViewportSyncWidget({ id: 'viewport-sync' })];
+const WIDGETS = [
+  new ViewportSyncWidget({ id: 'viewport-sync' }),
+  new ZoomWidget(),
+];
 
 const meta: Meta = {
-  title: 'DeckGL',
+  title: 'DeckGL/Hooks',
   decorators: [],
   parameters: {
-    layout: 'fullscreen',
+    layout: '',
   },
 };
 
@@ -32,9 +36,12 @@ export const UseViewportScale: Story = {
   render: () => {
     return (
       <div>
-        <ViewportScale className='min-h-32 absolute right-1 bottom-1 bg-advisory-bold p-8' />
-        {/* <ViewportScale style={{ position: 'absolute', bottom: '2em', right: '2em', background: 'grey', padding: '0.5em 1em'}} /> */}
-        <BaseMap widgets={WIDGETS} className='h-dvh w-dvw' />
+        <ViewportScale className='absolute right-4 bottom-4 bg-gray-400 p-4' />
+        <BaseMap
+          interleaved={false} // setting it to true breaks out the widget somehow
+          widgets={WIDGETS}
+          className='h-dvh w-dvw'
+        />
       </div>
     );
   },

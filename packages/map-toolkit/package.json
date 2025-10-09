@@ -27,6 +27,12 @@
       },
       "default": "./dist/*/fiber.js"
     },
+    "./styles-embedded": {
+      "import": {
+        "default": "./dist/styles.css"
+      },
+      "default": "./dist/styles.css"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

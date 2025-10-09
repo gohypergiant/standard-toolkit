@@ -13,11 +13,11 @@
 import { Broadcast } from '@accelint/bus';
 import { _WidgetImpl, type WidgetImplProps } from '@deck.gl/widgets';
 import { MapEvents } from '@/deckgl/base-map/events';
-import type { 
+import type {
   _GlobeViewport,
-  Deck,
   Viewport,
-  WebMercatorViewport,Widget, } from '@deck.gl/core';
+  WebMercatorViewport,
+} from '@deck.gl/core';
 import type { MapEventType } from '@/deckgl/base-map/types';
 
 export const bus = Broadcast.getInstance<MapEventType>();
@@ -40,7 +40,6 @@ export class ViewportSyncWidget extends _WidgetImpl<ViewportSyncWidgetProps> {
   constructor(
     props: ViewportSyncWidgetProps = ViewportSyncWidget.defaultProps,
   ) {
-    console.log('init widget');
     // @ts-expect-error issue with deckgl types
     super(props);
   }
@@ -53,11 +52,9 @@ export class ViewportSyncWidget extends _WidgetImpl<ViewportSyncWidgetProps> {
   handleClick(): void {}
 
   // biome-ignore lint/suspicious/noEmptyBlockStatements: intentionally void
-  // biome-ignore lint/style/useNamingConvention: intentional
   onRenderHTML(): void {}
 
   onViewportChange(viewport: Viewport): void {
-    console.log('CHANGE VIEWPORT');
     if (!viewport.isGeospatial) {
       return;
     }

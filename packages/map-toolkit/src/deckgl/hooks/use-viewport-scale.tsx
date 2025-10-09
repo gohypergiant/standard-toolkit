@@ -13,13 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { useOn } from '@accelint/bus/react';
 import { distance } from '@turf/distance';
-import {
-  type ComponentProps,
-  type ComponentType,
-  type ElementType,
-  useEffect,
-  useRef,
-} from 'react';
+import { type ComponentProps, useRef } from 'react';
 import { MapEvents } from '../base-map/events';
 import type { Bounds, MapEventType, MapViewportEvent } from '../base-map/types';
 
@@ -37,57 +31,39 @@ type AllowedUnit = keyof typeof UNIT_MAP;
 type GetViewportScaleArgs = {
   bounds?: Bounds;
   unit: AllowedUnit;
-};
-type ViewportScale = {
-  width?: string;
-  height?: string;
-  toString: (unit?: 'km' | 'mi' | 'nmi') => string;
+  formatter?: Intl.NumberFormat;
 };
 
-const formatter = Intl.NumberFormat('en-US');
+const numberFormatter = Intl.NumberFormat('en-US');
 
-const getWidth = (unit: AllowedUnit, bounds: Bounds) => {
-  const [minX, minY, maxX] = bounds;
-  return formatter.format(
-    Math.round(
-      distance([minY, minX], [minY, maxX], {
-        units: UNIT_MAP[unit],
-      }),
-    ),
-  );
-};
-
-const getHeight = (unit: AllowedUnit, bounds: Bounds) => {
-  const [minX, minY, maxY] = bounds;
-  return formatter.format(
-    Math.round(
-      distance([minX, minY], [minX, maxY], {
-        units: UNIT_MAP[unit],
-      }),
-    ),
-  );
-};
-
-export function getViewportScale({ bounds, unit }: GetViewportScaleArgs) {
+export function getViewportScale({
+  bounds,
+  unit,
+  formatter = numberFormatter,
+}: GetViewportScaleArgs) {
   if (!bounds) {
-    return {
-      width: undefined,
-      height: undefined,
-      toString: () => '-- x --',
-    } as const;
+    return '-- x --' as const;
   }
 
-  const width = getWidth(unit, bounds);
-  const height = getHeight(unit, bounds);
+  const [minX, minY, maxX, maxY] = bounds;
 
-  const print = (unit: 'km' | 'mi' | 'nmi' = 'nmi') => {
-    const width = getWidth(unit, bounds);
-    const height = getHeight(unit, bounds);
+  const width = formatter.format(
+    Math.round(
+      distance([minY, minX], [minY, maxX], {
+        units: 'nauticalmiles',
+      }),
+    ),
+  );
 
-    return `${width} x ${height} ${unit.toUpperCase()}`;
-  };
+  const height = formatter.format(
+    Math.round(
+      distance([minX, minY], [minX, maxY], {
+        units: 'nauticalmiles',
+      }),
+    ),
+  );
 
-  return { width, height, toString: print } as const;
+  return `${width} x ${height} ${unit.toUpperCase()}` as const;
 }
 
 type ViewportScaleProps = ComponentProps<'span'> & {
@@ -95,77 +71,29 @@ type ViewportScaleProps = ComponentProps<'span'> & {
   className?: string;
 };
 
-export function useViewportScale(unit: AllowedUnit = 'nmi') {
-  const viewPortScaleRef = useRef<ViewportScale>(undefined);
-
-  useOn<MapViewportEvent>(
-    MapEvents.viewport,
-    ({ payload: { bounds } }: MapViewportEvent) => {
-      console.log('viewport changed');
-      if (bounds) {
-        viewPortScaleRef.current = getViewportScale({
-          bounds,
-          unit,
-        });
-      }
-    },
-  );
-
-  return viewPortScaleRef.current;
-}
-
-////// using the hook
 export function ViewportScale({
   unit = 'nmi',
   className,
   ...rest
 }: ViewportScaleProps) {
-  const viewPortScale = useViewportScale(unit);
-  console.log({ viewPortScale });
+  const ref = useRef<HTMLSpanElement>(null);
 
-  if (!viewPortScale) {
-    return (
-      <span className={className} {...rest}>
-        ### x ### {unit}
-      </span>
-    );
-  }
+  useOn<MapViewportEvent>(
+    MapEvents.viewport,
+    ({ payload: { bounds } }: MapViewportEvent) => {
+      if (bounds && ref.current) {
+        const viewportScale = getViewportScale({
+          bounds,
+          unit,
+        });
+        ref.current.innerText = viewportScale.toString();
+      }
+    },
+  );
 
   return (
-    <span className={className} {...rest}>
-      {viewPortScale.toString()}
+    <span className={className} {...rest} ref={ref}>
+      ### x ### {unit}
     </span>
   );
 }
-
-////// just using the util
-
-// export function ViewportScale({ unit, className }: ViewportScaleProps) {
-//   const lastBounds = useRef<Bounds>(undefined);
-//   const el = useRef<HTMLSpanElement>(null);
-
-//   useEffect(() => {
-//     function onMove(e: { payload: { bounds?: Bounds } }) {
-//       if (el.current && e.payload.bounds) {
-//         lastBounds.current = e.payload.bounds;
-
-//         el.current.textContent = getViewportScale({
-//           bounds: lastBounds.current,
-//           unit,
-//         }).toString();
-//       }
-//     }
-
-//     bus.on(EVENTS.MAP_MOVE, onMove);
-
-//     return () => {
-//       bus.off(EVENTS.MAP_MOVE, onMove);
-//     };
-//   }, [unit]);
-
-//   return (
-//     <span className={className} ref={el}>
-//       {getViewportScale({ bounds: lastBounds.current, unit }).toString()}
-//     </span>
-//   );
-// }
