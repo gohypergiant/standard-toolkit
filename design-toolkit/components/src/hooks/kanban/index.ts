@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useDroppable } from '@dnd-kit/core';
+import { useDndContext, useDroppable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { calculateClosestEdge } from '@/components/kanban/context';
@@ -25,14 +25,20 @@ export function useColumnInteractions(column: KanbanColumnData) {
     data: column,
   });
 
+  // Get the global over state to detect when hovering over cards in this column
+  const { over } = useDndContext();
+
+  // Check if we're over the column itself OR over a card that belongs to this column
+  const isOverColumn = isOver || over?.data?.current?.columnId === column.id;
+
   const isHighlighted = Boolean(
-    isOver ||
+    isOverColumn ||
       (active &&
         active.data.current?.columnId !== column.id &&
         column.canDrop !== false),
   );
 
-  const isActive = isOver && column.canDrop !== false;
+  const isActive = isOverColumn && column.canDrop !== false;
 
   return {
     ref: setNodeRef,

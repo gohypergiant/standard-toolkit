@@ -23,7 +23,6 @@ import {
   PointerSensor,
   pointerWithin,
   rectIntersection,
-  useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -285,19 +284,9 @@ const ColContent = ({
 }: KanbanColContentProps) => {
   const cardIds = column?.cards?.map((card) => card.id) || [];
 
-  // Make the content area droppable when empty to ensure it can receive drops
-  const { setNodeRef: setDroppableRef } = useDroppable({
-    id: `${column?.id}-content`,
-    data: column,
-  });
-
   return (
     <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
-      <div
-        ref={setDroppableRef}
-        className={colContent({ className })}
-        {...rest}
-      >
+      <div className={colContent({ className })} {...rest}>
         {children}
       </div>
     </SortableContext>
