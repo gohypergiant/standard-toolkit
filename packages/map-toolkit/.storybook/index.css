@@ -11,7 +11,7 @@
  */
 
 @import "tailwindcss";
-@import "@accelint/design-toolkit/styles";
+@import "../../../design-toolkit/components/dist/styles.css"; /* TODO: replace with however we decide to fix this*/
 @source "../node_modules/@accelint/design-toolkit";
 
 html {
