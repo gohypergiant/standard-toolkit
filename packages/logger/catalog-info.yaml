@@ -2,23 +2,23 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@accelint/bus"
-  title: Accelint Bus
+  name: "@accelint/logger"
+  title: Accelint Logger
   description: >-
-    An open-source event bus library.
+    A flexible and extensible logging utility with callsite tracking and
+    environment-aware capabilities.
 
 
     Dependencies:
 
-    @accelint/core@0.4.0, @accelint/typescript-config@0.1.2,
-    @accelint/vitest-config@0.1.3
+    @accelint/typescript-config@0.1.2, @accelint/vitest-config@0.1.3
   annotations:
-    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/bus/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/logger/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 1.2.0
+    package/version: 0.1.0
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
-    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/logger
       title: Documentation
       icon: docs
       type: documentation
@@ -30,6 +30,5 @@ spec:
   lifecycle: production
   owner: group:default/pathfinder
   dependsOn:
-    - component:@accelint/core
     - component:@accelint/typescript-config
     - component:@accelint/vitest-config
