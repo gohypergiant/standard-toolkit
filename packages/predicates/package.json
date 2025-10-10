@@ -1,7 +1,7 @@
 {
   "name": "@accelint/predicates",
   "title": "Accelint Predicates",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": false,
   "license": "Apache-2.0",
   "keywords": [

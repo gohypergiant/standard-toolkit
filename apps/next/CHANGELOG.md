@@ -1,5 +1,33 @@
 # @apps/next
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [23ad1db]
+- Updated dependencies [66ac503]
+- Updated dependencies [3e47dea]
+- Updated dependencies [ccb2d05]
+- Updated dependencies [0baf4b0]
+- Updated dependencies [57efc27]
+- Updated dependencies [d625d2b]
+- Updated dependencies [6d131cd]
+- Updated dependencies [1e68e16]
+- Updated dependencies [ade0504]
+- Updated dependencies [fb2852d]
+- Updated dependencies [5643ee1]
+- Updated dependencies [64280a7]
+- Updated dependencies [ac5378e]
+- Updated dependencies [4d96d59]
+- Updated dependencies [eba4ac3]
+- Updated dependencies [65a0137]
+- Updated dependencies [d726ad5]
+  - @accelint/design-toolkit@6.0.0
+  - @accelint/icons@2.0.4
+  - @accelint/bus@1.4.0
+  - @accelint/core@0.4.2
+  - @accelint/logger@0.1.1
+
 ## 0.3.2
 
 ### Patch Changes

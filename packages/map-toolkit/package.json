@@ -1,7 +1,7 @@
 {
   "name": "@accelint/map-toolkit",
   "title": "Accelint Map Toolkit",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "private": false,
   "license": "Apache-2.0",
   "keywords": [
@@ -100,7 +100,7 @@
     "vitest-broadcast-channel-mock": "0.1.0"
   },
   "optionalDependencies": {
-    "@accelint/bus": "^1.3.0",
+    "@accelint/bus": "^1.4.0",
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "^9.1.14",
     "@deck.gl/geo-layers": "^9.1.14",
