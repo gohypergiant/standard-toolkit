@@ -12,6 +12,7 @@
 
 import { Placeholder } from '@accelint/icons';
 import { useState } from 'react';
+import { CRITICALITY } from '@/constants/criticality';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './index';
@@ -61,12 +62,12 @@ type StoryForDeletable = StoryObj<typeof metaFromDeletable>;
 export const Default: Story = {
   args: {
     children: 'Chip',
-    variant: 'info',
+    variant: CRITICALITY.INFO,
   },
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
+      options: Object.values(CRITICALITY),
     },
   },
   render: ({ children, ...args }) => (
@@ -81,12 +82,12 @@ export const Default: Story = {
 
 export const List: Story = {
   args: {
-    variant: 'info',
+    variant: CRITICALITY.INFO,
   },
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'advisory', 'normal', 'serious', 'critical'],
+      options: Object.values(CRITICALITY),
     },
   },
   parameters: {
