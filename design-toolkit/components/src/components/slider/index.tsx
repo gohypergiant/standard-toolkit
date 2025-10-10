@@ -81,11 +81,7 @@ export const Slider = ({
             </Label>
           )}
           {showInput && (
-            <div
-              className={inputs({
-                className: classNames?.inputs,
-              })}
-            >
+            <div className={inputs({ className: classNames?.inputs })}>
               {state.values.map((value, index) => (
                 <Input
                   key={`number-field-${index === 0 ? 'min' : 'max'}`}
@@ -94,6 +90,8 @@ export const Slider = ({
                     (className) => input({ className }),
                   )}
                   value={value}
+                  disabled={state.isDisabled}
+                  data-disabled={state.isDisabled || undefined}
                   onChange={(event) =>
                     state.setThumbValue(
                       index,
