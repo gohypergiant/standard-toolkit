@@ -27,7 +27,9 @@ import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapClickEvent, MapEventType, MapHoverEvent } from './types';
 
-type BaseMapProps = DeckglProps & { className?: string };
+type BaseMapProps = DeckglProps & {
+  className?: string;
+};
 
 export const bus = Broadcast.getInstance<MapEventType>();
 

@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-@import "tailwindcss";
+export const MapModeEventsNamespace = 'mode';
 
-html {
-  overflow: hidden;
-}
+export const MapModeEvents = {
+  changed: `${MapModeEventsNamespace}:changed`,
+  changeRequest: `${MapModeEventsNamespace}:change:request`,
+  changeAuthorization: `${MapModeEventsNamespace}:change:authorization`,
+  changeDecision: `${MapModeEventsNamespace}:change:decision`,
+} as const;

@@ -18,9 +18,6 @@ import type { MapClickEvent, MapHoverEvent } from '../base-map/types';
 
 const meta: Meta = {
   title: 'DeckGL',
-  parameters: {
-    layout: 'fullscreen',
-  },
 };
 
 export default meta;

@@ -815,6 +815,9 @@ importers:
       '@accelint/bus':
         specifier: ^1.3.0
         version: 1.3.0(@accelint/core@0.4.1(type-fest@4.41.0)(typescript@5.9.2)(uuid@11.1.0)(zod@4.1.5))(typescript@5.9.2)
+      '@accelint/core':
+        specifier: ^1.4.0
+        version: 0.4.1(type-fest@4.41.0)(typescript@5.9.2)(uuid@11.1.0)(zod@4.1.5)
       '@deck.gl/core':
         specifier: 9.1.14
         version: 9.1.14
@@ -3455,7 +3458,6 @@ packages:
 
   '@ls-lint/ls-lint@2.3.0-beta.1':
     resolution: {integrity: sha512-NmujBNFslP4GhFsB92zh1evSSBadcg+RMsQ5FM70OrU36C3AbQYaVXDn4reC28GM6DFoOtiETRdKV6ie1TfP7g==}
-    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
