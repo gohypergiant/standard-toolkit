@@ -27,9 +27,9 @@ const program = new Command();
 
 type ParseParametersProps = {
   // Options
-  catalogInfo: string | undefined; // The path to the catalog-info.yaml file.
-  nodeModules: string | undefined; // The path to the node_modules folder.
-  packageJson: string | undefined; // The path to the package.json file.
+  catalogInfo?: string; // The path to the catalog-info.yaml file.
+  nodeModules?: string; // The path to the node_modules folder.
+  packageJson?: string; // The path to the package.json file.
 };
 
 function _parseParameters({
@@ -54,8 +54,6 @@ function _parseParameters({
 const DESCRIPTION_REGEX = /\n\s*Dependencies:[\s\S]*/;
 
 export function handleAction(options: CmdOptions) {
-  console.log(...arguments);
-
   const {
     catalogInfo,
     nodeModules,
@@ -78,7 +76,7 @@ export function handleAction(options: CmdOptions) {
     Boolean(regenerate),
   );
 
-  const dependencySpinner = ora('Gathering depedencies...');
+  const dependencySpinner = ora('Gathering dependencies...');
   dependencySpinner.start();
   if (hasDependencies) {
     const dependencies = collectDependencies(
