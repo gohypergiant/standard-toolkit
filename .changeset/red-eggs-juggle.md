@@ -8,7 +8,6 @@
 "@accelint/design-toolkit": patch
 "@accelint/eslint-config": patch
 "@accelint/formatters": patch
-"@accelint/formatters": patch
 "@accelint/geo": patch
 "@accelint/icons": patch
 "@accelint/logger": patch
