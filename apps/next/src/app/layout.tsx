@@ -31,10 +31,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
     //     localStorage.theme === "dark" ||
     //       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
     //   );
-    <html
-      lang='en'
-      className='bg-surface-overlay fg-info-bold font-primary dark'
-    >
+    <html lang='en' className='font-primary dark'>
       <body className='w-full h-dvh flex flex-col'>
         <DTKTheme>
           <Nav />

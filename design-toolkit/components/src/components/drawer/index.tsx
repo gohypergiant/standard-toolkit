@@ -13,6 +13,7 @@
 
 import 'client-only';
 import { Broadcast } from '@accelint/bus';
+import { useEmit, useOn } from '@accelint/bus/react';
 import { isUUID, type UniqueId } from '@accelint/core';
 import { Cancel, ChevronLeft } from '@accelint/icons';
 import { Pressable } from '@react-aria/interactions';
@@ -31,11 +32,11 @@ import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import {
+  useViewStackEmit,
   ViewStack,
   ViewStackContext,
   ViewStackEventHandlers,
 } from '../view-stack';
-import { ViewStackEventTypes } from '../view-stack/events';
 import { DrawerEventTypes } from './events';
 import { DrawerMenuStyles, DrawerStyles, DrawerTitleStyles } from './styles';
 import type { ViewStackViewProps } from '../view-stack/types';
@@ -55,6 +56,7 @@ import type {
 const { layout, main, drawer, panel, view, header, content, footer } =
   DrawerStyles();
 const { menu, item } = DrawerMenuStyles();
+
 const bus = Broadcast.getInstance<DrawerEvent>();
 
 export const DrawerContext = createContext<DrawerContextValue>({
@@ -70,8 +72,22 @@ export const DrawerEventHandlers = {
   toggle: (view: UniqueId) => bus.emit(DrawerEventTypes.toggle, { view }),
 } as const;
 
+export function useDrawerEmit() {
+  const viewStackEmit = useViewStackEmit();
+  const emitOpen = useEmit<DrawerEvent>(DrawerEventTypes.open);
+  const emitToggle = useEmit<DrawerEvent>(DrawerEventTypes.toggle);
+
+  return {
+    ...viewStackEmit,
+    close: viewStackEmit.clear,
+    open: (view: UniqueId) => emitOpen({ view }),
+    toggle: (view: UniqueId) => emitToggle({ view }),
+  } as const;
+}
+
 function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);
+  const drawerEmit = useDrawerEmit();
 
   function handlePress() {
     for (const type of Array.isArray(events) ? events : [events]) {
@@ -86,7 +102,7 @@ function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
         continue;
       }
 
-      DrawerEventHandlers[event](id);
+      drawerEmit[event](id);
     }
   }
 
@@ -175,34 +191,32 @@ function DrawerMenuItem({
   }
 
   return (
-    <Tooltip>
-      <Tooltip.Trigger>
-        <DrawerTrigger for={`${action}:${id}`}>
-          <ToggleButton
-            {...rest}
-            ref={tooltipRef}
-            className={composeRenderProps(classNames?.item, (className) =>
-              item({ className }),
-            )}
-            role='tab'
-            variant='icon'
-            isSelected={id === view || (stack.length > 1 && stack.includes(id))}
-          >
-            {composeRenderProps(children, (children) => (
-              <Icon>{children}</Icon>
-            ))}
-          </ToggleButton>
-        </DrawerTrigger>
-      </Tooltip.Trigger>
-      <Tooltip.Body
+    <Tooltip.Trigger>
+      <DrawerTrigger for={`${action}:${id}`}>
+        <ToggleButton
+          {...rest}
+          ref={tooltipRef}
+          className={composeRenderProps(classNames?.item, (className) =>
+            item({ className }),
+          )}
+          role='tab'
+          variant='icon'
+          isSelected={id === view || (stack.length > 1 && stack.includes(id))}
+        >
+          {composeRenderProps(children, (children) => (
+            <Icon>{children}</Icon>
+          ))}
+        </ToggleButton>
+      </DrawerTrigger>
+      <Tooltip
         triggerRef={tooltipRef}
         placement={tooltipPlacementMap[placement]}
         offset={6}
         className={classNames?.tooltip}
       >
         {textValue}
-      </Tooltip.Body>
-    </Tooltip>
+      </Tooltip>
+    </Tooltip.Trigger>
   );
 }
 DrawerMenuItem.displayName = 'Drawer.Menu.Item';
@@ -252,7 +266,7 @@ function DrawerView({
   useEffect(() => {
     register(id);
 
-    () => unregister(id);
+    return () => unregister(id);
   }, [register, unregister, id]);
 
   return (
@@ -320,6 +334,32 @@ function DrawerFooter({ className, ...rest }: ComponentPropsWithRef<'footer'>) {
 }
 DrawerFooter.displayName = 'Drawer.Footer';
 
+/**
+ * Drawer - Slide-in panel for navigation or contextual content
+ *
+ * A flexible panel that slides in from the viewport edge and supports
+ * stacked views, headers, footers, and programmatic triggers.
+ *
+ * @example
+ * const ids = { drawer: uuid(), a: uuid() };
+ *
+ * <Drawer.Layout push="left">
+ *   <Drawer.Layout.Main>
+ *     <Drawer.Trigger for={`open:${ids.a}`}>
+ *       <Button variant="icon">Open</Button>
+ *     </Drawer.Trigger>
+ *   </Drawer.Layout.Main>
+ *
+ *   <Drawer id={ids.drawer} defaultView={ids.a}>
+ *     <Drawer.Panel>
+ *       <Drawer.View id={ids.a}>
+ *         <Drawer.Header title="Title A" />
+ *         <Drawer.Content>Content for View A</Drawer.Content>
+ *       </Drawer.View>
+ *     </Drawer.Panel>
+ *   </Drawer>
+ * </Drawer.Layout>
+ */
 export function Drawer({
   id,
   children,
@@ -344,39 +384,31 @@ export function Drawer({
     defaultView || null,
   );
 
+  const viewStackEmit = useViewStackEmit();
+
   const handleOpen = useCallback(
     (data: DrawerOpenEvent) => {
       if (views.current.has(data?.payload?.view)) {
-        bus.emit(ViewStackEventTypes.clear, { stack: id });
-        bus.emit(ViewStackEventTypes.push, data.payload);
+        viewStackEmit.clear(id);
+        viewStackEmit.push(data.payload.view);
       }
     },
-    [id],
+    [id, viewStackEmit.clear, viewStackEmit.push],
   );
   const handleToggle = useCallback(
     (data: DrawerToggleEvent) => {
       if (views.current.has(data?.payload?.view)) {
-        bus.emit(ViewStackEventTypes.clear, { stack: id });
+        viewStackEmit.clear(id);
         if (activeView !== data?.payload?.view) {
-          bus.emit(ViewStackEventTypes.push, data.payload);
+          viewStackEmit.push(data.payload.view);
         }
       }
     },
-    [id, activeView],
+    [id, activeView, viewStackEmit.clear, viewStackEmit.push],
   );
 
-  useEffect(() => {
-    const listeners = [
-      bus.on(DrawerEventTypes.open, handleOpen),
-      bus.on(DrawerEventTypes.toggle, handleToggle),
-    ];
-
-    return () => {
-      for (const off of listeners) {
-        off();
-      }
-    };
-  }, [handleOpen, handleToggle]);
+  useOn(DrawerEventTypes.open, handleOpen);
+  useOn(DrawerEventTypes.toggle, handleToggle);
 
   return (
     <DrawerContext.Provider

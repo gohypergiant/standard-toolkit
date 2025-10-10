@@ -9,47 +9,38 @@ The Tooltip component provides a floating label that explains an element when us
 
 It is composed of the following components:
 
-- **Tooltip** - Main wrapper component that manages tooltip trigger and display logic
-- **Tooltip.Trigger** - The element that users interact with to show the tooltip
-- **Tooltip.Body** - The floating container that displays the tooltip content
+- **Tooltip.Trigger** - Main wrapper component that manages tooltip trigger and display logic
+- **Tooltip** - The floating container that displays the tooltip content
 
 ## Example usage
 ```tsx
 // Basic tooltip
-<Tooltip>
-  <Tooltip.Trigger>
-    <span>Hover me</span>
-  </Tooltip.Trigger>
-  <Tooltip.Body>This is a helpful tooltip</Tooltip.Body>
-</Tooltip>
+<Tooltip.Trigger>
+  <Button>Hover me</Button>
+  <Tooltip>This is a helpful tooltip</Tooltip>
+</Tooltip.Trigger>
 
 // Tooltip with custom placement and offset
-<Tooltip>
-  <Tooltip.Trigger>
-    <Button>Click me</Button>
-  </Tooltip.Trigger>
-  <Tooltip.Body placement="top" offset={10}>
+<Tooltip.Trigger>
+  <Button>Click me</Button>
+  <Tooltip placement="top" offset={10}>
     Tooltip above the button
-  </Tooltip.Body>
-</Tooltip>
+  </Tooltip>
+</Tooltip.Trigger>
 
 // Tooltip with icon
-<Tooltip>
-  <Tooltip.Trigger>
-    <Icon><Info /></Icon>
-  </Tooltip.Trigger>
-  <Tooltip.Body>Additional information</Tooltip.Body>
-</Tooltip>
+<Tooltip.Trigger>
+  <Icon><Info /></Icon>
+  <Tooltip>Additional information</Tooltip>
+</Tooltip.Trigger>
 
 // Long tooltip content
-<Tooltip>
-  <Tooltip.Trigger>
-    <span>Long explanation</span>
-  </Tooltip.Trigger>
-  <Tooltip.Body>
+<Tooltip.Trigger>
+  <Button>Long explanation</Button>
+  <Tooltip>
     This tooltip contains a longer explanation that will wrap to multiple lines
-  </Tooltip.Body>
-</Tooltip>
+  </Tooltip>
+</Tooltip.Trigger>
 ```
 
 ## Variants
@@ -66,21 +57,12 @@ The Tooltip component has a single visual variant that automatically adapts base
 
 ## Props
 
-### Tooltip Props
-* **`children`** - Must contain exactly one `Tooltip.Trigger` and one `Tooltip.Body` component
-* **`isOpen`** - Controls whether the tooltip is visible
-* **`defaultOpen`** - Initial open state
-* **`onOpenChange`** - Callback when open state changes
-
 ### Tooltip.Trigger Props
-* **`children`** - The element that triggers the tooltip (can be any focusable element)
-* **`isDisabled`** - Disables the tooltip trigger
+Implements all props from [Tooltip.Trigger](https://react-spectrum.adobe.com/react-aria/Tooltip.html#tooltiptrigger)
 
-### Tooltip.Body Props
-* **`children`** - The tooltip content text
-* **`placement`** - Tooltip position: `'top'`, `'bottom'`, `'left'`, `'right'` (default: `'bottom'`)
-* **`offset`** - Distance between tooltip and trigger in pixels (default: `5`)
-* **`className`** - Additional CSS classes for custom styling
+### Tooltip Props
+Implements all props from [Tooltip](https://react-spectrum.adobe.com/react-aria/Tooltip.html#tooltip-1)
+* **`parentRef`** - Ref to the parent container the tooltip should portal to
 
 ## Implementation Notes
 The `Tooltip` component wraps the `Tooltip` and `TooltipTrigger` components from `react-aria-components`.

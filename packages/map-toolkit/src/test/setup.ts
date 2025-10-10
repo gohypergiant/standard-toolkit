@@ -16,6 +16,9 @@ import { afterEach, expect } from 'vitest';
 
 expect.extend(matchers);
 
+// Add browser globals that jsdom doesn't provide
+globalThis.reportError = console.error;
+
 afterEach(() => {
   cleanup();
 });

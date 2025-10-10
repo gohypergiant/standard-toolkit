@@ -111,6 +111,8 @@ export type {
   ClassificationBannerProps,
   ClassificationBannerStyleVariants,
 } from './components/classification-banner/types';
+export { Clock } from './components/clock';
+export type { ClockProps } from './components/clock/types';
 export { ColorPicker } from './components/color-picker';
 export { ColorPickerStyles } from './components/color-picker/styles';
 export type { ColorPickerProps } from './components/color-picker/types';
@@ -150,6 +152,7 @@ export {
   Drawer,
   DrawerContext,
   DrawerEventHandlers,
+  useDrawerEmit,
 } from './components/drawer';
 export {
   DrawerMenuStyles,
@@ -198,6 +201,22 @@ export type {
   MenuProps,
   MenuSectionProps,
 } from './components/menu/types';
+export {
+  NoticeEventNamespace,
+  NoticeEventTypes,
+} from './components/notice/events';
+export { Notice } from './components/notice';
+export { NoticeStyles } from './components/notice/styles';
+export type {
+  NoticeActionEvent,
+  NoticeColor,
+  NoticeContent,
+  NoticeDequeueEvent,
+  NoticeIconProps,
+  NoticeListProps,
+  NoticeProps,
+  NoticeQueueEvent,
+} from './components/notice/types';
 export { Options, OptionsContext } from './components/options';
 export { OptionsStyles } from './components/options/styles';
 export type {
@@ -322,16 +341,10 @@ export type { TimeFieldProps } from './components/time-field/types';
 export { Tooltip, TooltipContext } from './components/tooltip';
 export { TooltipStyles } from './components/tooltip/styles';
 export type {
-  TooltipBodyProps,
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
-export {
-  Tree,
-  TreeContext,
-  TreeItem,
-  TreeItemContext,
-} from './components/tree';
+export { Tree, TreeContext, TreeItemContext } from './components/tree';
 export { TreeStyles, TreeStylesDefaults } from './components/tree/styles';
 export type {
   TreeContextValue,
@@ -349,6 +362,7 @@ export {
   ViewStack,
   ViewStackContext,
   ViewStackEventHandlers,
+  useViewStackEmit,
 } from './components/view-stack';
 export type {
   ViewStackBackEvent,
@@ -399,7 +413,9 @@ export {
   tv,
   twMerge,
 } from './lib/utils';
+export { PortalProvider } from './providers/portal';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
+export type { ThemeMode } from './providers/theme-provider';
 export { designTokens } from './tokens/tokens';
 export type {
   SemanticColorTokens,

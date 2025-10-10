@@ -25,21 +25,18 @@ export const AccordionStyles = tv({
       'group-enabled/accordion:focus-visible-within:bg-interactive-muted-hover group-enabled/accordion:hover:bg-interactive-muted-hover',
       'group-enabled/accordion:pressed:bg-interactive-muted-pressed',
       'group-disabled/accordion:fg-disabled group-disabled/accordion:cursor-not-allowed',
-      'transition-color duration-[80ms]',
     ],
     heading: 'grow',
-    trigger: [
-      'flex w-full cursor-pointer items-center justify-start size-medium:px-0 disabled:cursor-not-allowed',
-    ],
+    trigger: 'w-full cursor-pointer justify-start size-medium:px-0',
     panel: 'p-s',
   },
   variants: {
     variant: {
       cozy: {
-        trigger: 'gap-s text-header-m',
+        trigger: 'size-medium:gap-s size-medium:text-header-m',
       },
       compact: {
-        trigger: 'gap-xs text-header-s',
+        trigger: 'size-medium:gap-xs size-medium:text-header-s',
       },
     },
   },

@@ -12,7 +12,7 @@
   "description": "An open-source icon library to serve as part of the entire ecosystem of UX for Accelint.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
+    "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "type": "module",
   "owner": "default/pathfinder",

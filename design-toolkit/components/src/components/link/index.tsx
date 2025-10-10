@@ -27,6 +27,15 @@ function LinkProvider({ children, ...props }: ProviderProps<LinkProps>) {
 }
 LinkProvider.displayName = 'Link.Provider';
 
+/**
+ * Link - Accessible anchor/link component with optional visited state
+ *
+ * A flexible link component that handles visited state, external anchors, and
+ * icon integration while providing ARIA-compatible behavior.
+ *
+ * @example
+ * <Link href="/dashboard">Go to Dashboard</Link>
+ */
 export function Link({ ref, ...props }: LinkProps) {
   [props, ref] = useContextProps(props, ref ?? null, LinkContext);
 

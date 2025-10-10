@@ -10,9 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+export const NoticeEventNamespace = 'Notice';
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
+export const NoticeEventTypes = {
+  queue: `${NoticeEventNamespace}:queue`,
+  dequeue: `${NoticeEventNamespace}:dequeue`,
+  actionPrimary: `${NoticeEventNamespace}:action:primary`,
+  actionSecondary: `${NoticeEventNamespace}:action:secondary`,
+  close: `${NoticeEventNamespace}:close`,
+} as const;

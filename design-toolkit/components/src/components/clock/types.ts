@@ -10,10 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, it } from 'vitest';
+import type { ComponentPropsWithRef } from 'react';
 
-describe('hello world test', () => {
-  it('should run test', () => {
-    expect(true).toBe(true);
-  });
-});
+export type ClockProps = ComponentPropsWithRef<'time'> & {
+  formatter?: Intl.DateTimeFormat;
+};

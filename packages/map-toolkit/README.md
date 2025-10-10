@@ -30,3 +30,6 @@ In an effort to reduce the number of unnecessary dependencies being installed by
 
 ## Usage
 - Under Construction 🚧
+
+## Storybook Preview
+- To run storybook, use the command `pnpm preview` to run locally.

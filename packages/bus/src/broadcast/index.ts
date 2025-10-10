@@ -295,9 +295,10 @@ export class Broadcast<
     };
     const message = {
       type,
-      target: target === 'self' ? this.id : isUUID(target) ? target : undefined,
       payload,
-    } as Payload as P;
+      source: this.id,
+      target: target === 'self' ? this.id : isUUID(target) ? target : undefined,
+    } as unknown as P;
 
     if (message.target !== this.id) {
       this.channel.postMessage(message);
