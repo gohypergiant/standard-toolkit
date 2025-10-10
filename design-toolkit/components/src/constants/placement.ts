@@ -10,18 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Axis } from '@react-types/overlays';
-import type { ComponentPropsWithRef } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { PLACEMENT } from '@/constants/placement';
-import type { BadgeStyles } from './styles';
+export type PlacementKey = keyof typeof PLACEMENT;
+export type Placement = (typeof PLACEMENT)[PlacementKey];
 
-type Horizontal = typeof PLACEMENT.LEFT | typeof PLACEMENT.RIGHT;
-type Vertical = typeof PLACEMENT.TOP | typeof PLACEMENT.BOTTOM;
-
-export type BadgeProps = ComponentPropsWithRef<'span'> &
-  VariantProps<typeof BadgeStyles> & {
-    children?: string;
-    offset?: number | { x?: number; y?: number };
-    placement?: Axis | `${Vertical} ${Horizontal}`;
-  };
+export const PLACEMENT = Object.freeze({
+  TOP: 'top',
+  BOTTOM: 'bottom',
+  LEFT: 'left',
+  RIGHT: 'right',
+} as const);

@@ -17,9 +17,10 @@ import type {
   PopoverRenderProps,
   Pressable,
 } from 'react-aria-components';
+import type { Placement } from '@/constants/placement';
 
 export interface PopoverProps {
-  placement?: 'left' | 'right' | 'top' | 'bottom';
+  placement?: Placement;
   children?: ReactNode;
 }
 
