@@ -24,7 +24,7 @@ import {
 } from '@accelint/icons';
 import { useToastRegion } from '@react-aria/toast';
 import { useToastQueue } from '@react-stately/toast';
-import { isEqual } from 'lodash';
+import { isEqual } from 'radashi';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   composeRenderProps,
