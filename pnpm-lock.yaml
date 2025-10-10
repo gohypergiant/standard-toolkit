@@ -384,9 +384,6 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
-      '@types/lodash':
-        specifier: ^4.17.20
-        version: 4.17.20
       '@types/node':
         specifier: ^24.1.0
         version: 24.7.1
@@ -414,9 +411,6 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
