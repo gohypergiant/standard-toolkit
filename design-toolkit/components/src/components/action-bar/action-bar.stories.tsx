@@ -1,7 +1,3 @@
-import { Placeholder } from '@accelint/icons';
-import { Button, ToggleButton } from '../button';
-import { Icon } from '../icon';
-import { ActionBar } from './index';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -13,13 +9,25 @@ import { ActionBar } from './index';
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import { EXCLUSIONS } from '^storybook/utils';
+import { Placeholder } from '@accelint/icons';
+import { Button, ToggleButton } from '../button';
+import { Icon } from '../icon';
+import { ActionBar } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
   title: 'Components/ActionBar',
   component: ActionBar,
   parameters: {
-    layout: 'fullscreen',
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle:
+        'A horizontal toolbar component for grouping actions and controls',
+    },
   },
 } satisfies Meta<typeof ActionBar>;
 
@@ -29,25 +37,23 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => {
     return (
-      <div className='relative h-[400px] bg-surface-overlay'>
-        <ActionBar className='absolute top-s left-s'>
-          <Button>
-            <Icon>
-              <Placeholder />
-            </Icon>
-          </Button>
-          <Button>
-            <Icon>
-              <Placeholder />
-            </Icon>
-          </Button>
-          <Button>
-            <Icon>
-              <Placeholder />
-            </Icon>
-          </Button>
-        </ActionBar>
-      </div>
+      <ActionBar>
+        <Button>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </Button>
+        <Button>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </Button>
+        <Button>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </Button>
+      </ActionBar>
     );
   },
 };
@@ -55,25 +61,23 @@ export const Default: Story = {
 export const Toggle: Story = {
   render: () => {
     return (
-      <div className='relative h-[400px] bg-surface-overlay'>
-        <ActionBar className='absolute top-s left-s'>
-          <ToggleButton>
-            <Icon>
-              <Placeholder />
-            </Icon>
-          </ToggleButton>
-          <ToggleButton>
-            <Icon>
-              <Placeholder />
-            </Icon>
-          </ToggleButton>
-          <ToggleButton>
-            <Icon>
-              <Placeholder />
-            </Icon>
-          </ToggleButton>
-        </ActionBar>
-      </div>
+      <ActionBar>
+        <ToggleButton>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </ToggleButton>
+        <ToggleButton>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </ToggleButton>
+        <ToggleButton>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </ToggleButton>
+      </ActionBar>
     );
   },
 };

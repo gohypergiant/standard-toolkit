@@ -17,11 +17,20 @@ import type {
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
 import type { AriaAttributesWithRef } from '@/lib/types';
+import type { COLORS } from './colors';
+import type { SIZES } from './sizes';
 import type { ButtonStyles, ToggleButtonStyles } from './styles';
+import type { VARIANTS } from './variants';
+
+export type Color = typeof COLORS;
+
+export type Size = typeof SIZES;
+
+export type Variant = typeof VARIANTS;
 
 type ButtonVariantProps = {
-  size?: 'large' | 'medium' | 'small' | 'xsmall';
-  color?: 'mono-muted' | 'mono-bold' | 'accent' | 'serious' | 'critical';
+  color?: Color[keyof Color];
+  size?: Size[keyof Size];
 };
 
 export type ButtonStyleVariants = VariantProps<typeof ButtonStyles> &

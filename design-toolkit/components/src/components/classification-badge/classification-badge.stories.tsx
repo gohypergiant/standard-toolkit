@@ -10,6 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, EXCLUSIONS } from '^storybook/utils';
+import { CLASSIFICATION } from '@/constants/classification';
+import { SIZE } from '@/constants/size';
 import { ClassificationBadge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -17,30 +20,21 @@ const meta = {
   title: 'Components/ClassificationBadge',
   component: ClassificationBadge,
   args: {
-    className: undefined,
     children: '',
-    size: 'medium',
-    variant: 'missing',
+    size: SIZE.MEDIUM,
+    variant: CLASSIFICATION.MISSING,
   },
   argTypes: {
-    children: {
-      control: 'text',
+    children: COMMON_CONTROL.children,
+    size: COMMON_CONTROL.size.compact,
+    variant: COMMON_CONTROL.classificationVariant,
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
     },
-    variant: {
-      control: 'select',
-      options: [
-        'missing',
-        'unclassified',
-        'cui',
-        'confidential',
-        'secret',
-        'top-secret',
-        'ts-sci',
-      ],
-    },
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    docs: {
+      subtitle: 'A badge component for displaying classification levels.',
     },
   },
 } satisfies Meta<typeof ClassificationBadge>;

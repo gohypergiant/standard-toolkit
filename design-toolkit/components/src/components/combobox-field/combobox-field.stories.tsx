@@ -10,7 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_CONTROL,
+  COMMON_STATE_PROPS,
+  createStatesStory,
+  EXCLUSIONS,
+  MOCK_DATA,
+} from '^storybook/utils';
 import Placeholder from '@accelint/icons/placeholder';
+import { SIZE } from '@/constants/size';
 import { Icon } from '../icon';
 import { Options } from '../options';
 import { ComboBoxField } from './';
@@ -21,24 +29,41 @@ const meta = {
   title: 'Components/ComboBoxField',
   component: ComboBoxField,
   args: {
-    description: 'Helper text',
+    label: 'Choose an option',
+    description: 'Type to search and select an option',
     errorMessage: '',
-    label: 'Label',
     inputProps: {
-      placeholder: 'Placeholder',
+      placeholder: 'Type to search...',
     },
-    size: 'medium',
-    layoutOptions: {
-      estimatedRowHeight: 46,
-    },
+    size: SIZE.MEDIUM,
+    allowsEmptyCollection: false,
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['medium', 'small'],
+    description: COMMON_CONTROL.description,
+    errorMessage: COMMON_CONTROL.errorMessage,
+    isDisabled: COMMON_CONTROL.isDisabled,
+    isInvalid: COMMON_CONTROL.isInvalid,
+    isRequired: COMMON_CONTROL.isRequired,
+    label: COMMON_CONTROL.label,
+    size: COMMON_CONTROL.size.compact,
+  },
+  parameters: {
+    controls: {
+      exclude: [
+        ...EXCLUSIONS.COMMON,
+        ...EXCLUSIONS.FORM,
+        'allowsEmptyCollection',
+        'defaultFilter',
+        'formValue',
+        'layoutOptions',
+      ],
+    },
+    docs: {
+      subtitle:
+        'A searchable dropdown input component with autocomplete functionality',
     },
   },
 } satisfies Meta<typeof ComboBoxField>;
@@ -165,6 +190,35 @@ export const Default: Story = {
     </ComboBoxField>
   ),
 };
+
+export const States: Story = createStatesStory({
+  Component: ({ children, ...props }) => (
+    <ComboBoxField<{ id: string; name: string }>
+      {...props}
+      defaultItems={MOCK_DATA.SIMPLE_OPTIONS.map((opt) => ({
+        id: opt.id,
+        name: opt.name,
+      }))}
+    >
+      {(item) => (
+        <Options.Item key={item.id} textValue={item.name}>
+          <Options.Item.Label>{item.name}</Options.Item.Label>
+        </Options.Item>
+      )}
+    </ComboBoxField>
+  ),
+  baseProps: {
+    label: 'Select category',
+    inputProps: { placeholder: 'Type to search categories...' },
+  },
+  stateProps: {
+    ...COMMON_STATE_PROPS.FORM_FIELD,
+    error: {
+      isInvalid: true,
+      errorMessage: MOCK_DATA.ERROR_MESSAGES.REQUIRED,
+    },
+  },
+});
 
 export const WithDynamicSections: Story = {
   args: {

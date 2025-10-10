@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  COMMON_CONTROL,
+  createStatesStory,
+  EXCLUSIONS,
+} from '^storybook/utils';
+import { AXIS } from '@/constants/axis';
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { RadioGroupProps } from './types';
@@ -20,20 +26,24 @@ const meta = {
   title: 'Components/Radio',
   component: Radio.Group as Alias,
   args: {
-    orientation: 'vertical',
+    orientation: AXIS.VERTICAL,
     isDisabled: false,
     isRequired: false,
-    label: 'Header',
+    label: 'Choose an option',
   },
   argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
+    orientation: COMMON_CONTROL.orientation,
+    label: COMMON_CONTROL.label,
+    isDisabled: COMMON_CONTROL.isDisabled,
+    isRequired: COMMON_CONTROL.isRequired,
   },
   parameters: {
     controls: {
-      exclude: ['children', 'validationBehavior'],
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle:
+        'A form control for exclusive selection within a group of options',
     },
   },
 } satisfies Meta<Alias>;
@@ -44,9 +54,30 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: ({ children, label, ...args }) => (
     <Radio.Group label={label} {...args}>
-      <Radio value='1'>Radio text</Radio>
-      <Radio value='2'>Radio text</Radio>
-      <Radio value='3'>Radio text</Radio>
+      <Radio value='h1'>Option A</Radio>
+      <Radio value='h2'>Option B</Radio>
+      <Radio value='h3'>Option C</Radio>
+      <Radio value='h3'>Option D</Radio>
+      <Radio value='h3'>Option E</Radio>
+      <Radio value='h3'>Option F</Radio>
+      <Radio value='h3'>Option G</Radio>
+      <Radio value='h3'>Option H</Radio>
     </Radio.Group>
   ),
 };
+
+export const States: Story = createStatesStory({
+  Component: ({ ...props }) => (
+    <Radio.Group {...props}>
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </Radio.Group>
+  ),
+  baseProps: {
+    label: 'Select preference',
+  },
+  stateProps: {
+    disabled: { isDisabled: true, label: 'Disabled options' },
+  },
+});
