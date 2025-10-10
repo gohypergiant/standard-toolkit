@@ -15,19 +15,8 @@ import { describe, expect, it } from 'vitest';
 import { Pagination } from './index';
 import type { BasePaginationProps } from './types';
 
-function setup({
-  currentPage,
-  pageCount: pages,
-}: Partial<BasePaginationProps> = {}) {
-  render(
-    <Pagination.Provider value={{ currentPage, pageCount: pages }}>
-      <Pagination>
-        <Pagination.Previous />
-        <Pagination.NumberContainer />
-        <Pagination.Next />
-      </Pagination>
-    </Pagination.Provider>,
-  );
+function setup({ currentPage, pageCount }: Partial<BasePaginationProps> = {}) {
+  render(<Pagination currentPage={currentPage} pageCount={pageCount} />);
 }
 
 describe('Pagination', () => {

@@ -72,18 +72,6 @@ function getPaginationRange(
 
 const PaginationContext = createContext<BasePaginationProps>({});
 
-function PaginationProvider({
-  children,
-  ...props
-}: ProviderProps<BasePaginationProps>) {
-  return (
-    <PaginationContext.Provider value={props.value}>
-      {children}
-    </PaginationContext.Provider>
-  );
-}
-PaginationProvider.displayName = 'Pagination.Provider';
-
 /**
  *
  * Pagination - A lightweight implementation for page navigation.
@@ -100,15 +88,33 @@ PaginationProvider.displayName = 'Pagination.Provider';
 export function Pagination({
   children,
   className,
+  currentPage,
+  pageCount,
   ...rest
 }: BasePaginationProps) {
   return (
-    <div className={container({ className })} {...rest}>
-      {children}
-    </div>
+    <Pagination.Provider value={{ currentPage, pageCount }}>
+      <div className={container({ className })} {...rest}>
+        <Pagination.Previous />
+        <Pagination.NumberContainer />
+        <Pagination.Next />
+      </div>
+    </Pagination.Provider>
   );
 }
 Pagination.displayName = 'Pagination';
+
+function PaginationProvider({
+  children,
+  ...props
+}: ProviderProps<BasePaginationProps>) {
+  return (
+    <PaginationContext.Provider value={props.value}>
+      {children}
+    </PaginationContext.Provider>
+  );
+}
+PaginationProvider.displayName = 'Pagination.Provider';
 
 function PaginationPrevious({
   className,

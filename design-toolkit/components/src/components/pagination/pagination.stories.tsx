@@ -30,14 +30,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: ({ children, ...args }) => {
-    return (
-      <Pagination.Provider value={{ ...args }}>
-        <Pagination>
-          <Pagination.Previous />
-          <Pagination.NumberContainer />
-          <Pagination.Next />
-        </Pagination>
-      </Pagination.Provider>
-    );
+    return <Pagination {...args} />;
   },
 };
