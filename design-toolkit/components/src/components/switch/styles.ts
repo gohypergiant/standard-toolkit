@@ -17,13 +17,23 @@ export const SwitchStyles = tv({
     switch:
       'group/switch flex cursor-pointer items-center gap-s disabled:cursor-not-allowed',
     control: [
-      'flex rounded-round bg-transparent p-xxs outline outline-interactive before:mr-l before:block before:size-m before:rounded-full before:bg-info-bold',
-      'group-enabled/switch:group-focus-visible/switch:bg-interactive-muted-hover group-enabled/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-focus-visible/switch:before:bg-interactive-bold-hover',
-      'group-enabled/switch:group-hover/switch:bg-interactive-muted-hover group-enabled/switch:group-hover/switch:outline-interactive-hover group-enabled/switch:group-hover/switch:before:bg-interactive-bold-hover',
-      'group-enabled/switch:group-selected/switch:outline-accent-primary-bold group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:bg-accent-primary-bold',
-      'group-enabled/switch:group-selected/switch:group-focus-visible/switch:bg-accent-primary-muted group-enabled/switch:group-selected/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus-visible/switch:before:bg-accent-primary-bold',
-      'group-enabled/switch:group-selected/switch:group-hover/switch:bg-accent-primary-muted group-enabled/switch:group-selected/switch:group-hover/switch:outline-accent-primary-bold group-enabled/switch:group-selected/switch:group-hover/switch:before:bg-accent-primary-bold',
-      'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:bg-interactive-disabled',
+      'flex rounded-round bg-transparent p-xxs outline outline-interactive before:mr-l before:block before:size-m before:rounded-full before:[background-color:var(--fg-primary-muted)]',
+      //focus-visible
+      'group-enabled/switch:group-focus-visible/switch:bg-interactive-muted-hover group-enabled/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-focus-visible/switch:before:[background-color:var(--fg-primary-bold)]',
+      //hover
+      'group-enabled/switch:group-hover/switch:bg-interactive-muted-hover group-enabled/switch:group-hover/switch:outline-interactive-hover group-enabled/switch:group-hover/switch:before:[background-color:var(--fg-primary-bold)]',
+      //pressed
+      'group-enabled/switch:group-pressed/switch:bg-interactive-pressed group-enabled/switch:group-pressed/switch:outline-interactive-pressed group-enabled/switch:group-pressed/switch:before:[background-color:var(--fg-pressed)]',
+      //selected
+      'group-enabled/switch:group-selected/switch:outline-accent-primary-bold group-selected/switch:before:mr-0 group-selected/switch:before:ml-l group-enabled/switch:group-selected/switch:before:[background-color:var(--fg-accent-primary-bold)]',
+      //focus-visible
+      'group-enabled/switch:group-selected/switch:group-focus-visible/switch:bg-accent-primary-muted group-enabled/switch:group-selected/switch:group-focus-visible/switch:outline-interactive-hover group-enabled/switch:group-selected/switch:group-focus-visible/switch:before:[background-color:var(--fg-accent-primary-hover)]',
+      //hover
+      'group-enabled/switch:group-selected/switch:group-hover/switch:bg-accent-primary-muted group-enabled/switch:group-selected/switch:group-hover/switch:outline-accent-primary-bold group-enabled/switch:group-selected/switch:group-hover/switch:before:[background-color:var(--fg-accent-primary-hover)]',
+      //pressed
+      'group-enabled/switch:group-selected/switch:group-pressed/switch:bg-accent-primary-pressed group-enabled/switch:group-selected/switch:group-pressed/switch:outline-accent-primary-pressed group-enabled/switch:group-selected/switch:group-pressed/switch:before:[background-color:var(--fg-accent-primary-pressed)]',
+      //disabled
+      'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:[background-color:var(--fg-disabled)]',
     ],
     label: ['fg-primary-bold text-body-s', 'group-disabled/switch:fg-disabled'],
   },
