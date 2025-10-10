@@ -12,7 +12,6 @@
 
 import fs from 'node:fs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { template } from '../../src/utils/catalog-info-template.js';
 import { generateCatalogInfo } from '../../src/utils/generate-catalog-info.js';
 
 vi.mock('node:fs');

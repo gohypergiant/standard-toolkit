@@ -39,6 +39,7 @@ describe('validatePackage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock console methods for each test
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: intentional
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });

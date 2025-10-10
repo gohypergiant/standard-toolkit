@@ -40,8 +40,10 @@ describe('validateInput', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock console methods for each test
+    // biome-ignore-start lint/suspicious/noEmptyBlockStatements: intentional
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // biome-ignore-end lint/suspicious/noEmptyBlockStatements: intentional
     vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });
 

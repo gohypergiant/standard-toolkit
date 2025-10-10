@@ -31,6 +31,7 @@ describe('logMsg', () => {
   });
 
   it('should update spinner text with the provided message', () => {
+    // biome-ignore lint/suspicious/noExplicitAny: fine for the test
     logMsg('Test message', mockSpinner as any);
 
     expect(mockSpinner.start).toHaveBeenCalled();
@@ -39,6 +40,7 @@ describe('logMsg', () => {
   });
 
   it('should handle empty message', () => {
+    // biome-ignore lint/suspicious/noExplicitAny: fine for the test
     logMsg('', mockSpinner as any);
 
     expect(mockSpinner.start).toHaveBeenCalled();

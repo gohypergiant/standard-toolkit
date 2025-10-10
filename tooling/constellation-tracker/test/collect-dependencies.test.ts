@@ -107,6 +107,7 @@ describe('collectDependencies', () => {
     const result = collectDependencies(
       '/path/to/package.json',
       '/path/to/node_modules',
+      // biome-ignore lint/suspicious/noExplicitAny: fine for the test
       mockSpinner as any,
     );
 
@@ -150,6 +151,7 @@ describe('collectDependencies', () => {
     const result = collectDependencies(
       '/path/to/package.json',
       '/path/to/node_modules',
+      // biome-ignore lint/suspicious/noExplicitAny: fine for the test
       mockSpinner as any,
     );
 
@@ -165,6 +167,7 @@ describe('collectDependencies', () => {
       collectDependencies(
         '/path/to/package.json',
         '/path/to/node_modules',
+        // biome-ignore lint/suspicious/noExplicitAny: fine for the test
         mockSpinner as any,
       ),
     ).toThrow(
