@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { useState } from 'react';
 import { Pagination } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { BasePaginationProps } from './types';
@@ -31,5 +32,21 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: ({ children, ...args }) => {
     return <Pagination {...args} />;
+  },
+};
+
+export const Example: Story = {
+  render: ({ children, ...args }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const handleChange = (nextPage: number) => {
+      setCurrentPage(nextPage);
+    };
+    return (
+      <Pagination
+        currentPage={currentPage}
+        pageCount={args.pageCount}
+        onChange={handleChange}
+      />
+    );
   },
 };

@@ -77,27 +77,34 @@ const PaginationContext = createContext<BasePaginationProps>({});
  * Pagination - A lightweight implementation for page navigation.
  *
  * @example
- * <Pagination.Provider value={{ currentPage: 1, pageCount: 5}}>
- *    <Pagination>
- *      <Pagination.Previous />
- *      <Pagination.NumberContainer />
- *      <Pagination.Next />
- *    </Pagination>
- * </Pagination.Provider>
+ * <Pagination currentPage={1} pageCount={5} onChange={handleOnChange} />
  */
 export function Pagination({
   children,
-  className,
+  classNames,
   currentPage,
   pageCount,
+  onChange,
   ...rest
 }: BasePaginationProps) {
   return (
     <Pagination.Provider value={{ currentPage, pageCount }}>
-      <div className={container({ className })} {...rest}>
-        <Pagination.Previous />
-        <Pagination.NumberContainer />
-        <Pagination.Next />
+      <div
+        className={container({ className: classNames?.container })}
+        {...rest}
+      >
+        <Pagination.Previous
+          onPress={() => onChange?.(currentPage! - 1)}
+          className={classNames?.controls}
+        />
+        <Pagination.NumberContainer
+          onPress={(nextPage) => onChange?.(nextPage)}
+          className={classNames?.pages}
+        />
+        <Pagination.Next
+          onPress={() => onChange?.(currentPage! + 1)}
+          className={classNames?.controls}
+        />
       </div>
     </Pagination.Provider>
   );

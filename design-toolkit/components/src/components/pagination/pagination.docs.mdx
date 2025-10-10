@@ -9,16 +9,12 @@ The Pagination component provides a simple way to navigate multiple pages while 
 
 It is composed of the following components:
 
-- **Pagination** - A wrapper component for containing all pagination buttons.
-- **Pagination.Provider** - Context provider for pagination display state.
-- **Pagination.Previous** - Button to navigate backwards in page count.
-- **Pagination.Next** - Button to navigate forwards in page count.
-- **Pagination.NumberContainer** - Wrapper for page buttons, displaying a maximum range of 5 pages.
+- **Pagination** - A wrapper component for containing all pagination buttons. Logic is contained within this component.
 
 
 ## Example usage
 ```tsx
-  <Pagination currentPage={1} pageCount={10}>
+  <Pagination currentPage={1} pageCount={10} onChange={handleOnChange}>
 ```
 
 <Canvas of={PaginationStories.Default} />
@@ -26,23 +22,15 @@ It is composed of the following components:
 ## Props
 
 ### Pagination Props
-* **`className`** - Custom class names for styling container
+* **`currentPage`** - Current page number to display, not zero-index.
+* **`pageCount`** - The total number of pages.
+* **`onChange`** - Handler function for the onPress event of control buttons.
+* **`classNames`** - Custom class names for styling container
+  * `container` - Control wrapper container.
+  * `controls` - Previous/Next button styles.
+  * `pages` - ToggleButtons corresponding to page numbers.
 
-### Pagination.Provider Props
-* **`pageCount`** - Total number of pages.
-* **`currentPage`** - Current page. Not zero-indexed.
 
-### Pagination.Previous Props
-* **`onPress`** - Function to handle the onPress function for Button component.
-* **`className`** - Custom class names for styling button
-
-### Pagination.Next Props
-* **`onPress`** - Function to handle the onPress function for Button component.
-* **`className`** - Custom class names for styling button
-
-### Pagination.NumberContainer Props
-* **`onPress`** - Function to handle the onPress function for Button component.
-* **`className`** - Custom class names for styling button
 
 ## Implementation Notes
 

@@ -15,7 +15,12 @@ import type { PropsWithChildren } from 'react';
 export type BasePaginationProps = PropsWithChildren & {
   pageCount?: number;
   currentPage?: number;
-  className?: string;
+  classNames?: {
+    container?: string;
+    controls?: string;
+    pages?: string;
+  };
+  onChange?: (nextPage: number) => void;
 };
 
 export type PaginationNavProps = {
