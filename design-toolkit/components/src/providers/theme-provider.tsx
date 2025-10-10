@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { merge } from 'lodash';
+import { assign } from 'radashi';
 import {
   createContext,
   type PropsWithChildren,
@@ -72,7 +72,7 @@ export function ThemeProvider({
   }, [mode]);
 
   const tokens: ContextColorTokens = useMemo(() => {
-    const tokensWithOverrides = merge(designTokens, overrides);
+    const tokensWithOverrides = assign(designTokens, overrides as ThemeTokens);
     return {
       ...tokensWithOverrides[mode],
       ...tokensWithOverrides.static,
