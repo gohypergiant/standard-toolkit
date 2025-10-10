@@ -41,7 +41,7 @@
   },
   "scripts": {
     "build": "pnpm generate:icons && pnpm license && pnpm format && pnpm tsup",
-    "constellation-tracker": "node ../../tooling/constellation-tracker/dist/main.js",
+    "constellation-tracker": "constellation-tracker",
     "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
     "format": "pnpm biome check --linter-enabled=false . --write",
     "license": "pnpm zx ../../scripts/license.mjs --files src/icons"
@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@svgr/cli": "8.1.0",

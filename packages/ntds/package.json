@@ -46,7 +46,7 @@
     "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsup && pnpm copy",
     "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
     "build:icons:masked": "smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
-    "constellation-tracker": "node ../../tooling/constellation-tracker/dist/main.js",
+    "constellation-tracker": "constellation-tracker",
     "copy": "pnpm copy:spritesheets",
     "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
     "license": "pnpm zx ../../scripts/license.mjs --files src",
@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",

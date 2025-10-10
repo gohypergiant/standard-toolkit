@@ -62,7 +62,7 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm generate && pnpm license && pnpm format && tsup && pnpm build:css",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
-    "constellation-tracker": "node ../../tooling/constellation-tracker/dist/main.js",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
@@ -117,6 +117,7 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/icons": "workspace:*",
     "@accelint/temporal": "workspace:*",

@@ -11,8 +11,9 @@ metadata:
 
     Dependencies:
 
-    @accelint/biome-config@1.0.0, @accelint/design-toolkit@5.0.0,
-    @accelint/smeegl@0.3.1, @accelint/typescript-config@0.1.2
+    @accelint/biome-config@1.0.0, @accelint/constellation-tracker@0.0.0,
+    @accelint/design-toolkit@5.0.0, @accelint/smeegl@0.3.1,
+    @accelint/typescript-config@0.1.2
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/ntds/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
@@ -32,6 +33,7 @@ spec:
   owner: group:default/pathfinder
   dependsOn:
     - component:@accelint/biome-config
+    - component:@accelint/constellation-tracker
     - component:@accelint/design-toolkit
     - component:@accelint/smeegl
     - component:@accelint/typescript-config

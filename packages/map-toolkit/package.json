@@ -45,7 +45,7 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
-    "constellation-tracker": "node ../../tooling/constellation-tracker/dist/main.js",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src",
@@ -56,6 +56,7 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",

@@ -37,7 +37,7 @@
   },
   "scripts": {
     "build": "pnpm tsc && pnpm license && pnpm format",
-    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
+    "constellation-tracker": "constellation-tracker",
     "lint": "pnpm biome lint",
     "format": "pnpm biome format . --write",
     "license": "pnpm zx ../../scripts/license.mjs",
@@ -45,6 +45,7 @@
     "postinstall": "pnpm run build"
   },
   "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/lodash": "4.17.20",
