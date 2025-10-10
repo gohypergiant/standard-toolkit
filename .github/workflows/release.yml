@@ -36,7 +36,6 @@ jobs:
           node-version: ${{ env.RUNNER_NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install
-      - run: pnpm run constellation-tracker
       - name: Creating .npmrc
         run: |
           cat << EOF > "$HOME/.npmrc"

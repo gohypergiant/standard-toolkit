@@ -14,7 +14,7 @@
     "build:design-preview": "pnpm --filter=@accelint/design-toolkit build-storybook -o ../../design-toolkit/build",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
-    "changeset:version": "pnpm exec changeset version",
+    "changeset:version": "pnpm exec changeset version && pnpm run constellation-tracker",
     "clean": "pnpm run clean:dist && pnpm run clean:buildinfo && pnpm run clean:turbo && pnpm run clean:pnpm && pnpm run clean:cov && pnpm run clean:deps",
     "clean:cov": "pnpm -r exec rimraf coverage && exec pnpm rimraf coverage",
     "clean:deps": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
