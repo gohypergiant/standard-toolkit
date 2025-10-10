@@ -31,7 +31,7 @@
   :root {
     /** Static tokens (same values regardless of theme) **/
         --classification-missing: var(--primitive-classification-missing, #0b0b0b);
-    --classification-unclass: var(--primitive-classification-unclass, #007A33);
+    --classification-unclassified: var(--primitive-classification-unclassified, #007A33);
     --classification-cui: var(--primitive-classification-cui, #502b85);
     --classification-confidential: var(--primitive-classification-confidential, #0033a0);
     --classification-secret: var(--primitive-classification-secret, #c8102e);
@@ -341,15 +341,15 @@
   outline-color: var(--classification-missing);
 }
 
-@utility bg-classification-unclass {
-  background-color: var(--classification-unclass);
+@utility bg-classification-unclassified {
+  background-color: var(--classification-unclassified);
 }
-@utility fg-classification-unclass {
-  color: var(--classification-unclass);
-  --icon-color: var(--classification-unclass);
+@utility fg-classification-unclassified {
+  color: var(--classification-unclassified);
+  --icon-color: var(--classification-unclassified);
 }
-@utility outline-classification-unclass {
-  outline-color: var(--classification-unclass);
+@utility outline-classification-unclassified {
+  outline-color: var(--classification-unclassified);
 }
 
 @utility bg-classification-cui {
