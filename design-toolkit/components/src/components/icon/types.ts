@@ -11,7 +11,8 @@
  */
 
 import type { ComponentPropsWithRef } from 'react';
+import type { SizeRangeFull } from '@/constants/size';
 
 export type IconProps = ComponentPropsWithRef<'span'> & {
-  size?: 'large' | 'medium' | 'small' | 'xsmall';
+  size?: SizeRangeFull;
 };

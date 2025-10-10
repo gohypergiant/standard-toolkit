@@ -18,10 +18,11 @@ import type {
   TagProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { SizeRangeCompact } from '@/constants/size';
 import type { ChipStyles } from './styles';
 
 export type BaseChipProps = {
-  size?: 'medium' | 'small';
+  size?: SizeRangeCompact;
 };
 
 export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &

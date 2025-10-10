@@ -25,6 +25,7 @@ import {
   type TVReturnType,
   type TVVariants,
 } from 'tailwind-variants';
+import { SIZE_RANGE } from '@/constants/size';
 import type { ForwardedRef } from 'react';
 import type { ContextValue } from 'react-aria-components';
 
@@ -110,7 +111,7 @@ const twMergeConfig = {
       'button-s',
       'button-xs',
     ],
-    radius: ['none', 'small', 'medium', 'large', 'round'],
+    radius: ['none', ...SIZE_RANGE.STANDARD, 'round'],
     shadow: ['elevation-default', 'elevation-overlay', 'elevation-raised'],
     spacing: [
       'none',

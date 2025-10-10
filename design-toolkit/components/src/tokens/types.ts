@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import type { SIZE } from '@/constants/size';
+
 // biome-ignore lint/style/useNamingConvention: acronym
 type RGBA = [number, number, number, number];
 
@@ -301,9 +303,9 @@ export type ThemeTokens = {
   };
   radius: {
     none: number;
-    small: number;
-    medium: number;
-    large: number;
+    [SIZE.SMALL]: number;
+    [SIZE.MEDIUM]: number;
+    [SIZE.LARGE]: number;
     round: number;
   };
   shadow: {
