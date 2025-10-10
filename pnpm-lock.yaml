@@ -414,6 +414,9 @@ importers:
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
+      radashi:
+        specifier: ^12.6.2
+        version: 12.6.2
       react:
         specifier: ^19.0.0
         version: 19.2.0
@@ -9698,6 +9701,10 @@ packages:
   radash@12.1.1:
     resolution: {integrity: sha512-h36JMxKRqrAxVD8201FrCpyeNuUY9Y5zZwujr20fFO77tpUtGa6EZzfKw/3WaiBX95fq7+MpsuMLNdSnORAwSA==}
     engines: {node: '>=14.18.0'}
+
+  radashi@12.6.2:
+    resolution: {integrity: sha512-43uD9P3oZ1nT9lgHr2P34K7aEIQh6ku2FDQsDhjaUpaj2sb3il6Xe8s8MS31uJmcbYl0v2Ul35V7OjMG8yrcDw==}
+    engines: {node: '>=16.0.0'}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -22055,6 +22062,8 @@ snapshots:
     optional: true
 
   radash@12.1.1: {}
+
+  radashi@12.6.2: {}
 
   randombytes@2.1.0:
     dependencies:
