@@ -1,25 +1,27 @@
 ---
 '@accelint/constellation-tracker': major
-'@accelint/design-toolkit': patch
-'@accelint/typescript-config': patch
-'@accelint/prettier-config': patch
-'@accelint/eslint-config': patch
-'@accelint/vitest-config': patch
-'@accelint/icons': patch
 '@accelint/biome-config': patch
-'@accelint/converters': patch
-'@accelint/formatters': patch
-'@accelint/predicates': patch
-'@accelint/worker': patch
+'@accelint/bus': patch
 '@accelint/constants': patch
-'@accelint/websocket': patch
-'@accelint/temporal': patch
-'@accelint/smeegl': patch
+'@accelint/converters': patch
 '@accelint/core': patch
+'@accelint/design-toolkit': patch
+'@accelint/eslint-config': patch
+'@accelint/formatters': patch
+'@accelint/formatters': patch
+'@accelint/geo': patch
+'@accelint/icons': patch
+'@accelint/logger': patch
 '@accelint/math': patch
 '@accelint/ntds': patch
-'@accelint/bus': patch
-'@accelint/geo': patch
+'@accelint/predicates': patch
+'@accelint/prettier-config': patch
+'@accelint/smeegl': patch
+'@accelint/temporal': patch
+'@accelint/typescript-config': patch
+'@accelint/vitest-config': patch
+'@accelint/websocket': patch
+'@accelint/worker': patch
 ---
 
 - Released `@accelint/constellation-tracker` - A tool that helps maintain catalog-info.yaml files for Constellation integration
