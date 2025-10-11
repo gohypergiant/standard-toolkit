@@ -13,14 +13,44 @@
 'use client';
 
 import 'client-only';
-import { useContext } from 'react';
+import { memo, useContext } from 'react';
 import {
+  type Path,
   type RuleProps,
   TestID,
   useRule,
   useStopEventPropagation,
 } from 'react-querybuilder';
 import type { QueryBuilderContextType } from './types';
+import { Lines } from '../lines';
+import { RuleStyles } from './styles';
+
+const {
+  lines
+} = RuleStyles();
+
+const QueryBuilderLines = memo(function QueryBuilderLines({
+path, 
+props, 
+context
+}: {
+path: Path,
+  props: RuleProps;
+  context: QueryBuilderContextType
+}) {
+
+    const isLastRule = path[0] === props.schema.getQuery()?.rules.length - 1; 
+    const line = isLastRule ? 'last' : 'branch';
+
+    return (
+      <Lines
+        variant={line}
+        size='small'
+        isVisible={context.showRuleLines}
+        className={lines()}
+      />
+    );
+});
 
 export function Rule(props: RuleProps) {
   const rule = useRule(props);
@@ -74,13 +104,12 @@ export function Rule(props: RuleProps) {
     schema: rule.schema,
     validation: validationResult,
   };
-
   const renderValueSources =
     !['null', 'notNull'].includes(operator) && valueSources.length > 1;
 
   return (
     <>
-      {context.showRuleLines && <span className='rule-lines relative' />}
+      {context.showRuleLines && <QueryBuilderLines path={path} props={props} context={context}/> }
       <div className={outerClassName}>
         <FieldSelectorControlElement
           testID={TestID.fields}

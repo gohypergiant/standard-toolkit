@@ -13,10 +13,8 @@
 'use client';
 
 import 'client-only';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Button } from '../button';
-import { pressToMouseEvent } from './utils';
-import type { PressEvent } from '@react-types/shared';
 import type { ActionProps } from 'react-querybuilder';
 
 export function ActionElement({
@@ -25,12 +23,6 @@ export function ActionElement({
   title: titleProp,
   handleOnClick,
 }: ActionProps) {
-  // TODO: remove pressToMouseEvent when design-system is removed
-  const handlePress = useCallback(
-    (event: PressEvent) => handleOnClick(pressToMouseEvent(event)),
-    [handleOnClick],
-  );
-
   const title = useMemo(
     () =>
       disabledTranslation?.title && disabled
@@ -42,7 +34,7 @@ export function ActionElement({
   return (
     <Button
       isDisabled={disabled && !disabledTranslation}
-      onPress={handlePress}
+      onPress={() => handleOnClick()}
       size='small'
       variant='outline'
     >
