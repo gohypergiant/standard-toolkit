@@ -85,6 +85,7 @@
     "@accelint/core": "^0.4.2",
     "@accelint/icons": "^2.0.4",
     "@accelint/temporal": "^0.1.1",
+    "@accelint/ts-transformer-compound-components": "workspace:^",
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",
     "@internationalized/date": "^3.8.2",

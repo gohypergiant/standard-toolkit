@@ -21,54 +21,58 @@ interface ComponentStructure {
   }[];
 }
 
-function parseComponentStructure(
-  node: ts.Node,
-): ComponentStructure | undefined {
+const isCompound = (tag: ts.JSDocTag) =>
+  tag.tagName.getText() === 'compound-component';
+
+function readDocblockDef(node: ts.Node): ComponentStructure | undefined {
   if (!(ts.isFunctionDeclaration(node) || ts.isVariableStatement(node))) {
     return undefined;
   }
 
   const jsDoc = ts.getJSDocTags(node);
-  if (
-    !jsDoc.some(
-      (tag: ts.JSDocTag) => tag.tagName.getText() === 'compound-component',
-    )
-  ) {
-    return undefined;
-  }
 
-  // Get the component name
-  let name: string;
-  if (ts.isFunctionDeclaration(node)) {
-    name = node.name?.getText() || '';
-  } else {
-    const declaration = (node as ts.VariableStatement).declarationList
-      .declarations[0];
-    name = declaration.name.getText();
+  if (!jsDoc.some(isCompound)) {
+    return undefined;
   }
 
   // Parse the child requirements from JSDoc
   const children = jsDoc
     .filter((tag: ts.JSDocTag) => tag.tagName.getText() === 'requires')
     .map((tag: ts.JSDocTag) => {
-      const comment = tag.comment as string;
-      const [componentName, requirement] = comment.split(' ');
-      const [type, count] = requirement.split(' ');
+      const comment = tag.comment?.toString() || '';
+      const [componentName, rule, countAsString] = comment.split(' ');
+      const count = Number.parseInt(countAsString, 10);
 
       return {
         name: componentName,
-        min: type === 'exactly' ? Number.parseInt(count, 10) : 0,
-        max: type === 'max' ? Number.parseInt(count, 10) : undefined,
+        min:
+          rule === 'exactly'
+            ? count
+            : rule === 'min'
+              ? count
+              : rule === 'max'
+                ? 0
+                : 1,
+        max: rule === 'exactly' ? count : rule === 'max' ? count : undefined,
       };
     });
 
-  return { name, children };
+  // to aid in getting the component name
+  const nodeResolved = ts.isFunctionDeclaration(node)
+    ? node
+    : (node as ts.VariableStatement).declarationList.declarations[0];
+
+  return {
+    name: nodeResolved.name?.getText() || '',
+    children,
+  };
 }
 
+/*
 function validateJsxElement(
   node: ts.JsxElement | ts.JsxSelfClosingElement,
   components: Map<string, ComponentStructure>,
-  program: ts.Program,
+  sourceFile: ts.SourceFile,
 ): ts.Diagnostic[] {
   const diagnostics: ts.Diagnostic[] = [];
 
@@ -86,14 +90,19 @@ function validateJsxElement(
   // Count children
   const childCounts = new Map<string, number>();
   if (ts.isJsxElement(node)) {
-    node.children.forEach((child: ts.JsxChild) => {
-      if (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child)) {
-        const name = ts.isJsxElement(child)
-          ? child.openingElement.tagName.getText()
-          : child.tagName.getText();
-        childCounts.set(name, (childCounts.get(name) || 0) + 1);
+    const checkAndCountChild = (child: ts.JsxChild) => {
+      if (ts.isJsxElement(child)) {
+        const tagName = child.openingElement.tagName.getText();
+        const childName = tagName.split('.')[1] || tagName; // Handle Component.SubComponent format
+        childCounts.set(childName, (childCounts.get(childName) || 0) + 1);
+      } else if (ts.isJsxSelfClosingElement(child)) {
+        const tagName = child.tagName.getText();
+        const childName = tagName.split('.')[1] || tagName; // Handle Component.SubComponent format
+        childCounts.set(childName, (childCounts.get(childName) || 0) + 1);
       }
-    });
+    };
+
+    node.children.forEach(checkAndCountChild);
   }
 
   // Validate against requirements
@@ -102,81 +111,161 @@ function validateJsxElement(
 
     if (count < requirement.min) {
       diagnostics.push({
-        file: node.getSourceFile(),
+        file: sourceFile,
         start: node.getStart(),
         length: node.getWidth(),
         category: ts.DiagnosticCategory.Error,
-        code: 9999, // Custom error code
-        messageText: `Component <${elementName}> requires at least ${requirement.min} of <${requirement.name}>, but found ${count}`,
+        code: 9999,
+        messageText:
+          requirement.min === 1 && requirement.max === 1
+            ? `Component ${elementName} requires exactly one ${requirement.name} component`
+            : `Component ${elementName} requires at least ${requirement.min} ${requirement.name} component(s), but found ${count}`,
       });
     }
 
     if (requirement.max !== undefined && count > requirement.max) {
       diagnostics.push({
-        file: node.getSourceFile(),
+        file: sourceFile,
         start: node.getStart(),
         length: node.getWidth(),
         category: ts.DiagnosticCategory.Error,
-        code: 9999, // Custom error code
-        messageText: `Component <${elementName}> allows at most ${requirement.max} of <${requirement.name}>, but found ${count}`,
+        code: 9999,
+        messageText:
+          requirement.min === requirement.max
+            ? `Component ${elementName} requires exactly ${requirement.max} ${requirement.name} component(s), but found ${count}`
+            : `Component ${elementName} allows at most ${requirement.max} ${requirement.name} component(s), but found ${count}`,
       });
     }
   });
 
   return diagnostics;
 }
+*/
 
-export default function createTransformer(config: { components: string[] }) {
-  return {
-    name: 'compound-components',
-    setup(build: any) {
-      build.onTransform({ filter: /\.[jt]sx?$/ }, async (args: any) => {
-        const program = ts.createProgram([args.path], {});
-        const sourceFile = program.getSourceFile(args.path);
-        if (!sourceFile) return;
+interface TransformerConfig {
+  components: string[];
+}
 
-        const components = new Map<string, ComponentStructure>();
+export function createTransformer(
+  config: TransformerConfig,
+): ts.TransformerFactory<ts.SourceFile> {
+  return (context: ts.TransformationContext): ts.Transformer<ts.SourceFile> => {
+    return (sourceFile: ts.SourceFile): ts.SourceFile => {
+      // First pass: collect component structures
+      const components = new Map<string, ComponentStructure>();
+      const diagnostics: ts.Diagnostic[] = [];
 
-        // First pass: collect component structures
-        ts.forEachChild(sourceFile, (node: ts.Node) => {
-          const structure = parseComponentStructure(node);
-          if (structure) {
-            components.set(structure.name, structure);
-          }
+      const addError = (
+        sourceFile: ts.SourceFile,
+        node: ts.Node,
+        messageText: string,
+      ) =>
+        diagnostics.push({
+          file: sourceFile,
+          start: node.getStart(),
+          length: node.getWidth(),
+          category: ts.DiagnosticCategory.Error,
+          code: 9999,
+          messageText,
         });
 
-        // Second pass: validate JSX
-        const transformer: ts.TransformerFactory<ts.SourceFile> = (
-          context: ts.TransformationContext,
-        ) => {
-          return (sourceFile: ts.SourceFile) => {
-            function visit(node: ts.Node): ts.Node {
-              if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node)) {
-                const diagnostics = validateJsxElement(
+      // Collect and validate component declarations
+      const collectComponents = (node: ts.Node) => {
+        const structure = readDocblockDef(node);
+
+        if (structure) {
+          components.set(structure.name, structure);
+          // Validate structure after collection to ensure we have all components
+          try {
+            structure.children.forEach((child) => {
+              if (!config.components.includes(child.name)) {
+                addError(
+                  sourceFile,
                   node,
-                  components,
-                  program,
+                  `Invalid child component "${child.name}" in compound component "${structure.name}". Must be one of: ${config.components.join(', ')}`,
                 );
-                // Add diagnostics to the program through synthetic comments
-                for (const diagnostic of diagnostics) {
-                  const newNode = ts.addSyntheticTrailingComment(
-                    node,
-                    ts.SyntaxKind.MultiLineCommentTrivia,
-                    ` @ts-error ${diagnostic.messageText} `,
-                    true,
-                  );
-                  return newNode;
-                }
               }
-              return ts.visitEachChild(node, visit, context);
+            });
+          } catch (error) {
+            addError(
+              sourceFile,
+              node,
+              error instanceof Error ? error.message : 'Unknown error',
+            );
+          }
+        }
+        ts.forEachChild(node, collectComponents);
+      };
+      collectComponents(sourceFile);
+
+      // Second pass: validate component usage
+      const validateJsxUsage = (node: ts.Node) => {
+        if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node)) {
+          const elementName = ts.isJsxElement(node)
+            ? node.openingElement.tagName.getText()
+            : node.tagName.getText();
+
+          const structure = components.get(elementName);
+          if (structure) {
+            // Collect and validate child components
+            const childCounts = new Map<string, number>();
+            if (ts.isJsxElement(node)) {
+              node.children.forEach((child) => {
+                if (ts.isJsxElement(child)) {
+                  const tagName = child.openingElement.tagName.getText();
+                  const childName = tagName.split('.')[1] || tagName;
+                  childCounts.set(
+                    childName,
+                    (childCounts.get(childName) || 0) + 1,
+                  );
+                } else if (ts.isJsxSelfClosingElement(child)) {
+                  const tagName = child.tagName.getText();
+                  const childName = tagName.split('.')[1] || tagName;
+                  childCounts.set(
+                    childName,
+                    (childCounts.get(childName) || 0) + 1,
+                  );
+                }
+              });
             }
 
-            return ts.visitNode(sourceFile, visit) as ts.SourceFile;
-          };
-        };
+            // Validate each required child component
+            structure.children.forEach((requirement) => {
+              const count = childCounts.get(requirement.name) || 0;
+              if (count < requirement.min) {
+                addError(
+                  sourceFile,
+                  node,
+                  requirement.min === 1 && requirement.max === 1
+                    ? `Component ${elementName} requires exactly one ${requirement.name} component`
+                    : `Component ${elementName} requires at least ${requirement.min} ${requirement.name} component(s), but found ${count}`,
+                );
+              }
+              if (requirement.max !== undefined && count > requirement.max) {
+                addError(
+                  sourceFile,
+                  node,
+                  requirement.min === requirement.max
+                    ? `Component ${elementName} requires exactly ${requirement.max} ${requirement.name} component(s), but found ${count}`
+                    : `Component ${elementName} allows at most ${requirement.max} ${requirement.name} component(s), but found ${count}`,
+                );
+              }
+            });
+          }
+        }
+        ts.forEachChild(node, validateJsxUsage);
+      };
+      validateJsxUsage(sourceFile);
 
-        return { program, transformer };
+      // Return a decorated source file with diagnostics
+      const decoratedSource = Object.create(sourceFile) as ts.SourceFile;
+      Object.assign(decoratedSource, sourceFile, {
+        get diagnostics() {
+          return diagnostics;
+        },
       });
-    },
+
+      return decoratedSource;
+    };
   };
 }
