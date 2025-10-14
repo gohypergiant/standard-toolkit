@@ -21,11 +21,16 @@ import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
 import { MapEvents } from './events';
-import type { PickingInfo } from '@deck.gl/core';
+import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { MapClickEvent, MapEventType, MapHoverEvent } from './types';
+import type {
+  MapClickEvent,
+  MapEventType,
+  MapHoverEvent,
+  MapViewStateEvent,
+} from './types';
 
 type BaseMapProps = DeckglProps & { className?: string };
 
@@ -35,6 +40,7 @@ export function BaseMap({
   children,
   onClick,
   onHover,
+  onViewStateChange,
   className,
   parameters,
   ...rest
@@ -55,6 +61,9 @@ export function BaseMap({
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+  const emitViewStateChange = useEmit<MapViewStateEvent>(
+    MapEvents.viewportChange,
+  );
 
   const handleMapClick = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
@@ -108,6 +117,23 @@ export function BaseMap({
     [emitHover, onHover],
   );
 
+  const handleViewStateChange = useCallback(
+    (viewStateProps: ViewStateChangeParameters) => {
+      // send full pickingInfo and event to user-defined onHover
+      onViewStateChange?.(viewStateProps);
+
+      // the bus cannot serialize functions, so we omit them from the event payloads
+      const { viewState, interactionState } = viewStateProps;
+
+      emitViewStateChange({
+        latitude: viewState.latitude,
+        longitude: viewState.longitude,
+        interactionState,
+      });
+    },
+    [emitViewStateChange, onViewStateChange],
+  );
+
   return (
     <div id={container} className={className}>
       <Deckgl
@@ -117,6 +143,7 @@ export function BaseMap({
         useDevicePixels={false}
         onHover={handleMapHover}
         onClick={handleMapClick}
+        onViewStateChange={handleViewStateChange}
         // @ts-expect-error TODO: conflict with deckgl type
         parameters={{ ...PARAMETERS, ...parameters }}
       >

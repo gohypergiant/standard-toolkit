@@ -11,7 +11,7 @@
  */
 
 import type { Payload } from '@accelint/bus';
-import type { PickingInfo } from '@deck.gl/core';
+import type { InteractionState, PickingInfo } from '@deck.gl/core';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
 
@@ -50,7 +50,17 @@ export type MapHoverPayload = {
   event: NonFuncMjolnirPointerEvent;
 };
 
+export type MapViewStatePayload = {
+  latitude: number;
+  longitude: number;
+  interactionState: InteractionState;
+};
+
 export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
+export type MapViewStateEvent = Payload<
+  typeof MapEvents.viewportChange,
+  MapViewStatePayload
+>;
 
-export type MapEventType = MapClickEvent | MapHoverEvent;
+export type MapEventType = MapClickEvent | MapHoverEvent | MapViewStateEvent;

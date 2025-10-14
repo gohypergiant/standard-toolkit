@@ -43,6 +43,7 @@
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
+    "@accelint/geo": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@deck.gl/core": "9.1.14",
@@ -86,6 +87,7 @@
   },
   "optionalDependencies": {
     "@accelint/bus": "^1.3.0",
+    "@accelint/geo": "^0.2.9",
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "^9.1.14",
     "@deck.gl/geo-layers": "^9.1.14",

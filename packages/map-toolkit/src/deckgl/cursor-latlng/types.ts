@@ -9,7 +9,14 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+//import type { coordinateSystems } from '@accelint/geo';
+
+// export type CursorLatLngProps = {
+//   formatString?: (typeof coordinateSystems)[keyof typeof coordinateSystems];
+// };
+
+export type FormatTypes = 'dms' | 'mgrs' | 'ddm' | 'utm';
 
 export type CursorLatLngProps = {
-  toString?: (coords: number[]) => string;
+  formatString?: FormatTypes;
 };

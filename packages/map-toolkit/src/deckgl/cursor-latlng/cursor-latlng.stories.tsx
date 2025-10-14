@@ -10,12 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { Broadcast } from '@accelint/bus';
 import { BaseMap } from '../base-map';
 import { CursorLatLng } from './index';
-import type { PickingInfo, Position } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { IControl } from 'maplibre-gl';
 
 const meta: Meta = {
   title: 'Components/Cursor LatLng',
@@ -23,34 +20,21 @@ const meta: Meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  args: {
-    test: false,
-  },
 } satisfies Meta<typeof CursorLatLng>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const emitObject = (pickInfo: PickingInfo) => ({
-  coordinates: [Number.NaN, Number.NaN],
-  id: undefined,
-  index: pickInfo.index,
-  layerId: pickInfo.layer?.id,
-  screenSpace: pickInfo.pixel as Position,
-  type: undefined,
-  worldSpace: pickInfo.coordinate as Position,
-});
-
 export const Default: Story = {
   render: ({ ...args }) => {
     return (
       <div>
-        <BaseMap />
+        <BaseMap className='h-dvh w-dvw' />
         <div
           className='size-[400px]'
           style={{ position: 'absolute', left: 0, top: 0, color: 'white' }}
         >
-          <CursorLatLng />
+          <CursorLatLng formatString={'dms'} />
         </div>
       </div>
     );

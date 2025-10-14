@@ -11,24 +11,41 @@
  */
 
 import { useOn } from '@accelint/bus/react';
+import { coordinateSystems, createCoordinate } from '@accelint/geo';
 import { useRef } from 'react';
 import { MapEvents } from '../base-map/events';
 import { CursorLatLngStyles } from './styles';
-import type { MapHoverEvent } from '../base-map/types';
-import type { CursorLatLngProps } from './types';
+import type { MapHoverEvent, MapViewStateEvent } from '../base-map/types';
+import type { CursorLatLngProps, FormatTypes } from './types';
 
 export function CursorLatLng(props: CursorLatLngProps) {
   const el = useRef<HTMLDivElement>(null);
-  const { toString } = props;
+  const { formatString } = props;
+  //const create = createCoordinate(coordinateSystems.dd, 'LATLON')
 
   useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
     const coords = data.payload.info.coordinate;
 
     if (coords && el.current) {
-      const formatted = toString ? toString(coords) : coords.join(', ');
-      el.current.textContent = formatted;
+      // const coord = create(coords.join(' / '));
+      // const formatted = formatString ? coord[`${formatString}`]() : coord.dd();
+      el.current.textContent = 'sup';
     }
   });
 
-  return <div style={CursorLatLngStyles}>HelloWorld</div>;
+  // useOn<MapViewStateEvent>(MapEvents.viewportChange, (data: MapViewStateEvent) => {
+  //   const { latitude, longitude } = data.payload;
+
+  //   if (latitude && longitude && el.current) {
+  //     const coord = create(`${latitude} / ${longitude}`);
+  //     const formatted = formatString ? coord[`${formatString}`]() : coord.dd();
+  //     el.current.textContent = formatted;
+  //   }
+  // });
+
+  return (
+    <div style={CursorLatLngStyles} ref={el}>
+      --, --
+    </div>
+  );
 }
