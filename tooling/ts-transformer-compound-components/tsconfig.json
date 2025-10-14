@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "esnext",
-    "lib": ["es2020"],
+    "module": "es2020",
+    "lib": ["es2020", "dom"],
     "declaration": true,
     "outDir": "dist",
     "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "types": ["react/jsx-runtime", "node"],
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["src"]
 }
