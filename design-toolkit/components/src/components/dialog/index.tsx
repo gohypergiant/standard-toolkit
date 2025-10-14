@@ -95,8 +95,7 @@ DialogFooter.displayName = 'Dialog.Footer';
  *     )}
  *   </Dialog>
  * </Dialog.Trigger>
- */
-/**
+ *
  * @compound-component
  * @requires title exactly 1
  * @requires content exactly 1
