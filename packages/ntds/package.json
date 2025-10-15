@@ -1,15 +1,27 @@
 {
   "name": "@accelint/ntds",
-  "version": "0.2.0",
+  "title": "Accelint NTDS",
+  "version": "0.2.1",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "An NTDS-compliant offering of a set of SVG Icon Components with fill color inputs for general usage, and a spritesheet for icons to be used in the COP.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/ntds",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -28,13 +40,13 @@
         "default": "./dist/spritesheets/*.js"
       },
       "default": "./dist/spritesheets/*.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsup && pnpm copy",
     "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
     "build:icons:masked": "smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
+    "constellation-tracker": "constellation-tracker",
     "copy": "pnpm copy:spritesheets",
     "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
     "license": "pnpm zx ../../scripts/license.mjs --files src",
@@ -45,6 +57,7 @@
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",

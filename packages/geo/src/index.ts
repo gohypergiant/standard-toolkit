@@ -17,8 +17,14 @@
 // biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
 export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
+export { formatDecimalDegrees } from './coordinates/latlon/decimal-degrees/formatter';
 export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
+export { formatDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/formatter';
 export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
+export { formatDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/formatter';
 export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
+export { createFormatter } from './coordinates/latlon/internal/format';
+export type { FormatOptions } from './coordinates/latlon/internal/format';
+export { getOrdinal } from './coordinates/latlon/internal/ordinal';
 export { parseMGRS } from './coordinates/mgrs/parser';
 export { parseUTM } from './coordinates/utm/parser';

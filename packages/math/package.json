@@ -1,15 +1,27 @@
 {
   "name": "@accelint/math",
-  "version": "0.1.5",
+  "title": "Accelint Math",
+  "version": "0.1.6",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "A simple, lightweight JavaScript library that provides a collection of basic mathematical functions.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/math",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -32,12 +44,14 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/math",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "esbuild-fix-imports-plugin": "1.0.21",

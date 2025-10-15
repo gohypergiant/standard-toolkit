@@ -1,5 +1,63 @@
 # @accelint/design-toolkit
 
+## 6.0.0
+
+### Major Changes
+
+- 6d131cd: A refactor introducing breaking changes for the Tooltip component. The structure is now a light wrapper around the [Tooltip](https://react-spectrum.adobe.com/react-aria/Tooltip.html) implementation. Tooltip has been replaced with Tooltip.Trigger and Tooltip.Body has been replaced with Tooltip. Reference the [docs](https://gohypergiant.github.io/standard-toolkit/?path=/docs/components-tooltip--playground) for implementation instructions.
+- ac5378e: Changed to new naming system for fontsource.
+
+  Breaking change: This will require changing packages downstream according to the [v5 migration blog](https://fontsource.org/docs/getting-started/migrate-v5) on fontsource.
+
+  Example:
+
+  From this:
+
+  ```json
+      "@fontsource/roboto-flex": "^5.2.8",
+      "@fontsource/roboto-mono": "^5.2.8",
+  ```
+
+  To:
+
+  ```json
+      "@fontsource-variable/roboto-flex": "^5.2.8",
+      "@fontsource-variable/roboto-mono": "^5.2.8",
+  ```
+
+### Minor Changes
+
+- 23ad1db: This release introduces a Notice component to display notifications, alerts, and messages. The implementation includes an individual Notice component for single notifications and Notice.List for queue-based notifications. The system supports five color variants (info, advisory, normal, critical, and serious) with customizable action buttons, automatic timeout management, flexible dequeuing options, and portal-based rendering. View the [Notice component in Storybook](https://gohypergiant.github.io/standard-toolkit/?path=/docs/components-notice--playground) for interactive examples and documentation.
+- 0baf4b0: This fixes a memory leak in the ViewStack component that affects the Drawer component causing detached elements.
+- ade0504: - export ThemeMode type (light or dark)for use in the ThemeProvider
+  - apply bg-surface-default and fg-primary-bold tokens to the html element by default
+  - move font-primary token from the body element to the html
+- eba4ac3: Adds Clock component
+
+### Patch Changes
+
+- 66ac503: Fixes incorrect link to the Github repository
+- 3e47dea: Updates state styles of tree
+- 57efc27: Updates state styles for tabs
+- d625d2b: Apply story patterns: satisfies, story type alias, meta property ordering
+- 1e68e16: Updates state styles of combobox
+- fb2852d: add missing docblock comments to publicly exported components
+- 5643ee1: Fixed buttons min/max widths being incorrectly applied
+- 64280a7: - Released `@accelint/constellation-tracker` - A tool that helps maintain catalog-info.yaml files for Constellation integration
+  - Ensures all packages include catalog-info.yaml in their published files for better discoverability and integration with Constellation
+  - Provides automated tracking and updating of component metadata across the project
+  - Enhanced package metadata to support better integration with internal tooling
+- 4d96d59: Fixes an issue where the Slider component had a fixed height instead of being sized according to its content.
+- 65a0137: Link state style updates
+- d726ad5: Accordion/AccordionGroup variant styling has been updated to address a bug that was not displaying correctly.
+- Updated dependencies [66ac503]
+- Updated dependencies [ccb2d05]
+- Updated dependencies [64280a7]
+  - @accelint/icons@2.0.4
+  - @accelint/bus@1.4.0
+  - @accelint/core@0.4.2
+  - @accelint/temporal@0.1.1
+
 ## 5.2.0
 
 ### Minor Changes
