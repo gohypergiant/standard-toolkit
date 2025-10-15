@@ -40,7 +40,8 @@
     "lint:fs": "pnpm ls-lint",
     "postinstall": "pnpm run deps:postinstall",
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
-    "test": "turbo test"
+    "test": "turbo test",
+    "test:browser": "turbo test:browser"
   },
   "dependencies": {
     "@accelint/biome-config": "workspace:*",

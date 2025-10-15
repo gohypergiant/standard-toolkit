@@ -19,6 +19,7 @@ coverage
 .next
 build
 dist
+dist-no-transforms
 storybook-static
 
 # Environment variables

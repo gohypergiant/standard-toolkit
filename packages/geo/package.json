@@ -39,15 +39,15 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "build:no-transforms": "pnpm tsup --config tsup.config.no-transforms.ts",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/geo",
     "lint": "pnpm biome lint",
-    "test": "pnpm vitest --dir=src"
+    "test": "pnpm vitest --dir=src",
+    "test:browser": "pnpm build && pnpm build:no-transforms && node browser-testing/index.mjs"
   },
   "dependencies": {
-    "@accelint/math": "workspace:*",
-    "@accelint/predicates": "workspace:*",
     "@ngageoint/grid-js": "^2.1.0",
     "@ngageoint/mgrs-js": "^1.0.0",
     "typescript": "5.8.3"
@@ -56,7 +56,9 @@
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
+    "esbuild": "^0.25.11",
     "esbuild-fix-imports-plugin": "^1.0.23",
+    "playwright": "^1.56.1",
     "tsup": "8.5.0",
     "vitest": "^2.1.9"
   },

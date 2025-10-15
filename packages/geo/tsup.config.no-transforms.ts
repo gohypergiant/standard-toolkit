@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Build configuration WITHOUT compatibility transforms.
+ * Used for negative testing to verify that transforms are actually fixing issues.
+ */
+
 import {
   fixAliasPlugin,
   fixExtensionsPlugin,
@@ -20,7 +25,8 @@ import * as ngageoint from './compat/ngageoint';
 
 export default defineConfig({
   esbuildPlugins: [
-    ngageoint.createEsbuildPlugin(),
+    // NOTE: ngageoint.createEsbuildPlugin() intentionally omitted
+    // This build should have the compatibility issues
     fixAliasPlugin(),
     fixFolderImportsPlugin(),
     fixExtensionsPlugin(),
@@ -32,11 +38,12 @@ export default defineConfig({
   ],
   bundle: true,
   clean: true,
-  dts: true,
+  dts: false, // Skip type declarations for this build
   format: 'esm',
   sourcemap: true,
   splitting: true,
   treeshake: true,
   metafile: true,
+  outDir: 'dist-no-transforms',
   noExternal: [...ngageoint.PACKAGES_TO_BUNDLE],
 });

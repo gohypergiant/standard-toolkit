@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Browser Compatibility Testing (Negative Test - No Transforms)</title>
+
+<body>
+  <script type="module">
+    // Import from the NO-TRANSFORMS build to verify compatibility issues exist
+    // This should FAIL with js_cols errors if transforms are working correctly
+    // 
+    // Note: Even though the import will fail, we need to signal completion
+    // so the test framework doesn't wait for the timeout. We use a setTimeout
+    // to ensure the error has time to be captured first.
+    import { coordinateSystems as sys, createCoordinate } from '../dist-no-transforms/index.js';
+
+    // If we somehow reach here (we shouldn't), signal completion
+    window.testsComplete = true;
+  </script>
+  <script>
+    // Give the module error time to be captured, then signal completion
+    // This ensures the test framework sees the error before completing
+    setTimeout(() => {
+      window.testsComplete = true;
+    }, 100);
+  </script>

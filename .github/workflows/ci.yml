@@ -38,4 +38,8 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run test
       - run: pnpm run lint:fs
+      - name: Install Playwright browsers
+        run: pnpm --filter @accelint/geo exec playwright install --with-deps chromium
+      - name: Run browser compatibility tests
+        run: pnpm --filter @accelint/geo test:browser
 

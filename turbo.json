@@ -13,6 +13,10 @@
       "dependsOn": ["^build"],
       "outputs": ["coverage"]
     },
+    "test:browser": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
     "index": {
       "outputs": ["src/index.ts"]
     },
