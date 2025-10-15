@@ -12,59 +12,13 @@
 
 import { Broadcast } from '@accelint/bus';
 import { useOn } from '@accelint/bus/react';
-import { distance } from '@turf/distance';
 import { type ComponentProps, useRef } from 'react';
 import { MapEvents } from '../base-map/events';
-import type { Bounds, MapEventType, MapViewportEvent } from '../base-map/types';
+import { getViewportScale } from './utils';
+import type { MapEventType, MapViewportEvent } from '../base-map/types';
+import type { AllowedUnit } from './types';
 
 export const bus = Broadcast.getInstance<MapEventType>();
-
-const UNIT_MAP = {
-  km: 'kilometers',
-  m: 'meters',
-  nmi: 'nauticalmiles',
-  mi: 'miles',
-  ft: 'feet',
-} as const;
-
-type AllowedUnit = keyof typeof UNIT_MAP;
-type GetViewportScaleArgs = {
-  bounds?: Bounds;
-  unit: AllowedUnit;
-  formatter?: Intl.NumberFormat;
-};
-
-const numberFormatter = Intl.NumberFormat('en-US');
-
-export function getViewportScale({
-  bounds,
-  unit,
-  formatter = numberFormatter,
-}: GetViewportScaleArgs) {
-  if (!bounds) {
-    return '-- x --' as const;
-  }
-
-  const [minX, minY, maxX, maxY] = bounds;
-
-  const width = formatter.format(
-    Math.round(
-      distance([minY, minX], [minY, maxX], {
-        units: UNIT_MAP[unit],
-      }),
-    ),
-  );
-
-  const height = formatter.format(
-    Math.round(
-      distance([minX, minY], [minX, maxY], {
-        units: UNIT_MAP[unit],
-      }),
-    ),
-  );
-
-  return `${width} x ${height} ${unit.toUpperCase()}` as const;
-}
 
 type ViewportScaleProps = ComponentProps<'span'> & {
   unit?: AllowedUnit;
@@ -81,6 +35,7 @@ export function ViewportScale({
     MapEvents.viewport,
     ({ payload: { bounds } }: MapViewportEvent) => {
       if (bounds && ref.current) {
+        console.log({ bounds });
         const viewportScale = getViewportScale({
           bounds,
           unit,
@@ -91,8 +46,8 @@ export function ViewportScale({
   );
 
   return (
-    <span className={className} {...rest} ref={ref}>
-      ### x ### {unit}
+    <span data-testid='blah' className={className} {...rest} ref={ref}>
+      ### x ### {unit.toUpperCase()}
     </span>
   );
 }

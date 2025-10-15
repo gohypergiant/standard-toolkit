@@ -10,16 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { ZoomWidget } from '@deck.gl/widgets';
 import { BaseMap } from '../base-map';
 import { ViewportSyncWidget } from '../widgets/viewport-sync';
-import { ViewportScale as ViewportScaleComponent } from './use-viewport-scale';
+import { ViewportScale as ViewportScaleComponent } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const WIDGETS = [
-  new ViewportSyncWidget({ id: 'viewport-sync' }),
-  new ZoomWidget(),
-];
+const WIDGETS = [new ViewportSyncWidget({ id: 'viewport-sync' })];
 
 const meta: Meta = {
   title: 'DeckGL',
