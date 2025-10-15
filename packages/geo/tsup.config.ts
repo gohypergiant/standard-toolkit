@@ -16,9 +16,11 @@ import {
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
 import { defineConfig } from 'tsup';
+import * as ngageoint from './compat/ngageoint';
 
 export default defineConfig({
   esbuildPlugins: [
+    ngageoint.createEsbuildPlugin(),
     fixAliasPlugin(),
     fixFolderImportsPlugin(),
     fixExtensionsPlugin(),
@@ -28,7 +30,7 @@ export default defineConfig({
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
   ],
-  bundle: false,
+  bundle: true,
   clean: true,
   dts: true,
   format: 'esm',
@@ -36,4 +38,5 @@ export default defineConfig({
   splitting: true,
   treeshake: true,
   metafile: true,
+  noExternal: [...ngageoint.PACKAGES_TO_BUNDLE],
 });
