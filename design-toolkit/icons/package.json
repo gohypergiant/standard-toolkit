@@ -1,15 +1,25 @@
 {
   "name": "@accelint/icons",
-  "version": "2.0.3",
+  "title": "Accelint Icons",
+  "version": "2.0.4",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "design-tk",
+    "ui",
+    "tooling"
+  ],
+  "description": "An open-source icon library to serve as part of the entire ecosystem of UX for Accelint.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit/design-toolkit"
+    "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "type": "module",
+  "owner": "default/pathfinder",
+  "subPath": "design-toolkit/icons",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml"
   ],
   "types": "./dist/index.d.mts",
   "exports": {
@@ -31,11 +41,11 @@
   },
   "scripts": {
     "build": "pnpm generate:icons && pnpm license && pnpm format && pnpm tsup",
+    "constellation-tracker": "constellation-tracker",
     "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
     "format": "pnpm biome check --linter-enabled=false . --write",
     "license": "pnpm zx ../../scripts/license.mjs --files src/icons"
   },
-  "keywords": [],
   "$schema": "https://json.schemastore.org/package",
   "author": "https://hypergiant.com",
   "publishConfig": {
@@ -47,6 +57,7 @@
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@svgr/cli": "8.1.0",

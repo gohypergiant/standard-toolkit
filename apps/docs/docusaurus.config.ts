@@ -34,7 +34,7 @@ const config: Config = {
   // TODO: change "ignore" to "warn" or "error" when the site is more complete.
   // "ignore" for now to make the output during build less noisy.
   onBrokenLinks: 'ignore',
-  onBrokenMarkdownLinks: 'ignore',
+  // onBrokenMarkdownLinks: 'ignore',
   onBrokenAnchors: 'ignore',
 
   // Even if you don't use internationalization, you can use this field to set
@@ -43,6 +43,12 @@ const config: Config = {
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
+  },
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'ignore',
+    },
   },
 
   presets: [

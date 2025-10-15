@@ -1,4 +1,4 @@
-import { startCase } from 'lodash';
+import { title } from 'radashi';
 import { Icon } from '../components/icon';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
@@ -28,7 +28,7 @@ export const UIIcons: Story = {
         {Object.entries(catalog).map(([section, meta]) => (
           <div key={section} className='flex flex-col gap-xl'>
             <h1 className='fg-primary-bold mt-xl text-header-xl'>
-              {startCase(section)}
+              {title(section)}
             </h1>
             <p className='fg-primary-muted text-body-s'>{meta.description}</p>
             <div className='fg-primary-bold grid auto-cols-max grid-cols-2 justify-center gap-l font-display text-body-xs md:grid-cols-3 lg:grid-cols-4'>
@@ -40,7 +40,7 @@ export const UIIcons: Story = {
                     </Icon>
                     <div className='flex flex-col'>
                       <span className='flex-none'>
-                        {startCase(icon.name).replaceAll(' ', '')}
+                        {title(icon.name).replaceAll(' ', '')}
                       </span>
                       <span className='fg-info-bold'>{icon.name}</span>
                     </div>

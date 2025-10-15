@@ -1,16 +1,31 @@
 {
   "name": "@accelint/smeegl",
-  "version": "0.3.1",
+  "title": "Smeegl",
+  "version": "0.3.2",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "A small, spreet-based spritesheet/texture package for use with Deck.gl.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "tooling/smeegl",
   "type": "module",
   "bin": {
     "smeegl": "./dist/main.js"
   },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
   "exports": {
     ".": {
       "import": {
@@ -18,11 +33,11 @@
         "default": "./dist/lib.js"
       },
       "default": "./dist/lib.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "build": "pnpm tsc && pnpm license && pnpm format",
+    "constellation-tracker": "constellation-tracker",
     "lint": "pnpm biome lint",
     "format": "pnpm biome format . --write",
     "license": "pnpm zx ../../scripts/license.mjs",
@@ -30,6 +45,7 @@
     "postinstall": "pnpm run build"
   },
   "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/lodash": "4.17.20",

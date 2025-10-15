@@ -1,15 +1,27 @@
 {
   "name": "@accelint/logger",
-  "version": "0.1.0",
+  "title": "Accelint Logger",
+  "version": "0.1.1",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "A flexible and extensible logging utility with callsite tracking and environment-aware capabilities.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/logger",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -26,12 +38,12 @@
         "default": "./dist/*/index.js"
       },
       "default": "./dist/*/index.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/logger",
     "lint": "pnpm biome lint",
@@ -39,6 +51,7 @@
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@testing-library/dom": "^10.4.1",

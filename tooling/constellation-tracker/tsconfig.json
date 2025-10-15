@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@accelint/typescript-config/tsc/dom/library",
+  "include": ["./src"],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.test-d.ts"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "lib": ["es2023"],
+    "target": "es2022",
+    "incremental": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true
+  }
+}

@@ -1,15 +1,27 @@
 {
   "name": "@accelint/predicates",
-  "version": "0.4.1",
+  "title": "Accelint Predicates",
+  "version": "0.4.2",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "A collection of useful predicate functions for JavaScript.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/predicates",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -26,18 +38,19 @@
         "default": "./dist/*/index.js"
       },
       "default": "./dist/*/index.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/predicates",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@vitest/web-worker": "2.1.3",
