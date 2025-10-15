@@ -28,7 +28,7 @@ export default defineConfig({
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
   ],
-  bundle: false,
+  bundle: true,
   clean: true,
   dts: true,
   format: 'esm',
@@ -36,4 +36,9 @@ export default defineConfig({
   splitting: true,
   treeshake: true,
   metafile: true,
+  noExternal: [
+    // Bundle @ngageoint packages to convert CommonJS to ESM for browser compatibility
+    '@ngageoint/grid-js',
+    '@ngageoint/mgrs-js',
+  ],
 });
