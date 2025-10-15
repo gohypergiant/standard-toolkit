@@ -78,6 +78,7 @@
     "preview:docs": "pnpm storybook dev --docs -p 6006",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch",
+    "test:memory:e2e": "vitest test/memory/e2e --coverage=false",
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
@@ -126,6 +127,8 @@
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",
     "@internationalized/date": "^3.8.2",
+    "@memlab/api": "^1.0.42",
+    "@memlab/core": "^1.1.43",
     "@radix-ui/react-avatar": "^1.1.10",
     "@react-aria/dnd": "^3.10.1",
     "@react-aria/interactions": "^3.25.3",
@@ -168,6 +171,7 @@
     "jsdom": "^26.1.0",
     "lodash": "^4.17.21",
     "postcss": "^8.5.6",
+    "puppeteer": "^24.25.0",
     "react": "^19.0.0",
     "react-aria-components": "^1.12.1",
     "react-dom": "^19.0.0",
