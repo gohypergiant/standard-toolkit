@@ -54,15 +54,11 @@ Iti is composed of the following components:
 ## Props
 
 ### ComboBoxField Props
+Implements [Combobox Props](https://react-spectrum.adobe.com/react-aria/ComboBox.html#combobox-1)
 - **`label`** - Label text displayed above the input field (hidden in small size)
 - **`description`** - Helper text displayed below the input field (hidden in small size or when invalid)
 - **`errorMessage`** - Error message displayed when the field is invalid
 - **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
-- **`isDisabled`** - Whether the combobox is disabled
-- **`isInvalid`** - Whether the combobox is in an invalid state
-- **`isRequired`** - Whether the field is required
-- **`menuTrigger`** - When to open the menu: `'focus'` | `'input'` | `'manual'` (default: `'focus'`)
-- **`inputProps`** - Additional props passed to the input element
 - **`layoutOptions`** - Configuration for virtualization (e.g., `{ estimatedRowHeight: 46 }`)
 - **`classNames`** - Object containing custom class names for styling:
   - `field` - Main field container
@@ -154,6 +150,18 @@ Support for icons, descriptions, and complex layouts:
           <Options.Item.Description>{item.description}</Options.Item.Description>
         )}
       </Options.Item.Content>
+    </Options.Item>
+  )}
+</ComboBoxField>
+```
+
+### Persist custom value
+Allow a custom value to be entered:
+```tsx
+<ComboBoxField<CustomItem> defaultItems={items} allowsCustomValue>
+  {(item) => (
+    <Options.Item key={item.id} textValue={item.name}>
+      <Options.Item.Label>{item.name}</Options.Item.Label>
     </Options.Item>
   )}
 </ComboBoxField>
