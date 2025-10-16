@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createControl, EXCLUSIONS } from '^storybook/utils';
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
 import { Link } from './index';
@@ -26,11 +27,18 @@ const meta = {
     isVisited: false,
   },
   argTypes: {
-    allowsVisited: {
-      control: 'boolean',
+    children: COMMON_CONTROL.children,
+    allowsVisited: createControl.boolean(
+      'Whether the link can be styled when visited',
+    ),
+    isDisabled: COMMON_CONTROL.isDisabled,
+  },
+  parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
     },
-    isDisabled: {
-      control: 'boolean',
+    docs: {
+      subtitle: 'Accessible link component for navigation and actions.',
     },
   },
 } satisfies Meta<typeof Link>;

@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createControl, EXCLUSIONS } from '^storybook/utils';
 import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
+import { SIZE } from '@/constants/size';
 import { DateField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -20,22 +22,47 @@ const meta = {
   args: {
     label: 'Label',
     defaultValue: parseDate('2020-01-23'),
-    description: 'Format: d MMM yyyy',
+    description: 'Format: MM DD yyyy',
     errorMessage: '',
     granularity: 'day',
-    size: 'medium',
+    size: SIZE.MEDIUM,
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'medium'],
+    label: COMMON_CONTROL.label,
+    description: COMMON_CONTROL.description,
+    errorMessage: COMMON_CONTROL.errorMessage,
+    isDisabled: COMMON_CONTROL.isDisabled,
+    isInvalid: COMMON_CONTROL.isInvalid,
+    isRequired: COMMON_CONTROL.isRequired,
+    size: COMMON_CONTROL.size.compact,
+    granularity: createControl.select('Date granularity', [
+      'day',
+      'hour',
+      'minute',
+      'second',
+    ]),
+  },
+  parameters: {
+    controls: {
+      exclude: [
+        ...EXCLUSIONS.COMMON,
+        ...EXCLUSIONS.FORM,
+        'autoComplete',
+        'hideTimeZone',
+        'isDateUnavailable',
+        'maxValue',
+        'minValue',
+        'placeholderValue',
+        'shouldForceLeadingZeros',
+        'shortMonth',
+      ],
     },
-    granularity: {
-      control: 'select',
-      options: ['day', 'hour', 'minute', 'second'],
+    docs: {
+      subtitle:
+        'Date input field with granular control over date/time selection.',
     },
   },
 } satisfies Meta<typeof DateField>;
@@ -50,7 +77,6 @@ export const Default: Story = {
 export const WithoutShortMonth: Story = {
   args: {
     ...Default.args,
-    granularity: 'day',
     shortMonth: false,
     description: 'Format: d MM yyyy',
     defaultValue: parseDate('2020-01-23'),

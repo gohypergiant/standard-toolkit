@@ -1,4 +1,3 @@
-import { uuid } from '@accelint/core';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,6 +9,9 @@ import { uuid } from '@accelint/core';
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import { createControl, EXCLUSIONS } from '^storybook/utils';
+import { uuid } from '@accelint/core';
 import {
   ChevronDown,
   ChevronLeft,
@@ -71,15 +73,24 @@ const meta = {
     push: 'left right',
   },
   argTypes: {
-    extend: {
-      control: 'select',
-      options: ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
-    },
-    push: {
-      control: 'text',
-    },
+    extend: createControl.select(
+      'Extend options',
+      ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
+      'bottom',
+    ),
+    // TODO: this - "push" - could likely be better represented; possibly with four radios?
+    push: createControl.text(
+      'Which panels should "push" (not "overlay") the content',
+    ),
   },
   parameters: {
+    controls: {
+      exclude: [...EXCLUSIONS.COMMON],
+    },
+    docs: {
+      subtitle:
+        'A slide-out panel component for navigation and secondary content',
+    },
     layout: 'fullscreen',
   },
 } satisfies Meta<Alias>;
@@ -100,16 +111,16 @@ export const Default: Story = {
                   '--single': '40px',
                   '--double': 'calc(2 * var(--single))',
                   backgroundImage: `
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
-            radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
-          `,
+                    radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
+                    radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
+                  `,
                   backgroundSize: 'var(--double) var(--double)',
                   backgroundPosition:
                     'center, calc(50% + var(--single)) calc(50% + var(--single))',
                 } as CSSProperties
               }
             >
-              <div className='flex w-1/2 flex-col rounded-large bg-surface-overlay p-xl outline-2 outline-info-bold [&>*]:my-s'>
+              <div className='fg-primary-bold flex w-1/2 flex-col rounded-large bg-surface-overlay p-xl outline-2 outline-info-bold [&>*]:my-s'>
                 <p>This page is for demo purposes only!</p>
               </div>
             </div>

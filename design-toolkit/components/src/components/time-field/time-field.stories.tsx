@@ -10,30 +10,54 @@
  * governing permissions and limitations under the License.
  */
 
+import { COMMON_CONTROL, createControl, EXCLUSIONS } from '^storybook/utils';
 import { parseTime } from '@internationalized/date';
+import { SIZE } from '@/constants/size';
 import { TimeField } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const meta = {
+type PropAlias = Parameters<typeof TimeField>[0]['granularity'] & string;
+
+const GRANULARITY = Object.freeze({
+  HOUR: 'hour',
+  MINUTE: 'minute',
+  SECOND: 'second',
+} as const satisfies Record<Uppercase<PropAlias>, PropAlias>);
+
+const meta: Meta<typeof TimeField> = {
   title: 'Components/TimeField',
   component: TimeField,
   args: {
-    label: 'Label',
+    defaultValue: parseTime('20:03'),
     description: 'Format: hh:mm:ssz',
     errorMessage: '',
-    size: 'medium',
+    granularity: GRANULARITY.SECOND,
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
-    defaultValue: parseTime('20:03'),
+    label: 'Label',
+    size: SIZE.MEDIUM,
   },
   argTypes: {
-    size: {
-      control: 'select',
-      options: ['small', 'medium'],
-    },
-    granularity: {
-      control: 'select',
+    size: COMMON_CONTROL.size.compact,
+    granularity: createControl.select(
+      'Input granularity',
+      Object.values(GRANULARITY),
+    ),
+  },
+  parameters: {
+    controls: {
+      exclude: [
+        ...EXCLUSIONS.COMMON,
+        ...EXCLUSIONS.FORM,
+        'defaultValue',
+        'minValue',
+        'maxValue',
+        'hourCycle',
+        'hideTimeZone',
+        'shouldForceLeadingZeros',
+        'placeholderValue',
+      ],
     },
   },
 } satisfies Meta<typeof TimeField>;
