@@ -19,6 +19,40 @@ import type {
   KanbanColumnData,
 } from '@/components/kanban/types';
 
+/**
+ * Hook that provides drag-and-drop interactions for a kanban column.
+ *
+ * This hook integrates with `@dnd-kit/core` to enable dropping cards into columns.
+ * It tracks hover states, validates drop targets based on the column's `canDrop` property,
+ * and provides visual feedback states for both the column itself and cards within it.
+ *
+ * @param column - The kanban column data object containing the column's id, canDrop status, and other properties
+ *
+ * @returns An object containing:
+ * - `ref` - Ref callback to attach to the droppable column DOM element
+ * - `isHighlighted` - Boolean indicating if the column should be visually highlighted (when a card from another column is being dragged)
+ * - `isActive` - Boolean indicating if the column is actively being hovered over and can accept the drop
+ *
+ * @example
+ * ```tsx
+ * function KanbanColumn({ column }: { column: KanbanColumnData }) {
+ *   const { ref, isHighlighted, isActive } = useColumnInteractions(column);
+ *
+ *   return (
+ *     <div
+ *       ref={ref}
+ *       className={cn({
+ *         'ring-2 ring-blue-300': isHighlighted && !isActive, // Potential drop target
+ *         'ring-2 ring-blue-500 bg-blue-50': isActive,        // Active drop target
+ *       })}
+ *     >
+ *       <h2>{column.title}</h2>
+ *       {column.cards.map(card => <Card key={card.id} card={card} />)}
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function useColumnInteractions(column: KanbanColumnData) {
   const { setNodeRef, isOver, active } = useDroppable({
     id: column.id,
@@ -47,6 +81,37 @@ export function useColumnInteractions(column: KanbanColumnData) {
   };
 }
 
+/**
+ * Hook that provides drag-and-drop interactions for a kanban card.
+ *
+ * This hook integrates with `@dnd-kit/sortable` to enable dragging, dropping, and reordering
+ * of cards within and between columns. It handles transform animations, drag state tracking,
+ * and edge detection for insertion positioning.
+ *
+ * @param card - The kanban card data object containing the card's id and other properties
+ *
+ * @returns An object containing:
+ * - `ref` - Ref callback to attach to the draggable card DOM element
+ * - `isDragging` - Boolean indicating if this card is currently being dragged
+ * - `closestEdge` - The closest edge ('top' or 'bottom') when another card is hovering over this card, or null if not hovering
+ * - `style` - CSS style object with transform and transition properties for drag animations
+ * - `attributes` - Accessibility and drag attributes to spread on the card element
+ * - `listeners` - Event listeners to spread on the drag handle element
+ *
+ * @example
+ * ```tsx
+ * function KanbanCard({ card }: { card: KanbanCardData }) {
+ *   const { ref, isDragging, closestEdge, style, attributes, listeners } = useCardInteractions(card);
+ *
+ *   return (
+ *     <div ref={ref} style={style} {...attributes} {...listeners}>
+ *       {card.title}
+ *       {closestEdge && <DropIndicator edge={closestEdge} />}
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function useCardInteractions(card: KanbanCardData) {
   const {
     attributes,
@@ -77,7 +142,6 @@ export function useCardInteractions(card: KanbanCardData) {
   return {
     ref: setNodeRef,
     isDragging,
-    container: null,
     closestEdge,
     style,
     attributes,
