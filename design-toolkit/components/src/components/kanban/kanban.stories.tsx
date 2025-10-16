@@ -57,7 +57,7 @@ export const Default: Story = {
                     />
                   </Kanban.Column.Header>
 
-                  <Kanban.Column.Content>
+                  <Kanban.Column.Content column={column}>
                     {column.cards.map((card) => (
                       <Kanban.Card key={card.id} card={card}>
                         <Kanban.Card.Header>
@@ -178,7 +178,7 @@ export const CompleteExample: Story = {
                     />
                   </Kanban.Column.Header>
 
-                  <Kanban.Column.Content>
+                  <Kanban.Column.Content column={column}>
                     {column.cards.map((card) => (
                       <Kanban.Card key={card.id} card={card}>
                         <Kanban.Card.Header>

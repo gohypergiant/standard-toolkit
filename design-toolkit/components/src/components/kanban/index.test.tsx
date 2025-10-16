@@ -9,8 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { cleanup, render, renderHook, screen } from '@testing-library/react';
-import { afterAll, describe, expect, it, vi } from 'vitest';
+import { render, renderHook, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { Kanban } from '.';
 import { KanbanProvider, useKanban } from './context';
 import { columnData as columns } from './mock-data';
@@ -63,7 +63,6 @@ function TestKanban() {
 }
 
 describe('Kanban Board', () => {
-  afterAll(() => cleanup());
   describe('Kanban Components', () => {
     render(<TestKanban />);
     const mainContainer = screen.getByTestId('container');

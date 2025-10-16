@@ -74,6 +74,8 @@ const DragContext = createContext<{ activeId: string | null }>({
 
 const useDragContext = () => useContext(DragContext);
 
+const ACTIVATION_DISTANCE = 8;
+
 export function Kanban({ children, className, ...rest }: KanbanProps) {
   const { moveCard, columns } = useKanban();
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -81,7 +83,7 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: ACTIVATION_DISTANCE,
       },
     }),
   );
@@ -179,6 +181,7 @@ const HeaderTitle = ({
     </Heading>
   );
 };
+HeaderTitle.displayName = 'Kanban.Header.Title';
 
 const HeaderActions = ({
   children,
@@ -200,9 +203,6 @@ const HeaderSearch = ({ classNames, ...rest }: KanbanSearchProps) => (
   />
 );
 HeaderSearch.displayName = 'Kanban.Header.Search';
-
-const HeaderMenu = ({ children }: KanbanMenuProps) => ({ children });
-HeaderMenu.displayName = 'Kanban.Header.Menu';
 
 const ColContainer = ({
   children,
@@ -242,7 +242,7 @@ const ColHeader = ({ children, className, ...rest }: KanbanComponentProps) => {
 ColHeader.displayName = 'Kanban.Column.Header';
 
 const ColDragHandle = () => (
-  <Icon size='small'>
+  <Icon size='small' aria-label='Drag column'>
     <DragVert />
   </Icon>
 );
@@ -361,7 +361,7 @@ const CardHeader = ({ className, children, ...rest }: KanbanComponentProps) => {
     </Header>
   );
 };
-CardHeader.displayname = 'Kanban.Card.Header';
+CardHeader.displayName = 'Kanban.Card.Header';
 
 const CardTitle = ({ className, children, ...rest }: KanbanComponentProps) => {
   return (
@@ -392,7 +392,7 @@ const CardBody = ({ children, className, ...rest }: KanbanComponentProps) => {
     </div>
   );
 };
-CardBody.displayname = 'Kanban.Card.Body';
+CardBody.displayName = 'Kanban.Card.Body';
 
 // Kanban Composition
 CardHeader.Title = CardTitle;
@@ -404,10 +404,6 @@ KanbanCard.Body = CardBody;
 Header.Title = HeaderTitle;
 Header.Actions = HeaderActions;
 Header.Search = HeaderSearch;
-Header.Menu = HeaderMenu;
-
-ColHeader.Title = ColHeaderTitle;
-ColHeader.Actions = ColHeaderActions;
 
 ColHeader.Title = ColHeaderTitle;
 ColHeader.Actions = ColHeaderActions;
