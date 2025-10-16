@@ -1,5 +1,11 @@
 # @accelint/core
 
+## 0.5.0
+
+### Minor Changes
+
+- 525a5a6: Open-source the safe-enum package, making it available to consumers as part of the @accelint/core package.
+
 ## 0.4.2
 
 ### Patch Changes

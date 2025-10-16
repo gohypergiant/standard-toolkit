@@ -1,5 +1,16 @@
 # @accelint/docs
 
+## 0.1.23
+
+### Patch Changes
+
+- Updated dependencies [525a5a6]
+- Updated dependencies [b32e3ae]
+  - @accelint/core@0.5.0
+  - @accelint/geo@0.3.0
+  - @accelint/ntds@0.2.1
+  - @accelint/predicates@0.4.3
+
 ## 0.1.22
 
 ### Patch Changes

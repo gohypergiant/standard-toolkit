@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-toolkit",
   "title": "Design Toolkit",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "private": false,
   "license": "Apache-2.0",
   "keywords": [
@@ -81,9 +81,9 @@
     "build-storybook": "pnpm storybook build"
   },
   "peerDependencies": {
-    "@accelint/bus": "^1.4.0",
-    "@accelint/core": "^0.4.2",
-    "@accelint/icons": "^2.0.4",
+    "@accelint/bus": "^2.0.0",
+    "@accelint/core": "^0.5.0",
+    "@accelint/icons": "^2.1.0",
     "@accelint/temporal": "^0.1.1",
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",

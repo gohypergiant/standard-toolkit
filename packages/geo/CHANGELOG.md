@@ -1,5 +1,15 @@
 # @accelint/geo
 
+## 0.3.0
+
+### Minor Changes
+
+- b32e3ae: Adds formatters to the existing coordinate representations
+
+### Patch Changes
+
+- @accelint/predicates@0.4.3
+
 ## 0.2.10
 
 ### Patch Changes
