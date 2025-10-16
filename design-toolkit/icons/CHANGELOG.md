@@ -1,5 +1,11 @@
 # @accelint/icons
 
+## 2.1.0
+
+### Minor Changes
+
+- 5ce2a0c: Adds new map-related icons to the icon library set
+
 ## 2.0.4
 
 ### Patch Changes
