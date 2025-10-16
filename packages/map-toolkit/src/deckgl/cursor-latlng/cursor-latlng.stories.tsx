@@ -11,32 +11,35 @@
  */
 
 import { BaseMap } from '../base-map';
-import { CursorLatLng } from './index';
-import type { Meta, StoryObj } from '@storybook/react';
+import { FormatTypes, useHoverCoordinate } from './index';
+import type { Meta } from '@storybook/react';
+
+const HoverCoordinateDemo = () => {
+  const { formattedCoord, setFormat } = useHoverCoordinate();
+  setFormat(FormatTypes.Ddm); // TODO: Add formats dropdown to story
+
+  return (
+    <div>
+      <BaseMap className='h-dvh w-dvw' />
+      <div
+        className='size-[400px]'
+        style={{ position: 'absolute', left: 0, top: 0, color: 'white' }}
+      >
+        {formattedCoord}
+      </div>
+    </div>
+  );
+};
 
 const meta: Meta = {
   title: 'Components/Cursor LatLng',
-  component: CursorLatLng,
+  component: HoverCoordinateDemo,
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<typeof CursorLatLng>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: ({ ...args }) => {
-    return (
-      <div>
-        <BaseMap className='h-dvh w-dvw' />
-        <div
-          className='size-[400px]'
-          style={{ position: 'absolute', left: 0, top: 0, color: 'white' }}
-        >
-          <CursorLatLng formatString={'dms'} />
-        </div>
-      </div>
-    );
-  },
-};
+const Template = () => <HoverCoordinateDemo />;
+export const Default = Template.bind({});
