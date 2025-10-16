@@ -1,5 +1,11 @@
 # @accelint/map-toolkit
 
+## 0.1.1
+
+### Patch Changes
+
+- 303b61f: Pins the dependency version of Deck.gl to 9.1.14. We are not yet able to support 9.2.
+
 ## 0.1.0
 
 ### Minor Changes

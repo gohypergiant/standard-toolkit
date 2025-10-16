@@ -1,5 +1,12 @@
 # @accelint/bus
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [525a5a6]
+  - @accelint/core@0.5.0
+
 ## 1.4.0
 
 ### Minor Changes

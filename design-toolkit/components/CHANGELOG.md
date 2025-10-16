@@ -1,5 +1,27 @@
 # @accelint/design-toolkit
 
+## 7.0.0
+
+### Minor Changes
+
+- cec6fee: Replace lodash with radashi for performance and build size optimization
+- 5ce2a0c: Adds new map-related icons to the icon library set
+
+### Patch Changes
+
+- 842e84a: Updates state styles of select
+- d67c471: Audits state styles of switch
+- 0d0edc4: Document the custom value implementation for combobox
+- f5a2a9f: Updates color-picker state styles
+- b5061d2: Updates state styles of checkbox
+- 0c5e77f: State style updates plus propagates disabled state to slider
+- 1c2a622: Updates deletable chip and selectable chip state styles
+- Updated dependencies [525a5a6]
+- Updated dependencies [5ce2a0c]
+  - @accelint/core@0.5.0
+  - @accelint/icons@2.1.0
+  - @accelint/bus@2.0.0
+
 ## 6.0.0
 
 ### Major Changes
