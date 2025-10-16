@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CRITICALITY } from '@/constants/criticality';
 import { Badge } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -27,7 +28,7 @@ const meta = {
     },
     variant: {
       control: 'select',
-      options: ['info', 'normal', 'serious', 'critical', 'advisory'],
+      options: Object.values(CRITICALITY),
     },
   },
 } satisfies Meta<typeof Badge>;

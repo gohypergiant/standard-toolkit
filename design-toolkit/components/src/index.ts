@@ -380,6 +380,8 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { CRITICALITY } from './constants/criticality';
+export type { Criticality, CriticalityKey } from './constants/criticality';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
