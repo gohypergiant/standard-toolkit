@@ -16,6 +16,7 @@ import type {
   TextAreaProps,
   TextFieldProps,
 } from 'react-aria-components';
+import type { SizeRangeCompact } from '@/constants/size';
 
 export type TextAreaFieldProps = Omit<
   TextFieldProps,
@@ -34,5 +35,5 @@ export type TextAreaFieldProps = Omit<
       RefAttributes<HTMLTextAreaElement>;
     description?: string;
     errorMessage?: FieldErrorProps['children'];
-    size?: 'medium' | 'small';
+    size?: SizeRangeCompact;
   };

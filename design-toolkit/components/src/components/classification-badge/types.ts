@@ -12,6 +12,7 @@
 
 import type { ComponentPropsWithRef } from 'react';
 import type { VariantProps } from 'tailwind-variants';
+import type { SizeRangeCompact } from '@/constants/size';
 import type { ClassificationBadgeStyles } from './styles';
 
 export type ClassificationBadgeStyleVariants = VariantProps<
@@ -20,5 +21,5 @@ export type ClassificationBadgeStyleVariants = VariantProps<
 
 export type ClassificationBadgeProps = ClassificationBadgeStyleVariants &
   ComponentPropsWithRef<'span'> & {
-    size?: 'medium' | 'small';
+    size?: SizeRangeCompact;
   };

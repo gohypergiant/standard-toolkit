@@ -16,11 +16,12 @@ import type {
   LinkProps,
 } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
+import type { SizeRangeFull } from '@/constants/size';
 import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ButtonStyles, ToggleButtonStyles } from './styles';
 
 type ButtonVariantProps = {
-  size?: 'large' | 'medium' | 'small' | 'xsmall';
+  size?: SizeRangeFull;
   color?: 'mono-muted' | 'mono-bold' | 'accent' | 'serious' | 'critical';
 };
 

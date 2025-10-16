@@ -18,6 +18,7 @@ import type {
   ListBoxSectionProps,
   TextProps,
 } from 'react-aria-components';
+import type { SizeRangeBinary } from '@/constants/size';
 import type { IconProps } from '../icon/types';
 
 export type OptionsDataItem = {
@@ -43,7 +44,7 @@ export type OptionsProps<T extends OptionsDataItem> = Omit<
   'orientation' | 'layout'
 > &
   RefAttributes<HTMLDivElement> & {
-    size?: 'small' | 'large';
+    size?: SizeRangeBinary;
   };
 
 export type OptionsSectionProps<T extends OptionsDataItem> = Omit<

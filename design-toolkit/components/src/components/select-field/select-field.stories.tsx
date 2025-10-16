@@ -12,6 +12,7 @@
 
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useId, useState } from 'react';
+import { SIZE_RANGE } from '@/constants/size';
 import { Icon } from '../icon';
 import { Options } from '../options';
 import { SelectField } from './index';
@@ -38,7 +39,7 @@ const meta = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['medium', 'small'],
+      options: SIZE_RANGE.COMPACT,
     },
   },
 } satisfies Meta<typeof SelectField>;
