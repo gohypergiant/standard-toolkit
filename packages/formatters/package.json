@@ -1,15 +1,27 @@
 {
   "name": "@accelint/formatters",
-  "version": "0.1.5",
+  "title": "Accelint Formatters",
+  "version": "0.1.6",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "A set of useful formatting functions for enhancing readability and consistency in your applications.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/formatters",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -32,11 +44,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/formatters",
     "lint": "pnpm biome lint"
   },
   "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "esbuild-fix-imports-plugin": "1.0.21",

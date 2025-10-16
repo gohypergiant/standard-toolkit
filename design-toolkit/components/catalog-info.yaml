@@ -1,0 +1,44 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@accelint/design-toolkit"
+  title: Design Toolkit
+  description: >-
+    An open-source component library to serve as part of the entire ecosystem of
+    UX for Accelint.
+
+
+    Dependencies:
+
+    @accelint/biome-config@1.0.0, @accelint/bus@1.2.0,
+    @accelint/constellation-tracker@0.0.0, @accelint/core@0.4.0,
+    @accelint/icons@2.0.3, @accelint/temporal@0.1.0,
+    @accelint/typescript-config@0.1.2, @accelint/vitest-config@0.1.3
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/design-toolkit/blob/main/design-toolkit/components/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 5.0.0
+    github.com/project-slug: gohypergiant/standard-toolkit/design-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/design-toolkit/tree/main/design-toolkit/components
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - design-tk
+    - ui
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:@accelint/biome-config
+    - component:@accelint/bus
+    - component:@accelint/constellation-tracker
+    - component:@accelint/core
+    - component:@accelint/icons
+    - component:@accelint/temporal
+    - component:@accelint/typescript-config
+    - component:@accelint/vitest-config

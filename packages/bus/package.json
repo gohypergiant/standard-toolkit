@@ -1,15 +1,27 @@
 {
   "name": "@accelint/bus",
-  "version": "1.3.0",
+  "title": "Accelint Bus",
+  "version": "1.4.0",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "description": "An open-source event bus library.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/bus",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -26,12 +38,12 @@
         "default": "./dist/*/index.js"
       },
       "default": "./dist/*/index.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/bus",
     "lint": "pnpm biome lint",
@@ -39,6 +51,7 @@
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
@@ -54,7 +67,7 @@
     "vitest-broadcast-channel-mock": "0.1.0"
   },
   "peerDependencies": {
-    "@accelint/core": "^0.4.1",
+    "@accelint/core": "^0.4.2",
     "typescript": "^5.8.3"
   },
   "optionalDependencies": {
