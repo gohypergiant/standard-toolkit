@@ -380,6 +380,8 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { AXIS } from './constants/axis';
+export type { Axis, AxisKey } from './constants/axis';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {

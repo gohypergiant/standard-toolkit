@@ -11,6 +11,7 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { AXIS } from '@/constants/axis';
 import { Divider } from './';
 import type { DividerProps } from './types';
 
@@ -32,7 +33,7 @@ describe('Divider', () => {
     const divider = screen.getByRole('separator');
 
     expect(divider).toBeInTheDocument();
-    expect(divider).toHaveAttribute('data-orientation', 'horizontal');
+    expect(divider).toHaveAttribute('data-orientation', AXIS.HORIZONTAL);
   });
 
   it('should render a vertical divider when specified', () => {
