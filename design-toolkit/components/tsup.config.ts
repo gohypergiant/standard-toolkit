@@ -18,15 +18,20 @@ import {
 } from 'esbuild-fix-imports-plugin';
 import { glob } from 'tinyglobby';
 import { defineConfig } from 'tsup';
+import { checkCompoundComponents } from '../../tooling/ts-transformer-compound-components/src/check-compound-components';
 
 const CHECK = /client-only/gm;
 
 export default defineConfig({
-  esbuildPlugins: [
-    fixAliasPlugin(),
-    fixFolderImportsPlugin(),
-    fixExtensionsPlugin(),
-  ],
+  esbuildOptions: async (options) => {
+    options.plugins = [
+      ...(options.plugins || []),
+      await checkCompoundComponents({ path: process.cwd() }),
+      fixAliasPlugin(),
+      fixFolderImportsPlugin(),
+      fixExtensionsPlugin(),
+    ];
+  },
   entry: [
     'src/**/*.{ts,tsx,css}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
@@ -44,7 +49,7 @@ export default defineConfig({
   dts: true,
   format: 'esm',
   minify: true,
-  sourcemap: true,
+  sourcemap: false,
   splitting: true,
   treeshake: true,
   onSuccess: async () => {

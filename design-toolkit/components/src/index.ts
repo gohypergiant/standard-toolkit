@@ -140,7 +140,10 @@ export type {
 } from './components/details-list/types';
 export { Dialog, DialogContext } from './components/dialog';
 export { DialogStyles } from './components/dialog/styles';
-export type { DialogProps } from './components/dialog/types';
+export type {
+  DialogProps,
+  DialogTriggerProps,
+} from './components/dialog/types';
 export { Divider, DividerContext } from './components/divider';
 export { DividerStyles } from './components/divider/styles';
 export type { DividerProps } from './components/divider/types';
@@ -421,6 +424,7 @@ export {
 export { PortalProvider } from './providers/portal';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
 export type { ThemeMode } from './providers/theme-provider';
+export { InvalidTooltip } from './test/invalid-tooltip';
 export { designTokens } from './tokens/tokens';
 export type {
   SemanticColorTokens,
