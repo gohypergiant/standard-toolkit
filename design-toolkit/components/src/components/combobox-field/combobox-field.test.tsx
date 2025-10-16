@@ -46,7 +46,7 @@ function setup({
 
 describe('ComboBoxField', () => {
   it('should render', () => {
-    setup();
+    setup({ 'aria-label': 'Animals' });
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
