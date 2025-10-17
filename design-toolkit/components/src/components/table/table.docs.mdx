@@ -85,8 +85,11 @@ const dataExample = [
 * **`persistRowKebabMenu`** - Boolean to persist row kebab
 * **`persistNumerals`** - Boolean to persist numeral columns
 * **`enableSorting`** - Boolean to enable sorting 
-* **`enableColumnOrdering`** - Boolean to enable column ordering 
+* **`enableColumnReordering`** - Boolean to enable column ordering 
 * **`enableRowActions`** - Boolean to enable row actions 
+* **`manualSorting`** - Boolean to enable server side sorting. 
+* **`onSortChange`** - Prop for when server is handling sorting for data. Used when `manualSorting` is set to true.
+* **`onColumnReorderChange`** - Prop for when server is handling column reordering logic of data  
 
 ## Implementation Notes
 The `Table` component uses Tanstack React Table from `Tanstack`.

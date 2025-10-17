@@ -20,6 +20,7 @@ import { Menu } from '../menu';
 import { TableContext } from './context';
 import { TableHeaderCellStyles, TableStyles } from './styles';
 import type { TableHeaderCellProps } from './types';
+import { HeaderColumnAction, headerColumnActionValues, SortDirection } from './constants/table';
 
 const { menuItem } = TableStyles();
 
@@ -31,12 +32,15 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
     moveColumnRight,
     persistHeaderKebabMenu,
     setColumnSelection,
+    manualSorting,
+    handleSortChange,
+    handleColumnReordering
   } = useContext(TableContext);
 
   const [hoveredArrow, setHoveredArrow] = useState(false);
 
   if (
-    ['numeral', 'kebab', 'selection'].includes(header.column.id) ||
+    headerColumnActionValues.includes(header.column.id as 'numeral' | 'kebab' | 'selection') ||
     !(enableSorting || enableColumnReordering)
   ) {
     return null;
@@ -60,8 +64,8 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
       >
         <Icon>
           {(!sort || hoveredArrow) && <Kebab />}
-          {!hoveredArrow && sort === 'desc' && <ArrowDown />}
-          {!hoveredArrow && sort === 'asc' && <ArrowUp />}
+          {!hoveredArrow && sort === SortDirection.DESC && <ArrowDown />}
+          {!hoveredArrow && sort === SortDirection.ASC && <ArrowUp />}
         </Icon>
       </Button>
       <Menu>
@@ -69,14 +73,22 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
           <>
             <Menu.Item
               classNames={{ item: menuItem() }}
-              onAction={() => moveColumnLeft(header.column.getIndex())}
+              onAction={() => {
+                const index = header.column.getIndex();
+                moveColumnLeft(index);
+                handleColumnReordering?.(index);
+              }}
               isDisabled={header.column.getIsFirstColumn('center')}
             >
               Move Column Left
             </Menu.Item>
             <Menu.Item
               classNames={{ item: menuItem() }}
-              onAction={() => moveColumnRight(header.column.getIndex())}
+              onAction={() => {
+                const index = header.column.getIndex();
+                moveColumnRight(index);
+                handleColumnReordering?.(index);
+              }}
               isDisabled={header.column.getIsLastColumn('center')}
             >
               Move Column Right
@@ -88,18 +100,30 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
           <>
             <Menu.Item
               classNames={{ item: menuItem() }}
-              onAction={() => header.column.toggleSorting(false)}
-              isDisabled={sort === 'asc'}
+              onAction={() => {
+                manualSorting ? handleSortChange?.(header.column.id, SortDirection.ASC) : header.column.toggleSorting(false)
+              }}
+              isDisabled={sort === SortDirection.ASC}
             >
               Sort Ascending
             </Menu.Item>
             <Menu.Item
-              onAction={() => header.column.toggleSorting(true)}
-              isDisabled={sort === 'desc'}
+              classNames={{ item: menuItem() }}
+              onAction={() => {
+                manualSorting ? handleSortChange?.(header.column.id, SortDirection.DESC) : header.column.toggleSorting(true);
+
+              }}
+              isDisabled={sort === SortDirection.DESC}
             >
               Sort Descending
             </Menu.Item>
-            <Menu.Item onAction={header.column.clearSorting} isDisabled={!sort}>
+            <Menu.Item 
+              classNames={{ item: menuItem() }} 
+              onAction={() => {
+                manualSorting ? handleSortChange?.(header.column.id, null) :  header.column.clearSorting();
+              }}
+              isDisabled={!sort}
+            >
               Clear Sort
             </Menu.Item>
           </>
@@ -121,10 +145,15 @@ export function HeaderCell<T>({
   const showKebab = enableColumnReordering || enableSorting;
   const renderProps = header?.getContext();
   const narrow =
-    header?.column.id === 'numeral' || header?.column.id === 'kebab';
-
+    header?.column.id === HeaderColumnAction.NUMERAL || header?.column.id === HeaderColumnAction.KEBAB;
+  const sortLabel = header?.column.getIsSorted() === SortDirection.ASC
+                    ? 'ascending'
+                    : header?.column.getIsSorted() === SortDirection.DESC
+                    ? 'descending'
+                    : undefined
+                
   return (
-    <th {...rest} ref={ref}>
+    <th {...rest} ref={ref} aria-sort={sortLabel}>
       <div
         className={TableHeaderCellStyles({
           narrow,
@@ -136,7 +165,8 @@ export function HeaderCell<T>({
         {children ||
           (header && (
             <>
-              {header.column.id !== 'kebab' &&
+              {header.column.id !== HeaderColumnAction.KEBAB &&
+              // {header.column.id !== '8' &&
                 renderProps &&
                 flexRender(header.column.columnDef.header, renderProps)}
               <HeaderCellMenu header={header} />

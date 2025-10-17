@@ -152,7 +152,7 @@ const meta = {
     persistRowKebabMenu: true,
     persistNumerals: true,
     enableSorting: true,
-    enableColumnOrdering: true,
+    enableColumnReordering: true,
     enableRowActions: true,
   },
   argTypes: {
@@ -175,7 +175,7 @@ export const Default: Story = {
     enableSorting: false,
   },
 
-  render: (args) => <Table {...args} />,
+  render: (args) => <Table {...args} key={JSON.stringify(args)} />,
 };
 
 export const SortableColumns: Story = {
@@ -190,5 +190,5 @@ export const SortableColumns: Story = {
       },
     },
   },
-  render: (args) => <Table {...args} />,
+  render: (args) => <Table {...args} key={JSON.stringify(args)} />,
 };

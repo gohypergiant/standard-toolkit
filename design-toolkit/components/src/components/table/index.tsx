@@ -19,6 +19,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   type Row,
+  type RowPinningState,
   type RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table';
@@ -59,7 +60,7 @@ function RowActionsMenu<T>({
     enableRowActions && (
       <div className={persistRowKebabMenu ? '' : notPersistRowKebab()}>
         <Menu.Trigger>
-          <Button variant='icon' aria-label='Menu'>
+          <Button variant='icon' aria-label={`row ${row.index + 1} actions`}>
             <Icon>
               <Kebab />
             </Icon>
@@ -112,8 +113,11 @@ export function Table<T extends { id: Key }>({
   persistHeaderKebabMenu = true,
   persistNumerals = false,
   enableSorting = true,
-  enableColumnOrdering: enableColumnReordering = true,
+  enableColumnReordering = true,
   enableRowActions = true,
+  manualSorting = false,
+  onSortChange,
+  onColumnReorderChange,
   ...rest
 }: TableProps<T>) {
   const {
@@ -125,7 +129,10 @@ export function Table<T extends { id: Key }>({
   });
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
-
+   const [rowPinning, setRowPinning] = useState<RowPinningState>({
+    top: [],
+    bottom: [],
+  });
   /**
    * moveUpSelectedRows moves the selected rows up in the table.
    * It finds the first selected row, determines its index,
@@ -255,6 +262,14 @@ export function Table<T extends { id: Key }>({
     [showCheckbox, columnsProp, kebabPosition, actionColumn],
   );
 
+  const handleSortChange = (columnId: string, sortDirection: 'asc' | 'desc' | null) => {
+    onSortChange?.(columnId, sortDirection)
+  }
+
+  const handleColumnReordering = (index: number) => {
+    onColumnReorderChange?.(index)
+  }
+
   const {
     getHeaderGroups,
     getTopRows,
@@ -271,13 +286,17 @@ export function Table<T extends { id: Key }>({
     },
     state: {
       rowSelection,
+      rowPinning
     },
     getRowId: (row, index) => {
       // Use the index as the row ID if no unique identifier is available
       return row.id ? row.id.toString() : index.toString();
     },
     enableRowSelection: true,
+    enableRowPinning: true,
+    manualSorting: manualSorting,
     onRowSelectionChange: setRowSelection,
+    onRowPinningChange: setRowPinning,
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
   });
@@ -341,6 +360,9 @@ export function Table<T extends { id: Key }>({
         setColumnSelection,
         moveColumnLeft,
         moveColumnRight,
+        manualSorting,
+        handleSortChange,
+        handleColumnReordering
       }}
     >
       <table {...rest}>
