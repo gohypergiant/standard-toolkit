@@ -13,6 +13,7 @@
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useRef, useState } from 'react';
+import { PLACEMENT } from '@/constants/placement';
 import { Button } from '../button';
 import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
@@ -258,8 +259,8 @@ export const ContextMenu: Story = {
           ref={menuPositionRef}
           style={{
             position: 'fixed',
-            top: menuPosition?.y,
-            left: menuPosition?.x,
+            [PLACEMENT.TOP]: menuPosition?.y,
+            [PLACEMENT.LEFT]: menuPosition?.x,
           }}
           data-pressed={!!menuPosition || undefined}
         >

@@ -380,6 +380,8 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { PLACEMENT } from './constants/placement';
+export type { Placement, PlacementKey } from './constants/placement';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
