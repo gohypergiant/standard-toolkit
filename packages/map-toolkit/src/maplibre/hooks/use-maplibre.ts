@@ -13,12 +13,49 @@
 import { type IControl, Map as MapLibre, type MapOptions } from 'maplibre-gl';
 import { useEffect, useRef } from 'react';
 
+/**
+ * Hook to integrate a MapLibre GL map with a Deck.gl instance.
+ *
+ * This hook manages the lifecycle of a MapLibre map, including initialization,
+ * style updates, and cleanup. It ensures the Deck.gl control is properly added
+ * to the map and handles cleanup when the component unmounts.
+ *
+ * @param deck - The Deck.gl IControl instance to add to the map
+ * @param styleUrl - The MapLibre style URL to use for the map
+ * @param options - MapLibre map options (container, center, zoom, etc.)
+ * @returns The MapLibre map instance, or null if not yet initialized
+ *
+ * @example
+ * ```tsx
+ * function MapComponent() {
+ *   const deckglInstance = useDeckgl();
+ *   const container = useId();
+ *
+ *   const mapOptions = useMemo(() => ({
+ *     container,
+ *     center: [-122.4, 37.8],
+ *     zoom: 12,
+ *   }), [container]);
+ *
+ *   useMapLibre(
+ *     deckglInstance as IControl,
+ *     'https://tiles.example.com/style.json',
+ *     mapOptions
+ *   );
+ *
+ *   return <div id={container} />;
+ * }
+ * ```
+ */
 export function useMapLibre(
   deck: IControl | null,
   styleUrl: string,
   options: MapOptions,
 ) {
   const mapRef = useRef<MapLibre | null>(null);
+  // Using a ref for options to avoid re-creating the map when options object reference changes
+  // The map is only created once on mount, options changes after that are ignored
+  const optionsRef = useRef(options);
   // using a ref in the initial setup so that it doesn't cause a re-run of the effect on change
   const styleRef = useRef(styleUrl);
 
@@ -26,7 +63,7 @@ export function useMapLibre(
   useEffect(() => {
     if (deck && !mapRef.current) {
       mapRef.current = new MapLibre({
-        ...options,
+        ...optionsRef.current,
         style: styleRef.current,
       });
 
@@ -43,7 +80,7 @@ export function useMapLibre(
         }
       };
     }
-  }, [deck, options]);
+  }, [deck]);
 
   // Update style when it changes
   useEffect(() => {

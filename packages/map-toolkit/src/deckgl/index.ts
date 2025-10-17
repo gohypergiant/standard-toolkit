@@ -10,13 +10,35 @@
  * governing permissions and limitations under the License.
  */
 
-export { BaseMap, bus } from './base-map';
+export { BaseMap, type BaseMapProps } from './base-map';
 export {
   BASE_MAP_STYLE,
   PARAMETERS,
 } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
+export {
+  MapModeContext,
+  type MapModeContextValue,
+  MapModeProvider,
+  type MapModeProviderProps,
+} from './base-map/map-mode-provider';
+export {
+  MapModeEvents,
+  MapModeEventsNamespace,
+} from './base-map/map-mode-provider/events';
+export { useMapMode } from './base-map/map-mode-provider/use-map-mode';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
+export type {
+  MapModeEventType,
+  ModeChangeAuthorizationEvent,
+  ModeChangeAuthorizationPayload,
+  ModeChangeDecisionEvent,
+  ModeChangeDecisionPayload,
+  ModeChangedEvent,
+  ModeChangedPayload,
+  ModeChangeRequestEvent,
+  ModeChangeRequestPayload,
+} from './base-map/map-mode-provider/types';
 export type {
   MapClickEvent,
   MapClickPayload,

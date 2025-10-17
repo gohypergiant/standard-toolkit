@@ -10,9 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-@import "@accelint/design-toolkit/styles";
-@source "../node_modules/@accelint/design-toolkit";
+export const MapModeEventsNamespace = 'map-mode';
 
-html {
-  overflow: hidden;
-}
+export const MapModeEvents = {
+  changed: `${MapModeEventsNamespace}:changed`,
+  changeRequest: `${MapModeEventsNamespace}:change:request`,
+  changeAuthorization: `${MapModeEventsNamespace}:change:authorization`,
+  changeDecision: `${MapModeEventsNamespace}:change:decision`,
+} as const;

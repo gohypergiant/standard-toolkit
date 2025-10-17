@@ -15,9 +15,16 @@ import type { PickingInfo } from '@deck.gl/core';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
 
-// the bus cannot serialize functions, so we omit them from the event payloads
+/**
+ * PickingInfo without the viewport property, as it cannot be serialized through the event bus.
+ * The viewport contains function properties that would break serialization.
+ */
 type NonFuncPickingInfo = Omit<PickingInfo, 'viewport'>;
 
+/**
+ * MjolnirGestureEvent without function properties and non-serializable objects.
+ * These properties are omitted to allow the event to be serialized through the event bus.
+ */
 type NonFuncMjolnirGestureEvent = Omit<
   MjolnirGestureEvent,
   | 'stopPropagation'
@@ -30,6 +37,10 @@ type NonFuncMjolnirGestureEvent = Omit<
   | 'pointers'
 >;
 
+/**
+ * MjolnirPointerEvent without function properties and non-serializable objects.
+ * These properties are omitted to allow the event to be serialized through the event bus.
+ */
 type NonFuncMjolnirPointerEvent = Omit<
   MjolnirPointerEvent,
   | 'stopPropagation'
@@ -40,17 +51,41 @@ type NonFuncMjolnirPointerEvent = Omit<
   | 'target'
 >;
 
+/**
+ * Payload for map click events emitted through the event bus.
+ * Contains picking information about what was clicked and the gesture event details.
+ */
 export type MapClickPayload = {
+  /** Information about the picked object and its properties */
   info: NonFuncPickingInfo;
+  /** The gesture event that triggered the click */
   event: NonFuncMjolnirGestureEvent;
 };
 
+/**
+ * Payload for map hover events emitted through the event bus.
+ * Contains picking information about what is being hovered and the pointer event details.
+ */
 export type MapHoverPayload = {
+  /** Information about the picked object and its properties */
   info: NonFuncPickingInfo;
+  /** The pointer event that triggered the hover */
   event: NonFuncMjolnirPointerEvent;
 };
 
+/**
+ * Type for map click events in the event bus.
+ * Combines the event name with the click payload.
+ */
 export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
+
+/**
+ * Type for map hover events in the event bus.
+ * Combines the event name with the hover payload.
+ */
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
 
+/**
+ * Union type of all map event types that can be emitted through the event bus.
+ */
 export type MapEventType = MapClickEvent | MapHoverEvent;
