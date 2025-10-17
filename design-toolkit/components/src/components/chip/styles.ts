@@ -49,11 +49,14 @@ export const SelectableChipStyles = tv({
   slots: {
     chip: [
       'cursor-pointer outline-interactive',
-      'enabled:focus-visible:outline-interactive-hover',
-      'enabled:hover:outline-interactive-hover',
+      // hover
+      'enabled:hover:outline-2 enabled:hover:outline-interactive-hover',
+      'enabled:selected:hover:outline-interactive-primary-bold',
+      'enabled:focus-visible:outline-2 enabled:focus-visible:outline-interactive-hover',
+      'enabled:selected:focus-visible:outline-interactive-primary-bold',
+      'enabled:pressed:outline-1 enabled:pressed:outline-accent-primary-pressed',
+      'enabled:pressed:outline-1 enabled:selected:pressed:outline-accent-primary-pressed',
       'enabled:selected:bg-accent-primary-muted enabled:selected:outline-accent-primary-bold',
-      'enabled:selected:focus-visible:outline-interactive-hover',
-      'enabled:selected:hover:outline-interactive-hover',
       'disabled:fg-disabled disabled:cursor-not-allowed disabled:outline-interactive-disabled',
       'disabled:selected:bg-interactive-disabled',
     ],
@@ -64,11 +67,25 @@ export const DeletableChipStyles = tv({
   extend: BaseChipStyles,
   slots: {
     chip: [
-      'gap-xs outline-interactive',
-      'enabled:focus-visible:outline-interactive-hover',
-      'enabled:hover:outline-interactive-hover',
-      'disabled:fg-disabled disabled:cursor-not-allowed disabled:outline-interactive-disabled',
+      'cursor-default gap-xs outline-interactive',
+      'enabled:fg-primary-muted',
+      'disabled:fg-disabled disabled:cursor-not-allowed disabled:bg-interactive-disabled disabled:outline-interactive-disabled',
+      'has-[button:hover]:fg-hover',
+      'has-[button:focus-visible]:fg-hover',
+      // using :pressed does not apply the style
+      'has-[button[data-pressed]]:fg-pressed',
     ],
-    remove: ['cursor-pointer', 'disabled:cursor-not-allowed'],
+    remove: [
+      'remove',
+      'cursor-pointer',
+      'size-medium:p-0 size-small:p-0',
+      'size-medium:min-w-[16px] size-medium:max-w-[16px]',
+      'size-small:min-w-[12px] size-small:max-w-[12px]',
+      'enabled:hover:fg-hover',
+      'enabled:color-mono-muted:hover:bg-transparent',
+      'enabled:color-mono-muted:fg-primary-bold',
+      'enabled:pressed:fg-pressed',
+      'disabled:cursor-not-allowed',
+    ],
   },
 });

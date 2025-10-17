@@ -11,9 +11,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { noop } from '@accelint/core';
-import type { PressEvent } from '@react-types/shared';
-import type { MouseEvent } from 'react';
 import type {
   RuleType,
   RuleValidator,
@@ -39,16 +36,3 @@ export const getValidationResult = (
     reasons: result.valid ? [] : result.reasons,
   };
 };
-
-/**
- * This is required because the design system Button supports an onPress event but
- * QueryBuilder provides a callback that expects a MouseEvent and will error
- * out if preventDefault is not available as a method.
- * @param event
- */
-export const pressToMouseEvent = (event: PressEvent) =>
-  ({
-    ...event,
-    preventDefault: noop,
-    stopPropagation: noop,
-  }) as unknown as MouseEvent;

@@ -18,11 +18,11 @@ import {
   Tag as AriaTag,
   TagGroup as AriaTagGroup,
   TagList as AriaTagList,
-  Button,
   type ContextValue,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { Button } from '../button';
 import { Icon } from '../icon';
 import {
   ChipStyles,
@@ -58,7 +58,7 @@ function ChipList<T extends object>({ ref, ...props }: ChipListProps<T>) {
     dependencies,
     items,
     renderEmptyState,
-    size = 'medium',
+    size = 'small',
     ...rest
   } = props;
 
@@ -117,6 +117,8 @@ function DeletableChip({ ref, ...props }: DeletableChipProps) {
     ...rest
   } = props;
 
+  const iconSize = size === 'small' ? 'xsmall' : 'small';
+
   return (
     <AriaTag
       {...rest}
@@ -138,12 +140,14 @@ function DeletableChip({ ref, ...props }: DeletableChipProps) {
           <>
             {children}
             <Button
+              variant='icon'
+              size={size}
               slot='remove'
               className={composeRenderProps(classNames?.remove, (className) =>
                 remove({ className }),
               )}
             >
-              <Icon size='small'>
+              <Icon size={iconSize}>
                 <CancelFill />
               </Icon>
             </Button>

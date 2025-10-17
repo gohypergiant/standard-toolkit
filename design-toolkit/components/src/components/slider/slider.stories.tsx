@@ -25,6 +25,7 @@ const meta = {
     orientation: 'horizontal',
     showInput: false,
     showLabel: true,
+    isDisabled: false,
   },
   argTypes: {
     layout: {

@@ -16,9 +16,11 @@ import {
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
 import { defineConfig } from 'tsup';
+import * as ngageoint from './compat/ngageoint';
 
 export default defineConfig({
   esbuildPlugins: [
+    ngageoint.createEsbuildPlugin(),
     fixAliasPlugin(),
     fixFolderImportsPlugin(),
     fixExtensionsPlugin(),
@@ -36,9 +38,5 @@ export default defineConfig({
   splitting: true,
   treeshake: true,
   metafile: true,
-  noExternal: [
-    // Bundle @ngageoint packages to convert CommonJS to ESM for browser compatibility
-    '@ngageoint/grid-js',
-    '@ngageoint/mgrs-js',
-  ],
+  noExternal: [...ngageoint.PACKAGES_TO_BUNDLE],
 });
