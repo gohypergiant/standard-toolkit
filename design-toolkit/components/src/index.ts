@@ -380,6 +380,8 @@ export type {
   ViewStackTriggerProps,
   ViewStackViewProps,
 } from './components/view-stack/types';
+export { SELECTION } from './constants/selection';
+export type { Selection, SelectionKey } from './constants/selection';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {

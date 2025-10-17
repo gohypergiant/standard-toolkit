@@ -13,6 +13,7 @@
 import Kebab from '@accelint/icons/kebab';
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useRef, useState } from 'react';
+import { SELECTION } from '@/constants/selection';
 import { Button } from '../button';
 import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
@@ -34,7 +35,7 @@ const meta = {
     },
     selectionMode: {
       control: 'select',
-      options: ['single', 'multiple', 'none'],
+      options: Object.values(SELECTION),
     },
   },
 } satisfies Meta<typeof Menu>;
