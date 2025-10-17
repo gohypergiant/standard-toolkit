@@ -21,35 +21,32 @@ import {
   useRule,
   useStopEventPropagation,
 } from 'react-querybuilder';
-import type { QueryBuilderContextType } from './types';
 import { Lines } from '../lines';
 import { RuleStyles } from './styles';
+import type { QueryBuilderContextType } from './types';
 
-const {
-  lines
-} = RuleStyles();
+const { lines } = RuleStyles();
 
 const QueryBuilderLines = memo(function QueryBuilderLines({
-path, 
-props, 
-context
+  path,
+  props,
+  context,
 }: {
-path: Path,
+  path: Path;
   props: RuleProps;
-  context: QueryBuilderContextType
+  context: QueryBuilderContextType;
 }) {
+  const isLastRule = path[0] === props.schema.getQuery()?.rules.length - 1;
+  const line = isLastRule ? 'last' : 'branch';
 
-    const isLastRule = path[0] === props.schema.getQuery()?.rules.length - 1; 
-    const line = isLastRule ? 'last' : 'branch';
-
-    return (
-      <Lines
-        variant={line}
-        size='small'
-        isVisible={context.showRuleLines}
-        className={lines()}
-      />
-    );
+  return (
+    <Lines
+      variant={line}
+      size='small'
+      isVisible={context.showRuleLines}
+      className={lines()}
+    />
+  );
 });
 
 export function Rule(props: RuleProps) {
@@ -109,7 +106,9 @@ export function Rule(props: RuleProps) {
 
   return (
     <>
-      {context.showRuleLines && <QueryBuilderLines path={path} props={props} context={context}/> }
+      {context.showRuleLines && (
+        <QueryBuilderLines path={path} props={props} context={context} />
+      )}
       <div className={outerClassName}>
         <FieldSelectorControlElement
           testID={TestID.fields}
