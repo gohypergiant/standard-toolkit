@@ -10,15 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ComponentPropsWithRef } from 'react';
-import type { PROXIMITY } from '@/constants/proximity';
+export type ProximityKey = keyof typeof PROXIMITY;
+export type Proximity = (typeof PROXIMITY)[ProximityKey];
 
-export type HeroProps = Omit<ComponentPropsWithRef<'header'>, 'className'> & {
-  classNames?: {
-    hero?: string;
-    icon?: string;
-    title?: string;
-    subtitle?: string;
-  };
-  [PROXIMITY.COMPACT]?: boolean;
-};
+export const PROXIMITY = Object.freeze({
+  COZY: 'cozy',
+  COMPACT: 'compact',
+} as const);

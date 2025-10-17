@@ -10,10 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { PROXIMITY, type Proximity } from '@/constants/proximity';
 import { tv } from '@/lib/utils';
 
 export const MenuStylesDefaults = {
-  variant: 'cozy',
+  variant: PROXIMITY.COZY,
 } as const;
 
 export const MenuStyles = tv({
@@ -100,13 +101,13 @@ export const MenuStyles = tv({
   },
   variants: {
     variant: {
-      cozy: {
+      [PROXIMITY.COZY]: {
         item: 'pt-s pb-s',
       },
-      compact: {
+      [PROXIMITY.COMPACT]: {
         item: 'pt-xs pb-xs',
       },
-    },
+    } satisfies Record<Proximity, { item: string }>,
   },
   defaultVariants: MenuStylesDefaults,
 });

@@ -10,10 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
+import { PROXIMITY, type Proximity } from '@/constants/proximity';
 import { tv } from '@/lib/utils';
 
+type VariantsDef = {
+  actions: string;
+  content: string;
+  display: string;
+  item: string;
+  label: string;
+  spacing: string;
+};
+
 export const TreeStylesDefaults = {
-  variant: 'cozy',
+  variant: PROXIMITY.COZY,
 } as const;
 
 export const TreeStyles = tv({
@@ -54,7 +64,7 @@ export const TreeStyles = tv({
   },
   variants: {
     variant: {
-      cozy: {
+      [PROXIMITY.COZY]: {
         content: 'min-h-[48px] text-header-m',
         display: 'gap-x-s px-xs',
         label: 'gap-xs',
@@ -62,7 +72,7 @@ export const TreeStyles = tv({
         spacing: 'min-h-[46px] w-[28px]',
         item: 'min-h-s',
       },
-      compact: {
+      [PROXIMITY.COMPACT]: {
         content: 'min-h-[36px] gap-xs text-header-s',
         display: 'gap-x-s px-xxs',
         label: 'gap-xs',
@@ -78,7 +88,7 @@ export const TreeStyles = tv({
         spacing: 'min-h-xl w-[20px]',
         item: 'min-h-s',
       },
-    },
+    } satisfies Record<Proximity | 'crammed', VariantsDef>,
   },
   defaultVariants: TreeStylesDefaults,
 });
