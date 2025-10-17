@@ -10,10 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-export const MapEventsNamespace = 'map';
+import type { Bounds } from '../base-map/types';
+import type { UNIT_MAP } from './constants';
 
-export const MapEvents = {
-  click: `${MapEventsNamespace}:click`,
-  hover: `${MapEventsNamespace}:hover`,
-  viewport: `${MapEventsNamespace}:viewport`,
-} as const;
+export type AllowedUnit = keyof typeof UNIT_MAP;
+
+export type GetViewportScaleArgs = {
+  bounds?: Bounds;
+  unit: AllowedUnit;
+  formatter?: Intl.NumberFormat;
+};
