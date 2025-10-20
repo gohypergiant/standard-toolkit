@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Preview } from '@storybook/react';
-import './index.css';
+import { withThemeByClassName } from '@storybook/addon-themes';
+import type { Preview, ReactRenderer } from '@storybook/react';
+import '../src/index.css';
 
 const preview: Preview = {
   parameters: {
@@ -23,6 +24,15 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    withThemeByClassName<ReactRenderer>({
+      themes: {
+        light: 'light !bg-surface-default', // need important because storybook uses important 🫠
+        dark: 'dark !bg-surface-default', // need important because storybook uses important 🫠
+      },
+      defaultTheme: 'dark',
+    }),
+  ],
 };
 
 export default preview;
