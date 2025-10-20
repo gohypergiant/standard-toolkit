@@ -26,6 +26,7 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
+  useMemo,
   version,
 } from 'react';
 import {
@@ -35,7 +36,6 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
 import { PortalProvider } from '@/providers/portal';
 import { TooltipStyles } from './styles';
 import type { FocusableElement } from '@react-types/shared';
@@ -113,12 +113,6 @@ function TooltipTrigger({ ref, ...props }: TooltipTriggerProps) {
 
   const { children, delay = 250, ...rest } = props;
 
-  containsExactChildren({
-    children,
-    componentName: TooltipTrigger.displayName,
-    restrictions: [[Tooltip, { min: 1, max: 1 }]],
-  });
-
   return (
     <AriaTooltipTrigger {...rest} delay={delay}>
       <TooltipFocusable ref={ref}>{children}</TooltipFocusable>
@@ -136,8 +130,15 @@ export function Tooltip({
   ...props
 }: TooltipProps) {
   const isSSR = useIsSSR();
-  const overlayContainer = isSSR ? null : document.createElement('div');
-  overlayContainer?.setAttribute('class', 'absolute');
+  const overlayContainer = useMemo(() => {
+    if (isSSR) {
+      return null;
+    }
+    const div = document.createElement('div');
+    div.setAttribute('class', 'absolute');
+    return div;
+  }, [isSSR]);
+
   return (
     <PortalProvider parentRef={parentRef} inject={overlayContainer}>
       <AriaTooltip

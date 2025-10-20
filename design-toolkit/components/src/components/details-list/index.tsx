@@ -20,7 +20,6 @@ import {
   TextContext,
   useContextProps,
 } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
 import { DetailsListStyles, DetailsListStylesDefaults } from './styles';
 import type { ProviderProps } from '@/lib/types';
 import type {
@@ -94,15 +93,6 @@ export function DetailsList({ ref, ...props }: DetailsListProps) {
     align = DetailsListStylesDefaults.align,
     ...rest
   } = props;
-
-  containsExactChildren({
-    children,
-    componentName: DetailsList.displayName,
-    restrictions: [
-      [DetailsList.Label, { min: 1 }],
-      [DetailsList.Value, { min: 1 }],
-    ],
-  });
 
   return (
     <TextContext

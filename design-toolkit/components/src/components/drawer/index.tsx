@@ -27,7 +27,6 @@ import {
   useState,
 } from 'react';
 import { composeRenderProps, Header, Heading } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
 import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
@@ -227,14 +226,6 @@ function DrawerMenu({
   children,
   ...rest
 }: DrawerMenuProps) {
-  containsExactChildren({
-    children,
-    componentName: DrawerMenu.displayName,
-    restrictions: [
-      [DrawerMenuItem, { min: 1 }],
-      [DrawerTrigger, { min: 0, max: 0 }],
-    ],
-  });
   return (
     <nav
       {...rest}
@@ -370,15 +361,6 @@ export function Drawer({
   onChange,
   ...rest
 }: DrawerProps) {
-  containsExactChildren({
-    children,
-    componentName: Drawer.displayName,
-    restrictions: [
-      [DrawerMenu, { min: 0, max: 1 }],
-      [DrawerPanel, { min: 1, max: 1 }],
-    ],
-  });
-
   const views = useRef(new Set<UniqueId>());
   const [activeView, setActiveView] = useState<UniqueId | null>(
     defaultView || null,
