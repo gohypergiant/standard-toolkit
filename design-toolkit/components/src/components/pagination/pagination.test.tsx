@@ -11,17 +11,57 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 import { Pagination } from './index';
 import type { BasePaginationProps } from './types';
 
-function setup({ currentPage, pageCount }: Partial<BasePaginationProps> = {}) {
-  render(<Pagination currentPage={currentPage} pageCount={pageCount} />);
+function setup(props: Partial<BasePaginationProps>) {
+  return {
+    ...render(<Pagination {...props} />),
+    ...props,
+  };
 }
 
 describe('Pagination', () => {
   it('should render', () => {
-    setup({ currentPage: 1, pageCount: 5 });
+    setup({ currentPage: 1, pageCount: 5, onChange: vi.fn() });
     expect(screen.getByText('1')).toBeInTheDocument();
+  });
+
+  it('should trigger onChange when button is pressed', async () => {
+    const { onChange, container } = setup({
+      currentPage: 1,
+      pageCount: 5,
+      onChange: vi.fn(),
+    });
+    userEvent.setup();
+    const nextButton = container.querySelector(
+      'button[aria-label="pagination-next"]',
+    );
+    expect(nextButton).toBeDefined();
+    await userEvent.click(nextButton as Element);
+    expect(onChange).toHaveBeenCalled();
+  });
+
+  it('previous button should be disabled when currentPage === 1', () => {
+    setup({ currentPage: 1, pageCount: 5, onChange: vi.fn() });
+    const button = document.querySelector(
+      'button[aria-label="pagination-previous"]',
+    );
+    expect(button).not.toBeNull();
+    expect(button).toBeDefined();
+    console.log(button);
+    expect(button as HTMLElement).toBeDisabled();
+  });
+
+  it('next button should be disabled when currentPage === pageCount', () => {
+    setup({ currentPage: 5, pageCount: 5, onChange: vi.fn() });
+    const button = document.querySelector(
+      'button[aria-label="pagination-next"]',
+    );
+    expect(button).not.toBeNull();
+    expect(button).toBeDefined();
+    expect(button as HTMLElement).toBeDisabled();
   });
 });

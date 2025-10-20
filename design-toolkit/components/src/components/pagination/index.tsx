@@ -39,7 +39,12 @@ function getPaginationRange(
   pageCount: number,
   currentPage: number,
 ): PaginationRange {
-  if (!(pageCount && currentPage)) {
+  if (
+    !(pageCount && currentPage) ||
+    currentPage > pageCount ||
+    pageCount < 1 ||
+    currentPage < 1
+  ) {
     return { minRange: DEFAULT_MIN_RANGE, maxRange: DEFAULT_MAX_RANGE };
   }
 
@@ -188,12 +193,12 @@ function PaginationNumberContainer({
   onPress,
   className,
 }: PaginationNumberContainerProps) {
-  const { pageCount: pages, currentPage } = useContext(PaginationContext);
-  if (!(pages && currentPage)) {
+  const { pageCount, currentPage } = useContext(PaginationContext);
+  if (!(pageCount && currentPage)) {
     return;
   }
 
-  const { minRange, maxRange } = getPaginationRange(pages, currentPage);
+  const { minRange, maxRange } = getPaginationRange(pageCount, currentPage);
 
   return range(minRange, maxRange).map((pageNumber) => (
     <PaginationPageNumber
