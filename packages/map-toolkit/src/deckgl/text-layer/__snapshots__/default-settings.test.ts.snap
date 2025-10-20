@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`defaults > should match snapshot to prevent accidental changes 1`] = `
+{
+  "fontFamily": "system-ui, sans-serif",
+  "fontSettings": {
+    "buffer": 6,
+    "cutoff": 0.25,
+    "fontSize": 12,
+    "sdf": true,
+    "smoothing": 0.05,
+  },
+  "fontWeight": 500,
+  "getAlignmentBaseline": "center",
+  "getColor": [
+    255,
+    255,
+    255,
+    255,
+  ],
+  "getTextAnchor": "middle",
+  "lineHeight": 1,
+  "outlineColor": [
+    0,
+    0,
+    0,
+    255,
+  ],
+  "outlineWidth": 1,
+}
+`;
