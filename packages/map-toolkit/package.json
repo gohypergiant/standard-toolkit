@@ -1,15 +1,29 @@
 {
   "name": "@accelint/map-toolkit",
-  "version": "0.0.2",
+  "title": "Accelint Map Toolkit",
+  "version": "0.1.0",
   "private": false,
   "license": "Apache-2.0",
+  "keywords": [
+    "deckgl",
+    "geospatial",
+    "map-tk",
+    "maplibre"
+  ],
+  "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "owner": "default/pathfinder",
+  "subPath": "packages/map-toolkit",
   "type": "module",
   "files": [
-    "dist/**"
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -26,12 +40,12 @@
         "default": "./dist/*/fiber.js"
       },
       "default": "./dist/*/fiber.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src",
@@ -42,16 +56,17 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@deck.gl/core": "9.1.14",
-    "@deck.gl/extensions": "^9.1.14",
-    "@deck.gl/geo-layers": "^9.1.14",
+    "@deck.gl/extensions": "9.1.14",
+    "@deck.gl/geo-layers": "9.1.14",
     "@deck.gl/layers": "9.1.14",
-    "@deck.gl/mapbox": "^9.1.14",
-    "@deck.gl/mesh-layers": "^9.1.14",
-    "@deck.gl/widgets": "^9.1.14",
+    "@deck.gl/mapbox": "9.1.14",
+    "@deck.gl/mesh-layers": "9.1.14",
+    "@deck.gl/widgets": "9.1.14",
     "@deckgl-fiber-renderer/dom": "1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",
@@ -85,14 +100,14 @@
     "vitest-broadcast-channel-mock": "0.1.0"
   },
   "optionalDependencies": {
-    "@accelint/bus": "^1.3.0",
+    "@accelint/bus": "workspace:*",
     "@deck.gl/core": "9.1.14",
-    "@deck.gl/extensions": "^9.1.14",
-    "@deck.gl/geo-layers": "^9.1.14",
+    "@deck.gl/extensions": "9.1.14",
+    "@deck.gl/geo-layers": "9.1.14",
     "@deck.gl/layers": "9.1.14",
-    "@deck.gl/mapbox": "^9.1.14",
-    "@deck.gl/mesh-layers": "^9.1.14",
-    "@deck.gl/widgets": "^9.1.14",
+    "@deck.gl/mapbox": "9.1.14",
+    "@deck.gl/mesh-layers": "9.1.14",
+    "@deck.gl/widgets": "9.1.14",
     "@deckgl-fiber-renderer/dom": "1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",

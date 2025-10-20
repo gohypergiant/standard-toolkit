@@ -57,13 +57,13 @@ export const Default: Story = {
             </Icon>
             <Options.Item.Label>Blue Jay</Options.Item.Label>
           </Options.Item>
-          <Options.Item textValue='Gray catbird'>
+          <Options.Item textValue='Gray catbird' color='serious'>
             <Icon>
               <Placeholder />
             </Icon>
             <Options.Item.Label>Gray catbird</Options.Item.Label>
           </Options.Item>
-          <Options.Item textValue='Black-capped chickadee'>
+          <Options.Item textValue='Black-capped chickadee' color='critical'>
             <Icon>
               <Placeholder />
             </Icon>

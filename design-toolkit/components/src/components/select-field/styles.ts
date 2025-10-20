@@ -21,6 +21,9 @@ export const SelectFieldStyles = tv({
       'group-size-small/select-field:fit-content size-small:py-xxs',
       'group-invalid/select-field:enabled:outline-serious-bold',
       'group-focus-visible/select-field:enabled:outline-accent-primary-bold',
+      'enabled:hover:color-mono-muted:bg-transparent enabled:hover:color-mono-muted:outline-1',
+      'enabled:focus-visible:color-mono-muted:bg-transparent enabled:focus-visible:color-mono-muted:outline-1',
+      'enabled:pressed:color-mono-muted:bg-transparent enabled:pressed:color-mono-muted:outline-1 enabled:pressed:color-mono-muted:outline-accent-primary-bold',
     ],
     label: '',
     description:

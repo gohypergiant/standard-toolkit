@@ -1,0 +1,36 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@accelint/formatters"
+  title: Accelint Formatters
+  description: >-
+    A set of useful formatting functions for enhancing readability and
+    consistency in your applications.
+
+
+    Dependencies:
+
+    @accelint/constellation-tracker@0.0.0, @accelint/typescript-config@0.1.2,
+    @accelint/vitest-config@0.1.3
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/formatters/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 0.1.5
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/formatters
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:@accelint/constellation-tracker
+    - component:@accelint/typescript-config
+    - component:@accelint/vitest-config

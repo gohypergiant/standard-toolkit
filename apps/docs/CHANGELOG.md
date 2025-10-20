@@ -1,5 +1,22 @@
 # @accelint/docs
 
+## 0.1.22
+
+### Patch Changes
+
+- Updated dependencies [64280a7]
+  - @accelint/biome-config@1.0.1
+  - @accelint/constants@0.1.6
+  - @accelint/converters@0.3.3
+  - @accelint/core@0.4.2
+  - @accelint/formatters@0.1.6
+  - @accelint/geo@0.2.10
+  - @accelint/math@0.1.6
+  - @accelint/ntds@0.2.1
+  - @accelint/predicates@0.4.2
+  - @accelint/temporal@0.1.1
+  - @accelint/typescript-config@0.1.3
+
 ## 0.1.21
 
 ### Patch Changes

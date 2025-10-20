@@ -1,0 +1,36 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "@accelint/math"
+  title: Accelint Math
+  description: >-
+    A simple, lightweight JavaScript library that provides a collection of basic
+    mathematical functions.
+
+
+    Dependencies:
+
+    @accelint/constellation-tracker@0.0.0, @accelint/typescript-config@0.1.2,
+    @accelint/vitest-config@0.1.3
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/math/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 0.1.5
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/math
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:@accelint/constellation-tracker
+    - component:@accelint/typescript-config
+    - component:@accelint/vitest-config

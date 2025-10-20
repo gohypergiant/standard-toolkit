@@ -238,7 +238,7 @@
       "accent": {
         "primary": {
           "bold": "--primitive-accent-primary-300",
-          "hover": "--primitive-accent-primary-200",
+          "hover": "--primitive-accent-primary-700",
           "pressed": "--primitive-accent-primary-600"
         }
       },

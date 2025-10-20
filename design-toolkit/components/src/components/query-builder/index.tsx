@@ -13,14 +13,12 @@
 
 import 'client-only';
 import { Delete, Duplicate, LockFill } from '@accelint/icons';
-import { createContext, useCallback, useMemo } from 'react';
+import { createContext, useMemo } from 'react';
 import {
   type ActionProps,
-  type Classnames,
   type CombinatorSelectorProps,
   QueryBuilder as RQBBuilder,
 } from 'react-querybuilder';
-import { cn } from '../../lib/utils';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Label } from '../label';
@@ -33,11 +31,36 @@ import {
   RuleGroupHeaderComponent,
 } from './group';
 import { Rule } from './rule';
-import { getValidationResult, pressToMouseEvent } from './utils';
+import { QueryBuilderStyles } from './styles';
+import { getValidationResult } from './utils';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
-import type { PressEvent } from '@react-types/shared';
 import type { QueryBuilderContextType, QueryBuilderProps } from './types';
+
+const {
+  queryBuilder,
+  ruleGroup,
+  header,
+  combinators,
+  cloneGroup,
+  removeGroup,
+  cloneRule,
+  fields,
+  value,
+  addRule,
+  addGroup,
+  operators,
+  valueListItem,
+  valueSource,
+  removeRule,
+  valid,
+  invalid,
+  disabled,
+  lockRule,
+  lockGroup,
+  body,
+  rule,
+} = QueryBuilderStyles();
 
 const operatorDescriptions: Record<string, string> = {
   AND: 'All rules below must be true for a match',
@@ -52,8 +75,9 @@ function CombinatorSelector({
   return (
     <Radio.Group
       value={value}
-      onChange={handleOnChange}
+      onChange={handleOnChange} 
       orientation='horizontal'
+      style={{flexWrap: 'nowrap'}}
     >
       <Label>Combinator</Label>
       {options.map((option) => (
@@ -71,17 +95,11 @@ function CombinatorSelector({
 }
 
 function RemoveRuleAction({ handleOnClick, className, ...rest }: ActionProps) {
-  // TODO: remove pressToMouseEvent when design-system is removed
-  const handlePress = useCallback(
-    (event: PressEvent) => handleOnClick(pressToMouseEvent(event)),
-    [handleOnClick],
-  );
-
   return (
     <Button
       size='small'
       variant='icon'
-      onPress={handlePress}
+      onPress={() => handleOnClick()}
       className={className}
       {...rest}
     >
@@ -93,17 +111,11 @@ function RemoveRuleAction({ handleOnClick, className, ...rest }: ActionProps) {
 }
 
 function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
-  // TODO: remove pressToMouseEvent when design-system is removed
-  const handlePress = useCallback(
-    (event: PressEvent) => handleOnClick(pressToMouseEvent(event)),
-    [handleOnClick],
-  );
-
   return (
     <Button
       size='small'
       variant='icon'
-      onPress={handlePress}
+      onPress={() => handleOnClick()}
       className={className}
       {...rest}
     >
@@ -115,17 +127,11 @@ function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
 }
 
 function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
-  // TODO: remove pressToMouseEvent when design-system is removed
-  const handlePress = useCallback(
-    (event: PressEvent) => handleOnClick(pressToMouseEvent(event)),
-    [handleOnClick],
-  );
-
   return (
     <Button
       size='small'
       variant='icon'
-      onPress={handlePress}
+      onPress={() => handleOnClick()}
       className={className}
       {...rest}
     >
@@ -195,51 +201,33 @@ export function QueryBuilder({
    * Passed in as a map as all the default styling, but can be overridden by using the
    * controlClassnames prop
    */
-  const defaultClassnames: Partial<Classnames> = useMemo(
-    () => ({
-      queryBuilder: 'outline outline-transparent',
-      ruleGroup:
-        'group col-span-full flex flex-col gap-s p-s outline outline-info-bold rounded-medium',
-      header: 'flex gap-s',
-      body: cn(
-        'group grid gap-x-s empty:hidden',
-        showRuleLines
-          ? 'grid-cols-[10px_minmax(100px,_1fr)_min-content]'
-          : 'grid-cols-[minmax(100px,_1fr)_min-content]',
-      ),
-      combinators: 'my-s',
-      addRule: '',
-      addGroup: '',
-      cloneRule: 'fg-info-bold hover:fg-info-hover',
-      cloneGroup: 'fg-info-bold hover:fg-info-hover',
-      removeGroup: '',
-      rule: cn(
-        'flex gap-xs py-s',
-        orientation === 'vertical'
-          ? 'flex-col'
-          : 'min-height-[50px] items-start',
-      ),
-      fields: 'w-full',
-      operators: '',
-      value: 'w-full',
-      removeRule: '',
-      valid: '',
-      invalid: '',
-      disabled: '',
-      lockRule: 'fg-info-bold hover:fg-info-hover',
-      lockGroup: 'fg-info-bold hover:fg-info-hover',
-      valueSource: '',
-      valueListItem: '',
-    }),
-    [orientation, showRuleLines],
-  );
-
   const mergedClassnames = useMemo(() => {
     return {
-      ...defaultClassnames,
+      queryBuilder: queryBuilder(),
+      ruleGroup: ruleGroup(),
+      header: header(),
+      combinators: combinators(),
+      fields: fields(),
+      operators: operators(),
+      value: value(),
+      valueListItem: valueListItem(),
+      valueSource: valueSource(),
+      cloneGroup: cloneGroup(),
+      cloneRule: cloneRule(),
+      lockGroup: lockGroup(),
+      lockRule: lockRule(),
+      disabled: disabled(),
+      valid: valid(),
+      invalid: invalid(),
+      removeRule: removeRule(),
+      addRule: addRule(),
+      addGroup: addGroup(),
+      removeGroup: removeGroup(),
+      rule: rule({ variant: orientation }),
+      body: body({ showRuleLines: showRuleLines }),
       ...controlClassnames,
     };
-  }, [controlClassnames, defaultClassnames]);
+  }, [controlClassnames, showRuleLines, orientation]);
 
   const QueryBuilderContext = createContext<QueryBuilderContextType>({
     orientation,

@@ -41,7 +41,7 @@ export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {
     icon?: IconProps['className'];
     hotkey?: string;
   };
-  color?: 'info' | 'serious';
+  color?: 'info' | 'serious' | 'critical';
 };
 
 export type MenuSectionProps<T> = Omit<AriaMenuSectionProps<T>, 'className'> & {

@@ -11,11 +11,11 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
+import { type ReactNode, useState } from 'react';
 import { Icon } from '../icon';
 import { Options } from '../options';
 import { ComboBoxField } from './';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { ReactNode } from 'react';
 
 const meta = {
   title: 'Components/ComboBoxField',
@@ -34,6 +34,7 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    allowsCustomValue: false,
   },
   argTypes: {
     size: {
@@ -274,4 +275,47 @@ export const WithManyItems: Story = {
       ))}
     </ComboBoxField>
   ),
+};
+
+export const WithCustomValue: Story = {
+  args: {
+    allowsCustomValue: true,
+  },
+  render: ({ children, ...args }) => {
+    const [customValue, setCustomValue] = useState('');
+    return (
+      <div className='space-y-l'>
+        <ComboBoxField<CustomOptionsItem>
+          {...args}
+          defaultItems={items}
+          onInputChange={(value) => setCustomValue(value)}
+        >
+          {(item) => (
+            <Options.Item
+              key={item.id}
+              textValue={item.name}
+              isDisabled={item.isDisabled}
+            >
+              {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+              <Options.Item.Content>
+                <Options.Item.Label>{item.name}</Options.Item.Label>
+                {item.description && (
+                  <Options.Item.Description>
+                    {item.description}
+                  </Options.Item.Description>
+                )}
+              </Options.Item.Content>
+            </Options.Item>
+          )}
+        </ComboBoxField>
+        <div className='space-y-s text-body-s'>
+          <div className='fg-primary-muted'>
+            Setting 'allowsCustomValue' to true enables you to capture a custom
+            value that will persist on blur
+          </div>
+          <div>customValue: {customValue}</div>
+        </div>
+      </div>
+    );
+  },
 };

@@ -76,6 +76,8 @@ export {
   prop,
   property,
 } from './object/property';
+export { getSafeEnumValues } from './safe-enum/get-safe-enum-values';
+export type { SafeEnum } from './safe-enum/safe-enum';
 export type {
   Accumulator,
   ArrayElementType,
