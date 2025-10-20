@@ -34,7 +34,7 @@ export const ViewportScale: Story = {
       <div>
         <ViewportScaleComponent className='absolute right-4 bottom-4 bg-gray-400 p-4' />
         <BaseMap
-          interleaved={false} // setting it to true breaks the widget somehow
+          interleaved={false} // setting it to true breaks the widget somehow, may be a Storybook specific bug
           widgets={WIDGETS}
           className='h-dvh w-dvw'
         />
