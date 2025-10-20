@@ -15,7 +15,7 @@
 import ChevronLeft from '@accelint/icons/chevron-left';
 import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
-import { range } from 'lodash';
+import { range } from 'radashi';
 import { createContext, useContext } from 'react';
 import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
@@ -52,7 +52,7 @@ function getPaginationRange(
   }
 
   // Middle.
-  if (currentPage >= 3 && currentPage <= pageCount - 3) {
+  if (currentPage >= 3 && currentPage < pageCount - 2) {
     return {
       minRange: currentPage - 2,
       maxRange: currentPage + 2,
@@ -82,19 +82,20 @@ const PaginationContext = createContext<BasePaginationProps>({});
 export function Pagination({
   children,
   classNames,
-  currentPage,
+  currentPage = 1,
   pageCount,
   onChange,
   ...rest
 }: BasePaginationProps) {
   return (
     <Pagination.Provider value={{ currentPage, pageCount }}>
-      <div
-        className={container({ className: classNames?.container })}
+      <nav
         {...rest}
+        className={container({ className: classNames?.container })}
+        aria-label='pagination'
       >
         <Pagination.Previous
-          onPress={() => onChange?.(currentPage! - 1)}
+          onPress={() => onChange?.(currentPage - 1)}
           className={classNames?.controls}
         />
         <Pagination.NumberContainer
@@ -102,14 +103,13 @@ export function Pagination({
           className={classNames?.pages}
         />
         <Pagination.Next
-          onPress={() => onChange?.(currentPage! + 1)}
+          onPress={() => onChange?.(currentPage + 1)}
           className={classNames?.controls}
         />
-      </div>
+      </nav>
     </Pagination.Provider>
   );
 }
-Pagination.displayName = 'Pagination';
 
 function PaginationProvider({
   children,
@@ -123,11 +123,7 @@ function PaginationProvider({
 }
 PaginationProvider.displayName = 'Pagination.Provider';
 
-function PaginationPrevious({
-  className,
-  onPress,
-  ...rest
-}: PaginationNavProps) {
+function PaginationPrevious({ className, onPress }: PaginationNavProps) {
   const { currentPage } = useContext(PaginationContext);
 
   return (
@@ -137,7 +133,7 @@ function PaginationPrevious({
       className={button({ className })}
       isDisabled={currentPage === 1}
       onPress={() => onPress?.()}
-      {...rest}
+      aria-label='pagination-previous'
     >
       <Icon>
         <ChevronLeft />
@@ -147,7 +143,7 @@ function PaginationPrevious({
 }
 PaginationPrevious.displayName = 'Pagination.Previous';
 
-function PaginationNext({ className, onPress, ...rest }: PaginationNavProps) {
+function PaginationNext({ className, onPress }: PaginationNavProps) {
   const { currentPage, pageCount: pages } = useContext(PaginationContext);
 
   return (
@@ -157,7 +153,7 @@ function PaginationNext({ className, onPress, ...rest }: PaginationNavProps) {
       isDisabled={currentPage === pages}
       onPress={() => onPress?.()}
       className={button({ className })}
-      {...rest}
+      aria-label='pagination-next'
     >
       <Icon>
         <ChevronRight />
@@ -180,6 +176,7 @@ function PaginationPageNumber({
       isSelected={isSelected}
       className={button({ className })}
       onPress={() => onPress?.()}
+      aria-current='page'
     >
       {pageNumber}
     </ToggleButton>
@@ -198,17 +195,14 @@ function PaginationNumberContainer({
 
   const { minRange, maxRange } = getPaginationRange(pages, currentPage);
 
-  // range is not inclusive of upper limit, + 1
-  return range(minRange, maxRange + 1).map((pageNumber) => (
-    <>
-      <PaginationPageNumber
-        pageNumber={pageNumber}
-        key={`page-${pageNumber}`}
-        isSelected={pageNumber === currentPage}
-        onPress={() => onPress?.(pageNumber)}
-        className={className}
-      />
-    </>
+  return range(minRange, maxRange).map((pageNumber) => (
+    <PaginationPageNumber
+      pageNumber={pageNumber}
+      key={`page-${pageNumber}`}
+      isSelected={pageNumber === currentPage}
+      onPress={() => onPress?.(pageNumber)}
+      className={className}
+    />
   ));
 }
 PaginationNumberContainer.displayName = 'Pagination.NumberContainer';

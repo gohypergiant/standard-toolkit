@@ -25,7 +25,6 @@ export type BasePaginationProps = PropsWithChildren & {
 
 export type PaginationNavProps = {
   className?: string;
-  enabled?: boolean;
   onPress?: () => void;
 };
 
