@@ -20,10 +20,16 @@ import type { AllowedUnit } from './types';
 
 export const bus = Broadcast.getInstance<MapEventType>();
 
-type ViewportScaleProps = ComponentProps<'span'> & {
+export type ViewportScaleProps = ComponentProps<'span'> & {
   unit?: AllowedUnit;
 };
 
+/**
+ * A span with the currend viewport bounds, i.e. `660 x 1,801 NMI`
+ * @param {Object} props - Extends `<span>` props
+ * @param {string} props.unit - Measure of distance, `km | m | nmi | mi | ft`. Defaults to `nmi`
+ * @param {string} props.className - styles
+ */
 export function ViewportScale({
   unit = 'nmi',
   className,
@@ -35,7 +41,6 @@ export function ViewportScale({
     MapEvents.viewport,
     ({ payload: { bounds } }: MapViewportEvent) => {
       if (bounds && ref.current) {
-        console.log({ bounds });
         const viewportScale = getViewportScale({
           bounds,
           unit,
@@ -46,8 +51,8 @@ export function ViewportScale({
   );
 
   return (
-    <span data-testid='blah' className={className} {...rest} ref={ref}>
-      ### x ### {unit.toUpperCase()}
+    <span className={className} {...rest} ref={ref}>
+      {getViewportScale({ bounds: undefined, unit })}
     </span>
   );
 }

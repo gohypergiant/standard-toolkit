@@ -17,6 +17,6 @@ export type AllowedUnit = keyof typeof UNIT_MAP;
 
 export type GetViewportScaleArgs = {
   bounds?: Bounds;
-  unit: AllowedUnit;
+  unit?: AllowedUnit;
   formatter?: Intl.NumberFormat;
 };

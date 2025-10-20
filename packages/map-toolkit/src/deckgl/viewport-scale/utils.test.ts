@@ -30,4 +30,10 @@ describe('getViewportScale', () => {
     });
     expect(result).toBe('1.223 x 3.336 KM');
   });
+  it('provides a fallback for undefined bounds', () => {
+    const result = getViewportScale({
+      bounds: undefined,
+    });
+    expect(result).toBe('-- x -- NMI');
+  });
 });

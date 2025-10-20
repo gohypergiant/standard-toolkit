@@ -12,24 +12,33 @@
 
 import { distance } from '@turf/distance';
 import { UNIT_MAP } from './constants';
+import type { Bounds } from '../base-map/types';
 import type { GetViewportScaleArgs } from './types';
 
 const numberFormatter = Intl.NumberFormat('en-US');
 
+/**
+ * Returns a formatter viewport bounds string, i.e. `660 x 1,801 NMI`
+ * @param {Object} args
+ * @param {Bounds} args.bounds - 4 number tuple, i.e. `[-82, 22, -71, 52]`
+ * @param {string} args.unit - Measure of distance, `km | m | nmi | mi | ft`. Defaults to `nmi`
+ * @param {Intl.NumberFormat} args.formatter - [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat)
+ * @returns
+ */
 export function getViewportScale({
   bounds,
-  unit,
+  unit = 'nmi',
   formatter = numberFormatter,
 }: GetViewportScaleArgs) {
   if (!bounds) {
-    return '-- x --' as const;
+    return `-- x -- ${unit.toUpperCase()}` as const;
   }
 
-  const [minX, minY, maxX, maxY] = bounds;
+  const [minLon, minLat, maxLon, maxLat] = bounds;
 
   const width = formatter.format(
     Math.round(
-      distance([minY, minX], [minY, maxX], {
+      distance([minLat, minLon], [minLat, maxLon], {
         units: UNIT_MAP[unit],
       }),
     ),
@@ -37,11 +46,11 @@ export function getViewportScale({
 
   const height = formatter.format(
     Math.round(
-      distance([minX, minY], [minX, maxY], {
+      distance([minLon, minLat], [minLon, maxLat], {
         units: UNIT_MAP[unit],
       }),
     ),
   );
 
-  return `${width} x ${height} ${unit.toUpperCase()}` as const;
+  return `${width} x ${height} ${unit.toUpperCase()}`;
 }
