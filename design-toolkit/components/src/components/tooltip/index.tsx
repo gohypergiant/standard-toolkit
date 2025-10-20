@@ -26,6 +26,7 @@ import {
   type ReactElement,
   type ReactNode,
   type RefAttributes,
+  useMemo,
   version,
 } from 'react';
 import {
@@ -136,8 +137,15 @@ export function Tooltip({
   ...props
 }: TooltipProps) {
   const isSSR = useIsSSR();
-  const overlayContainer = isSSR ? null : document.createElement('div');
-  overlayContainer?.setAttribute('class', 'absolute');
+  const overlayContainer = useMemo(() => {
+    if (isSSR) {
+      return null;
+    }
+    const div = document.createElement('div');
+    div.setAttribute('class', 'absolute');
+    return div;
+  }, [isSSR]);
+
   return (
     <PortalProvider parentRef={parentRef} inject={overlayContainer}>
       <AriaTooltip
