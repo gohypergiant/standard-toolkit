@@ -140,8 +140,9 @@ const findCard = (
 ): { column: KanbanColumnData; card: KanbanCardData; index: number } | null => {
   for (const column of columns) {
     const index = column.cards.findIndex((c) => c.id === cardId);
-    if (index !== -1 && column.cards[index]) {
-      return { column, card: column.cards[index], index };
+    const card = column.cards[index];
+    if (index !== -1 && card) {
+      return { column, card, index };
     }
   }
   return null;
