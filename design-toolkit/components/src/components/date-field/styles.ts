@@ -26,6 +26,7 @@ export const DateFieldStyles = tv({
       'group-size-small/date-field:text-body-xs',
       'fg-primary-bold',
       'hover:outline-interactive-hover',
+      'pressed:outline-interactive-pressed',
       'focus-visible-within:outline-accent-primary-bold',
       'group-invalid/date-field:outline-serious-bold',
       'group-disabled/date-field:placeholder:fg-disabled group-disabled/date-field:fg-disabled group-disabled/date-field:outline-interactive-disabled',
@@ -35,6 +36,8 @@ export const DateFieldStyles = tv({
       'text-right',
       'placeholder-shown:fg-primary-muted',
       'focus-visible:fg-a11y-on-accent focus-visible:bg-accent-primary-bold focus-visible:outline-none',
+      'data-[pressed]:bg-transparent',
+      'pressed:bg-transparent'
     ],
     description: [
       'fg-primary-muted text-body-xs',
