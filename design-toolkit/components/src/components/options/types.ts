@@ -35,7 +35,7 @@ export type OptionsItemProps<T extends OptionsDataItem> = Omit<
       item?: ListBoxItemProps['className'];
       icon?: IconProps['className'];
     };
-    color?: 'info' | 'serious';
+    color?: 'info' | 'serious' | 'critical';
   };
 
 export type OptionsProps<T extends OptionsDataItem> = Omit<

@@ -22,21 +22,41 @@ export const MenuStyles = tv({
     item: [
       'group/menu-item flex cursor-pointer items-center gap-x-s px-s text-body-s outline outline-transparent',
       'grid grid-cols-[auto_auto_1fr_auto] [grid-template-areas:"icon_label_space_action"_"icon_description_space_action"]',
-      'enabled:focus-visible:outline-interactive-hover',
-
-      // Info
-      'color-info:enabled:fg-primary-bold',
-      'color-info:enabled:focus-visible:fg-a11y-on-accent color-info:enabled:focus-visible:bg-accent-primary-bold',
-      'color-info:enabled:hover:fg-a11y-on-accent color-info:enabled:hover:bg-accent-primary-bold',
-      'color-info:enabled:open:fg-a11y-on-accent color-info:enabled:open:bg-accent-primary-bold',
-      'color-info:enabled:selected:fg-a11y-on-accent color-info:enabled:selected:bg-accent-primary-bold',
-
-      // Serious
-      'color-serious:enabled:fg-serious-bold',
-      'color-serious:enabled:focus-visible:fg-a11y-on-utility color-serious:enabled:focus-visible:bg-serious-bold',
-      'color-serious:enabled:hover:fg-a11y-on-utility color-serious:enabled:hover:bg-serious-bold',
-      'color-serious:enabled:open:fg-a11y-on-utility color-serious:enabled:open:bg-serious-bold',
-      'color-serious:enabled:selected:fg-a11y-on-utility color-serious:enabled:selected:bg-serious-bold',
+      'enabled:fg-primary-bold enabled',
+      'enabled:selected:inset-shadow-[3px_0_0_0_]',
+      // info
+      'color-info:enabled:focus-visible:bg-accent-primary-muted',
+      'color-info:enabled:hover:bg-accent-primary-muted',
+      'color-info:enabled:open:bg-accent-primary-muted',
+      'color-info:enabled:selected:bg-accent-primary-muted',
+      'color-info:enabled:pressed:fg-accent-primary-bold color-info:enabled:pressed:bg-accent-primary-pressed',
+      // info + selected
+      'color-info:enabled:selected:inset-shadow-[color:var(--outline-accent-primary-bold)] color-info:enabled:selected:bg-accent-primary-muted',
+      'color-info:enabled:selected:hover:bg-accent-primary-bold',
+      'color-info:enabled:selected:focus-visible:bg-accent-primary-bold',
+      'color-info:enabled:selected:pressed:fg-accent-primary-bold color-info:enabled:selected:pressed:inset-shadow-[color:var(--outline-accent-primary-pressed)] color-info:enabled:selected:pressed:bg-accent-primary-pressed',
+      // serious
+      'color-serious:enabled:focus-visible:bg-serious-muted',
+      'color-serious:enabled:hover:bg-serious-muted',
+      'color-serious:enabled:open:bg-serious-muted',
+      'color-serious:enabled:selected:bg-serious-muted',
+      'color-serious:enabled:pressed:fg-serious-bold color-serious:enabled:pressed:bg-serious-pressed',
+      // serious + selected
+      'color-serious:enabled:selected:inset-shadow-[color:var(--outline-serious-bold)] color-serious:enabled:selected:bg-serious-muted',
+      'color-serious:enabled:selected:hover:bg-serious-bold',
+      'color-serious:enabled:selected:focus-visible:bg-serious-bold',
+      'color-serious:enabled:selected:pressed:fg-serious-bold color-serious:enabled:selected:pressed:inset-shadow-[color:var(--outline-serious-pressed)] color-serious:enabled:selected:pressed:bg-serious-pressed',
+      // critical
+      'color-critical:enabled:focus-visible:bg-critical-muted',
+      'color-critical:enabled:hover:bg-critical-muted',
+      'color-critical:enabled:open:bg-critical-muted',
+      'color-critical:enabled:selected:bg-critical-muted',
+      'color-critical:enabled:pressed:fg-critical-bold color-critical:enabled:pressed:bg-critical-pressed',
+      // critical + selected
+      'color-critical:enabled:selected:inset-shadow-[color:var(--outline-critical-bold)] color-critical:enabled:selected:bg-critical-muted',
+      'color-critical:enabled:selected:hover:bg-critical-bold',
+      'color-critical:enabled:selected:focus-visible:bg-critical-bold',
+      'color-critical:enabled:selected:pressed:fg-critical-bold color-critical:enabled:selected:pressed:inset-shadow-[color:var(--outline-critical-pressed)] color-critical:enabled:selected:pressed:bg-critical-pressed',
 
       'disabled:fg-disabled disabled:cursor-not-allowed disabled:bg-transparent',
     ],
@@ -48,6 +68,15 @@ export const MenuStyles = tv({
       'fg-primary-muted truncate text-body-xs',
       'group-hover/menu-item:fg-a11y-on-accent group-focus-visible/menu-item:fg-a11y-on-accent',
       'group-disabled/menu-item:fg-disabled',
+      // info
+      'group-enabled/menu-item:group-pressed/menu-item:group-color-info/menu-item:fg-accent-primary-bold',
+      'group-enabled/menu-item:group-selected/menu-item:group-pressed/menu-item:group-color-info/menu-item:fg-accent-primary-bold',
+      // serious
+      'group-enabled/menu-item:group-pressed/menu-item:group-color-serious/menu-item:fg-serious-bold',
+      'group-enabled/menu-item:group-selected/menu-item:group-pressed/menu-item:group-color-serious/menu-item:fg-serious-bold',
+      // critical
+      'group-enabled/menu-item:group-pressed/menu-item:group-color-critical/menu-item:fg-critical-bold',
+      'group-enabled/menu-item:group-selected/menu-item:group-pressed/menu-item:group-color-critical/menu-item:fg-critical-bold',
     ],
     more: '[grid-area:action]',
     section: '',
@@ -57,6 +86,15 @@ export const MenuStyles = tv({
       '[grid-area:action]',
       'group-hover/menu-item:fg-a11y-on-accent group-focus-visible/menu-item:fg-a11y-on-accent',
       'group-disabled/menu-item:fg-disabled',
+      // info
+      'group-enabled/menu-item:group-pressed/menu-item:group-color-info/menu-item:fg-accent-primary-bold',
+      'group-enabled/menu-item:group-selected/menu-item:group-pressed/menu-item:group-color-info/menu-item:fg-accent-primary-bold',
+      // serious
+      'group-enabled/menu-item:group-pressed/menu-item:group-color-serious/menu-item:fg-serious-bold',
+      'group-enabled/menu-item:group-selected/menu-item:group-pressed/menu-item:group-color-serious/menu-item:fg-serious-bold',
+      // critical
+      'group-enabled/menu-item:group-pressed/menu-item:group-color-critical/menu-item:fg-critical-bold',
+      'group-enabled/menu-item:group-selected/menu-item:group-pressed/menu-item:group-color-critical/menu-item:fg-accent-critical-bold',
     ],
     popover: 'outline-none',
   },
