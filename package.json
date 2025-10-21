@@ -25,6 +25,7 @@
     "constellation-tracker": "turbo constellation-tracker",
     "deps:format-packages": "pnpm syncpack format",
     "deps:mismatch-fix": "pnpm syncpack fix-mismatches",
+    "deps:postinstall": "pnpm run deps:mismatch-fix && pnpm run deps:format-packages",
     "deps:version-major": "pnpm taze major -r",
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",
@@ -34,6 +35,8 @@
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
     "lint:fs": "pnpm ls-lint",
+    "postinstall": "pnpm run deps:postinstall",
+    "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
   "dependencies": {
