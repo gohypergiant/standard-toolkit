@@ -35,7 +35,7 @@ const DEFAULT_MAX_RANGE = 5;
 
 // Return min max range for visible pages. As per our design, we limit
 // the range of numbers to a spread of 5 maximum, getting the lower and upper bounds.
-function getPaginationRange(
+export function getPaginationRange(
   pageCount: number,
   currentPage: number,
 ): PaginationRange {
@@ -129,14 +129,14 @@ function PaginationProvider({
 PaginationProvider.displayName = 'Pagination.Provider';
 
 function PaginationPrevious({ className, onPress }: PaginationNavProps) {
-  const { currentPage } = useContext(PaginationContext);
+  const { currentPage, pageCount } = useContext(PaginationContext);
 
   return (
     <Button
       color='accent'
       variant='icon'
       className={button({ className })}
-      isDisabled={currentPage === 1}
+      isDisabled={currentPage === 1 || !pageCount || pageCount < 1}
       onPress={() => onPress?.()}
       aria-label='pagination-previous'
     >
@@ -149,13 +149,13 @@ function PaginationPrevious({ className, onPress }: PaginationNavProps) {
 PaginationPrevious.displayName = 'Pagination.Previous';
 
 function PaginationNext({ className, onPress }: PaginationNavProps) {
-  const { currentPage, pageCount: pages } = useContext(PaginationContext);
+  const { currentPage, pageCount } = useContext(PaginationContext);
 
   return (
     <Button
       color='accent'
       variant='icon'
-      isDisabled={currentPage === pages}
+      isDisabled={currentPage === pageCount || !pageCount || pageCount < 1}
       onPress={() => onPress?.()}
       className={button({ className })}
       aria-label='pagination-next'

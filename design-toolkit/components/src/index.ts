@@ -226,7 +226,7 @@ export type {
   OptionsProps,
   OptionsSectionProps,
 } from './components/options/types';
-export { Pagination } from './components/pagination';
+export { Pagination, getPaginationRange } from './components/pagination';
 export { PaginationStyles } from './components/pagination/styles';
 export type {
   BasePaginationProps,
