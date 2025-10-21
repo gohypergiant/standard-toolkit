@@ -221,14 +221,13 @@ const Col = ({ children, className, column, ...rest }: KanbanColProps) => {
   const { ref, isActive, isHighlighted } = useColumnInteractions(column);
 
   return (
-    <div
+    <ol
       className={ColumnStyles({ isHighlighted, isActive, className })}
-      role='list'
       ref={ref}
       {...rest}
     >
       {children}
-    </div>
+    </ol>
   );
 };
 Col.displayName = 'Kanban.Column';
@@ -329,12 +328,7 @@ function KanbanCard({
   const showPlaceholder = activeId && activeId !== card.id && closestEdge;
 
   return (
-    <div
-      className={cardContainerOuter()}
-      ref={ref}
-      style={style}
-      rel='listitem'
-    >
+    <li className={cardContainerOuter()} ref={ref} style={style}>
       {showPlaceholder && closestEdge === 'top' && (
         <Divider className='mb-s h-xxs bg-accent-primary-bold' />
       )}
@@ -356,7 +350,7 @@ function KanbanCard({
       {showPlaceholder && closestEdge === 'bottom' && (
         <Divider className='mt-s h-xxs bg-accent-primary-bold' />
       )}
-    </div>
+    </li>
   );
 }
 
