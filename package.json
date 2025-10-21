@@ -29,12 +29,11 @@
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",
     "dev": "turbo dev",
-    "format": "pnpm biome format . --write",
+    "format": "pnpm biome check --linter-enabled=false . --write",
     "indexer": "turbo index",
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
     "lint:fs": "pnpm ls-lint",
-    "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
   "dependencies": {

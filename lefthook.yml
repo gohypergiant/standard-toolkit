@@ -12,11 +12,7 @@ pre-commit:
       run: pnpm run format
       stage_fixed: true
       priority: 3
-    sort-imports:
-      run: pnpm run sort-imports
-      stage_fixed: true
-      priority: 4
     validate-docblocks:
       run: pnpm run audit:docblocks || true
-      priority: 5
+      priority: 4
 
