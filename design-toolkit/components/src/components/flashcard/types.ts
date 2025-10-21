@@ -10,3 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+export type FlashcardProps = {
+  title: string;
+  subTitle: string;
+  secondaryData?: string[];
+  metadata?: FlashcardMetaData[];
+};
+
+// TODO: How strict do we need to be with the value types?
+export type FlashcardMetaData = {
+  key: string;
+  value: unknown;
+};

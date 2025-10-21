@@ -10,3 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import type { FlashcardProps } from './types';
+
+export function Flashcard(props: FlashcardProps) {
+  return <div>Hello.</div>;
+}
+Flashcard.displayName = 'Flashcard';

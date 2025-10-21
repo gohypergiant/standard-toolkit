@@ -10,3 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { Flashcard } from '.';
+import type { FlashcardProps } from './types';
+
+function setup(props: FlashcardProps) {
+  return {
+    ...render(<Flashcard {...props} />),
+    ...props,
+  };
+}
+
+describe('Flashcard', () => {
+  it('should render', () => {
+    setup({ title: 'Hey', subTitle: 'Hey again' });
+    expect(screen.findByText('Hello')).toBeInTheDocument();
+  });
+});
