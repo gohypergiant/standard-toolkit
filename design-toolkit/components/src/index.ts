@@ -434,8 +434,6 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
-export { useCardInteractions } from './hooks/useCardInteractions';
-export { useColumnInteractions } from './hooks/useColumnInteractions';
 export type {
   AriaAttributes,
   AriaAttributesWithRef,
