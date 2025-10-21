@@ -47,7 +47,7 @@ importers:
         specifier: ^0.17.2
         version: 0.17.2
       tsx:
-        specifier: ^4.19.1
+        specifier: ^4.20.5
         version: 4.20.6
       turbo:
         specifier: ^2.5.8
