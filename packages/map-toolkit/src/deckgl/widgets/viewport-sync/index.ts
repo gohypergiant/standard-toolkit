@@ -65,6 +65,7 @@ export class ViewportSyncWidget extends _WidgetImpl<ViewportSyncWidgetProps> {
 
     // NOTE: can probably add more to this in the future, stubbing some common ones for now
     bus.emit(MapEvents.viewport, {
+      id: this.props.id,
       latitude,
       longitude,
       zoom,

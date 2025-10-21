@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Bounds } from '../base-map/types';
+import type { Bounds } from '../deckgl/base-map/types';
 import type { UNIT_MAP } from './constants';
 
 export type AllowedUnit = keyof typeof UNIT_MAP;

@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { BaseMap } from '../base-map';
-import { ViewportSyncWidget } from '../widgets/viewport-sync';
-import { ViewportScale as ViewportScaleComponent } from '.';
+import { BaseMap } from '../deckgl/base-map';
+import { ViewportSyncWidget } from '../deckgl/widgets/viewport-sync';
+import { ViewportScale as ViewportScaleComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const WIDGETS = [new ViewportSyncWidget({ id: 'viewport-sync' })];

@@ -56,6 +56,7 @@ export type MapViewportPayload = {
   latitude?: number;
   longitude?: number;
   zoom?: number;
+  id?: string;
 };
 
 export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
