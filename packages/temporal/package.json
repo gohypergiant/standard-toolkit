@@ -42,7 +42,7 @@
     "test": "pnpm vitest --dir=src"
   },
   "dependencies": {
-    "typescript": "^5.8.3"
+    "typescript": "5.8.3"
   },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",

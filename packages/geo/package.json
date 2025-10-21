@@ -47,7 +47,7 @@
     "@accelint/predicates": "workspace:*",
     "@ngageoint/grid-js": "^2.1.0",
     "@ngageoint/mgrs-js": "^1.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "5.8.3"
   },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",

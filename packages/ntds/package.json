@@ -61,19 +61,19 @@
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@types/node": "^24.1.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.11",
     "esbuild-fix-imports-plugin": "^1.0.21",
     "lodash": "^4.17.21",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "tsup": "8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "5.8.3"
   },
   "peerDependencies": {
     "lodash": "^4.17.21",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "engines": {
     "node": ">=18",
