@@ -223,6 +223,7 @@ const Col = ({ children, className, column, ...rest }: KanbanColProps) => {
   return (
     <div
       className={ColumnStyles({ isHighlighted, isActive, className })}
+      role='list'
       ref={ref}
       {...rest}
     >
@@ -328,7 +329,12 @@ function KanbanCard({
   const showPlaceholder = activeId && activeId !== card.id && closestEdge;
 
   return (
-    <div className={cardContainerOuter()} ref={ref} style={style}>
+    <div
+      className={cardContainerOuter()}
+      ref={ref}
+      style={style}
+      rel='listitem'
+    >
       {showPlaceholder && closestEdge === 'top' && (
         <Divider className='mb-s h-xxs bg-accent-primary-bold' />
       )}
