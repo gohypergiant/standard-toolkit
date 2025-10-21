@@ -87,7 +87,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "19.1.13",
     "client-only": "^0.0.1",
-    "esbuild-fix-imports-plugin": "^1.0.21",
+    "esbuild-fix-imports-plugin": "^1.0.23",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "^3.0.2",
     "mjolnir.js": "^3.0.0",

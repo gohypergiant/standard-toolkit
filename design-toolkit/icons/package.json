@@ -54,7 +54,7 @@
     "@svgr/cli": "^8.1.0",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
-    "esbuild-fix-imports-plugin": "^1.0.21",
+    "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0"
   },
   "peerDependencies": {

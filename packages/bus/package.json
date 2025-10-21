@@ -58,7 +58,7 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@types/react": "19.1.13",
-    "esbuild-fix-imports-plugin": "^1.0.21",
+    "esbuild-fix-imports-plugin": "^1.0.23",
     "react": "19.0.0",
     "tsup": "8.5.0",
     "typescript": "5.8.3",
