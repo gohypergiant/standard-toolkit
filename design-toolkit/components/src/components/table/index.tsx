@@ -129,7 +129,7 @@ export function Table<T extends { id: Key }>({
   });
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
-   const [rowPinning, setRowPinning] = useState<RowPinningState>({
+  const [rowPinning, setRowPinning] = useState<RowPinningState>({
     top: [],
     bottom: [],
   });
@@ -262,13 +262,16 @@ export function Table<T extends { id: Key }>({
     [showCheckbox, columnsProp, kebabPosition, actionColumn],
   );
 
-  const handleSortChange = (columnId: string, sortDirection: 'asc' | 'desc' | null) => {
-    onSortChange?.(columnId, sortDirection)
-  }
+  const handleSortChange = (
+    columnId: string,
+    sortDirection: 'asc' | 'desc' | null,
+  ) => {
+    onSortChange?.(columnId, sortDirection);
+  };
 
   const handleColumnReordering = (index: number) => {
-    onColumnReorderChange?.(index)
-  }
+    onColumnReorderChange?.(index);
+  };
 
   const {
     getHeaderGroups,
@@ -286,7 +289,7 @@ export function Table<T extends { id: Key }>({
     },
     state: {
       rowSelection,
-      rowPinning
+      rowPinning,
     },
     getRowId: (row, index) => {
       // Use the index as the row ID if no unique identifier is available
@@ -362,7 +365,7 @@ export function Table<T extends { id: Key }>({
         moveColumnRight,
         manualSorting,
         handleSortChange,
-        handleColumnReordering
+        handleColumnReordering,
       }}
     >
       <table {...rest}>

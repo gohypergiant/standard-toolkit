@@ -2,7 +2,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@accelint/icons"
+  name: accelint_icons
   title: Accelint Icons
   description: >-
     An open-source icon library to serve as part of the entire ecosystem of UX
@@ -11,15 +11,15 @@ metadata:
 
     Dependencies:
 
-    @accelint/biome-config@1.0.0, @accelint/constellation-tracker@0.0.0,
-    @accelint/typescript-config@0.1.2, @accelint/vitest-config@0.1.3
+    accelint_biome-config@1.0.1, accelint_constellation-tracker@1.0.0,
+    accelint_typescript-config@0.1.3, accelint_vitest-config@0.1.4
   annotations:
-    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/design-toolkit/blob/main/design-toolkit/icons/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/design-toolkit/icons/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 2.0.3
-    github.com/project-slug: gohypergiant/standard-toolkit/design-toolkit
+    package/version: 2.0.4
+    github.com/project-slug: gohypergiant/standard-toolkit
   links:
-    - url: https://github.com/gohypergiant/standard-toolkit/design-toolkit/tree/main/design-toolkit/icons
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/icons
       title: Documentation
       icon: docs
       type: documentation
@@ -32,7 +32,7 @@ spec:
   lifecycle: production
   owner: group:default/pathfinder
   dependsOn:
-    - component:@accelint/biome-config
-    - component:@accelint/constellation-tracker
-    - component:@accelint/typescript-config
-    - component:@accelint/vitest-config
+    - component:accelint_biome-config
+    - component:accelint_constellation-tracker
+    - component:accelint_typescript-config
+    - component:accelint_vitest-config
