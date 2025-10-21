@@ -427,8 +427,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
       react-querybuilder:
-        specifier: 8.8.1
-        version: 8.8.1(@types/react@19.1.13)(react@19.0.0)(redux@5.0.1)
+        specifier: 8.10.0
+        version: 8.10.0(@types/react@19.1.13)(react@19.0.0)(redux@5.0.1)
       storybook:
         specifier: ^8.6.14
         version: 8.6.14(prettier@3.6.2)
@@ -4233,6 +4233,20 @@ packages:
     resolution: {integrity: sha512-IwEphTD75liO8g+6taS+4oqz+nnroocNfWVHWz7j+N+ZO2vYrc6PV1q7GQhuahL0IOR7JccFTsFKQ/mb6iZWAg==}
     peerDependencies:
       react: '>=16.8'
+
+  '@react-querybuilder/core@8.10.0':
+    resolution: {integrity: sha512-5XyprsViFLQIrwRjD1cmqULOujb1zJXLxr8PKRv0Wwv2vw80zg5/NTx+EJnwKFM3Mcxdg//ZEU9TS4zrfDqljA==}
+    peerDependencies:
+      drizzle-orm: '>=0.38.0'
+      json-logic-js: '>=2'
+      sequelize: '>=6'
+    peerDependenciesMeta:
+      drizzle-orm:
+        optional: true
+      json-logic-js:
+        optional: true
+      sequelize:
+        optional: true
 
   '@react-stately/autocomplete@3.0.0-beta.3':
     resolution: {integrity: sha512-YfP/TrvkOCp6j7oqpZxJSvmSeXn+XtbKSOiBOuo+m2zCIhW2ncThmDB9uAUOkpmikDv/LkGKni40RQE8USdGdA==}
@@ -9377,8 +9391,8 @@ packages:
       react-loadable: '*'
       webpack: '>=4.41.1 || 5.x'
 
-  react-querybuilder@8.8.1:
-    resolution: {integrity: sha512-Owy5auiV5YJFNbbrGGitlXEgdshPd1gvXHmb6rk/6ld3I4EsrCCINWZrhsPCrRjBPPAsf0fWnJ/LtqTeujdXYA==}
+  react-querybuilder@8.10.0:
+    resolution: {integrity: sha512-NOo3FMYlM9K21zB2QEl+k7SPx2y989uL2pwg9eJGRxY8E6xcjURfJcQSyurbpc/e9xODc8baaCB8F//0Kq26DA==}
     peerDependencies:
       drizzle-orm: '>=0.38.0'
       json-logic-js: '>=2'
@@ -15323,6 +15337,11 @@ snapshots:
   '@react-hook/passive-layout-effect@1.2.1(react@19.0.0)':
     dependencies:
       react: 19.0.0
+
+  '@react-querybuilder/core@8.10.0':
+    dependencies:
+      immer: 10.1.3
+      numeric-quantity: 2.1.0
 
   '@react-stately/autocomplete@3.0.0-beta.3(react@19.0.0)':
     dependencies:
@@ -21297,8 +21316,9 @@ snapshots:
       react-loadable: '@docusaurus/react-loadable@6.0.0(react@19.0.0)'
       webpack: 5.102.1(@swc/core@1.13.5(@swc/helpers@0.5.17))(esbuild@0.25.11)
 
-  react-querybuilder@8.8.1(@types/react@19.1.13)(react@19.0.0)(redux@5.0.1):
+  react-querybuilder@8.10.0(@types/react@19.1.13)(react@19.0.0)(redux@5.0.1):
     dependencies:
+      '@react-querybuilder/core': 8.10.0
       '@reduxjs/toolkit': 2.9.1(react-redux@9.2.0(@types/react@19.1.13)(react@19.0.0)(redux@5.0.1))(react@19.0.0)
       immer: 10.1.3
       numeric-quantity: 2.1.0
