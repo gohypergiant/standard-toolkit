@@ -13,10 +13,10 @@
 
 import { flexRender } from '@tanstack/react-table';
 import { useContext } from 'react';
+import { HeaderColumnAction } from './constants/table';
 import { TableContext } from './context';
 import { TableCellStyles } from './styles';
 import type { TableCellProps } from './types';
-import { HeaderColumnAction } from './constants/table';
 
 export function TableCell<T>({
   children,

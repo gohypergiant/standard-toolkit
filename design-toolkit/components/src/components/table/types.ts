@@ -95,24 +95,27 @@ type ExtendedTableProps<T extends { id: Key }> = {
   enableRowActions?: boolean;
   /**
    * When manualSorting is set to true, the table will assume that the data that you provide is already sorted, and will not apply any sorting to it.
-   * This is used for server-side sorting. 
-   * If true, getSortedRowModel() is not needed. 
-  ***/
+   * This is used for server-side sorting.
+   * If true, getSortedRowModel() is not needed.
+   ***/
   manualSorting?: boolean;
-    /**
+  /**
    * Callback function triggered when the sorting state changes.
    *
    * @param columnId - The ID of the column whose sort direction changed.
    * @param sortDirection - The new sort direction for the column:
    * `'asc'` for ascending, `'desc'` for descending, or `null` to clear sorting.
    */
-  onSortChange?: (columnId: string, sortDirection: 'asc' | 'desc' | null) => void;
-    /**
+  onSortChange?: (
+    columnId: string,
+    sortDirection: 'asc' | 'desc' | null,
+  ) => void;
+  /**
    * Callback function triggered when a column is reordered via drag-and-drop or other mechanism.
    *
    * @param index - The new index position of the column after reordering.
    */
-  onColumnReorderChange?: (index: number) => void
+  onColumnReorderChange?: (index: number) => void;
 };
 
 /**
@@ -241,6 +244,9 @@ export type TableContextValue = {
   moveColumnRight: (index: number) => void;
   setColumnSelection: Dispatch<SetStateAction<string | null>>;
   manualSorting: boolean;
-  handleSortChange?: (columnId: string, direction: 'asc' | 'desc' | null) => void;
+  handleSortChange?: (
+    columnId: string,
+    direction: 'asc' | 'desc' | null,
+  ) => void;
   handleColumnReordering?: (index: number) => void;
 };
