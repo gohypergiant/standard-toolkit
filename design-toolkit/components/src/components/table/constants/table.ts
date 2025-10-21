@@ -10,22 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import { createContext } from 'react';
-import type { TableContextValue } from './types';
+import { getSafeEnumValues, type SafeEnum } from '@accelint/core';
 
-// Only keep values in context that are needed across multiple component levels
-export const TableContext = createContext<TableContextValue>({
-  moveColumnLeft: () => undefined,
-  moveColumnRight: () => undefined,
-  setColumnSelection: () => null,
-  columnSelection: null,
-  persistRowKebabMenu: true,
-  persistHeaderKebabMenu: true,
-  persistNumerals: true,
-  enableSorting: true,
-  enableColumnReordering: true,
-  enableRowActions: true,
-  manualSorting: false,
-  handleSortChange: () => undefined,
-  handleColumnReordering: () => undefined,
-});
+export const SortDirection = Object.freeze({
+  ASC: 'asc',
+  DESC: 'desc',
+} as const);
+
+export const HeaderColumnAction = Object.freeze({
+  NUMERAL: 'numeral',
+  KEBAB: 'kebab',
+  SELECTION: 'selection',
+} as const);
+
+export type SortDirectionState = SafeEnum<typeof SortDirection>;
+export const sortDirectionValues = getSafeEnumValues(SortDirection);
+
+export type HeaderColumnActionKey = SafeEnum<typeof HeaderColumnAction>;
+export const headerColumnActionValues = getSafeEnumValues(HeaderColumnAction);

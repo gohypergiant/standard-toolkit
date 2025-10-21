@@ -23,5 +23,8 @@ export { formatDegreesDecimalMinutes } from './coordinates/latlon/degrees-decima
 export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
 export { formatDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/formatter';
 export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
+export { createFormatter } from './coordinates/latlon/internal/format';
+export type { FormatOptions } from './coordinates/latlon/internal/format';
+export { getOrdinal } from './coordinates/latlon/internal/ordinal';
 export { parseMGRS } from './coordinates/mgrs/parser';
 export { parseUTM } from './coordinates/utm/parser';

@@ -59,6 +59,6 @@ export const QueryBuilderStyles = tv({
 
 export const RuleStyles = tv({
   slots: {
-    lines: 'min-h-[46px] w-[20px]'
+    lines: 'min-h-[46px] w-[20px]',
   },
 });

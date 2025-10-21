@@ -21,7 +21,6 @@ import {
   composeRenderProps,
   Link,
 } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
 import { Icon } from '../icon';
 import { BreadcrumbsStyles } from './styles';
 import type { BreadcrumbItemProps } from './types';
@@ -44,12 +43,6 @@ export function Breadcrumbs({
   children,
   className,
 }: BreadcrumbsProps<BreadcrumbProps>) {
-  containsExactChildren({
-    children,
-    componentName: Breadcrumbs.displayName,
-    restrictions: [[BreadcrumbItem, { min: 1 }]],
-  });
-
   return (
     <AriaBreadcrumbs className={list({ className })}>
       {children}

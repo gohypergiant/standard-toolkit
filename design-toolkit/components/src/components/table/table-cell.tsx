@@ -13,6 +13,7 @@
 
 import { flexRender } from '@tanstack/react-table';
 import { useContext } from 'react';
+import { HeaderColumnAction } from './constants/table';
 import { TableContext } from './context';
 import { TableCellStyles } from './styles';
 import type { TableCellProps } from './types';
@@ -25,8 +26,8 @@ export function TableCell<T>({
   ...rest
 }: TableCellProps<T>) {
   const { columnSelection, persistNumerals } = useContext(TableContext);
-  const isKebab = cell?.column.id === 'kebab';
-  const isNumeral = cell?.column.id === 'numeral';
+  const isKebab = cell?.column.id === HeaderColumnAction.KEBAB;
+  const isNumeral = cell?.column.id === HeaderColumnAction.NUMERAL;
   const isSelected = cell?.column.id === columnSelection;
   const narrow = isNumeral || isKebab;
   const notPersistNums = isNumeral && !persistNumerals;

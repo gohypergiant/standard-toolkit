@@ -30,12 +30,10 @@ import {
   Popover,
   Pressable,
   Provider,
-  Text,
   TextContext,
   ToggleButton,
 } from 'react-aria-components';
-import { containsAnyOfExactChildren, containsExactChildren } from '@/lib/react';
-import { Avatar, AvatarContext } from '../avatar';
+import { AvatarContext } from '../avatar';
 import { DividerContext } from '../divider';
 import { Icon, IconContext } from '../icon';
 import { Tooltip } from '../tooltip';
@@ -152,15 +150,6 @@ export function Sidenav({
   children,
   ...rest
 }: SidenavProps) {
-  containsExactChildren({
-    children,
-    componentName: Sidenav.displayName,
-    restrictions: [
-      [SidenavHeader, { min: 1, max: 1 }],
-      [SidenavContent, { min: 1, max: 1 }],
-      [SidenavFooter, { min: 0, max: 1 }],
-    ],
-  });
   const [isOpen, setIsOpen] = useState(false);
 
   useOn(SidenavEventTypes.toggle, (data: SidenavToggleEvent) => {
@@ -274,18 +263,6 @@ function SidenavItem({
   textValue,
   ...rest
 }: SidenavItemProps) {
-  containsAnyOfExactChildren({
-    children,
-    componentName: SidenavItem.displayName,
-    restrictions: [
-      [[SidenavAvatar, { min: 1, max: 1 }]],
-      [
-        [Icon, { min: 1, max: 1 }],
-        [Text, { min: 1, max: 1 }],
-      ],
-    ],
-  });
-
   const { isOpen } = useContext(SidenavContext);
 
   // Implement ref to place tooltip inside Button DOM to enable contextual styling
@@ -323,15 +300,6 @@ function SidenavLink({
   textValue,
   ...rest
 }: SidenavLinkProps) {
-  containsExactChildren({
-    children,
-    componentName: SidenavLink.displayName,
-    restrictions: [
-      [Icon, { min: 1, max: 1 }],
-      [Text, { min: 1, max: 1 }],
-    ],
-  });
-
   const { isOpen } = useContext(SidenavContext);
 
   // Implement ref to place tooltip inside Link DOM to enable contextual styling
@@ -371,23 +339,6 @@ function SidenavLink({
 SidenavLink.displayName = 'Sidenav.Link';
 
 function SidenavAvatar({ children, className, ...rest }: SidenavAvatarProps) {
-  containsAnyOfExactChildren({
-    children,
-    componentName: SidenavAvatar.displayName,
-    restrictions: [
-      [
-        [Avatar, { min: 1, max: 1 }],
-        [Heading, { min: 1, max: 1 }],
-        [Text, { min: 0, max: 1 }],
-      ],
-      [
-        [Icon, { min: 1, max: 1 }],
-        [Heading, { min: 1, max: 1 }],
-        [Text, { min: 0, max: 1 }],
-      ],
-    ],
-  });
-
   return (
     <Provider
       values={[
@@ -415,12 +366,6 @@ function SidenavMenu({
   children,
   ...rest
 }: SidenavMenuProps) {
-  containsExactChildren({
-    children,
-    componentName: SidenavMenu.displayName,
-    restrictions: [[SidenavMenuItem, { min: 2 }]],
-  });
-
   const { isOpen } = useContext(SidenavContext);
   const ref = useRef(null);
 
@@ -492,12 +437,6 @@ function SidenavMenuItem({
   children,
   ...rest
 }: SidenavMenuItemProps) {
-  containsExactChildren({
-    children,
-    componentName: SidenavMenuItem.displayName,
-    restrictions: [[Text, { min: 1, max: 1 }]],
-  });
-
   return (
     <ToggleButton
       {...rest}
