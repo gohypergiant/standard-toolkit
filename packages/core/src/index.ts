@@ -77,6 +77,7 @@ export {
   property,
 } from './object/property';
 export { getSafeEnumValues } from './safe-enum/get-safe-enum-values';
+export type { IsLiteralEnum } from './safe-enum/is-literal-enum';
 export type { SafeEnum } from './safe-enum/safe-enum';
 export type {
   Accumulator,
