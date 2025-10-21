@@ -36,7 +36,6 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
 import { PortalProvider } from '@/providers/portal';
 import { TooltipStyles } from './styles';
 import type { FocusableElement } from '@react-types/shared';
@@ -113,12 +112,6 @@ function TooltipTrigger({ ref, ...props }: TooltipTriggerProps) {
   [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
 
   const { children, delay = 250, ...rest } = props;
-
-  containsExactChildren({
-    children,
-    componentName: TooltipTrigger.displayName,
-    restrictions: [[Tooltip, { min: 1, max: 1 }]],
-  });
 
   return (
     <AriaTooltipTrigger {...rest} delay={delay}>

@@ -304,6 +304,16 @@ export type { SliderProps } from './components/slider/types';
 export { Switch, SwitchContext } from './components/switch';
 export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
+export {
+  HeaderColumnAction,
+  SortDirection,
+  headerColumnActionValues,
+  sortDirectionValues,
+} from './components/table/constants/table';
+export type {
+  HeaderColumnActionKey,
+  SortDirectionState,
+} from './components/table/constants/table';
 export { TableContext } from './components/table/context';
 export { Table } from './components/table';
 export {
@@ -392,11 +402,6 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
-export {
-  containsAnyOfExactChildren,
-  containsExactChildren,
-  expectsIconWrapper,
-} from './lib/react';
 export type {
   AriaAttributes,
   AriaAttributesWithRef,

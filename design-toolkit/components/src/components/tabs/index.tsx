@@ -26,7 +26,6 @@ import {
   type TabProps,
   useContextProps,
 } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
 import { TabStyles } from './styles';
 import type { ProviderProps } from '@/lib/types';
 import type { TabsProps } from './types';
@@ -60,12 +59,6 @@ function TabList<T extends object>({
   className,
   ...rest
 }: TabListProps<T>) {
-  containsExactChildren({
-    children,
-    componentName: TabList.displayName,
-    restrictions: [[Tab, { min: 1 }]],
-  });
-
   return (
     <AriaTabList<T>
       {...rest}
@@ -143,15 +136,6 @@ export function Tabs({ ref, ...props }: TabsProps) {
   [props, ref] = useContextProps(props, ref ?? null, TabsContext);
 
   const { children, className, ...rest } = props;
-
-  containsExactChildren({
-    children,
-    componentName: Tabs.displayName,
-    restrictions: [
-      [TabList, { min: 1, max: 1 }],
-      [TabPanel, { min: 1 }],
-    ],
-  });
 
   return (
     <AriaTabs
