@@ -13,8 +13,8 @@
 import type { PropsWithChildren } from 'react';
 
 export type BasePaginationProps = PropsWithChildren & {
-  pageCount?: number;
-  currentPage?: number;
+  pageCount: number;
+  currentPage: number;
   classNames?: {
     container?: string;
     controls?: string;

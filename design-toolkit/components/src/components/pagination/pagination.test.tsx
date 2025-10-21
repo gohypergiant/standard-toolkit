@@ -16,7 +16,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { getPaginationRange, Pagination } from './index';
 import type { BasePaginationProps } from './types';
 
-function setup(props: Partial<BasePaginationProps>) {
+function setup(props: BasePaginationProps) {
   return {
     ...render(<Pagination {...props} />),
     ...props,
@@ -84,6 +84,12 @@ describe('Pagination', () => {
     const navContainer = document.querySelector('nav');
     // Prev, Page, Next
     expect(navContainer?.children.length).toEqual(3);
+  });
+
+  it('should show empty component on empty pageCount', () => {
+    setup({ currentPage: 0, pageCount: 0, onChange: vi.fn() });
+    const navContainer = document.querySelector('nav');
+    expect(navContainer?.childNodes.length).toEqual(2);
   });
 
   describe('getPaginationRange()', () => {

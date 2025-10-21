@@ -45,7 +45,7 @@ export function getPaginationRange(
     pageCount < 1 ||
     currentPage < 1
   ) {
-    return { minRange: DEFAULT_MIN_RANGE, maxRange: DEFAULT_MAX_RANGE };
+    return { minRange: 0, maxRange: 0 };
   }
 
   // Below max display.
@@ -85,7 +85,6 @@ const PaginationContext = createContext<BasePaginationProps>({});
  * <Pagination currentPage={1} pageCount={5} onChange={handleOnChange} />
  */
 export function Pagination({
-  children,
   classNames,
   currentPage = 1,
   pageCount,
@@ -97,10 +96,14 @@ export function Pagination({
       <nav
         {...rest}
         className={container({ className: classNames?.container })}
-        aria-label='pagination'
+        aria-label={`pagination, page ${currentPage} of ${pageCount}`}
       >
         <Pagination.Previous
-          onPress={() => onChange?.(currentPage - 1)}
+          onPress={() => {
+            if (currentPage > 1) {
+              onChange?.(currentPage - 1);
+            }
+          }}
           className={classNames?.controls}
         />
         <Pagination.NumberContainer
@@ -108,7 +111,11 @@ export function Pagination({
           className={classNames?.pages}
         />
         <Pagination.Next
-          onPress={() => onChange?.(currentPage + 1)}
+          onPress={() => {
+            if (currentPage < pageCount) {
+              onChange?.(currentPage + 1);
+            }
+          }}
           className={classNames?.controls}
         />
       </nav>
@@ -181,7 +188,7 @@ function PaginationPageNumber({
       isSelected={isSelected}
       className={button({ className })}
       onPress={() => onPress?.()}
-      aria-current='page'
+      aria-current={isSelected ? 'page' : undefined}
     >
       {pageNumber}
     </ToggleButton>
@@ -195,10 +202,14 @@ function PaginationNumberContainer({
 }: PaginationNumberContainerProps) {
   const { pageCount, currentPage } = useContext(PaginationContext);
   if (!(pageCount && currentPage)) {
-    return;
+    return null;
   }
 
   const { minRange, maxRange } = getPaginationRange(pageCount, currentPage);
+
+  if (minRange === 0 || maxRange === 0) {
+    return null;
+  }
 
   return range(minRange, maxRange).map((pageNumber) => (
     <PaginationPageNumber
