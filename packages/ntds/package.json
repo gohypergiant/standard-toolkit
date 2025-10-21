@@ -76,9 +76,10 @@
     "react-dom": "19.0.0"
   },
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "pnpm": ">=9"
   },
+  "packageManager": "pnpm@10.9.0",
   "publishConfig": {
     "access": "public"
   },
