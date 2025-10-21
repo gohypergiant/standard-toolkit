@@ -1,22 +1,21 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/map-toolkit",
   "title": "Accelint Map Toolkit",
-  "version": "0.1.0",
-  "private": false,
-  "license": "Apache-2.0",
+  "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
   "keywords": [
     "deckgl",
     "geospatial",
     "map-tk",
     "maplibre"
   ],
-  "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "owner": "default/pathfinder",
   "subPath": "packages/map-toolkit",
+  "version": "0.1.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "gohypergiant/standard-toolkit",
   "type": "module",
   "files": [
     "./dist/**",
@@ -45,13 +44,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "build-storybook": "pnpm storybook build",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "lint": "pnpm biome lint",
-    "test": "pnpm vitest --dir=src",
-    "test:watch": "pnpm vitest --dir=src --watch",
     "preview": "pnpm storybook dev -p 6006",
-    "build-storybook": "pnpm storybook build"
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
@@ -117,8 +116,6 @@
     "react": "^19.0.0",
     "typescript": "^5.8.3"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
   "publishConfig": {
     "access": "public"
   },

@@ -1,12 +1,12 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/developer-toolkit",
+  "author": "https://hypergiant.com",
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
+  "repository": "gohypergiant/standard-toolkit",
+  "type": "module",
   "scripts": {
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
@@ -16,10 +16,10 @@
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version && pnpm run constellation-tracker",
     "clean": "pnpm run clean:dist && pnpm run clean:buildinfo && pnpm run clean:turbo && pnpm run clean:pnpm && pnpm run clean:cov && pnpm run clean:deps",
+    "clean:buildinfo": "pnpm exec find . -name 'tsconfig.tsbuildinfo' -delete",
     "clean:cov": "pnpm -r exec rimraf coverage && exec pnpm rimraf coverage",
     "clean:deps": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
     "clean:dist": "pnpm -r exec rimraf dist",
-    "clean:buildinfo": "pnpm exec find . -name 'tsconfig.tsbuildinfo' -delete",
     "clean:pnpm": "pnpm rimraf pnpm-lock.yaml",
     "clean:turbo": "pnpm -r exec  rimraf .turbo && exec pnpm rimraf .turbo",
     "constellation-tracker": "turbo constellation-tracker",
@@ -55,8 +55,6 @@
     "turbo": "2.5.8",
     "zx": "8.1.9"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "engines": {
     "node": ">=18",
@@ -79,6 +77,5 @@
   },
   "pnpmOverridesReasons": {
     "undici": "https://github.com/nodejs/undici/issues/4374 (No support for Node 18)"
-  },
-  "type": "module"
+  }
 }
