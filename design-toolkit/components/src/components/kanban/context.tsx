@@ -10,7 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { createContext, type ReactNode, useCallback, useContext } from 'react';
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { KanbanCardData, KanbanColumnData } from './types';
 
@@ -134,25 +140,27 @@ const KanbanContext = createContext<KanbanContextData>({
   getColumnById: () => undefined,
 });
 
-const findCard = (
-  columns: KanbanColumnData[],
-  cardId: string,
-): { column: KanbanColumnData; card: KanbanCardData; index: number } | null => {
-  for (const column of columns) {
-    const index = column.cards.findIndex((c) => c.id === cardId);
-    const card = column.cards[index];
-    if (index !== -1 && card) {
-      return { column, card, index };
-    }
-  }
-  return null;
-};
-
 export const KanbanProvider = ({
   children,
   columns,
   updateColumnState,
 }: KanbanProviderProps) => {
+  // Create a lookup map for O(1) card access
+  const cardMap = useMemo(() => {
+    const map = new Map<
+      string,
+      { column: KanbanColumnData; card: KanbanCardData; index: number }
+    >();
+
+    columns.forEach((column) => {
+      column.cards.forEach((card, index) => {
+        map.set(card.id, { column, card, index });
+      });
+    });
+
+    return map;
+  }, [columns]);
+
   const moveCard = useCallback(
     (
       cardId: string,
@@ -163,7 +171,7 @@ export const KanbanProvider = ({
       const newColumns = [...columns];
 
       // Find source card
-      const source = findCard(newColumns, cardId);
+      const source = cardMap.get(cardId);
       if (!source) {
         return;
       }
@@ -220,7 +228,7 @@ export const KanbanProvider = ({
 
       updateColumnState(updatedColumns);
     },
-    [columns, updateColumnState],
+    [columns, updateColumnState, cardMap],
   );
 
   const getColumnById = useCallback(
