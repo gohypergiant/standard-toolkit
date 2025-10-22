@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { memo, useContext, type Key } from 'react';
+import { memo, useContext } from 'react';
 import {
   type Path,
   type RuleProps,
