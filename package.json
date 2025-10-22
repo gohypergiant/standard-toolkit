@@ -5,7 +5,10 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "repository": "gohypergiant/standard-toolkit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "type": "module",
   "scripts": {
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
