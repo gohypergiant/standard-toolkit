@@ -2,4 +2,4 @@
 "@accelint/map-toolkit": minor
 ---
 
-Adds ViewportScale component & widget
+Adds ViewportScale hook, component, & widget
