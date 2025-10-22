@@ -1,22 +1,21 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/map-toolkit",
   "title": "Accelint Map Toolkit",
-  "version": "0.1.0",
-  "private": false,
-  "license": "Apache-2.0",
+  "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
   "keywords": [
     "deckgl",
     "geospatial",
     "map-tk",
     "maplibre"
   ],
-  "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "owner": "default/pathfinder",
   "subPath": "packages/map-toolkit",
+  "version": "0.1.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "gohypergiant/standard-toolkit",
   "type": "module",
   "files": [
     "./dist/**",
@@ -45,13 +44,16 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "build-storybook": "pnpm storybook build",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "lint": "pnpm biome lint",
-    "test": "pnpm vitest --dir=src",
-    "test:watch": "pnpm vitest --dir=src --watch",
     "preview": "pnpm storybook dev -p 6006",
-    "build-storybook": "pnpm storybook build"
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
+  },
+  "dependencies": {
+    "@types/react-dom": "19.1.11"
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
@@ -60,14 +62,14 @@
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@deck.gl/core": "9.1.14",
-    "@deck.gl/extensions": "9.1.14",
-    "@deck.gl/geo-layers": "9.1.14",
-    "@deck.gl/layers": "9.1.14",
-    "@deck.gl/mapbox": "9.1.14",
-    "@deck.gl/mesh-layers": "9.1.14",
-    "@deck.gl/widgets": "9.1.14",
-    "@deckgl-fiber-renderer/dom": "1.4.0",
+    "@deck.gl/core": "^9.1.14",
+    "@deck.gl/extensions": "^9.1.14",
+    "@deck.gl/geo-layers": "^9.1.14",
+    "@deck.gl/layers": "^9.1.14",
+    "@deck.gl/mapbox": "^9.1.14",
+    "@deck.gl/mesh-layers": "^9.1.14",
+    "@deck.gl/widgets": "^9.1.14",
+    "@deckgl-fiber-renderer/dom": "^1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",
     "@storybook/addon-actions": "^8.6.14",
@@ -83,21 +85,21 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.1.9",
+    "@types/react": "19.1.13",
     "client-only": "^0.0.1",
-    "esbuild-fix-imports-plugin": "1.0.21",
+    "esbuild-fix-imports-plugin": "^1.0.23",
     "maplibre-gl": "^5.7.1",
-    "milsymbol": "3.0.2",
+    "milsymbol": "^3.0.2",
     "mjolnir.js": "^3.0.0",
-    "node-fetch": "2.6.7",
-    "react": "^19.0.0",
+    "node-fetch": "^2.6.7",
+    "react": "19.0.0",
     "storybook": "^8.6.14",
     "tailwindcss": "^4.1.11",
     "tsup": "8.5.0",
-    "typescript": "^5.8.3",
+    "typescript": "5.8.3",
     "vite": "^5.4.9",
-    "vitest": "2.1.3",
-    "vitest-broadcast-channel-mock": "0.1.0"
+    "vitest": "^2.1.9",
+    "vitest-broadcast-channel-mock": "^0.1.0"
   },
   "optionalDependencies": {
     "@accelint/bus": "workspace:*",
@@ -114,11 +116,9 @@
     "maplibre-gl": "^5.7.1",
     "milsymbol": "3.0.2",
     "mjolnir.js": "^3.0.0",
-    "react": "^19.0.0",
-    "typescript": "^5.8.3"
+    "react": "19.0.0",
+    "typescript": "5.8.3"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
   "publishConfig": {
     "access": "public"
   },

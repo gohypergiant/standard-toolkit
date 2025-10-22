@@ -1,20 +1,19 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/biome-config",
   "title": "Biome Configuration",
-  "version": "1.0.1",
-  "private": false,
-  "license": "Apache-2.0",
+  "description": "The shared Biome configuration used across Accelint projects.",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
   "keywords": [
     "dev-tk",
     "tooling"
   ],
-  "description": "The shared Biome configuration used across Accelint projects.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "owner": "default/pathfinder",
   "subPath": "tooling/biome-config",
+  "version": "1.0.1",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "gohypergiant/standard-toolkit",
   "type": "module",
   "files": [
     "./analyzer.json",
@@ -34,8 +33,6 @@
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
   "publishConfig": {
     "access": "public"
   },

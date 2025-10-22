@@ -1,22 +1,21 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/icons",
   "title": "Accelint Icons",
+  "description": "An open-source icon library to serve as part of the entire ecosystem of UX for Accelint.",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
+  "keywords": [
+    "design-tk",
+    "tooling",
+    "ui"
+  ],
+  "subPath": "design-toolkit/icons",
   "version": "2.0.4",
   "private": false,
   "license": "Apache-2.0",
-  "keywords": [
-    "design-tk",
-    "ui",
-    "tooling"
-  ],
-  "description": "An open-source icon library to serve as part of the entire ecosystem of UX for Accelint.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
+  "repository": "gohypergiant/standard-toolkit",
   "type": "module",
-  "owner": "default/pathfinder",
-  "subPath": "design-toolkit/icons",
   "files": [
     "./dist/**",
     "./catalog-info.yaml"
@@ -42,29 +41,27 @@
   "scripts": {
     "build": "pnpm generate:icons && pnpm license && pnpm format && pnpm tsup",
     "constellation-tracker": "constellation-tracker",
-    "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
     "format": "pnpm biome check --linter-enabled=false . --write",
+    "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
     "license": "pnpm zx ../../scripts/license.mjs --files src/icons"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
-  "publishConfig": {
-    "access": "public"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@svgr/cli": "8.1.0",
-    "@types/react": "19.1.2",
-    "@types/react-dom": "19.1.2",
-    "esbuild-fix-imports-plugin": "1.0.21",
+    "@svgr/cli": "^8.1.0",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.11",
+    "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0"
   },
-  "dependencies": {}
+  "peerDependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,12 +1,12 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/developer-toolkit",
+  "author": "https://hypergiant.com",
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
+  "repository": "gohypergiant/standard-toolkit",
+  "type": "module",
   "scripts": {
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
@@ -16,15 +16,16 @@
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version && pnpm run constellation-tracker",
     "clean": "pnpm run clean:dist && pnpm run clean:buildinfo && pnpm run clean:turbo && pnpm run clean:pnpm && pnpm run clean:cov && pnpm run clean:deps",
+    "clean:buildinfo": "pnpm exec find . -name 'tsconfig.tsbuildinfo' -delete",
     "clean:cov": "pnpm -r exec rimraf coverage && exec pnpm rimraf coverage",
     "clean:deps": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
     "clean:dist": "pnpm -r exec rimraf dist",
-    "clean:buildinfo": "pnpm exec find . -name 'tsconfig.tsbuildinfo' -delete",
     "clean:pnpm": "pnpm rimraf pnpm-lock.yaml",
     "clean:turbo": "pnpm -r exec  rimraf .turbo && exec pnpm rimraf .turbo",
     "constellation-tracker": "turbo constellation-tracker",
     "deps:format-packages": "pnpm syncpack format",
     "deps:mismatch-fix": "pnpm syncpack fix-mismatches",
+    "deps:postinstall": "pnpm run deps:mismatch-fix && pnpm run deps:format-packages",
     "deps:version-major": "pnpm taze major -r",
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",
@@ -34,26 +35,26 @@
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
     "lint:fs": "pnpm ls-lint",
+    "postinstall": "pnpm run deps:postinstall",
+    "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
   "dependencies": {
     "@accelint/biome-config": "workspace:*",
-    "@babel/parser": "7.25.8",
-    "@biomejs/biome": "2.2.3",
-    "@changesets/changelog-git": "0.2.0",
-    "@changesets/cli": "2.27.9",
-    "@ls-lint/ls-lint": "2.3.0-beta.1",
-    "@swc/core": "1.7.36",
-    "lefthook": "1.9.3",
-    "rimraf": "5.0.10",
-    "syncpack": "13.0.0",
-    "taze": "0.17.2",
-    "tsx": "4.19.1",
-    "turbo": "2.5.8",
-    "zx": "8.1.9"
+    "@babel/parser": "^7.25.8",
+    "@biomejs/biome": "^2.2.4",
+    "@changesets/changelog-git": "^0.2.0",
+    "@changesets/cli": "^2.27.9",
+    "@ls-lint/ls-lint": "^2.3.1",
+    "@swc/core": "^1.7.36",
+    "lefthook": "^1.9.3",
+    "rimraf": "^5.0.10",
+    "syncpack": "^13.0.4",
+    "taze": "^0.17.2",
+    "tsx": "^4.20.5",
+    "turbo": "^2.5.8",
+    "zx": "^8.1.9"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "engines": {
     "node": ">=18",
@@ -76,6 +77,5 @@
   },
   "pnpmOverridesReasons": {
     "undici": "https://github.com/nodejs/undici/issues/4374 (No support for Node 18)"
-  },
-  "type": "module"
+  }
 }

@@ -1,20 +1,19 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/formatters",
   "title": "Accelint Formatters",
-  "version": "0.1.6",
-  "private": false,
-  "license": "Apache-2.0",
+  "description": "A set of useful formatting functions for enhancing readability and consistency in your applications.",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
   "keywords": [
     "dev-tk",
     "tooling"
   ],
-  "description": "A set of useful formatting functions for enhancing readability and consistency in your applications.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "owner": "default/pathfinder",
   "subPath": "packages/formatters",
+  "version": "0.1.6",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "gohypergiant/standard-toolkit",
   "type": "module",
   "files": [
     "./dist/**",
@@ -49,19 +48,17 @@
     "index": "pnpm zx ../../scripts/indexer.mjs packages/formatters",
     "lint": "pnpm biome lint"
   },
+  "dependencies": {
+    "typescript": "5.8.3"
+  },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "esbuild-fix-imports-plugin": "1.0.21",
+    "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0",
-    "vitest": "2.1.3"
+    "vitest": "^2.1.9"
   },
-  "dependencies": {
-    "typescript": "^5.8.3"
-  },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
   "publishConfig": {
     "access": "public"
   },

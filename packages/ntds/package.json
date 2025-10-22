@@ -1,20 +1,19 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/ntds",
   "title": "Accelint NTDS",
-  "version": "0.2.1",
-  "private": false,
-  "license": "Apache-2.0",
+  "description": "An NTDS-compliant offering of a set of SVG Icon Components with fill color inputs for general usage, and a spritesheet for icons to be used in the COP.",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
   "keywords": [
     "dev-tk",
     "tooling"
   ],
-  "description": "An NTDS-compliant offering of a set of SVG Icon Components with fill color inputs for general usage, and a spritesheet for icons to be used in the COP.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "owner": "default/pathfinder",
   "subPath": "packages/ntds",
+  "version": "0.2.1",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "gohypergiant/standard-toolkit",
   "type": "module",
   "files": [
     "./dist/**",
@@ -49,10 +48,10 @@
     "constellation-tracker": "constellation-tracker",
     "copy": "pnpm copy:spritesheets",
     "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
-    "license": "pnpm zx ../../scripts/license.mjs --files src",
     "dev": "pnpm tsc --watch",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
     "format": "pnpm biome check --linter-enabled=false . --write",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
+    "license": "pnpm zx ../../scripts/license.mjs --files src",
     "lint": "pnpm biome lint"
   },
   "devDependencies": {
@@ -61,29 +60,27 @@
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
-    "@types/node": "20",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
-    "esbuild-fix-imports-plugin": "1.0.21",
+    "@types/node": "^24.9.0",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.11",
+    "esbuild-fix-imports-plugin": "^1.0.23",
     "lodash": "^4.17.21",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "tsup": "8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "5.8.3"
   },
   "peerDependencies": {
     "lodash": "^4.17.21",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false,
   "engines": {
     "node": ">=18",
     "pnpm": ">=9"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
 }

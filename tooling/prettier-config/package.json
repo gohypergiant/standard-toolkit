@@ -1,20 +1,19 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/prettier-config",
   "title": "Prettier Configuration",
-  "version": "0.1.3",
-  "private": false,
-  "license": "Apache-2.0",
+  "description": "The shared Prettier configuration used across Accelint projects.",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
   "keywords": [
     "dev-tk",
     "tooling"
   ],
-  "description": "The shared Prettier configuration used across Accelint projects.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "owner": "default/pathfinder",
   "subPath": "tooling/prettier-config",
+  "version": "0.1.3",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "gohypergiant/standard-toolkit",
   "type": "module",
   "files": [
     "./catalog-info.yaml",
@@ -26,8 +25,6 @@
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "$schema": "https://json.schemastore.org/package",
-  "author": "https://hypergiant.com",
   "publishConfig": {
     "access": "public"
   },
