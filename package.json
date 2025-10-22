@@ -25,7 +25,7 @@
     "clean:dist": "pnpm -r exec rimraf dist",
     "clean:pnpm": "pnpm rimraf pnpm-lock.yaml",
     "clean:turbo": "pnpm -r exec  rimraf .turbo && exec pnpm rimraf .turbo",
-    "constellation-tracker": "turbo constellation-tracker",
+    "constellation-tracker": "turbo constellation-tracker -- --regenerate",
     "deps:format-packages": "pnpm syncpack format",
     "deps:mismatch-fix": "pnpm syncpack fix-mismatches",
     "deps:postinstall": "pnpm run deps:mismatch-fix && pnpm run deps:format-packages",
