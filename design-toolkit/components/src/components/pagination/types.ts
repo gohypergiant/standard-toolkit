@@ -15,6 +15,7 @@ import type { PropsWithChildren } from 'react';
 export type BasePaginationProps = PropsWithChildren & {
   pageCount: number;
   currentPage: number;
+  isLoading?: boolean;
   classNames?: {
     container?: string;
     controls?: string;
@@ -29,6 +30,7 @@ export type PaginationNavProps = {
 };
 
 export type PageNumberContainerProps = {
+  isLoading?: boolean;
   className?: string;
   onPress?: (pageNumber: number) => void;
 };

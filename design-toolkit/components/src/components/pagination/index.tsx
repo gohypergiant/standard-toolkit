@@ -33,8 +33,14 @@ const { container, button } = PaginationStyles();
 const DEFAULT_MIN_RANGE = 1;
 const DEFAULT_MAX_RANGE = 5;
 
-// Return min max range for visible pages. As per our design, we limit
-// the range of numbers to a spread of 5 maximum, getting the lower and upper bounds.
+/**
+ * Return min max range for visible pages. As per our design, we limit
+ * the range of numbers to a spread of 5 maximum, getting the lower and upper bounds.
+ *
+ * @param pageCount - total page count
+ * @param currentPage - current page
+ * @returns - Range of 1 to 5 numbers.
+ */
 export function getPaginationRange(
   pageCount: number,
   currentPage: number,
@@ -86,12 +92,21 @@ const PaginationContext = createContext<BasePaginationProps>({
  *
  * @example
  * <Pagination currentPage={1} pageCount={5} onChange={handleOnChange} />
+ *
+ * @param currentPage - represents currently selected page number
+ * @param pageCount - total number of pages
+ * @param onChange - (page: number) => void, handler for button press events
+ * @param classNames - group of styling applied to components
+ *    * container - <nav> container for component
+ *    * controls - navigation controls, previous/next
+ *    * pages - buttons for page numbers
  */
 export function Pagination({
   classNames,
   currentPage = 1,
   pageCount,
   onChange,
+  isLoading = false,
   ...rest
 }: BasePaginationProps) {
   return (
@@ -112,6 +127,7 @@ export function Pagination({
         <Pagination.NumberContainer
           onPress={(nextPage) => onChange?.(nextPage)}
           className={classNames?.pages}
+          isLoading={isLoading}
         />
         <Pagination.Next
           onPress={() => {
@@ -207,11 +223,12 @@ function PaginationPageNumber({
 PaginationPageNumber.displayName = 'Pagination.PageNumber';
 
 function PaginationNumberContainer({
+  isLoading,
   onPress,
   className,
 }: PaginationNumberContainerProps) {
   const { pageCount, currentPage } = useContext(PaginationContext);
-  if (!(pageCount && currentPage)) {
+  if (!(pageCount && currentPage) || isLoading) {
     return null;
   }
 
