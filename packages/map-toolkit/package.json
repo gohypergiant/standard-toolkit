@@ -55,9 +55,6 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
-  "dependencies": {
-    "@types/react-dom": "19.1.11"
-  },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
@@ -90,6 +87,7 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.9.0",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.13",
     "client-only": "^0.0.1",
