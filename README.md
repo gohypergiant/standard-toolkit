@@ -29,18 +29,18 @@ Given a version number MAJOR.MINOR.PATCH, the meanings of each number changing f
 
 ## 🔍 License
 
-Licensed under [Apache] License v2.0. Read the [license instructions](LICENSE) if you are interested in contributing or using any of the packages.
+Licensed under [Apache License v2.0]. Read the [license instructions](LICENSE) if you are interested in contributing or using any of the packages.
 
 ## 🚀 Attributions
 
-Development Toolkit (DevTK) is sponsored by: [Hypergiant] (GitHub [@gohypergiant][go]) an [Accelint] company.
+Development Toolkit (DevTK) is sponsored by: [Hypergiant] ([GitHub @gohypergiant]) an [Accelint] company.
 
 ## 🔔 Disclaimer
 
 Standard Toolkit is currently only intended for usage within the Accelint family of systems. Contributions are more than welcome but please consider that this project may not fit your needs.
 
 [Accelint]: https://accelint.com
-[Apache 2]: https://www.apache.org/licenses/LICENSE-2.0
-[Docs]: https://standard-toolkit.accelint.dev/ 
-[Github]: https://github.com/gohypergiant
+[Apache License v2.0]: https://www.apache.org/licenses/LICENSE-2.0
+[Docs]: https://standard-toolkit.accelint.dev/
+[Github @gohypergiant]: https://github.com/gohypergiant
 [Hypergiant]: https://hypergiant.com
