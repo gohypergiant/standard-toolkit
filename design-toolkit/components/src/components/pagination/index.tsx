@@ -75,7 +75,10 @@ export function getPaginationRange(
   return { minRange: DEFAULT_MIN_RANGE, maxRange: DEFAULT_MAX_RANGE };
 }
 
-const PaginationContext = createContext<BasePaginationProps>({});
+const PaginationContext = createContext<BasePaginationProps>({
+  currentPage: 0,
+  pageCount: 0,
+});
 
 /**
  *
@@ -143,7 +146,9 @@ function PaginationPrevious({ className, onPress }: PaginationNavProps) {
       color='accent'
       variant='icon'
       className={button({ className })}
-      isDisabled={currentPage === 1 || !pageCount || pageCount < 1}
+      isDisabled={
+        currentPage === 1 || !pageCount || pageCount < 1 || currentPage < 1
+      }
       onPress={() => onPress?.()}
       aria-label='pagination-previous'
     >
@@ -162,7 +167,12 @@ function PaginationNext({ className, onPress }: PaginationNavProps) {
     <Button
       color='accent'
       variant='icon'
-      isDisabled={currentPage === pageCount || !pageCount || pageCount < 1}
+      isDisabled={
+        currentPage === pageCount ||
+        !pageCount ||
+        pageCount < 1 ||
+        currentPage < 1
+      }
       onPress={() => onPress?.()}
       className={button({ className })}
       aria-label='pagination-next'
@@ -207,6 +217,7 @@ function PaginationNumberContainer({
 
   const { minRange, maxRange } = getPaginationRange(pageCount, currentPage);
 
+  // No display for invalid props.
   if (minRange === 0 || maxRange === 0) {
     return null;
   }

@@ -86,8 +86,20 @@ describe('Pagination', () => {
     expect(navContainer?.children.length).toEqual(3);
   });
 
-  it('should show empty component on empty pageCount', () => {
-    setup({ currentPage: 0, pageCount: 0, onChange: vi.fn() });
+  it('should show empty component on pageCount < 1', () => {
+    setup({ currentPage: 1, pageCount: 0, onChange: vi.fn() });
+    const navContainer = document.querySelector('nav');
+    expect(navContainer?.childNodes.length).toEqual(2);
+  });
+
+  it('should show empty component on currentPage < 1', () => {
+    setup({ currentPage: -3, pageCount: 5, onChange: vi.fn() });
+    const navContainer = document.querySelector('nav');
+    expect(navContainer?.childNodes.length).toEqual(2);
+  });
+
+  it('should show empty component on currentPage > pageCount', () => {
+    setup({ currentPage: 6, pageCount: 5, onChange: vi.fn() });
     const navContainer = document.querySelector('nav');
     expect(navContainer?.childNodes.length).toEqual(2);
   });
