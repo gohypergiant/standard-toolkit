@@ -6,6 +6,7 @@
     "peer",
     "overrides"
   ],
+  "formatRepository": false,
   "semverGroups": [
     {
       "dependencies": [
