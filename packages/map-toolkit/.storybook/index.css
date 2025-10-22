@@ -11,8 +11,8 @@
  */
 
 @import "tailwindcss";
-@import "@accelint/design-toolkit/styles";
-@source "../node_modules/@accelint/design-toolkit";
+/* @import "@accelint/design-toolkit/styles";
+@source "../node_modules/@accelint/design-toolkit"; */
 
 html {
   overflow: hidden;

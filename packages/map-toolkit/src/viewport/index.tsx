@@ -33,10 +33,15 @@ export type UseViewportStateProps = {
 };
 
 const viewportStore = new Map<string, MapViewportPayload>();
+const defaultSnapshot = {};
 
-function defaultSubscription(onStoreChange: () => void, viewId: string) {
+const defaultSubscription = (viewId: string) => (onStoreChange: () => void) => {
   const handler = (e: MapViewportEvent) => {
     if (viewId === e.payload.id) {
+      /**
+       * onStoreChange just tells react to run "getSnapshot". We can't pass anything
+       * to that function directly from here, so we need to store the value somewhere that it can grab it.
+       */
       viewportStore.set(viewId, e.payload);
       onStoreChange();
     }
@@ -45,27 +50,35 @@ function defaultSubscription(onStoreChange: () => void, viewId: string) {
   const unsub = bus.on(MapEvents.viewport, handler);
 
   return unsub;
-}
+};
 
-function getViewportSnapshot(viewId: string): MapViewportPayload {
-  return viewportStore.get(viewId) ?? {};
-}
+/**
+ * The object returned gets equality checked, so it needs to be stable or react blows up.
+ */
+const defaultViewportSnapshot = (viewId: string) => (): MapViewportPayload => {
+  return viewportStore.get(viewId) ?? defaultSnapshot;
+};
 
+/**
+ * A thin wrapper around [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore).
+ * If you pass in a custom subscribe/getSnapshot you are in full control, otherwise the hook will subscribe to map:viewport
+ * events from the Bus.
+ *
+ * @param {string} viewId - The id of the subscribed viewport.
+ *
+ * @example
+ *
+ * const { bounds, id, latitude, longitude, zoom } = useViewportState({ viewId: 'default' });
+ */
 export function useViewportState({
   viewId,
   subscribe,
   getSnapshot,
   getServerSnapshot,
 }: UseViewportStateProps) {
-  const subscribeFn =
-    subscribe ??
-    ((onStoreChange) => defaultSubscription(onStoreChange, viewId));
-
-  const getSnapshotFn = getSnapshot ?? (() => getViewportSnapshot(viewId));
-
   const viewState = useSyncExternalStore<MapViewportPayload>(
-    subscribeFn,
-    getSnapshotFn,
+    subscribe ?? defaultSubscription(viewId),
+    getSnapshot ?? defaultViewportSnapshot(viewId),
     getServerSnapshot,
   );
 
@@ -73,21 +86,24 @@ export function useViewportState({
 }
 
 export type ViewportScaleProps = ComponentProps<'span'> & {
+  viewId: string;
   unit?: AllowedUnit;
 };
 
 /**
  * A span with the currend viewport bounds, i.e. `660 x 1,801 NMI`
  * @param {Object} props - Extends `<span>` props
+ * @param {string} props.viewId - The id of the view to subscribe to.
  * @param {string} props.unit - Measure of distance, `km | m | nmi | mi | ft`. Defaults to `nmi`
  * @param {string} props.className - styles
  */
 export function ViewportScale({
-  unit,
+  viewId,
+  unit = 'nmi',
   className,
   ...rest
 }: ViewportScaleProps) {
-  const { bounds } = useViewportState({ viewId: 'default ' });
+  const { bounds } = useViewportState({ viewId });
   const scale = getViewportScale({ bounds, unit });
 
   return (

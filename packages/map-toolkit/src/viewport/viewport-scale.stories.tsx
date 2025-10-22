@@ -15,7 +15,7 @@ import { ViewportSyncWidget } from '../deckgl/widgets/viewport-sync';
 import { ViewportScale as ViewportScaleComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
-const WIDGETS = [new ViewportSyncWidget({ id: 'viewport-sync' })];
+const WIDGETS = [new ViewportSyncWidget({ id: 'default' })];
 
 const meta: Meta = {
   title: 'DeckGL',
@@ -32,7 +32,10 @@ export const ViewportScale: Story = {
   render: () => {
     return (
       <div>
-        <ViewportScaleComponent className='absolute right-4 bottom-4 bg-gray-400 p-4' />
+        <ViewportScaleComponent
+          viewId='default'
+          className='absolute right-4 bottom-4 bg-gray-400 p-4'
+        />
         <BaseMap
           interleaved={false} // setting it to true breaks the widget somehow, may be a Storybook specific bug
           widgets={WIDGETS}
