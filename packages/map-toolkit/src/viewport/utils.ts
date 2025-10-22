@@ -17,7 +17,7 @@ import type { GetViewportScaleArgs } from './types';
 const numberFormatter = Intl.NumberFormat('en-US');
 
 /**
- * Returns a formatter viewport bt i.e. `660 x 1,801 NMI`
+ * Returns a formatter viewport scale string i.e. `660 x 1,801 NMI`
  * @param {Object} args
  * @param {Object} args.bounds - 4 number tuple, i.e. `[-82, 22, -71, 52]`
  * @param {string} args.unit - Measure of distance, `km | m | nmi | mi | ft`. Defaults to `nmi`

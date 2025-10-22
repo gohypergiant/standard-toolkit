@@ -15,7 +15,7 @@ const WIDGETS = [new ViewportSyncWidget({ id: 'viewport-sync' })];
 export function MapView() {
   return (
     <>
-      <ViewportScale className='absolute right-4 bottom-4 bg-gray-400 p-4' />
+      <ViewportScale viewId="default" className='absolute right-4 bottom-4 bg-gray-400 p-4' />
       <BaseMap widgets={WIDGETS} className="w-full h-full">
     </>
   )
