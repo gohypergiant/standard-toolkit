@@ -25,6 +25,12 @@ import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
 import type { InputProps } from '../input/types';
 import type { QueryBuilderValueEditors } from './types';
+import { ValueEditorStyles } from './styles';
+
+const {
+  textField,
+  textFieldError,
+} = ValueEditorStyles();
 
 function CheckboxValueEditor({
   disabled,
@@ -149,6 +155,7 @@ function TextValueEditor({
       aria-label={name}
       aria-labelledby={name}
       errorMessage={reasons?.join('/n')}
+      classNames={{field: textField(), error: textFieldError()}}
     />
   );
 }
