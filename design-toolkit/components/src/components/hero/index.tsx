@@ -23,8 +23,7 @@ import {
   TextContext,
   useContextProps,
 } from 'react-aria-components';
-import { containsExactChildren } from '@/lib/react';
-import { Icon, IconContext } from '../icon';
+import { IconContext } from '../icon';
 import { HeroStyles } from './styles';
 import type { HeroProps } from './types';
 
@@ -67,16 +66,6 @@ export function Hero({ ref, ...props }: HeroProps) {
   [props, ref] = useContextProps(props, ref ?? null, HeroContext);
 
   const { children, classNames, compact, ...rest } = props;
-
-  containsExactChildren({
-    children,
-    componentName: Hero.displayName,
-    restrictions: [
-      [Icon, { min: 1, max: 1 }],
-      [Hero.Title, { min: 1, max: 1 }],
-      [Hero.Subtitle, { min: 0 }],
-    ],
-  });
 
   return (
     <Provider

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "pnpm run build:typedoc && pnpm run build:docusaurus",
-    "build:docusaurus": "docusaurus build",
     "build:contributing": "mv ./content/api/_media/CONTRIBUTING.md ./content/CONTRIBUTING.md",
+    "build:docusaurus": "docusaurus build",
     "build:license": "mv ./content/api/_media/LICENSE ./content/LICENSE.md",
     "build:typedoc": "typedoc && pnpm run build:contributing && pnpm run build:license",
     "clear": "docusaurus clear",
@@ -24,26 +24,26 @@
     "@accelint/predicates": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
-    "@biomejs/biome": "2.2.3",
-    "@codesandbox/sandpack-react": "2.20.0",
-    "@docusaurus/core": "3.9.1",
-    "@docusaurus/module-type-aliases": "3.9.1",
-    "@docusaurus/preset-classic": "3.9.1",
-    "@docusaurus/theme-common": "3.9.1",
-    "@docusaurus/theme-live-codeblock": "3.9.1",
-    "@docusaurus/tsconfig": "3.9.1",
-    "@docusaurus/types": "3.9.1",
-    "@easyops-cn/docusaurus-search-local": "0.52.1",
-    "@mdx-js/react": "3.0.0",
-    "clsx": "2.0.0",
-    "prism-react-renderer": "2.3.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "rehype-katex": "7",
-    "remark-math": "6",
+    "@biomejs/biome": "^2.2.4",
+    "@codesandbox/sandpack-react": "^2.20.0",
+    "@docusaurus/core": "^3.9.2",
+    "@docusaurus/module-type-aliases": "^3.9.2",
+    "@docusaurus/preset-classic": "^3.9.2",
+    "@docusaurus/theme-common": "^3.9.2",
+    "@docusaurus/theme-live-codeblock": "^3.9.2",
+    "@docusaurus/tsconfig": "^3.9.2",
+    "@docusaurus/types": "^3.9.2",
+    "@easyops-cn/docusaurus-search-local": "^0.52.1",
+    "@mdx-js/react": "^3.0.0",
+    "clsx": "^2.1.1",
+    "prism-react-renderer": "^2.3.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "rehype-katex": "^7",
+    "remark-math": "^6",
     "typedoc": "^0.28.8",
-    "typedoc-plugin-markdown": "^4.7.1",
-    "typescript": "^5.8.3"
+    "typedoc-plugin-markdown": "^4.8.1",
+    "typescript": "5.8.3"
   },
   "browserslist": {
     "production": [
@@ -58,6 +58,6 @@
     ]
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   }
 }
