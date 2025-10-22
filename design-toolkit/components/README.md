@@ -31,6 +31,7 @@ pnpm --filter "*apps/next" run dev
 ```
 
 ## Helpful extensions for VSCode
+
 If you use Visual Studio Code, there are some helpful extensions you can install when working with Tailwind and Biome.
 
 - [`Biome`](https://marketplace.visualstudio.com/items/?itemName=biomejs.biome)
@@ -38,6 +39,7 @@ If you use Visual Studio Code, there are some helpful extensions you can install
 - [`Class Collapse`](https://marketplace.visualstudio.com/items/?itemName=Etsi0.class-collapse)
 
 Also add the following to your `settings.json` file for VSCode:
+
 ```json
     "editor.codeActionsOnSave": {
         "quickfix.biome": "explicit"
