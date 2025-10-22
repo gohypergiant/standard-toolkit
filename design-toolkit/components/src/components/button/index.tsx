@@ -23,8 +23,10 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
-import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
+
+import './styles.css';
+import clsx from 'clsx';
 
 export const ButtonContext =
   createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
@@ -88,10 +90,16 @@ export function Button({ ref, ...props }: ButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          ButtonStyles({
+          clsx(
+            'button',
+            {
+              'button-filled': variant === 'filled',
+              'button-outline': variant === 'outline',
+              'button-flat': variant === 'flat',
+              'button-icon': variant === 'icon',
+            },
             className,
-            variant,
-          }),
+          ),
         )}
         data-color={color}
         data-size={size}
@@ -171,10 +179,16 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          LinkButtonStyles({
+          clsx(
+            'link-button',
+            {
+              'link-button-filled': variant === 'filled',
+              'link-button-outline': variant === 'outline',
+              'link-button-flat': variant === 'flat',
+              'link-button-icon': variant === 'icon',
+            },
             className,
-            variant,
-          }),
+          ),
         )}
         data-color={color}
         data-size={size}
@@ -256,10 +270,16 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          ToggleButtonStyles({
+          clsx(
+            'toggle-button',
+            {
+              'toggle-button-filled': variant === 'filled',
+              'toggle-button-outline': variant === 'outline',
+              'toggle-button-flat': variant === 'flat',
+              'toggle-button-icon': variant === 'icon',
+            },
             className,
-            variant,
-          }),
+          ),
         )}
         data-color={color}
         data-size={size}
