@@ -23,8 +23,11 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
-import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
+
+import './styles.css';
+import clsx from 'clsx';
+import { ToggleButtonStyles } from './styles';
 
 export const ButtonContext =
   createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
@@ -88,10 +91,16 @@ export function Button({ ref, ...props }: ButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          ButtonStyles({
+          clsx(
+            'button',
+            {
+              'button-filled': variant === 'filled',
+              'button-outline': variant === 'outline',
+              'button-flat': variant === 'flat',
+              'button-icon': variant === 'icon',
+            },
             className,
-            variant,
-          }),
+          ),
         )}
         data-color={color}
         data-size={size}
@@ -171,10 +180,16 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          LinkButtonStyles({
+          clsx(
+            'button',
+            {
+              'button-filled': variant === 'filled',
+              'button-outline': variant === 'outline',
+              'button-flat': variant === 'flat',
+              'button-icon': variant === 'icon',
+            },
             className,
-            variant,
-          }),
+          ),
         )}
         data-color={color}
         data-size={size}

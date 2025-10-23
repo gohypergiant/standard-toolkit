@@ -11,6 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
+import { useState } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Button, LinkButton, ToggleButton } from './';
@@ -133,4 +134,39 @@ export const Toggle: StoryForToggle = {
       )}
     </ToggleButton>
   ),
+};
+
+export const PerfTest: Story = {
+  args: {
+    color: 'mono-muted',
+    variant: 'flat',
+  },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['outline', 'flat', 'icon'],
+    },
+  },
+  render: (props) => {
+    const [key, setKey] = useState(0);
+
+    return (
+      <div className='flex flex-col gap-l'>
+        <Button
+          variant='outline'
+          onPress={() => setKey((oldKey) => oldKey + 1)}
+        >
+          Rerender
+        </Button>
+        <div key={key} className='grid grid-cols-4 gap-s'>
+          {Array.from({ length: 1000 }, (_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: intentional
+            <Button key={i} {...props}>
+              Button {i}
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
+  },
 };
