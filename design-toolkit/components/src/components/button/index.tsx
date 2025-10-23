@@ -27,6 +27,7 @@ import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
 import './styles.css';
 import clsx from 'clsx';
+import { ToggleButtonStyles } from './styles';
 
 export const ButtonContext =
   createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
@@ -270,16 +271,10 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          clsx(
-            'button toggle-button',
-            {
-              'button-filled toggle-button-filled': variant === 'filled',
-              'button-outline toggle-button-outline': variant === 'outline',
-              'button-flat toggle-button-flat': variant === 'flat',
-              'button-icon toggle-button-icon': variant === 'icon',
-            },
+          ToggleButtonStyles({
             className,
-          ),
+            variant,
+          }),
         )}
         data-color={color}
         data-size={size}

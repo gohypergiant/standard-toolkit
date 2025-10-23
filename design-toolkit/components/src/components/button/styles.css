@@ -4,7 +4,7 @@
 .button {
   @apply flex w-content shrink-0 cursor-pointer items-center justify-center rounded-medium outline outline-transparent;
 
-  &:disabled {
+  &:where([disabled], [data-disabled], :disabled) {
     @apply cursor-not-allowed;
   }
 
@@ -23,199 +23,205 @@
 }
 
 .button-filled {
-  &:disabled {
+  &:where([disabled], [data-disabled], :disabled) {
     @apply fg-disabled bg-interactive-disabled;
   }
 
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-bold bg-interactive-muted;
+  &:where(:not([disabled], [data-disabled]), :enabled) {
+    &:where([data-color="mono-muted"]) {
+      @apply fg-primary-bold bg-interactive-muted;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-primary-muted bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-primary-muted bg-interactive-muted-pressed;
-    }
-  }
 
-  &:where([data-color="mono-bold"]):not([disabled]) {
-    @apply fg-inverse-bold bg-interactive-bold;
+    &:where([data-color="mono-bold"]) {
+      @apply fg-inverse-bold bg-interactive-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-bold-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-bold-hover;
+      }
+      &:active {
+        @apply fg-inverse-muted bg-interactive-bold-pressed;
+      }
     }
-    &:active {
-      @apply fg-inverse-muted bg-interactive-bold-pressed;
-    }
-  }
 
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-a11y-on-accent bg-accent-primary-bold;
+    &:where([data-color="accent"]) {
+      @apply fg-a11y-on-accent bg-accent-primary-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-accent-primary-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-accent-primary-hover;
+      }
+      &:active {
+        @apply fg-accent-primary-bold bg-accent-primary-pressed;
+      }
     }
-    &:active {
-      @apply fg-accent-primary-bold bg-accent-primary-pressed;
-    }
-  }
 
-  &:where([data-color="serious"]):not([disabled]) {
-    @apply fg-a11y-on-utility bg-serious-bold;
+    &:where([data-color="serious"]) {
+      @apply fg-a11y-on-utility bg-serious-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-serious-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-serious-hover;
+      }
+      &:active {
+        @apply fg-serious-bold bg-serious-pressed;
+      }
     }
-    &:active {
-      @apply fg-serious-bold bg-serious-pressed;
-    }
-  }
 
-  &:where([data-color="critical"]):not([disabled]) {
-    @apply fg-a11y-on-utility bg-critical-bold;
+    &:where([data-color="critical"]) {
+      @apply fg-a11y-on-utility bg-critical-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-critical-hover;
-    }
-    &:active {
-      @apply fg-critical-bold bg-critical-pressed;
+      &:hover,
+      &:focus-visible {
+        @apply bg-critical-hover;
+      }
+      &:active {
+        @apply fg-critical-bold bg-critical-pressed;
+      }
     }
   }
 }
 
 .button-outline {
-  &:disabled {
+  &:where([disabled], [data-disabled], :disabled) {
     @apply fg-disabled outline-interactive-disabled;
   }
 
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-bold bg-transparent outline outline-interactive;
+  &:where(:not([disabled], [data-disabled]), :enabled) {
+    &:where([data-color="mono-muted"]) {
+      @apply fg-primary-bold bg-transparent outline outline-interactive;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
-    }
-  }
 
-  &:where([data-color="mono-bold"]):not([disabled]) {
-    @apply fg-primary-bold bg-transparent outline outline-mono-bold;
+    &:where([data-color="mono-bold"]) {
+      @apply fg-primary-bold bg-transparent outline outline-mono-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
-    }
-  }
 
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-primary-bold bg-transparent outline outline-accent-primary-bold;
+    &:where([data-color="accent"]) {
+      @apply fg-primary-bold bg-transparent outline outline-accent-primary-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+      }
+      &:active {
+        @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
+      }
     }
-    &:active {
-      @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
-    }
-  }
 
-  &:where([data-color="serious"]):not([disabled]) {
-    @apply fg-primary-bold bg-transparent outline outline-serious-bold;
+    &:where([data-color="serious"]) {
+      @apply fg-primary-bold bg-transparent outline outline-serious-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-serious-hover outline-2 outline-serious-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-serious-hover outline-2 outline-serious-hover;
+      }
+      &:active {
+        @apply fg-serious-bold bg-serious-pressed outline-2 outline-serious-pressed;
+      }
     }
-    &:active {
-      @apply fg-serious-bold bg-serious-pressed outline-2 outline-serious-pressed;
-    }
-  }
 
-  &:where([data-color="critical"]):not([disabled]) {
-    @apply fg-primary-bold bg-transparent outline outline-critical-bold;
+    &:where([data-color="critical"]) {
+      @apply fg-primary-bold bg-transparent outline outline-critical-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-critical-hover outline-2 outline-critical-hover;
-    }
-    &:active {
-      @apply fg-critical-pressed bg-critical-pressed outline-2 outline-critical-pressed;
+      &:hover,
+      &:focus-visible {
+        @apply bg-critical-hover outline-2 outline-critical-hover;
+      }
+      &:active {
+        @apply fg-critical-pressed bg-critical-pressed outline-2 outline-critical-pressed;
+      }
     }
   }
 }
 
 .button-flat {
-  &:disabled {
+  &:where([disabled], [data-disabled], :disabled) {
     @apply fg-disabled bg-transparent;
   }
 
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-muted;
+  &:where(:not([disabled], [data-disabled]), :enabled) {
+    &:where([data-color="mono-muted"]) {
+      @apply fg-primary-muted;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
 
-  &:where([data-color="mono-bold"]):not([disabled]) {
-    @apply fg-primary-bold;
+    &:where([data-color="mono-bold"]) {
+      @apply fg-primary-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
 
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-accent-primary-bold;
+    &:where([data-color="accent"]) {
+      @apply fg-accent-primary-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-accent-primary-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-accent-primary-hover;
+      }
+      &:active {
+        @apply fg-accent-primary-pressed bg-accent-primary-pressed;
+      }
     }
-    &:active {
-      @apply fg-accent-primary-pressed bg-accent-primary-pressed;
-    }
-  }
 
-  &:where([data-color="serious"]):not([disabled]) {
-    @apply fg-serious-bold;
+    &:where([data-color="serious"]) {
+      @apply fg-serious-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-serious-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-serious-hover;
+      }
+      &:active {
+        @apply fg-serious-pressed bg-serious-pressed;
+      }
     }
-    &:active {
-      @apply fg-serious-pressed bg-serious-pressed;
-    }
-  }
 
-  &:where([data-color="critical"]):not([disabled]) {
-    @apply fg-critical-bold;
+    &:where([data-color="critical"]) {
+      @apply fg-critical-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply fg-a11y-on-accent bg-critical-hover;
-    }
-    &:active {
-      @apply fg-critical-pressed bg-critical-pressed;
+      &:hover,
+      &:focus-visible {
+        @apply fg-a11y-on-accent bg-critical-hover;
+      }
+      &:active {
+        @apply fg-critical-pressed bg-critical-pressed;
+      }
     }
   }
 }
@@ -231,67 +237,69 @@
     @apply min-w-0 rounded-small p-xxs;
   }
 
-  &:disabled {
+  &:where([disabled], [data-disabled], :disabled) {
     @apply fg-disabled bg-transparent;
   }
 
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-muted;
+  &:where(:not([disabled], [data-disabled]), :enabled) {
+    &:where([data-color="mono-muted"]) {
+      @apply fg-primary-muted;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
 
-  &:where([data-color="mono-bold"]):not([disabled]) {
-    @apply fg-primary-bold;
+    &:where([data-color="mono-bold"]) {
+      @apply fg-primary-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
+      &:hover,
+      &:focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
 
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-accent-primary-bold;
+    &:where([data-color="accent"]) {
+      @apply fg-accent-primary-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply fg-accent-primary-hover bg-interactive-muted-hover;
+      &:hover,
+      &:focus-visible {
+        @apply fg-accent-primary-hover bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-accent-primary-pressed bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-accent-primary-pressed bg-interactive-muted-pressed;
-    }
-  }
 
-  &:where([data-color="serious"]):not([disabled]) {
-    @apply fg-serious-bold;
+    &:where([data-color="serious"]) {
+      @apply fg-serious-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply fg-serious-hover bg-interactive-muted-hover;
+      &:hover,
+      &:focus-visible {
+        @apply fg-serious-hover bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-serious-pressed bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-serious-pressed bg-interactive-muted-pressed;
-    }
-  }
 
-  &:where([data-color="critical"]):not([disabled]) {
-    @apply fg-critical-bold;
+    &:where([data-color="critical"]) {
+      @apply fg-critical-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply fg-critical-hover bg-interactive-muted-hover;
-    }
-    &:active {
-      @apply fg-critical-pressed bg-interactive-muted-pressed;
+      &:hover,
+      &:focus-visible {
+        @apply fg-critical-hover bg-interactive-muted-hover;
+      }
+      &:active {
+        @apply fg-critical-pressed bg-interactive-muted-pressed;
+      }
     }
   }
 }
@@ -309,396 +317,69 @@
     @apply min-w-0 p-xxs;
   }
 
-  &:disabled {
+  &:where([disabled], [data-disabled], :disabled) {
     @apply fg-disabled bg-interactive-disabled outline outline-interactive-disabled;
   }
 
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-muted bg-surface-default outline outline-interactive;
+  &:where(:not([disabled], [data-disabled]), :enabled) {
+    &:where([data-color="mono-muted"]) {
+      @apply fg-primary-muted bg-surface-default outline outline-interactive;
 
-    &:hover,
-    &:focus-visible {
-      @apply fg-primary-muted outline-interactive-hover;
+      &:hover,
+      &:focus-visible {
+        @apply fg-primary-muted outline-interactive-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
+
+    &:where([data-color="mono-bold"]) {
+      @apply fg-primary-bold bg-surface-default outline outline-interactive;
+
+      &:hover,
+      &:focus-visible {
+        @apply fg-primary-muted outline-interactive-hover;
+      }
+      &:active {
+        @apply fg-pressed bg-interactive-muted-pressed;
+      }
     }
-  }
 
-  &:where([data-color="mono-bold"]):not([disabled]) {
-    @apply fg-primary-bold bg-surface-default outline outline-interactive;
+    &:where([data-color="accent"]) {
+      @apply fg-accent-primary-bold bg-accent-primary-bold outline outline-accent-primary-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply fg-primary-muted outline-interactive-hover;
+      &:hover,
+      &:focus-visible {
+        @apply fg-accent-primary-hover outline-accent-primary-hover;
+      }
+      &:active {
+        @apply fg-accent-primary-pressed bg-interactive-muted-pressed outline-accent-primary-pressed;
+      }
     }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
+
+    &:where([data-color="serious"]) {
+      @apply fg-serious-bold bg-serious-muted outline outline-serious-bold;
+
+      &:hover,
+      &:focus-visible {
+        @apply fg-serious-hover outline-interactive-hover;
+      }
+      &:active {
+        @apply fg-serious-pressed bg-interactive-muted-pressed outline-serious-pressed;
+      }
     }
-  }
 
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-accent-primary-bold bg-accent-primary-bold outline outline-accent-primary-bold;
+    &:where([data-color="critical"]) {
+      @apply fg-critical-bold bg-critical-muted outline outline-critical-bold;
 
-    &:hover,
-    &:focus-visible {
-      @apply fg-accent-primary-hover outline-accent-primary-hover;
-    }
-    &:active {
-      @apply fg-accent-primary-pressed bg-interactive-muted-pressed outline-accent-primary-pressed;
-    }
-  }
-
-  &:where([data-color="serious"]):not([disabled]) {
-    @apply fg-serious-bold bg-serious-muted outline outline-serious-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-serious-hover outline-interactive-hover;
-    }
-    &:active {
-      @apply fg-serious-pressed bg-interactive-muted-pressed outline-serious-pressed;
-    }
-  }
-
-  &:where([data-color="critical"]):not([disabled]) {
-    @apply fg-critical-bold bg-critical-muted outline outline-critical-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-critical-hover outline-critical-hover;
-    }
-    &:active {
-      @apply fg-critical-pressed bg-interactive-muted-pressed outline-critical-pressed;
-    }
-  }
-}
-
-.toggle-button {
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-accent-primary-bold bg-transparent;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-accent-primary-hover bg-accent-primary-muted;
-    }
-    &:active {
-      @apply fg-accent-primary-bold bg-accent-primary-pressed;
-    }
-  }
-}
-
-.toggle-button-flat {
-  &:disabled {
-    @apply fg-disabled bg-transparent;
-
-    &:where([data-selected]) {
-      @apply fg-disabled bg-interactive-disabled outline outline-interactive-disabled;
-    }
-  }
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-muted bg-transparent;
-
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
-
-  &:where([data-color="mono-muted"][data-selected]):not([disabled]) {
-    @apply fg-primary-muted bg-interactive-muted outline outline-interactive-hover;
-
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover outline-2;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
-    }
-  }
-
-  &:where([data-color="mono-bold"]):not([disabled]) {
-    @apply fg-primary-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed
-    }
-  }
-
-  &:where([data-color="mono-bold"][data-selected]):not([disabled]) {
-    @apply fg-primary-bold outline outline-mono-bold;
-
-    &:hover {
-      @apply fg-hover bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
-    }
-    &:focus-visible {
-      @apply bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
-    }
-  }
-
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-primary-bold bg-transparent;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-accent-primary-hover bg-accent-primary-muted;
-    }
-    &:active {
-      @apply fg-accent-primary-bold bg-accent-primary-pressed;
-    }
-  }
-
-  &:where([data-color="accent"][data-selected]):not([disabled]) {
-    @apply fg-a11y-on-accent bg-accent-primary-bold outline outline-accent-primary-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
-    }
-    &:active {
-      @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
-    }
-  }
-
-  &:where([data-color="serious"]):not([disabled]) {
-    @apply fg-serious-bold bg-transparent;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-serious-hover bg-serious-bold;
-    }
-    &:active {
-      @apply fg-serious-bold bg-serious-pressed;
-    }
-  }
-
-  &:where([data-color="serious"][data-selected]):not([disabled]) {
-    @apply fg-primary-bold bg-serious-muted outline outline-serious-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-primary-bold bg-serious-hover outline-2 outline-serious-hover;
-    }
-    &:active {
-      @apply fg-serious-pressed bg-serious-pressed outline-2 outline-serious-pressed;
-    }
-  }
-
-  &:where([data-color="critical"]):not([disabled]) {
-    @apply fg-critical-bold bg-transparent;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-critical-hover bg-critical-muted;
-    }
-    &:active {
-      @apply fg-critical-bold bg-critical-pressed;
-    }
-  }
-
-  &:where([data-color="critical"][data-selected]):not([disabled]) {
-    @apply fg-primary-bold bg-critical-muted outline outline-critical-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-a11y-on-accent bg-critical-hover outline-2;
-    }
-    &:active {
-      @apply fg-critical-bold bg-critical-pressed outline-2 outline-critical-pressed;
-    }
-  }
-}
-
-.toggle-button-outline {
-  &:disabled {
-    @apply fg-disabled bg-transparent outline outline-interactive-disabled;
-
-    &:where([data-selected]) {
-      @apply fg-disabled bg-interactive-disabled outline-interactive-disabled;
-    }
-  }
-
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-bold bg-transparent outline outline-interactive;
-
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover outline-2 outline-interactive-hover
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
-    }
-  }
-
-  &:where([data-color="mono-muted"][data-selected]):not([disabled]) {
-    @apply fg-primary-muted bg-interactive-muted outline outline-interactive-hover;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-hover bg-interactive-muted-hover outline-2;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
-    }
-  }
-}
-
-.toggle-button-icon {
-  &:where([data-size="xsmall"]) {
-    @apply rounded-small p-xxs;
-    min-width: 20px;
-    max-width: 20px;
-  }
-
-  &:where([data-size="small"]) {
-    @apply rounded-small p-xxs min-w-xl max-w-xl;
-  }
-
-  &:where([data-size="medium"]) {
-    @apply p-xs;
-    min-width: 28px;
-    max-width: 28px;
-  }
-
-  &:where([data-size="large"]) {
-    @apply p-xs min-w-xxl max-w-xxl;
-  }
-
-  &:disabled {
-    @apply fg-disabled bg-transparent;
-
-    &:where([data-selected]) {
-      @apply bg-interactive-disabled;
-    }
-  }
-
-  &:where([data-color="mono-muted"]):not([disabled]) {
-    @apply fg-primary-muted;
-
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
-
-  &:where([data-color="mono-muted"][data-selected]):not([disabled]) {
-    @apply fg-primary-muted bg-interactive-muted;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-primary-bold bg-interactive-muted-hover;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
-
-  &:where([data-color="mono-bold"]):not([disabled]) {
-    @apply fg-primary-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply bg-interactive-muted-hover;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
-
-  &:where([data-color="mono-bold"][data-selected]):not([disabled]) {
-    @apply fg-inverse-bold bg-interactive-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-inverse-bold bg-interactive-bold-hover;
-    }
-    &:active {
-      @apply fg-pressed bg-interactive-muted-pressed;
-    }
-  }
-
-  &:where([data-color="accent"]):not([disabled]) {
-    @apply fg-primary-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-accent-primary-hover bg-accent-primary-muted;
-    }
-    &:active {
-      @apply fg-accent-primary-pressed bg-accent-primary-pressed;
-    }
-  }
-
-  &:where([data-color="accent"][data-selected]):not([disabled]) {
-    @apply fg-accent-primary-hover bg-accent-primary-muted;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-a11y-on-accent bg-accent-primary-hover;
-    }
-    &:active {
-      @apply fg-accent-primary-pressed bg-accent-primary-pressed;
-    }
-  }
-
-  &:where([data-color="serious"]):not([disabled]) {
-    @apply fg-serious-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-serious-hover bg-serious-muted;
-    }
-    &:active {
-      @apply fg-serious-pressed bg-serious-pressed;
-    }
-  }
-
-  &:where([data-color="serious"][data-selected]):not([disabled]) {
-    @apply fg-serious-bold bg-serious-muted;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-primary-bold bg-serious-hover;
-    }
-    &:active {
-      @apply fg-serious-pressed bg-serious-pressed;
-    }
-  }
-
-  &:where([data-color="critical"]):not([disabled]) {
-    @apply fg-critical-bold;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-critical-hover bg-critical-muted;
-    }
-    &:active {
-      @apply fg-critical-pressed bg-critical-pressed;
-    }
-  }
-
-  &:where([data-color="critical"][data-selected]):not([disabled]) {
-    @apply fg-critical-bold bg-critical-muted;
-
-    &:hover,
-    &:focus-visible {
-      @apply fg-a11y-on-accent bg-critical-hover;
-    }
-    &:active {
-      @apply fg-critical-pressed bg-critical-pressed;
+      &:hover,
+      &:focus-visible {
+        @apply fg-critical-hover outline-critical-hover;
+      }
+      &:active {
+        @apply fg-critical-pressed bg-interactive-muted-pressed outline-critical-pressed;
+      }
     }
   }
 }
