@@ -35,7 +35,12 @@ export function generateCatalogInfo(packagePath: string) {
   const catalogInfo = Object.assign({}, template);
   const isGithub = packageJson.repository.url?.includes('github.com');
 
-  catalogInfo.metadata.name = packageJson.name;
+  // Backstage limits us to alphanumeric, -, and _ characters
+  // so we need to purge invalid characters from the package
+  // name. We replace '@' with '' and '/' with '_'.
+  catalogInfo.metadata.name = packageJson.name
+    .replaceAll('@', '')
+    .replaceAll('/', '_');
   catalogInfo.metadata.title = packageJson.title;
   catalogInfo.metadata.description = packageJson.description;
 

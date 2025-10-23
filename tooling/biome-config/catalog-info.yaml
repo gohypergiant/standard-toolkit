@@ -2,13 +2,13 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@accelint/biome-config"
+  name: accelint_biome-config
   title: Biome Configuration
   description: The shared Biome configuration used across Accelint projects.
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/tooling/biome-config/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 1.0.0
+    package/version: 1.0.1
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/biome-config

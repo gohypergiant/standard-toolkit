@@ -2,7 +2,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@accelint/ntds"
+  name: accelint_ntds
   title: Accelint NTDS
   description: >-
     An NTDS-compliant offering of a set of SVG Icon Components with fill color
@@ -11,13 +11,13 @@ metadata:
 
     Dependencies:
 
-    @accelint/biome-config@1.0.0, @accelint/constellation-tracker@0.0.0,
-    @accelint/design-toolkit@5.0.0, @accelint/smeegl@0.3.1,
-    @accelint/typescript-config@0.1.2
+    accelint_biome-config@1.0.1, accelint_constellation-tracker@1.0.0,
+    accelint_design-toolkit@6.0.0, accelint_smeegl@0.3.2,
+    accelint_typescript-config@0.1.3
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/ntds/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.2.0
+    package/version: 0.2.1
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/ntds
@@ -32,8 +32,8 @@ spec:
   lifecycle: production
   owner: group:default/pathfinder
   dependsOn:
-    - component:@accelint/biome-config
-    - component:@accelint/constellation-tracker
-    - component:@accelint/design-toolkit
-    - component:@accelint/smeegl
-    - component:@accelint/typescript-config
+    - component:accelint_biome-config
+    - component:accelint_constellation-tracker
+    - component:accelint_design-toolkit
+    - component:accelint_smeegl
+    - component:accelint_typescript-config

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@accelint/typescript-config/tsc/dom/library",
-  "include": ["./src"],
+  "include": ["./src", "./.storybook/*.tsx"],
   "exclude": [
     "node_modules",
     "**/*.bench.ts",
@@ -11,11 +11,11 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM"],
-    "rootDir": "src",
+    "rootDir": "./",
     "outDir": "dist",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["@testing-library/jest-dom"]
+    "types": ["@testing-library/jest-dom", "node"]
   }
 }
