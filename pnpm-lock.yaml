@@ -748,10 +748,6 @@ importers:
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
 
   packages/map-toolkit:
-    dependencies:
-      '@types/react-dom':
-        specifier: 19.1.11
-        version: 19.1.11(@types/react@19.1.13)
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -777,6 +773,9 @@ importers:
       '@storybook/addon-storysource':
         specifier: ^8.6.14
         version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
+      '@storybook/addon-themes':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
       '@storybook/blocks':
         specifier: ^8.6.14
         version: 8.6.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.14(prettier@3.6.2))
@@ -792,6 +791,9 @@ importers:
       '@storybook/react-vite':
         specifier: ^8.6.14
         version: 8.6.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.52.5)(storybook@8.6.14(prettier@3.6.2))(typescript@5.8.3)(vite@5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0))
+      '@storybook/theming':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.15(vite@5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0))
@@ -807,9 +809,15 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/node':
+        specifier: ^24.9.0
+        version: 24.9.1
       '@types/react':
         specifier: 19.1.13
         version: 19.1.13
+      '@types/react-dom':
+        specifier: 19.1.11
+        version: 19.1.11(@types/react@19.1.13)
       client-only:
         specifier: ^0.0.1
         version: 0.0.1
