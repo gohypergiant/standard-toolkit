@@ -91,7 +91,7 @@ export type ViewportScaleProps = ComponentProps<'span'> & {
 };
 
 /**
- * A span with the currend viewport bounds, i.e. `660 x 1,801 NMI`
+ * A span with the current viewport bounds, i.e. `660 x 1,801 NMI`
  * @param {Object} props - Extends `<span>` props
  * @param {string} props.viewId - The id of the view to subscribe to.
  * @param {string} props.unit - Measure of distance, `km | m | nmi | mi | ft`. Defaults to `nmi`
