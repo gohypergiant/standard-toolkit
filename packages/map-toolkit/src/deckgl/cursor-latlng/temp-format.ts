@@ -10,10 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-export const MapEventsNamespace = 'map';
+// This is a temporary file until our geo coordinates package is refactored and working.
 
-export const MapEvents = {
-  click: `${MapEventsNamespace}:click`,
-  hover: `${MapEventsNamespace}:hover`,
-  viewportChange: `${MapEventsNamespace}:viewport_change`,
-} as const;
+export function createCoordinate() {
+  return (input: string) => {
+    return Object.freeze({
+      dd: () => `Test DD: ${input}`,
+      ddm: () => `Test DDM: ${input}`,
+    });
+  };
+}

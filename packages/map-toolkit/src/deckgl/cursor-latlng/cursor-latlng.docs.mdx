@@ -1,0 +1,22 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as CursorLatlngStories from './cursor-latlng.stories';
+
+<Meta of={CursorLatlngStories} />
+
+# Cursor LatLong
+A hook that retrieves the coordinates of the mouse's current hovered position on a BaseMap.
+
+## Example usage
+```tsx
+import { FormatTypes, useHoverCoordinate } from "@accelint/cursor-latlng";
+const { formattedCoord, setFormat } = useHoverCoordinate();
+setFormat(FormatTypes.Ddm);
+console.log(formattedCoord);
+```
+
+## Props
+
+## Implementation Notes
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit)
