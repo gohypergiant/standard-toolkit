@@ -1,6 +1,6 @@
 {
   "name": "@accelint/docs",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "private": true,
   "scripts": {
     "build": "pnpm run build:typedoc && pnpm run build:docusaurus",

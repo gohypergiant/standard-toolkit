@@ -1,5 +1,17 @@
 # @accelint/core
 
+## 0.5.0
+
+### Minor Changes
+
+- 525a5a6: Open-source the safe-enum package, making it available to consumers as part of the @accelint/core package.
+
+### Patch Changes
+
+- 0d697fa: Fixed definitions in package files for longhand repository definitions, while disabling the option in syncpack that changed it.
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- 935b8e5: Updated the package names in the Constellation configuration file.
+
 ## 0.4.2
 
 ### Patch Changes
