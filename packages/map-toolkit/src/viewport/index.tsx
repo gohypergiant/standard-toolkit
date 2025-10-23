@@ -21,7 +21,7 @@ import type {
 } from '../deckgl/base-map/types';
 import type { AllowedUnit } from './types';
 
-export const bus = Broadcast.getInstance<MapEventType>();
+const bus = Broadcast.getInstance<MapEventType>();
 
 export type UseViewportStateProps = {
   viewId: string;

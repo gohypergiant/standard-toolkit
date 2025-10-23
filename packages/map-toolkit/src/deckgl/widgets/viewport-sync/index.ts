@@ -20,7 +20,7 @@ import type {
 } from '@deck.gl/core';
 import type { MapEventType } from '@/deckgl/base-map/types';
 
-export const bus = Broadcast.getInstance<MapEventType>();
+const bus = Broadcast.getInstance<MapEventType>();
 
 export type ViewportSyncWidgetProps = WidgetImplProps;
 
