@@ -27,9 +27,11 @@ import {
   Switch,
   Tabs,
   TextField,
+  Tooltip,
   useTheme,
 } from '@accelint/design-toolkit';
 import Placeholder from '@accelint/icons/placeholder';
+import { useState } from 'react';
 
 const drawerIds = {
   drawer: uuid(),
@@ -42,6 +44,7 @@ const divider = <div className='h-px w-full bg-accent-primary-muted' />;
 
 export default function KitchenSink() {
   const theme = useTheme();
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   return (
     <div className='w-full h-full'>
       <Drawer.Layout>
@@ -79,6 +82,16 @@ export default function KitchenSink() {
                 <Placeholder />
               </Icon>
             </Button>
+            {divider}
+            <Tooltip.Trigger isOpen={isTooltipOpen}>
+              <Button
+                data-testid='tooltip-trigger'
+                onPress={() => setIsTooltipOpen(!isTooltipOpen)}
+              >
+                Toggle Tooltip
+              </Button>
+              <Tooltip>This is a tooltip for memory testing</Tooltip>
+            </Tooltip.Trigger>
           </div>
           <div className='flex flex-col gap-s items-start w-[200px]'>
             <Checkbox>Checkbox</Checkbox>
@@ -183,15 +196,25 @@ export default function KitchenSink() {
             {divider}
             <Tabs orientation='horizontal'>
               <Tabs.List>
-                <Tabs.List.Tab id='uno'>Tab 1</Tabs.List.Tab>
-                <Tabs.List.Tab id='dos'>Tab 2</Tabs.List.Tab>
-                <Tabs.List.Tab id='tres' isDisabled>
+                <Tabs.List.Tab data-testid='tab-1' id='uno'>
+                  Tab 1
+                </Tabs.List.Tab>
+                <Tabs.List.Tab data-testid='tab-2' id='dos'>
+                  Tab 2
+                </Tabs.List.Tab>
+                <Tabs.List.Tab data-testid='tab 3' id='tres' isDisabled>
                   Tab 3
                 </Tabs.List.Tab>
               </Tabs.List>
-              <Tabs.Panel id='uno'>Content 1</Tabs.Panel>
-              <Tabs.Panel id='dos'>Content 2</Tabs.Panel>
-              <Tabs.Panel id='tres'>Content 3</Tabs.Panel>
+              <Tabs.Panel data-testid='content-1' id='uno'>
+                Content 1
+              </Tabs.Panel>
+              <Tabs.Panel data-testid='content-2' id='dos'>
+                Content 2
+              </Tabs.Panel>
+              <Tabs.Panel data-testid='content-3' id='tres'>
+                Content 3
+              </Tabs.Panel>
             </Tabs>
             {divider}
             <Tabs orientation='vertical'>
@@ -225,13 +248,28 @@ export default function KitchenSink() {
         </Drawer.Layout.Main>
         <Drawer id={drawerIds.drawer} placement='right' size='large'>
           <Drawer.Menu>
-            <Drawer.Menu.Item toggle for={drawerIds.a} textValue='Menu A'>
+            <Drawer.Menu.Item
+              data-testid='drawer-menu-a'
+              toggle
+              for={drawerIds.a}
+              textValue='Menu A'
+            >
               A
             </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.b} textValue='Menu B'>
+            <Drawer.Menu.Item
+              data-testid='drawer-menu-b'
+              toggle
+              for={drawerIds.b}
+              textValue='Menu B'
+            >
               B
             </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.c} textValue='Menu C'>
+            <Drawer.Menu.Item
+              data-testid='drawer-menu-c'
+              toggle
+              for={drawerIds.c}
+              textValue='Menu C'
+            >
               C
             </Drawer.Menu.Item>
           </Drawer.Menu>

@@ -6,7 +6,9 @@
     "node_modules",
     "**/*.bench.ts",
     "**/*.test.ts",
-    "**/*.test-d.ts"
+    "**/*.test-d.ts",
+    "**/*.spec.ts",
+    "tests/**/*"
   ],
   "compilerOptions": {
     "incremental": true,
