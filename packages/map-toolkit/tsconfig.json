@@ -6,7 +6,8 @@
     "node_modules",
     "**/*.bench.ts",
     "**/*.test.ts",
-    "**/*.test-d.ts"
+    "**/*.test-d.ts",
+    "**/examples/**"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

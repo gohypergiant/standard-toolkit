@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CHARACTER_SETS > should match snapshot to prevent accidental changes 1`] = `
+{
+  "ALL_NUMBERS": "1234567890",
+  "ASCII_ALL": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !"#$%&'()*+,-./:;<=>?@[]^_\`{|}~",
+  "ASCII_ALPHA_NUMERIC": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+  "ASCII_LETTERS": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "ASCII_LETTERS_LOWERCASE": "abcdefghijklmnopqrstuvwxyz",
+  "ASCII_LETTERS_UPPERCASE": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "ASCII_SYMBOLS": " !"#$%&'()*+,-./:;<=>?@[]^_\`{|}~",
+  "AUTO": "auto",
+  "EXPANDED": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !"#$%&'()*+,-./:;<=>?@[]^_\`{|}~àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿßÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ1234567890 ¡¿¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿×÷",
+  "LATIN_ALL": "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿßÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ1234567890 ¡¿¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿×÷",
+  "LATIN_ALPHA_NUMERIC": "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿßÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ1234567890",
+  "LATIN_LETTERS": "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿßÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ",
+  "LATIN_LETTERS_LOWERCASE": "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿß",
+  "LATIN_LETTERS_UPPERCASE": "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ",
+  "LATIN_SYMBOLS": " ¡¿¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿×÷",
+}
+`;
