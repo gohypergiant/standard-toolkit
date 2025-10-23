@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+# playwright and memlab test artifacts
+/test-results/
+/playwright-report/
+/tests/memlab/snapshots*/
+
 # next.js
 /.next/
 /out/

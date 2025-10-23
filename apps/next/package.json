@@ -7,7 +7,10 @@
     "build": "NODE_ENV=production next build",
     "dev": "NODE_ENV=development next dev",
     "start": "NODE_ENV=production next start",
-    "test": "pnpm vitest --dir=src"
+    "test": "pnpm vitest --dir=src",
+    "test:memlab": "playwright test tests/memlab",
+    "test:memlab:debug": "playwright test tests/memlab --debug",
+    "test:memlab:ui": "playwright test tests/memlab --ui"
   },
   "dependencies": {
     "@accelint/bus": "workspace:*",
@@ -32,6 +35,7 @@
     "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
+    "@playwright/test": "^1.56.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
@@ -42,6 +46,7 @@
     "@vanilla-extract/next-plugin": "^2.4.14",
     "@vanilla-extract/vite-plugin": "^4.0.20",
     "jsdom": "25.0.1",
+    "memlab": "^1.1.60",
     "typescript": "5.8.3",
     "vite": "^5.4.9",
     "vitest": "^2.1.9"
