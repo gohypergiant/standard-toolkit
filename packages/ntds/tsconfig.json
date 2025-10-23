@@ -12,9 +12,9 @@
     "jsx": "react-jsx",
     "rootDir": ".",
     "outDir": "dist",
+    "types": [],
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "types": ["node"]
+    }
   }
 }
