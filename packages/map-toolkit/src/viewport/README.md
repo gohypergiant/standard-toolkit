@@ -1,8 +1,13 @@
-# `@accelint/map-toolkit/viewport-scale`
+# `@accelint/map-toolkit/viewport`
 
-A react component that displays the current viewport scale for the selected scale unit (defaults to Nautical Miles, NMI) in a `<span>`
 
-## Usage
+## useViewportState
+A react hook for syncing to viewport events.  A thin wrapper around `useSyncExternalStore`, it provides default `subscribe` and `getSnapshot` functions that listen to Bus for viewport events and signal react to re-render. 
+
+## ViewportScale
+A react component that consumes `useViewportState` and displays the current viewport scale for the selected scale unit (defaults to Nautical Miles, NMI) in a `<span>`
+
+### Usage
 
 `<ViewportScale>` updates by subscribing to viewport events from the Bus.  The easiest way to send those events with DeckGL is by initializing the `ViewportSyncWidget` in the BaseMap.
 
@@ -22,7 +27,7 @@ export function MapView() {
 }
 ```
 
-## Props
+### Props
 
 ### unit
 `'km' | 'm' | 'nmi' | 'mi' | 'ft'`
