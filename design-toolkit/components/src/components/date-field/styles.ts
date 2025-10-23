@@ -36,8 +36,6 @@ export const DateFieldStyles = tv({
       'text-right',
       'placeholder-shown:fg-primary-muted',
       'focus-visible:fg-a11y-on-accent focus-visible:bg-accent-primary-bold focus-visible:outline-none',
-      'data-[pressed]:bg-transparent',
-      'pressed:bg-transparent'
     ],
     description: [
       'fg-primary-muted text-body-xs',
