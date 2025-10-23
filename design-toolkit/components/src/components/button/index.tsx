@@ -180,12 +180,12 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
         ref={ref}
         className={composeRenderProps(className, (className) =>
           clsx(
-            'link-button',
+            'button',
             {
-              'link-button-filled': variant === 'filled',
-              'link-button-outline': variant === 'outline',
-              'link-button-flat': variant === 'flat',
-              'link-button-icon': variant === 'icon',
+              'button-filled': variant === 'filled',
+              'button-outline': variant === 'outline',
+              'button-flat': variant === 'flat',
+              'button-icon': variant === 'icon',
             },
             className,
           ),
@@ -271,12 +271,12 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
         ref={ref}
         className={composeRenderProps(className, (className) =>
           clsx(
-            'toggle-button',
+            'button toggle-button',
             {
-              'toggle-button-filled': variant === 'filled',
-              'toggle-button-outline': variant === 'outline',
-              'toggle-button-flat': variant === 'flat',
-              'toggle-button-icon': variant === 'icon',
+              'button-filled toggle-button-filled': variant === 'filled',
+              'button-outline toggle-button-outline': variant === 'outline',
+              'button-flat toggle-button-flat': variant === 'flat',
+              'button-icon toggle-button-icon': variant === 'icon',
             },
             className,
           ),

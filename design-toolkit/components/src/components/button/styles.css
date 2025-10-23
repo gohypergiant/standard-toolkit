@@ -1,17 +1,5 @@
-/*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-
- /* very likely a better way to do this, but just importing directly for now */
- @import '../../index.css';
+/* very likely a better way to do this, but just importing directly for now */
+@import '../../index.css';
 
 .button {
   @apply flex w-content shrink-0 cursor-pointer items-center justify-center rounded-medium outline outline-transparent;
@@ -30,351 +18,280 @@
     @apply min-w-[54px] gap-xxs px-s py-xs text-button-s;
   }
   &:where([data-size="xsmall"]) {
-    min-width: 41px;
-    gap: var(--spacing-xxs);
-    padding: var(--spacing-xs);
-    font-size: var(--typography-button-xs-size);
+    @apply min-w-[41px] gap-xxs p-xs text-button-xs;
   }
 }
 
 .button-filled {
   &:disabled {
-    color: var(--fg-disabled);
-    background-color: var(--bg-interactive-disabled);
+    @apply fg-disabled bg-interactive-disabled;
   }
 
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: var(--bg-interactive-muted);
+    @apply fg-primary-bold bg-interactive-muted;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-primary-muted);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-primary-muted bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-bold"]):not([disabled]) {
-    color: var(--fg-inverse-bold);
-    background-color: var(--bg-interactive-bold);
+    @apply fg-inverse-bold bg-interactive-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-bold-hover);
+      @apply bg-interactive-bold-hover;
     }
     &:active {
-      color: var(--fg-inverse-muted);
-      background-color: var(--bg-interactive-bold-pressed);
+      @apply fg-inverse-muted bg-interactive-bold-pressed;
     }
   }
 
   &:where([data-color="accent"]):not([disabled]) {
-    color: var(--fg-a11y-on-accent);
-    background-color: var(--bg-accent-primary-bold);
+    @apply fg-a11y-on-accent bg-accent-primary-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-accent-primary-hover);
+      @apply bg-accent-primary-hover;
     }
     &:active {
-      color: var(--fg-accent-primary-bold);
-      background-color: var(--bg-accent-primary-pressed);
+      @apply fg-accent-primary-bold bg-accent-primary-pressed;
     }
   }
 
   &:where([data-color="serious"]):not([disabled]) {
-    color: var(--fg-a11y-on-utility);
-    background-color: var(--bg-serious-bold);
+    @apply fg-a11y-on-utility bg-serious-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-serious-hover);
+      @apply bg-serious-hover;
     }
     &:active {
-      color: var(--fg-serious-bold);
-      background-color: var(--bg-serious-pressed);
+      @apply fg-serious-bold bg-serious-pressed;
     }
   }
 
   &:where([data-color="critical"]):not([disabled]) {
-    color: var(--fg-a11y-on-utility);
-    background-color: var(--bg-critical-bold);
+    @apply fg-a11y-on-utility bg-critical-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-critical-hover);
+      @apply bg-critical-hover;
     }
     &:active {
-      color: var(--fg-critical-bold);
-      background-color: var(--bg-critical-pressed);
+      @apply fg-critical-bold bg-critical-pressed;
     }
   }
 }
 
 .button-outline {
   &:disabled {
-    color: var(--fg-disabled);
-    outline-color: var(--outline-interactive-disabled);
+    @apply fg-disabled outline-interactive-disabled;
   }
 
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: transparent;
-    outline: 1px solid var(--outline-interactive);
+    @apply fg-primary-bold bg-transparent outline outline-interactive;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
-      outline: 2px solid var(--outline-interactive-hover);
+      @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline: 2px solid var(--outline-interactive-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
     }
   }
 
-  /* Outline - Mono Bold */
   &:where([data-color="mono-bold"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: transparent;
-    outline: 1px solid var(--outline-mono-bold);
+    @apply fg-primary-bold bg-transparent outline outline-mono-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
-      outline: 2px solid var(--outline-interactive-hover);
+      @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline: 2px solid var(--outline-interactive-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
     }
   }
 
   &:where([data-color="accent"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: transparent;
-    outline: 1px solid var(--outline-accent-primary-bold);
+    @apply fg-primary-bold bg-transparent outline outline-accent-primary-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-accent-primary-hover);
-      outline: 2px solid var(--outline-accent-primary-hover);
+      @apply bg-accent-primary-hover outline-2 outline-accent-primary-hover;
     }
     &:active {
-      color: var(--fg-accent-primary-bold);
-      background-color: var(--bg-accent-primary-pressed);
-      outline: 2px solid var(--outline-accent-primary-pressed);
+      @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
     }
   }
 
-  /* Outline - Serious */
   &:where([data-color="serious"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: transparent;
-    outline: 1px solid var(--outline-serious-bold);
+    @apply fg-primary-bold bg-transparent outline outline-serious-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-serious-hover);
-      outline: 2px solid var(--outline-serious-hover);
+      @apply bg-serious-hover outline-2 outline-serious-hover;
     }
     &:active {
-      color: var(--fg-serious-bold);
-      background-color: var(--bg-serious-pressed);
-      outline: 2px solid var(--outline-serious-pressed);
+      @apply fg-serious-bold bg-serious-pressed outline-2 outline-serious-pressed;
     }
   }
 
-  /* Outline - Critical */
   &:where([data-color="critical"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: transparent;
-    outline: 1px solid var(--outline-critical-bold);
+    @apply fg-primary-bold bg-transparent outline outline-critical-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-critical-hover);
-      outline: 2px solid var(--outline-critical-hover);
+      @apply bg-critical-hover outline-2 outline-critical-hover;
     }
     &:active {
-      color: var(--fg-critical-pressed);
-      background-color: var(--bg-critical-pressed);
-      outline: 2px solid var(--outline-critical-pressed);
+      @apply fg-critical-pressed bg-critical-pressed outline-2 outline-critical-pressed;
     }
   }
 }
 
 .button-flat {
   &:disabled {
-    color: var(--fg-disabled);
-    background-color: transparent;
+    @apply fg-disabled bg-transparent;
   }
 
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-muted);
+    @apply fg-primary-muted;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-bold"]):not([disabled]) {
-    color: var(--fg-primary-bold);
+    @apply fg-primary-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="accent"]):not([disabled]) {
-    color: var(--fg-accent-primary-bold);
+    @apply fg-accent-primary-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-accent-primary-hover);
+      @apply bg-accent-primary-hover;
     }
     &:active {
-      color: var(--fg-accent-primary-pressed);
-      background-color: var(--bg-accent-primary-pressed);
+      @apply fg-accent-primary-pressed bg-accent-primary-pressed;
     }
   }
 
   &:where([data-color="serious"]):not([disabled]) {
-    color: var(--fg-serious-bold);
+    @apply fg-serious-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-serious-hover);
+      @apply bg-serious-hover;
     }
     &:active {
-      color: var(--fg-serious-pressed);
-      background-color: var(--bg-serious-pressed);
+      @apply fg-serious-pressed bg-serious-pressed;
     }
   }
 
   &:where([data-color="critical"]):not([disabled]) {
-    color: var(--fg-critical-bold);
+    @apply fg-critical-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-a11y-on-accent);
-      background-color: var(--bg-critical-hover);
+      @apply fg-a11y-on-accent bg-critical-hover;
     }
     &:active {
-      color: var(--fg-critical-pressed);
-      background-color: var(--bg-critical-pressed);
+      @apply fg-critical-pressed bg-critical-pressed;
     }
   }
 }
 
 .button-icon {
-  &:where([data-size="large"]) {
-    min-width: 0;
-    padding: var(--spacing-xs);
-  }
-
+  &:where([data-size="large"]),
   &:where([data-size="medium"]) {
-    min-width: 0;
-    padding: var(--spacing-xs);
+    @apply min-w-0 p-xs;
   }
 
-  &:where([data-size="small"]) {
-    min-width: 0;
-    border-radius: var(--radius-small);
-    padding: var(--spacing-xxs);
-  }
-
+  &:where([data-size="small"]),
   &:where([data-size="xsmall"]) {
-    min-width: 0;
-    border-radius: var(--radius-small);
-    padding: var(--spacing-xxs);
+    @apply min-w-0 rounded-small p-xxs;
   }
 
   &:disabled {
-    color: var(--fg-disabled);
-    background-color: transparent;
+    @apply fg-disabled bg-transparent;
   }
 
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-muted);
+    @apply fg-primary-muted;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-bold"]):not([disabled]) {
-    color: var(--fg-primary-bold);
+    @apply fg-primary-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="accent"]):not([disabled]) {
-    color: var(--fg-accent-primary-bold);
+    @apply fg-accent-primary-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-accent-primary-hover);
-      background-color: var(--bg-interactive-muted-hover);
+      @apply fg-accent-primary-hover bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-accent-primary-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-accent-primary-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="serious"]):not([disabled]) {
-    color: var(--fg-serious-bold);
+    @apply fg-serious-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-serious-hover);
-      background-color: var(--bg-interactive-muted-hover);
+      @apply fg-serious-hover bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-serious-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-serious-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="critical"]):not([disabled]) {
-    color: var(--fg-critical-bold);
+    @apply fg-critical-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-critical-hover);
-      background-color: var(--bg-interactive-muted-hover);
+      @apply fg-critical-hover bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-critical-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-critical-pressed bg-interactive-muted-pressed;
     }
   }
 }
@@ -382,549 +299,406 @@
 .button-floating {
   border-radius: 9999px;
 
-  &:where([data-size="large"]) {
-    min-width: 0;
-    padding: var(--spacing-xs);
-  }
-
+  &:where([data-size="large"]),
   &:where([data-size="medium"]) {
-    min-width: 0;
-    padding: var(--spacing-xs);
+    @apply min-w-0 p-xs;
   }
 
-  &:where([data-size="small"]) {
-    min-width: 0;
-    padding: var(--spacing-xxs);
-  }
-
+  &:where([data-size="small"]),
   &:where([data-size="xsmall"]) {
-    min-width: 0;
-    padding: var(--spacing-xxs);
+    @apply min-w-0 p-xxs;
   }
 
   &:disabled {
-    color: var(--fg-disabled);
-    background-color: var(--bg-interactive-disabled);
-    outline-color: var(--outline-interactive-disabled);
+    @apply fg-disabled bg-interactive-disabled outline outline-interactive-disabled;
   }
 
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-muted);
-    background-color: var(--bg-surface-default);
-    outline-color: var(--outline-interactive);
+    @apply fg-primary-muted bg-surface-default outline outline-interactive;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-primary-hover);
-      outline-color: var(--outline-interactive-hover);
+      @apply fg-primary-muted outline-interactive-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-bold"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: var(--bg-surface-default);
-    outline-color: var(--outline-interactive);
+    @apply fg-primary-bold bg-surface-default outline outline-interactive;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-primary-hover);
-      outline-color: var(--outline-interactive-hover);
+      @apply fg-primary-muted outline-interactive-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="accent"]):not([disabled]) {
-    color: var(--fg-accent-primary-bold);
-    background-color: var(--bg-accent-primary-bold);
-    outline-color: var(--outline-accent-primary-bold);
+    @apply fg-accent-primary-bold bg-accent-primary-bold outline outline-accent-primary-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-accent-primary-hover);
-      outline-color: var(--outline-accent-primary-hover);
+      @apply fg-accent-primary-hover outline-accent-primary-hover;
     }
     &:active {
-      color: var(--fg-accent-primary-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline-color: var(--outline-accent-primary-pressed);
+      @apply fg-accent-primary-pressed bg-interactive-muted-pressed outline-accent-primary-pressed;
     }
   }
 
   &:where([data-color="serious"]):not([disabled]) {
-    color: var(--fg-serious-bold);
-    background-color: var(--bg-serious-muted);
-    outline-color: var(--outline-serious-bold);
+    @apply fg-serious-bold bg-serious-muted outline outline-serious-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-serious-hover);
-      outline-color: var(--outline-interactive-hover);
+      @apply fg-serious-hover outline-interactive-hover;
     }
     &:active {
-      color: var(--fg-serious-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline-color: var(--outline-serious-pressed);
+      @apply fg-serious-pressed bg-interactive-muted-pressed outline-serious-pressed;
     }
   }
 
   &:where([data-color="critical"]):not([disabled]) {
-    color: var(--fg-critical-bold);
-    background-color: var(--bg-critical-muted);
-    outline-color: var(--outline-critical-bold);
+    @apply fg-critical-bold bg-critical-muted outline outline-critical-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-critical-hover);
-      outline-color: var(--outline-critical-hover);
+      @apply fg-critical-hover outline-critical-hover;
     }
-
     &:active {
-      color: var(--fg-critical-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline-color: var(--outline-critical-pressed);
+      @apply fg-critical-pressed bg-interactive-muted-pressed outline-critical-pressed;
     }
   }
 }
 
 .toggle-button {
-  color: var(--fg-accent-primary-bold);
-  background-color: transparent;
-
   &:where([data-color="accent"]):not([disabled]) {
+    @apply fg-accent-primary-bold bg-transparent;
+
     &:hover,
     &:focus-visible {
-      color: var(--fg-accent-primary-hover);
-      background-color: var(--bg-accent-primary-muted);
+      @apply fg-accent-primary-hover bg-accent-primary-muted;
     }
     &:active {
-      color: var(--fg-accent-primary-bold);
-      background-color: var(--bg-accent-primary-pressed);
+      @apply fg-accent-primary-bold bg-accent-primary-pressed;
     }
   }
 }
 
-/* Toggle Button - Flat Variant */
 .toggle-button-flat {
   &:disabled {
-    color: var(--fg-disabled);
-    background-color: transparent;
+    @apply fg-disabled bg-transparent;
 
     &:where([data-selected]) {
-      color: var(--fg-disabled);
-      background-color: var(--bg-interactive-disabled);
-      outline-color: var(--outline-interactive-disabled);
+      @apply fg-disabled bg-interactive-disabled outline outline-interactive-disabled;
     }
   }
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-muted);
-    background-color: transparent;
+    @apply fg-primary-muted bg-transparent;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-muted"][data-selected]):not([disabled]) {
-    color: var(--fg-primary-muted);
-    background-color: var(--bg-interactive-muted);
-    outline: 1px solid var(--outline-interactive-hover);
+    @apply fg-primary-muted bg-interactive-muted outline outline-interactive-hover;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
-      outline-width: 2px;
+      @apply bg-interactive-muted-hover outline-2;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline-width: 2px;
-      outline-color: var(--outline-interactive-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
     }
   }
 
   &:where([data-color="mono-bold"]):not([disabled]) {
-    color: var(--fg-primary-bold);
+    @apply fg-primary-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed
     }
   }
 
   &:where([data-color="mono-bold"][data-selected]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    outline: 1px solid var(--outline-mono-bold);
+    @apply fg-primary-bold outline outline-mono-bold;
 
     &:hover {
-      color: var(--fg-hover);
-      background-color: var(--bg-interactive-muted-hover);
-      outline-width: 2px;
-      outline-color: var(--outline-mono-bold-hover);
+      @apply fg-hover bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
     }
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
-      outline-width: 2px;
-      outline-color: var(--outline-mono-bold-hover);
+      @apply bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline-width: 2px;
-      outline-color: var(--outline-interactive-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
     }
   }
 
   &:where([data-color="accent"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: transparent;
+    @apply fg-primary-bold bg-transparent;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-accent-primary-hover);
-      background-color: var(--bg-accent-primary-muted);
+      @apply fg-accent-primary-hover bg-accent-primary-muted;
     }
     &:active {
-      color: var(--fg-accent-primary-bold);
-      background-color: var(--bg-accent-primary-pressed);
+      @apply fg-accent-primary-bold bg-accent-primary-pressed;
     }
   }
 
   &:where([data-color="accent"][data-selected]):not([disabled]) {
-    color: var(--fg-a11y-on-accent);
-    background-color: var(--bg-accent-primary-bold);
-    outline: 1px solid var(--outline-accent-primary-bold);
+    @apply fg-a11y-on-accent bg-accent-primary-bold outline outline-accent-primary-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-a11y-on-accent);
-      background-color: var(--bg-accent-primary-hover);
-      outline-width: 2px;
-      outline-color: var(--outline-accent-primary-hover);
+      @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
     }
     &:active {
-      color: var(--fg-accent-primary-bold);
-      background-color: var(--bg-accent-primary-pressed);
-      outline-width: 2px;
-      outline-color: var(--outline-accent-primary-pressed);
+      @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
     }
   }
 
   &:where([data-color="serious"]):not([disabled]) {
-    color: var(--fg-serious-bold);
-    background-color: transparent;
+    @apply fg-serious-bold bg-transparent;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-serious-hover);
-      background-color: var(--bg-serious-bold);
+      @apply fg-serious-hover bg-serious-bold;
     }
     &:active {
-      color: var(--fg-serious-bold);
-      background-color: var(--bg-serious-pressed);
+      @apply fg-serious-bold bg-serious-pressed;
     }
   }
 
   &:where([data-color="serious"][data-selected]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: var(--bg-serious-muted);
-    outline: 1px solid var(--outline-serious-bold);
-    &:where([data-color="serious"][data-selected]):not([disabled]):hover,
-    &:where([data-color="serious"][data-selected]):not([disabled]):focus-visible {
-      color: var(--fg-primary-bold);
-      background-color: var(--bg-serious-hover);
-      outline-width: 2px;
-      outline-color: var(--outline-serious-hover);
-    }
-    &:where([data-color="serious"][data-selected]):not([disabled]):active {
-      color: var(--fg-serious-pressed);
-      background-color: var(--bg-serious-pressed);
-      outline-width: 2px;
-      outline-color: var(--outline-serious-pressed);
-    }
-  }
-
-
-  /* Toggle Button - Flat - Critical */
-  &:where([data-color="critical"]):not([disabled]) {
-    color: var(--fg-critical-bold);
-    background-color: transparent;
+    @apply fg-primary-bold bg-serious-muted outline outline-serious-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-critical-hover);
-      background-color: var(--bg-critical-muted);
+      @apply fg-primary-bold bg-serious-hover outline-2 outline-serious-hover;
     }
     &:active {
-      color: var(--fg-critical-bold);
-      background-color: var(--bg-critical-pressed);
+      @apply fg-serious-pressed bg-serious-pressed outline-2 outline-serious-pressed;
+    }
+  }
+
+  &:where([data-color="critical"]):not([disabled]) {
+    @apply fg-critical-bold bg-transparent;
+
+    &:hover,
+    &:focus-visible {
+      @apply fg-critical-hover bg-critical-muted;
+    }
+    &:active {
+      @apply fg-critical-bold bg-critical-pressed;
     }
   }
 
   &:where([data-color="critical"][data-selected]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: var(--bg-critical-muted);
-    outline: 1px solid var(--outline-critical-bold);
+    @apply fg-primary-bold bg-critical-muted outline outline-critical-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-a11y-on-accent);
-      background-color: var(--bg-critical-hover);
-      outline-width: 2px;
+      @apply fg-a11y-on-accent bg-critical-hover outline-2;
     }
     &:active {
-      color: var(--fg-critical-bold);
-      background-color: var(--bg-critical-pressed);
-      outline-width: 2px;
-      outline-color: var(--outline-critical-pressed);
+      @apply fg-critical-bold bg-critical-pressed outline-2 outline-critical-pressed;
     }
   }
 }
 
 .toggle-button-outline {
   &:disabled {
-    color: var(--fg-disabled);
-    outline-color: var(--outline-interactive-disabled);
-    background-color: transparent;
+    @apply fg-disabled bg-transparent outline outline-interactive-disabled;
 
     &:where([data-selected]) {
-      color: var(--fg-disabled);
-      background-color: var(--bg-interactive-disabled);
-      outline-color: var(--outline-interactive-disabled);
+      @apply fg-disabled bg-interactive-disabled outline-interactive-disabled;
     }
   }
 
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-bold);
-    background-color: transparent;
-    outline: 1px solid var(--outline-interactive);
+    @apply fg-primary-bold bg-transparent outline outline-interactive;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
-      outline-width: 2px;
-      outline-color: var(--outline-interactive-hover);
+      @apply bg-interactive-muted-hover outline-2 outline-interactive-hover
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline-width: 2px;
-      outline-color: var(--outline-interactive-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
     }
   }
 
   &:where([data-color="mono-muted"][data-selected]):not([disabled]) {
-    color: var(--fg-primary-muted);
-    background-color: var(--bg-interactive-muted);
-    outline: 1px solid var(--outline-interactive-hover);
+    @apply fg-primary-muted bg-interactive-muted outline outline-interactive-hover;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-hover);
-      background-color: var(--bg-interactive-muted-hover);
-      outline-width: 2px;
+      @apply fg-hover bg-interactive-muted-hover outline-2;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
-      outline-width: 2px;
-      outline-color: var(--outline-interactive-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
     }
   }
 }
 
 .toggle-button-icon {
   &:where([data-size="xsmall"]) {
-    border-radius: var(--radius-small);
-    padding: var(--spacing-xxs);
+    @apply rounded-small p-xxs;
     min-width: 20px;
     max-width: 20px;
   }
 
   &:where([data-size="small"]) {
-    border-radius: var(--radius-small);
-    padding: var(--spacing-xxs);
-    min-width: var(--spacing-xl);
-    max-width: var(--spacing-xl);
+    @apply rounded-small p-xxs min-w-xl max-w-xl;
   }
 
   &:where([data-size="medium"]) {
-    padding: var(--spacing-xs);
+    @apply p-xs;
     min-width: 28px;
     max-width: 28px;
   }
 
   &:where([data-size="large"]) {
-    padding: var(--spacing-xs);
-    min-width: var(--spacing-xxl);
-    max-width: var(--spacing-xxl);
+    @apply p-xs min-w-xxl max-w-xxl;
   }
 
   &:disabled {
-    color: var(--fg-disabled);
-    background-color: transparent;
+    @apply fg-disabled bg-transparent;
 
     &:where([data-selected]) {
-      color: var(--fg-disabled);
-      background-color: var(--bg-interactive-disabled);
+      @apply bg-interactive-disabled;
     }
   }
 
   &:where([data-color="mono-muted"]):not([disabled]) {
-    color: var(--fg-primary-muted);
+    @apply fg-primary-muted;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-muted"][data-selected]):not([disabled]) {
-    color: var(--fg-primary-muted);
-    background-color: var(--bg-interactive-muted);
+    @apply fg-primary-muted bg-interactive-muted;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-primary-bold);
-      background-color: var(--bg-interactive-muted-hover);
+      @apply fg-primary-bold bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-bold"]):not([disabled]) {
-    color: var(--fg-primary-bold);
+    @apply fg-primary-bold;
 
     &:hover,
     &:focus-visible {
-      background-color: var(--bg-interactive-muted-hover);
+      @apply bg-interactive-muted-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="mono-bold"][data-selected]):not([disabled]) {
-    color: var(--fg-inverse-bold);
-    background-color: var(--bg-interactive-bold);
+    @apply fg-inverse-bold bg-interactive-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-inverse-bold);
-      background-color: var(--bg-interactive-bold-hover);
+      @apply fg-inverse-bold bg-interactive-bold-hover;
     }
     &:active {
-      color: var(--fg-pressed);
-      background-color: var(--bg-interactive-muted-pressed);
+      @apply fg-pressed bg-interactive-muted-pressed;
     }
   }
 
   &:where([data-color="accent"]):not([disabled]) {
-    color: var(--fg-primary-bold);
+    @apply fg-primary-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-accent-primary-hover);
-      background-color: var(--bg-accent-primary-muted);
+      @apply fg-accent-primary-hover bg-accent-primary-muted;
     }
     &:active {
-      color: var(--fg-accent-primary-pressed);
-      background-color: var(--bg-accent-primary-pressed);
+      @apply fg-accent-primary-pressed bg-accent-primary-pressed;
     }
   }
 
   &:where([data-color="accent"][data-selected]):not([disabled]) {
-    color: var(--fg-accent-primary-hover);
-    background-color: var(--bg-accent-primary-muted);
+    @apply fg-accent-primary-hover bg-accent-primary-muted;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-a11y-on-accent);
-      background-color: var(--bg-accent-primary-hover);
+      @apply fg-a11y-on-accent bg-accent-primary-hover;
     }
     &:active {
-      color: var(--fg-accent-primary-pressed);
-      background-color: var(--bg-accent-primary-pressed);
+      @apply fg-accent-primary-pressed bg-accent-primary-pressed;
     }
   }
 
   &:where([data-color="serious"]):not([disabled]) {
-    color: var(--fg-serious-bold);
+    @apply fg-serious-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-serious-hover);
-      background-color: var(--bg-serious-muted);
+      @apply fg-serious-hover bg-serious-muted;
     }
     &:active {
-      color: var(--fg-serious-pressed);
-      background-color: var(--bg-serious-pressed);
+      @apply fg-serious-pressed bg-serious-pressed;
     }
   }
 
   &:where([data-color="serious"][data-selected]):not([disabled]) {
-    color: var(--fg-serious-bold);
-    background-color: var(--bg-serious-muted);
+    @apply fg-serious-bold bg-serious-muted;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-primary-bold);
-      background-color: var(--bg-serious-hover);
+      @apply fg-primary-bold bg-serious-hover;
     }
     &:active {
-      color: var(--fg-serious-pressed);
-      background-color: var(--bg-serious-pressed);
+      @apply fg-serious-pressed bg-serious-pressed;
     }
   }
 
   &:where([data-color="critical"]):not([disabled]) {
-    color: var(--fg-critical-bold);
+    @apply fg-critical-bold;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-critical-hover);
-      background-color: var(--bg-critical-muted);
+      @apply fg-critical-hover bg-critical-muted;
     }
     &:active {
-      color: var(--fg-critical-pressed);
-      background-color: var(--bg-critical-pressed);
+      @apply fg-critical-pressed bg-critical-pressed;
     }
   }
 
   &:where([data-color="critical"][data-selected]):not([disabled]) {
-    color: var(--fg-critical-bold);
-    background-color: var(--bg-critical-muted);
+    @apply fg-critical-bold bg-critical-muted;
 
     &:hover,
     &:focus-visible {
-      color: var(--fg-a11y-on-accent);
-      background-color: var(--bg-critical-hover);
+      @apply fg-a11y-on-accent bg-critical-hover;
     }
     &:active {
-      color: var(--fg-critical-pressed);
-      background-color: var(--bg-critical-pressed);
+      @apply fg-critical-pressed bg-critical-pressed;
     }
   }
 }
