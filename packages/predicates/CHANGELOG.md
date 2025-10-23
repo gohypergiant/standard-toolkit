@@ -1,5 +1,18 @@
 # @accelint/predicates
 
+## 0.4.3
+
+### Patch Changes
+
+- 0d697fa: Fixed definitions in package files for longhand repository definitions, while disabling the option in syncpack that changed it.
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- 935b8e5: Updated the package names in the Constellation configuration file.
+- Updated dependencies [0d697fa]
+- Updated dependencies [f99f294]
+- Updated dependencies [935b8e5]
+- Updated dependencies [525a5a6]
+  - @accelint/core@0.5.0
+
 ## 0.4.2
 
 ### Patch Changes

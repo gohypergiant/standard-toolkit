@@ -11,13 +11,13 @@ metadata:
 
     Dependencies:
 
-    accelint_biome-config@1.0.1, accelint_constellation-tracker@1.0.0,
-    accelint_design-toolkit@6.0.0, accelint_smeegl@0.3.2,
-    accelint_typescript-config@0.1.3
+    accelint_biome-config@1.0.2, accelint_constellation-tracker@1.0.1,
+    accelint_design-toolkit@7.0.0, accelint_smeegl@0.3.3,
+    accelint_typescript-config@0.1.4
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/ntds/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.2.1
+    package/version: 0.2.2
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/ntds

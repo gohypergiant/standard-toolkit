@@ -11,14 +11,14 @@ metadata:
 
     Dependencies:
 
-    accelint_biome-config@1.0.1, accelint_bus@1.4.0,
-    accelint_constellation-tracker@1.0.0, accelint_core@0.4.2,
-    accelint_icons@2.0.4, accelint_temporal@0.1.1,
-    accelint_typescript-config@0.1.3, accelint_vitest-config@0.1.4
+    accelint_biome-config@1.0.2, accelint_bus@2.0.0,
+    accelint_constellation-tracker@1.0.1, accelint_core@0.5.0,
+    accelint_icons@2.1.0, accelint_temporal@0.1.2,
+    accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.5
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/design-toolkit/components/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 6.0.0
+    package/version: 7.0.0
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components
@@ -27,8 +27,8 @@ metadata:
       type: documentation
   tags:
     - design-tk
-    - ui
     - tooling
+    - ui
 spec:
   type: library
   lifecycle: production

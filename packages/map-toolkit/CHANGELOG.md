@@ -1,5 +1,14 @@
 # @accelint/map-toolkit
 
+## 0.1.1
+
+### Patch Changes
+
+- 303b61f: Pins the dependency version of Deck.gl to 9.1.14. We are not yet able to support 9.2.
+- 0d697fa: Fixed definitions in package files for longhand repository definitions, while disabling the option in syncpack that changed it.
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- 935b8e5: Updated the package names in the Constellation configuration file.
+
 ## 0.1.0
 
 ### Minor Changes
