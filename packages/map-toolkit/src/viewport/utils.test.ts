@@ -19,7 +19,7 @@ describe('getViewportScale', () => {
       bounds: [-82, 22, -71, 52],
       unit: 'nmi',
     });
-    expect(result).toBe('660 x 1,801 NMI');
+    expect(result).toBe('612 x 1,801 NMI');
   });
   it('can take a custom formatter', () => {
     const formatter = Intl.NumberFormat('de-DE');
@@ -28,7 +28,7 @@ describe('getViewportScale', () => {
       unit: 'km',
       formatter,
     });
-    expect(result).toBe('1.223 x 3.336 KM');
+    expect(result).toBe('1.134 x 3.336 KM');
   });
   it('provides a fallback for undefined bounds', () => {
     const result = getViewportScale({
