@@ -10,10 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-@import "tailwindcss";
-@import "@accelint/design-toolkit/styles";
-@source "../node_modules/@accelint/design-toolkit";
+import type { Bounds } from '../deckgl/base-map/types';
+import type { UNIT_MAP } from './constants';
 
-#storybook-root {
-  overflow: hidden;
-}
+export type AllowedUnit = keyof typeof UNIT_MAP;
+
+export type GetViewportScaleArgs = {
+  bounds?: Bounds;
+  unit?: AllowedUnit;
+  formatter?: Intl.NumberFormat;
+};
+
+export type GeoCoordinate = [longitude: number, latitude: number];

@@ -111,7 +111,6 @@ export function BaseMap({
   return (
     <div id={container} className={className}>
       <Deckgl
-        {...rest}
         controller
         interleaved
         useDevicePixels={false}
@@ -119,6 +118,7 @@ export function BaseMap({
         onClick={handleMapClick}
         // @ts-expect-error TODO: conflict with deckgl type
         parameters={{ ...PARAMETERS, ...parameters }}
+        {...rest}
       >
         {children}
       </Deckgl>

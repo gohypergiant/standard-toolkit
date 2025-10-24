@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-@import "tailwindcss";
-@import "@accelint/design-toolkit/styles";
-@source "../node_modules/@accelint/design-toolkit";
-
-#storybook-root {
-  overflow: hidden;
-}
+export const UNIT_MAP = {
+  km: 'kilometers',
+  m: 'meters',
+  nmi: 'nauticalmiles',
+  mi: 'miles',
+  ft: 'feet',
+} as const;
