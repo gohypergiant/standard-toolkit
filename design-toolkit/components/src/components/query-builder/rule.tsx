@@ -15,28 +15,47 @@
 import 'client-only';
 import { memo, useContext } from 'react';
 import {
-  type Path,
+  type RuleGroupTypeAny,
   type RuleProps,
   TestID,
   useRule,
   useStopEventPropagation,
 } from 'react-querybuilder';
 import { Lines } from '../lines';
-import { RuleStyles } from './styles';
-import type { QueryBuilderContextType } from './types';
+import type { QueryBuilderContextType, QueryBuilderLinesProps } from './types';
 
-const { lines } = RuleStyles();
+
+function isLastRuleInGroup(rules: RuleGroupTypeAny['rules'], path: number[]): boolean {
+  if (!rules || path.length === 0) { 
+    return false 
+  }
+
+  const currentIndex = path[0];
+  if (typeof currentIndex !== 'number' || currentIndex < 0 || currentIndex >= rules.length) {
+    return false;
+  }
+  const isLast = currentIndex === rules.length - 1;
+
+  if (path.length === 1) {
+    return isLast;
+  }
+
+  const nextRule = rules[currentIndex];
+
+  if ( typeof nextRule !== 'object' || nextRule === null ||    !('rules' in nextRule)) {
+    return false;
+  }
+
+  return isLastRuleInGroup(nextRule.rules, path.slice(1));
+}
 
 const QueryBuilderLines = memo(function QueryBuilderLines({
   path,
   props,
   context,
-}: {
-  path: Path;
-  props: RuleProps;
-  context: QueryBuilderContextType;
-}) {
-  const isLastRule = path[0] === props.schema.getQuery()?.rules.length - 1;
+}: QueryBuilderLinesProps ) {
+  const rules = props.schema.getQuery()?.rules;
+  const isLastRule = isLastRuleInGroup(rules, path);
   const line = isLastRule ? 'last' : 'branch';
 
   return (
@@ -44,10 +63,11 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
       variant={line}
       size='small'
       isVisible={context.showRuleLines}
-      className={lines()}
+      className='min-h-[46px] w-[20px]'
     />
   );
 });
+
 
 export function Rule(props: RuleProps) {
   const rule = useRule(props);

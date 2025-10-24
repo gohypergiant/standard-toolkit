@@ -43,7 +43,7 @@ export const QueryBuilderStyles = tv({
   variants: {
     variant: {
       horizontal: {
-        rule: 'min-h-[50px]',
+        rule: 'items-center',
       },
       vertical: {
         rule: 'flex-col',
@@ -57,8 +57,9 @@ export const QueryBuilderStyles = tv({
   defaultVariants: QueryBuilderStylesDefaults,
 });
 
-export const RuleStyles = tv({
+export const ValueEditorStyles = tv({
   slots: {
-    lines: 'min-h-[46px] w-[20px]',
+    textField: 'relative',
+    textFieldError: 'absolute top-full left-0 mt-[3px]'
   },
 });
