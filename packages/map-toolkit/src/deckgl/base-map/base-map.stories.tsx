@@ -17,10 +17,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { MapClickEvent, MapHoverEvent } from '../base-map/types';
 
 const meta: Meta = {
-  title: 'DeckGL',
-  parameters: {
-    layout: 'fullscreen',
-  },
+  title: 'DeckGL/Base Map',
 };
 
 export default meta;

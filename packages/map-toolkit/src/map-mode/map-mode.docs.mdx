@@ -1,0 +1,525 @@
+import { Meta } from '@storybook/blocks';
+
+import * as MapModeStories from './map-mode.stories';
+
+<Meta of={MapModeStories} />
+
+# Map Mode
+
+A framework-agnostic state management system for coordinating map interaction modes with built-in ownership and authorization controls. Map Mode enables multiple features or components to safely share control of a map's interaction state (e.g., drawing, measuring, editing) with automatic conflict resolution.
+
+## Features
+
+- **Framework Agnostic**: Core mode logic works independently of React or any UI framework
+- **Hybrid Architecture**: React integration combines Context (for map instance identity) with external store pattern (state management via `useSyncExternalStore`)
+- **Mode Ownership**: Track which component/feature owns each mode to prevent conflicts
+- **Authorization Flow**: Built-in authorization system when switching between modes owned by different components
+- **Instance Isolation**: Support for multiple independent map instances (e.g., main map + minimap)
+- **Pending Request Management**: Handles multiple concurrent authorization requests (one per requester)
+- **Auto-Accept/Reject**: Smart conflict resolution - auto-accepts first pending request when returning to default, auto-rejects other requests when one is approved
+- **Event-Based**: Uses `@accelint/bus` for decoupled event communication
+
+## Core Concepts
+
+### Modes
+
+Modes represent different map interaction states. Common examples:
+
+- `default` - Standard pan/zoom navigation
+- `drawing` - Drawing shapes on the map
+- `measuring` - Measuring distances/areas
+- `editing` - Editing existing features
+- `multi-select` - Selecting multiple features
+
+You can define any custom modes your application needs.
+
+### Ownership
+
+Each mode can be "owned" by a component or feature, identified by a unique owner ID. Once a mode is owned:
+
+- The owner can freely switch between their own modes
+- The owner can always return to `default` mode without authorization
+- Other components must request authorization to change modes
+
+This prevents conflicts when multiple features (e.g., a drawing tool and a measurement tool) want control of the map.
+
+### Authorization Flow
+
+When a component requests to change from a mode owned by another component, an authorization request is triggered:
+
+1. Component A requests a mode change
+2. If Component B owns the current mode, a `changeAuthorization` event is emitted
+3. Component B can approve or reject the request via a `changeDecision` event
+4. If approved, the mode changes and all other pending requests are auto-rejected
+5. If rejected, the mode stays unchanged
+
+### Pending Requests
+
+The system manages pending authorization requests intelligently:
+
+- **One request per requester**: Each component can have only one pending request at a time
+- **Auto-replacement**: New requests from the same component automatically replace their previous pending request
+- **Persistence**: Pending requests persist when the mode owner switches between their own modes
+- **Auto-rejection on approval**: When any request is approved, all other pending requests are automatically rejected
+- **Smart default handling**: When the mode owner returns to default mode:
+  - If the first pending request is for default mode, all pending requests are rejected (already in that mode)
+  - If the first pending request is for a different mode, that request is auto-approved and others are rejected
+
+## Basic Usage (React)
+
+### 1. Wrap your app with MapIdProvider
+
+The `MapIdProvider` creates a map mode instance and provides its ID to child components:
+
+```tsx
+import { MapIdProvider } from '@accelint/map-toolkit/deckgl';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+
+export function App() {
+  return (
+    <MapIdProvider defaultMode="default">
+      <BaseMap className="w-full h-full">
+        {/* Your map layers and UI components */}
+      </BaseMap>
+    </MapIdProvider>
+  );
+}
+```
+
+### 2. Use the mode in your components
+
+Access the current mode and request mode changes using the `useMapMode` hook:
+
+```tsx
+import { useMapMode } from '@accelint/map-toolkit/deckgl';
+
+function DrawingToolbar() {
+  const { mode, requestModeChange } = useMapMode();
+
+  const handleDrawingMode = () => {
+    requestModeChange('drawing', 'drawing-toolbar-id');
+  };
+
+  return (
+    <div>
+      <p>Current mode: {mode}</p>
+      <button onClick={handleDrawingMode}>
+        Enter Drawing Mode
+      </button>
+    </div>
+  );
+}
+```
+
+### 3. Multiple components consuming the same mode
+
+Any component can read the current mode and react to changes:
+
+```tsx
+function ModeIndicator() {
+  const { mode } = useMapMode();
+  return <div>Current mode: {mode}</div>;
+}
+
+function MapControls() {
+  const { requestModeChange } = useMapMode();
+
+  return (
+    <div>
+      <button onClick={() => requestModeChange('default', 'controls')}>
+        Default
+      </button>
+      <button onClick={() => requestModeChange('measuring', 'controls')}>
+        Measure
+      </button>
+    </div>
+  );
+}
+```
+
+## Multiple Map Instances
+
+When you need multiple independent maps on the same page (e.g., main map + minimap), use the `mapId` prop to isolate each instance:
+
+```tsx
+import { MapIdProvider } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+// Generate unique IDs for each map instance
+const MAIN_MAP_ID = uuid(); // e.g., "main-map-uuid-abc123"
+const MINIMAP_ID = uuid();  // e.g., "minimap-uuid-xyz789"
+
+function MultiMapView() {
+  return (
+    <>
+      {/* Main map with its own mode state */}
+      <MapIdProvider mapId={MAIN_MAP_ID} defaultMode="drawing">
+        <BaseMap className="w-full h-2/3" />
+        <DrawingToolbar /> {/* Controls for main map */}
+      </MapIdProvider>
+
+      {/* Minimap with independent mode state */}
+      <MapIdProvider mapId={MINIMAP_ID} defaultMode="view">
+        <BaseMap className="w-full h-1/3" />
+        {/* Minimap stays in view mode while main map can switch modes */}
+      </MapIdProvider>
+    </>
+  );
+}
+```
+
+**Key Points:**
+
+- Each provider with a unique `mapId` (UUID) operates independently
+- Mode changes in one instance don't affect other instances
+- Events are automatically scoped to each instance via `mapInstanceId` in event payloads
+- If `mapId` is omitted, a unique UUID is auto-generated (useful for single-map scenarios)
+
+## Advanced: Authorization Flow
+
+When your features need to coordinate mode changes, implement authorization handlers:
+
+```tsx
+import { useEmit, useOn } from '@accelint/bus/react';
+import { MapModeEvents } from '@accelint/map-toolkit/deckgl';
+import type {
+  ModeChangeAuthorizationEvent,
+  ModeChangeDecisionEvent
+} from '@accelint/map-toolkit/deckgl';
+
+function DrawingFeature() {
+  const { mode, requestModeChange } = useMapMode();
+  const emitDecision = useEmit<ModeChangeDecisionEvent>(
+    MapModeEvents.changeDecision
+  );
+
+  // Handle authorization requests when this feature owns the current mode
+  useOn<ModeChangeAuthorizationEvent>(
+    MapModeEvents.changeAuthorization,
+    (event) => {
+      // Only respond if we're the current mode owner
+      if (mode === 'drawing' || mode === 'editing') {
+        // Auto-approve or show UI to ask user
+        emitDecision({
+          authId: event.payload.authId,
+          approved: true,
+          owner: 'drawing-feature',
+          mapInstanceId: event.payload.mapInstanceId,
+        });
+      }
+    }
+  );
+
+  return (
+    <button onClick={() => requestModeChange('drawing', 'drawing-feature')}>
+      Start Drawing
+    </button>
+  );
+}
+```
+
+## React API Reference
+
+### `MapIdProvider`
+
+Context provider that creates and manages a map mode instance.
+
+#### Props
+
+##### `children: ReactNode`
+
+Child components that will have access to the map mode context.
+
+##### `defaultMode?: string`
+
+Initial mode when provider mounts. Defaults to `'default'`.
+
+##### `mapId?: UniqueId`
+
+Optional unique ID for this map instance. Used to isolate mode changes between multiple map instances (e.g., main map vs minimap). If not provided, a unique UUID is automatically generated.
+
+### `useMapMode(mapInstanceId?)`
+
+Hook to access map mode state. Can be used within a `MapIdProvider` (uses context) or outside (by passing `mapInstanceId`).
+
+#### Parameters
+
+##### `mapInstanceId?: UniqueId`
+
+The map instance ID to access. If not provided, uses the ID from `MapIdContext`.
+
+#### Returns
+
+```tsx
+{
+  mode: string;                    // Current mode
+  requestModeChange: (             // Request a mode change
+    desiredMode: string,
+    requestOwner: string
+  ) => void;
+}
+```
+
+#### Throws
+
+- `Error` if no `mapInstanceId` is provided and hook is used outside of `MapIdProvider`
+- `Error` if the store is not found for the given instance ID
+
+#### Examples
+
+**Inside MapIdProvider (uses context):**
+
+```tsx
+function MapToolbar() {
+  const { mode, requestModeChange } = useMapMode();
+
+  return <button onClick={() => requestModeChange('drawing', 'toolbar')}>
+    Draw ({mode})
+  </button>;
+}
+```
+
+**Outside MapIdProvider (pass ID directly):**
+
+```tsx
+function ExternalControl({ mapId }: { mapId: UniqueId }) {
+  const { mode, requestModeChange } = useMapMode(mapId);
+
+  return <div>
+    <p>Map is in {mode} mode</p>
+    <button onClick={() => requestModeChange('default', 'external')}>
+      Reset
+    </button>
+  </div>;
+}
+```
+
+## Events
+
+Map Mode emits events through `@accelint/bus` that you can subscribe to:
+
+### `MapModeEvents.changed`
+
+Emitted when the mode successfully changes.
+
+**Payload:**
+
+```tsx
+{
+  previousMode: string;     // The mode before the change
+  currentMode: string;      // The new current mode
+  mapInstanceId: UniqueId;  // The map instance this event is for
+}
+```
+
+**Usage:**
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { MapModeEvents } from '@accelint/map-toolkit/deckgl';
+
+useOn(MapModeEvents.changed, (event) => {
+  console.log(`Mode changed from ${event.payload.previousMode} to ${event.payload.currentMode}`);
+});
+```
+
+### `MapModeEvents.changeRequest`
+
+Emitted when a component requests a mode change.
+
+**Payload:**
+
+```tsx
+{
+  desiredMode: string;      // The requested mode
+  owner: string;            // ID of the requesting component
+  mapInstanceId: UniqueId;  // The map instance this event is for
+}
+```
+
+### `MapModeEvents.changeAuthorization`
+
+Emitted when authorization is required for a mode change. **You should listen for this event if your feature owns a mode.**
+
+**Payload:**
+
+```tsx
+{
+  authId: string;           // Unique ID for this authorization request
+  desiredMode: string;      // The requested mode
+  currentMode: string;      // The current mode
+  mapInstanceId: UniqueId;  // The map instance this event is for
+}
+```
+
+**Important:** This event is emitted automatically by the Map Mode system. You don't emit it - you only listen for it to respond to authorization requests.
+
+### `MapModeEvents.changeDecision`
+
+Emitted when an authorization decision is made. **You should emit this event if your feature owns a mode and receives an authorization request.**
+
+**Payload:**
+
+```tsx
+{
+  authId: string;           // ID of the authorization request
+  approved: boolean;        // Whether the request was approved
+  owner: string;            // ID of the owner making the decision
+  reason?: string;          // Optional reason for rejection
+  mapInstanceId: UniqueId;  // The map instance this event is for (REQUIRED)
+}
+```
+
+**Important:** Always include the `mapInstanceId` from the authorization event in your decision to ensure it's scoped to the correct map instance.
+
+## Authorization Logic
+
+The Map Mode system automatically determines if a mode change requires authorization:
+
+**Auto-accept if:**
+
+1. The desired mode is `default` AND the requester is the current mode's owner (mode owners can always return to default)
+2. The requesting owner is the current mode's owner (you can always switch between your own modes)
+3. Neither the current mode nor desired mode have an owner (unowned modes are freely accessible)
+4. Currently in default mode AND the requester owns the desired mode (enter your own mode from default)
+
+**Require authorization if:**
+
+- The desired mode is `default` AND the requester is NOT the current mode's owner
+- The current mode is owned by someone else
+- Any mode change that doesn't meet the auto-accept criteria above
+
+## Best Practices
+
+### Owner IDs
+
+Use descriptive, unique IDs for owners to make debugging easier:
+
+```tsx
+// ✅ Good - Clear and unique
+requestModeChange('drawing', 'drawing-toolbar-uuid-123');
+requestModeChange('measuring', 'measurement-panel-uuid-456');
+
+// ❌ Bad - Generic or empty
+requestModeChange('drawing', 'component');
+requestModeChange('drawing', '');
+```
+
+### Authorization Handling
+
+If your feature owns a mode, always handle authorization requests:
+
+```tsx
+// ✅ Good - Handles authorization
+useOn<ModeChangeAuthorizationEvent>(
+  MapModeEvents.changeAuthorization,
+  (event) => {
+    if (isMyMode(event.payload.currentMode)) {
+      // Auto-approve, show UI, or use custom logic
+      emitDecision({
+        authId: event.payload.authId,
+        approved: shouldApprove(event.payload),
+        owner: MY_FEATURE_ID,
+        mapInstanceId: event.payload.mapInstanceId, // REQUIRED
+      });
+    }
+  }
+);
+
+// ❌ Bad - No authorization handling means requests hang forever
+```
+
+### Default Mode
+
+The `default` mode is special:
+
+- It's always ownerless
+- Use it as a "neutral" state between different features
+- Only the current mode owner can switch to it without authorization
+- Non-owners must request authorization to switch to default
+
+This ensures smooth transitions between features while preventing unexpected mode changes.
+
+## Examples
+
+See the Storybook stories for complete working examples:
+
+- **BasicUsage**: Simple mode switching with a toolbar
+- **MultipleConsumers**: Multiple components reading and changing the mode
+- **AuthorizationFlow**: Full authorization flow with multiple features coordinating
+
+## Troubleshooting
+
+### "useMapMode must be used within a MapIdProvider"
+
+**Cause**: Using `useMapMode()` without providing a `mapInstanceId` and not within a `MapIdProvider`.
+
+**Solution**: Either wrap your component with `MapIdProvider` or pass the `mapInstanceId` directly:
+
+```tsx
+// Option 1: Use provider (creates and manages store automatically)
+<MapIdProvider>
+  <YourComponent />
+</MapIdProvider>
+
+// Option 2: Pass ID directly (requires store to exist)
+import { getOrCreateStore } from '@accelint/map-toolkit/map-mode';
+
+// Ensure store exists
+const mapId = 'my-map-id';
+getOrCreateStore(mapId, 'default');
+
+// Then use the hook
+const { mode } = useMapMode(mapId);
+```
+
+### Mode changes not working
+
+**Causes:**
+
+1. Empty `desiredMode` or `requestOwner` - throws an error
+2. Authorization required but not handled - request remains pending
+3. Authorization decision from wrong owner - silently ignored
+
+**Solutions:**
+
+1. Ensure both parameters are non-empty strings
+2. Implement authorization handler to respond to requests
+3. Verify the decision is emitted by the current mode's owner
+
+### Authorization requests pending indefinitely
+
+**Cause**: No authorization handler responding to requests.
+
+**Solution**: Implement an authorization handler in the mode owner component:
+
+```tsx
+useOn<ModeChangeAuthorizationEvent>(
+  MapModeEvents.changeAuthorization,
+  (event) => {
+    // Approve or reject the request
+    emitDecision({
+      authId: event.payload.authId,
+      approved: true,
+      owner: 'my-feature-id',
+      mapInstanceId: event.payload.mapInstanceId,
+    });
+  }
+);
+```
+
+### Multiple maps interfering with each other
+
+**Cause**: Not using unique `mapId` props for each `MapIdProvider`.
+
+**Solution**: Provide unique UUIDs for each map instance:
+
+```tsx
+import { uuid } from '@accelint/core';
+
+const MAP_1_ID = uuid();
+const MAP_2_ID = uuid();
+
+<MapIdProvider mapId={MAP_1_ID}>...</MapIdProvider>
+<MapIdProvider mapId={MAP_2_ID}>...</MapIdProvider>
+```
