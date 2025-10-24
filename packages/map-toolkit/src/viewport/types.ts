@@ -20,3 +20,5 @@ export type GetViewportScaleArgs = {
   unit?: AllowedUnit;
   formatter?: Intl.NumberFormat;
 };
+
+export type GeoCoordinate = [longitude: number, latitude: number];

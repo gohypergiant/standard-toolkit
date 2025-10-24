@@ -12,7 +12,7 @@
 
 import { distance } from '@turf/distance';
 import { UNIT_MAP } from './constants';
-import type { GetViewportScaleArgs } from './types';
+import type { GeoCoordinate, GetViewportScaleArgs } from './types';
 
 const numberFormatter = Intl.NumberFormat('en-US');
 
@@ -35,20 +35,16 @@ export function getViewportScale({
 
   const [minLon, minLat, maxLon, maxLat] = bounds;
 
+  const southWest: GeoCoordinate = [minLon, minLat];
+  const southEast: GeoCoordinate = [maxLon, minLat];
+  const northWest: GeoCoordinate = [minLon, maxLat];
+
   const width = formatter.format(
-    Math.round(
-      distance([minLat, minLon], [minLat, maxLon], {
-        units: UNIT_MAP[unit],
-      }),
-    ),
+    Math.round(distance(southWest, southEast, { units: UNIT_MAP[unit] })),
   );
 
   const height = formatter.format(
-    Math.round(
-      distance([minLon, minLat], [minLon, maxLat], {
-        units: UNIT_MAP[unit],
-      }),
-    ),
+    Math.round(distance(southWest, northWest, { units: UNIT_MAP[unit] })),
   );
 
   return `${width} x ${height} ${unit.toUpperCase()}`;

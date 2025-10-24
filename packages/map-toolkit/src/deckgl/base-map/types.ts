@@ -50,7 +50,12 @@ export type MapHoverPayload = {
   event: NonFuncMjolnirPointerEvent;
 };
 
-export type Bounds = [number, number, number, number];
+export type Bounds = [
+  minLon: number,
+  minLat: number,
+  maxLon: number,
+  maxLat: number,
+];
 export type MapViewportPayload = {
   bounds?: Bounds;
   latitude?: number;

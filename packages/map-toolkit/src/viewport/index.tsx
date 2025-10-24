@@ -32,43 +32,157 @@ export type UseViewportStateProps = {
   >[2];
 };
 
-const viewportStore = new Map<string, MapViewportPayload>();
-const defaultSnapshot = {};
-
-const defaultSubscription = (viewId: string) => (onStoreChange: () => void) => {
-  const handler = (e: MapViewportEvent) => {
-    if (viewId === e.payload.id) {
-      /**
-       * onStoreChange just tells react to run "getSnapshot". We can't pass anything
-       * to that function directly from here, so we need to store the value somewhere that it can grab it.
-       */
-      viewportStore.set(viewId, e.payload);
-      onStoreChange();
-    }
-  };
-
-  const unsub = bus.on(MapEvents.viewport, handler);
-
-  return unsub;
-};
-
 /**
- * The object returned gets equality checked, so it needs to be stable or react blows up.
+ * Store for viewport state keyed by viewId
  */
-const defaultViewportSnapshot = (viewId: string) => (): MapViewportPayload => {
-  return viewportStore.get(viewId) ?? defaultSnapshot;
-};
+const viewportStore = new Map<string, MapViewportPayload>();
 
 /**
- * A thin wrapper around [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore).
- * If you pass in a custom subscribe/getSnapshot you are in full control, otherwise the hook will subscribe to map:viewport
- * events from the Bus.
+ * Track the number of active subscribers per viewId for automatic cleanup
+ */
+const subscriberCounts = new Map<string, number>();
+
+/**
+ * Cache of subscription functions per viewId to avoid recreating on every render
+ */
+const subscriptionCache = new Map<
+  string,
+  (onStoreChange: () => void) => () => void
+>();
+
+/**
+ * Cache of snapshot functions per viewId to maintain referential stability
+ */
+const snapshotCache = new Map<string, () => MapViewportPayload>();
+
+/**
+ * Default empty snapshot - stable reference to prevent unnecessary re-renders
+ */
+const defaultSnapshot: MapViewportPayload = {};
+
+/**
+ * Creates or retrieves a cached subscription function for a given viewId.
+ * Automatically cleans up viewport state when the last subscriber unsubscribes.
  *
- * @param {string} viewId - The id of the subscribed viewport.
+ * @param viewId - The unique identifier for the viewport
+ * @returns A subscription function for useSyncExternalStore
+ */
+function getOrCreateSubscription(
+  viewId: string,
+): (onStoreChange: () => void) => () => void {
+  if (!subscriptionCache.has(viewId)) {
+    subscriptionCache.set(viewId, (onStoreChange: () => void) => {
+      // Increment subscriber count
+      const currentCount = subscriberCounts.get(viewId) || 0;
+      subscriberCounts.set(viewId, currentCount + 1);
+
+      const handler = (e: MapViewportEvent) => {
+        if (viewId === e.payload.id) {
+          /**
+           * onStoreChange just tells react to run "getSnapshot". We can't pass anything
+           * to that function directly from here, so we need to store the value somewhere that it can grab it.
+           */
+          viewportStore.set(viewId, e.payload);
+          onStoreChange();
+        }
+      };
+
+      const unsub = bus.on(MapEvents.viewport, handler);
+
+      // Return cleanup function
+      return () => {
+        unsub();
+
+        // Decrement subscriber count
+        const count = subscriberCounts.get(viewId) || 1;
+        const newCount = count - 1;
+
+        if (newCount <= 0) {
+          // No more subscribers - clean up completely
+          viewportStore.delete(viewId);
+          subscriberCounts.delete(viewId);
+          subscriptionCache.delete(viewId);
+          snapshotCache.delete(viewId);
+        } else {
+          subscriberCounts.set(viewId, newCount);
+        }
+      };
+    });
+  }
+
+  return subscriptionCache.get(viewId)!;
+}
+
+/**
+ * Creates or retrieves a cached snapshot function for a given viewId.
+ * The object returned gets equality checked, so it needs to be stable or React re-renders unnecessarily.
+ *
+ * @param viewId - The unique identifier for the viewport
+ * @returns A snapshot function for useSyncExternalStore
+ */
+function getOrCreateSnapshot(viewId: string): () => MapViewportPayload {
+  if (!snapshotCache.has(viewId)) {
+    snapshotCache.set(viewId, () => {
+      return viewportStore.get(viewId) ?? defaultSnapshot;
+    });
+  }
+
+  return snapshotCache.get(viewId)!;
+}
+
+/**
+ * Hook to subscribe to viewport state changes for a specific view.
+ *
+ * By default, subscribes to MapEvents.viewport events from the event bus and
+ * automatically cleans up when all subscribers unmount. For advanced use cases,
+ * custom subscribe/getSnapshot functions can be provided.
+ *
+ * A thin wrapper around [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore).
+ *
+ * @param viewId - Unique identifier for the viewport to track
+ * @param subscribe - Optional custom subscription function
+ * @param getSnapshot - Optional custom snapshot getter
+ * @param getServerSnapshot - Optional server-side snapshot getter
+ * @returns Current viewport state including bounds, latitude, longitude, zoom
  *
  * @example
+ * ```tsx
+ * function MapInfo() {
+ *   const { bounds, latitude, longitude, zoom } = useViewportState({
+ *     viewId: 'default'
+ *   });
  *
- * const { bounds, id, latitude, longitude, zoom } = useViewportState({ viewId: 'default' });
+ *   return (
+ *     <div>
+ *       Lat: {latitude?.toFixed(2)}, Lon: {longitude?.toFixed(2)}, Zoom: {zoom}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With custom subscribe/getSnapshot for advanced use cases
+ * function CustomMapInfo() {
+ *   const customSubscribe = (onStoreChange) => {
+ *     // Custom subscription logic
+ *     return () => { // cleanup }
+ *   }
+ *
+ *   const customGetSnapshot = () => {
+ *     // Custom snapshot logic
+ *     return { latitude: 0, longitude: 0, zoom: 1 };
+ *   };
+ *
+ *   const viewState = useViewportState({
+ *     viewId: 'custom',
+ *     subscribe: customSubscribe,
+ *     getSnapshot: customGetSnapshot,
+ *   });
+ *
+ *   return <div>Custom viewport state</div>;
+ * }
+ * ```
  */
 export function useViewportState({
   viewId,
@@ -77,8 +191,8 @@ export function useViewportState({
   getServerSnapshot,
 }: UseViewportStateProps) {
   const viewState = useSyncExternalStore<MapViewportPayload>(
-    subscribe ?? defaultSubscription(viewId),
-    getSnapshot ?? defaultViewportSnapshot(viewId),
+    subscribe ?? getOrCreateSubscription(viewId),
+    getSnapshot ?? getOrCreateSnapshot(viewId),
     getServerSnapshot,
   );
 
@@ -91,11 +205,28 @@ export type ViewportScaleProps = ComponentProps<'span'> & {
 };
 
 /**
- * A span with the current viewport bounds, i.e. `660 x 1,801 NMI`
- * @param {Object} props - Extends `<span>` props
- * @param {string} props.viewId - The id of the view to subscribe to.
- * @param {string} props.unit - Measure of distance, `km | m | nmi | mi | ft`. Defaults to `nmi`
- * @param {string} props.className - styles
+ * A span element displaying the current viewport bounds in the specified unit.
+ *
+ * Displays the viewport dimensions in a format like `660 x 1,801 NMI`.
+ * Updates automatically as the viewport changes by subscribing to viewport events.
+ *
+ * @param props - Extends `<span>` props
+ * @param props.viewId - The id of the view to subscribe to
+ * @param props.unit - Measure of distance: `km | m | nmi | mi | ft`. Defaults to `nmi`
+ * @param props.className - CSS classes for styling
+ *
+ * @example
+ * ```tsx
+ * // Basic usage with default nautical miles
+ * <ViewportScale viewId="default" />
+ *
+ * // With custom unit and styling
+ * <ViewportScale
+ *   viewId="default"
+ *   unit="km"
+ *   className="text-sm text-gray-600"
+ * />
+ * ```
  */
 export function ViewportScale({
   viewId,
@@ -111,4 +242,24 @@ export function ViewportScale({
       {scale}
     </span>
   );
+}
+
+/**
+ * Manually clear viewport state for a specific viewId.
+ * This is typically not needed as cleanup happens automatically when all subscribers unmount.
+ * Use this only in advanced scenarios where manual cleanup is required.
+ *
+ * @param viewId - The unique identifier for the viewport to clear
+ *
+ * @example
+ * ```tsx
+ * // Manual cleanup (rarely needed)
+ * clearViewportState('my-map-instance');
+ * ```
+ */
+export function clearViewportState(viewId: string): void {
+  viewportStore.delete(viewId);
+  subscriberCounts.delete(viewId);
+  subscriptionCache.delete(viewId);
+  snapshotCache.delete(viewId);
 }

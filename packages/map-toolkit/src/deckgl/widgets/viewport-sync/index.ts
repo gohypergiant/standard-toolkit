@@ -48,13 +48,14 @@ export class ViewportSyncWidget extends _WidgetImpl<ViewportSyncWidgetProps> {
     super.setProps(props);
   }
 
+  /**
+   * Required by _WidgetImpl but not used for this widget.
+   * ViewportSyncWidget doesn't render any HTML or handle clicks.
+   */
   // biome-ignore lint/suspicious/noEmptyBlockStatements: intentionally void
-/**
- * Required by _WidgetImpl but not used for this widget.
- * ViewportSyncWidget doesn't render any HTML or handle clicks.
- */
-// biome-ignore lint/suspicious/noEmptyBlockStatements: required by base class
-handleClick(): void {}
+  onRenderHTML(): void {}
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: required by base class
+  handleClick(): void {}
 
   onViewportChange(viewport: Viewport): void {
     if (!viewport.isGeospatial) {
