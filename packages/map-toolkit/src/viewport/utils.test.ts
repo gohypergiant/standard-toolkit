@@ -11,11 +11,11 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { getViewportScale } from './utils';
+import { getViewportSize } from './utils';
 
 describe('getViewportScale', () => {
   it('converts the bounds to a string', () => {
-    const result = getViewportScale({
+    const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
       unit: 'nmi',
     });
@@ -23,7 +23,7 @@ describe('getViewportScale', () => {
   });
   it('can take a custom formatter', () => {
     const formatter = Intl.NumberFormat('de-DE');
-    const result = getViewportScale({
+    const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
       unit: 'km',
       formatter,
@@ -31,7 +31,7 @@ describe('getViewportScale', () => {
     expect(result).toBe('1.134 x 3.336 KM');
   });
   it('provides a fallback for undefined bounds', () => {
-    const result = getViewportScale({
+    const result = getViewportSize({
       bounds: undefined,
     });
     expect(result).toBe('-- x -- NMI');

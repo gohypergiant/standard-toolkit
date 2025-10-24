@@ -12,7 +12,7 @@
 
 import { BaseMap } from '../deckgl/base-map';
 import { ViewportSyncWidget } from '../deckgl/widgets/viewport-sync';
-import { ViewportScale as ViewportScaleComponent } from './index';
+import { ViewportSize as ViewportSizeComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const WIDGETS = [new ViewportSyncWidget({ id: 'default' })];
@@ -28,11 +28,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const ViewportScale: Story = {
+export const ViewportSize: Story = {
   render: () => {
     return (
       <div>
-        <ViewportScaleComponent
+        <ViewportSizeComponent
           viewId='default'
           className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
         />

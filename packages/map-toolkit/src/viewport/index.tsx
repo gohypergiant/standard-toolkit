@@ -13,7 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { type ComponentProps, useSyncExternalStore } from 'react';
 import { MapEvents } from '../deckgl/base-map/events';
-import { getViewportScale } from './utils';
+import { getViewportSize } from './utils';
 import type {
   MapEventType,
   MapViewportEvent,
@@ -42,13 +42,11 @@ const viewportStore = new Map<string, MapViewportPayload>();
  */
 const subscriberCounts = new Map<string, number>();
 
+type Subscription = (onStoreChange: () => void) => () => void;
 /**
  * Cache of subscription functions per viewId to avoid recreating on every render
  */
-const subscriptionCache = new Map<
-  string,
-  (onStoreChange: () => void) => () => void
->();
+const subscriptionCache = new Map<string, Subscription>();
 
 /**
  * Cache of snapshot functions per viewId to maintain referential stability
@@ -70,8 +68,10 @@ const defaultSnapshot: MapViewportPayload = {};
 function getOrCreateSubscription(
   viewId: string,
 ): (onStoreChange: () => void) => () => void {
-  if (!subscriptionCache.has(viewId)) {
-    subscriptionCache.set(viewId, (onStoreChange: () => void) => {
+  let subscription = subscriptionCache.get(viewId);
+
+  if (!subscription) {
+    subscription = (onStoreChange: () => void) => {
       // Increment subscriber count
       const currentCount = subscriberCounts.get(viewId) || 0;
       subscriberCounts.set(viewId, currentCount + 1);
@@ -107,10 +107,11 @@ function getOrCreateSubscription(
           subscriberCounts.set(viewId, newCount);
         }
       };
-    });
+    };
+    subscriptionCache.set(viewId, subscription);
   }
 
-  return subscriptionCache.get(viewId)!;
+  return subscription;
 }
 
 /**
@@ -121,13 +122,14 @@ function getOrCreateSubscription(
  * @returns A snapshot function for useSyncExternalStore
  */
 function getOrCreateSnapshot(viewId: string): () => MapViewportPayload {
-  if (!snapshotCache.has(viewId)) {
-    snapshotCache.set(viewId, () => {
-      return viewportStore.get(viewId) ?? defaultSnapshot;
-    });
+  let snapshot = snapshotCache.get(viewId);
+
+  if (!snapshot) {
+    snapshot = () => viewportStore.get(viewId) ?? defaultSnapshot;
+    snapshotCache.set(viewId, snapshot);
   }
 
-  return snapshotCache.get(viewId)!;
+  return snapshot;
 }
 
 /**
@@ -199,7 +201,7 @@ export function useViewportState({
   return viewState;
 }
 
-export type ViewportScaleProps = ComponentProps<'span'> & {
+export type ViewportSizeProps = ComponentProps<'span'> & {
   viewId: string;
   unit?: AllowedUnit;
 };
@@ -218,24 +220,24 @@ export type ViewportScaleProps = ComponentProps<'span'> & {
  * @example
  * ```tsx
  * // Basic usage with default nautical miles
- * <ViewportScale viewId="default" />
+ * <ViewportSize viewId="default" />
  *
  * // With custom unit and styling
- * <ViewportScale
+ * <ViewportSize
  *   viewId="default"
  *   unit="km"
  *   className="text-sm text-gray-600"
  * />
  * ```
  */
-export function ViewportScale({
+export function ViewportSize({
   viewId,
   unit = 'nmi',
   className,
   ...rest
-}: ViewportScaleProps) {
+}: ViewportSizeProps) {
   const { bounds } = useViewportState({ viewId });
-  const scale = getViewportScale({ bounds, unit });
+  const scale = getViewportSize({ bounds, unit });
 
   return (
     <span className={className} {...rest}>
