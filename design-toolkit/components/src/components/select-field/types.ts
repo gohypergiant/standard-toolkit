@@ -16,6 +16,7 @@ import type {
   SelectProps as AriaSelectProps,
   VirtualizerProps as AriaVirtualizerProps,
   FieldErrorProps,
+  PopoverProps,
 } from 'react-aria-components';
 import type { ButtonProps } from '../button/types';
 import type { LabelProps } from '../label/types';
@@ -30,6 +31,7 @@ export type SelectFieldProps = Omit<AriaSelectProps, 'className'> &
       label?: LabelProps['className'];
       trigger?: ButtonProps['className'];
       value?: string;
+      popover?: PopoverProps['className'];
     };
   } & {
     label?: string;

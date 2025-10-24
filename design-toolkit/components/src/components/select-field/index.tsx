@@ -34,7 +34,7 @@ import { SelectFieldStyles } from './styles';
 import type { ProviderProps } from '@/lib/types';
 import type { SelectFieldProps } from './types';
 
-const { description, error, trigger, label, field, value } =
+const { description, error, trigger, label, field, value, popover } =
   SelectFieldStyles();
 
 export const SelectFieldContext =
@@ -166,7 +166,12 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
             >
               {errorMessage}
             </FieldError>
-            <AriaPopover className='min-w-(--trigger-width)'>
+            <AriaPopover 
+              className={composeRenderProps(
+                classNames?.popover,
+                (className) => popover({ className })
+              )}
+            >
               <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>
                 <Options>{children}</Options>
               </Virtualizer>
