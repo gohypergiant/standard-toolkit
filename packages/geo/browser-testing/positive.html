@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Browser Compatibility Testing</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "geodesy/mgrs": "../node_modules/geodesy/mgrs.js",
+        "geodesy/utm": "../node_modules/geodesy/utm.js",
+        "geodesy/latlon-ellipsoidal-vincenty": "../node_modules/geodesy/latlon-ellipsoidal-vincenty.js",
+        "geodesy/latlon-ellipsoidal-datum": "../node_modules/geodesy/latlon-ellipsoidal-datum.js",
+        "geodesy/latlon-ellipsoidal": "../node_modules/geodesy/latlon-ellipsoidal.js",
+        "geodesy/dms": "../node_modules/geodesy/dms.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <script type="module">
+    // Import from the built package (dist/) to test browser compatibility
+    import { coordinateSystems as sys, createCoordinate } from '../dist/index.js';
+
+    [
+      {
+        name: 'Decimal Degrees',
+        input: '50.6195, 3.0673',
+        system: sys.dd,
+      },
+      {
+        name: 'Degrees Decimal Minutes',
+        input: "50°37.17'N 3°4.038'E",
+        system: sys.ddm,
+      },
+      {
+        name: 'Degrees Minutes Seconds',
+        input: '50°37\'10.2"N 3°4\'2.28"E',
+        system: sys.dms,
+      },
+      {
+        name: 'MGRS Coordinate',
+        input: '33UXP04',
+        system: sys.mgrs,
+      },
+      {
+        name: 'UTM Coordinate',
+        input: '33N 417159 5612896',
+        system: sys.utm,
+      },
+    ].forEach(({ input, name, system }) => {
+      try {
+        const result = createCoordinate(system)(input);
+
+        console.info(`Success - "${name}"; ${result.dd()}`);
+      } catch (e) {
+        console.error(`FAILED - "${name}" for coord "${input}", with error;\n${e}`);
+      }
+    });
+
+    // Signal that tests have completed
+    window.testsComplete = true;
+  </script>
+</body>
+
+</html>

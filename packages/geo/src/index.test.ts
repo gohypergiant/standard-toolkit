@@ -26,11 +26,11 @@ import type { Format } from './coordinates/latlon/internal';
 
 describe('creating a coordinate object', () => {
   it.each`
-    system                    | format      | input                          | dd                                  | ddm                                    | dms                                    | mgrs
-    ${coordinateSystems.dd}   | ${'LONLAT'} | ${'12.3456 E / 87.6543 N'}     | ${'12.3456 E / 87.6543 N'}          | ${'12 20.736 E / 87 39.258 N'}         | ${'12 20 44.16 E / 87 39 15.48 N'}     | ${'33XVT8787436351'}
-    ${coordinateSystems.ddm}  | ${'LATLON'} | ${'11 33.02 N / 3 1.2 W'}      | ${'3.02 W / 11.550333333 N'}        | ${'3 1.2 W / 11 33.02 N'}              | ${'3 1 12 W / 11 33 1.1999988 N'}      | ${'30PVT9781976831'}
-    ${coordinateSystems.dms}  | ${'LATLON'} | ${'11 22 33.44 N / 3 2 1.1 W'} | ${'3.033638889 W / 11.375955556 N'} | ${'3 2.01833334 W / 11 22.55733336 N'} | ${'3 2 1.1 W / 11 22 33.44 N'}         | ${'30PVT9632957549'}
-    ${coordinateSystems.mgrs} | ${'LATLON'} | ${'30U WB 85358 69660'}        | ${'1.779008 W / 51.1719929 N'}      | ${'1 46.74048 W / 51 10.319574 N'}     | ${'1 46 44.4288 W / 51 10 19.17444 N'} | ${'30U WB 85358 69660'}
+    system                    | format      | input                          | dd                                           | ddm                                     | dms                                             | mgrs
+    ${coordinateSystems.dd}   | ${'LONLAT'} | ${'12.3456 E / 67.8901 N'}     | ${'12.3456 E / 67.8901 N'}                   | ${'12 20.736 E / 67 53.406 N'}          | ${'12 20 44.16 E / 67 53 24.36 N'}              | ${'33W UR 88535 33004'}
+    ${coordinateSystems.ddm}  | ${'LATLON'} | ${'11 33.02 N / 3 1.2 W'}      | ${'3.02 W / 11.550333333 N'}                 | ${'3 1.2 W / 11 33.02 N'}               | ${'3 1 12 W / 11 33 1.1999988 N'}               | ${'30P VT 97819 76831'}
+    ${coordinateSystems.dms}  | ${'LATLON'} | ${'11 22 33.44 N / 3 2 1.1 W'} | ${'3.033638889 W / 11.375955556 N'}          | ${'3 2.01833334 W / 11 22.55733336 N'}  | ${'3 2 1.1 W / 11 22 33.44 N'}                  | ${'30P VT 96329 57549'}
+    ${coordinateSystems.mgrs} | ${'LATLON'} | ${'30U WB 85358 69660'}        | ${'1.7790080009934 W / 51.17199279600467 N'} | ${'1 46.74048006 W / 51 10.31956776 N'} | ${'1 46 44.428803576 W / 51 10 19.174065617 N'} | ${'30U WB 85358 69660'}
   `(
     'should create a coordinate in the $system.name system using the $format format',
     ({ format, input, system, ...expected }) => {
@@ -202,8 +202,8 @@ describe('raw coordinate parsing', () => {
 
   describe('Military Grid Reference System', () => {
     it.each`
-      input                   | format      | tokens                         | errors
-      ${'30U WB 85358 69660'} | ${'LATLON'} | ${'51.1719929 N / 1.779008 W'} | ${[]}
+      input                   | format      | tokens                                       | errors
+      ${'30U WB 85358 69660'} | ${'LATLON'} | ${'51.17199279600467 N / 1.7790080009934 W'} | ${[]}
     `('$input -> $tokens', ({ format, input, ...expected }) => {
       const [tokens, errors] = parseMGRS(format, input);
 
@@ -235,9 +235,9 @@ describe('raw coordinate parsing', () => {
 
   describe('Universal Transverse Mercator', () => {
     it.each`
-      input                    | format      | tokens                           | errors
-      ${'30 N 585358 5669660'} | ${'LATLON'} | ${'51.1719929 N / 1.779008 W'}   | ${[]}
-      ${'18 N 585628 4511322'} | ${'LATLON'} | ${'40.7483961 N / 73.9857049 W'} | ${[]}
+      input                    | format      | tokens                                         | errors
+      ${'30 N 585358 5669660'} | ${'LATLON'} | ${'51.17199279600467 N / 1.7790080009934 W'}   | ${[]}
+      ${'18 N 585628 4511322'} | ${'LATLON'} | ${'40.74839601188732 N / 73.98570490632135 W'} | ${[]}
     `('$input -> $tokens', ({ format, input, ...expected }) => {
       const [tokens, errors] = parseUTM(format, input);
 

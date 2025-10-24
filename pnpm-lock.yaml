@@ -660,18 +660,12 @@ importers:
 
   packages/geo:
     dependencies:
-      '@accelint/math':
-        specifier: workspace:*
-        version: link:../math
-      '@accelint/predicates':
-        specifier: workspace:*
-        version: link:../predicates
-      '@ngageoint/grid-js':
-        specifier: ^2.1.0
-        version: 2.1.0
-      '@ngageoint/mgrs-js':
-        specifier: ^1.0.0
-        version: 1.0.0
+      '@types/geodesy':
+        specifier: ^2.2.8
+        version: 2.2.8
+      geodesy:
+        specifier: ^2.4.0
+        version: 2.4.0
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -688,6 +682,9 @@ importers:
       esbuild-fix-imports-plugin:
         specifier: ^1.0.23
         version: 1.0.23
+      playwright:
+        specifier: ^1.56.1
+        version: 1.56.1
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
@@ -3614,21 +3611,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@ngageoint/color-js@2.1.0':
-    resolution: {integrity: sha512-jiiZRtEgwIpMUEUVcef7kWGLd7yOSvHKHzxbGOV9YAXulYTnl9LPiq7uY6wO95iJ8NSVoanWTnRrDJ49NF+g5A==}
-    engines: {npm: '>= 8.x'}
-
-  '@ngageoint/grid-js@2.1.0':
-    resolution: {integrity: sha512-PKgkFPgRLU+qXCkfCU/jSZzyI0FlIOjKwTQTEDYR4pXGWXtSmYdor7xUQ/Cq5K/J/4UFJfd55BG7YGguAy9VhA==}
-    engines: {npm: '>= 8.x'}
-
-  '@ngageoint/mgrs-js@1.0.0':
-    resolution: {integrity: sha512-+5bOU2+LWEIK6SZTUMNwbTUhH6DdwvF5+HOzC70mHktwhdNm413ZyncrHzcPov160ItZzd34OazubO1LX49y0w==}
-    engines: {npm: '>= 6.x'}
-
-  '@ngageoint/simple-features-js@1.1.0':
-    resolution: {integrity: sha512-QhJvGiEvPiR5Mk+dUQNsxJF+A77mFfdiOU1CU95q0oHdaEuixrJrrPwJZeG2pSICRNlc36P65Hp26zjzgt7v5Q==}
-
   '@node-rs/jieba-android-arm-eabi@1.10.4':
     resolution: {integrity: sha512-MhyvW5N3Fwcp385d0rxbCWH42kqDBatQTyP8XbnYbju2+0BO/eTeCCLYj7Agws4pwxn2LtdldXRSKavT7WdzNA==}
     engines: {node: '>= 10'}
@@ -5289,6 +5271,9 @@ packages:
   '@types/express@4.17.23':
     resolution: {integrity: sha512-Crp6WY9aTYP3qPi2wGDo9iUe/rceX01UMhnF1jmwDcKCFM6cx7YhGP/Mpr3y9AASpfHixIG0E6azCcL5OcDHsQ==}
 
+  '@types/geodesy@2.2.8':
+    resolution: {integrity: sha512-nGnmuwiLr7gou7SnjMK803yVrVUV47aguHsPQ0IdLL8W3IkP8jQs+vrV43HZ7pW3sdwKJzuPszfHY9xCu04K2w==}
+
   '@types/geojson-vt@3.2.5':
     resolution: {integrity: sha512-qDO7wqtprzlpe8FfQ//ClPV9xiuoh2nkIgiouIptON9w5jvD/fA4szvP9GBlDVdJ5dldAl0kX/sy3URbWwLx0g==}
 
@@ -6413,9 +6398,6 @@ packages:
       supports-color:
         optional: true
 
-  decimal-format@3.0.1:
-    resolution: {integrity: sha512-L07urvPTg4RoTTAMsbZlVPdGoQKeQRLukLovp/6aTufiwGnVHY4Q6L4hELAFAWnh6zT0dZpZGXU/oSrli+SG9w==}
-
   decimal.js@10.6.0:
     resolution: {integrity: sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==}
 
@@ -7015,6 +6997,11 @@ packages:
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
 
+  fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -7030,6 +7017,10 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  geodesy@2.4.0:
+    resolution: {integrity: sha512-tHjQ1sXq8UAIEg1V0Pa6mznUxGU0R+3H5PIF6NULr0yPCAVLKqJro93Bbr19jSE18BMfyjN4osWDI4sm92m0kw==}
+    engines: {node: '>=8.0.0'}
 
   geojson-vt@4.0.2:
     resolution: {integrity: sha512-AV9ROqlNqoZEIJGfm1ncNjEXfkz2hdFlZf0qkVfmkwdKa8vj7H16YUOT81rJw1rdFhyEDlN2Tds91p/glzbl5A==}
@@ -7691,9 +7682,6 @@ packages:
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
-
-  js_cols@1.0.1:
-    resolution: {integrity: sha512-VJuDOf7txQznLQSlJ7p90Cawz5A1+T4MsOYF01V1WqK7TJOnHvvC8Oz8qtc7KDfDyfP05jP5ua7VOpUm/S6s+g==}
 
   jsdoc-type-pratt-parser@4.8.0:
     resolution: {integrity: sha512-iZ8Bdb84lWRuGHamRXFyML07r21pcwBrLkHEuHgEY5UbCouBwv7ECknDRKzsQIXMiqpPymqtIf8TC/shYKB5rw==}
@@ -8782,6 +8770,16 @@ packages:
 
   pkg-types@1.3.1:
     resolution: {integrity: sha512-/Jm5M4RvtBFVkKWRu2BLUTNP8/M2a+UwuAX+ae4770q1qVGtfjG+WTCupoZixokjmHiry8uI+dlY8KXYV5HVVQ==}
+
+  playwright-core@1.56.1:
+    resolution: {integrity: sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.56.1:
+    resolution: {integrity: sha512-aFi5B0WovBHTEvpM3DzXTUaeN6eN0qWnTkKx4NQaH4Wvcmc153PdaY2UBdSYKaGYw+UyWXSVyxDUg5DoPEttjw==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   polished@4.3.1:
     resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
@@ -9919,9 +9917,6 @@ packages:
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
 
-  sprintf-js@1.1.3:
-    resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
-
   srcset@4.0.0:
     resolution: {integrity: sha512-wvLeHgcVHKO8Sc/H/5lkGreJQVeYMm9rlmt8PuR1xE31rIuXhuzznUUqAt8MqLhB3MqJdFzlNAfpcWnxiFUcPw==}
     engines: {node: '>=12'}
@@ -10181,9 +10176,6 @@ packages:
     resolution: {integrity: sha512-Kw36UHxJEELq2VUqdaSGR2/8cAsPgMtvX8uGVU6Jk26O66PhXec0A5ZnRYs47btbtwPDpXXF66+Fo3vimCM9aQ==}
     engines: {node: '>=16'}
 
-  timsort@0.3.0:
-    resolution: {integrity: sha512-qsdtZH+vMoCARQtyod4imc2nIJwg9Cc7lPRrw9CzF8ZKR0khdr8+2nX80PBhET3tcyTtJDxAffGh2rXH4tyU8A==}
-
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
@@ -10294,9 +10286,6 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
-
-  tstl@2.5.16:
-    resolution: {integrity: sha512-+O2ybLVLKcBwKm4HymCEwZIT0PpwS3gCYnxfSDEjJEKADvIFruaQjd3m7CAKNU1c7N3X3WjVz87re7TA2A5FUw==}
 
   tsup@8.5.0:
     resolution: {integrity: sha512-VmBp77lWNQq6PfuMqCHD3xWl22vEoWsKajkF8t+yMBawlUS8JzEI+vOVMeuNZIuMML8qXRizFKi9oD5glKQVcQ==}
@@ -14429,29 +14418,6 @@ snapshots:
   '@next/swc-win32-x64-msvc@15.5.6':
     optional: true
 
-  '@ngageoint/color-js@2.1.0': {}
-
-  '@ngageoint/grid-js@2.1.0':
-    dependencies:
-      '@ngageoint/color-js': 2.1.0
-      '@ngageoint/simple-features-js': 1.1.0
-      '@types/lodash': 4.17.20
-      lodash: 4.17.21
-      tstl: 2.5.16
-
-  '@ngageoint/mgrs-js@1.0.0':
-    dependencies:
-      '@ngageoint/color-js': 2.1.0
-      '@ngageoint/grid-js': 2.1.0
-      decimal-format: 3.0.1
-      sprintf-js: 1.1.3
-      tstl: 2.5.16
-
-  '@ngageoint/simple-features-js@1.1.0':
-    dependencies:
-      js_cols: 1.0.1
-      timsort: 0.3.0
-
   '@node-rs/jieba-android-arm-eabi@1.10.4':
     optional: true
 
@@ -16537,6 +16503,8 @@ snapshots:
       '@types/qs': 6.14.0
       '@types/serve-static': 1.15.9
 
+  '@types/geodesy@2.2.8': {}
+
   '@types/geojson-vt@3.2.5':
     dependencies:
       '@types/geojson': 7946.0.16
@@ -17816,8 +17784,6 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  decimal-format@3.0.1: {}
-
   decimal.js@10.6.0: {}
 
   decode-named-character-reference@1.2.0:
@@ -18474,6 +18440,9 @@ snapshots:
 
   fs.realpath@1.0.0: {}
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -18482,6 +18451,8 @@ snapshots:
   generator-function@2.0.1: {}
 
   gensync@1.0.0-beta.2: {}
+
+  geodesy@2.4.0: {}
 
   geojson-vt@4.0.2:
     optional: true
@@ -19253,8 +19224,6 @@ snapshots:
   js-yaml@4.1.0:
     dependencies:
       argparse: 2.0.1
-
-  js_cols@1.0.1: {}
 
   jsdoc-type-pratt-parser@4.8.0: {}
 
@@ -20614,6 +20583,14 @@ snapshots:
       confbox: 0.1.8
       mlly: 1.8.0
       pathe: 2.0.3
+
+  playwright-core@1.56.1: {}
+
+  playwright@1.56.1:
+    dependencies:
+      playwright-core: 1.56.1
+    optionalDependencies:
+      fsevents: 2.3.2
 
   polished@4.3.1:
     dependencies:
@@ -22050,8 +22027,6 @@ snapshots:
 
   sprintf-js@1.0.3: {}
 
-  sprintf-js@1.1.3: {}
-
   srcset@4.0.0: {}
 
   stackback@0.0.2: {}
@@ -22318,8 +22293,6 @@ snapshots:
 
   tightrope@0.2.0: {}
 
-  timsort@0.3.0: {}
-
   tiny-invariant@1.3.3: {}
 
   tiny-warning@1.0.3: {}
@@ -22399,8 +22372,6 @@ snapshots:
       strip-bom: 3.0.0
 
   tslib@2.8.1: {}
-
-  tstl@2.5.16: {}
 
   tsup@8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1):
     dependencies:

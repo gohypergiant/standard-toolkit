@@ -97,6 +97,7 @@ const freezeCoordinate = (
     ddm: (format?: Format) => to(systemDegreesDecimalMinutes, format),
     dms: (format?: Format) => to(systemDegreesMinutesSeconds, format),
     mgrs: (format?: Format) => to(systemMGRS, format),
+    utm: (format?: Format) => to(systemUTM, format),
     errors,
     raw,
     valid,
