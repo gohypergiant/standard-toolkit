@@ -15,6 +15,7 @@
 import 'client-only';
 import { memo, useContext } from 'react';
 import {
+  type RuleGroupTypeAny,
   type RuleProps,
   TestID,
   useRule,
@@ -24,7 +25,7 @@ import { Lines } from '../lines';
 import type { QueryBuilderContextType, QueryBuilderLinesProps } from './types';
 
 
-function isLastRuleInGroup(rules: any[], path: number[]): boolean {
+function isLastRuleInGroup(rules: RuleGroupTypeAny['rules'], path: number[]): boolean {
   if (!rules || path.length === 0) return false;
 
   const currentIndex = path[0];
@@ -39,13 +40,11 @@ function isLastRuleInGroup(rules: any[], path: number[]): boolean {
 
   const nextRule = rules[currentIndex];
 
-  if (!nextRule) {
-    return false; 
+  if ( typeof nextRule !== 'object' || nextRule === null ||    !('rules' in nextRule)) {
+    return false;
   }
-  
-  const nextRules = nextRule?.rules;
 
-  return isLastRuleInGroup(nextRules, path.slice(1));
+  return isLastRuleInGroup(nextRule.rules, path.slice(1));
 }
 
 const QueryBuilderLines = memo(function QueryBuilderLines({

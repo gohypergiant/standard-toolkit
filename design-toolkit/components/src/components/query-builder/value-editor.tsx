@@ -80,7 +80,7 @@ function RadioGroupValueEditor({
   );
 }
 
-const defaultOptions: ValueEditorProps['values'] = [];
+const defaultOptions: ValueEditorProps['values'][] = [];
 
 function SelectValueEditor({
   disabled,
