@@ -18,11 +18,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 const WIDGETS = [new ViewportSyncWidget({ id: 'default' })];
 
 const meta: Meta = {
-  title: 'Viewport',
-  decorators: [],
-  parameters: {
-    layout: '',
-  },
+  title: 'Viewport/Viewport Size',
 };
 
 export default meta;
