@@ -41,6 +41,11 @@ function isLastRuleInGroup(rules: any[], path: number[]): boolean {
   }
 
   const nextRule = rules[currentIndex];
+
+  if (!nextRule) {
+    return false; 
+  }
+  
   const nextRules = nextRule?.rules;
 
   return isLastRuleInGroup(nextRules, path.slice(1));

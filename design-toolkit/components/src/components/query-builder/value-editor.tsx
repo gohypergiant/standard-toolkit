@@ -80,7 +80,7 @@ function RadioGroupValueEditor({
   );
 }
 
-const defaultOptions: unknown[] = [];
+const defaultOptions: ValueEditorProps['values'] = [];
 
 function SelectValueEditor({
   disabled,
@@ -154,7 +154,7 @@ function TextValueEditor({
       aria-invalid={!valid}
       aria-label={name}
       aria-labelledby={name}
-      errorMessage={reasons?.join('/n')}
+      errorMessage={reasons?.join('\n')}
       classNames={{field: textField(), error: textFieldError()}}
     />
   );
@@ -172,7 +172,7 @@ function TextareaValueEditor({
   return (
     <TextAreaField
       size='small'
-      errorMessage={reasons?.join('/n')}
+      errorMessage={reasons?.join('\n')}
       inputProps={{ placeholder }}
       value={value}
       isDisabled={disabled}
