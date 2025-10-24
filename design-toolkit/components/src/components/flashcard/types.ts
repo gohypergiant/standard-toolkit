@@ -10,12 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-export type FlashcardProps = {
-  title: string;
-  subTitle: string;
-  secondaryData?: string[];
-  metadata?: FlashcardMetaData[];
-};
+import type { PropsWithChildren } from 'react';
+
+// Honestly, might not need these props.
+export type FlashcardProps = PropsWithChildren;
 
 // TODO: How strict do we need to be with the value types?
 export type FlashcardMetaData = {
