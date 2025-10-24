@@ -18,7 +18,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 const WIDGETS = [new ViewportSyncWidget({ id: 'default' })];
 
 const meta: Meta = {
-  title: 'DeckGL',
+  title: 'Viewport',
   decorators: [],
   parameters: {
     layout: '',
