@@ -34,7 +34,7 @@ export const ViewportScale: Story = {
       <div>
         <ViewportScaleComponent
           viewId='default'
-          className='absolute right-4 bottom-4 bg-gray-400 p-4'
+          className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
         />
         <BaseMap
           interleaved={false} // setting it to true breaks the widget somehow, may be a Storybook specific bug
