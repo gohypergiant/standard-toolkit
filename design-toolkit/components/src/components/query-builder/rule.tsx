@@ -22,10 +22,8 @@ import {
   useStopEventPropagation,
 } from 'react-querybuilder';
 import { Lines } from '../lines';
-import { RuleStyles } from './styles';
-import type { QueryBuilderContextType } from './types';
+import type { QueryBuilderContextType, QueryBuilderLinesProps } from './types';
 
-const { lines } = RuleStyles();
 
 function isLastRuleInGroup(rules: any[], path: number[]): boolean {
   if (!rules || path.length === 0) return false;
@@ -55,11 +53,7 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
   path,
   props,
   context,
-}: {
-  path: Path;
-  props: RuleProps;
-  context: QueryBuilderContextType;
-}) {
+}: QueryBuilderLinesProps ) {
   const rules = props.schema.getQuery()?.rules;
   const isLastRule = isLastRuleInGroup(rules, path);
   const line = isLastRule ? 'last' : 'branch';
@@ -69,7 +63,7 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
       variant={line}
       size='small'
       isVisible={context.showRuleLines}
-      className={lines()}
+      className='min-h-[46px] w-[20px]'
     />
   );
 });

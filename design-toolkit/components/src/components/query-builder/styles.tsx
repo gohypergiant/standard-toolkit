@@ -57,12 +57,6 @@ export const QueryBuilderStyles = tv({
   defaultVariants: QueryBuilderStylesDefaults,
 });
 
-export const RuleStyles = tv({
-  slots: {
-    lines: 'min-h-[46px] w-[20px]',
-  },
-});
-
 export const ValueEditorStyles = tv({
   slots: {
     textField: 'relative',
