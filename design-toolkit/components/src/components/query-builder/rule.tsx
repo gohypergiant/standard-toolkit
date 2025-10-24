@@ -26,7 +26,9 @@ import type { QueryBuilderContextType, QueryBuilderLinesProps } from './types';
 
 
 function isLastRuleInGroup(rules: RuleGroupTypeAny['rules'], path: number[]): boolean {
-  if (!rules || path.length === 0) return false;
+  if (!rules || path.length === 0) { 
+    return false 
+  }
 
   const currentIndex = path[0];
   if (typeof currentIndex !== 'number' || currentIndex < 0 || currentIndex >= rules.length) {
