@@ -15,7 +15,6 @@
 import 'client-only';
 import { memo, useContext } from 'react';
 import {
-  type Path,
   type RuleProps,
   TestID,
   useRule,
