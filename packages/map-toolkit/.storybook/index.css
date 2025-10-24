@@ -14,6 +14,6 @@
 @import "@accelint/design-toolkit/styles";
 @source "../node_modules/@accelint/design-toolkit";
 
-html {
+#storybook-root {
   overflow: hidden;
 }
