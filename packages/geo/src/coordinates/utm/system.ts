@@ -11,8 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Point } from '@ngageoint/grid-js';
-import { UTM } from '@ngageoint/mgrs-js';
+import { LatLon } from 'geodesy/utm';
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseUTM } from './parser';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
@@ -37,6 +36,7 @@ export const systemUTM: CoordinateSystem = {
       [format.slice(3), right],
     ]) as Record<'LAT' | 'LON', number>;
 
-    return UTM.from(Point.point(LON, LAT)).toString();
+    const latlon = new LatLon(LAT, LON);
+    return latlon.toUtm().toString();
   },
 };

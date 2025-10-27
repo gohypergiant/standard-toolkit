@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { MGRS } from '@ngageoint/mgrs-js';
+import Mgrs from 'geodesy/mgrs';
 import { type ParseResults, parse } from '../latlon/internal/parse';
 import { violation } from '../latlon/internal/violation';
 
@@ -60,9 +60,9 @@ function detailedErrors(input: string) {
 // biome-ignore lint/suspicious/noExplicitAny: Format is unused
 export function parseMGRS(_format: any, input: string) {
   try {
-    const point = MGRS.parse(input).toPoint();
+    const point = Mgrs.parse(input).toUtm().toLatLon();
 
-    return parse(`${point.getLatitude()} / ${point.getLongitude()}`, 'LATLON');
+    return parse(`${point.lat} / ${point.lon}`, 'LATLON');
   } catch (_e) {
     return detailedErrors(input);
   }

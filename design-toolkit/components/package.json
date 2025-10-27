@@ -62,9 +62,9 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm generate && pnpm license && pnpm format && tsup && pnpm build:css",
     "build-storybook": "pnpm storybook build",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
+    "build": "pnpm generate && pnpm license && pnpm format && tsup && pnpm build:css",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write",
@@ -72,15 +72,15 @@
     "gen:variants": "node scripts/generate-variants.mjs",
     "generate": "pnpm gen:tokens && pnpm gen:variants",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
-    "license": "pnpm license:tokens && pnpm license:variants",
     "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
     "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
+    "license": "pnpm license:tokens && pnpm license:variants",
     "lint": "pnpm biome lint",
-    "preview": "pnpm storybook dev -p 6006",
     "preview:docs": "pnpm storybook dev --docs -p 6006",
+    "preview": "pnpm storybook dev -p 6006",
     "temp:token-migration": "pnpm zx scripts/token-migration.mjs",
-    "test": "pnpm vitest --dir=src",
-    "test:watch": "pnpm vitest --dir=src --watch"
+    "test:watch": "pnpm vitest --dir=src --watch",
+    "test": "pnpm vitest --dir=src"
   },
   "dependencies": {
     "@react-stately/data": "^3.13.2",
