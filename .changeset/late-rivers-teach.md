@@ -2,4 +2,4 @@
 "@accelint/design-toolkit": patch
 ---
 
-Fix lines indicator in Query Builder Component"
+Addresses a visual bug where QueryBuilder component hierarchy lines were not aligned correctly
