@@ -15,7 +15,6 @@
 import ChevronLeft from '@accelint/icons/chevron-left';
 import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
-import { range } from 'radashi';
 import { createContext, useContext } from 'react';
 import { Button, ToggleButton } from '../button';
 import { Icon } from '../icon';
@@ -30,8 +29,17 @@ import type {
 } from './types';
 
 const { container, button } = PaginationStyles();
+
+const DEFAULT_EMPTY_RANGE = 0;
 const DEFAULT_MIN_RANGE = 1;
 const DEFAULT_MAX_RANGE = 5;
+const DEFAULT_MID_RANGE = 2;
+const DEFAULT_UPPER_MID = 4;
+
+function range(start: number, end: number) {
+  const length = end - start + 1;
+  return Array.from({ length }, (_, index) => index + start);
+}
 
 /**
  * Return min max range for visible pages. As per our design, we limit
@@ -51,13 +59,13 @@ export function getPaginationRange(
     pageCount < 1 ||
     currentPage < 1
   ) {
-    return { minRange: 0, maxRange: 0 };
+    return { minRange: DEFAULT_EMPTY_RANGE, maxRange: DEFAULT_EMPTY_RANGE };
   }
 
   // Below max display.
-  if (pageCount < 5) {
+  if (pageCount < DEFAULT_MAX_RANGE) {
     return {
-      minRange: 1,
+      minRange: DEFAULT_MIN_RANGE,
       maxRange: pageCount,
     };
   }
@@ -65,15 +73,15 @@ export function getPaginationRange(
   // Middle.
   if (currentPage >= 3 && currentPage < pageCount - 2) {
     return {
-      minRange: currentPage - 2,
-      maxRange: currentPage + 2,
+      minRange: currentPage - DEFAULT_MID_RANGE,
+      maxRange: currentPage + DEFAULT_MID_RANGE,
     };
   }
 
   // End of page count.
   if (currentPage > pageCount - 3) {
     return {
-      minRange: pageCount - 4,
+      minRange: pageCount - DEFAULT_UPPER_MID,
       maxRange: pageCount,
     };
   }
@@ -110,13 +118,13 @@ export function Pagination({
   ...rest
 }: BasePaginationProps) {
   return (
-    <Pagination.Provider value={{ currentPage, pageCount }}>
+    <PaginationProvider value={{ currentPage, pageCount }}>
       <nav
         {...rest}
         className={container({ className: classNames?.container })}
         aria-label={`pagination, page ${currentPage} of ${pageCount}`}
       >
-        <Pagination.Previous
+        <PaginationPrevious
           onPress={() => {
             if (currentPage > 1) {
               onChange?.(currentPage - 1);
@@ -124,12 +132,12 @@ export function Pagination({
           }}
           className={classNames?.controls}
         />
-        <Pagination.NumberContainer
+        <PaginationNumberContainer
           onPress={(nextPage) => onChange?.(nextPage)}
           className={classNames?.pages}
           isLoading={isLoading}
         />
-        <Pagination.Next
+        <PaginationNext
           onPress={() => {
             if (currentPage < pageCount) {
               onChange?.(currentPage + 1);
@@ -138,7 +146,7 @@ export function Pagination({
           className={classNames?.controls}
         />
       </nav>
-    </Pagination.Provider>
+    </PaginationProvider>
   );
 }
 
@@ -152,7 +160,6 @@ function PaginationProvider({
     </PaginationContext.Provider>
   );
 }
-PaginationProvider.displayName = 'Pagination.Provider';
 
 function PaginationPrevious({ className, onPress }: PaginationNavProps) {
   const { currentPage, pageCount } = useContext(PaginationContext);
@@ -174,7 +181,6 @@ function PaginationPrevious({ className, onPress }: PaginationNavProps) {
     </Button>
   );
 }
-PaginationPrevious.displayName = 'Pagination.Previous';
 
 function PaginationNext({ className, onPress }: PaginationNavProps) {
   const { currentPage, pageCount } = useContext(PaginationContext);
@@ -199,7 +205,6 @@ function PaginationNext({ className, onPress }: PaginationNavProps) {
     </Button>
   );
 }
-PaginationNext.displayName = 'Pagination.Next';
 
 function PaginationPageNumber({
   isSelected,
@@ -220,7 +225,6 @@ function PaginationPageNumber({
     </ToggleButton>
   );
 }
-PaginationPageNumber.displayName = 'Pagination.PageNumber';
 
 function PaginationNumberContainer({
   isLoading,
@@ -249,9 +253,3 @@ function PaginationNumberContainer({
     />
   ));
 }
-PaginationNumberContainer.displayName = 'Pagination.NumberContainer';
-
-Pagination.Provider = PaginationProvider;
-Pagination.Previous = PaginationPrevious;
-Pagination.NumberContainer = PaginationNumberContainer;
-Pagination.Next = PaginationNext;
