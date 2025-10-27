@@ -46,18 +46,16 @@
     "test": "pnpm vitest --dir=src"
   },
   "dependencies": {
-    "@accelint/math": "workspace:*",
-    "@accelint/predicates": "workspace:*",
-    "@ngageoint/grid-js": "^2.1.0",
-    "@ngageoint/mgrs-js": "^1.0.0",
-    "typescript": "5.8.3"
+    "geodesy": "^2.4.0"
   },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
+    "@types/geodesy": "^2.2.8",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0",
+    "typescript": "5.8.3",
     "vitest": "^2.1.9"
   },
   "publishConfig": {
