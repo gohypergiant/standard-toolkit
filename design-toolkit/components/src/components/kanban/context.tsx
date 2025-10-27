@@ -31,6 +31,10 @@ export interface KanbanContextData {
   updateColumnState: (columns: KanbanColumnData[]) => void;
   moveCard: MoveCard;
   getColumnById: (id: string) => KanbanColumnData | undefined;
+  cardMap: Map<
+    string,
+    { column: KanbanColumnData; card: KanbanCardData; index: number }
+  >;
 }
 
 export interface KanbanProviderProps {
@@ -138,6 +142,7 @@ const KanbanContext = createContext<KanbanContextData>({
   updateColumnState: () => null,
   moveCard: () => null,
   getColumnById: () => undefined,
+  cardMap: new Map(),
 });
 
 export const KanbanProvider = ({
@@ -166,7 +171,7 @@ export const KanbanProvider = ({
       cardId: string,
       targetColumnId: string,
       targetPosition: number,
-      closestEdge: 'top' | 'bottom' | undefined,
+      closestEdge?: 'top' | 'bottom',
     ) => {
       const newColumns = [...columns];
 
@@ -187,9 +192,8 @@ export const KanbanProvider = ({
       // Remove card from source column
       const newSourceColumn = {
         ...source.column,
-        cards: [...source.column.cards],
+        cards: source.column.cards.filter((_, i) => i !== source.index),
       };
-      newSourceColumn.cards.splice(source.index, 1);
 
       // Calculate insert index
       let index = getInsertIndex(targetPosition, closestEdge);
@@ -228,7 +232,7 @@ export const KanbanProvider = ({
 
       updateColumnState(updatedColumns);
     },
-    [columns, updateColumnState, cardMap],
+    [columns, updateColumnState, cardMap.get],
   );
 
   const getColumnById = useCallback(
@@ -238,11 +242,17 @@ export const KanbanProvider = ({
 
   return (
     <KanbanContext.Provider
-      value={{ columns, updateColumnState, moveCard, getColumnById }}
+      value={{ columns, updateColumnState, moveCard, getColumnById, cardMap }}
     >
       {children}
     </KanbanContext.Provider>
   );
 };
 
-export const useKanban = () => useContext(KanbanContext);
+export const useKanban = () => {
+  const context = useContext(KanbanContext);
+  if (!context) {
+    throw new Error('useKanban must be used within KanbanProvider');
+  }
+  return context;
+};

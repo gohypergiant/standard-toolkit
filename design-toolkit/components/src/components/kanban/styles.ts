@@ -21,6 +21,7 @@ export const KanbanStyles = tv({
     colHeader:
       'fg-primary-bold flex w-full items-center justify-between gap-m bg-surface-default p-s text-header-m',
     colHeaderActions: 'fg-primary-muted flex flex-row items-center gap-s',
+    colHeaderActionsCount: 'w-[24px] text-center text-sm',
     colHeaderTitle:
       'fg-primary-bold flex flex-row items-center gap-s font-medium text-sm',
     colContent:
@@ -33,6 +34,7 @@ export const KanbanStyles = tv({
     cardBody: 'fg-primary-muted text-body-m',
     cardTitle: 'fg-primary-bold font-medium',
     cardActions: 'flex flex-row items-center',
+    divider: 'mb-s h-xxs bg-accent-primary-bold',
   },
 });
 

@@ -9,7 +9,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import type { FormEvent, PropsWithChildren, ReactNode } from 'react';
 import type { SearchFieldProps } from '../search-field/types';
 
@@ -33,7 +32,6 @@ export interface KanbanProps extends KanbanComponentProps {
 }
 
 export interface KanbanMenuProps extends KanbanComponentProps {
-  actionItems?: () => void;
   cardCount?: number;
 }
 
@@ -48,7 +46,7 @@ export interface KanbanColContentActionProps extends KanbanComponentProps {
 export interface KanbanColContentProps {
   children?: ReactNode | ReactNode[];
   className?: string;
-  column?: KanbanColumnData;
+  column: KanbanColumnData;
 }
 
 export type KanbanCardData = {

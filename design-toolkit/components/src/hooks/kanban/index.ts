@@ -133,7 +133,7 @@ export function useCardInteractions(card: KanbanCardData) {
   };
 
   // Determine closest edge based on over position
-  let closestEdge: 'top' | 'bottom' | null = null;
+  let closestEdge: 'top' | 'bottom' | undefined;
 
   if (over && over.id === card.id && active) {
     closestEdge = calculateClosestEdge(over, active);

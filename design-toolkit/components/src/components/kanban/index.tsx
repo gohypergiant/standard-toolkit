@@ -58,6 +58,7 @@ const {
   colContainer,
   colHeader,
   colHeaderActions,
+  colHeaderActionsCount,
   colHeaderTitle,
   colContent,
   cardContainerOuter,
@@ -65,6 +66,7 @@ const {
   cardTitle,
   cardBody,
   cardActions,
+  divider,
 } = KanbanStyles();
 
 // Context for sharing active drag state
@@ -77,7 +79,7 @@ const useDragContext = () => useContext(DragContext);
 const ACTIVATION_DISTANCE = 8;
 
 export function Kanban({ children, className, ...rest }: KanbanProps) {
-  const { moveCard, columns } = useKanban();
+  const { moveCard, cardMap } = useKanban();
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -112,10 +114,6 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveId(null);
 
-    if (!moveCard) {
-      return;
-    }
-
     const dropTarget = parseDropTarget(event);
     if (!dropTarget) {
       return;
@@ -130,9 +128,7 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
   };
 
   // Find the active card for the drag overlay
-  const activeCard = activeId
-    ? columns.flatMap((col) => col.cards).find((card) => card.id === activeId)
-    : null;
+  const activeCard = activeId ? cardMap.get(activeId)?.card : null;
 
   return (
     <DragContext.Provider value={{ activeId }}>
@@ -269,7 +265,7 @@ const ColHeaderActions = ({
 }: KanbanMenuProps) => {
   return (
     <div className={colHeaderActions({ className })} {...rest}>
-      <div className='w-[24px] text-center text-sm'>{cardCount ?? 0}</div>
+      <div className={colHeaderActionsCount()}>{cardCount ?? 0}</div>
       {children}
     </div>
   );
@@ -330,7 +326,7 @@ function KanbanCard({
   return (
     <li className={cardContainerOuter()} ref={ref} style={style}>
       {showPlaceholder && closestEdge === 'top' && (
-        <Divider className='mb-s h-xxs bg-accent-primary-bold' />
+        <Divider className={divider()} />
       )}
 
       <div
@@ -348,7 +344,7 @@ function KanbanCard({
       </div>
 
       {showPlaceholder && closestEdge === 'bottom' && (
-        <Divider className='mt-s h-xxs bg-accent-primary-bold' />
+        <Divider className={divider()} />
       )}
     </li>
   );
