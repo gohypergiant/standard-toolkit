@@ -23,7 +23,7 @@ import type { ProviderProps } from 'react';
 import type {
   BasePaginationProps,
   PaginationNavProps,
-  PageNumberContainerProps as PaginationNumberContainerProps,
+  PaginationNumberContainerProps,
   PaginationPageNumberProps,
   PaginationRange,
 } from './types';
@@ -39,6 +39,13 @@ const DEFAULT_UPPER_MID = 4;
 function range(start: number, end: number) {
   const length = end - start + 1;
   return Array.from({ length }, (_, index) => index + start);
+}
+
+// Handles edge cases around the relationship between pageCount and currentPage.`
+function isNavigationDisabled(pageCount: number, currentPage: number): boolean {
+  return (
+    !pageCount || pageCount < 1 || currentPage < 1 || pageCount < currentPage
+  );
 }
 
 /**
@@ -116,7 +123,7 @@ export function Pagination({
   onChange,
   isLoading = false,
   ...rest
-}: BasePaginationProps) {
+}: BasePaginationProps & React.HTMLAttributes<HTMLElement>) {
   return (
     <PaginationProvider value={{ currentPage, pageCount }}>
       <nav
@@ -126,9 +133,7 @@ export function Pagination({
       >
         <PaginationPrevious
           onPress={() => {
-            if (currentPage > 1) {
-              onChange?.(currentPage - 1);
-            }
+            onChange?.(currentPage - 1);
           }}
           className={classNames?.controls}
         />
@@ -139,9 +144,7 @@ export function Pagination({
         />
         <PaginationNext
           onPress={() => {
-            if (currentPage < pageCount) {
-              onChange?.(currentPage + 1);
-            }
+            onChange?.(currentPage + 1);
           }}
           className={classNames?.controls}
         />
@@ -170,9 +173,9 @@ function PaginationPrevious({ className, onPress }: PaginationNavProps) {
       variant='icon'
       className={button({ className })}
       isDisabled={
-        currentPage === 1 || !pageCount || pageCount < 1 || currentPage < 1
+        currentPage === 1 || isNavigationDisabled(pageCount, currentPage)
       }
-      onPress={() => onPress?.()}
+      onPress={() => onPress()}
       aria-label='pagination-previous'
     >
       <Icon>
@@ -191,11 +194,9 @@ function PaginationNext({ className, onPress }: PaginationNavProps) {
       variant='icon'
       isDisabled={
         currentPage === pageCount ||
-        !pageCount ||
-        pageCount < 1 ||
-        currentPage < 1
+        isNavigationDisabled(pageCount, currentPage)
       }
-      onPress={() => onPress?.()}
+      onPress={() => onPress()}
       className={button({ className })}
       aria-label='pagination-next'
     >
@@ -218,7 +219,7 @@ function PaginationPageNumber({
       variant='flat'
       isSelected={isSelected}
       className={button({ className })}
-      onPress={() => onPress?.()}
+      onPress={() => onPress()}
       aria-current={isSelected ? 'page' : undefined}
     >
       {pageNumber}
@@ -232,10 +233,6 @@ function PaginationNumberContainer({
   className,
 }: PaginationNumberContainerProps) {
   const { pageCount, currentPage } = useContext(PaginationContext);
-  if (!(pageCount && currentPage) || isLoading) {
-    return null;
-  }
-
   const { minRange, maxRange } = getPaginationRange(pageCount, currentPage);
 
   // No display for invalid props.

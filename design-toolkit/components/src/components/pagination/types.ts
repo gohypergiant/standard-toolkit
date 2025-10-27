@@ -10,9 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren } from 'react';
-
-export type BasePaginationProps = PropsWithChildren & {
+export type BasePaginationProps = {
   pageCount: number;
   currentPage: number;
   isLoading?: boolean;
@@ -26,20 +24,20 @@ export type BasePaginationProps = PropsWithChildren & {
 
 export type PaginationNavProps = {
   className?: string;
-  onPress?: () => void;
+  onPress: () => void;
 };
 
-export type PageNumberContainerProps = {
+export type PaginationNumberContainerProps = {
   isLoading?: boolean;
   className?: string;
-  onPress?: (pageNumber: number) => void;
+  onPress: (pageNumber: number) => void;
 };
 
 export type PaginationPageNumberProps = {
   className?: string;
   pageNumber: number;
   isSelected: boolean;
-  onPress?: () => void;
+  onPress: () => void;
 };
 
 export type PaginationRange = {
