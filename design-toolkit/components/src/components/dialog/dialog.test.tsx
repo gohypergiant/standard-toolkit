@@ -13,7 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Dialog } from './';
-import type { DialogTriggerProps } from './types';
+import type { DialogTriggerProps } from 'react-aria-components';
 
 function setup({
   children = 'Foo',
