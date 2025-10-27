@@ -33,10 +33,14 @@ export const Default: Story = {
 
     return (
       <Flashcard>
-        <Flashcard.Hero>Identifier</Flashcard.Hero>
+        <Flashcard.Hero>
+          <Flashcard.Identifier>IDENTIFIER</Flashcard.Identifier>
+        </Flashcard.Hero>
         <Flashcard.Secondary>
-          <Flashcard.SecondaryData>SECONDARY_DATA_01</Flashcard.SecondaryData>
-          <Flashcard.SecondaryData>SECONDARY_DATA_02</Flashcard.SecondaryData>
+          <Flashcard.SecondaryDetails>
+            <Flashcard.SecondaryData>SECONDARY_DATA_01</Flashcard.SecondaryData>
+            <Flashcard.SecondaryData>SECONDARY_DATA_02</Flashcard.SecondaryData>
+          </Flashcard.SecondaryDetails>
           {details.map((item) => (
             <Flashcard.Details
               label={item.label}

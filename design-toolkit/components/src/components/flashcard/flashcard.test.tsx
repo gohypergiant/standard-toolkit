@@ -13,18 +13,39 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Flashcard } from '.';
-import type { FlashcardProps } from './types';
 
-function setup(props: FlashcardProps) {
-  return {
-    ...render(<Flashcard {...props} />),
-    ...props,
-  };
+function setup() {
+  const details = [
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+  ];
+
+  render(
+    <Flashcard>
+      <Flashcard.Hero>
+        <Flashcard.Identifier>IDENTIFIER</Flashcard.Identifier>
+      </Flashcard.Hero>
+      <Flashcard.Secondary>
+        <Flashcard.SecondaryData>SECONDARY_DATA_01</Flashcard.SecondaryData>
+        <Flashcard.SecondaryData>SECONDARY_DATA_02</Flashcard.SecondaryData>
+        {details.map((item) => (
+          <Flashcard.Details
+            label={item.label}
+            value={item.value}
+            key={item.label}
+          />
+        ))}
+      </Flashcard.Secondary>
+    </Flashcard>,
+  );
 }
 
 describe('Flashcard', () => {
   it('should render', () => {
-    setup({ title: 'Hey', subTitle: 'Hey again' });
-    expect(screen.findByText('Hello')).toBeInTheDocument();
+    setup();
+    expect(screen.findByText('IDENTIFIER')).toBeInTheDocument();
   });
 });

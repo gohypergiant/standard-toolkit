@@ -17,6 +17,6 @@ export type FlashcardProps = PropsWithChildren;
 
 // TODO: How strict do we need to be with the value types?
 export type FlashcardMetaData = {
-  key: string;
-  value: unknown;
+  label: string;
+  value: any;
 };

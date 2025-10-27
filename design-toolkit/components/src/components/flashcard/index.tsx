@@ -15,7 +15,9 @@
  *
  * <Flashcard>
  *  <Flashcard.Hero>
- *    {identifier}
+ *    <Flashcard.Identifier>
+ *      {identifier}
+ *    </Flashcard.Identifier>
  *  </Flashcard.Hero>
  *  <Flashcard.Secondary>
  *    <Flashcard.SecondaryData>
@@ -29,14 +31,16 @@
  * </Flashcard>
  */
 
-import type { FlashcardProps } from './types';
+import { Skeleton } from '../skeleton';
+import type { PropsWithChildren } from 'react';
+import type { FlashcardMetaData, FlashcardProps } from './types';
 
 export function Flashcard(props: FlashcardProps) {
   const { children, ...rest } = props;
 
   return (
     <div
-      className='radius-small w-[361px] outline outline-interactive-hover'
+      className='rounded-[var(--radius-medium)] min-w-[128px] outline outline-interactive-hover'
       {...rest}
     >
       {children}
@@ -45,9 +49,18 @@ export function Flashcard(props: FlashcardProps) {
 }
 Flashcard.displayName = 'Flashcard';
 
-// TODO: types
-function FlashcardHero(props: any) {
-  const { children, ...rest } = props;
+// TODO: Fix up type.
+function FlashcardHero(props: PropsWithChildren & { isLoading: boolean }) {
+  const { isLoading, children, ...rest } = props;
+
+  if (isLoading) {
+    return (
+      <div className='gap-s bg-surface-muted p-s' {...rest}>
+        <Skeleton />
+        <Skeleton />
+      </div>
+    );
+  }
 
   return (
     <div className='gap-s bg-surface-muted p-s' {...rest}>
@@ -57,8 +70,7 @@ function FlashcardHero(props: any) {
 }
 FlashcardHero.displayName = 'Flashcard.Hero';
 
-// TODO: Types
-function FlashcardIdentifier(props: any) {
+function FlashcardIdentifier(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
@@ -66,15 +78,14 @@ function FlashcardIdentifier(props: any) {
       <div className='fg-primary-bold text-body-m' {...rest}>
         {children}
       </div>
-      {/* TODO: What is this subheader for? Does it need to be a subcomponent? */}
+      {/* TODO: Flashcard.HeroIdentifierLabel? What is this for. */}
       <div className='fg-primary-muted text-body-xs'>DATA</div>
     </div>
   );
 }
 FlashcardIdentifier.displayName = 'Flashcard.Identifier';
 
-// TODO: types
-function FlashcardSecondary(props: any) {
+function FlashcardSecondaryContainer(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
@@ -83,8 +94,19 @@ function FlashcardSecondary(props: any) {
     </div>
   );
 }
+FlashcardSecondaryContainer.displayName = 'Flashcard.SecondaryContainer';
 
-function FlashcardSecondaryData(props: any) {
+function FlashcardSecondaryDetails(props: PropsWithChildren) {
+  const { children, ...rest } = props;
+  return (
+    <div className='flex flex-col spacing-xxs' {...rest}>
+      {children}
+    </div>
+  );
+}
+FlashcardSecondaryDetails.displayName = 'Flashcard.SecondaryDetails';
+
+function FlashcardSecondaryData(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
@@ -95,7 +117,7 @@ function FlashcardSecondaryData(props: any) {
 }
 FlashcardSecondaryData.display = 'Flashcard.SecondaryData';
 
-function FlashcardDetails(props: any) {
+function FlashcardDetails(props: FlashcardMetaData) {
   const { label, value, ...rest } = props;
 
   return (
@@ -111,4 +133,5 @@ Flashcard.Hero = FlashcardHero;
 Flashcard.Details = FlashcardDetails;
 Flashcard.Identifier = FlashcardIdentifier;
 Flashcard.SecondaryData = FlashcardSecondaryData;
-Flashcard.Secondary = FlashcardSecondary;
+Flashcard.Secondary = FlashcardSecondaryContainer;
+Flashcard.SecondaryDetails = FlashcardSecondaryDetails;
