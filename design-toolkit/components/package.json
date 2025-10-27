@@ -82,10 +82,6 @@
     "test:watch": "pnpm vitest --dir=src --watch",
     "test": "pnpm vitest --dir=src"
   },
-  "dependencies": {
-    "@react-stately/data": "^3.13.2",
-    "@tanstack/react-table": "^8.21.3"
-  },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
@@ -172,6 +168,7 @@
     "@react-aria/ssr": "^3.9.10",
     "@react-aria/utils": "^3.30.0",
     "@react-stately/color": "^3.9.0",
+    "@react-stately/data": "^3.13.2",
     "@react-stately/datepicker": "^3.15.2",
     "@react-stately/utils": "^3.10.8",
     "@react-types/overlays": "^3.9.0",
