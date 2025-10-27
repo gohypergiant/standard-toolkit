@@ -142,29 +142,43 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 }
 
+  const QueryBuilderContext = createContext<QueryBuilderContextType>({
+  orientation: 'horizontal',
+  showRuleLines: true,
+  });
+
 /**
  * QueryBuilder - A visual interface for building complex database queries
  *
- * Provides an intuitive drag-and-drop interface for constructing database queries
- * with support for multiple conditions, operators, and logical grouping. Enables
- * users to build complex filters without writing SQL or code.
+ * Provides an intuitive interface for constructing queries with support for multiple 
+ * conditions, operators, and logical grouping.
  *
  * @example
- * // Basic query builder
- * <QueryBuilder
- *   fields={[
- *     // { name, label, type, inputType, operators },
- *   ]}
- *   query={
- *     // { combinator, rules }
- *   }
- *   onQueryChange={handleQueryChange}
- *   controlElements={{
- *     addRuleAction: CustomAddButton,
- *     removeRuleAction: CustomRemoveButton
- *   }}
- *   orientation="vertical"
- * />
+ * ```tsx
+ * const fields = [
+ *   { name: 'firstName', label: 'First Name', inputType: 'text' },
+ *   { name: 'age', label: 'Age', inputType: 'number' }
+ * ];
+ * 
+ * const initialQuery = {
+ *   combinator: 'and',
+ *   rules: []
+ * };
+ *
+ * function MyQueryBuilder() {
+ *   const [query, setQuery] = useState(initialQuery);
+ *   
+ *   return (
+ *     <QueryBuilder
+ *       fields={fields}
+ *       query={query}
+ *       onQueryChange={setQuery}
+ *       orientation="vertical"
+ *       showRuleLines={true}
+ *     />
+ *   );
+ * }
+ * ```
  */
 export function QueryBuilder({
   controlClassnames,
@@ -173,6 +187,13 @@ export function QueryBuilder({
   showRuleLines = true,
   ...rest
 }: QueryBuilderProps) {
+
+  const contextValue = useMemo(() => ({
+    orientation,
+    showRuleLines,
+  }), [orientation, showRuleLines]);
+
+
   /**
    * Represents the list of available controls that the component can use as a custom
    * component override.Passed in as a map of our custom defaults, but can be
@@ -229,13 +250,9 @@ export function QueryBuilder({
     };
   }, [controlClassnames, showRuleLines, orientation]);
 
-  const QueryBuilderContext = createContext<QueryBuilderContextType>({
-    orientation,
-    showRuleLines,
-  });
-
   return (
-    <RQBBuilder
+        <QueryBuilderContext.Provider value={contextValue}>
+          <RQBBuilder
       showNotToggle={false}
       showShiftActions={false}
       enableDragAndDrop={false}
@@ -245,6 +262,7 @@ export function QueryBuilder({
       listsAsArrays
       {...rest}
     />
+        </QueryBuilderContext.Provider>
   );
 }
 
