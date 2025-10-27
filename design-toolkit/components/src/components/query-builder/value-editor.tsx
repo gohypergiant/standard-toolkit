@@ -77,7 +77,7 @@ function RadioGroupValueEditor({
   );
 }
 
-const defaultOptions: ValueEditorProps['values'][] = [];
+const defaultOptions: ValueEditorProps['values'] = [];
 
 function SelectValueEditor({
   disabled,
@@ -96,7 +96,7 @@ function SelectValueEditor({
       {...rest}
       disabled={disabled}
       multiple={type === 'multiselect'}
-      options={values}
+      options={values ?? []}
       title={name}
       validation={!valid}
       value={value}
