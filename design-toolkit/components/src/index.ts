@@ -230,8 +230,8 @@ export { Pagination, getPaginationRange } from './components/pagination';
 export { PaginationStyles } from './components/pagination/styles';
 export type {
   BasePaginationProps,
-  PageNumberContainerProps,
   PaginationNavProps,
+  PaginationNumberContainerProps,
   PaginationPageNumberProps,
   PaginationRange,
 } from './components/pagination/types';

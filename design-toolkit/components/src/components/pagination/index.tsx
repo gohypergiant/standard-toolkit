@@ -236,7 +236,7 @@ function PaginationNumberContainer({
   const { minRange, maxRange } = getPaginationRange(pageCount, currentPage);
 
   // No display for invalid props.
-  if (minRange === 0 || maxRange === 0) {
+  if (minRange === 0 || maxRange === 0 || isLoading) {
     return null;
   }
 
