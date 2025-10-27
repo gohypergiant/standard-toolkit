@@ -11,51 +11,6 @@
  */
 'use client';
 
-import 'client-only';
-import {
-  Link as AriaLink,
-  composeRenderProps,
-  LinkContext,
-  useContextProps,
-} from 'react-aria-components';
-import { LinkStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
-import type { LinkProps } from './types';
+import { Link } from './link';
 
-function LinkProvider({ children, ...props }: ProviderProps<LinkProps>) {
-  return <LinkContext.Provider value={props}>{children}</LinkContext.Provider>;
-}
-LinkProvider.displayName = 'Link.Provider';
-
-/**
- * Link - Accessible anchor/link component with optional visited state
- *
- * A flexible link component that handles visited state, external anchors, and
- * icon integration while providing ARIA-compatible behavior.
- *
- * @example
- * <Link href="/dashboard">Go to Dashboard</Link>
- */
-export function Link({ ref, ...props }: LinkProps) {
-  [props, ref] = useContextProps(props, ref ?? null, LinkContext);
-
-  const {
-    allowsVisited = false,
-    className,
-    isVisited = false,
-    ...rest
-  } = props;
-
-  return (
-    <AriaLink
-      {...rest}
-      ref={ref}
-      className={composeRenderProps(className, (className) =>
-        LinkStyles({ className }),
-      )}
-      data-visited={(allowsVisited && isVisited) || null}
-    />
-  );
-}
-Link.displayName = 'Link';
-Link.Provider = LinkProvider;
+export { Link };

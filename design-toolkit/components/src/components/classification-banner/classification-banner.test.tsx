@@ -11,7 +11,7 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ClassificationBanner } from './';
+import { ClassificationBanner } from './classification-banner';
 import type { ClassificationBannerProps } from './types';
 
 function setup({

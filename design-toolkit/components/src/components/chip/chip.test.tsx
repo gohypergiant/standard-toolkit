@@ -12,7 +12,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Chip } from './index';
+import { Chip } from './chip';
 import type { ChipProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<ChipProps> = {}) {

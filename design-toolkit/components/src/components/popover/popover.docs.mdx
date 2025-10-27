@@ -10,55 +10,55 @@ A flexible and accessible popover component that provides contextual information
 It is composed of the following components:
 
 - **Popover** - Root component that manages popover state and positioning
-- **Popover.Trigger** - Element that triggers the popover open
-- **Popover.Content** - Main popover container with positioning and backdrop
-- **Popover.Title** - Optional semantic heading for the popover
-- **Popover.Body** - Main content area for the popover
-- **Popover.Footer** - Optional footer area for actions or additional content
+- **PopoverTrigger** - Element that triggers the popover open
+- **PopoverContent** - Main popover container with positioning and backdrop
+- **PopoverTitle** - Optional semantic heading for the popover
+- **PopoverBody** - Main content area for the popover
+- **PopoverFooter** - Optional footer area for actions or additional content
 
 ## Example usage
 ```tsx
 // Basic popover with title and content
 <Popover>
-  <Popover.Trigger>
+  <PopoverTrigger>
     <Icon><Information /></Icon>
-  </Popover.Trigger>
-  <Popover.Content>
-    <Popover.Title>Information</Popover.Title>
-    <Popover.Body>This is helpful information.</Popover.Body>
-  </Popover.Content>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverTitle>Information</PopoverTitle>
+    <PopoverBody>This is helpful information.</PopoverBody>
+  </PopoverContent>
 </Popover>
 
 // Popover with actions and footer
 <Popover>
-  <Popover.Trigger>
+  <PopoverTrigger>
     <Button variant="icon">
       <Icon><Delete /></Icon>
     </Button>
-  </Popover.Trigger>
-  <Popover.Content>
+  </PopoverTrigger>
+  <PopoverContent>
     {({ close }) => (
       <>
-        <Popover.Title>Delete Item</Popover.Title>
-        <Popover.Body>Are you sure you want to delete this?</Popover.Body>
-        <Popover.Footer>
+        <PopoverTitle>Delete Item</PopoverTitle>
+        <PopoverBody>Are you sure you want to delete this?</PopoverBody>
+        <PopoverFooter>
           <Button variant="flat" onPress={close}>Cancel</Button>
           <Button variant="filled" onPress={close}>Delete</Button>
-        </Popover.Footer>
+        </PopoverFooter>
       </>
     )}
-  </Popover.Content>
+  </PopoverContent>
 </Popover>
 
 // Custom placement and styling
 <Popover placement="right">
-  <Popover.Trigger>
+  <PopoverTrigger>
     <span>Settings</span>
-  </Popover.Trigger>
-  <Popover.Content className="min-w-sm">
-    <Popover.Title>Settings</Popover.Title>
-    <Popover.Body>Configure your preferences here.</Popover.Body>
-  </Popover.Content>
+  </PopoverTrigger>
+  <PopoverContent className="min-w-sm">
+    <PopoverTitle>Settings</PopoverTitle>
+    <PopoverBody>Configure your preferences here.</PopoverBody>
+  </PopoverContent>
 </Popover>
 ```
 
@@ -81,26 +81,26 @@ The Popover component supports different placement options to position the popov
 - **`placement`** - Placement variant: `'left'` | `'right'` | `'top'` | `'bottom'` (default: `'bottom'`)
 - **`children`** - Popover trigger and content components
 
-### Popover.Trigger Props
+### PopoverTrigger Props
 - **`children`** - The trigger element (button, icon, text, etc.)
 - **`className`** - Custom CSS class name for additional styling
 - **`onPress`** - Press event handler for the trigger
 
-### Popover.Content Props
+### PopoverContent Props
 - **`children`** - Popover content or render function with close callback
 - **`className`** - Custom CSS class name for the popover container
 - **`isOpen`** - Whether the popover is currently open
 - **`onOpenChange`** - Callback when open state changes
 
-### Popover.Title Props
+### PopoverTitle Props
 - **`children`** - Title text content
 - **`className`** - Custom CSS class name for the title
 
-### Popover.Body Props
+### PopoverBody Props
 - **`children`** - Body content
 - **`className`** - Custom CSS class name for the body
 
-### Popover.Footer Props
+### PopoverFooter Props
 - **`children`** - Footer content (typically action buttons)
 - **`className`** - Custom CSS class name for the footer
 
@@ -116,23 +116,23 @@ The component accepts all standard HTML attributes for the respective elements, 
 Support for both static content and dynamic render functions:
 ```tsx
 // Static content
-<Popover.Content>
-  <Popover.Title>Static Title</Popover.Title>
-  <Popover.Body>Static content</Popover.Body>
-</Popover.Content>
+<PopoverContent>
+  <PopoverTitle>Static Title</PopoverTitle>
+  <PopoverBody>Static content</PopoverBody>
+</PopoverContent>
 
 // Dynamic content with close callback
-<Popover.Content>
+<PopoverContent>
   {({ close }) => (
     <>
-      <Popover.Title>Dynamic Title</Popover.Title>
-      <Popover.Body>Dynamic content</Popover.Body>
-      <Popover.Footer>
+      <PopoverTitle>Dynamic Title</PopoverTitle>
+      <PopoverBody>Dynamic content</PopoverBody>
+      <PopoverFooter>
         <Button onPress={close}>Close</Button>
-      </Popover.Footer>
+      </PopoverFooter>
     </>
   )}
-</Popover.Content>
+</PopoverContent>
 ```
 
 ### Placement Control
@@ -156,10 +156,10 @@ Built-in accessibility features ensure proper interaction and screen reader supp
 ### Custom Styling
 Flexible styling through className props:
 ```tsx
-<Popover.Content className="min-w-sm max-w-md">
-  <Popover.Title className="text-lg font-bold">Custom Title</Popover.Title>
-  <Popover.Body className="text-sm">Custom body styling</Popover.Body>
-</Popover.Content>
+<PopoverContent className="min-w-sm max-w-md">
+  <PopoverTitle className="text-lg font-bold">Custom Title</PopoverTitle>
+  <PopoverBody className="text-sm">Custom body styling</PopoverBody>
+</PopoverContent>
 ```
 
 ## Examples
@@ -177,17 +177,17 @@ Flexible styling through className props:
 ```tsx
 <div className="flex gap-4">
   <Popover placement="top">
-    <Popover.Trigger><Button>Top</Button></Popover.Trigger>
-    <Popover.Content>
-      <Popover.Body>Appears above</Popover.Body>
-    </Popover.Content>
+    <PopoverTrigger><Button>Top</Button></PopoverTrigger>
+    <PopoverContent>
+      <PopoverBody>Appears above</PopoverBody>
+    </PopoverContent>
   </Popover>
 
   <Popover placement="right">
-    <Popover.Trigger><Button>Right</Button></Popover.Trigger>
-    <Popover.Content>
-      <Popover.Body>Appears to the right</Popover.Body>
-    </Popover.Content>
+    <PopoverTrigger><Button>Right</Button></PopoverTrigger>
+    <PopoverContent>
+      <PopoverBody>Appears to the right</PopoverBody>
+    </PopoverContent>
   </Popover>
 </div>
 ```
@@ -195,36 +195,36 @@ Flexible styling through className props:
 ### Form in Popover
 ```tsx
 <Popover>
-  <Popover.Trigger>
+  <PopoverTrigger>
     <Button>Edit Profile</Button>
-  </Popover.Trigger>
-  <Popover.Content>
-    <Popover.Title>Edit Profile</Popover.Title>
-    <Popover.Body>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverTitle>Edit Profile</PopoverTitle>
+    <PopoverBody>
       <form className="space-y-4">
         <input placeholder="Name" />
         <input placeholder="Email" />
       </form>
-    </Popover.Body>
-    <Popover.Footer>
+    </PopoverBody>
+    <PopoverFooter>
       <Button variant="flat">Cancel</Button>
       <Button variant="filled">Save</Button>
-    </Popover.Footer>
-  </Popover.Content>
+    </PopoverFooter>
+  </PopoverContent>
 </Popover>
 ```
 
 ### Information Tooltip
 ```tsx
 <Popover>
-  <Popover.Trigger>
+  <PopoverTrigger>
     <Icon className="text-blue-500"><Question /></Icon>
-  </Popover.Trigger>
-  <Popover.Content>
-    <Popover.Body>
+  </PopoverTrigger>
+  <PopoverContent>
+    <PopoverBody>
       This feature allows you to customize your experience.
-    </Popover.Body>
-  </Popover.Content>
+    </PopoverBody>
+  </PopoverContent>
 </Popover>
 ```
 

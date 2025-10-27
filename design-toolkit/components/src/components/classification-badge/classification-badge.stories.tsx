@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { ClassificationBadge } from './';
+import { ClassificationBadge } from './classification-badge';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

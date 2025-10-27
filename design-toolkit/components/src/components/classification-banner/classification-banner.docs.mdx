@@ -9,7 +9,7 @@ The ClassificationBanner component displays prominent security classification ba
 
 It is composed of the following components:
 - **ClassificationBanner** - Main classification component for displaying security levels
-- **ClassificationBanner.Provider** - Context provider for setting default props across multiple classification banners
+- **ClassificationBannerProvider** - Context provider for setting default props across multiple classification banners
 
 ## Example usage
 ```tsx
@@ -30,10 +30,10 @@ It is composed of the following components:
 <ClassificationBanner variant="ts-sci" />
 
 // Using context provider for default props
-<ClassificationBanner.Provider variant="confidential">
+<ClassificationBannerProvider variant="confidential">
   <ClassificationBanner />
   <ClassificationBanner />
-</ClassificationBanner.Provider>
+</ClassificationBannerProvider>
 
 // Classification banner with custom styling
 <ClassificationBanner

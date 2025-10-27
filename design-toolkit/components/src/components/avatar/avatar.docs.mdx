@@ -10,7 +10,7 @@ The Avatar component displays a user's profile picture, initials, or a fallback 
 It is composed of the following components:
 
 - **Avatar** - Main avatar component that renders profile picture with fallback support
-- **Avatar.Provider** - Context provider for setting default props across multiple avatars
+- **AvatarProvider** - Context provider for setting default props across multiple avatars
 
 ## Example Usage
 
@@ -58,7 +58,7 @@ It is composed of the following components:
 * **medium** - Standard size (32px) with larger text (default)
 * **small** - Compact size (24px) with smaller text for space-constrained layouts
 
-The size can be controlled via the `size` prop or set globally using the `Avatar.Provider` component.
+The size can be controlled via the `size` prop or set globally using the `AvatarProvider` component.
 
 ## Props
 All components and subcomponents accept either a `className` or a `classNames` prop that allow for custom style overrides. The `className` prop takes a string and `classNames` takes an object when there are multiple targets.
@@ -81,15 +81,15 @@ All components and subcomponents accept either a `className` or a `classNames` p
 
 The component accepts all standard HTML span attributes and forwards them to the underlying element.
 
-### Avatar.Provider
+### AvatarProvider
 Context provider component that allows setting default props for multiple Avatar components. Useful for maintaining consistent sizing across a group of avatars.
 
 ```tsx
 // Using context provider for default props
-<Avatar.Provider size="small">
+<AvatarProvider size="small">
   <Avatar imageProps={{ alt: "User 1", src: "avatar1.jpg" }} />
   <Avatar imageProps={{ alt: "User 2", src: "avatar2.jpg" }} />
-</Avatar.Provider>
+</AvatarProvider>
 ```
 
 ### Avatar

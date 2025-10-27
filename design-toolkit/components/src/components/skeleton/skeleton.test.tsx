@@ -12,7 +12,7 @@
 
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Skeleton } from './';
+import { Skeleton } from './skeleton';
 import type { SkeletonProps } from './types';
 
 function setup(props: Partial<SkeletonProps> = {}) {

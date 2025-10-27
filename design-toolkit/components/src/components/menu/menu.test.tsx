@@ -17,79 +17,84 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { Menu } from './index';
+import { Menu } from './menu';
+import { MenuDescription } from './menu-description';
+import { MenuItem } from './menu-item';
+import { MenuLabel } from './menu-label';
+import { MenuSection } from './menu-section';
+import { MenuSeparator } from './menu-separator';
+import { MenuSubmenu } from './menu-submenu';
+import { MenuTrigger } from './menu-trigger';
 import type { MenuProps } from './types';
 
 function setup({
   children = (
     <>
-      <Menu.Item>
+      <MenuItem>
         <Icon>
           <Placeholder />
         </Icon>
-        <Menu.Item.Label>Songbirds</Menu.Item.Label>
-      </Menu.Item>
-      <Menu.Separator />
-      <Menu.Submenu>
-        <Menu.Item>
-          <Menu.Item.Label>North American Birds</Menu.Item.Label>
-        </Menu.Item>
+        <MenuLabel>Songbirds</MenuLabel>
+      </MenuItem>
+      <MenuSeparator />
+      <MenuSubmenu>
+        <MenuItem>
+          <MenuLabel>North American Birds</MenuLabel>
+        </MenuItem>
         <Menu>
-          <Menu.Item>
+          <MenuItem>
             <Icon>
               <Placeholder />
             </Icon>
-            <Menu.Item.Label>Blue Jay</Menu.Item.Label>
-            <Menu.Item.Description>Cyanocitta cristata</Menu.Item.Description>
-          </Menu.Item>
-          <Menu.Item isDisabled>
+            <MenuLabel>Blue Jay</MenuLabel>
+            <MenuDescription>Cyanocitta cristata</MenuDescription>
+          </MenuItem>
+          <MenuItem isDisabled>
             <Icon>
               <Placeholder />
             </Icon>
-            <Menu.Item.Label>Gray catbird</Menu.Item.Label>
-            <Menu.Item.Description>
-              Dumetella carolinensis
-            </Menu.Item.Description>
-          </Menu.Item>
+            <MenuLabel>Gray catbird</MenuLabel>
+            <MenuDescription>Dumetella carolinensis</MenuDescription>
+          </MenuItem>
         </Menu>
-      </Menu.Submenu>
-      <Menu.Separator />
-      <Menu.Section title='Additional Notable Species'>
-        <Menu.Item>
+      </MenuSubmenu>
+      <MenuSeparator />
+      <MenuSection title='Additional Notable Species'>
+        <MenuItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Menu.Item.Label>Mallard</Menu.Item.Label>
-          <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
-        </Menu.Item>
-        <Menu.Item>
+          <MenuLabel>Mallard</MenuLabel>
+          <MenuDescription>Anas platyrhynchos</MenuDescription>
+        </MenuItem>
+        <MenuItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Menu.Item.Label>Chimney swift</Menu.Item.Label>
-          <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
-        </Menu.Item>
-        <Menu.Item>
+          <MenuLabel>Chimney swift</MenuLabel>
+          <MenuDescription>Chaetura pelagica</MenuDescription>
+        </MenuItem>
+        <MenuItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Menu.Item.Label>Brünnich's guillemot</Menu.Item.Label>
-          <Menu.Item.Description>Dumetella carolinensis</Menu.Item.Description>
-        </Menu.Item>
-      </Menu.Section>
+          <MenuLabel>Brünnich's guillemot</MenuLabel>
+          <MenuDescription>Dumetella carolinensis</MenuDescription>
+        </MenuItem>
+      </MenuSection>
     </>
   ),
   ...rest
 }: Partial<MenuProps<object>> = {}) {
   render(
-    <Menu.Trigger>
+    <MenuTrigger>
       <Button variant='icon' aria-label='Menu'>
         <Icon>
           <Kebab />
         </Icon>
       </Button>
       <Menu {...rest}>{children}</Menu>
-    </Menu.Trigger>,
+    </MenuTrigger>,
   );
 
   return {

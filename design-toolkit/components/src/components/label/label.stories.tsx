@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Label } from './';
+import { Label } from './label';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

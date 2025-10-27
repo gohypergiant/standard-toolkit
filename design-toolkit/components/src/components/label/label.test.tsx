@@ -12,7 +12,7 @@
 
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Label } from './';
+import { Label } from './label';
 import type { LabelProps } from './types';
 
 function setup(props: Partial<LabelProps> = {}) {

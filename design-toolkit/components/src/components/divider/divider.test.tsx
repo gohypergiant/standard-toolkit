@@ -11,7 +11,7 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Divider } from './';
+import { Divider } from './divider';
 import type { DividerProps } from './types';
 
 function setup({

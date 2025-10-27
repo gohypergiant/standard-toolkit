@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Skeleton } from './';
+import { Skeleton } from './skeleton';
 import { SkeletonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react';
 

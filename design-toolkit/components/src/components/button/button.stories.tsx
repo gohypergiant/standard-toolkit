@@ -13,7 +13,9 @@
 import { Placeholder } from '@accelint/icons';
 import { composeRenderProps } from 'react-aria-components';
 import { Icon } from '../icon';
-import { Button, LinkButton, ToggleButton } from './';
+import { Button } from './button';
+import { LinkButton } from './link-button';
+import { ToggleButton } from './toggle-button';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

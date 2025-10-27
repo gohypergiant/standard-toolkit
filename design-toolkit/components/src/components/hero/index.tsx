@@ -12,91 +12,15 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import {
-  type ContextValue,
-  Header,
-  Heading,
-  HeadingContext,
-  Provider,
-  Text,
-  TextContext,
-  useContextProps,
-} from 'react-aria-components';
-import { IconContext } from '../icon';
-import { HeroStyles } from './styles';
-import type { HeroProps } from './types';
+import { Hero } from './hero';
+import { HeroSubtitle } from './subtitle';
+import { HeroTitle } from './title';
 
-const { hero, icon, title, subtitle } = HeroStyles();
-
-export const HeroContext =
-  createContext<ContextValue<HeroProps, HTMLElement>>(null);
-
-/**
- * A versatile hero component that displays an icon alongside primary and secondary content.
- * Automatically organizes child components by type and supports both stacked and grid layouts.
- *
- * @example
- * ```tsx
- * // Basic hero with icon and content
- * <Hero>
- *   <Icon><Placeholder /></Icon>
- *   <Hero.Title>Primary Title</Hero.Title>
- *   <Hero.Subtitle>Secondary information</Hero.Subtitle>
- * </Hero>
- *
- * // Grid layout for compact display
- * <Hero compact>
- *   <Icon><Settings /></Icon>
- *   <Hero.Title>Settings</Hero.Title>
- *   <Hero.Subtitle>Configure your preferences</Hero.Subtitle>
- * </Hero>
- * ```
- *
- * ## Child Component Behavior
- * - **Icon**: Only one allowed
- * - **Hero.Title**: Only one allowed
- * - **Hero.Subtitle**: Any number allowed as secondary content
- *
- * ## Layout Modes
- * - **Stack** (default): Vertical layout with larger icon and stacked content
- * - **Grid** (compact=true): Horizontal layout with smaller icon beside content
- */
-export function Hero({ ref, ...props }: HeroProps) {
-  [props, ref] = useContextProps(props, ref ?? null, HeroContext);
-
-  const { children, classNames, compact, ...rest } = props;
-
-  return (
-    <Provider
-      values={[
-        [
-          IconContext,
-          { className: icon({ className: classNames?.icon }), size: 'large' },
-        ],
-        [
-          HeadingContext,
-          { className: title({ className: classNames?.title }), level: 2 },
-        ],
-        [
-          TextContext,
-          { className: subtitle({ className: classNames?.subtitle }) },
-        ],
-      ]}
-    >
-      <Header
-        {...rest}
-        ref={ref}
-        className={hero({ className: classNames?.hero })}
-        data-layout={compact ? 'grid' : 'stack'}
-      >
-        {children}
-      </Header>
-    </Provider>
-  );
-}
-Hero.displayName = 'Hero';
-Hero.Title = Heading;
+// Attach subcomponents to maintain API compatibility
+Hero.Title = HeroTitle;
 Hero.Title.displayName = 'Hero.Title';
-Hero.Subtitle = Text;
+Hero.Subtitle = HeroSubtitle;
 Hero.Subtitle.displayName = 'Hero.Subtitle';
+
+export { Hero };
+export { HeroContext } from './context';

@@ -13,7 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Options } from '../options';
-import { SelectField } from './index';
+import { SelectField } from './select-field';
 import type { SelectFieldProps } from './types';
 
 function setup({
