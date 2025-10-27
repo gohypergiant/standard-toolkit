@@ -60,6 +60,6 @@ export const QueryBuilderStyles = tv({
 export const ValueEditorStyles = tv({
   slots: {
     textField: 'relative',
-    textFieldError: 'absolute top-full left-0 mt-[3px]'
+    textFieldError: 'absolute top-full left-0 mt-[3px]',
   },
 });

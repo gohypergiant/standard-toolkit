@@ -76,7 +76,7 @@ function CombinatorSelector({
     <Radio.Group
       value={value}
       onChange={handleOnChange}
-      classNames={{group: 'orientation-horizontal:flex-nowrap'}}
+      classNames={{ group: 'orientation-horizontal:flex-nowrap' }}
       orientation='horizontal'
     >
       <Label>Combinator</Label>
@@ -142,15 +142,15 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 }
 
-  const QueryBuilderContext = createContext<QueryBuilderContextType>({
+const QueryBuilderContext = createContext<QueryBuilderContextType>({
   orientation: 'horizontal',
   showRuleLines: true,
-  });
+});
 
 /**
  * QueryBuilder - A visual interface for building complex database queries
  *
- * Provides an intuitive interface for constructing queries with support for multiple 
+ * Provides an intuitive interface for constructing queries with support for multiple
  * conditions, operators, and logical grouping.
  *
  * @example
@@ -159,7 +159,7 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
  *   { name: 'firstName', label: 'First Name', inputType: 'text' },
  *   { name: 'age', label: 'Age', inputType: 'number' }
  * ];
- * 
+ *
  * const initialQuery = {
  *   combinator: 'and',
  *   rules: []
@@ -167,7 +167,7 @@ function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
  *
  * function MyQueryBuilder() {
  *   const [query, setQuery] = useState(initialQuery);
- *   
+ *
  *   return (
  *     <QueryBuilder
  *       fields={fields}
@@ -187,12 +187,13 @@ export function QueryBuilder({
   showRuleLines = true,
   ...rest
 }: QueryBuilderProps) {
-
-  const contextValue = useMemo(() => ({
-    orientation,
-    showRuleLines,
-  }), [orientation, showRuleLines]);
-
+  const contextValue = useMemo(
+    () => ({
+      orientation,
+      showRuleLines,
+    }),
+    [orientation, showRuleLines],
+  );
 
   /**
    * Represents the list of available controls that the component can use as a custom
@@ -251,18 +252,18 @@ export function QueryBuilder({
   }, [controlClassnames, showRuleLines, orientation]);
 
   return (
-        <QueryBuilderContext.Provider value={contextValue}>
-          <RQBBuilder
-      showNotToggle={false}
-      showShiftActions={false}
-      enableDragAndDrop={false}
-      controlClassnames={mergedClassnames}
-      controlElements={mergedElements}
-      context={QueryBuilderContext}
-      listsAsArrays
-      {...rest}
-    />
-        </QueryBuilderContext.Provider>
+    <QueryBuilderContext.Provider value={contextValue}>
+      <RQBBuilder
+        showNotToggle={false}
+        showShiftActions={false}
+        enableDragAndDrop={false}
+        controlClassnames={mergedClassnames}
+        controlElements={mergedElements}
+        context={QueryBuilderContext}
+        listsAsArrays
+        {...rest}
+      />
+    </QueryBuilderContext.Provider>
   );
 }
 

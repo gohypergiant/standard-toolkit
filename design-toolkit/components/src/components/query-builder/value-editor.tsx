@@ -21,16 +21,13 @@ import { Switch } from '../switch';
 import { TextAreaField } from '../text-area-field';
 import { TextField } from '../text-field';
 import { multiValueOperators } from './constants';
+import { ValueEditorStyles } from './styles';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
 import type { InputProps } from '../input/types';
 import type { QueryBuilderValueEditors } from './types';
-import { ValueEditorStyles } from './styles';
 
-const {
-  textField,
-  textFieldError,
-} = ValueEditorStyles();
+const { textField, textFieldError } = ValueEditorStyles();
 
 function CheckboxValueEditor({
   disabled,
@@ -155,7 +152,7 @@ function TextValueEditor({
       aria-label={name}
       aria-labelledby={name}
       errorMessage={reasons?.join('\n')}
-      classNames={{field: textField(), error: textFieldError()}}
+      classNames={{ field: textField(), error: textFieldError() }}
     />
   );
 }

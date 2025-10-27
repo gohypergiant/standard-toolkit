@@ -24,14 +24,20 @@ import {
 import { Lines } from '../lines';
 import type { QueryBuilderContextType, QueryBuilderLinesProps } from './types';
 
-
-function isLastRuleInGroup(rules: RuleGroupTypeAny['rules'], path: number[]): boolean {
-  if (!rules || path.length === 0) { 
-    return false 
+function isLastRuleInGroup(
+  rules: RuleGroupTypeAny['rules'],
+  path: number[],
+): boolean {
+  if (!rules || path.length === 0) {
+    return false;
   }
 
   const currentIndex = path[0];
-  if (typeof currentIndex !== 'number' || currentIndex < 0 || currentIndex >= rules.length) {
+  if (
+    typeof currentIndex !== 'number' ||
+    currentIndex < 0 ||
+    currentIndex >= rules.length
+  ) {
     return false;
   }
   const isLast = currentIndex === rules.length - 1;
@@ -42,7 +48,11 @@ function isLastRuleInGroup(rules: RuleGroupTypeAny['rules'], path: number[]): bo
 
   const nextRule = rules[currentIndex];
 
-  if ( typeof nextRule !== 'object' || nextRule === null ||    !('rules' in nextRule)) {
+  if (
+    typeof nextRule !== 'object' ||
+    nextRule === null ||
+    !('rules' in nextRule)
+  ) {
     return false;
   }
 
@@ -53,7 +63,7 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
   path,
   props,
   context,
-}: QueryBuilderLinesProps ) {
+}: QueryBuilderLinesProps) {
   const rules = props.schema.getQuery()?.rules;
   const isLastRule = isLastRuleInGroup(rules, path);
   const line = isLastRule ? 'last' : 'branch';
@@ -67,7 +77,6 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
     />
   );
 });
-
 
 export function Rule(props: RuleProps) {
   const rule = useRule(props);
