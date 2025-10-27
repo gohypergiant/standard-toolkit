@@ -64,7 +64,7 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
   props,
   context,
 }: QueryBuilderLinesProps) {
-  const rules = props.schema.getQuery()?.rules;
+  const rules = props.schema.getQuery()?.rules ?? [];
   const isLastRule = isLastRuleInGroup(rules, path);
   const line = isLastRule ? 'last' : 'branch';
 
