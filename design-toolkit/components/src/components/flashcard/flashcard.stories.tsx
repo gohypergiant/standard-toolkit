@@ -10,3 +10,42 @@
  * governing permissions and limitations under the License.
  */
 
+import { Flashcard } from '.';
+import type { Meta, StoryObj } from '@storybook/react';
+
+const meta = {
+  title: 'Components/Flashcard',
+  component: Flashcard,
+} satisfies Meta<typeof Flashcard>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render: () => {
+    const details = [
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+    ];
+
+    return (
+      <Flashcard>
+        <Flashcard.Hero>Identifier</Flashcard.Hero>
+        <Flashcard.Secondary>
+          <Flashcard.SecondaryData>SECONDARY_DATA_01</Flashcard.SecondaryData>
+          <Flashcard.SecondaryData>SECONDARY_DATA_02</Flashcard.SecondaryData>
+          {details.map((item) => (
+            <Flashcard.Details
+              label={item.label}
+              value={item.value}
+              key={item.label}
+            />
+          ))}
+        </Flashcard.Secondary>
+      </Flashcard>
+    );
+  },
+};

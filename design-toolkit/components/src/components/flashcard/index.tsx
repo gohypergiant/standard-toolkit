@@ -49,9 +49,11 @@ Flashcard.displayName = 'Flashcard';
 function FlashcardHero(props: any) {
   const { children, ...rest } = props;
 
-  <div className='padding-s gap-s bg-surface-muted' {...rest}>
-    {children}
-  </div>;
+  return (
+    <div className='gap-s bg-surface-muted p-s' {...rest}>
+      {children}
+    </div>
+  );
 }
 FlashcardHero.displayName = 'Flashcard.Hero';
 
@@ -61,22 +63,22 @@ function FlashcardIdentifier(props: any) {
 
   return (
     <div className='flex flex-col'>
-      <h1 className='fg-primary-bold text-body-m' {...rest}>
+      <div className='fg-primary-bold text-body-m' {...rest}>
         {children}
-      </h1>
+      </div>
       {/* TODO: What is this subheader for? Does it need to be a subcomponent? */}
-      <h2 className='fg-primary-muted text-body-xs'>DATA</h2>
+      <div className='fg-primary-muted text-body-xs'>DATA</div>
     </div>
   );
 }
 FlashcardIdentifier.displayName = 'Flashcard.Identifier';
 
 // TODO: types
-function _FlashcardSecondary(props: any) {
+function FlashcardSecondary(props: any) {
   const { children, ...rest } = props;
 
   return (
-    <div className='padding-s flex flex-col gap-s' {...rest}>
+    <div className='flex flex-col gap-s p-s' {...rest}>
       {children}
     </div>
   );
@@ -86,7 +88,7 @@ function FlashcardSecondaryData(props: any) {
   const { children, ...rest } = props;
 
   return (
-    <h2 className='fg-primary-muted padding-s gap-s text-body-xs' {...rest}>
+    <h2 className='fg-primary-muted text-body-xs' {...rest}>
       {children}
     </h2>
   );
@@ -94,12 +96,14 @@ function FlashcardSecondaryData(props: any) {
 FlashcardSecondaryData.display = 'Flashcard.SecondaryData';
 
 function FlashcardDetails(props: any) {
-  const { key, value, ...rest } = props;
+  const { label, value, ...rest } = props;
 
-  <div className='flex flex-row justify-between text-body-xs' {...rest}>
-    <span className='fg-primary-muted'>{key}</span>
-    <span className='fg-primary-bold'>{value}</span>
-  </div>;
+  return (
+    <div className='flex flex-row justify-between text-body-xs' {...rest}>
+      <div className='fg-primary-muted'>{label}</div>
+      <div className='fg-primary-bold'>{value}</div>
+    </div>
+  );
 }
 FlashcardDetails.displayName = 'Flashcard.Details';
 
@@ -107,3 +111,4 @@ Flashcard.Hero = FlashcardHero;
 Flashcard.Details = FlashcardDetails;
 Flashcard.Identifier = FlashcardIdentifier;
 Flashcard.SecondaryData = FlashcardSecondaryData;
+Flashcard.Secondary = FlashcardSecondary;
