@@ -16,86 +16,96 @@
 .button {
   @apply flex w-content shrink-0 cursor-pointer items-center justify-center rounded-medium outline outline-transparent;
 
-  &:where([disabled], [data-disabled], :disabled) {
+  @variant disabled {
     @apply cursor-not-allowed;
   }
 
-  &:where([data-size="large"]) {
+  @variant size-large {
     @apply min-w-[96px] gap-xs px-l py-s text-button-l;
   }
-  &:where([data-size="medium"]) {
+  @variant size-medium {
     @apply min-w-[68px] gap-xs px-m py-xs text-button-m;
   }
-  &:where([data-size="small"]) {
+  @variant size-small {
     @apply min-w-[54px] gap-xxs px-s py-xs text-button-s;
   }
-  &:where([data-size="xsmall"]) {
+  @variant size-xsmall {
     @apply min-w-[41px] gap-xxs p-xs text-button-xs;
   }
 }
 
 .button-filled {
-  &:where([disabled], [data-disabled], :disabled) {
+  @variant disabled {
     @apply fg-disabled bg-interactive-disabled;
   }
 
-  &:where(:not([disabled], [data-disabled]), :enabled) {
-    &:where([data-color="mono-muted"]) {
+  @variant enabled {
+    @variant color-mono-muted {
       @apply fg-primary-bold bg-interactive-muted;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-primary-muted bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="mono-bold"]) {
+    @variant color-mono-bold {
       @apply fg-inverse-bold bg-interactive-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-bold-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-bold-hover;
+      }
+      @variant active {
         @apply fg-inverse-muted bg-interactive-bold-pressed;
       }
     }
 
-    &:where([data-color="accent"]) {
+    @variant color-accent {
       @apply fg-a11y-on-accent bg-accent-primary-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-accent-primary-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-accent-primary-hover;
+      }
+      @variant active {
         @apply fg-accent-primary-bold bg-accent-primary-pressed;
       }
     }
 
-    &:where([data-color="serious"]) {
+    @variant color-serious {
       @apply fg-a11y-on-utility bg-serious-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-serious-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-serious-hover;
+      }
+      @variant active {
         @apply fg-serious-bold bg-serious-pressed;
       }
     }
 
-    &:where([data-color="critical"]) {
+    @variant color-critical {
       @apply fg-a11y-on-utility bg-critical-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-critical-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-critical-hover;
+      }
+      @variant active {
         @apply fg-critical-bold bg-critical-pressed;
       }
     }
@@ -103,67 +113,77 @@
 }
 
 .button-outline {
-  &:where([disabled], [data-disabled], :disabled) {
+  @variant disabled {
     @apply fg-disabled outline-interactive-disabled;
   }
 
-  &:where(:not([disabled], [data-disabled]), :enabled) {
-    &:where([data-color="mono-muted"]) {
+  @variant enabled {
+    @variant color-mono-muted {
       @apply fg-primary-bold bg-transparent outline outline-interactive;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
       }
     }
 
-    &:where([data-color="mono-bold"]) {
+    @variant color-mono-bold {
       @apply fg-primary-bold bg-transparent outline outline-mono-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
       }
     }
 
-    &:where([data-color="accent"]) {
+    @variant color-accent {
       @apply fg-primary-bold bg-transparent outline outline-accent-primary-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-accent-primary-hover outline-2 outline-accent-primary-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+      }
+      @variant active {
         @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
       }
     }
 
-    &:where([data-color="serious"]) {
+    @variant color-serious {
       @apply fg-primary-bold bg-transparent outline outline-serious-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-serious-hover outline-2 outline-serious-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-serious-hover outline-2 outline-serious-hover;
+      }
+      @variant active {
         @apply fg-serious-bold bg-serious-pressed outline-2 outline-serious-pressed;
       }
     }
 
-    &:where([data-color="critical"]) {
+    @variant color-critical {
       @apply fg-primary-bold bg-transparent outline outline-critical-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-critical-hover outline-2 outline-critical-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-critical-hover outline-2 outline-critical-hover;
+      }
+      @variant active {
         @apply fg-critical-pressed bg-critical-pressed outline-2 outline-critical-pressed;
       }
     }
@@ -171,67 +191,77 @@
 }
 
 .button-flat {
-  &:where([disabled], [data-disabled], :disabled) {
+  @variant disabled {
     @apply fg-disabled bg-transparent;
   }
 
-  &:where(:not([disabled], [data-disabled]), :enabled) {
-    &:where([data-color="mono-muted"]) {
+  @variant enabled {
+    @variant color-mono-muted {
       @apply fg-primary-muted;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="mono-bold"]) {
+    @variant color-mono-bold {
       @apply fg-primary-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="accent"]) {
+    @variant color-accent {
       @apply fg-accent-primary-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-accent-primary-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-accent-primary-hover;
+      }
+      @variant active {
         @apply fg-accent-primary-pressed bg-accent-primary-pressed;
       }
     }
 
-    &:where([data-color="serious"]) {
+    @variant color-serious {
       @apply fg-serious-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-serious-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-serious-hover;
+      }
+      @variant active {
         @apply fg-serious-pressed bg-serious-pressed;
       }
     }
 
-    &:where([data-color="critical"]) {
+    @variant color-critical {
       @apply fg-critical-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-a11y-on-accent bg-critical-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-a11y-on-accent bg-critical-hover;
+      }
+      @variant active {
         @apply fg-critical-pressed bg-critical-pressed;
       }
     }
@@ -239,77 +269,90 @@
 }
 
 .button-icon {
-  &:where([data-size="large"]),
-  &:where([data-size="medium"]) {
+  @variant size-large {
     @apply min-w-0 p-xs;
   }
-
-  &:where([data-size="small"]),
-  &:where([data-size="xsmall"]) {
+  @variant size-medium {
+    @apply min-w-0 p-xs;
+  }
+  @variant size-small {
+    @apply min-w-0 rounded-small p-xxs;
+  }
+  @variant size-xsmall {
     @apply min-w-0 rounded-small p-xxs;
   }
 
-  &:where([disabled], [data-disabled], :disabled) {
+  @variant disabled {
     @apply fg-disabled bg-transparent;
   }
 
-  &:where(:not([disabled], [data-disabled]), :enabled) {
-    &:where([data-color="mono-muted"]) {
+  @variant enabled {
+    @variant color-mono-muted {
       @apply fg-primary-muted;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="mono-bold"]) {
+    @variant color-mono-bold {
       @apply fg-primary-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="accent"]) {
+    @variant color-accent {
       @apply fg-accent-primary-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-accent-primary-hover bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-accent-primary-hover bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-accent-primary-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="serious"]) {
+    @variant color-serious {
       @apply fg-serious-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-serious-hover bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-serious-hover bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-serious-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="critical"]) {
+    @variant color-critical {
       @apply fg-critical-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-critical-hover bg-interactive-muted-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-critical-hover bg-interactive-muted-hover;
+      }
+      @variant active {
         @apply fg-critical-pressed bg-interactive-muted-pressed;
       }
     }
@@ -319,77 +362,90 @@
 .button-floating {
   border-radius: 9999px;
 
-  &:where([data-size="large"]),
-  &:where([data-size="medium"]) {
+  @variant size-large {
     @apply min-w-0 p-xs;
   }
-
-  &:where([data-size="small"]),
-  &:where([data-size="xsmall"]) {
+  @variant size-medium {
+    @apply min-w-0 p-xs;
+  }
+  @variant size-small {
+    @apply min-w-0 p-xxs;
+  }
+  @variant size-xsmall {
     @apply min-w-0 p-xxs;
   }
 
-  &:where([disabled], [data-disabled], :disabled) {
+  @variant disabled {
     @apply fg-disabled bg-interactive-disabled outline outline-interactive-disabled;
   }
 
-  &:where(:not([disabled], [data-disabled]), :enabled) {
-    &:where([data-color="mono-muted"]) {
+  @variant enabled {
+    @variant color-mono-muted {
       @apply fg-primary-muted bg-surface-default outline outline-interactive;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-primary-muted outline-interactive-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-primary-muted outline-interactive-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="mono-bold"]) {
+    @variant color-mono-bold {
       @apply fg-primary-bold bg-surface-default outline outline-interactive;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-primary-muted outline-interactive-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-primary-muted outline-interactive-hover;
+      }
+      @variant active {
         @apply fg-pressed bg-interactive-muted-pressed;
       }
     }
 
-    &:where([data-color="accent"]) {
+    @variant color-accent {
       @apply fg-accent-primary-bold bg-accent-primary-bold outline outline-accent-primary-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-accent-primary-hover outline-accent-primary-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-accent-primary-hover outline-accent-primary-hover;
+      }
+      @variant active {
         @apply fg-accent-primary-pressed bg-interactive-muted-pressed outline-accent-primary-pressed;
       }
     }
 
-    &:where([data-color="serious"]) {
+    @variant color-serious {
       @apply fg-serious-bold bg-serious-muted outline outline-serious-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-serious-hover outline-interactive-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-serious-hover outline-interactive-hover;
+      }
+      @variant active {
         @apply fg-serious-pressed bg-interactive-muted-pressed outline-serious-pressed;
       }
     }
 
-    &:where([data-color="critical"]) {
+    @variant color-critical {
       @apply fg-critical-bold bg-critical-muted outline outline-critical-bold;
 
-      &:where([data-hovered], :hover),
-      &:where([data-focus-visible], :focus-visible) {
+      @variant hover {
         @apply fg-critical-hover outline-critical-hover;
       }
-      &:where([data-pressed], :active) {
+      @variant focus-visible {
+        @apply fg-critical-hover outline-critical-hover;
+      }
+      @variant active {
         @apply fg-critical-pressed bg-interactive-muted-pressed outline-critical-pressed;
       }
     }
