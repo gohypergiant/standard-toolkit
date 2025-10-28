@@ -36,4 +36,44 @@ describe('getViewportSize', () => {
     });
     expect(result).toBe('-- x -- NMI');
   });
+  it('handles invalid longitude values outside -180 to 180 range', () => {
+    const result = getViewportSize({
+      bounds: [-200, 22, -71, 52],
+      unit: 'nmi',
+    });
+    expect(result).toBe('-- x -- NMI');
+  });
+
+  it('handles invalid latitude values outside -90 to 90 range', () => {
+    const result = getViewportSize({
+      bounds: [-82, -100, -71, 52],
+      unit: 'nmi',
+    });
+    expect(result).toBe('-- x -- NMI');
+  });
+
+  it('handles invalid bounds where minLat > maxLat', () => {
+    const result = getViewportSize({
+      bounds: [-82, 52, -71, 22],
+      unit: 'nmi',
+    });
+    expect(result).toBe('-- x -- NMI');
+  });
+
+  it('works with all supported units', () => {
+    const bounds: [number, number, number, number] = [-82, 22, -71, 52];
+    expect(getViewportSize({ bounds, unit: 'km' })).toContain('KM');
+    expect(getViewportSize({ bounds, unit: 'm' })).toContain('M');
+    expect(getViewportSize({ bounds, unit: 'nmi' })).toContain('NMI');
+    expect(getViewportSize({ bounds, unit: 'mi' })).toContain('MI');
+    expect(getViewportSize({ bounds, unit: 'ft' })).toContain('FT');
+  });
+
+  it('handles edge case of bounds at world extents', () => {
+    const result = getViewportSize({
+      bounds: [-180, -90, 180, 90],
+      unit: 'nmi',
+    });
+    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NMI$/);
+  });
 });
