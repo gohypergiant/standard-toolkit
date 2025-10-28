@@ -170,3 +170,23 @@ export const PerfTest: Story = {
     );
   },
 };
+
+export const OverrideTest: Story = {
+  args: {
+    color: 'mono-muted',
+    variant: 'flat',
+  },
+  render: ({ children, ...props }) => (
+    <Button {...props} className='outline-critical-bold'>
+      {composeRenderProps(children, (children) =>
+        props.variant === 'icon' || props.variant === 'floating' ? (
+          <Icon>
+            <Placeholder />
+          </Icon>
+        ) : (
+          children
+        ),
+      )}
+    </Button>
+  ),
+};
