@@ -22,7 +22,5 @@ addons.setConfig({
     brandTitle: 'Design Toolkit',
     brandUrl: 'https://design-toolkit.accelint.io/',
     brandTarget: '_self',
-    colorPrimary: '#004f7e',
-    colorSecondary: '#414245',
   }),
 });
