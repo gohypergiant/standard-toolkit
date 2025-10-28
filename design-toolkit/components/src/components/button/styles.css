@@ -50,7 +50,7 @@
         @variant focus-visible {
           @apply bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-primary-muted bg-interactive-muted-pressed;
         }
       }
@@ -64,7 +64,7 @@
         @variant focus-visible {
           @apply bg-interactive-bold-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-inverse-muted bg-interactive-bold-pressed;
         }
       }
@@ -78,7 +78,7 @@
         @variant focus-visible {
           @apply bg-accent-primary-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-accent-primary-bold bg-accent-primary-pressed;
         }
       }
@@ -92,7 +92,7 @@
         @variant focus-visible {
           @apply bg-serious-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-serious-bold bg-serious-pressed;
         }
       }
@@ -106,7 +106,7 @@
         @variant focus-visible {
           @apply bg-critical-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-critical-bold bg-critical-pressed;
         }
       }
@@ -128,7 +128,7 @@
         @variant focus-visible {
           @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
         }
       }
@@ -142,7 +142,7 @@
         @variant focus-visible {
           @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
         }
       }
@@ -156,7 +156,7 @@
         @variant focus-visible {
           @apply bg-accent-primary-hover outline-2 outline-accent-primary-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
         }
       }
@@ -170,7 +170,7 @@
         @variant focus-visible {
           @apply bg-serious-hover outline-2 outline-serious-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-serious-bold bg-serious-pressed outline-2 outline-serious-pressed;
         }
       }
@@ -184,7 +184,7 @@
         @variant focus-visible {
           @apply bg-critical-hover outline-2 outline-critical-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-critical-pressed bg-critical-pressed outline-2 outline-critical-pressed;
         }
       }
@@ -206,7 +206,7 @@
         @variant focus-visible {
           @apply bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed;
         }
       }
@@ -220,7 +220,7 @@
         @variant focus-visible {
           @apply bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed;
         }
       }
@@ -234,7 +234,7 @@
         @variant focus-visible {
           @apply bg-accent-primary-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-accent-primary-pressed bg-accent-primary-pressed;
         }
       }
@@ -248,7 +248,7 @@
         @variant focus-visible {
           @apply bg-serious-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-serious-pressed bg-serious-pressed;
         }
       }
@@ -262,7 +262,7 @@
         @variant focus-visible {
           @apply fg-a11y-on-accent bg-critical-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-critical-pressed bg-critical-pressed;
         }
       }
@@ -297,7 +297,7 @@
         @variant focus-visible {
           @apply bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed;
         }
       }
@@ -311,7 +311,7 @@
         @variant focus-visible {
           @apply bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed;
         }
       }
@@ -325,7 +325,7 @@
         @variant focus-visible {
           @apply fg-accent-primary-hover bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-accent-primary-pressed bg-interactive-muted-pressed;
         }
       }
@@ -339,7 +339,7 @@
         @variant focus-visible {
           @apply fg-serious-hover bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-serious-pressed bg-interactive-muted-pressed;
         }
       }
@@ -353,7 +353,7 @@
         @variant focus-visible {
           @apply fg-critical-hover bg-interactive-muted-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-critical-pressed bg-interactive-muted-pressed;
         }
       }
@@ -390,7 +390,7 @@
         @variant focus-visible {
           @apply fg-primary-muted outline-interactive-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed;
         }
       }
@@ -404,7 +404,7 @@
         @variant focus-visible {
           @apply fg-primary-muted outline-interactive-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-pressed bg-interactive-muted-pressed;
         }
       }
@@ -418,7 +418,7 @@
         @variant focus-visible {
           @apply fg-accent-primary-hover outline-accent-primary-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-accent-primary-pressed bg-interactive-muted-pressed outline-accent-primary-pressed;
         }
       }
@@ -432,7 +432,7 @@
         @variant focus-visible {
           @apply fg-serious-hover outline-interactive-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-serious-pressed bg-interactive-muted-pressed outline-serious-pressed;
         }
       }
@@ -446,7 +446,7 @@
         @variant focus-visible {
           @apply fg-critical-hover outline-critical-hover;
         }
-        @variant active {
+        @variant pressed {
           @apply fg-critical-pressed bg-interactive-muted-pressed outline-critical-pressed;
         }
       }
