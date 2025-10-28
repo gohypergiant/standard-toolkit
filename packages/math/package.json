@@ -52,15 +52,13 @@
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
-  "dependencies": {
-    "typescript": "5.8.3"
-  },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0",
+    "typescript": "5.8.3",
     "vitest": "^2.1.9"
   },
   "publishConfig": {

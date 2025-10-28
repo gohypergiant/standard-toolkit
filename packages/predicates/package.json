@@ -52,8 +52,7 @@
     "test": "pnpm vitest --dir=src"
   },
   "dependencies": {
-    "@accelint/core": "workspace:*",
-    "typescript": "5.8.3"
+    "@accelint/core": "workspace:*"
   },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
@@ -63,6 +62,7 @@
     "esbuild-fix-imports-plugin": "^1.0.23",
     "fast-check": "^4.1.1",
     "tsup": "8.5.0",
+    "typescript": "5.8.3",
     "vitest": "^2.1.9"
   },
   "publishConfig": {
