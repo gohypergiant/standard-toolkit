@@ -12,10 +12,7 @@
 
 import { distance } from '@turf/distance';
 import { UNIT_MAP } from './constants';
-import type {
-  GeoCoordinate,
-  GetViewportScaleArgs as GetViewportSizeArgs,
-} from './types';
+import type { GeoCoordinate, GetViewportSizeArgs } from './types';
 
 const numberFormatter = Intl.NumberFormat('en-US');
 

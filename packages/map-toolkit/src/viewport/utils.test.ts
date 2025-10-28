@@ -13,7 +13,7 @@
 import { describe, expect, it } from 'vitest';
 import { getViewportSize } from './utils';
 
-describe('getViewportScale', () => {
+describe('getViewportSize', () => {
   it('converts the bounds to a string', () => {
     const result = getViewportSize({
       bounds: [-82, 22, -71, 52],

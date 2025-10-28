@@ -15,7 +15,7 @@ import type { UNIT_MAP } from './constants';
 
 export type AllowedUnit = keyof typeof UNIT_MAP;
 
-export type GetViewportScaleArgs = {
+export type GetViewportSizeArgs = {
   bounds?: Bounds;
   unit?: AllowedUnit;
   formatter?: Intl.NumberFormat;
