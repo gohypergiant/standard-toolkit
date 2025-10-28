@@ -29,11 +29,40 @@ export function getViewportSize({
   unit = 'nmi',
   formatter = numberFormatter,
 }: GetViewportSizeArgs) {
+  const defaultValue = `-- x -- ${unit.toUpperCase()}`;
+
   if (!bounds) {
-    return `-- x -- ${unit.toUpperCase()}`;
+    return defaultValue;
   }
 
   const [minLon, minLat, maxLon, maxLat] = bounds;
+
+  // Validate bounds are within valid geographic ranges
+  if (
+    minLon < -180 ||
+    minLon > 180 ||
+    maxLon < -180 ||
+    maxLon > 180 ||
+    minLat < -90 ||
+    minLat > 90 ||
+    maxLat < -90 ||
+    maxLat > 90
+  ) {
+    console.warn(
+      'getViewportSize: Invalid bounds - coordinates outside valid ranges',
+      { bounds },
+    );
+    return defaultValue;
+  }
+
+  // Validate that min/max are in correct order
+  if (minLat > maxLat) {
+    console.warn(
+      'getViewportSize: Invalid bounds - minLat is greater than maxLat',
+      { bounds },
+    );
+    return defaultValue;
+  }
 
   const southWest: GeoCoordinate = [minLon, minLat];
   const southEast: GeoCoordinate = [maxLon, minLat];
