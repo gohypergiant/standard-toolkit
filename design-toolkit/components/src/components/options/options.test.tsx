@@ -24,25 +24,25 @@ function setup({
         header='North American Birds'
         classNames={{ section: 'w-[200px]' }}
       >
-        <Options.Item>
+        <Options.Item textValue='Blue Jay'>
           <Icon>
             <Placeholder />
           </Icon>
           <Options.Item.Label>Blue Jay</Options.Item.Label>
         </Options.Item>
-        <Options.Item>
+        <Options.Item textValue='Gray catbird'>
           <Icon>
             <Placeholder />
           </Icon>
           <Options.Item.Label>Gray catbird</Options.Item.Label>
         </Options.Item>
-        <Options.Item>
+        <Options.Item textValue='Black-capped chickadee'>
           <Icon>
             <Placeholder />
           </Icon>
           <Options.Item.Label>Black-capped chickadee</Options.Item.Label>
         </Options.Item>
-        <Options.Item>
+        <Options.Item textValue='Song Sparrow'>
           <Icon>
             <Placeholder />
           </Icon>
@@ -50,13 +50,13 @@ function setup({
         </Options.Item>
       </Options.Section>
       <Options.Section header='African Birds'>
-        <Options.Item>
+        <Options.Item textValue='Lilac-breasted roller'>
           <Icon>
             <Placeholder />
           </Icon>
           <Options.Item.Label>Lilac-breasted roller</Options.Item.Label>
         </Options.Item>
-        <Options.Item>
+        <Options.Item textValue='Hornbill'>
           <Icon>
             <Placeholder />
           </Icon>
@@ -67,7 +67,11 @@ function setup({
   ),
   ...rest
 }: Partial<OptionsProps<OptionsDataItem>> = {}) {
-  render(<Options {...rest}>{children}</Options>);
+  render(
+    <Options aria-label='Bird options' {...rest}>
+      {children}
+    </Options>,
+  );
 
   return {
     ...rest,

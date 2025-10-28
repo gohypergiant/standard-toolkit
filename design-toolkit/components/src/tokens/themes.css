@@ -185,7 +185,7 @@
     --fg-inverse-muted: var(--primitive-neutral-400, #888a8f);
     --fg-disabled: var(--primitive-neutral-300, #c3c5c7);
     --fg-accent-primary-bold: var(--primitive-accent-primary-300, #39b7fa);
-    --fg-accent-primary-hover: var(--primitive-accent-primary-200, #6ed1ff);
+    --fg-accent-primary-hover: var(--primitive-accent-primary-700, #004f7e);
     --fg-accent-primary-pressed: var(--primitive-accent-primary-600, #0068a1);
     --fg-info-bold: var(--primitive-utility-info-600, #414245);
     --fg-info-hover: var(--primitive-utility-info-700, #38393A);

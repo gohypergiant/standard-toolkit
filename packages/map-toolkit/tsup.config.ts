@@ -27,6 +27,7 @@ export default defineConfig({
     'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
+    '!**/test',
   ],
   bundle: false,
   clean: true,

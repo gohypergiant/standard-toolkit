@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { UTM } from '@ngageoint/mgrs-js';
+import Utm from 'geodesy/utm';
 import { type ParseResults, parse } from '../latlon/internal/parse';
 import { violation } from '../latlon/internal/violation';
 
@@ -52,9 +52,10 @@ function detailedErrors(input: string) {
 // biome-ignore lint/suspicious/noExplicitAny: Format is unused
 export function parseUTM(_format: any, input: string) {
   try {
-    const point = UTM.parse(input).toPoint();
+    const utm = Utm.parse(input);
+    const latlon = utm.toLatLon();
 
-    return parse(`${point.getLatitude()} / ${point.getLongitude()}`, 'LATLON');
+    return parse(`${latlon.lat} / ${latlon.lon}`, 'LATLON');
   } catch (_) {
     return detailedErrors(input);
   }

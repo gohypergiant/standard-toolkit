@@ -2,7 +2,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: "@accelint/predicates"
+  name: accelint_predicates
   title: Accelint Predicates
   description: >-
     A collection of useful predicate functions for JavaScript.
@@ -10,12 +10,12 @@ metadata:
 
     Dependencies:
 
-    @accelint/core@0.4.0, @accelint/constellation-tracker@0.0.0,
-    @accelint/typescript-config@0.1.2, @accelint/vitest-config@0.1.3
+    accelint_core@0.4.2, accelint_constellation-tracker@1.0.0,
+    accelint_typescript-config@0.1.3, accelint_vitest-config@0.1.4
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/predicates/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.4.0
+    package/version: 0.4.2
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/predicates
@@ -30,7 +30,7 @@ spec:
   lifecycle: production
   owner: group:default/pathfinder
   dependsOn:
-    - component:@accelint/core
-    - component:@accelint/constellation-tracker
-    - component:@accelint/typescript-config
-    - component:@accelint/vitest-config
+    - component:accelint_core
+    - component:accelint_constellation-tracker
+    - component:accelint_typescript-config
+    - component:accelint_vitest-config

@@ -34,7 +34,7 @@ import { SelectFieldStyles } from './styles';
 import type { ProviderProps } from '@/lib/types';
 import type { SelectFieldProps } from './types';
 
-const { description, error, trigger, label, field, value } =
+const { description, error, trigger, label, field, value, popover } =
   SelectFieldStyles();
 
 export const SelectFieldContext =
@@ -110,9 +110,12 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
     isInvalid: isInvalidProp,
     ...rest
   } = props;
-  const errorMessage = errorMessageProp || null; // Protect against empty string
+
+  const errorMessage = errorMessageProp?.trim() ?? null;
+  const hasError = !!errorMessage;
+  const isInvalid = isInvalidProp ?? hasError;
   const isSmall = size === 'small';
-  const showLabel = !isSmall && !!label;
+  const showLabel = !isSmall && !!labelProp;
 
   return (
     <AriaSelect
@@ -121,7 +124,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
       className={composeRenderProps(classNames?.field, (className) =>
         field({ className }),
       )}
-      isInvalid={isInvalidProp || (errorMessage ? true : undefined)}
+      isInvalid={isInvalid}
       data-size={size}
     >
       {composeRenderProps(
@@ -166,7 +169,11 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
             >
               {errorMessage}
             </FieldError>
-            <AriaPopover className='min-w-(--trigger-width)'>
+            <AriaPopover
+              className={composeRenderProps(classNames?.popover, (className) =>
+                popover({ className }),
+              )}
+            >
               <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>
                 <Options>{children}</Options>
               </Virtualizer>
