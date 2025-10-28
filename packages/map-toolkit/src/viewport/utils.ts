@@ -17,16 +17,16 @@ import type { GeoCoordinate, GetViewportSizeArgs } from './types';
 const numberFormatter = Intl.NumberFormat('en-US');
 
 /**
- * Returns a formatter viewport size string i.e. `660 x 1,801 NMI`
+ * Returns a formatter viewport size string i.e. `660 x 1,801 NM`
  * @param {Object} args
  * @param {Object} args.bounds - 4 number tuple, i.e. `[-82, 22, -71, 52]`
- * @param {string} args.unit - Measure of distance, `km | m | nmi | mi | ft`. Defaults to `nmi`
+ * @param {string} args.unit - Measure of distance, `km | m | nm | mi | ft`. Defaults to `nm`
  * @param {Intl.NumberFormat} args.formatter - [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat)
  * @returns
  */
 export function getViewportSize({
   bounds,
-  unit = 'nmi',
+  unit = 'nm',
   formatter = numberFormatter,
 }: GetViewportSizeArgs) {
   const defaultValue = `-- x -- ${unit.toUpperCase()}`;

@@ -13,7 +13,7 @@
 export const UNIT_MAP = {
   km: 'kilometers',
   m: 'meters',
-  nmi: 'nauticalmiles',
+  nm: 'nauticalmiles',
   mi: 'miles',
   ft: 'feet',
 } as const;

@@ -17,9 +17,9 @@ describe('getViewportSize', () => {
   it('converts the bounds to a string', () => {
     const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
-      unit: 'nmi',
+      unit: 'nm',
     });
-    expect(result).toBe('612 x 1,801 NMI');
+    expect(result).toBe('612 x 1,801 NM');
   });
   it('can take a custom formatter', () => {
     const formatter = Intl.NumberFormat('de-DE');
@@ -34,37 +34,37 @@ describe('getViewportSize', () => {
     const result = getViewportSize({
       bounds: undefined,
     });
-    expect(result).toBe('-- x -- NMI');
+    expect(result).toBe('-- x -- NM');
   });
   it('handles invalid longitude values outside -180 to 180 range', () => {
     const result = getViewportSize({
       bounds: [-200, 22, -71, 52],
-      unit: 'nmi',
+      unit: 'nm',
     });
-    expect(result).toBe('-- x -- NMI');
+    expect(result).toBe('-- x -- NM');
   });
 
   it('handles invalid latitude values outside -90 to 90 range', () => {
     const result = getViewportSize({
       bounds: [-82, -100, -71, 52],
-      unit: 'nmi',
+      unit: 'nm',
     });
-    expect(result).toBe('-- x -- NMI');
+    expect(result).toBe('-- x -- NM');
   });
 
   it('handles invalid bounds where minLat > maxLat', () => {
     const result = getViewportSize({
       bounds: [-82, 52, -71, 22],
-      unit: 'nmi',
+      unit: 'nm',
     });
-    expect(result).toBe('-- x -- NMI');
+    expect(result).toBe('-- x -- NM');
   });
 
   it('works with all supported units', () => {
     const bounds: [number, number, number, number] = [-82, 22, -71, 52];
     expect(getViewportSize({ bounds, unit: 'km' })).toContain('KM');
     expect(getViewportSize({ bounds, unit: 'm' })).toContain('M');
-    expect(getViewportSize({ bounds, unit: 'nmi' })).toContain('NMI');
+    expect(getViewportSize({ bounds, unit: 'nm' })).toContain('NM');
     expect(getViewportSize({ bounds, unit: 'mi' })).toContain('MI');
     expect(getViewportSize({ bounds, unit: 'ft' })).toContain('FT');
   });
@@ -72,8 +72,8 @@ describe('getViewportSize', () => {
   it('handles edge case of bounds at world extents', () => {
     const result = getViewportSize({
       bounds: [-180, -90, 180, 90],
-      unit: 'nmi',
+      unit: 'nm',
     });
-    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NMI$/);
+    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
   });
 });

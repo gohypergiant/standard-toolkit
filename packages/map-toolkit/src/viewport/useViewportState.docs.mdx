@@ -48,16 +48,28 @@ function CustomMapInfo() {
 
 ## Props
 
-# viewId
+### viewId
 **Required** - Identifier of the subscribed Viewport
 
-# subscribe
+### subscribe
 **Optional** - custom `useSyncExternalStore` subscribe function
 
-# getSnapshot
+### getSnapshot
 **Optional** - custom `useSyncExternalStore` getSnapshot function
 
-# getServerSnapshot
+### getServerSnapshot
 **Optional** - custom `useSyncExternalStore` getServerSnapshot function
 
+## return
 
+### bounds
+[number, number, number, number]
+
+### latitude
+number
+
+### longitude
+number
+
+### zoom
+number

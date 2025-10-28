@@ -19,16 +19,26 @@ const WIDGETS = [new ViewportSyncWidget({ id: 'default' })];
 
 const meta: Meta = {
   title: 'Viewport/Viewport Size',
+  args: {
+    unit: undefined,
+  },
+  argTypes: {
+    unit: {
+      control: 'select',
+      options: ['km', 'm', 'nm', 'mi', 'ft'],
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ViewportSize: Story = {
-  render: () => {
+  render: ({ unit }) => {
     return (
       <div>
         <ViewportSizeComponent
+          unit={unit}
           viewId='default'
           className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
         />

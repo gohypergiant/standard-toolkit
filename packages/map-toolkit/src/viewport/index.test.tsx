@@ -253,7 +253,7 @@ describe('ViewportSize', () => {
 
   it('renders default placeholder when no bounds are available', () => {
     render(<ViewportSize viewId='test-view' />);
-    expect(screen.getByText('-- x -- NMI')).toBeInTheDocument();
+    expect(screen.getByText('-- x -- NM')).toBeInTheDocument();
   });
 
   it('renders viewport size when bounds are available', async () => {
@@ -273,7 +273,7 @@ describe('ViewportSize', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('viewport-size').textContent).toMatch(
-        /^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NMI$/,
+        /^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/,
       );
     });
   });
@@ -325,7 +325,7 @@ describe('ViewportSize', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('viewport-size').textContent).not.toBe(
-        '-- x -- NMI',
+        '-- x -- NM',
       );
     });
 

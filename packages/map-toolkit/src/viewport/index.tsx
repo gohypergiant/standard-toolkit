@@ -209,12 +209,12 @@ export type ViewportSizeProps = ComponentProps<'span'> & {
 /**
  * A span element displaying the current viewport bounds in the specified unit.
  *
- * Displays the viewport dimensions in a format like `660 x 1,801 NMI`.
+ * Displays the viewport dimensions in a format like `660 x 1,801 NM`.
  * Updates automatically as the viewport changes by subscribing to viewport events.
  *
  * @param props - Extends `<span>` props
  * @param props.viewId - The id of the view to subscribe to
- * @param props.unit - Measure of distance: `km | m | nmi | mi | ft`. Defaults to `nmi`
+ * @param props.unit - Measure of distance: `km | m | nm | mi | ft`. Defaults to `nm`
  * @param props.className - CSS classes for styling
  *
  * @example
@@ -232,7 +232,7 @@ export type ViewportSizeProps = ComponentProps<'span'> & {
  */
 export function ViewportSize({
   viewId,
-  unit = 'nmi',
+  unit = 'nm',
   className,
   ...rest
 }: ViewportSizeProps) {
