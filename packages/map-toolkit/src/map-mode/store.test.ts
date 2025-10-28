@@ -16,7 +16,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   mockBroadcastChannel,
   resetMockBroadcastChannel,
-} from 'vitest-broadcast-channel-mock';
+} from '../../../__mocks__/broadcast-channel';
 import { MapModeEvents } from './events';
 import {
   destroyStore,
@@ -33,7 +33,7 @@ describe('MapModeStore', () => {
 
   beforeEach(() => {
     // Mock BroadcastChannel FIRST
-    mockBroadcastChannel();
+    mockBroadcastChannel(vi);
 
     // Create fresh instances for each test
     id = uuid();

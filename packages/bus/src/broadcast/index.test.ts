@@ -15,13 +15,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   mockBroadcastChannel,
   resetMockBroadcastChannel,
-} from 'vitest-broadcast-channel-mock';
+} from '../../../__mocks__/broadcast-channel';
 import { Broadcast } from './index';
 import type { Payload } from './types';
 
 describe('broadcast', () => {
   beforeEach(() => {
-    mockBroadcastChannel();
+    mockBroadcastChannel(vi);
 
     // Make sure to completely reset instance between tests
     Broadcast.getInstance().destroy();

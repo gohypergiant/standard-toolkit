@@ -26,6 +26,7 @@ ignore:
   - '**/.storybook'
   - '**/.turbo'
   - '**/__fixtures__'
+  - '**/__mocks__'
   - '**/__snapshots__'
   - '**/build'
   - '**/coverage'
