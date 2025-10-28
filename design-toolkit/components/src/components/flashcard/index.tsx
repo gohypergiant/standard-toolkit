@@ -33,11 +33,13 @@
 
 import { createContext, type PropsWithChildren, useContext } from 'react';
 import { Skeleton } from '../skeleton';
-import type { ContextValue } from 'react-aria-components';
-import type { FlashcardMetaData, FlashcardProps } from './types';
+import type {
+  FlashcardDetailContainerProps,
+  FlashcardMetaData,
+  FlashcardProps,
+} from './types';
 
-const FlashcardContext =
-  createContext<ContextValue<FlashcardProps, HTMLDivElement>>(null);
+const FlashcardContext = createContext<FlashcardProps>({ isLoading: false });
 
 export function Flashcard(props: FlashcardProps) {
   const { isLoading, children, ...rest } = props;
@@ -124,7 +126,24 @@ function FlashcardSecondaryData(props: PropsWithChildren) {
 }
 FlashcardSecondaryData.display = 'Flashcard.SecondaryData';
 
-function FlashcardDetails(props: FlashcardMetaData) {
+// TODO: Type
+function FlashcardDetailsContainer({ details }: FlashcardDetailContainerProps) {
+  if (!(details && details.length)) {
+    return null;
+  }
+
+  return details
+    .splice(0, 5)
+    .map((item) => (
+      <Flashcard.Details
+        label={item.label}
+        value={item.value}
+        key={item.label}
+      />
+    ));
+}
+
+function FlashcardDetail(props: FlashcardMetaData) {
   const { label, value, ...rest } = props;
 
   return (
@@ -134,10 +153,10 @@ function FlashcardDetails(props: FlashcardMetaData) {
     </div>
   );
 }
-FlashcardDetails.displayName = 'Flashcard.Details';
+FlashcardDetail.displayName = 'Flashcard.Details';
 
 Flashcard.Hero = FlashcardHero;
-Flashcard.Details = FlashcardDetails;
+Flashcard.Details = FlashcardDetail;
 Flashcard.Identifier = FlashcardIdentifier;
 Flashcard.SecondaryData = FlashcardSecondaryData;
 Flashcard.Secondary = FlashcardSecondaryContainer;

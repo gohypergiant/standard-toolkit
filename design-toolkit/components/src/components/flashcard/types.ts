@@ -22,3 +22,7 @@ export type FlashcardMetaData = {
   label: string;
   value: any;
 };
+
+export type FlashcardDetailContainerProps = {
+  details?: FlashcardMetaData[];
+};
