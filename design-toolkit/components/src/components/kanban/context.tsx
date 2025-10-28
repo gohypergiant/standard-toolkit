@@ -123,7 +123,7 @@ const updatePositions = (column: KanbanColumnData) => {
   });
 };
 
-const getInsertIndex = (
+export const getInsertIndex = (
   targetPosition: number,
   closestEdge?: 'top' | 'bottom',
 ) => {

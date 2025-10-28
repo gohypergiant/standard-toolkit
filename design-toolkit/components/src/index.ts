@@ -188,6 +188,7 @@ export type { InputProps } from './components/input/types';
 export {
   KanbanProvider,
   calculateClosestEdge,
+  getInsertIndex,
   parseDropTarget,
   useKanban,
 } from './components/kanban/context';
