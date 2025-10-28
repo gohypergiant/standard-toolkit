@@ -14,7 +14,7 @@ import { tv } from '@/lib/utils';
 
 export const TextFieldStyles = tv({
   slots: {
-    field: 'group/text-field flex flex-col gap-xs',
+    field: 'group/text-field flex flex-col gap-xs [&_[data-testid=input-container]]:max-w-none',
     label: '',
     input: '',
     description: [
