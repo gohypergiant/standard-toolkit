@@ -11,9 +11,9 @@
  */
 
 import { useOn } from '@accelint/bus/react';
+import { coordinateSystems, createCoordinate } from '@accelint/geo';
 import { useState } from 'react';
 import { MapEvents } from '../deckgl/base-map/events';
-import { createCoordinate } from './temp-format';
 import type {
   MapHoverEvent,
   MapViewStateEvent,
@@ -28,8 +28,7 @@ export enum FormatTypes {
 export function useHoverCoordinate() {
   const [formattedCoord, setFormattedCoord] = useState('--, --');
   const [format, setFormat] = useState<FormatTypes>(FormatTypes.Dd);
-  //const create = createCoordinate(coordinateSystems.dd, 'LATLON');
-  const create = createCoordinate();
+  const create = createCoordinate(coordinateSystems.dd, 'LATLON');
 
   useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
     const coords = data.payload.info.coordinate;
