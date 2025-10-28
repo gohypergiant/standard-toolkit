@@ -60,6 +60,7 @@
     "@accelint/bus": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
+    "@accelint/geo": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@deck.gl/core": "^9.1.14",
@@ -107,6 +108,7 @@
   },
   "optionalDependencies": {
     "@accelint/bus": "1.4.0",
+    "@accelint/geo": "0.2.10",
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "9.1.14",
     "@deck.gl/geo-layers": "9.1.14",

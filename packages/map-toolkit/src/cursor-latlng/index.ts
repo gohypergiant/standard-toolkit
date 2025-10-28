@@ -12,9 +12,12 @@
 
 import { useOn } from '@accelint/bus/react';
 import { useState } from 'react';
-import { MapEvents } from '../base-map/events';
+import { MapEvents } from '../deckgl/base-map/events';
 import { createCoordinate } from './temp-format';
-import type { MapHoverEvent, MapViewStateEvent } from '../base-map/types';
+import type {
+  MapHoverEvent,
+  MapViewStateEvent,
+} from '../deckgl/base-map/types';
 
 // Should I suppress pascal case warning here? use a completely different type declaration?
 export enum FormatTypes {

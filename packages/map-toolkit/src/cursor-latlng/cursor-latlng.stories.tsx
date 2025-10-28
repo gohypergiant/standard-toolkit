@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffect, useMemo } from 'react';
-import { BaseMap } from '../base-map';
+import { useEffect } from 'react';
+import { BaseMap } from '../deckgl/base-map';
 import { FormatTypes, useHoverCoordinate } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
