@@ -173,6 +173,12 @@ export type {
   DrawerToggleEvent,
   DrawerTriggerProps,
 } from './components/drawer/types';
+export { Flashcard } from './components/flashcard';
+export { FlashcardStyles } from './components/flashcard/styles';
+export type {
+  FlashcardMetaData,
+  FlashcardProps,
+} from './components/flashcard/types';
 export { Hero, HeroContext } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
 export type { HeroProps } from './components/hero/types';

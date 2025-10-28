@@ -13,7 +13,9 @@
 import type { PropsWithChildren } from 'react';
 
 // Honestly, might not need these props.
-export type FlashcardProps = PropsWithChildren;
+export type FlashcardProps = PropsWithChildren & {
+  isLoading?: boolean;
+};
 
 // TODO: How strict do we need to be with the value types?
 export type FlashcardMetaData = {

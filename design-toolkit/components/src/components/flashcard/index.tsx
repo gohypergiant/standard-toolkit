@@ -31,29 +31,36 @@
  * </Flashcard>
  */
 
+import { createContext, type PropsWithChildren, useContext } from 'react';
 import { Skeleton } from '../skeleton';
-import type { PropsWithChildren } from 'react';
+import type { ContextValue } from 'react-aria-components';
 import type { FlashcardMetaData, FlashcardProps } from './types';
 
+const FlashcardContext =
+  createContext<ContextValue<FlashcardProps, HTMLDivElement>>(null);
+
 export function Flashcard(props: FlashcardProps) {
-  const { children, ...rest } = props;
+  const { isLoading, children, ...rest } = props;
 
   return (
-    <div
-      className='rounded-[var(--radius-medium)] min-w-[128px] outline outline-interactive-hover'
-      {...rest}
-    >
-      {children}
-    </div>
+    <Flashcard.Provider value={{ isLoading }}>
+      <div
+        className='rounded-[var(--radius-medium)] min-w-[128px] outline outline-interactive-hover'
+        {...rest}
+      >
+        {children}
+      </div>
+    </Flashcard.Provider>
   );
 }
 Flashcard.displayName = 'Flashcard';
 
 // TODO: Fix up type.
-function FlashcardHero(props: PropsWithChildren & { isLoading: boolean }) {
-  const { isLoading, children, ...rest } = props;
+function FlashcardHero(props: PropsWithChildren) {
+  const { children, ...rest } = props;
+  const context = useContext(FlashcardContext);
 
-  if (isLoading) {
+  if (context?.isLoading) {
     return (
       <div className='gap-s bg-surface-muted p-s' {...rest}>
         <Skeleton />
@@ -135,3 +142,4 @@ Flashcard.Identifier = FlashcardIdentifier;
 Flashcard.SecondaryData = FlashcardSecondaryData;
 Flashcard.Secondary = FlashcardSecondaryContainer;
 Flashcard.SecondaryDetails = FlashcardSecondaryDetails;
+Flashcard.Provider = FlashcardContext.Provider;
