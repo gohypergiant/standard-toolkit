@@ -69,6 +69,9 @@ importers:
       '@accelint/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@accelint/dependency-cruiser':
+        specifier: workspace:*
+        version: link:../../packages/dependency-cruiser
       '@accelint/formatters':
         specifier: workspace:*
         version: link:../../packages/formatters
@@ -3611,6 +3614,7 @@ packages:
 
   '@ls-lint/ls-lint@2.3.1':
     resolution: {integrity: sha512-vPe6IDByQnQRTxcAYjTxrmga/tSIui50VBFTB5KIJWY3OOFmxE2VtymjeSEfQfiMbhZV/ZPAqYy2lt8pZFQ0Rw==}
+    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
