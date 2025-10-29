@@ -255,9 +255,6 @@ importers:
       '@react-stately/data':
         specifier: ^3.13.2
         version: 3.14.1(react@19.0.0)
-      '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -367,6 +364,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.16(vite@5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0))
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@testing-library/dom':
         specifier: ^10.4.1
         version: 10.4.1
@@ -548,10 +548,6 @@ importers:
         version: 19.0.0
 
   packages/constants:
-    dependencies:
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -568,6 +564,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -577,9 +576,6 @@ importers:
       '@accelint/constants':
         specifier: workspace:*
         version: link:../constants
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -596,6 +592,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -634,10 +633,6 @@ importers:
         version: 4.1.12
 
   packages/formatters:
-    dependencies:
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -654,6 +649,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -706,9 +704,6 @@ importers:
       serialize-error:
         specifier: ^12.0.0
         version: 12.0.0
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -737,6 +732,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -830,6 +828,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vite:
         specifier: ^5.4.9
         version: 5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -841,8 +842,8 @@ importers:
         version: 0.1.0(vitest@2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0))
     optionalDependencies:
       '@accelint/bus':
-        specifier: workspace:*
-        version: link:../bus
+        specifier: 1.4.0
+        version: 1.4.0(@accelint/core@0.4.2(type-fest@4.41.0)(typescript@5.8.3)(uuid@11.1.0)(zod@4.1.12))(typescript@5.8.3)
       '@deck.gl/core':
         specifier: 9.1.14
         version: 9.1.14
@@ -885,15 +886,8 @@ importers:
       react:
         specifier: 19.0.0
         version: 19.0.0
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
 
   packages/math:
-    dependencies:
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -910,6 +904,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -964,9 +961,6 @@ importers:
       '@accelint/core':
         specifier: workspace:*
         version: link:../core
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -989,15 +983,14 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
 
   packages/temporal:
-    dependencies:
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -1014,6 +1007,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -1023,9 +1019,6 @@ importers:
       mitt:
         specifier: ^3.0.1
         version: 3.0.1
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -1042,15 +1035,14 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
 
   packages/websocket:
-    dependencies:
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -1067,6 +1059,9 @@ importers:
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
@@ -1193,6 +1188,20 @@ importers:
         version: 2.1.9(@types/node@24.9.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
 
 packages:
+
+  '@accelint/bus@1.4.0':
+    resolution: {integrity: sha512-BsVz7GRWmpDYyGFKrToQg0IgF2GD6jzXB4GVUovK6CJ/DdkJQtwGQMGmxWGxSbwPSZ/BTDpTn9jOiGcbml0AUw==}
+    peerDependencies:
+      '@accelint/core': ^0.4.2
+      typescript: ^5.8.3
+
+  '@accelint/core@0.4.2':
+    resolution: {integrity: sha512-nHzXDF204rzaC3hjGJwZsyD5+YznvdMtin4XcALyKi6CGvxfltYDkD2ndG/UGXC2rBUf5JIdnE8jt9/bPNQrzA==}
+    peerDependencies:
+      type-fest: ^4.41.0
+      typescript: ^5.8.3
+      uuid: ^11.1.0
+      zod: ^4.0.15
 
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
@@ -3443,7 +3452,6 @@ packages:
 
   '@ls-lint/ls-lint@2.3.1':
     resolution: {integrity: sha512-vPe6IDByQnQRTxcAYjTxrmga/tSIui50VBFTB5KIJWY3OOFmxE2VtymjeSEfQfiMbhZV/ZPAqYy2lt8pZFQ0Rw==}
-    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -10890,6 +10898,22 @@ packages:
     hasBin: true
 
 snapshots:
+
+  '@accelint/bus@1.4.0(@accelint/core@0.4.2(type-fest@4.41.0)(typescript@5.8.3)(uuid@11.1.0)(zod@4.1.12))(typescript@5.8.3)':
+    dependencies:
+      '@accelint/core': 0.4.2(type-fest@4.41.0)(typescript@5.8.3)(uuid@11.1.0)(zod@4.1.12)
+      typescript: 5.8.3
+    optionalDependencies:
+      react: 19.0.0
+    optional: true
+
+  '@accelint/core@0.4.2(type-fest@4.41.0)(typescript@5.8.3)(uuid@11.1.0)(zod@4.1.12)':
+    dependencies:
+      type-fest: 4.41.0
+      typescript: 5.8.3
+      uuid: 11.1.0
+      zod: 4.1.12
+    optional: true
 
   '@adobe/css-tools@4.4.4': {}
 

@@ -19,7 +19,7 @@ import { ViewStackContext } from '../view-stack/context';
 import { useDrawerEmit } from './context';
 import type { DrawerTriggerProps } from './types';
 
-export function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
+export function DrawerTrigger({ for: events, ...rest }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);
   const drawerEmit = useDrawerEmit();
 
@@ -40,5 +40,5 @@ export function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
     }
   }
 
-  return <Pressable onPress={handlePress}>{children}</Pressable>;
+  return <Pressable {...rest} onPress={handlePress} />;
 }

@@ -76,7 +76,6 @@ export function Drawer({
     },
     [id, viewStackEmit.clear, viewStackEmit.push],
   );
-
   const handleToggle = useCallback(
     (data: DrawerToggleEvent) => {
       if (views.current.has(data?.payload?.view)) {

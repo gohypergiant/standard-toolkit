@@ -16,16 +16,16 @@ import { Dialog } from './';
 import { DialogFooter } from './footer';
 import { DialogTitle } from './title';
 import { DialogTrigger } from './trigger';
-import type { DialogTriggerProps } from './types';
+import type { DialogProps } from './types';
 
 function setup({
   children = 'Foo',
   isOpen = true,
   ...rest
-}: Partial<DialogTriggerProps> = {}) {
+}: Partial<DialogProps> = {}) {
   render(
     <DialogTrigger {...rest} isOpen={isOpen}>
-      {children}
+      <Dialog>{children}</Dialog>
     </DialogTrigger>,
   );
 
@@ -44,11 +44,11 @@ describe('Dialog', () => {
 
     setup({
       children: (
-        <Dialog>
+        <>
           <DialogTitle>{title}</DialogTitle>
           {content}
           <DialogFooter>{footer}</DialogFooter>
-        </Dialog>
+        </>
       ),
     });
 

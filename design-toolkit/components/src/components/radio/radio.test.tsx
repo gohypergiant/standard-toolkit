@@ -18,7 +18,7 @@ import type { RadioProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<RadioProps> = {}) {
   render(
-    <RadioGroup>
+    <RadioGroup aria-label='Options'>
       <Radio value='1' {...rest}>
         {children}
       </Radio>
