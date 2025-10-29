@@ -14,7 +14,7 @@
 import 'client-only';
 import { type ComponentProps, useContext } from 'react';
 import { OverlayTriggerStateContext } from 'react-aria-components';
-import { isSlottedContextValue } from '@/lib/utils';
+import { isSlottedContextValue } from '../../lib/utils';
 import { ButtonContext } from '../button/context';
 import { DialogContext } from './context';
 import { DialogStyles } from './styles';

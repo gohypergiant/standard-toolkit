@@ -12,10 +12,10 @@
 'use client';
 
 import { ChevronDown } from '@accelint/icons';
-import { isSlottedContextValue } from '@/lib/utils';
 import 'client-only';
 import { useContext } from 'react';
 import { composeRenderProps, Heading } from 'react-aria-components';
+import { isSlottedContextValue } from '../../lib/utils';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';

@@ -12,10 +12,10 @@
 'use client';
 
 import { Kebab } from '@accelint/icons';
-import { isSlottedContextValue } from '@/lib/utils';
 import 'client-only';
 import { useContext } from 'react';
 import { Header, Provider } from 'react-aria-components';
+import { isSlottedContextValue } from '../../lib/utils';
 import { ButtonContext } from '../button/context';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';

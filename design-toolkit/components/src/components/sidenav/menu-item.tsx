@@ -13,8 +13,7 @@
 'use client';
 
 import 'client-only';
-import { composeRenderProps } from 'react-aria-components';
-import { ToggleButton } from '../button/toggle-button';
+import { composeRenderProps, ToggleButton } from 'react-aria-components';
 import { SidenavStyles } from './styles';
 import type { SidenavMenuItemProps } from './types';
 

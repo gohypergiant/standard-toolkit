@@ -13,7 +13,6 @@
 'use client';
 
 import ChevronRight from '@accelint/icons/chevron-right';
-import { isSlottedContextValue } from '@/lib/utils';
 import 'client-only';
 import { useContext } from 'react';
 import {
@@ -24,6 +23,7 @@ import {
   Provider,
   Text,
 } from 'react-aria-components';
+import { isSlottedContextValue } from '../../lib/utils';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';
 import { MenuContext } from './context';

@@ -27,7 +27,7 @@ The Drawer enforces a predictable child structure: only one DrawerPanel is allow
 ## Example Usage
 
 ### Using the Simplified Title Prop
-```
+```tsx
 const ids = {
   drawer: uuid(),
   a: uuid(),
@@ -63,7 +63,7 @@ const ids = {
 ```
 
 ### Using Custom Header Layout
-```
+```tsx
 const ids = {
   drawer: uuid(),
   a: uuid(),
@@ -116,7 +116,7 @@ For common use cases, you can use the `title` prop to automatically create a hea
 - The title text
 - A close button
 
-```
+```tsx
 <DrawerHeader title="My Title" />
 ```
 
@@ -126,7 +126,7 @@ This automatically handles the layout and provides appropriate semantic heading 
 
 For more control over the header content, you can use a compositional approach:
 
-```
+```tsx
 <DrawerHeader>
   <DrawerHeaderTitle level={2}>My Title</DrawerHeaderTitle>
   <DrawerClose />

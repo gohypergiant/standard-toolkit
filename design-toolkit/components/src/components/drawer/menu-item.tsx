@@ -14,12 +14,10 @@
 
 import 'client-only';
 import { useContext, useRef } from 'react';
-import {
-  composeRenderProps,
-  ToggleButton,
-  Tooltip,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components';
+import { ToggleButton } from '../button/toggle-button';
 import { Icon } from '../icon';
+import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import { ViewStackContext } from '../view-stack/context';
 import { DrawerContext } from './context';
@@ -63,7 +61,6 @@ export function DrawerMenuItem({
           className={composeRenderProps(classNames?.item, (className) =>
             item({ className }),
           )}
-          // @ts-expect-error intentionally using non-supported role.
           role='tab'
           variant='icon'
           isSelected={id === view || (stack.length > 1 && stack.includes(id))}
