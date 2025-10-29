@@ -13,8 +13,8 @@
 import { Lasso } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { Tooltip } from './tooltip';
-import { TooltipTrigger } from './tooltip-trigger';
+import { Tooltip } from './';
+import { TooltipTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

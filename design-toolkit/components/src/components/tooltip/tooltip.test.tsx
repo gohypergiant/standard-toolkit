@@ -11,8 +11,8 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Tooltip } from './tooltip';
-import { TooltipTrigger } from './tooltip-trigger';
+import { Tooltip } from './';
+import { TooltipTrigger } from './trigger';
 import type { TooltipTriggerComponentProps } from 'react-aria-components';
 
 function setup({
