@@ -12,8 +12,8 @@
 'use client';
 
 import 'client-only';
-import { type ComponentProps } from 'react';
 import { DialogStyles } from './styles';
+import type { ComponentProps } from 'react';
 
 const { content } = DialogStyles();
 

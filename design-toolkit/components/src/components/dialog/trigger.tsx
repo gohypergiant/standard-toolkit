@@ -9,12 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
-import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
-import type { DialogProps } from './types';
+import { DialogTrigger } from 'react-aria-components';
 
-export const DialogContext =
-  createContext<ContextValue<DialogProps, HTMLDivElement>>(null);
+export { DialogTrigger };

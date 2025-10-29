@@ -12,10 +12,10 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Dialog } from './dialog';
-import { DialogFooter } from './dialog-footer';
-import { DialogTitle } from './dialog-title';
-import { DialogTrigger } from './dialog-trigger';
+import { Dialog } from './';
+import { DialogFooter } from './footer';
+import { DialogTitle } from './title';
+import { DialogTrigger } from './trigger';
 import type { DialogTriggerProps } from './types';
 
 function setup({
