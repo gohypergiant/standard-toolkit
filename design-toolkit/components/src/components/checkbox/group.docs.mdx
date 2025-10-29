@@ -5,7 +5,7 @@ import * as CheckboxGroupStories from './checkbox-group.stories';
 <Meta of={CheckboxGroupStories} />
 
 # Checkbox Group
-A checkbox group allows a user to select multiple items from a list of options. The Checkbox.Group component provides flexible layout options with automatic spacing and responsive behavior. Horizontal orientation automatically wraps checkboxes when space is constrained, while vertical orientation provides consistent stacking with proper spacing between items.
+A checkbox group allows a user to select multiple items from a list of options. The CheckboxGroup component provides flexible layout options with automatic spacing and responsive behavior. Horizontal orientation automatically wraps checkboxes when space is constrained, while vertical orientation provides consistent stacking with proper spacing between items.
 
 ## Example Usage
 
@@ -13,18 +13,18 @@ A checkbox group allows a user to select multiple items from a list of options. 
 
 ```tsx
 // Checkbox group with label
-<Checkbox.Group label="Notification preferences" orientation="vertical">
+<CheckboxGroup label="Notification preferences" orientation="vertical">
   <Checkbox value="email">Email notifications</Checkbox>
   <Checkbox value="sms">SMS notifications</Checkbox>
   <Checkbox value="push">Push notifications</Checkbox>
-</Checkbox.Group>
+</CheckboxGroup>
 
 // Horizontal checkbox group
-<Checkbox.Group label="Features" orientation="horizontal">
+<CheckboxGroup label="Features" orientation="horizontal">
   <Checkbox value="feature1">Feature 1</Checkbox>
   <Checkbox value="feature2">Feature 2</Checkbox>
   <Checkbox value="feature3">Feature 3</Checkbox>
-</Checkbox.Group>
+</CheckboxGroup>
 ```
 
 ## Props

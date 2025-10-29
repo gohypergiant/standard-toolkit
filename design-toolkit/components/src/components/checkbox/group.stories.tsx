@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CheckboxGroup } from './group';
 import { Checkbox } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { CheckboxGroupProps } from './types';
@@ -17,7 +18,7 @@ import type { CheckboxGroupProps } from './types';
 type Alias = React.FC<CheckboxGroupProps>;
 
 /**
- * The `<Checkbox.Group>` component is a direct wrapper around the equiavalent component from
+ * The `<CheckboxGroup>` component is a direct wrapper around the equiavalent component from
  * `react-aria-components`.
  *
  * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/CheckboxGroup.html">here</a>.
@@ -26,8 +27,8 @@ type Alias = React.FC<CheckboxGroupProps>;
  * behavior.
  */
 const meta = {
-  title: 'Components/Checkbox.Group',
-  component: Checkbox.Group as Alias,
+  title: 'Components/CheckboxGroup',
+  component: CheckboxGroup as Alias,
   args: {
     label: 'Header',
     orientation: 'vertical',
@@ -52,11 +53,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => (
-    <Checkbox.Group {...args}>
+    <CheckboxGroup {...args}>
       <Checkbox value='value1'>Checkbox text</Checkbox>
       <Checkbox value='value2'>Checkbox text</Checkbox>
       <Checkbox value='value3'>Checkbox text</Checkbox>
       <Checkbox value='value4'>Checkbox text</Checkbox>
-    </Checkbox.Group>
+    </CheckboxGroup>
   ),
 };
