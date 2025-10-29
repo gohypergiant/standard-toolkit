@@ -57,8 +57,7 @@
     "@loglayer/transport": "^2.2.1",
     "@loglayer/transport-simple-pretty-terminal": "^2.2.1",
     "callsites": "^4.2.0",
-    "serialize-error": "^12.0.0",
-    "typescript": "5.8.3"
+    "serialize-error": "^12.0.0"
   },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
@@ -70,6 +69,7 @@
     "esbuild-fix-imports-plugin": "^1.0.23",
     "loglayer": "^6.6.0",
     "tsup": "8.5.0",
+    "typescript": "5.8.3",
     "vitest": "^2.1.9"
   },
   "peerDependencies": {

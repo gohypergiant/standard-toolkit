@@ -84,6 +84,7 @@ export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
   return (
     <TextField
       {...rest}
+      aria-label={labelProp}
       ref={ref}
       className={composeRenderProps(classNames?.field, (className) =>
         field({ className }),

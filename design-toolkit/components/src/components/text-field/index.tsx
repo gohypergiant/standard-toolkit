@@ -125,6 +125,7 @@ export function TextField({ ref, ...props }: TextFieldProps) {
   return (
     <AriaTextField
       {...rest}
+      aria-label={labelProp}
       ref={ref}
       className={composeRenderProps(classNames?.field, (className) =>
         field({ className }),

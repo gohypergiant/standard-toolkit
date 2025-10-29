@@ -12,7 +12,12 @@ import type { Payload } from '@accelint/bus';
  */
 import type { UniqueId } from '@accelint/core';
 import type { FocusableElement } from '@react-types/shared';
-import type { ComponentPropsWithRef, DOMAttributes, ReactElement } from 'react';
+import type {
+  ComponentPropsWithRef,
+  DOMAttributes,
+  ReactElement,
+  RefAttributes,
+} from 'react';
 import type { HeadingProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
 import type { AriaAttributesWithRef } from '@/lib/types';
@@ -216,7 +221,7 @@ type TargetedEvents =
 
 type ChainedEvents = (SimpleEvents | TargetedEvents)[];
 
-export type DrawerTriggerProps = {
+export type DrawerTriggerProps = RefAttributes<FocusableElement> & {
   children: ReactElement<DOMAttributes<FocusableElement>, string>;
   /**
    * __SimpleEvents__ allow the easiest implementation of events, but come with some restrictions:

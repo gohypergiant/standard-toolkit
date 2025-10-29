@@ -63,8 +63,6 @@
     "zod": "^4.1.12"
   },
   "peerDependencies": {
-    "type-fest": "^4.41.0",
-    "typescript": "5.8.3",
     "uuid": "^11.1.0",
     "zod": "^4.1.12"
   },
