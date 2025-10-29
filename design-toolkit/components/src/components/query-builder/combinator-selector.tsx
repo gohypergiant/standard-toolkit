@@ -14,7 +14,9 @@
 import 'client-only';
 import { Label } from '../label';
 import { Radio } from '../radio';
+import { RadioGroup } from '../radio/group';
 import { Tooltip } from '../tooltip';
+import { TooltipTrigger } from '../tooltip/trigger';
 import type { CombinatorSelectorProps } from 'react-querybuilder';
 
 const operatorDescriptions: Record<string, string> = {
@@ -28,7 +30,7 @@ export function CombinatorSelector({
   handleOnChange,
 }: CombinatorSelectorProps) {
   return (
-    <Radio.Group
+    <RadioGroup
       value={value}
       onChange={handleOnChange}
       orientation='horizontal'
@@ -37,14 +39,14 @@ export function CombinatorSelector({
       <Label>Combinator</Label>
       {options.map((option) => (
         <Radio key={option.label} value={option.label}>
-          <Tooltip.Trigger>
+          <TooltipTrigger>
             <button type='button'>{option.label}</button>
             <Tooltip placement='top'>
               {operatorDescriptions[option.label]}
             </Tooltip>
-          </Tooltip.Trigger>
+          </TooltipTrigger>
         </Radio>
       ))}
-    </Radio.Group>
+    </RadioGroup>
   );
 }
