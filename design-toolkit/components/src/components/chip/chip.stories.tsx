@@ -14,10 +14,10 @@ import { Placeholder } from '@accelint/icons';
 import { useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { Chip } from './chip';
-import { ChipList } from './chip-list';
-import { DeletableChip } from './deletable-chip';
-import { SelectableChip } from './selectable-chip';
+import { Chip } from './';
+import { DeletableChip } from './deletable';
+import { ChipList } from './list';
+import { SelectableChip } from './selectable';
 import type { Meta, StoryObj } from '@storybook/react';
 import type {
   ChipListProps,
