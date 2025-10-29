@@ -12,7 +12,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { TextField } from './text-field';
+import { TextField } from './';
 import type { TextFieldProps } from './types';
 
 function setup(props: Partial<TextFieldProps> = {}) {

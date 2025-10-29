@@ -11,6 +11,148 @@
  */
 'use client';
 
-import { TextField } from './text-field';
+import 'client-only';
+import {
+  TextField as AriaTextField,
+  composeRenderProps,
+  FieldError,
+  Text,
+  useContextProps,
+} from 'react-aria-components';
+import { Input } from '../input';
+import { Label } from '../label';
+import { TextFieldContext } from './context';
+import { TextFieldStyles } from './styles';
+import type { TextFieldProps } from './types';
 
-export { TextField };
+const { field, label, description, error } = TextFieldStyles();
+
+/**
+ * TextField - A complete form field component with label, input, and validation
+ *
+ * Provides a comprehensive form field experience combining label, input, description,
+ * and error message components. Handles validation states and accessibility
+ * automatically while supporting extensive customization through styling props.
+ *
+ * @example
+ * // Basic text field with label and required validation
+ * <TextField label='Full Name' isRequired defaultValue='John Doe' />
+ *
+ * @example
+ * // Text field with placeholder and description
+ * <TextField
+ *   label='Email Address'
+ *   inputProps={{ placeholder: 'Enter your email address', type: 'email' }}
+ *   description='We will never share your email with third parties'
+ * />
+ *
+ * @example
+ * // Text field with error state
+ * <TextField
+ *   label='Username'
+ *   isInvalid
+ *   errorMessage='Username must be at least 3 characters long'
+ *   inputProps={{ placeholder: 'Enter username' }}
+ * />
+ *
+ * @example
+ * // Small size text field with clearable input
+ * <TextField
+ *   label='Search'
+ *   size='small'
+ *   inputProps={{
+ *     placeholder: 'Type to search...',
+ *     isClearable: true,
+ *     type: 'search'
+ *   }}
+ * />
+ *
+ * @example
+ * // Disabled text field
+ * <TextField
+ *   label='Status'
+ *   isDisabled
+ *   defaultValue='Inactive'
+ *   description='This field cannot be edited'
+ * />
+ *
+ * @example
+ * // Password field with validation
+ * <TextField
+ *   label='Password'
+ *   isRequired
+ *   inputProps={{
+ *     type: 'password',
+ *     placeholder: 'Enter a secure password',
+ *     minLength: 8
+ *   }}
+ *   description='Password must be at least 8 characters'
+ * />
+ */
+export function TextField({ ref, ...props }: TextFieldProps) {
+  [props, ref] = useContextProps(props, ref ?? null, TextFieldContext);
+
+  const {
+    classNames,
+    description: descriptionProp,
+    errorMessage: errorMessageProp,
+    inputProps,
+    label: labelProp,
+    size = 'medium',
+    isInvalid: isInvalidProp,
+    ...rest
+  } = props;
+  const errorMessage = errorMessageProp || null; // Protect against empty string
+  const isSmall = size === 'small';
+
+  return (
+    <AriaTextField
+      {...rest}
+      ref={ref}
+      className={composeRenderProps(classNames?.field, (className) =>
+        field({ className }),
+      )}
+      isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
+      data-size={size}
+    >
+      {(
+        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props
+      ) => (
+        <>
+          {!!labelProp && !isSmall && (
+            <Label
+              className={label({ className: classNames?.label })}
+              isDisabled={isDisabled}
+              isRequired={isRequired}
+            >
+              {labelProp}
+            </Label>
+          )}
+          <Input
+            {...inputProps}
+            classNames={classNames?.input}
+            disabled={isDisabled}
+            required={isRequired}
+            size={size}
+            isInvalid={isInvalid}
+          />
+          {!!descriptionProp && !(isSmall || isInvalid) && (
+            <Text
+              slot='description'
+              className={description({ className: classNames?.description })}
+            >
+              {descriptionProp}
+            </Text>
+          )}
+          <FieldError
+            className={composeRenderProps(classNames?.error, (className) =>
+              error({ className }),
+            )}
+          >
+            {errorMessage}
+          </FieldError>
+        </>
+      )}
+    </AriaTextField>
+  );
+}
