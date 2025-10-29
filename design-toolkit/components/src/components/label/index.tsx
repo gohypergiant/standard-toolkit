@@ -11,6 +11,45 @@
  */
 'use client';
 
-import { Label } from './label';
+import 'client-only';
+import { Label as AriaLabel, useContextProps } from 'react-aria-components';
+import { LabelContext } from './context';
+import { LabelStyles } from './styles';
+import type { LabelProps } from './types';
 
-export { Label };
+/**
+ * Label - A semantic label component for form elements and content
+ *
+ * Provides accessible labeling for form controls with automatic handling of
+ * required/optional states. Integrates with React Aria form components to
+ * ensure proper accessibility and screen reader support.
+ *
+ * @example
+ * // Basic label
+ * <Label>Username</Label>
+ *
+ * @example
+ * // Required field label
+ * <Label isRequired>Email Address</Label>
+ *
+ * @example
+ * // Disabled label
+ * <Label isDisabled>Inactive Field</Label>
+ */
+export function Label({ ref, ...props }: LabelProps) {
+  [props, ref] = useContextProps(props, ref ?? null, LabelContext);
+
+  const { children, className, isDisabled, isRequired, ...rest } = props;
+
+  return (
+    <AriaLabel
+      {...rest}
+      className={LabelStyles({ className })}
+      data-disabled={isDisabled || null}
+      data-required={isRequired || null}
+    >
+      {children}
+      {!isRequired && ' (optional)'}
+    </AriaLabel>
+  );
+}
