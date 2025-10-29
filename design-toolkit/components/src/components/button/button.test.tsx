@@ -11,7 +11,7 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Button } from './button';
+import { Button } from './';
 import type { ButtonProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<ButtonProps> = {}) {

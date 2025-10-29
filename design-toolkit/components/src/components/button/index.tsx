@@ -11,6 +11,79 @@
  */
 'use client';
 
-import { Button } from './button';
+import 'client-only';
+import {
+  Button as AriaButton,
+  composeRenderProps,
+  useContextProps,
+} from 'react-aria-components';
+import { IconProvider } from '../icon/context';
+import { ButtonContext } from './context';
+import { ButtonStyles } from './styles';
+import type { ButtonProps } from './types';
 
-export { Button };
+/**
+ * Button - A versatile interactive button component with multiple variants
+ *
+ * Provides accessible button functionality with support for different visual styles,
+ * sizes, and interactive states. Includes icon support and integrates with React Aria
+ * for keyboard navigation and accessibility features.
+ *
+ * @example
+ * // Basic button
+ * <Button>Click me</Button>
+ *
+ * @example
+ * // Primary button with different sizes
+ * <Button variant="filled" size="large">Large Filled</Button>
+ * <Button variant="outline" size="small">Small Outline</Button>
+ *
+ * @example
+ * // Button with icon
+ * <Button variant="flat">
+ *   <Icon><Plus /></Icon>
+ *   Add Item
+ * </Button>
+ *
+ * @example
+ * // Icon-only button
+ * <Button variant="icon">
+ *   <Icon><Settings /></Icon>
+ * </Button>
+ *
+ * @example
+ * // Button with different colors
+ * <Button color="critical">Critical Button</Button>
+ * <Button color="serious">Delete</Button>
+ */
+export function Button({ ref, ...props }: ButtonProps) {
+  [props, ref] = useContextProps(props, ref ?? null, ButtonContext);
+
+  const {
+    children,
+    className,
+    color = 'mono-muted',
+    size = 'medium',
+    variant,
+    ...rest
+  } = props;
+
+  return (
+    <IconProvider size={size}>
+      <AriaButton
+        {...rest}
+        ref={ref}
+        className={composeRenderProps(className, (className) =>
+          ButtonStyles({
+            className,
+            variant,
+          }),
+        )}
+        data-color={color}
+        data-size={size}
+      >
+        {children}
+      </AriaButton>
+    </IconProvider>
+  );
+}
