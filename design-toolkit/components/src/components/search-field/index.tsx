@@ -11,7 +11,100 @@
  */
 'use client';
 
+import { CancelFill, Loop, Search } from '@accelint/icons';
 import 'client-only';
-import { SearchField } from './search-field';
+import {
+  SearchField as AriaSearchField,
+  Button,
+  composeRenderProps,
+  Input,
+  useContextProps,
+} from 'react-aria-components';
+import { Icon } from '../icon';
+import { IconProvider } from '../icon/context';
+import { SearchFieldContext } from './context';
+import { SearchFieldStyles, SearchFieldStylesDefaults } from './styles';
+import type { SearchFieldProps } from './types';
 
-export { SearchField };
+const { field, input, search, loading, clear } = SearchFieldStyles();
+
+/**
+ * SearchField - A customizable search input component built on React Aria Components
+ *
+ * Provides a search input with integrated search icon, loading state, and clear functionality.
+ * Supports two visual variants (filled/outlined), and granular styling control.
+ *
+ * @example
+ * // Basic search field
+ * <SearchField placeholder="Search..." />
+ *
+ * @example
+ * // Filled variant with custom styling
+ * <SearchField
+ *   variant="filled"
+ *   placeholder="Search products"
+ *   classNames={{
+ *     input: "bg-info-bold",
+ *     searchIcon: "fg-accent-primary-bold"
+ *   }}
+ * />
+ *
+ * @example
+ * // With event handlers
+ * <SearchField
+ *   placeholder="Type to search"
+ *   onSubmit={(value) => console.log('Search:', value)}
+ *   onChange={(value) => setQuery(value)}
+ * />
+ */
+export function SearchField({ ref, ...props }: SearchFieldProps) {
+  [props, ref] = useContextProps(props, ref ?? null, SearchFieldContext);
+
+  const {
+    classNames,
+    inputProps,
+    isLoading = false,
+    variant = SearchFieldStylesDefaults.variant,
+    ...rest
+  } = props;
+
+  return (
+    <IconProvider size='small'>
+      <AriaSearchField
+        {...rest}
+        ref={ref}
+        className={composeRenderProps(classNames?.field, (className) =>
+          field({ className, variant }),
+        )}
+      >
+        <Icon className={search({ className: classNames?.search, variant })}>
+          <Search />
+        </Icon>
+        <Input
+          {...inputProps}
+          className={composeRenderProps(classNames?.input, (className) =>
+            input({ className, variant }),
+          )}
+          type='search'
+        />
+        {isLoading ? (
+          <Icon
+            className={loading({ className: classNames?.loading, variant })}
+          >
+            <Loop />
+          </Icon>
+        ) : (
+          <Button
+            className={composeRenderProps(classNames?.clear, (className) =>
+              clear({ className, variant }),
+            )}
+          >
+            <Icon>
+              <CancelFill />
+            </Icon>
+          </Button>
+        )}
+      </AriaSearchField>
+    </IconProvider>
+  );
+}
