@@ -12,6 +12,37 @@
 
 'use client';
 
-import { Divider } from './divider';
+import 'client-only';
+import { useContextProps } from 'react-aria-components';
+import { DividerContext } from './context';
+import { DividerStyles } from './styles';
+import type { DividerProps } from './types';
 
-export { Divider };
+/**
+ * Divider - A simple horizontal or vertical rule component
+ *
+ * Provides a visual separator between content sections with support for both
+ * horizontal and vertical orientations.
+ *
+ * @example
+ * // Basic horizontal divider
+ * <Divider />
+ *
+ * @example
+ * // Vertical divider
+ * <Divider orientation="vertical" />
+ */
+export function Divider({ ref, ...props }: DividerProps) {
+  [props, ref] = useContextProps(props, ref ?? null, DividerContext);
+
+  const { className, orientation = 'horizontal', ...rest } = props;
+
+  return (
+    <hr
+      {...rest}
+      ref={ref}
+      className={DividerStyles({ className })}
+      data-orientation={orientation}
+    />
+  );
+}
