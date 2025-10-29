@@ -12,11 +12,11 @@
 
 'use client';
 
-import 'client-only';
 import { useBus } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useToastRegion } from '@react-aria/toast';
 import { useToastQueue } from '@react-stately/toast';
+import 'client-only';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   composeRenderProps,
@@ -27,8 +27,8 @@ import {
   UNSTABLE_ToastStateContext as ToastStateContext,
 } from 'react-aria-components';
 import { Button } from '../button';
+import { Notice } from './';
 import { NoticeEventTypes } from './events';
-import { Notice } from './notice';
 import { NoticeStyles } from './styles';
 import { matchesMetadata } from './utils';
 import type {
