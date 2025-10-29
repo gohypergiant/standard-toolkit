@@ -112,11 +112,7 @@ export const ControlledSelection: Story = {
     };
 
     return (
-      <SelectField
-        {...args}
-        selectedKey={value}
-        onSelectionChange={handleSelection}
-      >
+      <SelectField {...args} value={value} onChange={handleSelection}>
         <OptionsItem id={koalaId} textValue='Koala'>
           <Icon>
             <Placeholder />
