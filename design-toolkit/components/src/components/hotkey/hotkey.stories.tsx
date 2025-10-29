@@ -12,7 +12,7 @@
 
 import MouseRightClick from '@accelint/icons/mouse-right-click';
 import { Icon } from '../icon';
-import { Hotkey } from './hotkey';
+import { Hotkey } from './';
 import { HotkeySet } from './hotkey-set';
 import type { Meta, StoryObj } from '@storybook/react';
 

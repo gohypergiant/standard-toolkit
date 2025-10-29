@@ -12,6 +12,52 @@
 
 'use client';
 
-import { Hotkey } from './hotkey';
+import 'client-only';
+import { Keyboard, useContextProps } from 'react-aria-components';
+import { HotkeyContext } from './context';
+import { HotkeyStyles, HotkeyStylesDefaults } from './styles';
+import type { HotkeyProps } from './types';
 
-export { Hotkey };
+const { key } = HotkeyStyles();
+
+/**
+ * Hotkey - A visual representation of keyboard shortcuts and key combinations
+ *
+ * Displays keyboard keys and shortcuts in a consistent, accessible format.
+ * Perfect for documentation, help systems, or UI elements that need to show
+ * keyboard shortcuts. Supports multiple visual styles including outlined keys,
+ * flat presentation, and icon-specific formatting.
+ *
+ * @example
+ * // Basic hotkey display
+ * <Hotkey>Ctrl</Hotkey>
+ *
+ * @example
+ * // Hotkey combination with different variants
+ * <HotkeySet>
+ *   <Hotkey variant="outline">Cmd</Hotkey>
+ *   <span>+</span>
+ *   <Hotkey variant="outline">K</Hotkey>
+ * </HotkeySet>
+ *
+ * @example
+ * // Flat style for inline text
+ * <p>Press <Hotkey variant="flat">Enter</Hotkey> to submit</p>
+ *
+ * @example
+ * // Icon variant for special keys
+ * <HotkeySet>
+ *   <Hotkey variant="icon">⌘</Hotkey>
+ *   <Hotkey>Space</Hotkey>
+ * </HotkeySet>
+ */
+export function Hotkey({ ref, children, ...props }: HotkeyProps) {
+  [props, ref] = useContextProps(props, ref ?? null, HotkeyContext);
+  const { className, variant = HotkeyStylesDefaults.variant } = props;
+
+  return (
+    <Keyboard ref={ref} {...props} className={key({ className, variant })}>
+      {children}
+    </Keyboard>
+  );
+}
