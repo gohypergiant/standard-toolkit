@@ -789,6 +789,367 @@ describe('Kanban Board', () => {
         expect(updatedDestColumn.cards[0].position).toBe(0);
       });
     });
+
+    describe('moveCard - Error Handling & Edge Cases', () => {
+      it('should move card to last position within same column', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const targetColumn = columns[0] as KanbanColumnData;
+        expect(targetColumn).toBeDefined();
+        const targetCard = targetColumn?.cards[0] as KanbanCardData;
+        expect(targetCard).toBeDefined();
+
+        // Move card from position 0 to position 3 (after all cards in column with 3 cards)
+        // Due to removal, the actual insert position will be adjusted
+        moveCard(targetCard.id, targetColumn.id, 3);
+
+        const updatedColumns = setColumns.mock.calls[0]?.[0];
+        const updatedColumn = updatedColumns.find(
+          (column: KanbanColumnData) => column.id === targetColumn.id,
+        );
+
+        // Card should be at position 2 (last position after adjustment: 3 - 1 = 2)
+        const movedCard = updatedColumn.cards.find(
+          (card: KanbanCardData) => card.id === targetCard.id,
+        );
+        expect(movedCard.position).toBe(2);
+        expect(updatedColumn.cards[2].id).toBe(targetCard.id);
+      });
+
+      it('should handle moving last card down as no-op', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const targetColumn = columns[0] as KanbanColumnData;
+        expect(targetColumn).toBeDefined();
+        const lastCard = targetColumn?.cards[2] as KanbanCardData;
+        expect(lastCard).toBeDefined();
+
+        // Move last card (position 2) to position 3 (conceptually after itself)
+        moveCard(lastCard.id, targetColumn.id, 3);
+
+        const updatedColumns = setColumns.mock.calls[0]?.[0];
+        const updatedColumn = updatedColumns.find(
+          (column: KanbanColumnData) => column.id === targetColumn.id,
+        );
+
+        // Card should remain at position 2 (adjustment: 3 - 1 = 2)
+        const movedCard = updatedColumn.cards.find(
+          (card: KanbanCardData) => card.id === lastCard.id,
+        );
+        expect(movedCard.position).toBe(2);
+      });
+
+      it('should handle moving card in single-card column', () => {
+        const setColumns = vi.fn();
+        // Create a column with only one card
+        const singleCardColumn: KanbanColumnData = {
+          title: 'Single',
+          id: 'single',
+          headerActions: [],
+          cards: [
+            {
+              title: 'Only Card',
+              body: 'The only card',
+              id: 'single-card',
+              columnId: 'single',
+              position: 0,
+            },
+          ],
+        };
+        const columnsWithSingle = [singleCardColumn, ...columns];
+
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider
+              columns={columnsWithSingle}
+              updateColumnState={setColumns}
+            >
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const onlyCard = singleCardColumn.cards[0] as KanbanCardData;
+        expect(onlyCard).toBeDefined();
+
+        // Try to move the only card to position 1
+        moveCard(onlyCard.id, singleCardColumn.id, 1);
+
+        const updatedColumns = setColumns.mock.calls[0]?.[0];
+        const updatedColumn = updatedColumns.find(
+          (column: KanbanColumnData) => column.id === singleCardColumn.id,
+        );
+
+        // Card should remain at position 0 (adjustment: 1 - 1 = 0)
+        expect(updatedColumn.cards.length).toBe(1);
+        expect(updatedColumn.cards[0].position).toBe(0);
+      });
+
+      it('should handle invalid card ID gracefully', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+
+        // Try to move a non-existent card
+        moveCard('non-existent-id', 'todo', 0);
+
+        // updateColumnState should not be called
+        expect(setColumns).not.toHaveBeenCalled();
+      });
+
+      it('should handle invalid target column ID gracefully', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const sourceColumn = columns[0] as KanbanColumnData;
+        expect(sourceColumn).toBeDefined();
+        const sourceCard = sourceColumn?.cards[0] as KanbanCardData;
+        expect(sourceCard).toBeDefined();
+
+        // Try to move to a non-existent column
+        moveCard(sourceCard.id, 'non-existent-column', 0);
+
+        // updateColumnState should not be called
+        expect(setColumns).not.toHaveBeenCalled();
+      });
+
+      it('should move card to middle position of target column', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const sourceColumn = columns[0] as KanbanColumnData;
+        expect(sourceColumn).toBeDefined();
+        const sourceCard = sourceColumn?.cards[0] as KanbanCardData;
+        expect(sourceCard).toBeDefined();
+        const destColumn = columns[0] as KanbanColumnData;
+        expect(destColumn).toBeDefined();
+
+        // Move card to position 1 (middle) in column with 3 cards
+        // Since it's same column and moving down, adjustment applies
+        moveCard(sourceCard.id, destColumn.id, 1);
+
+        const updatedColumns = setColumns.mock.calls[0]?.[0];
+        const updatedColumn = updatedColumns.find(
+          (column: KanbanColumnData) => column.id === destColumn.id,
+        );
+
+        // Card should be at position 0 (adjustment: 1 - 1 = 0)
+        const movedCard = updatedColumn.cards.find(
+          (card: KanbanCardData) => card.id === sourceCard.id,
+        );
+        expect(movedCard.position).toBe(0);
+
+        // Verify cards are in correct order
+        expect(updatedColumn.cards[0].id).toBe('id-1');
+        expect(updatedColumn.cards[1].id).toBe('id-2');
+        expect(updatedColumn.cards[2].id).toBe('id-3');
+      });
+
+      it('should move card across non-sequential columns', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const sourceColumn = columns[0] as KanbanColumnData;
+        expect(sourceColumn).toBeDefined();
+        const sourceCard = sourceColumn?.cards[0] as KanbanCardData;
+        expect(sourceCard).toBeDefined();
+        const destColumn = columns[3] as KanbanColumnData;
+        expect(destColumn).toBeDefined();
+
+        // Move from column 0 (todo) to column 3 (done), skipping columns 1 and 2
+        moveCard(sourceCard.id, destColumn.id, 0);
+
+        const updatedColumns = setColumns.mock.calls[0]?.[0];
+        const updatedSourceColumn = updatedColumns.find(
+          (column: KanbanColumnData) => column.id === sourceColumn.id,
+        );
+        const updatedDestColumn = updatedColumns.find(
+          (column: KanbanColumnData) => column.id === destColumn.id,
+        );
+
+        // Source column should have one less card
+        expect(updatedSourceColumn.cards.length).toBe(2);
+        expect(
+          updatedSourceColumn.cards.find(
+            (card: KanbanCardData) => card.id === sourceCard.id,
+          ),
+        ).toBeUndefined();
+
+        // Destination column should have one more card at position 0
+        expect(updatedDestColumn.cards.length).toBe(3);
+        expect(updatedDestColumn.cards[0].id).toBe(sourceCard.id);
+        expect(updatedDestColumn.cards[0].columnId).toBe(destColumn.id);
+        expect(updatedDestColumn.cards[0].position).toBe(0);
+      });
+
+      it('should handle moving from empty column gracefully', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const emptyColumn = columns[2] as KanbanColumnData;
+        expect(emptyColumn).toBeDefined();
+        expect(emptyColumn.cards.length).toBe(0);
+
+        // Try to move a non-existent card from empty column
+        moveCard('fake-id-in-empty-column', 'todo', 0);
+
+        // updateColumnState should not be called (card not found)
+        expect(setColumns).not.toHaveBeenCalled();
+      });
+
+      it('should maintain state consistency across multiple sequential moves', () => {
+        const setColumns = vi.fn();
+        const { result, rerender } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+
+        // Move 1: Move id-1 from position 0 to position 2
+        moveCard('id-1', 'todo', 2);
+        expect(setColumns).toHaveBeenCalledTimes(1);
+
+        // Get updated state from first move
+        const columnsAfterMove1 = setColumns.mock.calls[0]?.[0];
+        setColumns.mockClear();
+
+        // Rerender with new state
+        rerender();
+
+        // Create new hook instance with updated columns
+        const { result: result2 } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider
+              columns={columnsAfterMove1}
+              updateColumnState={setColumns}
+            >
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        // Move 2: Move id-2 to inProgress
+        result2.current.moveCard('id-2', 'inProgress', 0);
+        expect(setColumns).toHaveBeenCalledTimes(1);
+
+        const columnsAfterMove2 = setColumns.mock.calls[0]?.[0];
+        const todoColumn = columnsAfterMove2.find(
+          (col: KanbanColumnData) => col.id === 'todo',
+        );
+        const inProgressColumn = columnsAfterMove2.find(
+          (col: KanbanColumnData) => col.id === 'inProgress',
+        );
+
+        // Verify todo has 2 cards with sequential positions
+        expect(todoColumn.cards.length).toBe(2);
+        expect(todoColumn.cards[0].position).toBe(0);
+        expect(todoColumn.cards[1].position).toBe(1);
+
+        // Verify inProgress has 3 cards with sequential positions
+        expect(inProgressColumn.cards.length).toBe(3);
+        expect(inProgressColumn.cards[0].position).toBe(0);
+        expect(inProgressColumn.cards[1].position).toBe(1);
+        expect(inProgressColumn.cards[2].position).toBe(2);
+      });
+
+      it('should preserve all card properties during move', () => {
+        const setColumns = vi.fn();
+        const { result } = renderHook(() => useKanban(), {
+          wrapper: ({ children }) => (
+            <KanbanProvider columns={columns} updateColumnState={setColumns}>
+              {children}
+            </KanbanProvider>
+          ),
+        });
+
+        const { moveCard } = result.current;
+        const sourceColumn = columns[0] as KanbanColumnData;
+        expect(sourceColumn).toBeDefined();
+        const sourceCard = sourceColumn?.cards[0] as KanbanCardData;
+        expect(sourceCard).toBeDefined();
+
+        // Store original properties
+        const originalTitle = sourceCard.title;
+        const originalBody = sourceCard.body;
+        const originalId = sourceCard.id;
+
+        // Move card to different column
+        moveCard(sourceCard.id, 'inProgress', 0);
+
+        const updatedColumns = setColumns.mock.calls[0]?.[0];
+        const destColumn = updatedColumns.find(
+          (column: KanbanColumnData) => column.id === 'inProgress',
+        );
+        const movedCard = destColumn.cards.find(
+          (card: KanbanCardData) => card.id === sourceCard.id,
+        );
+
+        // Verify all original properties are preserved
+        expect(movedCard.id).toBe(originalId);
+        expect(movedCard.title).toBe(originalTitle);
+        expect(movedCard.body).toBe(originalBody);
+
+        // Verify only columnId and position changed
+        expect(movedCard.columnId).toBe('inProgress');
+        expect(movedCard.position).toBe(0);
+      });
+    });
   });
 
   describe('Edge Detection Logic', () => {
