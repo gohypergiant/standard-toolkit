@@ -11,8 +11,8 @@
  */
 'use client';
 
-import 'client-only';
 import { ChevronDown } from '@accelint/icons';
+import 'client-only';
 import { useContext, useRef } from 'react';
 import {
   Button,
@@ -22,45 +22,16 @@ import {
   DisclosurePanel,
   Heading,
   Popover,
-  ToggleButton,
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
-import { SidenavContext } from './sidenav';
+import { TooltipTrigger } from '../tooltip/trigger';
+import { SidenavContext } from './context';
 import { SidenavStyles } from './styles';
-import type { SidenavMenuItemProps, SidenavMenuProps } from './types';
+import type { SidenavMenuProps } from './types';
 
-const {
-  menu,
-  menuButton,
-  menuItem,
-  menuPanel,
-  panelContent,
-  tooltip,
-  transient,
-} = SidenavStyles();
-
-/**
- * SidenavMenuItem - Menu item component for sidenav
- *
- * Provides a selectable item within a sidenav menu
- */
-export function SidenavMenuItem({
-  className,
-  children,
-  ...rest
-}: SidenavMenuItemProps) {
-  return (
-    <ToggleButton
-      {...rest}
-      className={composeRenderProps(className, (className) =>
-        menuItem({ className }),
-      )}
-    >
-      {children}
-    </ToggleButton>
-  );
-}
+const { menu, menuButton, menuPanel, panelContent, tooltip, transient } =
+  SidenavStyles();
 
 /**
  * SidenavMenu - Menu component for sidenav
@@ -109,7 +80,7 @@ export function SidenavMenu({
     </Disclosure>
   ) : (
     <DialogTrigger>
-      <Tooltip.Trigger isDisabled={isOpen}>
+      <TooltipTrigger isDisabled={isOpen}>
         <Button
           {...rest}
           ref={ref}
@@ -122,7 +93,7 @@ export function SidenavMenu({
         <Tooltip parentRef={ref} placement='right' className={tooltip()}>
           {title}
         </Tooltip>
-      </Tooltip.Trigger>
+      </TooltipTrigger>
       <Popover
         className={composeRenderProps(classNames?.popoverPanel, (className) =>
           menuPanel({ className }),
@@ -138,6 +109,3 @@ export function SidenavMenu({
     </DialogTrigger>
   );
 }
-
-// Attach SidenavMenuItem to SidenavMenu
-SidenavMenu.Item = SidenavMenuItem;

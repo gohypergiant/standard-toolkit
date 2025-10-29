@@ -9,31 +9,35 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
 
 import 'client-only';
-import { Provider } from 'react-aria-components';
-import { DividerContext } from '../divider/context';
+import { composeRenderProps } from 'react-aria-components';
+import { ToggleButton } from '../button/toggle-button';
 import { SidenavStyles } from './styles';
-import type { SidenavContentProps } from './types';
+import type { SidenavMenuItemProps } from './types';
 
-const { content, divider } = SidenavStyles();
+const { menuItem } = SidenavStyles();
 
 /**
- * SidenavContent - Container for sidenav content
+ * SidenavMenuItem - Menu item component for sidenav
  *
- * Provides a container for sidenav content with proper styling
+ * Provides a selectable item within a sidenav menu
  */
-export function SidenavContent({
+export function SidenavMenuItem({
   className,
   children,
   ...rest
-}: SidenavContentProps) {
+}: SidenavMenuItemProps) {
   return (
-    <Provider values={[[DividerContext, { className: divider() }]]}>
-      <div {...rest} className={content({ className })}>
-        {children}
-      </div>
-    </Provider>
+    <ToggleButton
+      {...rest}
+      className={composeRenderProps(className, (className) =>
+        menuItem({ className }),
+      )}
+    >
+      {children}
+    </ToggleButton>
   );
 }

@@ -11,7 +11,135 @@
  */
 'use client';
 
+import { useOn } from '@accelint/bus/react';
 import 'client-only';
-import { Sidenav } from './sidenav';
+import { useState } from 'react';
+import { DEFAULT_SLOT, HeadingContext, Provider } from 'react-aria-components';
+import { SidenavContext } from './context';
+import { SidenavEventTypes } from './events';
+import { SidenavStyles } from './styles';
+import type {
+  SidenavCloseEvent,
+  SidenavOpenEvent,
+  SidenavProps,
+  SidenavToggleEvent,
+} from './types';
 
-export { Sidenav };
+const { sidenav, heading, transient, menuHeading, panelHeading } =
+  SidenavStyles();
+
+/**
+ * Sidenav - Collapsible side navigation panel
+ *
+ * Provides a hierarchical collapsible side navigation intended to be used
+ * inside a DrawerLayout. Supports headers, avatars, nested menus, and items.
+ *
+ * @example
+ * <DrawerLayout push="left">
+ *   <DrawerLayoutMain className="col-start-2">
+ *     <SidenavTrigger>
+ *       <Button variant="icon" size="large">
+ *         <Icon>
+ *           <MenuIcon />
+ *         </Icon>
+ *       </Button>
+ *     </SidenavTrigger>
+ *   </DrawerLayoutMain>
+ *   <Sidenav>
+ *     <SidenavHeader>
+ *       <SidenavAvatar>
+ *         <Icon><AppLogo /></Icon>
+ *         <Heading>Application Header</Heading>
+ *         <Text>subheader</Text>
+ *       </SidenavAvatar>
+ *     </SidenavHeader>
+ *     <SidenavContent>
+ *       <Heading>Navigation</Heading>
+ *       <SidenavItem>
+ *         <Icon><HomeIcon /></Icon>
+ *         <Text>Home</Text>
+ *       </SidenavItem>
+ *       <Divider />
+ *       <SidenavItem isSelected>
+ *         <Icon><SettingsIcon /></Icon>
+ *         <Text>Settings</Text>
+ *       </SidenavItem>
+ *       <Divider />
+ *       <SidenavMenu title="More Options" icon={<Icon><MenuIcon /></Icon>}>
+ *         <SidenavMenuItem>
+ *           <Text>Sub Item 1</Text>
+ *         </SidenavMenuItem>
+ *         <SidenavMenuItem>
+ *           <Text>Sub Item 2</Text>
+ *         </SidenavMenuItem>
+ *       </SidenavMenu>
+ *     </SidenavContent>
+ *     <SidenavFooter>
+ *       <SidenavAvatar>
+ *         <Icon><UserIcon /></Icon>
+ *         <Heading>User Name</Heading>
+ *         <Text>john@example.com</Text>
+ *       </SidenavAvatar>
+ *     </SidenavFooter>
+ *   </Sidenav>
+ * </DrawerLayout>
+ */
+export function Sidenav({
+  id,
+  className,
+  isHiddenWhenClosed,
+  children,
+  ...rest
+}: SidenavProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useOn(SidenavEventTypes.toggle, (data: SidenavToggleEvent) => {
+    if (data.payload.id === id) {
+      setIsOpen((prev) => !prev);
+    }
+  });
+
+  useOn(SidenavEventTypes.open, (data: SidenavOpenEvent) => {
+    if (!isOpen && data.payload.id === id) {
+      setIsOpen(true);
+    }
+  });
+
+  useOn(SidenavEventTypes.close, (data: SidenavCloseEvent) => {
+    if (isOpen && data.payload.id === id) {
+      setIsOpen(false);
+    }
+  });
+
+  if (isHiddenWhenClosed && !isOpen) {
+    return null;
+  }
+
+  return (
+    <Provider
+      values={[
+        [
+          HeadingContext,
+          {
+            slots: {
+              [DEFAULT_SLOT]: {
+                className: heading({ className: transient() }),
+              },
+              menu: { className: menuHeading({ className: transient() }) },
+              panel: { className: panelHeading() },
+            },
+          },
+        ],
+        [SidenavContext, { id, isOpen }],
+      ]}
+    >
+      <nav
+        {...rest}
+        className={sidenav({ className })}
+        data-open={isOpen || null}
+      >
+        {children}
+      </nav>
+    </Provider>
+  );
+}

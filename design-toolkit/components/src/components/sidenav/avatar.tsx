@@ -13,8 +13,8 @@
 
 import 'client-only';
 import { HeadingContext, Provider, TextContext } from 'react-aria-components';
-import { AvatarContext } from '../avatar';
-import { IconContext } from '../icon';
+import { AvatarContext } from '../avatar/context';
+import { IconContext } from '../icon/context';
 import { SidenavStyles } from './styles';
 import type { SidenavAvatarProps } from './types';
 

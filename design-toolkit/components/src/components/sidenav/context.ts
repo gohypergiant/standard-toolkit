@@ -9,31 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
 
+import { uuid } from '@accelint/core';
 import 'client-only';
-import { Provider } from 'react-aria-components';
-import { DividerContext } from '../divider/context';
-import { SidenavStyles } from './styles';
-import type { SidenavContentProps } from './types';
+import { createContext } from 'react';
+import type { SidenavContextValue } from './types';
 
-const { content, divider } = SidenavStyles();
-
-/**
- * SidenavContent - Container for sidenav content
- *
- * Provides a container for sidenav content with proper styling
- */
-export function SidenavContent({
-  className,
-  children,
-  ...rest
-}: SidenavContentProps) {
-  return (
-    <Provider values={[[DividerContext, { className: divider() }]]}>
-      <div {...rest} className={content({ className })}>
-        {children}
-      </div>
-    </Provider>
-  );
-}
+export const SidenavContext = createContext<SidenavContextValue>({
+  id: uuid(),
+  isOpen: false,
+});

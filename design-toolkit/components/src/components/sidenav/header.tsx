@@ -11,14 +11,14 @@
  */
 'use client';
 
-import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { ChevronLeft } from '@accelint/icons';
+import 'client-only';
 import { useContext } from 'react';
 import { Button, composeRenderProps, Header } from 'react-aria-components';
 import { Icon } from '../icon';
+import { SidenavContext } from './context';
 import { SidenavEventTypes } from './events';
-import { SidenavContext } from './sidenav';
 import { SidenavStyles } from './styles';
 import type { SidenavHeaderProps, SidenavToggleEvent } from './types';
 

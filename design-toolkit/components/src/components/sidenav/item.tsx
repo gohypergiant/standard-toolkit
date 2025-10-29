@@ -19,9 +19,10 @@ import {
   TextContext,
   ToggleButton,
 } from 'react-aria-components';
-import { IconContext } from '../icon';
+import { IconContext } from '../icon/context';
 import { Tooltip } from '../tooltip';
-import { SidenavContext } from './sidenav';
+import { TooltipTrigger } from '../tooltip/trigger';
+import { SidenavContext } from './context';
 import { SidenavStyles } from './styles';
 import type { SidenavItemProps } from './types';
 
@@ -50,7 +51,7 @@ export function SidenavItem({
         [TextContext, { className: text({ className: transient() }) }],
       ]}
     >
-      <Tooltip.Trigger isDisabled={isOpen}>
+      <TooltipTrigger isDisabled={isOpen}>
         <ToggleButton
           {...rest}
           ref={ref}
@@ -63,7 +64,7 @@ export function SidenavItem({
         <Tooltip parentRef={ref} placement='right' className={tooltip()}>
           {textValue}
         </Tooltip>
-      </Tooltip.Trigger>
+      </TooltipTrigger>
     </Provider>
   );
 }

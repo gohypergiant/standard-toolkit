@@ -11,8 +11,8 @@
  */
 'use client';
 
-import 'client-only';
 import { ArrowNortheast } from '@accelint/icons';
+import 'client-only';
 import { useContext, useRef } from 'react';
 import {
   composeRenderProps,
@@ -22,7 +22,8 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
-import { SidenavContext } from './sidenav';
+import { TooltipTrigger } from '../tooltip/trigger';
+import { SidenavContext } from './context';
 import { SidenavStyles } from './styles';
 import type { SidenavLinkProps } from './types';
 
@@ -48,7 +49,7 @@ export function SidenavLink({
     <Provider
       values={[[TextContext, { className: text({ className: transient() }) }]]}
     >
-      <Tooltip.Trigger isDisabled={isOpen}>
+      <TooltipTrigger isDisabled={isOpen}>
         <Link
           {...rest}
           ref={ref}
@@ -71,7 +72,7 @@ export function SidenavLink({
             <ArrowNortheast />
           </Icon>
         </Tooltip>
-      </Tooltip.Trigger>
+      </TooltipTrigger>
     </Provider>
   );
 }
