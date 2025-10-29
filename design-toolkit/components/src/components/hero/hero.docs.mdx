@@ -9,23 +9,23 @@ A versatile hero component that displays an icon alongside primary and secondary
 
 It is composed of the following components:
 - **Hero** - Main hero container with automatic layout and icon integration
-- **Hero.Title** - Primary heading text component (renders as `<h2>` element)
-- **Hero.Subtitle**  - Secondary text content component for additional metadata
+- **HeroTitle** - Primary heading text component (renders as `<h2>` element)
+- **HeroSubtitle**  - Secondary text content component for additional metadata
 
 ## Example usage
 ```tsx
 // Basic hero with icon and content
 <Hero>
   <Icon><Placeholder /></Icon>
-  <Hero.Title>Primary Title</Hero.Title>
-  <Hero.Subtitle>Secondary information</Hero.Subtitle>
+  <HeroTitle>Primary Title</HeroTitle>
+  <HeroSubtitle>Secondary information</HeroSubtitle>
 </Hero>
 
 // Grid layout for compact display
 <Hero compact>
   <Icon><Settings /></Icon>
-  <Hero.Title>Settings</Hero.Title>
-  <Hero.Subtitle>Configure your preferences</Hero.Subtitle>
+  <HeroTitle>Settings</HeroTitle>
+  <HeroSubtitle>Configure your preferences</HeroSubtitle>
 </Hero>
 ```
 
@@ -56,8 +56,8 @@ The component accepts all standard HTML attributes for `<header>` elements, such
 
 ## Child Component Behavior
 - **Icon**: Exactly 1 required (automatically sized and positioned)
-- **Hero.Title**: Exactly 1 required (renders as semantic heading)
-- **Hero.Subtitle**: 0 or more allowed (for additional metadata or secondary information)
+- **HeroTitle**: Exactly 1 required (renders as semantic heading)
+- **HeroSubtitle**: 0 or more allowed (for additional metadata or secondary information)
 
 ## Examples
 
@@ -68,8 +68,8 @@ The component accepts all standard HTML attributes for `<header>` elements, such
 ```tsx
 <Hero compact>
   <Icon><Placeholder /></Icon>
-  <Hero.Title>Compact Title</Hero.Title>
-  <Hero.Subtitle>Compact subtitle</Hero.Subtitle>
+  <HeroTitle>Compact Title</HeroTitle>
+  <HeroSubtitle>Compact subtitle</HeroSubtitle>
 </Hero>
 ```
 
@@ -79,10 +79,10 @@ The component supports multiple subtitle elements, making it perfect for display
 ```tsx
 <Hero>
   <Icon><User /></Icon>
-  <Hero.Title>John Doe</Hero.Title>
-  <Hero.Subtitle>Software Engineer</Hero.Subtitle>
-  <Hero.Subtitle>San Francisco, CA</Hero.Subtitle>
-  <Hero.Subtitle>5 years experience</Hero.Subtitle>
+  <HeroTitle>John Doe</HeroTitle>
+  <HeroSubtitle>Software Engineer</HeroSubtitle>
+  <HeroSubtitle>San Francisco, CA</HeroSubtitle>
+  <HeroSubtitle>5 years experience</HeroSubtitle>
 </Hero>
 ```
 
