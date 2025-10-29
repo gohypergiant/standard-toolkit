@@ -10,6 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-import { Lines } from './lines';
+import { LinesStyles } from './styles';
+import type { LinesProps } from './types';
 
-export { Lines };
+/**
+ * Lines - Decorative rule/connector lines used by components like Tree
+ *
+ * Renders horizontal or vertical rule lines used for visual grouping and
+ * tree branch connectors. Visibility and variant control the appearance.
+ *
+ * @example
+ * <Lines variant="branch" />
+ */
+export function Lines({
+  className,
+  size = 'medium',
+  variant,
+  isVisible = true,
+}: LinesProps) {
+  return (
+    <div
+      className={LinesStyles({ className, variant, isVisible })}
+      data-size={size}
+    />
+  );
+}
