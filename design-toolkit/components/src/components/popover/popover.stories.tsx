@@ -14,12 +14,12 @@ import { Delete, Information } from '@accelint/icons';
 import { Button } from '@/components/button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
-import { Popover } from './popover';
-import { PopoverBody } from './popover-body';
-import { PopoverContent } from './popover-content';
-import { PopoverFooter } from './popover-footer';
-import { PopoverTitle } from './popover-title';
-import { PopoverTrigger } from './popover-trigger';
+import { Popover } from './';
+import { PopoverBody } from './body';
+import { PopoverContent } from './content';
+import { PopoverFooter } from './footer';
+import { PopoverTitle } from './title';
+import { PopoverTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**

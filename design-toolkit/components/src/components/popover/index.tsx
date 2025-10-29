@@ -12,6 +12,49 @@
 
 'use client';
 
-import { Popover } from './popover';
+import 'client-only';
+import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
+import type { PopoverProps } from './types';
 
-export { Popover };
+/**
+ * Popover - A floating content container positioned relative to a trigger element
+ *
+ * Provides accessible popover functionality with flexible positioning and content
+ * organization. Perfect for contextual information, menus, or supplementary content
+ * that appears on demand without interrupting the user's workflow.
+ *
+ * @example
+ * // Basic popover
+ * <Popover>
+ *   <PopoverTrigger>
+ *     <Button>Show Info</Button>
+ *   </PopoverTrigger>
+ *   <PopoverContent>
+ *     <PopoverBody>
+ *       <p>Additional information appears here</p>
+ *     </PopoverBody>
+ *   </PopoverContent>
+ * </Popover>
+ *
+ * @example
+ * // Popover with title and actions
+ * <Popover placement="top">
+ *   <PopoverTrigger>
+ *     <Button>Options</Button>
+ *   </PopoverTrigger>
+ *   <PopoverContent>
+ *     <PopoverTitle>Quick Actions</PopoverTitle>
+ *     <PopoverBody>
+ *       <Button>Edit</Button>
+ *       <Button>Delete</Button>
+ *     </PopoverBody>
+ *   </PopoverContent>
+ * </Popover>
+ */
+export function Popover({
+  placement = 'bottom',
+  children,
+  ...rest
+}: PopoverProps) {
+  return <AriaDialogTrigger {...rest}>{children}</AriaDialogTrigger>;
+}
