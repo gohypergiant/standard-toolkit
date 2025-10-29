@@ -11,8 +11,8 @@
  */
 'use client';
 
-import 'client-only';
 import { isUUID } from '@accelint/core';
+import 'client-only';
 import { Fragment, useContext, useEffect } from 'react';
 import { ViewStackContext } from './context';
 import type { ViewStackViewProps } from './types';
@@ -26,11 +26,11 @@ export function ViewStackView({ id, children }: ViewStackViewProps) {
   const { parent, view, register, unregister } = useContext(ViewStackContext);
 
   if (!parent) {
-    throw new Error('ViewStack.View must be implemented within a ViewStack');
+    throw new Error('ViewStackView must be implemented within a ViewStack');
   }
 
   if (!isUUID(id)) {
-    throw new Error(`ViewStack.View's id must be a UniqueId`);
+    throw new Error(`ViewStackView's id must be a UniqueId`);
   }
 
   useEffect(() => {

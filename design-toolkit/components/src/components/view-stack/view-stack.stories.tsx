@@ -15,6 +15,8 @@ import { ChevronLeft } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { ViewStack } from './index';
+import { ViewStackTrigger } from './trigger';
+import { ViewStackView } from './view';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const ids = {
@@ -52,52 +54,52 @@ export const Default: Story = {
   render: () => (
     <>
       <ViewStack id={ids.stack} defaultView={ids.a}>
-        <ViewStack.View id={ids.a}>
-          <ViewStack.Trigger for={ids.b}>
+        <ViewStackView id={ids.a}>
+          <ViewStackTrigger for={ids.b}>
             <Button size='small' variant='flat'>
               Push View B
             </Button>
-          </ViewStack.Trigger>
+          </ViewStackTrigger>
           <h1 className='fg-primary-bold h-oversized text-center'>View A</h1>
-        </ViewStack.View>
-        <ViewStack.View id={ids.b}>
+        </ViewStackView>
+        <ViewStackView id={ids.b}>
           <div className='flex'>
-            <ViewStack.Trigger for='back'>
+            <ViewStackTrigger for='back'>
               <Button variant='icon'>
                 <Icon>
                   <ChevronLeft />
                 </Icon>
               </Button>
-            </ViewStack.Trigger>
-            <ViewStack.Trigger for={ids.c}>
+            </ViewStackTrigger>
+            <ViewStackTrigger for={ids.c}>
               <Button size='small' variant='flat'>
                 Push View C
               </Button>
-            </ViewStack.Trigger>
+            </ViewStackTrigger>
           </div>
           <h1 className='fg-primary-bold h-oversized text-center'>View B</h1>
-        </ViewStack.View>
-        <ViewStack.View id={ids.c}>
-          <ViewStack.Trigger for='back'>
+        </ViewStackView>
+        <ViewStackView id={ids.c}>
+          <ViewStackTrigger for='back'>
             <Button variant='icon'>
               <Icon>
                 <ChevronLeft />
               </Icon>
             </Button>
-          </ViewStack.Trigger>
+          </ViewStackTrigger>
           <h1 className='fg-primary-bold h-oversized text-center'>View C</h1>
-        </ViewStack.View>
+        </ViewStackView>
       </ViewStack>
       <div className='flex gap-s'>
-        <ViewStack.Trigger for={[`clear:${ids.stack}`, ids.a]}>
+        <ViewStackTrigger for={[`clear:${ids.stack}`, ids.a]}>
           <Button variant='flat'>Goto View A</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for={[`clear:${ids.stack}`, ids.b]}>
+        </ViewStackTrigger>
+        <ViewStackTrigger for={[`clear:${ids.stack}`, ids.b]}>
           <Button variant='flat'>Goto View B</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for={[`clear:${ids.stack}`, ids.c]}>
+        </ViewStackTrigger>
+        <ViewStackTrigger for={[`clear:${ids.stack}`, ids.c]}>
           <Button variant='flat'>Goto View C</Button>
-        </ViewStack.Trigger>
+        </ViewStackTrigger>
       </div>
     </>
   ),

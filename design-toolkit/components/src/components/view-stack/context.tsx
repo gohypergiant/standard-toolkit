@@ -11,10 +11,10 @@
  */
 'use client';
 
-import 'client-only';
 import { Broadcast } from '@accelint/bus';
 import { useEmit } from '@accelint/bus/react';
-import { type UniqueId } from '@accelint/core';
+import type { UniqueId } from '@accelint/core';
+import 'client-only';
 import { createContext } from 'react';
 import { ViewStackEventTypes } from './events';
 import type { ViewStackContextValue, ViewStackEvent } from './types';
