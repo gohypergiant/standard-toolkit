@@ -17,7 +17,23 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
 import { Kanban } from '.';
+import { KanbanCard } from './card';
+import { KanbanCardBody } from './card-body';
+import { KanbanCardHeader } from './card-header';
+import { KanbanCardHeaderActions } from './card-header-actions';
+import { KanbanCardHeaderTitle } from './card-header-title';
+import { KanbanColumn } from './column';
+import { KanbanColumnActions } from './column-actions';
+import { KanbanColumnContainer } from './column-container';
+import { KanbanColumnContent } from './column-content';
+import { KanbanColumnHeader } from './column-header';
+import { KanbanColumnHeaderActions } from './column-header-actions';
+import { KanbanColumnHeaderTitle } from './column-header-title';
 import { KanbanProvider } from './context';
+import { KanbanHeader } from './header';
+import { KanbanHeaderActions } from './header-actions';
+import { KanbanHeaderSearch } from './header-search';
+import { KanbanHeaderTitle } from './header-title';
 import { columnData } from './mock-data';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { KanbanCardData, KanbanColumnData } from './types';
@@ -41,37 +57,37 @@ export const Default: Story = {
       <div className='h-screen'>
         <KanbanProvider columns={columns} updateColumnState={setColumns}>
           <Kanban>
-            <Kanban.Header>
-              <Kanban.Header.Title>Project Board</Kanban.Header.Title>
-            </Kanban.Header>
+            <KanbanHeader>
+              <KanbanHeaderTitle>Project Board</KanbanHeaderTitle>
+            </KanbanHeader>
 
-            <Kanban.Column.Container>
+            <KanbanColumnContainer>
               {columns.map((column) => (
-                <Kanban.Column key={column.id} column={column}>
-                  <Kanban.Column.Header>
-                    <Kanban.Column.Header.Title>
+                <KanbanColumn key={column.id} column={column}>
+                  <KanbanColumnHeader>
+                    <KanbanColumnHeaderTitle>
                       {column.title}
-                    </Kanban.Column.Header.Title>
-                    <Kanban.Column.Header.Actions
+                    </KanbanColumnHeaderTitle>
+                    <KanbanColumnHeaderActions
                       cardCount={column.cards.length}
                     />
-                  </Kanban.Column.Header>
+                  </KanbanColumnHeader>
 
-                  <Kanban.Column.Content column={column}>
+                  <KanbanColumnContent column={column}>
                     {column.cards.map((card) => (
-                      <Kanban.Card key={card.id} card={card}>
-                        <Kanban.Card.Header>
-                          <Kanban.Card.Header.Title>
+                      <KanbanCard key={card.id} card={card}>
+                        <KanbanCardHeader>
+                          <KanbanCardHeaderTitle>
                             {card.title}
-                          </Kanban.Card.Header.Title>
-                        </Kanban.Card.Header>
-                        <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
-                      </Kanban.Card>
+                          </KanbanCardHeaderTitle>
+                        </KanbanCardHeader>
+                        <KanbanCardBody>{card.body}</KanbanCardBody>
+                      </KanbanCard>
                     ))}
-                  </Kanban.Column.Content>
-                </Kanban.Column>
+                  </KanbanColumnContent>
+                </KanbanColumn>
               ))}
-            </Kanban.Column.Container>
+            </KanbanColumnContainer>
           </Kanban>
         </KanbanProvider>
       </div>
@@ -148,10 +164,10 @@ export const CompleteExample: Story = {
       <div className='h-screen'>
         <KanbanProvider columns={columns} updateColumnState={setColumns}>
           <Kanban>
-            <Kanban.Header>
-              <Kanban.Header.Title>Complete Kanban Board</Kanban.Header.Title>
-              <Kanban.Header.Actions className='space-x-s'>
-                <Kanban.Header.Search
+            <KanbanHeader>
+              <KanbanHeaderTitle>Complete Kanban Board</KanbanHeaderTitle>
+              <KanbanHeaderActions className='space-x-s'>
+                <KanbanHeaderSearch
                   onInput={(e) => setSearchTerm(e.currentTarget.value)}
                   inputProps={{
                     placeholder: 'Search',
@@ -163,29 +179,29 @@ export const CompleteExample: Story = {
                   </Icon>
                   Add Column
                 </Button>
-              </Kanban.Header.Actions>
-            </Kanban.Header>
+              </KanbanHeaderActions>
+            </KanbanHeader>
 
-            <Kanban.Column.Container>
+            <KanbanColumnContainer>
               {filteredColumns.map((column) => (
-                <Kanban.Column key={column.id} column={column}>
-                  <Kanban.Column.Header>
-                    <Kanban.Column.Header.Title>
+                <KanbanColumn key={column.id} column={column}>
+                  <KanbanColumnHeader>
+                    <KanbanColumnHeaderTitle>
                       {column.title}
-                    </Kanban.Column.Header.Title>
-                    <Kanban.Column.Header.Actions
+                    </KanbanColumnHeaderTitle>
+                    <KanbanColumnHeaderActions
                       cardCount={column.cards.length}
                     />
-                  </Kanban.Column.Header>
+                  </KanbanColumnHeader>
 
-                  <Kanban.Column.Content column={column}>
+                  <KanbanColumnContent column={column}>
                     {column.cards.map((card) => (
-                      <Kanban.Card key={card.id} card={card}>
-                        <Kanban.Card.Header>
-                          <Kanban.Card.Header.Title>
+                      <KanbanCard key={card.id} card={card}>
+                        <KanbanCardHeader>
+                          <KanbanCardHeaderTitle>
                             {card.title}
-                          </Kanban.Card.Header.Title>
-                          <Kanban.Card.Header.Actions>
+                          </KanbanCardHeaderTitle>
+                          <KanbanCardHeaderActions>
                             <Menu.Trigger>
                               <Button variant='icon'>
                                 <Icon size='small'>
@@ -205,18 +221,18 @@ export const CompleteExample: Story = {
                                 </Menu.Item>
                               </Menu>
                             </Menu.Trigger>
-                          </Kanban.Card.Header.Actions>
-                        </Kanban.Card.Header>
-                        <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
-                      </Kanban.Card>
+                          </KanbanCardHeaderActions>
+                        </KanbanCardHeader>
+                        <KanbanCardBody>{card.body}</KanbanCardBody>
+                      </KanbanCard>
                     ))}
-                  </Kanban.Column.Content>
-                  <Kanban.Column.Actions
+                  </KanbanColumnContent>
+                  <KanbanColumnActions
                     onAddCard={() => handleAddCard(column.id)}
                   />
-                </Kanban.Column>
+                </KanbanColumn>
               ))}
-            </Kanban.Column.Container>
+            </KanbanColumnContainer>
           </Kanban>
         </KanbanProvider>
       </div>

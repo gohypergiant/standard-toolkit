@@ -185,6 +185,19 @@ export type { IconProps } from './components/icon/types';
 export { Input, InputContext } from './components/input';
 export { InputStyles, InputStylesDefaults } from './components/input/styles';
 export type { InputProps } from './components/input/types';
+export { KanbanCardBody } from './components/kanban/card-body';
+export { KanbanCardHeaderActions } from './components/kanban/card-header-actions';
+export { KanbanCardHeaderTitle } from './components/kanban/card-header-title';
+export { KanbanCardHeader } from './components/kanban/card-header';
+export { KanbanCard } from './components/kanban/card';
+export { KanbanColumnActions } from './components/kanban/column-actions';
+export { KanbanColumnContainer } from './components/kanban/column-container';
+export { KanbanColumnContent } from './components/kanban/column-content';
+export { KanbanColumnHeaderActions } from './components/kanban/column-header-actions';
+export { KanbanColumnHeaderDragHandle } from './components/kanban/column-header-drag-handle';
+export { KanbanColumnHeaderTitle } from './components/kanban/column-header-title';
+export { KanbanColumnHeader } from './components/kanban/column-header';
+export { KanbanColumn } from './components/kanban/column';
 export {
   KanbanProvider,
   calculateClosestEdge,
@@ -198,7 +211,15 @@ export type {
   KanbanProviderProps,
   MoveCard,
 } from './components/kanban/context';
-export { Kanban } from './components/kanban';
+export { KanbanHeaderActions } from './components/kanban/header-actions';
+export { KanbanHeaderSearch } from './components/kanban/header-search';
+export { KanbanHeaderTitle } from './components/kanban/header-title';
+export { KanbanHeader } from './components/kanban/header';
+export {
+  DragContext,
+  Kanban,
+  useDragContext,
+} from './components/kanban/kanban';
 export { columnData } from './components/kanban/mock-data';
 export {
   CardInnerStyles,

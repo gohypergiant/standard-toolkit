@@ -9,15 +9,23 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
+import 'client-only';
 
-export { Kanban } from './kanban';
-export type {
-  KanbanCardProps,
-  KanbanColContentActionProps,
-  KanbanColContentProps,
-  KanbanColProps,
-  KanbanComponentProps,
-  KanbanMenuProps,
-  KanbanProps,
-  KanbanSearchProps,
-} from './types';
+import { Heading } from 'react-aria-components';
+import { KanbanStyles } from './styles';
+import type { KanbanComponentProps } from './types';
+
+const { headerTitle } = KanbanStyles();
+
+export function KanbanHeaderTitle({
+  children,
+  className,
+  ...rest
+}: KanbanComponentProps) {
+  return (
+    <Heading className={headerTitle({ className })} {...rest}>
+      {children}
+    </Heading>
+  );
+}

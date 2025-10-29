@@ -9,15 +9,30 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
+import 'client-only';
 
-export { Kanban } from './kanban';
-export type {
-  KanbanCardProps,
-  KanbanColContentActionProps,
-  KanbanColContentProps,
-  KanbanColProps,
-  KanbanComponentProps,
-  KanbanMenuProps,
-  KanbanProps,
-  KanbanSearchProps,
-} from './types';
+import { Add } from '@accelint/icons';
+import { Button } from '../button';
+import { Icon } from '../icon';
+import { KanbanStyles } from './styles';
+import type { KanbanColContentActionProps } from './types';
+
+const { colHeader } = KanbanStyles();
+
+export function KanbanColumnActions({
+  className,
+  onAddCard,
+  ...rest
+}: KanbanColContentActionProps) {
+  return (
+    <div className={colHeader({ className })} {...rest}>
+      <Button variant='flat' onPress={onAddCard} {...rest}>
+        <Icon>
+          <Add />
+        </Icon>
+        Add Card
+      </Button>
+    </div>
+  );
+}

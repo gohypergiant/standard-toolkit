@@ -9,15 +9,31 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
+import 'client-only';
 
-export { Kanban } from './kanban';
-export type {
-  KanbanCardProps,
-  KanbanColContentActionProps,
-  KanbanColContentProps,
-  KanbanColProps,
-  KanbanComponentProps,
-  KanbanMenuProps,
-  KanbanProps,
-  KanbanSearchProps,
-} from './types';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { KanbanStyles } from './styles';
+import type { KanbanColContentProps } from './types';
+
+const { colContent } = KanbanStyles();
+
+export function KanbanColumnContent({
+  children,
+  className,
+  column,
+  ...rest
+}: KanbanColContentProps) {
+  const cardIds = column?.cards?.map((card) => card.id) || [];
+
+  return (
+    <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
+      <div className={colContent({ className })} {...rest}>
+        {children}
+      </div>
+    </SortableContext>
+  );
+}

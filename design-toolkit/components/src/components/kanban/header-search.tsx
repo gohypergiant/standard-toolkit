@@ -9,15 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
+import 'client-only';
 
-export { Kanban } from './kanban';
-export type {
-  KanbanCardProps,
-  KanbanColContentActionProps,
-  KanbanColContentProps,
-  KanbanColProps,
-  KanbanComponentProps,
-  KanbanMenuProps,
-  KanbanProps,
-  KanbanSearchProps,
-} from './types';
+import { SearchField } from '../search-field';
+import type { KanbanSearchProps } from './types';
+
+export function KanbanHeaderSearch({ classNames, ...rest }: KanbanSearchProps) {
+  return (
+    <SearchField
+      variant='outlined'
+      classNames={classNames}
+      aria-label='Search'
+      {...rest}
+    />
+  );
+}

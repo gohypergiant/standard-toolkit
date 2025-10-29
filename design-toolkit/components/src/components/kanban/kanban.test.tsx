@@ -12,6 +12,18 @@
 import { render, renderHook, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Kanban } from '.';
+import { KanbanCard } from './card';
+import { KanbanCardBody } from './card-body';
+import { KanbanCardHeader } from './card-header';
+import { KanbanCardHeaderTitle } from './card-header-title';
+import { KanbanColumn } from './column';
+import { KanbanColumnActions } from './column-actions';
+import { KanbanColumnContainer } from './column-container';
+import { KanbanColumnContent } from './column-content';
+import { KanbanColumnHeader } from './column-header';
+import { KanbanColumnHeaderActions } from './column-header-actions';
+import { KanbanColumnHeaderDragHandle } from './column-header-drag-handle';
+import { KanbanColumnHeaderTitle } from './column-header-title';
 import {
   calculateClosestEdge,
   getInsertIndex,
@@ -19,6 +31,10 @@ import {
   parseDropTarget,
   useKanban,
 } from './context';
+import { KanbanHeader } from './header';
+import { KanbanHeaderActions } from './header-actions';
+import { KanbanHeaderSearch } from './header-search';
+import { KanbanHeaderTitle } from './header-title';
 import { columnData as columns } from './mock-data';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { KanbanCardData, KanbanColumnData } from './types';
@@ -69,43 +85,43 @@ function TestKanban() {
   return (
     <KanbanProvider columns={columns} updateColumnState={setColumns}>
       <Kanban>
-        <Kanban.Header>
-          <Kanban.Header.Title>Kanban Example</Kanban.Header.Title>
-          <Kanban.Header.Actions>
-            <Kanban.Header.Search />
+        <KanbanHeader>
+          <KanbanHeaderTitle>Kanban Example</KanbanHeaderTitle>
+          <KanbanHeaderActions>
+            <KanbanHeaderSearch />
             {/* Optional. */}
             {/* <Kanban.Header.Menu /> */}
-          </Kanban.Header.Actions>
-        </Kanban.Header>
+          </KanbanHeaderActions>
+        </KanbanHeader>
 
-        <Kanban.Column.Container data-testid='container'>
+        <KanbanColumnContainer data-testid='container'>
           {columns.map((column) => (
-            <Kanban.Column key={column.id} column={column}>
-              <Kanban.Column.Header>
-                <Kanban.Column.Header.Title>
-                  <Kanban.Column.DragHandle />
+            <KanbanColumn key={column.id} column={column}>
+              <KanbanColumnHeader>
+                <KanbanColumnHeaderTitle>
+                  <KanbanColumnHeaderDragHandle />
                   {column.title}
-                </Kanban.Column.Header.Title>
-                <Kanban.Column.Header.Actions />
-              </Kanban.Column.Header>
-              <Kanban.Column.Content column={column}>
+                </KanbanColumnHeaderTitle>
+                <KanbanColumnHeaderActions />
+              </KanbanColumnHeader>
+              <KanbanColumnContent column={column}>
                 {column.cards.map((card) => (
-                  <Kanban.Card key={card.id} card={card}>
-                    <Kanban.Card.Header>
-                      <Kanban.Card.Header.Title>
+                  <KanbanCard key={card.id} card={card}>
+                    <KanbanCardHeader>
+                      <KanbanCardHeaderTitle>
                         {card.title}
-                      </Kanban.Card.Header.Title>
+                      </KanbanCardHeaderTitle>
                       {/* Optional */}
                       {/* <Kanban.Card.Header.Actions /> */}
-                    </Kanban.Card.Header>
-                    <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
-                  </Kanban.Card>
+                    </KanbanCardHeader>
+                    <KanbanCardBody>{card.body}</KanbanCardBody>
+                  </KanbanCard>
                 ))}
-              </Kanban.Column.Content>
-              <Kanban.Column.Content.Actions />
-            </Kanban.Column>
+              </KanbanColumnContent>
+              <KanbanColumnActions />
+            </KanbanColumn>
           ))}
-        </Kanban.Column.Container>
+        </KanbanColumnContainer>
       </Kanban>
     </KanbanProvider>
   );

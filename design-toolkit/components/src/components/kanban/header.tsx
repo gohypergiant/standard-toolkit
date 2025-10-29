@@ -9,15 +9,22 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
+import 'client-only';
 
-export { Kanban } from './kanban';
-export type {
-  KanbanCardProps,
-  KanbanColContentActionProps,
-  KanbanColContentProps,
-  KanbanColProps,
-  KanbanComponentProps,
-  KanbanMenuProps,
-  KanbanProps,
-  KanbanSearchProps,
-} from './types';
+import { KanbanStyles } from './styles';
+import type { KanbanComponentProps } from './types';
+
+const { header } = KanbanStyles();
+
+export function KanbanHeader({
+  children,
+  className,
+  ...rest
+}: KanbanComponentProps) {
+  return (
+    <div className={header({ className })} {...rest}>
+      {children}
+    </div>
+  );
+}

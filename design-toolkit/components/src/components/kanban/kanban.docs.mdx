@@ -13,23 +13,23 @@ Built on top of [@dnd-kit](https://docs.dndkit.com/), the Kanban component provi
 It is composed of the following components:
 
 - **Kanban** – Root container that wraps the entire kanban board
-- **Kanban.Header** – Optional header for the board containing title, search, and actions
-- **Kanban.Header.Title** – Heading element for the board title
-- **Kanban.Header.Actions** – Container for header action buttons
-- **Kanban.Header.Search** – Search field for filtering cards
-- **Kanban.Column.Container** – Container that holds all columns
-- **Kanban.Column** – Individual column that contains cards
-- **Kanban.Column.Header** – Header section of a column
-- **Kanban.Column.Header.Title** – Title of the column
-- **Kanban.Column.Header.Actions** – Container for column actions (includes card count)
-- **Kanban.Column.DragHandle** – Visual indicator for column dragging
-- **Kanban.Column.Content** – Container for cards within a column
-- **Kanban.Column.Content.Actions** – Action button for adding new cards
-- **Kanban.Card** – Individual draggable card component
-- **Kanban.Card.Header** – Header section of a card
-- **Kanban.Card.Header.Title** – Title of the card
-- **Kanban.Card.Header.Actions** – Container for card action buttons
-- **Kanban.Card.Body** – Main content area of the card
+- **KanbanHeader** – Optional header for the board containing title, search, and actions
+- **KanbanHeaderTitle** – Heading element for the board title
+- **KanbanHeaderActions** – Container for header action buttons
+- **KanbanHeaderSearch** – Search field for filtering cards
+- **KanbanColumnContainer** – Container that holds all columns
+- **KanbanColumn** – Individual column that contains cards
+- **KanbanColumnHeader** – Header section of a column
+- **KanbanColumnHeaderTitle** – Title of the column
+- **KanbanColumnHeaderActions** – Container for column actions (includes card count)
+- **KanbanColumnHeaderDragHandle** – Visual indicator for column dragging
+- **KanbanColumnContent** – Container for cards within a column
+- **KanbanColumnActions** – Action button for adding new cards
+- **KanbanCard** – Individual draggable card component
+- **KanbanCardHeader** – Header section of a card
+- **KanbanCardHeaderTitle** – Title of the card
+- **KanbanCardHeaderActions** – Container for card action buttons
+- **KanbanCardBody** – Main content area of the card
 
 ## Getting Started
 
@@ -113,37 +113,37 @@ function MyKanbanBoard() {
   return (
     <KanbanProvider columns={columns} updateColumnState={setColumns}>
       <Kanban>
-        <Kanban.Header>
-          <Kanban.Header.Title>Project Board</Kanban.Header.Title>
-        </Kanban.Header>
+        <KanbanHeader>
+          <KanbanHeaderTitle>Project Board</KanbanHeaderTitle>
+        </KanbanHeader>
 
-        <Kanban.Column.Container>
+        <KanbanColumnContainer>
           {columns.map((column) => (
-            <Kanban.Column key={column.id} column={column}>
-              <Kanban.Column.Header>
-                <Kanban.Column.DragHandle />
-                <Kanban.Column.Header.Title>
+            <KanbanColumn key={column.id} column={column}>
+              <KanbanColumnHeader>
+                <KanbanColumnHeaderDragHandle />
+                <KanbanColumnHeaderTitle>
                   {column.title}
-                </Kanban.Column.Header.Title>
-                <Kanban.Column.Header.Actions cardCount={column.cards.length} />
-              </Kanban.Column.Header>
+                </KanbanColumnHeaderTitle>
+                <KanbanColumnHeaderActions cardCount={column.cards.length} />
+              </KanbanColumnHeader>
 
-              <Kanban.Column.Content>
+              <KanbanColumnContent>
                 {column.cards.map((card) => (
-                  <Kanban.Card key={card.id} card={card}>
-                    <Kanban.Card.Header>
-                      <Kanban.Card.Header.Title>{card.title}</Kanban.Card.Header.Title>
-                    </Kanban.Card.Header>
-                    <Kanban.Card.Body>{card.body}</Kanban.Card.Body>
-                  </Kanban.Card>
+                  <KanbanCard key={card.id} card={card}>
+                    <KanbanCardHeader>
+                      <KanbanCardHeaderTitle>{card.title}</KanbanCardHeaderTitle>
+                    </KanbanCardHeader>
+                    <KanbanCardBody>{card.body}</KanbanCardBody>
+                  </KanbanCard>
                 ))}
-                <Kanban.Column.Content.Actions
+                <KanbanColumnActions
                   onAddCard={() => {/* Handle add card */}}
                 />
-              </Kanban.Column.Content>
-            </Kanban.Column>
+              </KanbanColumnContent>
+            </KanbanColumn>
           ))}
-        </Kanban.Column.Container>
+        </KanbanColumnContainer>
       </Kanban>
     </KanbanProvider>
   );
@@ -157,20 +157,20 @@ function MyKanbanBoard() {
 ```tsx
 <KanbanProvider columns={columns} updateColumnState={setColumns}>
   <Kanban>
-    <Kanban.Header>
-      <Kanban.Header.Title>My Project</Kanban.Header.Title>
-      <Kanban.Header.Actions>
-        <Kanban.Header.Search
+    <KanbanHeader>
+      <KanbanHeaderTitle>My Project</KanbanHeaderTitle>
+      <KanbanHeaderActions>
+        <KanbanHeaderSearch
           onInput={(e) => handleSearch(e.currentTarget.value)}
           placeholder="Search cards..."
         />
         <Button onPress={handleAddColumn}>Add Column</Button>
-      </Kanban.Header.Actions>
-    </Kanban.Header>
+      </KanbanHeaderActions>
+    </KanbanHeader>
 
-    <Kanban.Column.Container>
+    <KanbanColumnContainer>
       {/* Columns here */}
-    </Kanban.Column.Container>
+    </KanbanColumnContainer>
   </Kanban>
 </KanbanProvider>
 ```
@@ -182,10 +182,10 @@ function MyKanbanBoard() {
 Cards can contain any React content in the body:
 
 ```tsx
-<Kanban.Card card={card}>
-  <Kanban.Card.Header>
-    <Kanban.Card.Header.Title>{card.title}</Kanban.Card.Header.Title>
-    <Kanban.Card.Header.Actions>
+<KanbanCard card={card}>
+  <KanbanCardHeader>
+    <KanbanCardHeaderTitle>{card.title}</KanbanCardHeaderTitle>
+    <KanbanCardHeaderActions>
       <Menu.Trigger>
         <Button variant="ghost" size="small">
           <Icon><MoreVert /></Icon>
@@ -195,10 +195,10 @@ Cards can contain any React content in the body:
           <Menu.Item>Delete</Menu.Item>
         </Menu>
       </Menu.Trigger>
-    </Kanban.Card.Header.Actions>
-  </Kanban.Card.Header>
+    </KanbanCardHeaderActions>
+  </KanbanCardHeader>
 
-  <Kanban.Card.Body>
+  <KanbanCardBody>
     <div className="space-y-2">
       <p>{card.description}</p>
       <div className="flex gap-2">
@@ -206,8 +206,8 @@ Cards can contain any React content in the body:
         <Badge>{card.assignee}</Badge>
       </div>
     </div>
-  </Kanban.Card.Body>
-</Kanban.Card>
+  </KanbanCardBody>
+</KanbanCard>
 ```
 
 <Canvas of={KanbanStories.CompleteExample} />
@@ -251,7 +251,7 @@ You don't need to implement this yourself—the provider handles it automaticall
 
 ## Adding Cards
 
-Use the `Kanban.Column.Content.Actions` component to add new cards:
+Use the `KanbanColumnActions` component to add new cards:
 
 ```tsx
 const handleAddCard = (columnId: string) => {
@@ -270,7 +270,7 @@ const handleAddCard = (columnId: string) => {
   ));
 };
 
-<Kanban.Column.Content.Actions onAddCard={() => handleAddCard(column.id)} />
+<KanbanColumnActions onAddCard={() => handleAddCard(column.id)} />
 ```
 
 <Canvas of={KanbanStories.CompleteExample} />
@@ -278,41 +278,41 @@ const handleAddCard = (columnId: string) => {
 ## Props
 
 ### Kanban
-- **`children`** – Board content (Header and Column.Container)
+- **`children`** – Board content (Header and ColumnContainer)
 - **`className`** – Additional CSS classes
 
-### Kanban.Header
+### KanbanHeader
 - **`children`** – Header content (Title and Actions)
 - **`className`** – Additional CSS classes
 
-### Kanban.Header.Title
+### KanbanHeaderTitle
 - **`children`** – Title text
 - **`className`** – Additional CSS classes
 
-### Kanban.Header.Actions
+### KanbanHeaderActions
 - **`children`** – Action buttons and search components
 - **`className`** – Additional CSS classes
 
-### Kanban.Header.Search
+### KanbanHeaderSearch
 Extends `SearchField` props
 - **`onInput`** – Handler for search input changes
 - **`classNames`** – Custom class names for styling
 
-### Kanban.Column
+### KanbanColumn
 - **`column`** – Column data object (required)
 - **`children`** – Column content
 - **`className`** – Additional CSS classes
 
-### Kanban.Column.Header.Actions
+### KanbanColumnHeaderActions
 - **`cardCount`** – Number of cards in the column (displayed automatically)
 - **`children`** – Additional action buttons
 - **`className`** – Additional CSS classes
 
-### Kanban.Column.Content.Actions
+### KanbanColumnActions
 - **`onAddCard`** – Callback when "Add Card" button is clicked
 - **`className`** – Additional CSS classes
 
-### Kanban.Card
+### KanbanCard
 - **`card`** – Card data object (required)
 - **`isActive`** – Whether the card is currently active/selected
 - **`children`** – Card content
