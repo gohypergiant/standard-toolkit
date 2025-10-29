@@ -11,8 +11,8 @@
  */
 
 import { Add } from '@accelint/icons';
+import { Icon } from './';
 import { IconProvider } from './context';
-import { Icon } from './icon';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
