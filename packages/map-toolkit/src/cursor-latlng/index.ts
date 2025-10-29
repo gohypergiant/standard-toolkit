@@ -25,16 +25,30 @@ export enum FormatTypes {
   Ddm = 'ddm',
 }
 
+const prepareCoord = (coord: [number, number]) => {
+  // Longitude can be above/below 180 when viewport center is near international date line
+  const lon =
+    coord[0] > 180
+      ? coord[0] - 360
+      : coord[0] < -180
+        ? coord[0] + 360
+        : coord[0];
+  const lat = coord[1];
+  const result = `${Math.abs(lon).toFixed(8) + (lon < 0 ? ' W' : ' E')} / ${Math.abs(lat).toFixed(8) + (lat < 0 ? ' S' : ' N')}`;
+
+  return result;
+};
+
 export function useHoverCoordinate() {
   const [formattedCoord, setFormattedCoord] = useState('--, --');
   const [format, setFormat] = useState<FormatTypes>(FormatTypes.Dd);
-  const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+  const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
 
   useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
-    const coords = data.payload.info.coordinate;
+    const coords = data.payload.info.coordinate as [number, number];
 
     if (coords) {
-      const coord = create(coords.join(' / '));
+      const coord = create(prepareCoord(coords));
       const result = format ? coord[`${format}`]() : coord.dd();
       setFormattedCoord(result);
     }

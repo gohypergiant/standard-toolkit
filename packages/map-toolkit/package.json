@@ -108,7 +108,7 @@
   },
   "optionalDependencies": {
     "@accelint/bus": "1.4.0",
-    "@accelint/geo": "0.2.10",
+    "@accelint/geo": "workspace:*",
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "9.1.14",
     "@deck.gl/geo-layers": "9.1.14",
