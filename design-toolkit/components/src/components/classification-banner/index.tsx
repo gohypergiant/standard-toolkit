@@ -11,6 +11,52 @@
  */
 'use client';
 
-import { ClassificationBanner } from './classification-banner';
+import 'client-only';
+import { useContextProps } from 'react-aria-components';
+import { ClassificationBannerContext } from './context';
+import {
+  ClassificationBannerStyles,
+  ClassificationBannerStylesDefaults,
+} from './styles';
+import type { ClassificationBannerProps } from './types';
 
-export { ClassificationBanner };
+/**
+ * ClassificationBanner - A prominent banner for displaying security classification
+ *
+ * Provides a full-width banner component for displaying security classification
+ * information at the top or bottom of pages. Essential for applications handling
+ * classified or sensitive information requiring clear visual indicators.
+ *
+ * @example
+ * // Top classification banner
+ * <ClassificationBanner variant="confidential" />
+ */
+export function ClassificationBanner({
+  ref,
+  ...props
+}: ClassificationBannerProps) {
+  [props, ref] = useContextProps(
+    props,
+    ref ?? null,
+    ClassificationBannerContext,
+  );
+
+  const {
+    className,
+    variant = ClassificationBannerStylesDefaults.variant,
+    children,
+    ...rest
+  } = props;
+
+  return (
+    <div
+      {...rest}
+      className={ClassificationBannerStyles({
+        variant,
+        className,
+      })}
+    >
+      {children}
+    </div>
+  );
+}

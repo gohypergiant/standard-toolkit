@@ -11,10 +11,10 @@
  */
 'use client';
 
+import type { ProviderProps } from '@/lib/types';
 import 'client-only';
 import { createContext } from 'react';
-import { type ContextValue } from 'react-aria-components';
-import type { ProviderProps } from '@/lib/types';
+import type { ContextValue } from 'react-aria-components';
 import type { ClassificationBannerProps } from './types';
 
 export const ClassificationBannerContext =
