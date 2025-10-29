@@ -9,30 +9,20 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
-import { createContext } from 'react';
-import { TreeStylesDefaults } from './styles';
-import type { TreeContextValue, TreeItemContextValue } from './types';
+import { TreeStyles } from './styles';
+import type { PropsWithChildren } from 'react';
 
-/**
- * Context for Tree component
- */
-export const TreeContext = createContext<TreeContextValue>({
-  visibilityComputedKeys: new Set(),
-  showRuleLines: true,
-  showVisibility: false,
-  variant: TreeStylesDefaults.variant,
-  isStatic: true,
-  onVisibilityChange: () => undefined,
-});
+const { actions } = TreeStyles();
 
 /**
- * Context for TreeItem component
+ * ItemActions - Action buttons for a tree item
+ *
+ * Container for action buttons in a tree item
  */
-export const TreeItemContext = createContext<TreeItemContextValue>({
-  isVisible: true,
-  isViewable: true,
-  ancestors: [],
-});
+export function TreeItemActions({
+  children,
+  className,
+}: PropsWithChildren & { className?: string }) {
+  return <div className={actions({ className })}>{children}</div>;
+}

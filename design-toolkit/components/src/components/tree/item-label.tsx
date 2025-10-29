@@ -9,30 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
-import { createContext } from 'react';
-import { TreeStylesDefaults } from './styles';
-import type { TreeContextValue, TreeItemContextValue } from './types';
+import { Text, type TextProps } from 'react-aria-components';
+import { TreeStyles } from './styles';
 
-/**
- * Context for Tree component
- */
-export const TreeContext = createContext<TreeContextValue>({
-  visibilityComputedKeys: new Set(),
-  showRuleLines: true,
-  showVisibility: false,
-  variant: TreeStylesDefaults.variant,
-  isStatic: true,
-  onVisibilityChange: () => undefined,
-});
+const { label } = TreeStyles();
 
 /**
- * Context for TreeItem component
+ * ItemLabel - Label for a tree item
+ *
+ * Renders the primary text label for a tree item
  */
-export const TreeItemContext = createContext<TreeItemContextValue>({
-  isVisible: true,
-  isViewable: true,
-  ancestors: [],
-});
+export function TreeItemLabel({ children, className }: TextProps) {
+  return <Text className={label({ className })}>{children}</Text>;
+}

@@ -9,85 +9,31 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
-import { type PropsWithChildren } from 'react';
-import {
-  TreeItem as AriaTreeItem,
-  TreeItemContent as AriaTreeItemContent,
-  composeRenderProps,
-  Text,
-  type TextProps,
-} from 'react-aria-components';
+import { useContext } from 'react';
+import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
+import { IconProvider } from '../icon/context';
 import { TreeContext, TreeItemContext } from './context';
+import { TreeLines } from './lines';
 import { TreeStyles } from './styles';
-import { TreeLines } from './tree';
-import type { IconProps } from '../icon/types';
-import type { TreeItemContentProps, TreeItemProps } from './types';
+import type { Key } from '@react-types/shared';
+import type { TreeItemContentProps } from './types';
 
-const {
-  item,
-  content,
-  display,
-  icon,
-  label,
-  actions,
-  spacing,
-  description,
-  drag,
-  expansion,
-  visibility,
-} = TreeStyles();
-
-/**
- * TreeItem - Individual node in a tree
- *
- * Represents a single item in the tree structure
- */
-export function TreeItem({ className, id, ...rest }: TreeItemProps) {
-  const { visibilityComputedKeys, visibleKeys, isStatic } =
-    TreeContext.useContext();
-  const { ancestors } = TreeItemContext.useContext();
-  const isViewable =
-    visibilityComputedKeys?.has(id) ||
-    (isStatic && ancestors.every((key) => visibleKeys?.has(key)));
-  const isVisible = visibleKeys?.has(id);
-
-  return (
-    <TreeItemContext.Provider
-      value={{
-        isVisible,
-        isViewable,
-        ancestors: [...ancestors, id],
-      }}
-    >
-      <AriaTreeItem
-        {...rest}
-        id={id}
-        className={composeRenderProps(className, (className) =>
-          item({ className }),
-        )}
-        data-viewable={isViewable || null}
-        data-visible={isVisible || null}
-      />
-    </TreeItemContext.Provider>
-  );
-}
+const { content, display, spacing, drag, expansion, visibility } = TreeStyles();
 
 /**
  * ItemContent - Content of a tree item
  *
  * Renders the content of a tree item with proper styling
  */
-export function ItemContent({ children }: TreeItemContentProps) {
+export function TreeItemContent({ children }: TreeItemContentProps) {
   const { showVisibility, variant, visibleKeys, onVisibilityChange } =
-    TreeContext.useContext();
-  const { isVisible, isViewable } = TreeItemContext.useContext();
+    useContext(TreeContext);
+  const { isVisible, isViewable } = useContext(TreeItemContext);
   const size = variant === 'cozy' ? 'medium' : 'small';
 
   return (
@@ -119,7 +65,7 @@ export function ItemContent({ children }: TreeItemContentProps) {
         };
 
         return (
-          <Icon.Provider size={size}>
+          <IconProvider size={size}>
             <div
               className={content({ variant })}
               data-last-of-set={isLastOfSet}
@@ -183,57 +129,9 @@ export function ItemContent({ children }: TreeItemContentProps) {
                 </Button>
               )}
             </div>
-          </Icon.Provider>
+          </IconProvider>
         );
       }}
     </AriaTreeItemContent>
   );
-}
-
-/**
- * ItemLabel - Label for a tree item
- *
- * Renders the primary text label for a tree item
- */
-export function ItemLabel({ children, className }: TextProps) {
-  return <Text className={label({ className })}>{children}</Text>;
-}
-
-/**
- * ItemDescription - Description for a tree item
- *
- * Renders secondary descriptive text for a tree item
- */
-export function ItemDescription({ children, className }: TextProps) {
-  const { variant } = TreeContext.useContext();
-
-  return variant !== 'crammed' ? (
-    <Text
-      data-slot='description'
-      className={description({ className, variant })}
-    >
-      {children}
-    </Text>
-  ) : null;
-}
-
-/**
- * ItemIcon - Icon for a tree item
- *
- * Renders an icon for a tree item
- */
-export function ItemIcon({ children, className }: IconProps) {
-  return <Icon className={icon({ className })}>{children}</Icon>;
-}
-
-/**
- * ItemActions - Action buttons for a tree item
- *
- * Container for action buttons in a tree item
- */
-export function ItemActions({
-  children,
-  className,
-}: PropsWithChildren & { className?: string }) {
-  return <div className={actions({ className })}>{children}</div>;
 }
