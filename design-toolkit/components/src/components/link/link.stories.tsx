@@ -12,8 +12,8 @@
 
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
+import { Link } from './';
 import { LinkProvider } from './context';
-import { Link } from './link';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
 
