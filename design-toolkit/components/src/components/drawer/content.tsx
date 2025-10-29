@@ -12,8 +12,8 @@
 'use client';
 
 import 'client-only';
-import { type ComponentPropsWithRef } from 'react';
 import { DrawerStyles } from './styles';
+import type { ComponentPropsWithRef } from 'react';
 
 const { content } = DrawerStyles();
 

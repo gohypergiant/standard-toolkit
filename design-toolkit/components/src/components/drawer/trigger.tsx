@@ -11,14 +11,11 @@
  */
 'use client';
 
-import 'client-only';
 import { isUUID, type UniqueId } from '@accelint/core';
-import { Cancel, ChevronLeft } from '@accelint/icons';
 import { Pressable } from '@react-aria/interactions';
+import 'client-only';
 import { useContext } from 'react';
-import { Button } from '../button';
-import { Icon } from '../icon';
-import { ViewStackContext } from '../view-stack';
+import { ViewStackContext } from '../view-stack/context';
 import { useDrawerEmit } from './context';
 import type { DrawerTriggerProps } from './types';
 
@@ -44,29 +41,4 @@ export function DrawerTrigger({ children, for: events }: DrawerTriggerProps) {
   }
 
   return <Pressable onPress={handlePress}>{children}</Pressable>;
-}
-
-export function DrawerClose() {
-  return (
-    <DrawerTrigger for='close'>
-      <Button variant='icon'>
-        <Icon>
-          <Cancel />
-        </Icon>
-      </Button>
-    </DrawerTrigger>
-  );
-}
-
-export function DrawerBack() {
-  const { stack } = useContext(ViewStackContext);
-  return stack.length > 1 ? (
-    <DrawerTrigger for='back'>
-      <Button variant='icon'>
-        <Icon>
-          <ChevronLeft />
-        </Icon>
-      </Button>
-    </DrawerTrigger>
-  ) : null;
 }

@@ -9,26 +9,23 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
 
+import { Cancel } from '@accelint/icons';
 import 'client-only';
-import { DrawerStyles } from './styles';
-import type { DrawerLayoutProps } from './types';
+import { Button } from '../button';
+import { Icon } from '../icon';
+import { DrawerTrigger } from './trigger';
 
-const { layout } = DrawerStyles();
-
-export function DrawerLayout({
-  className,
-  extend = 'left right',
-  push,
-  ...rest
-}: DrawerLayoutProps) {
+export function DrawerClose() {
   return (
-    <div
-      {...rest}
-      className={layout({ className })}
-      data-extend={extend}
-      data-push={push}
-    />
+    <DrawerTrigger for='close'>
+      <Button variant='icon'>
+        <Icon>
+          <Cancel />
+        </Icon>
+      </Button>
+    </DrawerTrigger>
   );
 }

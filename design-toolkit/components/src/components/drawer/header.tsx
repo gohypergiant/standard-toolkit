@@ -13,32 +13,14 @@
 
 import 'client-only';
 import { type ComponentPropsWithRef, useContext } from 'react';
-import { Header, Heading } from 'react-aria-components';
-import { ViewStackContext } from '../view-stack';
-import { DrawerStyles, DrawerTitleStyles } from './styles';
-import { DrawerBack, DrawerClose } from './trigger';
-import type { DrawerTitleProps } from './types';
+import { Header } from 'react-aria-components';
+import { ViewStackContext } from '../view-stack/context';
+import { DrawerBack } from './back';
+import { DrawerClose } from './close';
+import { DrawerHeaderTitle } from './header-title';
+import { DrawerStyles } from './styles';
 
 const { header } = DrawerStyles();
-
-/**
- * To change size of title, use the `level` prop: `1`-`3` (large), `4`-`6` (medium).
- *
- * `level` also changes the semantic heading tag number `h1`-`h6`
- */
-export function DrawerHeaderTitle({
-  className,
-  level,
-  ...rest
-}: DrawerTitleProps) {
-  return (
-    <Heading
-      {...rest}
-      className={DrawerTitleStyles({ className, level })}
-      level={level}
-    />
-  );
-}
 
 export function DrawerHeader({
   className,

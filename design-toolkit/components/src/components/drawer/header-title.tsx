@@ -9,26 +9,29 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
 
 import 'client-only';
-import { DrawerStyles } from './styles';
-import type { DrawerLayoutProps } from './types';
+import { Heading } from 'react-aria-components';
+import { DrawerTitleStyles } from './styles';
+import type { DrawerTitleProps } from './types';
 
-const { layout } = DrawerStyles();
-
-export function DrawerLayout({
+/**
+ * To change size of title, use the `level` prop: `1`-`3` (large), `4`-`6` (medium).
+ *
+ * `level` also changes the semantic heading tag number `h1`-`h6`
+ */
+export function DrawerHeaderTitle({
   className,
-  extend = 'left right',
-  push,
+  level,
   ...rest
-}: DrawerLayoutProps) {
+}: DrawerTitleProps) {
   return (
-    <div
+    <Heading
       {...rest}
-      className={layout({ className })}
-      data-extend={extend}
-      data-push={push}
+      className={DrawerTitleStyles({ className, level })}
+      level={level}
     />
   );
 }

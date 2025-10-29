@@ -11,33 +11,113 @@
  */
 'use client';
 
+import { useOn } from '@accelint/bus/react';
+import type { UniqueId } from '@accelint/core';
 import 'client-only';
-import { DrawerContent } from './content';
-import { Drawer } from './drawer';
-import { DrawerFooter } from './footer';
-import { DrawerHeader, DrawerHeaderTitle } from './header';
-import { DrawerLayout, DrawerLayoutMain } from './layout';
-import { DrawerMenu, DrawerMenuItem } from './menu';
-import { DrawerPanel } from './panel';
-import { DrawerBack, DrawerClose, DrawerTrigger } from './trigger';
-import { DrawerView } from './view';
+import { useCallback, useRef, useState } from 'react';
+import { ViewStack } from '../view-stack';
+import { useViewStackEmit } from '../view-stack/context';
+import { DrawerContext } from './context';
+import { DrawerEventTypes } from './events';
+import { DrawerStyles } from './styles';
+import type { DrawerOpenEvent, DrawerProps, DrawerToggleEvent } from './types';
 
-// Attach subcomponents to maintain API compatibility
-Drawer.Layout = DrawerLayout;
-Drawer.Menu = DrawerMenu;
-Drawer.Panel = DrawerPanel;
-Drawer.View = DrawerView;
-Drawer.Header = DrawerHeader;
-Drawer.Content = DrawerContent;
-Drawer.Footer = DrawerFooter;
-Drawer.Trigger = DrawerTrigger;
-Drawer.Close = DrawerClose;
-Drawer.Back = DrawerBack;
+const { drawer } = DrawerStyles();
 
-// Attach nested subcomponents
-DrawerLayout.Main = DrawerLayoutMain;
-DrawerMenu.Item = DrawerMenuItem;
-DrawerHeader.Title = DrawerHeaderTitle;
+/**
+ * Drawer - Slide-in panel for navigation or contextual content
+ *
+ * A flexible panel that slides in from the viewport edge and supports
+ * stacked views, headers, footers, and programmatic triggers.
+ *
+ * @example
+ * const ids = { drawer: uuid(), a: uuid() };
+ *
+ * <DrawerLayout push="left">
+ *   <DrawerLayoutMain>
+ *     <DrawerTrigger for={`open:${ids.a}`}>
+ *       <Button variant="icon">Open</Button>
+ *     </DrawerTrigger>
+ *   </DrawerLayoutMain>
+ *
+ *   <Drawer id={ids.drawer} defaultView={ids.a}>
+ *     <DrawerPanel>
+ *       <DrawerView id={ids.a}>
+ *         <DrawerHeader title="Title A" />
+ *         <DrawerContent>Content for View A</DrawerContent>
+ *       </DrawerView>
+ *     </DrawerPanel>
+ *   </Drawer>
+ * </DrawerLayout>
+ */
+export function Drawer({
+  id,
+  children,
+  className,
+  defaultView,
+  placement = 'left',
+  size = 'medium',
+  onChange,
+  ...rest
+}: DrawerProps) {
+  const views = useRef(new Set<UniqueId>());
+  const [activeView, setActiveView] = useState<UniqueId | null>(
+    defaultView || null,
+  );
 
-export { Drawer };
-export { DrawerContext, DrawerEventHandlers, useDrawerEmit } from './context';
+  const viewStackEmit = useViewStackEmit();
+
+  const handleOpen = useCallback(
+    (data: DrawerOpenEvent) => {
+      if (views.current.has(data?.payload?.view)) {
+        viewStackEmit.clear(id);
+        viewStackEmit.push(data.payload.view);
+      }
+    },
+    [id, viewStackEmit.clear, viewStackEmit.push],
+  );
+
+  const handleToggle = useCallback(
+    (data: DrawerToggleEvent) => {
+      if (views.current.has(data?.payload?.view)) {
+        viewStackEmit.clear(id);
+        if (activeView !== data?.payload?.view) {
+          viewStackEmit.push(data.payload.view);
+        }
+      }
+    },
+    [id, activeView, viewStackEmit.clear, viewStackEmit.push],
+  );
+
+  useOn(DrawerEventTypes.open, handleOpen);
+  useOn(DrawerEventTypes.toggle, handleToggle);
+
+  return (
+    <DrawerContext.Provider
+      value={{
+        register: (view: UniqueId) => views.current.add(view),
+        unregister: (view: UniqueId) => views.current.delete(view),
+        placement,
+      }}
+    >
+      <ViewStack
+        id={id}
+        defaultView={defaultView}
+        onChange={(view) => {
+          setActiveView(view);
+          onChange?.(view);
+        }}
+      >
+        <div
+          {...rest}
+          className={drawer({ className })}
+          data-open={!!activeView || null}
+          data-placement={placement}
+          data-size={size}
+        >
+          {children}
+        </div>
+      </ViewStack>
+    </DrawerContext.Provider>
+  );
+}

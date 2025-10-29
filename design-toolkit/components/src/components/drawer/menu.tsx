@@ -12,73 +12,10 @@
 'use client';
 
 import 'client-only';
-import { useContext, useRef } from 'react';
-import { composeRenderProps } from 'react-aria-components';
-import { ToggleButton } from '../button';
-import { Icon } from '../icon';
-import { Tooltip } from '../tooltip';
-import { ViewStackContext } from '../view-stack';
-import { DrawerContext } from './context';
 import { DrawerMenuStyles } from './styles';
-import { DrawerTrigger } from './trigger';
-import type { DrawerMenuItemProps, DrawerMenuProps } from './types';
+import type { DrawerMenuProps } from './types';
 
-const { menu, item } = DrawerMenuStyles();
-
-const tooltipPlacementMap = {
-  left: 'right',
-  right: 'left',
-  top: 'bottom',
-  bottom: 'top',
-} as const;
-
-export function DrawerMenuItem({
-  for: id,
-  children,
-  classNames,
-  toggle,
-  textValue,
-  ...rest
-}: DrawerMenuItemProps) {
-  const { parent, stack } = useContext(ViewStackContext);
-  const { placement } = useContext(DrawerContext);
-  const view = stack.at(-1);
-  const action = toggle ? 'toggle' : 'open';
-  const tooltipRef = useRef(null);
-
-  if (!parent) {
-    return null;
-  }
-
-  return (
-    <Tooltip.Trigger>
-      <DrawerTrigger for={`${action}:${id}`}>
-        <ToggleButton
-          {...rest}
-          ref={tooltipRef}
-          className={composeRenderProps(classNames?.item, (className) =>
-            item({ className }),
-          )}
-          role='tab'
-          variant='icon'
-          isSelected={id === view || (stack.length > 1 && stack.includes(id))}
-        >
-          {composeRenderProps(children, (children) => (
-            <Icon>{children}</Icon>
-          ))}
-        </ToggleButton>
-      </DrawerTrigger>
-      <Tooltip
-        triggerRef={tooltipRef}
-        placement={tooltipPlacementMap[placement]}
-        offset={6}
-        className={classNames?.tooltip}
-      >
-        {textValue}
-      </Tooltip>
-    </Tooltip.Trigger>
-  );
-}
+const { menu } = DrawerMenuStyles();
 
 export function DrawerMenu({
   className,

@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { type ComponentPropsWithRef, useContext, useEffect } from 'react';
-import { ViewStack } from '../view-stack';
+import { ViewStackView } from '../view-stack/view';
 import { DrawerContext } from './context';
 import { DrawerStyles } from './styles';
 import type { ViewStackViewProps } from '../view-stack/types';
@@ -35,10 +35,10 @@ export function DrawerView({
   }, [register, unregister, id]);
 
   return (
-    <ViewStack.View id={id}>
+    <ViewStackView id={id}>
       <div {...rest} className={view({ className })} role='tabpanel'>
         {children}
       </div>
-    </ViewStack.View>
+    </ViewStackView>
   );
 }

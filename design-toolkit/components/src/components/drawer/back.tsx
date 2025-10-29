@@ -9,26 +9,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
 
+import { ChevronLeft } from '@accelint/icons';
 import 'client-only';
-import { DrawerStyles } from './styles';
-import type { DrawerLayoutProps } from './types';
+import { useContext } from 'react';
+import { Button } from '../button';
+import { Icon } from '../icon';
+import { ViewStackContext } from '../view-stack/context';
+import { DrawerTrigger } from './trigger';
 
-const { layout } = DrawerStyles();
-
-export function DrawerLayout({
-  className,
-  extend = 'left right',
-  push,
-  ...rest
-}: DrawerLayoutProps) {
-  return (
-    <div
-      {...rest}
-      className={layout({ className })}
-      data-extend={extend}
-      data-push={push}
-    />
-  );
+export function DrawerBack() {
+  const { stack } = useContext(ViewStackContext);
+  return stack.length > 1 ? (
+    <DrawerTrigger for='back'>
+      <Button variant='icon'>
+        <Icon>
+          <ChevronLeft />
+        </Icon>
+      </Button>
+    </DrawerTrigger>
+  ) : null;
 }

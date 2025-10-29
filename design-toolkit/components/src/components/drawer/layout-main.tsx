@@ -9,26 +9,18 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 'use client';
 
 import 'client-only';
 import { DrawerStyles } from './styles';
-import type { DrawerLayoutProps } from './types';
+import type { ComponentPropsWithRef } from 'react';
 
-const { layout } = DrawerStyles();
+const { main } = DrawerStyles();
 
-export function DrawerLayout({
+export function DrawerLayoutMain({
   className,
-  extend = 'left right',
-  push,
   ...rest
-}: DrawerLayoutProps) {
-  return (
-    <div
-      {...rest}
-      className={layout({ className })}
-      data-extend={extend}
-      data-push={push}
-    />
-  );
+}: ComponentPropsWithRef<'main'>) {
+  return <main {...rest} className={main({ className })} />;
 }

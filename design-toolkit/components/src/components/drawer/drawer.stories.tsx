@@ -11,7 +11,19 @@
  */
 import { uuid } from '@accelint/core';
 import { Button } from '../button';
-import { Drawer } from './index';
+import { Drawer } from './';
+import { DrawerClose } from './close';
+import { DrawerContent } from './content';
+import { DrawerFooter } from './footer';
+import { DrawerHeader } from './header';
+import { DrawerHeaderTitle } from './header-title';
+import { DrawerLayout } from './layout';
+import { DrawerLayoutMain } from './layout-main';
+import { DrawerMenu } from './menu';
+import { DrawerMenuItem } from './menu-item';
+import { DrawerPanel } from './panel';
+import { DrawerTrigger } from './trigger';
+import { DrawerView } from './view';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ComponentProps } from 'react';
 import type { DrawerMenuProps, DrawerProps } from './types';
@@ -67,33 +79,33 @@ export const StaticHeaderFooter: Story = {
   render: ({ placement, size, toggle, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
-        <Drawer.Layout>
+        <DrawerLayout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
-            <Drawer.Menu position={position}>
-              <Drawer.Menu.Item toggle={toggle} for={ids.a} textValue='Menu A'>
+            <DrawerMenu position={position}>
+              <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
                 A
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle={toggle} for={ids.b} textValue='Menu B'>
+              </DrawerMenuItem>
+              <DrawerMenuItem toggle={toggle} for={ids.b} textValue='Menu B'>
                 B
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle={toggle} for={ids.c} textValue='Menu C'>
+              </DrawerMenuItem>
+              <DrawerMenuItem toggle={toggle} for={ids.c} textValue='Menu C'>
                 C
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Panel>
-              <Drawer.Header>
-                <Drawer.Header.Title>Title</Drawer.Header.Title>
-                <Drawer.Close />
-              </Drawer.Header>
-              <Drawer.Content>
-                <Drawer.View id={ids.a}>View A</Drawer.View>
-                <Drawer.View id={ids.b}>View B</Drawer.View>
-                <Drawer.View id={ids.c}>View C</Drawer.View>
-              </Drawer.Content>
-              <Drawer.Footer>Footer</Drawer.Footer>
-            </Drawer.Panel>
+              </DrawerMenuItem>
+            </DrawerMenu>
+            <DrawerPanel>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Title</DrawerHeaderTitle>
+                <DrawerClose />
+              </DrawerHeader>
+              <DrawerContent>
+                <DrawerView id={ids.a}>View A</DrawerView>
+                <DrawerView id={ids.b}>View B</DrawerView>
+                <DrawerView id={ids.c}>View C</DrawerView>
+              </DrawerContent>
+              <DrawerFooter>Footer</DrawerFooter>
+            </DrawerPanel>
           </Drawer>
-        </Drawer.Layout>
+        </DrawerLayout>
       </div>
     );
   },
@@ -103,44 +115,44 @@ export const DynamicHeaderFooter: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
-        <Drawer.Layout>
+        <DrawerLayout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
-            <Drawer.Menu position={position}>
-              <Drawer.Menu.Item toggle for={ids.a} textValue='Menu A'>
+            <DrawerMenu position={position}>
+              <DrawerMenuItem toggle for={ids.a} textValue='Menu A'>
                 A
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle for={ids.b} textValue='Menu B'>
+              </DrawerMenuItem>
+              <DrawerMenuItem toggle for={ids.b} textValue='Menu B'>
                 B
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item toggle for={ids.c} textValue='Menu C'>
+              </DrawerMenuItem>
+              <DrawerMenuItem toggle for={ids.c} textValue='Menu C'>
                 C
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Panel>
-              <Drawer.View id={ids.a}>
-                <Drawer.Header>
-                  <Drawer.Header.Title>Title A</Drawer.Header.Title>
-                </Drawer.Header>
-                <Drawer.Content>Content A</Drawer.Content>
-                <Drawer.Footer>Footer A</Drawer.Footer>
-              </Drawer.View>
-              <Drawer.View id={ids.b}>
-                <Drawer.Header>
-                  <Drawer.Header.Title>Title B</Drawer.Header.Title>
-                </Drawer.Header>
-                <Drawer.Content>Content B</Drawer.Content>
-                <Drawer.Footer>Footer B</Drawer.Footer>
-              </Drawer.View>
-              <Drawer.View id={ids.c}>
-                <Drawer.Header>
-                  <Drawer.Header.Title>Title C</Drawer.Header.Title>
-                </Drawer.Header>
-                <Drawer.Content>Content C</Drawer.Content>
-                <Drawer.Footer>Footer C</Drawer.Footer>
-              </Drawer.View>
-            </Drawer.Panel>
+              </DrawerMenuItem>
+            </DrawerMenu>
+            <DrawerPanel>
+              <DrawerView id={ids.a}>
+                <DrawerHeader>
+                  <DrawerHeaderTitle>Title A</DrawerHeaderTitle>
+                </DrawerHeader>
+                <DrawerContent>Content A</DrawerContent>
+                <DrawerFooter>Footer A</DrawerFooter>
+              </DrawerView>
+              <DrawerView id={ids.b}>
+                <DrawerHeader>
+                  <DrawerHeaderTitle>Title B</DrawerHeaderTitle>
+                </DrawerHeader>
+                <DrawerContent>Content B</DrawerContent>
+                <DrawerFooter>Footer B</DrawerFooter>
+              </DrawerView>
+              <DrawerView id={ids.c}>
+                <DrawerHeader>
+                  <DrawerHeaderTitle>Title C</DrawerHeaderTitle>
+                </DrawerHeader>
+                <DrawerContent>Content C</DrawerContent>
+                <DrawerFooter>Footer C</DrawerFooter>
+              </DrawerView>
+            </DrawerPanel>
           </Drawer>
-        </Drawer.Layout>
+        </DrawerLayout>
       </div>
     );
   },
@@ -150,32 +162,32 @@ export const OpenCloseTrigger: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen'>
-        <Drawer.Layout>
-          <Drawer.Layout.Main>
+        <DrawerLayout>
+          <DrawerLayoutMain>
             <div className='flex h-full items-center justify-center bg-surface-muted'>
-              <Drawer.Trigger for={`open:${ids.a}`}>
+              <DrawerTrigger for={`open:${ids.a}`}>
                 <Button>Open</Button>
-              </Drawer.Trigger>
+              </DrawerTrigger>
             </div>
-          </Drawer.Layout.Main>
+          </DrawerLayoutMain>
           <Drawer id={ids.drawer} placement={placement} size={size}>
-            <Drawer.Menu position={position}>
-              <Drawer.Menu.Item toggle for={ids.a} textValue='Menu A'>
+            <DrawerMenu position={position}>
+              <DrawerMenuItem toggle for={ids.a} textValue='Menu A'>
                 A
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Panel>
-              <Drawer.View id={ids.a}>
-                <Drawer.Header>
-                  <Drawer.Header.Title>Title A</Drawer.Header.Title>
-                  <Drawer.Close />
-                </Drawer.Header>
-                <Drawer.Content>Content A</Drawer.Content>
-                <Drawer.Footer>Footer A</Drawer.Footer>
-              </Drawer.View>
-            </Drawer.Panel>
+              </DrawerMenuItem>
+            </DrawerMenu>
+            <DrawerPanel>
+              <DrawerView id={ids.a}>
+                <DrawerHeader>
+                  <DrawerHeaderTitle>Title A</DrawerHeaderTitle>
+                  <DrawerClose />
+                </DrawerHeader>
+                <DrawerContent>Content A</DrawerContent>
+                <DrawerFooter>Footer A</DrawerFooter>
+              </DrawerView>
+            </DrawerPanel>
           </Drawer>
-        </Drawer.Layout>
+        </DrawerLayout>
       </div>
     );
   },
@@ -185,31 +197,31 @@ export const SimpleStack: Story = {
   render: ({ placement, size, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
-        <Drawer.Layout>
+        <DrawerLayout>
           <Drawer id={ids.drawer} placement={placement} size={size}>
-            <Drawer.Menu position={position}>
-              <Drawer.Menu.Item toggle for={ids.a} textValue='Menu A'>
+            <DrawerMenu position={position}>
+              <DrawerMenuItem toggle for={ids.a} textValue='Menu A'>
                 A
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
-            <Drawer.Panel>
-              <Drawer.View id={ids.a}>
-                <Drawer.Header title='Title A' />
-                <Drawer.Content>Content A</Drawer.Content>
-                <Drawer.Footer>
-                  <Drawer.Trigger for={ids.b}>
+              </DrawerMenuItem>
+            </DrawerMenu>
+            <DrawerPanel>
+              <DrawerView id={ids.a}>
+                <DrawerHeader title='Title A' />
+                <DrawerContent>Content A</DrawerContent>
+                <DrawerFooter>
+                  <DrawerTrigger for={ids.b}>
                     <Button variant='outline'>Show B</Button>
-                  </Drawer.Trigger>
-                </Drawer.Footer>
-              </Drawer.View>
-              <Drawer.View id={ids.b}>
-                <Drawer.Header title='Title B' />
-                <Drawer.Content>Content B</Drawer.Content>
-                <Drawer.Footer>Footer B</Drawer.Footer>
-              </Drawer.View>
-            </Drawer.Panel>
+                  </DrawerTrigger>
+                </DrawerFooter>
+              </DrawerView>
+              <DrawerView id={ids.b}>
+                <DrawerHeader title='Title B' />
+                <DrawerContent>Content B</DrawerContent>
+                <DrawerFooter>Footer B</DrawerFooter>
+              </DrawerView>
+            </DrawerPanel>
           </Drawer>
-        </Drawer.Layout>
+        </DrawerLayout>
       </div>
     );
   },

@@ -11,12 +11,15 @@
  */
 'use client';
 
-import 'client-only';
 import { Broadcast } from '@accelint/bus';
-import { useEmit, useOn } from '@accelint/bus/react';
-import { isUUID, type UniqueId } from '@accelint/core';
+import { useEmit } from '@accelint/bus/react';
+import type { UniqueId } from '@accelint/core';
+import 'client-only';
 import { createContext } from 'react';
-import { useViewStackEmit, ViewStackEventHandlers } from '../view-stack';
+import {
+  useViewStackEmit,
+  ViewStackEventHandlers,
+} from '../view-stack/context';
 import { DrawerEventTypes } from './events';
 import type { DrawerContextValue, DrawerEvent } from './types';
 
