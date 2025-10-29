@@ -11,30 +11,30 @@ The Accordion Group component combines provides a convenient grouping for Accord
 ### Basic
 ```tsx
 // Accordion group with multiple items
-<Accordion.Group allowsMultipleExpanded={true}>
+<AccordionGroup allowsMultipleExpanded={true}>
   <Accordion>
-    <Accordion.Header>
-      <Accordion.Trigger>
+    <AccordionHeader>
+      <AccordionTrigger>
         <Icon><Settings /></Icon>
         Settings
-      </Accordion.Trigger>
-    </Accordion.Header>
-    <Accordion.Panel>
+      </AccordionTrigger>
+    </AccordionHeader>
+    <AccordionPanel>
       <p>Settings configuration options...</p>
-    </Accordion.Panel>
+    </AccordionPanel>
   </Accordion>
   <Accordion>
-    <Accordion.Header>
-      <Accordion.Trigger>
+    <AccordionHeader>
+      <AccordionTrigger>
         <Icon><Help /></Icon>
         Help
-      </Accordion.Trigger>
-    </Accordion.Header>
-    <Accordion.Panel>
+      </AccordionTrigger>
+    </AccordionHeader>
+    <AccordionPanel>
       <p>Help documentation...</p>
-    </Accordion.Panel>
+    </AccordionPanel>
   </Accordion>
-</Accordion.Group>
+</AccordionGroup>
 ```
 
 <Canvas of={AccordionGroupStories.Default} />
@@ -43,11 +43,11 @@ The Accordion Group component combines provides a convenient grouping for Accord
 * **cozy** - Standard size with larger text and spacing (default)
 * **compact** - Smaller size with reduced text and spacing for space-constrained layouts
 
-### Accordion.Group Props
+### AccordionGroup Props
 The Accordion supports all the `Disclosure Group` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html#disclosuregroup-1) and
 * **`variant`** - Global variant for all child accordions.
 
 See [Accordion](?path=/docs/components-accordion--playground) for details on props for individual sections.
 
 ## Implementation Notes
-The `Accordion.Group` component wraps the `DisclosureGroup` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html)
+The `AccordionGroup` component wraps the `DisclosureGroup` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html)
