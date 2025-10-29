@@ -16,11 +16,15 @@ import 'client-only';
 import { Text, type TextProps } from 'react-aria-components';
 import { MenuStyles } from './styles';
 
-const { label } = MenuStyles();
+const { description } = MenuStyles();
 
-export function MenuLabel({ children, className, ...rest }: TextProps) {
+export function MenuItemDescription({
+  children,
+  className,
+  ...rest
+}: TextProps) {
   return (
-    <Text {...rest} slot='label' className={label({ className })}>
+    <Text {...rest} slot='description' className={description({ className })}>
       {children}
     </Text>
   );

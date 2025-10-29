@@ -27,8 +27,6 @@ import {
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';
 import { MenuContext } from './context';
-import { MenuDescription } from './menu-description';
-import { MenuLabel } from './menu-label';
 import { MenuStyles, MenuStylesDefaults } from './styles';
 import type { MenuItemProps } from './types';
 
@@ -90,6 +88,3 @@ export function MenuItem({
     </AriaMenuItem>
   );
 }
-
-MenuItem.Label = MenuLabel;
-MenuItem.Description = MenuDescription;

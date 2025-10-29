@@ -17,14 +17,14 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { Menu } from './menu';
-import { MenuDescription } from './menu-description';
-import { MenuItem } from './menu-item';
-import { MenuLabel } from './menu-label';
-import { MenuSection } from './menu-section';
-import { MenuSeparator } from './menu-separator';
-import { MenuSubmenu } from './menu-submenu';
-import { MenuTrigger } from './menu-trigger';
+import { Menu } from './';
+import { MenuItem } from './item';
+import { MenuItemDescription } from './item-description';
+import { MenuItemLabel } from './item-label';
+import { MenuSection } from './section';
+import { MenuSeparator } from './separator';
+import { MenuSubmenu } from './submenu';
+import { MenuTrigger } from './trigger';
 import type { MenuProps } from './types';
 
 function setup({
@@ -34,27 +34,27 @@ function setup({
         <Icon>
           <Placeholder />
         </Icon>
-        <MenuLabel>Songbirds</MenuLabel>
+        <MenuItemLabel>Songbirds</MenuItemLabel>
       </MenuItem>
       <MenuSeparator />
       <MenuSubmenu>
         <MenuItem>
-          <MenuLabel>North American Birds</MenuLabel>
+          <MenuItemLabel>North American Birds</MenuItemLabel>
         </MenuItem>
         <Menu>
           <MenuItem>
             <Icon>
               <Placeholder />
             </Icon>
-            <MenuLabel>Blue Jay</MenuLabel>
-            <MenuDescription>Cyanocitta cristata</MenuDescription>
+            <MenuItemLabel>Blue Jay</MenuItemLabel>
+            <MenuItemDescription>Cyanocitta cristata</MenuItemDescription>
           </MenuItem>
           <MenuItem isDisabled>
             <Icon>
               <Placeholder />
             </Icon>
-            <MenuLabel>Gray catbird</MenuLabel>
-            <MenuDescription>Dumetella carolinensis</MenuDescription>
+            <MenuItemLabel>Gray catbird</MenuItemLabel>
+            <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
           </MenuItem>
         </Menu>
       </MenuSubmenu>
@@ -64,22 +64,22 @@ function setup({
           <Icon>
             <Placeholder />
           </Icon>
-          <MenuLabel>Mallard</MenuLabel>
-          <MenuDescription>Anas platyrhynchos</MenuDescription>
+          <MenuItemLabel>Mallard</MenuItemLabel>
+          <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
         </MenuItem>
         <MenuItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <MenuLabel>Chimney swift</MenuLabel>
-          <MenuDescription>Chaetura pelagica</MenuDescription>
+          <MenuItemLabel>Chimney swift</MenuItemLabel>
+          <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
         </MenuItem>
         <MenuItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <MenuLabel>Brünnich's guillemot</MenuLabel>
-          <MenuDescription>Dumetella carolinensis</MenuDescription>
+          <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>
+          <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
         </MenuItem>
       </MenuSection>
     </>
