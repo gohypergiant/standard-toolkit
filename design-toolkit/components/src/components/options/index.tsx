@@ -12,18 +12,76 @@
 'use client';
 
 import 'client-only';
-import { OptionsItem } from './item';
-import { OptionsItemContent } from './item-content';
-import { OptionsItemDescription } from './item-description';
-import { OptionsItemLabel } from './item-label';
-import { Options } from './options';
-import { OptionsSection } from './section';
+import {
+  composeRenderProps,
+  ListBox,
+  useContextProps,
+} from 'react-aria-components';
+import { OptionsContext } from './context';
+import { OptionsStyles } from './styles';
+import type { OptionsDataItem, OptionsProps } from './types';
 
-// Attach subcomponents to maintain API compatibility
-Options.Item = OptionsItem;
-Options.Section = OptionsSection;
-Options.Item.Content = OptionsItemContent;
-Options.Item.Label = OptionsItemLabel;
-Options.Item.Description = OptionsItemDescription;
+const { list } = OptionsStyles();
 
-export { Options };
+/**
+ * Options - A flexible list component for selectable items with rich content
+ *
+ * Provides accessible list functionality with support for selection, sections,
+ * and rich item content including labels, descriptions, and icons. Perfect for
+ * dropdown lists, menu items, or any selectable list interface.
+ *
+ * @example
+ * // Basic options list
+ * <Options>
+ *   <OptionsItem>
+ *     <OptionsItemLabel>Option 1</OptionsItemLabel>
+ *   </OptionsItem>
+ *   <OptionsItem>
+ *     <OptionsItemLabel>Option 2</OptionsItemLabel>
+ *   </OptionsItem>
+ * </Options>
+ *
+ * @example
+ * // Options with descriptions and icons
+ * <Options>
+ *   <OptionsItem>
+ *     <Icon><User /></Icon>
+ *     <OptionsItemContent>
+ *       <OptionsItemLabel>John Doe</OptionsItemLabel>
+ *       <OptionsItemDescription>Senior Developer</OptionsItemDescription>
+ *     </OptionsItemContent>
+ *   </OptionsItem>
+ * </Options>
+ *
+ * @example
+ * // Sectioned options
+ * <Options>
+ *   <OptionsSection header="Recent">
+ *     <OptionsItem>Recent Item 1</OptionsItem>
+ *   </OptionsSection>
+ *   <OptionsSection header="All Items">
+ *     <OptionsItem>All Items 1</OptionsItem>
+ *   </OptionsSection>
+ * </Options>
+ */
+export function Options<T extends OptionsDataItem>({
+  ref,
+  ...props
+}: OptionsProps<T>) {
+  [props, ref] = useContextProps(props, ref ?? null, OptionsContext);
+
+  const { children, className, size, ...rest } = props;
+
+  return (
+    <ListBox<T>
+      {...rest}
+      ref={ref}
+      className={composeRenderProps(className, (className) =>
+        list({ className }),
+      )}
+      data-size={size}
+    >
+      {children}
+    </ListBox>
+  );
+}

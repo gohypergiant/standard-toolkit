@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { composeRenderProps, ListBoxItem } from 'react-aria-components';
-import { Icon } from '../icon';
+import { IconProvider } from '../icon/context';
 import { OptionsItemLabel } from './item-label';
 import { OptionsStyles } from './styles';
 import type { OptionsDataItem, OptionsItemProps } from './types';
@@ -37,7 +37,7 @@ export function OptionsItem<T extends OptionsDataItem>({
       data-color={color}
     >
       {composeRenderProps(children, (children) => (
-        <Icon.Provider
+        <IconProvider
           className={icon({ className: classNames?.icon })}
           size='small'
         >
@@ -46,7 +46,7 @@ export function OptionsItem<T extends OptionsDataItem>({
           ) : (
             children
           )}
-        </Icon.Provider>
+        </IconProvider>
       ))}
     </ListBoxItem>
   );

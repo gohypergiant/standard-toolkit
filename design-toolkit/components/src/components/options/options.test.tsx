@@ -15,54 +15,57 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Icon } from '../icon';
 import { Options } from './index';
+import { OptionsItem } from './item';
+import { OptionsItemLabel } from './item-label';
+import { OptionsSection } from './section';
 import type { OptionsDataItem, OptionsProps } from './types';
 
 function setup({
   children = (
     <>
-      <Options.Section
+      <OptionsSection
         header='North American Birds'
         classNames={{ section: 'w-[200px]' }}
       >
-        <Options.Item>
+        <OptionsItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Blue Jay</Options.Item.Label>
-        </Options.Item>
-        <Options.Item>
+          <OptionsItemLabel>Blue Jay</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Gray catbird</Options.Item.Label>
-        </Options.Item>
-        <Options.Item>
+          <OptionsItemLabel>Gray catbird</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Black-capped chickadee</Options.Item.Label>
-        </Options.Item>
-        <Options.Item>
+          <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Song Sparrow</Options.Item.Label>
-        </Options.Item>
-      </Options.Section>
-      <Options.Section header='African Birds'>
-        <Options.Item>
+          <OptionsItemLabel>Song Sparrow</OptionsItemLabel>
+        </OptionsItem>
+      </OptionsSection>
+      <OptionsSection header='African Birds'>
+        <OptionsItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Lilac-breasted roller</Options.Item.Label>
-        </Options.Item>
-        <Options.Item>
+          <OptionsItemLabel>Lilac-breasted roller</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Hornbill</Options.Item.Label>
-        </Options.Item>
-      </Options.Section>
+          <OptionsItemLabel>Hornbill</OptionsItemLabel>
+        </OptionsItem>
+      </OptionsSection>
     </>
   ),
   ...rest
