@@ -11,6 +11,8 @@
  */
 
 import { DetailsList } from './';
+import { DetailsListLabel } from './label';
+import { DetailsListValue } from './value';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -43,22 +45,22 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => (
     <DetailsList {...args}>
-      <DetailsList.Label>Key</DetailsList.Label>
-      <DetailsList.Value>Value</DetailsList.Value>
+      <DetailsListLabel>Key</DetailsListLabel>
+      <DetailsListValue>Value</DetailsListValue>
 
-      <DetailsList.Label>Ships</DetailsList.Label>
-      <DetailsList.Value>Millennium Falcon</DetailsList.Value>
-      <DetailsList.Value>USS Enterprise NCC-1701</DetailsList.Value>
-      <DetailsList.Value>Serenity</DetailsList.Value>
+      <DetailsListLabel>Ships</DetailsListLabel>
+      <DetailsListValue>Millennium Falcon</DetailsListValue>
+      <DetailsListValue>USS Enterprise NCC-1701</DetailsListValue>
+      <DetailsListValue>Serenity</DetailsListValue>
 
-      <DetailsList.Label>Coordinates</DetailsList.Label>
-      <DetailsList.Value>
+      <DetailsListLabel>Coordinates</DetailsListLabel>
+      <DetailsListValue>
         <div>Great Pyramid of Giza: 29°58'44" N 31°08'02" E</div>
         <div>Machu Picchu: 13°09'47" S 72°32'41" W</div>
         <div>Nazca Lines: 14.7390° S, 75.1300° W</div>
         <div>Colosseum: 41°53'24" N 12°29'32" E</div>
         <div>Taj Mahal: 27°10'30" N 78°02'31" E</div>
-      </DetailsList.Value>
+      </DetailsListValue>
     </DetailsList>
   ),
 };
