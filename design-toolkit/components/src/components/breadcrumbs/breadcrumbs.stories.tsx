@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { BreadcrumbItem, Breadcrumbs } from './';
+import { Breadcrumbs } from './';
+import { BreadcrumbItem } from './item';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

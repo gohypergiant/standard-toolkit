@@ -12,6 +12,34 @@
 'use client';
 
 import 'client-only';
-import { Breadcrumbs } from './breadcrumbs';
+import {
+  Breadcrumbs as AriaBreadcrumbs,
+  type BreadcrumbProps,
+  type BreadcrumbsProps,
+} from 'react-aria-components';
+import { BreadcrumbsStyles } from './styles';
 
-export { Breadcrumbs };
+const { list } = BreadcrumbsStyles();
+
+/**
+ * Breadcrumbs - Accessible breadcrumb navigation
+ *
+ * Displays the user's location within an application hierarchy and provides
+ * links back to parent pages. The final item represents the current page.
+ *
+ * @example
+ * <Breadcrumbs>
+ *   <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
+ *   <BreadcrumbItem>Current</BreadcrumbItem>
+ * </Breadcrumbs>
+ */
+export function Breadcrumbs({
+  children,
+  className,
+}: BreadcrumbsProps<BreadcrumbProps>) {
+  return (
+    <AriaBreadcrumbs className={list({ className })}>
+      {children}
+    </AriaBreadcrumbs>
+  );
+}
