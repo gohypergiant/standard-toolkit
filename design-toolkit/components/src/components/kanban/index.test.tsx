@@ -1052,7 +1052,7 @@ describe('Kanban Board', () => {
         });
       });
 
-      it('should throw error when cards property is null', () => {
+      it('should handle cards property being null', () => {
         const overRect = createMockRect(100, 0, 200, 100);
         const activeRect = createMockRect(50, 0, 200, 50);
         const overData = {
@@ -1061,9 +1061,14 @@ describe('Kanban Board', () => {
         };
         const event = createMockDragEvent(overRect, activeRect, overData);
 
-        // When cards is null (not undefined), the implementation tries to access cards.length
-        // which throws a TypeError. This test documents the current behavior.
-        expect(() => parseDropTarget(event as DragEndEvent)).toThrow(TypeError);
+        const result = parseDropTarget(event as DragEndEvent);
+
+        // When cards is null (not an array), it should fall through to card drop path
+        expect(result).toEqual({
+          columnId: undefined,
+          position: undefined,
+          edge: 'top',
+        });
       });
 
       it('should prioritize cards property when both cards and columnId present', () => {

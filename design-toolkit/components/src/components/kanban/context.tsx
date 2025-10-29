@@ -100,7 +100,7 @@ export function parseDropTarget(event: DragEndEvent): DropTargetInfo | null {
   }
 
   // Dropping on a column (empty space or column container)
-  if (overData.cards !== undefined) {
+  if (Array.isArray(overData.cards)) {
     return {
       columnId: overData.id,
       position: overData.cards.length,
