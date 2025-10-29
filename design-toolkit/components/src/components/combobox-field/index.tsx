@@ -11,12 +11,133 @@
  */
 'use client';
 
+import { ChevronDown } from '@accelint/icons';
 import 'client-only';
-import { ComboBoxField } from './combobox-field';
-import { ComboBoxFieldProvider } from './context';
+import {
+  Button,
+  ComboBox,
+  composeRenderProps,
+  FieldError,
+  Input,
+  ListLayout,
+  Popover,
+  Text,
+  useContextProps,
+  Virtualizer,
+} from 'react-aria-components';
+import { Icon } from '../icon';
+import { Label } from '../label';
+import { Options } from '../options';
+import { ComboBoxFieldContext } from './context';
+import { ComboBoxStyles } from './styles';
+import type { OptionsDataItem } from '../options/types';
+import type { ComboBoxFieldProps } from './types';
 
-// Attach provider to maintain API compatibility
-ComboBoxField.Provider = ComboBoxFieldProvider;
+const { field, label, control, input, trigger, description, error, popover } =
+  ComboBoxStyles();
 
-export { ComboBoxField };
-export { ComboBoxFieldContext } from './context';
+/**
+ * ComboBoxField - Accessible searchable combobox with dropdown options
+ *
+ * A combobox field that provides a searchable input with virtualized dropdown
+ * options and support for sections, icons, and rich content.
+ *
+ * @example
+ * <ComboBoxField defaultItems={items}>
+ *   {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
+ * </ComboBoxField>
+ */
+export function ComboBoxField<T extends OptionsDataItem>({
+  ref,
+  ...props
+}: ComboBoxFieldProps<T>) {
+  [props, ref] = useContextProps(props, ref ?? null, ComboBoxFieldContext);
+
+  const {
+    children,
+    classNames,
+    description: descriptionProp,
+    errorMessage: errorMessageProp,
+    inputProps,
+    label: labelProp,
+    layoutOptions,
+    menuTrigger = 'focus',
+    size = 'medium',
+    isInvalid: isInvalidProp,
+    ...rest
+  } = props;
+  const errorMessage = errorMessageProp || null; // Protect against empty string
+  const isSmall = size === 'small';
+
+  return (
+    <ComboBox<T>
+      {...rest}
+      ref={ref}
+      className={composeRenderProps(classNames?.field, (className) =>
+        field({ className }),
+      )}
+      menuTrigger={menuTrigger}
+      isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
+      data-size={size}
+    >
+      {(
+        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props
+      ) => (
+        <>
+          {!!labelProp && !isSmall && (
+            <Label
+              className={label({ className: classNames?.label })}
+              isDisabled={isDisabled}
+              isRequired={isRequired}
+            >
+              {labelProp}
+            </Label>
+          )}
+          <div className={control({ className: classNames?.control })}>
+            <Input
+              {...inputProps}
+              className={composeRenderProps(classNames?.input, (className) =>
+                input({ className }),
+              )}
+            />
+            <Button
+              className={composeRenderProps(classNames?.trigger, (className) =>
+                trigger({ className }),
+              )}
+            >
+              <Icon size='small'>
+                <ChevronDown />
+              </Icon>
+            </Button>
+          </div>
+          {!!descriptionProp && !(isSmall || isInvalid) && (
+            <Text
+              className={description({
+                className: classNames?.description,
+              })}
+              slot='description'
+            >
+              {descriptionProp}
+            </Text>
+          )}
+          <FieldError
+            className={composeRenderProps(classNames?.error, (className) =>
+              error({ className }),
+            )}
+          >
+            {errorMessage}
+          </FieldError>
+          <Popover
+            className={composeRenderProps(classNames?.popover, (className) =>
+              popover({ className }),
+            )}
+          >
+            <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>
+              <Options>{children}</Options>
+            </Virtualizer>
+          </Popover>
+        </>
+      )}
+    </ComboBox>
+  );
+}
