@@ -11,6 +11,58 @@
  */
 'use client';
 
-import { ClassificationBadge } from './classification-badge';
+import 'client-only';
+import { useContextProps } from 'react-aria-components';
+import { ClassificationBadgeContext } from './context';
+import {
+  ClassificationBadgeStyles,
+  ClassificationBadgeStylesDefaults,
+} from './styles';
+import type { ClassificationBadgeProps } from './types';
 
-export { ClassificationBadge };
+/**
+ * ClassificationBadge - A specialized badge for security and data classification
+ *
+ * Provides standardized visual indicators for data classification levels such as
+ * confidential, secret, or public information. Designed for compliance with
+ * security standards and information governance requirements.
+ *
+ * @example
+ * // Basic classification badge
+ * <ClassificationBadge level="confidential" />
+ *
+ * @example
+ * // Classification with custom styling
+ * <ClassificationBadge level="secret" />
+ */
+export function ClassificationBadge({
+  ref,
+  ...props
+}: ClassificationBadgeProps) {
+  [props, ref] = useContextProps(
+    props,
+    ref ?? null,
+    ClassificationBadgeContext,
+  );
+
+  const {
+    children,
+    className,
+    size = 'medium',
+    variant = ClassificationBadgeStylesDefaults.variant,
+    ...rest
+  } = props;
+
+  return (
+    <span
+      {...rest}
+      className={ClassificationBadgeStyles({
+        variant,
+        className,
+      })}
+      data-size={size}
+    >
+      {children}
+    </span>
+  );
+}

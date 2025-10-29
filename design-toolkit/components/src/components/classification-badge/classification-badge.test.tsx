@@ -11,7 +11,7 @@
  */
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ClassificationBadge } from './classification-badge';
+import { ClassificationBadge } from './';
 import type { ClassificationBadgeProps } from './types';
 
 function setup({
