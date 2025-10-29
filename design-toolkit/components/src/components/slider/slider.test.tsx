@@ -20,7 +20,7 @@ describe('Slider', () => {
       <Slider
         defaultValue={50}
         label='Foo'
-        layout='inline'
+        layout='stack'
         minValue={0}
         maxValue={100}
       />,
@@ -38,7 +38,7 @@ describe('Slider', () => {
       <Slider
         defaultValue={[20, 50]}
         label='Range'
-        layout='inline'
+        layout='grid'
         minValue={0}
         maxValue={100}
       />,
