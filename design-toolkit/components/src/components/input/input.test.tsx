@@ -13,7 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Input } from './input';
+import { Input } from './';
 import type { InputProps } from './types';
 
 function setup(props: Partial<InputProps> = {}) {

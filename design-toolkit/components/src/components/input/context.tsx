@@ -14,7 +14,7 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import { type ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components';
 import type { InputProps } from './types';
 
 export const InputContext =
