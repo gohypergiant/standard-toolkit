@@ -17,10 +17,10 @@ import { Menu } from '../menu';
 import { MenuItem } from '../menu/menu-item';
 import { MenuTrigger } from '../menu/menu-trigger';
 import { Accordion } from './';
-import { AccordionHeader } from './accordion-header';
-import { AccordionPanel } from './accordion-panel';
-import { AccordionTrigger } from './accordion-trigger';
+import { AccordionHeader } from './header';
+import { AccordionPanel } from './panel';
 import { AccordionStylesDefaults } from './styles';
+import { AccordionTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**

@@ -33,37 +33,37 @@ const { accordion } = AccordionStyles();
  * @example
  * // Basic accordion
  * <Accordion>
- *   <Accordion.Header>
- *     <Accordion.Trigger>Section Title</Accordion.Trigger>
- *   </Accordion.Header>
- *   <Accordion.Panel>Content goes here</Accordion.Panel>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Section Title</AccordionTrigger>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Content goes here</AccordionPanel>
  * </Accordion>
  *
  * @example
  * // Compact variant
  * <Accordion variant="compact">
- *   <Accordion.Header>
- *     <Accordion.Trigger>Compact Section</Accordion.Trigger>
- *   </Accordion.Header>
- *   <Accordion.Panel>Compact content</Accordion.Panel>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Compact Section</AccordionTrigger>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Compact content</AccordionPanel>
  * </Accordion>
  *
  * @example
  * // Multiple accordions in a group
- * <Accordion.Group>
+ * <AccordionGroup>
  *   <Accordion>
- *     <Accordion.Header>
- *       <Accordion.Trigger>First Section</Accordion.Trigger>
- *     </Accordion.Header>
- *     <Accordion.Panel>First content</Accordion.Panel>
+ *     <AccordionHeader>
+ *       <AccordionTrigger>First Section</AccordionTrigger>
+ *     </AccordionHeader>
+ *     <AccordionPanel>First content</AccordionPanel>
  *   </Accordion>
  *   <Accordion>
- *     <Accordion.Header>
- *       <Accordion.Trigger>Second Section</Accordion.Trigger>
- *     </Accordion.Header>
- *     <Accordion.Panel>Second content</Accordion.Panel>
+ *     <AccordionHeader>
+ *       <AccordionTrigger>Second Section</AccordionTrigger>
+ *     </AccordionHeader>
+ *     <AccordionPanel>Second content</AccordionPanel>
  *   </Accordion>
- * </Accordion.Group>
+ * </AccordionGroup>
  */
 export function Accordion({ ref, ...props }: AccordionProps) {
   [props, ref] = useContextProps(props, ref ?? null, AccordionContext);
