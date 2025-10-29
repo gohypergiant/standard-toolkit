@@ -12,6 +12,80 @@
 'use client';
 
 import 'client-only';
-import { ColorPicker } from './color-picker';
+import {
+  ColorSwatch,
+  ColorSwatchPicker,
+  ColorSwatchPickerItem,
+  composeRenderProps,
+} from 'react-aria-components';
+import { ColorPickerStyles } from './styles';
+import type { ColorPickerProps } from './types';
 
-export { ColorPicker };
+const { picker, item, swatch } = ColorPickerStyles();
+
+/**
+ * A color picker component that renders a grid of color swatches for selection.
+ *
+ * This component provides a simple interface for users to select from a predefined
+ * set of colors. It renders each color as an interactive swatch that can be clicked
+ * to select that color. The component supports keyboard navigation, accessibility
+ * features, and fine-grained styling control through the classNames prop.
+ *
+ * @param items - Array of color values to display as selectable swatches
+ * @param classNames - Object containing CSS class names for fine-grained styling control
+ * @param classNames.picker - CSS class name for the main picker container
+ * @param classNames.item - CSS class name for individual swatch items
+ * @param classNames.swatch - CSS class name for the color swatch elements
+ *
+ * @example
+ * ```tsx
+ * const colors = [
+ *   '#ff0000',
+ *   '#00ff00',
+ *   '#0000ff',
+ * ];
+ *
+ * <ColorPicker
+ *   options={colors}
+ *   value={'#ff0000'}
+ *   onChange={(color) => console.log('Selected:', color)}
+ *   classNames={{
+ *     picker: 'gap-4',
+ *     item: 'rounded-lg',
+ *     swatch: 'w-8 h-8'
+ *   }}
+ * />
+ * ```
+ *
+ * @remarks
+ * - Colors can be provided as Color objects or color strings
+ * - The component automatically handles color parsing and validation
+ * - Supports all accessibility features from react-aria-components
+ * - Uses a grid layout by default but can be customized via the layout prop
+ */
+export function ColorPicker({ classNames, items, ...rest }: ColorPickerProps) {
+  return (
+    <ColorSwatchPicker
+      {...rest}
+      className={composeRenderProps(classNames?.picker, (className) =>
+        picker({ className }),
+      )}
+    >
+      {items.map((color) => (
+        <ColorSwatchPickerItem
+          key={color.toString('hexa')}
+          className={composeRenderProps(classNames?.item, (className) =>
+            item({ className }),
+          )}
+          color={color}
+        >
+          <ColorSwatch
+            className={composeRenderProps(classNames?.swatch, (className) =>
+              swatch({ className }),
+            )}
+          />
+        </ColorSwatchPickerItem>
+      ))}
+    </ColorSwatchPicker>
+  );
+}
