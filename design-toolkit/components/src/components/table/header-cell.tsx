@@ -17,6 +17,9 @@ import { useContext, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { MenuItem } from '../menu/item';
+import { MenuSeparator } from '../menu/separator';
+import { MenuTrigger } from '../menu/trigger';
 import {
   HeaderColumnAction,
   headerColumnActionValues,
@@ -55,7 +58,7 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   const sort = header.column.getIsSorted();
 
   return (
-    <Menu.Trigger
+    <MenuTrigger
       onOpenChange={(isOpen) =>
         setColumnSelection(isOpen ? header.column.id : null)
       }
@@ -77,7 +80,7 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
       <Menu>
         {enableColumnReordering && (
           <>
-            <Menu.Item
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => {
                 const index = header.column.getIndex();
@@ -87,8 +90,8 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
               isDisabled={header.column.getIsFirstColumn('center')}
             >
               Move Column Left
-            </Menu.Item>
-            <Menu.Item
+            </MenuItem>
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => {
                 const index = header.column.getIndex();
@@ -98,13 +101,13 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
               isDisabled={header.column.getIsLastColumn('center')}
             >
               Move Column Right
-            </Menu.Item>
+            </MenuItem>
           </>
         )}
-        {enableColumnReordering && enableSorting && <Menu.Separator />}
+        {enableColumnReordering && enableSorting && <MenuSeparator />}
         {enableSorting && (
           <>
-            <Menu.Item
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => {
                 manualSorting
@@ -114,8 +117,8 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
               isDisabled={sort === SortDirection.ASC}
             >
               Sort Ascending
-            </Menu.Item>
-            <Menu.Item
+            </MenuItem>
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => {
                 manualSorting
@@ -125,8 +128,8 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
               isDisabled={sort === SortDirection.DESC}
             >
               Sort Descending
-            </Menu.Item>
-            <Menu.Item
+            </MenuItem>
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => {
                 manualSorting
@@ -136,15 +139,15 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
               isDisabled={!sort}
             >
               Clear Sort
-            </Menu.Item>
+            </MenuItem>
           </>
         )}
       </Menu>
-    </Menu.Trigger>
+    </MenuTrigger>
   );
 }
 
-export function HeaderCell<T>({
+export function TableHeaderCell<T>({
   ref,
   children,
   className,

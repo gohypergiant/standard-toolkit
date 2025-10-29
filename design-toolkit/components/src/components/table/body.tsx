@@ -11,29 +11,26 @@
  * governing permissions and limitations under the License.
  */
 
-import { TableRowStyles } from './styles';
-import { TableCell } from './table-cell';
-import type { TableRowProps } from './types';
+import { TableRow } from './row';
+import { TableBodyStyles } from './styles';
+import type { TableBodyProps } from './types';
 
-export function TableRow<T>({
-  ref,
+export function TableBody<T>({
   children,
   className,
-  row,
+  ref,
+  rows,
   ...rest
-}: TableRowProps<T>) {
-  const cells = row?.getAllCells();
-
+}: TableBodyProps<T>) {
   return (
-    <tr
+    <tbody
       {...rest}
       ref={ref}
-      className={TableRowStyles({ className })}
-      data-pinned={row?.getIsPinned() || null}
-      data-selected={row?.getIsSelected() || null}
+      className={TableBodyStyles({
+        className,
+      })}
     >
-      {children ||
-        cells?.map((cell) => <TableCell key={cell.id} cell={cell} />)}
-    </tr>
+      {children || rows?.map((row) => <TableRow key={row.id} row={row} />)}
+    </tbody>
   );
 }

@@ -11,8 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { TableHeaderCell } from './header-cell';
 import { TableHeaderStyles } from './styles';
-import { HeaderCell } from './table-header-cell';
 import type { TableHeaderProps } from './types';
 
 export function TableHeader<T>({
@@ -29,7 +29,7 @@ export function TableHeader<T>({
         headerGroups?.map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <HeaderCell key={header.id} header={header} />
+              <TableHeaderCell key={header.id} header={header} />
             ))}
           </tr>
         ))}
