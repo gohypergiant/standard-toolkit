@@ -11,6 +11,58 @@
  */
 'use client';
 
-import { Badge } from './badge';
+import 'client-only';
+import { useContextProps } from 'react-aria-components';
+import { BadgeContext } from './context';
+import { BadgeStyles, BadgeStylesDefaults } from './styles';
+import type { BadgeProps } from './types';
 
-export { Badge };
+/**
+ * Badge - A small status indicator component for labeling and notifications
+ *
+ * Displays contextual information like status, counts, or labels. Supports various
+ * visual variants and can be positioned relative to other elements. Useful for
+ * indicating notifications, statuses, or providing supplementary information.
+ *
+ * @example
+ * // Basic badge
+ * <Badge>New</Badge>
+ *
+ * @example
+ * // Status badges with different variants
+ * <Badge variant="success">Active</Badge>
+ * <Badge variant="warning">Pending</Badge>
+ * <Badge variant="serious">Error</Badge>
+ *
+ * @example
+ * // Positioned badge (typically used with other components)
+ * <div className="relative">
+ *   <Button>Messages</Button>
+ *   <Badge placement='top right' offset={-spacingS}>3</Badge>
+ * </div>
+ */
+export function Badge({ ref, ...props }: BadgeProps) {
+  [props, ref] = useContextProps(props, ref ?? null, BadgeContext);
+
+  const {
+    className,
+    offset,
+    placement,
+    variant = BadgeStylesDefaults.variant,
+    ...rest
+  } = props;
+
+  return (
+    <span
+      {...rest}
+      ref={ref}
+      className={BadgeStyles({
+        className,
+        variant,
+      })}
+      data-offset-x={typeof offset === 'number' ? offset : offset?.x}
+      data-offset-y={typeof offset === 'number' ? offset : offset?.y}
+      data-placement={placement || null}
+    />
+  );
+}
