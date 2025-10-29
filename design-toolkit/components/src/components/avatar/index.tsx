@@ -11,6 +11,90 @@
  */
 'use client';
 
-import { Avatar } from './avatar';
+import { Person } from '@accelint/icons';
+import { Fallback, Image, Root } from '@radix-ui/react-avatar';
+import { designTokens } from '@/tokens/tokens';
+import 'client-only';
+import { useContextProps } from 'react-aria-components';
+import { BadgeProvider } from '../badge/context';
+import { Icon } from '../icon';
+import { IconProvider } from '../icon/context';
+import { AvatarContext } from './context';
+import { AvatarStyles } from './styles';
+import type { AvatarProps } from './types';
 
-export { Avatar };
+const { avatar, image, fallback, content } = AvatarStyles();
+
+/**
+ * Avatar - A user profile image component with fallback support
+ *
+ * Displays a user's profile image with automatic fallback to a default person icon
+ * when the image fails to load. Supports multiple sizes and can include status badges.
+ * Built on Radix UI Avatar for accessibility and reliability.
+ *
+ * @example
+ * // Basic avatar with image
+ * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }} />
+ *
+ * @example
+ * // Avatar with fallback and custom size
+ * <Avatar
+ *   size="large"
+ *   imageProps={{ src: "/user.jpg", alt: "User Name" }}
+ *   fallbackProps={{ children: "UN" }}
+ * />
+ *
+ * @example
+ * // Avatar with status badge
+ * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }}>
+ *   <Badge variant="success" />
+ * </Avatar>
+ *
+ * @example
+ * // Avatar with only initials fallback
+ * <Avatar fallbackProps={{ children: "JD" }} />
+ */
+export function Avatar({ ref, ...props }: AvatarProps) {
+  [props, ref] = useContextProps(props, ref ?? null, AvatarContext);
+
+  const {
+    children,
+    classNames,
+    fallbackProps,
+    imageProps,
+    size = 'medium',
+    ...rest
+  } = props;
+
+  return (
+    <IconProvider size={size === 'medium' ? 'large' : 'medium'}>
+      <Root
+        {...rest}
+        ref={ref}
+        className={avatar({ size, className: classNames?.avatar })}
+        role='img'
+        data-size={size}
+      >
+        <Image
+          {...imageProps}
+          className={image({ className: classNames?.image, size })}
+        />
+        <Fallback
+          {...fallbackProps}
+          className={fallback({ className: classNames?.fallback, size })}
+        >
+          {fallbackProps?.children || (
+            <Icon>
+              <Person />
+            </Icon>
+          )}
+        </Fallback>
+        <BadgeProvider offset={designTokens.spacing.xs} placement='top right'>
+          <span className={content({ className: classNames?.content, size })}>
+            {children}
+          </span>
+        </BadgeProvider>
+      </Root>
+    </IconProvider>
+  );
+}

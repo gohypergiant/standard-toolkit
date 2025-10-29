@@ -13,7 +13,7 @@
 import { Placeholder } from '@accelint/icons';
 import { Badge } from '../badge';
 import { Icon } from '../icon';
-import { Avatar } from './avatar';
+import { Avatar } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
