@@ -15,8 +15,8 @@ import { type UniqueId, uuid } from '@accelint/core';
 import {
   Button,
   Divider,
-  Notice,
   NoticeEventTypes,
+  NoticeList,
   type NoticeQueueEvent,
 } from '@accelint/design-toolkit';
 import { useRef, useState } from 'react';
@@ -585,7 +585,7 @@ export const AuthorizationFlow: Story = {
           </div>
 
           {/* Notice list for stacking notifications */}
-          <Notice.List
+          <NoticeList
             placement='top right'
             defaultColor='serious'
             defaultTimeout={5000}
