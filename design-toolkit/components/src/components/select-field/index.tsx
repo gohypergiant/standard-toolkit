@@ -28,7 +28,7 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
-import { SelectFieldContext, SelectFieldProvider } from './context';
+import { SelectFieldContext } from './context';
 import { SelectFieldStyles } from './styles';
 import type { SelectFieldProps } from './types';
 
@@ -167,5 +167,3 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
     </AriaSelect>
   );
 }
-
-SelectField.Provider = SelectFieldProvider;
