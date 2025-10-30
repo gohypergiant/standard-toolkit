@@ -15,10 +15,12 @@ import type {
   FullCombinator,
   FullField,
   FullOperator,
+  Path,
   Classnames as RQBClassnames,
   Field as RQBField,
   QueryBuilderProps as RQBProps,
   RuleGroupType as RQBRuleGroupType,
+  RuleProps,
   ValueEditorProps,
 } from 'react-querybuilder';
 import type { LiteralUnion } from 'type-fest';
@@ -80,3 +82,9 @@ export type QueryBuilderContextType = Pick<
   QueryBuilderProps,
   'showRuleLines' | 'orientation'
 >;
+
+export type QueryBuilderLinesProps = {
+  path: Path;
+  props: RuleProps;
+  context: QueryBuilderContextType;
+};

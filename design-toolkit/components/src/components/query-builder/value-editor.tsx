@@ -21,10 +21,13 @@ import { Switch } from '../switch';
 import { TextAreaField } from '../text-area-field';
 import { TextField } from '../text-field';
 import { multiValueOperators } from './constants';
+import { ValueEditorStyles } from './styles';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
 import type { InputProps } from '../input/types';
 import type { QueryBuilderValueEditors } from './types';
+
+const { textField, textFieldError } = ValueEditorStyles();
 
 function CheckboxValueEditor({
   disabled,
@@ -74,7 +77,7 @@ function RadioGroupValueEditor({
   );
 }
 
-const defaultOptions: unknown[] = [];
+const defaultOptions: ValueEditorProps['values'] = [];
 
 function SelectValueEditor({
   disabled,
@@ -93,7 +96,7 @@ function SelectValueEditor({
       {...rest}
       disabled={disabled}
       multiple={type === 'multiselect'}
-      options={values}
+      options={values ?? []}
       title={name}
       validation={!valid}
       value={value}
@@ -148,7 +151,8 @@ function TextValueEditor({
       aria-invalid={!valid}
       aria-label={name}
       aria-labelledby={name}
-      errorMessage={reasons?.join('/n')}
+      errorMessage={reasons?.join('\n')}
+      classNames={{ field: textField(), error: textFieldError() }}
     />
   );
 }
@@ -165,7 +169,7 @@ function TextareaValueEditor({
   return (
     <TextAreaField
       size='small'
-      errorMessage={reasons?.join('/n')}
+      errorMessage={reasons?.join('\n')}
       inputProps={{ placeholder }}
       value={value}
       isDisabled={disabled}
