@@ -16,12 +16,12 @@ import type { TextLayerProps } from '@deck.gl/layers';
 export const defaultSettings: Partial<TextLayerProps> = {
   fontFamily: 'system-ui, sans-serif',
   fontSettings: {
-    fontSize: 24,
+    fontSize: 22,
     sdf: true,
     buffer: 10,
-    cutoff: 0.25,
+    cutoff: 0.19,
     radius: 10,
-    smoothing: 0.05,
+    smoothing: 0.1,
   },
   fontWeight: 500,
   getAlignmentBaseline: 'center',
