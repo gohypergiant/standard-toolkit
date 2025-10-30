@@ -12,19 +12,10 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import { type ContextValue, useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components';
+import { IconContext } from './context';
 import { IconStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { IconProps } from './types';
-
-export const IconContext =
-  createContext<ContextValue<IconProps, HTMLSpanElement>>(null);
-
-function IconProvider({ children, ...props }: ProviderProps<IconProps>) {
-  return <IconContext.Provider value={props}>{children}</IconContext.Provider>;
-}
-IconProvider.displayName = 'Icon.Provider';
 
 /**
  * Icon - A wrapper component for displaying SVG icons with consistent sizing
@@ -71,5 +62,3 @@ export function Icon({ ref, ...props }: IconProps) {
     </span>
   );
 }
-Icon.displayName = 'Icon';
-Icon.Provider = IconProvider;

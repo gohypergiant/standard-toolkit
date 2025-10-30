@@ -12,29 +12,13 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import { type ContextValue, useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components';
+import { ClassificationBadgeContext } from './context';
 import {
   ClassificationBadgeStyles,
   ClassificationBadgeStylesDefaults,
 } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { ClassificationBadgeProps } from './types';
-
-export const ClassificationBadgeContext =
-  createContext<ContextValue<ClassificationBadgeProps, HTMLSpanElement>>(null);
-
-function ClassificationBadgeProvider({
-  children,
-  ...props
-}: ProviderProps<ClassificationBadgeProps>) {
-  return (
-    <ClassificationBadgeContext.Provider value={props}>
-      {children}
-    </ClassificationBadgeContext.Provider>
-  );
-}
-ClassificationBadgeProvider.displayName = 'ClassificationBadge.Provider';
 
 /**
  * ClassificationBadge - A specialized badge for security and data classification
@@ -82,5 +66,3 @@ export function ClassificationBadge({
     </span>
   );
 }
-ClassificationBadge.displayName = 'ClassificationBadge';
-ClassificationBadge.Provider = ClassificationBadgeProvider;

@@ -5,12 +5,12 @@ import * as IconStories from './icon.stories';
 <Meta of={IconStories} />
 
 # Icon
-A flexible icon container component that provides consistent sizing, styling, and context management for SVG icons. The Icon component automatically handles size variants and can be used with the Icon.Provider for consistent sizing across multiple icons. Perfect for displaying icons in buttons, navigation, and other UI elements with proper accessibility and styling.
+A flexible icon container component that provides consistent sizing, styling, and context management for SVG icons. The Icon component automatically handles size variants and can be used with the IconProvider for consistent sizing across multiple icons. Perfect for displaying icons in buttons, navigation, and other UI elements with proper accessibility and styling.
 
 It is composed of the following components:
 
 - **Icon** - Wrapper component for displaying SVG icons with consistent sizing
-- **Icon.Provider** - Context provider for setting default icon sizes
+- **IconProvider** - Context provider for setting default icon sizes
 
 ## Example usage
 ```tsx
@@ -29,12 +29,12 @@ It is composed of the following components:
   <Star />
 </Icon>
 
-// Using Icon.Provider for consistent sizing
-<Icon.Provider size="medium">
+// Using IconProvider for consistent sizing
+<IconProvider size="medium">
   <Icon><Add /></Icon>
   <Icon><Edit /></Icon>
   <Icon><Delete /></Icon>
-</Icon.Provider>
+</IconProvider>
 ```
 
 ## Sizes
@@ -55,7 +55,7 @@ It is composed of the following components:
 - **`children`** - SVG icon component to render
 - **`className`** - Custom CSS class name for additional styling
 
-### Icon.Provider Props
+### IconProvider Props
 - **`size`** - Size to apply to all child Icon components
 - **`children`** - Icon components that will inherit the provider's size
 
@@ -76,13 +76,13 @@ The Icon component automatically applies the correct size based on the `size` pr
 ```
 
 ### Context Provider
-Use `Icon.Provider` to set consistent sizing for multiple icons:
+Use `IconProvider` to set consistent sizing for multiple icons:
 ```tsx
-<Icon.Provider size="small">
+<IconProvider size="small">
   <Icon><Home /></Icon>
   <Icon><Search /></Icon>
   <Icon><Profile /></Icon>
-</Icon.Provider>
+</IconProvider>
 ```
 
 ### Flexible Styling
@@ -158,7 +158,7 @@ The `Icon` component is built using React Aria Components and provides a flexibl
 Key features:
 - **Consistent Sizing**: Automatic size application based on props or provider context
 - **Flexible Styling**: Custom class names and CSS custom properties for theming
-- **Context Provider**: Icon.Provider for consistent sizing across multiple icons
+- **Context Provider**: IconProvider for consistent sizing across multiple icons
 - **Accessibility**: Proper semantic structure and ARIA support
 - **Responsive Design**: Size variants that adapt to different interface needs
 - **Type Safety**: Full TypeScript support with comprehensive prop types

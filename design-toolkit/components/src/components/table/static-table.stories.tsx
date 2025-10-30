@@ -10,7 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import { TableBody } from './body';
+import { TableCell } from './cell';
+import { TableHeader } from './header';
+import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
+import { TableRow } from './row';
 import type { Meta, StoryObj } from '@storybook/react';
 
 type Person = {
@@ -64,28 +69,28 @@ type Story = StoryObj<typeof meta>;
 export const Static: Story = {
   render: (...args) => (
     <Table {...args}>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>First Name</Table.HeaderCell>
-          <Table.HeaderCell>Last Name</Table.HeaderCell>
-          <Table.HeaderCell>Age</Table.HeaderCell>
-          <Table.HeaderCell>Visits</Table.HeaderCell>
-          <Table.HeaderCell>Status</Table.HeaderCell>
-          <Table.HeaderCell>Progress</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
+      <TableHeader>
+        <TableRow>
+          <TableHeaderCell>First Name</TableHeaderCell>
+          <TableHeaderCell>Last Name</TableHeaderCell>
+          <TableHeaderCell>Age</TableHeaderCell>
+          <TableHeaderCell>Visits</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+          <TableHeaderCell>Progress</TableHeaderCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {defaultData.map((person) => (
-          <Table.Row key={person.id}>
-            <Table.Cell>{person.firstName}</Table.Cell>
-            <Table.Cell>{person.lastName}</Table.Cell>
-            <Table.Cell>{person.age}</Table.Cell>
-            <Table.Cell>{person.visits}</Table.Cell>
-            <Table.Cell>{person.status}</Table.Cell>
-            <Table.Cell>{person.progress}%</Table.Cell>
-          </Table.Row>
+          <TableRow key={person.id}>
+            <TableCell>{person.firstName}</TableCell>
+            <TableCell>{person.lastName}</TableCell>
+            <TableCell>{person.age}</TableCell>
+            <TableCell>{person.visits}</TableCell>
+            <TableCell>{person.status}</TableCell>
+            <TableCell>{person.progress}%</TableCell>
+          </TableRow>
         ))}
-      </Table.Body>
+      </TableBody>
     </Table>
   ),
 };

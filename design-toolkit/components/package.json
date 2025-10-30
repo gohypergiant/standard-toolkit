@@ -32,39 +32,46 @@
       },
       "default": "./dist/index.js"
     },
-    "./*": {
+    "./components/*": {
       "import": {
-        "types": "./dist/components/*/index.d.ts",
-        "default": "./dist/components/*/index.js"
+        "types": "./dist/components/*.d.ts",
+        "default": "./dist/components/*.js"
       },
-      "default": "./dist/components/*/index.js"
+      "default": "./dist/components/*.js"
     },
-    "./query-builder": {
+    "./hooks/*": {
       "import": {
-        "types": "./dist/components/query-builder/index.d.ts",
-        "default": "./dist/components/query-builder/index.js"
+        "types": "./dist/hooks/*.d.ts",
+        "default": "./dist/hooks/*.js"
       },
-      "default": "./dist/components/query-builder/index.js"
+      "default": "./dist/hooks/*.js"
+    },
+    "./lib/*": {
+      "import": {
+        "types": "./dist/lib/*.d.ts",
+        "default": "./dist/lib/*.js"
+      },
+      "default": "./dist/lib/*.js"
+    },
+    "./providers/*": {
+      "import": {
+        "types": "./dist/providers/*.d.ts",
+        "default": "./dist/providers/*.js"
+      },
+      "default": "./dist/providers/*.js"
     },
     "./styles": {
       "import": {
         "default": "./dist/index.css"
       },
       "default": "./dist/index.css"
-    },
-    "./utils": {
-      "import": {
-        "types": "./dist/lib/utils.d.ts",
-        "default": "./dist/lib/utils.js"
-      },
-      "default": "./dist/lib/utils.js"
     }
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
+    "build": "pnpm generate && pnpm license && pnpm format && tsup && pnpm build:css",
     "build-storybook": "pnpm storybook build",
     "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
-    "build": "pnpm generate && pnpm license && pnpm format && tsup && pnpm build:css",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write",
@@ -72,15 +79,15 @@
     "gen:variants": "node scripts/generate-variants.mjs",
     "generate": "pnpm gen:tokens && pnpm gen:variants",
     "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
+    "license": "pnpm license:tokens && pnpm license:variants",
     "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
     "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
-    "license": "pnpm license:tokens && pnpm license:variants",
     "lint": "pnpm biome lint",
-    "preview:docs": "pnpm storybook dev --docs -p 6006",
     "preview": "pnpm storybook dev -p 6006",
+    "preview:docs": "pnpm storybook dev --docs -p 6006",
     "temp:token-migration": "pnpm zx scripts/token-migration.mjs",
-    "test:watch": "pnpm vitest --dir=src --watch",
-    "test": "pnpm vitest --dir=src"
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",

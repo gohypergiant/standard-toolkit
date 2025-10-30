@@ -12,116 +12,16 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
 import {
-  Collection,
-  type ContextValue,
   composeRenderProps,
-  Header,
   ListBox,
-  ListBoxItem,
-  ListBoxSection,
-  Text,
   useContextProps,
 } from 'react-aria-components';
-import { Icon } from '../icon';
+import { OptionsContext } from './context';
 import { OptionsStyles } from './styles';
-import type {
-  OptionsDataItem,
-  OptionsItemProps,
-  OptionsItemTextProps,
-  OptionsProps,
-  OptionsSectionProps,
-} from './types';
+import type { OptionsDataItem, OptionsProps } from './types';
 
-const {
-  list,
-  section,
-  header: headerClassNames,
-  item,
-  content,
-  icon,
-  label,
-  description,
-} = OptionsStyles();
-
-export const OptionsContext =
-  createContext<ContextValue<OptionsProps<OptionsDataItem>, HTMLDivElement>>(
-    null,
-  );
-
-function OptionsSection<T extends OptionsDataItem>({
-  children,
-  classNames,
-  header,
-  items,
-}: OptionsSectionProps<T>) {
-  return (
-    <ListBoxSection
-      id={header}
-      className={section({ className: classNames?.section })}
-    >
-      <Header className={headerClassNames({ className: classNames?.header })}>
-        {header}
-      </Header>
-      <Collection items={items}>{children}</Collection>
-    </ListBoxSection>
-  );
-}
-OptionsSection.displayName = 'Options.Section';
-
-function OptionsItemContent({ className, ...rest }: OptionsItemTextProps) {
-  return <div {...rest} className={content({ className })} />;
-}
-OptionsItemContent.displayName = 'Options.Item.Content';
-
-function OptionsItemLabel({ className, ...rest }: OptionsItemTextProps) {
-  return <Text {...rest} slot='label' className={label({ className })} />;
-}
-OptionsItemLabel.displayName = 'Options.Item.Label';
-
-function OptionsItemDescription({ className, ...rest }: OptionsItemTextProps) {
-  return (
-    <Text {...rest} slot='description' className={description({ className })} />
-  );
-}
-OptionsItemDescription.displayName = 'Options.Item.Description';
-
-function OptionsItem<T extends OptionsDataItem>({
-  children,
-  classNames,
-  color = 'info',
-  textValue = typeof children === 'string' ? children : '',
-  ...rest
-}: OptionsItemProps<T>) {
-  return (
-    <ListBoxItem
-      {...rest}
-      className={composeRenderProps(classNames?.item, (className) =>
-        item({ className }),
-      )}
-      textValue={textValue}
-      data-color={color}
-    >
-      {composeRenderProps(children, (children) => (
-        <Icon.Provider
-          className={icon({ className: classNames?.icon })}
-          size='small'
-        >
-          {typeof children === 'string' ? (
-            <OptionsItemLabel>{children}</OptionsItemLabel>
-          ) : (
-            children
-          )}
-        </Icon.Provider>
-      ))}
-    </ListBoxItem>
-  );
-}
-OptionsItem.displayName = 'Options.Item';
-OptionsItem.Label = OptionsItemLabel;
-OptionsItem.Content = OptionsItemContent;
-OptionsItem.Description = OptionsItemDescription;
+const { list } = OptionsStyles();
 
 /**
  * Options - A flexible list component for selectable items with rich content
@@ -133,35 +33,35 @@ OptionsItem.Description = OptionsItemDescription;
  * @example
  * // Basic options list
  * <Options>
- *   <Options.Item>
- *     <Options.Item.Label>Option 1</Options.Item.Label>
- *   </Options.Item>
- *   <Options.Item>
- *     <Options.Item.Label>Option 2</Options.Item.Label>
- *   </Options.Item>
+ *   <OptionsItem>
+ *     <OptionsItemLabel>Option 1</OptionsItemLabel>
+ *   </OptionsItem>
+ *   <OptionsItem>
+ *     <OptionsItemLabel>Option 2</OptionsItemLabel>
+ *   </OptionsItem>
  * </Options>
  *
  * @example
  * // Options with descriptions and icons
  * <Options>
- *   <Options.Item>
+ *   <OptionsItem>
  *     <Icon><User /></Icon>
- *     <Options.Item.Content>
- *       <Options.Item.Label>John Doe</Options.Item.Label>
- *       <Options.Item.Description>Senior Developer</Options.Item.Description>
- *     </Options.Item.Content>
- *   </Options.Item>
+ *     <OptionsItemContent>
+ *       <OptionsItemLabel>John Doe</OptionsItemLabel>
+ *       <OptionsItemDescription>Senior Developer</OptionsItemDescription>
+ *     </OptionsItemContent>
+ *   </OptionsItem>
  * </Options>
  *
  * @example
  * // Sectioned options
  * <Options>
- *   <Options.Section header="Recent">
- *     <Options.Item>Recent Item 1</Options.Item>
- *   </Options.Section>
- *   <Options.Section header="All Items">
- *     <Options.Item>All Items 1</Options.Item>
- *   </Options.Section>
+ *   <OptionsSection header="Recent">
+ *     <OptionsItem>Recent Item 1</OptionsItem>
+ *   </OptionsSection>
+ *   <OptionsSection header="All Items">
+ *     <OptionsItem>All Items 1</OptionsItem>
+ *   </OptionsSection>
  * </Options>
  */
 export function Options<T extends OptionsDataItem>({
@@ -185,6 +85,3 @@ export function Options<T extends OptionsDataItem>({
     </ListBox>
   );
 }
-Options.displayName = 'Options';
-Options.Item = OptionsItem;
-Options.Section = OptionsSection;

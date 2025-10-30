@@ -12,25 +12,10 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import {
-  Label as AriaLabel,
-  type ContextValue,
-  useContextProps,
-} from 'react-aria-components';
+import { Label as AriaLabel, useContextProps } from 'react-aria-components';
+import { LabelContext } from './context';
 import { LabelStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { LabelProps } from './types';
-
-export const LabelContext =
-  createContext<ContextValue<LabelProps, HTMLLabelElement>>(null);
-
-function LabelProvider({ children, ...props }: ProviderProps<LabelProps>) {
-  return (
-    <LabelContext.Provider value={props}>{children}</LabelContext.Provider>
-  );
-}
-LabelProvider.displayName = 'Label.Provider';
 
 /**
  * Label - A semantic label component for form elements and content
@@ -68,5 +53,3 @@ export function Label({ ref, ...props }: LabelProps) {
     </AriaLabel>
   );
 }
-Label.displayName = 'Label';
-Label.Provider = LabelProvider;

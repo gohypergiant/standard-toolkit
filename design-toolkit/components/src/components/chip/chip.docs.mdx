@@ -10,10 +10,10 @@ The Chip component provides compact, interactive elements for displaying tags, c
 It is composed of the following components:
 
 - **Chip** - Main chip component for displaying tags and labels
-- **Chip.List** - Container component for grouping multiple chips with shared behavior
-- **Chip.Selectable** - Interactive chip that can be selected/deselected for filtering
-- **Chip.Deletable** - Chip with built-in remove button for dynamic content management
-- **Chip.Provider** - Context provider for setting default props across multiple chips
+- **ChipList** - Container component for grouping multiple chips with shared behavior
+- **SelectableChip** - Interactive chip that can be selected/deselected for filtering
+- **DeletableChip** - Chip with built-in remove button for dynamic content management
+- **ChipProvider** - Context provider for setting default props across multiple chips
 
 ## Example usage
 ```tsx
@@ -38,34 +38,34 @@ It is composed of the following components:
 <Chip size="small">Small Chip</Chip>
 
 // Chip list for grouping
-<Chip.List>
+<ChipList>
   <Chip variant="info">Tag 1</Chip>
   <Chip variant="advisory">Tag 2</Chip>
   <Chip variant="normal">Tag 3</Chip>
-</Chip.List>
+</ChipList>
 
 // Selectable chips for filtering
-<Chip.List
+<ChipList
   selectionMode="multiple"
   disallowEmptySelection={false}
 >
-  <Chip.Selectable id="filter1">Filter 1</Chip.Selectable>
-  <Chip.Selectable id="filter2">Filter 2</Chip.Selectable>
-  <Chip.Selectable id="filter3">Filter 3</Chip.Selectable>
-</Chip.List>
+  <SelectableChip id="filter1">Filter 1</SelectableChip>
+  <SelectableChip id="filter2">Filter 2</SelectableChip>
+  <SelectableChip id="filter3">Filter 3</SelectableChip>
+</ChipList>
 
 // Deletable chips with remove functionality
-<Chip.List onRemove={(keys) => console.log('Removed:', keys)}>
-  <Chip.Deletable id="chip1">Deletable 1</Chip.Deletable>
-  <Chip.Deletable id="chip2">Deletable 2</Chip.Deletable>
-  <Chip.Deletable id="chip3">Deletable 3</Chip.Deletable>
-</Chip.List>
+<ChipList onRemove={(keys) => console.log('Removed:', keys)}>
+  <DeletableChip id="chip1">Deletable 1</DeletableChip>
+  <DeletableChip id="chip2">Deletable 2</DeletableChip>
+  <DeletableChip id="chip3">Deletable 3</DeletableChip>
+</ChipList>
 
 // Using context provider for default props
-<Chip.Provider size="small" variant="info">
+<ChipProvider size="small" variant="info">
   <Chip>Chip 1</Chip>
   <Chip>Chip 2</Chip>
-</Chip.Provider>
+</ChipProvider>
 
 // Chip with custom styling
 <Chip
@@ -100,7 +100,7 @@ It is composed of the following components:
 * **`children`** - Content to display in the chip (text, icons, etc.)
 * **`className`** - Additional CSS classes for custom styling
 
-### Chip.List Props
+### ChipList Props
 * **`size`** - Global size for all child chips
 * **`items`** - Array of items to render (for controlled rendering)
 * **`dependencies`** - Dependencies for re-rendering when they change
@@ -112,7 +112,7 @@ It is composed of the following components:
 * **`selectedKeys`** - Currently selected chip keys
 * **`onSelectionChange`** - Callback when selection changes
 
-### Chip.Selectable Props
+### SelectableChip Props
 * **`id`** - Unique identifier for the chip
 * **`size`** - Size variant (inherits from context if not specified)
 * **`isSelected`** - Controls the selected state
@@ -120,7 +120,7 @@ It is composed of the following components:
 * **`onSelectionChange`** - Callback when selection changes
 * **`className`** - Additional CSS classes for custom styling
 
-### Chip.Deletable Props
+### DeletableChip Props
 * **`id`** - Unique identifier for the chip
 * **`size`** - Size variant (inherits from context if not specified)
 * **`textValue`** - Text value for accessibility (auto-generated from children if not provided)

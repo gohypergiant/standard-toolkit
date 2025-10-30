@@ -12,8 +12,9 @@
 
 'use client';
 
-import 'client-only';
 import Calendar from '@accelint/icons/calendar';
+import type { DateValue } from '@internationalized/date';
+import 'client-only';
 import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,
@@ -25,7 +26,6 @@ import {
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { DateFieldStyles, DateFieldStylesDefaults } from './styles';
-import type { DateValue } from '@internationalized/date';
 import type { DateFieldProps } from './types';
 
 const { field, label, control, input, segment, description, error } =
@@ -124,7 +124,7 @@ export function DateField<T extends DateValue>({
         { isDisabled }, // Rely on internal state, not props, since state could differ from props
       ) => (
         <>
-          {!isSmall && label && (
+          {!isSmall && labelProp && (
             <Label
               className={label({ className: classNames?.label, shortMonth })}
               isDisabled={isDisabled}

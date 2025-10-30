@@ -11,38 +11,22 @@
  */
 'use client';
 
-import 'client-only';
 import { CancelFill, Loop, Search } from '@accelint/icons';
-import { createContext } from 'react';
+import 'client-only';
 import {
   SearchField as AriaSearchField,
   Button,
-  type ContextValue,
   composeRenderProps,
   Input,
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
+import { IconProvider } from '../icon/context';
+import { SearchFieldContext } from './context';
 import { SearchFieldStyles, SearchFieldStylesDefaults } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { SearchFieldProps } from './types';
 
 const { field, input, search, loading, clear } = SearchFieldStyles();
-
-export const SearchFieldContext =
-  createContext<ContextValue<SearchFieldProps, HTMLDivElement>>(null);
-
-function SearchFieldProvider({
-  children,
-  ...props
-}: ProviderProps<SearchFieldProps>) {
-  return (
-    <SearchFieldContext.Provider value={props}>
-      {children}
-    </SearchFieldContext.Provider>
-  );
-}
-SearchFieldProvider.displayName = 'SearchField.Provider';
 
 /**
  * SearchField - A customizable search input component built on React Aria Components
@@ -72,13 +56,6 @@ SearchFieldProvider.displayName = 'SearchField.Provider';
  *   onSubmit={(value) => console.log('Search:', value)}
  *   onChange={(value) => setQuery(value)}
  * />
- *
- * @example
- * // Using context provider for default props
- * <SearchField.Provider variant="filled">
- *   <SearchField placeholder="Search 1" />
- *   <SearchField placeholder="Search 2" />
- * </SearchField.Provider>
  */
 export function SearchField({ ref, ...props }: SearchFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, SearchFieldContext);
@@ -92,7 +69,7 @@ export function SearchField({ ref, ...props }: SearchFieldProps) {
   } = props;
 
   return (
-    <Icon.Provider size='small'>
+    <IconProvider size='small'>
       <AriaSearchField
         {...rest}
         ref={ref}
@@ -128,9 +105,6 @@ export function SearchField({ ref, ...props }: SearchFieldProps) {
           </Button>
         )}
       </AriaSearchField>
-    </Icon.Provider>
+    </IconProvider>
   );
 }
-
-SearchField.displayName = 'SearchField';
-SearchField.Provider = SearchFieldProvider;

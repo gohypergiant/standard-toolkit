@@ -10,16 +10,16 @@ An accessible breadcrumb navigation component built on React Aria Components. It
 It is composed of the following components:
 
 - **Breadcrumbs** - Container that renders the list of breadcrumb items
-- **Breadcrumbs.Item** - Individual breadcrumb item; renders a link when `href` is provided, or the current page when omitted
+- **BreadcrumbItem** - Individual breadcrumb item; renders a link when `href` is provided, or the current page when omitted
 
 ## Example usage
 
 ### Basic
 ```
 <Breadcrumbs>
-  <Breadcrumbs.Item linkProps={{ href: '/ ' }}>Root</Breadcrumbs.Item>
-  <Breadcrumbs.Item linkProps={{ href: '/home' }}>Child</Breadcrumbs.Item>
-  <Breadcrumbs.Item>Project Phoenix</Breadcrumbs.Item>
+  <BreadcrumbItem linkProps={{ href: '/ ' }}>Root</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/home' }}>Child</BreadcrumbItem>
+  <BreadcrumbItem>Project Phoenix</BreadcrumbItem>
 </Breadcrumbs>
 ```
 
@@ -29,10 +29,10 @@ It is composed of the following components:
 
 ### Breadcrumbs Props
 - Inherits all `Breadcrumbs` [props from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Breadcrumbs.html#props)
-- **`children`** - One or more `Breadcrumbs.Item` elements (minimum of 1)
+- **`children`** - One or more `BreadcrumbItem` elements (minimum of 1)
 - **`className`** - Additional classes to be applied to the breadcrumb list
 
-### Breadcrumbs.Item Props
+### BreadcrumbItem Props
 - Inherits all `Link` [props from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Breadcrumbs.html#link)
 - **`classNames`** - Customize internal slots
   - `item` - Wrapper for each breadcrumb item

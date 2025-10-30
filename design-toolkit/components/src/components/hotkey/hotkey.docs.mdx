@@ -9,9 +9,9 @@ This is a representation of key(s) from a keyboard that executes a specific acti
 
 It is composed of the following components:
 
-- **Hotkey** - Main hotkey component for displaying heyboard shortcuts in various styles
-- **Hotkey.Set** - Container for grouping multiple hotkeys with proper spacing
-- **Hotkey.Provider** - Context provider for setting default props across multiple hotkeys
+- **Hotkey** - Main hotkey component for displaying keyboard shortcuts in various styles
+- **HotkeySet** - Container for grouping multiple hotkeys with proper spacing
+- **HotkeyProvider** - Context provider for setting default props across multiple hotkeys
 
 ## Example usage
 ```
@@ -20,7 +20,7 @@ It is composed of the following components:
 
 ## Variants
 
-* **flat** - Renders plain text, appropriate for using in a `Menu.Item` component
+* **flat** - Renders plain text, appropriate for using in a `MenuItem` component
 * **outline** - Renders with borders.
 * **icon** - Renders an icon with the right size and spacing. An icon hotkey will never have a border.
 
@@ -29,13 +29,13 @@ It is composed of the following components:
 <Canvas of={HotkeyStories.Default} />
 
 # Hotkey Set
-If you want to group a set of `Hotkey` together to show multiple keystrokes or mouse events, wrap in a `Hotkey.Set` component.
+If you want to group a set of `Hotkey` together to show multiple keystrokes or mouse events, wrap in a `HotkeySet` component.
 
 Wrapping the `+` or `or` interstitial marks in a `span` is optional.
 
 ## Example usage
 ```
-<Hotkey.Set>
+<HotkeySet>
   <Hotkey variant='outline'>CMD</Hotkey>
   <span>+</span>
   <Hotkey variant='icon'>
@@ -43,7 +43,7 @@ Wrapping the `+` or `or` interstitial marks in a `span` is optional.
       <MouseRightClick />
     </Icon>
   </Hotkey>
-</Hotkey.Set>
+</HotkeySet>
 ```
 
 <Canvas of={HotkeyStories.KeysSet} />
