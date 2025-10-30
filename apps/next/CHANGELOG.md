@@ -1,5 +1,47 @@
 # @apps/next
 
+## 0.3.4
+
+### Patch Changes
+
+- 3d71b8d: Refactored the DesignToolkit so that it does not use the dot syntax anymore. As an example, `Drawer.Header` is now `DrawerHeader` and so on. This change is required to avoid RSC throwing `undefined` errors in some cases when rendering.
+
+  This is a breaking change and will require removing the dot notation from components currently in use in your code base.
+
+  This change also updates the import/export paths for the components. If you are not importing from the root `@accelint/design-toolkit` path, then you will need to update your imports as follows:
+  - `RootComponent` goes from `@accelint/design-toolkit/root-component` to `@accelint/design-toolkit/components/root-component/index`
+  - `RootComponentHeader` goes from `@accelint/design-toolkit/root-component` to `@accelint/design-toolkit/components/root-component/header`
+
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- Updated dependencies [842e84a]
+- Updated dependencies [0d697fa]
+- Updated dependencies [d10c518]
+- Updated dependencies [3d71b8d]
+- Updated dependencies [face3c9]
+- Updated dependencies [d67c471]
+- Updated dependencies [5b62458]
+- Updated dependencies [f031f36]
+- Updated dependencies [ea4f348]
+- Updated dependencies [0d0edc4]
+- Updated dependencies [ef52380]
+- Updated dependencies [f5a2a9f]
+- Updated dependencies [8d81c70]
+- Updated dependencies [f99f294]
+- Updated dependencies [b5061d2]
+- Updated dependencies [935b8e5]
+- Updated dependencies [525a5a6]
+- Updated dependencies [cfd8d43]
+- Updated dependencies [0c5e77f]
+- Updated dependencies [2f1b9c6]
+- Updated dependencies [1c2a622]
+- Updated dependencies [cec6fee]
+- Updated dependencies [5ce2a0c]
+  - @accelint/design-toolkit@7.0.0
+  - @accelint/icons@2.1.0
+  - @accelint/logger@0.1.2
+  - @accelint/core@0.5.0
+  - @accelint/bus@2.0.0
+
 ## 0.3.3
 
 ### Patch Changes

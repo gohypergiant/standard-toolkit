@@ -1,5 +1,14 @@
 # @accelint/ntds
 
+## 0.2.2
+
+### Patch Changes
+
+- 0d697fa: Fixed definitions in package files for longhand repository definitions, while disabling the option in syncpack that changed it.
+- ef52380: bump to node 22
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- 935b8e5: Updated the package names in the Constellation configuration file.
+
 ## 0.2.1
 
 ### Patch Changes

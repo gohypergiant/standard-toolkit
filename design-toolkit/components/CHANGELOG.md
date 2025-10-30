@@ -1,5 +1,53 @@
 # @accelint/design-toolkit
 
+## 7.0.0
+
+### Major Changes
+
+- 3d71b8d: Refactored the DesignToolkit so that it does not use the dot syntax anymore. As an example, `Drawer.Header` is now `DrawerHeader` and so on. This change is required to avoid RSC throwing `undefined` errors in some cases when rendering.
+
+  This is a breaking change and will require removing the dot notation from components currently in use in your code base.
+
+  This change also updates the import/export paths for the components. If you are not importing from the root `@accelint/design-toolkit` path, then you will need to update your imports as follows:
+  - `RootComponent` goes from `@accelint/design-toolkit/root-component` to `@accelint/design-toolkit/components/root-component/index`
+  - `RootComponentHeader` goes from `@accelint/design-toolkit/root-component` to `@accelint/design-toolkit/components/root-component/header`
+
+### Minor Changes
+
+- 5b62458: Removed all component composition validation due to it not working with SSR/RSC
+- ea4f348: Updating table component to include documentation and also add event handlers to handle server side logic
+- cec6fee: Replace lodash with radashi for performance and build size optimization
+- 5ce2a0c: Adds new map-related icons to the icon library set
+
+### Patch Changes
+
+- 842e84a: Updates state styles of select
+- 0d697fa: Fixed definitions in package files for longhand repository definitions, while disabling the option in syncpack that changed it.
+- d10c518: Memoize the overlay container for tooltip to prevent detached node
+- face3c9: Replaces style syntax errors in Checkbox and Tree that were preventing correct style application
+- d67c471: Audits state styles of switch
+- f031f36: Updates radio state styles
+- 0d0edc4: Document the custom value implementation for combobox
+- ef52380: bump to node 22
+- f5a2a9f: Updates color-picker state styles
+- 8d81c70: Updates state styles of option items and menu items plus fixes a semantic token discrepancy
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- b5061d2: Updates state styles of checkbox
+- 935b8e5: Updated the package names in the Constellation configuration file.
+- cfd8d43: Update the width of the select field component
+- 0c5e77f: State style updates plus propagates disabled state to slider
+- 2f1b9c6: address the console errors/warnings during test runs
+- 1c2a622: Updates deletable chip and selectable chip state styles
+- Updated dependencies [0d697fa]
+- Updated dependencies [f99f294]
+- Updated dependencies [935b8e5]
+- Updated dependencies [525a5a6]
+- Updated dependencies [5ce2a0c]
+  - @accelint/icons@2.1.0
+  - @accelint/temporal@0.1.2
+  - @accelint/core@0.5.0
+  - @accelint/bus@2.0.0
+
 ## 6.0.0
 
 ### Major Changes
