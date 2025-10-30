@@ -15,7 +15,7 @@
 import 'client-only';
 import { useContext, useRef } from 'react';
 import { composeRenderProps } from 'react-aria-components';
-import { ToggleButton } from '../button/toggle-button';
+import { ToggleButton } from '../button/toggle';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
