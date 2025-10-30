@@ -215,7 +215,7 @@ function PaginationPageNumber({
 }: PaginationPageNumberProps) {
   return (
     <ToggleButton
-      color={isSelected ? 'accent' : 'mono-bold'}
+      color='accent'
       variant='flat'
       isSelected={isSelected}
       className={button({ className })}
