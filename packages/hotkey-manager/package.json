@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@accelint/hotkey-manager",
+  "author": "https://hypergiant.com",
+  "version": "0.0.1",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "type": "module",
+  "files": [
+    "dist/**"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "bench": "pnpm vitest bench --run --dir src",
+    "build": "pnpm tsup",
+    "dev": "pnpm tsc --watch",
+    "lint": "pnpm biome lint",
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
+  },
+  "dependencies": {
+    "immer": "^10.1.1",
+    "radashi": "^12.6.2",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/core": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.1.9",
+    "esbuild-fix-imports-plugin": "^1.0.23",
+    "happy-dom": "^19.0.2",
+    "react": "^19.0.0",
+    "tsup": "8.5.0",
+    "type-fest": "^4.41.0",
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.9",
+    "vitest-broadcast-channel-mock": "^0.1.0"
+  },
+  "optionalDependencies": {
+    "react": "^19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}
