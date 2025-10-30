@@ -43,7 +43,7 @@ export const MenuStyles = tv({
       'color-serious:enabled:selected:bg-serious-muted',
       'color-serious:enabled:pressed:fg-serious-bold color-serious:enabled:pressed:bg-serious-pressed',
       // serious + selected
-      'color-serious:enabled:selected:inset-shadow-[color:var(--outline-serious-bold)] color-serious:enabled:selected:bg-serious-muted color-serious:enabled:selected:fg-primary-bold',
+      'color-serious:enabled:selected:fg-primary-bold color-serious:enabled:selected:inset-shadow-[color:var(--outline-serious-bold)] color-serious:enabled:selected:bg-serious-muted',
       'color-serious:enabled:selected:hover:fg-a11y-on-accent color-serious:enabled:selected:hover:inset-shadow-[color:var(--outline-serious-hover)] color-serious:enabled:selected:hover:bg-serious-bold',
       'color-serious:enabled:selected:focus-visible:fg-a11y-on-accent color-serious:enabled:selected:focus-visible:inset-shadow-[color:var(--outline-serious-hover)] color-serious:enabled:selected:focus-visible:bg-serious-bold',
       'color-serious:enabled:selected:pressed:fg-serious-bold color-serious:enabled:selected:pressed:inset-shadow-[color:var(--outline-serious-pressed)] color-serious:enabled:selected:pressed:bg-serious-pressed',
