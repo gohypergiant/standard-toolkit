@@ -56,18 +56,21 @@ export const Default: Story = {
               <Placeholder />
             </Icon>
             <Options.Item.Label>Blue Jay</Options.Item.Label>
+            <Options.Item.Description>A cool bird</Options.Item.Description>
           </Options.Item>
           <Options.Item textValue='Gray catbird' color='serious'>
             <Icon>
               <Placeholder />
             </Icon>
             <Options.Item.Label>Gray catbird</Options.Item.Label>
+            <Options.Item.Description>A cool bird</Options.Item.Description>
           </Options.Item>
           <Options.Item textValue='Black-capped chickadee' color='critical'>
             <Icon>
               <Placeholder />
             </Icon>
             <Options.Item.Label>Black-capped chickadee</Options.Item.Label>
+            <Options.Item.Description>A cool bird</Options.Item.Description>
           </Options.Item>
           <Options.Item textValue='Song Sparrow'>
             <Icon>
