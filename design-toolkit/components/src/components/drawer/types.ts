@@ -1,4 +1,14 @@
 import type { Payload } from '@accelint/bus';
+import type { UniqueId } from '@accelint/core';
+import type { FocusableElement } from '@react-types/shared';
+import type {
+  ComponentPropsWithRef,
+  DOMAttributes,
+  ReactElement,
+  RefAttributes,
+} from 'react';
+import type { HeadingProps } from 'react-aria-components';
+import type { VariantProps } from 'tailwind-variants';
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,16 +20,6 @@ import type { Payload } from '@accelint/bus';
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import type { UniqueId } from '@accelint/core';
-import type { FocusableElement } from '@react-types/shared';
-import type {
-  ComponentPropsWithRef,
-  DOMAttributes,
-  ReactElement,
-  RefAttributes,
-} from 'react';
-import type { HeadingProps } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
 import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackEvent } from '../view-stack/types';
@@ -150,7 +150,7 @@ export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
 };
 
 /**
- * Drawer.Menu.Item implements Drawer.Trigger with the default behavior of
+ * DrawerMenuItem implements DrawerTrigger with the default behavior of
  * the trigger's `open` event type, which resets the stack before pushing the new view
  */
 export type DrawerMenuItemProps = Omit<

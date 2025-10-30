@@ -12,164 +12,16 @@
 'use client';
 
 import 'client-only';
-import { ChevronDown, Kebab } from '@accelint/icons';
-import { createContext, useContext } from 'react';
 import {
-  type ContextValue,
   composeRenderProps,
   Disclosure,
-  DisclosureGroup,
-  DisclosurePanel,
-  Header,
-  Heading,
-  Provider,
   useContextProps,
 } from 'react-aria-components';
-import { isSlottedContextValue } from '@/lib/utils';
-import { Button, ButtonContext } from '../button';
-import { Icon, IconContext } from '../icon';
+import { AccordionContext } from './context';
 import { AccordionStyles, AccordionStylesDefaults } from './styles';
-import type {
-  AccordionGroupProps,
-  AccordionHeaderProps,
-  AccordionPanelProps,
-  AccordionProps,
-  AccordionTriggerProps,
-} from './types';
+import type { AccordionProps } from './types';
 
-const { group, accordion, header, heading, trigger, panel } = AccordionStyles();
-
-export const AccordionContext =
-  createContext<ContextValue<AccordionProps, HTMLDivElement>>(null);
-
-function AccordionGroup({
-  ref,
-  children,
-  className,
-  variant = AccordionStylesDefaults.variant,
-  isDisabled,
-  ...rest
-}: AccordionGroupProps) {
-  return (
-    <AccordionContext.Provider value={{ variant, isDisabled }}>
-      <DisclosureGroup
-        {...rest}
-        ref={ref}
-        className={composeRenderProps(className, (className) =>
-          group({
-            className,
-            variant,
-          }),
-        )}
-      >
-        {children}
-      </DisclosureGroup>
-    </AccordionContext.Provider>
-  );
-}
-AccordionGroup.displayName = 'Accordion.Group';
-
-function AccordionHeader({ ref, children, className }: AccordionHeaderProps) {
-  const context = useContext(AccordionContext);
-  const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    AccordionStylesDefaults.variant;
-  const isDisabled =
-    (isSlottedContextValue(context) ? undefined : context?.isDisabled) ?? false;
-
-  return (
-    <Provider
-      values={[
-        [IconContext, { size: variant === 'compact' ? 'small' : 'large' }],
-        [
-          ButtonContext,
-          {
-            children: (
-              <Icon>
-                <Kebab />
-              </Icon>
-            ),
-            variant: 'icon',
-            isDisabled,
-          },
-        ],
-      ]}
-    >
-      <Header
-        ref={ref}
-        className={header({
-          className,
-          variant,
-        })}
-      >
-        {children}
-      </Header>
-    </Provider>
-  );
-}
-AccordionHeader.displayName = 'Accordion.Header';
-
-function AccordionTrigger({
-  ref,
-  children,
-  classNames,
-}: AccordionTriggerProps) {
-  const context = useContext(AccordionContext);
-  const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    AccordionStylesDefaults.variant;
-
-  return (
-    <Heading
-      ref={ref}
-      className={heading({
-        className: classNames?.heading,
-        variant,
-      })}
-    >
-      <Button
-        slot='trigger'
-        className={composeRenderProps(classNames?.trigger, (className) =>
-          trigger({
-            className,
-            variant,
-          }),
-        )}
-        variant='flat'
-      >
-        <IconContext.Provider
-          value={{ size: variant === 'compact' ? 'small' : 'medium' }}
-        >
-          <Icon>
-            <ChevronDown className='transform group-expanded/accordion:rotate-180' />
-          </Icon>
-          {children}
-        </IconContext.Provider>
-      </Button>
-    </Heading>
-  );
-}
-AccordionTrigger.displayName = 'Accordion.Trigger';
-
-function AccordionPanel({
-  ref,
-  children,
-  className,
-  ...rest
-}: AccordionPanelProps) {
-  return (
-    <DisclosurePanel
-      {...rest}
-      ref={ref}
-      className={composeRenderProps(className, (className) =>
-        panel({ className }),
-      )}
-    >
-      {children}
-    </DisclosurePanel>
-  );
-}
-AccordionPanel.displayName = 'Accordion.Panel';
+const { accordion } = AccordionStyles();
 
 /**
  * Accordion - A collapsible content component with expandable sections
@@ -181,37 +33,37 @@ AccordionPanel.displayName = 'Accordion.Panel';
  * @example
  * // Basic accordion
  * <Accordion>
- *   <Accordion.Header>
- *     <Accordion.Trigger>Section Title</Accordion.Trigger>
- *   </Accordion.Header>
- *   <Accordion.Panel>Content goes here</Accordion.Panel>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Section Title</AccordionTrigger>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Content goes here</AccordionPanel>
  * </Accordion>
  *
  * @example
  * // Compact variant
  * <Accordion variant="compact">
- *   <Accordion.Header>
- *     <Accordion.Trigger>Compact Section</Accordion.Trigger>
- *   </Accordion.Header>
- *   <Accordion.Panel>Compact content</Accordion.Panel>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Compact Section</AccordionTrigger>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Compact content</AccordionPanel>
  * </Accordion>
  *
  * @example
  * // Multiple accordions in a group
- * <Accordion.Group>
+ * <AccordionGroup>
  *   <Accordion>
- *     <Accordion.Header>
- *       <Accordion.Trigger>First Section</Accordion.Trigger>
- *     </Accordion.Header>
- *     <Accordion.Panel>First content</Accordion.Panel>
+ *     <AccordionHeader>
+ *       <AccordionTrigger>First Section</AccordionTrigger>
+ *     </AccordionHeader>
+ *     <AccordionPanel>First content</AccordionPanel>
  *   </Accordion>
  *   <Accordion>
- *     <Accordion.Header>
- *       <Accordion.Trigger>Second Section</Accordion.Trigger>
- *     </Accordion.Header>
- *     <Accordion.Panel>Second content</Accordion.Panel>
+ *     <AccordionHeader>
+ *       <AccordionTrigger>Second Section</AccordionTrigger>
+ *     </AccordionHeader>
+ *     <AccordionPanel>Second content</AccordionPanel>
  *   </Accordion>
- * </Accordion.Group>
+ * </AccordionGroup>
  */
 export function Accordion({ ref, ...props }: AccordionProps) {
   [props, ref] = useContextProps(props, ref ?? null, AccordionContext);
@@ -245,8 +97,3 @@ export function Accordion({ ref, ...props }: AccordionProps) {
     </AccordionContext.Provider>
   );
 }
-Accordion.displayName = 'Accordion';
-Accordion.Group = AccordionGroup;
-Accordion.Header = AccordionHeader;
-Accordion.Trigger = AccordionTrigger;
-Accordion.Panel = AccordionPanel;

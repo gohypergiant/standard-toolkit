@@ -15,6 +15,8 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Icon } from '../icon';
 import { Hero } from './';
+import { HeroSubtitle } from './subtitle';
+import { HeroTitle } from './title';
 import type { HeroProps } from './types';
 
 const defaults = {
@@ -28,8 +30,8 @@ function setup({
       <Icon>
         <Placeholder data-testid='icon' />
       </Icon>
-      <Hero.Title>{defaults.title}</Hero.Title>
-      <Hero.Subtitle>{defaults.subtitle}</Hero.Subtitle>
+      <HeroTitle>{defaults.title}</HeroTitle>
+      <HeroSubtitle>{defaults.subtitle}</HeroSubtitle>
     </>
   ),
   ...rest

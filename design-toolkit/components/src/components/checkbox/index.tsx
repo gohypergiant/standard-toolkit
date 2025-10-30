@@ -11,67 +11,19 @@
  */
 'use client';
 
-import 'client-only';
 import { Check, Remove } from '@accelint/icons';
-import { createContext } from 'react';
+import 'client-only';
 import {
   Checkbox as AriaCheckbox,
-  CheckboxGroup as AriaCheckboxGroup,
-  type ContextValue,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { Icon } from '../icon';
-import { Label } from '../label';
+import { CheckboxContext } from './context';
 import { CheckboxStyles } from './styles';
-import type { CheckboxGroupProps, CheckboxProps } from './types';
+import type { CheckboxProps } from './types';
 
-const { group, groupLabel, checkbox, control, label } = CheckboxStyles();
-
-export const CheckboxGroupContext =
-  createContext<ContextValue<CheckboxGroupProps, HTMLDivElement>>(null);
-
-function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
-  [props, ref] = useContextProps(props, ref ?? null, CheckboxGroupContext);
-
-  const {
-    children,
-    classNames,
-    label,
-    orientation = 'vertical',
-    ...rest
-  } = props;
-
-  return (
-    <AriaCheckboxGroup
-      {...rest}
-      ref={ref}
-      className={composeRenderProps(classNames?.group, (className) =>
-        group({ className }),
-      )}
-      data-orientation={orientation}
-    >
-      {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
-          {label && (
-            <Label
-              className={groupLabel({ className: classNames?.label })}
-              isDisabled={isDisabled}
-              isRequired={isRequired}
-            >
-              {label}
-            </Label>
-          )}
-          {children}
-        </>
-      ))}
-    </AriaCheckboxGroup>
-  );
-}
-CheckboxGroup.displayName = 'Checkbox.Group';
-
-export const CheckboxContext =
-  createContext<ContextValue<CheckboxProps, HTMLLabelElement>>(null);
+const { checkbox, control, label } = CheckboxStyles();
 
 /**
  * Checkbox - A form control for binary or multiple selection with group support
@@ -88,11 +40,11 @@ export const CheckboxContext =
  *
  * @example
  * // Checkbox group with multiple options
- * <Checkbox.Group label="Select preferences">
+ * <CheckboxGroup label="Select preferences">
  *   <Checkbox value="notifications">Email notifications</Checkbox>
  *   <Checkbox value="marketing">Marketing emails</Checkbox>
  *   <Checkbox value="updates">Product updates</Checkbox>
- * </Checkbox.Group>
+ * </CheckboxGroup>
  *
  * @example
  * // Disabled checkbox
@@ -140,5 +92,3 @@ export function Checkbox({ ref, ...props }: CheckboxProps) {
     </AriaCheckbox>
   );
 }
-Checkbox.displayName = 'Checkbox';
-Checkbox.Group = CheckboxGroup;

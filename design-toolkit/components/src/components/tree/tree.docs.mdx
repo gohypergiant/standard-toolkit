@@ -11,18 +11,18 @@ Tree view allows users to navigate lists of data with nested levels that can be 
 It is composed of the following components:
 
 - **Tree** - parent that drives global tree behavior like selection or drag and drop
-- **Tree.Item** - defines an individual tree node item
-- **Tree.Item.Content** - composes the actual display of the tree node content. `Tree.Item` will always have `Tree.Item.Content` composed inside it.
-- **Tree.Item.Label** - places and styles the tree node label
-- **Tree.Item.Description** - places and styles the tree description
-- **Tree.Item.PrefixIcon** - places and styles the icon that optionally shows before a tree node
-- **Tree.Item.Actions** - container for unique application icons for a tree item
+- **TreeItem** - defines an individual tree node item
+- **TreeItemContent** - composes the actual display of the tree node content. `TreeItem` will always have `TreeItemContent` composed inside it.
+- **TreeItemLabel** - places and styles the tree node label
+- **TreeItemDescription** - places and styles the tree description
+- **TreeItemPrefixIcon** - places and styles the icon that optionally shows before a tree node
+- **TreeItemActions** - container for unique application icons for a tree item
 
 ### Static vs Dynamic Collections
 
 The Tree component supports two different collection patterns:
 
-1. **Static Collection**: Hard-coded tree structure using nested Tree.Item components
+1. **Static Collection**: Hard-coded tree structure using nested TreeItem components
 2. **Dynamic Collection**: Data-driven tree structure using the `items` prop and a render function
 
 You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously.
@@ -41,12 +41,12 @@ The `Tree` can be rendered with either hard-coded static data or with dynamic da
 
 ```jsx
 <Tree>
-  <Tree.Item id='one' textValue='one'>
-    <Tree.Item.Content>One</Tree.Item.Content>
-    <Tree.Item id='two' textValue='two'>
-      <Tree.Item.Content>Two</Tree.Item.Content>
-    </Tree.Item>
-  </Tree.Item>
+  <TreeItem id='one' textValue='one'>
+    <TreeItemContent>One</TreeItemContent>
+    <TreeItem id='two' textValue='two'>
+      <TreeItemContent>Two</TreeItemContent>
+    </TreeItem>
+  </TreeItem>
 </Tree>
 ```
 <Canvas of={TreeStories.StaticCollection} />
@@ -70,12 +70,12 @@ const items = [
 ];
 
 const Node = ({ node }) => (
-  <Tree.Item id={node.key} textValue={node.label}>
-    <Tree.Item.Content>
-      <Tree.Item.Label>{node.label}</Tree.Item.Label>
-    </Tree.Item.Content>
+  <TreeItem id={node.key} textValue={node.label}>
+    <TreeItemContent>
+      <TreeItemLabel>{node.label}</TreeItemLabel>
+    </TreeItemContent>
     {node.children?.map(child => <Node key={child.key} node={child} />)}
-  </Tree.Item>
+  </TreeItem>
 );
 
 <Tree items={items}>
@@ -202,7 +202,7 @@ type TreeNode<T> = {
 | `onVisibilityChange` | `(keys: Set<Key>) => void`                        | `undefined`  | Callback when visibility changes                                    |
 | `dragAndDropConfig`  | `DragAndDropConfig`                               | `undefined`  | Configuration for drag and drop behavior                            |
 
-## Tree.Item Props
+## TreeItem Props
 
 | Prop        | Type        | Default     | Description                                       |
 |-------------|-------------|-------------|---------------------------------------------------|

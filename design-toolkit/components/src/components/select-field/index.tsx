@@ -11,14 +11,12 @@
  */
 'use client';
 
-import 'client-only';
 import ChevronDown from '@accelint/icons/chevron-down';
-import { createContext } from 'react';
+import 'client-only';
 import {
   Popover as AriaPopover,
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
-  type ContextValue,
   composeRenderProps,
   FieldError,
   ListLayout,
@@ -30,27 +28,12 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
+import { SelectFieldContext } from './context';
 import { SelectFieldStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { SelectFieldProps } from './types';
 
 const { description, error, trigger, label, field, value, popover } =
   SelectFieldStyles();
-
-export const SelectFieldContext =
-  createContext<ContextValue<SelectFieldProps, HTMLDivElement>>(null);
-
-function SelectFieldProvider({
-  children,
-  ...props
-}: ProviderProps<SelectFieldProps>) {
-  return (
-    <SelectFieldContext.Provider value={props}>
-      {children}
-    </SelectFieldContext.Provider>
-  );
-}
-SelectFieldProvider.displayName = 'SelectField.Provider';
 
 /**
  * SelectField - A dropdown selection component with comprehensive form field features
@@ -63,9 +46,9 @@ SelectFieldProvider.displayName = 'SelectField.Provider';
  * @example
  * // Basic select field
  * <SelectField label='Country' placeholder='Select a country'>
- *   <Options.Item textValue='us'>United States</Options.Item>
- *   <Options.Item textValue='ca'>Canada</Options.Item>
- *   <Options.Item textValue='uk'>United Kingdom</Options.Item>
+ *   <OptionsItem textValue='us'>United States</OptionsItem>
+ *   <OptionsItem textValue='ca'>Canada</OptionsItem>
+ *   <OptionsItem textValue='uk'>United Kingdom</OptionsItem>
  * </SelectField>
  *
  * @example
@@ -77,9 +60,9 @@ SelectFieldProvider.displayName = 'SelectField.Provider';
  *   isRequired
  *   isInvalid={!!errors.priority}
  * >
- *   <Options.Item textValue="low">Low</Options.Item>
- *   <Options.Item textValue="medium">Medium</Options.Item>
- *   <Options.Item textValue="high">High</Options.Item>
+ *   <OptionsItem textValue="low">Low</OptionsItem>
+ *   <OptionsItem textValue="medium">Medium</OptionsItem>
+ *   <OptionsItem textValue="high">High</OptionsItem>
  * </SelectField>
  *
  * @example
@@ -92,8 +75,8 @@ SelectFieldProvider.displayName = 'SelectField.Provider';
  *     trigger: "custom-trigger-styles"
  *   }}
  * >
- *   <Options.Item textValue="option1">Option 1</Options.Item>
- *   <Options.Item textValue="option2">Option 2</Options.Item>
+ *   <OptionsItem textValue="option1">Option 1</OptionsItem>
+ *   <OptionsItem textValue="option2">Option 2</OptionsItem>
  * </SelectField>
  */
 export function SelectField({ ref, ...props }: SelectFieldProps) {
@@ -184,5 +167,3 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
     </AriaSelect>
   );
 }
-SelectField.displayName = 'SelectField';
-SelectField.Provider = SelectFieldProvider;

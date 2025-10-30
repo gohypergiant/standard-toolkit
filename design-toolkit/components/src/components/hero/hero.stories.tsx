@@ -13,6 +13,8 @@
 import Placeholder from '@accelint/icons/placeholder';
 import { Icon } from '../icon';
 import { Hero } from './';
+import { HeroSubtitle } from './subtitle';
+import { HeroTitle } from './title';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -33,9 +35,9 @@ export const Default: Story = {
         <Icon>
           <Placeholder />
         </Icon>
-        <Hero.Title>{'{object.name}'}</Hero.Title>
-        <Hero.Subtitle>additional-metadata-01</Hero.Subtitle>
-        <Hero.Subtitle>additional-metadata-002</Hero.Subtitle>
+        <HeroTitle>{'{object.name}'}</HeroTitle>
+        <HeroSubtitle>additional-metadata-01</HeroSubtitle>
+        <HeroSubtitle>additional-metadata-002</HeroSubtitle>
       </Hero>
     </div>
   ),

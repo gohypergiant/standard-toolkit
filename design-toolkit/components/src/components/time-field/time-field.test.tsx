@@ -14,7 +14,7 @@ import { parseTime } from '@internationalized/date';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { TimeField } from '.';
+import { TimeField } from './';
 import type { TimeValue } from 'react-aria-components';
 import type { TimeFieldProps } from './types';
 

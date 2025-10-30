@@ -1,0 +1,301 @@
+import { Meta } from '@storybook/blocks';
+
+import * as BaseMapStories from './base-map.stories';
+
+<Meta of={BaseMapStories} />
+
+# Base Map
+
+A React component that provides a Deck.gl-powered base map with MapLibre GL integration. This component serves as the foundation for building interactive map applications with support for click and hover events through a centralized event bus.
+
+## Features
+
+- **MapLibre GL Integration**: Built-in support for MapLibre GL base maps with customizable styles
+- **Event Bus**: Centralized event system for click and hover interactions using `@accelint/bus`
+- **Map Mode Integration**: Automatically creates internal `MapProvider` for map mode state management
+- **Deck.gl Controller**: Interactive map controls with configurable parameters
+- **Client-Side Only**: Designed for client-side rendering in React applications
+
+**Important**: BaseMap passes its children to Deck.gl, which only accepts Deck.gl layer components. Regular React UI components (buttons, toolbars, etc.) must be rendered as **siblings** to BaseMap, not children.
+
+## Dependencies
+
+BaseMap requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for map click and hover events
+- [`@deck.gl/core`](https://deck.gl/) - Deck.gl core library for WebGL visualization
+- [`@deckgl-fiber-renderer/dom`](https://github.com/deckgl-fiber-renderer/fiber.gl) - React renderer for Deck.gl
+- [`@deckgl-fiber-renderer/types`](https://github.com/deckgl-fiber-renderer/fiber.gl) - TypeScript types for the fiber renderer
+- `maplibre-gl` - MapLibre GL JS for base map rendering
+- `mjolnir.js` - Event handling library used by Deck.gl
+- `react` - React 19.0.0 or higher
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @deck.gl/core @deckgl-fiber-renderer/dom @deckgl-fiber-renderer/types maplibre-gl mjolnir.js react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @deck.gl/core @deckgl-fiber-renderer/dom @deckgl-fiber-renderer/types maplibre-gl mjolnir.js react
+```
+
+## Usage
+
+### Basic Setup
+
+```typescript
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { View } from '@deckgl-fiber-renderer/dom';
+import { uuid } from '@accelint/core';
+
+// Module-level constant for stability
+const MAIN_MAP_ID = uuid();
+
+export function MapView() {
+  return (
+    <BaseMap id={MAIN_MAP_ID} className="w-full h-full">
+      <View id="main" controller />
+      {/* Add your Deck.gl layers here */}
+    </BaseMap>
+  );
+}
+```
+
+### With UI Components
+
+UI components (toolbars, buttons, etc.) should be rendered as **siblings** to BaseMap, not children:
+
+```typescript
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import { View } from '@deckgl-fiber-renderer/dom';
+import { uuid } from '@accelint/core';
+
+// Module-level constant shared across components
+const MAIN_MAP_ID = uuid();
+
+function Toolbar() {
+  // Use the shared id
+  const { mode, requestModeChange } = useMapMode(MAIN_MAP_ID);
+
+  return (
+    <div className="absolute top-4 left-4">
+      <button onClick={() => requestModeChange('drawing', 'toolbar')}>
+        Draw Mode ({mode})
+      </button>
+    </div>
+  );
+}
+
+export function InteractiveMap() {
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0">
+        <View id="main" controller />
+        {/* Only Deck.gl layers as children */}
+      </BaseMap>
+      <Toolbar />
+    </div>
+  );
+}
+```
+
+### With Event Handlers
+
+```typescript
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+import type { PickingInfo } from '@deck.gl/core';
+import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+
+// Module-level constant
+const MAIN_MAP_ID = uuid();
+
+export function InteractiveMap() {
+  const handleClick = (info: PickingInfo, event: MjolnirGestureEvent) => {
+    console.log('Clicked:', info.object);
+  };
+
+  const handleHover = (info: PickingInfo, event: MjolnirPointerEvent) => {
+    console.log('Hovering:', info.object);
+  };
+
+  return (
+    <BaseMap
+      id={MAIN_MAP_ID}
+      className="w-full h-full"
+      onClick={handleClick}
+      onHover={handleHover}
+    >
+      <View id="main" controller />
+    </BaseMap>
+  );
+}
+```
+
+### Using the Event Bus
+
+The BaseMap component emits events through a centralized bus that can be subscribed to from anywhere in your application. You can subscribe to individual events using the `useOn` hook from [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus):
+
+```typescript
+import { useOn } from '@accelint/bus/react';
+import { MapEvents } from '@accelint/map-toolkit/deckgl';
+
+export function MapListener() {
+  useOn(MapEvents.click, (data) => {
+    console.log('Map clicked:', data.payload.info, data.payload.event);
+  });
+
+  return null;
+}
+```
+
+## API
+
+### Props
+
+The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/types` and includes the following additional props:
+
+#### `id: UniqueId` (required)
+
+Unique identifier for this map instance. Used to isolate map mode state between multiple map instances (e.g., main map vs minimap). This prop is required and should be a UUID generated using `uuid()` from `@accelint/core`.
+
+**Important**: This same `id` must be passed to `useMapMode(id)` in UI components that are rendered as siblings to BaseMap, since UI components cannot be children of BaseMap.
+
+**ID Changes**: If the `id` prop changes, BaseMap will perform a complete remount. The old store is properly cleaned up and a new one is created. While this is handled safely, frequent ID changes will cause performance issues due to remounting.
+
+**Recommended Pattern**: Create the `id` as a **module-level constant**. This ensures stability and makes it easy to share across all components:
+
+```tsx
+import { uuid } from '@accelint/core';
+
+// ✅ BEST - Module-level constant (recommended)
+// - Stable across renders and remounts
+// - Easy to import and share across components
+// - No useState/useRef complexity
+const MAIN_MAP_ID = uuid();
+
+export function MapView() {
+  return <BaseMap id={MAIN_MAP_ID}>...</BaseMap>;
+}
+
+export function Toolbar() {
+  const { mode } = useMapMode(MAIN_MAP_ID);
+  // All components use the same shared ID
+}
+```
+
+Alternative patterns (only use if you need dynamic IDs):
+
+```tsx
+// ✅ OK - For components that need their own isolated map instance
+function MapView() {
+  const [mapId] = useState(() => uuid());
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+
+// ❌ NEVER - Creates new ID on every render (causes constant remounting)
+function MapView() {
+  const mapId = uuid(); // Don't do this!
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+```
+
+#### `className?: string`
+
+Optional CSS class name to apply to the map container element.
+
+#### `onClick?: (info: PickingInfo, event: MjolnirGestureEvent) => void`
+
+Callback function triggered when the map is clicked. Receives the full picking info and gesture event.
+
+#### `onHover?: (info: PickingInfo, event: MjolnirPointerEvent) => void`
+
+Callback function triggered when hovering over the map. Receives the full picking info and pointer event.
+
+#### `parameters?: Record<string, any>`
+
+WebGL parameters to customize rendering. These will be merged with the default parameters.
+
+### Exported Constants
+
+#### `bus`
+
+The centralized broadcast instance for map events. Use the `useOn` hook from [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) to subscribe to map events in React components:
+
+```typescript
+import { useOn } from '@accelint/bus/react';
+import { MapEvents } from '@accelint/map-toolkit/deckgl';
+
+// In a React component
+useOn(MapEvents.click, (payload) => {
+  // Handle click event
+});
+
+useOn(MapEvents.hover, (payload) => {
+  // Handle hover event
+});
+```
+
+#### `MapEvents`
+
+Event names for map interactions:
+
+- `MapEvents.click`: `'map:click'`
+- `MapEvents.hover`: `'map:hover'`
+
+## Children Components
+
+**Important**: BaseMap passes its children directly to Deck.gl's rendering engine, which only accepts Deck.gl layer components (e.g., `<View>`, `<ScatterplotLayer>`, etc.).
+
+**Do NOT** render regular React UI components (buttons, divs, toolbars, etc.) as children of BaseMap. Doing so will result in errors like "Text nodes are not supported."
+
+**Instead**: Render UI components as **siblings** to BaseMap within a shared parent container:
+
+```tsx
+// ✅ Correct - UI as siblings
+<div className="relative w-full h-full">
+  <BaseMap id={mapId} className="absolute inset-0">
+    <View id="main" controller />
+    {/* Only Deck.gl layers */}
+  </BaseMap>
+  <Toolbar /> {/* Sibling to BaseMap */}
+</div>
+
+// ❌ Incorrect - UI as children
+<BaseMap id={mapId}>
+  <Toolbar /> {/* Will cause error! */}
+</BaseMap>
+```
+
+## Default Configuration
+
+The BaseMap component comes with the following defaults:
+
+- **Map Style**: [Carto Dark Matter](https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json)
+- **Initial View State**: Configured from `@accelint/map-toolkit` constants
+- **Controller**: Interactive with double-click zoom, drag rotate, pitch rotate, and roll disabled
+- **Device Pixels**: Disabled for performance
+- **Interleaved Rendering**: Enabled
+
+## Event Payload Types
+
+### `MapClickPayload`
+
+```typescript
+type MapClickPayload = {
+  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
+  event: NonFuncMjolnirGestureEvent; // Event with functions omitted for serialization
+};
+```
+
+### `MapHoverPayload`
+
+```typescript
+type MapHoverPayload = {
+  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
+  event: NonFuncMjolnirPointerEvent; // Event with functions omitted for serialization
+};
+```
+
+Note: Function properties and the viewport are omitted from event payloads to allow proper serialization through the event bus.

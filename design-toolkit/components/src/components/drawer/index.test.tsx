@@ -16,6 +16,15 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Drawer } from './';
+import { DrawerContent } from './content';
+import { DrawerFooter } from './footer';
+import { DrawerHeader } from './header';
+import { DrawerHeaderTitle } from './header-title';
+import { DrawerMenu } from './menu';
+import { DrawerMenuItem } from './menu-item';
+import { DrawerPanel } from './panel';
+import { DrawerTrigger } from './trigger';
+import { DrawerView } from './view';
 import type { ReactNode } from 'react';
 import type { DrawerProps } from './types';
 
@@ -27,40 +36,40 @@ const ids = {
 };
 const alternate = (
   <>
-    <Drawer.Menu>
-      <Drawer.Menu.Item for={ids.a} textValue='Menu A'>
+    <DrawerMenu>
+      <DrawerMenuItem for={ids.a} textValue='Menu A'>
         A
-      </Drawer.Menu.Item>
-      <Drawer.Menu.Item for={ids.c} textValue='Menu C'>
+      </DrawerMenuItem>
+      <DrawerMenuItem for={ids.c} textValue='Menu C'>
         C
-      </Drawer.Menu.Item>
-      <Drawer.Menu.Item for={ids.b} textValue='Menu B'>
+      </DrawerMenuItem>
+      <DrawerMenuItem for={ids.b} textValue='Menu B'>
         B
-      </Drawer.Menu.Item>
-    </Drawer.Menu>
-    <Drawer.Panel>
-      <Drawer.View id={ids.a}>
-        <Drawer.Header>
-          <Drawer.Header.Title>Title A</Drawer.Header.Title>
-        </Drawer.Header>
-        <Drawer.Content>Content A</Drawer.Content>
-        <Drawer.Footer>Footer A</Drawer.Footer>
-      </Drawer.View>
-      <Drawer.View id={ids.b}>
-        <Drawer.Header>
-          <Drawer.Header.Title>Title B</Drawer.Header.Title>
-        </Drawer.Header>
-        <Drawer.Content>Content B</Drawer.Content>
-        <Drawer.Footer>Footer B</Drawer.Footer>
-      </Drawer.View>
-      <Drawer.View id={ids.c}>
-        <Drawer.Header>
-          <Drawer.Header.Title>Title C</Drawer.Header.Title>
-        </Drawer.Header>
-        <Drawer.Content>Content C</Drawer.Content>
-        <Drawer.Footer>Footer C</Drawer.Footer>
-      </Drawer.View>
-    </Drawer.Panel>
+      </DrawerMenuItem>
+    </DrawerMenu>
+    <DrawerPanel>
+      <DrawerView id={ids.a}>
+        <DrawerHeader>
+          <DrawerHeaderTitle>Title A</DrawerHeaderTitle>
+        </DrawerHeader>
+        <DrawerContent>Content A</DrawerContent>
+        <DrawerFooter>Footer A</DrawerFooter>
+      </DrawerView>
+      <DrawerView id={ids.b}>
+        <DrawerHeader>
+          <DrawerHeaderTitle>Title B</DrawerHeaderTitle>
+        </DrawerHeader>
+        <DrawerContent>Content B</DrawerContent>
+        <DrawerFooter>Footer B</DrawerFooter>
+      </DrawerView>
+      <DrawerView id={ids.c}>
+        <DrawerHeader>
+          <DrawerHeaderTitle>Title C</DrawerHeaderTitle>
+        </DrawerHeader>
+        <DrawerContent>Content C</DrawerContent>
+        <DrawerFooter>Footer C</DrawerFooter>
+      </DrawerView>
+    </DrawerPanel>
   </>
 );
 
@@ -69,39 +78,39 @@ function setup(
     id = ids.drawer,
     children = (
       <>
-        <Drawer.Menu>
-          <Drawer.Menu.Item for={ids.a} textValue='Menu A'>
+        <DrawerMenu>
+          <DrawerMenuItem for={ids.a} textValue='Menu A'>
             A
-          </Drawer.Menu.Item>
-          <Drawer.Menu.Item for={ids.b} textValue='Menu B'>
+          </DrawerMenuItem>
+          <DrawerMenuItem for={ids.b} textValue='Menu B'>
             B
-          </Drawer.Menu.Item>
-          <Drawer.Menu.Item for={ids.c} textValue='Menu C'>
+          </DrawerMenuItem>
+          <DrawerMenuItem for={ids.c} textValue='Menu C'>
             C
-          </Drawer.Menu.Item>
-        </Drawer.Menu>
-        <Drawer.Panel>
-          <Drawer.Header>
-            <Drawer.Header.Title>Title</Drawer.Header.Title>
-            <Drawer.Trigger for='close'>
+          </DrawerMenuItem>
+        </DrawerMenu>
+        <DrawerPanel>
+          <DrawerHeader>
+            <DrawerHeaderTitle>Title</DrawerHeaderTitle>
+            <DrawerTrigger for='close'>
               <Button>Close</Button>
-            </Drawer.Trigger>
-          </Drawer.Header>
-          <Drawer.Content>
-            <Drawer.View id={ids.a}>View A</Drawer.View>
-            <Drawer.View id={ids.b}>View B</Drawer.View>
-            <Drawer.View id={ids.c}>View C</Drawer.View>
-          </Drawer.Content>
-          <Drawer.Footer>Footer</Drawer.Footer>
-        </Drawer.Panel>
+            </DrawerTrigger>
+          </DrawerHeader>
+          <DrawerContent>
+            <DrawerView id={ids.a}>View A</DrawerView>
+            <DrawerView id={ids.b}>View B</DrawerView>
+            <DrawerView id={ids.c}>View C</DrawerView>
+          </DrawerContent>
+          <DrawerFooter>Footer</DrawerFooter>
+        </DrawerPanel>
       </>
     ),
     ...rest
   }: Partial<DrawerProps> = {},
   outside: ReactNode = (
-    <Drawer.Trigger for={`open:${ids.a}`}>
+    <DrawerTrigger for={`open:${ids.a}`}>
       <Button>Open A</Button>
-    </Drawer.Trigger>
+    </DrawerTrigger>
   ),
 ) {
   return {

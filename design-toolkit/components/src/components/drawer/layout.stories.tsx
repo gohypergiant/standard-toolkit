@@ -17,7 +17,16 @@ import {
   ChevronUp,
   Placeholder,
 } from '@accelint/icons';
-import { Drawer } from './index';
+import { Drawer } from './';
+import { DrawerContent } from './content';
+import { DrawerHeader } from './header';
+import { DrawerHeaderTitle } from './header-title';
+import { DrawerLayout } from './layout';
+import { DrawerLayoutMain } from './layout-main';
+import { DrawerMenu } from './menu';
+import { DrawerMenuItem } from './menu-item';
+import { DrawerPanel } from './panel';
+import { DrawerView } from './view';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
@@ -64,8 +73,8 @@ const ids = {
 } as const;
 
 const meta = {
-  title: 'Components/Drawer.Layout',
-  component: Drawer.Layout as Alias,
+  title: 'Components/DrawerLayout',
+  component: DrawerLayout as Alias,
   args: {
     extend: 'left right',
     push: 'left right',
@@ -91,8 +100,8 @@ export const Default: Story = {
   render: ({ extend, push }) => {
     return (
       <div className='h-screen w-full'>
-        <Drawer.Layout extend={extend} push={push}>
-          <Drawer.Layout.Main>
+        <DrawerLayout extend={extend} push={push}>
+          <DrawerLayoutMain>
             <div
               className='flex h-full items-center justify-center bg-surface-overlay'
               style={
@@ -113,132 +122,124 @@ export const Default: Story = {
                 <p>This page is for demo purposes only!</p>
               </div>
             </div>
-          </Drawer.Layout.Main>
+          </DrawerLayoutMain>
 
           <Drawer id={ids.top.drawer} placement='top' size='medium'>
-            <Drawer.Menu>
-              <Drawer.Menu.Item toggle for={ids.top.views.a} textValue='Menu A'>
+            <DrawerMenu>
+              <DrawerMenuItem toggle for={ids.top.views.a} textValue='Menu A'>
                 <ChevronDown className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.top.views.b} textValue='Menu B'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.top.views.b} textValue='Menu B'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.top.views.c} textValue='Menu C'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.top.views.c} textValue='Menu C'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.top.views.d} textValue='Menu D'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.top.views.d} textValue='Menu D'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
+              </DrawerMenuItem>
+            </DrawerMenu>
 
-            <Drawer.Panel>
-              <Drawer.Header>
-                <Drawer.Header.Title>Top</Drawer.Header.Title>
-              </Drawer.Header>
-              <Drawer.Content>
+            <DrawerPanel>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Top</DrawerHeaderTitle>
+              </DrawerHeader>
+              <DrawerContent>
                 {Object.entries(ids.top.views).map(([_, id]) => (
-                  <Drawer.View id={id} key={id} />
+                  <DrawerView id={id} key={id} />
                 ))}
-              </Drawer.Content>
-            </Drawer.Panel>
+              </DrawerContent>
+            </DrawerPanel>
           </Drawer>
 
           <Drawer id={ids.bottom.drawer} placement='bottom'>
-            <Drawer.Menu>
-              <Drawer.Menu.Item
+            <DrawerMenu>
+              <DrawerMenuItem
                 toggle
                 for={ids.bottom.views.a}
                 textValue='Menu A'
               >
                 <ChevronUp className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.bottom.views.b} textValue='Menu B'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.bottom.views.b} textValue='Menu B'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.bottom.views.c} textValue='Menu C'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.bottom.views.c} textValue='Menu C'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.bottom.views.d} textValue='Menu D'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.bottom.views.d} textValue='Menu D'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
+              </DrawerMenuItem>
+            </DrawerMenu>
 
-            <Drawer.Panel>
-              <Drawer.Header>
-                <Drawer.Header.Title>Bottom</Drawer.Header.Title>
-              </Drawer.Header>
-              <Drawer.Content>
+            <DrawerPanel>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Bottom</DrawerHeaderTitle>
+              </DrawerHeader>
+              <DrawerContent>
                 {Object.entries(ids.bottom.views).map(([_, id]) => (
-                  <Drawer.View id={id} key={id} />
+                  <DrawerView id={id} key={id} />
                 ))}
-              </Drawer.Content>
-            </Drawer.Panel>
+              </DrawerContent>
+            </DrawerPanel>
           </Drawer>
 
           <Drawer id={ids.left.drawer} placement='left'>
-            <Drawer.Menu>
-              <Drawer.Menu.Item
-                toggle
-                for={ids.left.views.a}
-                textValue='Menu A'
-              >
+            <DrawerMenu>
+              <DrawerMenuItem toggle for={ids.left.views.a} textValue='Menu A'>
                 <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.left.views.b} textValue='Menu B'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.left.views.b} textValue='Menu B'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.left.views.c} textValue='Menu C'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.left.views.c} textValue='Menu C'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.left.views.d} textValue='Menu D'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.left.views.d} textValue='Menu D'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
+              </DrawerMenuItem>
+            </DrawerMenu>
 
-            <Drawer.Panel>
-              <Drawer.Header>
-                <Drawer.Header.Title>Left</Drawer.Header.Title>
-              </Drawer.Header>
-              <Drawer.Content>
+            <DrawerPanel>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Left</DrawerHeaderTitle>
+              </DrawerHeader>
+              <DrawerContent>
                 {Object.entries(ids.left.views).map(([_, id]) => (
-                  <Drawer.View id={id} key={id} />
+                  <DrawerView id={id} key={id} />
                 ))}
-              </Drawer.Content>
-            </Drawer.Panel>
+              </DrawerContent>
+            </DrawerPanel>
           </Drawer>
 
           <Drawer id={ids.right.drawer} placement='right'>
-            <Drawer.Menu>
-              <Drawer.Menu.Item
-                toggle
-                for={ids.right.views.a}
-                textValue='Menu A'
-              >
+            <DrawerMenu>
+              <DrawerMenuItem toggle for={ids.right.views.a} textValue='Menu A'>
                 <ChevronLeft className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.right.views.b} textValue='Menu B'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.right.views.b} textValue='Menu B'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.right.views.c} textValue='Menu C'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.right.views.c} textValue='Menu C'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-              <Drawer.Menu.Item for={ids.right.views.d} textValue='Menu D'>
+              </DrawerMenuItem>
+              <DrawerMenuItem for={ids.right.views.d} textValue='Menu D'>
                 <Placeholder />
-              </Drawer.Menu.Item>
-            </Drawer.Menu>
+              </DrawerMenuItem>
+            </DrawerMenu>
 
-            <Drawer.Panel>
-              <Drawer.Header>
-                <Drawer.Header.Title>Right</Drawer.Header.Title>
-              </Drawer.Header>
-              <Drawer.Content>
+            <DrawerPanel>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Right</DrawerHeaderTitle>
+              </DrawerHeader>
+              <DrawerContent>
                 {Object.entries(ids.right.views).map(([_, id]) => (
-                  <Drawer.View id={id} key={id} />
+                  <DrawerView id={id} key={id} />
                 ))}
-              </Drawer.Content>
-            </Drawer.Panel>
+              </DrawerContent>
+            </DrawerPanel>
           </Drawer>
-        </Drawer.Layout>
+        </DrawerLayout>
       </div>
     );
   },

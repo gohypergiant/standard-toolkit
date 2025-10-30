@@ -89,4 +89,3 @@ export function ColorPicker({ classNames, items, ...rest }: ColorPickerProps) {
     </ColorSwatchPicker>
   );
 }
-ColorPicker.displayName = 'ColorPicker';

@@ -4,8 +4,8 @@ import * as ListStories from './list.stories';
 
 <Meta of={ListStories} />
 
-# Notice.List
-The Notice.List component provides queue management and display functionality for multiple notice notifications. It's built on React Aria Components and provides excellent accessibility out of the box. Notice lists are commonly used to manage system-wide notifications, user feedback queues, and alert systems that need to display multiple messages with automatic timeout and dismissal capabilities.
+# NoticeList
+The NoticeList component provides queue management and display functionality for multiple notice notifications. It's built on React Aria Components and provides excellent accessibility out of the box. Notice lists are commonly used to manage system-wide notifications, user feedback queues, and alert systems that need to display multiple messages with automatic timeout and dismissal capabilities.
 
 ## Example usage
 
@@ -27,7 +27,7 @@ function App() {
 
   return (
     <div>
-      <Notice.List
+      <NoticeList
         aria-label='notice-list'
         placement="top right"
         defaultColor="info"
@@ -42,21 +42,21 @@ function App() {
 <Canvas of={ListStories.Default} />
 
 ### Multiple Notice Lists
-When you have multiple Notice.List on the page add a unique `aria-label` to each list
+When you have multiple NoticeList on the page add a unique `aria-label` to each list
 ```tsx
 // Create separate lists for different types of notifications
 const infoListId = "info-notices";
 const errorListId = "error-notices";
 
 <div>
-  <Notice.List
+  <NoticeList
     id={infoListId}
     aria-label='info-notices'
     placement="top right"
     defaultColor="info"
     limit={5}
   />
-  <Notice.List
+  <NoticeList
     id={errorListId}
     aria-label='error-notices'
     placement="bottom right"
@@ -94,7 +94,7 @@ emit({
 * **left** - Middle left of the container
 
 ## Props
-The Notice.List component accepts all standard HTML div attributes
+The NoticeList component accepts all standard HTML div attributes
 
 ### Core Props
 * **`id`** - Unique identifier for the notice list
@@ -115,7 +115,7 @@ The Notice.List component accepts all standard HTML div attributes
     - `actions` - Class name applied to the actions container
 
 ## Events
-The Notice.List implements events via bus
+The NoticeList implements events via bus
 
 ### Events
 * **`queue`** - Add an event to the queue
@@ -126,7 +126,7 @@ The Notice.List implements events via bus
 
 ## Queue Management
 
-The Notice.List component uses an event-driven architecture for queue management:
+The NoticeList component uses an event-driven architecture for queue management:
 
 ### Adding Notices
 ```tsx
@@ -224,7 +224,7 @@ dequeue({ metadata: { fileId: "file-123" } });
 ```
 
 ## Implementation Notes
-The `Notice.List` component wraps the `ToastRegion` and `ToastQueue` components from `react-aria-components` and integrates with a custom event bus system for queue management.
+The `NoticeList` component wraps the `ToastRegion` and `ToastQueue` components from `react-aria-components` and integrates with a custom event bus system for queue management.
 
 [React Aria Toast Docs](https://react-spectrum.adobe.com/react-aria/Toast.html)
 

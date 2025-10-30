@@ -10,7 +10,7 @@ A semantic and accessible label component that provides proper form labeling wit
 It is composed of the following components:
 
 - **Label** - Main label component with automatic optional/required text handling
-- **Label.Provider** - Context provider for setting consistent styling across multiple labels
+- **LabelProvider** - Context provider for setting consistent styling across multiple labels
 
 ## Example usage
 ```tsx
@@ -28,11 +28,11 @@ It is composed of the following components:
   Full Name
 </Label>
 
-// Using Label.Provider for consistent styling
-<Label.Provider isRequired={true}>
+// Using LabelProvider for consistent styling
+<LabelProvider isRequired={true}>
   <Label>Username</Label>
   <Label>Email</Label>
-</Label.Provider>
+</LabelProvider>
 ```
 
 ## States
@@ -55,7 +55,7 @@ The component automatically handles the visual distinction between required and 
 - **`isDisabled`** - Whether the label should appear disabled (default: `false`)
 - **`className`** - Custom CSS class name for additional styling
 
-### Label.Provider Props
+### LabelProvider Props
 - **`isRequired`** - Whether all child labels should be treated as required
 - **`isDisabled`** - Whether all child labels should appear disabled
 - **`children`** - Label components that will inherit the provider's styling
@@ -84,13 +84,13 @@ Built-in accessibility features ensure proper form labeling:
 ```
 
 ### Context Provider
-Use `Label.Provider` to set consistent styling for multiple labels:
+Use `LabelProvider` to set consistent styling for multiple labels:
 ```tsx
-<Label.Provider isRequired={true}>
+<LabelProvider isRequired={true}>
   <Label>First Name</Label>
   <Label>Last Name</Label>
   <Label>Email</Label>
-</Label.Provider>
+</LabelProvider>
 ```
 
 ### State Management
@@ -141,15 +141,15 @@ Visual feedback for different label states:
 </form>
 ```
 
-### Using Label.Provider
+### Using LabelProvider
 ```tsx
-<Label.Provider isRequired={true}>
+<LabelProvider isRequired={true}>
   <div className="space-y-2">
     <Label>First Name</Label>
     <Label>Last Name</Label>
     <Label>Email Address</Label>
   </div>
-</Label.Provider>
+</LabelProvider>
 ```
 
 ## Accessibility Features
@@ -173,7 +173,7 @@ Key features:
 - **Semantic Structure**: Proper `<label>` element with correct HTML semantics
 - **Automatic Indicators**: Built-in optional/required text handling
 - **State Management**: Visual feedback for different label states
-- **Context Provider**: Label.Provider for consistent styling across multiple labels
+- **Context Provider**: LabelProvider for consistent styling across multiple labels
 - **Accessibility**: Full ARIA compliance and screen reader support
 - **Type Safety**: Full TypeScript support with comprehensive prop types
 - **React Aria Integration**: Built on top of RAC for enhanced accessibility
