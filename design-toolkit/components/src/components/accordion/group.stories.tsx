@@ -27,7 +27,7 @@ type Alias = React.FC<AccordionGroupProps>;
  * The accordion group will stretch to fill the entire width of its parent container.
  */
 const meta = {
-  title: 'Components/Accordion.Group',
+  title: 'Components/AccordionGroup',
   component: AccordionGroup as Alias,
   args: {
     allowsMultipleExpanded: false,
