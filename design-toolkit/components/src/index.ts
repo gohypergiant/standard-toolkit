@@ -204,12 +204,15 @@ export {
   getInsertIndex,
   parseDropTarget,
   useKanban,
+  validateMoveCard,
 } from './components/kanban/context';
 export type {
   DropTargetInfo,
   KanbanContextData,
   KanbanProviderProps,
   MoveCard,
+  MoveCardValidationParams,
+  MoveCardValidationResult,
 } from './components/kanban/context';
 export { KanbanHeaderActions } from './components/kanban/header-actions';
 export { KanbanHeaderSearch } from './components/kanban/header-search';

@@ -278,45 +278,97 @@ const handleAddCard = (columnId: string) => {
 ## Props
 
 ### Kanban
-- **`children`** – Board content (Header and ColumnContainer)
-- **`className`** – Additional CSS classes
+- **`children`** (`ReactNode`, optional) – Board content (Header and ColumnContainer)
+- **`className`** (`string`, optional) – Additional CSS classes
+- **`columns`** (`ReactNode[]`, optional) – Array of column components
 
 ### KanbanHeader
-- **`children`** – Header content (Title and Actions)
-- **`className`** – Additional CSS classes
+- **`children`** (`ReactNode`, optional) – Header content (Title and Actions)
+- **`className`** (`string`, optional) – Additional CSS classes
 
 ### KanbanHeaderTitle
-- **`children`** – Title text
-- **`className`** – Additional CSS classes
+- **`children`** (`ReactNode`, optional) – Title text
+- **`className`** (`string`, optional) – Additional CSS classes
 
 ### KanbanHeaderActions
-- **`children`** – Action buttons and search components
-- **`className`** – Additional CSS classes
+- **`children`** (`ReactNode`, optional) – Action buttons and search components
+- **`className`** (`string`, optional) – Additional CSS classes
 
 ### KanbanHeaderSearch
-Extends `SearchField` props
-- **`onInput`** – Handler for search input changes
-- **`classNames`** – Custom class names for styling
+Extends `SearchField` props from React Aria
+- **`classNames`** (`object`, optional) – Custom class names for styling sub-elements
+  - `field` (`string`, optional) – SearchField container class
+  - `input` (`string`, optional) – Input element class
+  - `clear` (`string`, optional) – Clear button class
+  - `loading` (`string`, optional) – Loading icon class
+  - `search` (`string`, optional) – Search icon class
+- **`onInput`** (`(e: FormEvent<HTMLInputElement>) => void`, optional) – Handler for search input changes
+- **`inputProps`** (`Omit<InputProps, 'type'>`, optional) – Additional props for the input element
+- **`variant`** (`'filled' | 'outlined'`, optional) – Visual variant (defaults to 'outlined')
+- **`isLoading`** (`boolean`, optional) – Displays a loading spinner
 
 ### KanbanColumn
-- **`column`** – Column data object (required)
-- **`children`** – Column content
-- **`className`** – Additional CSS classes
+- **`column`** (`KanbanColumnData`, required) – Column data object
+  - `id` (`string`, required) – Unique column identifier
+  - `title` (`string`, required) – Column title
+  - `cards` (`KanbanCardData[]`, required) – Array of card data
+  - `canDrop` (`boolean`, optional) – Whether cards can be dropped in this column
+- **`children`** (`ReactNode`, optional) – Column content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnHeader
+- **`children`** (`ReactNode`, optional) – Child components (title, actions, drag handle)
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnHeaderTitle
+- **`children`** (`ReactNode`, optional) – Title text or content
+- **`className`** (`string`, optional) – Additional CSS classes
 
 ### KanbanColumnHeaderActions
-- **`cardCount`** – Number of cards in the column (displayed automatically)
-- **`children`** – Additional action buttons
-- **`className`** – Additional CSS classes
+- **`cardCount`** (`number`, optional) – Number of cards in the column (displays count badge)
+- **`children`** (`ReactNode`, optional) – Additional action buttons
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnHeaderDragHandle
+No configurable props. Renders a drag icon for reordering columns.
+
+### KanbanColumnContent
+- **`column`** (`KanbanColumnData`, required) – Column data for rendering cards
+- **`children`** (`ReactNode | ReactNode[]`, optional) – Card components
+- **`className`** (`string`, optional) – Additional CSS classes
 
 ### KanbanColumnActions
-- **`onAddCard`** – Callback when "Add Card" button is clicked
-- **`className`** – Additional CSS classes
+- **`onAddCard`** (`() => void`, optional) – Callback when "Add Card" button is clicked
+- **`children`** (`ReactNode`, optional) – Additional content
+- **`className`** (`string`, optional) – Additional CSS classes
 
 ### KanbanCard
-- **`card`** – Card data object (required)
-- **`isActive`** – Whether the card is currently active/selected
-- **`children`** – Card content
-- **`className`** – Additional CSS classes
+- **`card`** (`KanbanCardData`, required) – Card data object
+  - `id` (`string`, required) – Unique card identifier
+  - `title` (`string`, required) – Card title
+  - `body` (`ReactNode | string`, required) – Card body content
+  - `columnId` (`string`, required) – ID of the column containing this card
+  - `position` (`number`, required) – Position of card within column (0-indexed)
+  - `isActive` (`boolean`, optional) – Whether the card is active
+- **`isActive`** (`boolean`, optional) – Whether the card is currently being dragged
+- **`children`** (`ReactNode`, optional) – Card content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardHeader
+- **`children`** (`ReactNode`, optional) – Child components (title, actions)
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardHeaderTitle
+- **`children`** (`ReactNode`, optional) – Title text or content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardHeaderActions
+- **`children`** (`ReactNode`, optional) – Action buttons or menu items
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardBody
+- **`children`** (`ReactNode`, optional) – Body content to display
+- **`className`** (`string`, optional) – Additional CSS classes
 
 ## Accessibility
 

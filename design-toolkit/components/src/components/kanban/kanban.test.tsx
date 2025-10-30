@@ -129,19 +129,21 @@ function TestKanban() {
 
 describe('Kanban Board', () => {
   describe('Kanban Components', () => {
-    render(<TestKanban />);
-    const mainContainer = screen.getByTestId('container');
-
     it('should render', () => {
+      render(<TestKanban />);
       expect(screen.getByText('Kanban Example')).toBeTruthy();
     });
 
     it('should render correct number of columns for data', () => {
+      render(<TestKanban />);
+      const mainContainer = screen.getByTestId('container');
       expect(mainContainer).toBeTruthy();
       expect(mainContainer.childNodes.length).toEqual(columns.length);
     });
 
     it('should render correct number of cards for given column data', () => {
+      render(<TestKanban />);
+      const mainContainer = screen.getByTestId('container');
       expect(
         mainContainer.childNodes[0]?.childNodes[1]?.childNodes.length,
       ).toEqual(columns[0]?.cards.length);
@@ -861,7 +863,6 @@ describe('Kanban Board', () => {
         const singleCardColumn: KanbanColumnData = {
           title: 'Single',
           id: 'single',
-          headerActions: [],
           cards: [
             {
               title: 'Only Card',

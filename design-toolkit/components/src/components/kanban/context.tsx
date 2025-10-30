@@ -56,6 +56,48 @@ export interface DropTargetInfo {
 }
 
 /**
+ * Parameters for validating a card move operation
+ */
+export interface MoveCardValidationParams {
+  cardId: string;
+  targetColumnId: string;
+  targetPosition: number;
+  columns: KanbanColumnData[];
+  cardMap: Map<
+    string,
+    { column: KanbanColumnData; card: KanbanCardData; index: number }
+  >;
+}
+
+/**
+ * Result of validating a card move operation
+ * Uses discriminated union to ensure type safety based on success/failure
+ */
+export type MoveCardValidationResult =
+  | {
+      /** Validation succeeded */
+      success: true;
+      /** Adjusted target position (clamped to valid bounds) */
+      adjustedPosition: number;
+      /** Source card information */
+      sourceInfo: {
+        column: KanbanColumnData;
+        card: KanbanCardData;
+        index: number;
+      };
+      /** Target column */
+      targetColumn: KanbanColumnData;
+      /** Empty error array for success case */
+      errors: [];
+    }
+  | {
+      /** Validation failed */
+      success: false;
+      /** List of error messages describing validation failures */
+      errors: string[];
+    };
+
+/**
  * Calculates which edge of a drop target is closest to the dragged item
  * @param over - The drop target from dnd-kit
  * @param active - The active dragged item from dnd-kit
@@ -137,6 +179,90 @@ export const getInsertIndex = (
   return closestEdge === 'top' ? targetPosition : targetPosition + 1;
 };
 
+/**
+ * Validates all parameters for a card move operation
+ * @param params - Validation parameters
+ * @returns Validation result with success flag, adjusted values, and errors
+ */
+export function validateMoveCard({
+  cardId,
+  targetColumnId,
+  targetPosition,
+  columns,
+  cardMap,
+}: MoveCardValidationParams): MoveCardValidationResult {
+  const errors: string[] = [];
+  let adjustedPosition = targetPosition;
+
+  // 1. Type validation
+  if (typeof cardId !== 'string' || !cardId.trim()) {
+    errors.push('[Kanban] moveCard: cardId must be a non-empty string');
+  }
+
+  if (typeof targetColumnId !== 'string' || !targetColumnId.trim()) {
+    errors.push('[Kanban] moveCard: targetColumnId must be a non-empty string');
+  }
+
+  if (typeof targetPosition !== 'number' || !Number.isFinite(targetPosition)) {
+    errors.push('[Kanban] moveCard: targetPosition must be a finite number');
+  }
+
+  // Early return if type validation fails
+  if (errors.length > 0) {
+    return { success: false, errors };
+  }
+
+  // 2. Card existence validation
+  const sourceInfo = cardMap.get(cardId);
+  if (!sourceInfo) {
+    errors.push(`[Kanban] moveCard: Card "${cardId}" not found in any column`);
+    return { success: false, errors };
+  }
+
+  // 3. Target column existence validation
+  const targetColumn = columns.find((col) => col.id === targetColumnId);
+  if (!targetColumn) {
+    errors.push(
+      `[Kanban] moveCard: Target column "${targetColumnId}" not found`,
+    );
+    return { success: false, errors };
+  }
+
+  // 4. Position bounds validation (with adjustment)
+  if (adjustedPosition < 0) {
+    console.warn(
+      `[Kanban] moveCard: targetPosition (${adjustedPosition}) cannot be negative. Using 0 instead.`,
+    );
+    adjustedPosition = 0;
+  }
+
+  const maxPosition = targetColumn.cards.length;
+  if (adjustedPosition > maxPosition) {
+    console.warn(
+      `[Kanban] moveCard: targetPosition (${adjustedPosition}) exceeds maximum (${maxPosition}). ` +
+        `Using ${maxPosition} instead.`,
+    );
+    adjustedPosition = maxPosition;
+  }
+
+  // 5. canDrop validation
+  if (targetColumn.canDrop === false) {
+    errors.push(
+      `[Kanban] moveCard: Column "${targetColumnId}" does not accept drops`,
+    );
+    return { success: false, errors };
+  }
+
+  // All validations passed
+  return {
+    success: true,
+    adjustedPosition,
+    sourceInfo,
+    targetColumn,
+    errors: [],
+  };
+}
+
 const KanbanContext = createContext<KanbanContextData>({
   columns: [],
   updateColumnState: () => null,
@@ -173,20 +299,27 @@ export const KanbanProvider = ({
       targetPosition: number,
       closestEdge?: 'top' | 'bottom',
     ) => {
+      // Validate all inputs
+      const validation = validateMoveCard({
+        cardId,
+        targetColumnId,
+        targetPosition,
+        columns,
+        cardMap,
+      });
+
+      // Handle validation failure
+      if (!validation.success) {
+        validation.errors.forEach((error) => {
+          console.error(error);
+        });
+        return false;
+      }
+
+      // Extract validated data - TypeScript knows these are defined after success check
+      const { adjustedPosition, sourceInfo: source, targetColumn } = validation;
+
       const newColumns = [...columns];
-
-      // Find source card
-      const source = cardMap.get(cardId);
-      if (!source) {
-        return;
-      }
-
-      // Find target column
-      const targetColumn = newColumns.find((col) => col.id === targetColumnId);
-      if (!targetColumn) {
-        return;
-      }
-
       const isSameColumn = source.column.id === targetColumn.id;
 
       // Remove card from source column
@@ -195,8 +328,8 @@ export const KanbanProvider = ({
         cards: source.column.cards.filter((_, i) => i !== source.index),
       };
 
-      // Calculate insert index
-      let index = getInsertIndex(targetPosition, closestEdge);
+      // Calculate insert index using adjusted position
+      let index = getInsertIndex(adjustedPosition, closestEdge);
 
       // If moving within the same column and moving down, adjust index
       if (isSameColumn && source.index < index) {
@@ -232,7 +365,7 @@ export const KanbanProvider = ({
 
       updateColumnState(updatedColumns);
     },
-    [columns, updateColumnState, cardMap.get],
+    [columns, updateColumnState, cardMap],
   );
 
   const getColumnById = useCallback(

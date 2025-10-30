@@ -37,7 +37,13 @@ export const DragContext = createContext<{ activeId: string | null }>({
   activeId: null,
 });
 
-export const useDragContext = () => useContext(DragContext);
+export const useDragContext = () => {
+  const context = useContext(DragContext);
+  if (!context) {
+    throw new Error('useDragContext must be used within Kanban component');
+  }
+  return context;
+};
 
 const ACTIVATION_DISTANCE = 8;
 
