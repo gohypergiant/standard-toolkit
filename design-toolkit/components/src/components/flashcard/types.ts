@@ -18,11 +18,19 @@ export type FlashcardProps = PropsWithChildren & {
 };
 
 // TODO: How strict do we need to be with the value types?
-export type FlashcardMetaData = {
-  label: string;
-  value: any;
+export type FlashcardDetailProps = FlashcardMetaData & {
+  className?: string;
 };
 
 export type FlashcardDetailContainerProps = {
   details?: FlashcardMetaData[];
+  classNames?: {
+    container?: string;
+    detail?: string;
+  };
+};
+
+export type FlashcardMetaData = {
+  label: string;
+  value: any;
 };

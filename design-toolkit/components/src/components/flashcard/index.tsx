@@ -33,32 +33,29 @@
 
 import { createContext, type PropsWithChildren, useContext } from 'react';
 import { Skeleton } from '../skeleton';
-import type {
-  FlashcardDetailContainerProps,
-  FlashcardMetaData,
-  FlashcardProps,
-} from './types';
+import type { FlashcardDetailContainerProps, FlashcardProps } from './types';
 
-const FlashcardContext = createContext<FlashcardProps>({ isLoading: false });
+export const FlashcardContext = createContext<FlashcardProps>({
+  isLoading: false,
+});
 
 export function Flashcard(props: FlashcardProps) {
   const { isLoading, children, ...rest } = props;
 
   return (
-    <Flashcard.Provider value={{ isLoading }}>
+    <FlashcardContext.Provider value={{ isLoading }}>
       <div
-        className='rounded-[var(--radius-medium)] min-w-[128px] outline outline-interactive-hover'
+        className='rounded-medium min-w-[128px] outline outline-interactive-hover'
         {...rest}
       >
         {children}
       </div>
-    </Flashcard.Provider>
+    </FlashcardContext.Provider>
   );
 }
 Flashcard.displayName = 'Flashcard';
 
-// TODO: Fix up type.
-function FlashcardHero(props: PropsWithChildren) {
+export function FlashcardHero(props: PropsWithChildren) {
   const { children, ...rest } = props;
   const context = useContext(FlashcardContext);
 
@@ -77,9 +74,9 @@ function FlashcardHero(props: PropsWithChildren) {
     </div>
   );
 }
-FlashcardHero.displayName = 'Flashcard.Hero';
+FlashcardHero.displayName = 'FlashcardHero';
 
-function FlashcardIdentifier(props: PropsWithChildren) {
+export function FlashcardIdentifier(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
@@ -92,9 +89,9 @@ function FlashcardIdentifier(props: PropsWithChildren) {
     </div>
   );
 }
-FlashcardIdentifier.displayName = 'Flashcard.Identifier';
+FlashcardIdentifier.displayName = 'FlashcardIdentifier';
 
-function FlashcardSecondaryContainer(props: PropsWithChildren) {
+export function FlashcardSecondaryContainer(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
@@ -103,9 +100,9 @@ function FlashcardSecondaryContainer(props: PropsWithChildren) {
     </div>
   );
 }
-FlashcardSecondaryContainer.displayName = 'Flashcard.SecondaryContainer';
+FlashcardSecondaryContainer.displayName = 'FlashcardSecondaryContainer';
 
-function FlashcardSecondaryDetails(props: PropsWithChildren) {
+export function FlashcardSecondaryDetails(props: PropsWithChildren) {
   const { children, ...rest } = props;
   return (
     <div className='flex flex-col spacing-xxs' {...rest}>
@@ -113,9 +110,9 @@ function FlashcardSecondaryDetails(props: PropsWithChildren) {
     </div>
   );
 }
-FlashcardSecondaryDetails.displayName = 'Flashcard.SecondaryDetails';
+FlashcardSecondaryDetails.displayName = 'FlashcardSecondaryDetails';
 
-function FlashcardSecondaryData(props: PropsWithChildren) {
+export function FlashcardSecondaryData(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
@@ -124,10 +121,12 @@ function FlashcardSecondaryData(props: PropsWithChildren) {
     </h2>
   );
 }
-FlashcardSecondaryData.display = 'Flashcard.SecondaryData';
+FlashcardSecondaryData.display = 'FlashcardSecondaryData';
 
-// TODO: Type
-function FlashcardDetailsContainer({ details }: FlashcardDetailContainerProps) {
+export function FlashcardDetailsContainer(
+  props: FlashcardDetailContainerProps,
+) {
+  const { details, classNames } = props;
   if (!(details && details.length)) {
     return null;
   }
@@ -135,15 +134,16 @@ function FlashcardDetailsContainer({ details }: FlashcardDetailContainerProps) {
   return details
     .splice(0, 5)
     .map((item) => (
-      <Flashcard.Details
+      <FlashcardDetail
         label={item.label}
         value={item.value}
         key={item.label}
+        className={classNames?.detail}
       />
     ));
 }
 
-function FlashcardDetail(props: FlashcardMetaData) {
+function FlashcardDetail(props: FlashcardDetailProps) {
   const { label, value, ...rest } = props;
 
   return (
@@ -153,12 +153,4 @@ function FlashcardDetail(props: FlashcardMetaData) {
     </div>
   );
 }
-FlashcardDetail.displayName = 'Flashcard.Details';
-
-Flashcard.Hero = FlashcardHero;
-Flashcard.Details = FlashcardDetail;
-Flashcard.Identifier = FlashcardIdentifier;
-Flashcard.SecondaryData = FlashcardSecondaryData;
-Flashcard.Secondary = FlashcardSecondaryContainer;
-Flashcard.SecondaryDetails = FlashcardSecondaryDetails;
-Flashcard.Provider = FlashcardContext.Provider;
+FlashcardDetail.displayName = 'FlashcardDetail';
