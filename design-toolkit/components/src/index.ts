@@ -176,6 +176,7 @@ export type {
 export { Flashcard } from './components/flashcard';
 export { FlashcardStyles } from './components/flashcard/styles';
 export type {
+  FlashcardDetailContainerProps,
   FlashcardMetaData,
   FlashcardProps,
 } from './components/flashcard/types';
