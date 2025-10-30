@@ -13,8 +13,8 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { Button } from '@accelint/design-toolkit/button';
-import { Icon } from '@accelint/design-toolkit/icon';
+import { Button } from '@accelint/design-toolkit/components/button/index';
+import { Icon } from '@accelint/design-toolkit/components/icon/index';
 import { Add, ExpandWindow } from '@accelint/icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { testLogs } from './log-test';
