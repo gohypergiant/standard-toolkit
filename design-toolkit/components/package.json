@@ -59,6 +59,12 @@
         "default": "./dist/providers/*.js"
       },
       "default": "./dist/providers/*.js"
+    },
+    "./styles": {
+      "import": {
+        "default": "./dist/index.css"
+      },
+      "default": "./dist/index.css"
     }
   },
   "scripts": {
