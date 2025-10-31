@@ -55,6 +55,14 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
+  "dependencies": {
+    "@turf/area": "^7.2.0",
+    "@turf/centroid": "^7.2.0",
+    "@turf/circle": "^7.2.0",
+    "@turf/distance": "^7.2.0",
+    "@turf/helpers": "^7.2.0",
+    "@turf/length": "^7.2.0"
+  },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
@@ -63,6 +71,7 @@
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
+    "@deck.gl-community/editable-layers": "^9.1.1",
     "@deck.gl/core": "^9.1.14",
     "@deck.gl/extensions": "^9.1.14",
     "@deck.gl/geo-layers": "^9.1.14",
@@ -88,15 +97,19 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@turf/turf": "^7.3.0",
+    "@types/geojson": "^7946.0.14",
     "@types/node": "^24.9.0",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
+    "@types/turf": "^3.5.32",
     "client-only": "^0.0.1",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "^3.0.2",
     "mjolnir.js": "^3.0.0",
     "node-fetch": "^2.6.7",
+    "radashi": "^12.6.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "storybook": "^8.6.14",
@@ -111,6 +124,7 @@
   "optionalDependencies": {
     "@accelint/bus": "workspace:*",
     "@accelint/core": "workspace:*",
+    "@deck.gl-community/editable-layers": "9.1.1",
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "9.1.14",
     "@deck.gl/geo-layers": "9.1.14",
@@ -121,9 +135,11 @@
     "@deckgl-fiber-renderer/dom": "1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",
+    "@turf/turf": "7.3.0",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "3.0.2",
     "mjolnir.js": "^3.0.0",
+    "radashi": "12.4.1",
     "react": "19.0.0"
   },
   "publishConfig": {
