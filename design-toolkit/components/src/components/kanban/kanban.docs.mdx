@@ -1,0 +1,392 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as KanbanStories from './kanban.stories';
+
+<Meta of={KanbanStories} />
+
+# Kanban
+
+The Kanban component provides a flexible, drag-and-drop board for organizing tasks and workflows. It's ideal for project management, task tracking, agile workflows, and any scenario where you need to visualize items moving through different states or columns.
+
+Built on top of [@dnd-kit](https://docs.dndkit.com/), the Kanban component provides smooth drag-and-drop interactions for both cards and columns, with visual feedback and position indicators.
+
+It is composed of the following components:
+
+- **Kanban** – Root container that wraps the entire kanban board
+- **KanbanHeader** – Optional header for the board containing title, search, and actions
+- **KanbanHeaderTitle** – Heading element for the board title
+- **KanbanHeaderActions** – Container for header action buttons
+- **KanbanHeaderSearch** – Search field for filtering cards
+- **KanbanColumnContainer** – Container that holds all columns
+- **KanbanColumn** – Individual column that contains cards
+- **KanbanColumnHeader** – Header section of a column
+- **KanbanColumnHeaderTitle** – Title of the column
+- **KanbanColumnHeaderActions** – Container for column actions (includes card count)
+- **KanbanColumnHeaderDragHandle** – Visual indicator for column dragging
+- **KanbanColumnContent** – Container for cards within a column
+- **KanbanColumnActions** – Action button for adding new cards
+- **KanbanCard** – Individual draggable card component
+- **KanbanCardHeader** – Header section of a card
+- **KanbanCardHeaderTitle** – Title of the card
+- **KanbanCardHeaderActions** – Container for card action buttons
+- **KanbanCardBody** – Main content area of the card
+
+## Getting Started
+
+### Required: KanbanProvider
+
+The Kanban component requires the `KanbanProvider` context to manage state, handle drag-and-drop operations, and coordinate card movements between columns.
+
+```tsx
+import { KanbanProvider } from '@accelint/design-toolkit';
+
+function MyKanbanBoard() {
+  const [columns, setColumns] = useState(initialColumns);
+
+  return (
+    <KanbanProvider columns={columns} updateColumnState={setColumns}>
+      {/* Your Kanban components here */}
+    </KanbanProvider>
+  );
+}
+```
+
+### Data Structure
+
+The Kanban component expects data in the following format:
+
+```tsx
+type KanbanColumnData = {
+  id: string;           // Unique identifier for the column
+  title: string;        // Column display name
+  cards: KanbanCardData[];
+  canDrop?: boolean;    // Optional: whether cards can be dropped in this column
+};
+
+type KanbanCardData = {
+  id: string;          // Unique identifier for the card
+  title: string;       // Card display title
+  body: ReactNode | string;  // Card content
+  columnId: string;    // ID of the column this card belongs to
+  position: number;    // Position within the column (0-indexed)
+  isActive?: boolean;  // Optional: whether card is currently active
+};
+```
+
+## Example Usage
+
+### Basic Kanban Board
+
+```tsx
+import { useState } from 'react';
+import { Kanban, KanbanProvider } from '@accelint/design-toolkit';
+
+const initialColumns = [
+  {
+    id: 'todo',
+    title: 'To Do',
+    cards: [
+      {
+        id: 'card-1',
+        title: 'Task 1',
+        body: 'Description of task 1',
+        columnId: 'todo',
+        position: 0,
+      },
+    ],
+  },
+  {
+    id: 'in-progress',
+    title: 'In Progress',
+    cards: [],
+  },
+  {
+    id: 'done',
+    title: 'Done',
+    cards: [],
+  },
+];
+
+function MyKanbanBoard() {
+  const [columns, setColumns] = useState(initialColumns);
+
+  return (
+    <KanbanProvider columns={columns} updateColumnState={setColumns}>
+      <Kanban>
+        <KanbanHeader>
+          <KanbanHeaderTitle>Project Board</KanbanHeaderTitle>
+        </KanbanHeader>
+
+        <KanbanColumnContainer>
+          {columns.map((column) => (
+            <KanbanColumn key={column.id} column={column}>
+              <KanbanColumnHeader>
+                <KanbanColumnHeaderDragHandle />
+                <KanbanColumnHeaderTitle>
+                  {column.title}
+                </KanbanColumnHeaderTitle>
+                <KanbanColumnHeaderActions cardCount={column.cards.length} />
+              </KanbanColumnHeader>
+
+              <KanbanColumnContent>
+                {column.cards.map((card) => (
+                  <KanbanCard key={card.id} card={card}>
+                    <KanbanCardHeader>
+                      <KanbanCardHeaderTitle>{card.title}</KanbanCardHeaderTitle>
+                    </KanbanCardHeader>
+                    <KanbanCardBody>{card.body}</KanbanCardBody>
+                  </KanbanCard>
+                ))}
+                <KanbanColumnActions
+                  onAddCard={() => {/* Handle add card */}}
+                />
+              </KanbanColumnContent>
+            </KanbanColumn>
+          ))}
+        </KanbanColumnContainer>
+      </Kanban>
+    </KanbanProvider>
+  );
+}
+```
+
+<Canvas of={KanbanStories.Default} />
+
+### With Search and Actions
+
+```tsx
+<KanbanProvider columns={columns} updateColumnState={setColumns}>
+  <Kanban>
+    <KanbanHeader>
+      <KanbanHeaderTitle>My Project</KanbanHeaderTitle>
+      <KanbanHeaderActions>
+        <KanbanHeaderSearch
+          onInput={(e) => handleSearch(e.currentTarget.value)}
+          placeholder="Search cards..."
+        />
+        <Button onPress={handleAddColumn}>Add Column</Button>
+      </KanbanHeaderActions>
+    </KanbanHeader>
+
+    <KanbanColumnContainer>
+      {/* Columns here */}
+    </KanbanColumnContainer>
+  </Kanban>
+</KanbanProvider>
+```
+
+<Canvas of={KanbanStories.CompleteExample} />
+
+### Custom Card Content
+
+Cards can contain any React content in the body:
+
+```tsx
+<KanbanCard card={card}>
+  <KanbanCardHeader>
+    <KanbanCardHeaderTitle>{card.title}</KanbanCardHeaderTitle>
+    <KanbanCardHeaderActions>
+      <Menu.Trigger>
+        <Button variant="ghost" size="small">
+          <Icon><MoreVert /></Icon>
+        </Button>
+        <Menu>
+          <Menu.Item>Edit</Menu.Item>
+          <Menu.Item>Delete</Menu.Item>
+        </Menu>
+      </Menu.Trigger>
+    </KanbanCardHeaderActions>
+  </KanbanCardHeader>
+
+  <KanbanCardBody>
+    <div className="space-y-2">
+      <p>{card.description}</p>
+      <div className="flex gap-2">
+        <Badge>{card.priority}</Badge>
+        <Badge>{card.assignee}</Badge>
+      </div>
+    </div>
+  </KanbanCardBody>
+</KanbanCard>
+```
+
+<Canvas of={KanbanStories.CompleteExample} />
+
+## Drag and Drop Behavior
+
+### Card Dragging
+- Cards can be dragged within the same column to reorder
+- Cards can be dragged between columns to move them to different states
+- Visual indicators show where the card will be dropped
+- A preview of the card follows the cursor during dragging
+
+### Column Dragging
+- Columns can be reordered by dragging the drag handle
+- The entire column moves, including all its cards
+- Visual feedback indicates valid drop positions
+
+### Position Indicators
+- **Top indicator**: Shown when hovering over the top half of a card
+- **Bottom indicator**: Shown when hovering over the bottom half of a card
+- Indicators provide clear visual feedback about drop position
+
+## State Management
+
+The `KanbanProvider` manages all drag-and-drop state through the `moveCard` function:
+
+```tsx
+const moveCard = (
+  cardId: string,
+  targetColumnId: string,
+  targetPosition: number,
+  closestEdge?: 'top' | 'bottom'
+) => {
+  // Automatically updates card positions
+  // Handles moving between columns
+  // Updates the columns state
+};
+```
+
+You don't need to implement this yourself—the provider handles it automatically. Just provide the columns state and update function.
+
+## Adding Cards
+
+Use the `KanbanColumnActions` component to add new cards:
+
+```tsx
+const handleAddCard = (columnId: string) => {
+  const newCard = {
+    id: uuid(),
+    title: 'New Card',
+    body: 'Card description',
+    columnId,
+    position: columns.find(c => c.id === columnId).cards.length,
+  };
+
+  setColumns(columns.map(col =>
+    col.id === columnId
+      ? { ...col, cards: [...col.cards, newCard] }
+      : col
+  ));
+};
+
+<KanbanColumnActions onAddCard={() => handleAddCard(column.id)} />
+```
+
+<Canvas of={KanbanStories.CompleteExample} />
+
+## Props
+
+### Kanban
+- **`children`** (`ReactNode`, optional) – Board content (Header and ColumnContainer)
+- **`className`** (`string`, optional) – Additional CSS classes
+- **`columns`** (`ReactNode[]`, optional) – Array of column components
+
+### KanbanHeader
+- **`children`** (`ReactNode`, optional) – Header content (Title and Actions)
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanHeaderTitle
+- **`children`** (`ReactNode`, optional) – Title text
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanHeaderActions
+- **`children`** (`ReactNode`, optional) – Action buttons and search components
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanHeaderSearch
+Extends `SearchField` props from React Aria
+- **`classNames`** (`object`, optional) – Custom class names for styling sub-elements
+  - `field` (`string`, optional) – SearchField container class
+  - `input` (`string`, optional) – Input element class
+  - `clear` (`string`, optional) – Clear button class
+  - `loading` (`string`, optional) – Loading icon class
+  - `search` (`string`, optional) – Search icon class
+- **`onInput`** (`(e: FormEvent<HTMLInputElement>) => void`, optional) – Handler for search input changes
+- **`inputProps`** (`Omit<InputProps, 'type'>`, optional) – Additional props for the input element
+- **`variant`** (`'filled' | 'outlined'`, optional) – Visual variant (defaults to 'outlined')
+- **`isLoading`** (`boolean`, optional) – Displays a loading spinner
+
+### KanbanColumn
+- **`column`** (`KanbanColumnData`, required) – Column data object
+  - `id` (`string`, required) – Unique column identifier
+  - `title` (`string`, required) – Column title
+  - `cards` (`KanbanCardData[]`, required) – Array of card data
+  - `canDrop` (`boolean`, optional) – Whether cards can be dropped in this column
+- **`children`** (`ReactNode`, optional) – Column content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnHeader
+- **`children`** (`ReactNode`, optional) – Child components (title, actions, drag handle)
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnHeaderTitle
+- **`children`** (`ReactNode`, optional) – Title text or content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnHeaderActions
+- **`cardCount`** (`number`, optional) – Number of cards in the column (displays count badge)
+- **`children`** (`ReactNode`, optional) – Additional action buttons
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnHeaderDragHandle
+No configurable props. Renders a drag icon for reordering columns.
+
+### KanbanColumnContent
+- **`column`** (`KanbanColumnData`, required) – Column data for rendering cards
+- **`children`** (`ReactNode | ReactNode[]`, optional) – Card components
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanColumnActions
+- **`onAddCard`** (`() => void`, optional) – Callback when "Add Card" button is clicked
+- **`children`** (`ReactNode`, optional) – Additional content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCard
+- **`card`** (`KanbanCardData`, required) – Card data object
+  - `id` (`string`, required) – Unique card identifier
+  - `title` (`string`, required) – Card title
+  - `body` (`ReactNode | string`, required) – Card body content
+  - `columnId` (`string`, required) – ID of the column containing this card
+  - `position` (`number`, required) – Position of card within column (0-indexed)
+  - `isActive` (`boolean`, optional) – Whether the card is active
+- **`isActive`** (`boolean`, optional) – Whether the card is currently being dragged
+- **`children`** (`ReactNode`, optional) – Card content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardHeader
+- **`children`** (`ReactNode`, optional) – Child components (title, actions)
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardHeaderTitle
+- **`children`** (`ReactNode`, optional) – Title text or content
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardHeaderActions
+- **`children`** (`ReactNode`, optional) – Action buttons or menu items
+- **`className`** (`string`, optional) – Additional CSS classes
+
+### KanbanCardBody
+- **`children`** (`ReactNode`, optional) – Body content to display
+- **`className`** (`string`, optional) – Additional CSS classes
+
+## Accessibility
+
+The Kanban component includes built-in accessibility features:
+- Semantic HTML structure with proper headings
+- ARIA labels for drag-and-drop operations
+- Keyboard navigation support
+- Screen reader announcements for state changes
+- Focus management during drag operations
+
+## Implementation Notes
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/kanban)
+
+- Built on [dndkit](https://docs.dndkit.com/)
+- Uses React Context for state management via `KanbanProvider`
+- Requires unique IDs for all columns and cards
+- Card positions are automatically managed by the provider
+- Supports nested React content in card bodies
+- Visual feedback with position indicators and drag previews
+- Smooth animations for drag-and-drop interactions
