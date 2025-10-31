@@ -3,7 +3,7 @@ import * as DrawerLayoutStories from './layout.stories';
 
 <Meta of={DrawerLayoutStories} />
 
-# Drawer.Layout
+# DrawerLayout
 
 A flexible layout system for managing multiple drawers that can be positioned on any side of the main content area. Supports pushing and extending behaviors with configurable sizes and placements.
 
@@ -11,44 +11,44 @@ A flexible layout system for managing multiple drawers that can be positioned on
 
 ## Structure
 
-The Drawer.Layout system consists of the following components:
+The DrawerLayout system consists of the following components:
 
 ```tsx
-<Drawer.Layout>
-  <Drawer.Layout.Main>
+<DrawerLayout>
+  <DrawerLayoutMain>
     {/* Main content area */}
-  </Drawer.Layout.Main>
+  </DrawerLayoutMain>
 
   <Drawer>
-    <Drawer.Menu>
-      <Drawer.Menu.Item />
-    </Drawer.Menu>
-    <Drawer.Panel>
-      <Drawer.Header>
-        <Drawer.Header.Title />
-      </Drawer.Header>
-      <Drawer.Content>
-        <Drawer.View />
-      </Drawer.Content>
-    </Drawer.Panel>
+    <DrawerMenu>
+      <DrawerMenuItem />
+    </DrawerMenu>
+    <DrawerPanel>
+      <DrawerHeader>
+        <DrawerHeaderTitle />
+      </DrawerHeader>
+      <DrawerContent>
+        <DrawerView />
+      </DrawerContent>
+    </DrawerPanel>
   </Drawer>
-</Drawer.Layout>
+</DrawerLayout>
 ```
 
-- **Drawer.Layout**: Container that manages drawer interactions and layout
-- **Drawer.Layout.Main**: Main content area that responds to drawer states
+- **DrawerLayout**: Container that manages drawer interactions and layout
+- **DrawerLayoutMain**: Main content area that responds to drawer states
 - **Drawer**: Individual drawer container with configurable placement
-- **Drawer.Menu**: Navigation menu for controlling drawer views
-- **Drawer.Menu.Item**: Interactive item for toggling drawer states
-- **Drawer.Panel**: Content container for the drawer
-- **Drawer.Header**: Header section of the drawer
-- **Drawer.Header.Title**: Title component for the drawer
-- **Drawer.Content**: Main content area within the drawer
-- **Drawer.View**: Individual view container within the drawer
+- **DrawerMenu**: Navigation menu for controlling drawer views
+- **DrawerMenuItem**: Interactive item for toggling drawer states
+- **DrawerPanel**: Content container for the drawer
+- **DrawerHeader**: Header section of the drawer
+- **DrawerHeaderTitle**: Title component for the drawer
+- **DrawerContent**: Main content area within the drawer
+- **DrawerView**: Individual view container within the drawer
 
 ## Props
 
-### Drawer.Layout Props
+### DrawerLayout Props
 
 - `extend`
   - Type: select ('top bottom', 'left right', 'top', 'bottom', 'left', 'right')
@@ -82,7 +82,7 @@ The Drawer.Layout system consists of the following components:
   - Default: 'medium'
   - Description: Size of the drawer
 
-### Drawer.Menu.Item Props
+### DrawerMenuItem Props
 
 - `toggle`
   - Type: boolean
@@ -94,7 +94,7 @@ The Drawer.Layout system consists of the following components:
   - Required
   - Description: ID of the view this item controls
 
-### Drawer.View Props
+### DrawerView Props
 
 - `id`
   - Type: string
@@ -107,14 +107,14 @@ The Drawer.Layout system consists of the following components:
 - Uses CSS Grid for layout management
 - Handles transitions and animations automatically
 - **Props use camelCase** (e.g., `placement`, `size`)
-- **Component names use PascalCase** (e.g., `Drawer.Layout`)
+- **Component names use PascalCase** (e.g., `DrawerLayout`)
 - **Descriptions begin with uppercase letters**
 
 ## Usage Requirements
 
-- Must include exactly one `Drawer.Layout.Main` component
+- Must include exactly one `DrawerLayoutMain` component
 - Each `Drawer` must have a unique `id`
-- Each `Drawer.View` must have a unique `id`
+- Each `DrawerView` must have a unique `id`
 - `placement` must be one of: 'top', 'bottom', 'left', 'right'
 - Menu items must reference valid view IDs
 

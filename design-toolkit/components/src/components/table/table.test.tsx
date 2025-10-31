@@ -12,7 +12,11 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Table } from '.';
+import { TableBody } from './body';
+import { TableCell } from './cell';
+import { TableHeader } from './header';
+import { TableHeaderCell } from './header-cell';
+import { TableRow } from './row';
 import type { TableProps } from './types';
 
 function setup(
@@ -21,18 +25,18 @@ function setup(
   return {
     ...render(
       <table {...props}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Header 1</Table.HeaderCell>
-            <Table.HeaderCell>Header 2</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>Cell 1</Table.Cell>
-            <Table.Cell>Cell 2</Table.Cell>
-          </Table.Row>
-        </Table.Body>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderCell>Header 1</TableHeaderCell>
+            <TableHeaderCell>Header 2</TableHeaderCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>Cell 1</TableCell>
+            <TableCell>Cell 2</TableCell>
+          </TableRow>
+        </TableBody>
       </table>,
     ),
   };

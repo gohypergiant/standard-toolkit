@@ -6,99 +6,99 @@ import * as SidenavStories from './sidenav.stories';
 
 # Sidenav
 
-A navigation component that provides a collapsible side panel for hierarchical navigation in applications. The Sidenav component must be used within a `Drawer.Layout` to enable push/overlay functionality and proper layout management.
+A navigation component that provides a collapsible side panel for hierarchical navigation in applications. The Sidenav component must be used within a `DrawerLayout` to enable push/overlay functionality and proper layout management.
 
 ## Layout Requirements
 
 The Sidenav component requires specific layout configuration to function properly:
 
-1. Must be wrapped in a `Drawer.Layout` component
-2. The trigger button should be placed within `Drawer.Layout.Main`
-3. The Sidenav itself should be a direct child of `Drawer.Layout`
+1. Must be wrapped in a `DrawerLayout` component
+2. The trigger button should be placed within `DrawerLayoutMain`
+3. The Sidenav itself should be a direct child of `DrawerLayout`
 
 ## Components
 
 It is composed of the following components:
 - **Sidenav** - Root component that manages the navigation state and layout
-- **Sidenav.Trigger** - Button component that controls the expansion/collapse of the sidenav
-- **Sidenav.Header** - Container for the navigation header, typically containing a logo and application title
-- **Sidenav.Avatar** - Icon display component with icon, heading, and text
-- **Sidenav.Item** - Interactive navigation item that can be selected, disabled, or contain nested items
-- **Sidenav.Link** - Interactive navigation item that can be selected, disabled, or contain nested items
-- **Sidenav.Menu** - Expandable menu component that contains nested navigation items
-- **Sidenav.Menu.Item** - Individual navigation item within a Sidenav.Menu
-- **Sidenav.Content** - Container for content
-- **Sidenav.Footer** - Container for footer content
+- **SidenavTrigger** - Button component that controls the expansion/collapse of the sidenav
+- **SidenavHeader** - Container for the navigation header, typically containing a logo and application title
+- **SidenavAvatar** - Icon display component with icon, heading, and text
+- **SidenavItem** - Interactive navigation item that can be selected, disabled, or contain nested items
+- **SidenavLink** - Interactive navigation item that can be selected, disabled, or contain nested items
+- **SidenavMenu** - Expandable menu component that contains nested navigation items
+- **SidenavMenuItem** - Individual navigation item within a SidenavMenu
+- **SidenavContent** - Container for content
+- **SidenavFooter** - Container for footer content
 
 ## Example Usage
 
 ```tsx
 <div className="h-screen bg-surface-raised">
-  <Drawer.Layout push="left">
-    <Drawer.Layout.Main className="col-start-2">
-      <Sidenav.Trigger>
+  <DrawerLayout push="left">
+    <DrawerLayoutMain className="col-start-2">
+      <SidenavTrigger>
         <Button variant="icon" size="large">
           <Icon>
             <MenuIcon />
           </Icon>
         </Button>
-      </Sidenav.Trigger>
-    </Drawer.Layout.Main>
+      </SidenavTrigger>
+    </DrawerLayoutMain>
 
     <Sidenav>
-      <Sidenav.Header>
-        <Sidenav.Avatar>
+      <SidenavHeader>
+        <SidenavAvatar>
           <Icon><AppLogo /></Icon>
           <Heading>Application Header</Heading>
           <Text>subheader</Text>
-        </Sidenav.Avatar>
-      </Sidenav.Header>
+        </SidenavAvatar>
+      </SidenavHeader>
 
-      <Sidenav.Content>
+      <SidenavContent>
         <Heading>Navigation</Heading>
-        <Sidenav.Item>
+        <SidenavItem>
           <Icon><HomeIcon /></Icon>
           <Text>Home</Text>
-        </Sidenav.Item>
+        </SidenavItem>
         <Divider />
-        <Sidenav.Item isSelected>
+        <SidenavItem isSelected>
           <Icon><SettingsIcon /></Icon>
           <Text>Settings</Text>
-        </Sidenav.Item>
+        </SidenavItem>
         <Divider />
-        <Sidenav.Menu title="More Options" icon={<Icon><MenuIcon /></Icon>}>
-          <Sidenav.Menu.Item>
+        <SidenavMenu title="More Options" icon={<Icon><MenuIcon /></Icon>}>
+          <SidenavMenuItem>
             <Text>Sub Item 1</Text>
-          </Sidenav.Menu.Item>
-          <Sidenav.Menu.Item>
+          </SidenavMenuItem>
+          <SidenavMenuItem>
             <Text>Sub Item 2</Text>
-          </Sidenav.Menu.Item>
-        </Sidenav.Menu>
-      </Sidenav.Content>
+          </SidenavMenuItem>
+        </SidenavMenu>
+      </SidenavContent>
 
-      <Sidenav.Footer>
-        <Sidenav.Avatar>
+      <SidenavFooter>
+        <SidenavAvatar>
           <Icon><UserIcon /></Icon>
           <Heading>User Name</Heading>
           <Text>john@example.com</Text>
-        </Sidenav.Avatar>
-      </Sidenav.Footer>
+        </SidenavAvatar>
+      </SidenavFooter>
     </Sidenav>
-  </Drawer.Layout>
+  </DrawerLayout>
 </div>
 ```
 
 ## Props
 
-### Drawer.Layout Props
+### DrawerLayout Props
 - **`push`** `"left"` - Enables push behavior for the sidenav. When not specified, the sidenav will overlay content instead
 
 ### Sidenav Props
 - **`hidden`** `boolean` - Controls the visibility of the navigation panel
-- **`children`** `ReactNode` - Must contain exactly one `Sidenav.Header`, `Sidenav.Content`, and `Sidenav.Footer`
+- **`children`** `ReactNode` - Must contain exactly one `SidenavHeader`, `SidenavContent`, and `SidenavFooter`
 - **`className`** `string` - Custom CSS class name for the root element
 
-### Sidenav.Header Props
+### SidenavHeader Props
 - **`children`** `ReactNode` - Content to be rendered in the header section
 - **`classNames`** `object` - Optional CSS class names for styling different parts of the header
   - **`header`** `string` - Class name for the header element
@@ -106,16 +106,16 @@ It is composed of the following components:
   - **`container`** `string` - Class name for the container element
   - **`icon`** `string` - Class name for the icon element
 
-### Sidenav.Item Props
+### SidenavItem Props
 Supports all the `ToggleButton` [props and events](?path=/story/components-button--toggle).
 - **`classNames`** `object` - Optional CSS class names for styling
   - **`button`** `string` - Class name for the button element
   - **`icon`** `string` - Class name for the icon element
 
-### Sidenav.Link Props
+### SidenavLink Props
 Supports all the `LinkButton` [props and events](?path=/story/components-button--link).
 
-### Sidenav.Menu Props
+### SidenavMenu Props
 - **`title`** `string` - Required title text displayed in the menu button and panel header
 - **`icon`** `ReactNode` - Required icon displayed in the menu button
 - **`children`** `ReactNode` - Menu items to be rendered within the expandable panel
@@ -126,19 +126,19 @@ Supports all the `LinkButton` [props and events](?path=/story/components-button-
   - **`panel`** `string` - Class name for the disclosure panel
   - **`panelContent`** `string` - Class name for the panel content container
 
-### Sidenav.Menu.Item Props
+### SidenavMenuItem Props
 Supports all the `ToggleButton` [props and events](?path=/story/components-button--toggle).
 - **`className`** `string` - Class name for the menu item
 
-### Sidenav.Avatar Props
+### SidenavAvatar Props
 - **`children`** `ReactNode` - Must contain exactly one `Icon` or `Avatar` with a `Heading`, and `Text` component
 - **`className`** `string` - Class name for the avatar container
 
-### Sidenav.Content Props
+### SidenavContent Props
 - **`children`** `ReactNode` - Content to be rendered in the footer section
 - **`className`** `string` - Class name for the footer container
 
-### Sidenav.Footer Props
+### SidenavFooter Props
 - **`children`** `ReactNode` - Content to be rendered in the footer section
 - **`className`** `string` - Class name for the footer container
 
@@ -165,7 +165,7 @@ The Sidenav uses the following style variants and states:
 - Default: Basic menu button styling with chevron icon
 - Hover: `enabled:hover:bg-interactive-muted-hover`
 
-### Menu.Item States
+### MenuItem States
 - Default: Basic navigation item styling within menu panel
 - Hover: `enabled:hover:bg-interactive-muted-hover`
 - Selected: `enabled:selected:bg-accent-primary-bold`

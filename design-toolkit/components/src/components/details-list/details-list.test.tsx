@@ -14,6 +14,8 @@ import { render, screen } from '@testing-library/react';
 import { Fragment } from 'react';
 import { describe, expect, it } from 'vitest';
 import { DetailsList } from './';
+import { DetailsListLabel } from './label';
+import { DetailsListValue } from './value';
 import type { DetailsListProps } from './types';
 
 const defaults = {
@@ -26,8 +28,8 @@ function setup({
     <>
       {Object.entries(defaults).map(([label, value]: [string, string]) => (
         <Fragment key={label}>
-          <DetailsList.Label>{label}</DetailsList.Label>
-          <DetailsList.Value>{value}</DetailsList.Value>
+          <DetailsListLabel>{label}</DetailsListLabel>
+          <DetailsListValue>{value}</DetailsListValue>
         </Fragment>
       ))}
     </>

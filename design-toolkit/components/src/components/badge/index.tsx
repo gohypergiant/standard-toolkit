@@ -12,21 +12,10 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import { type ContextValue, useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components';
+import { BadgeContext } from './context';
 import { BadgeStyles, BadgeStylesDefaults } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { BadgeProps } from './types';
-
-export const BadgeContext =
-  createContext<ContextValue<BadgeProps, HTMLSpanElement>>(null);
-
-function BadgeProvider({ children, ...props }: ProviderProps<BadgeProps>) {
-  return (
-    <BadgeContext.Provider value={props}>{children}</BadgeContext.Provider>
-  );
-}
-BadgeProvider.displayName = 'Badge.Provider';
 
 /**
  * Badge - A small status indicator component for labeling and notifications
@@ -77,5 +66,3 @@ export function Badge({ ref, ...props }: BadgeProps) {
     />
   );
 }
-Badge.displayName = 'Badge';
-Badge.Provider = BadgeProvider;

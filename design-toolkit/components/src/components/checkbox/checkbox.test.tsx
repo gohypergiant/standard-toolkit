@@ -12,7 +12,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Checkbox } from './index';
+import { Checkbox } from './';
 import type { CheckboxProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<CheckboxProps> = {}) {

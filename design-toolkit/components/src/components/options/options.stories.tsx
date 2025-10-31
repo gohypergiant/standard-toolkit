@@ -17,8 +17,14 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Options } from './';
+import { OptionsItem } from './item';
+import { OptionsItemContent } from './item-content';
+import { OptionsItemDescription } from './item-description';
+import { OptionsItemLabel } from './item-label';
+import { OptionsSection } from './section';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
+import type { OptionsItemProps } from './types';
 
 const meta = {
   title: 'Components/Options',
@@ -44,6 +50,8 @@ interface CustomOptionsItem {
   prefixIcon?: ReactNode;
   suffixIcon?: ReactNode;
   children?: CustomOptionsItem[];
+  // biome-ignore lint/suspicious/noExplicitAny: intentional
+  color?: OptionsItemProps<any>['color'];
 }
 
 const items: CustomOptionsItem[] = [
@@ -138,23 +146,23 @@ export const Default: Story = {
   render: ({ children, ...args }) => (
     <Options {...args} items={items}>
       {(item) => (
-        <Options.Item
+        <OptionsItem
           key={item.id}
           id={item.id}
           textValue={item.name}
           isDisabled={item.isDisabled}
         >
           {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-          <Options.Item.Content>
-            <Options.Item.Label>{item.name}</Options.Item.Label>
+          <OptionsItemContent>
+            <OptionsItemLabel>{item.name}</OptionsItemLabel>
             {item.description && (
-              <Options.Item.Description>
+              <OptionsItemDescription>
                 {item.description}
-              </Options.Item.Description>
+              </OptionsItemDescription>
             )}
-          </Options.Item.Content>
+          </OptionsItemContent>
           {item.suffixIcon && <Icon>{item.suffixIcon}</Icon>}
-        </Options.Item>
+        </OptionsItem>
       )}
     </Options>
   ),
@@ -164,22 +172,22 @@ export const WithDynamicSections: Story = {
   render: ({ children, ...args }) => (
     <Options {...args} items={itemsWithSections}>
       {(section) => (
-        <Options.Section header={section.name} items={section.children}>
+        <OptionsSection header={section.name} items={section.children}>
           {({ children, ...item }) => (
-            <Options.Item key={item.id} id={item.id} textValue={item.name}>
+            <OptionsItem key={item.id} id={item.id} textValue={item.name}>
               {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-              <Options.Item.Content>
-                <Options.Item.Label>{item.name}</Options.Item.Label>
+              <OptionsItemContent>
+                <OptionsItemLabel>{item.name}</OptionsItemLabel>
                 {item.description && (
-                  <Options.Item.Description>
+                  <OptionsItemDescription>
                     {item.description}
-                  </Options.Item.Description>
+                  </OptionsItemDescription>
                 )}
-              </Options.Item.Content>
+              </OptionsItemContent>
               {item.suffixIcon && <Icon>{item.suffixIcon}</Icon>}
-            </Options.Item>
+            </OptionsItem>
           )}
-        </Options.Section>
+        </OptionsSection>
       )}
     </Options>
   ),
@@ -188,50 +196,50 @@ export const WithDynamicSections: Story = {
 export const WithStaticSections: Story = {
   render: ({ children, ...args }) => (
     <Options {...args}>
-      <Options.Section
+      <OptionsSection
         header='North American Birds'
         classNames={{ section: 'w-[200px]' }}
       >
-        <Options.Item textValue='Blue Jay'>
+        <OptionsItem textValue='Blue Jay'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Blue Jay</Options.Item.Label>
-        </Options.Item>
-        <Options.Item textValue='Gray catbird' color='serious'>
+          <OptionsItemLabel>Blue Jay</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem textValue='Gray catbird' color='serious'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Gray catbird</Options.Item.Label>
-          <Options.Item.Description>A cool bird</Options.Item.Description>
-        </Options.Item>
-        <Options.Item textValue='Black-capped chickadee' color='critical'>
+          <OptionsItemLabel>Gray catbird</OptionsItemLabel>
+          <OptionsItemDescription>A cool bird</OptionsItemDescription>
+        </OptionsItem>
+        <OptionsItem textValue='Black-capped chickadee' color='critical'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Black-capped chickadee</Options.Item.Label>
-        </Options.Item>
-        <Options.Item textValue='Song Sparrow'>
+          <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem textValue='Song Sparrow'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Song Sparrow</Options.Item.Label>
-        </Options.Item>
-      </Options.Section>
-      <Options.Section header='African Birds'>
-        <Options.Item textValue='Lilac-breasted roller'>
+          <OptionsItemLabel>Song Sparrow</OptionsItemLabel>
+        </OptionsItem>
+      </OptionsSection>
+      <OptionsSection header='African Birds'>
+        <OptionsItem textValue='Lilac-breasted roller'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Lilac-breasted roller</Options.Item.Label>
-        </Options.Item>
-        <Options.Item textValue='Hornbill'>
+          <OptionsItemLabel>Lilac-breasted roller</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem textValue='Hornbill'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Hornbill</Options.Item.Label>
-        </Options.Item>
-      </Options.Section>
+          <OptionsItemLabel>Hornbill</OptionsItemLabel>
+        </OptionsItem>
+      </OptionsSection>
     </Options>
   ),
 };
@@ -251,10 +259,10 @@ export const Virtualized: Story = {
       >
         <Options {...args}>
           {manyItems.map((item) => (
-            <Options.Item key={item.id} id={item.id} textValue={item.name}>
+            <OptionsItem key={item.id} id={item.id} textValue={item.name}>
               {item.icon && <Icon>{item.icon}</Icon>}
-              <Options.Item.Label>{item.name}</Options.Item.Label>
-            </Options.Item>
+              <OptionsItemLabel>{item.name}</OptionsItemLabel>
+            </OptionsItem>
           ))}
         </Options>
       </AriaVirtualizer>

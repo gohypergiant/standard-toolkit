@@ -11,67 +11,17 @@
  */
 'use client';
 
-import 'client-only';
-import {
-  type FocusableProviderProps,
-  useFocusable,
-} from '@react-aria/interactions';
 import { useIsSSR } from '@react-aria/ssr';
-import { mergeProps, mergeRefs, useObjectRef } from '@react-aria/utils';
-import {
-  Children,
-  cloneElement,
-  createContext,
-  type DOMAttributes,
-  type ReactElement,
-  type ReactNode,
-  type RefAttributes,
-  useMemo,
-  version,
-} from 'react';
+import { PortalProvider } from '@/providers/portal';
+import 'client-only';
+import { useMemo } from 'react';
 import {
   Tooltip as AriaTooltip,
-  TooltipTrigger as AriaTooltipTrigger,
-  type ContextValue,
   composeRenderProps,
-  useContextProps,
 } from 'react-aria-components';
-import { PortalProvider } from '@/providers/portal';
 import { TooltipStyles } from './styles';
-import type { FocusableElement } from '@react-types/shared';
-import type { TooltipProps, TooltipTriggerProps } from './types';
+import type { TooltipProps } from './types';
 
-export const TooltipContext =
-  createContext<ContextValue<TooltipTriggerProps, HTMLDivElement>>(null);
-
-function TooltipFocusable({
-  children,
-  ref,
-  ...props
-}: FocusableProviderProps & RefAttributes<FocusableElement>) {
-  ref = useObjectRef(ref);
-
-  const { focusableProps } = useFocusable(props, ref);
-  const [trigger, tooltip] = Children.toArray(children) as [
-    ReactElement<DOMAttributes<FocusableElement>, string>,
-    ReactNode,
-  ];
-
-  const childRef =
-    //@ts-expect-error
-    Number.parseInt(version, 10) < 19 ? trigger.ref : trigger.props.ref;
-
-  return (
-    <>
-      {cloneElement(trigger, {
-        ...mergeProps(focusableProps, trigger.props),
-        //@ts-expect-error
-        ref: mergeRefs(childRef, ref),
-      })}
-      {tooltip}
-    </>
-  );
-}
 /**
  * Tooltip - A contextual popup component for providing additional information
  *
@@ -81,46 +31,33 @@ function TooltipFocusable({
  *
  * @example
  * // Basic tooltip
- * <Tooltip.Trigger>
+ * <TooltipTrigger>
  *   <Button>Hover me</Button>
  *   <Tooltip>
  *     This is helpful information
  *   </Tooltip>
- * </Tooltip.Trigger>
+ * </TooltipTrigger>
  *
  * @example
  * // Tooltip with custom positioning
- * <Tooltip.Trigger>
+ * <TooltipTrigger>
  *   <Button>Hover for info</Button>
  *   <Tooltip placement="top" offset={10}>
  *     Positioned above with custom offset
  *   </Tooltip>
- * </Tooltip.Trigger>
+ * </TooltipTrigger>
  *
  * @example
  * // Icon with tooltip
- * <Tooltip.Trigger>
+ * <TooltipTrigger>
  *   <Button variant="icon">
  *     <Icon><Info /></Icon>
  *   </Button>
  *   <Tooltip>
  *     Additional context for this action
  *   </Tooltip>
- * </Tooltip.Trigger>
+ * </TooltipTrigger>
  */
-function TooltipTrigger({ ref, ...props }: TooltipTriggerProps) {
-  [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
-
-  const { children, delay = 250, ...rest } = props;
-
-  return (
-    <AriaTooltipTrigger {...rest} delay={delay}>
-      <TooltipFocusable ref={ref}>{children}</TooltipFocusable>
-    </AriaTooltipTrigger>
-  );
-}
-TooltipTrigger.displayName = 'Tooltip.Trigger';
-
 export function Tooltip({
   children,
   parentRef,
@@ -154,6 +91,3 @@ export function Tooltip({
     </PortalProvider>
   );
 }
-Tooltip.displayName = 'Tooltip';
-
-Tooltip.Trigger = TooltipTrigger;

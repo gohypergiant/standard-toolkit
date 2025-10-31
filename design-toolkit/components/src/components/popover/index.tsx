@@ -13,24 +13,8 @@
 'use client';
 
 import 'client-only';
-import {
-  Dialog as AriaDialog,
-  DialogTrigger as AriaDialogTrigger,
-  Heading as AriaHeading,
-  Popover as AriaPopover,
-  Pressable,
-} from 'react-aria-components';
-import { PopoverStyles } from './styles';
-import type { ReactNode } from 'react';
-import type {
-  PopoverBodyProps,
-  PopoverContentProps,
-  PopoverProps,
-  PopoverTitleProps,
-  PopoverTriggerProps,
-} from './types';
-
-const { content, body, title, footer } = PopoverStyles();
+import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
+import type { PopoverProps } from './types';
 
 /**
  * Popover - A floating content container positioned relative to a trigger element
@@ -42,87 +26,35 @@ const { content, body, title, footer } = PopoverStyles();
  * @example
  * // Basic popover
  * <Popover>
- *   <Popover.Trigger>
+ *   <PopoverTrigger>
  *     <Button>Show Info</Button>
- *   </Popover.Trigger>
- *   <Popover.Content>
- *     <Popover.Body>
+ *   </PopoverTrigger>
+ *   <PopoverContent>
+ *     <PopoverBody>
  *       <p>Additional information appears here</p>
- *     </Popover.Body>
- *   </Popover.Content>
+ *     </PopoverBody>
+ *   </PopoverContent>
  * </Popover>
  *
  * @example
  * // Popover with title and actions
  * <Popover placement="top">
- *   <Popover.Trigger>
+ *   <PopoverTrigger>
  *     <Button>Options</Button>
- *   </Popover.Trigger>
- *   <Popover.Content>
- *     <Popover.Title>Quick Actions</Popover.Title>
- *     <Popover.Body>
+ *   </PopoverTrigger>
+ *   <PopoverContent>
+ *     <PopoverTitle>Quick Actions</PopoverTitle>
+ *     <PopoverBody>
  *       <Button>Edit</Button>
  *       <Button>Delete</Button>
- *     </Popover.Body>
- *   </Popover.Content>
+ *     </PopoverBody>
+ *   </PopoverContent>
  * </Popover>
  */
-export const Popover = ({
+export function Popover({
   placement = 'bottom',
   children,
   ...rest
-}: PopoverProps) => {
+}: PopoverProps) {
   return <AriaDialogTrigger {...rest}>{children}</AriaDialogTrigger>;
-};
-Popover.displayName = 'Popover';
-
-const PopoverTrigger = ({ children, ...props }: PopoverTriggerProps) => {
-  return <Pressable {...props}>{children}</Pressable>;
-};
-Popover.displayName = 'Popover.Trigger';
-
-const PopoverContent = ({
-  children,
-  className,
-  ...rest
-}: PopoverContentProps) => {
-  return (
-    <AriaPopover className={content({ className })} {...rest}>
-      {/* @ts-expect-error package version mismatch TODO */}
-      <AriaDialog>{children}</AriaDialog>
-    </AriaPopover>
-  );
-};
-PopoverContent.displayName = 'Popover.Content';
-
-const PopoverTitle = ({ children, className, ...rest }: PopoverTitleProps) => {
-  return (
-    <AriaHeading slot='title' className={title({ className })} {...rest}>
-      {children}
-    </AriaHeading>
-  );
-};
-
-PopoverTitle.displayName = 'Popover.Title';
-
-const PopoverBody = ({ children, className }: PopoverBodyProps) => {
-  return <div className={body({ className })}>{children}</div>;
-};
-PopoverBody.displayName = 'Popover.Body';
-
-const PopoverFooter = ({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) => {
-  return <div className={footer({ className })}>{children}</div>;
-};
-PopoverFooter.displayName = 'Popover.Footer';
-
-Popover.Title = PopoverTitle;
-Popover.Content = PopoverContent;
-Popover.Body = PopoverBody;
-Popover.Footer = PopoverFooter;
-Popover.Trigger = PopoverTrigger;
+}

@@ -20,6 +20,15 @@ import { Button } from '../button';
 import { Divider } from '../divider';
 import { Icon } from '../icon';
 import { Sidenav } from './';
+import { SidenavAvatar } from './avatar';
+import { SidenavContent } from './content';
+import { SidenavFooter } from './footer';
+import { SidenavHeader } from './header';
+import { SidenavItem } from './item';
+import { SidenavLink } from './link';
+import { SidenavMenu } from './menu';
+import { SidenavMenuItem } from './menu-item';
+import { SidenavTrigger } from './trigger';
 import type { ReactNode } from 'react';
 import type { SidenavProps } from './types';
 
@@ -29,34 +38,34 @@ function setup(
   {
     children = (
       <>
-        <Sidenav.Header>
-          <Sidenav.Avatar>
+        <SidenavHeader>
+          <SidenavAvatar>
             <Icon data-testid='logo'>
               <Placeholder />
             </Icon>
             <Heading>Application Header</Heading>
             <Text>subheader</Text>
-          </Sidenav.Avatar>
-        </Sidenav.Header>
-        <Sidenav.Content>
+          </SidenavAvatar>
+        </SidenavHeader>
+        <SidenavContent>
           <Heading>Title</Heading>
-          <Sidenav.Item>
+          <SidenavItem>
             <Icon>
               <Placeholder />
             </Icon>
             <Text>Nav item</Text>
-          </Sidenav.Item>
+          </SidenavItem>
           <Divider />
           <Heading>External</Heading>
-          <Sidenav.Link href='#' textValue='Link item'>
+          <SidenavLink href='#' textValue='Link item'>
             <Icon>
               <Placeholder />
             </Icon>
             <Text>Link item</Text>
-          </Sidenav.Link>
+          </SidenavLink>
           <Divider />
           <Heading>Menu</Heading>
-          <Sidenav.Menu
+          <SidenavMenu
             data-testid='menu'
             icon={
               <Icon>
@@ -65,31 +74,31 @@ function setup(
             }
             title='Settings'
           >
-            <Sidenav.Menu.Item>
+            <SidenavMenuItem>
               <Text>Menu Item</Text>
-            </Sidenav.Menu.Item>
-            <Sidenav.Menu.Item>
+            </SidenavMenuItem>
+            <SidenavMenuItem>
               <Text>Menu Item 2</Text>
-            </Sidenav.Menu.Item>
-          </Sidenav.Menu>
-        </Sidenav.Content>
-        <Sidenav.Footer>
-          <Sidenav.Avatar>
+            </SidenavMenuItem>
+          </SidenavMenu>
+        </SidenavContent>
+        <SidenavFooter>
+          <SidenavAvatar>
             <Icon data-testid='avatar'>
               <Placeholder />
             </Icon>
             <Heading>FullName</Heading>
             <Text>test@example.com</Text>
-          </Sidenav.Avatar>
-        </Sidenav.Footer>
+          </SidenavAvatar>
+        </SidenavFooter>
       </>
     ),
     ...rest
   }: Partial<SidenavProps> = {},
   outside: ReactNode = (
-    <Sidenav.Trigger for={id}>
+    <SidenavTrigger for={id}>
       <Button>Open</Button>
-    </Sidenav.Trigger>
+    </SidenavTrigger>
   ),
 ) {
   return {

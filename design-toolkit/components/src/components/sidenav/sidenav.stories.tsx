@@ -17,9 +17,19 @@ import { Heading, Text } from 'react-aria-components';
 import { Avatar } from '../avatar';
 import { Button } from '../button';
 import { Divider } from '../divider';
-import { Drawer } from '../drawer';
+import { DrawerLayout } from '../drawer/layout';
+import { DrawerLayoutMain } from '../drawer/layout-main';
 import { Icon } from '../icon';
+import { SidenavAvatar } from './avatar';
+import { SidenavContent } from './content';
+import { SidenavFooter } from './footer';
+import { SidenavHeader } from './header';
 import { Sidenav } from './index';
+import { SidenavItem } from './item';
+import { SidenavLink } from './link';
+import { SidenavMenu } from './menu';
+import { SidenavMenuItem } from './menu-item';
+import { SidenavTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 // TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
@@ -72,34 +82,34 @@ export const Default: Story = {
     );
     return (
       <div className='h-screen bg-surface-raised text-default-light'>
-        <Drawer.Layout push={pushLayout ? 'left' : undefined}>
-          <Drawer.Layout.Main>
+        <DrawerLayout push={pushLayout ? 'left' : undefined}>
+          <DrawerLayoutMain>
             <nav className='flex items-center bg-surface-default p-m'>
-              <Sidenav.Trigger for={id}>
+              <SidenavTrigger for={id}>
                 <Button variant='icon' size='large'>
                   <Icon>
                     <ExpandLeftPanel className='' />
                   </Icon>
                 </Button>
-              </Sidenav.Trigger>
+              </SidenavTrigger>
             </nav>
-          </Drawer.Layout.Main>
+          </DrawerLayoutMain>
           <Sidenav id={id} isHiddenWhenClosed={isHiddenWhenClosed}>
-            <Sidenav.Header>
-              <Sidenav.Avatar>
+            <SidenavHeader>
+              <SidenavAvatar>
                 <Icon>
                   <Placeholder />
                 </Icon>
                 <Heading>Application Header</Heading>
                 <Text>Secondary Text</Text>
-              </Sidenav.Avatar>
-            </Sidenav.Header>
-            <Sidenav.Content>
+              </SidenavAvatar>
+            </SidenavHeader>
+            <SidenavContent>
               {Object.entries(sections).map(([section, items], i) => (
                 <React.Fragment key={section}>
                   <Heading>{section}</Heading>
                   {items.map((item) => (
-                    <Sidenav.Item
+                    <SidenavItem
                       key={item.id}
                       textValue={item.text}
                       isDisabled={item.disabled}
@@ -112,29 +122,29 @@ export const Default: Story = {
                         <Placeholder />
                       </Icon>
                       <Text>{item.text}</Text>
-                    </Sidenav.Item>
+                    </SidenavItem>
                   ))}
                   {i !== Object.entries(sections).length - 1 && <Divider />}
                 </React.Fragment>
               ))}
               <Divider />
               <Heading>External</Heading>
-              <Sidenav.Link href='#' textValue='Nav Link'>
+              <SidenavLink href='#' textValue='Nav Link'>
                 <Icon>
                   <Placeholder />
                 </Icon>
                 <Text>Nav Link</Text>
-              </Sidenav.Link>
-              <Sidenav.Link isDisabled href='#' textValue='Nav Link'>
+              </SidenavLink>
+              <SidenavLink isDisabled href='#' textValue='Nav Link'>
                 <Icon>
                   <Placeholder />
                 </Icon>
                 <Text>Nav Link</Text>
-              </Sidenav.Link>
+              </SidenavLink>
 
               <Divider />
               <Heading>Menu</Heading>
-              <Sidenav.Menu
+              <SidenavMenu
                 icon={
                   <Icon>
                     <Placeholder />
@@ -142,20 +152,20 @@ export const Default: Story = {
                 }
                 title='Nav Item'
               >
-                <Sidenav.Menu.Item>
+                <SidenavMenuItem>
                   <Text>Sub item</Text>
-                </Sidenav.Menu.Item>
-                <Sidenav.Menu.Item>
+                </SidenavMenuItem>
+                <SidenavMenuItem>
                   <Text>Sub item</Text>
-                </Sidenav.Menu.Item>
-                <Sidenav.Menu.Item isDisabled>
+                </SidenavMenuItem>
+                <SidenavMenuItem isDisabled>
                   <Text>Sub item</Text>
-                </Sidenav.Menu.Item>
-              </Sidenav.Menu>
-            </Sidenav.Content>
-            <Sidenav.Footer>
-              <Sidenav.Item textValue='Application Footer'>
-                <Sidenav.Avatar>
+                </SidenavMenuItem>
+              </SidenavMenu>
+            </SidenavContent>
+            <SidenavFooter>
+              <SidenavItem textValue='Application Footer'>
+                <SidenavAvatar>
                   <Avatar
                     imageProps={{
                       alt: 'Dog',
@@ -164,11 +174,11 @@ export const Default: Story = {
                   />
                   <Heading>Application Footer</Heading>
                   <Text>Secondary Text</Text>
-                </Sidenav.Avatar>
-              </Sidenav.Item>
-            </Sidenav.Footer>
+                </SidenavAvatar>
+              </SidenavItem>
+            </SidenavFooter>
           </Sidenav>
-        </Drawer.Layout>
+        </DrawerLayout>
       </div>
     );
   },

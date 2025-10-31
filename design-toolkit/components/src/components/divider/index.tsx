@@ -13,21 +13,10 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import { type ContextValue, useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components';
+import { DividerContext } from './context';
 import { DividerStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { DividerProps } from './types';
-
-export const DividerContext =
-  createContext<ContextValue<DividerProps, HTMLHRElement>>(null);
-
-function DividerProvider({ children, ...props }: ProviderProps<DividerProps>) {
-  return (
-    <DividerContext.Provider value={props}>{children}</DividerContext.Provider>
-  );
-}
-DividerProvider.displayName = 'Divider.Provider';
 
 /**
  * Divider - A simple horizontal or vertical rule component
@@ -57,5 +46,3 @@ export function Divider({ ref, ...props }: DividerProps) {
     />
   );
 }
-Divider.displayName = 'Divider';
-Divider.Provider = DividerProvider;

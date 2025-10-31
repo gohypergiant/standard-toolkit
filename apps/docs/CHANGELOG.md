@@ -1,5 +1,30 @@
 # @accelint/docs
 
+## 0.1.23
+
+### Patch Changes
+
+- ef52380: bump to node 22
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- Updated dependencies [0d697fa]
+- Updated dependencies [1788525]
+- Updated dependencies [ef52380]
+- Updated dependencies [f99f294]
+- Updated dependencies [935b8e5]
+- Updated dependencies [525a5a6]
+- Updated dependencies [b32e3ae]
+  - @accelint/typescript-config@0.1.4
+  - @accelint/biome-config@1.0.2
+  - @accelint/converters@0.3.4
+  - @accelint/formatters@0.1.7
+  - @accelint/predicates@0.4.3
+  - @accelint/constants@0.1.7
+  - @accelint/temporal@0.1.2
+  - @accelint/core@0.5.0
+  - @accelint/math@0.1.7
+  - @accelint/ntds@0.2.2
+  - @accelint/geo@0.3.0
+
 ## 0.1.22
 
 ### Patch Changes
