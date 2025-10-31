@@ -17,7 +17,7 @@ export const TimeFieldSylesDefaults = {
 
 export const TimeFieldStyles = tv({
   slots: {
-    field: 'group/time-field flex flex-col gap-xs',
+    field: 'group/time-field flex w-fit flex-col gap-xs',
     label: '',
     control: [
       'flex w-full items-center gap-xs rounded-medium px-s py-xs font-display outline outline-interactive',

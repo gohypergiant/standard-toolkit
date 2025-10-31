@@ -113,6 +113,7 @@ export function Input({ ref, ...props }: InputProps) {
       data-size={size}
     >
       <div
+        data-testid='input-container'
         className={sizer({
           className: classNames?.sizer,
           autoSize,

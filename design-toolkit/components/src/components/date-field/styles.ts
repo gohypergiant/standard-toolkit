@@ -18,7 +18,7 @@ export const DateFieldStylesDefaults = {
 
 export const DateFieldStyles = tv({
   slots: {
-    field: 'group/date-field flex flex-col gap-xs',
+    field: 'group/date-field flex w-fit flex-col gap-xs',
     label: '',
     control: [
       'flex w-full items-center gap-xs rounded-medium px-s py-xs font-display outline outline-interactive',
