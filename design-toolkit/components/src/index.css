@@ -23,7 +23,6 @@
 }
 
 @import './variants/variants.css';
-@import "./components.css";
 
 /**
  * Provides an escalation selector allowing for easier bump in specificity

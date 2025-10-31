@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+@reference '../../index.css';
+
 @layer components {
   .button {
     @apply flex w-content shrink-0 cursor-pointer items-center justify-center rounded-medium outline outline-transparent;
@@ -32,7 +34,7 @@
     }
   }
 
-  .button-filled {
+  .buttonFilled {
     @variant disabled {
       @apply fg-disabled bg-interactive-disabled;
     }
@@ -110,7 +112,7 @@
     }
   }
 
-  .button-outline {
+  .buttonOutline {
     @variant disabled {
       @apply fg-disabled outline-interactive-disabled;
     }
@@ -188,7 +190,7 @@
     }
   }
 
-  .button-flat {
+  .buttonFlat {
     @variant disabled {
       @apply fg-disabled bg-transparent;
     }
@@ -266,7 +268,7 @@
     }
   }
 
-  .button-icon {
+  .buttonIcon {
     @variant size-large {
       @apply min-w-0 p-xs;
     }
@@ -357,7 +359,7 @@
     }
   }
 
-  .button-floating {
+  .buttonFloating {
     border-radius: 9999px;
 
     @variant size-large {

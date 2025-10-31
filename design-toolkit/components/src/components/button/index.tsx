@@ -12,16 +12,30 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
 import {
   Button as AriaButton,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+// will we need our custom tv anymore?
+import { tv } from 'tailwind-variants';
 import { IconProvider } from '../icon/context';
+import styles from './button.module.css';
 import { ButtonContext } from './context';
-import { ButtonStyles } from './styles';
 import type { ButtonProps } from './types';
+
+const ButtonStyles = tv({
+  base: styles.button,
+  variants: {
+    variant: {
+      filled: styles.buttonFilled,
+      outline: styles.buttonOutline,
+      flat: styles.buttonFlat,
+      icon: styles.buttonIcon,
+      floating: styles.buttonFloating,
+    },
+  },
+});
 
 /**
  * Button - A versatile interactive button component with multiple variants
@@ -75,17 +89,7 @@ export function Button({ ref, ...props }: ButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          clsx(
-            'button',
-            {
-              'button-filled': variant === 'filled',
-              'button-outline': variant === 'outline',
-              'button-flat': variant === 'flat',
-              'button-icon': variant === 'icon',
-              'button-floating': variant === 'floating',
-            },
-            className,
-          ),
+          ButtonStyles({ variant, className }),
         )}
         data-color={color}
         data-size={size}

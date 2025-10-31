@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-/* TODO: add others here as we create them */
-/* we could also generate this file instead of manually maintaining it */
-@import "./components/button/button.css";
+declare module '*.module.css' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
