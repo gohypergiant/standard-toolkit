@@ -27,7 +27,7 @@ export function KanbanColumnContent({
   column,
   ...rest
 }: KanbanColContentProps) {
-  const cardIds = column?.cards?.map((card) => card.id) || [];
+  const cardIds = column.cards.map((card) => card.id);
 
   return (
     <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>

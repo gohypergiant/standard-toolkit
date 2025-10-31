@@ -33,9 +33,10 @@ import type { KanbanProps } from './types';
 const { container, cardHeader, cardTitle, cardBody } = KanbanStyles();
 
 // Context for sharing active drag state
-export const DragContext = createContext<{ activeId: string | null }>({
-  activeId: null,
-});
+
+export const DragContext = createContext<{ activeId: string | null } | null>(
+  null,
+);
 
 export const useDragContext = () => {
   const context = useContext(DragContext);
