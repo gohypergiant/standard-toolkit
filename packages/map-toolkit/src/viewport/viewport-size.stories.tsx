@@ -10,12 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import { uuid } from '@accelint/core';
 import { BaseMap } from '../deckgl/base-map';
 import { ViewportSyncWidget } from '../deckgl/widgets/viewport-sync';
 import { ViewportSize as ViewportSizeComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const WIDGETS = [new ViewportSyncWidget({ id: 'default' })];
+const BASE_MAP_STORY_ID = uuid();
 
 const meta: Meta = {
   title: 'Viewport/Viewport Size',
@@ -43,6 +45,7 @@ export const ViewportSize: Story = {
           className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
         />
         <BaseMap
+          id={BASE_MAP_STORY_ID}
           interleaved={false} // setting it to true breaks the widget somehow, may be a Storybook specific bug
           widgets={WIDGETS}
           className='h-dvh w-dvw'
