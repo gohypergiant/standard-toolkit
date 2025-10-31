@@ -65,7 +65,7 @@ export function Button({ ref, ...props }: ButtonProps) {
     className,
     color = 'mono-muted',
     size = 'medium',
-    variant,
+    variant = 'flat',
     ...rest
   } = props;
 
@@ -82,6 +82,7 @@ export function Button({ ref, ...props }: ButtonProps) {
               'button-outline': variant === 'outline',
               'button-flat': variant === 'flat',
               'button-icon': variant === 'icon',
+              'button-floating': variant === 'floating',
             },
             className,
           ),

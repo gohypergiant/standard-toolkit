@@ -10,9 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-/* very likely a better way to do this, but just importing directly for now */
-@reference '../../index.css';
-
 @layer components {
   .button {
     @apply flex w-content shrink-0 cursor-pointer items-center justify-center rounded-medium outline outline-transparent;
