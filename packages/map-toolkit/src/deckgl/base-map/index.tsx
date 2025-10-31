@@ -213,7 +213,6 @@ export function BaseMap({
     <div id={container} className={className}>
       <MapProvider id={id}>
         <Deckgl
-          {...rest}
           controller
           interleaved
           useDevicePixels={false}
@@ -222,6 +221,7 @@ export function BaseMap({
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
           parameters={{ ...PARAMETERS, ...parameters }}
+          {...rest}
         >
           {children}
         </Deckgl>
