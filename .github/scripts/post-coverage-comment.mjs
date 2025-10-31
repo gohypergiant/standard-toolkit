@@ -21,23 +21,21 @@ const COVERAGE_PR =
   process.env.COVERAGE_SUMMARY_FILE ?? 'coverage/coverage-summary.json';
 const METRICS = ['lines', 'statements', 'functions', 'branches'];
 
-const emptyMetrics = () => ({
-  lines: 0,
-  statements: 0,
-  functions: 0,
-  branches: 0,
+const emptyStats = () => ({
+  lines: { total: 0, covered: 0, skipped: 0, pct: 0 },
+  statements: { total: 0, covered: 0, skipped: 0, pct: 0 },
+  functions: { total: 0, covered: 0, skipped: 0, pct: 0 },
+  branches: { total: 0, covered: 0, skipped: 0, pct: 0 },
 });
 const getFile = (file) =>
   fs.readFileSync(path.resolve(process.cwd(), file), 'utf-8');
 
 function buildTable(pkg, base, pr) {
-  const noDiff = METRICS.every((metric) => {
-    const left = formatPct(base[metric]?.pct);
-    const right = formatPct(pr[metric]?.pct);
+  const noDiff = METRICS.every(
+    (metric) => formatPct(base[metric].pct) === formatPct(pr[metric].pct),
+  );
 
-    return left || (right && left !== right);
-  });
-
+  // NOTE: only show a table if there is change in coverage; reduce "noise"
   if (noDiff) {
     return `\`${pkg}\` (No diff)`;
   }
@@ -50,9 +48,9 @@ function buildTable(pkg, base, pr) {
       (metric) =>
         `| ${[
           metric,
-          `${formatPct(pr?.[metric]?.pct)}%`,
-          `${formatPct(base?.[metric]?.pct)}%`,
-          formatPct(pr - base),
+          `${formatPct(pr[metric].pct)}%`,
+          `${formatPct(base[metric].pct)}%`,
+          formatPct(pr[metric].pct - base[metric].pct),
         ]
           .join(' | ')
           .trim()} |`,
@@ -61,7 +59,8 @@ function buildTable(pkg, base, pr) {
 }
 
 function formatPct(pct) {
-  const num = Number.parseFloat(pct);
+  // NOTE: undefined and "Unknown" values replaced with "0" (zero)
+  const num = Number.parseFloat(`${pct}`.replace(/^un/i, '0'));
 
   return !Number.isNaN(num) && Number.isFinite(num) ? num.toFixed(2) : '0';
 }
@@ -74,15 +73,15 @@ function main() {
 
   return postComment(
     [
-      '## 📊 Coverage Report\n',
+      '## 📊 Coverage Reports\n',
 
-      '### Coverage Changes by Package\n',
+      '\n### Coverage Changes by Package\n',
       `<details>\n<summary>Click to expand ${packages.length} package details</summary>`,
 
       // package reports
       packages.reduce(
         (acc, pkg) =>
-          `${acc}\n${buildTable(pkg, branchBase[pkg] || emptyMetrics(), branchPR[pkg])}\n`,
+          `${acc}\n${buildTable(pkg, branchBase[pkg] || emptyStats(), branchPR[pkg])}\n`,
         '',
       ),
 

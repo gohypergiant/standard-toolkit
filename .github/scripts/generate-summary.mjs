@@ -27,10 +27,10 @@ const COVERAGE = 'coverage';
 const OUTPUT_DIR = 'coverage';
 
 const emptyStats = () => ({
-  lines: 0,
-  statements: 0,
-  functions: 0,
-  branches: 0,
+  lines: { total: 0, covered: 0, skipped: 0, pct: 0 },
+  statements: { total: 0, covered: 0, skipped: 0, pct: 0 },
+  functions: { total: 0, covered: 0, skipped: 0, pct: 0 },
+  branches: { total: 0, covered: 0, skipped: 0, pct: 0 },
 });
 const getPackageContent = async (pkg) =>
   JSON.parse(await fs.readFile(path.join(process.cwd(), pkg)));
