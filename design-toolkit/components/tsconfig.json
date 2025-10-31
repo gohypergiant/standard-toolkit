@@ -16,6 +16,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["@testing-library/jest-dom", "node"]
+    "types": ["@testing-library/jest-dom", "node", "./src/css-modules.d.ts"]
   }
 }

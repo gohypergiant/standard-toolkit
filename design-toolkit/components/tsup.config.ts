@@ -48,8 +48,8 @@ export default defineConfig({
   splitting: true,
   treeshake: true,
   onSuccess: async () => {
+    // Preserve 'on client' cirectives
     const files = await glob(['dist/**/*.js', '!dist/**/*.js.map']);
-
     for (let i = 0; i < files.length; i++) {
       const path = files[i];
       const content = await fs.readFile(path, 'utf-8');
@@ -58,5 +58,15 @@ export default defineConfig({
         fs.writeFile(path, `${"'use client';"}\n\n${content}`);
       }
     }
+
+    // TODO: make the build behave. it's currently putting double 'module' extensions
+    // on css module files...
+    // Hack for now: Manuall fix css module file extensions
+    const cssModules = await glob('dist/**/*.module.module.css');
+    await Promise.all(
+      cssModules.map((file) =>
+        fs.rename(file, file.replace('.module.module.css', '.module.css')),
+      ),
+    );
   },
 });
