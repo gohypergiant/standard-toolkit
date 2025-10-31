@@ -20,6 +20,36 @@ governing permissions and limitations under the License. -->
 2. Make your changes and push to your fork.
 3. Open a pull request on this repository from your fork [per the documentiaton](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork).
 
+## Development Workflow
+
+### Testing
+
+All packages should include tests for new features and bug fixes. We use [Vitest](https://vitest.dev/) as our testing framework.
+
+To run tests locally:
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests for a specific package
+cd packages/<package-name>
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+```
+
+#### Test Coverage
+
+We track test coverage to help maintain code quality. When you open a pull request:
+
+- Coverage reports are automatically generated and compared against the base branch
+- A bot will comment on your PR showing the coverage delta
+- There are currently no enforced coverage thresholds, but we encourage maintaining or improving coverage
+
+See [documentation/coverage.md](documentation/coverage.md) for more details about our coverage reporting setup.
+
 ### Technical Steering Committee
 
 Developer Toolkit development is governed by the Technical Steering Committee (TSC). Current members:
