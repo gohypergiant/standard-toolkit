@@ -17,6 +17,8 @@ import { MenuItem } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { MenuItemLabel } from '../menu/item-label';
+import { MenuSubmenu } from '../menu/submenu';
 import { MenuTrigger } from '../menu/trigger';
 import { Kanban } from '.';
 import { KanbanCard } from './card';
@@ -214,12 +216,12 @@ export const CompleteExample: Story = {
                                 <MenuItem
                                   onAction={() => handleEditCard(card.id)}
                                 >
-                                  Edit
+                                  <MenuItemLabel>Edit</MenuItemLabel>
                                 </MenuItem>
                                 <MenuItem
                                   onAction={() => handleDeleteCard(card.id)}
                                 >
-                                  Delete
+                                  <MenuItemLabel>Delete</MenuItemLabel>
                                 </MenuItem>
                               </Menu>
                             </MenuTrigger>
