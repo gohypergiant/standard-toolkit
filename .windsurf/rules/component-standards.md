@@ -567,7 +567,6 @@ When generating a new component, verify:
 
 ### Exports
 - ✓ Component exported from its file with named export
-- ✓ **CRITICAL:** Added to `/src/index.ts` barrel export
   - Example: `export { LinkButton } from './components/button/link';`
 - ✓ Types exported from `/src/index.ts` if part of public API
 
