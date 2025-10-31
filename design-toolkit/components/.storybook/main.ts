@@ -22,6 +22,10 @@ function getAbsolutePath(packageName: string): string {
 }
 
 const config: StorybookConfig = {
+  managerHead: (head) => `
+    ${head}
+    <link rel="stylesheet" href="./manager.css" />
+  `,
   stories: ['../src/**/*.docs.@(mdx|tsx)', '../src/**/*.stories.@(ts|tsx)'],
   addons: [
     getAbsolutePath('@storybook/addon-essentials'),
@@ -55,5 +59,6 @@ const config: StorybookConfig = {
       },
     },
   },
+  staticDirs: ['./assets'],
 };
 export default config;
