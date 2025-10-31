@@ -13,14 +13,17 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Tabs } from './index';
+import { TabList } from './list';
+import { TabPanel } from './panel';
+import { Tab } from './tab';
 
 function setup({ children }: { children: string } = { children: 'Foo' }) {
   render(
     <Tabs defaultSelectedKey={`tab-${children}`}>
-      <Tabs.List>
-        <Tabs.List.Tab id={`tab-${children}`}>{children} Tab</Tabs.List.Tab>
-      </Tabs.List>
-      <Tabs.Panel id={`tab-${children}`}>{children} Content</Tabs.Panel>
+      <TabList>
+        <Tab id={`tab-${children}`}>{children} Tab</Tab>
+      </TabList>
+      <TabPanel id={`tab-${children}`}>{children} Content</TabPanel>
     </Tabs>,
   );
 

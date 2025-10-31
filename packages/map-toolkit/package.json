@@ -12,7 +12,7 @@
     "maplibre"
   ],
   "subPath": "packages/map-toolkit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -59,6 +59,7 @@
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/core": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
@@ -97,9 +98,11 @@
     "mjolnir.js": "^3.0.0",
     "node-fetch": "^2.6.7",
     "react": "19.0.0",
+    "react-dom": "19.0.0",
     "storybook": "^8.6.14",
     "tailwindcss": "^4.1.11",
     "tsup": "8.5.0",
+    "type-fest": "^4.41.0",
     "typescript": "5.8.3",
     "vite": "^5.4.9",
     "vitest": "^2.1.9",
@@ -107,6 +110,7 @@
   },
   "optionalDependencies": {
     "@accelint/bus": "workspace:*",
+    "@accelint/core": "workspace:*",
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "9.1.14",
     "@deck.gl/geo-layers": "9.1.14",
@@ -120,8 +124,7 @@
     "maplibre-gl": "^5.7.1",
     "milsymbol": "3.0.2",
     "mjolnir.js": "^3.0.0",
-    "react": "19.0.0",
-    "typescript": "5.8.3"
+    "react": "19.0.0"
   },
   "publishConfig": {
     "access": "public"

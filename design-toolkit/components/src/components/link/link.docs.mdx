@@ -9,7 +9,7 @@ A flexible and accessible link component that provides navigation and action tri
 
 It is composed of the following components:
 - **Link** - Main interactive link component with accessibility and state management
-- **Link.Provider** - Context provider for setting default props across multiple links
+- **LinkProvider** - Context provider for setting default props across multiple links
 
 ## Example usage
 
@@ -35,11 +35,11 @@ It is composed of the following components:
 </Link>
 
 // Custom visited styling
-<Link.Provider allowsVisited className="enabled:visited:fg-accent-primary-pressed enabled:visited:underline">
+<LinkProvider allowsVisited className="enabled:visited:fg-accent-primary-pressed enabled:visited:underline">
   <Link href="/styled-visited">
     Custom visited styles
   </Link>
-</Link.Provider>
+</LinkProvider>
 ```
 
 <Canvas of={LinkStories.CustomVisitedStyles} />
@@ -68,7 +68,7 @@ Links can be seamlessly integrated into text content:
 - **`children`** - Link content (text, icons, or mixed content)
 - **`className`** - Custom CSS class name for additional styling
 
-### Link.Provider Props
+### LinkProvider Props
 - **`allowsVisited`** - Default visited tracking for all child links
 - **`className`** - Default styling to apply to all child links
 - **`children`** - Link components that will inherit the provider's props
@@ -95,12 +95,12 @@ Icons within links are automatically sized appropriately:
 ```
 
 ### Context Provider
-Use `Link.Provider` to set consistent props for multiple links:
+Use `LinkProvider` to set consistent props for multiple links:
 ```tsx
-<Link.Provider allowsVisited className="visited:fg-accent-primary-pressed visited:underline">
+<LinkProvider allowsVisited className="visited:fg-accent-primary-pressed visited:underline">
   <Link href="/link1">Link One</Link>
   <Link href="/link2">Link Two</Link>
-</Link.Provider>
+</LinkProvider>
 ```
 
 ### Accessibility
@@ -144,11 +144,11 @@ Apply custom styles trough **className** prop:
 ### Visited State Styling
 Customize visited link appearance:
 ```tsx
-<Link.Provider className="visited:fg-accent-primary-pressed visited:underline">
+<LinkProvider className="visited:fg-accent-primary-pressed visited:underline">
   <Link allowsVisited href="/styled-visited">
     Styled Visited Link
   </Link>
-</Link.Provider>
+</LinkProvider>
 ```
 
 ## Implementation Notes
@@ -161,8 +161,8 @@ The `Link` component is built on React Aria Components' `Link` and provides enha
 Key Features:
 - **Accessibility**: Full ARIA support, keyboard navigation, and screen reader compatibility
 - **State Management**: Optional visited state tracking with customizable styling
-- **Icon Integration**: Automatic icon sizing through `Icon.Provider` context
-- **Context Provider**: `Link.Provider` for consistent props across multiple links
+- **Icon Integration**: Automatic icon sizing through `IconProvider` context
+- **Context Provider**: `LinkProvider` for consistent props across multiple links
 - **Type Safety**: Full Typescript support with comprehensive prop types
 
 

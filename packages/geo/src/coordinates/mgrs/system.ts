@@ -11,8 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Point } from '@ngageoint/grid-js';
-import { MGRS } from '@ngageoint/mgrs-js';
+import { LatLon } from 'geodesy/mgrs';
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseMGRS } from './parser';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
@@ -37,6 +36,8 @@ export const systemMGRS: CoordinateSystem = {
       [format.slice(3), right],
     ]) as Record<'LAT' | 'LON', number>;
 
-    return MGRS.from(Point.point(LON, LAT)).toString();
+    const latlon = new LatLon(LAT, LON);
+
+    return latlon.toUtm().toMgrs().toString();
   },
 };

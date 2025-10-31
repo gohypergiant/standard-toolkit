@@ -1,5 +1,6 @@
 import { Placeholder } from '@accelint/icons';
-import { Button, ToggleButton } from '../button';
+import { Button } from '../button';
+import { ToggleButton } from '../button/toggle';
 import { Icon } from '../icon';
 import { ActionBar } from './index';
 /*

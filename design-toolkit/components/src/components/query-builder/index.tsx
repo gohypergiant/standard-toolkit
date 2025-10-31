@@ -12,27 +12,14 @@
 'use client';
 
 import 'client-only';
-import { Delete, Duplicate, LockFill } from '@accelint/icons';
 import { createContext, useMemo } from 'react';
-import {
-  type ActionProps,
-  type CombinatorSelectorProps,
-  QueryBuilder as RQBBuilder,
-} from 'react-querybuilder';
-import { Button } from '../button';
-import { Icon } from '../icon';
-import { Label } from '../label';
-import { Radio } from '../radio';
-import { Tooltip } from '../tooltip';
+import { QueryBuilder as RQBBuilder } from 'react-querybuilder';
 import { ActionElement } from './action-element';
-import {
-  RuleGroup,
-  RuleGroupFooterComponent,
-  RuleGroupHeaderComponent,
-} from './group';
+import { CloneAction, LockAction, RemoveRuleAction } from './actions';
+import { CombinatorSelector } from './combinator-selector';
 import { Rule } from './rule';
+import { RuleGroup } from './rule-group';
 import { QueryBuilderStyles } from './styles';
-import { getValidationResult } from './utils';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
 import type { QueryBuilderContextType, QueryBuilderProps } from './types';
@@ -61,86 +48,6 @@ const {
   body,
   rule,
 } = QueryBuilderStyles();
-
-const operatorDescriptions: Record<string, string> = {
-  AND: 'All rules below must be true for a match',
-  OR: 'One of the rules below must be true for a match',
-};
-
-function CombinatorSelector({
-  options,
-  value,
-  handleOnChange,
-}: CombinatorSelectorProps) {
-  return (
-    <Radio.Group
-      value={value}
-      onChange={handleOnChange}
-      orientation='horizontal'
-      style={{ flexWrap: 'nowrap' }}
-    >
-      <Label>Combinator</Label>
-      {options.map((option) => (
-        <Radio key={option.label} value={option.label}>
-          <Tooltip.Trigger>
-            <button type='button'>{option.label}</button>
-            <Tooltip placement='top'>
-              {operatorDescriptions[option.label]}
-            </Tooltip>
-          </Tooltip.Trigger>
-        </Radio>
-      ))}
-    </Radio.Group>
-  );
-}
-
-function RemoveRuleAction({ handleOnClick, className, ...rest }: ActionProps) {
-  return (
-    <Button
-      size='small'
-      variant='icon'
-      onPress={() => handleOnClick()}
-      className={className}
-      {...rest}
-    >
-      <Icon>
-        <Delete />
-      </Icon>
-    </Button>
-  );
-}
-
-function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
-  return (
-    <Button
-      size='small'
-      variant='icon'
-      onPress={() => handleOnClick()}
-      className={className}
-      {...rest}
-    >
-      <Icon>
-        <LockFill />
-      </Icon>
-    </Button>
-  );
-}
-
-function CloneAction({ handleOnClick, className, ...rest }: ActionProps) {
-  return (
-    <Button
-      size='small'
-      variant='icon'
-      onPress={() => handleOnClick()}
-      className={className}
-      {...rest}
-    >
-      <Icon>
-        <Duplicate />
-      </Icon>
-    </Button>
-  );
-}
 
 /**
  * QueryBuilder - A visual interface for building complex database queries
@@ -247,16 +154,3 @@ export function QueryBuilder({
     />
   );
 }
-
-QueryBuilder.CombinatorSelector = CombinatorSelector;
-QueryBuilder.RemoveRuleAction = RemoveRuleAction;
-QueryBuilder.LockAction = LockAction;
-QueryBuilder.CloneAction = CloneAction;
-QueryBuilder.ActionElement = ActionElement;
-QueryBuilder.Rule = Rule;
-QueryBuilder.RuleGroup = RuleGroup;
-QueryBuilder.RuleGroupHeaderComponent = RuleGroupHeaderComponent;
-QueryBuilder.RuleGroupFooterComponent = RuleGroupFooterComponent;
-QueryBuilder.getValidationResult = getValidationResult;
-QueryBuilder.ValueEditor = ValueEditor;
-QueryBuilder.ValueSelector = ValueSelector;

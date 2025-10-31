@@ -9,7 +9,7 @@ The ClassificationBadge component displays security classification levels for do
 
 It is composed of the following components:
 - **ClassificationBadge** - Main classification component for displaying security levels
-- **ClassificationBadge.Provider** - Context provider for setting default props across multiple classification badges
+- **ClassificationBadgeProvider** - Context provider for setting default props across multiple classification badges
 
 ## Example usage
 ```tsx
@@ -34,10 +34,10 @@ It is composed of the following components:
 <ClassificationBadge variant="secret" size="small" />
 
 // Using context provider for default props
-<ClassificationBadge.Provider variant="confidential" size="small">
+<ClassificationBadgeProvider variant="confidential" size="small">
   <ClassificationBadge />
   <ClassificationBadge />
-</ClassificationBadge.Provider>
+</ClassificationBadgeProvider>
 
 // Classification badge with custom styling
 <ClassificationBadge

@@ -14,7 +14,12 @@ import { Delete, Information } from '@accelint/icons';
 import { Button } from '@/components/button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
-import { Popover } from './index';
+import { Popover } from './';
+import { PopoverBody } from './body';
+import { PopoverContent } from './content';
+import { PopoverFooter } from './footer';
+import { PopoverTitle } from './title';
+import { PopoverTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**
@@ -45,17 +50,17 @@ type Story = StoryObj<typeof meta>;
 export const Simple: Story = {
   render: ({ ...args }) => (
     <Popover>
-      <Popover.Trigger>
+      <PopoverTrigger>
         <Icon className='fg-primary-bold'>
           <Information />
         </Icon>
-      </Popover.Trigger>
-      <Popover.Content {...args}>
-        <Popover.Title>Popover Title</Popover.Title>
-        <Popover.Body>
+      </PopoverTrigger>
+      <PopoverContent {...args}>
+        <PopoverTitle>Popover Title</PopoverTitle>
+        <PopoverBody>
           Lorum Ipsum text for the dialog shall go here.
-        </Popover.Body>
-      </Popover.Content>
+        </PopoverBody>
+      </PopoverContent>
     </Popover>
   ),
 };
@@ -63,31 +68,31 @@ export const Simple: Story = {
 export const WithActions: Story = {
   render: () => (
     <Popover>
-      <Popover.Trigger>
+      <PopoverTrigger>
         <Button variant='icon'>
           <Icon>
             <Delete />
           </Icon>
         </Button>
-      </Popover.Trigger>
-      <Popover.Content>
+      </PopoverTrigger>
+      <PopoverContent>
         {({ close }) => (
           <>
-            <Popover.Title>Delete Item</Popover.Title>
-            <Popover.Body>
+            <PopoverTitle>Delete Item</PopoverTitle>
+            <PopoverBody>
               Are you sure you want to delete this item?
-            </Popover.Body>
-            <Popover.Footer>
+            </PopoverBody>
+            <PopoverFooter>
               <Button variant='flat' onPress={close}>
                 Cancel
               </Button>
               <Button variant='filled' onPress={close}>
                 CTA
               </Button>
-            </Popover.Footer>
+            </PopoverFooter>
           </>
         )}
-      </Popover.Content>
+      </PopoverContent>
     </Popover>
   ),
 };
@@ -96,21 +101,21 @@ export const CustomComposition: Story = {
   render: () => {
     return (
       <Popover>
-        <Popover.Trigger>
+        <PopoverTrigger>
           <span className='fg-primary-bold'>Settings</span>
-        </Popover.Trigger>
-        <Popover.Content className='min-w-sm'>
+        </PopoverTrigger>
+        <PopoverContent className='min-w-sm'>
           {() => (
             <>
-              <Popover.Title>Notification Settings</Popover.Title>
-              <Popover.Body className='space-y-s'>
+              <PopoverTitle>Notification Settings</PopoverTitle>
+              <PopoverBody className='space-y-s'>
                 <Checkbox>Email Notifications</Checkbox>
                 <Checkbox>Push Notifications</Checkbox>
                 <Checkbox>SMS Notifications</Checkbox>
-              </Popover.Body>
+              </PopoverBody>
             </>
           )}
-        </Popover.Content>
+        </PopoverContent>
       </Popover>
     );
   },

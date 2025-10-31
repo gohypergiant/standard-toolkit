@@ -13,28 +13,12 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import {
-  type ContextValue,
-  Keyboard,
-  useContextProps,
-} from 'react-aria-components';
-import { Icon } from '../icon';
+import { Keyboard, useContextProps } from 'react-aria-components';
+import { HotkeyContext } from './context';
 import { HotkeyStyles, HotkeyStylesDefaults } from './styles';
-import type { ProviderProps } from '@/lib/types';
-import type { HotkeyProps, HotkeySetProps } from './types';
+import type { HotkeyProps } from './types';
 
-const { key, set } = HotkeyStyles();
-
-export const HotkeyContext =
-  createContext<ContextValue<HotkeyProps, HTMLElement>>(null);
-
-function HotkeyProvider({ children, ...props }: ProviderProps<HotkeyProps>) {
-  return (
-    <HotkeyContext.Provider value={props}>{children}</HotkeyContext.Provider>
-  );
-}
-HotkeyProvider.displayName = 'Hotkey.Provider';
+const { key } = HotkeyStyles();
 
 /**
  * Hotkey - A visual representation of keyboard shortcuts and key combinations
@@ -50,11 +34,11 @@ HotkeyProvider.displayName = 'Hotkey.Provider';
  *
  * @example
  * // Hotkey combination with different variants
- * <Hotkey.Set>
+ * <HotkeySet>
  *   <Hotkey variant="outline">Cmd</Hotkey>
  *   <span>+</span>
  *   <Hotkey variant="outline">K</Hotkey>
- * </Hotkey.Set>
+ * </HotkeySet>
  *
  * @example
  * // Flat style for inline text
@@ -62,10 +46,10 @@ HotkeyProvider.displayName = 'Hotkey.Provider';
  *
  * @example
  * // Icon variant for special keys
- * <Hotkey.Set>
+ * <HotkeySet>
  *   <Hotkey variant="icon">⌘</Hotkey>
  *   <Hotkey>Space</Hotkey>
- * </Hotkey.Set>
+ * </HotkeySet>
  */
 export function Hotkey({ ref, children, ...props }: HotkeyProps) {
   [props, ref] = useContextProps(props, ref ?? null, HotkeyContext);
@@ -77,18 +61,3 @@ export function Hotkey({ ref, children, ...props }: HotkeyProps) {
     </Keyboard>
   );
 }
-Hotkey.displayName = 'Hotkey';
-
-function HotkeySet({ children, ...props }: HotkeySetProps) {
-  const { className } = props;
-
-  return (
-    <div className={set({ className })}>
-      <Icon.Provider size='large'>{children}</Icon.Provider>
-    </div>
-  );
-}
-HotkeySet.displayName = 'Hotkey.Set';
-
-Hotkey.Set = HotkeySet;
-Hotkey.Provider = HotkeyProvider;

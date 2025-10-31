@@ -12,6 +12,7 @@
 
 import { Add } from '@accelint/icons';
 import { Icon } from './';
+import { IconProvider } from './context';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -44,7 +45,7 @@ export const Default: Story = {
 
 export const Provider: Story = {
   render: ({ className, size }) => (
-    <Icon.Provider size={size}>
+    <IconProvider size={size}>
       <div className={className}>
         <Icon>
           <Add />
@@ -56,6 +57,6 @@ export const Provider: Story = {
           <Add />
         </Icon>
       </div>
-    </Icon.Provider>
+    </IconProvider>
   ),
 };

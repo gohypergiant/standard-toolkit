@@ -11,7 +11,7 @@
  */
 
 import { parseTime } from '@internationalized/date';
-import { TimeField } from './index';
+import { TimeField } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

@@ -11,7 +11,7 @@ It's built using Tanstack React Table and simplifies table usage by requiring on
 It is composed of the following components:
 
 - **Table** - The root wrapper component that renders the full table structure.
-- **TableHeader** - Renders the table header section `(<thead>)` and maps over header groups provided by TanStack React Table.
+- **TableHeader** - Renders the table header section `(<thead>)` and maps over header groups provided by TanStack React Table
 - **TableHeaderCell** - Represents an individual header cell `(<th>)`, often with optional support for sorting, filtering, or custom labels.
 - **TableBody** - Renders the table body section `(<tbody>)` and maps over the visible rows from the table instance.
 - **TableRow** - Represents a single table row `(<tr>)`, rendered using the row model from TanStack.
@@ -56,20 +56,20 @@ const dataExample = [
 
 //Static 
 <Table {...args}>
-    <Table.Header>
-    <Table.Row>
-        <Table.HeaderCell>First Name</Table.HeaderCell>
-        <Table.HeaderCell>Last Name</Table.HeaderCell>
-    </Table.Row>
-    </Table.Header>
-    <Table.Body>
+    <TableHeader>
+    <TableRow>
+        <TableHeaderCell>First Name</TableHeaderCell>
+        <TableHeaderCell>Last Name</TableHeaderCell>
+    </TableRow>
+    </TableHeader>
+    <TableBody>
     {dataExample.map((person) => (
-        <Table.Row key={person.id}>
-        <Table.Cell>{person.firstName}</Table.Cell>
-        <Table.Cell>{person.lastName}</Table.Cell>
-        </Table.Row>
+        <TableRow key={person.id}>
+        <TableCell>{person.firstName}</TableCell>
+        <TableCell>{person.lastName}</TableCell>
+        </TableRow>
     ))}
-    </Table.Body>
+    </TableBody>
 </Table>
 
 ```

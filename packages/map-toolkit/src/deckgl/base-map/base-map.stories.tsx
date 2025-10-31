@@ -11,20 +11,21 @@
  */
 
 import { useOn } from '@accelint/bus/react';
+import { uuid } from '@accelint/core';
 import { MapEvents } from './events';
 import { BaseMap as BaseMapComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { MapClickEvent, MapHoverEvent } from '../base-map/types';
 
 const meta: Meta = {
-  title: 'DeckGL',
-  parameters: {
-    layout: 'fullscreen',
-  },
+  title: 'DeckGL/Base Map',
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+// Stable id for Storybook story
+const BASE_MAP_STORY_ID = uuid();
 
 export const BaseMap: Story = {
   render: () => {
@@ -36,6 +37,6 @@ export const BaseMap: Story = {
       console.log('hover:', data.payload);
     });
 
-    return <BaseMapComponent className='h-dvh w-dvw' />;
+    return <BaseMapComponent className='h-dvh w-dvw' id={BASE_MAP_STORY_ID} />;
   },
 };

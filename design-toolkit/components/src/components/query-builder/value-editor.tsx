@@ -17,6 +17,7 @@ import { useCallback } from 'react';
 import { useValueEditor, type ValueEditorProps } from 'react-querybuilder';
 import { Checkbox } from '../checkbox';
 import { Radio } from '../radio';
+import { RadioGroup } from '../radio/group';
 import { Switch } from '../switch';
 import { TextAreaField } from '../text-area-field';
 import { TextField } from '../text-field';
@@ -57,7 +58,7 @@ function RadioGroupValueEditor({
   const { valid } = getValidationResult(rule, validator);
 
   return (
-    <Radio.Group
+    <RadioGroup
       value={value}
       isDisabled={disabled}
       onChange={handleOnChange}
@@ -70,7 +71,7 @@ function RadioGroupValueEditor({
           {option.label}
         </Radio>
       ))}
-    </Radio.Group>
+    </RadioGroup>
   );
 }
 

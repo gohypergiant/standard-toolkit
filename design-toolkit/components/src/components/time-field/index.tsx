@@ -11,8 +11,8 @@
  */
 'use client';
 
-import 'client-only';
 import { Time } from '@accelint/icons';
+import 'client-only';
 import {
   DateInput as AriaDateInput,
   Text as AriaText,

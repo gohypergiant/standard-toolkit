@@ -12,29 +12,13 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import { type ContextValue, useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components';
+import { ClassificationBannerContext } from './context';
 import {
   ClassificationBannerStyles,
   ClassificationBannerStylesDefaults,
 } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { ClassificationBannerProps } from './types';
-
-export const ClassificationBannerContext =
-  createContext<ContextValue<ClassificationBannerProps, HTMLDivElement>>(null);
-
-function ClassificationBannerProvider({
-  children,
-  ...props
-}: ProviderProps<ClassificationBannerProps>) {
-  return (
-    <ClassificationBannerContext.Provider value={props}>
-      {children}
-    </ClassificationBannerContext.Provider>
-  );
-}
-ClassificationBannerProvider.displayName = 'ClassificationBanner.Provider';
 
 /**
  * ClassificationBanner - A prominent banner for displaying security classification
@@ -76,5 +60,3 @@ export function ClassificationBanner({
     </div>
   );
 }
-ClassificationBanner.displayName = 'ClassificationBanner';
-ClassificationBanner.Provider = ClassificationBannerProvider;

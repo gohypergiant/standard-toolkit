@@ -10,7 +10,7 @@
     "tooling"
   ],
   "subPath": "packages/websocket",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -43,15 +43,13 @@
     "index": "pnpm zx ../../scripts/indexer.mjs packages/websocket",
     "lint": "pnpm biome lint"
   },
-  "dependencies": {
-    "typescript": "5.8.3"
-  },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0",
+    "typescript": "5.8.3",
     "vitest": "^2.1.9"
   },
   "publishConfig": {
