@@ -18,7 +18,7 @@ metadata:
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/design-toolkit/components/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 7.0.0
+    package/version: 7.0.1
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components

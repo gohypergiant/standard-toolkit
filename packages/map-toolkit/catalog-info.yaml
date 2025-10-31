@@ -13,7 +13,7 @@ metadata:
 
     accelint_biome-config@1.0.2, accelint_bus@2.0.0,
     accelint_constellation-tracker@1.0.1, accelint_core@0.5.0,
-    accelint_design-toolkit@7.0.0, accelint_typescript-config@0.1.4,
+    accelint_design-toolkit@7.0.1, accelint_typescript-config@0.1.4,
     accelint_vitest-config@0.1.5
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/map-toolkit/catalog-info.yaml

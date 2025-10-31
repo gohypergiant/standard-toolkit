@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 7.0.1
+
+### Patch Changes
+
+- 0093e60: Fix issue with use client directive prepend logic not working during build
+
 ## 7.0.0
 
 ### Major Changes
