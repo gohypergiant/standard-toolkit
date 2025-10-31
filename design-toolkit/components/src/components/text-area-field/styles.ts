@@ -21,6 +21,7 @@ export const TextAreaStyles = tv({
       'group-size-medium/text-area-field:text-body-s group-size-small/text-area-field:text-body-xs',
       'group-enabled/text-area-field:focus-visible:outline-accent-primary-bold',
       'group-enabled/text-area-field:hover:outline-interactive-hover',
+      'group-enabled/text-area-field:pressed:outline-accent-primary-pressed',
       'group-enabled/text-area-field:group-invalid/text-area-field:outline-serious-bold',
       'group-disabled/text-area-field:text-disabled group-disabled/text-area-field:outline-interactive-disabled group-disabled/text-area-field:placeholder:text-disabled',
     ],

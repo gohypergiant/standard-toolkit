@@ -34,7 +34,7 @@ export const CheckboxStyles = tv({
       //pressed
       'group-enabled/checkbox:group-selected/checkbox:group-pressed/checkbox:bg-accent-primary-pressed group-enabled/checkbox:group-selected/checkbox:group-pressed/checkbox:outline-accent-primary-pressed group-enabled/checkbox:group-pressed/checkbox:outline-interactive-pressed group-enabled/checkbox:group-indeterminate/checkbox:group-pressed/checkbox:bg-accent-primary-pressed group-enabled/checkbox:group-indeterminate/checkbox:group-pressed/checkbox:outline-accent-primary-pressed',
       //disabled
-      'group-disabled/checkbox:group-indeterminate/checkbox:fg-inverse-bold group-disabled/checkbox:group-selected/checkbox:fg-inverse-bold group-disabled/checkbox:outline-interactive-disabled group-disabled/checkbox:group-indeterminate/checkbox:bg-interactive-disabled group-disabled/checkbox:group-selected/checkbox:bg-interactive-disabled',
+      'group-disabled/checkbox:group-indeterminate/checkbox:fg-disabled group-disabled/checkbox:group-selected/checkbox:fg-disabled group-disabled/checkbox:outline-interactive-disabled group-disabled/checkbox:group-indeterminate/checkbox:bg-interactive-disabled group-disabled/checkbox:group-selected/checkbox:bg-interactive-disabled',
     ],
     label: [
       'fg-primary-bold text-body-s',

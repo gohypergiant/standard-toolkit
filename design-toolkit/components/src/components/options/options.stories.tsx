@@ -74,13 +74,15 @@ const items: CustomOptionsItem[] = [
     name: 'Dog',
     description: 'Loyal companion',
     suffixIcon: <Placeholder />,
+    color: 'serious',
+
   },
   {
     id: 4,
     prefixIcon: <Placeholder />,
     name: 'Aardvark',
     description: 'Ant-eating nocturnal',
-    color: 'serious',
+    color: 'critical',
   },
   {
     id: 5,
@@ -151,6 +153,7 @@ export const Default: Story = {
           id={item.id}
           textValue={item.name}
           isDisabled={item.isDisabled}
+          color={item.color}
         >
           {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
           <OptionsItemContent>
