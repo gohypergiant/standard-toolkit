@@ -13,9 +13,11 @@
 import { uuid } from '@accelint/core';
 import { Add, Kebab } from '@accelint/icons';
 import { useState } from 'react';
+import { MenuItem } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { MenuTrigger } from '../menu/trigger';
 import { Kanban } from '.';
 import { KanbanCard } from './card';
 import { KanbanCardBody } from './card-body';
@@ -202,25 +204,25 @@ export const CompleteExample: Story = {
                             {card.title}
                           </KanbanCardHeaderTitle>
                           <KanbanCardHeaderActions>
-                            <Menu.Trigger>
+                            <MenuTrigger>
                               <Button variant='icon'>
                                 <Icon size='small'>
                                   <Kebab />
                                 </Icon>
                               </Button>
                               <Menu>
-                                <Menu.Item
+                                <MenuItem
                                   onAction={() => handleEditCard(card.id)}
                                 >
                                   Edit
-                                </Menu.Item>
-                                <Menu.Item
+                                </MenuItem>
+                                <MenuItem
                                   onAction={() => handleDeleteCard(card.id)}
                                 >
                                   Delete
-                                </Menu.Item>
+                                </MenuItem>
                               </Menu>
-                            </Menu.Trigger>
+                            </MenuTrigger>
                           </KanbanCardHeaderActions>
                         </KanbanCardHeader>
                         <KanbanCardBody>{card.body}</KanbanCardBody>
