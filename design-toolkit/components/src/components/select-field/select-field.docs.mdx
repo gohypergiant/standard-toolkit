@@ -10,37 +10,37 @@ The SelectField component provides a customizable dropdown select input with sup
 It is composed of the following components:
 
 - **SelectField** - Main select dropdown with form field features
-- **SelectField.Provider** - Context provider for setting default props across multiple select fields
+- **SelectFieldProvider** - Context provider for setting default props across multiple select fields
 - **[Options](?path=/docs/components-options--playground)** Main container for all option items
 
 ## Example usage
 ```tsx
 // Basic select field
 <SelectField label="Choose a bird" placeholder="Select...">
-  <Options.Item textValue="Blue Jay">Blue Jay</Options.Item>
-  <Options.Item textValue="Gray catbird">Gray catbird</Options.Item>
-  <Options.Item textValue="Black-capped chickadee">Black-capped chickadee</Options.Item>
+  <OptionsItem textValue="Blue Jay">Blue Jay</OptionsItem>
+  <OptionsItem textValue="Gray catbird">Gray catbird</OptionsItem>
+  <OptionsItem textValue="Black-capped chickadee">Black-capped chickadee</OptionsItem>
 </SelectField>
 
 // With grouped options and icons
 <SelectField label="Choose a bird" placeholder="Select...">
-  <Options.Section header="North American Birds">
-    <Options.Item textValue="Blue Jay">
+  <OptionsSection header="North American Birds">
+    <OptionsItem textValue="Blue Jay">
       <Icon><Placeholder /></Icon>
-      <Options.Item.Label>Blue Jay</Options.Item.Label>
-    </Options.Item>
-    <Options.Item textValue="Gray catbird">
+      <OptionsItemLabel>Blue Jay</OptionsItemLabel>
+    </OptionsItem>
+    <OptionsItem textValue="Gray catbird">
       <Icon><Placeholder /></Icon>
-      <Options.Item.Label>Gray catbird</Options.Item.Label>
-    </Options.Item>
-  </Options.Section>
+      <OptionsItemLabel>Gray catbird</OptionsItemLabel>
+    </OptionsItem>
+  </OptionsSection>
 </SelectField>
 
 // Using context provider for default props
-<SelectField.Provider size="small">
+<SelectFieldProvider size="small">
   <SelectField label="Small Select 1" />
   <SelectField label="Small Select 2" />
-</SelectField.Provider>
+</SelectFieldProvider>
 ```
 
 ## Variants
@@ -48,7 +48,7 @@ It is composed of the following components:
 * **medium** - Standard size with full label and description support (default)
 * **small** - Compact size with minimal label display and reduced padding
 
-The size can be controlled via the `size` prop or set globally using the `SelectField.Provider` component.
+The size can be controlled via the `size` prop or set globally using the `SelectFieldProvider` component.
 
 <Canvas of={SelectFieldStories.Default} />
 

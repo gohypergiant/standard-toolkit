@@ -13,155 +13,17 @@
 'use client';
 
 import 'client-only';
-import ChevronRight from '@accelint/icons/chevron-right';
-import { createContext, useContext } from 'react';
 import {
   Menu as AriaMenu,
-  MenuItem as AriaMenuItem,
-  MenuSection as AriaMenuSection,
-  Collection,
-  type ContextValue,
   composeRenderProps,
-  DEFAULT_SLOT,
-  Header,
-  KeyboardContext,
-  MenuTrigger,
   Popover,
-  Provider,
-  Separator,
-  type SeparatorProps,
-  SubmenuTrigger,
-  Text,
-  type TextProps,
   useContextProps,
 } from 'react-aria-components';
-import { isSlottedContextValue } from '@/lib/utils';
-import { Icon, IconContext } from '../icon';
+import { MenuContext } from './context';
 import { MenuStyles, MenuStylesDefaults } from './styles';
-import type { MenuItemProps, MenuProps, MenuSectionProps } from './types';
+import type { MenuProps } from './types';
 
-const {
-  menu,
-  icon,
-  item,
-  label,
-  description,
-  more,
-  section,
-  header,
-  separator,
-  hotkey,
-  popover,
-} = MenuStyles();
-
-export const MenuContext =
-  createContext<ContextValue<MenuProps<unknown>, HTMLDivElement>>(null);
-
-function MenuSection<T extends object>({
-  children,
-  classNames,
-  items,
-  title,
-  ...rest
-}: MenuSectionProps<T>) {
-  return (
-    <AriaMenuSection
-      {...rest}
-      className={section({ className: classNames?.section })}
-    >
-      {title && (
-        <Header className={header({ className: classNames?.header })}>
-          {title}
-        </Header>
-      )}
-      <Collection items={items}>{children}</Collection>
-    </AriaMenuSection>
-  );
-}
-MenuSection.displayName = 'Menu.Section';
-
-function MenuSeparator({ className, ...rest }: SeparatorProps) {
-  return <Separator {...rest} className={separator({ className })} />;
-}
-MenuSeparator.displayName = 'Menu.Separator';
-
-function MenuLabel({ children, className, ...rest }: TextProps) {
-  return (
-    <Text {...rest} slot='label' className={label({ className })}>
-      {children}
-    </Text>
-  );
-}
-MenuLabel.displayName = 'Menu.Item.Label';
-
-function MenuDescription({ children, className, ...rest }: TextProps) {
-  return (
-    <Text {...rest} slot='description' className={description({ className })}>
-      {children}
-    </Text>
-  );
-}
-MenuDescription.displayName = 'Menu.Item.Description';
-
-function MenuItem({
-  children,
-  classNames,
-  color = 'info',
-  ...rest
-}: MenuItemProps) {
-  const context = useContext(MenuContext);
-  const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    MenuStylesDefaults.variant;
-
-  return (
-    <AriaMenuItem
-      {...rest}
-      className={composeRenderProps(classNames?.item, (className) =>
-        item({ className, variant }),
-      )}
-      data-color={color}
-    >
-      {composeRenderProps(children, (children, { hasSubmenu }) => (
-        <Provider
-          values={[
-            [
-              KeyboardContext,
-              { className: hotkey({ className: classNames?.hotkey }) },
-            ],
-            [
-              IconContext,
-              {
-                slots: {
-                  [DEFAULT_SLOT]: {
-                    className: icon({ className: classNames?.icon }),
-                  },
-                  submenu: { className: more({ className: classNames?.more }) },
-                },
-              },
-            ],
-          ]}
-        >
-          {typeof children === 'string' ? (
-            <Text slot='label' className={classNames?.text}>
-              {children}
-            </Text>
-          ) : (
-            children
-          )}
-          {hasSubmenu && (
-            <Icon slot='submenu'>
-              <ChevronRight />
-            </Icon>
-          )}
-        </Provider>
-      ))}
-    </AriaMenuItem>
-  );
-}
-MenuItem.displayName = 'Menu.Item';
-MenuItem.Label = MenuLabel;
-MenuItem.Description = MenuDescription;
+const { menu, popover } = MenuStyles();
 
 /**
  * Menu - A dropdown menu component with keyboard navigation and selection
@@ -172,58 +34,58 @@ MenuItem.Description = MenuDescription;
  *
  * @example
  * // Basic menu with trigger
- * <Menu.Trigger>
+ * <MenuTrigger>
  *   <Button>Open Menu</Button>
  *   <Menu>
- *     <Menu.Item>Edit</Menu.Item>
- *     <Menu.Item>Copy</Menu.Item>
- *     <Menu.Item>Delete</Menu.Item>
+ *     <MenuItem>Edit</MenuItem>
+ *     <MenuItem>Copy</MenuItem>
+ *     <MenuItem>Delete</MenuItem>
  *   </Menu>
- * </Menu.Trigger>
+ * </MenuTrigger>
  *
  * @example
  * // Menu with sections and separators
- * <Menu.Trigger>
+ * <MenuTrigger>
  *   <Button>Open</Button>
  *   <Menu>
- *     <Menu.Section>
- *       <Menu.Item>New File</Menu.Item>
- *       <Menu.Item>Open File</Menu.Item>
- *     </Menu.Section>
+ *     <MenuSection>
+ *       <MenuItem>New File</MenuItem>
+ *       <MenuItem>Open File</MenuItem>
+ *     </MenuSection>
  *
- *     <Menu.Separator />
+ *     <MenuSeparator />
  *
- *     <Menu.Item>Settings</Menu.Item>
+ *     <MenuItem>Settings</MenuItem>
  *   </Menu>
- * </Menu.Trigger>
+ * </MenuTrigger>
  *
  * @example
  * // Menu with selection
- * <Menu.Trigger>
+ * <MenuTrigger>
  *   <Button>Group</Button>
  *   <Menu selectionMode='multiple'>
- *     <Menu.Item>Option 1</Menu.Item>
- *     <Menu.Item>Option 2</Menu.Item>
+ *     <MenuItem>Option 1</MenuItem>
+ *     <MenuItem>Option 2</MenuItem>
  *   </Menu>
- * </Menu.Trigger>
+ * </MenuTrigger>
  *
  * @example
  * // Menu with submenu
- * <Menu.Trigger>
+ * <MenuTrigger>
  *   <Button>Actions</Button>
  *   <Menu>
- *     <Menu.Item>New File</Menu.Item>
- *     <Menu.Submenu>
- *       <Menu.Item>Export</Menu.Item>
+ *     <MenuItem>New File</MenuItem>
+ *     <MenuSubmenu>
+ *       <MenuItem>Export</MenuItem>
  *       <Menu>
- *         <Menu.Item>Export as PDF</Menu.Item>
- *         <Menu.Item>Export as CSV</Menu.Item>
- *         <Menu.Item>Export as JSON</Menu.Item>
+ *         <MenuItem>Export as PDF</MenuItem>
+ *         <MenuItem>Export as CSV</MenuItem>
+ *         <MenuItem>Export as JSON</MenuItem>
  *       </Menu>
- *     </Menu.Submenu>
- *     <Menu.Item>Delete</Menu.Item>
+ *     </MenuSubmenu>
+ *     <MenuItem>Delete</MenuItem>
  *   </Menu>
- * </Menu.Trigger>
+ * </MenuTrigger>
  */
 export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
   [props, ref] = useContextProps(props, ref ?? null, MenuContext);
@@ -259,9 +121,3 @@ export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
     </Popover>
   );
 }
-Menu.displayName = 'Menu';
-Menu.Trigger = MenuTrigger;
-Menu.Submenu = SubmenuTrigger;
-Menu.Item = MenuItem;
-Menu.Separator = MenuSeparator;
-Menu.Section = MenuSection;

@@ -9,34 +9,34 @@ A modal dialog component that provides a focused, accessible overlay for user in
 
 It is composed of the following components:
 - **Dialog** - Root component that manages dialog state and trigger behavior
-- **Dialog.Body** - Modal overaly container that renders the dialog portal
-- **Dialog.Title** - Semantic heading element for dialog titles
-- **Dialog.Content** - Wrapper for the main dialog content with appropriate spacing
-- **Dialog.Footer** - Container for action buttons with proper alignment
-- **Dialog.Button** - Pre-styled button component sized based on dialog size
+- **DialogBody** - Modal overaly container that renders the dialog portal
+- **DialogTitle** - Semantic heading element for dialog titles
+- **DialogContent** - Wrapper for the main dialog content with appropriate spacing
+- **DialogFooter** - Container for action buttons with proper alignment
+- **DialogButton** - Pre-styled button component sized based on dialog size
 
 ## Example usage
 ```tsx
 <Dialog size="sm" isDismissable={true}>
   <Button>Open Dialog</Button>
-  <Dialog.Body>
+  <DialogBody>
     {({ close }) => (
       <>
-        <Dialog.Title>Dialog Title</Dialog.Title>
-        <Dialog.Content>
+        <DialogTitle>Dialog Title</DialogTitle>
+        <DialogContent>
           Dialog content goes here...
-        </Dialog.Content>
-        <Dialog.Footer>
-          <Dialog.Button onPress={close} variant="flat">
+        </DialogContent>
+        <DialogFooter>
+          <DialogButton onPress={close} variant="flat">
             Cancel
-          </Dialog.Button>
-          <Dialog.Button onPress={close}>
+          </DialogButton>
+          <DialogButton onPress={close}>
             Confirm
-          </Dialog.Button>
-        </Dialog.Footer>
+          </DialogButton>
+        </DialogFooter>
       </>
     )}
-  </Dialog.Body>
+  </DialogBody>
 </Dialog>
 ```
 
@@ -61,23 +61,23 @@ It is composed of the following components:
   - `modal` - Modal container
   - `dialog` - Dialog container
 
-### Dialog.Body Props
+### DialogBody Props
 - **`children`** - Render function that receives dialog context including `close` function
 - **`ref`** - Forwarded ref to the modal overlay
 
-### Dialog.Title Props
+### DialogTitle Props
 - **`children`** - Text content for the dialog title
 - **`className`** - Custom CSS class name
 
-### Dialog.Content Props
+### DialogContent Props
 - **`children`** - Main content of the dialog
 - **`className`** - Custom CSS class name
 
-### Dialog.Footer Props
+### DialogFooter Props
 - **`children`** - Footer content, typically action buttons
 - **`className`** - Custom CSS class name
 
-### Dialog.Button Props
+### DialogButton Props
 - **`children`** - Button text or content
 - **`variant`** - Button variant (inherits from Button component)
 - **`size`** - Button size (automatically adjusted based on dialog size)
@@ -106,18 +106,18 @@ const MyComponent = () => {
     return (
       <>
         <Button onPress={handleOpenPress}>Press Me</Button>
-        <Dialog.Trigger isOpen={open} onOpenChange={handleOpenChange}>
+        <DialogTrigger isOpen={open} onOpenChange={handleOpenChange}>
           <Dialog>
-            <Dialog.Title>Dialog Title</Dialog.Title>
-            <Dialog.Content>
+            <DialogTitle>Dialog Title</DialogTitle>
+            <DialogContent>
               Lorum Ipsum text for the dialog shall go here.
-            </Dialog.Content>
-            <Dialog.Footer>
+            </DialogContent>
+            <DialogFooter>
               <Button variant='flat'>Action 2</Button>
               <Button>Action 1</Button>
-            </Dialog.Footer>
+            </DialogFooter>
           </Dialog>
-        </Dialog.Trigger>
+        </DialogTrigger>
       </>
     );
   },

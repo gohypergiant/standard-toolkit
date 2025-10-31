@@ -10,15 +10,15 @@ The Radio component provides a set of radio buttons that allow users to select o
 It is composed of the following components:
 
 - **Radio** - Individual radio button component that represents a single selectable option
-- **Radio.Group** - Container component that manages radio button group state and layout
+- **RadioGroup** - Container component that manages radio button group state and layout
 
 ## Example usage
 ```tsx
-<Radio.Group label="Select an option">
+<RadioGroup label="Select an option">
   <Radio value="1">Option 1</Radio>
   <Radio value="2">Option 2</Radio>
   <Radio value="3">Option 3</Radio>
-</Radio.Group>
+</RadioGroup>
 ```
 
 ## Orientations
@@ -26,13 +26,13 @@ It is composed of the following components:
 * **vertical** - radio buttons are stacked vertically (default)
 * **horizontal** - radio buttons are arranged horizontally in a row
 
-The orientation can be controlled via the `orientation` prop on the `Radio.Group` component.
+The orientation can be controlled via the `orientation` prop on the `RadioGroup` component.
 
 <Canvas of={RadioStories.Default} />
 
 ## Props
 
-### Radio.Group Props
+### RadioGroup Props
 * **`label`** - Optional string label displayed above the radio group
 * **`orientation`** - Layout direction: `'vertical'` (default) or `'horizontal'`
 * **`isDisabled`** - Disables the entire radio group

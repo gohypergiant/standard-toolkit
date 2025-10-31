@@ -12,7 +12,11 @@
 
 import { useCallback, useRef, useState } from 'react';
 import { Button } from '../button';
+import { DialogContent } from './content';
+import { DialogFooter } from './footer';
 import { Dialog } from './index';
+import { DialogTitle } from './title';
+import { DialogTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -49,19 +53,19 @@ export const Default: Story = {
         className='relative h-[800px] w-[600px] p-l outline outline-info-bold'
         ref={ref}
       >
-        <Dialog.Trigger>
+        <DialogTrigger>
           <Button>Press Me</Button>
           <Dialog {...args} parentRef={ref}>
-            <Dialog.Title>Dialog Title</Dialog.Title>
-            <Dialog.Content>
+            <DialogTitle>Dialog Title</DialogTitle>
+            <DialogContent>
               Lorum Ipsum text for the dialog shall go here.
-            </Dialog.Content>
-            <Dialog.Footer>
+            </DialogContent>
+            <DialogFooter>
               <Button variant='flat'>Action 2</Button>
               <Button>Action 1</Button>
-            </Dialog.Footer>
+            </DialogFooter>
           </Dialog>
-        </Dialog.Trigger>
+        </DialogTrigger>
       </div>
     );
   },
@@ -74,19 +78,19 @@ export const LocalPortal: Story = {
     return (
       <div className='flex h-[600px] w-[960px] outline outline-info-bold'>
         <div className='w-full p-l'>
-          <Dialog.Trigger>
+          <DialogTrigger>
             <Button>Press Me</Button>
             <Dialog parentRef={parentRef}>
-              <Dialog.Title>Dialog Title</Dialog.Title>
-              <Dialog.Content>
+              <DialogTitle>Dialog Title</DialogTitle>
+              <DialogContent>
                 Lorum Ipsum text for the dialog shall go here.
-              </Dialog.Content>
-              <Dialog.Footer>
+              </DialogContent>
+              <DialogFooter>
                 <Button variant='flat'>Action 2</Button>
                 <Button>Action 1</Button>
-              </Dialog.Footer>
+              </DialogFooter>
             </Dialog>
-          </Dialog.Trigger>
+          </DialogTrigger>
         </div>
         <div
           ref={parentRef}
@@ -105,19 +109,19 @@ export const Controlled: Story = {
 
     return (
       <div className='h-[800px] w-[600px] p-l outline outline-info-bold'>
-        <Dialog.Trigger isOpen={open} onOpenChange={handleOpenChange}>
+        <DialogTrigger isOpen={open} onOpenChange={handleOpenChange}>
           <Button isDisabled>Disabled</Button>
           <Dialog>
-            <Dialog.Title>Dialog Title</Dialog.Title>
-            <Dialog.Content>
+            <DialogTitle>Dialog Title</DialogTitle>
+            <DialogContent>
               Lorum Ipsum text for the dialog shall go here.
-            </Dialog.Content>
-            <Dialog.Footer>
+            </DialogContent>
+            <DialogFooter>
               <Button variant='flat'>Action 2</Button>
               <Button>Action 1</Button>
-            </Dialog.Footer>
+            </DialogFooter>
           </Dialog>
-        </Dialog.Trigger>
+        </DialogTrigger>
         <Button onPress={handleOpenPress}>Press Me</Button>
       </div>
     );

@@ -23,6 +23,7 @@ import {
   Text,
 } from 'react-aria-components';
 import { Tooltip } from '../tooltip';
+import { TooltipTrigger } from '../tooltip/trigger';
 import { SliderStyles } from './styles';
 import type { SliderProps } from './types';
 
@@ -50,7 +51,7 @@ const {
  * // Basic slider
  * <Slider label="Volume" defaultValue={50} />
  */
-export const Slider = ({
+export function Slider({
   classNames,
   label: labelProp,
   layout = 'grid',
@@ -60,7 +61,7 @@ export const Slider = ({
   showInput,
   showLabel = true,
   ...rest
-}: SliderProps) => {
+}: SliderProps) {
   return (
     <AriaSlider
       {...rest}
@@ -125,7 +126,7 @@ export const Slider = ({
                     state.values.length === 1 ? 0 : 1,
                   )}
                 />
-                <Tooltip.Trigger
+                <TooltipTrigger
                   isDisabled={!showInput || state.isThumbDragging(index)}
                 >
                   <SliderThumb
@@ -138,7 +139,7 @@ export const Slider = ({
                   <Tooltip placement='top'>
                     {state.getThumbValue(index)}
                   </Tooltip>
-                </Tooltip.Trigger>
+                </TooltipTrigger>
               </Fragment>
             ))}
           </AriaSliderTrack>
@@ -158,4 +159,4 @@ export const Slider = ({
       )}
     </AriaSlider>
   );
-};
+}

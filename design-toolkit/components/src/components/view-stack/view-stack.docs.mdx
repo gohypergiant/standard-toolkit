@@ -11,8 +11,8 @@ The ViewStack component provides a flexible stack-based navigation system for ma
 It is composed of the following components:
 
 - **ViewStack** - Parent that encapsulates all the views and triggers
-- **ViewStack.View** - Content view container
-- **ViewStack.Trigger** - Fires a stack or view action
+- **ViewStackView** - Content view container
+- **ViewStackTrigger** - Fires a stack or view action
 
 The ViewStack has no inherent sense of style or layout. It simply displays the current view, if there is one. There's a limit of a single active view per stack, but stacks can also be nested to create more complex combinations of views.
 
@@ -26,24 +26,24 @@ const ids = {
 };
 
 <ViewStack id={ids.stack} defaultView={ids.a}>
-  <ViewStack.View id={ids.a}>
-    <ViewStack.Trigger for={ids.b}>
+  <ViewStackView id={ids.a}>
+    <ViewStackTrigger for={ids.b}>
       <Button>
         Push View B
       </Button>
-    </ViewStack.Trigger>
+    </ViewStackTrigger>
     <h1>View A</h1>
-  </ViewStack.View>
-  <ViewStack.View id={ids.b}>
-    <ViewStack.Trigger for='back'>
+  </ViewStackView>
+  <ViewStackView id={ids.b}>
+    <ViewStackTrigger for='back'>
       <Button variant='icon'>
         <Icon>
           <ChevronLeft />
         </Icon>
       </Button>
-    </ViewStack.Trigger>
+    </ViewStackTrigger>
     <h1>View B</h1>
-  </ViewStack.View>
+  </ViewStackView>
 </ViewStack>
 ```
 
@@ -68,14 +68,14 @@ All components and subcomponents accept a `className` prop that allows for custo
 * **`id`** - Unique identifier for the stack: `UniqueId` (required)
 * **`defaultView`** - Initial view to display: `UniqueId` (optional)
 * **`onChange`** - Callback when active view changes: `(view: UniqueId | null) => void` (optional)
-* **`children`** - ViewStack.View componentsand other content: `ReactNode`
+* **`children`** - ViewStackView componentsand other content: `ReactNode`
 
-### ViewStack.View Props
+### ViewStackView Props
 
 * **`id`** - Unique identifier for the view: `UniqueId` (required)
 * **`children`** - Content to display when this view is active: `ReactNode`
 
-### ViewStack.Trigger Props
+### ViewStackTrigger Props
 
 * **`for`** - Trigger action or target: `SimpleEvents | TargetedEvents | ChainedEvents` (required)
 * **`children`** - Trigger content: `ReactNode` (typically Button or other interactive element)
@@ -98,20 +98,20 @@ All components and subcomponents accept a `className` prop that allows for custo
 * `['reset:${stackId}', viewId]` - Reset stack then push view
 
 
-## ViewStack.View
+## ViewStackView
 
-The ViewStack.View is the content region that will be visible when that view's id is active. There's no rules around the DOM structure inside or outside of the ViewStack.View. This means the view can be as deeply nested as desired and/or can contain any content desired.
+The ViewStackView is the content region that will be visible when that view's id is active. There's no rules around the DOM structure inside or outside of the ViewStackView. This means the view can be as deeply nested as desired and/or can contain any content desired.
 
-## ViewStack.Trigger
+## ViewStackTrigger
 
-The ViewStack.Trigger is the React component to enable transitioning from one view to another. While the trigger can be placed anywhere in the application, there are a couple caveats to it's implementation that are necessary to understand its functionality.
+The ViewStackTrigger is the React component to enable transitioning from one view to another. While the trigger can be placed anywhere in the application, there are a couple caveats to it's implementation that are necessary to understand its functionality.
 
-The most important prop for the ViewStack.Trigger is `for`. This dictates it's behavior when pressed. Here are the possible values and notes about each:
+The most important prop for the ViewStackTrigger is `for`. This dictates it's behavior when pressed. Here are the possible values and notes about each:
 
-- `'back'`: Can only be used when the trigger is inside a ViewStack. Will pop off the latest view from the stack. If the stack becomes empty, the stack resets to the `defaultView` if one was set.
-- `'clear'`: Can only be used when the trigger is inside a ViewStack. Will clear the stack of all views and will _not_ reset to the defaultView.
-- `'reset'`: Can only be used when the trigger is inside a ViewStack. Will clear the stack of all views and will reset to the `defaultView` if one was set.
-- A `UniqueId` (`id` should belong to a ViewStack.View). Can be anywhere in the application and will push that id to the stack of it's parent.
+- `'back'`: Can only be used when the trigger is inside a ViewStack Will pop off the latest view from the stack. If the stack becomes empty, the stack resets to the `defaultView` if one was set.
+- `'clear'`: Can only be used when the trigger is inside a ViewStack Will clear the stack of all views and will _not_ reset to the defaultView.
+- `'reset'`: Can only be used when the trigger is inside a ViewStack Will clear the stack of all views and will reset to the `defaultView` if one was set.
+- A `UniqueId` (`id` should belong to a ViewStackView). Can be anywhere in the application and will push that id to the stack of it's parent.
 - ``` `back:${UniqueId}` ``` (`id` should belong to a ViewStack): Can be anywhere in the application and will cause stack to follow `'back'` behavior.
 - ``` `clear:${UniqueId}` ``` (`id` should belong to a ViewStack): Can be anywhere in the application and will cause stack to follow `'clear'` behavior.
 - ``` `reset:${UniqueId}` ``` (`id` should belong to a ViewStack): Can be anywhere in the application and will cause stack to follow `'reset'` behavior.

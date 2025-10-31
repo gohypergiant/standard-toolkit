@@ -10,7 +10,7 @@ The TextField component provides a single-line text input with integrated label,
 It is composed of the following components:
 
 - **TextField** - Complete form field with label, input, and validation
-- **TextField.Provider** - Context provider for setting default text field props
+- **TextFieldProvider** - Context provider for setting default text field props
 
 ## Example usage
 ```tsx
@@ -47,10 +47,10 @@ It is composed of the following components:
 />
 
 // Using context provider for default props
-<TextField.Provider size="small">
+<TextFieldProvider size="small">
   <TextField label="Field 1" />
   <TextField label="Field 2" />
-</TextField.Provider>
+</TextFieldProvider>
 
 // With custom input props
 <TextField
@@ -68,7 +68,7 @@ It is composed of the following components:
 * **medium** - Standard size with full label and description support (default)
 * **small** - Compact size with minimal label display and reduced text size
 
-The size can be controlled via the `size` prop or set globally using the `TextField.Provider` component.
+The size can be controlled via the `size` prop or set globally using the `TextFieldProvider` component.
 
 <Canvas of={TextFieldStories.Default} />
 

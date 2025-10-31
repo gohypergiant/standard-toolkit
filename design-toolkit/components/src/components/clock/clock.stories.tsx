@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Clock } from '.';
+import { Clock } from './';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

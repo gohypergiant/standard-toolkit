@@ -11,7 +11,7 @@
     "ui"
   ],
   "subPath": "design-toolkit/components",
-  "version": "6.0.0",
+  "version": "7.0.1",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -32,32 +32,39 @@
       },
       "default": "./dist/index.js"
     },
-    "./*": {
+    "./components/*": {
       "import": {
-        "types": "./dist/components/*/index.d.ts",
-        "default": "./dist/components/*/index.js"
+        "types": "./dist/components/*.d.ts",
+        "default": "./dist/components/*.js"
       },
-      "default": "./dist/components/*/index.js"
+      "default": "./dist/components/*.js"
     },
-    "./query-builder": {
+    "./hooks/*": {
       "import": {
-        "types": "./dist/components/query-builder/index.d.ts",
-        "default": "./dist/components/query-builder/index.js"
+        "types": "./dist/hooks/*.d.ts",
+        "default": "./dist/hooks/*.js"
       },
-      "default": "./dist/components/query-builder/index.js"
+      "default": "./dist/hooks/*.js"
+    },
+    "./lib/*": {
+      "import": {
+        "types": "./dist/lib/*.d.ts",
+        "default": "./dist/lib/*.js"
+      },
+      "default": "./dist/lib/*.js"
+    },
+    "./providers/*": {
+      "import": {
+        "types": "./dist/providers/*.d.ts",
+        "default": "./dist/providers/*.js"
+      },
+      "default": "./dist/providers/*.js"
     },
     "./styles": {
       "import": {
         "default": "./dist/index.css"
       },
       "default": "./dist/index.css"
-    },
-    "./utils": {
-      "import": {
-        "types": "./dist/lib/utils.d.ts",
-        "default": "./dist/lib/utils.js"
-      },
-      "default": "./dist/lib/utils.js"
     }
   },
   "scripts": {

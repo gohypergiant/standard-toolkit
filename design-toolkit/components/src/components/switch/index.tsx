@@ -12,29 +12,17 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
 import {
   Switch as AriaSwitch,
-  type ContextValue,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { SwitchContext } from './context';
 import { SwitchStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { SwitchProps } from './types';
 
 // "switch" is a reserved term in JS
 const { switch: switchClassNames, control, label } = SwitchStyles();
-
-export const SwitchContext =
-  createContext<ContextValue<SwitchProps, HTMLLabelElement>>(null);
-
-function SwitchProvider({ children, ...props }: ProviderProps<SwitchProps>) {
-  return (
-    <SwitchContext.Provider value={props}>{children}</SwitchContext.Provider>
-  );
-}
-SwitchProvider.displayName = 'Switch.Provider';
 
 /**
  * Switch - A toggle control for binary state changes
@@ -98,5 +86,3 @@ export function Switch({ ref, ...props }: SwitchProps) {
     </AriaSwitch>
   );
 }
-Switch.displayName = 'Switch';
-Switch.Provider = SwitchProvider;

@@ -10,7 +10,7 @@ The Switch component provides a toggle input control that allows users to turn a
 It is composed of the following components:
 
 - **Switch** - Main switch toggle component for binary on/off controls
-- **Switch.Provider** - Context provider for setting default props across multiple switches
+- **SwitchProvider** - Context provider for setting default props across multiple switches
 
 ## Example usage
 ```tsx
@@ -26,10 +26,10 @@ It is composed of the following components:
 <Switch isDisabled>Feature unavailable</Switch>
 
 // Using context provider for default props
-<Switch.Provider>
+<SwitchProvider>
   <Switch>Option 1</Switch>
   <Switch>Option 2</Switch>
-</Switch.Provider>
+</SwitchProvider>
 
 // With custom styling
 <Switch

@@ -14,8 +14,8 @@ import { useBus, useEmit } from '@accelint/bus/react';
 import { type UniqueId, uuid } from '@accelint/core';
 import { useEffect, useState } from 'react';
 import { Button } from '../button';
-import { Notice } from './';
 import { NoticeEventTypes } from './events';
+import { NoticeList } from './list';
 import type { Meta, StoryObj } from '@storybook/react';
 import type {
   NoticeActionEvent,
@@ -24,9 +24,9 @@ import type {
   NoticeQueueEvent,
 } from './types';
 
-const meta: Meta<typeof Notice.List> = {
-  title: 'Components/Notice.List',
-  component: Notice.List,
+const meta: Meta<typeof NoticeList> = {
+  title: 'Components/NoticeList',
+  component: NoticeList,
   parameters: {
     layout: 'fullscreen',
   },
@@ -62,7 +62,7 @@ const colors = ['normal', 'advisory', 'info', 'serious', 'critical'] as const;
 
 export default meta;
 
-export const Default: StoryObj<typeof Notice.List> = {
+export const Default: StoryObj<typeof NoticeList> = {
   render: (args) => {
     const emit = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
     return (
@@ -79,7 +79,7 @@ export const Default: StoryObj<typeof Notice.List> = {
             Create Notice
           </Button>
         </div>
-        <Notice.List {...args} aria-label='notice-list' />
+        <NoticeList {...args} aria-label='notice-list' />
       </div>
     );
   },
@@ -98,7 +98,7 @@ function generateNotices({ color, target, metadata }: Partial<NoticeContent>) {
   });
 }
 
-export const DequeueSingle: StoryObj<typeof Notice.List> = {
+export const DequeueSingle: StoryObj<typeof NoticeList> = {
   parameters: {
     controls: { disable: true },
   },
@@ -140,14 +140,14 @@ export const DequeueSingle: StoryObj<typeof Notice.List> = {
           ))}
         </div>
         <div className='flex-1'>
-          <Notice.List aria-label='notice-list' hideClearAll />
+          <NoticeList aria-label='notice-list' hideClearAll />
         </div>
       </div>
     );
   },
 };
 
-export const DequeueList: StoryObj<typeof Notice.List> = {
+export const DequeueList: StoryObj<typeof NoticeList> = {
   parameters: {
     controls: { disable: true },
   },
@@ -190,16 +190,16 @@ export const DequeueList: StoryObj<typeof Notice.List> = {
         </div>
         <div className='flex flex-1 flex-col gap-s'>
           <div className='fg-primary-bold'>List A</div>
-          <Notice.List id={a} aria-label='info-notices' hideClearAll />
+          <NoticeList id={a} aria-label='info-notices' hideClearAll />
           <div className='fg-primary-bold'>List B</div>
-          <Notice.List id={b} aria-label='serious-notices' hideClearAll />
+          <NoticeList id={b} aria-label='serious-notices' hideClearAll />
         </div>
       </div>
     );
   },
 };
 
-export const DequeueColor: StoryObj<typeof Notice.List> = {
+export const DequeueColor: StoryObj<typeof NoticeList> = {
   parameters: {
     controls: { disable: true },
   },
@@ -223,19 +223,14 @@ export const DequeueColor: StoryObj<typeof Notice.List> = {
           ))}
         </div>
         <div className='flex-1'>
-          <Notice.List
-            id={a}
-            aria-label='info-notices'
-            limit={5}
-            hideClearAll
-          />
+          <NoticeList id={a} aria-label='info-notices' limit={5} hideClearAll />
         </div>
       </div>
     );
   },
 };
 
-export const DequeueMetadata: StoryObj<typeof Notice.List> = {
+export const DequeueMetadata: StoryObj<typeof NoticeList> = {
   parameters: {
     controls: { disable: true },
   },
@@ -301,17 +296,17 @@ export const DequeueMetadata: StoryObj<typeof Notice.List> = {
           ))}
         </div>
         <div className='flex flex-1 flex-col gap-s'>
-          <Notice.List id={a} aria-label='notices-a' hideClearAll />
-          <Notice.List id={b} aria-label='notices-b' hideClearAll />
-          <Notice.List id={c} aria-label='notices-c' hideClearAll />
-          <Notice.List id={d} aria-label='notices-d' hideClearAll />
+          <NoticeList id={a} aria-label='notices-a' hideClearAll />
+          <NoticeList id={b} aria-label='notices-b' hideClearAll />
+          <NoticeList id={c} aria-label='notices-c' hideClearAll />
+          <NoticeList id={d} aria-label='notices-d' hideClearAll />
         </div>
       </div>
     );
   },
 };
 
-export const DequeueCombination: StoryObj<typeof Notice.List> = {
+export const DequeueCombination: StoryObj<typeof NoticeList> = {
   parameters: {
     controls: { disable: true },
   },
@@ -353,9 +348,9 @@ export const DequeueCombination: StoryObj<typeof Notice.List> = {
         </div>
         <div className='flex h-full flex-1 flex-col justify-between gap-s'>
           <div className='fg-primary-bold'>List A</div>
-          <Notice.List id={a} aria-label='notices-a' hideClearAll />
+          <NoticeList id={a} aria-label='notices-a' hideClearAll />
           <div className='fg-primary-bold'>List B</div>
-          <Notice.List id={b} aria-label='notices-b' hideClearAll />
+          <NoticeList id={b} aria-label='notices-b' hideClearAll />
         </div>
       </div>
     );
