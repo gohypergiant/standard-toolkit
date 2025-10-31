@@ -13,12 +13,11 @@
 import { uuid } from '@accelint/core';
 import { Add, Kebab } from '@accelint/icons';
 import { useState } from 'react';
-import { MenuItem } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { MenuItem } from '../menu/item';
 import { MenuItemLabel } from '../menu/item-label';
-import { MenuSubmenu } from '../menu/submenu';
 import { MenuTrigger } from '../menu/trigger';
 import { Kanban } from '.';
 import { KanbanCard } from './card';
