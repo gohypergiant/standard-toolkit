@@ -23,13 +23,16 @@ import type { Meta, StoryObj } from '@storybook/react';
 const meta = {
   title: 'Components/Flashcard',
   component: Flashcard,
+  args: {
+    isLoading: false,
+  },
 } satisfies Meta<typeof Flashcard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => {
+  render: ({ children, ...args }) => {
     const details = [
       { label: 'key', value: 'value' },
       { label: 'key', value: 'value' },
@@ -41,7 +44,7 @@ export const Default: Story = {
     ];
 
     return (
-      <Flashcard>
+      <Flashcard {...args}>
         <FlashcardHero>
           <FlashcardIdentifier>IDENTIFIER</FlashcardIdentifier>
         </FlashcardHero>

@@ -14,6 +14,7 @@ import type { PropsWithChildren } from 'react';
 
 // Honestly, might not need these props.
 export type FlashcardProps = PropsWithChildren & {
+  className?: string;
   isLoading?: boolean;
 };
 

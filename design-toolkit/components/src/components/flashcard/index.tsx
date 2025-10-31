@@ -33,21 +33,34 @@
 
 import { createContext, type PropsWithChildren, useContext } from 'react';
 import { Skeleton } from '../skeleton';
+import { FlashcardStyles } from './styles';
 import type { FlashcardDetailContainerProps, FlashcardProps } from './types';
+
+const {
+  container,
+  hero,
+  identifier,
+  header,
+  subHeader,
+  secondaryContainer,
+  secondaryDetails,
+  secondaryData,
+  detailsContainer,
+  detailsItem,
+  detailsLabel,
+  detailsValue,
+} = FlashcardStyles();
 
 export const FlashcardContext = createContext<FlashcardProps>({
   isLoading: false,
 });
 
 export function Flashcard(props: FlashcardProps) {
-  const { isLoading, children, ...rest } = props;
+  const { isLoading, children, className, ...rest } = props;
 
   return (
     <FlashcardContext.Provider value={{ isLoading }}>
-      <div
-        className='min-w-[128px] rounded-medium outline outline-interactive-hover'
-        {...rest}
-      >
+      <div className={container({ className })} {...rest}>
         {children}
       </div>
     </FlashcardContext.Provider>
@@ -55,37 +68,37 @@ export function Flashcard(props: FlashcardProps) {
 }
 Flashcard.displayName = 'Flashcard';
 
+// TODO: Update type to include className.
 export function FlashcardHero(props: PropsWithChildren) {
   const { children, ...rest } = props;
-  const context = useContext(FlashcardContext);
+  const { isLoading } = useContext(FlashcardContext);
 
-  if (context?.isLoading) {
+  if (isLoading) {
     return (
-      <div className='gap-s bg-surface-muted p-s' {...rest}>
+      <div className={hero()} {...rest}>
         <Skeleton />
-        <Skeleton />
+        <Skeleton className='w-1/2' />
       </div>
     );
   }
 
   return (
-    <div className='gap-s bg-surface-muted p-s' {...rest}>
+    <div className={hero()} {...rest}>
       {children}
     </div>
   );
 }
 FlashcardHero.displayName = 'FlashcardHero';
 
+// classNames
 export function FlashcardIdentifier(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
-    <div className='flex flex-col'>
-      <div className='fg-primary-bold text-body-m' {...rest}>
-        {children}
-      </div>
+    <div className={identifier()} {...rest}>
+      <div className={header()}>{children}</div>
       {/* TODO: Does this need another subcomponent? */}
-      <div className='fg-primary-muted text-body-xs'>DATA</div>
+      <div className={subHeader()}>DATA</div>
     </div>
   );
 }
@@ -95,7 +108,7 @@ export function FlashcardSecondaryContainer(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
-    <div className='flex flex-col gap-s p-s' {...rest}>
+    <div className={secondaryContainer()} {...rest}>
       {children}
     </div>
   );
@@ -105,7 +118,7 @@ FlashcardSecondaryContainer.displayName = 'FlashcardSecondaryContainer';
 export function FlashcardSecondaryDetails(props: PropsWithChildren) {
   const { children, ...rest } = props;
   return (
-    <div className='spacing-xxs flex flex-col' {...rest}>
+    <div className={secondaryDetails()} {...rest}>
       {children}
     </div>
   );
@@ -116,7 +129,7 @@ export function FlashcardSecondaryData(props: PropsWithChildren) {
   const { children, ...rest } = props;
 
   return (
-    <h2 className='fg-primary-muted text-body-xs' {...rest}>
+    <h2 className={secondaryData()} {...rest}>
       {children}
     </h2>
   );
@@ -127,24 +140,24 @@ export function FlashcardDetailsContainer(
   props: FlashcardDetailContainerProps,
 ) {
   const { details, classNames, ...rest } = props;
+  const { isLoading } = useContext(FlashcardContext);
+
   if (!details?.length) {
     return null;
   }
 
   return (
-    <div
-      className='flex w-full flex-col justify-between text-body-xs'
-      {...rest}
-    >
+    <div className={detailsContainer()} {...rest}>
       {/* Limit to the first 5 items. Not optimal. */}
       {details.splice(0, 5).map((item) => {
         return (
-          <div
-            className='flex w-full flex-row justify-between text-body-xs'
-            key={item.label}
-          >
-            <div className='fg-primary-muted'>{item.label}</div>
-            <div className='fg-primary-bold'>{item.value}</div>
+          <div className={detailsItem()} key={item.label}>
+            <div className={detailsLabel()}>
+              {isLoading ? <Skeleton /> : item.label}
+            </div>
+            <div className={detailsValue()}>
+              {isLoading ? <Skeleton /> : item.value}
+            </div>
           </div>
         );
       })}

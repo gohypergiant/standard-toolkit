@@ -1,0 +1,42 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as FlashcardStories from './flashcard.stories';
+
+<Meta of={FlashcardStories} />
+
+# Flashcard
+A quick visual identifier for multiple points of data for a given map entity.
+
+## Example Usage
+
+### Basic
+
+```tsx
+    const details = [
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+    ];
+
+    <Flashcard>
+      <FlashcardHero>
+        <FlashcardIdentifier>IDENTIFIER</FlashcardIdentifier>
+      </FlashcardHero>
+      <FlashcardSecondaryContainer>
+        <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
+        <FlashcardSecondaryData>SECONDARY_DATA_02</FlashcardSecondaryData>
+        <FlashcardDetailsContainer details={details}/>
+      </FlashcardSecondaryContainer>
+    </Flashcard>
+```
+
+## Props
+- I'm bad at writing these. :)
+
+## Implementation Notes
+- WIP
+

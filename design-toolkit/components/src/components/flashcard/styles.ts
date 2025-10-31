@@ -10,8 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
+import { tv } from '@/lib/utils';
+
 export const FlashcardStyles = tv({
   slots: {
-    container: '',
+    container: 'min-w-[128px] rounded-medium outline outline-interactive-hover',
+    hero: 'flex flex-col gap-s bg-surface-muted p-s',
+    identifier: 'flex flex-col',
+    header: 'fg-primary-bold text-body-m',
+    subHeader: 'fg-primary-muted text-body-xs',
+    secondaryContainer: 'flex flex-col gap-s p-s',
+    secondaryDetails: 'spacing-xxs flex flex-col', // TODO: Better name pls.
+    secondaryData: 'fg-primary-muted text-body-xs',
+    detailsContainer: 'flex w-full flex-col justify-between text-body-xs',
+    detailsItem: 'flex w-full flex-row justify-between text-body-xs',
+    detailsLabel: 'fg-primary-muted',
+    detailsValue: 'fg-primary-bold',
   },
 });
