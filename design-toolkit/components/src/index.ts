@@ -298,6 +298,15 @@ export type {
   OptionsProps,
   OptionsSectionProps,
 } from './components/options/types';
+export { Pagination, getPaginationRange } from './components/pagination';
+export { PaginationStyles } from './components/pagination/styles';
+export type {
+  BasePaginationProps,
+  PaginationNavProps,
+  PaginationNumberContainerProps,
+  PaginationPageNumberProps,
+  PaginationRange,
+} from './components/pagination/types';
 export { PopoverBody } from './components/popover/body';
 export { PopoverContent } from './components/popover/content';
 export { PopoverFooter } from './components/popover/footer';
