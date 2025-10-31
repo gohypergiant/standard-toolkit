@@ -14,6 +14,9 @@
 import { Add, Check, Group } from '@accelint/icons';
 import { Icon } from '@/components/icon';
 import { Tabs } from '@/components/tabs/index';
+import { TabList } from './list';
+import { TabPanel } from './panel';
+import { Tab } from './tab';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**
@@ -26,7 +29,7 @@ import type { Meta, StoryObj } from '@storybook/react';
  *
  * Error boundaries for incorrect usage of this component:
  *
- * - `Tabs` must include a `Tabs.List`
+ * - `Tabs` must include a `TabList`
  */
 const meta = {
   title: 'Components/Tabs',
@@ -51,38 +54,38 @@ export const Default: Story = {
     <div className='flex w-full flex-row flex-wrap gap-m'>
       <div className='w-[300px]'>
         <Tabs {...args}>
-          <Tabs.List>
-            <Tabs.List.Tab id='Storybook-Tab-1'>Tab 1</Tabs.List.Tab>
-            <Tabs.List.Tab id='Storybook-Tab-2'>Tab 2</Tabs.List.Tab>
-            <Tabs.List.Tab id='Storybook-Tab-3'>Tab 3</Tabs.List.Tab>
-          </Tabs.List>
-          <Tabs.Panel id='Storybook-Tab-1'>Panel 1</Tabs.Panel>
-          <Tabs.Panel id='Storybook-Tab-2'>Panel 2</Tabs.Panel>
-          <Tabs.Panel id='Storybook-Tab-3'>Panel 3</Tabs.Panel>
+          <TabList>
+            <Tab id='Storybook-Tab-1'>Tab 1</Tab>
+            <Tab id='Storybook-Tab-2'>Tab 2</Tab>
+            <Tab id='Storybook-Tab-3'>Tab 3</Tab>
+          </TabList>
+          <TabPanel id='Storybook-Tab-1'>Panel 1</TabPanel>
+          <TabPanel id='Storybook-Tab-2'>Panel 2</TabPanel>
+          <TabPanel id='Storybook-Tab-3'>Panel 3</TabPanel>
         </Tabs>
       </div>
       <div className='w-[300px]'>
         <Tabs {...args}>
-          <Tabs.List>
-            <Tabs.List.Tab id='Storybook-Tab-1'>
+          <TabList>
+            <Tab id='Storybook-Tab-1'>
               <Icon>
                 <Add />
               </Icon>
-            </Tabs.List.Tab>
-            <Tabs.List.Tab id='Storybook-Tab-2'>
+            </Tab>
+            <Tab id='Storybook-Tab-2'>
               <Icon>
                 <Check />
               </Icon>
-            </Tabs.List.Tab>
-            <Tabs.List.Tab id='Storybook-Tab-3'>
+            </Tab>
+            <Tab id='Storybook-Tab-3'>
               <Icon>
                 <Group />
               </Icon>
-            </Tabs.List.Tab>
-          </Tabs.List>
-          <Tabs.Panel id='Storybook-Tab-1'>Panel 1</Tabs.Panel>
-          <Tabs.Panel id='Storybook-Tab-2'>Panel 2</Tabs.Panel>
-          <Tabs.Panel id='Storybook-Tab-3'>Panel 3</Tabs.Panel>
+            </Tab>
+          </TabList>
+          <TabPanel id='Storybook-Tab-1'>Panel 1</TabPanel>
+          <TabPanel id='Storybook-Tab-2'>Panel 2</TabPanel>
+          <TabPanel id='Storybook-Tab-3'>Panel 3</TabPanel>
         </Tabs>
       </div>
     </div>

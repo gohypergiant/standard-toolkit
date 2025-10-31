@@ -12,13 +12,13 @@ Menu is a complex, composed component made up of smaller subcomponents. The subc
 It is composed of the following components:
 
 - **Menu** - Root menu component that wraps the dropdown portion
-- **Menu.Trigger** - Manages open/close behavior and anchors menu position
-- **Menu.Item** - Individual menu item with support for labels and description
-- **Menu.Item.Label** - Item display label (accessed via Text component with slot='label')
-- **Menu.Item.Description** - Item description subtext (accessed via Text component with slot='description')
-- **Menu.Separator** - Visual line separator between menu sections
-- **Menu.Section** - Visually distinct section optional title
-- **Menu.Submenu** - Nested submenu flyout for hierarchical items
+- **MenuTrigger** - Manages open/close behavior and anchors menu position
+- **MenuItem** - Individual menu item with support for labels and description
+- **MenuItemLabel** - Item display label (accessed via Text component with slot='label')
+- **MenuItemDescription** - Item description subtext (accessed via Text component with slot='description')
+- **MenuSeparator** - Visual line separator between menu sections
+- **MenuSection** - Visually distinct section optional title
+- **MenuSubmenu** - Nested submenu flyout for hierarchical items
 
 Additionally, you can compose in a `Hotkey` component or `Icon` components within menu items.
 
@@ -35,67 +35,67 @@ You can build a static menu with a flat list of options to select.
 
 ### Simplest Version
 ```
-<Menu.Trigger>
+<MenuTrigger>
   <Button>Open Menu</Button>
     <Menu>
-      <Menu.Item>
-        <Menu.Item.Label>Item</Menu.Item.Label>
-      </Menu.Item>
-      <Menu.Separator />
-      <Menu.Item>
-        <Menu.Item.Label>Item</Menu.Item.Label>
-      </Menu.Item>
+      <MenuItem>
+        <MenuItemLabel>Item</MenuItemLabel>
+      </MenuItem>
+      <MenuSeparator />
+      <MenuItem>
+        <MenuItemLabel>Item</MenuItemLabel>
+      </MenuItem>
     </Menu>
-</Menu.Trigger>
+</MenuTrigger>
 ```
 
 ### With Section
 You can add an optional section area.
 ```
-<Menu.Trigger>
+<MenuTrigger>
   <Button>Open Menu</Button>
     <Menu>
-      <Menu.Item>
-        <Menu.Item.Label>Item</Menu.Item.Label>
-      </Menu.Item>
-      <Menu.Section title='Additional Notable Species'>
-        <Menu.Item>
-          <Menu.Item.Label>Mallard</Menu.Item.Label>
-          <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
+      <MenuItem>
+        <MenuItemLabel>Item</MenuItemLabel>
+      </MenuItem>
+      <MenuSection title='Additional Notable Species'>
+        <MenuItem>
+          <MenuItemLabel>Mallard</MenuItemLabel>
+          <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
           <Hotkey variant='flat'>⌘V</Hotkey>
-        </Menu.Item>
-        <Menu.Item>
-          <Menu.Item.Label>Chimney swift</Menu.Item.Label>
-          <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
+        </MenuItem>
+        <MenuItem>
+          <MenuItemLabel>Chimney swift</MenuItemLabel>
+          <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
           <Hotkey variant='flat'>⌘V</Hotkey>
-        </Menu.Item>
-      </Menu.Section>
+        </MenuItem>
+      </MenuSection>
     </Menu>
-</Menu.Trigger>
+</MenuTrigger>
 ```
 
 ### With Submenu
 You can add in optional, nested Submenus
 
 ```
-<Menu.Trigger>
+<MenuTrigger>
   <Button>Open Menu</Button>
   <Menu>
-    <Menu.Item>
-      <Menu.Item.Label>Item</Menu.Item.Label>
-    </Menu.Item>
-    <Menu.Submenu>
-      <Menu.Item>
-        <Menu.Item.Label>Item With Children</Menu.Item.Label>
-      </Menu.Item>
+    <MenuItem>
+      <MenuItemLabel>Item</MenuItemLabel>
+    </MenuItem>
+    <MenuSubmenu>
+      <MenuItem>
+        <MenuItemLabel>Item With Children</MenuItemLabel>
+      </MenuItem>
         <Menu>
-          <Menu.Item>
-            <Menu.Item.Label>Blue Jay</Menu.Item.Label>
-          </Menu.Item>
+          <MenuItem>
+            <MenuItemLabel>Blue Jay</MenuItemLabel>
+          </MenuItem>
         </Menu>
-      </Menu.Submenu>
+      </MenuSubmenu>
   </Menu>
-</Menu.Trigger>
+</MenuTrigger>
 ```
 
 ## Props
@@ -109,7 +109,7 @@ The Menu supports all the [props from `react-aria-components` Menu](https://reac
   - `popover` - Applied to the popover wrapper
 - **`popoverProps`** - Props passed to the underlying Popover component
 
-### Menu.Item Props
+### MenuItem Props
 - **`color`** - Color variant: `'info'` (default) | `'serious'` | `'critical'`
 - **`classNames`** - Custom class names for different parts:
   - `item` - Applied to menu item
@@ -118,27 +118,27 @@ The Menu supports all the [props from `react-aria-components` Menu](https://reac
   - `more` - Applied to submenu indicators
   - `text` - Applied to text content
 
-### Menu.Section Props
+### MenuSection Props
 - **`title`** - Optional section title
 - **`classNames`** - Custom class names for different parts:
   - `section` - Applied to the section container
   - `header` - Applied to the section header
 
-### Menu.Trigger Props
-The Menu.Trigger component supports all the [props from `react-aria-components` MenuTrigger](https://react-spectrum.adobe.com/react-area/Menu.html#menutrigger).
+### MenuTrigger Props
+The MenuTrigger component supports all the [props from `react-aria-components` MenuTrigger](https://react-spectrum.adobe.com/react-area/Men.#menutrigger).
 
-### Menu.Submenu Props
-The Menu.Trigger component supports all the [props from `react-aria-components` Submenu](https://react-spectrum.adobe.com/react-area/Menu.html#submenu).
+### MenuSubmenu Props
+The MenuTrigger component supports all the [props from `react-aria-components` Submenu](https://react-spectrum.adobe.com/react-area/Menu.html#submenu).
 
-### Menu.Item.Label Props
+### MenuItemLabel Props
 - **`children`** - Label text content
 - **`className`** - Custom CSS class name for styling
 
-### Menu.Item.Description Props
+### MenuItemDescription Props
 - **`children`** - Description text content
 - **`className`** - Custom CSS class name for styling
 
-### Menu.Separator Props
+### MenuSeparator Props
 - **`className`** - Custom CSS class name for styling
 
 

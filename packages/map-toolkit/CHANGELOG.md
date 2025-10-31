@@ -1,5 +1,34 @@
 # @accelint/map-toolkit
 
+## 0.2.0
+
+### Minor Changes
+
+- b4d1b9b: Add map mode system with authorization flow for managing interaction modes.
+
+  **New Features:**
+  - `MapProvider` component for managing map mode state with instance isolation
+  - `useMapMode()` hook for accessing and requesting mode changes
+  - Authorization flow for resolving ownership conflicts when switching modes
+  - Event bus integration for decoupled mode change communication
+  - Support for multiple independent map instances with isolated state
+
+  **API:**
+  - `MapProvider` component (internal to `BaseMap`)
+  - `useMapMode(id)` hook for UI components
+  - `BaseMap` now requires `id` prop for instance identification
+  - Observable store pattern using React's `useSyncExternalStore`
+
+- 998dee6: add deckgl-layer-text for default text styling
+
+### Patch Changes
+
+- 303b61f: Pins the dependency version of Deck.gl to 9.1.14. We are not yet able to support 9.2.
+- 0d697fa: Fixed definitions in package files for longhand repository definitions, while disabling the option in syncpack that changed it.
+- a8b8de2: Update README content in map-toolkit
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- 935b8e5: Updated the package names in the Constellation configuration file.
+
 ## 0.1.0
 
 ### Minor Changes

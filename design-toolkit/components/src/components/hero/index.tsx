@@ -12,25 +12,19 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
 import {
-  type ContextValue,
   Header,
-  Heading,
   HeadingContext,
   Provider,
-  Text,
   TextContext,
   useContextProps,
 } from 'react-aria-components';
-import { IconContext } from '../icon';
+import { IconContext } from '../icon/context';
+import { HeroContext } from './context';
 import { HeroStyles } from './styles';
 import type { HeroProps } from './types';
 
 const { hero, icon, title, subtitle } = HeroStyles();
-
-export const HeroContext =
-  createContext<ContextValue<HeroProps, HTMLElement>>(null);
 
 /**
  * A versatile hero component that displays an icon alongside primary and secondary content.
@@ -41,22 +35,22 @@ export const HeroContext =
  * // Basic hero with icon and content
  * <Hero>
  *   <Icon><Placeholder /></Icon>
- *   <Hero.Title>Primary Title</Hero.Title>
- *   <Hero.Subtitle>Secondary information</Hero.Subtitle>
+ *   <HeroTitle>Primary Title</HeroTitle>
+ *   <HeroSubtitle>Secondary information</HeroSubtitle>
  * </Hero>
  *
  * // Grid layout for compact display
  * <Hero compact>
  *   <Icon><Settings /></Icon>
- *   <Hero.Title>Settings</Hero.Title>
- *   <Hero.Subtitle>Configure your preferences</Hero.Subtitle>
+ *   <HeroTitle>Settings</HeroTitle>
+ *   <HeroSubtitle>Configure your preferences</HeroSubtitle>
  * </Hero>
  * ```
  *
  * ## Child Component Behavior
  * - **Icon**: Only one allowed
- * - **Hero.Title**: Only one allowed
- * - **Hero.Subtitle**: Any number allowed as secondary content
+ * - **HeroTitle**: Only one allowed
+ * - **HeroSubtitle**: Any number allowed as secondary content
  *
  * ## Layout Modes
  * - **Stack** (default): Vertical layout with larger icon and stacked content
@@ -95,8 +89,3 @@ export function Hero({ ref, ...props }: HeroProps) {
     </Provider>
   );
 }
-Hero.displayName = 'Hero';
-Hero.Title = Heading;
-Hero.Title.displayName = 'Hero.Title';
-Hero.Subtitle = Text;
-Hero.Subtitle.displayName = 'Hero.Subtitle';

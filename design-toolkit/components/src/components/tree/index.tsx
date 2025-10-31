@@ -11,102 +11,32 @@
  */
 'use client';
 
-import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
 import { Cache } from '@/hooks/use-tree/actions/cache';
 import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
-import {
-  createContext,
-  memo,
-  type PropsWithChildren,
-  useContext,
-  useMemo,
-} from 'react';
+import { useMemo } from 'react';
 import {
   Tree as AriaTree,
-  TreeItem as AriaTreeItem,
-  TreeItemContent as AriaTreeItemContent,
   composeRenderProps,
   DropIndicator,
   type DropTarget,
-  Text,
-  type TextProps,
   useDragAndDrop,
 } from 'react-aria-components';
-import { Button } from '../button';
-import { Checkbox } from '../checkbox';
-import { Icon } from '../icon';
-import { Lines } from '../lines';
+import { TreeContext } from './context';
 import { TreeStyles, TreeStylesDefaults } from './styles';
-import type { IconProps } from '../icon/types';
-import type {
-  TreeContextValue,
-  TreeItemContentProps,
-  TreeItemContextValue,
-  TreeItemProps,
-  TreeProps,
-} from './types';
+import type { TreeProps } from './types';
 
-const {
-  tree,
-  item,
-  content,
-  display,
-  icon,
-  label,
-  actions,
-  spacing,
-  description,
-  drag,
-  expansion,
-  visibility,
-} = TreeStyles();
-
-export const TreeContext = createContext<TreeContextValue>({
-  visibilityComputedKeys: new Set(),
-  showRuleLines: true,
-  showVisibility: false,
-  variant: TreeStylesDefaults.variant,
-  isStatic: true,
-  onVisibilityChange: () => undefined,
-});
+const { tree } = TreeStyles();
 
 const defaultRenderDropIndicator = (target: DropTarget) => (
   <DropIndicator target={target} className='border border-highlight-hover' />
 );
 
-const TreeLines = memo(function TreeLines({
-  level,
-  isLastOfSet,
-}: {
-  level: number;
-  isLastOfSet: boolean;
-}) {
-  const { showRuleLines, variant } = useContext(TreeContext);
-
-  return Array.from({ length: level }).map((_, i) => {
-    const type = i === level - 1 ? 'branch' : 'vert';
-    const line = isLastOfSet && i > 0 ? 'last' : type;
-    const size = variant === 'crammed' ? 'medium' : 'large';
-
-    return (
-      <Lines
-        // biome-ignore lint/suspicious/noArrayIndexKey: index should be the key, only count matters
-        key={i}
-        variant={line}
-        size={size}
-        isVisible={showRuleLines}
-        className={spacing({ variant })}
-      />
-    );
-  });
-});
-
 /**
  * Tree - Hierarchical tree view with optional drag-and-drop and visibility
  *
  * Renders a selectable tree with support for nested items, drag-and-drop,
- * selection modes, and visibility controls. Use Tree.Item to define nodes.
+ * selection modes, and visibility controls. Use TreeItem to define nodes.
  *
  * @example
  * <Tree items={items} expandedKeys={expandedKeys}>
@@ -115,12 +45,12 @@ const TreeLines = memo(function TreeLines({
  *
  * @example
  * <Tree>
- *   <Tree.Item id='one' textValue='one'>
- *     <Tree.Item.Content>One</Tree.Item.Content>
- *     <Tree.Item id='two' textValue='two'>
- *       <Tree.Item.Content>Two</Tree.Item.Content>
- *     </Tree.Item>
- *   </Tree.Item>
+ *   <TreeItem id='one' textValue='one'>
+ *     <TreeItemContent>One</TreeItemContent>
+ *     <TreeItem id='two' textValue='two'>
+ *       <TreeItemContent>Two</TreeItemContent>
+ *     </TreeItem>
+ *   </TreeItem>
  * </Tree>
  */
 export function Tree<T>({
@@ -274,187 +204,3 @@ export function Tree<T>({
     </TreeContext.Provider>
   );
 }
-Tree.displayName = 'Tree';
-
-export const TreeItemContext = createContext<TreeItemContextValue>({
-  isVisible: true,
-  isViewable: true,
-  ancestors: [],
-});
-
-function TreeItem({ className, id, ...rest }: TreeItemProps) {
-  const { visibilityComputedKeys, visibleKeys, isStatic } =
-    useContext(TreeContext);
-  const { ancestors } = useContext(TreeItemContext);
-  const isViewable =
-    visibilityComputedKeys?.has(id) ||
-    (isStatic && ancestors.every((key) => visibleKeys?.has(key)));
-  const isVisible = visibleKeys?.has(id);
-
-  return (
-    <TreeItemContext.Provider
-      value={{
-        isVisible,
-        isViewable,
-        ancestors: [...ancestors, id],
-      }}
-    >
-      <AriaTreeItem
-        {...rest}
-        id={id}
-        className={composeRenderProps(className, (className) =>
-          item({ className }),
-        )}
-        data-viewable={isViewable || null}
-        data-visible={isVisible || null}
-      />
-    </TreeItemContext.Provider>
-  );
-}
-TreeItem.displayName = 'Tree.Item';
-
-function ItemContent({ children }: TreeItemContentProps) {
-  const { showVisibility, variant, visibleKeys, onVisibilityChange } =
-    useContext(TreeContext);
-  const { isVisible, isViewable } = useContext(TreeItemContext);
-  const size = variant === 'cozy' ? 'medium' : 'small';
-
-  return (
-    <AriaTreeItemContent>
-      {(renderProps) => {
-        const {
-          id,
-          allowsDragging,
-          hasChildItems,
-          level,
-          selectionBehavior,
-          selectionMode,
-          state,
-          isDisabled,
-          isExpanded,
-          isSelected,
-        } = renderProps;
-
-        const isLastOfSet = !(
-          state.collection.getItem(id)?.nextKey || hasChildItems
-        );
-        const shouldShowSelection =
-          selectionBehavior === 'toggle' && selectionMode !== 'none';
-
-        const handlePress = () => {
-          const keys = new Set<Key>(visibleKeys);
-          visibleKeys?.has(id) ? keys.delete(id) : keys.add(id);
-          onVisibilityChange?.(keys);
-        };
-
-        return (
-          <Icon.Provider size={size}>
-            <div
-              className={content({ variant })}
-              data-last-of-set={isLastOfSet}
-            >
-              {showVisibility && (
-                <Button
-                  variant='icon'
-                  color='mono-bold'
-                  size={size}
-                  onPress={handlePress}
-                  isDisabled={isDisabled}
-                  className={visibility()}
-                >
-                  <Icon>{isVisible ? <Show /> : <Hide />}</Icon>
-                </Button>
-              )}
-              {level > 1 && (
-                <TreeLines level={level} isLastOfSet={isLastOfSet} />
-              )}
-              {hasChildItems ? (
-                <Button
-                  slot='chevron'
-                  variant='icon'
-                  size={size}
-                  className={expansion()}
-                >
-                  <Icon>{isExpanded ? <ChevronDown /> : <ChevronUp />}</Icon>
-                </Button>
-              ) : (
-                <div className={spacing({ variant })} />
-              )}
-              <div className={display({ variant })}>
-                {typeof children === 'function'
-                  ? children({
-                      ...renderProps,
-                      variant,
-                      isVisible,
-                      isViewable: isViewable,
-                      defaultChildren: null,
-                    })
-                  : children}
-              </div>
-              {shouldShowSelection && (
-                <Checkbox
-                  slot='selection'
-                  isSelected={isSelected}
-                  isDisabled={isDisabled}
-                />
-              )}
-              {allowsDragging && (
-                <Button
-                  slot='drag'
-                  variant='icon'
-                  size={size}
-                  isDisabled={isDisabled}
-                  className={drag({})}
-                >
-                  <Icon>
-                    <DragVert />
-                  </Icon>
-                </Button>
-              )}
-            </div>
-          </Icon.Provider>
-        );
-      }}
-    </AriaTreeItemContent>
-  );
-}
-ItemContent.displayName = 'Tree.Item.Content';
-
-function ItemLabel({ children, className }: TextProps) {
-  return <Text className={label({ className })}>{children}</Text>;
-}
-ItemLabel.displayName = 'Tree.Item.Label';
-
-function ItemDescription({ children, className }: TextProps) {
-  const { variant } = useContext(TreeContext);
-
-  return variant !== 'crammed' ? (
-    <Text
-      data-slot='description'
-      className={description({ className, variant })}
-    >
-      {children}
-    </Text>
-  ) : null;
-}
-ItemDescription.displayName = 'Tree.Item.Description';
-
-function ItemIcon({ children, className }: IconProps) {
-  return <Icon className={icon({ className })}>{children}</Icon>;
-}
-ItemIcon.displayName = 'Tree.Item.PrefixIcon';
-
-function ItemActions({
-  children,
-  className,
-}: PropsWithChildren & { className?: string }) {
-  return <div className={actions({ className })}>{children}</div>;
-}
-ItemActions.displayName = 'Tree.Icon.Actions';
-
-Tree.Item = TreeItem;
-TreeItem.Content = ItemContent;
-TreeItem.Label = ItemLabel;
-TreeItem.Description = ItemDescription;
-TreeItem.PrefixIcon = ItemIcon;
-TreeItem.Actions = ItemActions;

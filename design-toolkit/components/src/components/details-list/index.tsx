@@ -12,48 +12,16 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
 import {
-  type ContextValue,
   DEFAULT_SLOT,
-  Text,
   TextContext,
   useContextProps,
 } from 'react-aria-components';
+import { DetailsListContext } from './context';
 import { DetailsListStyles, DetailsListStylesDefaults } from './styles';
-import type { ProviderProps } from '@/lib/types';
-import type {
-  DetailsListLabelProps,
-  DetailsListProps,
-  DetailsListValueProps,
-} from './types';
+import type { DetailsListProps } from './types';
 
 const { list, label, value } = DetailsListStyles();
-
-export const DetailsListContext =
-  createContext<ContextValue<DetailsListProps, HTMLDListElement>>(null);
-
-function DetailsListProvider({
-  children,
-  ...props
-}: ProviderProps<DetailsListProps>) {
-  return (
-    <DetailsListContext.Provider value={props}>
-      {children}
-    </DetailsListContext.Provider>
-  );
-}
-DetailsListProvider.displayName = 'DetailsListProvider.Provider';
-
-function DetailsListLabel(props: DetailsListLabelProps) {
-  return <Text {...props} elementType='dt' slot='label' />;
-}
-DetailsListLabel.displayName = 'DetailsList.Label';
-
-function DetailsListValue(props: DetailsListValueProps) {
-  return <Text {...props} elementType='dd' slot='value' />;
-}
-DetailsListValue.displayName = 'DetailsList.Value';
 
 /**
  * A semantic details list component for displaying metadata in key-value pairs.
@@ -63,26 +31,26 @@ DetailsListValue.displayName = 'DetailsList.Value';
  * @example
  * ```tsx
  * <DetailsList align="left">
- *   <DetailsList.Label>Key</DetailsList.Label>
- *   <DetailsList.Value>Value</DetailsList.Value>
+ *   <DetailsListLabel>Key</DetailsListLabel>
+ *   <DetailsListValue>Value</DetailsListValue>
  *
- *   <DetailsList.Label>Ships</DetailsList.Label>
- *   <DetailsList.Value>Millennium Falcon</DetailsList.Value>
- *   <DetailsList.Value>USS Enterprise NCC-1701</DetailsList.Value>
- *   <DetailsList.Value>Serenity</DetailsList.Value>
+ *   <DetailsListLabel>Ships</DetailsListLabel>
+ *   <DetailsListValue>Millennium Falcon</DetailsListValue>
+ *   <DetailsListValue>USS Enterprise NCC-1701</DetailsListValue>
+ *   <DetailsListValue>Serenity</DetailsListValue>
  *
- *   <DetailsList.Label>Coordinates</DetailsList.Label>
- *   <DetailsList.Value>
+ *   <DetailsListLabel>Coordinates</DetailsListLabel>
+ *   <DetailsListValue>
  *     <div>Great Pyramid of Giza: 29°58'44" N 31°08'02" E</div>
  *     <div>Machu Picchu: 13°09'47" S 72°32'41" W</div>
  *     <div>Colosseum: 41°53'24" N 12°29'32" E</div>
  *     <div>Taj Mahal: 27°10'30" N 78°02'31" E</div>
- *   </DetailsList.Value>
+ *   </DetailsListValue>
  * </DetailsList>
  * ```
  * ## Child Component Behavior
- * - **DetailsList.Label**: Minimum of 1
- * - **DetailsList.Value**: Minimum of 1
+ * - **DetailsListLabel**: Minimum of 1
+ * - **DetailsListValue**: Minimum of 1
  */
 export function DetailsList({ ref, ...props }: DetailsListProps) {
   [props, ref] = useContextProps(props, ref ?? null, DetailsListContext);
@@ -110,7 +78,3 @@ export function DetailsList({ ref, ...props }: DetailsListProps) {
     </TextContext>
   );
 }
-DetailsList.displayName = 'DetailsList';
-DetailsList.Provider = DetailsListProvider;
-DetailsList.Label = DetailsListLabel;
-DetailsList.Value = DetailsListValue;

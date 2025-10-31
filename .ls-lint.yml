@@ -20,6 +20,7 @@ ignore:
   - .github
   - .turbo
   - .vscode
+  - .windsurf
   - '**/.next'
   - '**/.ladle'
   - '**/.storybook'

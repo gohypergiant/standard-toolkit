@@ -82,7 +82,7 @@
         "@types/react*"
       ],
       "isIgnored": true,
-      "label": "Keep react components in sync since this project is using node v18.*"
+      "label": "Keep react components in sync manually"
     },
     {
       "dependencies": [

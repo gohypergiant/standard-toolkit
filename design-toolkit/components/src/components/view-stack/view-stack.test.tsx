@@ -16,6 +16,8 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { ViewStack } from './';
+import { ViewStackTrigger } from './trigger';
+import { ViewStackView } from './view';
 import type { ReactNode } from 'react';
 import type { ViewStackProps } from './types';
 
@@ -31,27 +33,27 @@ function setup(
     id = ids.stack,
     children = (
       <>
-        <ViewStack.View id={ids.a}>A</ViewStack.View>
-        <ViewStack.View id={ids.b}>B</ViewStack.View>
-        <ViewStack.View id={ids.c}>C</ViewStack.View>
-        <ViewStack.Trigger for={ids.a}>
+        <ViewStackView id={ids.a}>A</ViewStackView>
+        <ViewStackView id={ids.b}>B</ViewStackView>
+        <ViewStackView id={ids.c}>C</ViewStackView>
+        <ViewStackTrigger for={ids.a}>
           <Button>Goto A</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for={ids.b}>
+        </ViewStackTrigger>
+        <ViewStackTrigger for={ids.b}>
           <Button>Goto B</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for={ids.c}>
+        </ViewStackTrigger>
+        <ViewStackTrigger for={ids.c}>
           <Button>Goto C</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for='back'>
+        </ViewStackTrigger>
+        <ViewStackTrigger for='back'>
           <Button>Back</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for='clear'>
+        </ViewStackTrigger>
+        <ViewStackTrigger for='clear'>
           <Button>Clear</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for='reset'>
+        </ViewStackTrigger>
+        <ViewStackTrigger for='reset'>
           <Button>Reset</Button>
-        </ViewStack.Trigger>
+        </ViewStackTrigger>
       </>
     ),
     ...rest
@@ -203,12 +205,12 @@ describe('ViewStack', () => {
     setup(
       {},
       <>
-        <ViewStack.Trigger for={ids.c}>
+        <ViewStackTrigger for={ids.c}>
           <Button>{labels.goToC}</Button>
-        </ViewStack.Trigger>
-        <ViewStack.Trigger for={`clear:${ids.stack}`}>
+        </ViewStackTrigger>
+        <ViewStackTrigger for={`clear:${ids.stack}`}>
           <Button>{labels.clear}</Button>
-        </ViewStack.Trigger>
+        </ViewStackTrigger>
       </>,
     );
 
@@ -222,8 +224,8 @@ describe('ViewStack', () => {
   });
 });
 
-describe('ViewStack.View', () => {
+describe('ViewStackView', () => {
   it('should throw if not inside ViewStack', () => {
-    expect(() => render(<ViewStack.View id={ids.a} />)).toThrow();
+    expect(() => render(<ViewStackView id={ids.a} />)).toThrow();
   });
 });

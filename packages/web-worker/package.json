@@ -10,7 +10,7 @@
     "tooling"
   ],
   "subPath": "packages/web-worker",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -44,8 +44,7 @@
     "lint": "pnpm biome lint"
   },
   "dependencies": {
-    "mitt": "^3.0.1",
-    "typescript": "5.8.3"
+    "mitt": "^3.0.1"
   },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
@@ -53,6 +52,7 @@
     "@accelint/vitest-config": "workspace:*",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0",
+    "typescript": "5.8.3",
     "vitest": "^2.1.9"
   },
   "publishConfig": {

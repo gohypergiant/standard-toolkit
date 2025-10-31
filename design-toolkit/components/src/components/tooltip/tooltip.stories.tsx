@@ -13,7 +13,8 @@
 import { Lasso } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { Tooltip } from './index';
+import { Tooltip } from './';
+import { TooltipTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -27,10 +28,10 @@ type Story = StoryObj<typeof Tooltip>; // NOTE: intentional pattern deviation be
 export const Default: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip.Trigger>
+      <TooltipTrigger>
         <span className='fg-primary-bold'>Test</span>
         <Tooltip>My tooltip</Tooltip>
-      </Tooltip.Trigger>
+      </TooltipTrigger>
     </div>
   ),
 };
@@ -38,10 +39,10 @@ export const Default: Story = {
 export const LongTooltip: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip.Trigger>
+      <TooltipTrigger>
         <span className='fg-primary-bold'>Long Tooltip</span>
         <Tooltip>A floating label used to explain an element</Tooltip>
-      </Tooltip.Trigger>
+      </TooltipTrigger>
     </div>
   ),
 };
@@ -49,10 +50,10 @@ export const LongTooltip: Story = {
 export const TooltipWithButton: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip.Trigger>
+      <TooltipTrigger>
         <Button>My Button</Button>
         <Tooltip>My tooltip</Tooltip>
-      </Tooltip.Trigger>
+      </TooltipTrigger>
     </div>
   ),
 };
@@ -60,12 +61,12 @@ export const TooltipWithButton: Story = {
 export const TooltipWithIcon: Story = {
   render: () => (
     <div className='p-m'>
-      <Tooltip.Trigger>
+      <TooltipTrigger>
         <Icon className='fg-primary-bold h-xl w-xl'>
           <Lasso />
         </Icon>
         <Tooltip>Lasso Selection</Tooltip>
-      </Tooltip.Trigger>
+      </TooltipTrigger>
     </div>
   ),
 };

@@ -11,6 +11,7 @@
  */
 
 import { Breadcrumbs } from './';
+import { BreadcrumbItem } from './item';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -24,9 +25,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Breadcrumbs>
-      <Breadcrumbs.Item linkProps={{ href: '/ ' }}>Root</Breadcrumbs.Item>
-      <Breadcrumbs.Item linkProps={{ href: '/home' }}>Child</Breadcrumbs.Item>
-      <Breadcrumbs.Item>Child</Breadcrumbs.Item>
+      <BreadcrumbItem linkProps={{ href: '/ ' }}>Root</BreadcrumbItem>
+      <BreadcrumbItem linkProps={{ href: '/home' }}>Child</BreadcrumbItem>
+      <BreadcrumbItem>Child</BreadcrumbItem>
     </Breadcrumbs>
   ),
 };
