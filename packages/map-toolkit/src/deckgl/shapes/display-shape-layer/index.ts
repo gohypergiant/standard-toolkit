@@ -12,10 +12,12 @@
 
 'use client';
 
+import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
+import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import { DEFAULT_DISPLAY_PROPS } from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
@@ -31,6 +33,12 @@ import type { EditableShape } from '../shared/types';
 import type { DisplayShapeLayerProps } from './types';
 
 /**
+ * Typed event bus instance for shape events.
+ * Provides type-safe event emission for shape interactions.
+ */
+const shapeBus = Broadcast.getInstance<ShapeEvent>();
+
+/**
  * DisplayShapeLayer - Display-only shapes layer
  *
  * A composite layer that renders:
@@ -39,6 +47,10 @@ import type { DisplayShapeLayerProps } from './types';
  * 3. ShapeLabelLayer (if showLabels enabled)
  *
  * Purpose: Render shapes from external APIs (read-only visualization)
+ *
+ * Bus Integration: Automatically emits shape events via @accelint/bus:
+ * - shapes:selected when a shape is clicked
+ * - shapes:deselected when clicking empty space (future)
  */
 export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   static override layerName = 'DisplayShapeLayer';
@@ -69,13 +81,19 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private handleShapeClick = (info: PickingInfo): void => {
     const { onShapeClick } = this.props;
 
-    if (!(info.object && onShapeClick)) {
+    if (!info.object) {
       return;
     }
 
     const shape = info.object.properties?._shape as EditableShape;
     if (shape) {
-      onShapeClick(shape);
+      // Emit shape selected event via bus
+      shapeBus.emit(ShapeEvents.selected, { shapeId: shape.id });
+
+      // Call callback if provided
+      if (onShapeClick) {
+        onShapeClick(shape);
+      }
     }
   };
 
@@ -136,11 +154,28 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
+   * Check if any features have icon configuration
+   */
+  private hasIcons(): boolean {
+    const features = this.getFeaturesWithId();
+    return features.some((f) => f.properties?.styleProperties?.icon);
+  }
+
+  /**
    * Render main shapes layer
    */
   private renderMainLayer() {
     const { pickable } = this.props;
     const features = this.getFeaturesWithId();
+    const hasIcons = this.hasIcons();
+
+    // Collect icon atlas and mapping from features
+    const iconAtlas = features.find(
+      (f) => f.properties?.styleProperties?.icon?.atlas,
+    )?.properties?.styleProperties?.icon?.atlas;
+    const iconMapping = features.find(
+      (f) => f.properties?.styleProperties?.icon?.mapping,
+    )?.properties?.styleProperties?.icon?.mapping;
 
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}`,
@@ -156,10 +191,29 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         const isHovered = info?.index === this.state?.hoverIndex;
         return getHoverLineWidth(d, isHovered);
       },
+      lineWidthUnits: 'pixels',
+      lineWidthMinPixels: 1,
+      lineWidthMaxPixels: 20,
 
-      // Points as icons (markers)
-      pointType: 'circle+icon',
-      getPointRadius: 8,
+      // Points - use icons if any feature has icon config, otherwise circles
+      pointType: hasIcons ? 'icon' : 'circle',
+      getPointRadius: (d) => {
+        const iconSize = d.properties?.styleProperties?.icon?.size;
+        return iconSize ?? 2;
+      },
+      pointRadiusUnits: 'pixels',
+
+      // Icon configuration (only used if pointType includes 'icon')
+      ...(hasIcons && iconAtlas ? { iconAtlas } : {}),
+      ...(hasIcons && iconMapping ? { iconMapping } : {}),
+      ...(hasIcons
+        ? {
+            getIcon: (d: EditableShape['feature']) =>
+              d.properties?.styleProperties?.icon?.name ?? 'marker',
+            getIconSize: (d: EditableShape['feature']) =>
+              d.properties?.styleProperties?.icon?.size ?? 8,
+          }
+        : {}),
 
       // Dash pattern support
       extensions: [new PathStyleExtension({ dash: true })],
@@ -180,6 +234,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         getLineColor: [features],
         getLineWidth: [features, this.state?.hoverIndex],
         getDashArray: [features],
+        getPointRadius: [features],
+        ...(hasIcons
+          ? {
+              getIcon: [features],
+              getIconSize: [features],
+            }
+          : {}),
       },
     });
   }
@@ -188,7 +249,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Render labels layer
    */
   private renderLabelsLayer() {
-    const { showLabels, data } = this.props;
+    const { showLabels, data, labelOptions } = this.props;
 
     if (!showLabels) {
       return null;
@@ -197,6 +258,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     return createShapeLabelLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
       data,
+      labelOptions,
     });
   }
 

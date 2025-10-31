@@ -60,6 +60,20 @@ export interface StyleProperties {
   strokeOpacity: number;
   /** Stroke pattern */
   strokePattern: StrokePattern;
+  /** Optional icon properties for Point geometries */
+  icon?: {
+    /** Icon atlas URL or data */
+    atlas?: string;
+    /** Icon mapping (name to position in atlas) */
+    mapping?: Record<
+      string,
+      { x: number; y: number; width: number; height: number; mask?: boolean }
+    >;
+    /** Icon name to use from mapping */
+    name?: string;
+    /** Icon size in pixels */
+    size?: number;
+  };
 }
 
 /**

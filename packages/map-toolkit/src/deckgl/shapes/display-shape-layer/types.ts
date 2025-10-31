@@ -18,6 +18,7 @@ import type {
   ShapeId,
   StyledFeature as SharedStyledFeature,
 } from '../shared/types';
+import type { LabelPositionOptions } from './utils/labels';
 
 /**
  * Re-export StyledFeature from shared types
@@ -53,6 +54,9 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
 
   /** Whether to show labels */
   showLabels?: boolean;
+
+  /** Custom label positioning options */
+  labelOptions?: LabelPositionOptions;
 
   /** Custom highlight color [r, g, b, a] */
   highlightColor?: [number, number, number, number];

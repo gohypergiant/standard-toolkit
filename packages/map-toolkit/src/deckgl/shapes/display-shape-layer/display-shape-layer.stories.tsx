@@ -10,13 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useState } from 'react';
 import { BaseMap } from '../../base-map/index';
+import { mockShapes } from '../__fixtures__/mock-shapes';
+import { ShapeEvents, type ShapeSelectedEvent } from '../shared/events';
 import './fiber';
-import { DEFAULT_STYLE_PROPERTIES } from '../shared/constants';
 import type { Meta, StoryObj } from '@storybook/react';
-import type { EditableShape, ShapeId } from '../shared/types';
+import type { ShapeId } from '../shared/types';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Display Shape Layer',
@@ -28,151 +30,69 @@ type Story = StoryObj<typeof meta>;
 // Stable ID for Storybook
 const DISPLAY_MAP_ID = uuid();
 
-// Mock shapes data
-const mockShapes: EditableShape[] = [
-  // Circle shape
-  {
-    id: uuid(),
-    name: 'Sample Circle',
-    label: 'Circle',
-    shapeType: 'Circle',
-    locked: false,
-    feature: {
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [-77.0, 38.9],
-            [-76.95, 38.95],
-            [-76.9, 38.9],
-            [-76.95, 38.85],
-            [-77.0, 38.9],
-          ],
-        ],
-      },
-      properties: {
-        styleProperties: {
-          ...DEFAULT_STYLE_PROPERTIES,
-          fillColor: '#62a6ff',
-          strokeColor: '#62a6ff',
-        },
-        shapeId: uuid(),
-        editProperties: {
-          center: [-76.95, 38.9],
-          radius: { value: 5, units: 'kilometers' },
-        },
-      },
-    },
-  },
-  // Polygon shape
-  {
-    id: uuid(),
-    name: 'Sample Polygon',
-    label: 'Polygon',
-    shapeType: 'Polygon',
-    locked: false,
-    feature: {
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [-77.1, 39.0],
-            [-77.0, 39.0],
-            [-77.0, 38.95],
-            [-77.1, 38.95],
-            [-77.1, 39.0],
-          ],
-        ],
-      },
-      properties: {
-        styleProperties: {
-          ...DEFAULT_STYLE_PROPERTIES,
-          fillColor: '#30D27E',
-          strokeColor: '#30D27E',
-        },
-        shapeId: uuid(),
-      },
-    },
-  },
-  // LineString shape
-  {
-    id: uuid(),
-    name: 'Sample Line',
-    label: 'Line',
-    shapeType: 'LineString',
-    locked: false,
-    feature: {
-      type: 'Feature',
-      geometry: {
-        type: 'LineString',
-        coordinates: [
-          [-76.8, 38.85],
-          [-76.85, 38.9],
-          [-76.9, 38.85],
-        ],
-      },
-      properties: {
-        styleProperties: {
-          ...DEFAULT_STYLE_PROPERTIES,
-          strokeColor: '#FCA400',
-          strokeWidth: 4,
-        },
-        shapeId: uuid(),
-      },
-    },
-  },
-  // Point shape
-  {
-    id: uuid(),
-    name: 'Sample Point',
-    label: 'Point',
-    shapeType: 'Point',
-    locked: false,
-    feature: {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [-76.75, 38.95],
-      },
-      properties: {
-        styleProperties: {
-          ...DEFAULT_STYLE_PROPERTIES,
-          strokeColor: '#D4231D',
-        },
-        shapeId: uuid(),
-      },
-    },
-  },
-];
-
 /**
  * Basic display of shapes with all types
+ *
+ * Demonstrates automatic bus integration:
+ * - Click a shape to select it (emits shapes:selected via bus automatically)
+ * - The highlight layer responds to selection state
+ * - Selection state can be controlled via the bus from anywhere in the app
  */
 export const BasicDisplay: Story = {
   render: () => {
     const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
+    const [eventLog, setEventLog] = useState<string[]>([]);
+
+    // Listen to shape selection events emitted automatically by DisplayShapeLayer
+    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
+      const shapeId = event.payload.shapeId;
+      setSelectedId(shapeId);
+      setEventLog((log) => [
+        ...log.slice(-4),
+        `shapes:selected - ${shapeId.substring(0, 8)}...`,
+      ]);
+    });
 
     return (
-      <BaseMap className='h-dvh w-dvw' id={DISPLAY_MAP_ID}>
-        <displayShapeLayer
-          id='basic-shapes'
-          data={mockShapes}
-          selectedShapeId={selectedId}
-          showLabels={true}
-          pickable={true}
-          onShapeClick={(shape) => {
-            console.log('Shape clicked:', shape);
-            setSelectedId(shape.id);
-          }}
-          onShapeHover={(shape) => {
-            if (shape) {
-              console.log('Shape hovered:', shape.name);
-            }
-          }}
-        />
-      </BaseMap>
+      <div className='flex h-dvh w-dvw flex-col'>
+        {/* Event log showing bus integration */}
+        <div className='bg-gray-800 p-4 text-white'>
+          <div className='mb-2 font-bold'>Bus Events (automatic):</div>
+          <div className='space-y-1 font-mono text-sm'>
+            {eventLog.length === 0 ? (
+              <div className='text-gray-400'>
+                Click a shape to see events...
+              </div>
+            ) : (
+              eventLog.map((log) => (
+                <div key={`${log}-${Date.now()}`} className='text-green-400'>
+                  {log}
+                </div>
+              ))
+            )}
+          </div>
+          {selectedId && (
+            <div className='mt-2 text-sm'>
+              Selected: {selectedId.substring(0, 8)}... (highlight layer active)
+            </div>
+          )}
+        </div>
+
+        <BaseMap className='flex-1' id={DISPLAY_MAP_ID}>
+          <displayShapeLayer
+            id='basic-shapes'
+            data={mockShapes}
+            selectedShapeId={selectedId}
+            showLabels={true}
+            pickable={true}
+            onShapeHover={(shape) => {
+              if (shape) {
+                console.log('Shape hovered:', shape.name);
+              }
+            }}
+          />
+        </BaseMap>
+      </div>
     );
   },
 };
@@ -209,6 +129,64 @@ export const NonInteractive: Story = {
           pickable={false}
         />
       </BaseMap>
+    );
+  },
+};
+
+// Stable ID for custom offsets story
+const CUSTOM_OFFSETS_MAP_ID = uuid();
+
+/**
+ * Custom label offsets (Point shapes only)
+ *
+ * Demonstrates how to customize the label offset for point markers
+ * based on your icon size or design.
+ *
+ * Circle, LineString, and Polygon offsets use fixed values.
+ */
+export const CustomLabelOffsets: Story = {
+  args: {
+    pointOffsetX: 0,
+    pointOffsetY: -40,
+  },
+  argTypes: {
+    pointOffsetX: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Horizontal offset for POINT labels only (pixels)',
+    },
+    pointOffsetY: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description:
+        'Vertical offset for POINT labels only (pixels, negative = up)',
+    },
+  },
+  render: (args) => {
+    return (
+      <div className='flex h-dvh w-dvw flex-col'>
+        {/* Info banner */}
+        <div className='bg-blue-600 p-3 text-white'>
+          <div className='font-bold'>
+            Note: Controls only affect the Point shape label
+          </div>
+          <div className='text-sm'>
+            Circle, LineString, and Polygon offsets use fixed values.
+          </div>
+        </div>
+
+        <BaseMap className='flex-1' id={CUSTOM_OFFSETS_MAP_ID}>
+          <displayShapeLayer
+            id='shapes-custom-offsets'
+            data={mockShapes}
+            showLabels={true}
+            pickable={true}
+            labelOptions={{
+              // Custom offset for point markers [x, y]
+              // This only affects the Point shape label
+              pointOffset: [args.pointOffsetX, args.pointOffsetY],
+            }}
+          />
+        </BaseMap>
+      </div>
     );
   },
 };

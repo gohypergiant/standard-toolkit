@@ -162,37 +162,29 @@ export type ShapeEventHandler<T extends ShapeEventType = ShapeEventType> = (
 ) => void;
 
 /**
- * Emit a shape event
+ * Shape events namespace for bus integration
  */
-// biome-ignore lint/suspicious/noExplicitAny: Generic event payload type
-export function emitShapeEvent<T extends keyof typeof ShapeEvents>(
-  type: T,
-  payload: any,
-): void {
-  // Implementation would use @accelint/bus
-  // For now, just a placeholder
-  console.log('Shape event:', type, payload);
-}
+export const ShapeEventsNamespace = 'shapes';
 
 /**
- * Listen to shape events
+ * Note: These utility functions are deprecated in favor of direct bus usage.
+ * Use `useEmit` and `useOn` from '@accelint/bus/react' in React components instead.
+ *
+ * @example
+ * ```tsx
+ * import { useEmit, useOn } from '@accelint/bus/react';
+ * import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
+ *
+ * function MyComponent() {
+ *   const emit = useEmit();
+ *
+ *   // Emit shape selected event
+ *   emit(ShapeEvents.selected, { shapeId: 'some-id' });
+ *
+ *   // Listen to shape events
+ *   useOn(ShapeEvents.selected, (event) => {
+ *     console.log('Shape selected:', event.data.shapeId);
+ *   });
+ * }
+ * ```
  */
-export function onShapeEvent<T extends ShapeEventType>(
-  _type: T,
-  _handler: ShapeEventHandler<T>,
-): () => void {
-  // Implementation would use @accelint/bus
-  // Return unsubscribe function
-  // biome-ignore lint/suspicious/noEmptyBlockStatements: Placeholder implementation
-  return () => {};
-}
-
-/**
- * Remove shape event listener
- */
-export function offShapeEvent<T extends ShapeEventType>(
-  _type: T,
-  _handler: ShapeEventHandler<T>,
-): void {
-  // Implementation would use @accelint/bus
-}

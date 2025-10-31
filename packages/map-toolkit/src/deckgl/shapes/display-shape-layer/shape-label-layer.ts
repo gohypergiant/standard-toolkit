@@ -19,12 +19,15 @@ import {
   getLabelFillColor,
   getLabelPosition2d,
   getLabelText,
+  type LabelPositionOptions,
 } from './utils/labels';
 import type { EditableShape } from '../shared/types';
 
 export interface ShapeLabelLayerProps {
   id?: string;
   data: EditableShape[];
+  /** Optional label positioning options */
+  labelOptions?: LabelPositionOptions;
 }
 
 /**
@@ -34,7 +37,7 @@ export interface ShapeLabelLayerProps {
 export function createShapeLabelLayer(
   props: ShapeLabelLayerProps,
 ): TextLayer<EditableShape> {
-  const { id = SHAPE_LAYER_IDS.DISPLAY_LABELS, data } = props;
+  const { id = SHAPE_LAYER_IDS.DISPLAY_LABELS, data, labelOptions } = props;
 
   return new TextLayer<EditableShape>({
     id,
@@ -43,16 +46,20 @@ export function createShapeLabelLayer(
     // Text content
     getText: getLabelText,
 
-    // Position
-    // biome-ignore lint/suspicious/noExplicitAny: TextLayer position type compatibility
-    getPosition: getLabelPosition2d as any,
+    // Position - use pixel-based offsets for consistent positioning
+    getPosition: (d: EditableShape) =>
+      getLabelPosition2d(d, labelOptions).coordinates,
+    getPixelOffset: (d: EditableShape) =>
+      getLabelPosition2d(d, labelOptions).pixelOffset,
+    getTextAnchor: (d: EditableShape) =>
+      getLabelPosition2d(d, labelOptions).textAnchor,
+    getAlignmentBaseline: (d: EditableShape) =>
+      getLabelPosition2d(d, labelOptions).alignmentBaseline,
 
     // Styling
-    getColor: [255, 255, 255, 255], // White text
-    getSize: 12,
+    getColor: [0, 0, 0, 255], // Black text
+    getSize: 10,
     getAngle: 0,
-    getTextAnchor: 'middle',
-    getAlignmentBaseline: 'center',
 
     // Background
     background: true,
@@ -64,8 +71,18 @@ export function createShapeLabelLayer(
     getBorderWidth: 2,
 
     // Font
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    fontWeight: 500,
+    fontFamily: 'Roboto MonoVariable, monospace',
+    fontWeight: 'bold',
+    fontSettings: {
+      sdf: true,
+    },
+
+    // Update triggers - tell deck.gl to recalculate when labelOptions change
+    updateTriggers: {
+      getPixelOffset: [labelOptions],
+      getTextAnchor: [labelOptions],
+      getAlignmentBaseline: [labelOptions],
+    },
 
     // Behavior
     pickable: false,

@@ -12,80 +12,118 @@
 
 'use client';
 
-import type { Position } from 'geojson';
 import type { EditableShape } from '../../shared/types';
 
 /**
- * Get label position for circle shapes
+ * Label positioning information including coordinates and screen-space offsets
  */
-function getCircleLabelPosition(shape: EditableShape): Position | null {
-  const editProps = shape.feature.properties?.editProperties;
-  if (editProps?.center && editProps?.radius) {
-    const [lon, lat] = editProps.center;
-    const radiusKm = editProps.radius.value;
-    // Offset to top of circle (approximate)
-    const latOffset = radiusKm / 111; // ~111km per degree
-    return [lon, lat + latOffset];
-  }
-  return null;
+export interface LabelPosition2d {
+  /** Geographic coordinates [longitude, latitude] */
+  coordinates: [number, number];
+  /** Horizontal text anchor point */
+  textAnchor: 'start' | 'middle' | 'end';
+  /** Vertical text alignment */
+  alignmentBaseline: 'top' | 'center' | 'bottom';
+  /** Pixel offset from coordinates [x, y] */
+  pixelOffset: [number, number];
 }
 
 /**
- * Get label position for polygon shapes
+ * Options for label positioning
  */
-function getPolygonLabelPosition(
-  shape: EditableShape,
-  ring: Position[],
-): Position {
-  // For circles, center the label at the top
-  if (shape.shapeType === 'Circle') {
-    const circlePos = getCircleLabelPosition(shape);
-    if (circlePos) {
-      return circlePos;
-    }
-  }
-
-  // Default: first vertex with small offset
-  const firstVertex = ring[0];
-  if (!firstVertex || firstVertex.length < 2) {
-    return [0, 0];
-  }
-  return [(firstVertex[0] ?? 0) + 0.0001, firstVertex[1] ?? 0];
+export interface LabelPositionOptions {
+  /** Custom pixel offset for point shapes [x, y] */
+  pointOffset?: [number, number];
 }
 
 /**
  * Get 2D position for label based on geometry type
- * Smart positioning that works for all shape types
+ * Uses pixel-based offsets for consistent positioning at all zoom levels
  */
-export function getLabelPosition2d(shape: EditableShape): Position {
+export function getLabelPosition2d(
+  shape: EditableShape,
+  options?: LabelPositionOptions,
+): LabelPosition2d {
   const { geometry } = shape.feature;
 
   switch (geometry.type) {
-    case 'Point':
+    case 'Point': {
       // Point: Above the marker, centered
-      return [
-        geometry.coordinates[0] ?? 0,
-        (geometry.coordinates[1] ?? 0) + 0.0001,
-      ];
+      // Use custom offset if provided, otherwise use default
+      const defaultOffset: [number, number] = [0, -14];
+      const pixelOffset = options?.pointOffset ?? defaultOffset;
+
+      return {
+        coordinates: [
+          geometry.coordinates[0] ?? 0,
+          geometry.coordinates[1] ?? 0,
+        ],
+        textAnchor: 'middle',
+        alignmentBaseline: 'bottom',
+        pixelOffset,
+      };
+    }
 
     case 'LineString': {
-      // LineString: Start of first segment
+      // LineString: Start of first segment, offset to top-right
       const firstCoord = geometry.coordinates[0];
-      return firstCoord ?? [0, 0];
+      return {
+        coordinates: firstCoord ?? [0, 0],
+        textAnchor: 'start',
+        alignmentBaseline: 'center',
+        pixelOffset: [7, -15],
+      };
     }
 
     case 'Polygon': {
-      // Polygon: First vertex, offset right
+      // Polygon: First vertex or center, offset to top-right
       const ring = geometry.coordinates[0];
       if (!ring || ring.length === 0) {
-        return [0, 0];
+        return {
+          coordinates: [0, 0],
+          textAnchor: 'start',
+          alignmentBaseline: 'center',
+          pixelOffset: [7, -15],
+        };
       }
-      return getPolygonLabelPosition(shape, ring);
+
+      // Default to first vertex for polygons
+      const firstVertex = ring[0];
+      const position: [number, number] = firstVertex
+        ? [firstVertex[0] ?? 0, firstVertex[1] ?? 0]
+        : [0, 0];
+
+      // Circle shapes override: use center alignment with static offset (matches NGC2)
+      if (shape.shapeType === 'Circle') {
+        // For circles, get the first coordinate of the first ring
+        const circlePosition = geometry.coordinates[0]?.[0] as
+          | [number, number]
+          | undefined;
+        return {
+          coordinates: circlePosition || [0, 0],
+          textAnchor: 'middle',
+          alignmentBaseline: 'center',
+          pixelOffset: [0, -17],
+        };
+      }
+
+      // Regular polygons use top-right offset
+      return {
+        coordinates: position,
+        textAnchor: 'start',
+        alignmentBaseline: 'center',
+        pixelOffset: [7, -15],
+      };
     }
 
     default:
-      // Fallback: return first coordinate if available
-      return [0, 0];
+      // Fallback
+      return {
+        coordinates: [0, 0],
+        textAnchor: 'middle',
+        alignmentBaseline: 'center',
+        pixelOffset: [0, 0],
+      };
   }
 }
 

@@ -60,12 +60,13 @@ export {
   STROKE_WIDTHS,
 } from './shared/constants';
 // Event exports
+// Note: emitShapeEvent, onShapeEvent, offShapeEvent are deprecated.
+// Use useEmit and useOn from '@accelint/bus/react' directly instead.
 export {
-  emitShapeEvent,
-  offShapeEvent,
-  onShapeEvent,
   SHAPE_EVENTS,
   SHAPE_MODES,
+  ShapeEvents,
+  ShapeModes,
 } from './shared/events';
 export { ShapeFeatureType } from './shared/types';
 export type {

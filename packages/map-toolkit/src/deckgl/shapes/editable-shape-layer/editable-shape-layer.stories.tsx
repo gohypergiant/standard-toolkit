@@ -11,10 +11,11 @@
  */
 
 import { uuid } from '@accelint/core';
+import { Button } from '@accelint/design-toolkit';
 import { useEffect, useState } from 'react';
 import { BaseMap } from '../../base-map/index';
+import { mockShapes } from '../__fixtures__/mock-shapes';
 import './fiber';
-import { DEFAULT_STYLE_PROPERTIES } from '../shared/constants';
 import { useShapeEdits } from './hooks';
 import { createShapeStore, type ShapeStore } from './store';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -31,75 +32,8 @@ type Story = StoryObj<typeof meta>;
 // Stable ID for Storybook
 const EDITABLE_MAP_ID = uuid();
 
-// Mock initial shapes data
-const mockInitialShapes: EditableShape[] = [
-  // Circle shape
-  {
-    id: uuid(),
-    name: 'Sample Circle',
-    label: 'Circle',
-    shapeType: 'Circle',
-    locked: false,
-    feature: {
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [-77.0, 38.9],
-            [-76.95, 38.95],
-            [-76.9, 38.9],
-            [-76.95, 38.85],
-            [-77.0, 38.9],
-          ],
-        ],
-      },
-      properties: {
-        styleProperties: {
-          ...DEFAULT_STYLE_PROPERTIES,
-          fillColor: '#62a6ff',
-          strokeColor: '#62a6ff',
-        },
-        shapeId: uuid(),
-        editProperties: {
-          center: [-76.95, 38.9],
-          radius: { value: 5, units: 'kilometers' },
-        },
-      },
-    },
-  },
-  // Polygon shape
-  {
-    id: uuid(),
-    name: 'Sample Polygon',
-    label: 'Polygon',
-    shapeType: 'Polygon',
-    locked: false,
-    feature: {
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [-77.1, 39.0],
-            [-77.0, 39.0],
-            [-77.0, 38.95],
-            [-77.1, 38.95],
-            [-77.1, 39.0],
-          ],
-        ],
-      },
-      properties: {
-        styleProperties: {
-          ...DEFAULT_STYLE_PROPERTIES,
-          fillColor: '#30D27E',
-          strokeColor: '#30D27E',
-        },
-        shapeId: uuid(),
-      },
-    },
-  },
-];
+// Use mock shapes from fixtures
+const mockInitialShapes: EditableShape[] = mockShapes;
 
 /**
  * Helper component that manages the shape store
@@ -130,48 +64,48 @@ function EditableShapeDemo({
       {/* Toolbar */}
       <div className='flex flex-wrap items-center gap-2 bg-gray-800 p-4 text-white'>
         <span className='font-bold'>Mode:</span>
-        <button
+        <Button
           type='button'
-          onClick={() => setMode('view')}
-          className={`rounded px-3 py-1 ${mode === 'view' ? 'bg-blue-600' : 'bg-gray-600'}`}
+          onPress={() => setMode('view')}
+          variant={mode === 'view' ? 'filled' : 'outline'}
         >
           View
-        </button>
-        <button
+        </Button>
+        <Button
           type='button'
-          onClick={() => setMode('drawCircle')}
-          className={`rounded px-3 py-1 ${mode === 'drawCircle' ? 'bg-blue-600' : 'bg-gray-600'}`}
+          onPress={() => setMode('drawCircle')}
+          variant={mode === 'drawCircle' ? 'filled' : 'outline'}
         >
           Draw Circle
-        </button>
-        <button
+        </Button>
+        <Button
           type='button'
-          onClick={() => setMode('drawPolygon')}
-          className={`rounded px-3 py-1 ${mode === 'drawPolygon' ? 'bg-blue-600' : 'bg-gray-600'}`}
+          onPress={() => setMode('drawPolygon')}
+          variant={mode === 'drawPolygon' ? 'filled' : 'outline'}
         >
           Draw Polygon
-        </button>
-        <button
+        </Button>
+        <Button
           type='button'
-          onClick={() => setMode('drawLine')}
-          className={`rounded px-3 py-1 ${mode === 'drawLine' ? 'bg-blue-600' : 'bg-gray-600'}`}
+          onPress={() => setMode('drawLine')}
+          variant={mode === 'drawLine' ? 'filled' : 'outline'}
         >
           Draw Line
-        </button>
-        <button
+        </Button>
+        <Button
           type='button'
-          onClick={() => setMode('drawPoint')}
-          className={`rounded px-3 py-1 ${mode === 'drawPoint' ? 'bg-blue-600' : 'bg-gray-600'}`}
+          onPress={() => setMode('drawPoint')}
+          variant={mode === 'drawPoint' ? 'filled' : 'outline'}
         >
           Draw Point
-        </button>
-        <button
+        </Button>
+        <Button
           type='button'
-          onClick={() => setMode('modify')}
-          className={`rounded px-3 py-1 ${mode === 'modify' ? 'bg-blue-600' : 'bg-gray-600'}`}
+          onPress={() => setMode('modify')}
+          variant={mode === 'modify' ? 'filled' : 'outline'}
         >
           Modify
-        </button>
+        </Button>
         <span className='ml-4'>Shapes: {store.shapes.length}</span>
       </div>
 
