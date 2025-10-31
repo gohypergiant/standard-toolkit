@@ -14,57 +14,75 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Octokit } from 'octokit';
 
-const START = () => ({ lines: 0, statements: 0, functions: 0, branches: 0 });
+const COVERAGE_BASE =
+  process.env.BASE_COVERAGE_SUMMARY_FILE ??
+  'coverage/base-coverage-summary.json';
+const COVERAGE_PR =
+  process.env.COVERAGE_SUMMARY_FILE ?? 'coverage/coverage-summary.json';
+const METRICS = ['lines', 'statements', 'functions', 'branches'];
 
-const formatPct = (pct) => {
+const emptyMetrics = () => ({
+  lines: 0,
+  statements: 0,
+  functions: 0,
+  branches: 0,
+});
+const getFile = (file) =>
+  fs.readFileSync(path.resolve(process.cwd(), file), 'utf-8');
+
+function buildTable(pkg, base, pr) {
+  const noDiff = METRICS.every((metric) => {
+    const left = formatPct(base[metric]?.pct);
+    const right = formatPct(pr[metric]?.pct);
+
+    return left || (right && left !== right);
+  });
+
+  if (noDiff) {
+    return `\`${pkg}\` (No diff)`;
+  }
+
+  return [
+    `\`${pkg}\`\n`,
+    `| metric | current | base | change |`,
+    `| ------ | ------- | ---- | ------ |`,
+    ...METRICS.map(
+      (metric) =>
+        `| ${[
+          metric,
+          `${formatPct(pr?.[metric]?.pct)}%`,
+          `${formatPct(base?.[metric]?.pct)}%`,
+          formatPct(pr - base),
+        ]
+          .join(' | ')
+          .trim()} |`,
+    ),
+  ].join('\n');
+}
+
+function formatPct(pct) {
   const num = Number.parseFloat(pct);
 
-  return !Number.isNaN(num) && Number.isFinite(num) ? num.toFixed(2) : '';
-};
-const formatDelta = (current, base) => {
-  const delta = (current ?? 0) - (base ?? 0);
-  const sign = delta > 0 ? '+' : '';
+  return !Number.isNaN(num) && Number.isFinite(num) ? num.toFixed(2) : '0';
+}
 
-  return `${sign}${delta.toFixed(2)}%`;
-};
-const createRow = (label, pr = 0, base = 0) =>
-  `| ${label} | ${formatPct(pr)}% | ${formatPct(base)}% | ${formatDelta(pr, base)} |`;
-const buildTable = (coverage, baseCoverage) =>
-  `
-| Metric | Current | Base | Change |
-| ------ | ------- | ---- | ------ |
-${createRow('Lines', coverage?.lines?.pct, baseCoverage?.lines?.pct)}
-${createRow('Statements', coverage?.statements?.pct, baseCoverage?.statements?.pct)}
-${createRow('Functions', coverage?.functions?.pct, baseCoverage?.functions?.pct)}
-${createRow('Branches', coverage?.branches?.pct, baseCoverage?.branches?.pct)}
-`.trim();
-
-async function main() {
-  const [branchPR, branchBase] = [
-    process.env.COVERAGE_SUMMARY_FILE ?? 'coverage/coverage-summary.json',
-    process.env.BASE_COVERAGE_SUMMARY_FILE ??
-      'coverage/base-coverage-summary.json',
-  ].map((file) =>
-    JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file), 'utf-8')),
-  );
+function main() {
+  const branchPR = JSON.parse(getFile(COVERAGE_PR) ?? '{}');
+  const branchBase = JSON.parse(getFile(COVERAGE_BASE) ?? '{}');
 
   const packages = Object.keys(branchPR).sort();
 
-  await postComment(
+  return postComment(
     [
       '## 📊 Coverage Report\n',
 
-      '### Coverage by Package\n',
+      '### Coverage Changes by Package\n',
       `<details>\n<summary>Click to expand ${packages.length} package details</summary>`,
 
       // package reports
       packages.reduce(
         (acc, pkg) =>
-          [
-            acc,
-            `\`${pkg}\``,
-            buildTable(branchPR[pkg], branchBase[pkg] || START()),
-          ].join('\n\n'),
+          `${acc}\n${buildTable(pkg, branchBase[pkg] || emptyMetrics(), branchPR[pkg])}\n`,
         '',
       ),
 
