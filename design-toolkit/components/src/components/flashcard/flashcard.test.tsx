@@ -12,10 +12,19 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Flashcard } from '.';
+import {
+  Flashcard,
+  FlashcardDetailsContainer,
+  FlashcardHero,
+  FlashcardIdentifier,
+  FlashcardSecondaryContainer,
+  FlashcardSecondaryData,
+} from '.';
 
 function setup() {
   const details = [
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
     { label: 'key', value: 'value' },
     { label: 'key', value: 'value' },
     { label: 'key', value: 'value' },
@@ -25,20 +34,14 @@ function setup() {
 
   render(
     <Flashcard>
-      <Flashcard.Hero>
-        <Flashcard.Identifier>IDENTIFIER</Flashcard.Identifier>
-      </Flashcard.Hero>
-      <Flashcard.Secondary>
-        <Flashcard.SecondaryData>SECONDARY_DATA_01</Flashcard.SecondaryData>
-        <Flashcard.SecondaryData>SECONDARY_DATA_02</Flashcard.SecondaryData>
-        {details.map((item) => (
-          <Flashcard.Details
-            label={item.label}
-            value={item.value}
-            key={item.label}
-          />
-        ))}
-      </Flashcard.Secondary>
+      <FlashcardHero>
+        <FlashcardIdentifier>IDENTIFIER</FlashcardIdentifier>
+      </FlashcardHero>
+      <FlashcardSecondaryContainer>
+        <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
+        <FlashcardSecondaryData>SECONDARY_DATA_02</FlashcardSecondaryData>
+        <FlashcardDetailsContainer details={details} data-testid='secondary' />
+      </FlashcardSecondaryContainer>
     </Flashcard>,
   );
 }
@@ -46,6 +49,13 @@ function setup() {
 describe('Flashcard', () => {
   it('should render', () => {
     setup();
-    expect(screen.findByText('IDENTIFIER')).toBeInTheDocument();
+    expect(screen.getByText('IDENTIFIER')).toBeInTheDocument();
+  });
+
+  it('should only show 5 additional details', () => {
+    setup();
+    const secondaryContainer = screen.getByTestId('secondary');
+    console.log(secondaryContainer);
+    expect(secondaryContainer.childElementCount).toBe(5);
   });
 });

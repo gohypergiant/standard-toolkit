@@ -10,7 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { Flashcard } from '.';
+import {
+  Flashcard,
+  FlashcardDetailsContainer,
+  FlashcardHero,
+  FlashcardIdentifier,
+  FlashcardSecondaryContainer,
+  FlashcardSecondaryData,
+} from '.';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -29,26 +36,20 @@ export const Default: Story = {
       { label: 'key', value: 'value' },
       { label: 'key', value: 'value' },
       { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
+      { label: 'key', value: 'value' },
     ];
 
     return (
       <Flashcard>
-        <Flashcard.Hero>
-          <Flashcard.Identifier>IDENTIFIER</Flashcard.Identifier>
-        </Flashcard.Hero>
-        <Flashcard.Secondary>
-          <Flashcard.SecondaryDetails>
-            <Flashcard.SecondaryData>SECONDARY_DATA_01</Flashcard.SecondaryData>
-            <Flashcard.SecondaryData>SECONDARY_DATA_02</Flashcard.SecondaryData>
-          </Flashcard.SecondaryDetails>
-          {details.map((item) => (
-            <Flashcard.Details
-              label={item.label}
-              value={item.value}
-              key={item.label}
-            />
-          ))}
-        </Flashcard.Secondary>
+        <FlashcardHero>
+          <FlashcardIdentifier>IDENTIFIER</FlashcardIdentifier>
+        </FlashcardHero>
+        <FlashcardSecondaryContainer>
+          <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
+          <FlashcardSecondaryData>SECONDARY_DATA_02</FlashcardSecondaryData>
+          <FlashcardDetailsContainer details={details} />
+        </FlashcardSecondaryContainer>
       </Flashcard>
     );
   },

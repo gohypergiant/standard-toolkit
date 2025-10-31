@@ -45,7 +45,7 @@ export function Flashcard(props: FlashcardProps) {
   return (
     <FlashcardContext.Provider value={{ isLoading }}>
       <div
-        className='rounded-medium min-w-[128px] outline outline-interactive-hover'
+        className='min-w-[128px] rounded-medium outline outline-interactive-hover'
         {...rest}
       >
         {children}
@@ -84,7 +84,7 @@ export function FlashcardIdentifier(props: PropsWithChildren) {
       <div className='fg-primary-bold text-body-m' {...rest}>
         {children}
       </div>
-      {/* TODO: Flashcard.HeroIdentifierLabel? What is this for. */}
+      {/* TODO: Does this need another subcomponent? */}
       <div className='fg-primary-muted text-body-xs'>DATA</div>
     </div>
   );
@@ -105,7 +105,7 @@ FlashcardSecondaryContainer.displayName = 'FlashcardSecondaryContainer';
 export function FlashcardSecondaryDetails(props: PropsWithChildren) {
   const { children, ...rest } = props;
   return (
-    <div className='flex flex-col spacing-xxs' {...rest}>
+    <div className='spacing-xxs flex flex-col' {...rest}>
       {children}
     </div>
   );
@@ -126,31 +126,29 @@ FlashcardSecondaryData.display = 'FlashcardSecondaryData';
 export function FlashcardDetailsContainer(
   props: FlashcardDetailContainerProps,
 ) {
-  const { details, classNames } = props;
-  if (!(details && details.length)) {
+  const { details, classNames, ...rest } = props;
+  if (!details?.length) {
     return null;
   }
 
-  return details
-    .splice(0, 5)
-    .map((item) => (
-      <FlashcardDetail
-        label={item.label}
-        value={item.value}
-        key={item.label}
-        className={classNames?.detail}
-      />
-    ));
-}
-
-function FlashcardDetail(props: FlashcardDetailProps) {
-  const { label, value, ...rest } = props;
-
   return (
-    <div className='flex flex-row justify-between text-body-xs' {...rest}>
-      <div className='fg-primary-muted'>{label}</div>
-      <div className='fg-primary-bold'>{value}</div>
+    <div
+      className='flex w-full flex-col justify-between text-body-xs'
+      {...rest}
+    >
+      {/* Limit to the first 5 items. Not optimal. */}
+      {details.splice(0, 5).map((item) => {
+        return (
+          <div
+            className='flex w-full flex-row justify-between text-body-xs'
+            key={item.label}
+          >
+            <div className='fg-primary-muted'>{item.label}</div>
+            <div className='fg-primary-bold'>{item.value}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }
-FlashcardDetail.displayName = 'FlashcardDetail';
+FlashcardDetailsContainer.displayName = 'FlashcardDetailsContainer';
