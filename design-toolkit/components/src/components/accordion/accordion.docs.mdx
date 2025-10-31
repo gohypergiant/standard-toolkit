@@ -9,26 +9,26 @@ The Accordion component provides a collapsible content section that can expand a
 
 It is composed of the following components:
 
-- **[Accordion.Group](?path=/docs/components-accordion-group--playground)** - Container component that groups multiple accordions together and provides shared configuration like variant and multiple expansion behavior.
+- **[AccordionGroup](?path=/docs/components-accordion-group--playground)** - Container component that groups multiple accordions together and provides shared configuration like variant and multiple expansion behavior.
 - **Accordion** - Main accordion component that manages the expand/collapse state and renders the header and panel.
-- **Accordion.Header** - Container for the accordion trigger and any additional header elements like menus or action buttons.
-- **Accordion.Trigger** - Button that controls the expand/collapse state.
-- **Accordion.Panel** - Collapsible content container that shows/hides based on the accordion's expanded state.
+- **AccordionHeader** - Container for the accordion trigger and any additional header elements like menus or action buttons.
+- **AccordionTrigger** - Button that controls the expand/collapse state.
+- **AccordionPanel** - Collapsible content container that shows/hides based on the accordion's expanded state.
 
 ## Example Usage
 
 ### Basic
 ```tsx
 <Accordion>
-  <Accordion.Header>
-    <Accordion.Trigger>
+  <AccordionHeader>
+    <AccordionTrigger>
       <Icon><Placeholder /></Icon>
       Accordion title
-    </Accordion.Trigger>
-  </Accordion.Header>
-  <Accordion.Panel>
+    </AccordionTrigger>
+  </AccordionHeader>
+  <AccordionPanel>
     <p>This is the accordion content that can be expanded and collapsed.</p>
-  </Accordion.Panel>
+  </AccordionPanel>
 </Accordion>
 ```
 <Canvas of={AccordionStories.Default} />
@@ -37,22 +37,22 @@ It is composed of the following components:
 The accordion supports an optional [Menu](?path=/docs/components-menu--playground).
 ```tsx
 <Accordion>
-  <Accordion.Header>
-    <Accordion.Trigger>
+  <AccordionHeader>
+    <AccordionTrigger>
       <Icon><Document /></Icon>
       Document options
-    </Accordion.Trigger>
-    <Menu.Trigger>
+    </AccordionTrigger>
+    <MenuTrigger>
       <Button />
       <Menu>
-        <Menu.Item>Edit</Menu.Item>
-        <Menu.Item>Delete</Menu.Item>
+        <MenuItem>Edit</MenuItem>
+        <MenuItem>Delete</MenuItem>
       </Menu>
-    </Menu.Trigger>
-  </Accordion.Header>
-  <Accordion.Panel>
+    </MenuTrigger>
+  </AccordionHeader>
+  <AccordionPanel>
     <p>Document content...</p>
-  </Accordion.Panel>
+  </AccordionPanel>
 </Accordion>
 ```
 <Canvas of={AccordionStories.WithMenu} />
@@ -61,7 +61,7 @@ The accordion supports an optional [Menu](?path=/docs/components-menu--playgroun
 * **cozy** - Standard size with larger text and spacing (default)
 * **compact** - Smaller size with reduced text and spacing for space-constrained layouts
 
-The variant can be controlled via the `variant` prop on individual accordions or set globally using the `Accordion.Group` component.
+The variant can be controlled via the `variant` prop on individual accordions or set globally using the `AccordionGroup` component.
 
 ## Props
 All components and subcomponents accept either a `className` or a `classNames` prop that allow for custom style overrides. The `className` prop takes a string and `classNames` takes an object when there are multiple targets.
@@ -82,16 +82,16 @@ The `Accordion` component accepts `ReactNode` children or a function that return
 </Accordion>
 ```
 
-### Accordion.Header Props
-* **`children`** - Must contain an `Accordion.Trigger` and optionally other elements like menus
+### AccordionHeader Props
+* **`children`** - Must contain an `AccordionTrigger` and optionally other elements like menus
 
-### Accordion.Trigger Props
+### AccordionTrigger Props
 * **`children`** - The trigger content (typically text with an icon)
 * **`classNames`** - Custom class names for styling:
   * `heading` - Applied to the heading element
   * `trigger` - Applied to the trigger button
 
-### Accordion.Panel Props
+### AccordionPanel Props
 * **`children`** - The content to display when expanded
 * **`className`** - Additional CSS classes for custom styling
 

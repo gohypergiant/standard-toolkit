@@ -9,38 +9,38 @@ The Tooltip component provides a floating label that explains an element when us
 
 It is composed of the following components:
 
-- **Tooltip.Trigger** - Main wrapper component that manages tooltip trigger and display logic
+- **TooltipTrigger** - Main wrapper component that manages tooltip trigger and display logic
 - **Tooltip** - The floating container that displays the tooltip content
 
 ## Example usage
 ```tsx
 // Basic tooltip
-<Tooltip.Trigger>
+<TooltipTrigger>
   <Button>Hover me</Button>
   <Tooltip>This is a helpful tooltip</Tooltip>
-</Tooltip.Trigger>
+</TooltipTrigger>
 
 // Tooltip with custom placement and offset
-<Tooltip.Trigger>
+<TooltipTrigger>
   <Button>Click me</Button>
   <Tooltip placement="top" offset={10}>
     Tooltip above the button
   </Tooltip>
-</Tooltip.Trigger>
+</TooltipTrigger>
 
 // Tooltip with icon
-<Tooltip.Trigger>
+<TooltipTrigger>
   <Icon><Info /></Icon>
   <Tooltip>Additional information</Tooltip>
-</Tooltip.Trigger>
+</TooltipTrigger>
 
 // Long tooltip content
-<Tooltip.Trigger>
+<TooltipTrigger>
   <Button>Long explanation</Button>
   <Tooltip>
     This tooltip contains a longer explanation that will wrap to multiple lines
   </Tooltip>
-</Tooltip.Trigger>
+</TooltipTrigger>
 ```
 
 ## Variants
@@ -57,8 +57,8 @@ The Tooltip component has a single visual variant that automatically adapts base
 
 ## Props
 
-### Tooltip.Trigger Props
-Implements all props from [Tooltip.Trigger](https://react-spectrum.adobe.com/react-aria/Tooltip.html#tooltiptrigger)
+### TooltipTrigger Props
+Implements all props from [TooltipTrigger](https://react-spectrum.adobe.com/react-aria/Tooltip.html#tooltiptrigger)
 
 ### Tooltip Props
 Implements all props from [Tooltip](https://react-spectrum.adobe.com/react-aria/Tooltip.html#tooltip-1)

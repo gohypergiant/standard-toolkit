@@ -14,7 +14,10 @@ import { Placeholder } from '@accelint/icons';
 import { useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { Chip } from './index';
+import { Chip } from './';
+import { DeletableChip } from './deletable';
+import { ChipList } from './list';
+import { SelectableChip } from './selectable';
 import type { Meta, StoryObj } from '@storybook/react';
 import type {
   ChipListProps,
@@ -45,12 +48,12 @@ const meta = {
 
 const metaFromSelectable = {
   ...meta,
-  component: Chip.List as AliasSelectable,
+  component: ChipList as AliasSelectable,
 } satisfies Meta<AliasSelectable>;
 
 const metaFromDeletable = {
   ...meta,
-  component: Chip.List as AliasDeletable,
+  component: ChipList as AliasDeletable,
 } satisfies Meta<AliasDeletable>;
 
 export default meta;
@@ -95,13 +98,13 @@ export const List: Story = {
     },
   },
   render: ({ size }) => (
-    <Chip.List size={size}>
+    <ChipList size={size}>
       {List.argTypes?.variant?.options?.map((label) => (
         <Chip key={label} className='capitalize' variant={label}>
           {label}
         </Chip>
       ))}
-    </Chip.List>
+    </ChipList>
   ),
 };
 
@@ -138,14 +141,14 @@ export const SelectableChipList: StoryForSelectable = {
     },
   },
   render: ({ children, id, className, style, size, isDisabled, ...rest }) => (
-    <Chip.List
+    <ChipList
       {...rest}
       disabledKeys={isDisabled ? selectableData.map(({ id }) => id) : undefined}
       items={selectableData}
       size={size}
     >
-      {({ id, label }) => <Chip.Selectable id={id}>{label}</Chip.Selectable>}
-    </Chip.List>
+      {({ id, label }) => <SelectableChip id={id}>{label}</SelectableChip>}
+    </ChipList>
   ),
 };
 
@@ -169,15 +172,15 @@ export const DeletableChipList: StoryForDeletable = {
 
     return (
       <>
-        <Chip.List
+        <ChipList
           {...rest}
           disabledKeys={isDisabled ? chips : undefined}
           items={Array.from(chips).map((label) => ({ id: label, label }))}
           size={size}
           onRemove={(keys) => setChips((prev) => prev.difference(keys))}
         >
-          {({ id, label }) => <Chip.Deletable id={id}>{label}</Chip.Deletable>}
-        </Chip.List>
+          {({ id, label }) => <DeletableChip id={id}>{label}</DeletableChip>}
+        </ChipList>
         <Button
           size='xsmall'
           variant='flat'

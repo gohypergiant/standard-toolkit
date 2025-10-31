@@ -12,20 +12,14 @@
 'use client';
 
 import 'client-only';
-import { ChevronRight } from '@accelint/icons';
 import {
   Breadcrumbs as AriaBreadcrumbs,
-  Breadcrumb,
   type BreadcrumbProps,
   type BreadcrumbsProps,
-  composeRenderProps,
-  Link,
 } from 'react-aria-components';
-import { Icon } from '../icon';
 import { BreadcrumbsStyles } from './styles';
-import type { BreadcrumbItemProps } from './types';
 
-const { list, item, link, separator } = BreadcrumbsStyles();
+const { list } = BreadcrumbsStyles();
 
 /**
  * Breadcrumbs - Accessible breadcrumb navigation
@@ -35,8 +29,8 @@ const { list, item, link, separator } = BreadcrumbsStyles();
  *
  * @example
  * <Breadcrumbs>
- *   <Breadcrumbs.Item linkProps={{ href: '/' }}>Home</Breadcrumbs.Item>
- *   <Breadcrumbs.Item>Current</Breadcrumbs.Item>
+ *   <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
+ *   <BreadcrumbItem>Current</BreadcrumbItem>
  * </Breadcrumbs>
  */
 export function Breadcrumbs({
@@ -49,46 +43,3 @@ export function Breadcrumbs({
     </AriaBreadcrumbs>
   );
 }
-Breadcrumbs.displayName = 'Breadcrumbs';
-
-function BreadcrumbItem({
-  children,
-  classNames,
-  linkProps,
-  ...rest
-}: BreadcrumbItemProps) {
-  return (
-    <Breadcrumb
-      {...rest}
-      className={composeRenderProps(classNames?.item, (className) =>
-        item({ className }),
-      )}
-    >
-      {composeRenderProps(linkProps ? null : children, (itemChildren) => (
-        <>
-          {linkProps ? (
-            <Link
-              {...linkProps}
-              className={composeRenderProps(classNames?.link, (className) =>
-                link({ className }),
-              )}
-            >
-              {children}
-            </Link>
-          ) : (
-            itemChildren
-          )}
-          <Icon
-            aria-hidden='true'
-            className={separator({ className: classNames?.separator })}
-          >
-            <ChevronRight />
-          </Icon>
-        </>
-      ))}
-    </Breadcrumb>
-  );
-}
-BreadcrumbItem.displayName = 'Breadcrumbs.Item';
-
-Breadcrumbs.Item = BreadcrumbItem;

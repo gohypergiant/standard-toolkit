@@ -19,13 +19,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { LinkStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { LinkProps } from './types';
-
-function LinkProvider({ children, ...props }: ProviderProps<LinkProps>) {
-  return <LinkContext.Provider value={props}>{children}</LinkContext.Provider>;
-}
-LinkProvider.displayName = 'Link.Provider';
 
 /**
  * Link - Accessible anchor/link component with optional visited state
@@ -57,5 +51,3 @@ export function Link({ ref, ...props }: LinkProps) {
     />
   );
 }
-Link.displayName = 'Link';
-Link.Provider = LinkProvider;

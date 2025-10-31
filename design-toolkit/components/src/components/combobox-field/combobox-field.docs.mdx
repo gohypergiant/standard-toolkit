@@ -18,26 +18,26 @@ Iti is composed of the following components:
 // Basic combobox with dynamic items
 <ComboBoxField<CustomItem> defaultItems={items}>
   {(item) => (
-    <Options.Item key={item.id} textValue={item.name}>
+    <OptionsItem key={item.id} textValue={item.name}>
       <Icon>{item.prefixIcon}</Icon>
-      <Options.Item.Content>
-        <Options.Item.Label>{item.name}</Options.Item.Label>
-        <Options.Item.Description>{item.description}</Options.Item.Description>
-      </Options.Item.Content>
-    </Options.Item>
+      <OptionsItemContent>
+        <OptionsItemLabel>{item.name}</OptionsItemLabel>
+        <OptionsItemDescription>{item.description}</OptionsItemDescription>
+      </OptionsItemContent>
+    </OptionsItem>
   )}
 </ComboBoxField>
 
 // Combobox with sections
 <ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
   {(section) => (
-    <Options.Section header={section.name} items={section.children}>
+    <OptionsSection header={section.name} items={section.children}>
       {(item) => (
-        <Options.Item key={item.id} textValue={item.name}>
-          <Options.Item.Label>{item.name}</Options.Item.Label>
-        </Options.Item>
+        <OptionsItem key={item.id} textValue={item.name}>
+          <OptionsItemLabel>{item.name}</OptionsItemLabel>
+        </OptionsItem>
       )}
-    </Options.Section>
+    </OptionsSection>
   )}
 </ComboBoxField>
 ```
@@ -99,9 +99,9 @@ Support for both static and dynamic content rendering:
 // Dynamic rendering with defaultItems prop
 <ComboBoxField<CustomItem> defaultItems={items}>
   {(item) => (
-    <Options.Item key={item.id} textValue={item.name}>
-      <Options.Item.Label>{item.name}</Options.Item.Label>
-    </Options.Item>
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
   )}
 </ComboBoxField>
 ```
@@ -111,13 +111,13 @@ Organize options into logical groups with headers:
 ```tsx
 <ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
   {(section) => (
-    <Options.Section header={section.name} items={section.children}>
+    <OptionsSection header={section.name} items={section.children}>
       {(item) => (
-        <Options.Item key={item.id} textValue={item.name}>
-          <Options.Item.Label>{item.name}</Options.Item.Label>
-        </Options.Item>
+        <OptionsItem key={item.id} textValue={item.name}>
+          <OptionsItemLabel>{item.name}</OptionsItemLabel>
+        </OptionsItem>
       )}
-    </Options.Section>
+    </OptionsSection>
   )}
 </ComboBoxField>
 ```
@@ -130,9 +130,9 @@ Handle large datasets efficiently with built-in virtualization:
   defaultItems={manyItems}
 >
   {(item) => (
-    <Options.Item key={item.id} textValue={item.name}>
-      <Options.Item.Label>{item.name}</Options.Item.Label>
-    </Options.Item>
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
   )}
 </ComboBoxField>
 ```
@@ -142,15 +142,15 @@ Support for icons, descriptions, and complex layouts:
 ```tsx
 <ComboBoxField<CustomItem> defaultItems={items}>
   {(item) => (
-    <Options.Item key={item.id} textValue={item.name}>
+    <OptionsItem key={item.id} textValue={item.name}>
       {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-      <Options.Item.Content>
-        <Options.Item.Label>{item.name}</Options.Item.Label>
+      <OptionsItemContent>
+        <OptionsItemLabel>{item.name}</OptionsItemLabel>
         {item.description && (
-          <Options.Item.Description>{item.description}</Options.Item.Description>
+          <OptionsItemDescription>{item.description}</OptionsItemDescription>
         )}
-      </Options.Item.Content>
-    </Options.Item>
+      </OptionsItemContent>
+    </OptionsItem>
   )}
 </ComboBoxField>
 ```
@@ -160,9 +160,9 @@ Allow a custom value to be entered:
 ```tsx
 <ComboBoxField<CustomItem> defaultItems={items} allowsCustomValue>
   {(item) => (
-    <Options.Item key={item.id} textValue={item.name}>
-      <Options.Item.Label>{item.name}</Options.Item.Label>
-    </Options.Item>
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
   )}
 </ComboBoxField>
 ```

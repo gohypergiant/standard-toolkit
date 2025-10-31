@@ -12,10 +12,8 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
 import {
   TextField as AriaTextField,
-  type ContextValue,
   composeRenderProps,
   FieldError,
   Text,
@@ -23,26 +21,11 @@ import {
 } from 'react-aria-components';
 import { Input } from '../input';
 import { Label } from '../label';
+import { TextFieldContext } from './context';
 import { TextFieldStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { TextFieldProps } from './types';
 
 const { field, label, description, error } = TextFieldStyles();
-
-export const TextFieldContext =
-  createContext<ContextValue<TextFieldProps, HTMLDivElement>>(null);
-
-function TextFieldProvider({
-  children,
-  ...props
-}: ProviderProps<TextFieldProps>) {
-  return (
-    <TextFieldContext.Provider value={props}>
-      {children}
-    </TextFieldContext.Provider>
-  );
-}
-TextFieldProvider.displayName = 'TextField.Provider';
 
 /**
  * TextField - A complete form field component with label, input, and validation
@@ -174,5 +157,3 @@ export function TextField({ ref, ...props }: TextFieldProps) {
     </AriaTextField>
   );
 }
-TextField.displayName = 'TextField';
-TextField.Provider = TextFieldProvider;

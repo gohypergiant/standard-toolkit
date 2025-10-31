@@ -10,7 +10,7 @@ The SearchField component provides a customizable search input with integrated s
 It is composed of the following components:
 
 - **SearchField** - Main search input with integrated icons and functionality
-- **SearchField.Provider** - Context provider for setting default props across multiple search fields
+- **SearchFieldProvider** - Context provider for setting default props across multiple search fields
 
 ## Example usage
 ```tsx
@@ -25,10 +25,10 @@ It is composed of the following components:
 />
 
 // Using context provider for default props
-<SearchField.Provider variant="filled">
+<SearchFieldProvider variant="filled">
   <SearchField placeholder="Search 1" />
   <SearchField placeholder="Search 2" />
-</SearchField.Provider>
+</SearchFieldProvider>
 ```
 
 ## Variants
@@ -36,7 +36,7 @@ It is composed of the following components:
 * **outlined** - Renders with a border outline (default)
 * **filled** - Renders with a filled background and darker outline
 
-The variant can be controlled via the `variant` prop or set globally using the `SearchField.Provider` component.
+The variant can be controlled via the `variant` prop or set globally using the `SearchFieldProvider` component.
 
 <Canvas of={SearchFieldStories.Default} />
 

@@ -11,66 +11,20 @@
  */
 'use client';
 
+import { PortalProvider } from '@/providers/portal';
 import 'client-only';
-import { type ComponentProps, createContext, useContext } from 'react';
 import {
   Dialog as AriaDialog,
-  type ContextValue,
   composeRenderProps,
-  DialogTrigger,
-  Heading,
-  type HeadingProps,
   Modal,
   ModalOverlay,
-  OverlayTriggerStateContext,
   useContextProps,
 } from 'react-aria-components';
-import { isSlottedContextValue } from '@/lib/utils';
-import { PortalProvider } from '@/providers/portal';
-import { ButtonContext } from '../button';
+import { DialogContext } from './context';
 import { DialogStyles } from './styles';
 import type { DialogProps } from './types';
 
-const { overlay, modal, dialog, title, content, footer } = DialogStyles();
-
-export const DialogContext =
-  createContext<ContextValue<DialogProps, HTMLDivElement>>(null);
-
-function DialogTitle({ children, className }: HeadingProps) {
-  return (
-    <Heading slot='title' className={title({ className })}>
-      {children}
-    </Heading>
-  );
-}
-DialogTitle.displayName = 'Dialog.Title';
-
-function DialogContent({ children, className }: ComponentProps<'div'>) {
-  return <div className={content({ className })}>{children}</div>;
-}
-DialogContent.displayName = 'Dialog.Content';
-
-function DialogFooter({ children, className }: ComponentProps<'footer'>) {
-  const context = useContext(DialogContext);
-  const size =
-    (isSlottedContextValue(context) ? null : context?.size) ?? 'small';
-  const state = useContext(OverlayTriggerStateContext);
-
-  return (
-    <footer className={footer({ className })}>
-      <ButtonContext.Provider
-        value={{
-          size,
-          onPress: state?.close ?? (() => undefined),
-        }}
-      >
-        {children}
-      </ButtonContext.Provider>
-    </footer>
-  );
-}
-
-DialogFooter.displayName = 'Dialog.Footer';
+const { overlay, modal, dialog } = DialogStyles();
 
 /**
  * Dialog - A modal dialog component for important content and interactions
@@ -81,20 +35,20 @@ DialogFooter.displayName = 'Dialog.Footer';
  *
  * @example
  * // Basic dialog with trigger
- * <Dialog.Trigger>
+ * <DialogTrigger>
  *   <Button>Open Dialog</Button>
  *   <Dialog>
  *     {({ close }) => (
  *       <>
- *         <Dialog.Title>Confirm Action</Dialog.Title>
+ *         <DialogTitle>Confirm Action</DialogTitle>
  *         <p>Are you sure you want to continue?</p>
- *         <Dialog.Footer>
- *           <Dialog.Button onPress={close}>Confirm</Dialog.Button>
- *         </Dialog.Footer>
+ *         <DialogFooter>
+ *           <Button onPress={close}>Confirm</Button>
+ *         </DialogFooter>
  *       </>
  *     )}
  *   </Dialog>
- * </Dialog.Trigger>
+ * </DialogTrigger>
  */
 export function Dialog({ ref, ...props }: DialogProps) {
   [props, ref] = useContextProps(props, ref ?? null, DialogContext);
@@ -126,8 +80,3 @@ export function Dialog({ ref, ...props }: DialogProps) {
     </DialogContext.Provider>
   );
 }
-Dialog.displayName = 'Dialog';
-Dialog.Trigger = DialogTrigger;
-Dialog.Title = DialogTitle;
-Dialog.Content = DialogContent;
-Dialog.Footer = DialogFooter;

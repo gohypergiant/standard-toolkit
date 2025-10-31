@@ -11,23 +11,23 @@ The Drawer component provides a flexible, accessible UI pattern for displaying c
 It is composed of the following components:
 
 - **Drawer** – Root component that manages the drawer state and view stack
-- **Drawer.Layout** – Container for layout structure, supports extending specific drawer's layout and drawer's push/overlay behavior
-- **Drawer.Menu** – Navigation menu for switching between views
-- **Drawer.Menu.Item** – Individual menu item, can trigger open/toggle for a drawer as well as show a specific view. Supports tooltips for better accessibility and user experience.
-- **Drawer.Panel** – Main panel container for drawer content
-- **Drawer.View** – Content region for a specific view, mapped to a unique id
-- **Drawer.Header** – Header region, typically for titles or actions. Supports a `title` prop for automatic header layout with back/close buttons
-- **Drawer.Header.Title** – Heading element, supports semantic levels and styling
-- **Drawer.Content** – Main content area within a view
-- **Drawer.Footer** – Footer region for actions or supplementary info
-- **Drawer.Trigger** – Programmatic trigger for drawer/view actions
+- **DrawerLayout** – Container for layout structure, supports extending specific drawer's layout and drawer's push/overlay behavior
+- **DrawerMenu** – Navigation menu for switching between views
+- **DrawerMenuItem** – Individual menu item, can trigger open/toggle for a drawer as well as show a specific view. Supports tooltips for better accessibility and user experience.
+- **DrawerPanel** – Main panel container for drawer content
+- **DrawerView** – Content region for a specific view, mapped to a unique id
+- **DrawerHeader** – Header region, typically for titles or actions. Supports a `title` prop for automatic header layout with back/close buttons
+- **DrawerHeaderTitle** – Heading element, supports semantic levels and styling
+- **DrawerContent** – Main content area within a view
+- **DrawerFooter** – Footer region for actions or supplementary info
+- **DrawerTrigger** – Programmatic trigger for drawer/view actions
 
-The Drawer enforces a predictable child structure: only one Drawer.Panel is allowed per Drawer, and Drawer.Menu is optional.
+The Drawer enforces a predictable child structure: only one DrawerPanel is allowed per Drawer, and DrawerMenu is optional.
 
 ## Example Usage
 
 ### Using the Simplified Title Prop
-```
+```tsx
 const ids = {
   drawer: uuid(),
   a: uuid(),
@@ -35,35 +35,35 @@ const ids = {
 };
 
 <Drawer id={ids.drawer} defaultView={ids.a}>
-  <Drawer.Menu>
-    <Drawer.Menu.Item for={ids.a}>View A</Drawer.Menu.Item>
-    <Drawer.Menu.Item for={ids.b}>View B</Drawer.Menu.Item>
-  </Drawer.Menu>
-  <Drawer.Panel>
-    <Drawer.View id={ids.a}>
-      <Drawer.Header title="Title A" />
-      <Drawer.Content>
+  <DrawerMenu>
+    <DrawerMenuItem for={ids.a}>View A</DrawerMenuItem>
+    <DrawerMenuItem for={ids.b}>View B</DrawerMenuItem>
+  </DrawerMenu>
+  <DrawerPanel>
+    <DrawerView id={ids.a}>
+      <DrawerHeader title="Title A" />
+      <DrawerContent>
         Content for View A
-      </Drawer.Content>
-      <Drawer.Footer>
+      </DrawerContent>
+      <DrawerFooter>
         Footer Actions
-      </Drawer.Footer>
-    </Drawer.View>
-    <Drawer.View id={ids.b}>
-      <Drawer.Header title="Title B" />
-      <Drawer.Content>
+      </DrawerFooter>
+    </DrawerView>
+    <DrawerView id={ids.b}>
+      <DrawerHeader title="Title B" />
+      <DrawerContent>
         Content for View B
-      </Drawer.Content>
-      <Drawer.Footer>
+      </DrawerContent>
+      <DrawerFooter>
         Footer Actions
-      </Drawer.Footer>
-    </Drawer.View>
-  </Drawer.Panel>
+      </DrawerFooter>
+    </DrawerView>
+  </DrawerPanel>
 </Drawer>
 ```
 
 ### Using Custom Header Layout
-```
+```tsx
 const ids = {
   drawer: uuid(),
   a: uuid(),
@@ -71,43 +71,43 @@ const ids = {
 };
 
 <Drawer id={ids.drawer} defaultView={ids.a}>
-  <Drawer.Menu>
-    <Drawer.Menu.Item for={ids.a} textValue="View A">View A</Drawer.Menu.Item>
-    <Drawer.Menu.Item for={ids.b} textValue="View B">View B</Drawer.Menu.Item>
-  </Drawer.Menu>
-  <Drawer.Panel>
-    <Drawer.View id={ids.a}>
-      <Drawer.Header>
-        <Drawer.Header.Title level={2}>Title A</Drawer.Header.Title>
+  <DrawerMenu>
+    <DrawerMenuItem for={ids.a} textValue="View A">View A</DrawerMenuItem>
+    <DrawerMenuItem for={ids.b} textValue="View B">View B</DrawerMenuItem>
+  </DrawerMenu>
+  <DrawerPanel>
+    <DrawerView id={ids.a}>
+      <DrawerHeader>
+        <DrawerHeaderTitle level={2}>Title A</DrawerHeaderTitle>
         {/* Custom actions can go here */}
-      </Drawer.Header>
-      <Drawer.Content>
+      </DrawerHeader>
+      <DrawerContent>
         Content for View A
-      </Drawer.Content>
-      <Drawer.Footer>
+      </DrawerContent>
+      <DrawerFooter>
         Footer Actions
-      </Drawer.Footer>
-    </Drawer.View>
-    <Drawer.View id={ids.b}>
-      <Drawer.Header>
-        <Drawer.Header.Title level={2}>Title B</Drawer.Header.Title>
-      </Drawer.Header>
-      <Drawer.Content>
+      </DrawerFooter>
+    </DrawerView>
+    <DrawerView id={ids.b}>
+      <DrawerHeader>
+        <DrawerHeaderTitle level={2}>Title B</DrawerHeaderTitle>
+      </DrawerHeader>
+      <DrawerContent>
         Content for View B
-      </Drawer.Content>
-      <Drawer.Footer>
+      </DrawerContent>
+      <DrawerFooter>
         Footer Actions
-      </Drawer.Footer>
-    </Drawer.View>
-  </Drawer.Panel>
+      </DrawerFooter>
+    </DrawerView>
+  </DrawerPanel>
 </Drawer>
 ```
 
 <Canvas of={DrawerStories.StaticHeaderFooter} />
 
-## Drawer.Header
+## DrawerHeader
 
-The Drawer.Header component provides two ways to create headers:
+The DrawerHeader component provides two ways to create headers:
 
 ### Simplified Header with Title Prop
 
@@ -116,8 +116,8 @@ For common use cases, you can use the `title` prop to automatically create a hea
 - The title text
 - A close button
 
-```
-<Drawer.Header title="My Title" />
+```tsx
+<DrawerHeader title="My Title" />
 ```
 
 This automatically handles the layout and provides appropriate semantic heading levels based on the view stack depth.
@@ -126,15 +126,15 @@ This automatically handles the layout and provides appropriate semantic heading 
 
 For more control over the header content, you can use a compositional approach:
 
+```tsx
+<DrawerHeader>
+  <DrawerHeaderTitle level={2}>My Title</DrawerHeaderTitle>
+  <DrawerClose />
+</DrawerHeader>
 ```
-<Drawer.Header>
-  <Drawer.Header.Title level={2}>My Title</Drawer.Header.Title>
-  <Drawer.Close />
-</Drawer.Header>
-```
-## Drawer.Menu.Item
+## DrawerMenuItem
 
-The Drawer.Menu.Item component represents individual navigation items within the drawer menu.
+The DrawerMenuItem component represents individual navigation items within the drawer menu.
 
 - **`for`** - The unique identifier fo the view this item should navigate to
 - **`toggle`** - When `true`, the menu item will toggle the visibility of the associated view instead of just opening it
@@ -145,13 +145,13 @@ The Drawer.Menu.Item component represents individual navigation items within the
 
 When `textValue` is provided, a tooltip will appear on hover, enhancing accessibility and user experience.
 
-## Drawer.View
+## DrawerView
 
-The Drawer.View is the content region that will be visible when that view's id is active. The view can be deeply nested and contain any content.
+The DrawerView is the content region that will be visible when that view's id is active. The view can be deeply nested and contain any content.
 
-## Drawer.Trigger
+## DrawerTrigger
 
-Drawer.Trigger enables transitioning between views or controlling the drawer programmatically. The `for` prop dictates its behavior:
+DrawerTrigger enables transitioning between views or controlling the drawer programmatically. The `for` prop dictates its behavior:
 
 - `'open'`, `'toggle'`, `'close'`: Control the drawer state
 - A `UniqueId`: Pushes the corresponding view onto the stack

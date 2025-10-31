@@ -13,6 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { SearchField } from '@/components/search-field/index';
+import { SearchFieldProvider } from './context';
 import type { SearchFieldProps } from './types';
 
 function setup({
@@ -59,9 +60,9 @@ describe('SearchField', () => {
     const value = 'hello world';
 
     render(
-      <SearchField.Provider value={value}>
+      <SearchFieldProvider value={value}>
         <SearchField aria-label='Context test' />
-      </SearchField.Provider>,
+      </SearchFieldProvider>,
     );
 
     expect(screen.getByRole('searchbox')).toHaveValue(value);

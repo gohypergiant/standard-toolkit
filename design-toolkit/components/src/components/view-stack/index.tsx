@@ -11,109 +11,19 @@
  */
 'use client';
 
-import 'client-only';
-import { Broadcast } from '@accelint/bus';
-import { useEmit, useOn } from '@accelint/bus/react';
+import { useOn } from '@accelint/bus/react';
 import { isUUID, type UniqueId } from '@accelint/core';
-import {
-  createContext,
-  Fragment,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { Pressable } from 'react-aria-components';
+import 'client-only';
+import { useCallback, useRef, useState } from 'react';
+import { ViewStackContext } from './context';
 import { ViewStackEventTypes } from './events';
 import type {
   ViewStackBackEvent,
   ViewStackClearEvent,
-  ViewStackContextValue,
-  ViewStackEvent,
   ViewStackProps,
   ViewStackPushEvent,
   ViewStackResetEvent,
-  ViewStackTriggerProps,
-  ViewStackViewProps,
 } from './types';
-
-const bus = Broadcast.getInstance<ViewStackEvent>();
-
-export const ViewStackContext = createContext<ViewStackContextValue>({
-  parent: null,
-  stack: [],
-  view: null,
-  register: () => undefined,
-  unregister: () => undefined,
-});
-
-export const ViewStackEventHandlers = {
-  back: (stack: UniqueId) => bus.emit(ViewStackEventTypes.back, { stack }),
-  clear: (stack: UniqueId) => bus.emit(ViewStackEventTypes.clear, { stack }),
-  push: (view: UniqueId) => bus.emit(ViewStackEventTypes.push, { view }),
-  reset: (stack: UniqueId) => bus.emit(ViewStackEventTypes.reset, { stack }),
-} as const;
-
-export function useViewStackEmit() {
-  const emitBack = useEmit<ViewStackEvent>(ViewStackEventTypes.back);
-  const emitClear = useEmit<ViewStackEvent>(ViewStackEventTypes.clear);
-  const emitPush = useEmit<ViewStackEvent>(ViewStackEventTypes.push);
-  const emitReset = useEmit<ViewStackEvent>(ViewStackEventTypes.reset);
-
-  return {
-    back: (stack: UniqueId) => emitBack({ stack }),
-    clear: (stack: UniqueId) => emitClear({ stack }),
-    push: (view: UniqueId) => emitPush({ view }),
-    reset: (stack: UniqueId) => emitReset({ stack }),
-  } as const;
-}
-
-function ViewStackTrigger({ children, for: types }: ViewStackTriggerProps) {
-  const { parent } = useContext(ViewStackContext);
-  const viewStackEmit = useViewStackEmit();
-
-  function handlePress() {
-    for (const type of Array.isArray(types) ? types : [types]) {
-      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
-        'back' | 'clear' | 'reset' | 'push',
-        UniqueId | undefined | null,
-      ];
-
-      id ??= parent;
-
-      if (!id) {
-        continue;
-      }
-
-      viewStackEmit[event](id);
-    }
-  }
-
-  return <Pressable onPress={handlePress}>{children}</Pressable>;
-}
-ViewStackTrigger.displayName = 'ViewStack.Trigger';
-
-function ViewStackView({ id, children }: ViewStackViewProps) {
-  const { parent, view, register, unregister } = useContext(ViewStackContext);
-
-  if (!parent) {
-    throw new Error('ViewStack.View must be implemented within a ViewStack');
-  }
-
-  if (!isUUID(id)) {
-    throw new Error(`ViewStack.View's id must be a UniqueId`);
-  }
-
-  useEffect(() => {
-    register(id);
-
-    return () => unregister(id);
-  }, [register, unregister, id]);
-
-  return view === id ? <Fragment key={id}>{children}</Fragment> : null;
-}
-ViewStackView.displayName = 'ViewStack.View';
 
 /**
  * ViewStack - Stack-based view manager for pushing/popping views
@@ -129,24 +39,24 @@ ViewStackView.displayName = 'ViewStack.View';
  * };
  *
  * <ViewStack id={ids.stack} defaultView={ids.a}>
- *   <ViewStack.View id={ids.a}>
- *     <ViewStack.Trigger for={ids.b}>
+ *   <ViewStackView id={ids.a}>
+ *     <ViewStackTrigger for={ids.b}>
  *       <Button>
  *         Push View B
  *       </Button>
- *     </ViewStack.Trigger>
+ *     </ViewStackTrigger>
  *     <h1>View A</h1>
- *   </ViewStack.View>
- *   <ViewStack.View id={ids.b}>
- *     <ViewStack.Trigger for='back'>
+ *   </ViewStackView>
+ *   <ViewStackView id={ids.b}>
+ *     <ViewStackTrigger for='back'>
  *       <Button variant='icon'>
  *         <Icon>
  *           <ChevronLeft />
  *         </Icon>
  *       </Button>
- *     </ViewStack.Trigger>
+ *     </ViewStackTrigger>
  *     <h1>View B</h1>
- *   </ViewStack.View>
+ *   </ViewStackView>
  * </ViewStack>
  */
 export function ViewStack({
@@ -229,6 +139,3 @@ export function ViewStack({
     </ViewStackContext.Provider>
   );
 }
-ViewStack.displayName = 'ViewStack';
-ViewStack.View = ViewStackView;
-ViewStack.Trigger = ViewStackTrigger;

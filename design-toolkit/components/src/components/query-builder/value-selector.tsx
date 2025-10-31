@@ -12,6 +12,7 @@
  */
 'use client';
 
+import type { Key } from '@react-types/shared';
 import 'client-only';
 import { useCallback, useMemo } from 'react';
 import {
@@ -20,8 +21,8 @@ import {
   type ValueSelectorProps,
 } from 'react-querybuilder';
 import { ComboBoxField } from '../combobox-field';
-import { Options } from '../options';
-import type { Key } from '@react-types/shared';
+import { OptionsItem } from '../options/item';
+import { OptionsSection } from '../options/section';
 
 export function ValueSelector(props: ValueSelectorProps) {
   const {
@@ -56,22 +57,22 @@ export function ValueSelector(props: ValueSelectorProps) {
     () =>
       isOptionGroupArray(optionsProp)
         ? optionsProp.map((section) => (
-            <Options.Section key={section.label} header={section.label}>
+            <OptionsSection key={section.label} header={section.label}>
               {section.options.map((option) => (
-                <Options.Item id={option.name} key={option.name}>
+                <OptionsItem id={option.name} key={option.name}>
                   {option.label}
-                </Options.Item>
+                </OptionsItem>
               ))}
-            </Options.Section>
+            </OptionsSection>
           ))
         : optionsProp.map((option) => (
-            <Options.Item
+            <OptionsItem
               textValue={option.label}
               id={option.name}
               key={option.name}
             >
               {option.label}
-            </Options.Item>
+            </OptionsItem>
           )),
     [optionsProp],
   );

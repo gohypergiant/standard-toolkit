@@ -10,45 +10,45 @@ A flexible and accessible list component that provides structured options with s
 It is composed of the following components:
 
 - **Options** - Main options list container with size variants and item management
-- **Options.Item** - Individual option item with support for icons, labels, and descriptions
-- **Options.Item.Label** - Primary text content component for option items
-- **Options.Item.Description** - Secondary text content for additional information
-- **Options.Item.Content** - Container for label and description content
-- **Options.Section** - Grouping container with optinal header
+- **OptionsItem** - Individual option item with support for icons, labels, and descriptions
+- **OptionsItemLabel** - Primary text content component for option items
+- **OptionsItemDescription** - Secondary text content for additional information
+- **OptionsItemContent** - Container for label and description content
+- **OptionsSection** - Grouping container with optinal header
 
 ## Example usage
 ```tsx
 // Basic options list
 <Options>
-  <Options.Item textValue="Option 1">
+  <OptionsItem textValue="Option 1">
     <Icon><Placeholder /></Icon>
-    <Options.Item.Label>Option 1</Options.Item.Label>
-  </Options.Item>
-  <Options.Item textValue="Option 2">
+    <OptionsItemLabel>Option 1</OptionsItemLabel>
+  </OptionsItem>
+  <OptionsItem textValue="Option 2">
     <Icon><Placeholder /></Icon>
-    <Options.Item.Label>Option 2</Options.Item.Label>
-  </Options.Item>
+    <OptionsItemLabel>Option 2</OptionsItemLabel>
+  </OptionsItem>
 </Options>
 
 // Options with sections
 <Options>
-  <Options.Section header="Category A">
-    <Options.Item textValue="Item A1">
+  <OptionsSection header="Category A">
+    <OptionsItem textValue="Item A1">
       <Icon><Placeholder /></Icon>
-      <Options.Item.Label>Item A1</Options.Item.Label>
-    </Options.Item>
-  </Options.Section>
+      <OptionsItemLabel>Item A1</OptionsItemLabel>
+    </OptionsItem>
+  </OptionsSection>
 </Options>
 
 // Options with descriptions and custom colors
 <Options size="large">
-  <Options.Item textValue="Success Item" color="info">
+  <OptionsItem textValue="Success Item" color="info">
     <Icon><Check /></Icon>
-    <Options.Item.Content>
-      <Options.Item.Label>Success Item</Options.Item.Label>
-      <Options.Item.Description>This is a successful action</Options.Item.Description>
-    </Options.Item.Content>
-  </Options.Item>
+    <OptionsItemContent>
+      <OptionsItemLabel>Success Item</OptionsItemLabel>
+      <OptionsItemDescription>This is a successful action</OptionsItemDescription>
+    </OptionsItemContent>
+  </OptionsItem>
 </Options>
 ```
 
@@ -69,7 +69,7 @@ It is composed of the following components:
 - **`children`** - Option items or sections to render
 - **`className`** - Custom CSS class name for the options list
 
-### Options.Item Props
+### OptionsItem Props
 - **`color`** - Color variant: `'info'` | `'serious'` (default: `'info'`)
 - **`textValue`** - Text value for accessibility and search
 - **`isDisabled`** - Whether the option is disabled
@@ -77,7 +77,7 @@ It is composed of the following components:
   - `item` - Main item container styling
   - `icon` - Icon styling and sizing
 
-### Options.Section Props
+### OptionsSection Props
 - **`header`** - Section header text
 - **`items`** - Array of data items for dynamic rendering within the section
 - **`classNames`** - Object containing custom class names:
@@ -98,9 +98,9 @@ Support for both static and dynamic content rendering:
 // Dynamic rendering with items prop
 <Options items={dataItems}>
   {(item) => (
-    <Options.Item key={item.id} textValue={item.name}>
-      <Options.Item.Label>{item.name}</Options.Item.Label>
-    </Options.Item>
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
   )}
 </Options>
 ```
@@ -109,12 +109,12 @@ Support for both static and dynamic content rendering:
 Organize options into logical groups with headers:
 ```tsx
 <Options>
-  <Options.Section header="Popular Items">
-    <Options.Item textValue="Item 1">...</Options.Item>
-  </Options.Section>
-  <Options.Section header="All Items">
-    <Options.Item textValue="Item 2">...</Options.Item>
-  </Options.Section>
+  <OptionsSection header="Popular Items">
+    <OptionsItem textValue="Item 1">...</OptionsItem>
+  </OptionsSection>
+  <OptionsSection header="All Items">
+    <OptionsItem textValue="Item 2">...</OptionsItem>
+  </OptionsSection>
 </Options>
 ```
 
@@ -122,19 +122,19 @@ Organize options into logical groups with headers:
 Visual distinction between different types of options:
 ```tsx
 // Info color (default) - for neutral or positive actions
-<Options.Item color="info">...</Options.Item>
+<OptionsItem color="info">...</OptionsItem>
 
 // Serious color - for warnings or destructive actions
-<Options.Item color="serious">...</Options.Item>
+<OptionsItem color="serious">...</OptionsItem>
 ```
 
 ### Icon Support
 Flexible icon placement and styling:
 ```tsx
-<Options.Item textValue="With Icon">
+<OptionsItem textValue="With Icon">
   <Icon><Placeholder /></Icon>
-  <Options.Item.Label>With Icon</Options.Item.Label>
-</Options.Item>
+  <OptionsItemLabel>With Icon</OptionsItemLabel>
+</OptionsItem>
 ```
 
 ### Accessibility
@@ -162,15 +162,15 @@ Built-in accessibility features ensure proper navigation and screen reader suppo
 ```tsx
 <div className="space-y-4">
   <Options size="small">
-    <Options.Item textValue="Small Option">
-      <Options.Item.Label>Small Option</Options.Item.Label>
-    </Options.Item>
+    <OptionsItem textValue="Small Option">
+      <OptionsItemLabel>Small Option</OptionsItemLabel>
+    </OptionsItem>
   </Options>
 
   <Options size="large">
-    <Options.Item textValue="Large Option">
-      <Options.Item.Label>Large Option</Options.Item.Label>
-    </Options.Item>
+    <OptionsItem textValue="Large Option">
+      <OptionsItemLabel>Large Option</OptionsItemLabel>
+    </OptionsItem>
   </Options>
 </div>
 ```
@@ -178,15 +178,15 @@ Built-in accessibility features ensure proper navigation and screen reader suppo
 ### Options with Descriptions
 ```tsx
 <Options>
-  <Options.Item textValue="Detailed Option">
+  <OptionsItem textValue="Detailed Option">
     <Icon><Info /></Icon>
-    <Options.Item.Content>
-      <Options.Item.Label>Detailed Option</Options.Item.Label>
-      <Options.Item.Description>
+    <OptionsItemContent>
+      <OptionsItemLabel>Detailed Option</OptionsItemLabel>
+      <OptionsItemDescription>
         This option includes additional context and information
-      </Options.Item.Description>
-    </Options.Item.Content>
-  </Options.Item>
+      </OptionsItemDescription>
+    </OptionsItemContent>
+  </OptionsItem>
 </Options>
 ```
 

@@ -14,6 +14,12 @@
 @import "@accelint/design-toolkit/styles";
 @source "../node_modules/@accelint/design-toolkit";
 
-#storybook-root {
+/* Hide overflow for map stories (not docs pages) */
+html:has(#storybook-root) {
   overflow: hidden;
+}
+
+/* Allow scrolling on docs pages */
+html:has(.sbdocs) {
+  overflow: auto !important;
 }

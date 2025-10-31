@@ -14,6 +14,7 @@ import { tv } from '@/lib/utils';
 export const SliderStyles = tv({
   slots: {
     slider: [
+      'isolate',
       'group/slider flex gap-s',
       'layout-grid:grid',
       'layout-stack:flex',
@@ -58,7 +59,7 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:-translate-x-1/2 group-orientation-vertical/slider:top-[calc(100%-attr(data-end_%)*100)] group-orientation-vertical/slider:bottom-[calc(attr(data-start_%)*100)] group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:w-xxs',
     ],
     thumb: [
-      'h-m w-m rounded-full outline-transparent [background-color:var(--fg-accent-primary-bold)]',
+      'z-10 h-m w-m rounded-full outline-transparent [background-color:var(--fg-accent-primary-bold)]',
       'hover:[background-color:var(--fg-accent-primary-hover)]',
       'dragging:outline dragging:outline-interactive-hover dragging:ring-8 dragging:ring-[rgba(110,209,255,0.08)] dragging:[background-color:var(--fg-a11y-on-accent)]',
       'disabled:cursor-not-allowed disabled:[background-color:var(--fg-disabled)]',

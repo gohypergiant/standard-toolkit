@@ -50,4 +50,3 @@ export function Skeleton({
 }: SkeletonProps) {
   return <div {...rest} className={SkeletonStyles({ className, shape })} />;
 }
-Skeleton.displayName = 'Skeleton';

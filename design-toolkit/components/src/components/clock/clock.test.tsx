@@ -12,7 +12,7 @@
 
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Clock } from '.';
+import { Clock } from './';
 
 describe('clock', () => {
   it('should render', async () => {

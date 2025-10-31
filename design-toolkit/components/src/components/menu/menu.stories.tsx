@@ -17,6 +17,13 @@ import { Button } from '../button';
 import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
 import { Menu } from './';
+import { MenuItem } from './item';
+import { MenuItemDescription } from './item-description';
+import { MenuItemLabel } from './item-label';
+import { MenuSection } from './section';
+import { MenuSeparator } from './separator';
+import { MenuSubmenu } from './submenu';
+import { MenuTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { MenuItemProps } from './types';
 
@@ -42,18 +49,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-type MenuItem = {
+type MenuItemType = {
   id: number;
   name: string;
   description?: string;
   prefixIcon?: ReactNode;
-  children?: MenuItem[];
+  children?: MenuItemType[];
   isDisabled?: boolean;
   hotkey?: string;
   color?: MenuItemProps['color'];
 };
 
-const menuItems: MenuItem[] = [
+const menuItems: MenuItemType[] = [
   {
     id: 1,
     prefixIcon: <Placeholder />,
@@ -112,127 +119,121 @@ const menuItems: MenuItem[] = [
 
 export const Basic: Story = {
   render: (args) => (
-    <Menu.Trigger>
+    <MenuTrigger>
       <Button variant='icon' aria-label='Menu'>
         <Icon>
           <Kebab />
         </Icon>
       </Button>
       <Menu {...args}>
-        <Menu.Item>
+        <MenuItem>
           <Icon>
             <Placeholder />
           </Icon>
-          <Menu.Item.Label>Songbirds</Menu.Item.Label>
+          <MenuItemLabel>Songbirds</MenuItemLabel>
           <Hotkey variant='flat'>⌘A</Hotkey>
-        </Menu.Item>
-        <Menu.Separator />
-        <Menu.Submenu>
-          <Menu.Item>
-            <Menu.Item.Label>North American Birds</Menu.Item.Label>
-          </Menu.Item>
+        </MenuItem>
+        <MenuSeparator />
+        <MenuSubmenu>
+          <MenuItem>
+            <MenuItemLabel>North American Birds</MenuItemLabel>
+          </MenuItem>
           <Menu>
-            <Menu.Item>
+            <MenuItem>
               <Icon>
                 <Placeholder />
               </Icon>
-              <Menu.Item.Label>Blue Jay</Menu.Item.Label>
-              <Menu.Item.Description>Cyanocitta cristata</Menu.Item.Description>
-            </Menu.Item>
-            <Menu.Item isDisabled>
+              <MenuItemLabel>Blue Jay</MenuItemLabel>
+              <MenuItemDescription>Cyanocitta cristata</MenuItemDescription>
+            </MenuItem>
+            <MenuItem isDisabled>
               <Icon>
                 <Placeholder />
               </Icon>
-              <Menu.Item.Label>Gray catbird</Menu.Item.Label>
-              <Menu.Item.Description>
-                Dumetella carolinensis
-              </Menu.Item.Description>
-            </Menu.Item>
+              <MenuItemLabel>Gray catbird</MenuItemLabel>
+              <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
+            </MenuItem>
           </Menu>
-        </Menu.Submenu>
-        <Menu.Separator />
-        <Menu.Section title='Additional Notable Species'>
-          <Menu.Item color='serious'>
+        </MenuSubmenu>
+        <MenuSeparator />
+        <MenuSection title='Additional Notable Species'>
+          <MenuItem color='serious'>
             <Icon>
               <Placeholder />
             </Icon>
-            <Menu.Item.Label>Mallard</Menu.Item.Label>
-            <Menu.Item.Description>Anas platyrhynchos</Menu.Item.Description>
+            <MenuItemLabel>Mallard</MenuItemLabel>
+            <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
             <Hotkey variant='flat'>⌘V</Hotkey>
-          </Menu.Item>
-          <Menu.Item color='critical'>
+          </MenuItem>
+          <MenuItem color='critical'>
             <Icon>
               <Placeholder />
             </Icon>
-            <Menu.Item.Label>Chimney swift</Menu.Item.Label>
-            <Menu.Item.Description>Chaetura pelagica</Menu.Item.Description>
-          </Menu.Item>
-          <Menu.Item>
+            <MenuItemLabel>Chimney swift</MenuItemLabel>
+            <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
+          </MenuItem>
+          <MenuItem>
             <Icon>
               <Placeholder />
             </Icon>
-            <Menu.Item.Label>Brünnich's guillemot</Menu.Item.Label>
-            <Menu.Item.Description>
-              Dumetella carolinensis
-            </Menu.Item.Description>
+            <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>
+            <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
             <Hotkey variant='flat'>⌘X</Hotkey>
-          </Menu.Item>
-        </Menu.Section>
+          </MenuItem>
+        </MenuSection>
       </Menu>
-    </Menu.Trigger>
+    </MenuTrigger>
   ),
 };
 
 export const Dynamic: Story = {
   render: (args) => (
-    <Menu.Trigger>
+    <MenuTrigger>
       <Button variant='icon' aria-label='Menu'>
         <Icon>
           <Kebab />
         </Icon>
       </Button>
-      <Menu<MenuItem> {...args} items={menuItems}>
+      <Menu<MenuItemType> {...args} items={menuItems}>
         {function render(item) {
           if (item.children) {
             return (
-              <Menu.Submenu>
-                <Menu.Item
+              <MenuSubmenu>
+                <MenuItem
                   key={item.id}
                   isDisabled={item.isDisabled}
                   color={item.color}
                 >
                   <Icon>{item.prefixIcon}</Icon>
-                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                  <MenuItemLabel>{item.name}</MenuItemLabel>
                   {item.description && (
-                    <Menu.Item.Description>
+                    <MenuItemDescription>
                       {item.description}
-                    </Menu.Item.Description>
+                    </MenuItemDescription>
                   )}
                   {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
-                </Menu.Item>
+                </MenuItem>
                 <Menu items={item.children}>{(item) => render(item)}</Menu>
-              </Menu.Submenu>
+              </MenuSubmenu>
             );
           }
           return (
-            <Menu.Item
+            <MenuItem
               key={item.id}
               isDisabled={item.isDisabled}
               color={item.color}
             >
               <Icon>{item.prefixIcon}</Icon>
-              <Menu.Item.Label>{item.name}</Menu.Item.Label>
+              <MenuItemLabel>{item.name}</MenuItemLabel>
               {item.description && (
-                <Menu.Item.Description>
-                  {item.description}
-                </Menu.Item.Description>
+                <MenuItemDescription>{item.description}</MenuItemDescription>
               )}
               {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
-            </Menu.Item>
+            </MenuItem>
           );
         }}
       </Menu>
-    </Menu.Trigger>
+    </MenuTrigger>
   ),
 };
 
@@ -263,7 +264,7 @@ export const ContextMenu: Story = {
           }}
           data-pressed={!!menuPosition || undefined}
         >
-          <Menu<MenuItem>
+          <Menu<MenuItemType>
             popoverProps={{
               placement: 'bottom left',
               offset: 0,
@@ -281,30 +282,30 @@ export const ContextMenu: Story = {
             {function render(item) {
               if (item.children) {
                 return (
-                  <Menu.Submenu>
-                    <Menu.Item
+                  <MenuSubmenu>
+                    <MenuItem
                       key={item.id}
                       isDisabled={item.isDisabled}
                       color={item.color}
                     >
-                      <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                      <MenuItemLabel>{item.name}</MenuItemLabel>
                       {item.hotkey && (
                         <Hotkey variant='flat'>{item.hotkey}</Hotkey>
                       )}
-                    </Menu.Item>
+                    </MenuItem>
                     <Menu items={item.children}>{(item) => render(item)}</Menu>
-                  </Menu.Submenu>
+                  </MenuSubmenu>
                 );
               }
               return (
-                <Menu.Item
+                <MenuItem
                   key={item.id}
                   isDisabled={item.isDisabled}
                   color={item.color}
                 >
-                  <Menu.Item.Label>{item.name}</Menu.Item.Label>
+                  <MenuItemLabel>{item.name}</MenuItemLabel>
                   {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}
-                </Menu.Item>
+                </MenuItem>
               );
             }}
           </Menu>

@@ -12,7 +12,6 @@
 
 'use client';
 
-import 'client-only';
 import { Kebab, Pin } from '@accelint/icons';
 import { useListData } from '@react-stately/data';
 import {
@@ -23,19 +22,20 @@ import {
   type RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table';
+import type { Key } from '@react-types/shared';
+import 'client-only';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { MenuItem } from '../menu/item';
+import { MenuSeparator } from '../menu/separator';
+import { MenuTrigger } from '../menu/trigger';
+import { TableBody } from './body';
 import { TableContext } from './context';
+import { TableHeader } from './header';
 import { TableStyles } from './styles';
-import { TableBody } from './table-body';
-import { TableCell } from './table-cell';
-import { TableHeader } from './table-header';
-import { HeaderCell } from './table-header-cell';
-import { TableRow } from './table-row';
-import type { Key } from '@react-types/shared';
 import type { TableProps } from './types';
 
 const { menuItem, notPersistRowKebab } = TableStyles();
@@ -59,36 +59,36 @@ function RowActionsMenu<T>({
   return (
     enableRowActions && (
       <div className={persistRowKebabMenu ? '' : notPersistRowKebab()}>
-        <Menu.Trigger>
+        <MenuTrigger>
           <Button variant='icon' aria-label={`row ${row.index + 1} actions`}>
             <Icon>
               <Kebab />
             </Icon>
           </Button>
           <Menu>
-            <Menu.Item
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => row.pin(isPinned ? false : 'top')}
             >
               {isPinned ? 'Unpin' : 'Pin'}
-            </Menu.Item>
-            <Menu.Separator />
-            <Menu.Item
+            </MenuItem>
+            <MenuSeparator />
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => moveRowsUp(row, rows)}
               isDisabled={isPinned || row.index === 0}
             >
               Move Up
-            </Menu.Item>
-            <Menu.Item
+            </MenuItem>
+            <MenuItem
               classNames={{ item: menuItem() }}
               onAction={() => moveRowsDown(row, rows)}
               isDisabled={isPinned || row.index === rows.length - 1}
             >
               Move Down
-            </Menu.Item>
+            </MenuItem>
           </Menu>
-        </Menu.Trigger>
+        </MenuTrigger>
       </div>
     )
   );
@@ -380,10 +380,3 @@ export function Table<T extends { id: Key }>({
     </TableContext.Provider>
   );
 }
-
-Table.displayName = 'Table';
-Table.Body = TableBody;
-Table.Cell = TableCell;
-Table.Header = TableHeader;
-Table.HeaderCell = HeaderCell;
-Table.Row = TableRow;

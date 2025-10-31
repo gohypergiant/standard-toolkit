@@ -17,14 +17,32 @@ import {
   Button,
   Checkbox,
   Chip,
+  ChipList,
   DateField,
   Drawer,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerHeaderTitle,
+  DrawerLayout,
+  DrawerLayoutMain,
+  DrawerMenu,
+  DrawerMenuItem,
+  DrawerPanel,
+  DrawerTrigger,
+  DrawerView,
   Icon,
-  Options,
+  OptionsItem,
+  OptionsItemLabel,
+  OptionsSection,
   Radio,
+  RadioGroup,
   SelectField,
   Slider,
   Switch,
+  Tab,
+  TabList,
+  TabPanel,
   Tabs,
   TextField,
   useTheme,
@@ -44,8 +62,8 @@ export default function KitchenSink() {
   const theme = useTheme();
   return (
     <div className='w-full h-full'>
-      <Drawer.Layout>
-        <Drawer.Layout.Main className='flex gap-xxl p-l'>
+      <DrawerLayout>
+        <DrawerLayoutMain className='flex gap-xxl p-l'>
           <div className='flex flex-col gap-s items-start w-[200px]'>
             <Button>Default</Button>
             <Button color='serious'>Serious</Button>
@@ -87,11 +105,11 @@ export default function KitchenSink() {
             </Checkbox>
             <Checkbox isSelected>Selected</Checkbox>
             {divider}
-            <Radio.Group defaultValue='1'>
+            <RadioGroup defaultValue='1'>
               <Radio value='1'>Radio 1</Radio>
               <Radio value='2'>Radio 2</Radio>
               <Radio value='3'>Radio 3</Radio>
-            </Radio.Group>
+            </RadioGroup>
             {divider}
             <Switch labelPosition='start'>switch</Switch>
             <Switch labelPosition='start' isSelected>
@@ -102,13 +120,13 @@ export default function KitchenSink() {
               switch
             </Switch>
             {divider}
-            <Chip.List>
+            <ChipList>
               <Chip>chip</Chip>
               <Chip variant='normal'>chip</Chip>
               <Chip variant='advisory'>chip</Chip>
               <Chip variant='serious'>chip</Chip>
               <Chip variant='critical'>chip</Chip>
-            </Chip.List>
+            </ChipList>
             {divider}
             <Slider
               classNames={{
@@ -131,48 +149,46 @@ export default function KitchenSink() {
             />
             {divider}
             <SelectField isRequired label='Select field'>
-              <Options.Section header='North American Birds'>
-                <Options.Item textValue='Blue Jay'>
+              <OptionsSection header='North American Birds'>
+                <OptionsItem textValue='Blue Jay'>
                   <Icon>
                     <Placeholder />
                   </Icon>
-                  <Options.Item.Label>Blue Jay</Options.Item.Label>
-                </Options.Item>
-                <Options.Item textValue='Gray catbird'>
+                  <OptionsItemLabel>Blue Jay</OptionsItemLabel>
+                </OptionsItem>
+                <OptionsItem textValue='Gray catbird'>
                   <Icon>
                     <Placeholder />
                   </Icon>
-                  <Options.Item.Label>Gray catbird</Options.Item.Label>
-                </Options.Item>
-                <Options.Item textValue='Black-capped chickadee'>
+                  <OptionsItemLabel>Gray catbird</OptionsItemLabel>
+                </OptionsItem>
+                <OptionsItem textValue='Black-capped chickadee'>
                   <Icon>
                     <Placeholder />
                   </Icon>
-                  <Options.Item.Label>
-                    Black-capped chickadee
-                  </Options.Item.Label>
-                </Options.Item>
-                <Options.Item textValue='Song Sparrow'>
+                  <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>
+                </OptionsItem>
+                <OptionsItem textValue='Song Sparrow'>
                   <Icon>
                     <Placeholder />
                   </Icon>
-                  <Options.Item.Label>Song Sparrow</Options.Item.Label>
-                </Options.Item>
-              </Options.Section>
-              <Options.Section header='African Birds'>
-                <Options.Item textValue='Lilac-breasted roller'>
+                  <OptionsItemLabel>Song Sparrow</OptionsItemLabel>
+                </OptionsItem>
+              </OptionsSection>
+              <OptionsSection header='African Birds'>
+                <OptionsItem textValue='Lilac-breasted roller'>
                   <Icon>
                     <Placeholder />
                   </Icon>
-                  <Options.Item.Label>Lilac-breasted roller</Options.Item.Label>
-                </Options.Item>
-                <Options.Item textValue='Hornbill'>
+                  <OptionsItemLabel>Lilac-breasted roller</OptionsItemLabel>
+                </OptionsItem>
+                <OptionsItem textValue='Hornbill'>
                   <Icon>
                     <Placeholder />
                   </Icon>
-                  <Options.Item.Label>Hornbill</Options.Item.Label>
-                </Options.Item>
-              </Options.Section>
+                  <OptionsItemLabel>Hornbill</OptionsItemLabel>
+                </OptionsItem>
+              </OptionsSection>
             </SelectField>
             {divider}
             <DateField
@@ -182,29 +198,29 @@ export default function KitchenSink() {
             />
             {divider}
             <Tabs orientation='horizontal'>
-              <Tabs.List>
-                <Tabs.List.Tab id='uno'>Tab 1</Tabs.List.Tab>
-                <Tabs.List.Tab id='dos'>Tab 2</Tabs.List.Tab>
-                <Tabs.List.Tab id='tres' isDisabled>
+              <TabList>
+                <Tab id='uno'>Tab 1</Tab>
+                <Tab id='dos'>Tab 2</Tab>
+                <Tab id='tres' isDisabled>
                   Tab 3
-                </Tabs.List.Tab>
-              </Tabs.List>
-              <Tabs.Panel id='uno'>Content 1</Tabs.Panel>
-              <Tabs.Panel id='dos'>Content 2</Tabs.Panel>
-              <Tabs.Panel id='tres'>Content 3</Tabs.Panel>
+                </Tab>
+              </TabList>
+              <TabPanel id='uno'>Content 1</TabPanel>
+              <TabPanel id='dos'>Content 2</TabPanel>
+              <TabPanel id='tres'>Content 3</TabPanel>
             </Tabs>
             {divider}
             <Tabs orientation='vertical'>
-              <Tabs.List>
-                <Tabs.List.Tab id='uno'>Tab 1</Tabs.List.Tab>
-                <Tabs.List.Tab id='dos'>Tab 2</Tabs.List.Tab>
-                <Tabs.List.Tab id='tres' isDisabled>
+              <TabList>
+                <Tab id='uno'>Tab 1</Tab>
+                <Tab id='dos'>Tab 2</Tab>
+                <Tab id='tres' isDisabled>
                   Tab 3
-                </Tabs.List.Tab>
-              </Tabs.List>
-              <Tabs.Panel id='uno'>Content 1</Tabs.Panel>
-              <Tabs.Panel id='dos'>Content 2</Tabs.Panel>
-              <Tabs.Panel id='tres'>Content 3</Tabs.Panel>
+                </Tab>
+              </TabList>
+              <TabPanel id='uno'>Content 1</TabPanel>
+              <TabPanel id='dos'>Content 2</TabPanel>
+              <TabPanel id='tres'>Content 3</TabPanel>
             </Tabs>
           </div>
           <div>
@@ -222,35 +238,35 @@ export default function KitchenSink() {
               />
             </div>
           </div>
-        </Drawer.Layout.Main>
+        </DrawerLayoutMain>
         <Drawer id={drawerIds.drawer} placement='right' size='large'>
-          <Drawer.Menu>
-            <Drawer.Menu.Item toggle for={drawerIds.a} textValue='Menu A'>
+          <DrawerMenu>
+            <DrawerMenuItem toggle for={drawerIds.a} textValue='Menu A'>
               A
-            </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.b} textValue='Menu B'>
+            </DrawerMenuItem>
+            <DrawerMenuItem toggle for={drawerIds.b} textValue='Menu B'>
               B
-            </Drawer.Menu.Item>
-            <Drawer.Menu.Item toggle for={drawerIds.c} textValue='Menu C'>
+            </DrawerMenuItem>
+            <DrawerMenuItem toggle for={drawerIds.c} textValue='Menu C'>
               C
-            </Drawer.Menu.Item>
-          </Drawer.Menu>
-          <Drawer.Panel>
-            <Drawer.Header>
-              <Drawer.Header.Title>Title</Drawer.Header.Title>
-              <Drawer.Trigger for='close'>
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerHeader>
+              <DrawerHeaderTitle>Title</DrawerHeaderTitle>
+              <DrawerTrigger for='close'>
                 <Button>Close</Button>
-              </Drawer.Trigger>
-            </Drawer.Header>
-            <Drawer.Content>
-              <Drawer.View id={drawerIds.a}>View A</Drawer.View>
-              <Drawer.View id={drawerIds.b}>View B</Drawer.View>
-              <Drawer.View id={drawerIds.c}>View C</Drawer.View>
-            </Drawer.Content>
-            <Drawer.Footer>Footer</Drawer.Footer>
-          </Drawer.Panel>
+              </DrawerTrigger>
+            </DrawerHeader>
+            <DrawerContent>
+              <DrawerView id={drawerIds.a}>View A</DrawerView>
+              <DrawerView id={drawerIds.b}>View B</DrawerView>
+              <DrawerView id={drawerIds.c}>View C</DrawerView>
+            </DrawerContent>
+            <DrawerFooter>Footer</DrawerFooter>
+          </DrawerPanel>
         </Drawer>
-      </Drawer.Layout>
+      </DrawerLayout>
     </div>
   );
 }

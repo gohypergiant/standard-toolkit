@@ -13,15 +13,16 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Radio } from './';
+import { RadioGroup } from './group';
 import type { RadioProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<RadioProps> = {}) {
   render(
-    <Radio.Group aria-label='Options'>
+    <RadioGroup aria-label='Options'>
       <Radio value='1' {...rest}>
         {children}
       </Radio>
-    </Radio.Group>,
+    </RadioGroup>,
   );
 
   return {
