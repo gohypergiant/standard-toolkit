@@ -19,7 +19,7 @@ import {
 import { glob } from 'tinyglobby';
 import { defineConfig } from 'tsup';
 
-const CHECK = /client-only/gm;
+const CHECK = /client-only/;
 
 export default defineConfig({
   esbuildPlugins: [
