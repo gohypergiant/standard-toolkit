@@ -127,6 +127,11 @@ FlashcardSecondaryDetails.displayName = 'FlashcardSecondaryDetails';
 
 export function FlashcardSecondaryData(props: PropsWithChildren) {
   const { children, ...rest } = props;
+  const { isLoading } = useContext(FlashcardContext);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <h2 className={secondaryData()} {...rest}>
