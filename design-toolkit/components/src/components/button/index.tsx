@@ -79,7 +79,7 @@ export function Button({ ref, ...props }: ButtonProps) {
     className,
     color = 'mono-muted',
     size = 'medium',
-    variant = 'flat',
+    variant = 'filled',
     ...rest
   } = props;
 
