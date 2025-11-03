@@ -84,6 +84,7 @@
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/geo": "workspace:*",
+    "@accelint/hotkey-manager": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@deck.gl/core": "^9.1.14",
@@ -130,6 +131,7 @@
     "react": "19.0.0"
   },
   "optionalDependencies": {
+    "@accelint/hotkey-manager": "workspace:*",
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "9.1.14",
     "@deck.gl/geo-layers": "9.1.14",
