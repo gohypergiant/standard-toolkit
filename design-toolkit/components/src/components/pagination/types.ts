@@ -10,37 +10,41 @@
  * governing permissions and limitations under the License.
  */
 
-export type BasePaginationProps = {
-  pageCount: number;
-  currentPage: number;
+import type { ComponentPropsWithRef } from 'react';
+import type { ButtonProps, ToggleButtonProps } from '../button/types';
+
+export type PaginationContextValue = {
+  page: number;
+  total: number;
   isLoading?: boolean;
+  setPage: (page: number) => void;
+};
+
+export type PaginationProps = Omit<
+  ComponentPropsWithRef<'nav'>,
+  'className' | 'onChange'
+> & {
   classNames?: {
     container?: string;
-    controls?: string;
-    pages?: string;
+    prev?: ButtonProps['className'];
+    pages?: ToggleButtonProps['className'];
+    next?: ButtonProps['className'];
   };
-  onChange?: (nextPage: number) => void;
-};
-
-export type PaginationNavProps = {
-  className?: string;
-  onPress: () => void;
-};
-
-export type PaginationNumberContainerProps = {
+  total: number;
+  defaultValue?: number;
+  value?: number;
   isLoading?: boolean;
-  className?: string;
-  onPress: (pageNumber: number) => void;
+  onChange?: (page: number) => void;
 };
 
-export type PaginationPageNumberProps = {
-  className?: string;
-  pageNumber: number;
-  isSelected: boolean;
-  onPress: () => void;
+export type PaginationPagesProps = Pick<ToggleButtonProps, 'className'> & {
+  onPress?: (page: number) => void;
 };
 
-export type PaginationRange = {
-  minRange: number;
-  maxRange: number;
+export type PaginationPrevProps = Pick<ButtonProps, 'className'> & {
+  onPress?: (page: number) => void;
+};
+
+export type PaginationNextProps = Pick<ButtonProps, 'className'> & {
+  onPress?: (page: number) => void;
 };

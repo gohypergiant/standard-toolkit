@@ -14,8 +14,7 @@ import { tv } from '@/lib/utils';
 
 export const PaginationStyles = tv({
   slots: {
-    container: 'flex min-w-2xs flex-row gap-s',
-    button:
-      'size-medium:enabled:fg-primary-bold size-medium:w-[32px] size-medium:min-w-[32px]',
+    container: 'flex flex-row gap-s',
+    button: 'size-medium:enabled:fg-primary-bold size-medium:min-w-[32px]',
   },
 });

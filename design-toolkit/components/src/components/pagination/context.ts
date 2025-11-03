@@ -10,29 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { useState } from 'react';
-import { Pagination } from './index';
-import type { Meta, StoryObj } from '@storybook/react';
-import type { PaginationProps } from './types';
+'use client';
 
-const meta = {
-  title: 'Components/Pagination',
-  component: Pagination,
-  args: {
-    total: 4,
-  },
-} satisfies Meta<PaginationProps>;
+import 'client-only';
+import { noop } from 'radashi';
+import { createContext } from 'react';
+import type { PaginationContextValue } from './types';
 
-export default meta;
-
-export const Default: StoryObj<typeof meta> = {};
-
-export const Example: StoryObj<typeof meta> = {
-  render: (props) => {
-    const [currentPage, setCurrentPage] = useState(1);
-
-    return (
-      <Pagination {...props} value={currentPage} onChange={setCurrentPage} />
-    );
-  },
-};
+export const PaginationContext = createContext<PaginationContextValue>({
+  page: 0,
+  total: 0,
+  setPage: noop,
+});

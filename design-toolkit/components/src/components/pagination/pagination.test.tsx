@@ -13,10 +13,11 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { getPaginationRange, Pagination } from './index';
-import type { BasePaginationProps } from './types';
+import { Pagination } from './index';
+import { getPaginationRange } from './utils';
+import type { PaginationProps } from './types';
 
-function setup(props: BasePaginationProps) {
+function setup(props: PaginationProps) {
   return {
     ...render(<Pagination {...props} />),
     ...props,
@@ -25,94 +26,74 @@ function setup(props: BasePaginationProps) {
 
 describe('Pagination', () => {
   it('should render', () => {
-    setup({ currentPage: 1, pageCount: 5, onChange: vi.fn() });
-    const navContainer = document.querySelector('nav');
+    setup({ value: 1, total: 5, onChange: vi.fn() });
+
     expect(screen.getByText('1')).toBeInTheDocument();
-    expect(navContainer?.children.length).toEqual(7);
+    expect(screen.getByRole('navigation').children).toHaveLength(7);
   });
 
   it('should trigger onChange when button is pressed', async () => {
-    const { onChange, container } = setup({
-      currentPage: 1,
-      pageCount: 5,
+    const { onChange } = setup({
+      value: 1,
+      total: 5,
       onChange: vi.fn(),
     });
-    userEvent.setup();
-    const nextButton = container.querySelector(
-      'button[aria-label="pagination-next"]',
-    );
-    expect(nextButton).toBeDefined();
-    await userEvent.click(nextButton as Element);
+
+    await userEvent.click(screen.getByLabelText('Next page'));
+
     expect(onChange).toHaveBeenCalled();
   });
 
-  it('previous button should be disabled when currentPage === 1', () => {
-    setup({ currentPage: 1, pageCount: 5, onChange: vi.fn() });
-    const button = document.querySelector(
-      'button[aria-label="pagination-previous"]',
-    );
-    expect(button).not.toBeNull();
-    expect(button).toBeDefined();
-    expect(button as HTMLElement).toBeDisabled();
+  it('previous button should be disabled when first page is active', () => {
+    setup({ value: 1, total: 5, onChange: vi.fn() });
+
+    expect(screen.getByLabelText('Previous page')).toBeDisabled();
   });
 
-  it('next button should be disabled when currentPage === pageCount', () => {
-    setup({ currentPage: 5, pageCount: 5, onChange: vi.fn() });
-    const button = document.querySelector(
-      'button[aria-label="pagination-next"]',
-    );
-    expect(button).not.toBeNull();
-    expect(button).toBeDefined();
-    expect(button as HTMLElement).toBeDisabled();
+  it('next button should be disabled when last page is active', () => {
+    setup({ value: 5, total: 5, onChange: vi.fn() });
+
+    expect(screen.getByLabelText('Next page')).toBeDisabled();
   });
 
   it('should disable both prev/next for single pageCount', () => {
-    setup({ currentPage: 1, pageCount: 1, onChange: vi.fn() });
-    const nextButton = document.querySelector(
-      'button[aria-label="pagination-next"]',
-    );
-    const previousButton = document.querySelector(
-      'button[aria-label="pagination-previous"]',
-    );
-    expect(nextButton).not.toBeNull();
-    expect(previousButton).not.toBeNull();
-    expect(nextButton).toBeDefined();
-    expect(previousButton).toBeDefined();
-    expect(nextButton as HTMLElement).toBeDisabled();
-    expect(previousButton as HTMLElement).toBeDisabled();
+    setup({ value: 1, total: 1, onChange: vi.fn() });
 
-    const navContainer = document.querySelector('nav');
-    // Prev, Page, Next
-    expect(navContainer?.children.length).toEqual(3);
+    expect(screen.getByLabelText('Next page')).toBeDisabled();
+    expect(screen.getByLabelText('Previous page')).toBeDisabled();
+
+    expect(screen.getByRole('navigation').children).toHaveLength(3);
   });
 
   it('should show empty component on pageCount < 1', () => {
-    setup({ currentPage: 1, pageCount: 0, onChange: vi.fn() });
-    const navContainer = document.querySelector('nav');
-    expect(navContainer?.childNodes.length).toEqual(2);
+    setup({ value: 1, total: 0, onChange: vi.fn() });
+
+    expect(screen.getByRole('navigation').children).toHaveLength(2);
   });
 
   it('should show empty component on currentPage < 1', () => {
-    setup({ currentPage: -3, pageCount: 5, onChange: vi.fn() });
-    const navContainer = document.querySelector('nav');
-    expect(navContainer?.childNodes.length).toEqual(2);
+    setup({ value: -3, total: 5, onChange: vi.fn() });
+
+    expect(screen.getByRole('navigation').children).toHaveLength(2);
   });
 
   it('should show empty component on currentPage > pageCount', () => {
-    setup({ currentPage: 6, pageCount: 5, onChange: vi.fn() });
-    const navContainer = document.querySelector('nav');
-    expect(navContainer?.childNodes.length).toEqual(2);
+    setup({ value: 6, total: 5, onChange: vi.fn() });
+
+    expect(screen.getByRole('navigation').children).toHaveLength(2);
   });
 
   describe('getPaginationRange()', () => {
     it('should return 1-5', () => {
       const { minRange, maxRange } = getPaginationRange(5, 1);
+
       expect(minRange).toEqual(1);
       expect(maxRange).toEqual(5);
     });
 
     it('should return last 5 pages', () => {
       const { minRange, maxRange } = getPaginationRange(10, 10);
+
       expect(minRange).toEqual(6);
       expect(maxRange).toEqual(10);
     });

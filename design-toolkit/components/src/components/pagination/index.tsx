@@ -12,95 +12,16 @@
 
 'use client';
 
-import ChevronLeft from '@accelint/icons/chevron-left';
-import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
-import { createContext, useContext } from 'react';
-import { Button } from '../button';
-import { ToggleButton } from '../button/toggle';
-import { Icon } from '../icon';
+import { useControlledState } from '@react-stately/utils';
+import { PaginationContext } from './context';
+import { PaginationNext } from './next';
+import { PaginationPages } from './pages';
+import { PaginationPrev } from './prev';
 import { PaginationStyles } from './styles';
-import type { ProviderProps } from 'react';
-import type {
-  BasePaginationProps,
-  PaginationNavProps,
-  PaginationNumberContainerProps,
-  PaginationPageNumberProps,
-  PaginationRange,
-} from './types';
+import type { PaginationProps } from './types';
 
-const { container, button } = PaginationStyles();
-
-const DEFAULT_EMPTY_RANGE = 0;
-const DEFAULT_MIN_RANGE = 1;
-const DEFAULT_MAX_RANGE = 5;
-const DEFAULT_MID_RANGE = 2;
-const DEFAULT_UPPER_MID = 4;
-
-function range(start: number, end: number) {
-  const length = end - start + 1;
-  return Array.from({ length }, (_, index) => index + start);
-}
-
-// Handles edge cases around the relationship between pageCount and currentPage.`
-function isNavigationDisabled(pageCount: number, currentPage: number): boolean {
-  return (
-    !pageCount || pageCount < 1 || currentPage < 1 || pageCount < currentPage
-  );
-}
-
-/**
- * Return min max range for visible pages. As per our design, we limit
- * the range of numbers to a spread of 5 maximum, getting the lower and upper bounds.
- *
- * @param pageCount - total page count
- * @param currentPage - current page
- * @returns - Range of 1 to 5 numbers.
- */
-export function getPaginationRange(
-  pageCount: number,
-  currentPage: number,
-): PaginationRange {
-  if (
-    !(pageCount && currentPage) ||
-    currentPage > pageCount ||
-    pageCount < 1 ||
-    currentPage < 1
-  ) {
-    return { minRange: DEFAULT_EMPTY_RANGE, maxRange: DEFAULT_EMPTY_RANGE };
-  }
-
-  // Below max display.
-  if (pageCount < DEFAULT_MAX_RANGE) {
-    return {
-      minRange: DEFAULT_MIN_RANGE,
-      maxRange: pageCount,
-    };
-  }
-
-  // Middle.
-  if (currentPage >= 3 && currentPage < pageCount - 2) {
-    return {
-      minRange: currentPage - DEFAULT_MID_RANGE,
-      maxRange: currentPage + DEFAULT_MID_RANGE,
-    };
-  }
-
-  // End of page count.
-  if (currentPage > pageCount - 3) {
-    return {
-      minRange: pageCount - DEFAULT_UPPER_MID,
-      maxRange: pageCount,
-    };
-  }
-
-  return { minRange: DEFAULT_MIN_RANGE, maxRange: DEFAULT_MAX_RANGE };
-}
-
-const PaginationContext = createContext<BasePaginationProps>({
-  currentPage: 0,
-  pageCount: 0,
-});
+const { container } = PaginationStyles();
 
 /**
  *
@@ -118,136 +39,32 @@ const PaginationContext = createContext<BasePaginationProps>({
  *    * pages - buttons for page numbers
  */
 export function Pagination({
+  children,
   classNames,
-  currentPage = 1,
-  pageCount,
+  defaultValue = 1,
+  total = 0,
+  value,
+  isLoading,
   onChange,
-  isLoading = false,
   ...rest
-}: BasePaginationProps & React.HTMLAttributes<HTMLElement>) {
+}: PaginationProps) {
+  const [page, setPage] = useControlledState(value, defaultValue, onChange);
+
   return (
-    <PaginationProvider value={{ currentPage, pageCount }}>
+    <PaginationContext.Provider value={{ page, total, isLoading, setPage }}>
       <nav
         {...rest}
         className={container({ className: classNames?.container })}
-        aria-label={`pagination, page ${currentPage} of ${pageCount}`}
+        aria-label={`Page ${page} of ${total}`}
       >
-        <PaginationPrevious
-          onPress={() => {
-            onChange?.(currentPage - 1);
-          }}
-          className={classNames?.controls}
-        />
-        <PaginationNumberContainer
-          onPress={(nextPage) => onChange?.(nextPage)}
-          className={classNames?.pages}
-          isLoading={isLoading}
-        />
-        <PaginationNext
-          onPress={() => {
-            onChange?.(currentPage + 1);
-          }}
-          className={classNames?.controls}
-        />
+        {children || (
+          <>
+            <PaginationPrev className={classNames?.prev} />
+            <PaginationPages className={classNames?.pages} />
+            <PaginationNext className={classNames?.next} />
+          </>
+        )}
       </nav>
-    </PaginationProvider>
-  );
-}
-
-function PaginationProvider({
-  children,
-  ...props
-}: ProviderProps<BasePaginationProps>) {
-  return (
-    <PaginationContext.Provider value={props.value}>
-      {children}
     </PaginationContext.Provider>
   );
-}
-
-function PaginationPrevious({ className, onPress }: PaginationNavProps) {
-  const { currentPage, pageCount } = useContext(PaginationContext);
-
-  return (
-    <Button
-      color='accent'
-      variant='icon'
-      className={button({ className })}
-      isDisabled={
-        currentPage === 1 || isNavigationDisabled(pageCount, currentPage)
-      }
-      onPress={() => onPress()}
-      aria-label='pagination-previous'
-    >
-      <Icon>
-        <ChevronLeft />
-      </Icon>
-    </Button>
-  );
-}
-
-function PaginationNext({ className, onPress }: PaginationNavProps) {
-  const { currentPage, pageCount } = useContext(PaginationContext);
-
-  return (
-    <Button
-      color='accent'
-      variant='icon'
-      isDisabled={
-        currentPage === pageCount ||
-        isNavigationDisabled(pageCount, currentPage)
-      }
-      onPress={() => onPress()}
-      className={button({ className })}
-      aria-label='pagination-next'
-    >
-      <Icon>
-        <ChevronRight />
-      </Icon>
-    </Button>
-  );
-}
-
-function PaginationPageNumber({
-  isSelected,
-  pageNumber,
-  onPress,
-  className,
-}: PaginationPageNumberProps) {
-  return (
-    <ToggleButton
-      color='accent'
-      variant='flat'
-      isSelected={isSelected}
-      className={button({ className })}
-      onPress={() => onPress()}
-      aria-current={isSelected ? 'page' : undefined}
-    >
-      {pageNumber}
-    </ToggleButton>
-  );
-}
-
-function PaginationNumberContainer({
-  isLoading,
-  onPress,
-  className,
-}: PaginationNumberContainerProps) {
-  const { pageCount, currentPage } = useContext(PaginationContext);
-  const { minRange, maxRange } = getPaginationRange(pageCount, currentPage);
-
-  // No display for invalid props.
-  if (minRange === 0 || maxRange === 0 || isLoading) {
-    return null;
-  }
-
-  return range(minRange, maxRange).map((pageNumber) => (
-    <PaginationPageNumber
-      pageNumber={pageNumber}
-      key={`page-${pageNumber}`}
-      isSelected={pageNumber === currentPage}
-      onPress={() => onPress?.(pageNumber)}
-      className={className}
-    />
-  ));
 }
