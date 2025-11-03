@@ -239,6 +239,62 @@ export { InputContext } from './components/input/context';
 export { Input } from './components/input';
 export { InputStyles, InputStylesDefaults } from './components/input/styles';
 export type { InputProps } from './components/input/types';
+export { KanbanCardBody } from './components/kanban/card-body';
+export { KanbanCardHeaderActions } from './components/kanban/card-header-actions';
+export { KanbanCardHeaderTitle } from './components/kanban/card-header-title';
+export { KanbanCardHeader } from './components/kanban/card-header';
+export { KanbanCard } from './components/kanban/card';
+export { KanbanColumnActions } from './components/kanban/column-actions';
+export { KanbanColumnContainer } from './components/kanban/column-container';
+export { KanbanColumnContent } from './components/kanban/column-content';
+export { KanbanColumnHeaderActions } from './components/kanban/column-header-actions';
+export { KanbanColumnHeaderDragHandle } from './components/kanban/column-header-drag-handle';
+export { KanbanColumnHeaderTitle } from './components/kanban/column-header-title';
+export { KanbanColumnHeader } from './components/kanban/column-header';
+export { KanbanColumn } from './components/kanban/column';
+export {
+  KanbanProvider,
+  calculateClosestEdge,
+  getInsertIndex,
+  parseDropTarget,
+  useKanban,
+  validateMoveCard,
+} from './components/kanban/context';
+export type {
+  DropTargetInfo,
+  KanbanContextData,
+  KanbanProviderProps,
+  MoveCard,
+  MoveCardValidationParams,
+  MoveCardValidationResult,
+} from './components/kanban/context';
+export { KanbanHeaderActions } from './components/kanban/header-actions';
+export { KanbanHeaderSearch } from './components/kanban/header-search';
+export { KanbanHeaderTitle } from './components/kanban/header-title';
+export { KanbanHeader } from './components/kanban/header';
+export {
+  DragContext,
+  Kanban,
+  useDragContext,
+} from './components/kanban/kanban';
+export { columnData } from './components/kanban/mock-data';
+export {
+  CardInnerStyles,
+  ColumnStyles,
+  KanbanStyles,
+} from './components/kanban/styles';
+export type {
+  KanbanCardData,
+  KanbanCardProps,
+  KanbanColContentActionProps,
+  KanbanColContentProps,
+  KanbanColProps,
+  KanbanColumnData,
+  KanbanComponentProps,
+  KanbanMenuProps,
+  KanbanProps,
+  KanbanSearchProps,
+} from './components/kanban/types';
 export { LabelContext, LabelProvider } from './components/label/context';
 export { Label } from './components/label';
 export { LabelStyles } from './components/label/styles';
@@ -515,6 +571,7 @@ export type {
   ViewStackViewProps,
 } from './components/view-stack/types';
 export { ViewStackView } from './components/view-stack/view';
+export { useCardInteractions, useColumnInteractions } from './hooks/kanban';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
