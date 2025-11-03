@@ -242,10 +242,10 @@
         @apply fg-serious-bold;
 
         @variant hover {
-          @apply bg-serious-hover;
+          @apply fg-a11y-on-accent bg-serious-hover;
         }
         @variant focus-visible {
-          @apply bg-serious-hover;
+          @apply fg-a11y-on-accent bg-serious-hover;
         }
         @variant pressed {
           @apply fg-serious-pressed bg-serious-pressed;
