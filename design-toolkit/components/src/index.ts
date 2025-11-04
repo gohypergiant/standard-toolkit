@@ -354,6 +354,19 @@ export type {
   OptionsProps,
   OptionsSectionProps,
 } from './components/options/types';
+export { PaginationContext } from './components/pagination/context';
+export { Pagination } from './components/pagination';
+export { PaginationNext } from './components/pagination/next';
+export { PaginationPages } from './components/pagination/pages';
+export { PaginationPrev } from './components/pagination/prev';
+export { PaginationStyles } from './components/pagination/styles';
+export type {
+  PaginationContextValue,
+  PaginationNextProps,
+  PaginationPagesProps,
+  PaginationPrevProps,
+  PaginationProps,
+} from './components/pagination/types';
 export { PopoverBody } from './components/popover/body';
 export { PopoverContent } from './components/popover/content';
 export { PopoverFooter } from './components/popover/footer';
