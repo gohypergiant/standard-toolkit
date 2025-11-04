@@ -60,6 +60,47 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   };
 
   /**
+   * Override getPickingInfo to handle events from sublayers
+   * This is the correct pattern for CompositeLayer event handling
+   */
+  override getPickingInfo({
+    info,
+    mode,
+    sourceLayer,
+  }: {
+    info: PickingInfo;
+    mode?: string;
+    // biome-ignore lint/suspicious/noExplicitAny: sourceLayer type from deck.gl is not well-typed
+    sourceLayer?: any;
+  }) {
+    // Check if this picking event came from our main shapes layer
+    if (sourceLayer?.id === `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}`) {
+      // Handle click events (deck.gl uses 'query' mode for clicks)
+      if (mode === 'query') {
+        this.handleShapeClick(info);
+      }
+
+      // Handle hover events (including when mode is undefined, which is hover)
+      if (mode === 'hover' || !mode) {
+        // Update hover state
+        if (info.index !== undefined && info.index !== this.state?.hoverIndex) {
+          this.setState({ hoverIndex: info.index });
+        } else if (
+          info.index === undefined &&
+          this.state?.hoverIndex !== undefined
+        ) {
+          this.setState({ hoverIndex: undefined });
+        }
+
+        // Call hover callback
+        this.handleShapeHover(info);
+      }
+    }
+
+    return info;
+  }
+
+  /**
    * Convert shapes to GeoJSON features with shapeId in properties
    */
   private getFeaturesWithId(): EditableShape['feature'][] {
@@ -86,6 +127,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
 
     const shape = info.object.properties?._shape as EditableShape;
+
     if (shape) {
       // Emit shape selected event via bus
       shapeBus.emit(ShapeEvents.selected, { shapeId: shape.id });
@@ -103,17 +145,15 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private handleShapeHover = (info: PickingInfo): void => {
     const { onShapeHover } = this.props;
 
-    if (!onShapeHover) {
-      return;
+    // Extract shape from info if present
+    let shape: EditableShape | null = null;
+    if (info.object) {
+      shape = info.object.properties?._shape as EditableShape;
     }
 
-    if (info.object) {
-      const shape = info.object.properties?._shape as EditableShape;
-      if (shape) {
-        onShapeHover(shape);
-      }
-    } else {
-      onShapeHover(null);
+    // Call callback if provided
+    if (onShapeHover) {
+      onShapeHover(shape);
     }
   };
 
@@ -222,11 +262,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Behavior
       pickable,
       autoHighlight: false, // We handle highlighting manually
-      onClick: this.handleShapeClick,
-      onHover: (info) => {
-        this.setState({ hoverIndex: info.index });
-        this.handleShapeHover(info);
-      },
+      // Note: onClick and onHover are handled via getPickingInfo() override
 
       // Update triggers
       updateTriggers: {

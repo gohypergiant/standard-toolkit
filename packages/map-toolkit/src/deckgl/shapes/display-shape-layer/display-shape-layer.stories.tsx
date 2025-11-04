@@ -10,14 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
+import { useEmit, useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useState } from 'react';
+import { MapEvents } from '../../base-map/events';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import { ShapeEvents, type ShapeSelectedEvent } from '../shared/events';
+import {
+  type ShapeDeselectedEvent,
+  ShapeEvents,
+  type ShapeSelectedEvent,
+} from '../shared/events';
 import './fiber';
 import type { Meta, StoryObj } from '@storybook/react';
+import type { MapClickEvent } from '../../base-map/types';
 import type { ShapeId } from '../shared/types';
 
 const meta: Meta = {
@@ -35,63 +41,102 @@ const DISPLAY_MAP_ID = uuid();
  *
  * Demonstrates automatic bus integration:
  * - Click a shape to select it (emits shapes:selected via bus automatically)
+ * - Click empty space to deselect (emits shapes:deselected via bus)
  * - The highlight layer responds to selection state
  * - Selection state can be controlled via the bus from anywhere in the app
  */
 export const BasicDisplay: Story = {
   render: () => {
     const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
-    const [eventLog, setEventLog] = useState<string[]>([]);
+    const [selectedName, setSelectedName] = useState<string | undefined>();
+    const [eventLog, setEventLog] = useState<
+      Array<{ id: string; message: string }>
+    >([]);
+    const emitDeselected = useEmit<ShapeDeselectedEvent>(
+      ShapeEvents.deselected,
+    );
 
     // Listen to shape selection events emitted automatically by DisplayShapeLayer
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
       const shapeId = event.payload.shapeId;
+      const shape = mockShapes.find((s) => s.id === shapeId);
+      const shapeName = shape?.name || 'Unknown';
+
       setSelectedId(shapeId);
+      setSelectedName(shapeName);
       setEventLog((log) => [
         ...log.slice(-4),
-        `shapes:selected - ${shapeId.substring(0, 8)}...`,
+        {
+          id: `${Date.now()}-${shapeId}`,
+          message: `shapes:selected - "${shapeName}" (${shapeId.substring(0, 8)}...)`,
+        },
       ]);
     });
 
-    return (
-      <div className='flex h-dvh w-dvw flex-col'>
-        {/* Event log showing bus integration */}
-        <div className='bg-gray-800 p-4 text-white'>
-          <div className='mb-2 font-bold'>Bus Events (automatic):</div>
-          <div className='space-y-1 font-mono text-sm'>
-            {eventLog.length === 0 ? (
-              <div className='text-gray-400'>
-                Click a shape to see events...
-              </div>
-            ) : (
-              eventLog.map((log) => (
-                <div key={`${log}-${Date.now()}`} className='text-green-400'>
-                  {log}
-                </div>
-              ))
-            )}
-          </div>
-          {selectedId && (
-            <div className='mt-2 text-sm'>
-              Selected: {selectedId.substring(0, 8)}... (highlight layer active)
-            </div>
-          )}
-        </div>
+    // Listen to shape deselection events
+    useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, () => {
+      setSelectedId(undefined);
+      setSelectedName(undefined);
+      setEventLog((log) => [
+        ...log.slice(-4),
+        {
+          id: `${Date.now()}-deselected`,
+          message: 'shapes:deselected',
+        },
+      ]);
+    });
 
-        <BaseMap className='flex-1' id={DISPLAY_MAP_ID}>
+    // Listen to map clicks to detect clicks on empty space
+    useOn<MapClickEvent>(MapEvents.click, (event) => {
+      // Only emit deselect if we have a selection and clicked on empty space
+      // index is -1 when nothing is picked
+      if (
+        selectedId &&
+        event.payload.id === DISPLAY_MAP_ID &&
+        event.payload.info.index === -1
+      ) {
+        emitDeselected(null);
+      }
+    });
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={DISPLAY_MAP_ID}>
           <displayShapeLayer
             id='basic-shapes'
             data={mockShapes}
             selectedShapeId={selectedId}
             showLabels={true}
             pickable={true}
-            onShapeHover={(shape) => {
-              if (shape) {
-                console.log('Shape hovered:', shape.name);
-              }
-            }}
           />
         </BaseMap>
+
+        {/* Event log showing bus integration */}
+        <div className='absolute top-l left-l z-10 flex max-h-[calc(100vh-2rem)] w-[320px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Shape Events</p>
+
+          <div className='rounded-lg bg-info-muted p-s'>
+            <p className='mb-xs text-body-xs'>Selected Shape</p>
+            <code className='text-body-m'>{selectedName || 'None'}</code>
+          </div>
+
+          <div className='flex min-h-0 flex-1 flex-col'>
+            <p className='mb-s font-semibold text-body-m'>Event Log</p>
+            <div className='min-h-0 flex-1 overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
+              {eventLog.length === 0 ? (
+                <p className='text-body-xs text-content-disabled'>
+                  Click a shape to see events...
+                </p>
+              ) : (
+                eventLog.map((entry) => (
+                  <p key={entry.id} className='mb-xs text-body-xs'>
+                    {entry.message}
+                  </p>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   },

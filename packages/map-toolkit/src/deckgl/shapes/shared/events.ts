@@ -13,7 +13,7 @@
 'use client';
 
 import type { Payload } from '@accelint/bus';
-import type { EditableShape, EditMode, ShapeId } from './types';
+import type { EditMode, ShapeId } from './types';
 
 /**
  * Shape lifecycle and interaction events
@@ -74,7 +74,7 @@ export type ShapeDrawingEvent = Payload<
 export type ShapeDrawnEvent = Payload<
   'shapes:drawn',
   {
-    shape: EditableShape;
+    shapeId: ShapeId;
   }
 >;
 
@@ -88,7 +88,7 @@ export type ShapeEditingEvent = Payload<
 export type ShapeUpdatedEvent = Payload<
   'shapes:updated',
   {
-    shape: EditableShape;
+    shapeId: ShapeId;
   }
 >;
 
@@ -97,7 +97,7 @@ export type ShapeCancelledEvent = Payload<'shapes:cancelled', null>;
 export type ShapeSavedEvent = Payload<
   'shapes:saved',
   {
-    shape: EditableShape;
+    shapeId: ShapeId;
   }
 >;
 

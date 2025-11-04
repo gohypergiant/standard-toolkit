@@ -18,7 +18,7 @@ import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
-import { BASE_MAP_STYLE, PARAMETERS } from './constants';
+import { BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
@@ -45,6 +45,12 @@ export type BaseMapProps = DeckglProps & {
    * from components rendered outside of the BaseMap's children (i.e., as siblings).
    */
   id: UniqueId;
+  /**
+   * Picking radius in pixels (default: 5).
+   * Creates a detection radius around the pointer for pickable objects.
+   * Higher values make thin lines and small shapes easier to hover.
+   */
+  pickingRadius?: number;
 };
 
 /**
@@ -127,6 +133,7 @@ export function BaseMap({
   onClick,
   onHover,
   parameters,
+  pickingRadius,
   ...rest
 }: BaseMapProps) {
   const deckglInstance = useDeckgl();
@@ -161,7 +168,7 @@ export function BaseMap({
       onClick?.(info, event);
 
       // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, ...infoRest } = info;
+      const { viewport, layer, sourceLayer, ...infoRest } = info;
       const {
         stopImmediatePropagation,
         stopPropagation,
@@ -189,7 +196,8 @@ export function BaseMap({
       onHover?.(info, event);
 
       // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, ...infoRest } = info;
+      const { viewport, layer, sourceLayer, ...infoRest } = info;
+
       const {
         stopImmediatePropagation,
         stopPropagation,
@@ -217,6 +225,7 @@ export function BaseMap({
           controller
           interleaved
           useDevicePixels={false}
+          pickingRadius={pickingRadius ?? PICKING_RADIUS}
           onHover={handleMapHover}
           onClick={handleMapClick}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.

@@ -117,9 +117,13 @@ export interface StyledFeature extends Feature {
 export interface EditableShape {
   /** Unique identifier */
   id: ShapeId;
-  /** Display name */
+  /** Full shape name used internally and in UI */
   name: string;
-  /** Optional label to show on map */
+  /**
+   * Optional short display label shown on the map
+   * If not provided, the `name` property will be used instead
+   * Useful for showing abbreviated text on the map (e.g., "NYC" vs "New York City Office")
+   */
   label?: string;
   /** Shape type */
   shapeType: ShapeFeatureTypeValues;

@@ -129,7 +129,12 @@ export function getLabelPosition2d(
 
 /**
  * Get label text for a shape
- * Prioritizes label property over name
+ *
+ * Returns the display label for the shape on the map.
+ * - `label`: Optional short display name shown on the map (e.g., "NYC")
+ * - `name`: Full shape name used internally (e.g., "New York City Office")
+ *
+ * If `label` is not provided, falls back to using `name`.
  */
 export function getLabelText(shape: EditableShape): string {
   return shape.label || shape.name;
