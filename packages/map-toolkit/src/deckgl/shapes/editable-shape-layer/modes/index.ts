@@ -33,7 +33,7 @@ export const ModifyMode = BaseModifyMode;
 export const ViewMode = BaseViewMode;
 
 /**
- * Map of edit shape modes to their mode class instances
+ * Map of edit shape modes to their mode class constructors
  */
 export const SHAPE_MODES = {
   view: ViewMode,
@@ -52,9 +52,27 @@ export function getModeClass(mode: EditShapeMode) {
 }
 
 /**
- * Create a mode instance for a given edit shape mode
+ * Stable mode instances cached at module level.
+ * Creating new mode instances on every render causes deck.gl assertion failures
+ * because nebula.gl expects stable mode references.
+ */
+const MODE_INSTANCES = {
+  view: new ViewMode(),
+  drawCircle: new DrawCircleMode(),
+  drawPolygon: new DrawPolygonMode(),
+  drawLine: new DrawLineMode(),
+  drawPoint: new DrawPointMode(),
+  modify: new ModifyMode(),
+} as const;
+
+/**
+ * Get a stable mode instance for a given edit shape mode.
+ * Returns the same instance on subsequent calls to prevent layer recreation.
+ *
+ * IMPORTANT: Mode instances are cached to satisfy deck.gl's requirement
+ * for stable object references. Creating new instances on every render
+ * causes "deck.gl: assertion failed" errors.
  */
 export function createMode(mode: EditShapeMode) {
-  const ModeClass = getModeClass(mode);
-  return new ModeClass();
+  return MODE_INSTANCES[mode];
 }

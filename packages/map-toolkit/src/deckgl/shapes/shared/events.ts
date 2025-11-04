@@ -41,6 +41,8 @@ export const ShapeEvents = {
   deselected: 'shapes:deselected',
   /** Validation error (consumer integrates with NoticeList) */
   validationError: 'shapes:validation-error',
+  /** Mode changed (for map interaction coordination) */
+  modeChanged: 'shapes:mode-changed',
 } as const;
 
 export type ShapeEventType = (typeof ShapeEvents)[keyof typeof ShapeEvents];
@@ -125,6 +127,13 @@ export type ShapeValidationErrorEvent = Payload<
   }
 >;
 
+export type ShapeModeChangedEvent = Payload<
+  'shapes:mode-changed',
+  {
+    mode: EditShapeMode;
+  }
+>;
+
 /**
  * Union of all shape event types
  */
@@ -138,7 +147,8 @@ export type ShapeEvent =
   | ShapeDeletedEvent
   | ShapeSelectedEvent
   | ShapeDeselectedEvent
-  | ShapeValidationErrorEvent;
+  | ShapeValidationErrorEvent
+  | ShapeModeChangedEvent;
 
 /**
  * Edit shape modes for EditableShapeLayer

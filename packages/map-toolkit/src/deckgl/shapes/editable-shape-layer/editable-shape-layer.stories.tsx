@@ -12,12 +12,13 @@
 
 import { uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import './fiber';
 import { useShapeEdits } from './hooks';
-import { createShapeStore, type ShapeStore } from './store';
+import { SimpleEditableLayer } from './simple-editable-layer';
+import { createShapeStore, type ShapeStore, useShapeStore } from './store';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { EditShapeMode } from '../shared/events';
 import type { EditableShape, ShapeId } from '../shared/types';
@@ -29,8 +30,9 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Stable ID for Storybook
+// Stable IDs for Storybook - generated once at module level
 const EDITABLE_MAP_ID = uuid();
+const LAYER_ID = `editable-shapes-${uuid()}`;
 
 // Use mock shapes from fixtures
 const mockInitialShapes: EditableShape[] = mockShapes;
@@ -49,8 +51,10 @@ function EditableShapeDemo({
     createShapeStore({ shapes: initialShapes, mode: initialMode }),
   );
   const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
-  const [hoveredId, setHoveredId] = useState<ShapeId | undefined>();
   const [mode, setMode] = useState<EditShapeMode>(initialMode);
+
+  // Subscribe to store updates
+  const storeState = useShapeStore(store);
 
   const { handleEdit } = useShapeEdits({ store });
 
@@ -58,6 +62,26 @@ function EditableShapeDemo({
   useEffect(() => {
     store.setMode(mode);
   }, [mode, store]);
+
+  // Memoize callbacks to prevent layer recreation on every render
+  const handleShapeClick = useCallback((shape: EditableShape) => {
+    console.log('Shape clicked:', shape);
+    setSelectedId(shape.id);
+    // Automatically enter modify mode when a shape is clicked
+    setMode('modify');
+  }, []);
+
+  const handleShapeHover = useCallback((shape: EditableShape | null) => {
+    console.log('Shape hovered:', shape);
+  }, []);
+
+  // Two-layer architecture matching NGC2:
+  // 1. DisplayShapeLayer: Shows ALL shapes (read-only)
+  // 2. EditableShapeLayer: Shows ONLY the selected shape (when in modify mode)
+  //
+  // Note: Unlike React components, deck.gl layers should NOT be wrapped in useMemo.
+  // deck.gl handles layer stability internally - wrapping in useMemo with data dependencies
+  // causes unnecessary layer recreation and deck.gl assertion errors.
 
   return (
     <div className='flex h-dvh w-dvw flex-col'>
@@ -106,28 +130,33 @@ function EditableShapeDemo({
         >
           Modify
         </Button>
-        <span className='ml-4'>Shapes: {store.shapes.length}</span>
+        <span className='ml-4'>Shapes: {storeState.shapes.length}</span>
       </div>
 
       {/* Map */}
       <BaseMap className='flex-1' id={EDITABLE_MAP_ID}>
-        <editableShapeLayer
-          id='editable-shapes'
+        {/* Display layer: shows all shapes in read-only mode */}
+        <displayShapeLayer
+          id={`${LAYER_ID}-display`}
           data={store.shapes}
-          mode={mode}
           selectedShapeId={selectedId}
-          hoveredShapeId={hoveredId}
           showLabels={true}
-          pickable={true}
-          onShapeClick={(shape: EditableShape) => {
-            console.log('Shape clicked:', shape);
-            setSelectedId(shape.id);
-          }}
-          onShapeHover={(shape: EditableShape | null) => {
-            setHoveredId(shape?.id);
-          }}
-          onEdit={handleEdit}
+          pickable={mode !== 'modify'} // Disable picking in modify mode
+          onShapeClick={handleShapeClick}
+          onShapeHover={handleShapeHover}
         />
+        {/* Edit layer: shows only the selected shape for editing */}
+        {/* Only render when not in view mode to avoid unnecessary layer mounting */}
+        {mode !== 'view' && (
+          <SimpleEditableLayer
+            id={`${LAYER_ID}-edit`}
+            data={store.shapes}
+            mode={mode}
+            selectedShapeId={selectedId}
+            pickable={true}
+            onEdit={handleEdit}
+          />
+        )}
       </BaseMap>
     </div>
   );

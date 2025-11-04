@@ -12,8 +12,13 @@
 
 'use client';
 
+import { Broadcast } from '@accelint/bus';
 import { useSyncExternalStore } from 'react';
-import type { EditShapeMode } from '../shared/events';
+import {
+  type EditShapeMode,
+  type ShapeEvent,
+  ShapeEvents,
+} from '../shared/events';
 import type {
   EditableShape,
   ShapeFeatureTypeValues,
@@ -168,6 +173,10 @@ export function createShapeStore(
     setMode: (mode) => {
       state = { ...state, mode };
       notifyListeners();
+      // Emit mode change event for map interaction coordination
+      Broadcast.getInstance<ShapeEvent>().emit(ShapeEvents.modeChanged, {
+        mode,
+      });
     },
 
     setEditingShape: (shape) => {

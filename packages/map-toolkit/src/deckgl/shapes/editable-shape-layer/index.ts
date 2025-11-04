@@ -13,9 +13,11 @@
 'use client';
 
 import { CompositeLayer } from '@deck.gl/core';
+import { PathStyleExtension } from '@deck.gl/extensions';
 import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
 import { createShapeLabelLayer } from '../display-shape-layer/shape-label-layer';
 import {
+  getDashArray,
   getFillColor,
   getStrokeColor,
   getStrokeWidth,
@@ -33,6 +35,27 @@ import type {
 import type { EditShapeMode } from '../shared/events';
 import type { EditableShape, ShapeFeature, ShapeId } from '../shared/types';
 
+/**
+ * Stable PathStyleExtension instance to prevent layer recreation on every render.
+ * Creating this at module level ensures the same object identity is used across renders,
+ * which prevents deck.gl from thinking the layer configuration has changed.
+ */
+const PATH_STYLE_EXTENSION = new PathStyleExtension({ dash: true });
+
+/**
+ * Stable accessor functions for _subLayerProps.geojson
+ * These must be defined at module level to maintain stable function identities.
+ * Creating new functions on every render causes deck.gl to think the layer config changed.
+ */
+// biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer color accessor signature
+const STABLE_GET_FILL_COLOR = (f: any) => getFillColor(f) as any;
+// biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer color accessor signature
+const STABLE_GET_LINE_COLOR = (f: any) => getStrokeColor(f) as any;
+// biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor signature
+const STABLE_GET_LINE_WIDTH = (f: any) => getStrokeWidth(f);
+// biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor signature
+const STABLE_GET_DASH_ARRAY = (f: any) => getDashArray(f);
+
 export interface EditableShapeLayerProps {
   id?: string;
   data: EditableShape[];
@@ -43,9 +66,7 @@ export interface EditableShapeLayerProps {
   pickable?: boolean;
   highlightColor?: [number, number, number, number];
 
-  // Interaction callbacks
-  onShapeClick?: (shape: EditableShape, event: any) => void;
-  onShapeHover?: (shape: EditableShape | null, event: any) => void;
+  // Edit callback - called when shape geometry is modified
   onEdit?: (
     editType: string,
     updatedData: FeatureCollection,
@@ -73,14 +94,50 @@ export class EditableShapeLayer extends CompositeLayer<EditableShapeLayerProps> 
 
   /**
    * Convert EditableShape[] to FeatureCollection for EditableGeoJsonLayer
+   *
+   * IMPORTANT: EditableGeoJsonLayer should only receive a SINGLE shape at a time.
+   * This matches NGC2's architecture where:
+   * - DisplayShapeLayer shows ALL shapes (read-only)
+   * - EditableShapeLayer shows ONLY the shape being edited
+   *
+   * Rendering multiple shapes in EditableGeoJsonLayer causes exponential
+   * interaction complexity and infinite render loops.
    */
   getFeatureCollection(): FeatureCollection {
-    const { data } = this.props;
-    return {
+    const { data, selectedShapeId, mode } = this.props;
+
+    let shapesToEdit: EditableShape[] = [];
+
+    // Only include the selected shape when in modify mode
+    if (mode === 'modify' && selectedShapeId) {
+      const selectedShape = data.find((s) => s.id === selectedShapeId);
+      if (selectedShape) {
+        shapesToEdit = [selectedShape];
+      }
+    }
+    // For drawing modes: empty array (new shape will be added by deck.gl)
+    // For view mode: empty array (DisplayShapeLayer handles viewing)
+
+    const featureCollection: FeatureCollection = {
       type: 'FeatureCollection',
       // biome-ignore lint/suspicious/noExplicitAny: GeoJSON FeatureCollection type compatibility
-      features: data.map((shape) => shape.feature) as any,
+      features: shapesToEdit.map((shape) => shape.feature) as any,
     };
+
+    // Debug logging
+    if (mode === 'modify' && shapesToEdit.length > 0) {
+      console.log('[EditableShapeLayer] Feature collection for modify mode:', {
+        mode,
+        selectedShapeId,
+        featureCount: featureCollection.features.length,
+        firstFeature: featureCollection.features[0],
+        geometryType: featureCollection.features[0]?.geometry?.type,
+        coordinatesLength:
+          featureCollection.features[0]?.geometry?.coordinates?.length,
+      });
+    }
+
+    return featureCollection;
   }
 
   /**
@@ -92,36 +149,18 @@ export class EditableShapeLayer extends CompositeLayer<EditableShapeLayerProps> 
   }
 
   /**
-   * Handle click on shape
+   * NOTE: We do NOT override getPickingInfo for EditableShapeLayer.
+   *
+   * EditableGeoJsonLayer handles its own picking internally for drag operations
+   * and edit handle interactions. Overriding getPickingInfo here interferes with
+   * the drag events and prevents edit handles from being draggable.
+   *
+   * This differs from DisplayShapeLayer which DOES override getPickingInfo
+   * because it needs custom click/hover handling for shape selection.
+   *
+   * EditableShapeLayer's onClick/onHover are passed directly to EditableGeoJsonLayer
+   * and do not require getPickingInfo interception.
    */
-  handleClick = (info: any, event: any) => {
-    const { onShapeClick, pickable } = this.props;
-    if (!(pickable && onShapeClick)) {
-      return;
-    }
-
-    const feature = info?.object;
-    if (feature) {
-      const shape = this.findShapeByFeature(feature);
-      if (shape) {
-        onShapeClick(shape, event);
-      }
-    }
-  };
-
-  /**
-   * Handle hover on shape
-   */
-  handleHover = (info: any, event: any) => {
-    const { onShapeHover, pickable } = this.props;
-    if (!(pickable && onShapeHover)) {
-      return;
-    }
-
-    const feature = info?.object;
-    const shape = feature ? this.findShapeByFeature(feature) : null;
-    onShapeHover(shape ?? null, event);
-  };
 
   /**
    * Handle edits from EditableGeoJsonLayer
@@ -142,45 +181,74 @@ export class EditableShapeLayer extends CompositeLayer<EditableShapeLayerProps> 
    * Render the editable layer
    */
   renderEditableLayer(): EditableGeoJsonLayer {
-    const { id = SHAPE_LAYER_IDS.EDIT, mode = 'view', data } = this.props;
+    const {
+      id = SHAPE_LAYER_IDS.EDIT,
+      mode = 'view',
+      selectedShapeId,
+    } = this.props;
 
     const featureCollection = this.getFeatureCollection();
     const modeInstance = createMode(mode);
+
+    // Ensure selectedFeatureIndexes is only set when we actually have features
+    // Setting [0] with empty features causes nebula.gl to crash with undefined position errors
+    const hasFeatures = featureCollection.features.length > 0;
+    const selectedFeatureIndexes =
+      mode === 'modify' && selectedShapeId && hasFeatures ? [0] : [];
+
+    // Debug: Log layer creation
+    console.log('[EditableShapeLayer] Creating EditableGeoJsonLayer:', {
+      id,
+      mode,
+      modeInstance,
+      modeInstanceIdentity: modeInstance === createMode(mode),
+      dataIdentity: featureCollection,
+      hasFeatures,
+      selectedFeatureIndexes,
+    });
 
     // biome-ignore lint/suspicious/noExplicitAny: EditableGeoJsonLayer data type compatibility
     return new EditableGeoJsonLayer({
       id,
       data: featureCollection as any,
       mode: modeInstance,
-
-      // Styling for filled geometries (Polygon, Circle)
-      filled: true,
-      // biome-ignore lint/suspicious/noExplicitAny: EditableGeoJsonLayer color accessor signature
-      getFillColor: (f: any) => getFillColor(f) as any,
-
-      // Styling for line geometries (LineString, Polygon outline)
-      stroked: true,
-      // biome-ignore lint/suspicious/noExplicitAny: EditableGeoJsonLayer color accessor signature
-      getLineColor: (f: any) => getStrokeColor(f) as any,
-      // biome-ignore lint/suspicious/noExplicitAny: Feature type from deck.gl
-      getLineWidth: (f: any) => {
-        const shape = data.find((s) => s.feature === f);
-        return shape ? getStrokeWidth(shape.feature) : 2;
-      },
-      lineWidthUnits: 'pixels',
-      lineWidthMinPixels: 1,
-      lineWidthMaxPixels: 20,
+      // Tell deck.gl which feature is selected for editing (shows edit handles)
+      selectedFeatureIndexes,
 
       // Interaction
       pickable: this.props.pickable,
-      onClick: this.handleClick,
-      onHover: this.handleHover,
       onEdit: this.handleEdit,
 
       // Edit handles styling
       editHandlePointRadiusScale: 2,
       editHandlePointRadiusMinPixels: 4,
       editHandlePointRadiusMaxPixels: 8,
+
+      // Sub-layer props - configure all styling through geojson sublayer like NGC2
+      // This approach avoids updateTriggers issues and lets deck.gl handle updates naturally
+      // IMPORTANT: Use stable module-level functions to prevent layer recreation
+      // biome-ignore lint/style/useNamingConvention: EditableGeoJsonLayer requires _subLayerProps naming
+      _subLayerProps: {
+        geojson: {
+          // Filled geometries (Polygon, Circle)
+          filled: true,
+          getFillColor: STABLE_GET_FILL_COLOR,
+
+          // Line geometries (LineString, Polygon outline)
+          stroked: true,
+          getLineColor: STABLE_GET_LINE_COLOR,
+          getLineWidth: STABLE_GET_LINE_WIDTH,
+          lineWidthUnits: 'pixels',
+          lineWidthMinPixels: 1,
+          lineWidthMaxPixels: 20,
+
+          // Dash patterns
+          getDashArray: STABLE_GET_DASH_ARRAY,
+          extensions: [PATH_STYLE_EXTENSION],
+        },
+        // Note: guides sublayer config omitted - uses EditableGeoJsonLayer defaults
+        // NGC2 only configures guides for circles (to hide edit handles)
+      },
     });
   }
 
@@ -227,11 +295,8 @@ export class EditableShapeLayer extends CompositeLayer<EditableShapeLayerProps> 
     | ReturnType<typeof createEditHighlightSelectedLayer>
     | ReturnType<typeof createShapeLabelLayer>
   > {
-    return [
-      ...this.renderHighlightLayers(),
-      this.renderEditableLayer(),
-      this.renderLabelsLayer(),
-    ].filter(Boolean) as Array<
+    // Temporarily simplified - only return editable layer to test if highlight layers are causing issues
+    return [this.renderEditableLayer()].filter(Boolean) as Array<
       | EditableGeoJsonLayer
       | ReturnType<typeof createEditHighlightSelectedLayer>
       | ReturnType<typeof createShapeLabelLayer>

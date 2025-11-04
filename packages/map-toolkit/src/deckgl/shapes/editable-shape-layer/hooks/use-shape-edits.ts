@@ -15,10 +15,13 @@
 import { useEmit } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useCallback } from 'react';
-import { ShapeEvents } from '../../shared/events';
+import { type ShapeEvent, ShapeEvents } from '../../shared/events';
 import { emitValidationErrors } from '../utils/error-handling';
 import { validateShape } from '../utils/validation';
-import type { FeatureCollection } from '@deck.gl-community/editable-layers';
+import type {
+  EditAction,
+  FeatureCollection,
+} from '@deck.gl-community/editable-layers';
 import type {
   EditableShape,
   ShapeFeature,
@@ -83,20 +86,19 @@ function handleAddFeature(
   store.addShape(newShape);
 
   // Emit event
-  emit(ShapeEvents.drawn, { shape: newShape });
+  emit(ShapeEvents.drawn, { shapeId: newShape.id });
 }
 
 /**
  * Handle updating an existing feature
  */
 function handleUpdateFeature(
-  // biome-ignore lint/suspicious/noExplicitAny: editContext type from deck.gl-community
-  editContext: any,
+  features: ShapeFeature[],
   store: ShapeStore,
   emit: ReturnType<typeof useEmit>,
   onValidationError?: (errors: string[]) => void,
 ): void {
-  const updatedFeature = editContext?.updatedData?.features?.[0];
+  const updatedFeature = features[0];
   if (!updatedFeature) {
     return;
   }
@@ -129,25 +131,28 @@ function handleUpdateFeature(
   store.updateShape(existingShape.id, { feature: updatedFeature });
 
   // Emit event
-  emit(ShapeEvents.updated, { shape: updatedShape });
+  emit(ShapeEvents.updated, { shapeId: updatedShape.id });
 }
 
 /**
  * Handle removing a feature
+ * Note: NGC2 doesn't implement feature removal, this is for future use
  */
 function handleRemoveFeature(
-  // biome-ignore lint/suspicious/noExplicitAny: editContext type from deck.gl-community
-  editContext: any,
+  features: ShapeFeature[],
   store: ShapeStore,
   emit: ReturnType<typeof useEmit>,
 ): void {
-  const removedFeature = editContext?.featureIndexes?.[0];
-  if (removedFeature === undefined) {
-    return;
-  }
+  // When a feature is removed, updatedData.features will not include it
+  // We need to find which shape is missing by comparing with current shapes
+  const remainingShapeIds = new Set(
+    features.map((f) => f.properties?.shapeId).filter(Boolean),
+  );
 
-  // Find the corresponding shape
-  const removedShape = store.shapes[removedFeature];
+  const removedShape = store.shapes.find(
+    (s) => !remainingShapeIds.has(s.feature.properties?.shapeId),
+  );
+
   if (!removedShape) {
     return;
   }
@@ -196,15 +201,15 @@ function handleOtherEdit(
  */
 export function useShapeEdits(options: UseShapeEditsOptions) {
   const { store, defaultStyleProperties, onValidationError } = options;
-  const emit = useEmit();
+  const emit = useEmit<ShapeEvent>();
 
   /**
    * Handle edit events from EditableGeoJsonLayer
    */
   const handleEdit = useCallback(
-    // biome-ignore lint/suspicious/noExplicitAny: editContext type from deck.gl-community
-    (editType: string, updatedData: FeatureCollection, editContext: any) => {
+    (editAction: EditAction<FeatureCollection>) => {
       try {
+        const { editType, updatedData } = editAction;
         const features = updatedData.features as ShapeFeature[];
 
         switch (editType) {
@@ -219,11 +224,11 @@ export function useShapeEdits(options: UseShapeEditsOptions) {
             break;
 
           case 'updateFeature':
-            handleUpdateFeature(editContext, store, emit, onValidationError);
+            handleUpdateFeature(features, store, emit, onValidationError);
             break;
 
           case 'removeFeature':
-            handleRemoveFeature(editContext, store, emit);
+            handleRemoveFeature(features, store, emit);
             break;
 
           default:

@@ -10,18 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
+import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
 import { extend } from '@deckgl-fiber-renderer/dom';
+import { DisplayShapeLayer } from '../display-shape-layer';
 import { EditableShapeLayer } from './index';
+import type { DisplayShapeLayerProps } from '../display-shape-layer/types';
 import type { EditableShapeLayerProps } from './index';
 
-extend({ EditableShapeLayer });
+extend({ DisplayShapeLayer, EditableShapeLayer, EditableGeoJsonLayer });
 
 declare global {
   namespace React {
     // biome-ignore lint/style/useNamingConvention: Built-in React namespace.
     namespace JSX {
       interface IntrinsicElements {
+        displayShapeLayer: DisplayShapeLayerProps;
         editableShapeLayer: EditableShapeLayerProps;
+        // biome-ignore lint/suspicious/noExplicitAny: EditableGeoJsonLayer props are complex
+        editableGeoJsonLayer: any;
       }
     }
   }
