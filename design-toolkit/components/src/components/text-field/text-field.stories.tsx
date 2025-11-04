@@ -44,3 +44,66 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: TextField,
 };
+
+export const WithPrefix: Story = {
+  args: {
+    label: 'Price',
+    inputProps: {
+      placeholder: '0.00',
+      type: 'number',
+      prefix: '$',
+    },
+    description: 'Enter the price in dollars',
+  },
+};
+
+export const WithSuffix: Story = {
+  args: {
+    label: 'Weight',
+    inputProps: {
+      placeholder: '0',
+      type: 'number',
+      suffix: 'kg',
+    },
+    description: 'Enter the weight in kilograms',
+  },
+};
+
+export const WithPrefixAndSuffix: Story = {
+  args: {
+    label: 'Temperature Range',
+    inputProps: {
+      placeholder: '0',
+      type: 'number',
+      prefix: '~',
+      suffix: '°C',
+    },
+    description: 'Approximate temperature in Celsius',
+  },
+};
+
+export const PrefixWithClearable: Story = {
+  args: {
+    label: 'URL',
+    inputProps: {
+      placeholder: 'example.com',
+      type: 'text',
+      prefix: 'https://',
+      isClearable: true,
+    },
+    description: 'Enter website URL',
+  },
+};
+
+export const SuffixWithClearable: Story = {
+  args: {
+    label: 'Distance',
+    inputProps: {
+      placeholder: '0',
+      type: 'number',
+      suffix: 'km',
+      isClearable: true,
+    },
+    description: 'Enter distance with clear button',
+  },
+};

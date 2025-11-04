@@ -38,3 +38,46 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: Input,
 };
+
+export const WithPrefix: Story = {
+  args: {
+    placeholder: '0.00',
+    type: 'number',
+    prefix: '$',
+  },
+};
+
+export const WithSuffix: Story = {
+  args: {
+    placeholder: '0',
+    type: 'number',
+    suffix: 'kg',
+  },
+};
+
+export const WithPrefixAndSuffix: Story = {
+  args: {
+    placeholder: '0',
+    type: 'number',
+    prefix: '~',
+    suffix: '°C',
+  },
+};
+
+export const PrefixWithClearable: Story = {
+  args: {
+    placeholder: 'example.com',
+    type: 'text',
+    prefix: 'https://',
+    isClearable: true,
+  },
+};
+
+export const SuffixWithClearable: Story = {
+  args: {
+    placeholder: '0',
+    type: 'number',
+    suffix: 'km',
+    isClearable: true,
+  },
+};

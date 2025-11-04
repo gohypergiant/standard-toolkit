@@ -24,8 +24,12 @@ export type InputProps = Omit<AriaInputProps, 'className' | 'size' | 'type'> &
       sizer?: string;
       input?: AriaInputProps['className'];
       clear?: ButtonProps['className'];
+      prefix?: string;
+      suffix?: string;
     };
     size?: 'medium' | 'small';
     isClearable?: boolean;
     isInvalid?: boolean;
+    prefix?: string;
+    suffix?: string;
   };

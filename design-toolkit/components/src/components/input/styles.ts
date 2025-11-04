@@ -15,33 +15,38 @@ import { tv } from '@/lib/utils';
 export const InputStylesDefaults = {
   autoSize: false,
   type: 'text',
-  isClearable: false,
 } as const;
 
 export const InputStyles = tv({
   slots: {
-    container:
-      'group/input grid items-center [--length:attr(data-length_type(<number>),0)] [grid-template-columns:minmax(0,1fr)_min-content]',
-    sizer: [
-      'font-display [grid-column:1/-1] [grid-row:1]',
-      'group-size-medium/input:text-body-s group-size-small/input:text-body-xs',
+    container: [
+      'group/input w-full',
+      'size-medium:text-body-s size-small:text-body-xs',
     ],
-    input: [
-      'fg-primary-bold block w-full rounded-medium py-xs pr-[calc(var(--room)+var(--spacing-s))] pl-s font-display outline outline-interactive',
+    sizer: [
+      'flex w-full items-center gap-xs rounded-medium py-xs pr-xs pl-s font-display outline outline-interactive',
       'enabled:group-focus-visible-within/input:outline-accent-primary-bold',
       'enabled:group-hover/input:outline-interactive-hover',
       'enabled:group-pressed/input:outline-interactive-pressed',
       'enabled:group-invalid/input:outline-serious-bold',
       'disabled:cursor-not-allowed disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
     ],
+    input: [
+      'fg-primary-bold min-w-0 flex-1 font-display outline-none',
+      'disabled:cursor-not-allowed disabled:text-disabled disabled:placeholder:text-disabled',
+    ],
+    prefix: [
+      'fg-primary-muted pointer-events-none',
+      'group-disabled/input:text-disabled',
+    ],
+    suffix: [
+      'fg-primary-muted pointer-events-none',
+      'group-disabled/input:text-disabled',
+    ],
     clear: [
-      '[grid-column:2/-1] [grid-row:1]',
-      'group-size-medium/input:mr-xs group-size-small/input:mr-xxs',
-      'enabled:fg-info-bold enabled:bg-transparent',
-      'enabled:focus-visible:fg-info-hover enabled:focus-visible:bg-transparent',
-      'enabled:hover:fg-info-hover enabled:hover:bg-transparent',
-      'group-empty/input:invisible',
-      'group-not-empty/input:group-not-focus-within/input:invisible',
+      'hidden min-w-0 group-focus-within/input:group-not-data-empty/input:block',
+      'enabled:fg-info-bold enabled:focus-visible:fg-info-hover enabled:hover:fg-info-hover',
+      '-my-xs group-size-small/input:p-0!', // definitely a bit of a hack!
     ],
   },
   variants: {
@@ -76,14 +81,6 @@ export const InputStyles = tv({
       url: '',
       week: '',
     },
-    isClearable: {
-      false: {
-        container: '[--room:0px]',
-      },
-      true: {
-        container: '[--room:20px]',
-      },
-    },
   },
   compoundVariants: [
     {
@@ -104,16 +101,6 @@ export const InputStyles = tv({
         sizer: [
           'group-size-medium/input:min-w-[160px] group-size-medium/input:max-w-[400px]',
           'group-size-small/input:min-w-[80px] group-size-small/input:max-w-[200px]',
-        ],
-      },
-    },
-    {
-      autoSize: true,
-      type: ['number', 'text'],
-      className: {
-        sizer: [
-          'group-size-medium/input:w-[calc((var(--length)*1ch)+((var(--length)-1)*var(--typography-body-s-spacing))+(var(--spacing-s)*2)+var(--room))]',
-          'group-size-small/input:w-[calc((var(--length)*1ch)+((var(--length)-1)*var(--typography-body-xs-spacing))+(var(--spacing-s)*2)+var(--room))] group-size-small/input:min-w-[calc(2ch+((var(--length)-1)*var(--typography-body-xs-spacing))+(var(--spacing-s)*2)+var(--room))]',
         ],
       },
     },

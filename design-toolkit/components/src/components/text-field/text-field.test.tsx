@@ -79,4 +79,103 @@ describe('TextField', () => {
 
     expect(screen.getByText(description)).toBeInTheDocument();
   });
+
+  describe('prefix', () => {
+    it('should render input with prefix', () => {
+      const prefix = '$';
+      setup({
+        label: 'Price',
+        inputProps: { prefix },
+      });
+
+      expect(screen.getByText(prefix)).toBeInTheDocument();
+    });
+
+    it('should pass prefix className through classNames', () => {
+      const prefix = '€';
+      const customClass = 'custom-prefix-class';
+      setup({
+        label: 'Price',
+        inputProps: { prefix },
+        classNames: {
+          input: { prefix: customClass },
+        },
+      });
+
+      const prefixElement = screen.getByText(prefix);
+      expect(prefixElement.className).toContain(customClass);
+    });
+  });
+
+  describe('suffix', () => {
+    it('should render input with suffix', () => {
+      const suffix = 'kg';
+      setup({
+        label: 'Weight',
+        inputProps: { suffix },
+      });
+
+      expect(screen.getByText(suffix)).toBeInTheDocument();
+    });
+
+    it('should pass suffix className through classNames', () => {
+      const suffix = '%';
+      const customClass = 'custom-suffix-class';
+      setup({
+        label: 'Percentage',
+        inputProps: { suffix },
+        classNames: {
+          input: { suffix: customClass },
+        },
+      });
+
+      const suffixElement = screen.getByText(suffix);
+      expect(suffixElement.className).toContain(customClass);
+    });
+  });
+
+  describe('prefix and suffix together', () => {
+    it('should render both prefix and suffix', () => {
+      const prefix = '~';
+      const suffix = '°C';
+      setup({
+        label: 'Temperature',
+        inputProps: { prefix, suffix },
+      });
+
+      expect(screen.getByText(prefix)).toBeInTheDocument();
+      expect(screen.getByText(suffix)).toBeInTheDocument();
+    });
+
+    it('should work with description', () => {
+      const prefix = '$';
+      const suffix = 'USD';
+      const description = 'Enter amount in US dollars';
+      setup({
+        label: 'Amount',
+        inputProps: { prefix, suffix },
+        description,
+      });
+
+      expect(screen.getByText(description)).toBeInTheDocument();
+      expect(screen.getByText(prefix)).toBeInTheDocument();
+      expect(screen.getByText(suffix)).toBeInTheDocument();
+    });
+
+    it('should work with validation error', () => {
+      const prefix = '$';
+      const suffix = 'USD';
+      const errorMessage = 'Amount is required';
+      setup({
+        label: 'Amount',
+        inputProps: { prefix, suffix },
+        isInvalid: true,
+        errorMessage,
+      });
+
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
+      expect(screen.getByText(prefix)).toBeInTheDocument();
+      expect(screen.getByText(suffix)).toBeInTheDocument();
+    });
+  });
 });

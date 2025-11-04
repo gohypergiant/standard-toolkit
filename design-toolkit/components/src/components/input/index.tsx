@@ -24,7 +24,9 @@ import {
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { InputContext } from './context';
+import { Prefix } from './prefix';
 import { InputStyles, InputStylesDefaults } from './styles';
+import { Suffix } from './suffix';
 import type { ChangeEvent } from 'react';
 import type { InputProps } from './types';
 
@@ -71,9 +73,11 @@ export function Input({ ref, ...props }: InputProps) {
     defaultValue = '',
     disabled,
     placeholder,
+    prefix,
     readOnly,
     required,
     size = 'medium',
+    suffix,
     type = InputStylesDefaults.type,
     value: valueProp,
     isClearable,
@@ -101,7 +105,6 @@ export function Input({ ref, ...props }: InputProps) {
         className: classNames?.container,
         autoSize,
         type,
-        isClearable,
       })}
       data-disabled={disabled || null}
       data-empty={isEmpty || null}
@@ -117,14 +120,14 @@ export function Input({ ref, ...props }: InputProps) {
           className: classNames?.sizer,
           autoSize,
           type,
-          isClearable,
         })}
       >
+        <Prefix className={classNames?.prefix} prefix={prefix} />
         <AriaInput
           {...rest}
           ref={ref}
           className={composeRenderProps(classNames?.input, (className) =>
-            input({ className, autoSize, type, isClearable }),
+            input({ className, autoSize, type }),
           )}
           disabled={disabled}
           placeholder={placeholder}
@@ -145,27 +148,28 @@ export function Input({ ref, ...props }: InputProps) {
             }
           }}
         />
-      </div>
-      {isClearable && (
-        <Button
-          className={composeRenderProps(classNames?.clear, (className) =>
-            clear({ className, autoSize, type, isClearable }),
-          )}
-          excludeFromTabOrder
-          size='small'
-          variant='icon'
-          isDisabled={disabled}
-          onPress={() => {
-            handleChange(clearInputEvent);
+        <Suffix className={classNames?.suffix} suffix={suffix} />
+        {isClearable && (
+          <Button
+            className={composeRenderProps(classNames?.clear, (className) =>
+              clear({ autoSize, className, type }),
+            )}
+            excludeFromTabOrder
+            size='small'
+            variant='icon'
+            isDisabled={disabled}
+            onPress={() => {
+              handleChange(clearInputEvent);
 
-            ref?.current?.focus();
-          }}
-        >
-          <Icon>
-            <CancelFill />
-          </Icon>
-        </Button>
-      )}
+              ref?.current?.focus();
+            }}
+          >
+            <Icon>
+              <CancelFill />
+            </Icon>
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
