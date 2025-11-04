@@ -36,11 +36,7 @@ export default meta;
 export const Default: StoryObj<typeof meta> = {
   render: ({ unit }) => (
     <>
-      <BaseMap
-        id={BASE_MAP_STORY_ID}
-        //interleaved={false} // setting it to true breaks the widget somehow, may be a Storybook specific bug
-        className='h-screen w-screen'
-      />
+      <BaseMap id={BASE_MAP_STORY_ID} className='h-screen w-screen' />
       <ViewportSize
         className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
         instanceId={BASE_MAP_STORY_ID}
