@@ -13,11 +13,11 @@
 import type { Bounds } from '../deckgl/base-map/types';
 import type { UNIT_MAP } from './constants';
 
-export type AllowedUnit = keyof typeof UNIT_MAP;
+export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
 
 export type GetViewportSizeArgs = {
   bounds?: Bounds;
-  unit?: AllowedUnit;
+  unit?: SupportedDistanceUnit;
   formatter?: Intl.NumberFormat;
 };
 

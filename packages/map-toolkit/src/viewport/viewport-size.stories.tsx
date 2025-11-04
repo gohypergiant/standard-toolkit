@@ -12,11 +12,10 @@
 
 import { uuid } from '@accelint/core';
 import { BaseMap } from '../deckgl/base-map';
-import { ViewportSyncWidget } from '../deckgl/widgets/viewport-sync';
-import { ViewportSize as ViewportSizeComponent } from './index';
+import { ViewportSize } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
-const WIDGETS = [new ViewportSyncWidget({ id: 'default' })];
 const BASE_MAP_STORY_ID = uuid();
 
 const meta: Meta = {
@@ -33,24 +32,20 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const ViewportSize: Story = {
-  render: ({ unit }) => {
-    return (
-      <div>
-        <ViewportSizeComponent
-          unit={unit}
-          viewId='default'
-          className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
-        />
-        <BaseMap
-          id={BASE_MAP_STORY_ID}
-          interleaved={false} // setting it to true breaks the widget somehow, may be a Storybook specific bug
-          widgets={WIDGETS}
-          className='h-dvh w-dvw'
-        />
-      </div>
-    );
-  },
+export const Default: StoryObj<typeof meta> = {
+  render: ({ unit }) => (
+    <>
+      <BaseMap
+        id={BASE_MAP_STORY_ID}
+        //interleaved={false} // setting it to true breaks the widget somehow, may be a Storybook specific bug
+        className='h-screen w-screen'
+      />
+      <ViewportSize
+        className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
+        instanceId={BASE_MAP_STORY_ID}
+        unit={unit}
+      />
+    </>
+  ),
 };

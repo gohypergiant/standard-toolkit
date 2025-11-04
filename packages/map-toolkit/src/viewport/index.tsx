@@ -11,20 +11,20 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { type ComponentProps, useSyncExternalStore } from 'react';
+import { type UniqueId, uuid } from '@accelint/core';
+import { type ComponentPropsWithRef, useSyncExternalStore } from 'react';
 import { MapEvents } from '../deckgl/base-map/events';
 import { getViewportSize } from './utils';
 import type {
   MapEventType,
-  MapViewportEvent,
   MapViewportPayload,
 } from '../deckgl/base-map/types';
-import type { AllowedUnit } from './types';
+import type { SupportedDistanceUnit } from './types';
 
 const bus = Broadcast.getInstance<MapEventType>();
 
 export type UseViewportStateProps = {
-  viewId: string;
+  instanceId: UniqueId;
   subscribe?: Parameters<typeof useSyncExternalStore<MapViewportPayload>>[0];
   getSnapshot?: Parameters<typeof useSyncExternalStore<MapViewportPayload>>[1];
   getServerSnapshot?: Parameters<
@@ -35,81 +35,84 @@ export type UseViewportStateProps = {
 /**
  * Store for viewport state keyed by viewId
  */
-const viewportStore = new Map<string, MapViewportPayload>();
+const viewportStore = new Map<UniqueId, MapViewportPayload>();
 
 /**
  * Track the number of active subscribers per viewId for automatic cleanup
  */
-const subscriberCounts = new Map<string, number>();
+const subscriberCounts = new Map<UniqueId, number>();
 
 type Subscription = (onStoreChange: () => void) => () => void;
 /**
  * Cache of subscription functions per viewId to avoid recreating on every render
  */
-const subscriptionCache = new Map<string, Subscription>();
+const subscriptionCache = new Map<UniqueId, Subscription>();
 
 /**
  * Cache of snapshot functions per viewId to maintain referential stability
  */
-const snapshotCache = new Map<string, () => MapViewportPayload>();
+const snapshotCache = new Map<UniqueId, () => MapViewportPayload>();
 
 /**
  * Default empty snapshot - stable reference to prevent unnecessary re-renders
  */
-const defaultSnapshot: MapViewportPayload = {};
+const defaultSnapshot: MapViewportPayload = {
+  id: uuid(),
+  bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
+  latitude: Number.NaN,
+  longitude: Number.NaN,
+  zoom: Number.NaN,
+};
 
 /**
  * Creates or retrieves a cached subscription function for a given viewId.
  * Automatically cleans up viewport state when the last subscriber unsubscribes.
  *
- * @param viewId - The unique identifier for the viewport
+ * @param instanceId - The unique identifier for the viewport
  * @returns A subscription function for useSyncExternalStore
  */
 function getOrCreateSubscription(
-  viewId: string,
+  instanceId: UniqueId,
 ): (onStoreChange: () => void) => () => void {
-  let subscription = subscriptionCache.get(viewId);
-
-  if (!subscription) {
-    subscription = (onStoreChange: () => void) => {
-      // Increment subscriber count
-      const currentCount = subscriberCounts.get(viewId) || 0;
-      subscriberCounts.set(viewId, currentCount + 1);
-
-      const handler = (e: MapViewportEvent) => {
-        if (viewId === e.payload.id) {
+  const subscription =
+    subscriptionCache.get(instanceId) ??
+    ((onStoreChange: () => void) => {
+      const unsub = bus.on(MapEvents.viewport, ({ payload }) => {
+        if (instanceId === payload.id) {
           /**
            * onStoreChange just tells react to run "getSnapshot". We can't pass anything
            * to that function directly from here, so we need to store the value somewhere that it can grab it.
            */
-          viewportStore.set(viewId, e.payload);
+          viewportStore.set(instanceId, payload);
+
           onStoreChange();
         }
-      };
+      });
+      // Increment subscriber count
+      const currentCount = subscriberCounts.get(instanceId) || 0;
 
-      const unsub = bus.on(MapEvents.viewport, handler);
+      subscriberCounts.set(instanceId, currentCount + 1);
 
       // Return cleanup function
       return () => {
-        unsub();
-
         // Decrement subscriber count
-        const count = subscriberCounts.get(viewId) || 1;
-        const newCount = count - 1;
+        const count = (subscriberCounts.get(instanceId) ?? 1) - 1;
 
-        if (newCount <= 0) {
+        if (count <= 0) {
+          unsub();
+
           // No more subscribers - clean up completely
-          viewportStore.delete(viewId);
-          subscriberCounts.delete(viewId);
-          subscriptionCache.delete(viewId);
-          snapshotCache.delete(viewId);
+          viewportStore.delete(instanceId);
+          subscriberCounts.delete(instanceId);
+          subscriptionCache.delete(instanceId);
+          snapshotCache.delete(instanceId);
         } else {
-          subscriberCounts.set(viewId, newCount);
+          subscriberCounts.set(instanceId, count);
         }
       };
-    };
-    subscriptionCache.set(viewId, subscription);
-  }
+    });
+
+  subscriptionCache.set(instanceId, subscription);
 
   return subscription;
 }
@@ -118,16 +121,16 @@ function getOrCreateSubscription(
  * Creates or retrieves a cached snapshot function for a given viewId.
  * The object returned gets equality checked, so it needs to be stable or React re-renders unnecessarily.
  *
- * @param viewId - The unique identifier for the viewport
+ * @param instanceId - The unique identifier for the viewport
  * @returns A snapshot function for useSyncExternalStore
  */
-function getOrCreateSnapshot(viewId: string): () => MapViewportPayload {
-  let snapshot = snapshotCache.get(viewId);
+function getOrCreateSnapshot(instanceId: UniqueId): () => MapViewportPayload {
+  const fallback = { ...defaultSnapshot, id: instanceId };
+  const snapshot =
+    snapshotCache.get(instanceId) ??
+    (() => viewportStore.get(instanceId) ?? fallback);
 
-  if (!snapshot) {
-    snapshot = () => viewportStore.get(viewId) ?? defaultSnapshot;
-    snapshotCache.set(viewId, snapshot);
-  }
+  snapshotCache.set(instanceId, snapshot);
 
   return snapshot;
 }
@@ -141,7 +144,7 @@ function getOrCreateSnapshot(viewId: string): () => MapViewportPayload {
  *
  * A thin wrapper around [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore).
  *
- * @param viewId - Unique identifier for the viewport to track
+ * @param instanceId - Unique identifier for the viewport to track
  * @param subscribe - Optional custom subscription function
  * @param getSnapshot - Optional custom snapshot getter
  * @param getServerSnapshot - Optional server-side snapshot getter
@@ -149,9 +152,9 @@ function getOrCreateSnapshot(viewId: string): () => MapViewportPayload {
  *
  * @example
  * ```tsx
- * function MapInfo() {
+ * function MapInfo({ instanceId }) {
  *   const { bounds, latitude, longitude, zoom } = useViewportState({
- *     viewId: 'default'
+ *     instanceId
  *   });
  *
  *   return (
@@ -187,23 +190,21 @@ function getOrCreateSnapshot(viewId: string): () => MapViewportPayload {
  * ```
  */
 export function useViewportState({
-  viewId,
+  instanceId,
   subscribe,
   getSnapshot,
   getServerSnapshot,
 }: UseViewportStateProps) {
-  const viewState = useSyncExternalStore<MapViewportPayload>(
-    subscribe ?? getOrCreateSubscription(viewId),
-    getSnapshot ?? getOrCreateSnapshot(viewId),
+  return useSyncExternalStore<MapViewportPayload>(
+    subscribe ?? getOrCreateSubscription(instanceId),
+    getSnapshot ?? getOrCreateSnapshot(instanceId),
     getServerSnapshot,
   );
-
-  return viewState;
 }
 
-export type ViewportSizeProps = ComponentProps<'span'> & {
-  viewId: string;
-  unit?: AllowedUnit;
+export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
+  instanceId: UniqueId;
+  unit?: SupportedDistanceUnit;
 };
 
 /**
@@ -231,19 +232,13 @@ export type ViewportSizeProps = ComponentProps<'span'> & {
  * ```
  */
 export function ViewportSize({
-  viewId,
+  instanceId,
   unit = 'nm',
-  className,
   ...rest
 }: ViewportSizeProps) {
-  const { bounds } = useViewportState({ viewId });
-  const scale = getViewportSize({ bounds, unit });
+  const { bounds } = useViewportState({ instanceId });
 
-  return (
-    <span className={className} {...rest}>
-      {scale}
-    </span>
-  );
+  return <span {...rest}>{getViewportSize({ bounds, unit })}</span>;
 }
 
 /**
@@ -251,7 +246,7 @@ export function ViewportSize({
  * This is typically not needed as cleanup happens automatically when all subscribers unmount.
  * Use this only in advanced scenarios where manual cleanup is required.
  *
- * @param viewId - The unique identifier for the viewport to clear
+ * @param instanceId - The unique identifier for the viewport to clear
  *
  * @example
  * ```tsx
@@ -259,9 +254,9 @@ export function ViewportSize({
  * clearViewportState('my-map-instance');
  * ```
  */
-export function clearViewportState(viewId: string): void {
-  viewportStore.delete(viewId);
-  subscriberCounts.delete(viewId);
-  subscriptionCache.delete(viewId);
-  snapshotCache.delete(viewId);
+export function clearViewportState(instanceId: UniqueId): void {
+  viewportStore.delete(instanceId);
+  subscriberCounts.delete(instanceId);
+  subscriptionCache.delete(instanceId);
+  snapshotCache.delete(instanceId);
 }

@@ -15,18 +15,18 @@
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useId, useMemo } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
-import type { PickingInfo } from '@deck.gl/core';
+import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { MapClickEvent, MapHoverEvent } from './types';
+import type { MapClickEvent, MapHoverEvent, MapViewportEvent } from './types';
 
 /**
  * Props for the BaseMap component.
@@ -121,12 +121,17 @@ export type BaseMapProps = DeckglProps & {
  * ```
  */
 export function BaseMap({
+  id,
   className,
   children,
-  id,
+  controller = true,
+  interleaved = true,
+  parameters = {},
+  useDevicePixels = false,
+  widgets: widgetsProp = [],
   onClick,
   onHover,
-  parameters,
+  onViewStateChange,
   ...rest
 }: BaseMapProps) {
   const deckglInstance = useDeckgl();
@@ -150,12 +155,17 @@ export function BaseMap({
   );
 
   // Use the custom hook to handle MapLibre
-  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
+  const _map = useMapLibre(
+    deckglInstance as IControl,
+    BASE_MAP_STYLE,
+    mapOptions,
+  );
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+  const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
 
-  const handleMapClick = useCallback(
+  const handleClick = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
@@ -183,7 +193,7 @@ export function BaseMap({
     [emitClick, id, onClick],
   );
 
-  const handleMapHover = useCallback(
+  const handleHover = useCallback(
     (info: PickingInfo, event: MjolnirPointerEvent) => {
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
@@ -209,19 +219,52 @@ export function BaseMap({
     [emitHover, id, onHover],
   );
 
+  const deckRef = useRef<ReturnType<typeof useDeckgl>>(null);
+
+  useEffect(() => {
+    if (deckglInstance) {
+      deckRef.current = deckglInstance;
+    }
+  }, [deckglInstance]);
+
+  const handleViewStateChange = useCallback(
+    (params: ViewStateChangeParameters) => {
+      onViewStateChange?.(params);
+
+      const {
+        //viewId,
+        viewState: { latitude, longitude, zoom },
+      } = params;
+
+      console.log(params);
+
+      emitViewport({
+        id,
+        // bounds: deckRef.current?._deck.viewManager
+        //   .getViewport(viewId)
+        //   .getBounds(),
+        latitude,
+        longitude,
+        zoom,
+      });
+    },
+    [emitViewport, id, onViewStateChange],
+  );
+
   return (
     <div id={container} className={className}>
       <MapProvider id={id}>
         <Deckgl
-          controller
-          interleaved
-          useDevicePixels={false}
-          onHover={handleMapHover}
-          onClick={handleMapClick}
+          {...rest}
+          controller={controller}
+          interleaved={interleaved}
+          useDevicePixels={useDevicePixels}
+          onClick={handleClick}
+          onHover={handleHover}
+          onViewStateChange={handleViewStateChange}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
           parameters={{ ...PARAMETERS, ...parameters }}
-          {...rest}
         >
           {children}
         </Deckgl>

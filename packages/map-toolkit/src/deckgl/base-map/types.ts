@@ -84,12 +84,13 @@ export type Bounds = [
   maxLon: number,
   maxLat: number,
 ];
+
 export type MapViewportPayload = {
-  bounds?: Bounds;
-  latitude?: number;
-  longitude?: number;
-  zoom?: number;
-  id?: string;
+  bounds: Bounds;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  id: UniqueId;
 };
 
 /**
