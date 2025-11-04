@@ -61,8 +61,6 @@ export function useMapLibre(
 
   // Initialize MapLibre instance once
   useEffect(() => {
-    console.log({ deck });
-
     if (deck) {
       const mapLibre = new MapLibre({
         ...optionsRef.current,
@@ -75,7 +73,6 @@ export function useMapLibre(
       });
 
       setMap(mapLibre);
-      console.log(mapLibre);
       return () => {
         mapLibre.removeControl(deck);
         mapLibre.remove();

@@ -15,7 +15,14 @@
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useMemo,
+  useRef,
+} from 'react';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
@@ -227,29 +234,50 @@ export function BaseMap({
     }
   }, [deckglInstance]);
 
-  const handleViewStateChange = useCallback(
+  const handleViewStateChange = useEffectEvent(
     (params: ViewStateChangeParameters) => {
       onViewStateChange?.(params);
 
       const {
-        //viewId,
+        viewId,
         viewState: { latitude, longitude, zoom },
       } = params;
 
-      console.log(params);
+      // biome-ignore lint/suspicious/noTsIgnore: squirrelly deckglInstance typing
+      // @ts-ignore
+      const viewport = deckglInstance._deck
+        .getViewports()
+        // biome-ignore lint/suspicious/noTsIgnore: squirrelly deckglInstance typing
+        // @ts-ignore
+        ?.find((vp) => vp.id === viewId);
 
       emitViewport({
         id,
-        // bounds: deckRef.current?._deck.viewManager
-        //   .getViewport(viewId)
-        //   .getBounds(),
+        bounds: viewport?.getBounds(),
         latitude,
         longitude,
         zoom,
       });
     },
-    [emitViewport, id, onViewStateChange],
   );
+
+  const handleLoad = useEffectEvent(() => {
+    //--- force update viewport state once all viewports initialized ---
+    // biome-ignore lint/suspicious/noTsIgnore: squirrelly deckglInstance typing
+    // @ts-ignore
+    deckglInstance._deck.getViewports().forEach((vp) => {
+      handleViewStateChange({
+        viewId: vp.id,
+        viewState: {
+          latitude: vp.latitude,
+          longitude: vp.longitude,
+          zoom: vp.zoom,
+          id: vp.id,
+          bounds: vp.getBounds(),
+        },
+      } as ViewStateChangeParameters);
+    });
+  });
 
   return (
     <div id={container} className={className}>
@@ -261,6 +289,7 @@ export function BaseMap({
           useDevicePixels={useDevicePixels}
           onClick={handleClick}
           onHover={handleHover}
+          onLoad={handleLoad}
           onViewStateChange={handleViewStateChange}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
