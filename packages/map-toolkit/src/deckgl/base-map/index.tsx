@@ -243,12 +243,10 @@ export function BaseMap({
         viewState: { latitude, longitude, zoom },
       } = params;
 
-      // biome-ignore lint/suspicious/noTsIgnore: squirrelly deckglInstance typing
-      // @ts-ignore
+      // @ts-expect-error squirrelly deckglInstance typing
       const viewport = deckglInstance._deck
         .getViewports()
-        // biome-ignore lint/suspicious/noTsIgnore: squirrelly deckglInstance typing
-        // @ts-ignore
+        // @ts-expect-error squirrelly deckglInstance typing
         ?.find((vp) => vp.id === viewId);
 
       emitViewport({
@@ -263,8 +261,7 @@ export function BaseMap({
 
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
-    // biome-ignore lint/suspicious/noTsIgnore: squirrelly deckglInstance typing
-    // @ts-ignore
+    // @ts-expect-error squirrelly deckglInstance typing
     deckglInstance._deck.getViewports().forEach((vp) => {
       handleViewStateChange({
         viewId: vp.id,
