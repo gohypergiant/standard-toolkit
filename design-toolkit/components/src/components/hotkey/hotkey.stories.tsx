@@ -12,7 +12,8 @@
 
 import MouseRightClick from '@accelint/icons/mouse-right-click';
 import { Icon } from '../icon';
-import { Hotkey } from './index';
+import { Hotkey } from './';
+import { HotkeySet } from './hotkey-set';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -55,7 +56,7 @@ export const KeysSet: Story = {
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>
-        <Hotkey.Set>
+        <HotkeySet>
           <Hotkey>CMD</Hotkey>
           <span>+</span>
           <Hotkey variant='icon'>
@@ -65,8 +66,8 @@ export const KeysSet: Story = {
           </Hotkey>
           <span>+</span>
           <Hotkey>⌘V</Hotkey>
-        </Hotkey.Set>
-        <Hotkey.Set>
+        </HotkeySet>
+        <HotkeySet>
           <Hotkey>CMD</Hotkey>
           <span>or</span>
           <Hotkey variant='icon'>
@@ -76,7 +77,7 @@ export const KeysSet: Story = {
           </Hotkey>
           <span>+</span>
           <Hotkey>⌘V</Hotkey>
-        </Hotkey.Set>
+        </HotkeySet>
       </div>
     );
   },

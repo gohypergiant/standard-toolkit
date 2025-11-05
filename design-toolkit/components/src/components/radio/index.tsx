@@ -12,54 +12,11 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
-import {
-  Radio as AriaRadio,
-  RadioGroup as AriaRadioGroup,
-  type ContextValue,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
-import { Label } from '../label';
+import { Radio as AriaRadio, composeRenderProps } from 'react-aria-components';
 import { RadioStyles } from './styles';
-import type { RadioGroupProps, RadioProps } from './types';
+import type { RadioProps } from './types';
 
-const { group, groupLabel, radio, control, label } = RadioStyles();
-
-export const RadioContext =
-  createContext<ContextValue<RadioGroupProps, HTMLDivElement>>(null);
-
-function RadioGroup({ ref, ...props }: RadioGroupProps) {
-  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
-
-  const { children, classNames, label, ...rest } = props;
-
-  return (
-    <AriaRadioGroup
-      {...rest}
-      ref={ref}
-      className={composeRenderProps(classNames?.group, (className) =>
-        group({ className }),
-      )}
-    >
-      {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
-          {label && (
-            <Label
-              className={groupLabel({ className: classNames?.label })}
-              isDisabled={isDisabled}
-              isRequired={isRequired}
-            >
-              {label}
-            </Label>
-          )}
-          {children}
-        </>
-      ))}
-    </AriaRadioGroup>
-  );
-}
-RadioGroup.displayName = 'Radio.Group';
+const { radio, control, label } = RadioStyles();
 
 /**
  * Radio - A form control for exclusive selection within a group of options
@@ -70,27 +27,27 @@ RadioGroup.displayName = 'Radio.Group';
  *
  * @example
  * // Basic radio group
- * <Radio.Group label="Choose size">
+ * <RadioGroup label="Choose size">
  *   <Radio value="small">Small</Radio>
  *   <Radio value="medium">Medium</Radio>
  *   <Radio value="large">Large</Radio>
- * </Radio.Group>
+ * </RadioGroup>
  *
  * @example
  * // Radio group with default selection
- * <Radio.Group defaultValue="medium" label="Size preference">
+ * <RadioGroup defaultValue="medium" label="Size preference">
  *   <Radio value="small">Small (S)</Radio>
  *   <Radio value="medium">Medium (M)</Radio>
  *   <Radio value="large">Large (L)</Radio>
- * </Radio.Group>
+ * </RadioGroup>
  *
  * @example
  * // Disabled radio options
- * <Radio.Group label="Shipping options">
+ * <RadioGroup label="Shipping options">
  *   <Radio value="standard">Standard shipping</Radio>
  *   <Radio value="express">Express shipping</Radio>
  *   <Radio value="overnight" isDisabled>Overnight (unavailable)</Radio>
- * </Radio.Group>
+ * </RadioGroup>
  */
 export function Radio({ classNames, children, ...rest }: RadioProps) {
   return (
@@ -111,5 +68,3 @@ export function Radio({ classNames, children, ...rest }: RadioProps) {
     </AriaRadio>
   );
 }
-Radio.displayName = 'Radio';
-Radio.Group = RadioGroup;

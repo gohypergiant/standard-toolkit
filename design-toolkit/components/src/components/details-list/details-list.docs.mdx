@@ -10,26 +10,26 @@ A semantic details list component for displaying metadata in key-value pairs. Us
 It is composed of the following components:
 
 - **DetailsList** - Main details list container with grid layout and alignment options
-- **DetailsList.Label** - Label component for keys/terms (renders as `<dt>`)
-- **DetailsList.Value** - Value component for descriptions/definitions (renders as `<dd>`)
-- **DetailsList.Provider** - Context provider for setting default props across multiple details lists
+- **DetailsListLabel** - Label component for keys/terms (renders as `<dt>`)
+- **DetailsListValue** - Value component for descriptions/definitions (renders as `<dd>`)
+- **DetailsListProvider** - Context provider for setting default props across multiple details lists
 
 ## Example usage
 ```tsx
 <DetailsList align="justify">
-  <DetailsList.Label>Key</DetailsList.Label>
-  <DetailsList.Value>Value</DetailsList.Value>
+  <DetailsListLabel>Key</DetailsListLabel>
+  <DetailsListValue>Value</DetailsListValue>
 
-  <DetailsList.Label>Ships</DetailsList.Label>
-  <DetailsList.Value>Millennium Falcon</DetailsList.Value>
-  <DetailsList.Value>USS Enterprise NCC-1701</DetailsList.Value>
-  <DetailsList.Value>Serenity</DetailsList.Value>
+  <DetailsListLabel>Ships</DetailsListLabel>
+  <DetailsListValue>Millennium Falcon</DetailsListValue>
+  <DetailsListValue>USS Enterprise NCC-1701</DetailsListValue>
+  <DetailsListValue>Serenity</DetailsListValue>
 
-  <DetailsList.Label>Coordinates</DetailsList.Label>
-  <DetailsList.Value>
+  <DetailsListLabel>Coordinates</DetailsListLabel>
+  <DetailsListValue>
     <div>Great Pyramid of Giza: 29°58'44" N 31°08'02" E</div>
     <div>Machu Picchu: 13°09'47" S 72°32'41" W</div>
-  </DetailsList.Value>
+  </DetailsListValue>
 </DetailsList>
 ```
 
@@ -52,13 +52,13 @@ It is composed of the following components:
   - `label` - Label elements (`<dt>` elements)
   - `value` - Value elements (`<dd>` elements)
 
-### DetailsList.Label Props
+### DetailsListLabel Props
 - **`children`** - Text content for the label
 - **`className`** - Custom CSS class name
 - **`slot`** - Slot name (defaults to `'label'`)
 - **`elementType`** - HTML element type (defaults to `'dt'`)
 
-### DetailsList.Value Props
+### DetailsListValue Props
 - **`children`** - Text content for the value (supports React nodes)
 - **`className`** - Custom CSS class name
 - **`slot`** - Slot name (defaults to `'value'`)
@@ -71,8 +71,8 @@ The component accepts all standard HTML attributes for `<dl>` elements, such as:
 - **`data-*`** - Custom data attributes
 
 ## Child Component Behavior
-- **DetailsList.Label**: Minimum of 1 required
-- **DetailsList.Value**: Minimum of 1 required
+- **DetailsListLabel**: Minimum of 1 required
+- **DetailsListValue**: Minimum of 1 required
 
 ## Examples
 

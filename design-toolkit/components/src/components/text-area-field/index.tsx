@@ -13,9 +13,7 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
 import {
-  type ContextValue,
   composeRenderProps,
   FieldError,
   Text,
@@ -24,26 +22,11 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
+import { TextAreaFieldContext } from './context';
 import { TextAreaStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { TextAreaFieldProps } from './types';
 
 const { field, label, input, description, error } = TextAreaStyles();
-
-export const TextAreaFieldContext =
-  createContext<ContextValue<TextAreaFieldProps, HTMLDivElement>>(null);
-
-function TextAreaFieldProvider({
-  children,
-  ...props
-}: ProviderProps<TextAreaFieldProps>) {
-  return (
-    <TextAreaFieldContext.Provider value={props}>
-      {children}
-    </TextAreaFieldContext.Provider>
-  );
-}
-TextAreaFieldProvider.displayName = 'TextAreaField.Provider';
 
 /**
  * TextAreaField - A multi-line text input component with label and validation
@@ -131,5 +114,3 @@ export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
     </TextField>
   );
 }
-TextAreaField.displayName = 'TextAreaField';
-TextAreaField.Provider = TextAreaFieldProvider;

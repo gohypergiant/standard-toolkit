@@ -12,7 +12,8 @@
 
 import { Placeholder } from '@accelint/icons';
 import { Icon } from '../icon';
-import { Link } from './index';
+import { Link } from './';
+import { LinkProvider } from './context';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactNode } from 'react';
 
@@ -47,12 +48,12 @@ export const CustomVisitedStyles: Story = {
     allowsVisited: true,
   },
   render: ({ children, ...args }) => (
-    <Link.Provider
+    <LinkProvider
       {...args}
       className='enabled:visited:fg-accent-primary-pressed enabled:visited:underline'
     >
       <Link isVisited>{children}</Link>
-    </Link.Provider>
+    </LinkProvider>
   ),
 };
 

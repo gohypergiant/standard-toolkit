@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { Provider } from 'react-aria-components';
-import { ButtonContext, ToggleButtonContext } from '../button';
+import { ButtonContext, ToggleButtonContext } from '../button/context';
 import { ActionBarStyles } from './styles';
 import type { ActionBarProps } from './types';
 
@@ -40,4 +40,3 @@ export function ActionBar({ className, ...rest }: ActionBarProps) {
     </Provider>
   );
 }
-ActionBar.displayName = 'ActionBar';

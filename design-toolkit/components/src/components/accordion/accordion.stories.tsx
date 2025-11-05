@@ -14,8 +14,13 @@ import { Placeholder } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
+import { MenuItem } from '../menu/item';
+import { MenuTrigger } from '../menu/trigger';
 import { Accordion } from './';
+import { AccordionHeader } from './header';
+import { AccordionPanel } from './panel';
 import { AccordionStylesDefaults } from './styles';
+import { AccordionTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 
 /**
@@ -48,20 +53,20 @@ export const Default: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <Accordion {...args}>
-        <Accordion.Header>
-          <Accordion.Trigger>
+        <AccordionHeader>
+          <AccordionTrigger>
             <Icon>
               <Placeholder />
             </Icon>
             Accordion title
-          </Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Panel>
+          </AccordionTrigger>
+        </AccordionHeader>
+        <AccordionPanel>
           <p className='fg-primary-muted text-body-s'>
             This is a placeholder content for an accordion. Please replace with
             an actual content instance.
           </p>
-        </Accordion.Panel>
+        </AccordionPanel>
       </Accordion>
     </div>
   ),
@@ -71,27 +76,27 @@ export const WithMenu: Story = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <Accordion {...args}>
-        <Accordion.Header>
-          <Accordion.Trigger>
+        <AccordionHeader>
+          <AccordionTrigger>
             <Icon>
               <Placeholder />
             </Icon>
             Accordion title
-          </Accordion.Trigger>
-          <Menu.Trigger>
+          </AccordionTrigger>
+          <MenuTrigger>
             <Button />
             <Menu>
-              <Menu.Item>Foo</Menu.Item>
-              <Menu.Item>Bar</Menu.Item>
+              <MenuItem>Foo</MenuItem>
+              <MenuItem>Bar</MenuItem>
             </Menu>
-          </Menu.Trigger>
-        </Accordion.Header>
-        <Accordion.Panel>
+          </MenuTrigger>
+        </AccordionHeader>
+        <AccordionPanel>
           <p className='fg-primary-muted text-body-s'>
             This is a placeholder content for an accordion. Please replace with
             an actual content instance.
           </p>
-        </Accordion.Panel>
+        </AccordionPanel>
       </Accordion>
     </div>
   ),

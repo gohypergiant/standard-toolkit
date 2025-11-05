@@ -12,13 +12,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Breadcrumbs } from './';
+import { BreadcrumbItem } from './item';
 
 function setup() {
   render(
     <Breadcrumbs>
-      <Breadcrumbs.Item>Root</Breadcrumbs.Item>
-      <Breadcrumbs.Item>Previous</Breadcrumbs.Item>
-      <Breadcrumbs.Item>Current</Breadcrumbs.Item>
+      <BreadcrumbItem>Root</BreadcrumbItem>
+      <BreadcrumbItem>Previous</BreadcrumbItem>
+      <BreadcrumbItem>Current</BreadcrumbItem>
     </Breadcrumbs>,
   );
 }

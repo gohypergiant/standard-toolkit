@@ -11,13 +11,11 @@
  */
 'use client';
 
-import 'client-only';
 import { ChevronDown } from '@accelint/icons';
-import { createContext } from 'react';
+import 'client-only';
 import {
   Button,
   ComboBox,
-  type ContextValue,
   composeRenderProps,
   FieldError,
   Input,
@@ -30,29 +28,13 @@ import {
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
+import { ComboBoxFieldContext } from './context';
 import { ComboBoxStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
 
 const { field, label, control, input, trigger, description, error, popover } =
   ComboBoxStyles();
-
-export const ComboBoxFieldContext =
-  // biome-ignore lint/suspicious/noExplicitAny: Setting a type would restrict it beyond what the component allows to extend to
-  createContext<ContextValue<ComboBoxFieldProps<any>, HTMLDivElement>>(null);
-
-function ComboBoxFieldProvider<T extends OptionsDataItem>({
-  children,
-  ...props
-}: ProviderProps<ComboBoxFieldProps<T>>) {
-  return (
-    <ComboBoxFieldContext.Provider value={props}>
-      {children}
-    </ComboBoxFieldContext.Provider>
-  );
-}
-ComboBoxFieldProvider.displayName = 'ComboBoxField.Provider';
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options
@@ -62,7 +44,7 @@ ComboBoxFieldProvider.displayName = 'ComboBoxField.Provider';
  *
  * @example
  * <ComboBoxField defaultItems={items}>
- *   {(item) => <Options.Item key={item.id} textValue={item.name}>{item.name}</Options.Item>}
+ *   {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
  * </ComboBoxField>
  */
 export function ComboBoxField<T extends OptionsDataItem>({
@@ -159,4 +141,3 @@ export function ComboBoxField<T extends OptionsDataItem>({
     </ComboBox>
   );
 }
-ComboBoxField.displayName = 'ComboBox';

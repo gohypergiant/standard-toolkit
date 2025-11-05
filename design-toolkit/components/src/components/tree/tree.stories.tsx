@@ -25,6 +25,12 @@ import { useTreeState } from '@/hooks/use-tree/state';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tree } from './index';
+import { TreeItem } from './item';
+import { TreeItemActions } from './item-actions';
+import { TreeItemContent } from './item-content';
+import { TreeItemDescription } from './item-description';
+import { TreeItemLabel } from './item-label';
+import { TreeItemPrefixIcon } from './item-prefix-icon';
 import type { Key, Selection } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { TreeNode } from '@/hooks/use-tree/types';
@@ -162,29 +168,25 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
   const { values, isDisabled } = node;
 
   return (
-    <Tree.Item
+    <TreeItem
       id={node.key}
       key={node.key}
       textValue={node.label}
       isDisabled={isDisabled}
     >
-      <Tree.Item.Content>
+      <TreeItemContent>
         {({ variant, isViewable, isVisible }) => {
           const size = variant === 'cozy' ? 'medium' : 'small';
           return (
             <>
               {values?.iconPrefix && (
-                <Tree.Item.PrefixIcon>
-                  {values?.iconPrefix}
-                </Tree.Item.PrefixIcon>
+                <TreeItemPrefixIcon>{values?.iconPrefix}</TreeItemPrefixIcon>
               )}
-              <Tree.Item.Label>{node.label}</Tree.Item.Label>
+              <TreeItemLabel>{node.label}</TreeItemLabel>
               {values?.description && (
-                <Tree.Item.Description>
-                  {values?.description}
-                </Tree.Item.Description>
+                <TreeItemDescription>{values?.description}</TreeItemDescription>
               )}
-              <Tree.Item.Actions>
+              <TreeItemActions>
                 {isDisabled && (
                   <Icon
                     className='fg-default-dark aspect-square rounded-full bg-interactive-hover-dark p-xs'
@@ -207,15 +209,15 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
                     <CenterOn />
                   </Icon>
                 </Button>
-              </Tree.Item.Actions>
+              </TreeItemActions>
             </>
           );
         }}
-      </Tree.Item.Content>
+      </TreeItemContent>
       {node.children?.map((child) => (
         <Node key={child.key} node={child} />
       ))}
-    </Tree.Item>
+    </TreeItem>
   );
 }
 
@@ -377,30 +379,30 @@ export const StaticCollection: Story = {
         visibleKeys={visibility}
         onVisibilityChange={setVisibility}
       >
-        <Tree.Item id='fruit' textValue='fruit'>
-          <Tree.Item.Content>Fruit</Tree.Item.Content>
-          <Tree.Item id='apples' textValue='apples'>
-            <Tree.Item.Content>Apples</Tree.Item.Content>
-            <Tree.Item id='green' textValue='green-apple'>
-              <Tree.Item.Content>Green Apple</Tree.Item.Content>
-            </Tree.Item>
-            <Tree.Item id='red' textValue='red-apple'>
-              <Tree.Item.Content>Red Apple</Tree.Item.Content>
-            </Tree.Item>
-            <Tree.Item id='yellow' textValue='yellow-apple'>
-              <Tree.Item.Content>Yellow Apple</Tree.Item.Content>
-            </Tree.Item>
-          </Tree.Item>
-        </Tree.Item>
-        <Tree.Item id='vegetables' textValue='vegetables'>
-          <Tree.Item.Content>Vegetables</Tree.Item.Content>
-          <Tree.Item id='carrot' textValue='carrot'>
-            <Tree.Item.Content>Carrot</Tree.Item.Content>
-          </Tree.Item>
-          <Tree.Item id='kale' textValue='kale'>
-            <Tree.Item.Content>Kale</Tree.Item.Content>
-          </Tree.Item>
-        </Tree.Item>
+        <TreeItem id='fruit' textValue='fruit'>
+          <TreeItemContent>Fruit</TreeItemContent>
+          <TreeItem id='apples' textValue='apples'>
+            <TreeItemContent>Apples</TreeItemContent>
+            <TreeItem id='green' textValue='green-apple'>
+              <TreeItemContent>Green Apple</TreeItemContent>
+            </TreeItem>
+            <TreeItem id='red' textValue='red-apple'>
+              <TreeItemContent>Red Apple</TreeItemContent>
+            </TreeItem>
+            <TreeItem id='yellow' textValue='yellow-apple'>
+              <TreeItemContent>Yellow Apple</TreeItemContent>
+            </TreeItem>
+          </TreeItem>
+        </TreeItem>
+        <TreeItem id='vegetables' textValue='vegetables'>
+          <TreeItemContent>Vegetables</TreeItemContent>
+          <TreeItem id='carrot' textValue='carrot'>
+            <TreeItemContent>Carrot</TreeItemContent>
+          </TreeItem>
+          <TreeItem id='kale' textValue='kale'>
+            <TreeItemContent>Kale</TreeItemContent>
+          </TreeItem>
+        </TreeItem>
       </Tree>
     );
   },

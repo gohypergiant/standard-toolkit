@@ -11,30 +11,16 @@
  */
 'use client';
 
-import type { ProviderProps } from '@/lib/types';
 import 'client-only';
-import { createContext } from 'react';
 import {
   Button as AriaButton,
-  ToggleButton as AriaToggleButton,
-  type ContextValue,
   composeRenderProps,
-  Link,
   useContextProps,
 } from 'react-aria-components';
-import { Icon } from '../icon';
-import { ButtonStyles, LinkButtonStyles, ToggleButtonStyles } from './styles';
-import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
-
-export const ButtonContext =
-  createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
-
-function ButtonProvider({ children, ...props }: ProviderProps<ButtonProps>) {
-  return (
-    <ButtonContext.Provider value={props}>{children}</ButtonContext.Provider>
-  );
-}
-ButtonProvider.displayName = 'Button.Provider';
+import { IconProvider } from '../icon/context';
+import { ButtonContext } from './context';
+import { ButtonStyles } from './styles';
+import type { ButtonProps } from './types';
 
 /**
  * Button - A versatile interactive button component with multiple variants
@@ -83,7 +69,7 @@ export function Button({ ref, ...props }: ButtonProps) {
   } = props;
 
   return (
-    <Icon.Provider size={size}>
+    <IconProvider size={size}>
       <AriaButton
         {...rest}
         ref={ref}
@@ -98,176 +84,6 @@ export function Button({ ref, ...props }: ButtonProps) {
       >
         {children}
       </AriaButton>
-    </Icon.Provider>
+    </IconProvider>
   );
 }
-Button.displayName = 'Button';
-Button.Provider = ButtonProvider;
-
-export const LinkButtonContext =
-  createContext<ContextValue<LinkButtonProps, HTMLAnchorElement>>(null);
-
-function LinkButtonProvider({
-  children,
-  ...props
-}: ProviderProps<LinkButtonProps>) {
-  return (
-    <LinkButtonContext.Provider value={props}>
-      {children}
-    </LinkButtonContext.Provider>
-  );
-}
-LinkButtonProvider.displayName = 'LinkButton.Provider';
-
-/**
- * LinkButton - A button component that renders as a link element
- *
- * Provides accessible link functionality with button-like styling and visual feedback.
- * Perfect for navigation actions that should look like buttons but behave as links.
- * Includes icon support and integrates with React Aria for keyboard navigation and accessibility.
- *
- * @example
- * // Basic link button
- * <LinkButton href="/dashboard">Go to Dashboard</LinkButton>
- *
- * @example
- * // Link button with different variants and sizes
- * <LinkButton variant="filled" size="large" href="/create">Create New</LinkButton>
- * <LinkButton variant="outline" size="small" href="/settings">Settings</LinkButton>
- *
- * @example
- * // Link button with icon
- * <LinkButton variant="flat" href="/profile">
- *   <Icon><User /></Icon>
- *   View Profile
- * </LinkButton>
- *
- * @example
- * // Icon-only link button
- * <LinkButton variant="icon" href="/help">
- *   <Icon><HelpCircle /></Icon>
- * </LinkButton>
- *
- * @example
- * // Link button with different colors
- * <LinkButton color="critical" href="/delete">Delete Account</LinkButton>
- * <LinkButton color="serious" href="/reset">Reset Data</LinkButton>
- */
-export function LinkButton({ ref, ...props }: LinkButtonProps) {
-  [props, ref] = useContextProps(props, ref ?? null, LinkButtonContext);
-
-  const {
-    children,
-    className,
-    color = 'mono-muted',
-    size = 'medium',
-    variant,
-    ...rest
-  } = props;
-
-  return (
-    <Icon.Provider size={size}>
-      <Link
-        {...rest}
-        ref={ref}
-        className={composeRenderProps(className, (className) =>
-          LinkButtonStyles({
-            className,
-            variant,
-          }),
-        )}
-        data-color={color}
-        data-size={size}
-      >
-        {children}
-      </Link>
-    </Icon.Provider>
-  );
-}
-LinkButton.displayName = 'LinkButton';
-LinkButton.Provider = LinkButtonProvider;
-
-export const ToggleButtonContext =
-  createContext<ContextValue<ToggleButtonProps, HTMLButtonElement>>(null);
-
-function ToggleButtonProvider({
-  children,
-  ...props
-}: ProviderProps<ToggleButtonProps>) {
-  return (
-    <ToggleButtonContext.Provider value={props}>
-      {children}
-    </ToggleButtonContext.Provider>
-  );
-}
-ToggleButtonProvider.displayName = 'ToggleButton.Provider';
-
-/**
- * ToggleButton - A button component that maintains pressed/unpressed state
- *
- * Provides accessible toggle functionality with visual feedback for the current state.
- * Perfect for features like favorites, bookmarks, switches, or any binary state controls.
- * Includes icon support and integrates with React Aria for keyboard navigation and accessibility.
- *
- * @example
- * // Basic toggle button
- * <ToggleButton>Toggle Feature</ToggleButton>
- *
- * @example
- * // Controlled toggle button with different variants
- * <ToggleButton variant="flat" isSelected={isEnabled} onChange={setIsEnabled}>
- *   Enable Notifications
- * </ToggleButton>
- *
- * @example
- * // Toggle button with icon and state
- * <ToggleButton variant="outline" isSelected={isFavorite} onChange={setIsFavorite}>
- *   <Icon><Heart /></Icon>
- *   {isFavorite ? 'Favorite' : 'Add to Favorites'}
- * </ToggleButton>
- *
- * @example
- * // Icon-only toggle button
- * <ToggleButton variant="icon" isSelected={isBookmarked} onChange={setIsBookmarked}>
- *   <Icon><Bookmark /></Icon>
- * </ToggleButton>
- *
- * @example
- * // Toggle button with different colors and sizes
- * <ToggleButton color="critical" size="small" isSelected={isEnabled}>
- *   Critical Toggle
- * </ToggleButton>
- */
-export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
-  [props, ref] = useContextProps(props, ref ?? null, ToggleButtonContext);
-
-  const {
-    children,
-    className,
-    color = 'mono-muted',
-    size = 'medium',
-    variant,
-    ...rest
-  } = props;
-
-  return (
-    <Icon.Provider size={size}>
-      <AriaToggleButton
-        {...rest}
-        ref={ref}
-        className={composeRenderProps(className, (className) =>
-          ToggleButtonStyles({
-            className,
-            variant,
-          }),
-        )}
-        data-color={color}
-        data-size={size}
-      >
-        {children}
-      </AriaToggleButton>
-    </Icon.Provider>
-  );
-}
-ToggleButton.displayName = 'ToggleButton';
-ToggleButton.Provider = ToggleButtonProvider;

@@ -18,47 +18,47 @@ The QueryBuilder consists of several subcomponents that can be composed together
 
 ```tsx
 <QueryBuilder>
-  <QueryBuilder.Rule />
-  <QueryBuilder.RuleGroup />
-  <QueryBuilder.ValueEditor />
-  <QueryBuilder.ValueSelector />
+  <QueryBuilderRule />
+  <QueryBuilderRuleGroup />
+  <QueryBuilderValueEditor />
+  <QueryBuilderValueSelector />
 </QueryBuilder>
 ```
 
 - **QueryBuilder**: Main wrapper component that manages the query state and layout
-- **QueryBuilder.Rule**: Individual rule component containing field, operator, and value
-- **QueryBuilder.RuleGroup**: Container for organizing multiple rules with a shared combinator
-- **QueryBuilder.ValueEditor**: Input component for editing rule values
-- **QueryBuilder.ValueSelector**: Dropdown component for selecting predefined values
+- **QueryBuilderRule**: Individual rule component containing field, operator, and value
+- **QueryBuilderRuleGroup**: Container for organizing multiple rules with a shared combinator
+- **QueryBuilderValueEditor**: Input component for editing rule values
+- **QueryBuilderValueSelector**: Dropdown component for selecting predefined values
 
 ### Supporting Components
 
 ```tsx
-<QueryBuilder.RuleGroup>
-  <QueryBuilder.RuleGroupHeaderComponent />
-  <QueryBuilder.CombinatorSelector />
-  <QueryBuilder.RuleGroupFooterComponent />
-</QueryBuilder.RuleGroup>
+<QueryBuilderRuleGroup>
+  <QueryBuilderRuleGroupHeaderComponent />
+  <QueryBuilderCombinatorSelector />
+  <QueryBuilderRuleGroupFooterComponent />
+</QueryBuilderRuleGroup>
 ```
 
-- **QueryBuilder.RuleGroupHeaderComponent**: Header section containing group actions
-- **QueryBuilder.CombinatorSelector**: Controls AND/OR logic between rules
-- **QueryBuilder.RuleGroupFooterComponent**: Footer section with add rule/group actions
+- **QueryBuilderRuleGroupHeaderComponent**: Header section containing group actions
+- **QueryBuilderCombinatorSelector**: Controls AND/OR logic between rules
+- **QueryBuilderRuleGroupFooterComponent**: Footer section with add rule/group actions
 
 ### Action Components
 
 ```tsx
-<QueryBuilder.ActionElement>
-  <QueryBuilder.RemoveRuleAction />
-  <QueryBuilder.LockAction />
-  <QueryBuilder.CloneAction />
-</QueryBuilder.ActionElement>
+<QueryBuilderActionElement>
+  <QueryBuilderRemoveRuleAction />
+  <QueryBuilderLockAction />
+  <QueryBuilderCloneAction />
+</QueryBuilderActionElement>
 ```
 
-- **QueryBuilder.ActionElement**: Base component for rule and group actions
-- **QueryBuilder.RemoveRuleAction**: Button to remove a rule or group
-- **QueryBuilder.LockAction**: Button to lock/unlock a rule or group
-- **QueryBuilder.CloneAction**: Button to duplicate a rule or group
+- **QueryBuilderActionElement**: Base component for rule and group actions
+- **QueryBuilderRemoveRuleAction**: Button to remove a rule or group
+- **QueryBuilderLockAction**: Button to lock/unlock a rule or group
+- **QueryBuilderCloneAction**: Button to duplicate a rule or group
 
 ## Implementation Notes
 

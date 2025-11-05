@@ -12,7 +12,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Badge } from './index';
+import { Badge } from './';
 import type { BadgeProps } from './types';
 
 function setup({ children = 'Foo', ...rest }: Partial<BadgeProps> = {}) {

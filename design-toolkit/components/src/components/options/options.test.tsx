@@ -15,54 +15,57 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Icon } from '../icon';
 import { Options } from './index';
+import { OptionsItem } from './item';
+import { OptionsItemLabel } from './item-label';
+import { OptionsSection } from './section';
 import type { OptionsDataItem, OptionsProps } from './types';
 
 function setup({
   children = (
     <>
-      <Options.Section
+      <OptionsSection
         header='North American Birds'
         classNames={{ section: 'w-[200px]' }}
       >
-        <Options.Item textValue='Blue Jay'>
+        <OptionsItem textValue='Blue Jay'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Blue Jay</Options.Item.Label>
-        </Options.Item>
-        <Options.Item textValue='Gray catbird'>
+          <OptionsItemLabel>Blue Jay</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem textValue='Gray catbird'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Gray catbird</Options.Item.Label>
-        </Options.Item>
-        <Options.Item textValue='Black-capped chickadee'>
+          <OptionsItemLabel>Gray catbird</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem textValue='Black-capped chickadee'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Black-capped chickadee</Options.Item.Label>
-        </Options.Item>
-        <Options.Item textValue='Song Sparrow'>
+          <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem textValue='Song Sparrow'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Song Sparrow</Options.Item.Label>
-        </Options.Item>
-      </Options.Section>
-      <Options.Section header='African Birds'>
-        <Options.Item textValue='Lilac-breasted roller'>
+          <OptionsItemLabel>Song Sparrow</OptionsItemLabel>
+        </OptionsItem>
+      </OptionsSection>
+      <OptionsSection header='African Birds'>
+        <OptionsItem textValue='Lilac-breasted roller'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Lilac-breasted roller</Options.Item.Label>
-        </Options.Item>
-        <Options.Item textValue='Hornbill'>
+          <OptionsItemLabel>Lilac-breasted roller</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem textValue='Hornbill'>
           <Icon>
             <Placeholder />
           </Icon>
-          <Options.Item.Label>Hornbill</Options.Item.Label>
-        </Options.Item>
-      </Options.Section>
+          <OptionsItemLabel>Hornbill</OptionsItemLabel>
+        </OptionsItem>
+      </OptionsSection>
     </>
   ),
   ...rest

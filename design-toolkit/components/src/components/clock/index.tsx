@@ -11,8 +11,8 @@
  */
 'use client';
 
-import 'client-only';
 import { setClockInterval } from '@accelint/temporal';
+import 'client-only';
 import { useCallback, useEffect, useState } from 'react';
 import type { ClockProps } from './types';
 
@@ -60,4 +60,3 @@ export function Clock({ formatter = DEFAULT_FORMATTER, ...rest }: ClockProps) {
 
   return <time {...rest}>{time}</time>;
 }
-Clock.displayName = 'Clock';

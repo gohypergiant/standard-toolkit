@@ -96,11 +96,11 @@ MySubComponent.displayName = 'MyComponent.Item';
 // Better (non-RAC)
 export function MyComponent({ children, classNames, ...rest}) {
   return (
-    <Button.Provider className={item({ classNames?.item })}>
+    <ButtonProvider className={item({ classNames?.item })}>
       <header {...rest} className={header({ className: classNames?.header })}>
         <nav className={nav({ className: classNames?.nav })}>{children}</nav>
       </header>
-    </Button.Provider>
+    </ButtonProvider>
   )
 }
 MyComponent.displayName = 'MyComponent';
