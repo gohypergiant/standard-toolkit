@@ -12,6 +12,7 @@ A react component that consumes `useViewportState` and displays the current view
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl'
 import { ViewportSize } from '@accelint/map-toolkit/viewport'
+import { ActionBar } from '@accelint/design-toolkit';
 import { uuid } from '@accelint/core'
 
 const VIEW_ID = uuid()
@@ -19,7 +20,9 @@ const VIEW_ID = uuid()
 export function MapView() {
   return (
     <>
-      <ViewportSize instanceId={VIEW_ID} className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised' />
+      <ActionBar className='absolute right-l bottom-xxl'>
+        <ViewportSize instanceId={VIEW_ID} />
+      </ActionBar>
       <BaseMap id={VIEW_ID} className="w-full h-full">
     </>
   )
