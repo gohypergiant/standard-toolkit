@@ -12,9 +12,9 @@
 
 'use client';
 
-import { useEmit } from '@accelint/bus/react';
+import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { type ShapeEvent, ShapeEvents } from '../../shared/events';
 import { emitValidationErrors } from '../utils/error-handling';
 import { validateShape } from '../utils/validation';
@@ -41,7 +41,7 @@ export interface UseShapeEditsOptions {
 function handleAddFeature(
   features: ShapeFeature[],
   store: ShapeStore,
-  emit: ReturnType<typeof useEmit>,
+  bus: Broadcast<ShapeEvent>,
   defaultStyleProperties?: StyleProperties,
   onValidationError?: (errors: string[]) => void,
 ): void {
@@ -76,7 +76,7 @@ function handleAddFeature(
   const validation = validateShape(newShape);
   if (!validation.isValid) {
     emitValidationErrors(validation.errors, onValidationError);
-    emit(ShapeEvents.validationError, {
+    bus.emit(ShapeEvents.validationError, {
       errors: validation.errors,
     });
     return;
@@ -86,7 +86,7 @@ function handleAddFeature(
   store.addShape(newShape);
 
   // Emit event
-  emit(ShapeEvents.drawn, { shapeId: newShape.id });
+  bus.emit(ShapeEvents.drawn, { shapeId: newShape.id });
 }
 
 /**
@@ -95,7 +95,7 @@ function handleAddFeature(
 function handleUpdateFeature(
   features: ShapeFeature[],
   store: ShapeStore,
-  emit: ReturnType<typeof useEmit>,
+  bus: Broadcast<ShapeEvent>,
   onValidationError?: (errors: string[]) => void,
 ): void {
   const updatedFeature = features[0];
@@ -121,7 +121,7 @@ function handleUpdateFeature(
   const validation = validateShape(updatedShape);
   if (!validation.isValid) {
     emitValidationErrors(validation.errors, onValidationError);
-    emit(ShapeEvents.validationError, {
+    bus.emit(ShapeEvents.validationError, {
       errors: validation.errors,
     });
     return;
@@ -131,17 +131,17 @@ function handleUpdateFeature(
   store.updateShape(existingShape.id, { feature: updatedFeature });
 
   // Emit event
-  emit(ShapeEvents.updated, { shapeId: updatedShape.id });
+  bus.emit(ShapeEvents.updated, { shapeId: updatedShape.id });
 }
 
 /**
  * Handle removing a feature
- * Note: NGC2 doesn't implement feature removal, this is for future use
+ * Note: Reference implementation doesn't implement feature removal, this is for future use
  */
 function handleRemoveFeature(
   features: ShapeFeature[],
   store: ShapeStore,
-  emit: ReturnType<typeof useEmit>,
+  bus: Broadcast<ShapeEvent>,
 ): void {
   // When a feature is removed, updatedData.features will not include it
   // We need to find which shape is missing by comparing with current shapes
@@ -161,7 +161,7 @@ function handleRemoveFeature(
   store.deleteShape(removedShape.id);
 
   // Emit event
-  emit(ShapeEvents.deleted, { shapeId: removedShape.id });
+  bus.emit(ShapeEvents.deleted, { shapeId: removedShape.id });
 }
 
 /**
@@ -170,7 +170,7 @@ function handleRemoveFeature(
 function handleOtherEdit(
   features: ShapeFeature[],
   store: ShapeStore,
-  emit: ReturnType<typeof useEmit>,
+  bus: Broadcast<ShapeEvent>,
 ): void {
   if (features.length === 0) {
     return;
@@ -191,7 +191,7 @@ function handleOtherEdit(
       feature,
     };
     store.setEditingShape(updatedShape);
-    emit(ShapeEvents.editing, { shapeId: shape.id });
+    bus.emit(ShapeEvents.editing, { shapeId: shape.id });
   }
 }
 
@@ -201,7 +201,7 @@ function handleOtherEdit(
  */
 export function useShapeEdits(options: UseShapeEditsOptions) {
   const { store, defaultStyleProperties, onValidationError } = options;
-  const emit = useEmit<ShapeEvent>();
+  const bus = useRef(Broadcast.getInstance<ShapeEvent>()).current;
 
   /**
    * Handle edit events from EditableGeoJsonLayer
@@ -217,30 +217,30 @@ export function useShapeEdits(options: UseShapeEditsOptions) {
             handleAddFeature(
               features,
               store,
-              emit,
+              bus,
               defaultStyleProperties,
               onValidationError,
             );
             break;
 
           case 'updateFeature':
-            handleUpdateFeature(features, store, emit, onValidationError);
+            handleUpdateFeature(features, store, bus, onValidationError);
             break;
 
           case 'removeFeature':
-            handleRemoveFeature(features, store, emit);
+            handleRemoveFeature(features, store, bus);
             break;
 
           default:
             // Other edit types (e.g., 'movePosition', 'extruding', etc.)
-            handleOtherEdit(features, store, emit);
+            handleOtherEdit(features, store, bus);
             break;
         }
       } catch (error) {
         console.error('Error handling shape edit:', error);
       }
     },
-    [store, emit, defaultStyleProperties, onValidationError],
+    [store, bus, defaultStyleProperties, onValidationError],
   );
 
   return { handleEdit };

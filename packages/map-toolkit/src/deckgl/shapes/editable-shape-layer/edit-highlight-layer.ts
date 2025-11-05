@@ -50,6 +50,7 @@ export function createEditHighlightSelectedLayer(
   // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer data type compatibility
   return new GeoJsonLayer<any>({
     id,
+    // biome-ignore lint/suspicious/noExplicitAny: GeoJSON Feature type compatibility
     data: [selectedShape.feature] as any,
 
     // Filled geometries (Polygon, Circle)
@@ -105,6 +106,7 @@ export function createEditHighlightHoveredLayer(
   // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer data type compatibility
   return new GeoJsonLayer<any>({
     id,
+    // biome-ignore lint/suspicious/noExplicitAny: GeoJSON Feature type compatibility
     data: [hoveredShape.feature] as any,
 
     // Filled geometries (Polygon, Circle)

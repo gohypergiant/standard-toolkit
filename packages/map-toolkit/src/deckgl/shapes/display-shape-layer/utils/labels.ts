@@ -57,7 +57,7 @@ export function getLabelPosition2d(
         coordinates: [
           geometry.coordinates[0] ?? 0,
           geometry.coordinates[1] ?? 0,
-        ],
+        ] as [number, number],
         textAnchor: 'middle',
         alignmentBaseline: 'bottom',
         pixelOffset,
@@ -68,7 +68,7 @@ export function getLabelPosition2d(
       // LineString: Start of first segment, offset to top-right
       const firstCoord = geometry.coordinates[0];
       return {
-        coordinates: firstCoord ?? [0, 0],
+        coordinates: (firstCoord ?? [0, 0]) as [number, number],
         textAnchor: 'start',
         alignmentBaseline: 'center',
         pixelOffset: [7, -15],

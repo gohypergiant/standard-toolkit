@@ -73,7 +73,13 @@ export interface ShapeStoreActions {
 /**
  * Combined shape store type
  */
-export type ShapeStore = ShapeStoreState & ShapeStoreActions;
+export type ShapeStore = ShapeStoreState &
+  ShapeStoreActions & {
+    /** Subscribe to store changes (for useSyncExternalStore) */
+    subscribe: (listener: () => void) => () => void;
+    /** Get current state snapshot (for useSyncExternalStore) */
+    getSnapshot: () => ShapeStoreState;
+  };
 
 /**
  * Shape store listener function
@@ -198,16 +204,16 @@ export function createShapeStore(
       };
       notifyListeners();
     },
-  };
 
-  // Subscribe/unsubscribe for useSyncExternalStore
-  (store as any).subscribe = (listener: ShapeStoreListener) => {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  };
+    // Subscribe/unsubscribe for useSyncExternalStore
+    subscribe: (listener: ShapeStoreListener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
 
-  // Snapshot getter for useSyncExternalStore
-  (store as any).getSnapshot = () => state;
+    // Snapshot getter for useSyncExternalStore
+    getSnapshot: () => state,
+  };
 
   return store;
 }
@@ -217,9 +223,9 @@ export function createShapeStore(
  */
 export function useShapeStore(store: ShapeStore): ShapeStoreState {
   return useSyncExternalStore(
-    (store as any).subscribe,
-    (store as any).getSnapshot,
-    (store as any).getSnapshot,
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
   );
 }
 

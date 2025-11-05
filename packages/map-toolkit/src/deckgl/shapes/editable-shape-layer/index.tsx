@@ -22,6 +22,8 @@ import {
 } from '../display-shape-layer/utils/display-style';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { createMode } from './modes';
+// Import fiber for runtime registration and type augmentation (side effects)
+import './fiber';
 import type {
   EditAction,
   FeatureCollection,
@@ -46,7 +48,7 @@ const STABLE_GET_LINE_WIDTH = (f: any) => getStrokeWidth(f);
 // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor
 const STABLE_GET_DASH_ARRAY = (f: any) => getDashArray(f);
 
-export interface SimpleEditableLayerProps {
+export interface EditableShapeLayerProps {
   id?: string;
   data: EditableShape[];
   mode?: EditShapeMode;
@@ -59,14 +61,14 @@ export interface SimpleEditableLayerProps {
  * Simple functional wrapper for EditableGeoJsonLayer following NGC2 pattern
  * Uses hooks instead of CompositeLayer class to avoid layer recreation issues
  */
-export function SimpleEditableLayer({
+export function EditableShapeLayer({
   id = SHAPE_LAYER_IDS.EDIT,
   data,
   mode = 'view',
   selectedShapeId,
   pickable = true,
   onEdit,
-}: SimpleEditableLayerProps) {
+}: EditableShapeLayerProps) {
   // Convert data to feature collection
   const featureCollection: FeatureCollection = useMemo(() => {
     let shapesToEdit: EditableShape[] = [];
@@ -98,14 +100,11 @@ export function SimpleEditableLayer({
   const subLayerProps = useMemo(
     () => ({
       geojson: {
-        filled: true,
-        getFillColor: STABLE_GET_FILL_COLOR,
-        stroked: true,
-        getLineColor: STABLE_GET_LINE_COLOR,
-        getLineWidth: STABLE_GET_LINE_WIDTH,
         lineWidthUnits: 'pixels' as const,
         lineWidthMinPixels: 1,
-        lineWidthMaxPixels: 20,
+        getLineWidth: STABLE_GET_LINE_WIDTH,
+        getFillColor: STABLE_GET_FILL_COLOR,
+        getLineColor: STABLE_GET_LINE_COLOR,
         getDashArray: STABLE_GET_DASH_ARRAY,
         extensions: [PATH_STYLE_EXTENSION],
       },
@@ -122,6 +121,14 @@ export function SimpleEditableLayer({
       selectedFeatureIndexes={selectedFeatureIndexes}
       pickable={pickable}
       onEdit={onEdit}
+      // Tentative colors for visual feedback during drawing
+      getTentativeFillColor={[40, 245, 190, 20]}
+      getTentativeLineColor={[40, 245, 190, 200]}
+      // Mode configuration for distance calculations
+      modeConfig={{
+        distanceUnits: 'kilometers',
+      }}
+      // Edit handle styling
       editHandlePointRadiusScale={2}
       editHandlePointRadiusMinPixels={4}
       editHandlePointRadiusMaxPixels={8}
