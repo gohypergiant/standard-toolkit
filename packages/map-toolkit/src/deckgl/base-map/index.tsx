@@ -157,6 +157,7 @@ export function BaseMap({
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
+      attributionControl: { compact: true },
     }),
     [container],
   );

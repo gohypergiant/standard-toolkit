@@ -11,6 +11,7 @@
  */
 
 import { uuid } from '@accelint/core';
+import { ActionBar } from '@accelint/design-toolkit';
 import { BaseMap } from '../deckgl/base-map';
 import { ViewportSize } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
@@ -37,11 +38,9 @@ export const Default: StoryObj<typeof meta> = {
   render: ({ unit }) => (
     <>
       <BaseMap id={BASE_MAP_STORY_ID} className='h-screen w-screen' />
-      <ViewportSize
-        className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised'
-        instanceId={BASE_MAP_STORY_ID}
-        unit={unit}
-      />
+      <ActionBar className='absolute right-l bottom-xxl'>
+        <ViewportSize instanceId={BASE_MAP_STORY_ID} unit={unit} />
+      </ActionBar>
     </>
   ),
 };

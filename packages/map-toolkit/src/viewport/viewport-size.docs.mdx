@@ -12,8 +12,9 @@ A react component that consumes `useViewportState` and displays the current view
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl'
 import { ViewportSize } from '@accelint/map-toolkit/viewport'
+import { uuid } from '@accelint/core'
 
-const VIEW_ID = 'viewport-1'
+const VIEW_ID = uuid()
 
 export function MapView() {
   return (
@@ -27,10 +28,13 @@ export function MapView() {
 
 ## Props
 
-# unit
+### instanceId
+`UniqueId` for the subscribed Viewport
+
+### unit
 `'km' | 'm' | 'nm' | 'mi' | 'ft'`
 Takes an abbreviated unit string. Supports kilometers, meters, nautical miles, miles, and feet. Defaults to nautical miles.
 
-# className
+### className
 Passes the css class to the span. Unstyled by default.
 

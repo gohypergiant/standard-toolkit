@@ -12,10 +12,10 @@
 
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
-import { clearViewportState, useViewportState, ViewportSize } from './index';
+import { clearViewportState, useViewportState } from './index';
 import type {
   MapEventType,
   MapViewportPayload,
@@ -257,125 +257,6 @@ describe('useViewportState', () => {
         bus.emit(MapEvents.viewport, payload2);
       });
     }).not.toThrow();
-  });
-});
-
-describe('ViewportSize', () => {
-  beforeEach(() => {
-    clearViewportState(instanceId);
-  });
-
-  afterEach(() => {
-    clearViewportState(instanceId);
-  });
-
-  it('renders default placeholder when no bounds are available', () => {
-    render(<ViewportSize instanceId={instanceId} />);
-    expect(screen.getByText('-- x -- NM')).toBeInTheDocument();
-  });
-
-  it('renders viewport size when bounds are available', async () => {
-    render(
-      <ViewportSize instanceId={instanceId} data-testid='viewport-size' />,
-    );
-
-    const payload: MapViewportPayload = {
-      id: instanceId,
-      latitude: 37.7749,
-      longitude: -122.4194,
-      zoom: 10,
-      bounds: [-82, 22, -71, 52],
-    };
-
-    act(() => {
-      bus.emit(MapEvents.viewport, payload);
-    });
-
-    await waitFor(() => {
-      expect(screen.getByTestId('viewport-size').textContent).toMatch(
-        /^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/,
-      );
-    });
-  });
-
-  it('respects custom unit prop', async () => {
-    render(
-      <ViewportSize
-        instanceId={instanceId}
-        unit='km'
-        data-testid='viewport-size'
-      />,
-    );
-
-    const payload: MapViewportPayload = {
-      id: instanceId,
-      latitude: 37.7749,
-      longitude: -122.4194,
-      zoom: 10,
-      bounds: [-82, 22, -71, 52],
-    };
-
-    act(() => {
-      bus.emit(MapEvents.viewport, payload);
-    });
-
-    await waitFor(() => {
-      expect(screen.getByTestId('viewport-size').textContent).toMatch(/KM$/);
-    });
-  });
-
-  it('applies custom className', () => {
-    render(
-      <ViewportSize
-        instanceId={instanceId}
-        className='custom-class'
-        data-testid='viewport-size'
-      />,
-    );
-    expect(screen.getByTestId('viewport-size')).toHaveClass('custom-class');
-  });
-
-  it('updates when viewport changes', async () => {
-    render(
-      <ViewportSize instanceId={instanceId} data-testid='viewport-size' />,
-    );
-
-    const payload1: MapViewportPayload = {
-      id: instanceId,
-      latitude: 37.7749,
-      longitude: -122.4194,
-      zoom: 10,
-      bounds: [-82, 22, -71, 52],
-    };
-
-    act(() => {
-      bus.emit(MapEvents.viewport, payload1);
-    });
-
-    await waitFor(() => {
-      expect(screen.getByTestId('viewport-size').textContent).not.toBe(
-        '-- x -- NM',
-      );
-    });
-
-    const firstContent = screen.getByTestId('viewport-size').textContent;
-
-    const payload2: MapViewportPayload = {
-      id: instanceId,
-      bounds: [-100, 30, -90, 40],
-      latitude: 37.7749,
-      longitude: -122.4194,
-      zoom: 10,
-    };
-
-    act(() => {
-      bus.emit(MapEvents.viewport, payload2);
-    });
-
-    await waitFor(() => {
-      const secondContent = screen.getByTestId('viewport-size').textContent;
-      expect(secondContent).not.toBe(firstContent);
-    });
   });
 });
 

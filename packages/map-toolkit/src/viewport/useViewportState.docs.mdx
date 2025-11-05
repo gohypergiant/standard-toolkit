@@ -9,11 +9,13 @@ A react hook for syncing to viewport events.  A thin wrapper around [useSyncExte
 
 ```typescript
 import { useViewportState } from '@accelint/map-toolkit/viewport'
+import { uuid } from '@accelint/core'
 
 // basic usage
+const VIEW_ID = uuid()
 function MapInfo() {
   const { bounds, latitude, longitude, zoom } = useViewportState({
-    viewId: 'default'
+    instanceId: VIEW_ID
   });
 
   return (
@@ -37,7 +39,7 @@ const customGetSnapshot = () => {
 function CustomMapInfo() {
 
   const viewState = useViewportState({
-    viewId: 'custom',
+    instanceId: 'custom',
     subscribe: customSubscribe,
     getSnapshot: customGetSnapshot,
   });
@@ -48,7 +50,7 @@ function CustomMapInfo() {
 
 ## Props
 
-### viewId
+### instanceId
 **Required** - Identifier of the subscribed Viewport
 
 ### subscribe
