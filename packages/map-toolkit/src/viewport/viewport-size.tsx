@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useViewportState } from './useViewportState';
+import { useViewportState } from './use-viewport-state';
 import { getViewportSize } from './utils';
 import type { UniqueId } from '@accelint/core';
 import type { ComponentPropsWithRef } from 'react';
