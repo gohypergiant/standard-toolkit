@@ -16,8 +16,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import './fiber';
+import { EditableShapeLayer } from './';
 import { useShapeEdits } from './hooks';
-import { SimpleEditableLayer } from './simple-editable-layer';
 import { createShapeStore, type ShapeStore, useShapeStore } from './store';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { EditShapeMode } from '../shared/events';
@@ -148,7 +148,7 @@ function EditableShapeDemo({
         {/* Edit layer: shows only the selected shape for editing */}
         {/* Only render when not in view mode to avoid unnecessary layer mounting */}
         {mode !== 'view' && (
-          <SimpleEditableLayer
+          <EditableShapeLayer
             id={`${LAYER_ID}-edit`}
             data={store.shapes}
             mode={mode}
