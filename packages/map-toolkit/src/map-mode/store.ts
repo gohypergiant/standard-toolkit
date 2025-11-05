@@ -74,6 +74,14 @@ export class MapModeStore {
   };
 
   /**
+   * Get the owner of the current mode
+   * @internal - For internal map-toolkit use only
+   */
+  getCurrentModeOwner = (): string | undefined => {
+    return this.modeOwners.get(this.mode);
+  };
+
+  /**
    * Subscribe to mode changes (for useSyncExternalStore)
    */
   subscribe = (listener: () => void): (() => void) => {
