@@ -11,6 +11,7 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { uuid } from '@accelint/core';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
@@ -21,42 +22,52 @@ import type {
 } from '../deckgl/base-map/types';
 
 const bus = Broadcast.getInstance<MapEventType>();
+const instanceId = uuid();
+const instanceIdTwo = uuid();
+
+const defaultPayload = {
+  zoom: Number.NaN,
+  latitude: Number.NaN,
+  longitude: Number.NaN,
+  id: instanceId,
+  bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
+};
 
 describe('useViewportState', () => {
   beforeEach(() => {
     // Clear any existing state before each test
-    clearViewportState('test-view');
+    clearViewportState(instanceId);
   });
 
   afterEach(() => {
     // Clean up after each test
-    clearViewportState('test-view');
+    clearViewportState(instanceId);
   });
 
   it('returns empty object initially when no viewport event has been emitted', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ viewId: 'test-view' });
+      viewState = useViewportState({ instanceId });
       return null;
     }
 
     render(<TestComponent />);
-    expect(viewState).toEqual({});
+    expect(viewState).toEqual(defaultPayload);
   });
 
   it('updates when viewport event is emitted', async () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ viewId: 'test-view' });
+      viewState = useViewportState({ instanceId });
       return <div data-testid='output'>{JSON.stringify(viewState)}</div>;
     }
 
     render(<TestComponent />);
 
     const payload: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 37.7749,
       longitude: -122.4194,
       zoom: 10,
@@ -76,38 +87,40 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ viewId: 'test-view-1' });
+      viewState = useViewportState({ instanceId });
       return null;
     }
 
     render(<TestComponent />);
 
     const payload1: MapViewportPayload = {
-      id: 'test-view-2',
+      id: instanceId,
       latitude: 37.7749,
       longitude: -122.4194,
       zoom: 10,
+      bounds: [0, 0, 0, 0],
     };
 
     const payload2: MapViewportPayload = {
-      id: 'test-view-1',
+      id: instanceIdTwo,
       latitude: 40.7128,
       longitude: -74.006,
       zoom: 12,
+      bounds: [0, 0, 0, 0],
     };
 
     act(() => {
       bus.emit(MapEvents.viewport, payload1);
     });
     await waitFor(() => {
-      expect(viewState).toEqual({});
+      expect(viewState).toEqual(payload1);
     });
 
     act(() => {
       bus.emit(MapEvents.viewport, payload2);
     });
     await waitFor(() => {
-      expect(viewState).toEqual(payload2);
+      expect(viewState).toEqual(payload1);
     });
   });
 
@@ -116,12 +129,12 @@ describe('useViewportState', () => {
     let viewState2: MapViewportPayload | undefined;
 
     function TestComponent1() {
-      viewState1 = useViewportState({ viewId: 'test-view' });
+      viewState1 = useViewportState({ instanceId });
       return null;
     }
 
     function TestComponent2() {
-      viewState2 = useViewportState({ viewId: 'test-view' });
+      viewState2 = useViewportState({ instanceId });
       return null;
     }
 
@@ -133,10 +146,11 @@ describe('useViewportState', () => {
     );
 
     const payload: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 37.7749,
       longitude: -122.4194,
       zoom: 10,
+      bounds: [0, 0, 0, 0],
     };
 
     act(() => {
@@ -151,10 +165,11 @@ describe('useViewportState', () => {
     rerender(<TestComponent1 />);
 
     const payload2: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 40.7128,
       longitude: -74.006,
       zoom: 12,
+      bounds: [0, 0, 0, 0],
     };
 
     act(() => {
@@ -168,10 +183,11 @@ describe('useViewportState', () => {
 
   it('supports custom subscribe and getSnapshot functions', () => {
     const customPayload: MapViewportPayload = {
-      id: 'custom',
+      id: instanceIdTwo,
       latitude: 51.5074,
       longitude: -0.1278,
       zoom: 8,
+      bounds: [0, 0, 0, 0],
     };
 
     const customSubscribe = vi.fn(() => {
@@ -185,7 +201,7 @@ describe('useViewportState', () => {
 
     function TestComponent() {
       viewState = useViewportState({
-        viewId: 'custom-view',
+        instanceId: instanceIdTwo,
         subscribe: customSubscribe,
         getSnapshot: customGetSnapshot,
       });
@@ -203,17 +219,18 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ viewId: 'test-view' });
+      viewState = useViewportState({ instanceId });
       return null;
     }
 
     const { unmount } = render(<TestComponent />);
 
     const payload: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 37.7749,
       longitude: -122.4194,
       zoom: 10,
+      bounds: [0, 0, 0, 0],
     };
 
     act(() => {
@@ -228,10 +245,11 @@ describe('useViewportState', () => {
 
     // After unmount, emitting another event should not cause issues
     const payload2: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 40.7128,
       longitude: -74.006,
       zoom: 12,
+      bounds: [0, 0, 0, 0],
     };
 
     expect(() => {
@@ -244,23 +262,25 @@ describe('useViewportState', () => {
 
 describe('ViewportSize', () => {
   beforeEach(() => {
-    clearViewportState('test-view');
+    clearViewportState(instanceId);
   });
 
   afterEach(() => {
-    clearViewportState('test-view');
+    clearViewportState(instanceId);
   });
 
   it('renders default placeholder when no bounds are available', () => {
-    render(<ViewportSize viewId='test-view' />);
+    render(<ViewportSize instanceId={instanceId} />);
     expect(screen.getByText('-- x -- NM')).toBeInTheDocument();
   });
 
   it('renders viewport size when bounds are available', async () => {
-    render(<ViewportSize viewId='test-view' data-testid='viewport-size' />);
+    render(
+      <ViewportSize instanceId={instanceId} data-testid='viewport-size' />,
+    );
 
     const payload: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 37.7749,
       longitude: -122.4194,
       zoom: 10,
@@ -280,11 +300,15 @@ describe('ViewportSize', () => {
 
   it('respects custom unit prop', async () => {
     render(
-      <ViewportSize viewId='test-view' unit='km' data-testid='viewport-size' />,
+      <ViewportSize
+        instanceId={instanceId}
+        unit='km'
+        data-testid='viewport-size'
+      />,
     );
 
     const payload: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 37.7749,
       longitude: -122.4194,
       zoom: 10,
@@ -303,7 +327,7 @@ describe('ViewportSize', () => {
   it('applies custom className', () => {
     render(
       <ViewportSize
-        viewId='test-view'
+        instanceId={instanceId}
         className='custom-class'
         data-testid='viewport-size'
       />,
@@ -312,10 +336,15 @@ describe('ViewportSize', () => {
   });
 
   it('updates when viewport changes', async () => {
-    render(<ViewportSize viewId='test-view' data-testid='viewport-size' />);
+    render(
+      <ViewportSize instanceId={instanceId} data-testid='viewport-size' />,
+    );
 
     const payload1: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
+      latitude: 37.7749,
+      longitude: -122.4194,
+      zoom: 10,
       bounds: [-82, 22, -71, 52],
     };
 
@@ -332,8 +361,11 @@ describe('ViewportSize', () => {
     const firstContent = screen.getByTestId('viewport-size').textContent;
 
     const payload2: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       bounds: [-100, 30, -90, 40],
+      latitude: 37.7749,
+      longitude: -122.4194,
+      zoom: 10,
     };
 
     act(() => {
@@ -352,17 +384,18 @@ describe('clearViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ viewId: 'test-view' });
+      viewState = useViewportState({ instanceId });
       return null;
     }
 
     const { unmount } = render(<TestComponent />);
 
     const payload: MapViewportPayload = {
-      id: 'test-view',
+      id: instanceId,
       latitude: 37.7749,
       longitude: -122.4194,
       zoom: 10,
+      bounds: [0, 0, 0, 0],
     };
 
     act(() => {
@@ -377,12 +410,12 @@ describe('clearViewportState', () => {
     unmount();
 
     // Clear the state
-    clearViewportState('test-view');
+    clearViewportState(instanceId);
 
     // Re-mount and verify state is cleared
     render(<TestComponent />);
 
     // After clearing, new subscriptions should start with empty state
-    expect(viewState).toEqual({});
+    expect(viewState).toEqual(defaultPayload);
   });
 });

@@ -6,9 +6,8 @@ import * as ViewportStories from './viewport-size.stories.tsx'
 # `<ViewportSize>`
 A react component that consumes `useViewportState` and displays the current viewport scale for the selected scale unit (defaults to Nautical Miles, NM) in a `<span>`
 
-{/* TODO - Revisit this when we know for sure how to proceded without the widget */}
 ## Usage
-`<ViewportSize>` updates by subscribing to viewport events from the Bus..
+`<ViewportSize>` updates by subscribing to viewport events from the Bus.
 
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl'
@@ -19,8 +18,8 @@ const VIEW_ID = 'viewport-1'
 export function MapView() {
   return (
     <>
-      <ViewportSize viewId={VIEW_ID} className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised' />
-      <BaseMap className="w-full h-full">
+      <ViewportSize instanceId={VIEW_ID} className='absolute right-xl bottom-xl rounded-medium bg-surface-overlay p-l shadow-elevation-raised' />
+      <BaseMap id={VIEW_ID} className="w-full h-full">
     </>
   )
 }
