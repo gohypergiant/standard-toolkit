@@ -224,14 +224,17 @@ export {
   Flashcard,
   FlashcardContext,
   FlashcardDetailsContainer,
+  FlashcardHeader,
   FlashcardHero,
   FlashcardIdentifier,
   FlashcardSecondaryContainer,
   FlashcardSecondaryData,
   FlashcardSecondaryDetails,
+  FlashcardSubheader,
 } from './components/flashcard';
 export { FlashcardStyles } from './components/flashcard/styles';
 export type {
+  FlashcardComponentProps,
   FlashcardDetailContainerProps,
   FlashcardDetailProps,
   FlashcardMetaData,
