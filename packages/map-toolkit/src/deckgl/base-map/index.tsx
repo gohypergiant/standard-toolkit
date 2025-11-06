@@ -15,7 +15,8 @@
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useId, useMemo } from 'react';
+import { useCallback, useId, useMemo, useRef } from 'react';
+import { useMapCursor } from '../../map-cursor/use-map-cursor';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
@@ -152,8 +153,43 @@ export function BaseMap({
   // Use the custom hook to handle MapLibre
   useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
 
+  return (
+    <div id={container} className={className}>
+      <MapProvider id={id}>
+        <BaseMapInternal
+          id={id}
+          onClick={onClick}
+          onHover={onHover}
+          parameters={parameters}
+          {...rest}
+        >
+          {children}
+        </BaseMapInternal>
+      </MapProvider>
+    </div>
+  );
+}
+
+/**
+ * Internal component that has access to MapProvider context.
+ * Separated to enable cursor management via useMapCursor hook.
+ */
+function BaseMapInternal({
+  id,
+  onClick,
+  onHover,
+  parameters,
+  children,
+  ...rest
+}: Omit<BaseMapProps, 'className'>) {
+  const { cursor } = useMapCursor(id);
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+
+  // Use ref to store current cursor value for synchronous access in getCursor
+  // This avoids closure/memoization issues with useCallback
+  const cursorRef = useRef(cursor);
+  cursorRef.current = cursor;
 
   const handleMapClick = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
@@ -209,23 +245,24 @@ export function BaseMap({
     [emitHover, id, onHover],
   );
 
+  const handleGetCursor = useCallback(() => {
+    return cursorRef.current;
+  }, []);
+
   return (
-    <div id={container} className={className}>
-      <MapProvider id={id}>
-        <Deckgl
-          {...rest}
-          controller
-          interleaved
-          useDevicePixels={false}
-          onHover={handleMapHover}
-          onClick={handleMapClick}
-          // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
-          // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
-          parameters={{ ...PARAMETERS, ...parameters }}
-        >
-          {children}
-        </Deckgl>
-      </MapProvider>
-    </div>
+    <Deckgl
+      {...rest}
+      controller
+      interleaved
+      useDevicePixels={false}
+      onHover={handleMapHover}
+      onClick={handleMapClick}
+      getCursor={handleGetCursor}
+      // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
+      // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
+      parameters={{ ...PARAMETERS, ...parameters }}
+    >
+      {children}
+    </Deckgl>
   );
 }

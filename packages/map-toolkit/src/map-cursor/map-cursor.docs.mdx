@@ -1,0 +1,652 @@
+import { Meta } from '@storybook/blocks';
+
+import * as MapCursorStories from './map-cursor.stories';
+
+<Meta of={MapCursorStories} />
+
+# Map Cursor
+
+A framework-agnostic cursor management system for coordinating map cursor state with owner-based priority and mode-owner integration. Map Cursor enables multiple features or components to safely control the map's cursor appearance while respecting map mode ownership hierarchy.
+
+## Features
+
+- **Framework Agnostic**: Core cursor logic works independently of React or any UI framework
+- **Hybrid Architecture**: React integration combines Context (for map instance identity) with external store pattern (state management via `useSyncExternalStore`)
+- **Owner-based Priority**: Mode owners have highest priority for cursor changes
+- **Most Recent Wins**: In default mode, the most recent cursor request is displayed
+- **Mode Integration**: Automatically integrates with Map Mode ownership system
+- **Instance Isolation**: Support for multiple independent map instances (e.g., main map + minimap)
+- **Event-Based**: Uses `@accelint/bus` for decoupled event communication
+- **Automatic Cleanup**: `useMapCursorEffect` hook for lifecycle-based cursor management
+
+## Dependencies
+
+Map Cursor requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for decoupled communication between cursor consumers
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
+- [`@accelint/map-toolkit/map-mode`](../map-mode/map-mode.docs.mdx) - Map mode system for ownership integration
+
+**React Integration:**
+- `react` - React 19.0.0 or higher for the `useMapCursor` hook and context
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core react
+```
+
+## Core Concepts
+
+### Cursor Types
+
+The system supports all standard CSS cursor types including:
+
+- `default` - Standard pointer
+- `pointer` - Hand/link cursor
+- `crosshair` - Crosshair for precise selection
+- `grab` / `grabbing` - Pan/drag cursors
+- `move` - Move cursor
+- `help` - Help/question mark cursor
+- And all other CSS cursor values
+
+See the [MDN cursor documentation](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) for the complete list.
+
+### Ownership & Priority
+
+Map Cursor uses a two-tiered priority system:
+
+1. **Mode Owner Priority**: If a mode owner exists (from MapModeStore), only that owner can change the cursor
+2. **Most Recent Wins**: In default/ownerless mode, the most recent cursor request is displayed
+
+This prevents conflicts when multiple features want to control the cursor while respecting the map mode ownership hierarchy.
+
+### Cursor State Flow
+
+```
+Component A requests cursor 'pointer' (owner: 'feature-a')
+  → Mode owner check
+  → If mode is owned by someone else: REJECT
+  → If mode is default or owned by requester: ACCEPT
+  → Store cursor and make it current
+  → Notify all subscribers
+  → Update map canvas cursor
+```
+
+### Rejection Events
+
+When a non-owner tries to change the cursor in an owned mode, a rejection event is emitted with a detailed reason. This can be used to display notices or toast messages to users.
+
+## Basic Usage (React)
+
+### 1. Set up BaseMap with id
+
+The `BaseMap` component automatically creates cursor management. Create a unique `id` for the map instance as a **module-level constant**:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+// Module-level constant - stable and shareable
+const MAIN_MAP_ID = uuid();
+
+export function App() {
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0">
+        {/* Deck.gl layers only */}
+      </BaseMap>
+      {/* UI components rendered as siblings */}
+    </div>
+  );
+}
+```
+
+The cursor system is automatically initialized and ready to use.
+
+### 2. Use the cursor in your UI components
+
+Access cursor state and request changes using the `useMapCursor` hook. **Important**: UI components should be rendered as **siblings** to `BaseMap` and must pass the `id`:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { uuid } from '@accelint/core';
+
+// Module-level constant shared across components
+const MAIN_MAP_ID = uuid();
+
+function DrawingToolbar() {
+  const { cursor, requestCursorChange, clearCursor } = useMapCursor(MAIN_MAP_ID);
+
+  const handleMouseEnter = () => {
+    requestCursorChange('crosshair', 'drawing-toolbar');
+  };
+
+  const handleMouseLeave = () => {
+    clearCursor('drawing-toolbar');
+  };
+
+  return (
+    <div
+      className="absolute top-4 left-4"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <p>Current cursor: {cursor}</p>
+      <button>Draw (hover to activate crosshair)</button>
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0" />
+      <DrawingToolbar />
+    </div>
+  );
+}
+```
+
+### 3. Automatic cursor management with useMapCursorEffect
+
+For components that need a cursor for their entire lifecycle, use `useMapCursorEffect`:
+
+```tsx
+import { useMapCursorEffect } from '@accelint/map-toolkit/map-cursor';
+
+function DrawingMode() {
+  // Automatically sets crosshair on mount, clears on unmount
+  useMapCursorEffect('crosshair', 'drawing-mode', MAIN_MAP_ID);
+
+  return <div>Drawing mode active</div>;
+}
+```
+
+## Multiple Map Instances
+
+When you need multiple independent maps, provide unique `id` props to each `BaseMap`. Cursor state is completely isolated between instances:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { uuid } from '@accelint/core';
+
+const MAIN_MAP_ID = uuid();
+const MINIMAP_ID = uuid();
+
+function MultiMapView() {
+  function MainMapControls() {
+    const { requestCursorChange } = useMapCursor(MAIN_MAP_ID);
+
+    return (
+      <button onClick={() => requestCursorChange('crosshair', 'main-controls')}>
+        Crosshair on Main Map
+      </button>
+    );
+  }
+
+  function MinimapControls() {
+    const { requestCursorChange } = useMapCursor(MINIMAP_ID);
+
+    return (
+      <button onClick={() => requestCursorChange('grab', 'mini-controls')}>
+        Grab on Minimap
+      </button>
+    );
+  }
+
+  return (
+    <div className="w-full h-full flex flex-col">
+      <div className="relative h-2/3">
+        <BaseMap id={MAIN_MAP_ID} className="absolute inset-0" />
+        <MainMapControls />
+      </div>
+      <div className="relative h-1/3">
+        <BaseMap id={MINIMAP_ID} className="absolute inset-0" />
+        <MinimapControls />
+      </div>
+    </div>
+  );
+}
+```
+
+## Integration with Map Mode
+
+Map Cursor automatically integrates with Map Mode for ownership-based priority:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { uuid } from '@accelint/core';
+
+const MAIN_MAP_ID = uuid();
+
+function App() {
+  function ModeOwnerControls() {
+    const { mode, requestModeChange } = useMapMode(MAIN_MAP_ID);
+    const { cursor, requestCursorChange } = useMapCursor(MAIN_MAP_ID);
+
+    return (
+      <div className="absolute top-4 left-4">
+        <button onClick={() => requestModeChange('drawing', 'owner')}>
+          Enter Drawing Mode
+        </button>
+        <button onClick={() => requestCursorChange('crosshair', 'owner')}>
+          Set Crosshair (owner: {cursor})
+        </button>
+      </div>
+    );
+  }
+
+  function NonOwnerControls() {
+    const { requestCursorChange } = useMapCursor(MAIN_MAP_ID);
+
+    return (
+      <div className="absolute top-4 right-4">
+        {/* This will be rejected if mode is owned by someone else */}
+        <button onClick={() => requestCursorChange('pointer', 'non-owner')}>
+          Try to Set Pointer
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0" />
+      <ModeOwnerControls />
+      <NonOwnerControls />
+    </div>
+  );
+}
+```
+
+## Framework-Agnostic Usage
+
+The core `MapCursorStore` works with any framework or vanilla JavaScript using the subscribe/notify pattern:
+
+```typescript
+import { getOrCreateStore, destroyStore } from '@accelint/map-toolkit/map-cursor';
+import { uuid } from '@accelint/core';
+
+const id = uuid();
+const store = getOrCreateStore(id);
+
+// Subscribe to cursor changes
+const unsubscribe = store.subscribe(() => {
+  const currentCursor = store.getSnapshot();
+  console.log('Cursor changed to:', currentCursor);
+
+  // Update your UI
+  updateMapCursor(currentCursor);
+});
+
+// Request a cursor change
+store.requestCursorChange('crosshair', 'my-feature-id');
+
+// Clear cursor when done
+store.clearCursor('my-feature-id');
+
+// Clean up
+unsubscribe();
+destroyStore(id);
+```
+
+### Using the Event Bus Directly
+
+You can listen to cursor events through the event bus:
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+import { MapCursorEvents } from '@accelint/map-toolkit/map-cursor';
+import type { MapCursorEventType } from '@accelint/map-toolkit/map-cursor';
+
+const bus = Broadcast.getInstance<MapCursorEventType>();
+
+// Listen for cursor changes
+const unsubChange = bus.on(MapCursorEvents.changed, (event) => {
+  if (event.payload.id === id) {
+    console.log('Cursor changed:', event.payload);
+  }
+});
+
+// Listen for rejections
+const unsubReject = bus.on(MapCursorEvents.rejected, (event) => {
+  if (event.payload.id === id) {
+    console.error('Cursor change rejected:', event.payload.reason);
+  }
+});
+
+// Clean up
+unsubChange();
+unsubReject();
+```
+
+## React API Reference
+
+### `useMapCursor(id?)`
+
+Hook to access map cursor state and actions.
+
+#### Parameters
+
+##### `id?: UniqueId`
+
+The map ID to access. **Recommended**: Always pass this parameter for UI components that are siblings to `BaseMap`.
+
+#### Returns
+
+```tsx
+{
+  cursor: CSSCursorType;                    // Current cursor
+  requestCursorChange: (                    // Request cursor change
+    cursor: CSSCursorType,
+    requestOwner: string
+  ) => void;
+  clearCursor: (owner: string) => void;     // Clear cursor for owner
+}
+```
+
+#### Throws
+
+- `Error` if no `id` is provided and hook is used outside of `MapProvider`
+- `Error` if the store is not found for the given map ID
+
+#### Example
+
+```tsx
+function CursorControls() {
+  const { cursor, requestCursorChange, clearCursor } = useMapCursor(MAIN_MAP_ID);
+
+  return (
+    <div>
+      <p>Current: {cursor}</p>
+      <button onClick={() => requestCursorChange('crosshair', 'controls')}>
+        Crosshair
+      </button>
+      <button onClick={() => clearCursor('controls')}>
+        Clear
+      </button>
+    </div>
+  );
+}
+```
+
+### `useMapCursorEffect(cursor, owner, id?)`
+
+Hook to automatically manage cursor for a component's lifecycle. Sets cursor on mount and clears on unmount.
+
+#### Parameters
+
+- `cursor: CSSCursorType` - The cursor to request
+- `owner: string` - The owner identifier
+- `id?: UniqueId` - Optional map instance ID
+
+#### Example
+
+```tsx
+function DrawingMode() {
+  // Automatically sets crosshair while mounted
+  useMapCursorEffect('crosshair', 'drawing-mode', MAIN_MAP_ID);
+
+  return <div>Drawing mode active with crosshair</div>;
+}
+```
+
+## Events
+
+Map Cursor emits events through `@accelint/bus`:
+
+### `MapCursorEvents.changeRequest`
+
+Emitted when a component requests a cursor change.
+
+**Payload:**
+
+```tsx
+{
+  cursor: CSSCursorType;   // Requested cursor
+  owner: string;           // Requesting component ID
+  id: UniqueId;            // Map instance ID
+}
+```
+
+### `MapCursorEvents.changed`
+
+Emitted when the cursor successfully changes.
+
+**Payload:**
+
+```tsx
+{
+  previousCursor: CSSCursorType;   // Previous cursor
+  currentCursor: CSSCursorType;    // New cursor
+  owner: string;                   // Owner of new cursor
+  id: UniqueId;                    // Map instance ID
+}
+```
+
+**Usage:**
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { MapCursorEvents } from '@accelint/map-toolkit/map-cursor';
+
+useOn(MapCursorEvents.changed, (event) => {
+  if (event.payload.id === MAIN_MAP_ID) {
+    console.log(`Cursor changed to ${event.payload.currentCursor}`);
+  }
+});
+```
+
+### `MapCursorEvents.rejected`
+
+Emitted when a cursor change request is rejected.
+
+**Payload:**
+
+```tsx
+{
+  rejectedCursor: CSSCursorType;  // Cursor that was rejected
+  rejectedOwner: string;          // Owner whose request was rejected
+  currentOwner: string;           // Current mode owner
+  reason: string;                 // Rejection reason
+  id: UniqueId;                   // Map instance ID
+}
+```
+
+**Usage:**
+
+```tsx
+import { useOn, useEmit } from '@accelint/bus/react';
+import { MapCursorEvents } from '@accelint/map-toolkit/map-cursor';
+import { NoticeEventTypes, type NoticeQueueEvent } from '@accelint/design-toolkit';
+
+function CursorNotifications() {
+  const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
+
+  useOn(MapCursorEvents.rejected, (event) => {
+    if (event.payload.id === MAIN_MAP_ID) {
+      emitNotice({
+        message: event.payload.reason,
+        color: 'critical',
+      });
+    }
+  });
+
+  return null;
+}
+```
+
+## Priority Logic
+
+The cursor system determines priority as follows:
+
+**Mode owner exists (from MapModeStore):**
+- ✅ Mode owner can change cursor
+- ❌ Non-owners cannot change cursor (rejected with event)
+
+**No mode owner (default mode):**
+- ✅ Any component can change cursor
+- ✅ Most recent request wins
+- Each owner can have one cursor set at a time
+
+## Best Practices
+
+### Owner IDs
+
+Use descriptive, unique IDs for owners:
+
+```tsx
+// ✅ Good - Clear and unique
+requestCursorChange('pointer', 'layer-hover-interaction');
+requestCursorChange('crosshair', 'drawing-tool-feature');
+
+// ❌ Bad - Generic or empty
+requestCursorChange('pointer', 'component');
+requestCursorChange('crosshair', '');
+```
+
+### Clearing Cursors
+
+Always clear your cursor when your component unmounts or no longer needs cursor control:
+
+```tsx
+// ✅ Good - Using useMapCursorEffect (auto-cleanup)
+function MyFeature() {
+  useMapCursorEffect('crosshair', 'my-feature', MAIN_MAP_ID);
+  return <div>Feature active</div>;
+}
+
+// ✅ Good - Manual cleanup
+function MyFeature() {
+  const { requestCursorChange, clearCursor } = useMapCursor(MAIN_MAP_ID);
+
+  useEffect(() => {
+    requestCursorChange('pointer', 'my-feature');
+    return () => clearCursor('my-feature');
+  }, [requestCursorChange, clearCursor]);
+
+  return <div>Feature active</div>;
+}
+
+// ❌ Bad - No cleanup (cursor persists after unmount)
+function MyFeature() {
+  const { requestCursorChange } = useMapCursor(MAIN_MAP_ID);
+
+  useEffect(() => {
+    requestCursorChange('pointer', 'my-feature');
+  }, [requestCursorChange]);
+
+  return <div>Feature active</div>;
+}
+```
+
+### Rejection Handling
+
+Display user-friendly messages when cursor changes are rejected:
+
+```tsx
+import { useOn, useEmit } from '@accelint/bus/react';
+import { MapCursorEvents } from '@accelint/map-toolkit/map-cursor';
+import { NoticeEventTypes, type NoticeQueueEvent } from '@accelint/design-toolkit';
+
+function App() {
+  const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
+
+  useOn(MapCursorEvents.rejected, (event) => {
+    if (event.payload.id === MAIN_MAP_ID) {
+      emitNotice({
+        message: event.payload.reason,
+        color: 'critical',
+      });
+    }
+  });
+
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0" />
+      {/* Your UI components */}
+    </div>
+  );
+}
+```
+
+## Examples
+
+See the Storybook stories for complete working examples:
+
+- **BasicUsage**: Simple cursor control from a toolbar
+- **AutomaticCursorEffect**: Using `useMapCursorEffect` for lifecycle management
+- **WithModeOwner**: Cursor priority with mode ownership, rejections, and notices
+
+## Troubleshooting
+
+### Error: "useMapCursor requires either an id parameter or to be used within a MapProvider"
+
+**Cause**: Using `useMapCursor()` without providing an `id` parameter, outside of context.
+
+**Solution**: Pass the `id` to the hook:
+
+```tsx
+const MAIN_MAP_ID = uuid();
+
+function YourComponent() {
+  const { cursor } = useMapCursor(MAIN_MAP_ID);
+  return <div>Cursor: {cursor}</div>;
+}
+```
+
+### Error: "MapCursorStore not found for map instance: [id]"
+
+**Cause**: Calling `useMapCursor(id)` with an ID that doesn't have a store.
+
+**Solution**: Ensure `BaseMap` with matching `id` is mounted first.
+
+### Cursor changes not working
+
+**Causes:**
+
+1. **Empty parameters** - `cursor` or `requestOwner` is empty/whitespace → throws error
+2. **Mode ownership** - Another component owns the mode → cursor change rejected
+3. **Not clearing old cursors** - Component unmounted without calling `clearCursor`
+
+**Solutions:**
+
+1. Ensure both parameters are non-empty strings
+2. Check for rejection events in console or use rejection handlers
+3. Use `useMapCursorEffect` or manual cleanup in `useEffect`
+
+### Cursor not updating on map canvas
+
+**Cause**: `BaseMapInternal` not receiving cursor updates from store.
+
+**Solution**: This should be automatic. If it's not working:
+1. Check that `BaseMap` is mounted with the correct `id`
+2. Verify cursor requests are being accepted (not rejected)
+3. Check console for any errors
+
+### Rejections not showing notices
+
+**Cause**: Not listening to rejection events or incorrect event payload structure.
+
+**Solution**: Use `useEmit` pattern with correct payload:
+
+```tsx
+const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
+
+useOn(MapCursorEvents.rejected, (event) => {
+  if (event.payload.id === MAIN_MAP_ID) {
+    emitNotice({
+      message: event.payload.reason,
+      color: 'critical',
+    });
+  }
+});
+```
