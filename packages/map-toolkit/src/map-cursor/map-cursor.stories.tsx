@@ -19,12 +19,19 @@ import {
   NoticeList,
   type NoticeQueueEvent,
 } from '@accelint/design-toolkit';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { BaseMap } from '../deckgl/base-map';
+import { MapModeEvents } from '../map-mode/events';
 import { useMapMode } from '../map-mode/use-map-mode';
 import { MapCursorEvents } from './events';
 import { useMapCursor, useMapCursorEffect } from './use-map-cursor';
+import type { UniqueId } from '@accelint/core';
 import type { Meta, StoryObj } from '@storybook/react';
+import type {
+  ModeChangeAuthorizationEvent,
+  ModeChangeDecisionEvent,
+  ModeChangedEvent,
+} from '../map-mode/types';
 import type { CSSCursorType } from './types';
 
 // Common cursor types to demonstrate
@@ -42,6 +49,7 @@ const EXAMPLE_CURSORS: CSSCursorType[] = [
 const BASIC_USAGE_MAP_ID = uuid();
 const WITH_MODE_OWNER_MAP_ID = uuid();
 const MULTIPLE_OWNERS_MAP_ID = uuid();
+const INTEGRATION_MAP_ID = uuid();
 
 const meta = {
   title: 'Map Cursor',
@@ -262,7 +270,10 @@ export const WithModeOwner: Story = {
               <Button
                 variant={isDefaultMode ? 'filled' : 'outline'}
                 color={isDefaultMode ? 'accent' : 'mono-muted'}
-                onPress={() => requestModeChange('default', ownerId.current)}
+                onPress={() => {
+                  requestModeChange('default', ownerId.current);
+                  clearCursor(ownerId.current);
+                }}
               >
                 Default
               </Button>
@@ -394,6 +405,515 @@ export const WithModeOwner: Story = {
           defaultTimeout={5000}
           hideClearAll
         />
+      </div>
+    );
+  },
+};
+
+/**
+ * Advanced integration demonstrating cursor management with map mode authorization.
+ * Shows how cursor priority respects mode ownership and handles all authorization scenarios
+ * including auto-accept when returning to default mode.
+ *
+ * Key scenarios demonstrated:
+ * - Shapes feature requires authorization to exit (drawing/editing modes)
+ * - MeasuringTool auto-accepts exit to unowned modes
+ * - Cursor automatically syncs with mode ownership
+ * - Pending mode requests trigger after approval
+ * - Returning to default mode auto-accepts first pending request
+ */
+export const IntegrationWithModeAuth: Story = {
+  render: () => {
+    function IntegrationDemo() {
+      const { mode, requestModeChange } = useMapMode(INTEGRATION_MAP_ID);
+      const { cursor, requestCursorChange } = useMapCursor(INTEGRATION_MAP_ID);
+      const [modeOwners, setModeOwners] = useState<Map<string, string>>(
+        new Map(),
+      );
+      const [pendingAuths, setPendingAuths] = useState<
+        Array<{
+          authId: string;
+          desiredMode: string;
+          requestingOwner: string;
+          id: UniqueId;
+        }>
+      >([]);
+      const [eventLog, setEventLog] = useState<string[]>([]);
+
+      const pendingRequests = useRef<
+        Map<
+          string,
+          {
+            requesterId: string;
+            desiredMode: string;
+          }
+        >
+      >(new Map());
+      const logContainerRef = useRef<HTMLDivElement>(null);
+
+      const emitDecision = useEmit<ModeChangeDecisionEvent>(
+        MapModeEvents.changeDecision,
+      );
+      const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
+
+      const addLog = (message: string) => {
+        setEventLog((prev) => [
+          ...prev,
+          `${new Date().toLocaleTimeString()}: ${message}`,
+        ]);
+        setTimeout(() => {
+          if (logContainerRef.current) {
+            logContainerRef.current.scrollTop =
+              logContainerRef.current.scrollHeight;
+          }
+        }, 0);
+      };
+
+      const showNotice = (message: string) => {
+        emitNotice({
+          message,
+          color: 'serious',
+        });
+      };
+
+      // Listen for mode changes
+      useOn<ModeChangedEvent>(MapModeEvents.changed, (event) => {
+        if (!('payload' in event) || event.payload.id !== INTEGRATION_MAP_ID) {
+          return;
+        }
+
+        addLog(
+          `Mode: "${event.payload.previousMode}" → "${event.payload.currentMode}"`,
+        );
+
+        const requestData = pendingRequests.current.get(
+          event.payload.currentMode,
+        );
+        const requestingOwner = requestData?.requesterId;
+
+        if (requestingOwner && event.payload.currentMode !== 'default') {
+          setModeOwners((prev) => {
+            const newMap = new Map(prev);
+            if (!newMap.has(event.payload.currentMode)) {
+              newMap.set(event.payload.currentMode, requestingOwner);
+              addLog(
+                `"${event.payload.currentMode}" owned by ${requestingOwner}`,
+              );
+            }
+            return newMap;
+          });
+          pendingRequests.current.delete(event.payload.currentMode);
+        }
+      });
+
+      // Listen for cursor changes
+      useOn(MapCursorEvents.changed, (event) => {
+        if (!('payload' in event) || event.payload.id !== INTEGRATION_MAP_ID) {
+          return;
+        }
+        addLog(
+          `Cursor: "${event.payload.previousCursor}" → "${event.payload.currentCursor}" (by ${event.payload.owner})`,
+        );
+      });
+
+      // Listen for cursor rejections
+      useOn(MapCursorEvents.rejected, (event) => {
+        if (!('payload' in event) || event.payload.id !== INTEGRATION_MAP_ID) {
+          return;
+        }
+        addLog(
+          `Cursor REJECTED: ${event.payload.rejectedOwner} cannot set "${event.payload.rejectedCursor}"`,
+        );
+        showNotice(`Cursor change rejected: ${event.payload.reason}`);
+      });
+
+      // Helper: Auto-accept authorization for MeasuringTool
+      const handleMeasuringToolAuth = useCallback(
+        (authId: string, id: UniqueId, currentModeOwner: string) => {
+          addLog('MeasuringTool auto-accepting');
+          emitDecision({
+            authId,
+            approved: true,
+            owner: currentModeOwner,
+            id,
+          });
+        },
+        [emitDecision],
+      );
+
+      // Helper: Show authorization dialog for Shapes feature
+      const handleShapesAuth = useCallback(
+        (
+          authId: string,
+          desiredMode: string,
+          requestingOwner: string,
+          id: UniqueId,
+        ) => {
+          const existingIndex = pendingAuths.findIndex(
+            (auth) => auth.requestingOwner === requestingOwner,
+          );
+
+          if (existingIndex !== -1) {
+            addLog(`Replacing pending request from ${requestingOwner}`);
+            setPendingAuths((prev) => {
+              const updated = [...prev];
+              updated[existingIndex] = {
+                authId,
+                desiredMode,
+                requestingOwner,
+                id,
+              };
+              return updated;
+            });
+          } else {
+            setPendingAuths((prev) => [
+              ...prev,
+              {
+                authId,
+                desiredMode,
+                requestingOwner,
+                id,
+              },
+            ]);
+          }
+        },
+        [pendingAuths],
+      );
+
+      // Listen for authorization requests
+      useOn<ModeChangeAuthorizationEvent>(
+        MapModeEvents.changeAuthorization,
+        (event) => {
+          if (
+            !('payload' in event) ||
+            event.payload.id !== INTEGRATION_MAP_ID
+          ) {
+            return;
+          }
+
+          const requestData = pendingRequests.current.get(
+            event.payload.desiredMode,
+          );
+          if (!requestData) {
+            return;
+          }
+
+          const requestingOwner = requestData.requesterId;
+          const currentModeOwner = modeOwners.get(event.payload.currentMode);
+
+          addLog(
+            `Authorization: ${requestingOwner} wants "${event.payload.desiredMode}"`,
+          );
+
+          // Auto-accept for MeasuringTool
+          if (currentModeOwner === 'MeasuringTool') {
+            handleMeasuringToolAuth(
+              event.payload.authId,
+              event.payload.id,
+              currentModeOwner,
+            );
+            return;
+          }
+
+          // Show dialog for Shapes feature
+          if (currentModeOwner === 'Shapes') {
+            handleShapesAuth(
+              event.payload.authId,
+              event.payload.desiredMode,
+              requestingOwner,
+              event.payload.id,
+            );
+          }
+        },
+      );
+
+      // Listen for authorization decisions
+      useOn<ModeChangeDecisionEvent>(MapModeEvents.changeDecision, (event) => {
+        if (!('payload' in event) || event.payload.id !== INTEGRATION_MAP_ID) {
+          return;
+        }
+
+        const status = event.payload.approved ? 'APPROVED' : 'REJECTED';
+        addLog(
+          `Decision: ${status}${event.payload.reason ? ` - ${event.payload.reason}` : ''}`,
+        );
+
+        setPendingAuths((prev) =>
+          prev.filter((a) => a.authId !== event.payload.authId),
+        );
+      });
+
+      const handleModeRequest = (modeName: string, owner: string) => {
+        pendingRequests.current.set(modeName, {
+          requesterId: owner,
+          desiredMode: modeName,
+        });
+        requestModeChange(modeName, owner);
+      };
+
+      const handleCursorRequest = (
+        cursorType: CSSCursorType,
+        owner: string,
+      ) => {
+        requestCursorChange(cursorType, owner);
+      };
+
+      const handleDefaultModeRequest = (owner: string) => {
+        handleModeRequest('default', owner);
+        // Explicitly clear cursor when returning to default mode
+        requestCursorChange('default', owner);
+      };
+
+      const handleApprove = (authId: string) => {
+        const auth = pendingAuths.find((a) => a.authId === authId);
+        if (auth) {
+          const currentModeOwner = modeOwners.get(mode);
+          if (currentModeOwner) {
+            emitDecision({
+              authId,
+              approved: true,
+              owner: currentModeOwner,
+              id: auth.id,
+            });
+          }
+        }
+      };
+
+      const handleReject = (authId: string) => {
+        const auth = pendingAuths.find((a) => a.authId === authId);
+        if (auth) {
+          const currentModeOwner = modeOwners.get(mode);
+          if (currentModeOwner) {
+            emitDecision({
+              authId,
+              approved: false,
+              owner: currentModeOwner,
+              reason: `${currentModeOwner} rejected the request`,
+              id: auth.id,
+            });
+          }
+        }
+      };
+
+      return (
+        <>
+          <div className='absolute top-l left-l flex max-h-[calc(100vh-2rem)] w-[380px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+            <p className='font-bold text-header-l'>Cursor + Mode Integration</p>
+
+            <div>
+              <p className='mb-s font-bold text-body-m'>Current State</p>
+              <div className='space-y-xs rounded-lg bg-info-muted p-s'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-body-s'>Mode:</span>
+                  <code className='text-body-m'>{mode}</code>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <span className='text-body-s'>Cursor:</span>
+                  <code className='text-body-m'>{cursor}</code>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <span className='text-body-s'>Owner:</span>
+                  <strong className='text-body-s'>
+                    {modeOwners.get(mode) || 'None'}
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <div className='mb-m'>
+              <p className='mb-s font-bold text-body-m'>Shapes Feature</p>
+              <p className='mb-m text-body-xs text-content-secondary'>
+                Requires auth to exit. Cursors: crosshair (drawing), move
+                (editing)
+              </p>
+              <div className='flex flex-wrap gap-s'>
+                <Button
+                  size='small'
+                  variant='filled'
+                  color='accent'
+                  onPress={() => handleDefaultModeRequest('Shapes')}
+                >
+                  default
+                </Button>
+                <Button
+                  size='small'
+                  variant='filled'
+                  color='accent'
+                  onPress={() => {
+                    handleModeRequest('drawing', 'Shapes');
+                    handleCursorRequest('crosshair', 'Shapes');
+                  }}
+                >
+                  drawing
+                </Button>
+                <Button
+                  size='small'
+                  variant='filled'
+                  color='accent'
+                  onPress={() => {
+                    handleModeRequest('editing', 'Shapes');
+                    handleCursorRequest('move', 'Shapes');
+                  }}
+                >
+                  editing
+                </Button>
+              </div>
+            </div>
+
+            <div className='mb-m'>
+              <p className='mb-s font-bold text-body-m'>Measuring Tool</p>
+              <p className='mb-m text-body-xs text-content-secondary'>
+                Auto-accepts exit. Cursor: ew-resize (measuring)
+              </p>
+              <div className='flex flex-wrap gap-s'>
+                <Button
+                  size='small'
+                  variant='filled'
+                  color='serious'
+                  onPress={() => handleDefaultModeRequest('MeasuringTool')}
+                >
+                  default
+                </Button>
+                <Button
+                  size='small'
+                  variant='filled'
+                  color='serious'
+                  onPress={() => {
+                    handleModeRequest('measuring', 'MeasuringTool');
+                    handleCursorRequest('ew-resize', 'MeasuringTool');
+                  }}
+                >
+                  measuring
+                </Button>
+              </div>
+            </div>
+
+            <div className='mb-m'>
+              <p className='mb-s font-bold text-body-m'>
+                Non-Owner (Cursor Only)
+              </p>
+              <p className='mb-m text-body-xs text-content-secondary'>
+                Can only set cursor in default mode
+              </p>
+              <div className='flex flex-wrap gap-s'>
+                <Button
+                  size='small'
+                  variant='outline'
+                  color='mono-muted'
+                  onPress={() => handleDefaultModeRequest('NonOwner')}
+                >
+                  default
+                </Button>
+                <Button
+                  size='small'
+                  variant='outline'
+                  color='mono-muted'
+                  onPress={() => handleCursorRequest('pointer', 'NonOwner')}
+                >
+                  pointer
+                </Button>
+                <Button
+                  size='small'
+                  variant='outline'
+                  color='mono-muted'
+                  onPress={() => handleCursorRequest('help', 'NonOwner')}
+                >
+                  help
+                </Button>
+              </div>
+            </div>
+
+            <Divider />
+
+            <div className='flex min-h-0 flex-1 flex-col'>
+              <p className='mb-s font-semibold text-body-m'>Event Log</p>
+              <div
+                ref={logContainerRef}
+                className='min-h-0 flex-1 overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'
+              >
+                {eventLog.length === 0 ? (
+                  <p className='text-body-xs text-content-disabled'>
+                    No events yet
+                  </p>
+                ) : (
+                  eventLog.map((entry, index) => (
+                    <p
+                      key={`${index.toString()}-${entry}`}
+                      className='mb-xs text-body-xs'
+                    >
+                      {entry}
+                    </p>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Notice list */}
+          <NoticeList
+            placement='bottom'
+            defaultColor='serious'
+            defaultTimeout={5000}
+            hideClearAll
+          />
+
+          {/* Authorization dialogs */}
+          <div className='absolute top-l right-l flex w-[384px] flex-col gap-m'>
+            {pendingAuths.map((auth, index) => (
+              <div
+                key={auth.authId}
+                className='flex flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'
+              >
+                <p className='font-bold text-header-m'>
+                  Authorization Request{' '}
+                  {pendingAuths.length > 1
+                    ? `${index + 1}/${pendingAuths.length}`
+                    : ''}
+                </p>
+                <div className='space-y-m'>
+                  <div className='rounded-lg bg-surface-muted p-s'>
+                    <p className='mb-xs text-body-xs'>Request From</p>
+                    <code className='text-body-m'>{auth.requestingOwner}</code>
+                  </div>
+                  <div className='text-body-m'>
+                    <span>Wants to change to: </span>
+                    <code className='rounded bg-surface-muted px-s py-xs text-body-m'>
+                      {auth.desiredMode}
+                    </code>
+                  </div>
+                  <Divider />
+                  <div className='rounded-lg bg-surface-muted p-s'>
+                    <p className='mb-xs text-body-xs'>Current Mode</p>
+                    <code className='text-body-m'>{mode}</code>
+                  </div>
+                </div>
+                <div className='flex justify-end gap-s'>
+                  <Button
+                    variant='flat'
+                    color='critical'
+                    onPress={() => handleReject(auth.authId)}
+                  >
+                    Reject
+                  </Button>
+                  <Button
+                    variant='filled'
+                    color='accent'
+                    onPress={() => handleApprove(auth.authId)}
+                  >
+                    Approve
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      );
+    }
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={INTEGRATION_MAP_ID} />
+        <IntegrationDemo />
       </div>
     );
   },

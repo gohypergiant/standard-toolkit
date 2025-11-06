@@ -59,26 +59,50 @@ See the [MDN cursor documentation](https://developer.mozilla.org/en-US/docs/Web/
 
 Map Cursor uses a two-tiered priority system:
 
-1. **Mode Owner Priority**: If a mode owner exists (from MapModeStore), only that owner can change the cursor
+1. **Mode Owner Priority**: If a mode owner exists (from MapModeStore), only that owner can change the cursor immediately
 2. **Most Recent Wins**: In default/ownerless mode, the most recent cursor request is displayed
+3. **Stored for Later**: All cursor requests are stored, even when rejected. When a component becomes the mode owner, their stored cursor is automatically applied
 
-This prevents conflicts when multiple features want to control the cursor while respecting the map mode ownership hierarchy.
+This prevents conflicts when multiple features want to control the cursor by respecting the map mode ownership hierarchy and enabling seamless cursor changes when mode ownership changes.
 
 ### Cursor State Flow
 
 ```
 Component A requests cursor 'pointer' (owner: 'feature-a')
+  → Check if cursor is different from currently stored cursor for this owner
+  → If same cursor: Skip (no event, no storage update)
+  → If different: Store cursor request (even if will be rejected)
   → Mode owner check
-  → If mode is owned by someone else: REJECT
-  → If mode is default or owned by requester: ACCEPT
-  → Store cursor and make it current
-  → Notify all subscribers
-  → Update map canvas cursor
+  → If mode is owned by someone else:
+    → REJECT immediate application
+    → Emit rejection event
+    → Cursor stored for later (auto-applies when requester becomes owner)
+  → If mode is default or owned by requester:
+    → Check if cursor actually changes from current display
+    → If same: Skip notification (already displaying this cursor)
+    → If different: Accept and notify
+    → Update map canvas cursor
 ```
 
 ### Rejection Events
 
-When a non-owner tries to change the cursor in an owned mode, a rejection event is emitted with a detailed reason. This can be used to display notices or toast messages to users.
+When a non-owner tries to change the cursor in an owned mode, a rejection event is emitted with a detailed reason. However, the cursor request is still **stored** and will be automatically applied if/when the requester becomes the mode owner. This can be used to display notices or toast messages to users.
+
+### Duplicate Request Prevention
+
+The system prevents unnecessary events and updates:
+
+- **Same cursor for same owner**: If an owner requests the same cursor they already have stored, no storage update occurs
+- **Same displayed cursor**: If the cursor being requested is already the currently displayed cursor, no change event is emitted
+- **No redundant events**: This ensures event logs only show actual state changes, not redundant requests
+
+### Automatic Cursor Cleanup
+
+When the map mode returns to `'default'`, the cursor store automatically clears only the **previous mode owner's** cursor entry:
+
+- **Selective**: Only the previous owner's cursor is removed from storage
+- **Preserves others**: Other components' stored cursors remain for future use
+- **UI control**: Applications should explicitly set cursor to 'default' when desired (cursor and mode are independent)
 
 ## Basic Usage (React)
 
@@ -489,13 +513,19 @@ function CursorNotifications() {
 The cursor system determines priority as follows:
 
 **Mode owner exists (from MapModeStore):**
-- ✅ Mode owner can change cursor
-- ❌ Non-owners cannot change cursor (rejected with event)
+- ✅ Mode owner can change cursor immediately
+- ⚠️ Non-owners' requests are rejected for immediate application but **stored**
+- 🔄 Stored cursor auto-applies when requester becomes mode owner
 
 **No mode owner (default mode):**
 - ✅ Any component can change cursor
 - ✅ Most recent request wins
 - Each owner can have one cursor set at a time
+
+**Duplicate Prevention:**
+- 🚫 Same cursor request from same owner → No event, no update
+- 🚫 Cursor already displayed → No change event
+- ✅ Only actual state changes trigger events and notifications
 
 ## Best Practices
 

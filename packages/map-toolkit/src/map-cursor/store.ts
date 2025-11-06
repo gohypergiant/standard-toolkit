@@ -11,9 +11,11 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { MapModeEvents } from '../map-mode/events';
 import { getStore as getModeStore } from '../map-mode/store';
 import { MapCursorEvents } from './events';
 import type { UniqueId } from '@accelint/core';
+import type { ModeChangedEvent } from '../map-mode/types';
 import type { CSSCursorType, MapCursorEventType } from './types';
 
 /**
@@ -49,6 +51,7 @@ const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
  * - Mode owner (from MapModeStore) has highest priority
  * - Only one cursor per owner (stored in Map<owner, cursor>)
  * - Non-owners can set cursors only in default mode or ownerless modes
+ * - All requests are stored and auto-applied when requester becomes mode owner
  *
  * @see {getOrCreateStore} - Creates or retrieves a store for a given map instance
  * @see {destroyStore} - Destroys a store and cleans up its resources
@@ -72,11 +75,15 @@ export class MapCursorStore {
    *
    * Priority order:
    * 1. Mode owner's cursor (if exists and mode is owned)
-   * 2. Most recent cursor set (when in default/unowned mode)
+   * 2. Most recent cursor (only if currentOwner still has an entry in storage)
    * 3. Default cursor
+   *
+   * The owner entry check prevents returning stale cursors after cleanup.
+   * For example, when a mode owner returns to default, their cursor entry is
+   * deleted from storage, so their cached cursor won't be returned.
    */
   getSnapshot = (): CSSCursorType => {
-    // Check if there's a mode owner with a cursor
+    // Priority 1: Mode owner's cursor
     const modeStore = getModeStore(this.id);
     if (modeStore) {
       const modeOwner = modeStore.getCurrentModeOwner();
@@ -88,12 +95,14 @@ export class MapCursorStore {
       }
     }
 
-    // When no mode owner exists (default mode), use the most recent cursor
-    if (this.currentCursor) {
-      return this.currentCursor;
+    // Priority 2: Most recent cursor (only if owner entry still exists)
+    if (this.currentCursor && this.currentOwner) {
+      if (this.cursorOwners.has(this.currentOwner)) {
+        return this.currentCursor;
+      }
     }
 
-    // Default cursor
+    // Priority 3: Default cursor
     return DEFAULT_CURSORS.default;
   };
 
@@ -111,11 +120,16 @@ export class MapCursorStore {
    * Request a cursor change
    *
    * Components request cursor changes via this method. The request will be:
-   * - **Accepted** if:
+   * - **Accepted and applied immediately** if:
    *   - Requester is the mode owner
    *   - No mode owner exists (default/ownerless mode)
-   * - **Rejected** if:
+   *   - Cursor is different from current cursor
+   * - **Rejected for immediate application** if:
    *   - Requester is not the mode owner and a mode owner exists
+   *   - Cursor is stored and will auto-apply when requester becomes owner
+   * - **Skipped** if:
+   *   - Same cursor is already stored for this owner (no event)
+   *   - Same cursor is already displayed (no change event)
    *
    * @param cursor - The desired CSS cursor type
    * @param requestOwner - Unique identifier of the component requesting the change
@@ -123,14 +137,17 @@ export class MapCursorStore {
    *
    * @example
    * ```ts
-   * // Mode owner requesting cursor change (always accepted)
+   * // Mode owner requesting cursor change (accepted immediately)
    * store.requestCursorChange('crosshair', 'drawing-tool');
    *
-   * // Non-owner requesting in default mode (accepted)
+   * // Non-owner requesting in default mode (accepted immediately)
    * store.requestCursorChange('pointer', 'layer-component');
    *
-   * // Non-owner requesting in owned mode (rejected)
-   * store.requestCursorChange('pointer', 'other-component'); // Rejected
+   * // Non-owner requesting in owned mode (rejected but stored)
+   * store.requestCursorChange('pointer', 'other-component'); // Rejected, stored for later
+   *
+   * // Requesting same cursor again (skipped, no event)
+   * store.requestCursorChange('pointer', 'layer-component'); // No-op
    * ```
    */
   requestCursorChange = (cursor: CSSCursorType, requestOwner: string): void => {
@@ -176,10 +193,55 @@ export class MapCursorStore {
       this.handleCursorChangeRequest(cursor, requestOwner);
     });
     this.unsubscribers.push(unsubRequest);
+
+    // Listen for mode changes to handle cursor updates when ownership changes
+    const modeBus = Broadcast.getInstance<ModeChangedEvent>();
+    const unsubModeChange = modeBus.on(MapModeEvents.changed, (event) => {
+      // Filter: only handle if targeted at this map
+      if (event.payload.id !== this.id) {
+        return;
+      }
+
+      const previousCursor = this.getSnapshot();
+
+      // When returning to default mode, clear the previous mode owner's cursor
+      // Preserves other components' stored cursor preferences for future use
+      if (event.payload.currentMode === 'default') {
+        if (this.currentOwner) {
+          this.cursorOwners.delete(this.currentOwner);
+        }
+        this.currentCursor = null;
+        this.currentOwner = null;
+
+        // Notify immediately to trigger React re-render
+        this.notify();
+      }
+
+      // Defer cursor change check until after new mode owner is registered
+      // Mode changed event fires before ownership is established
+      queueMicrotask(() => {
+        const newCursor = this.getSnapshot();
+        if (previousCursor !== newCursor) {
+          const modeStore = getModeStore(this.id);
+          const newModeOwner = modeStore?.getCurrentModeOwner() || 'system';
+          this.bus.emit(MapCursorEvents.changed, {
+            previousCursor,
+            currentCursor: newCursor,
+            owner: newModeOwner,
+            id: this.id,
+          });
+          this.notify();
+        }
+      });
+    });
+    this.unsubscribers.push(unsubModeChange);
   }
 
   /**
    * Handle cursor change request logic with owner-based priority
+   *
+   * All cursor requests are stored in the cursorOwners map, regardless of permission.
+   * This enables automatic cursor application when the requester later becomes mode owner.
    */
   private handleCursorChangeRequest(
     cursor: CSSCursorType,
@@ -188,26 +250,36 @@ export class MapCursorStore {
     const modeStore = getModeStore(this.id);
     const modeOwner = modeStore?.getCurrentModeOwner();
 
-    // Check if requester has permission
     const hasPermission = !modeOwner || requestOwner === modeOwner;
+    const previousCursor = this.getSnapshot();
+    const existingCursor = this.cursorOwners.get(requestOwner);
+    const isNewCursor = existingCursor !== cursor;
+
+    // Store new cursor requests for auto-application when requester becomes owner
+    if (isNewCursor) {
+      this.cursorOwners.set(requestOwner, cursor);
+    }
 
     if (!hasPermission && modeOwner) {
-      // Reject the request - modeOwner is guaranteed to exist here
-      this.bus.emit(MapCursorEvents.rejected, {
-        rejectedCursor: cursor,
-        rejectedOwner: requestOwner,
-        currentOwner: modeOwner,
-        reason: `Cursor change to ${cursor} rejected: "${requestOwner}" is not the mode owner. To change cursor, request map mode change.`,
-        id: this.id,
-      });
+      // Reject immediate application, emit event only for new requests
+      if (isNewCursor) {
+        this.bus.emit(MapCursorEvents.rejected, {
+          rejectedCursor: cursor,
+          rejectedOwner: requestOwner,
+          currentOwner: modeOwner,
+          reason: `Cursor change to ${cursor} rejected: "${requestOwner}" is not the mode owner. To change cursor, request map mode change.`,
+          id: this.id,
+        });
+      }
       return;
     }
 
-    // Accept the request
-    const previousCursor = this.getSnapshot();
-    this.cursorOwners.set(requestOwner, cursor);
+    // Skip if cursor not changing
+    if (previousCursor === cursor) {
+      return;
+    }
 
-    // Track the most recent cursor for use in default mode
+    // Accept and apply
     this.currentCursor = cursor;
     this.currentOwner = requestOwner;
 
