@@ -25,7 +25,7 @@ import { TextFieldContext } from './context';
 import { TextFieldStyles } from './styles';
 import type { TextFieldProps } from './types';
 
-const { field, label, description, error } = TextFieldStyles();
+const { field, label, description, error, input } = TextFieldStyles();
 
 /**
  * TextField - A complete form field component with label, input, and validation
@@ -131,7 +131,7 @@ export function TextField({ ref, ...props }: TextFieldProps) {
           )}
           <Input
             {...inputProps}
-            classNames={classNames?.input}
+            classNames={{ ...classNames?.input, sizer: input() }}
             disabled={isDisabled}
             required={isRequired}
             size={size}
