@@ -12,6 +12,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Tooltip } from './';
+import { TooltipTrigger } from './trigger';
 import type { TooltipTriggerComponentProps } from 'react-aria-components';
 
 function setup({
@@ -20,10 +21,10 @@ function setup({
   ...rest
 }: Partial<TooltipTriggerComponentProps> = {}) {
   render(
-    <Tooltip.Trigger isOpen={isOpen}>
+    <TooltipTrigger isOpen={isOpen}>
       <span className='fg-primary-bold'>{children}</span>
       <Tooltip>My tooltip</Tooltip>
-    </Tooltip.Trigger>,
+    </TooltipTrigger>,
   );
 
   return {

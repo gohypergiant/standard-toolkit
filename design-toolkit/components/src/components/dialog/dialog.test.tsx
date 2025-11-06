@@ -13,6 +13,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Dialog } from './';
+import { DialogFooter } from './footer';
+import { DialogTitle } from './title';
+import { DialogTrigger } from './trigger';
 import type { DialogProps } from './types';
 
 function setup({
@@ -21,9 +24,9 @@ function setup({
   ...rest
 }: Partial<DialogProps> = {}) {
   render(
-    <Dialog.Trigger {...rest} isOpen={isOpen}>
+    <DialogTrigger {...rest} isOpen={isOpen}>
       <Dialog>{children}</Dialog>
-    </Dialog.Trigger>,
+    </DialogTrigger>,
   );
 
   return {
@@ -42,9 +45,9 @@ describe('Dialog', () => {
     setup({
       children: (
         <>
-          <Dialog.Title>{title}</Dialog.Title>
+          <DialogTitle>{title}</DialogTitle>
           {content}
-          <Dialog.Footer>{footer}</Dialog.Footer>
+          <DialogFooter>{footer}</DialogFooter>
         </>
       ),
     });

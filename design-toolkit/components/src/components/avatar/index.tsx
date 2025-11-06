@@ -11,29 +11,19 @@
  */
 'use client';
 
-import 'client-only';
 import { Person } from '@accelint/icons';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
-import { createContext } from 'react';
-import { type ContextValue, useContextProps } from 'react-aria-components';
 import { designTokens } from '@/tokens/tokens';
-import { Badge } from '../badge';
+import 'client-only';
+import { useContextProps } from 'react-aria-components';
+import { BadgeProvider } from '../badge/context';
 import { Icon } from '../icon';
+import { IconProvider } from '../icon/context';
+import { AvatarContext } from './context';
 import { AvatarStyles } from './styles';
-import type { ProviderProps } from '@/lib/types';
 import type { AvatarProps } from './types';
 
 const { avatar, image, fallback, content } = AvatarStyles();
-
-export const AvatarContext =
-  createContext<ContextValue<AvatarProps, HTMLSpanElement>>(null);
-
-function AvatarProvider({ children, ...props }: ProviderProps<AvatarProps>) {
-  return (
-    <AvatarContext.Provider value={props}>{children}</AvatarContext.Provider>
-  );
-}
-AvatarProvider.displayName = 'Avatar.Provider';
 
 /**
  * Avatar - A user profile image component with fallback support
@@ -77,7 +67,7 @@ export function Avatar({ ref, ...props }: AvatarProps) {
   } = props;
 
   return (
-    <Icon.Provider size={size === 'medium' ? 'large' : 'medium'}>
+    <IconProvider size={size === 'medium' ? 'large' : 'medium'}>
       <Root
         {...rest}
         ref={ref}
@@ -99,14 +89,12 @@ export function Avatar({ ref, ...props }: AvatarProps) {
             </Icon>
           )}
         </Fallback>
-        <Badge.Provider offset={designTokens.spacing.xs} placement='top right'>
+        <BadgeProvider offset={designTokens.spacing.xs} placement='top right'>
           <span className={content({ className: classNames?.content, size })}>
             {children}
           </span>
-        </Badge.Provider>
+        </BadgeProvider>
       </Root>
-    </Icon.Provider>
+    </IconProvider>
   );
 }
-Avatar.displayName = 'Avatar';
-Avatar.Provider = AvatarProvider;

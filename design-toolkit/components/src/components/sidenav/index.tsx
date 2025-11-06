@@ -11,137 +11,78 @@
  */
 'use client';
 
+import { useOn } from '@accelint/bus/react';
 import 'client-only';
-import { useEmit, useOn } from '@accelint/bus/react';
-import { isUUID, type UniqueId, uuid } from '@accelint/core';
-import { ArrowNortheast, ChevronDown, ChevronLeft } from '@accelint/icons';
-import { createContext, useContext, useRef, useState } from 'react';
-import {
-  Button,
-  composeRenderProps,
-  DEFAULT_SLOT,
-  DialogTrigger,
-  Disclosure,
-  DisclosurePanel,
-  Header,
-  Heading,
-  HeadingContext,
-  Link,
-  Popover,
-  Pressable,
-  Provider,
-  TextContext,
-  ToggleButton,
-} from 'react-aria-components';
-import { AvatarContext } from '../avatar';
-import { DividerContext } from '../divider';
-import { Icon, IconContext } from '../icon';
-import { Tooltip } from '../tooltip';
+import { useState } from 'react';
+import { DEFAULT_SLOT, HeadingContext, Provider } from 'react-aria-components';
+import { SidenavContext } from './context';
 import { SidenavEventTypes } from './events';
 import { SidenavStyles } from './styles';
 import type {
-  SidenavAvatarProps,
   SidenavCloseEvent,
-  SidenavContentProps,
-  SidenavContextValue,
-  SidenavEvent,
-  SidenavFooterProps,
-  SidenavHeaderProps,
-  SidenavItemProps,
-  SidenavLinkProps,
-  SidenavMenuItemProps,
-  SidenavMenuProps,
   SidenavOpenEvent,
   SidenavProps,
   SidenavToggleEvent,
-  SidenavTriggerProps,
 } from './types';
 
-const {
-  sidenav,
-  content,
-  header,
-  toggle,
-  heading,
-  divider,
-  item,
-  text,
-  transient,
-  avatar,
-  avatarHeading,
-  avatarIcon,
-  avatarText,
-  link,
-  tooltip,
-  menu,
-  menuButton,
-  menuHeading,
-  menuPanel,
-  menuItem,
-  panelHeading,
-  panelContent,
-} = SidenavStyles();
-
-const SidenavContext = createContext<SidenavContextValue>({
-  id: uuid(),
-  isOpen: false,
-});
+const { sidenav, heading, transient, menuHeading, panelHeading } =
+  SidenavStyles();
 
 /**
  * Sidenav - Collapsible side navigation panel
  *
  * Provides a hierarchical collapsible side navigation intended to be used
- * inside a Drawer.Layout. Supports headers, avatars, nested menus, and items.
+ * inside a DrawerLayout. Supports headers, avatars, nested menus, and items.
  *
  * @example
- * <Drawer.Layout push="left">
- *   <Drawer.Layout.Main className="col-start-2">
- *     <Sidenav.Trigger>
+ * <DrawerLayout push="left">
+ *   <DrawerLayoutMain className="col-start-2">
+ *     <SidenavTrigger>
  *       <Button variant="icon" size="large">
  *         <Icon>
  *           <MenuIcon />
  *         </Icon>
  *       </Button>
- *     </Sidenav.Trigger>
- *   </Drawer.Layout.Main>
+ *     </SidenavTrigger>
+ *   </DrawerLayoutMain>
  *   <Sidenav>
- *     <Sidenav.Header>
- *       <Sidenav.Avatar>
+ *     <SidenavHeader>
+ *       <SidenavAvatar>
  *         <Icon><AppLogo /></Icon>
  *         <Heading>Application Header</Heading>
  *         <Text>subheader</Text>
- *       </Sidenav.Avatar>
- *     </Sidenav.Header>
- *     <Sidenav.Content>
+ *       </SidenavAvatar>
+ *     </SidenavHeader>
+ *     <SidenavContent>
  *       <Heading>Navigation</Heading>
- *       <Sidenav.Item>
+ *       <SidenavItem>
  *         <Icon><HomeIcon /></Icon>
  *         <Text>Home</Text>
- *       </Sidenav.Item>
+ *       </SidenavItem>
  *       <Divider />
- *       <Sidenav.Item isSelected>
+ *       <SidenavItem isSelected>
  *         <Icon><SettingsIcon /></Icon>
  *         <Text>Settings</Text>
- *       </Sidenav.Item>
+ *       </SidenavItem>
  *       <Divider />
- *       <Sidenav.Menu title="More Options" icon={<Icon><MenuIcon /></Icon>}>
- *         <Sidenav.Menu.Item>
+ *       <SidenavMenu title="More Options" icon={<Icon><MenuIcon /></Icon>}>
+ *         <SidenavMenuItem>
  *           <Text>Sub Item 1</Text>
- *         </Sidenav.Menu.Item>
- *         <Sidenav.Menu.Item>
+ *         </SidenavMenuItem>
+ *         <SidenavMenuItem>
  *           <Text>Sub Item 2</Text>
- *         </Sidenav.Menu.Item>
- *       </Sidenav.Menu>
- *     </Sidenav.Content>
- *     <Sidenav.Footer>
- *       <Sidenav.Avatar>
+ *         </SidenavMenuItem>
+ *       </SidenavMenu>
+ *     </SidenavContent>
+ *     <SidenavFooter>
+ *       <SidenavAvatar>
  *         <Icon><UserIcon /></Icon>
  *         <Heading>User Name</Heading>
  *         <Text>john@example.com</Text>
- *       </Sidenav.Avatar>
- *     </Sidenav.Footer>
+ *       </SidenavAvatar>
+ *     </SidenavFooter>
  *   </Sidenav>
- * </Drawer.Layout>
+ * </DrawerLayout>
  */
 export function Sidenav({
   id,
@@ -202,261 +143,3 @@ export function Sidenav({
     </Provider>
   );
 }
-Sidenav.displayName = 'Sidenav';
-
-function SidenavContent({ className, children, ...rest }: SidenavContentProps) {
-  return (
-    <Provider values={[[DividerContext, { className: divider() }]]}>
-      <div {...rest} className={content({ className })}>
-        {children}
-      </div>
-    </Provider>
-  );
-}
-SidenavContent.displayName = 'Sidenav.Content';
-
-function SidenavHeader({ children, classNames, ...rest }: SidenavHeaderProps) {
-  const emit = useEmit<SidenavToggleEvent>(SidenavEventTypes.toggle);
-  const { id } = useContext(SidenavContext);
-
-  return (
-    <Header {...rest} className={header({ className: classNames?.header })}>
-      <Button
-        className={composeRenderProps(classNames?.button, (className) =>
-          toggle({ className }),
-        )}
-        onPress={() => emit({ id })}
-      >
-        {children}
-        <Icon className={transient()}>
-          <ChevronLeft />
-        </Icon>
-      </Button>
-    </Header>
-  );
-}
-SidenavHeader.displayName = 'Sidenav.Header';
-
-function SidenavFooter(props: SidenavFooterProps) {
-  return <footer {...props} />;
-}
-SidenavFooter.displayName = 'Sidenav.Footer';
-
-function SidenavTrigger({ children, for: type, ...rest }: SidenavTriggerProps) {
-  const [event, id] = (isUUID(type) ? ['toggle', type] : type.split(':')) as [
-    'close' | 'open' | 'toggle',
-    UniqueId,
-  ];
-  const emit = useEmit<SidenavEvent>(SidenavEventTypes[event]);
-
-  return (
-    <Pressable {...rest} onPress={() => emit({ id })}>
-      {children}
-    </Pressable>
-  );
-}
-SidenavTrigger.displayName = 'Sidenav.Trigger';
-
-function SidenavItem({
-  children,
-  classNames,
-  textValue,
-  ...rest
-}: SidenavItemProps) {
-  const { isOpen } = useContext(SidenavContext);
-
-  // Implement ref to place tooltip inside Button DOM to enable contextual styling
-  const ref = useRef(null);
-
-  return (
-    <Provider
-      values={[
-        [IconContext, { size: 'medium' }],
-        [TextContext, { className: text({ className: transient() }) }],
-      ]}
-    >
-      <Tooltip.Trigger isDisabled={isOpen}>
-        <ToggleButton
-          {...rest}
-          ref={ref}
-          className={composeRenderProps(classNames?.button, (className) =>
-            item({ className }),
-          )}
-        >
-          {children}
-        </ToggleButton>
-        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
-          {textValue}
-        </Tooltip>
-      </Tooltip.Trigger>
-    </Provider>
-  );
-}
-SidenavItem.displayName = 'Sidenav.Item';
-
-function SidenavLink({
-  children,
-  classNames,
-  textValue,
-  ...rest
-}: SidenavLinkProps) {
-  const { isOpen } = useContext(SidenavContext);
-
-  // Implement ref to place tooltip inside Link DOM to enable contextual styling
-  const ref = useRef(null);
-
-  return (
-    <Provider
-      values={[[TextContext, { className: text({ className: transient() }) }]]}
-    >
-      <Tooltip.Trigger isDisabled={isOpen}>
-        <Link
-          {...rest}
-          ref={ref}
-          className={composeRenderProps(classNames?.button, (className) =>
-            link({ className }),
-          )}
-        >
-          {composeRenderProps(children, (children) => (
-            <>
-              {children}
-              <Icon className={transient()}>
-                <ArrowNortheast />
-              </Icon>
-            </>
-          ))}
-        </Link>
-        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
-          {textValue}
-          <Icon>
-            <ArrowNortheast />
-          </Icon>
-        </Tooltip>
-      </Tooltip.Trigger>
-    </Provider>
-  );
-}
-SidenavLink.displayName = 'Sidenav.Link';
-
-function SidenavAvatar({ children, className, ...rest }: SidenavAvatarProps) {
-  return (
-    <Provider
-      values={[
-        [IconContext, { size: 'large', className: avatarIcon() }],
-        [
-          HeadingContext,
-          { className: avatarHeading({ className: transient() }) },
-        ],
-        [TextContext, { className: avatarText({ className: transient() }) }],
-        [AvatarContext, { classNames: { avatar: avatarIcon() } }],
-      ]}
-    >
-      <div {...rest} className={avatar({ className })}>
-        {children}
-      </div>
-    </Provider>
-  );
-}
-SidenavAvatar.displayName = 'Sidenav.Avatar';
-
-function SidenavMenu({
-  icon,
-  title,
-  classNames,
-  children,
-  ...rest
-}: SidenavMenuProps) {
-  const { isOpen } = useContext(SidenavContext);
-  const ref = useRef(null);
-
-  return isOpen ? (
-    <Disclosure
-      className={composeRenderProps(classNames?.menu, (className) =>
-        menu({ className }),
-      )}
-    >
-      <Button
-        {...rest}
-        slot='trigger'
-        className={composeRenderProps(classNames?.button, (className) =>
-          menuButton({ className }),
-        )}
-      >
-        {icon}
-        <Heading slot='menu'>{title}</Heading>
-        <Icon className={transient({ className: classNames?.icon })}>
-          <ChevronDown className='transform group-expanded/menu:rotate-180' />
-        </Icon>
-      </Button>
-      <DisclosurePanel
-        className={composeRenderProps(
-          classNames?.disclosurePanel,
-          (className) => className ?? '',
-        )}
-      >
-        <div className={panelContent({ className: classNames?.panelContent })}>
-          {children}
-        </div>
-      </DisclosurePanel>
-    </Disclosure>
-  ) : (
-    <DialogTrigger>
-      <Tooltip.Trigger isDisabled={isOpen}>
-        <Button
-          {...rest}
-          ref={ref}
-          className={composeRenderProps(classNames?.button, (className) =>
-            menuButton({ className }),
-          )}
-        >
-          {icon}
-        </Button>
-        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
-          {title}
-        </Tooltip>
-      </Tooltip.Trigger>
-      <Popover
-        className={composeRenderProps(classNames?.popoverPanel, (className) =>
-          menuPanel({ className }),
-        )}
-        placement='right top'
-        shouldFlip={false}
-      >
-        <Heading slot='panel'>{title}</Heading>
-        <div className={panelContent({ className: classNames?.panelContent })}>
-          {children}
-        </div>
-      </Popover>
-    </DialogTrigger>
-  );
-}
-SidenavMenu.displayName = 'Sidenav.Menu';
-
-function SidenavMenuItem({
-  className,
-  children,
-  ...rest
-}: SidenavMenuItemProps) {
-  return (
-    <ToggleButton
-      {...rest}
-      className={composeRenderProps(className, (className) =>
-        menuItem({ className }),
-      )}
-    >
-      {children}
-    </ToggleButton>
-  );
-}
-SidenavMenuItem.displayName = 'Sidenav.Menu.Item';
-
-SidenavMenu.Item = SidenavMenuItem;
-
-Sidenav.Trigger = SidenavTrigger;
-Sidenav.Header = SidenavHeader;
-Sidenav.Item = SidenavItem;
-Sidenav.Link = SidenavLink;
-Sidenav.Avatar = SidenavAvatar;
-Sidenav.Footer = SidenavFooter;
-Sidenav.Content = SidenavContent;
-Sidenav.Menu = SidenavMenu;

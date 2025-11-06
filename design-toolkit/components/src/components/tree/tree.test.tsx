@@ -14,26 +14,28 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Tree } from './index';
+import { TreeItem } from './item';
+import { TreeItemContent } from './item-content';
 
 describe('Tree', () => {
   it('should render', () => {
     render(
       <Tree aria-label='Static example'>
-        <Tree.Item id='fruit' textValue='fruit'>
-          <Tree.Item.Content>Fruit</Tree.Item.Content>
-          <Tree.Item id='apples' textValue='apples'>
-            <Tree.Item.Content>Apples</Tree.Item.Content>
-            <Tree.Item id='green' textValue='green-apple'>
-              <Tree.Item.Content>Green Apple</Tree.Item.Content>
-            </Tree.Item>
-          </Tree.Item>
-        </Tree.Item>
-        <Tree.Item id='vegetables' textValue='vegetables'>
-          <Tree.Item.Content>Vegetables</Tree.Item.Content>
-          <Tree.Item id='carrot' textValue='carrot'>
-            <Tree.Item.Content>Carrot</Tree.Item.Content>
-          </Tree.Item>
-        </Tree.Item>
+        <TreeItem id='fruit' textValue='fruit'>
+          <TreeItemContent>Fruit</TreeItemContent>
+          <TreeItem id='apples' textValue='apples'>
+            <TreeItemContent>Apples</TreeItemContent>
+            <TreeItem id='green' textValue='green-apple'>
+              <TreeItemContent>Green Apple</TreeItemContent>
+            </TreeItem>
+          </TreeItem>
+        </TreeItem>
+        <TreeItem id='vegetables' textValue='vegetables'>
+          <TreeItemContent>Vegetables</TreeItemContent>
+          <TreeItem id='carrot' textValue='carrot'>
+            <TreeItemContent>Carrot</TreeItemContent>
+          </TreeItem>
+        </TreeItem>
       </Tree>,
     );
 

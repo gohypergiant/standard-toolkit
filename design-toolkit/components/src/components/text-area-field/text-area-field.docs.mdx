@@ -32,10 +32,10 @@ The TextArea Field component provides a multi-line text input with integrated la
 />
 
 // Using context provider for default props
-<TextAreaField.Provider size="small">
+<TextAreaFieldProvider size="small">
   <TextAreaField label="Field 1" />
   <TextAreaField label="Field 2" />
-</TextAreaField.Provider>
+</TextAreaFieldProvider>
 
 // With custom input props
 <TextAreaField
@@ -53,7 +53,7 @@ The TextArea Field component provides a multi-line text input with integrated la
 * **medium** - Standard size with full label and description support (default)
 * **small** - Compact size with minimal label display and reduced text size
 
-The size can be controlled via the `size` prop or set globally using the `TextAreaField.Provider` component.
+The size can be controlled via the `size` prop or set globally using the `TextAreaFieldProvider` component.
 
 <Canvas of={TextAreaFieldStories.Default} />
 

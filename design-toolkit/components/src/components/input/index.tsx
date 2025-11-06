@@ -12,20 +12,20 @@
 
 'use client';
 
-import 'client-only';
 import { CancelFill } from '@accelint/icons';
 import { useControlledState } from '@react-stately/utils';
-import { type ChangeEvent, createContext } from 'react';
+import 'client-only';
 import {
   Input as AriaInput,
   InputContext as AriaInputContext,
-  type ContextValue,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
+import { InputContext } from './context';
 import { InputStyles, InputStylesDefaults } from './styles';
+import type { ChangeEvent } from 'react';
 import type { InputProps } from './types';
 
 const { container, sizer, input, clear } = InputStyles();
@@ -34,9 +34,6 @@ const { container, sizer, input, clear } = InputStyles();
 const clearInputEvent = {
   target: { value: '' },
 } as ChangeEvent<HTMLInputElement>;
-
-export const InputContext =
-  createContext<ContextValue<InputProps, HTMLInputElement>>(null);
 
 /**
  * Input - A flexible text input component with enhanced features
@@ -172,4 +169,3 @@ export function Input({ ref, ...props }: InputProps) {
     </div>
   );
 }
-Input.displayName = 'Input';

@@ -13,19 +13,19 @@
 import { Broadcast } from '@accelint/bus';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Notice } from './';
 import { NoticeEventTypes } from './events';
+import { NoticeList } from './list';
 import type { NoticeListProps, NoticeQueueEvent } from './types';
 
 const bus = Broadcast.getInstance<NoticeQueueEvent>();
 
 function setup(props: NoticeListProps) {
-  render(<Notice.List {...props} />);
+  render(<NoticeList {...props} />);
 
   return props;
 }
 
-describe('Notice.List', () => {
+describe('NoticeList', () => {
   it('should render message', async () => {
     setup({});
     bus.emit(NoticeEventTypes.queue, {

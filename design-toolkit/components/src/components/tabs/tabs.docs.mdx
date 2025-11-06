@@ -14,14 +14,14 @@ Tabs organize content into multiple sections and allow users to navigate between
 import { Tabs } from '@accelint/design-toolkit';
 
 <Tabs defaultSelectedKey="tab1">
-  <Tabs.List>
-    <Tabs.List.Tab id="tab1">First Tab</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab2">Second Tab</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab3">Third Tab</Tabs.List.Tab>
-  </Tabs.List>
-  <Tabs.Panel id="tab1">Content for first tab</Tabs.Panel>
-  <Tabs.Panel id="tab2">Content for second tab</Tabs.Panel>
-  <Tabs.Panel id="tab3">Content for third tab</Tabs.Panel>
+  <TabList>
+    <Tab id="tab1">First Tab</Tab>
+    <Tab id="tab2">Second Tab</Tab>
+    <Tab id="tab3">Third Tab</Tab>
+  </TabList>
+  <TabPanel id="tab1">Content for first tab</TabPanel>
+  <TabPanel id="tab2">Content for second tab</TabPanel>
+  <TabPanel id="tab3">Content for third tab</TabPanel>
 </Tabs>
 ```
 
@@ -30,9 +30,9 @@ import { Tabs } from '@accelint/design-toolkit';
 The Tabs component follows a specific structure:
 
 - **Tabs** - The main container component that manages tab selection state
-- **Tabs.List** - Container for tab items
-  - **Tabs.List.Tab** - Individual tab buttons that users can select
-- **Tabs.Panel** - Content container that displays when its corresponding tab is selected
+- **TabList** - Container for tab items
+  - **Tab** - Individual tab buttons that users can select
+- **TabPanel** - Content container that displays when its corresponding tab is selected
 
 ## Props
 
@@ -42,20 +42,20 @@ The Tabs component follows a specific structure:
 * **`selectedKey`** - The controlled selected tab key
 * **`onSelectionChange`** - Handler called when selection changes
 * **`orientation`** - The orientation of the tabs
-* **`children`** - Must include Tabs.List and Tabs.Panel components
+* **`children`** - Must include TabList and TabPanel components
 
-### Tabs.List
+### TabList
 
 * **`variant`** - Visual style variant
-* **`children`** - Must include at least one Tabs.List.Tab component
+* **`children`** - Must include at least one Tab component
 
-### Tabs.List.Tab
+### Tab
 
 * **`id`** - Unique identifier that matches a panel
 * **`children`** - Content of the tab
 * **`disabled`** - Whether the tab is disabled
 
-### Tabs.Panel
+### TabPanel
 
 * **`id`** - Unique identifier that matches a tab
 * **`children`** - Content to show when the corresponding tab is selected
@@ -75,14 +75,14 @@ The Tabs component is built on top of React Aria's Tabs component, which provide
 
 ```tsx
 <Tabs defaultSelectedKey="tab1">
-  <Tabs.List>
-    <Tabs.List.Tab id="tab1">Overview</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab2">Details</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab3">Settings</Tabs.List.Tab>
-  </Tabs.List>
-  <Tabs.Panel id="tab1">Overview content</Tabs.Panel>
-  <Tabs.Panel id="tab2">Details content</Tabs.Panel>
-  <Tabs.Panel id="tab3">Settings content</Tabs.Panel>
+  <TabList>
+    <Tab id="tab1">Overview</Tab>
+    <Tab id="tab2">Details</Tab>
+    <Tab id="tab3">Settings</Tab>
+  </TabList>
+  <TabPanel id="tab1">Overview content</TabPanel>
+  <TabPanel id="tab2">Details content</TabPanel>
+  <TabPanel id="tab3">Settings content</TabPanel>
 </Tabs>
 ```
 
@@ -90,14 +90,14 @@ The Tabs component is built on top of React Aria's Tabs component, which provide
 
 ```tsx
 <Tabs orientation="vertical" defaultSelectedKey="tab1">
-  <Tabs.List>
-    <Tabs.List.Tab id="tab1">Profile</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab2">Account</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab3">Preferences</Tabs.List.Tab>
-  </Tabs.List>
-  <Tabs.Panel id="tab1">Profile settings</Tabs.Panel>
-  <Tabs.Panel id="tab2">Account settings</Tabs.Panel>
-  <Tabs.Panel id="tab3">Preferences settings</Tabs.Panel>
+  <TabList>
+    <Tab id="tab1">Profile</Tab>
+    <Tab id="tab2">Account</Tab>
+    <Tab id="tab3">Preferences</Tab>
+  </TabList>
+  <TabPanel id="tab1">Profile settings</TabPanel>
+  <TabPanel id="tab2">Account settings</TabPanel>
+  <TabPanel id="tab3">Preferences settings</TabPanel>
 </Tabs>
 ```
 
@@ -105,20 +105,20 @@ The Tabs component is built on top of React Aria's Tabs component, which provide
 
 ```tsx
 <Tabs defaultSelectedKey="home">
-  <Tabs.List variant="icons">
-    <Tabs.List.Tab id="home">
+  <TabList variant="icons">
+    <Tab id="home">
       <Icon><Home /></Icon>
-    </Tabs.List.Tab>
-    <Tabs.List.Tab id="search">
+    </Tab>
+    <Tab id="search">
       <Icon><Search /></Icon>
-    </Tabs.List.Tab>
-    <Tabs.List.Tab id="settings">
+    </Tab>
+    <Tab id="settings">
       <Icon><Settings /></Icon>
-    </Tabs.List.Tab>
-  </Tabs.List>
-  <Tabs.Panel id="home">Home content</Tabs.Panel>
-  <Tabs.Panel id="search">Search content</Tabs.Panel>
-  <Tabs.Panel id="settings">Settings content</Tabs.Panel>
+    </Tab>
+  </TabList>
+  <TabPanel id="home">Home content</TabPanel>
+  <TabPanel id="search">Search content</TabPanel>
+  <TabPanel id="settings">Settings content</TabPanel>
 </Tabs>
 ```
 
@@ -126,14 +126,14 @@ The Tabs component is built on top of React Aria's Tabs component, which provide
 
 ```tsx
 <Tabs defaultSelectedKey="tab1">
-  <Tabs.List>
-    <Tabs.List.Tab id="tab1">Active Tab</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab2" disabled>Disabled Tab</Tabs.List.Tab>
-    <Tabs.List.Tab id="tab3">Another Tab</Tabs.List.Tab>
-  </Tabs.List>
-  <Tabs.Panel id="tab1">Active tab content</Tabs.Panel>
-  <Tabs.Panel id="tab2">This content won't be accessible</Tabs.Panel>
-  <Tabs.Panel id="tab3">Another tab content</Tabs.Panel>
+  <TabList>
+    <Tab id="tab1">Active Tab</Tab>
+    <Tab id="tab2" disabled>Disabled Tab</Tab>
+    <Tab id="tab3">Another Tab</Tab>
+  </TabList>
+  <TabPanel id="tab1">Active tab content</TabPanel>
+  <TabPanel id="tab2">This content won't be accessible</TabPanel>
+  <TabPanel id="tab3">Another tab content</TabPanel>
 </Tabs>
 ```
 
@@ -147,12 +147,12 @@ function ControlledTabs() {
 
   return (
     <Tabs selectedKey={selectedKey} onSelectionChange={setSelectedKey}>
-      <Tabs.List>
-        <Tabs.List.Tab id="tab1">First Tab</Tabs.List.Tab>
-        <Tabs.List.Tab id="tab2">Second Tab</Tabs.List.Tab>
-      </Tabs.List>
-      <Tabs.Panel id="tab1">First tab content</Tabs.Panel>
-      <Tabs.Panel id="tab2">Second tab content</Tabs.Panel>
+      <TabList>
+        <Tab id="tab1">First Tab</Tab>
+        <Tab id="tab2">Second Tab</Tab>
+      </TabList>
+      <TabPanel id="tab1">First tab content</TabPanel>
+      <TabPanel id="tab2">Second tab content</TabPanel>
     </Tabs>
   );
 }

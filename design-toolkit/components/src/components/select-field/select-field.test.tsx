@@ -12,25 +12,27 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Options } from '../options';
-import { SelectField } from './index';
+import { OptionsItem } from '../options/item';
+import { OptionsItemDescription } from '../options/item-description';
+import { OptionsItemLabel } from '../options/item-label';
+import { SelectField } from './';
 import type { SelectFieldProps } from './types';
 
 function setup({
   children = (
     <>
-      <Options.Item isDisabled>
-        <Options.Item.Label>Red Panda</Options.Item.Label>
-        <Options.Item.Description>Some ice cream</Options.Item.Description>
-      </Options.Item>
-      <Options.Item>
-        <Options.Item.Label>Cat</Options.Item.Label>
-        <Options.Item.Description>Some ice cream</Options.Item.Description>
-      </Options.Item>
-      <Options.Item>
-        <Options.Item.Label>Dog</Options.Item.Label>
-        <Options.Item.Description>Some ice cream</Options.Item.Description>
-      </Options.Item>
+      <OptionsItem isDisabled>
+        <OptionsItemLabel>Red Panda</OptionsItemLabel>
+        <OptionsItemDescription>Some ice cream</OptionsItemDescription>
+      </OptionsItem>
+      <OptionsItem>
+        <OptionsItemLabel>Cat</OptionsItemLabel>
+        <OptionsItemDescription>Some ice cream</OptionsItemDescription>
+      </OptionsItem>
+      <OptionsItem>
+        <OptionsItemLabel>Dog</OptionsItemLabel>
+        <OptionsItemDescription>Some ice cream</OptionsItemDescription>
+      </OptionsItem>
     </>
   ),
   ...rest
