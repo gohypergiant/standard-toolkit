@@ -20,4 +20,6 @@ export const MapCursorEvents = {
   changed: `${MapCursorEventsNamespace}:changed`,
   /** Emitted when a component requests a new cursor */
   changeRequest: `${MapCursorEventsNamespace}:change:request`,
+  /** Emitted when map cursor state changes eg. hover/drag */
+  changeState: `${MapCursorEventsNamespace}:change:state`,
 } as const;

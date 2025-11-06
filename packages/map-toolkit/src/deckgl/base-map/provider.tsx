@@ -14,7 +14,14 @@
 
 import 'client-only';
 import { createContext, type ReactNode, useEffect } from 'react';
-import { destroyStore, getOrCreateStore } from '../../map-mode/store';
+import {
+  destroyStore as destroyCursorStore,
+  getOrCreateStore as getOrCreateCursorStore,
+} from '../../map-cursor/store';
+import {
+  destroyStore as destroyModeStore,
+  getOrCreateStore as getOrCreateModeStore,
+} from '../../map-mode/store';
 import type { UniqueId } from '@accelint/core';
 
 /**
@@ -161,12 +168,14 @@ export function MapProvider({ children, id }: MapProviderProps) {
 function MapProviderInternal({ children, id }: MapProviderProps) {
   // Create store synchronously before children render
   // This is required for useSyncExternalStore pattern
-  getOrCreateStore(id);
+  getOrCreateModeStore(id);
+  getOrCreateCursorStore(id);
 
   // Cleanup when component unmounts
   useEffect(() => {
     return () => {
-      destroyStore(id);
+      destroyModeStore(id);
+      destroyCursorStore(id);
     };
   }, [id]); // id is stable within this component's lifetime due to key prop
 

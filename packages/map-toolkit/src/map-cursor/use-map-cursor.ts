@@ -1,21 +1,21 @@
 import { useContext, useMemo, useSyncExternalStore } from 'react';
-import { getStore } from '../store';
-import { MapIdContext } from './provider';
+import { MapContext } from '../deckgl/base-map/provider';
+import { getStore } from './store';
 import type { UniqueId } from '@accelint/core';
 
 /**
- * Return value for the useMapMode hook
+ * Return value for the useMapCursor hook
  */
 export type UseMapCursorReturn = {
-  /** The current active map mode */
-  cursors: [];
-  /** Function to request a mode change with ownership */
-  requestCursorChange: (desiredMode: string, requestOwner: string) => void;
+  /** The current active map cursor */
+  cursor: string;
+  /** Function to request a cursor change with ownership */
+  requestCursorChange: (desiredCursor: string, requestOwner: string) => void;
 };
 
-export function useMapMode(mapInstanceId?: UniqueId): UseMapCursorReturn {
-  const contextId = useContext(MapIdContext);
-  const actualId = mapInstanceId ?? contextId;
+export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
+  const contextId = useContext(MapContext);
+  const actualId = id ?? contextId;
 
   if (!actualId) {
     throw new Error(
@@ -33,14 +33,14 @@ export function useMapMode(mapInstanceId?: UniqueId): UseMapCursorReturn {
   }
 
   // Subscribe to store using useSyncExternalStore
-  const cursors = useSyncExternalStore(store.subscribe, store.getSnapshot);
+  const cursor = useSyncExternalStore(store.subscribe, store.getSnapshot);
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
-      cursors,
+      cursor,
       requestCursorChange: store.requestCursorChange,
     }),
-    [cursors, store],
+    [cursor, store],
   );
 }
