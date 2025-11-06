@@ -81,7 +81,6 @@ export function FlashcardHero(props: FlashcardComponentProps) {
   if (isLoading) {
     return (
       <div {...rest} className={hero({ className })}>
-        {/* TODO: Styling? */}
         <Skeleton />
         <Skeleton className='w-1/2' />
       </div>
@@ -193,10 +192,10 @@ export function FlashcardDetailsContainer(
             key={item.label}
           >
             <div className={detailsLabel({ className: classNames?.label })}>
-              {isLoading ? <Skeleton /> : item.label}
+              {isLoading ? <Skeleton className='my-xxs py-xxs' /> : item.label}
             </div>
             <div className={detailsValue({ className: classNames?.value })}>
-              {isLoading ? <Skeleton /> : item.value}
+              {isLoading ? <Skeleton className='my-xxs py-xxs' /> : item.value}
             </div>
           </div>
         );
