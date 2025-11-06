@@ -41,7 +41,7 @@ export class MapCursorStore {
     this.id = id;
     this.cursorDefaults = cursorDefaults;
     // Subscribe to bus events
-    this.setupEventListeners();
+    // this.setupEventListeners();
   }
 
   /**
@@ -65,11 +65,31 @@ export class MapCursorStore {
     };
   };
 
+  /**
+   * Notify all subscribers of state change
+   */
+  private notify(): void {
+    for (const listener of this.listeners) {
+      listener();
+    }
+  }
+
   updateCursorState = (state: CursorState): void => {
-    this.cursorState = state;
+    if (this.cursorState !== state) {
+      this.cursorState = state;
+
+      this.cursorOwners.clear();
+
+      this.bus.emit(MapCursorEvents.changeState, {
+        state,
+        id: this.id,
+      });
+    }
+
+    this.notify();
   };
 
-  requestCursorChange = (desiredCursor: string, requestOwner: string): void => {
+  addCursor = (desiredCursor: string, requestOwner: string): void => {
     const trimmedDesiredCursor = desiredCursor.trim();
     const trimmedRequestOwner = requestOwner.trim();
 
@@ -80,50 +100,68 @@ export class MapCursorStore {
       throw new Error('requestCursorChange requires non-empty requestOwner');
     }
 
-    this.bus.emit(MapCursorEvents.changeRequest, {
-      desiredCursor: trimmedDesiredCursor,
-      owner: trimmedRequestOwner,
-      id: this.id,
-    });
+    this.cursorOwners.set(trimmedRequestOwner, trimmedDesiredCursor);
+    this.notify();
+
+    // this.bus.emit(MapCursorEvents.changeRequest, {
+    //   desiredCursor: trimmedDesiredCursor,
+    //   owner: trimmedRequestOwner,
+    //   id: this.id,
+    // });
   };
 
-  private setupEventListeners(): void {
-    // Listen for cursor change requests
-    const unsubRequest = this.bus.on(MapCursorEvents.changeRequest, (event) => {
-      const { desiredCursor, owner: requestOwner, id } = event.payload;
+  removeCursor = (requestOwner: string): void => {
+    const trimmedRequestOwner = requestOwner.trim();
 
-      // Filter: only handle if targeted at this map and desired cursor doesn't exist
-      if (
-        id !== this.id ||
-        desiredCursor === this.cursorOwners.get(requestOwner)
-      ) {
-        return;
-      }
+    if (!trimmedRequestOwner) {
+      throw new Error('requestCursorChange requires non-empty requestOwner');
+    }
 
-      this.handleCursorChangeRequest(desiredCursor, requestOwner);
-    });
-    this.unsubscribers.push(unsubRequest);
+    this.cursorOwners.delete(trimmedRequestOwner);
+    this.notify();
+  };
 
-    // Listen to map events for cursor state changes
-    const unsubMapState = this.bus.on(MapCursorEvents.changeState, (event) => {
-      const { state, id } = event.payload;
+  // private setupEventListeners(): void {
+  //   // Listen for cursor change requests
+  //   const unsubRequest = this.bus.on(MapCursorEvents.changeRequest, (event) => {
+  //     const { desiredCursor, owner: requestOwner, id } = event.payload;
 
-      // Filter: only handle if targeted at this map or state will change
-      if (id !== this.id || state === this.cursorState) {
-        return;
-      }
+  //     // Filter: only handle if targeted at this map and desired cursor doesn't exist
+  //     if (
+  //       id !== this.id ||
+  //       desiredCursor === this.cursorOwners.get(requestOwner)
+  //     ) {
+  //       return;
+  //     }
 
-      this.updateCursorState(state);
-    });
-    this.unsubscribers.push(unsubMapState);
-  }
+  //     this.handleCursorChangeRequest(desiredCursor, requestOwner);
+  //   });
+  //   this.unsubscribers.push(unsubRequest);
 
-  private handleCursorChangeRequest(
-    desiredMode: string,
-    requestOwner: string,
-  ): void {
-    return;
-  }
+  //   // Listen to map events for cursor state changes
+  //   const unsubMapState = this.bus.on(MapCursorEvents.changeState, (event) => {
+  //     const { state, id } = event.payload;
+
+  //     // Filter: only handle if targeted at this map or state will change
+  //     if (id !== this.id || state === this.cursorState) {
+  //       return;
+  //     }
+
+  //     this.handleCursorStateChange(state);
+  //   });
+  //   this.unsubscribers.push(unsubMapState);
+  // }
+
+  // private handleCursorChangeRequest(
+  //   desiredMode: string,
+  //   requestOwner: string,
+  // ): void {
+  //   return;
+  // }
+
+  // private handleCursorStateChange(): void {
+  //   this.cursorOwners.clear();
+  // }
 
   /**
    * Clean up store resources

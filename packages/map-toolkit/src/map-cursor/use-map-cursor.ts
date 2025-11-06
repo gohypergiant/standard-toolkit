@@ -2,6 +2,7 @@ import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import { getStore } from './store';
 import type { UniqueId } from '@accelint/core';
+import type { CursorState } from './types';
 
 /**
  * Return value for the useMapCursor hook
@@ -10,7 +11,9 @@ export type UseMapCursorReturn = {
   /** The current active map cursor */
   cursor: string;
   /** Function to request a cursor change with ownership */
-  requestCursorChange: (desiredCursor: string, requestOwner: string) => void;
+  addCursor: (desiredCursor: string, requestOwner: string) => void;
+  removeCursor: (requestOwner: string) => void;
+  updateCursorState: (state: CursorState) => void;
 };
 
 export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
@@ -39,7 +42,9 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
   return useMemo(
     () => ({
       cursor,
-      requestCursorChange: store.requestCursorChange,
+      addCursor: store.addCursor,
+      removeCursor: store.removeCursor,
+      updateCursorState: store.updateCursorState,
     }),
     [cursor, store],
   );

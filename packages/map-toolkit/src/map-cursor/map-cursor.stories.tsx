@@ -1,3 +1,15 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 //import { useEmit, useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
@@ -36,7 +48,7 @@ export const BasicUsage: Story = {
 
     // A simple toolbar that changes cursor
     function CursorToolbar() {
-      const { cursor, requestCursorChange } = useMapCursor(BASIC_USAGE_MAP_ID);
+      const { cursor, addCursor } = useMapCursor(BASIC_USAGE_MAP_ID);
       mapCursor = cursor;
       return (
         <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
@@ -47,7 +59,7 @@ export const BasicUsage: Story = {
                 key={cursorName}
                 variant={cursor === cursorName ? 'filled' : 'outline'}
                 color={cursor === cursorName ? 'accent' : 'mono-muted'}
-                onPress={() => requestCursorChange(cursorName, 'toolbar')}
+                onPress={() => addCursor(cursorName, 'toolbar')}
                 className='w-full'
               >
                 {cursorName}
