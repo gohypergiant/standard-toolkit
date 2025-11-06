@@ -178,13 +178,15 @@ export function FlashcardDetailsContainer(
     return null;
   }
 
+  const displayDetails = [...details].splice(0, 5);
+
   return (
     <div
       {...rest}
       className={detailsContainer({ className: classNames?.container })}
     >
       {/* Limit to the first 5 items in details array.*/}
-      {details.splice(0, 5).map((item) => {
+      {displayDetails.map((item) => {
         return (
           <div
             className={detailsItem({ className: classNames?.item })}
