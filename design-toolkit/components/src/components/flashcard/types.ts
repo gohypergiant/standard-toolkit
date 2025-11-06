@@ -12,9 +12,11 @@
 
 import type { PropsWithChildren } from 'react';
 
-// Honestly, might not need these props.
-export type FlashcardProps = PropsWithChildren & {
+export type FlashcardComponentProps = PropsWithChildren & {
   className?: string;
+};
+
+export type FlashcardProps = FlashcardComponentProps & {
   isLoading?: boolean;
 };
 
@@ -27,7 +29,9 @@ export type FlashcardDetailContainerProps = {
   details?: FlashcardMetaData[];
   classNames?: {
     container?: string;
-    detail?: string;
+    item?: string;
+    label?: string;
+    value?: string;
   };
 };
 

@@ -12,26 +12,29 @@ A quick visual identifier for multiple points of data for a given map entity.
 ### Basic
 
 ```tsx
-    const details = [
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-    ];
+  const details = [
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+    { label: 'key', value: 'value' },
+  ];
 
-    <Flashcard>
-      <FlashcardHero>
-        <FlashcardIdentifier>IDENTIFIER</FlashcardIdentifier>
-      </FlashcardHero>
-      <FlashcardSecondaryContainer>
-        <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
-        <FlashcardSecondaryData>SECONDARY_DATA_02</FlashcardSecondaryData>
-        <FlashcardDetailsContainer details={details}/>
-      </FlashcardSecondaryContainer>
-    </Flashcard>
+  <Flashcard>
+    <FlashcardHero>
+      <FlashcardIdentifier>
+        <FlashcardHeader>Identifier</FlashcardHeader>
+        <FlashcardSubheader>DATA</FlashcardSubheader>
+      </FlashcardIdentifier>
+    </FlashcardHero>
+    <FlashcardSecondaryContainer>
+      <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
+      <FlashcardSecondaryData>SECONDARY_DATA_02</FlashcardSecondaryData>
+      <FlashcardDetailsContainer details={details}/>
+    </FlashcardSecondaryContainer>
+  </Flashcard>
 ```
 
 ## Props
@@ -43,7 +46,13 @@ The Flashcard component accepts all standard HTML div attributes.
 Upper half of the Flashcard to provide identifier data for the object being observed.
 
 ### FlashcardIdentifier
-Header for upper half of flashcard.
+Header for upper half of flashcard. Container for **`header`** and **`subHeader`**
+
+### FlashcardHeader
+Main identifier for Flashcard.
+
+### FlashcardSubheader
+Subheading for main identifier.
 
 ### FlashcardSecondaryContainer
 Container for the lower half of the Flashcard.
@@ -52,8 +61,10 @@ Container for the lower half of the Flashcard.
 Secondary data information that will appear below the initial header.
 
 ### FlashcardDetailsContainer
-* **`details`** - Array of additional details of the `FlashcardMetaData` type.
+* **`details`** - Array of additional details of the FlashcardMetaData type.
   * `{ label: string, value: any }` - Additional detail, only first 5 in the array are displayed.
 * **`classNames`** - Object for various class names for the details component.
   * `container` - Styling for container for the additional detail list.
-  * `detail` - Styling for individual entry in detail list.
+  * `item` - Styling for individual entry in detail list.
+  * `label` - Styling for detail label
+  * `value` - Styling for detail value

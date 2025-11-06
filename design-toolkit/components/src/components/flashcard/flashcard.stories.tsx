@@ -13,12 +13,24 @@
 import {
   Flashcard,
   FlashcardDetailsContainer,
+  FlashcardHeader,
   FlashcardHero,
   FlashcardIdentifier,
   FlashcardSecondaryContainer,
   FlashcardSecondaryData,
+  FlashcardSubheader,
 } from '.';
 import type { Meta, StoryObj } from '@storybook/react';
+
+const DEFAULT_DETAILS = [
+  { label: 'key', value: 'value' },
+  { label: 'key', value: 'value' },
+  { label: 'key', value: 'value' },
+  { label: 'key', value: 'value' },
+  { label: 'key', value: 'value' },
+  { label: 'key', value: 'value' },
+  { label: 'key', value: 'value' },
+];
 
 const meta = {
   title: 'Components/Flashcard',
@@ -30,28 +42,19 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
 export const Default: Story = {
   render: ({ children, ...args }) => {
-    const details = [
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-      { label: 'key', value: 'value' },
-    ];
-
     return (
       <Flashcard {...args}>
         <FlashcardHero>
-          <FlashcardIdentifier>IDENTIFIER</FlashcardIdentifier>
+          <FlashcardIdentifier>
+            <FlashcardHeader>IDENTIFIER</FlashcardHeader>
+            <FlashcardSubheader>DATA</FlashcardSubheader>
+          </FlashcardIdentifier>
         </FlashcardHero>
         <FlashcardSecondaryContainer>
           <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
-          <FlashcardSecondaryData>SECONDARY_DATA_02</FlashcardSecondaryData>
-          <FlashcardDetailsContainer details={details} />
+          <FlashcardDetailsContainer details={DEFAULT_DETAILS} />
         </FlashcardSecondaryContainer>
       </Flashcard>
     );

@@ -14,27 +14,33 @@
  * Example usage.
  *
  * <Flashcard>
- *  <Flashcard.Hero>
- *    <Flashcard.Identifier>
- *      {identifier}
- *    </Flashcard.Identifier>
- *  </Flashcard.Hero>
- *  <Flashcard.Secondary>
- *    <Flashcard.SecondaryData>
+ *  <FlashcardHero>
+ *    <FlashcardIdentifier>
+ *      <FlashcardHeader>
+ *        {header}
+ *      </FlashcardHeader>
+ *      <FlashcardSubheader>
+ *        {subHeader}
+ *      </FlashcardSubheader>
+ *    </FlashcardIdentifier>
+ *  </FlashcardHero>
+ *  <FlashcardSecondary>
+ *    <FlashcardSecondaryData>
  *      {secondaryData}
- *    </Flashcard.SecondaryData>
- *
- *     {details.map((key, value) => (
- *      <Flashcard.Details key={key} value={value} />
- *     ))}
- *  </Flashcard.Secondary>
+ *    </FlashcardSecondaryData>
+ *    <FlashcardDetailsContainer details={details} />
+ *  </FlashcardSecondary>
  * </Flashcard>
  */
 
-import { createContext, type PropsWithChildren, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { Skeleton } from '../skeleton';
 import { FlashcardStyles } from './styles';
-import type { FlashcardDetailContainerProps, FlashcardProps } from './types';
+import type {
+  FlashcardComponentProps,
+  FlashcardDetailContainerProps,
+  FlashcardProps,
+} from './types';
 
 const {
   container,
@@ -60,7 +66,7 @@ export function Flashcard(props: FlashcardProps) {
 
   return (
     <FlashcardContext.Provider value={{ isLoading }}>
-      <div className={container({ className })} {...rest}>
+      <div {...rest} className={container({ className })}>
         {children}
       </div>
     </FlashcardContext.Provider>
@@ -68,14 +74,14 @@ export function Flashcard(props: FlashcardProps) {
 }
 Flashcard.displayName = 'Flashcard';
 
-// TODO: Update type to include className.
-export function FlashcardHero(props: PropsWithChildren) {
-  const { children, ...rest } = props;
+export function FlashcardHero(props: FlashcardComponentProps) {
+  const { children, className, ...rest } = props;
   const { isLoading } = useContext(FlashcardContext);
 
   if (isLoading) {
     return (
-      <div className={hero()} {...rest}>
+      <div {...rest} className={hero({ className })}>
+        {/* TODO: Styling? */}
         <Skeleton />
         <Skeleton className='w-1/2' />
       </div>
@@ -83,7 +89,7 @@ export function FlashcardHero(props: PropsWithChildren) {
   }
 
   return (
-    <div className={hero()} {...rest}>
+    <div {...rest} className={hero()}>
       {children}
     </div>
   );
@@ -91,50 +97,71 @@ export function FlashcardHero(props: PropsWithChildren) {
 FlashcardHero.displayName = 'FlashcardHero';
 
 // classNames
-export function FlashcardIdentifier(props: PropsWithChildren) {
-  const { children, ...rest } = props;
+export function FlashcardIdentifier(props: FlashcardComponentProps) {
+  const { children, className, ...rest } = props;
 
   return (
-    <div className={identifier()} {...rest}>
-      <div className={header()}>{children}</div>
-      {/* TODO: Does this need another subcomponent? */}
-      <div className={subHeader()}>DATA</div>
+    <div {...rest} className={identifier({ className })}>
+      {children}
     </div>
   );
 }
 FlashcardIdentifier.displayName = 'FlashcardIdentifier';
 
-export function FlashcardSecondaryContainer(props: PropsWithChildren) {
-  const { children, ...rest } = props;
+export function FlashcardHeader(props: FlashcardComponentProps) {
+  const { children, className, ...rest } = props;
 
   return (
-    <div className={secondaryContainer()} {...rest}>
+    <div {...rest} className={header({ className })}>
+      {children}
+    </div>
+  );
+}
+FlashcardHeader.displayName = 'FlashcardHeader';
+
+export function FlashcardSubheader(props: FlashcardComponentProps) {
+  const { children, className, ...rest } = props;
+
+  return (
+    <div {...rest} className={subHeader({ className })}>
+      {children}
+    </div>
+  );
+}
+FlashcardSubheader.displayName = 'FlashcardSubheader';
+
+export function FlashcardSecondaryContainer(props: FlashcardComponentProps) {
+  const { children, className, ...rest } = props;
+
+  return (
+    <div {...rest} className={secondaryContainer({ className })}>
       {children}
     </div>
   );
 }
 FlashcardSecondaryContainer.displayName = 'FlashcardSecondaryContainer';
 
-export function FlashcardSecondaryDetails(props: PropsWithChildren) {
-  const { children, ...rest } = props;
+export function FlashcardSecondaryDetails(props: FlashcardComponentProps) {
+  const { children, className, ...rest } = props;
   return (
-    <div className={secondaryDetails()} {...rest}>
+    <div {...rest} className={secondaryDetails({ className })}>
       {children}
     </div>
   );
 }
 FlashcardSecondaryDetails.displayName = 'FlashcardSecondaryDetails';
 
-export function FlashcardSecondaryData(props: PropsWithChildren) {
-  const { children, ...rest } = props;
+export function FlashcardSecondaryData(props: FlashcardComponentProps) {
+  const { children, className, ...rest } = props;
   const { isLoading } = useContext(FlashcardContext);
 
+  // While loading, don't display.
   if (isLoading) {
     return null;
   }
 
   return (
-    <h2 className={secondaryData()} {...rest}>
+    <h2 {...rest} className={secondaryData({ className })}>
       {children}
     </h2>
   );
@@ -152,15 +179,21 @@ export function FlashcardDetailsContainer(
   }
 
   return (
-    <div className={detailsContainer()} {...rest}>
-      {/* Limit to the first 5 items. Not optimal. */}
+    <div
+      {...rest}
+      className={detailsContainer({ className: classNames?.container })}
+    >
+      {/* Limit to the first 5 items in details array.*/}
       {details.splice(0, 5).map((item) => {
         return (
-          <div className={detailsItem()} key={item.label}>
-            <div className={detailsLabel()}>
+          <div
+            className={detailsItem({ className: classNames?.item })}
+            key={item.label}
+          >
+            <div className={detailsLabel({ className: classNames?.label })}>
               {isLoading ? <Skeleton /> : item.label}
             </div>
-            <div className={detailsValue()}>
+            <div className={detailsValue({ className: classNames?.value })}>
               {isLoading ? <Skeleton /> : item.value}
             </div>
           </div>

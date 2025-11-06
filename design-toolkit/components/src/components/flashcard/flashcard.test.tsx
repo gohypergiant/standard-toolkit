@@ -15,13 +15,15 @@ import { describe, expect, it } from 'vitest';
 import {
   Flashcard,
   FlashcardDetailsContainer,
+  FlashcardHeader,
   FlashcardHero,
   FlashcardIdentifier,
   FlashcardSecondaryContainer,
   FlashcardSecondaryData,
+  FlashcardSubheader,
 } from '.';
 
-function setup() {
+function setup(isLoading = false) {
   const details = [
     { label: 'key', value: 'value' },
     { label: 'key', value: 'value' },
@@ -33,9 +35,12 @@ function setup() {
   ];
 
   render(
-    <Flashcard>
+    <Flashcard isLoading={isLoading}>
       <FlashcardHero>
-        <FlashcardIdentifier>IDENTIFIER</FlashcardIdentifier>
+        <FlashcardIdentifier>
+          <FlashcardHeader>IDENTIFIER</FlashcardHeader>
+          <FlashcardSubheader>DATA</FlashcardSubheader>
+        </FlashcardIdentifier>
       </FlashcardHero>
       <FlashcardSecondaryContainer>
         <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
@@ -55,11 +60,14 @@ describe('Flashcard', () => {
   it('should only show 5 additional details', () => {
     setup();
     const secondaryContainer = screen.getByTestId('secondary');
-    console.log(secondaryContainer);
     expect(secondaryContainer.childElementCount).toBe(5);
   });
 
-  it('should do something with loading status', () => {
-    // TODO: Add this test.
+  it('should not show secondary data field while loading', () => {
+    setup(true);
+    const header = screen.queryByText('IDENTIFIER');
+    expect(header).toBeNull();
+    const secondaryData = screen.queryByText('SECONDARY_DATA');
+    expect(secondaryData).toBeNull();
   });
 });
