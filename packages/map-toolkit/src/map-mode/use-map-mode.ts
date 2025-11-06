@@ -26,15 +26,6 @@ export type UseMapModeReturn = {
 };
 
 /**
- * Return value for the useMapModeOwner hook
- * @internal - For internal map-toolkit use only
- */
-type UseMapModeOwnerReturn = {
-  /** The owner of the current mode (undefined for unowned modes like 'default') */
-  owner?: string;
-};
-
-/**
  * Hook to access the map mode state and actions.
  *
  * This hook uses `useSyncExternalStore` to subscribe to the external `MapModeStore`,
@@ -104,59 +95,4 @@ export function useMapMode(id?: UniqueId): UseMapModeReturn {
     }),
     [mode, store],
   );
-}
-
-/**
- * Hook to access the owner of the current map mode.
- *
- * @internal - For internal map-toolkit use only. DO NOT export from index.ts.
- *
- * This hook provides access to the owner identifier of the current mode.
- * The owner is the component that claimed ownership when entering the mode.
- * For unowned modes (like 'default'), this will return undefined.
- *
- * @param id - Optional map instance ID. If not provided, will use the ID from `MapContext`.
- * @returns The owner of the current mode (undefined for unowned modes)
- * @throws Error if no `id` is provided and hook is used outside of `MapProvider`
- * @throws Error if store doesn't exist for the given map ID
- *
- * @example
- * ```tsx
- * // Internal use within map-toolkit only
- * function InternalMapComponent() {
- *   const { owner } = useMapModeOwner();
- *
- *   // Use owner for internal logic
- *   const isOwnedByThisComponent = owner === 'my-component-id';
- *
- *   return <div>Current owner: {owner ?? 'none'}</div>;
- * }
- * ```
- */
-export function useMapModeOwner(id?: UniqueId): UseMapModeOwnerReturn {
-  const contextId = useContext(MapContext);
-  const actualId = id ?? contextId;
-
-  if (!actualId) {
-    throw new Error(
-      'useMapModeOwner requires either an id parameter or to be used within a MapProvider',
-    );
-  }
-
-  // Get the store for this map instance
-  const store = getStore(actualId);
-
-  if (!store) {
-    throw new Error(
-      `MapModeStore not found for map instance: ${actualId}. Ensure a store has been created for this map instance (e.g., via MapProvider or getOrCreateStore).`,
-    );
-  }
-
-  // Subscribe to store mode changes - owner can change when mode changes
-  useSyncExternalStore(store.subscribe, store.getSnapshot);
-
-  // Get the owner for the current mode
-  const owner = store.getCurrentModeOwner();
-
-  return { owner };
 }
