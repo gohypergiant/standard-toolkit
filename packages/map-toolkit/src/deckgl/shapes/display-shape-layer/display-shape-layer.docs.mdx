@@ -31,13 +31,19 @@ DisplayShapeLayer requires the following dependencies:
 - [`@deckgl-fiber-renderer/dom`](https://github.com/deckgl-fiber-renderer/fiber.gl) - React renderer for Deck.gl (for fiber usage)
 - [`geojson`](https://www.npmjs.com/package/geojson) - GeoJSON TypeScript types
 - `react` - React 19.0.0 or higher
+- [`@turf/area`](https://turfjs.org/) - Calculate circle area
+- [`@turf/centroid`](https://turfjs.org/) - Calculate circle centroid
+- [`@turf/circle`](https://turfjs.org/) - Create circle geometries
+- [`@turf/distance`](https://turfjs.org/) - Calculate distances for circles
+- [`@turf/helpers`](https://turfjs.org/) - Turf.js helper utilities
+- [`@turf/length`](https://turfjs.org/) - Calculate circle perimeter length
 
 **Installation:**
 
 ```bash
-npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl/layers @deck.gl/extensions @deckgl-fiber-renderer/dom geojson react
+npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl/layers @deck.gl/extensions @deckgl-fiber-renderer/dom geojson react @turf/area @turf/centroid @turf/circle @turf/distance @turf/helpers @turf/length
 # or
-pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl/layers @deck.gl/extensions @deckgl-fiber-renderer/dom geojson react
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl/layers @deck.gl/extensions @deckgl-fiber-renderer/dom geojson react @turf/area @turf/centroid @turf/circle @turf/distance @turf/helpers @turf/length
 ```
 
 ## Basic Usage

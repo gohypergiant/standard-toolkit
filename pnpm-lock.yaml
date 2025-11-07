@@ -811,25 +811,6 @@ importers:
         version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
 
   packages/map-toolkit:
-    dependencies:
-      '@turf/area':
-        specifier: ^7.2.0
-        version: 7.2.0
-      '@turf/centroid':
-        specifier: ^7.2.0
-        version: 7.2.0
-      '@turf/circle':
-        specifier: ^7.2.0
-        version: 7.2.0
-      '@turf/distance':
-        specifier: ^7.2.0
-        version: 7.2.0
-      '@turf/helpers':
-        specifier: ^7.2.0
-        version: 7.2.0
-      '@turf/length':
-        specifier: ^7.2.0
-        version: 7.2.0
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -985,6 +966,24 @@ importers:
       '@deckgl-fiber-renderer/types':
         specifier: ^1.4.0
         version: 1.4.0(3d447033c42c2cfa06869b0be95f0ad2)
+      '@turf/area':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@turf/centroid':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@turf/circle':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@turf/distance':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@turf/helpers':
+        specifier: ^7.2.0
+        version: 7.2.0
+      '@turf/length':
+        specifier: ^7.2.0
+        version: 7.2.0
       maplibre-gl:
         specifier: ^5.7.1
         version: 5.10.0
@@ -16906,6 +16905,7 @@ snapshots:
       '@turf/meta': 7.2.0
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/bbox-polygon@6.5.0':
     dependencies:
@@ -16971,6 +16971,7 @@ snapshots:
       '@turf/meta': 7.2.0
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/circle@6.5.0':
     dependencies:
@@ -16984,6 +16985,7 @@ snapshots:
       '@turf/helpers': 7.2.0
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/clone@5.1.5':
     dependencies:
@@ -17007,6 +17009,7 @@ snapshots:
       '@turf/invariant': 7.2.0
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/difference@6.5.0':
     dependencies:
@@ -17027,6 +17030,7 @@ snapshots:
       '@turf/invariant': 7.2.0
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/ellipse@6.5.0':
     dependencies:
@@ -17046,6 +17050,7 @@ snapshots:
     dependencies:
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/intersect@6.5.0':
     dependencies:
@@ -17069,6 +17074,7 @@ snapshots:
       '@turf/helpers': 7.2.0
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/length@7.2.0':
     dependencies:
@@ -17077,6 +17083,7 @@ snapshots:
       '@turf/meta': 7.2.0
       '@types/geojson': 7946.0.16
       tslib: 2.8.1
+    optional: true
 
   '@turf/line-intersect@6.5.0':
     dependencies:
@@ -17108,6 +17115,7 @@ snapshots:
     dependencies:
       '@turf/helpers': 7.2.0
       '@types/geojson': 7946.0.16
+    optional: true
 
   '@turf/midpoint@6.5.0':
     dependencies:
