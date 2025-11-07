@@ -92,7 +92,7 @@ export const getStrokeColor = createColorAccessor(
  */
 export function getLineWidth(feature: StyledFeature): number {
   const styleProps = feature.properties?.styleProperties;
-  return styleProps?.strokeWidth ?? 2;
+  return styleProps?.strokeWidth ?? 4;
 }
 
 /**

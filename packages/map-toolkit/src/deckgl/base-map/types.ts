@@ -17,12 +17,12 @@ import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
 
 /**
- * PickingInfo without the viewport and object properties, as they cannot be serialized through the event bus.
- * The viewport contains function properties and object may contain complex non-serializable data.
+ * PickingInfo without the viewport, layer and sourceLayer properties,
+ * as they contain function properties that cannot be serialized through the event bus.
  */
 type NonFuncPickingInfo = Omit<
   PickingInfo,
-  'viewport' | 'object' | 'layer' | 'sourceLayer'
+  'viewport' | 'layer' | 'sourceLayer'
 >;
 
 /**

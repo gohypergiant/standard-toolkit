@@ -35,6 +35,8 @@ type Story = StoryObj<typeof meta>;
 
 // Stable ID for Storybook
 const DISPLAY_MAP_ID = uuid();
+const WITHOUT_LABELS_MAP_ID = uuid();
+const NON_INTERACTIVE_MAP_ID = uuid();
 
 /**
  * Basic display of shapes with all types
@@ -147,11 +149,42 @@ export const BasicDisplay: Story = {
  */
 export const WithoutLabels: Story = {
   render: () => {
+    const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
+    const emitDeselected = useEmit<ShapeDeselectedEvent>(
+      ShapeEvents.deselected,
+    );
+
+    // Listen to shape selection events emitted automatically by DisplayShapeLayer
+    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
+      const shapeId = event.payload.shapeId;
+
+      setSelectedId(shapeId);
+    });
+
+    // Listen to shape deselection events
+    useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, () => {
+      setSelectedId(undefined);
+    });
+
+    // Listen to map clicks to detect clicks on empty space
+    useOn<MapClickEvent>(MapEvents.click, (event) => {
+      // Only emit deselect if we have a selection and clicked on empty space
+      // index is -1 when nothing is picked
+      if (
+        selectedId &&
+        event.payload.id === WITHOUT_LABELS_MAP_ID &&
+        event.payload.info.index === -1
+      ) {
+        emitDeselected(null);
+      }
+    });
+
     return (
-      <BaseMap className='h-dvh w-dvw' id={uuid()}>
+      <BaseMap className='h-dvh w-dvw' id={WITHOUT_LABELS_MAP_ID}>
         <displayShapeLayer
           id='shapes-no-labels'
           data={mockShapes}
+          selectedShapeId={selectedId}
           showLabels={false}
           pickable={true}
         />
@@ -166,7 +199,7 @@ export const WithoutLabels: Story = {
 export const NonInteractive: Story = {
   render: () => {
     return (
-      <BaseMap className='h-dvh w-dvw' id={uuid()}>
+      <BaseMap className='h-dvh w-dvw' id={NON_INTERACTIVE_MAP_ID}>
         <displayShapeLayer
           id='shapes-static'
           data={mockShapes}
@@ -206,6 +239,13 @@ export const CustomLabelOffsets: Story = {
     },
   },
   render: (args) => {
+    const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
+
+    // Listen to shape selection events emitted automatically by DisplayShapeLayer
+    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
+      setSelectedId(event.payload.shapeId);
+    });
+
     return (
       <div className='flex h-dvh w-dvw flex-col'>
         {/* Info banner */}
@@ -222,6 +262,7 @@ export const CustomLabelOffsets: Story = {
           <displayShapeLayer
             id='shapes-custom-offsets'
             data={mockShapes}
+            selectedShapeId={selectedId}
             showLabels={true}
             pickable={true}
             labelOptions={{

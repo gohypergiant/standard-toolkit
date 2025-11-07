@@ -184,12 +184,17 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Styling
       filled: true,
       stroked: true,
-      getFillColor: highlightColor || getHighlightColor(),
-      getLineColor: highlightColor || getHighlightColor(),
+      lineWidthUnits: 'pixels',
+      lineWidthMinPixels: 1,
+      getFillColor: () => [0, 0, 0, 0], // Transparent fill
+      getLineColor: () => highlightColor || getHighlightColor(),
       getLineWidth: getHighlightLineWidth,
 
       // Behavior
       pickable: false,
+      updateTriggers: {
+        getLineWidth: [selectedShapeId, features],
+      },
     });
   }
 
