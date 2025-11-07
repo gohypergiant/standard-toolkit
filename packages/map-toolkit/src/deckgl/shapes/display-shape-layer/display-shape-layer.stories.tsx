@@ -12,7 +12,7 @@
 
 import { useEmit, useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { MapEvents } from '../../base-map/events';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
@@ -206,7 +206,7 @@ const LABEL_POSITIONS_MAP_ID = uuid();
 export const LabelPositioning: Story = {
   args: {
     // Point controls
-    pointLabelVerticalAnchor: 'bottom',
+    pointLabelVerticalAnchor: 'top',
     pointLabelHorizontalAnchor: 'center',
     pointLabelOffsetX: 0,
     pointLabelOffsetY: -27,
@@ -350,6 +350,60 @@ export const LabelPositioning: Story = {
       }
     });
 
+    // Memoize labelOptions to prevent unnecessary re-renders
+    const labelOptions = useMemo(
+      () => ({
+        pointLabelVerticalAnchor: args.pointLabelVerticalAnchor,
+        pointLabelHorizontalAnchor: args.pointLabelHorizontalAnchor,
+        pointLabelOffset: [args.pointLabelOffsetX, args.pointLabelOffsetY] as [
+          number,
+          number,
+        ],
+        lineStringLabelVerticalAnchor: args.lineStringLabelVerticalAnchor,
+        lineStringLabelHorizontalAnchor: args.lineStringLabelHorizontalAnchor,
+        lineStringLabelCoordinateAnchor: args.lineStringLabelCoordinateAnchor,
+        lineStringLabelOffset: [
+          args.lineStringLabelOffsetX,
+          args.lineStringLabelOffsetY,
+        ] as [number, number],
+        polygonLabelVerticalAnchor: args.polygonLabelVerticalAnchor,
+        polygonLabelHorizontalAnchor: args.polygonLabelHorizontalAnchor,
+        polygonLabelCoordinateAnchor: args.polygonLabelCoordinateAnchor,
+        polygonLabelOffset: [
+          args.polygonLabelOffsetX,
+          args.polygonLabelOffsetY,
+        ] as [number, number],
+        circleLabelVerticalAnchor: args.circleLabelVerticalAnchor,
+        circleLabelHorizontalAnchor: args.circleLabelHorizontalAnchor,
+        circleLabelCoordinateAnchor: args.circleLabelCoordinateAnchor,
+        circleLabelOffset: [
+          args.circleLabelOffsetX,
+          args.circleLabelOffsetY,
+        ] as [number, number],
+      }),
+      [
+        args.pointLabelVerticalAnchor,
+        args.pointLabelHorizontalAnchor,
+        args.pointLabelOffsetX,
+        args.pointLabelOffsetY,
+        args.lineStringLabelVerticalAnchor,
+        args.lineStringLabelHorizontalAnchor,
+        args.lineStringLabelCoordinateAnchor,
+        args.lineStringLabelOffsetX,
+        args.lineStringLabelOffsetY,
+        args.polygonLabelVerticalAnchor,
+        args.polygonLabelHorizontalAnchor,
+        args.polygonLabelCoordinateAnchor,
+        args.polygonLabelOffsetX,
+        args.polygonLabelOffsetY,
+        args.circleLabelVerticalAnchor,
+        args.circleLabelHorizontalAnchor,
+        args.circleLabelCoordinateAnchor,
+        args.circleLabelOffsetX,
+        args.circleLabelOffsetY,
+      ],
+    );
+
     return (
       <div className='flex h-dvh w-dvw flex-col'>
         {/* Info banner */}
@@ -370,37 +424,7 @@ export const LabelPositioning: Story = {
             selectedShapeId={selectedId}
             showLabels={true}
             pickable={true}
-            labelOptions={{
-              pointLabelVerticalAnchor: args.pointLabelVerticalAnchor,
-              pointLabelHorizontalAnchor: args.pointLabelHorizontalAnchor,
-              pointLabelOffset: [
-                args.pointLabelOffsetX,
-                args.pointLabelOffsetY,
-              ],
-              lineStringLabelVerticalAnchor: args.lineStringLabelVerticalAnchor,
-              lineStringLabelHorizontalAnchor:
-                args.lineStringLabelHorizontalAnchor,
-              lineStringLabelCoordinateAnchor:
-                args.lineStringLabelCoordinateAnchor,
-              lineStringLabelOffset: [
-                args.lineStringLabelOffsetX,
-                args.lineStringLabelOffsetY,
-              ],
-              polygonLabelVerticalAnchor: args.polygonLabelVerticalAnchor,
-              polygonLabelHorizontalAnchor: args.polygonLabelHorizontalAnchor,
-              polygonLabelCoordinateAnchor: args.polygonLabelCoordinateAnchor,
-              polygonLabelOffset: [
-                args.polygonLabelOffsetX,
-                args.polygonLabelOffsetY,
-              ],
-              circleLabelVerticalAnchor: args.circleLabelVerticalAnchor,
-              circleLabelHorizontalAnchor: args.circleLabelHorizontalAnchor,
-              circleLabelCoordinateAnchor: args.circleLabelCoordinateAnchor,
-              circleLabelOffset: [
-                args.circleLabelOffsetX,
-                args.circleLabelOffsetY,
-              ],
-            }}
+            labelOptions={labelOptions}
           />
         </BaseMap>
       </div>

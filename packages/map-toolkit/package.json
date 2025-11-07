@@ -96,7 +96,6 @@
     "@types/node": "^24.9.0",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
-    "@types/turf": "^3.5.32",
     "client-only": "^0.0.1",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "maplibre-gl": "^5.7.1",

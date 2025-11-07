@@ -283,7 +283,7 @@ export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
  */
 export interface LabelPositionOptions {
   // Point geometry options
-  /** Vertical anchor for Point labels @default 'bottom' */
+  /** Vertical anchor for Point labels @default 'top' */
   pointLabelVerticalAnchor?: LabelVerticalPosition;
   /** Horizontal anchor for Point labels @default 'center' */
   pointLabelHorizontalAnchor?: LabelHorizontalPosition;
@@ -398,7 +398,7 @@ function getPointPosition(
   options?: LabelPositionOptions,
 ): LabelPosition2d {
   const defaultOffset: [number, number] = [0, -27];
-  const defaultVertical: LabelVerticalPosition = 'bottom';
+  const defaultVertical: LabelVerticalPosition = 'top';
   const defaultHorizontal: LabelHorizontalPosition = 'center';
 
   const resolved = resolveLabelProperties(
