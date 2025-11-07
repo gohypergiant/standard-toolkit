@@ -79,6 +79,7 @@ export function createShapeLabelLayer(
 
     // Update triggers - tell deck.gl to recalculate when labelOptions change
     updateTriggers: {
+      getPosition: [labelOptions],
       getPixelOffset: [labelOptions],
       getTextAnchor: [labelOptions],
       getAlignmentBaseline: [labelOptions],

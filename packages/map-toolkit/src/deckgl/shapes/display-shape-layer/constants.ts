@@ -13,10 +13,28 @@
 'use client';
 
 /**
+ * Map interaction constants
+ * Values derived from ngc2 for consistency
+ */
+export const MAP_INTERACTION = {
+  LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
+  ICON_SIZE: 38, // Size of shape icons
+} as const;
+
+/**
+ * Selection highlight configuration
+ */
+export const SELECTION_HIGHLIGHT = {
+  COLOR: [40, 245, 190, 100] as [number, number, number, number], // Turquoise/cyan at ~39% opacity
+  WIDTH_INCREASE: 10, // Additional pixels added to base stroke width
+  ICON_SIZE_INCREASE: 8, // Additional pixels for highlight icon
+} as const;
+
+/**
  * Default props for DisplayShapeLayer
  */
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
   showLabels: true,
-  highlightColor: [40, 245, 190, 100] as [number, number, number, number], // Turquoise at 39% opacity
+  highlightColor: SELECTION_HIGHLIGHT.COLOR,
 };

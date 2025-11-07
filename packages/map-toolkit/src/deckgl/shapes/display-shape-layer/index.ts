@@ -18,7 +18,11 @@ import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
-import { DEFAULT_DISPLAY_PROPS } from './constants';
+import {
+  DEFAULT_DISPLAY_PROPS,
+  MAP_INTERACTION,
+  SELECTION_HIGHLIGHT,
+} from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
   getDashArray,
@@ -176,6 +180,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return null;
     }
 
+    // Check if selected feature has icon
+    const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
+    const iconAtlas = selectedFeature.properties?.styleProperties?.icon?.atlas;
+    const iconMapping =
+      selectedFeature.properties?.styleProperties?.icon?.mapping;
+
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
       // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
@@ -185,15 +195,48 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       filled: true,
       stroked: true,
       lineWidthUnits: 'pixels',
-      lineWidthMinPixels: 1,
+      lineWidthMinPixels: MAP_INTERACTION.LINE_WIDTH_MIN_PIXELS,
       getFillColor: () => [0, 0, 0, 0], // Transparent fill
       getLineColor: () => highlightColor || getHighlightColor(),
       getLineWidth: getHighlightLineWidth,
+
+      // Icon configuration for highlight layer
+      pointType: hasIcon ? 'icon' : 'circle',
+      ...(hasIcon && iconAtlas ? { iconAtlas } : {}),
+      ...(hasIcon && iconMapping ? { iconMapping } : {}),
+      ...(hasIcon
+        ? {
+            getIcon: (d: EditableShape['feature']) =>
+              d.properties?.styleProperties?.icon?.name ?? 'marker',
+            getIconSize: (d: EditableShape['feature']) => {
+              const iconSize =
+                d.properties?.styleProperties?.icon?.size ??
+                MAP_INTERACTION.ICON_SIZE;
+              return iconSize + SELECTION_HIGHLIGHT.ICON_SIZE_INCREASE;
+            },
+            getIconColor: () => highlightColor || getHighlightColor(),
+            getIconPixelOffset: (d: EditableShape['feature']) => {
+              const iconSize =
+                d.properties?.styleProperties?.icon?.size ??
+                MAP_INTERACTION.ICON_SIZE;
+              const highlightSize =
+                iconSize + SELECTION_HIGHLIGHT.ICON_SIZE_INCREASE;
+              return [-1, -highlightSize / 2];
+            },
+            iconBillboard: false,
+          }
+        : {}),
 
       // Behavior
       pickable: false,
       updateTriggers: {
         getLineWidth: [selectedShapeId, features],
+        ...(hasIcon
+          ? {
+              getIconSize: [selectedShapeId, features],
+              getIconColor: [highlightColor],
+            }
+          : {}),
       },
     });
   }
@@ -237,7 +280,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         return getHoverLineWidth(d, isHovered);
       },
       lineWidthUnits: 'pixels',
-      lineWidthMinPixels: 1,
+      lineWidthMinPixels: MAP_INTERACTION.LINE_WIDTH_MIN_PIXELS,
       lineWidthMaxPixels: 20,
 
       // Points - use icons if any feature has icon config, otherwise circles
@@ -255,8 +298,24 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         ? {
             getIcon: (d: EditableShape['feature']) =>
               d.properties?.styleProperties?.icon?.name ?? 'marker',
-            getIconSize: (d: EditableShape['feature']) =>
-              d.properties?.styleProperties?.icon?.size ?? 8,
+            getIconSize: (
+              d: EditableShape['feature'],
+              { index }: { index: number },
+            ) => {
+              const iconSize =
+                d.properties?.styleProperties?.icon?.size ??
+                MAP_INTERACTION.ICON_SIZE;
+              const isHovered = index === this.state?.hoverIndex;
+              return isHovered ? iconSize + 5 : iconSize;
+            },
+            getIconColor: getStrokeColor,
+            getIconPixelOffset: (d: EditableShape['feature']) => {
+              const iconSize =
+                d.properties?.styleProperties?.icon?.size ??
+                MAP_INTERACTION.ICON_SIZE;
+              return [-1, -iconSize / 2];
+            },
+            iconBillboard: false,
           }
         : {}),
 
@@ -279,7 +338,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         ...(hasIcons
           ? {
               getIcon: [features],
-              getIconSize: [features],
+              getIconSize: [features, this.state?.hoverIndex],
+              getIconColor: [features],
+              getIconPixelOffset: [features],
             }
           : {}),
       },

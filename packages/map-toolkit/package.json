@@ -47,6 +47,7 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "build:icons": "smeegl '.storybook/icons/marker.svg' 'src/deckgl/shapes/__fixtures__/atlas'",
     "build-storybook": "pnpm storybook build",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
@@ -69,6 +70,7 @@
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
+    "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@deck.gl-community/editable-layers": "^9.1.1",

@@ -74,6 +74,21 @@ export interface StyleProperties {
     /** Icon size in pixels */
     size?: number;
   };
+  /** Optional custom label pixel offset [x, y] */
+  labelOffset?: [number, number];
+  /** Optional custom label vertical anchor */
+  labelVerticalAnchor?: 'top' | 'middle' | 'bottom';
+  /** Optional custom label horizontal anchor */
+  labelHorizontalAnchor?: 'left' | 'center' | 'right';
+  /** Optional custom label coordinate anchor (position along geometry) */
+  labelCoordinateAnchor?:
+    | 'start'
+    | 'middle'
+    | 'end'
+    | 'top'
+    | 'right'
+    | 'bottom'
+    | 'left';
 }
 
 /**

@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { MapEvents } from '../../base-map/events';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
+import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
 import {
   type ShapeDeselectedEvent,
   ShapeEvents,
@@ -37,6 +38,7 @@ type Story = StoryObj<typeof meta>;
 const DISPLAY_MAP_ID = uuid();
 const WITHOUT_LABELS_MAP_ID = uuid();
 const NON_INTERACTIVE_MAP_ID = uuid();
+const WITH_ICONS_MAP_ID = uuid();
 
 /**
  * Basic display of shapes with all types
@@ -211,67 +213,288 @@ export const NonInteractive: Story = {
   },
 };
 
-// Stable ID for custom offsets story
-const CUSTOM_OFFSETS_MAP_ID = uuid();
-
 /**
- * Custom label offsets (Point shapes only)
+ * Label positioning controls
  *
- * Demonstrates how to customize the label offset for point markers
- * based on your icon size or design.
+ * Demonstrates full control over label positioning for different geometry types.
+ * Use vertical (top/middle/bottom) and horizontal (left/center/right) positioning
+ * combined with pixel offsets to place labels exactly where you want them.
  *
- * Circle, LineString, and Polygon offsets use fixed values.
+ * Examples:
+ * - Circle with label on top: vertical='top', horizontal='center'
+ * - Circle with label on right: vertical='middle', horizontal='right'
+ * - LineString with label above: vertical='top', horizontal='left'
+ *
+ * Priority system:
+ * 1. Per-shape styleProperties (highest)
+ * 2. Global labelOptions (these controls)
+ * 3. Default values (fallback)
  */
-export const CustomLabelOffsets: Story = {
+const LABEL_POSITIONS_MAP_ID = uuid();
+
+export const LabelPositioning: Story = {
   args: {
-    pointOffsetX: 0,
-    pointOffsetY: -40,
+    // Point controls
+    pointLabelVerticalAnchor: 'bottom',
+    pointLabelHorizontalAnchor: 'center',
+    pointLabelOffsetX: 0,
+    pointLabelOffsetY: -45,
+    // LineString controls
+    lineStringLabelCoordinateAnchor: 'start',
+    lineStringLabelVerticalAnchor: 'middle',
+    lineStringLabelHorizontalAnchor: 'left',
+    lineStringLabelOffsetX: 7,
+    lineStringLabelOffsetY: -15,
+    // Polygon controls
+    polygonLabelCoordinateAnchor: 'start',
+    polygonLabelVerticalAnchor: 'middle',
+    polygonLabelHorizontalAnchor: 'left',
+    polygonLabelOffsetX: 7,
+    polygonLabelOffsetY: -15,
+    // Circle controls
+    circleLabelCoordinateAnchor: 'top',
+    circleLabelVerticalAnchor: 'middle',
+    circleLabelHorizontalAnchor: 'center',
+    circleLabelOffsetX: 0,
+    circleLabelOffsetY: -17,
   },
   argTypes: {
-    pointOffsetX: {
-      control: { type: 'number', min: -100, max: 100, step: 1 },
-      description: 'Horizontal offset for POINT labels only (pixels)',
+    // Point controls
+    pointLabelVerticalAnchor: {
+      control: { type: 'select' },
+      options: ['top', 'middle', 'bottom'],
+      description: 'Vertical anchor for Point labels',
     },
-    pointOffsetY: {
+    pointLabelHorizontalAnchor: {
+      control: { type: 'select' },
+      options: ['left', 'center', 'right'],
+      description: 'Horizontal anchor for Point labels',
+    },
+    pointLabelOffsetX: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Horizontal offset for Point labels (pixels)',
+    },
+    pointLabelOffsetY: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Vertical offset for Point labels (pixels, negative = up)',
+    },
+    // LineString controls
+    lineStringLabelCoordinateAnchor: {
+      control: { type: 'select' },
+      options: ['start', 'middle', 'end'],
+      description: 'Position along LineString (start/middle/end)',
+    },
+    lineStringLabelVerticalAnchor: {
+      control: { type: 'select' },
+      options: ['top', 'middle', 'bottom'],
+      description: 'Vertical anchor for LineString labels',
+    },
+    lineStringLabelHorizontalAnchor: {
+      control: { type: 'select' },
+      options: ['left', 'center', 'right'],
+      description: 'Horizontal anchor for LineString labels',
+    },
+    lineStringLabelOffsetX: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Horizontal offset for LineString labels (pixels)',
+    },
+    lineStringLabelOffsetY: {
       control: { type: 'number', min: -100, max: 100, step: 1 },
       description:
-        'Vertical offset for POINT labels only (pixels, negative = up)',
+        'Vertical offset for LineString labels (pixels, negative = up)',
+    },
+    // Polygon controls
+    polygonLabelCoordinateAnchor: {
+      control: { type: 'select' },
+      options: ['start', 'middle', 'end'],
+      description: 'Position along Polygon outer ring (start/middle/end)',
+    },
+    polygonLabelVerticalAnchor: {
+      control: { type: 'select' },
+      options: ['top', 'middle', 'bottom'],
+      description: 'Vertical anchor for Polygon labels',
+    },
+    polygonLabelHorizontalAnchor: {
+      control: { type: 'select' },
+      options: ['left', 'center', 'right'],
+      description: 'Horizontal anchor for Polygon labels',
+    },
+    polygonLabelOffsetX: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Horizontal offset for Polygon labels (pixels)',
+    },
+    polygonLabelOffsetY: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Vertical offset for Polygon labels (pixels, negative = up)',
+    },
+    // Circle controls
+    circleLabelCoordinateAnchor: {
+      control: { type: 'select' },
+      options: ['top', 'right', 'bottom', 'left'],
+      description: 'Position on Circle perimeter (top/right/bottom/left)',
+    },
+    circleLabelVerticalAnchor: {
+      control: { type: 'select' },
+      options: ['top', 'middle', 'bottom'],
+      description: 'Vertical anchor for Circle labels',
+    },
+    circleLabelHorizontalAnchor: {
+      control: { type: 'select' },
+      options: ['left', 'center', 'right'],
+      description: 'Horizontal anchor for Circle labels',
+    },
+    circleLabelOffsetX: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Horizontal offset for Circle labels (pixels)',
+    },
+    circleLabelOffsetY: {
+      control: { type: 'number', min: -100, max: 100, step: 1 },
+      description: 'Vertical offset for Circle labels (pixels, negative = up)',
     },
   },
   render: (args) => {
     const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
+    const emitDeselected = useEmit<ShapeDeselectedEvent>(
+      ShapeEvents.deselected,
+    );
 
-    // Listen to shape selection events emitted automatically by DisplayShapeLayer
+    // Listen to shape selection events
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
       setSelectedId(event.payload.shapeId);
+    });
+
+    // Listen to shape deselection events
+    useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, () => {
+      setSelectedId(undefined);
+    });
+
+    // Listen to map clicks to detect clicks on empty space
+    useOn<MapClickEvent>(MapEvents.click, (event) => {
+      if (
+        selectedId &&
+        event.payload.id === LABEL_POSITIONS_MAP_ID &&
+        event.payload.info.index === -1
+      ) {
+        emitDeselected(null);
+      }
     });
 
     return (
       <div className='flex h-dvh w-dvw flex-col'>
         {/* Info banner */}
-        <div className='bg-blue-600 p-3 text-white'>
+        <div className='bg-purple-600 p-3 text-white'>
           <div className='font-bold'>
-            Note: Controls only affect the Point shape label
+            Interactive Label Positioning Controls
           </div>
           <div className='text-sm'>
-            Circle, LineString, and Polygon offsets use fixed values.
+            Use the Storybook controls panel to adjust label positions for each
+            geometry type
           </div>
         </div>
 
-        <BaseMap className='flex-1' id={CUSTOM_OFFSETS_MAP_ID}>
+        <BaseMap className='flex-1' id={LABEL_POSITIONS_MAP_ID}>
           <displayShapeLayer
-            id='shapes-custom-offsets'
+            id='shapes-label-positioning'
             data={mockShapes}
             selectedShapeId={selectedId}
             showLabels={true}
             pickable={true}
             labelOptions={{
-              // Custom offset for point markers [x, y]
-              // This only affects the Point shape label
-              pointOffset: [args.pointOffsetX, args.pointOffsetY],
+              pointLabelVerticalAnchor: args.pointLabelVerticalAnchor,
+              pointLabelHorizontalAnchor: args.pointLabelHorizontalAnchor,
+              pointLabelOffset: [
+                args.pointLabelOffsetX,
+                args.pointLabelOffsetY,
+              ],
+              lineStringLabelVerticalAnchor: args.lineStringLabelVerticalAnchor,
+              lineStringLabelHorizontalAnchor:
+                args.lineStringLabelHorizontalAnchor,
+              lineStringLabelCoordinateAnchor:
+                args.lineStringLabelCoordinateAnchor,
+              lineStringLabelOffset: [
+                args.lineStringLabelOffsetX,
+                args.lineStringLabelOffsetY,
+              ],
+              polygonLabelVerticalAnchor: args.polygonLabelVerticalAnchor,
+              polygonLabelHorizontalAnchor: args.polygonLabelHorizontalAnchor,
+              polygonLabelCoordinateAnchor: args.polygonLabelCoordinateAnchor,
+              polygonLabelOffset: [
+                args.polygonLabelOffsetX,
+                args.polygonLabelOffsetY,
+              ],
+              circleLabelVerticalAnchor: args.circleLabelVerticalAnchor,
+              circleLabelHorizontalAnchor: args.circleLabelHorizontalAnchor,
+              circleLabelCoordinateAnchor: args.circleLabelCoordinateAnchor,
+              circleLabelOffset: [
+                args.circleLabelOffsetX,
+                args.circleLabelOffsetY,
+              ],
             }}
           />
         </BaseMap>
+      </div>
+    );
+  },
+};
+
+/**
+ * Display with custom icons for Point geometries
+ *
+ * Demonstrates how to use icon atlases for Point shapes.
+ * Icons are generated from design-toolkit SVGs using smeegl.
+ *
+ * To regenerate icons: pnpm build:icons
+ */
+export const WithIcons: Story = {
+  render: () => {
+    const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
+    const emitDeselected = useEmit<ShapeDeselectedEvent>(
+      ShapeEvents.deselected,
+    );
+
+    // Listen to shape selection events
+    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
+      setSelectedId(event.payload.shapeId);
+    });
+
+    // Listen to shape deselection events
+    useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, () => {
+      setSelectedId(undefined);
+    });
+
+    // Listen to map clicks to detect clicks on empty space
+    useOn<MapClickEvent>(MapEvents.click, (event) => {
+      if (
+        selectedId &&
+        event.payload.id === WITH_ICONS_MAP_ID &&
+        event.payload.info.index === -1
+      ) {
+        emitDeselected(null);
+      }
+    });
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={WITH_ICONS_MAP_ID}>
+          <displayShapeLayer
+            id='shapes-with-icons'
+            data={mockShapesWithIcons}
+            selectedShapeId={selectedId}
+            showLabels={true}
+            pickable={true}
+          />
+        </BaseMap>
+
+        {/* Info panel */}
+        <div className='absolute top-l left-l z-10 rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Icon Demo</p>
+          <p className='mt-s text-body-s text-content-secondary'>
+            Point shapes use custom marker icons
+          </p>
+          <p className='mt-xs text-body-s text-content-secondary'>
+            from design-toolkit via icon atlas
+          </p>
+        </div>
       </div>
     );
   },
