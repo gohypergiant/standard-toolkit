@@ -13,40 +13,21 @@
 export { BaseMap, type BaseMapProps } from './base-map';
 export { BASE_MAP_STYLE, PARAMETERS } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
-// Shape layer exports
+// Display Shape Layer exports
 export {
-  computeCirclePolygon,
-  computeCircleSteps,
-  createShapeStore,
-  createTemporaryShape,
   DASH_ARRAYS,
   DEFAULT_COLORS,
   DEFAULT_STYLE_PROPERTIES,
   DisplayShapeLayer,
-  EditableShapeLayer,
   ERROR_MESSAGES,
-  formatCoordinate,
-  getShapeTypeForMode,
-  isDrawingMode,
-  isEditingMode,
-  isViewMode,
   SHAPE_EVENTS,
   SHAPE_LAYER_IDS,
   SHAPE_MODES,
+  ShapeEvents,
   ShapeFeatureType,
+  ShapeModes,
   STROKE_PATTERNS,
   STROKE_WIDTHS,
-  useCircleState,
-  useHoveredShape,
-  useSelectedShape,
-  useShape,
-  useShapeEdits,
-  useShapeStore,
-  useShapesByType,
-  useStyleProperties,
-  validateCoordinates,
-  validateGeometry,
-  validateShape,
 } from './shapes';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
@@ -59,10 +40,8 @@ export type {
 export type {
   CircleEditProperties,
   CircleRadius,
-  CircleState,
   DisplayShapeLayerProps,
   EditableShape,
-  EditableShapeLayerProps,
   EditShapeMode,
   ShapeEventHandler,
   ShapeEventPayload,
@@ -71,13 +50,7 @@ export type {
   ShapeFeatureProperties,
   ShapeFeatureTypeValues,
   ShapeId,
-  ShapeStore,
-  ShapeStoreActions,
-  ShapeStoreState,
-  ShapeValidationResult,
   StyledFeature,
   StyledFeatureProperties,
   StyleProperties,
-  UseShapeEditsOptions,
-  UseStylePropertiesOptions,
 } from './shapes';

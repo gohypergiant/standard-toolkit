@@ -841,8 +841,8 @@ importers:
         specifier: workspace:*
         version: link:../../design-toolkit/components
       '@accelint/smeegl':
-        specifier: ^0.3.3
-        version: 0.3.3(@types/node@24.9.1)
+        specifier: workspace:*
+        version: link:../../tooling/smeegl
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -1299,10 +1299,6 @@ importers:
         version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
 
 packages:
-
-  '@accelint/smeegl@0.3.3':
-    resolution: {integrity: sha512-IqmkBXOIfv4WgrnInLKXvSJPwFUMf/lrORRR7szKiHnWtutOYy5WHNxQa78usjkX/88njYHVZowEiLu8dB5TAw==}
-    hasBin: true
 
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
@@ -3605,7 +3601,6 @@ packages:
 
   '@ls-lint/ls-lint@2.3.1':
     resolution: {integrity: sha512-vPe6IDByQnQRTxcAYjTxrmga/tSIui50VBFTB5KIJWY3OOFmxE2VtymjeSEfQfiMbhZV/ZPAqYy2lt8pZFQ0Rw==}
-    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -11262,21 +11257,6 @@ packages:
     hasBin: true
 
 snapshots:
-
-  '@accelint/smeegl@0.3.3(@types/node@24.9.1)':
-    dependencies:
-      ansis: 4.2.0
-      commander: 14.0.2
-      crc32-universal: 1.0.1
-      esbuild-plugin-file-path-extensions: 2.1.4
-      globby: 14.1.0
-      inquirer: 12.10.0(@types/node@24.9.1)
-      lodash: 4.17.21
-      ora: 8.2.0
-      true-myth: 9.2.0
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - '@types/node'
 
   '@adobe/css-tools@4.4.4': {}
 

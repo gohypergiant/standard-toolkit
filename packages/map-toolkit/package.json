@@ -47,8 +47,8 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
-    "build:icons": "smeegl '.storybook/icons/marker.svg' 'src/deckgl/shapes/__fixtures__/atlas'",
     "build-storybook": "pnpm storybook build",
+    "build:icons": "smeegl '.storybook/icons/marker.svg' 'src/deckgl/shapes/__fixtures__/atlas'",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "lint": "pnpm biome lint",
