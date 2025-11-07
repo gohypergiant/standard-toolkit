@@ -11,17 +11,23 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { MapEvents, type MapEventType } from '@/deckgl';
 import { MapModeEvents } from '../map-mode/events';
 import { getStore as getModeStore } from '../map-mode/store';
 import { MapCursorEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { ModeChangedEvent } from '../map-mode/types';
-import type { CSSCursorType, MapCursorEventType } from './types';
+import type {
+  CSSCursorType,
+  CursorDefaults,
+  CursorState,
+  MapCursorEventType,
+} from './types';
 
 /**
  * Default cursor values based on map interaction state
  */
-const DEFAULT_CURSORS = {
+const DEFAULT_CURSORS: CursorDefaults = {
   /** Default cursor when not interacting */
   default: 'default' as CSSCursorType,
   /** Cursor when hovering over interactive elements */
@@ -34,7 +40,7 @@ const DEFAULT_CURSORS = {
  * Typed event bus instance for map cursor events.
  * Provides type-safe event emission and listening for all map cursor state changes.
  */
-const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
+const mapCursorBus = Broadcast.getInstance<MapCursorEventType | MapEventType>();
 
 /**
  * External store for managing map cursor state.
@@ -63,6 +69,7 @@ export class MapCursorStore {
   private readonly unsubscribers: Array<() => void> = [];
   private currentCursor: CSSCursorType | null = null;
   private currentOwner: string | null = null;
+  private cursorState: CursorState = 'default';
 
   constructor(private readonly id: UniqueId) {
     this.id = id;
@@ -103,7 +110,7 @@ export class MapCursorStore {
     }
 
     // Priority 3: Default cursor
-    return DEFAULT_CURSORS.default;
+    return DEFAULT_CURSORS[this.cursorState];
   };
 
   /**
@@ -235,7 +242,46 @@ export class MapCursorStore {
       });
     });
     this.unsubscribers.push(unsubModeChange);
+
+    const unsubHover = this.bus.on(MapEvents.hover, (event) => {
+      const { id } = event.payload;
+
+      // Filter: only handle if targeted at this map
+      if (id !== this.id) {
+        return;
+      }
+
+      this.handleCursorStateChange('hover');
+    });
+    this.unsubscribers.push(unsubHover);
+
+    const unsubClick = this.bus.on(MapEvents.click, (event) => {
+      const { id } = event.payload;
+
+      // Filter: only handle if targeted at this map
+      if (id !== this.id) {
+        return;
+      }
+
+      this.handleCursorStateChange('default');
+    });
+    this.unsubscribers.push(unsubClick);
   }
+
+  private handleCursorStateChange = (state: CursorState): void => {
+    if (this.cursorState !== state) {
+      this.cursorState = state;
+
+      this.cursorOwners.clear();
+
+      this.bus.emit(MapCursorEvents.changeState, {
+        state,
+        id: this.id,
+      });
+
+      this.notify();
+    }
+  };
 
   /**
    * Handle cursor change request logic with owner-based priority

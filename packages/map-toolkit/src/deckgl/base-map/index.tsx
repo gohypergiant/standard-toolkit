@@ -27,7 +27,7 @@ import type { PickingInfo } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { MapClickEvent, MapHoverEvent } from './types';
+import type { MapClickEvent, MapDragEvent, MapHoverEvent } from './types';
 
 /**
  * Props for the BaseMap component.
@@ -177,6 +177,7 @@ export function BaseMap({
 function BaseMapInternal({
   id,
   onClick,
+  onDrag,
   onHover,
   parameters,
   children,
@@ -185,6 +186,7 @@ function BaseMapInternal({
   const { cursor } = useMapCursor(id);
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+  const emitDrag = useEmit<MapDragEvent>(MapEvents.drag);
 
   // Use ref to store current cursor value for synchronous access in getCursor
   // This avoids closure/memoization issues with useCallback
@@ -225,7 +227,7 @@ function BaseMapInternal({
       onHover?.(info, event);
 
       // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, ...infoRest } = info;
+      const { viewport, layer, ...infoRest } = info;
       const {
         stopImmediatePropagation,
         stopPropagation,
@@ -245,6 +247,32 @@ function BaseMapInternal({
     [emitHover, id, onHover],
   );
 
+  const handleMapDrag = useCallback(
+    (info: PickingInfo, event: MjolnirGestureEvent) => {
+      // send full pickingInfo and event to user-defined onHover
+      onDrag?.(info, event);
+
+      // the bus cannot serialize functions, so we omit them from the event payloads
+      const { viewport, layer, ...infoRest } = info;
+      const {
+        stopImmediatePropagation,
+        stopPropagation,
+        preventDefault,
+        srcEvent,
+        rootElement,
+        target,
+        ...eventRest
+      } = event;
+
+      emitDrag({
+        info: infoRest,
+        event: eventRest,
+        id,
+      });
+    },
+    [emitDrag, id, onDrag],
+  );
+
   const handleGetCursor = useCallback(() => {
     return cursorRef.current;
   }, []);
@@ -257,6 +285,7 @@ function BaseMapInternal({
       useDevicePixels={false}
       onHover={handleMapHover}
       onClick={handleMapClick}
+      onDrag={handleMapDrag}
       getCursor={handleGetCursor}
       // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
       // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.

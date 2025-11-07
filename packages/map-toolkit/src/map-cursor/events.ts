@@ -21,4 +21,6 @@ export const MapCursorEvents = {
   changed: 'cursor:changed',
   /** Emitted when a cursor change request is rejected */
   rejected: 'cursor:rejected',
+  /** Emitted when map cursor state changes eg. hover/drag */
+  changeState: 'cursor:change-state',
 } as const;
