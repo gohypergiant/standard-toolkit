@@ -1,0 +1,468 @@
+import { Meta } from '@storybook/blocks';
+
+import * as DisplayShapeLayerStories from './display-shape-layer.stories';
+
+<Meta of={DisplayShapeLayerStories} />
+
+# Display Shape Layer
+
+A read-only deck.gl composite layer for displaying geographic shapes with interactive features, labels, and customizable styling. Ideal for rendering shapes from external APIs or displaying geographic data without editing capabilities.
+
+## Features
+
+- **Multiple geometry types**: Point, LineString, Polygon, and Circle
+- **Icon support**: Custom icons for Point geometries via icon atlases
+- **Interactive selection**: Click handling with visual highlight feedback
+- **Hover effects**: Line width increases on hover for better UX
+- **Customizable labels**: Flexible label positioning with per-shape or global options
+- **Style properties**: Full control over colors, stroke patterns, and opacity
+- **Event bus integration**: Automatically emits shape events via @accelint/bus
+
+## Dependencies
+
+DisplayShapeLayer requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for shape interaction events
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including UUID generation
+- [`@deck.gl/core`](https://deck.gl/) - Deck.gl core library for WebGL visualization
+- [`@deck.gl/layers`](https://deck.gl/) - Deck.gl layer implementations (GeoJsonLayer, TextLayer)
+- [`@deck.gl/extensions`](https://deck.gl/) - Deck.gl extensions (PathStyleExtension for dash patterns)
+- [`@deckgl-fiber-renderer/dom`](https://github.com/deckgl-fiber-renderer/fiber.gl) - React renderer for Deck.gl (for fiber usage)
+- [`geojson`](https://www.npmjs.com/package/geojson) - GeoJSON TypeScript types
+- `react` - React 19.0.0 or higher
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl/layers @deck.gl/extensions @deckgl-fiber-renderer/dom geojson react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl/layers @deck.gl/extensions @deckgl-fiber-renderer/dom geojson react
+```
+
+## Basic Usage
+
+### With Fiber Renderer
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
+import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+import { useOn } from '@accelint/bus/react';
+import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
+import { useState } from 'react';
+
+function MapWithShapes() {
+  const [selectedId, setSelectedId] = useState<string>();
+  const shapes = [
+    {
+      id: '1',
+      name: 'My Location',
+      shapeType: 'Point',
+      locked: false,
+      feature: {
+        type: 'Feature',
+        properties: {
+          styleProperties: {
+            fillColor: '#62a6ff',
+            strokeColor: '#62a6ff',
+            strokeWidth: 4,
+            fillOpacity: 100,
+            strokeOpacity: 100,
+            strokePattern: 'solid',
+          },
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [-122.4, 37.8],
+        },
+      },
+    },
+  ];
+
+  // Listen to shape selection events from the event bus
+  useOn(ShapeEvents.selected, (event) => {
+    setSelectedId(event.payload.shapeId);
+  });
+
+  return (
+    <BaseMap>
+      <displayShapeLayer
+        id="my-shapes"
+        data={shapes}
+        selectedShapeId={selectedId}
+        showLabels={true}
+        pickable={true}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Direct Layer Usage
+
+```tsx
+import { Deck } from '@deck.gl/core';
+import { DisplayShapeLayer } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer';
+
+const layer = new DisplayShapeLayer({
+  id: 'shapes',
+  data: shapes,
+  pickable: true,
+  showLabels: true,
+  onShapeClick: (shape) => {
+    console.log('Clicked shape:', shape.name);
+  },
+});
+
+new Deck({
+  initialViewState: {
+    longitude: -122.4,
+    latitude: 37.8,
+    zoom: 11,
+  },
+  controller: true,
+  layers: [layer],
+});
+```
+
+## Shape Data Structure
+
+Each shape must follow the `EditableShape` interface:
+
+```typescript
+interface EditableShape {
+  /** Unique identifier */
+  id: string;
+  /** Full shape name used internally and in UI */
+  name: string;
+  /** Optional short display label shown on the map */
+  label?: string;
+  /** Shape type: 'Point' | 'LineString' | 'Polygon' | 'Circle' */
+  shapeType: string;
+  /** Whether shape is locked from editing */
+  locked: boolean;
+  /** GeoJSON feature with geometry and style properties */
+  feature: {
+    type: 'Feature';
+    properties: {
+      styleProperties: StyleProperties;
+    };
+    geometry: Point | LineString | Polygon;
+  };
+  /** UTC timestamp (optional) */
+  lastUpdated?: number;
+}
+```
+
+### Style Properties
+
+Control the visual appearance of each shape:
+
+```typescript
+interface StyleProperties {
+  /** Fill color as hex string (e.g., "#62a6ff") */
+  fillColor: string;
+  /** Stroke color as hex string */
+  strokeColor: string;
+  /** Stroke width in pixels (1 | 2 | 4 | 8) */
+  strokeWidth: StrokeWidth;
+  /** Fill opacity percentage (0-100) */
+  fillOpacity: number;
+  /** Stroke opacity percentage (0-100) */
+  strokeOpacity: number;
+  /** Stroke pattern: 'solid' | 'dashed' | 'dotted' */
+  strokePattern: StrokePattern;
+  /** Optional icon properties for Point geometries */
+  icon?: {
+    atlas: string;
+    mapping: Record<string, IconDefinition>;
+    name: string;
+    size?: number;
+  };
+  /** Optional custom label positioning */
+  labelOffset?: [number, number];
+  labelVerticalAnchor?: 'top' | 'middle' | 'bottom';
+  labelHorizontalAnchor?: 'left' | 'center' | 'right';
+  labelCoordinateAnchor?: 'start' | 'middle' | 'end' | 'top' | 'right' | 'bottom' | 'left';
+}
+```
+
+## Custom Icons for Points
+
+Display custom icons for Point geometries using icon atlases:
+
+```tsx
+import ATLAS_PNG from './assets/atlas.png';
+import ATLAS_JSON from './assets/atlas.json';
+
+const pointWithIcon = {
+  id: '1',
+  name: 'Location Marker',
+  shapeType: 'Point',
+  locked: false,
+  feature: {
+    type: 'Feature',
+    properties: {
+      styleProperties: {
+        fillColor: '#62a6ff',
+        strokeColor: '#62a6ff',
+        strokeWidth: 4,
+        fillOpacity: 100,
+        strokeOpacity: 100,
+        strokePattern: 'solid',
+        icon: {
+          atlas: ATLAS_PNG,
+          mapping: ATLAS_JSON,
+          name: 'marker',
+          size: 38,
+        },
+      },
+    },
+    geometry: {
+      type: 'Point',
+      coordinates: [-122.4, 37.8],
+    },
+  },
+};
+```
+
+## Label Positioning
+
+The layer provides flexible label positioning with a three-tier priority system:
+
+1. **Per-shape properties** in `styleProperties` (highest priority)
+2. **Global `labelOptions`** prop
+3. **Default values** (geometry-specific fallbacks)
+
+### Global Label Options
+
+Apply positioning to all shapes of a given type:
+
+```tsx
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  showLabels={true}
+  labelOptions={{
+    // Circle labels at the top of the perimeter
+    circleLabelCoordinateAnchor: 'top',
+    circleLabelVerticalAnchor: 'bottom',
+    circleLabelOffset: [0, -10],
+
+    // LineString labels at the middle
+    lineStringLabelCoordinateAnchor: 'middle',
+    lineStringLabelVerticalAnchor: 'top',
+    lineStringLabelHorizontalAnchor: 'center',
+    lineStringLabelOffset: [0, -15],
+
+    // Point labels above with center alignment
+    pointLabelVerticalAnchor: 'bottom',
+    pointLabelHorizontalAnchor: 'center',
+    pointLabelOffset: [0, -27],
+  }}
+/>
+```
+
+### Per-Shape Label Positioning
+
+Override positioning for individual shapes via `styleProperties`:
+
+```tsx
+const shape = {
+  // ... other properties
+  feature: {
+    properties: {
+      styleProperties: {
+        // ... style properties
+        // Position this specific label
+        labelCoordinateAnchor: 'middle',
+        labelVerticalAnchor: 'bottom',
+        labelHorizontalAnchor: 'right',
+        labelOffset: [10, -20],
+      },
+    },
+    // ...
+  },
+};
+```
+
+### Positioning Concepts
+
+#### Coordinate Anchor
+
+Determines *where* on the geometry to place the label:
+
+- **Point**: Label is always at the point coordinate (no anchor needed)
+- **LineString/Polygon**: `'start'`, `'middle'`, or `'end'` along the geometry
+- **Circle**: `'top'`, `'right'`, `'bottom'`, or `'left'` on the perimeter
+
+#### Vertical/Horizontal Anchor
+
+Determines how the label text aligns *relative to* the anchor point.
+
+_Note: this is relative to the label text itself, and does not include offsets for not the bounding box around the text._
+
+- **Vertical**
+  - `'top'` - Label text appears below the point
+  - `'middle'` - Label text is vertically centered
+  - `'bottom'` - Label text appears above the point
+
+- **Horizontal**
+  - `'left'` - Label text appears to the right of the point
+  - `'center'` - Label text is horizontally centered
+  - `'right'` - Label text appears to the left of the point
+
+#### Pixel Offset
+
+Fine-tune label position with `[x, y]` pixel offsets:
+
+- Positive x moves right, negative moves left
+- Positive y moves down, negative moves up
+
+### Default Label Positions
+
+Each geometry type has sensible defaults:
+
+- **Point**: Above the point, centered `[0, -27]`
+- **LineString**: At start, middle-left aligned `[7, -15]`
+- **Polygon**: At start of outer ring, middle-left aligned `[7, -15]`
+- **Circle**: At top of perimeter, centered `[0, -17]`
+
+## Selection and Highlighting
+
+### Visual Feedback
+
+When a shape is selected via `selectedShapeId`, the layer renders a highlight layer underneath with:
+
+- Increased line width (+10 pixels)
+- Custom highlight color (default: turquoise at ~39% opacity)
+- Icon size increase (+8 pixels for Point geometries with icons)
+
+### Custom Highlight Color
+
+```tsx
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  highlightColor={[255, 0, 0, 128]} // Red at 50% opacity [R, G, B, A]
+/>
+```
+
+### Hover Effects
+
+When `pickable={true}`, shapes show hover feedback:
+
+- Line width increases by 2 pixels
+- Icon size increases by 5 pixels (for Point geometries with icons)
+
+## Event Bus Integration
+
+The layer automatically emits events via `@accelint/bus`:
+
+### shapes:selected
+
+Emitted when a shape is clicked:
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
+
+function MyComponent() {
+  useOn(ShapeEvents.selected, (event) => {
+    console.log('Selected shape ID:', event.payload.shapeId);
+  });
+
+  // ...
+}
+```
+
+### shapes:deselected
+
+Emitted when clicking empty space (requires map click handler):
+
+```tsx
+import { useEmit } from '@accelint/bus/react';
+import { MapEvents } from '@accelint/map-toolkit/deckgl/base-map/events';
+
+function MyComponent() {
+  const emitDeselected = useEmit(ShapeEvents.deselected);
+
+  useOn(MapEvents.click, (event) => {
+    // If clicked empty space and have selection
+    if (selectedId && event.payload.info.index === -1) {
+      emitDeselected(null);
+    }
+  });
+
+  // ...
+}
+```
+
+## Callbacks
+
+In addition to event bus integration, the layer provides callback props:
+
+### onShapeClick
+
+```tsx
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  onShapeClick={(shape) => {
+    console.log('Clicked:', shape.name);
+    // Access full shape data including geometry, properties, etc.
+  }}
+/>
+```
+
+### onShapeHover
+
+```tsx
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  onShapeHover={(shape) => {
+    if (shape) {
+      console.log('Hovering:', shape.name);
+    } else {
+      console.log('Hover ended');
+    }
+  }}
+/>
+```
+
+## Performance Considerations
+
+- The layer uses deck.gl's `updateTriggers` to minimize re-renders
+- Label positioning is calculated once per shape unless options change
+- Icon atlases are shared across all Point geometries for efficiency
+- Use `pickable={false}` to disable interaction and improve performance for static displays
+
+## API Reference
+
+### DisplayShapeLayerProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | *required* | Unique layer ID |
+| `data` | `EditableShape[]` | *required* | Array of shapes to display |
+| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
+| `onShapeClick` | `(shape: EditableShape) => void` | `undefined` | Callback when shape is clicked |
+| `onShapeHover` | `(shape: EditableShape \| null) => void` | `undefined` | Callback when shape is hovered |
+| `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
+| `showLabels` | `boolean` | `true` | Whether to show labels |
+| `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
+| `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
+
+### LabelPositionOptions
+
+See the [Label Positioning](#label-positioning) section for detailed documentation on available options for each geometry type.
+
+## Examples
+
+See the Storybook stories for interactive examples:
+
+- **BasicDisplayAndEvents**: Interactive shape display with event logging
+- **LabelPositioning**: Comprehensive label positioning controls
+- **WithPointIcons**: Custom icon atlas demo

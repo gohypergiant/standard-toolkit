@@ -32,32 +32,76 @@ export type StyledFeatureProperties = SharedStyledFeature['properties'];
 
 /**
  * Props for DisplayShapeLayer
+ *
+ * @example Basic usage
+ * ```tsx
+ * const props: DisplayShapeLayerProps = {
+ *   id: 'my-shapes',
+ *   data: myShapes,
+ *   pickable: true,
+ *   showLabels: true,
+ * };
+ * ```
  */
 export interface DisplayShapeLayerProps extends CompositeLayerProps {
-  /** Unique layer ID */
+  /** Unique layer ID - required for deck.gl layer management */
   id: string;
 
-  /** Array of shapes to display */
+  /**
+   * Array of shapes to display
+   * Each shape must have a GeoJSON feature with styleProperties
+   */
   data: EditableShape[];
 
-  /** Currently selected shape ID (for highlighting) */
+  /**
+   * Currently selected shape ID (for highlighting)
+   * When set, renders a highlight layer around the selected shape
+   */
   selectedShapeId?: ShapeId;
 
-  /** Callback when a shape is clicked */
+  /**
+   * Callback when a shape is clicked
+   * Also triggers a shapes:selected event on the event bus
+   * @param shape - The clicked shape with full properties
+   */
   onShapeClick?: (shape: EditableShape) => void;
 
-  /** Callback when a shape is hovered (null when hover ends) */
+  /**
+   * Callback when a shape is hovered
+   * Called with null when hover ends
+   * @param shape - The hovered shape, or null when hover ends
+   */
   onShapeHover?: (shape: EditableShape | null) => void;
 
-  /** Whether shapes are pickable (clickable/hoverable) */
+  /**
+   * Whether shapes are pickable (clickable/hoverable)
+   * @default true
+   */
   pickable?: boolean;
 
-  /** Whether to show labels */
+  /**
+   * Whether to show labels on shapes
+   * Labels use the shape's `label` property, or `name` if label is not set
+   * @default true
+   */
   showLabels?: boolean;
 
-  /** Custom label positioning options */
+  /**
+   * Global label positioning options
+   * Can be overridden per-shape via styleProperties
+   * Priority: per-shape properties > labelOptions > defaults
+   * @see LabelPositionOptions for available options
+   */
   labelOptions?: LabelPositionOptions;
 
-  /** Custom highlight color [r, g, b, a] */
+  /**
+   * Custom highlight color for selected shapes [r, g, b, a]
+   * Each channel is 0-255
+   * @default [40, 245, 190, 100] - Turquoise at ~39% opacity
+   * @example Custom red highlight
+   * ```tsx
+   * highlightColor={[255, 0, 0, 128]} // Red at 50% opacity
+   * ```
+   */
   highlightColor?: [number, number, number, number];
 }

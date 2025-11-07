@@ -14,41 +14,6 @@
 
 // Display Shape Layer exports
 export { DisplayShapeLayer } from './display-shape-layer/index';
-// Hook exports
-export {
-  useCircleState,
-  useShapeEdits,
-  useStyleProperties,
-} from './editable-shape-layer/hooks';
-// Editable Shape Layer exports
-export { EditableShapeLayer } from './editable-shape-layer/index';
-// Store exports
-export {
-  createShapeStore,
-  useHoveredShape,
-  useSelectedShape,
-  useShape,
-  useShapeStore,
-  useShapesByType,
-} from './editable-shape-layer/store';
-// Utility exports
-export {
-  computeCirclePolygon,
-  computeCircleSteps,
-  formatCoordinate,
-} from './editable-shape-layer/utils/geometry';
-export {
-  getShapeTypeForMode,
-  isDrawingMode,
-  isEditingMode,
-  isViewMode,
-} from './editable-shape-layer/utils/mode-helpers';
-export { createTemporaryShape } from './editable-shape-layer/utils/shape-creation';
-export {
-  validateCoordinates,
-  validateGeometry,
-  validateShape,
-} from './editable-shape-layer/utils/validation';
 // Constant exports
 export {
   DASH_ARRAYS,
@@ -74,18 +39,6 @@ export type {
   StyledFeature,
   StyledFeatureProperties,
 } from './display-shape-layer/types';
-export type {
-  CircleState,
-  UseShapeEditsOptions,
-  UseStylePropertiesOptions,
-} from './editable-shape-layer/hooks';
-export type { EditableShapeLayerProps } from './editable-shape-layer/index';
-export type {
-  ShapeStore,
-  ShapeStoreActions,
-  ShapeStoreState,
-} from './editable-shape-layer/store';
-export type { ShapeValidationResult } from './editable-shape-layer/utils/validation';
 export type {
   EditShapeMode,
   ShapeEventHandler,

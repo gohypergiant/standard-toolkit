@@ -16,6 +16,21 @@
  * This module provides utilities for positioning labels on shapes and calculating
  * points along line segments. Use these to customize label placement in your shape data.
  *
+ * ## Label Styling
+ *
+ * Labels are automatically styled to match their shapes:
+ * - **Background fill**: Uses the shape's `fillColor` with `fillOpacity`
+ * - **Border**: Uses the shape's `strokeColor` at full opacity with 2px width
+ * - **Padding**: 8px on all sides (top, right, bottom, left)
+ * - **Text**: Black (rgba(0, 0, 0, 255)) with bold Roboto Mono font at 10px
+ *
+ * ### Calculating Offsets
+ *
+ * When positioning labels, account for the 8px padding around the text.
+ * For example, to position a label exactly 5px above a point:
+ * - Label height ≈ text height (10px) + padding (16px) = 26px
+ * - Offset needed: [0, -(26 + 5)] = [0, -31]
+ *
  * @example Position label at the middle of a LineString
  * ```typescript
  * import { getLineStringMidpoint } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/labels';
@@ -205,46 +220,104 @@ export type LabelHorizontalPosition = 'left' | 'center' | 'right';
 export type LabelCoordinateAnchor = 'start' | 'middle' | 'end';
 
 /**
- * Circle coordinate anchor using cardinal directions
+ * Circle coordinate anchor for positioning labels on the perimeter
+ * Uses edge positions relative to the circle's bounding box
  */
 export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
 
 /**
- * Options for label positioning
+ * Global label positioning options for DisplayShapeLayer
+ *
+ * ## Priority System
+ * Label positioning follows a three-tier priority system:
+ * 1. **Per-shape properties** in `styleProperties` (highest priority)
+ * 2. **Global options** via this interface
+ * 3. **Default values** (geometry-specific fallbacks)
+ *
+ * ## Label Appearance
+ *
+ * Labels automatically inherit styling from their shapes:
+ * - **Background**: Shape's `fillColor` with `fillOpacity`
+ * - **Border**: Shape's `strokeColor` at full opacity (2px width)
+ * - **Padding**: 8px on all sides
+ * - **Text**: Black, bold, Roboto Mono, 10px
+ *
+ * Total label box height ≈ 26px (10px text + 16px padding)
+ *
+ * ## Positioning Concepts
+ *
+ * ### Coordinate Anchor
+ * Determines *where* on the geometry to place the label:
+ * - **Point**: Label is always at the point coordinate
+ * - **LineString/Polygon**: 'start', 'middle', or 'end' along the geometry
+ * - **Circle**: 'top', 'right', 'bottom', or 'left' on the perimeter
+ *
+ * ### Vertical/Horizontal Anchor
+ * Determines how the label aligns *relative to* the anchor point:
+ * - **Vertical**: 'top' (label text below point), 'middle' (centered), 'bottom' (label text above point)
+ * - **Horizontal**: 'left' (label text right of point), 'center' (centered), 'right' (label text left of point)
+ *
+ * ### Pixel Offset
+ * Fine-tune label position with [x, y] pixel offsets:
+ * - Positive x moves right, negative moves left
+ * - Positive y moves down, negative moves up
+ * - Account for 8px padding when calculating precise offsets
+ *
+ * @example Position circle labels at the top with 5px clearance
+ * ```tsx
+ * const labelOptions: LabelPositionOptions = {
+ *   circleLabelCoordinateAnchor: 'top',
+ *   circleLabelVerticalAnchor: 'bottom', // Label above the top point
+ *   circleLabelOffset: [0, -31], // -(26px label height + 5px clearance)
+ * };
+ * ```
+ *
+ * @example Position line labels at middle with offset to the right
+ * ```tsx
+ * const labelOptions: LabelPositionOptions = {
+ *   lineStringLabelCoordinateAnchor: 'middle',
+ *   lineStringLabelHorizontalAnchor: 'left',
+ *   lineStringLabelOffset: [10, 0], // 10px to the right
+ * };
+ * ```
  */
 export interface LabelPositionOptions {
-  /** Vertical anchor for Point labels */
+  // Point geometry options
+  /** Vertical anchor for Point labels @default 'bottom' */
   pointLabelVerticalAnchor?: LabelVerticalPosition;
-  /** Horizontal anchor for Point labels */
+  /** Horizontal anchor for Point labels @default 'center' */
   pointLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Custom pixel offset for point shapes [x, y] */
+  /** Pixel offset for Point labels [x, y] @default [0, -27] */
   pointLabelOffset?: [number, number];
 
-  /** Coordinate anchor for LineString labels (position along line) */
+  // LineString geometry options
+  /** Position along LineString (start/middle/end) @default 'start' */
   lineStringLabelCoordinateAnchor?: LabelCoordinateAnchor;
-  /** Vertical anchor for LineString labels */
+  /** Vertical anchor for LineString labels @default 'middle' */
   lineStringLabelVerticalAnchor?: LabelVerticalPosition;
-  /** Horizontal anchor for LineString labels */
+  /** Horizontal anchor for LineString labels @default 'left' */
   lineStringLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Custom pixel offset for linestring shapes [x, y] */
+  /** Pixel offset for LineString labels [x, y] @default [7, -15] */
   lineStringLabelOffset?: [number, number];
 
-  /** Coordinate anchor for Polygon labels (position along outer ring) */
+  // Polygon geometry options
+  /** Position along Polygon outer ring (start/middle/end) @default 'start' */
   polygonLabelCoordinateAnchor?: LabelCoordinateAnchor;
-  /** Vertical anchor for Polygon labels */
+  /** Vertical anchor for Polygon labels @default 'middle' */
   polygonLabelVerticalAnchor?: LabelVerticalPosition;
-  /** Horizontal anchor for Polygon labels */
+  /** Horizontal anchor for Polygon labels @default 'left' */
   polygonLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Custom pixel offset for polygon shapes [x, y] */
+  /** Pixel offset for Polygon labels [x, y] @default [7, -15] */
   polygonLabelOffset?: [number, number];
 
-  /** Coordinate anchor for Circle labels (position on circle perimeter) */
+  // Circle geometry options
+  /** Position on Circle perimeter (top/right/bottom/left) @default 'top' */
   circleLabelCoordinateAnchor?: CircleLabelCoordinateAnchor;
-  /** Vertical anchor for Circle labels */
+  /** Vertical anchor for Circle labels @default 'middle' */
   circleLabelVerticalAnchor?: LabelVerticalPosition;
-  /** Horizontal anchor for Circle labels */
+  /** Horizontal anchor for Circle labels @default 'center' */
   circleLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Custom pixel offset for circle shapes [x, y] */
+  /** Pixel offset for Circle labels [x, y] @default [0, -17] */
   circleLabelOffset?: [number, number];
 }
 
@@ -324,7 +397,7 @@ function getPointPosition(
   shapeHorizontal: string | undefined,
   options?: LabelPositionOptions,
 ): LabelPosition2d {
-  const defaultOffset: [number, number] = [0, -45];
+  const defaultOffset: [number, number] = [0, -27];
   const defaultVertical: LabelVerticalPosition = 'bottom';
   const defaultHorizontal: LabelHorizontalPosition = 'center';
 
@@ -416,38 +489,38 @@ function getVertexCoordinate(vertex: number[] | undefined): [number, number] {
 }
 
 /**
- * Check if a vertex should replace the current target based on direction
+ * Check if a vertex should replace the current target based on edge position
  */
-function shouldUpdateCardinalVertex(
+function shouldUpdateEdgeVertex(
   vertexValue: number,
   targetValue: number,
-  direction: CircleLabelCoordinateAnchor,
+  position: CircleLabelCoordinateAnchor,
 ): boolean {
   // For top and right, find maximum value
   // For bottom and left, find minimum value
-  return direction === 'top' || direction === 'right'
+  return position === 'top' || position === 'right'
     ? vertexValue > targetValue
     : vertexValue < targetValue;
 }
 
 /**
- * Get the coordinate index based on direction (0 for x/longitude, 1 for y/latitude)
+ * Get the coordinate index based on edge position (0 for x/longitude, 1 for y/latitude)
  */
-function getCoordinateIndexForDirection(
-  direction: CircleLabelCoordinateAnchor,
+function getCoordinateIndexForEdgePosition(
+  position: CircleLabelCoordinateAnchor,
 ): number {
-  return direction === 'top' || direction === 'bottom' ? 1 : 0;
+  return position === 'top' || position === 'bottom' ? 1 : 0;
 }
 
 /**
- * Find cardinal direction point on a circle's perimeter
+ * Find the point on a circle's perimeter at the specified edge position
  * @param ring - Circle's polygon ring coordinates
- * @param direction - Cardinal direction (top/right/bottom/left)
- * @returns Coordinate at the specified cardinal direction
+ * @param position - Edge position (top/right/bottom/left) relative to bounding box
+ * @returns Coordinate at the specified edge position
  */
-function findCircleCardinalPoint(
+function findCircleEdgePoint(
   ring: number[][] | undefined,
-  direction: CircleLabelCoordinateAnchor,
+  position: CircleLabelCoordinateAnchor,
 ): [number, number] {
   if (!ring || ring.length === 0) {
     return [0, 0];
@@ -455,7 +528,7 @@ function findCircleCardinalPoint(
 
   // Find the vertex with max/min latitude or longitude
   let targetVertex = ring[0];
-  const coordinateIndex = getCoordinateIndexForDirection(direction);
+  const coordinateIndex = getCoordinateIndexForEdgePosition(position);
 
   for (const vertex of ring) {
     if (!vertex) {
@@ -472,7 +545,7 @@ function findCircleCardinalPoint(
       continue;
     }
 
-    if (shouldUpdateCardinalVertex(vertexValue, targetValue, direction)) {
+    if (shouldUpdateEdgeVertex(vertexValue, targetValue, position)) {
       targetVertex = vertex;
     }
   }
@@ -543,7 +616,7 @@ function getCirclePosition(
     defaultCoordinateAnchor) as CircleLabelCoordinateAnchor;
 
   // Calculate position based on coordinate anchor
-  const coordinates = findCircleCardinalPoint(ring, coordinateAnchor);
+  const coordinates = findCircleEdgePoint(ring, coordinateAnchor);
 
   return {
     coordinates,

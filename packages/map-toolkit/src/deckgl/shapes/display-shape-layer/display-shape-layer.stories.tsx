@@ -209,7 +209,7 @@ export const LabelPositioning: Story = {
     pointLabelVerticalAnchor: 'bottom',
     pointLabelHorizontalAnchor: 'center',
     pointLabelOffsetX: 0,
-    pointLabelOffsetY: -45,
+    pointLabelOffsetY: -27,
     // LineString controls
     lineStringLabelCoordinateAnchor: 'start',
     lineStringLabelVerticalAnchor: 'middle',

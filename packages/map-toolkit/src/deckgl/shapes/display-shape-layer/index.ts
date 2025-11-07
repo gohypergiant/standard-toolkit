@@ -43,18 +43,73 @@ import type { DisplayShapeLayerProps } from './types';
 const shapeBus = Broadcast.getInstance<ShapeEvent>();
 
 /**
- * DisplayShapeLayer - Display-only shapes layer
+ * DisplayShapeLayer - Read-only shapes visualization layer
  *
- * A composite layer that renders:
- * 1. Highlight sublayer (for selection glow)
- * 2. Main GeoJsonLayer (shapes)
- * 3. ShapeLabelLayer (if showLabels enabled)
+ * A composite deck.gl layer for displaying geographic shapes with interactive features.
+ * Ideal for rendering shapes from external APIs or displaying read-only geographic data.
  *
- * Purpose: Render shapes from external APIs (read-only visualization)
+ * ## Features
+ * - **Multiple geometry types**: Point, LineString, Polygon, and Circle
+ * - **Icon support**: Custom icons for Point geometries via icon atlases
+ * - **Interactive selection**: Click handling with visual highlight feedback
+ * - **Hover effects**: Line width increases on hover for better UX
+ * - **Customizable labels**: Flexible label positioning with per-shape or global options
+ * - **Style properties**: Full control over colors, stroke patterns, and opacity
+ * - **Event bus integration**: Automatically emits shape events via @accelint/bus
  *
- * Bus Integration: Automatically emits shape events via @accelint/bus:
- * - shapes:selected when a shape is clicked
- * - shapes:deselected when clicking empty space (future)
+ * ## Layer Structure
+ * Renders three sublayers (in order):
+ * 1. **Highlight layer**: Selection glow effect (rendered below main layer)
+ * 2. **Main GeoJsonLayer**: Shape geometries with styling and interaction
+ * 3. **Label layer**: Text labels (if showLabels enabled)
+ *
+ * ## Event Bus Integration
+ * Automatically emits shape events that can be consumed anywhere in your app:
+ * - `shapes:selected` - Emitted when a shape is clicked
+ * - `shapes:deselected` - Emitted when clicking empty space (via map click handler)
+ *
+ * @example Basic usage with Fiber renderer
+ * ```tsx
+ * import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+ *
+ * function MapWithShapes() {
+ *   const [selectedId, setSelectedId] = useState<string>();
+ *
+ *   // Listen to shape selection events
+ *   useOn(ShapeEvents.selected, (event) => {
+ *     setSelectedId(event.payload.shapeId);
+ *   });
+ *
+ *   return (
+ *     <BaseMap>
+ *       <displayShapeLayer
+ *         id="my-shapes"
+ *         data={shapes}
+ *         selectedShapeId={selectedId}
+ *         showLabels={true}
+ *         pickable={true}
+ *       />
+ *     </BaseMap>
+ *   );
+ * }
+ * ```
+ *
+ * @example With custom label positioning
+ * ```tsx
+ * <displayShapeLayer
+ *   id="my-shapes"
+ *   data={shapes}
+ *   showLabels={true}
+ *   labelOptions={{
+ *     // Position circle labels at the top
+ *     circleLabelCoordinateAnchor: 'top',
+ *     circleLabelVerticalAnchor: 'bottom',
+ *     circleLabelOffset: [0, -10],
+ *     // Position line labels at the middle
+ *     lineStringLabelCoordinateAnchor: 'middle',
+ *   }}
+ * />
+ * ```
  */
 export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   static override layerName = 'DisplayShapeLayer';

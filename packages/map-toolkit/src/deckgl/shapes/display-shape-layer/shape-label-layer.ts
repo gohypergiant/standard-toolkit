@@ -23,16 +23,50 @@ import {
 } from './utils/labels';
 import type { EditableShape } from '../shared/types';
 
+/**
+ * Props for creating a shape label layer
+ */
 export interface ShapeLabelLayerProps {
+  /** Layer ID (defaults to DISPLAY_LABELS constant) */
   id?: string;
+  /** Array of shapes to label */
   data: EditableShape[];
-  /** Optional label positioning options */
+  /**
+   * Global label positioning options
+   * Per-shape properties in styleProperties take precedence
+   */
   labelOptions?: LabelPositionOptions;
 }
 
 /**
- * ShapeLabelLayer - Renders text labels for shapes
- * Uses TextLayer from DeckGL with smart positioning based on geometry type
+ * Creates a TextLayer for rendering shape labels with intelligent positioning
+ *
+ * ## Features
+ * - **Geometry-aware positioning**: Different defaults for Point, LineString, Polygon, and Circle
+ * - **Three-tier priority system**: Per-shape properties > labelOptions > defaults
+ * - **Coordinate anchoring**: Position labels at start/middle/end (or edge positions for circles)
+ * - **Pixel-based offsets**: Consistent label placement at all zoom levels
+ * - **Styled backgrounds**: Color-matched backgrounds with borders using shape colors
+ *
+ * ## Label Positioning Priority
+ * 1. Per-shape `styleProperties` (highest priority)
+ * 2. Global `labelOptions` parameter
+ * 3. Geometry-specific defaults (fallback)
+ *
+ * @param props - Shape label layer configuration
+ * @returns Configured TextLayer instance
+ *
+ * @example
+ * ```tsx
+ * const labelLayer = createShapeLabelLayer({
+ *   id: 'my-labels',
+ *   data: shapes,
+ *   labelOptions: {
+ *     circleLabelCoordinateAnchor: 'top',
+ *     pointLabelOffset: [0, -20],
+ *   },
+ * });
+ * ```
  */
 export function createShapeLabelLayer(
   props: ShapeLabelLayerProps,
