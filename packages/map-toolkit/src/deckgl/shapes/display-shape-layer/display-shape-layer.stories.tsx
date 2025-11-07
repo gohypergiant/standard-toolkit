@@ -36,8 +36,6 @@ type Story = StoryObj<typeof meta>;
 
 // Stable ID for Storybook
 const DISPLAY_MAP_ID = uuid();
-const WITHOUT_LABELS_MAP_ID = uuid();
-const NON_INTERACTIVE_MAP_ID = uuid();
 const WITH_ICONS_MAP_ID = uuid();
 
 /**
@@ -49,8 +47,42 @@ const WITH_ICONS_MAP_ID = uuid();
  * - The highlight layer responds to selection state
  * - Selection state can be controlled via the bus from anywhere in the app
  */
-export const BasicDisplay: Story = {
-  render: () => {
+export const BasicDisplayAndEvents: Story = {
+  args: {
+    showLabels: true,
+    pickable: true,
+    highlightColorR: 40,
+    highlightColorG: 245,
+    highlightColorB: 190,
+    highlightColorA: 100,
+  },
+  argTypes: {
+    showLabels: {
+      control: { type: 'boolean' },
+      description: 'Show/hide labels on shapes',
+    },
+    pickable: {
+      control: { type: 'boolean' },
+      description: 'Enable/disable shape clicking and hovering',
+    },
+    highlightColorR: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color red channel (0-255)',
+    },
+    highlightColorG: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color green channel (0-255)',
+    },
+    highlightColorB: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color blue channel (0-255)',
+    },
+    highlightColorA: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color alpha/opacity (0-255)',
+    },
+  },
+  render: (args) => {
     const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
     const [selectedName, setSelectedName] = useState<string | undefined>();
     const [eventLog, setEventLog] = useState<
@@ -110,8 +142,14 @@ export const BasicDisplay: Story = {
             id='basic-shapes'
             data={mockShapes}
             selectedShapeId={selectedId}
-            showLabels={true}
-            pickable={true}
+            showLabels={args.showLabels}
+            pickable={args.pickable}
+            highlightColor={[
+              args.highlightColorR,
+              args.highlightColorG,
+              args.highlightColorB,
+              args.highlightColorA,
+            ]}
           />
         </BaseMap>
 
@@ -142,73 +180,6 @@ export const BasicDisplay: Story = {
           </div>
         </div>
       </div>
-    );
-  },
-};
-
-/**
- * Display without labels
- */
-export const WithoutLabels: Story = {
-  render: () => {
-    const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
-    const emitDeselected = useEmit<ShapeDeselectedEvent>(
-      ShapeEvents.deselected,
-    );
-
-    // Listen to shape selection events emitted automatically by DisplayShapeLayer
-    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
-      const shapeId = event.payload.shapeId;
-
-      setSelectedId(shapeId);
-    });
-
-    // Listen to shape deselection events
-    useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, () => {
-      setSelectedId(undefined);
-    });
-
-    // Listen to map clicks to detect clicks on empty space
-    useOn<MapClickEvent>(MapEvents.click, (event) => {
-      // Only emit deselect if we have a selection and clicked on empty space
-      // index is -1 when nothing is picked
-      if (
-        selectedId &&
-        event.payload.id === WITHOUT_LABELS_MAP_ID &&
-        event.payload.info.index === -1
-      ) {
-        emitDeselected(null);
-      }
-    });
-
-    return (
-      <BaseMap className='h-dvh w-dvw' id={WITHOUT_LABELS_MAP_ID}>
-        <displayShapeLayer
-          id='shapes-no-labels'
-          data={mockShapes}
-          selectedShapeId={selectedId}
-          showLabels={false}
-          pickable={true}
-        />
-      </BaseMap>
-    );
-  },
-};
-
-/**
- * Non-interactive display (not pickable)
- */
-export const NonInteractive: Story = {
-  render: () => {
-    return (
-      <BaseMap className='h-dvh w-dvw' id={NON_INTERACTIVE_MAP_ID}>
-        <displayShapeLayer
-          id='shapes-static'
-          data={mockShapes}
-          showLabels={true}
-          pickable={false}
-        />
-      </BaseMap>
     );
   },
 };
@@ -445,7 +416,7 @@ export const LabelPositioning: Story = {
  *
  * To regenerate icons: pnpm build:icons
  */
-export const WithIcons: Story = {
+export const WithPointIcons: Story = {
   render: () => {
     const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
     const emitDeselected = useEmit<ShapeDeselectedEvent>(
