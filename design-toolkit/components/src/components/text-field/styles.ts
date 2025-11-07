@@ -16,7 +16,8 @@ export const TextFieldStyles = tv({
   slots: {
     field: 'group/text-field flex flex-col gap-xs',
     label: '',
-    input: '',
+    input:
+      'group-size-medium/input:max-w-none group-size-small/input:max-w-none',
     description: [
       'fg-primary-muted text-body-xs',
       'group-disabled/text-field:fg-disabled',
