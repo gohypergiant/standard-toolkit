@@ -244,14 +244,19 @@ export class MapCursorStore {
     this.unsubscribers.push(unsubModeChange);
 
     const unsubHover = this.bus.on(MapEvents.hover, (event) => {
-      const { id } = event.payload;
+      const {
+        id,
+        info: { picked },
+      } = event.payload;
 
       // Filter: only handle if targeted at this map
       if (id !== this.id) {
         return;
       }
 
-      this.handleCursorStateChange('hover');
+      picked
+        ? this.handleCursorStateChange('hover')
+        : this.handleCursorStateChange('default');
     });
     this.unsubscribers.push(unsubHover);
 
