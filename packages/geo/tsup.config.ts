@@ -16,17 +16,20 @@ import {
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
 import { defineConfig } from 'tsup';
+import { pluginInline } from './build-plugins/esbuild-plugin-inline.js';
 
 export default defineConfig({
   esbuildPlugins: [
     fixAliasPlugin(),
     fixFolderImportsPlugin(),
     fixExtensionsPlugin(),
+    pluginInline,
   ],
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
+    '!**/__snapshots__',
   ],
   bundle: false,
   clean: true,

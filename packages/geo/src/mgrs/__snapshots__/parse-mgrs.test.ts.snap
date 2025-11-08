@@ -1,0 +1,865 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parse MGRS > valid coordinates > "01CEQ" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "E",
+  "gridRow": "Q",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "C",
+  "zoneNumber": 1,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "01CEQ11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "E",
+  "gridRow": "Q",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "C",
+  "zoneNumber": 1,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "01CEQ2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "E",
+  "gridRow": "Q",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "C",
+  "zoneNumber": 1,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "01CEQ333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "E",
+  "gridRow": "Q",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "C",
+  "zoneNumber": 1,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "01CEQ44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "E",
+  "gridRow": "Q",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "C",
+  "zoneNumber": 1,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "01CEQ5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "E",
+  "gridRow": "Q",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "C",
+  "zoneNumber": 1,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "02CKS" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "K",
+  "gridRow": "S",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "C",
+  "zoneNumber": 2,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "02CKS11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "K",
+  "gridRow": "S",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "C",
+  "zoneNumber": 2,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "02CKS2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "K",
+  "gridRow": "S",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "C",
+  "zoneNumber": 2,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "02CKS333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "K",
+  "gridRow": "S",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "C",
+  "zoneNumber": 2,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "02CKS44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "K",
+  "gridRow": "S",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "C",
+  "zoneNumber": 2,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "02CKS5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "K",
+  "gridRow": "S",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "C",
+  "zoneNumber": 2,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "03CSN" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "S",
+  "gridRow": "N",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "C",
+  "zoneNumber": 3,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "03CSN11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "S",
+  "gridRow": "N",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "C",
+  "zoneNumber": 3,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "03CSN2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "S",
+  "gridRow": "N",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "C",
+  "zoneNumber": 3,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "03CSN333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "S",
+  "gridRow": "N",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "C",
+  "zoneNumber": 3,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "03CSN44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "S",
+  "gridRow": "N",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "C",
+  "zoneNumber": 3,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "03CSN5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "S",
+  "gridRow": "N",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "C",
+  "zoneNumber": 3,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "12STA" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "T",
+  "gridRow": "A",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "S",
+  "zoneNumber": 12,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "12STA11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "T",
+  "gridRow": "A",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "S",
+  "zoneNumber": 12,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "12STA2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "T",
+  "gridRow": "A",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "S",
+  "zoneNumber": 12,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "12STA333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "T",
+  "gridRow": "A",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "S",
+  "zoneNumber": 12,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "12STA44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "T",
+  "gridRow": "A",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "S",
+  "zoneNumber": 12,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "12STA5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "T",
+  "gridRow": "A",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "S",
+  "zoneNumber": 12,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "31XQV" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "Q",
+  "gridRow": "V",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "X",
+  "zoneNumber": 31,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "31XQV11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "Q",
+  "gridRow": "V",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "X",
+  "zoneNumber": 31,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "31XQV2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "Q",
+  "gridRow": "V",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "X",
+  "zoneNumber": 31,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "31XQV333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "Q",
+  "gridRow": "V",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "X",
+  "zoneNumber": 31,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "31XQV44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "Q",
+  "gridRow": "V",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "X",
+  "zoneNumber": 31,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "31XQV5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "Q",
+  "gridRow": "V",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "X",
+  "zoneNumber": 31,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "32VKN" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "K",
+  "gridRow": "N",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "V",
+  "zoneNumber": 32,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "32VKN11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "K",
+  "gridRow": "N",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "V",
+  "zoneNumber": 32,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "32VKN2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "K",
+  "gridRow": "N",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "V",
+  "zoneNumber": 32,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "32VKN333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "K",
+  "gridRow": "N",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "V",
+  "zoneNumber": 32,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "32VKN44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "K",
+  "gridRow": "N",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "V",
+  "zoneNumber": 32,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "32VKN5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "K",
+  "gridRow": "N",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "V",
+  "zoneNumber": 32,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33MVP" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "V",
+  "gridRow": "P",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "M",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33MVP11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "V",
+  "gridRow": "P",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "M",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33MVP2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "V",
+  "gridRow": "P",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "M",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33MVP333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "V",
+  "gridRow": "P",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "M",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33MVP44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "V",
+  "gridRow": "P",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "M",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33MVP5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "V",
+  "gridRow": "P",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "M",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33XAV" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "A",
+  "gridRow": "V",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "X",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33XAV11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "A",
+  "gridRow": "V",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "X",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33XAV2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "A",
+  "gridRow": "V",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "X",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33XAV333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "A",
+  "gridRow": "V",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "X",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33XAV44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "A",
+  "gridRow": "V",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "X",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "33XAV5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "A",
+  "gridRow": "V",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "X",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "35XJL" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "J",
+  "gridRow": "L",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "X",
+  "zoneNumber": 35,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "35XJL11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "J",
+  "gridRow": "L",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "X",
+  "zoneNumber": 35,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "35XJL2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "J",
+  "gridRow": "L",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "X",
+  "zoneNumber": 35,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "35XJL333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "J",
+  "gridRow": "L",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "X",
+  "zoneNumber": 35,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "35XJL44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "J",
+  "gridRow": "L",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "X",
+  "zoneNumber": 35,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "35XJL5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "J",
+  "gridRow": "L",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "X",
+  "zoneNumber": 35,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "37XSV" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "S",
+  "gridRow": "V",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "X",
+  "zoneNumber": 37,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "37XSV11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "S",
+  "gridRow": "V",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "X",
+  "zoneNumber": 37,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "37XSV2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "S",
+  "gridRow": "V",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "X",
+  "zoneNumber": 37,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "37XSV333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "S",
+  "gridRow": "V",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "X",
+  "zoneNumber": 37,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "37XSV44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "S",
+  "gridRow": "V",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "X",
+  "zoneNumber": 37,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "37XSV5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "S",
+  "gridRow": "V",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "X",
+  "zoneNumber": 37,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "59XJV" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "J",
+  "gridRow": "V",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "X",
+  "zoneNumber": 59,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "59XJV11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "J",
+  "gridRow": "V",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "X",
+  "zoneNumber": 59,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "59XJV2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "J",
+  "gridRow": "V",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "X",
+  "zoneNumber": 59,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "59XJV333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "J",
+  "gridRow": "V",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "X",
+  "zoneNumber": 59,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "59XJV44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "J",
+  "gridRow": "V",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "X",
+  "zoneNumber": 59,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "59XJV5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "J",
+  "gridRow": "V",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "X",
+  "zoneNumber": 59,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "60WSC" 1`] = `
+{
+  "easting": 0,
+  "gridCol": "S",
+  "gridRow": "C",
+  "northing": 0,
+  "precision": 0,
+  "zoneLetter": "W",
+  "zoneNumber": 60,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "60WSC11" 1`] = `
+{
+  "easting": 1,
+  "gridCol": "S",
+  "gridRow": "C",
+  "northing": 1,
+  "precision": 1,
+  "zoneLetter": "W",
+  "zoneNumber": 60,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "60WSC2222" 1`] = `
+{
+  "easting": 22,
+  "gridCol": "S",
+  "gridRow": "C",
+  "northing": 22,
+  "precision": 2,
+  "zoneLetter": "W",
+  "zoneNumber": 60,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "60WSC333333" 1`] = `
+{
+  "easting": 333,
+  "gridCol": "S",
+  "gridRow": "C",
+  "northing": 333,
+  "precision": 3,
+  "zoneLetter": "W",
+  "zoneNumber": 60,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "60WSC44444444" 1`] = `
+{
+  "easting": 4444,
+  "gridCol": "S",
+  "gridRow": "C",
+  "northing": 4444,
+  "precision": 4,
+  "zoneLetter": "W",
+  "zoneNumber": 60,
+}
+`;
+
+exports[`parse MGRS > valid coordinates > "60WSC5555555555" 1`] = `
+{
+  "easting": 55555,
+  "gridCol": "S",
+  "gridRow": "C",
+  "northing": 55555,
+  "precision": 5,
+  "zoneLetter": "W",
+  "zoneNumber": 60,
+}
+`;
