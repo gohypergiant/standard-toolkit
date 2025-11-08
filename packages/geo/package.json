@@ -34,11 +34,33 @@
       },
       "default": "./dist/index.js"
     },
+    "./mgrs": {
+      "import": {
+        "types": "./dist/mgrs/index.d.ts",
+        "default": "./dist/mgrs/index.js"
+      },
+      "default": "./dist/mgrs/index.js"
+    },
+    "./utm": {
+      "import": {
+        "types": "./dist/utm/index.d.ts",
+        "default": "./dist/utm/index.js"
+      },
+      "default": "./dist/utm/index.js"
+    },
+    "./wgs": {
+      "import": {
+        "types": "./dist/wgs/index.d.ts",
+        "default": "./dist/wgs/index.js"
+      },
+      "default": "./dist/wgs/index.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsup",
+    "bundle-size": "pnpm run build && node scripts/bundle-size.js",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/geo",
@@ -52,8 +74,8 @@
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@types/geodesy": "^2.2.8",
     "esbuild-fix-imports-plugin": "^1.0.23",
+    "geographiclib-mgrs": "^1.0.4",
     "tsup": "8.5.0",
     "typescript": "5.8.3",
     "vitest": "^4.0.8"

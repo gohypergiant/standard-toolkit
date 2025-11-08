@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { Broadcast } from '@accelint/bus';
-import { coordinateSystems, createCoordinate } from '@accelint/geo';
+import { createCoordinate } from '@accelint/geo';
 import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { MapEvents } from '../deckgl/base-map/events';
 import { MapContext } from '../deckgl/base-map/provider';
@@ -30,10 +30,9 @@ import type { MapEventType, MapHoverEvent } from '../deckgl/base-map/types';
  * @property mgrs - Military Grid Reference System (e.g., "31U DQ 48251 11932")
  * @property utm - Universal Transverse Mercator (e.g., "31N 448251 5411932")
  */
-export type CoordinateFormatTypes = keyof typeof coordinateSystems;
+export type CoordinateFormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
 
 const bus = Broadcast.getInstance<MapEventType>();
-const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
 
 const MAX_LONGITUDE = 180;
 const LONGITUDE_RANGE = 360;
@@ -246,8 +245,20 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => string {
         return DEFAULT_COORDINATE;
       }
 
-      const coord = create(prepareCoord(state.coordinate));
-      return coord[state.format]();
+      const coord = createCoordinate('lonlat', prepareCoord(state.coordinate));
+
+      switch (state.format) {
+        case 'dd':
+          return coord.toString({ compass: true });
+        case 'ddm':
+          return coord.toString({ compass: true, format: 'ddm' });
+        case 'dms':
+          return coord.toString({ compass: true, format: 'dms' });
+        case 'mgrs':
+          return coord.toMGRS().toString();
+        case 'utm':
+          return coord.toUTM().toString();
+      }
     };
 
     snapshotCache.set(instanceId, cached);

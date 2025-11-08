@@ -53,6 +53,7 @@
     "@changesets/cli": "^2.27.9",
     "@ls-lint/ls-lint": "^2.3.1",
     "@swc/core": "^1.7.36",
+    "esbuild": "^0.25.12",
     "lefthook": "^1.9.3",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
