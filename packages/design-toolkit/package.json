@@ -10,7 +10,6 @@
     "tooling",
     "ui"
   ],
-  "subPath": "design-toolkit/components",
   "version": "7.0.1",
   "private": false,
   "license": "Apache-2.0",
@@ -32,12 +31,12 @@
       },
       "default": "./dist/index.js"
     },
-    "./components/*": {
+    "./*": {
       "import": {
-        "types": "./dist/components/*.d.ts",
-        "default": "./dist/components/*.js"
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.js"
       },
-      "default": "./dist/components/*.js"
+      "default": "./dist/*.js"
     },
     "./hooks/*": {
       "import": {
