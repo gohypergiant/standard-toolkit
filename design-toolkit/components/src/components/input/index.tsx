@@ -12,9 +12,9 @@
 
 'use client';
 
+import 'client-only';
 import { CancelFill } from '@accelint/icons';
 import { useControlledState } from '@react-stately/utils';
-import 'client-only';
 import {
   Input as AriaInput,
   InputContext as AriaInputContext,
@@ -23,14 +23,13 @@ import {
 } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
+import { IconProvider } from '../icon/context';
 import { InputContext } from './context';
-import { Prefix } from './prefix';
 import { InputStyles, InputStylesDefaults } from './styles';
-import { Suffix } from './suffix';
 import type { ChangeEvent } from 'react';
 import type { InputProps } from './types';
 
-const { container, sizer, input, clear } = InputStyles();
+const { container, sizer, prefix, input, suffix, clear } = InputStyles();
 
 // TODO: Improve this implementation so it is more of a realistic event
 const clearInputEvent = {
@@ -55,7 +54,7 @@ const clearInputEvent = {
  *   classNames={{ clear: "hover:bg-info-bold" }}
  * />
  */
-export function Input({ ref, ...props }: InputProps) {
+export function Input({ ref = null, ...props }: InputProps) {
   /**
    * It is necessary to pull in the AriaInputContext to capture defaultValue,
    * value & onChange props that may be supplied by a Field component
@@ -64,8 +63,8 @@ export function Input({ ref, ...props }: InputProps) {
    * the purposes of supporting the clear button and to capture the length
    * of the current value for the autoSize feature
    */
-  [props, ref] = useContextProps(props, ref ?? null, AriaInputContext);
-  [props, ref] = useContextProps({ ...props }, ref ?? null, InputContext);
+  [props, ref] = useContextProps(props, ref, AriaInputContext);
+  [props, ref] = useContextProps({ ...props }, ref, InputContext);
 
   const {
     classNames,
@@ -73,14 +72,14 @@ export function Input({ ref, ...props }: InputProps) {
     defaultValue = '',
     disabled,
     placeholder,
-    prefix,
+    prefix: prefixProp,
     readOnly,
     required,
     size = 'medium',
-    suffix,
+    suffix: suffixProp,
     type = InputStylesDefaults.type,
     value: valueProp,
-    isClearable,
+    isClearable = InputStylesDefaults.isClearable,
     isInvalid,
     onChange,
     onKeyDown,
@@ -89,6 +88,8 @@ export function Input({ ref, ...props }: InputProps) {
 
   const [value, setValue] = useControlledState(valueProp, defaultValue);
   const length = (`${value ?? ''}`.length || placeholder?.length) ?? 0;
+  const hasPrefix = !!prefixProp;
+  const hasSuffix = !!suffixProp;
   const isEmpty = value == null || value === '';
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -100,59 +101,104 @@ export function Input({ ref, ...props }: InputProps) {
   }
 
   return (
-    <div
-      className={container({
-        className: classNames?.container,
-        autoSize,
-        type,
-      })}
-      data-disabled={disabled || null}
-      data-empty={isEmpty || null}
-      data-invalid={isInvalid || null}
-      data-length={length}
-      data-placeholder={(!!placeholder && isEmpty) || null}
-      data-readonly={readOnly || null}
-      data-required={required || null}
-      data-size={size}
-    >
+    <IconProvider size='small'>
       <div
-        className={sizer({
-          className: classNames?.sizer,
+        className={container({
+          className: classNames?.container,
           autoSize,
+          isClearable,
+          prefix: hasPrefix,
+          suffix: hasSuffix,
           type,
         })}
+        data-disabled={disabled || null}
+        data-empty={isEmpty || null}
+        data-invalid={isInvalid || null}
+        data-length={length}
+        data-placeholder={(!!placeholder && isEmpty) || null}
+        data-readonly={readOnly || null}
+        data-required={required || null}
+        data-size={size}
       >
-        <Prefix className={classNames?.prefix} prefix={prefix} />
-        <AriaInput
-          {...rest}
-          ref={ref}
-          className={composeRenderProps(classNames?.input, (className) =>
-            input({ className, autoSize, type }),
-          )}
-          disabled={disabled}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          required={required}
-          type={type}
-          value={value}
-          onChange={handleChange}
-          onKeyDown={(event) => {
-            onKeyDown?.(event);
+        {hasPrefix && (
+          <span
+            className={prefix({
+              className: classNames?.prefix,
+              autoSize,
+              isClearable,
+              prefix: hasPrefix,
+              suffix: hasSuffix,
+              type,
+            })}
+          >
+            {prefixProp}
+          </span>
+        )}
+        <div
+          className={sizer({
+            className: classNames?.sizer,
+            autoSize,
+            type,
+          })}
+        >
+          <AriaInput
+            {...rest}
+            ref={ref}
+            className={composeRenderProps(classNames?.input, (className) =>
+              input({
+                className,
+                autoSize,
+                isClearable,
+                prefix: hasPrefix,
+                suffix: hasSuffix,
+                type,
+              }),
+            )}
+            disabled={disabled}
+            placeholder={placeholder}
+            readOnly={readOnly}
+            required={required}
+            type={type}
+            value={value}
+            onChange={handleChange}
+            onKeyDown={(event) => {
+              onKeyDown?.(event);
 
-            if (
-              isClearable &&
-              !event.defaultPrevented &&
-              event.key === 'Escape'
-            ) {
-              handleChange(clearInputEvent);
-            }
-          }}
-        />
-        <Suffix className={classNames?.suffix} suffix={suffix} />
+              if (
+                isClearable &&
+                !event.defaultPrevented &&
+                event.key === 'Escape'
+              ) {
+                handleChange(clearInputEvent);
+              }
+            }}
+          />
+        </div>
+        {hasSuffix && (
+          <span
+            className={suffix({
+              className: classNames?.suffix,
+              autoSize,
+              isClearable,
+              prefix: hasPrefix,
+              suffix: hasSuffix,
+              type,
+            })}
+          >
+            {suffixProp}
+          </span>
+        )}
         {isClearable && (
           <Button
             className={composeRenderProps(classNames?.clear, (className) =>
-              clear({ autoSize, className, type }),
+              clear({
+                className,
+                autoSize,
+                isClearable,
+                prefix: hasPrefix,
+                suffix: hasSuffix,
+                type,
+              }),
             )}
             excludeFromTabOrder
             size='small'
@@ -170,6 +216,6 @@ export function Input({ ref, ...props }: InputProps) {
           </Button>
         )}
       </div>
-    </div>
+    </IconProvider>
   );
 }

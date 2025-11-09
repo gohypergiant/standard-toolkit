@@ -81,29 +81,3 @@ export const WithPrefixAndSuffix: Story = {
     description: 'Approximate temperature in Celsius',
   },
 };
-
-export const PrefixWithClearable: Story = {
-  args: {
-    label: 'URL',
-    inputProps: {
-      placeholder: 'example.com',
-      type: 'text',
-      prefix: 'https://',
-      isClearable: true,
-    },
-    description: 'Enter website URL',
-  },
-};
-
-export const SuffixWithClearable: Story = {
-  args: {
-    label: 'Distance',
-    inputProps: {
-      placeholder: '0',
-      type: 'number',
-      suffix: 'km',
-      isClearable: true,
-    },
-    description: 'Enter distance with clear button',
-  },
-};

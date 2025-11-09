@@ -14,43 +14,46 @@ import { tv } from '@/lib/utils';
 
 export const InputStylesDefaults = {
   autoSize: false,
+  isClearable: true,
+  prefix: false,
+  suffix: false,
   type: 'text',
 } as const;
 
 export const InputStyles = tv({
   slots: {
     container: [
-      'group/input w-full',
+      'group/input grid items-center gap-xs rounded-medium px-s py-xs font-display outline outline-interactive',
+      '[--length:attr(data-length_type(<number>),0)] [grid-template-areas:"input_clear"]',
       'size-medium:text-body-s size-small:text-body-xs',
-    ],
-    sizer: [
-      'flex w-full items-center gap-xs rounded-medium py-xs pr-xs pl-s font-display outline outline-interactive',
-      'enabled:group-focus-visible-within/input:outline-accent-primary-bold',
-      'enabled:group-hover/input:outline-interactive-hover',
-      'enabled:group-pressed/input:outline-interactive-pressed',
-      'enabled:group-invalid/input:outline-serious-bold',
+      'enabled:focus-visible-within:outline-accent-primary-bold',
+      'enabled:hover:outline-interactive-hover',
+      'enabled:pressed:outline-interactive-pressed',
+      'enabled:invalid:outline-serious-bold',
       'disabled:cursor-not-allowed disabled:text-disabled disabled:outline-interactive-disabled disabled:placeholder:text-disabled',
     ],
-    input: [
-      'fg-primary-bold min-w-0 flex-1 font-display outline-none',
-      'disabled:cursor-not-allowed disabled:text-disabled disabled:placeholder:text-disabled',
-    ],
-    prefix: [
-      'fg-primary-muted pointer-events-none',
-      'group-disabled/input:text-disabled',
-    ],
-    suffix: [
-      'fg-primary-muted pointer-events-none',
-      'group-disabled/input:text-disabled',
-    ],
+    sizer: '[grid-area:input]',
+    input: 'w-full outline-none',
+    prefix: '[grid-area:prefix]',
+    suffix: '',
     clear: [
-      'hidden min-w-0 group-focus-within/input:group-not-data-empty/input:block',
-      'enabled:fg-info-bold enabled:focus-visible:fg-info-hover enabled:hover:fg-info-hover',
-      '-my-xs group-size-small/input:p-0!', // definitely a bit of a hack!
+      '-my-xs -mr-s invisible [grid-area:clear] group-focus-within/input:group-not-data-empty/input:visible',
     ],
   },
   variants: {
     autoSize: {
+      false: '',
+      true: '',
+    },
+    isClearable: {
+      false: '',
+      true: '',
+    },
+    prefix: {
+      false: '',
+      true: '',
+    },
+    suffix: {
       false: '',
       true: '',
     },
@@ -67,7 +70,7 @@ export const InputStyles = tv({
       month: '',
       number: {
         input:
-          'placeholder:fg-primary-muted [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
       },
       password: '',
       radio: '',
@@ -102,6 +105,74 @@ export const InputStyles = tv({
           'group-size-medium/input:min-w-[160px] group-size-medium/input:max-w-[400px]',
           'group-size-small/input:min-w-[80px] group-size-small/input:max-w-[200px]',
         ],
+      },
+    },
+    {
+      autoSize: true,
+      type: ['number', 'text'],
+      className: {
+        sizer: [
+          'group-size-medium/input:w-[calc((var(--length)*1ch)+((var(--length)-1)*var(--typography-body-s-spacing)))]',
+          'group-size-small/input:w-[calc((var(--length)*1ch)+((var(--length)-1)*var(--typography-body-xs-spacing)))] group-size-small/input:min-w-[calc(2ch+((var(--length)-1)*var(--typography-body-xs-spacing)))]',
+        ],
+      },
+    },
+    {
+      isClearable: false,
+      prefix: true,
+      suffix: false,
+      className: {
+        container: '[grid-template-areas:"prefix_input"]',
+      },
+    },
+    {
+      isClearable: false,
+      prefix: false,
+      suffix: true,
+      className: {
+        container: '[grid-template-areas:"input_suffix"]',
+      },
+    },
+    {
+      isClearable: false,
+      prefix: true,
+      suffix: true,
+      className: {
+        container: '[grid-template-areas:"prefix_input_suffix"]',
+      },
+    },
+    {
+      isClearable: true,
+      prefix: true,
+      suffix: false,
+      className: {
+        container: '[grid-template-areas:"prefix_input_clear"]',
+      },
+    },
+    {
+      isClearable: true,
+      prefix: false,
+      suffix: true,
+      className: {
+        container: '[grid-template-areas:"input_suffix-1_suffix-2"]',
+      },
+    },
+    {
+      isClearable: true,
+      prefix: true,
+      suffix: true,
+      className: {
+        container: '[grid-template-areas:"prefix_input_suffix-1_suffix-2"]',
+      },
+    },
+    {
+      isClearable: true,
+      suffix: true,
+      className: {
+        clear:
+          '[grid-area:suffix-1] group-focus-within/input:group-not-data-empty/input:[grid-area:suffix-2]',
+        suffix:
+          '[grid-area:suffix-2] group-focus-within/input:group-not-data-empty/input:[grid-area:suffix-1]',
       },
     },
   ],

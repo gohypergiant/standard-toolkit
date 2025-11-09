@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Input } from './';
+import { Input } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -33,13 +33,10 @@ const meta = {
 } satisfies Meta<typeof Input>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: Input,
-};
+export const Default: StoryObj<typeof meta> = {};
 
-export const WithPrefix: Story = {
+export const WithPrefix: StoryObj<typeof meta> = {
   args: {
     placeholder: '0.00',
     type: 'number',
@@ -47,7 +44,7 @@ export const WithPrefix: Story = {
   },
 };
 
-export const WithSuffix: Story = {
+export const WithSuffix: StoryObj<typeof meta> = {
   args: {
     placeholder: '0',
     type: 'number',
@@ -55,29 +52,11 @@ export const WithSuffix: Story = {
   },
 };
 
-export const WithPrefixAndSuffix: Story = {
+export const WithPrefixAndSuffix: StoryObj<typeof meta> = {
   args: {
     placeholder: '0',
     type: 'number',
     prefix: '~',
     suffix: '°C',
-  },
-};
-
-export const PrefixWithClearable: Story = {
-  args: {
-    placeholder: 'example.com',
-    type: 'text',
-    prefix: 'https://',
-    isClearable: true,
-  },
-};
-
-export const SuffixWithClearable: Story = {
-  args: {
-    placeholder: '0',
-    type: 'number',
-    suffix: 'km',
-    isClearable: true,
   },
 };
