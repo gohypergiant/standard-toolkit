@@ -10,12 +10,12 @@ metadata:
 
     Dependencies:
 
-    accelint_constellation-tracker@1.0.0, accelint_typescript-config@0.1.3,
-    accelint_vitest-config@0.1.4
+    accelint_constellation-tracker@1.0.1, accelint_typescript-config@0.1.4,
+    accelint_vitest-config@0.1.5
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/web-worker/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.1.4
+    package/version: 0.1.5
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/web-worker

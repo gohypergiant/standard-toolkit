@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/hotkey-manager",
   "author": "https://hypergiant.com",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
