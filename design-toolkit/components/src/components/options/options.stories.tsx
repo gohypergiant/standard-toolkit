@@ -75,7 +75,6 @@ const items: CustomOptionsItem[] = [
     description: 'Loyal companion',
     suffixIcon: <Placeholder />,
     color: 'serious',
-
   },
   {
     id: 4,
@@ -198,7 +197,11 @@ export const WithDynamicSections: Story = {
 
 export const WithStaticSections: Story = {
   render: ({ children, ...args }) => (
-    <Options {...args}>
+    <Options
+      {...args}
+      selectedKeys={new Set(['selected-1', 'selected-2', 'selected-3'])}
+      selectionMode='multiple'
+    >
       <OptionsSection
         header='North American Birds'
         classNames={{ section: 'w-[200px]' }}
@@ -223,6 +226,29 @@ export const WithStaticSections: Story = {
           <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>
         </OptionsItem>
         <OptionsItem textValue='Song Sparrow'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Song Sparrow</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem id='selected-1' textValue='Gray catbird' color='serious'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Gray catbird</OptionsItemLabel>
+          <OptionsItemDescription>A cool bird</OptionsItemDescription>
+        </OptionsItem>
+        <OptionsItem
+          id='selected-2'
+          textValue='Black-capped chickadee'
+          color='critical'
+        >
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem id='selected-3' textValue='Song Sparrow'>
           <Icon>
             <Placeholder />
           </Icon>
