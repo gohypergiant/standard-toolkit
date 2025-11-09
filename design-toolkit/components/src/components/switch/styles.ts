@@ -31,9 +31,11 @@ export const SwitchStyles = tv({
       //hover
       'group-enabled/switch:group-selected/switch:group-hover/switch:bg-accent-primary-muted group-enabled/switch:group-selected/switch:group-hover/switch:outline-accent-primary-bold group-enabled/switch:group-selected/switch:group-hover/switch:before:[background-color:var(--fg-accent-primary-hover)]',
       //pressed
+      'group-enabled/switch:group-pressed/switch:bg-transparent',
       'group-enabled/switch:group-selected/switch:group-pressed/switch:bg-accent-primary-pressed group-enabled/switch:group-selected/switch:group-pressed/switch:outline-accent-primary-pressed group-enabled/switch:group-selected/switch:group-pressed/switch:before:[background-color:var(--fg-accent-primary-pressed)]',
       //disabled
-      'group-disabled/switch:bg-interactive-disabled group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:[background-color:var(--fg-disabled)]',
+      'group-disabled/switch:bg-transparent group-disabled/switch:outline-interactive-disabled group-disabled/switch:before:bg-(--fg-disabled)',
+      'group-disabled/switch:group-selected/switch:bg-interactive-disabled',
     ],
     label: ['fg-primary-bold text-body-s', 'group-disabled/switch:fg-disabled'],
   },
