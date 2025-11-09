@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RefAttributes } from 'react';
+import type { ReactNode, RefAttributes } from 'react';
 import type { InputProps as AriaInputProps } from 'react-aria-components';
 import type { VariantProps } from 'tailwind-variants';
 import type { ButtonProps } from '../button/types';
@@ -18,14 +18,17 @@ import type { InputStyles } from './styles';
 
 export type InputProps = Omit<AriaInputProps, 'className' | 'size' | 'type'> &
   RefAttributes<HTMLInputElement> &
-  Omit<VariantProps<typeof InputStyles>, 'isEmpty'> & {
+  Omit<VariantProps<typeof InputStyles>, 'prefix' | 'suffix' | 'isEmpty'> & {
     classNames?: {
       container?: string;
       sizer?: string;
       input?: AriaInputProps['className'];
       clear?: ButtonProps['className'];
+      prefix?: string;
+      suffix?: string;
     };
+    prefix?: ReactNode;
     size?: 'medium' | 'small';
-    isClearable?: boolean;
+    suffix?: ReactNode;
     isInvalid?: boolean;
   };

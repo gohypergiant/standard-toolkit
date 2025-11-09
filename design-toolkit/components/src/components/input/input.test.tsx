@@ -110,4 +110,38 @@ describe('Input', () => {
 
     expect(container.firstChild).toHaveAttribute('data-size', 'medium');
   });
+
+  it('should render prefix when provided', () => {
+    const { prefix } = setup({ prefix: '$' });
+
+    expect(screen.getByText(prefix as string)).toBeInTheDocument();
+  });
+
+  it('should render prefix with custom className', () => {
+    const { classNames, prefix } = setup({
+      prefix: '€',
+      classNames: { prefix: 'custom-prefix-class' },
+    });
+
+    expect(screen.getByText(prefix as string)).toHaveClass(
+      classNames?.prefix as string,
+    );
+  });
+
+  it('should render suffix when provided', () => {
+    const { suffix } = setup({ suffix: 'kg' });
+
+    expect(screen.getByText(suffix as string)).toBeInTheDocument();
+  });
+
+  it('should render suffix with custom className', () => {
+    const { classNames, suffix } = setup({
+      suffix: '%',
+      classNames: { suffix: 'custom-suffix-class' },
+    });
+
+    expect(screen.getByText(suffix as string)).toHaveClass(
+      classNames?.suffix as string,
+    );
+  });
 });

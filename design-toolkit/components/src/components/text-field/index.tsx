@@ -47,6 +47,30 @@ const { field, label, description, error, input } = TextFieldStyles();
  * />
  *
  * @example
+ * // Text field with prefix for currency
+ * <TextField
+ *   label='Price'
+ *   inputProps={{ placeholder: '0.00', type: 'number', prefix: '$' }}
+ *   description='Enter the price in dollars'
+ * />
+ *
+ * @example
+ * // Text field with suffix for units
+ * <TextField
+ *   label='Weight'
+ *   inputProps={{ placeholder: '0', type: 'number', suffix: 'kg' }}
+ *   description='Enter the weight in kilograms'
+ * />
+ *
+ * @example
+ * // Text field with both prefix and suffix
+ * <TextField
+ *   label='Temperature'
+ *   inputProps={{ placeholder: '0', type: 'number', prefix: '~', suffix: '°C' }}
+ *   description='Approximate temperature in Celsius'
+ * />
+ *
+ * @example
  * // Text field with error state
  * <TextField
  *   label='Username'
