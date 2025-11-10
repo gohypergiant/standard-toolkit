@@ -95,7 +95,6 @@ export function FlashcardHero(props: FlashcardComponentProps) {
 }
 FlashcardHero.displayName = 'FlashcardHero';
 
-// classNames
 export function FlashcardIdentifier(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
 
