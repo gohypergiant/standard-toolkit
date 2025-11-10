@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-/** @type {Partial<import("design-toolkit/components/typedoc.mjs").TypeDocOptions>} */
+/** @type {Partial<import("packages/design-toolkit/typedoc.mjs").TypeDocOptions>} */
 export default {
   name: '@accelint/design-toolkit',
 };
