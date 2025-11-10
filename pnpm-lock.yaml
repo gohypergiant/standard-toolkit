@@ -381,6 +381,135 @@ importers:
         specifier: ^4.1.12
         version: 4.1.12
 
+  packages/design-foundation:
+    devDependencies:
+      '@accelint/biome-config':
+        specifier: workspace:*
+        version: link:../../tooling/biome-config
+      '@accelint/constellation-tracker':
+        specifier: workspace:*
+        version: link:../../tooling/constellation-tracker
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@fontsource-variable/roboto-flex':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource-variable/roboto-mono':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@storybook/addon-actions':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
+      '@storybook/addon-essentials':
+        specifier: ^8.6.14
+        version: 8.6.14(@types/react@19.1.13)(storybook@8.6.14(prettier@3.6.2))
+      '@storybook/addon-storysource':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
+      '@storybook/addon-themes':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
+      '@storybook/blocks':
+        specifier: ^8.6.14
+        version: 8.6.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.14(prettier@3.6.2))
+      '@storybook/builder-vite':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))(vite@5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0))
+      '@storybook/manager-api':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
+      '@storybook/react':
+        specifier: ^8.6.14
+        version: 8.6.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.14(prettier@3.6.2))(typescript@5.8.3)
+      '@storybook/react-vite':
+        specifier: ^8.6.14
+        version: 8.6.14(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.52.5)(storybook@8.6.14(prettier@3.6.2))(typescript@5.8.3)(vite@5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0))
+      '@storybook/theming':
+        specifier: ^8.6.14
+        version: 8.6.14(storybook@8.6.14(prettier@3.6.2))
+      '@tailwindcss/cli':
+        specifier: ^4.1.11
+        version: 4.1.16
+      '@tailwindcss/vite':
+        specifier: ^4.1.11
+        version: 4.1.16(vite@5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0))
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
+      '@testing-library/jest-dom':
+        specifier: ^6.6.4
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.0
+        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/node':
+        specifier: ^24.9.0
+        version: 24.9.1
+      '@types/react':
+        specifier: 19.1.13
+        version: 19.1.13
+      '@types/react-dom':
+        specifier: 19.1.11
+        version: 19.1.11(@types/react@19.1.13)
+      autoprefixer:
+        specifier: ^10.4.21
+        version: 10.4.21(postcss@8.5.6)
+      esbuild-fix-imports-plugin:
+        specifier: ^1.0.23
+        version: 1.0.23
+      jsdom:
+        specifier: ^25.0.1
+        version: 25.0.1
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
+      react:
+        specifier: 19.0.0
+        version: 19.0.0
+      react-dom:
+        specifier: 19.0.0
+        version: 19.0.0(react@19.0.0)
+      storybook:
+        specifier: ^8.6.14
+        version: 8.6.14(prettier@3.6.2)
+      tailwind-merge:
+        specifier: ^3.3.1
+        version: 3.3.1
+      tailwind-variants:
+        specifier: ^2.0.1
+        version: 2.1.0(tailwind-merge@3.3.1)(tailwindcss@4.1.16)
+      tailwindcss:
+        specifier: ^4.1.11
+        version: 4.1.16
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
+      vite:
+        specifier: ^5.4.9
+        version: 5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0)
+      vite-tsconfig-paths:
+        specifier: ^5.1.4
+        version: 5.1.4(typescript@5.8.3)(vite@5.4.21(@types/node@24.9.1)(lightningcss@1.30.2)(terser@5.44.0))
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
+
   packages/design-toolkit:
     dependencies:
       '@dnd-kit/core':
