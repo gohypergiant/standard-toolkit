@@ -24,9 +24,10 @@ export default defineConfig({
     fixExtensionsPlugin(),
   ],
   entry: [
-    'src/**/*.{ts,tsx,css}',
+    'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
+    '!**/__stories__',
     '!storybook-static',
     '!src/test',
   ],
