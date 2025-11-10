@@ -17,6 +17,7 @@ export default {
   disableSources: true,
   entryPoints: ['../../packages/*'],
   entryPointStrategy: 'packages',
+  exclude: ['../../packages/design-foundation'],
   hideBreadcrumbs: true,
   hidePageHeader: true,
   mergeReadme: true,
