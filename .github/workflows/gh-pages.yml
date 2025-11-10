@@ -39,7 +39,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: design-toolkit/build
+          path: packages/design-toolkit/build
   deploy:
     needs: build
     permissions:

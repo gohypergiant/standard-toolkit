@@ -10,7 +10,7 @@
     "tooling",
     "ui"
   ],
-  "subPath": "design-toolkit/components",
+  "subPath": "packages/design-toolkit",
   "version": "7.0.1",
   "private": false,
   "license": "Apache-2.0",
@@ -32,12 +32,12 @@
       },
       "default": "./dist/index.js"
     },
-    "./components/*": {
+    "./*": {
       "import": {
-        "types": "./dist/components/*.d.ts",
-        "default": "./dist/components/*.js"
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.js"
       },
-      "default": "./dist/components/*.js"
+      "default": "./dist/*.js"
     },
     "./hooks/*": {
       "import": {
@@ -78,7 +78,7 @@
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
     "generate": "pnpm gen:tokens && pnpm gen:variants",
-    "index": "pnpm zx ../../scripts/indexer.mjs design-toolkit/components",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
     "license": "pnpm license:tokens && pnpm license:variants",
     "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
     "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",

@@ -157,10 +157,10 @@ importers:
         version: link:../../packages/core
       '@accelint/design-toolkit':
         specifier: workspace:*
-        version: link:../../design-toolkit/components
+        version: link:../../packages/design-toolkit
       '@accelint/icons':
         specifier: workspace:*
-        version: link:../../design-toolkit/icons
+        version: link:../../packages/icons
       '@accelint/logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -250,7 +250,138 @@ importers:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
 
-  design-toolkit/components:
+  packages/bus:
+    devDependencies:
+      '@accelint/constellation-tracker':
+        specifier: workspace:*
+        version: link:../../tooling/constellation-tracker
+      '@accelint/core':
+        specifier: workspace:*
+        version: link:../core
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
+      '@testing-library/jest-dom':
+        specifier: ^6.6.4
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.0
+        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@types/react':
+        specifier: 19.1.13
+        version: 19.1.13
+      esbuild-fix-imports-plugin:
+        specifier: ^1.0.23
+        version: 1.0.23
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
+      vitest-broadcast-channel-mock:
+        specifier: ^0.1.0
+        version: 0.1.0(vitest@2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0))
+    optionalDependencies:
+      react:
+        specifier: 19.0.0
+        version: 19.0.0
+
+  packages/constants:
+    devDependencies:
+      '@accelint/constellation-tracker':
+        specifier: workspace:*
+        version: link:../../tooling/constellation-tracker
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      esbuild-fix-imports-plugin:
+        specifier: ^1.0.23
+        version: 1.0.23
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
+
+  packages/converters:
+    dependencies:
+      '@accelint/constants':
+        specifier: workspace:*
+        version: link:../constants
+    devDependencies:
+      '@accelint/constellation-tracker':
+        specifier: workspace:*
+        version: link:../../tooling/constellation-tracker
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      esbuild-fix-imports-plugin:
+        specifier: ^1.0.23
+        version: 1.0.23
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
+
+  packages/core:
+    devDependencies:
+      '@accelint/constellation-tracker':
+        specifier: workspace:*
+        version: link:../../tooling/constellation-tracker
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      esbuild-fix-imports-plugin:
+        specifier: ^1.0.23
+        version: 1.0.23
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
+
+  packages/design-toolkit:
     dependencies:
       '@dnd-kit/core':
         specifier: ^6.3.1
@@ -273,19 +404,19 @@ importers:
         version: link:../../tooling/biome-config
       '@accelint/bus':
         specifier: workspace:*
-        version: link:../../packages/bus
+        version: link:../bus
       '@accelint/constellation-tracker':
         specifier: workspace:*
         version: link:../../tooling/constellation-tracker
       '@accelint/core':
         specifier: workspace:*
-        version: link:../../packages/core
+        version: link:../core
       '@accelint/icons':
         specifier: workspace:*
         version: link:../icons
       '@accelint/temporal':
         specifier: workspace:*
-        version: link:../../packages/temporal
+        version: link:../temporal
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -473,174 +604,6 @@ importers:
         specifier: ^4.1.12
         version: 4.1.12
 
-  design-toolkit/icons:
-    dependencies:
-      react:
-        specifier: 19.0.0
-        version: 19.0.0
-      react-dom:
-        specifier: 19.0.0
-        version: 19.0.0(react@19.0.0)
-    devDependencies:
-      '@accelint/biome-config':
-        specifier: workspace:*
-        version: link:../../tooling/biome-config
-      '@accelint/constellation-tracker':
-        specifier: workspace:*
-        version: link:../../tooling/constellation-tracker
-      '@accelint/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@accelint/vitest-config':
-        specifier: workspace:*
-        version: link:../../tooling/vitest-config
-      '@svgr/cli':
-        specifier: ^8.1.0
-        version: 8.1.0(typescript@5.8.3)
-      '@types/react':
-        specifier: 19.1.13
-        version: 19.1.13
-      '@types/react-dom':
-        specifier: 19.1.11
-        version: 19.1.11(@types/react@19.1.13)
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
-
-  packages/bus:
-    devDependencies:
-      '@accelint/constellation-tracker':
-        specifier: workspace:*
-        version: link:../../tooling/constellation-tracker
-      '@accelint/core':
-        specifier: workspace:*
-        version: link:../core
-      '@accelint/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@accelint/vitest-config':
-        specifier: workspace:*
-        version: link:../../tooling/vitest-config
-      '@testing-library/dom':
-        specifier: ^10.4.1
-        version: 10.4.1
-      '@testing-library/jest-dom':
-        specifier: ^6.6.4
-        version: 6.9.1
-      '@testing-library/react':
-        specifier: ^16.3.0
-        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@types/react':
-        specifier: 19.1.13
-        version: 19.1.13
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-      vitest:
-        specifier: ^2.1.9
-        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
-      vitest-broadcast-channel-mock:
-        specifier: ^0.1.0
-        version: 0.1.0(vitest@2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0))
-    optionalDependencies:
-      react:
-        specifier: 19.0.0
-        version: 19.0.0
-
-  packages/constants:
-    devDependencies:
-      '@accelint/constellation-tracker':
-        specifier: workspace:*
-        version: link:../../tooling/constellation-tracker
-      '@accelint/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@accelint/vitest-config':
-        specifier: workspace:*
-        version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-      vitest:
-        specifier: ^2.1.9
-        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
-
-  packages/converters:
-    dependencies:
-      '@accelint/constants':
-        specifier: workspace:*
-        version: link:../constants
-    devDependencies:
-      '@accelint/constellation-tracker':
-        specifier: workspace:*
-        version: link:../../tooling/constellation-tracker
-      '@accelint/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@accelint/vitest-config':
-        specifier: workspace:*
-        version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-      vitest:
-        specifier: ^2.1.9
-        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
-
-  packages/core:
-    devDependencies:
-      '@accelint/constellation-tracker':
-        specifier: workspace:*
-        version: link:../../tooling/constellation-tracker
-      '@accelint/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@accelint/vitest-config':
-        specifier: workspace:*
-        version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
-      type-fest:
-        specifier: ^4.41.0
-        version: 4.41.0
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-      uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
-      vitest:
-        specifier: ^2.1.9
-        version: 2.1.9(@types/node@24.9.1)(happy-dom@19.0.2)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.0)
-      zod:
-        specifier: ^4.1.12
-        version: 4.1.12
-
   packages/formatters:
     devDependencies:
       '@accelint/constellation-tracker':
@@ -758,6 +721,43 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0
 
+  packages/icons:
+    dependencies:
+      react:
+        specifier: 19.0.0
+        version: 19.0.0
+      react-dom:
+        specifier: 19.0.0
+        version: 19.0.0(react@19.0.0)
+    devDependencies:
+      '@accelint/biome-config':
+        specifier: workspace:*
+        version: link:../../tooling/biome-config
+      '@accelint/constellation-tracker':
+        specifier: workspace:*
+        version: link:../../tooling/constellation-tracker
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      '@svgr/cli':
+        specifier: ^8.1.0
+        version: 8.1.0(typescript@5.8.3)
+      '@types/react':
+        specifier: 19.1.13
+        version: 19.1.13
+      '@types/react-dom':
+        specifier: 19.1.11
+        version: 19.1.11(@types/react@19.1.13)
+      esbuild-fix-imports-plugin:
+        specifier: ^1.0.23
+        version: 1.0.23
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.13.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+
   packages/logger:
     dependencies:
       '@loglayer/plugin':
@@ -820,7 +820,7 @@ importers:
         version: link:../../tooling/constellation-tracker
       '@accelint/design-toolkit':
         specifier: workspace:*
-        version: link:../../design-toolkit/components
+        version: link:../design-toolkit
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -1004,7 +1004,7 @@ importers:
         version: link:../../tooling/constellation-tracker
       '@accelint/design-toolkit':
         specifier: workspace:*
-        version: link:../../design-toolkit/components
+        version: link:../design-toolkit
       '@accelint/smeegl':
         specifier: workspace:*
         version: link:../../tooling/smeegl

@@ -14,7 +14,7 @@
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
     "build": "turbo build",
-    "build:design-preview": "pnpm --filter=@accelint/design-toolkit build-storybook -o ../../design-toolkit/build",
+    "build:design-preview": "pnpm --filter=@accelint/design-toolkit build-storybook -o ../../packages/design-toolkit/build",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version && pnpm run constellation-tracker",

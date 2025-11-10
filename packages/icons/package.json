@@ -7,10 +7,10 @@
   "owner": "default/pathfinder",
   "keywords": [
     "design-tk",
-    "tooling",
+    "icons",
     "ui"
   ],
-  "subPath": "design-toolkit/icons",
+  "subPath": "packages/icons",
   "version": "2.1.0",
   "private": false,
   "license": "Apache-2.0",
