@@ -10,11 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren } from 'react';
+import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
 
-export type FlashcardComponentProps = PropsWithChildren & {
-  className?: string;
-};
+export type FlashcardComponentProps = PropsWithChildren &
+  ComponentPropsWithRef<'div'>;
 
 export type FlashcardProps = FlashcardComponentProps & {
   isLoading?: boolean;
