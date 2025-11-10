@@ -31,9 +31,9 @@ describe('globalBind', () => {
     vi.clearAllMocks();
 
     // Mock window object
-    global.window = {
+    vi.stubGlobal('window', {
       addEventListener: mockAddEventListener,
-    } as any;
+    });
 
     eventStore.getState().setBound(false);
   });
