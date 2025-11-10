@@ -210,8 +210,8 @@
     --outline-interactive-pressed: var(--primitive-neutral-200, #e1e1e1);
     --outline-interactive-disabled: var(--primitive-neutral-200, #e1e1e1);
     --outline-accent-primary-bold: var(--primitive-accent-primary-300, #39b7fa);
-    --outline-accent-primary-hover: var(--primitive-accent-primary-600, #0068a1);
-    --outline-accent-primary-pressed: var(--primitive-accent-primary-200, #6ed1ff);
+    --outline-accent-primary-hover: var(--primitive-accent-primary-200, #6ed1ff);
+    --outline-accent-primary-pressed: var(--primitive-accent-primary-600, #0068a1);
     --outline-info-bold: var(--primitive-utility-info-400, #888a8f);
     --outline-info-hover: var(--primitive-utility-info-600, #414245);
     --outline-info-pressed: var(--primitive-utility-info-500, #565759);

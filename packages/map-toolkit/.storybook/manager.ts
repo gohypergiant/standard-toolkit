@@ -10,18 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@/lib/utils';
+import { addons } from '@storybook/manager-api';
+import { create } from '@storybook/theming';
 
-export const TextFieldStyles = tv({
-  slots: {
-    field: 'group/text-field flex flex-col gap-xs',
-    label: '',
-    input:
-      'group-size-medium/input:max-w-none group-size-small/input:max-w-none',
-    description: [
-      'fg-primary-muted text-body-xs',
-      'group-disabled/text-field:fg-disabled',
-    ],
-    error: 'fg-serious-bold text-body-xs',
-  },
+// Detect user system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+addons.setConfig({
+  theme: create({
+    base: prefersDark ? 'dark' : 'light',
+    brandTitle: 'Map Toolkit',
+    brandUrl: 'https://map-toolkit.accelint.io/',
+    brandTarget: '_self',
+  }),
 });

@@ -25,7 +25,7 @@ import { TextFieldContext } from './context';
 import { TextFieldStyles } from './styles';
 import type { TextFieldProps } from './types';
 
-const { field, label, description, error } = TextFieldStyles();
+const { field, label, description, error, input } = TextFieldStyles();
 
 /**
  * TextField - A complete form field component with label, input, and validation
@@ -44,6 +44,30 @@ const { field, label, description, error } = TextFieldStyles();
  *   label='Email Address'
  *   inputProps={{ placeholder: 'Enter your email address', type: 'email' }}
  *   description='We will never share your email with third parties'
+ * />
+ *
+ * @example
+ * // Text field with prefix for currency
+ * <TextField
+ *   label='Price'
+ *   inputProps={{ placeholder: '0.00', type: 'number', prefix: '$' }}
+ *   description='Enter the price in dollars'
+ * />
+ *
+ * @example
+ * // Text field with suffix for units
+ * <TextField
+ *   label='Weight'
+ *   inputProps={{ placeholder: '0', type: 'number', suffix: 'kg' }}
+ *   description='Enter the weight in kilograms'
+ * />
+ *
+ * @example
+ * // Text field with both prefix and suffix
+ * <TextField
+ *   label='Temperature'
+ *   inputProps={{ placeholder: '0', type: 'number', prefix: '~', suffix: '°C' }}
+ *   description='Approximate temperature in Celsius'
  * />
  *
  * @example
@@ -131,7 +155,7 @@ export function TextField({ ref, ...props }: TextFieldProps) {
           )}
           <Input
             {...inputProps}
-            classNames={classNames?.input}
+            classNames={{ ...classNames?.input, sizer: input() }}
             disabled={isDisabled}
             required={isRequired}
             size={size}

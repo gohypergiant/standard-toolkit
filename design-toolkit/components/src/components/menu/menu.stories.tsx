@@ -138,7 +138,9 @@ export const Basic: Story = {
           <MenuItem>
             <MenuItemLabel>North American Birds</MenuItemLabel>
           </MenuItem>
-          <Menu>
+          <Menu
+            selectedKeys={new Set(['selected-1', 'selected-2', 'selected-3'])}
+          >
             <MenuItem>
               <Icon>
                 <Placeholder />
@@ -152,6 +154,29 @@ export const Basic: Story = {
               </Icon>
               <MenuItemLabel>Gray catbird</MenuItemLabel>
               <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
+            </MenuItem>
+            <MenuItem id='selected-1' color='serious'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Mallard</MenuItemLabel>
+              <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
+              <Hotkey variant='flat'>⌘V</Hotkey>
+            </MenuItem>
+            <MenuItem id='selected-2' color='critical'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Chimney swift</MenuItemLabel>
+              <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
+            </MenuItem>
+            <MenuItem id='selected-3'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>
+              <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
+              <Hotkey variant='flat'>⌘X</Hotkey>
             </MenuItem>
           </Menu>
         </MenuSubmenu>

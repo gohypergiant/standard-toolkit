@@ -604,13 +604,15 @@ describe('MapModeStore', () => {
   });
 
   describe('Mode Ownership Tracking', () => {
-    it('tracks mode ownership', () => {
+    it('tracks mode ownership and allows owner to switch modes freely', () => {
       // Owner1 enters drawing mode
       store.requestModeChange('drawing', 'owner1');
+      expect(store.getCurrentModeOwner()).toBe('owner1');
 
       // Owner1 can switch freely
       store.requestModeChange('measuring', 'owner1');
       expect(store.getSnapshot()).toBe('measuring');
+      expect(store.getCurrentModeOwner()).toBe('owner1');
     });
 
     it('does not assign owner to default mode', () => {
@@ -620,6 +622,7 @@ describe('MapModeStore', () => {
 
       // Start in default
       expect(store.getSnapshot()).toBe('default');
+      expect(store.getCurrentModeOwner()).toBeUndefined();
 
       // Try to approve a fake auth for default mode from a non-existent owner
       bus.emit(MapModeEvents.changeDecision, {
@@ -640,13 +643,63 @@ describe('MapModeStore', () => {
     it('preserves ownership after returning to default', () => {
       // Owner1 claims drawing
       store.requestModeChange('drawing', 'owner1');
+      expect(store.getCurrentModeOwner()).toBe('owner1');
 
       // Return to default
       store.requestModeChange('default', 'owner1');
+      expect(store.getCurrentModeOwner()).toBeUndefined();
 
-      // Owner1 can re-enter drawing without auth
+      // Owner1 can re-enter drawing without auth (preserved ownership)
       store.requestModeChange('drawing', 'owner1');
       expect(store.getSnapshot()).toBe('drawing');
+      expect(store.getCurrentModeOwner()).toBe('owner1');
+    });
+  });
+
+  describe('getCurrentModeOwner', () => {
+    it('returns undefined for default mode', () => {
+      expect(store.getCurrentModeOwner()).toBeUndefined();
+    });
+
+    it('returns owner after entering owned mode', () => {
+      store.requestModeChange('drawing', 'owner1');
+
+      expect(store.getCurrentModeOwner()).toBe('owner1');
+    });
+
+    it('returns undefined after returning to default mode', () => {
+      store.requestModeChange('drawing', 'owner1');
+      expect(store.getCurrentModeOwner()).toBe('owner1');
+
+      store.requestModeChange('default', 'owner1');
+      expect(store.getCurrentModeOwner()).toBeUndefined();
+    });
+
+    it('returns new owner when ownership changes via authorization', () => {
+      // Owner1 enters drawing mode
+      store.requestModeChange('drawing', 'owner1');
+      expect(store.getCurrentModeOwner()).toBe('owner1');
+
+      // Capture auth request
+      let capturedAuthId: string | undefined;
+      bus.on(MapModeEvents.changeAuthorization, (event) => {
+        capturedAuthId = event.payload.authId;
+      });
+
+      // Owner2 requests measuring
+      store.requestModeChange('measuring', 'owner2');
+
+      // Approve the request
+      expect(capturedAuthId).toBeDefined();
+      bus.emit(MapModeEvents.changeDecision, {
+        authId: capturedAuthId as string,
+        approved: true,
+        owner: 'owner1',
+        id,
+      });
+
+      // Owner should now be owner2
+      expect(store.getCurrentModeOwner()).toBe('owner2');
     });
   });
 
