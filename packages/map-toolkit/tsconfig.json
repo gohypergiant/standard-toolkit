@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@accelint/typescript-config/tsc/dom/library",
-  "include": ["./src", "./.storybook/*.tsx"],
+  "include": ["./src", "./.storybook/*.tsx", "./image.d.ts"],
   "exclude": [
     "node_modules",
     "**/*.bench.ts",
