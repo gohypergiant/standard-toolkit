@@ -10,11 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   fixAliasPlugin,
   fixExtensionsPlugin,
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
+import { globSync } from 'glob';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -35,7 +38,17 @@ export default defineConfig({
   metafile: true,
   bundle: false,
   clean: true,
-  dts: true,
+  dts: {
+    entry: Object.fromEntries(
+      globSync('src/**/*.{ts,tsx}').map((file) => [
+        path.relative(
+          'src',
+          file.slice(0, file.length - path.extname(file).length),
+        ),
+        fileURLToPath(new URL(file, import.meta.url)),
+      ]),
+    ),
+  },
   format: 'esm',
   minify: true,
   sourcemap: true,

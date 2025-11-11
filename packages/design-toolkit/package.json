@@ -69,9 +69,8 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm format && tsup && pnpm build:css",
+    "build": "pnpm format && tsup",
     "build-storybook": "pnpm storybook build",
-    "build:css": "pnpm tailwindcss -i ./src/index.css -o ./dist/styles.css",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write",
