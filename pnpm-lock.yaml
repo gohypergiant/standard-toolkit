@@ -894,6 +894,9 @@ importers:
       '@accelint/constellation-tracker':
         specifier: workspace:*
         version: link:../../tooling/constellation-tracker
+      '@accelint/design-foundation':
+        specifier: workspace:*
+        version: link:../design-foundation
       '@accelint/design-toolkit':
         specifier: workspace:*
         version: link:../design-toolkit
