@@ -14,7 +14,7 @@
           "fix": "safe",
           "options": {
             "attributes": ["classList"],
-            "functions": ["clsx", "cn", "cva", "tv", "tw", "twMerge"]
+            "functions": ["tv", "twMerge"]
           }
         }
       }

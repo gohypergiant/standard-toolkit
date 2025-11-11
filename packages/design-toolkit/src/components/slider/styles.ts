@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { tv } from '@/lib/utils';
+import { tv } from '@accelint/design-foundation/lib/utils';
 
 export const SliderStyles = tv({
   slots: {

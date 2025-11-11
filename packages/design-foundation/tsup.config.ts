@@ -24,12 +24,9 @@ export default defineConfig({
     fixExtensionsPlugin(),
   ],
   entry: [
-    'src/**/*.{ts,tsx}',
+    'src/**/*.{ts,tsx,css}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
-    '!**/__stories__',
-    '!storybook-static',
-    '!src/test',
   ],
   loader: {
     '.css': 'copy',

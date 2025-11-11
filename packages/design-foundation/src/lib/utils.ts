@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { type ClassValue, clsx } from 'clsx';
 import {
   type ClassNameValue,
   extendTailwindMerge,
@@ -128,10 +127,6 @@ const twMergeConfig = {
 export const twMerge = extendTailwindMerge<AdditionalClassGroupIds>({
   extend: twMergeConfig,
 });
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 const PREFIX_REGEX = /((?:[^:]*:)+)([^:]+)/;
 

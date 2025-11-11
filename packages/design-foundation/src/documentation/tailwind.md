@@ -24,7 +24,7 @@ Be sure to import the local instance of `tv` and not from `tailwind-variants` so
 
 ```jsx
 // styles.ts
-import { tv } from '@/lib/utils';
+import { tv } from '@accelint/design-foundation/lib/utils';
 
 export const MyStyles = tv({
   slots: {

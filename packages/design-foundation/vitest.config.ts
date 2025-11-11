@@ -10,18 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@accelint/vitest-config/dom';
-import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/no-dom';
 
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    plugins: [],
-    test: {
-      globals: true,
-      setupFiles: './src/test/setup.ts',
-      environment: 'jsdom',
-      exclude: ['./storybook-static'],
-    },
-  }),
-);
+export default baseConfig;
