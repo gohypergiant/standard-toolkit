@@ -227,7 +227,7 @@ export {
   FlashcardHeader,
   FlashcardHero,
   FlashcardIdentifier,
-  FlashcardSecondaryContainer,
+  FlashcardSecondary,
   FlashcardSecondaryData,
   FlashcardSecondaryDetails,
   FlashcardSubheader,
