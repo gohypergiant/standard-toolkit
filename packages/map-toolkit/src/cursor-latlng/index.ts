@@ -19,14 +19,7 @@ import type {
   MapViewStateEvent,
 } from '../deckgl/base-map/types';
 
-// Should I suppress pascal case warning here? use a completely different type declaration?
-export enum FormatTypes {
-  Dd = 'dd',
-  Ddm = 'ddm',
-  Dms = 'dms',
-  Mgrs = 'mgrs',
-  Utm = 'utm',
-}
+export type FormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
 
 const prepareCoord = (coord: [number, number]) => {
   // Longitude can be above/below 180 when viewport center is near international date line
@@ -44,7 +37,7 @@ const prepareCoord = (coord: [number, number]) => {
 
 export function useHoverCoordinate() {
   const [formattedCoord, setFormattedCoord] = useState('--, --');
-  const [format, setFormat] = useState<FormatTypes>(FormatTypes.Dd);
+  const [format, setFormat] = useState<FormatTypes>('dd');
   const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
 
   useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
