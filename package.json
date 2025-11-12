@@ -14,7 +14,7 @@
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
     "build": "turbo build",
-    "build:design-preview": "pnpm --filter=@accelint/design-toolkit build-storybook -o ../../design-toolkit/build",
+    "build:design-preview": "pnpm --filter=@accelint/design-toolkit build-storybook -o ../../packages/design-toolkit/build",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version && pnpm run constellation-tracker",
@@ -60,11 +60,19 @@
   },
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "engines": {
-    "node": ">=18",
+    "node": ">=22",
     "pnpm": ">=10"
   },
   "packageManager": "pnpm@10.9.0",
   "pnpm": {
+    "overrides": {
+      "@loglayer/plugin": "2.2.1",
+      "@loglayer/shared": "2.5.3"
+    },
+    "overridesReason": {
+      "@loglayer/plugin": "multiple versions installed creating conflicting types issue",
+      "@loglayer/shared": "multiple versions installed creating conflicting types issue"
+    },
     "peerDependencyRules": {
       "allowedVersions": {
         "react": "^19",
