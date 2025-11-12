@@ -36,5 +36,5 @@ export type FlashcardDetailContainerProps = {
 
 export type FlashcardMetaData = {
   label: string;
-  value: any;
+  value: string | number;
 };

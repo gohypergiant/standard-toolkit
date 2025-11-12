@@ -16,7 +16,7 @@ import {
   FlashcardHeader,
   FlashcardHero,
   FlashcardIdentifier,
-  FlashcardSecondaryContainer,
+  FlashcardSecondary,
   FlashcardSecondaryData,
   FlashcardSubheader,
 } from '.';
@@ -52,10 +52,10 @@ export const Default: Story = {
             <FlashcardSubheader>DATA</FlashcardSubheader>
           </FlashcardIdentifier>
         </FlashcardHero>
-        <FlashcardSecondaryContainer>
+        <FlashcardSecondary>
           <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
           <FlashcardDetailsContainer details={DEFAULT_DETAILS} />
-        </FlashcardSecondaryContainer>
+        </FlashcardSecondary>
       </Flashcard>
     );
   },

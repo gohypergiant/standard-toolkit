@@ -32,7 +32,8 @@
  *  </FlashcardSecondary>
  * </Flashcard>
  */
-
+'use client';
+import 'client-only';
 import { createContext, useContext } from 'react';
 import { Skeleton } from '../skeleton';
 import { FlashcardStyles } from './styles';
@@ -128,7 +129,7 @@ export function FlashcardSubheader(props: FlashcardComponentProps) {
 }
 FlashcardSubheader.displayName = 'FlashcardSubheader';
 
-export function FlashcardSecondaryContainer(props: FlashcardComponentProps) {
+export function FlashcardSecondary(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
 
   return (
@@ -137,7 +138,7 @@ export function FlashcardSecondaryContainer(props: FlashcardComponentProps) {
     </div>
   );
 }
-FlashcardSecondaryContainer.displayName = 'FlashcardSecondaryContainer';
+FlashcardSecondary.displayName = 'FlashcardSecondary';
 
 export function FlashcardSecondaryDetails(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
@@ -164,7 +165,7 @@ export function FlashcardSecondaryData(props: FlashcardComponentProps) {
     </h2>
   );
 }
-FlashcardSecondaryData.display = 'FlashcardSecondaryData';
+FlashcardSecondaryData.displayName = 'FlashcardSecondaryData';
 
 export function FlashcardDetailsContainer(
   props: FlashcardDetailContainerProps,

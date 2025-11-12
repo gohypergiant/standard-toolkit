@@ -18,7 +18,7 @@ import {
   FlashcardHeader,
   FlashcardHero,
   FlashcardIdentifier,
-  FlashcardSecondaryContainer,
+  FlashcardSecondary,
   FlashcardSecondaryData,
   FlashcardSubheader,
 } from '.';
@@ -42,11 +42,11 @@ function setup(isLoading = false) {
           <FlashcardSubheader>DATA</FlashcardSubheader>
         </FlashcardIdentifier>
       </FlashcardHero>
-      <FlashcardSecondaryContainer>
+      <FlashcardSecondary>
         <FlashcardSecondaryData>SECONDARY_DATA_01</FlashcardSecondaryData>
         <FlashcardSecondaryData>SECONDARY_DATA_02</FlashcardSecondaryData>
         <FlashcardDetailsContainer details={details} data-testid='secondary' />
-      </FlashcardSecondaryContainer>
+      </FlashcardSecondary>
     </Flashcard>,
   );
 }
