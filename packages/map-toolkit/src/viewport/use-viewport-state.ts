@@ -31,23 +31,23 @@ export type UseViewportStateProps = {
 };
 
 /**
- * Store for viewport state keyed by viewId
+ * Store for viewport state keyed by instanceId
  */
 const viewportStore = new Map<UniqueId, MapViewportPayload>();
 
 /**
- * Track the number of active subscribers per viewId for automatic cleanup
+ * Track the number of active subscribers per instanceId for automatic cleanup
  */
 const subscriberCounts = new Map<UniqueId, number>();
 
 type Subscription = (onStoreChange: () => void) => () => void;
 /**
- * Cache of subscription functions per viewId to avoid recreating on every render
+ * Cache of subscription functions per instanceId to avoid recreating on every render
  */
 const subscriptionCache = new Map<UniqueId, Subscription>();
 
 /**
- * Cache of snapshot functions per viewId to maintain referential stability
+ * Cache of snapshot functions per instanceId to maintain referential stability
  */
 const snapshotCache = new Map<UniqueId, () => MapViewportPayload>();
 
@@ -63,7 +63,7 @@ const defaultSnapshot: MapViewportPayload = {
 };
 
 /**
- * Creates or retrieves a cached subscription function for a given viewId.
+ * Creates or retrieves a cached subscription function for a given instanceId.
  * Automatically cleans up viewport state when the last subscriber unsubscribes.
  *
  * @param instanceId - The unique identifier for the viewport
@@ -116,7 +116,7 @@ function getOrCreateSubscription(
 }
 
 /**
- * Creates or retrieves a cached snapshot function for a given viewId.
+ * Creates or retrieves a cached snapshot function for a given instanceId.
  * The object returned gets equality checked, so it needs to be stable or React re-renders unnecessarily.
  *
  * @param instanceId - The unique identifier for the viewport
@@ -178,7 +178,7 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => MapViewportPayload {
  *   };
  *
  *   const viewState = useViewportState({
- *     viewId: 'custom',
+ *     instanceId: 'some-uuid',
  *     subscribe: customSubscribe,
  *     getSnapshot: customGetSnapshot,
  *   });
@@ -201,7 +201,7 @@ export function useViewportState({
 }
 
 /**
- * Manually clear viewport state for a specific viewId.
+ * Manually clear viewport state for a specific instanceId.
  * This is typically not needed as cleanup happens automatically when all subscribers unmount.
  * Use this only in advanced scenarios where manual cleanup is required.
  *

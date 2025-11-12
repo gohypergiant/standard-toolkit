@@ -83,7 +83,7 @@ describe('useViewportState', () => {
     });
   });
 
-  it('only responds to events matching its viewId', async () => {
+  it('only responds to events matching its instanceId', async () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
@@ -124,7 +124,7 @@ describe('useViewportState', () => {
     });
   });
 
-  it('supports multiple subscribers to the same viewId', async () => {
+  it('supports multiple subscribers to the same instanceId', async () => {
     let viewState1: MapViewportPayload | undefined;
     let viewState2: MapViewportPayload | undefined;
 
@@ -261,7 +261,7 @@ describe('useViewportState', () => {
 });
 
 describe('clearViewportState', () => {
-  it('clears viewport state for a specific viewId', async () => {
+  it('clears viewport state for a specific instanceId', async () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
