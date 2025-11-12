@@ -631,19 +631,7 @@ export type {
   StylePropRenderProps,
   StyleRenderProps,
 } from './lib/types';
-export {
-  cn,
-  isSlottedContextValue,
-  mergeVariants,
-  tv,
-  twMerge,
-} from './lib/utils';
+export { isSlottedContextValue } from './lib/utils';
 export { PortalProvider } from './providers/portal';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
 export type { ThemeMode } from './providers/theme-provider';
-export { designTokens } from './tokens/tokens';
-export type {
-  SemanticColorTokens,
-  StaticColorTokens,
-  ThemeTokens,
-} from './tokens/types';

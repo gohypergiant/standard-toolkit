@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { useMemo } from 'react';
 import {
   type RuleGroupProps,
@@ -20,7 +21,6 @@ import {
   useRuleGroup,
   useStopEventPropagation,
 } from 'react-querybuilder';
-import { cn } from '@/lib/utils';
 
 export function RuleGroup(props: RuleGroupProps) {
   const group = useRuleGroup(props);
@@ -54,14 +54,14 @@ export function RuleGroup(props: RuleGroupProps) {
   );
 
   return (
-    <div className={cn(classNames.ruleGroup)}>
-      <div className={cn(classNames.header)}>
+    <div className={clsx(classNames.ruleGroup)}>
+      <div className={clsx(classNames.header)}>
         <RuleGroupHeaderComponent {...elementProps} />
       </div>
-      <div className={cn(classNames.body)}>
+      <div className={clsx(classNames.body)}>
         <RuleGroupBodyElements {...elementProps} />
       </div>
-      <div className={cn(classNames.header)}>
+      <div className={clsx(classNames.header)}>
         <RuleGroupFooterComponent {...elementProps} />
       </div>
     </div>

@@ -16,7 +16,7 @@ import type { NextConfig } from 'next';
 const withVanillaExtract = createVanillaExtractPlugin();
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@accelint/design-system'],
+  transpilePackages: ['@accelint/design-foundation', '@accelint/design-system'],
   productionBrowserSourceMaps: true,
 
   webpack(config, { dev, nextRuntime, webpack, isServer }) {
