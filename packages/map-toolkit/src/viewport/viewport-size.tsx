@@ -28,18 +28,18 @@ export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
  * Updates automatically as the viewport changes by subscribing to viewport events.
  *
  * @param props - Extends `<span>` props
- * @param props.viewId - The id of the view to subscribe to
+ * @param props.instanceId - The id of the view to subscribe to
  * @param props.unit - Measure of distance: `km | m | nm | mi | ft`. Defaults to `nm`
  * @param props.className - CSS classes for styling
  *
  * @example
  * ```tsx
  * // Basic usage with default nautical miles
- * <ViewportSize viewId="default" />
+ * <ViewportSize instanceId="some-uuid" />
  *
  * // With custom unit and styling
  * <ViewportSize
- *   viewId="default"
+ *   instanceId="some-uuid"
  *   unit="km"
  *   className="text-sm text-gray-600"
  * />
