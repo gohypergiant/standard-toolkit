@@ -23,6 +23,9 @@ import type {
 export enum FormatTypes {
   Dd = 'dd',
   Ddm = 'ddm',
+  Dms = 'dms',
+  Mgrs = 'mgrs',
+  Utm = 'utm',
 }
 
 const prepareCoord = (coord: [number, number]) => {

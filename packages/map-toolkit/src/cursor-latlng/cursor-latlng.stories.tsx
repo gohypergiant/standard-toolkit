@@ -10,10 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { uuid } from '@accelint/core';
 import { useEffect } from 'react';
 import { BaseMap } from '../deckgl/base-map';
 import { FormatTypes, useHoverCoordinate } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
+
+const BASIC_USAGE_MAP_ID = uuid();
 
 const meta: Meta = {
   title: 'Components/Cursor LatLng',
@@ -30,6 +33,9 @@ const meta: Meta = {
           // 'labels' maps option values to string labels
           Dd: 'dd',
           Ddm: 'ddm',
+          Dms: 'dms',
+          Mgrs: 'mgrs',
+          Utm: 'utm',
         },
       },
     },
@@ -47,7 +53,7 @@ const FormattedCoord = (props: Props) => {
   const { formattedCoord, setFormat } = useHoverCoordinate();
   useEffect(() => {
     setFormat(props.format);
-  }, [props.format]);
+  }, [props.format, setFormat]);
 
   return (
     <div
@@ -67,13 +73,13 @@ const FormattedCoord = (props: Props) => {
 
 export const Default: Story = {
   args: {
-    format: 'Dd',
+    format: 'Utm',
   },
 
   render: (args) => {
     return (
       <div>
-        <BaseMap className='h-dvh w-dvw' />
+        <BaseMap className='h-dvh w-dvw' id={BASIC_USAGE_MAP_ID} />
         <FormattedCoord {...(args as Props)} />
       </div>
     );
