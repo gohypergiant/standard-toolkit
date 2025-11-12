@@ -42,7 +42,7 @@
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
-  "dependencies": {
+  "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@babel/parser": "^7.25.8",
     "@biomejs/biome": "^2.2.4",

@@ -11,8 +11,9 @@
  */
 'use client';
 
-import { ChevronDown } from '@accelint/icons';
 import 'client-only';
+import { ChevronDown } from '@accelint/icons';
+import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { composeRenderProps, Heading } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';
@@ -20,10 +21,8 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';
 import { AccordionContext } from './context';
-import { AccordionStyles, AccordionStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { AccordionTriggerProps } from './types';
-
-const { heading, trigger } = AccordionStyles();
 
 export function AccordionTrigger({
   ref,
@@ -32,24 +31,14 @@ export function AccordionTrigger({
 }: AccordionTriggerProps) {
   const context = useContext(AccordionContext);
   const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    AccordionStylesDefaults.variant;
+    (isSlottedContextValue(context) ? undefined : context?.variant) ?? 'cozy';
 
   return (
-    <Heading
-      ref={ref}
-      className={heading({
-        className: classNames?.heading,
-        variant,
-      })}
-    >
+    <Heading ref={ref} className={clsx(styles.header, classNames?.heading)}>
       <Button
         slot='trigger'
         className={composeRenderProps(classNames?.trigger, (className) =>
-          trigger({
-            className,
-            variant,
-          }),
+          clsx(styles.trigger, styles[variant], className),
         )}
         variant='flat'
       >

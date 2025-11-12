@@ -16,7 +16,6 @@ import { Accordion } from './';
 import { AccordionGroup } from './group';
 import { AccordionHeader } from './header';
 import { AccordionPanel } from './panel';
-import { AccordionStylesDefaults } from './styles';
 import { AccordionTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { AccordionGroupProps } from './types';
@@ -31,7 +30,7 @@ const meta = {
   component: AccordionGroup as Alias,
   args: {
     allowsMultipleExpanded: false,
-    variant: AccordionStylesDefaults.variant,
+    variant: 'cozy',
     isDisabled: false,
   },
   argTypes: {
