@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@/lib/utils';
+import { tv } from '@accelint/design-foundation/lib/utils';
 
 export const TooltipStyles = tv({
   base: 'fg-primary-bold flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay',

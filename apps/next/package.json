@@ -12,6 +12,7 @@
   "dependencies": {
     "@accelint/bus": "workspace:*",
     "@accelint/core": "workspace:*",
+    "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/icons": "workspace:*",
     "@accelint/logger": "workspace:*",

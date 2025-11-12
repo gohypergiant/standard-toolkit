@@ -16,6 +16,7 @@ import { type ThemeVars, themes } from '@storybook/theming';
 import { createElement } from 'react';
 import { Docs } from './docs';
 import type { Preview, ReactRenderer } from '@storybook/react';
+import '@accelint/design-foundation/styles';
 import '../src/index.css';
 
 const preview: Preview = {
