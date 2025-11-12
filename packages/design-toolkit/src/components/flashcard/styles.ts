@@ -21,12 +21,12 @@ export const FlashcardStyles = tv({
     header: 'fg-primary-bold text-body-m',
     subHeader: 'fg-primary-muted text-body-xs',
     secondaryContainer: 'flex flex-col gap-s p-s',
-    secondaryDetails: 'spacing-xxs flex flex-col', // TODO: Better name pls.
+    secondaryDetails: 'spacing-xxs flex flex-col',
     secondaryData: 'fg-primary-muted text-body-xs',
     detailsContainer: 'flex w-full flex-col justify-between text-body-xs',
     detailsItem: 'flex w-full flex-row justify-between text-body-xs',
     detailsLabel: 'fg-primary-muted',
     detailsValue: 'fg-primary-bold',
-    skeleton: 'min-h-[8px] py-0',
+    skeleton: 'min-h- py-0',
   },
 });
