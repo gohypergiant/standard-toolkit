@@ -70,7 +70,7 @@ export function Avatar({ ref, ...props }: AvatarProps) {
       <Root
         {...rest}
         ref={ref}
-        className={clsx(styles.avatar, classNames?.avatar)}
+        className={clsx('group/avatar', styles.avatar, classNames?.avatar)}
         role='img'
         data-size={size}
       >

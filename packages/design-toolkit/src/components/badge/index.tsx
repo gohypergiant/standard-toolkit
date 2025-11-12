@@ -12,9 +12,10 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { useContextProps } from 'react-aria-components';
 import { BadgeContext } from './context';
-import { BadgeStyles, BadgeStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { BadgeProps } from './types';
 
 /**
@@ -44,22 +45,14 @@ import type { BadgeProps } from './types';
 export function Badge({ ref, ...props }: BadgeProps) {
   [props, ref] = useContextProps(props, ref ?? null, BadgeContext);
 
-  const {
-    className,
-    offset,
-    placement,
-    variant = BadgeStylesDefaults.variant,
-    ...rest
-  } = props;
+  const { className, color = 'info', offset, placement, ...rest } = props;
 
   return (
     <span
       {...rest}
       ref={ref}
-      className={BadgeStyles({
-        className,
-        variant,
-      })}
+      className={clsx('group/badge', styles.badge, className)}
+      data-color={color}
       data-offset-x={typeof offset === 'number' ? offset : offset?.x}
       data-offset-y={typeof offset === 'number' ? offset : offset?.y}
       data-placement={placement || null}
