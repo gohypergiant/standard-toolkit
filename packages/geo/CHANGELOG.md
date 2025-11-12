@@ -1,5 +1,18 @@
 # @accelint/geo
 
+## 0.3.0
+
+### Minor Changes
+
+- 1788525: Add browser support to the `@accelint/geo` package.
+- b32e3ae: Adds formatters to the existing coordinate representations
+
+### Patch Changes
+
+- 0d697fa: Fixed definitions in package files for longhand repository definitions, while disabling the option in syncpack that changed it.
+- f99f294: Updated syncpack and realigned all packages for dependency versions
+- 935b8e5: Updated the package names in the Constellation configuration file.
+
 ## 0.2.10
 
 ### Patch Changes

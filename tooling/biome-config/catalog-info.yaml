@@ -8,7 +8,7 @@ metadata:
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/tooling/biome-config/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 1.0.1
+    package/version: 1.0.2
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/biome-config

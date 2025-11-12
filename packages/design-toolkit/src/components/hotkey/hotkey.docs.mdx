@@ -1,0 +1,60 @@
+import { Canvas, Meta } from '@storybook/blocks';
+
+import * as HotkeyStories from './hotkey.stories';
+
+<Meta of={HotkeyStories}/>
+
+# Hotkey
+This is a representation of key(s) from a keyboard that executes a specific action. Common examples of hotkeys are: Copy (CMD/Ctrl + C), Paste (CMD/Ctrl + V), Undo (CMD/Ctrl + Z), and Save (CMD/Ctrl/ + S);
+
+It is composed of the following components:
+
+- **Hotkey** - Main hotkey component for displaying keyboard shortcuts in various styles
+- **HotkeySet** - Container for grouping multiple hotkeys with proper spacing
+- **HotkeyProvider** - Context provider for setting default props across multiple hotkeys
+
+## Example usage
+```
+<Hotkey>KEY</Hotkey>
+```
+
+## Variants
+
+* **flat** - Renders plain text, appropriate for using in a `MenuItem` component
+* **outline** - Renders with borders.
+* **icon** - Renders an icon with the right size and spacing. An icon hotkey will never have a border.
+
+**Outline** is the default variant and should be used in most cases, unless the Hotkey is used as an element in a more complex parent, like an `Options` list.
+
+<Canvas of={HotkeyStories.Default} />
+
+# Hotkey Set
+If you want to group a set of `Hotkey` together to show multiple keystrokes or mouse events, wrap in a `HotkeySet` component.
+
+Wrapping the `+` or `or` interstitial marks in a `span` is optional.
+
+## Example usage
+```
+<HotkeySet>
+  <Hotkey variant='outline'>CMD</Hotkey>
+  <span>+</span>
+  <Hotkey variant='icon'>
+    <Icon>
+      <MouseRightClick />
+    </Icon>
+  </Hotkey>
+</HotkeySet>
+```
+
+<Canvas of={HotkeyStories.KeysSet} />
+
+## Implementation Notes
+The `Hotkey` component wraps the `Keyboard` component from `react-aria-components`.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/Keyboard.html#keyboard)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/design-toolkit/components/src/components/hotkey)
+
+The underlying element is a `kbd` HTML element. [Docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/kbd) -->
+
+
