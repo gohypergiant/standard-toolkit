@@ -21,10 +21,6 @@ export { AccordionGroup } from './components/accordion/group';
 export { AccordionHeader } from './components/accordion/header';
 export { Accordion } from './components/accordion';
 export { AccordionPanel } from './components/accordion/panel';
-export {
-  AccordionStyles,
-  AccordionStylesDefaults,
-} from './components/accordion/styles';
 export { AccordionTrigger } from './components/accordion/trigger';
 export type {
   AccordionGroupProps,
@@ -35,7 +31,6 @@ export type {
   AccordionTriggerProps,
 } from './components/accordion/types';
 export { ActionBar } from './components/action-bar';
-export { ActionBarStyles } from './components/action-bar/styles';
 export type { ActionBarProps } from './components/action-bar/types';
 export { AvatarContext, AvatarProvider } from './components/avatar/context';
 export { Avatar } from './components/avatar';

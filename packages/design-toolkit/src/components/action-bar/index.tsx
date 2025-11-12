@@ -12,9 +12,10 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { Provider } from 'react-aria-components';
 import { ButtonContext, ToggleButtonContext } from '../button/context';
-import { ActionBarStyles } from './styles';
+import styles from './styles.module.css';
 import type { ActionBarProps } from './types';
 
 /**
@@ -36,7 +37,7 @@ export function ActionBar({ className, ...rest }: ActionBarProps) {
         [ToggleButtonContext, { variant: 'icon' }],
       ]}
     >
-      <nav {...rest} className={ActionBarStyles({ className })} />
+      <nav {...rest} className={clsx(styles.bar, className)} />
     </Provider>
   );
 }
