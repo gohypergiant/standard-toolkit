@@ -103,5 +103,4 @@ export type MapViewStateEvent = Payload<
 /**
  * Union type of all map event types that can be emitted through the event bus.
  */
-export type MapEventType = MapClickEvent | MapHoverEvent;
 export type MapEventType = MapClickEvent | MapHoverEvent | MapViewStateEvent;

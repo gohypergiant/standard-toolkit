@@ -26,12 +26,7 @@ import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type {
-  MapClickEvent,
-  MapEventType,
-  MapHoverEvent,
-  MapViewStateEvent,
-} from './types';
+import type { MapClickEvent, MapHoverEvent, MapViewStateEvent } from './types';
 
 /**
  * Props for the BaseMap component.
@@ -216,23 +211,6 @@ export function BaseMap({
       });
     },
     [emitHover, id, onHover],
-  );
-
-  const handleViewStateChange = useCallback(
-    (viewStateProps: ViewStateChangeParameters) => {
-      // send full pickingInfo and event to user-defined onHover
-      onViewStateChange?.(viewStateProps);
-
-      // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewState, interactionState } = viewStateProps;
-
-      emitViewStateChange({
-        latitude: viewState.latitude,
-        longitude: viewState.longitude,
-        interactionState,
-      });
-    },
-    [emitViewStateChange, onViewStateChange],
   );
 
   const handleViewStateChange = useCallback(
