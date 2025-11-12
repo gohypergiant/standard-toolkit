@@ -15,7 +15,7 @@
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import { useCallback, useId, useMemo } from 'react';
 import { useEffectEvent } from '@/react/ponyfill';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
@@ -157,11 +157,7 @@ export function BaseMap({
   );
 
   // Use the custom hook to handle MapLibre
-  const _map = useMapLibre(
-    deckglInstance as IControl,
-    BASE_MAP_STYLE,
-    mapOptions,
-  );
+  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -220,14 +216,6 @@ export function BaseMap({
     },
     [emitHover, id, onHover],
   );
-
-  const deckRef = useRef<ReturnType<typeof useDeckgl>>(null);
-
-  useEffect(() => {
-    if (deckglInstance) {
-      deckRef.current = deckglInstance;
-    }
-  }, [deckglInstance]);
 
   const handleViewStateChange = useEffectEvent(
     (params: ViewStateChangeParameters) => {
