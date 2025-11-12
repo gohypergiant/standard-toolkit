@@ -40,7 +40,6 @@ export { Badge } from './components/badge';
 export type { BadgeProps } from './components/badge/types';
 export { Breadcrumbs } from './components/breadcrumbs';
 export { BreadcrumbItem } from './components/breadcrumbs/item';
-export { BreadcrumbsStyles } from './components/breadcrumbs/styles';
 export type { BreadcrumbItemProps } from './components/breadcrumbs/types';
 export {
   ButtonContext,

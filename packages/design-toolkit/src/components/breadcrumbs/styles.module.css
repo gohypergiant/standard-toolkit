@@ -10,13 +10,30 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const BreadcrumbsStyles = tv({
-  slots: {
-    list: 'fg-primary-muted flex items-center gap-s',
-    item: 'group/breadcrumb flex items-center gap-s',
-    link: 'current:fg-accent-primary-bold hover:fg-primary-bold',
-    separator: 'group-current/breadcrumb:hidden',
-  },
-});
+@layer components.l1 {
+  .list {
+    @apply fg-primary-muted flex items-center gap-s;
+  }
+
+  .item {
+    @apply flex items-center gap-s;
+  }
+
+  .link {
+    @variant current {
+      @apply fg-accent-primary-bold;
+    }
+
+    @variant hover {
+      @apply fg-primary-bold;
+    }
+  }
+
+  .separator {
+    @variant group-current/breadcrumb {
+      @apply hidden;
+    }
+  }
+}

@@ -20,9 +20,8 @@ const meta = {
 } satisfies Meta<typeof Breadcrumbs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   render: () => (
     <Breadcrumbs>
       <BreadcrumbItem linkProps={{ href: '/ ' }}>Root</BreadcrumbItem>
