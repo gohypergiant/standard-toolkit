@@ -4,12 +4,12 @@ This is the Accelint Design Foundation, an open-source component library to serv
 
 ## Running locally
 
-To run the local Storybook instance
+To run the local Storybook instance, use the Design Toolkit Storybook
 
 ```bash
 pnpm i
 
-pnpm --filter=@accelint/design-foundation preview
+pnpm --filter=@accelint/design-toolkit preview
 ```
 
 If you run into errors, try running
@@ -69,5 +69,4 @@ Also add the following to your `settings.json` file for VSCode:
 
 Be sure to view topic specific documentation to understand technology choices, best practices, established patterns, and enforced opinions.
 
-- [React](./src/documentation/react.md)
 - [Tailwind](./src/documentation/tailwind.md)
