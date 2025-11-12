@@ -53,7 +53,7 @@
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "dependencies": {
-    "@loglayer/plugin": "^2.1.1",
+    "@loglayer/plugin": "^2.2.1",
     "@loglayer/transport": "^2.2.1",
     "@loglayer/transport-simple-pretty-terminal": "^2.2.1",
     "callsites": "^4.2.0",
@@ -67,13 +67,13 @@
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "esbuild-fix-imports-plugin": "^1.0.23",
-    "loglayer": "^6.6.0",
+    "loglayer": "^6.10.0",
     "tsup": "8.5.0",
     "typescript": "5.8.3",
     "vitest": "^2.1.9"
   },
   "peerDependencies": {
-    "loglayer": "^6.6.0"
+    "loglayer": "^6.10.0"
   },
   "publishConfig": {
     "access": "public"

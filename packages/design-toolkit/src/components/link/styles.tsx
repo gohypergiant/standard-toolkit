@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@/lib/utils';
+import { tv } from '@accelint/design-foundation/lib/utils';
 
 export const LinkStyles = tv({
   base: [
