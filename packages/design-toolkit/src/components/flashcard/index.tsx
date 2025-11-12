@@ -56,6 +56,7 @@ const {
   detailsItem,
   detailsLabel,
   detailsValue,
+  skeleton,
 } = FlashcardStyles();
 
 export const FlashcardContext = createContext<FlashcardProps>({
@@ -82,8 +83,8 @@ export function FlashcardHero(props: FlashcardComponentProps) {
   if (isLoading) {
     return (
       <div {...rest} className={hero({ className })}>
-        <Skeleton />
-        <Skeleton className='w-1/2' />
+        <Skeleton className={skeleton()} />
+        <Skeleton className={skeleton({ className: 'max-w-1/2' })} />
       </div>
     );
   }
@@ -192,10 +193,14 @@ export function FlashcardDetailsContainer(
             key={item.label}
           >
             <div className={detailsLabel({ className: classNames?.label })}>
-              {isLoading ? <Skeleton className='my-xxs py-xxs' /> : item.label}
+              {isLoading ? (
+                <Skeleton className={skeleton({ className: 'my-xxs' })} />
+              ) : (
+                item.label
+              )}
             </div>
             <div className={detailsValue({ className: classNames?.value })}>
-              {isLoading ? <Skeleton className='my-xxs py-xxs' /> : item.value}
+              {isLoading ? <Skeleton className={skeleton()} /> : item.value}
             </div>
           </div>
         );

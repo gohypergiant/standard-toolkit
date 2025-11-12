@@ -10,11 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@/lib/utils';
+import { tv } from '@accelint/design-foundation/lib/utils';
 
 export const FlashcardStyles = tv({
   slots: {
-    container: 'min-w-[128px] rounded-medium outline outline-interactive-hover',
+    container:
+      'min-w-[128px] rounded-medium font-display outline outline-interactive-hover',
     hero: 'flex flex-col gap-s bg-surface-muted p-s',
     identifier: 'flex flex-col',
     header: 'fg-primary-bold text-body-m',
@@ -26,5 +27,6 @@ export const FlashcardStyles = tv({
     detailsItem: 'flex w-full flex-row justify-between text-body-xs',
     detailsLabel: 'fg-primary-muted',
     detailsValue: 'fg-primary-bold',
+    skeleton: 'min-h-[8px] py-0',
   },
 });
