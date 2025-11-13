@@ -36,7 +36,7 @@ const MAX_LONGITUDE = 180;
 const LONGITUDE_RANGE = 360;
 const COORDINATE_PRECISION = 8;
 const prepareCoord = (coord: [number, number]) => {
-  // Normalize longitude to -180 to 180 range (handles International Date Line)
+  // Normalize longitude to -180 to 180 range (handles any wraparound including multi-revolution values)
   let lon = coord[0];
   lon =
     ((((lon + MAX_LONGITUDE) % LONGITUDE_RANGE) + LONGITUDE_RANGE) %
