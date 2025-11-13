@@ -2,4 +2,4 @@
 "@accelint/map-toolkit": patch
 ---
 
-update vite config in map-toolkit to re-enable base-map render
+update vite config in map-toolkit to re-enable base-map render in storybook preview
