@@ -36,9 +36,17 @@ export type UseViewportStateProps = {
 const viewportStore = new Map<UniqueId, MapViewportPayload>();
 
 /**
- * Track the number of active subscribers per instanceId for automatic cleanup
+ * Track React component subscribers per instanceId (for fan-out notifications).
+ * Each Set contains onStoreChange callbacks from useSyncExternalStore.
  */
-const subscriberCounts = new Map<UniqueId, number>();
+const componentSubscribers = new Map<UniqueId, Set<() => void>>();
+
+/**
+ * Cache of bus unsubscribe functions (1 per instanceId).
+ * This ensures we only have one bus listener per viewport, regardless of
+ * how many React components subscribe to it.
+ */
+const busUnsubscribers = new Map<UniqueId, () => void>();
 
 type Subscription = (onStoreChange: () => void) => () => void;
 /**
@@ -63,7 +71,62 @@ const defaultSnapshot: MapViewportPayload = {
 };
 
 /**
+ * Ensures a single bus listener exists for the given instanceId.
+ * All React subscribers will be notified via fan-out when the bus event fires.
+ * This prevents creating N bus listeners for N React components.
+ *
+ * @param instanceId - The unique identifier for the viewport
+ */
+function ensureBusListener(instanceId: UniqueId): void {
+  if (busUnsubscribers.has(instanceId)) {
+    return; // Already listening
+  }
+
+  const unsub = bus.on(MapEvents.viewport, ({ payload }) => {
+    if (instanceId === payload.id) {
+      // Write to store once
+      viewportStore.set(instanceId, payload);
+
+      // Fan-out: notify all React subscribers
+      const subscribers = componentSubscribers.get(instanceId);
+      if (subscribers) {
+        for (const onStoreChange of subscribers) {
+          onStoreChange();
+        }
+      }
+    }
+  });
+
+  busUnsubscribers.set(instanceId, unsub);
+}
+
+/**
+ * Cleans up the bus listener if no React subscribers remain.
+ *
+ * @param instanceId - The unique identifier for the viewport
+ */
+function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
+  const subscribers = componentSubscribers.get(instanceId);
+
+  if (!subscribers || subscribers.size === 0) {
+    // No more React subscribers - clean up bus listener
+    const unsub = busUnsubscribers.get(instanceId);
+    if (unsub) {
+      unsub();
+      busUnsubscribers.delete(instanceId);
+    }
+
+    // Clean up all state
+    viewportStore.delete(instanceId);
+    componentSubscribers.delete(instanceId);
+    subscriptionCache.delete(instanceId);
+    snapshotCache.delete(instanceId);
+  }
+}
+
+/**
  * Creates or retrieves a cached subscription function for a given instanceId.
+ * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
  * Automatically cleans up viewport state when the last subscriber unsubscribes.
  *
  * @param instanceId - The unique identifier for the viewport
@@ -75,38 +138,26 @@ function getOrCreateSubscription(
   const subscription =
     subscriptionCache.get(instanceId) ??
     ((onStoreChange: () => void) => {
-      const unsub = bus.on(MapEvents.viewport, ({ payload }) => {
-        if (instanceId === payload.id) {
-          /**
-           * onStoreChange just tells react to run "getSnapshot". We can't pass anything
-           * to that function directly from here, so we need to store the value somewhere that it can grab it.
-           */
-          viewportStore.set(instanceId, payload);
+      // Ensure single bus listener exists for this instanceId
+      ensureBusListener(instanceId);
 
-          onStoreChange();
-        }
-      });
-      // Increment subscriber count
-      const currentCount = subscriberCounts.get(instanceId) || 0;
+      // Add this React subscriber to the fan-out set
+      let subscribers = componentSubscribers.get(instanceId);
+      if (!subscribers) {
+        subscribers = new Set();
+        componentSubscribers.set(instanceId, subscribers);
+      }
+      subscribers.add(onStoreChange);
 
-      subscriberCounts.set(instanceId, currentCount + 1);
-
-      // Return cleanup function
+      // Return cleanup function for THIS React subscriber
       return () => {
-        // Decrement subscriber count
-        const count = (subscriberCounts.get(instanceId) ?? 1) - 1;
-
-        if (count <= 0) {
-          unsub();
-
-          // No more subscribers - clean up completely
-          viewportStore.delete(instanceId);
-          subscriberCounts.delete(instanceId);
-          subscriptionCache.delete(instanceId);
-          snapshotCache.delete(instanceId);
-        } else {
-          subscriberCounts.set(instanceId, count);
+        const subscribers = componentSubscribers.get(instanceId);
+        if (subscribers) {
+          subscribers.delete(onStoreChange);
         }
+
+        // Clean up bus listener if this was the last React subscriber
+        cleanupBusListenerIfNeeded(instanceId);
       };
     });
 
@@ -214,8 +265,16 @@ export function useViewportState({
  * ```
  */
 export function clearViewportState(instanceId: UniqueId): void {
+  // Unsubscribe from bus if listening
+  const unsub = busUnsubscribers.get(instanceId);
+  if (unsub) {
+    unsub();
+    busUnsubscribers.delete(instanceId);
+  }
+
+  // Clear all state
   viewportStore.delete(instanceId);
-  subscriberCounts.delete(instanceId);
+  componentSubscribers.delete(instanceId);
   subscriptionCache.delete(instanceId);
   snapshotCache.delete(instanceId);
 }
