@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import { designTokens } from '@accelint/design-foundation/tokens/index';
 import { assign } from 'radashi';
 import {
   createContext,
@@ -22,13 +23,12 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { designTokens } from '../tokens/tokens';
-import type { PartialDeep } from 'type-fest';
 import type {
   SemanticColorTokens,
   StaticColorTokens,
   ThemeTokens,
-} from '@/tokens/types';
+} from '@accelint/design-foundation/tokens/types';
+import type { PartialDeep } from 'type-fest';
 
 export type ThemeMode = 'dark' | 'light';
 type ContextColorTokens = SemanticColorTokens & StaticColorTokens;

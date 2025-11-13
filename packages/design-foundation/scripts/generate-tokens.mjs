@@ -306,7 +306,7 @@ async function main() {
     const otherTokens = generateTS(rest, primitiveMap);
 
     await writeFile(
-      'tokens.ts',
+      'index.ts',
       `import type { ThemeTokens } from './types';
 export const designTokens = ${JSON.stringify({ ...colorTokens, ...otherTokens }, null, 2)} satisfies ThemeTokens;`,
     );

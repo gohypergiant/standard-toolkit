@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@/lib/utils';
+import { tv } from '@accelint/design-foundation/lib/utils';
 
 export const ActionBarStyles = tv({
   base: 'flex w-fit gap-s rounded-medium bg-surface-default px-m py-s shadow-elevation-overlay',
