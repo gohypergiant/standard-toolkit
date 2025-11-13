@@ -13,7 +13,7 @@
 import { uuid } from '@accelint/core';
 import { ActionBar } from '@accelint/design-toolkit';
 import { BaseMap } from '../deckgl/base-map';
-import { ViewportSize } from './index';
+import { ViewportSize as ViewportSizeComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -34,12 +34,12 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: StoryObj<typeof meta> = {
+export const ViewportSize: StoryObj<typeof meta> = {
   render: ({ unit }) => (
     <>
       <BaseMap id={BASE_MAP_STORY_ID} className='h-screen w-screen' />
       <ActionBar className='absolute right-l bottom-xxl'>
-        <ViewportSize instanceId={BASE_MAP_STORY_ID} unit={unit} />
+        <ViewportSizeComponent instanceId={BASE_MAP_STORY_ID} unit={unit} />
       </ActionBar>
     </>
   ),
