@@ -44,30 +44,6 @@ const config: StorybookConfig = {
         '@': resolve(__dirname, '../src'),
       },
     },
-    optimizeDeps: {
-      ...config.optimizeDeps,
-      esbuildOptions: {
-        ...config.optimizeDeps?.esbuildOptions,
-        target: 'esnext',
-        supported: {
-          'class-field': true,
-          'class-static-field': true,
-        },
-      },
-      include: [
-        '@deck.gl/core',
-        '@deck.gl/layers',
-        '@deck.gl/geo-layers',
-        '@deck.gl/mapbox',
-        '@deck.gl/mesh-layers',
-        '@deck.gl/widgets',
-        '@loaders.gl/core',
-      ],
-    },
-    build: {
-      ...config.build,
-      target: 'esnext',
-    },
   }),
   staticDirs: ['./assets'],
 };
