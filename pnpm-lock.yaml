@@ -545,16 +545,16 @@ importers:
         specifier: ^3.31.0
         version: 3.32.1(react@19.0.0)
       '@storybook/addon-docs':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(@types/react@19.1.13)(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))
       '@storybook/addon-themes':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))
       '@storybook/builder-vite':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
       '@storybook/react-vite':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.53.2)(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.8.3)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
       '@tailwindcss/cli':
         specifier: ^4.1.11
@@ -620,7 +620,7 @@ importers:
         specifier: 8.10.0
         version: 8.10.0(@types/react@19.1.13)(react@19.0.0)(redux@5.0.1)
       storybook:
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
       tailwind-merge:
         specifier: ^3.3.1
@@ -883,16 +883,16 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/vitest-config
       '@storybook/addon-docs':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(@types/react@19.1.13)(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))
       '@storybook/addon-themes':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))
       '@storybook/builder-vite':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
       '@storybook/react-vite':
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.53.2)(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)))(typescript@5.8.3)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
       '@tailwindcss/vite':
         specifier: ^4.1.11
@@ -931,7 +931,7 @@ importers:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
       storybook:
-        specifier: 9.1.16
+        specifier: ^9.1.16
         version: 9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
       tailwindcss:
         specifier: ^4.1.11
@@ -3611,7 +3611,6 @@ packages:
 
   '@ls-lint/ls-lint@2.3.1':
     resolution: {integrity: sha512-vPe6IDByQnQRTxcAYjTxrmga/tSIui50VBFTB5KIJWY3OOFmxE2VtymjeSEfQfiMbhZV/ZPAqYy2lt8pZFQ0Rw==}
-    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 
