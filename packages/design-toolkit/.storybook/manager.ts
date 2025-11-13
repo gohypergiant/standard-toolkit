@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { addons } from '@storybook/manager-api';
-import { create } from '@storybook/theming';
+import { addons } from 'storybook/manager-api';
+import { create } from 'storybook/theming';
 
 // Detect user system preference
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

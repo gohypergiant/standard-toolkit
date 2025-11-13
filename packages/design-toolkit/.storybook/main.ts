@@ -28,16 +28,15 @@ const config: StorybookConfig = {
   `,
   stories: ['../src/**/*.docs.@(mdx|tsx)', '../src/**/*.stories.@(ts|tsx)'],
   addons: [
-    getAbsolutePath('@storybook/addon-essentials'),
-    getAbsolutePath('@storybook/addon-storysource'),
     getAbsolutePath('@storybook/addon-themes'),
+    getAbsolutePath('@storybook/addon-docs'),
   ],
   framework: {
-    name: '@storybook/react-vite',
+    name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
   core: {
-    builder: '@storybook/builder-vite', // 👈 The builder enabled here.
+    builder: getAbsolutePath('@storybook/builder-vite'), // 👈 The builder enabled here.
   },
   docs: {
     defaultName: 'Playground',

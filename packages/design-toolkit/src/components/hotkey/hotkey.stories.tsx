@@ -14,7 +14,7 @@ import MouseRightClick from '@accelint/icons/mouse-right-click';
 import { Icon } from '../icon';
 import { Hotkey } from './';
 import { HotkeySet } from './hotkey-set';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Hotkey',

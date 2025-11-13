@@ -15,7 +15,7 @@ import { Icon } from '../icon';
 import { Hero } from './';
 import { HeroSubtitle } from './subtitle';
 import { HeroTitle } from './title';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Hero',
