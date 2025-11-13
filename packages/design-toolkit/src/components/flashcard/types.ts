@@ -19,11 +19,6 @@ export type FlashcardProps = FlashcardComponentProps & {
   isLoading?: boolean;
 };
 
-// TODO: How strict do we need to be with the value types?
-export type FlashcardDetailProps = FlashcardMetaData & {
-  className?: string;
-};
-
 export type FlashcardDetailContainerProps = {
   details?: FlashcardMetaData[];
   classNames?: {
@@ -36,5 +31,5 @@ export type FlashcardDetailContainerProps = {
 
 export type FlashcardMetaData = {
   label: string;
-  value: string | number;
+  value: string | number | null;
 };

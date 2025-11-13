@@ -25,13 +25,14 @@ import {
 
 function setup(isLoading = false) {
   const details = [
-    { label: 'key', value: 'value' },
-    { label: 'key', value: 'value' },
-    { label: 'key', value: 'value' },
-    { label: 'key', value: 'value' },
-    { label: 'key', value: 'value' },
-    { label: 'key', value: 'value' },
-    { label: 'key', value: 'value' },
+    { label: 'OBJECTID', value: 75 },
+    { label: 'NAME', value: 'Acrisure Stadium' },
+    { label: 'LATITUDE', value: '40-26-48.22N' },
+    { label: 'LONGITUDE', value: '080-00-56.66W' },
+    { label: 'CITY', value: 'Pittsburgh' },
+    { label: 'STATE', value: 'PA' },
+    { label: 'STATUS_CODE', value: 'Open' },
+    { label: 'OPENING_ON', value: null },
   ];
 
   render(

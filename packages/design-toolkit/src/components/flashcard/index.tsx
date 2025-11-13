@@ -33,6 +33,7 @@
  * </Flashcard>
  */
 'use client';
+import { uuid } from '@accelint/core';
 import 'client-only';
 import { createContext, useContext } from 'react';
 import { Skeleton } from '../skeleton';
@@ -50,7 +51,6 @@ const {
   header,
   subHeader,
   secondaryContainer,
-  secondaryDetails,
   secondaryData,
   detailsContainer,
   detailsItem,
@@ -141,16 +141,6 @@ export function FlashcardSecondary(props: FlashcardComponentProps) {
 }
 FlashcardSecondary.displayName = 'FlashcardSecondary';
 
-export function FlashcardSecondaryDetails(props: FlashcardComponentProps) {
-  const { children, className, ...rest } = props;
-  return (
-    <div {...rest} className={secondaryDetails({ className })}>
-      {children}
-    </div>
-  );
-}
-FlashcardSecondaryDetails.displayName = 'FlashcardSecondaryDetails';
-
 export function FlashcardSecondaryData(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
   const { isLoading } = useContext(FlashcardContext);
@@ -178,7 +168,7 @@ export function FlashcardDetailsContainer(
     return null;
   }
 
-  const displayDetails = [...details].splice(0, 5);
+  const displayDetails = details.slice(0, 5);
 
   return (
     <div
@@ -187,10 +177,11 @@ export function FlashcardDetailsContainer(
     >
       {/* Limit to the first 5 items in details array.*/}
       {displayDetails.map((item) => {
+        const detailId = uuid();
         return (
           <div
             className={detailsItem({ className: classNames?.item })}
-            key={item.label}
+            key={detailId}
           >
             <div className={detailsLabel({ className: classNames?.label })}>
               {isLoading ? (
