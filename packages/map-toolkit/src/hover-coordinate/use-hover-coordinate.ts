@@ -39,6 +39,33 @@ const prepareCoord = (coord: [number, number]) => {
   return `${lonStr} / ${latStr}`;
 };
 
+/**
+ * React hook that tracks and formats the mouse hover position coordinates on a map.
+ * Listens to map hover events via the event bus and converts coordinates to various formats.
+ *
+ * @param id - Optional map instance ID. If not provided, attempts to use MapProvider context.
+ * @returns Object containing the formatted coordinate string and format setter function
+ * @throws {Error} When no id is provided and hook is used outside MapProvider context
+ *
+ * @example
+ * ```tsx
+ * const MAP_ID = uuid();
+ *
+ * function CoordinateDisplay() {
+ *   const { formattedCoord, setFormat } = useHoverCoordinate(MAP_ID);
+ *
+ *   return (
+ *     <div>
+ *       <select onChange={(e) => setFormat(e.target.value as FormatTypes)}>
+ *         <option value="dd">Decimal Degrees</option>
+ *         <option value="mgrs">MGRS</option>
+ *       </select>
+ *       <div>{formattedCoord}</div>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function useHoverCoordinate(id?: UniqueId) {
   const contextId = useContext(MapContext);
   const actualId = id ?? contextId;
