@@ -47,6 +47,12 @@
     @apply grow;
   }
 
+  .panel {
+    @apply p-s;
+  }
+}
+
+@layer components.l2 {
   .trigger {
     @apply w-full cursor-pointer justify-start;
 
@@ -65,9 +71,5 @@
         @apply gap-xs text-header-s;
       }
     }
-  }
-
-  .panel {
-    @apply p-s;
   }
 }

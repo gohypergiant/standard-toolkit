@@ -34,7 +34,7 @@ export function AccordionTrigger({
     (isSlottedContextValue(context) ? undefined : context?.variant) ?? 'cozy';
 
   return (
-    <Heading ref={ref} className={clsx(styles.header, classNames?.heading)}>
+    <Heading ref={ref} className={clsx(styles.heading, classNames?.heading)}>
       <Button
         slot='trigger'
         className={composeRenderProps(classNames?.trigger, (className) =>
