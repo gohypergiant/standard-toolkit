@@ -48,7 +48,7 @@ export function useHoverCoordinate(id?: UniqueId) {
   const [format, setFormat] = useState<FormatTypes>('dd');
   const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
 
-  // reset coordinate to default after new format is set
+  // biome-ignore lint/correctness/useExhaustiveDependencies: format change should trigger reset
   useEffect(() => {
     setFormattedCoord('--, --');
   }, [format]);
