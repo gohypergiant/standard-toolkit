@@ -20,7 +20,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 const BASE_MAP_STORY_ID = uuid();
 
 const meta: Meta = {
-  title: 'Viewport/Viewport Size',
+  title: 'Viewport',
   args: {
     unit: undefined,
   },
@@ -33,8 +33,9 @@ const meta: Meta = {
 };
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const ViewportSize: StoryObj<typeof meta> = {
+export const BasicUsage: Story = {
   render: ({ unit }) => (
     <>
       <BaseMap id={BASE_MAP_STORY_ID} className='h-screen w-screen' />
