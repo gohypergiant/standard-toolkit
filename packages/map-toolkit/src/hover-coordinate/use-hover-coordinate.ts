@@ -18,6 +18,9 @@ import { MapContext } from '../deckgl/base-map/provider';
 import type { UniqueId } from '@accelint/core';
 import type { MapHoverEvent } from '../deckgl/base-map/types';
 
+/**
+ * Formats supported by our geo coordinate package
+ */
 export type FormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
 
 const MAX_LONGITUDE = 180;

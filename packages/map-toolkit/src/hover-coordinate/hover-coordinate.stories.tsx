@@ -64,7 +64,7 @@ const FormattedCoord = (props: Props) => {
 
 export const Default: Story = {
   args: { format: 'ddm' },
-  render: (args) => {
+  render: (args: Partial<Props>) => {
     return (
       <div>
         <BaseMap className='h-dvh w-dvw' id={BASIC_USAGE_MAP_ID} />
