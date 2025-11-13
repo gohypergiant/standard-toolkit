@@ -15,7 +15,6 @@ import { ActionBar } from '@accelint/design-toolkit';
 import { BaseMap } from '../deckgl/base-map';
 import { ViewportSize as ViewportSizeComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import 'maplibre-gl/dist/maplibre-gl.css';
 
 const BASE_MAP_STORY_ID = uuid();
 
