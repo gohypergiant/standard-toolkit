@@ -19,7 +19,14 @@ import type { UniqueId } from '@accelint/core';
 import type { MapHoverEvent } from '../deckgl/base-map/types';
 
 /**
- * Formats supported by our geo coordinate package
+ * Supported coordinate format types for displaying map coordinates.
+ *
+ * @typedef {'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm'} FormatTypes
+ * @property dd - Decimal Degrees (e.g., "45.50000000 E / 30.25000000 N")
+ * @property ddm - Degrees Decimal Minutes (e.g., "45 30 E / 30 15 N")
+ * @property dms - Degrees Minutes Seconds (e.g., "45 30 0 E / 30 15 0 N")
+ * @property mgrs - Military Grid Reference System
+ * @property utm - Universal Transverse Mercator
  */
 export type FormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
 

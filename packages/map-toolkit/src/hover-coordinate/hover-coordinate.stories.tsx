@@ -14,7 +14,7 @@ import { uuid } from '@accelint/core';
 import { useEffect } from 'react';
 import { BaseMap } from '../deckgl/base-map';
 import { type FormatTypes, useHoverCoordinate } from './use-hover-coordinate';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const BASIC_USAGE_MAP_ID = uuid();
 
