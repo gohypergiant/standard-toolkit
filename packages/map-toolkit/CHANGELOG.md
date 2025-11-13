@@ -1,5 +1,19 @@
 # @accelint/map-toolkit
 
+## 0.2.1
+
+### Patch Changes
+
+- 99f6cd5: Add map-mode/store getCurrentModeOwner method to access the current map mode owner.
+- 80db585: BREAKING CHANGES:
+  Design Toolkit no longer exports `tv`, this is now available from Design Foundation
+
+  Created new package @accelint/design-foundation that houses all of the Tailwind tokens, variants, base styles and utilities for easier reuse without having a dependency on the larger Design Toolkit
+
+  Updated Map Toolkit Storybook and NextJS demo app styles to import the new Design Foundation
+
+- 7539bbb: update vite config in map-toolkit to re-enable base-map render in storybook preview
+
 ## 0.2.0
 
 ### Minor Changes

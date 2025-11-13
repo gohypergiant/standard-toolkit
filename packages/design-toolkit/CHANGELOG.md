@@ -1,5 +1,33 @@
 # @accelint/design-toolkit
 
+## 8.0.0
+
+### Major Changes
+
+- 80db585: BREAKING CHANGES:
+  Design Toolkit no longer exports `tv`, this is now available from Design Foundation
+
+  Created new package @accelint/design-foundation that houses all of the Tailwind tokens, variants, base styles and utilities for easier reuse without having a dependency on the larger Design Toolkit
+
+  Updated Map Toolkit Storybook and NextJS demo app styles to import the new Design Foundation
+
+### Minor Changes
+
+- 3f9d14b: Added a Kanban component with a drag-and-drop board for organizing tasks and workflows.
+- 3d6a25b: Add prefix and suffix to (text) Input and TextField components.
+- e463867: New feature added: Pagination. A lightweight implementation to allow users to navigate pages, with previous and next links.
+
+### Patch Changes
+
+- a5dfc06: Update all fields component to have the correct width
+- 4ca8fe5: fixes semantic token discrepancy
+
+  plus updates state styles of switch, text-area-field, checkbox, option-item and menu-item
+
+- 67edb84: Fixes an issue where the MenuTrigger and DrawerTrigger components were not being properly exported.
+- Updated dependencies [80db585]
+  - @accelint/design-foundation@0.1.0
+
 ## 7.0.1
 
 ### Patch Changes
