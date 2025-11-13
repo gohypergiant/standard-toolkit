@@ -11,7 +11,7 @@
  */
 
 import { type IControl, Map as MapLibre, type MapOptions } from 'maplibre-gl';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
  * Hook to integrate a MapLibre GL map with a Deck.gl instance.
@@ -52,7 +52,7 @@ export function useMapLibre(
   styleUrl: string,
   options: MapOptions,
 ) {
-  const [map, setMap] = useState<MapLibre | null>(null);
+  const mapRef = useRef<MapLibre | null>(null);
   // Using a ref for options to avoid re-creating the map when options object reference changes
   // The map is only created once on mount, options changes after that are ignored
   const optionsRef = useRef(options);
@@ -61,31 +61,33 @@ export function useMapLibre(
 
   // Initialize MapLibre instance once
   useEffect(() => {
-    if (deck) {
-      const mapLibre = new MapLibre({
+    if (deck && !mapRef.current) {
+      mapRef.current = new MapLibre({
         ...optionsRef.current,
         style: styleRef.current,
       });
 
-      mapLibre.once('style.load', () => {
-        mapLibre.setProjection({ type: 'mercator' });
-        mapLibre.addControl(deck);
+      mapRef.current.once('style.load', () => {
+        mapRef.current?.setProjection({ type: 'mercator' });
+        mapRef.current?.addControl(deck);
       });
 
-      setMap(mapLibre);
       return () => {
-        mapLibre.removeControl(deck);
-        mapLibre.remove();
-
-        setMap(null);
+        if (mapRef.current) {
+          mapRef.current.removeControl(deck);
+          mapRef.current.remove();
+          mapRef.current = null;
+        }
       };
     }
   }, [deck]);
 
   // Update style when it changes
   useEffect(() => {
-    map?.setStyle(styleUrl);
-  }, [map, styleUrl]);
+    if (mapRef.current) {
+      mapRef.current.setStyle(styleUrl);
+    }
+  }, [styleUrl]);
 
-  return useMemo(() => map, [map]);
+  return mapRef.current;
 }
