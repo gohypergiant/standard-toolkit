@@ -19,7 +19,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 const BASIC_USAGE_MAP_ID = uuid();
 
 const meta: Meta = {
-  title: 'Components/Cursor LatLng',
+  title: 'Hover Coordinate',
   parameters: {
     layout: 'fullscreen',
   },
@@ -65,7 +65,6 @@ const FormattedCoord = (props: Props) => {
 export const Default: Story = {
   args: { format: 'ddm' },
   render: (args) => {
-    console.log(args);
     return (
       <div>
         <BaseMap className='h-dvh w-dvw' id={BASIC_USAGE_MAP_ID} />
