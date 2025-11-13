@@ -36,9 +36,17 @@ export type UseViewportStateProps = {
 const viewportStore = new Map<UniqueId, MapViewportPayload>();
 
 /**
- * Track the number of active subscribers per instanceId for automatic cleanup
+ * Track React component subscribers per instanceId (for fan-out notifications).
+ * Each Set contains onStoreChange callbacks from useSyncExternalStore.
  */
-const subscriberCounts = new Map<UniqueId, number>();
+const componentSubscribers = new Map<UniqueId, Set<() => void>>();
+
+/**
+ * Cache of bus unsubscribe functions (1 per instanceId).
+ * This ensures we only have one bus listener per viewport, regardless of
+ * how many React components subscribe to it.
+ */
+const busUnsubscribers = new Map<UniqueId, () => void>();
 
 type Subscription = (onStoreChange: () => void) => () => void;
 /**
