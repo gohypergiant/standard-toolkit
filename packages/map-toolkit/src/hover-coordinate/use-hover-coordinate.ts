@@ -50,22 +50,28 @@ export function useHoverCoordinate(id?: UniqueId) {
 
   // reset coordinate to default after new format is set
   useEffect(() => {
+    console.log(`Format: ${format}`);
     setFormattedCoord('--, --');
   }, [format]);
 
   useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
+    console.log(data);
+    console.log(data.payload.info.coordinate);
     const eventId = data.payload.id;
 
     // Ignore hover events from other possible map instances
     if (actualId !== eventId) {
+      console.log('Bad id');
       return;
     }
 
     const coords = data.payload.info.coordinate as [number, number];
 
     if (coords) {
+      console.log('Worked');
       const coord = create(prepareCoord(coords));
       const result = format ? coord[`${format}`]() : coord.dd();
+      console.log(`Result: ${result}`);
       setFormattedCoord(result);
     }
   });

@@ -7,16 +7,85 @@ import * as CursorLatlngStories from './hover-coordinate.stories';
 # Cursor LatLong
 A hook that retrieves the coordinates of the mouse's current hovered position on a BaseMap.
 
-## Example usage
-```tsx
-import { FormatTypes, useHoverCoordinate } from "@accelint/cursor-latlng";
-const { formattedCoord, setFormat } = useHoverCoordinate();
-setFormat(FormatTypes.Ddm);
-console.log(formattedCoord);
+## Dependencies
+
+Map Cursor requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for decoupled communication between cursor consumers
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
+- [`@accelint/map-toolkit/hover-coordinate`](../hover-coordinate/hover-coordinate.docs.mdx) - Returns formatted hovered coordinate for a map instance
+
+**React Integration:**
+- `react` - React 19.0.0 or higher for the `useHoverCoordinate` hook and context
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core react
 ```
 
-## Props
+## Example usage
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { FormatTypes, useHoverCoordinate } from "@accelint/map-toolkit/hover-coordinate";
+import { uuid } from '@accelint/core';
 
-## Implementation Notes
+// Module-level constant shared across components
+const MAIN_MAP_ID = uuid();
+
+function HoverCoordinate() {
+  const { formattedCoord, setFormat } = useHoverCoordinate(MAIN_MAP_ID);
+  setFormat(FormatTypes.mgrs);
+  return (
+    <div className="absolute top-4 left-4">
+      {formattedCoord}
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0" />
+      <HoverCoordinate />
+    </div>
+  );
+}
+```
+
+## React API Reference
+
+### `useHoverCoordinate(id?)`
+
+Hook to access hovered coordinate of a map instance.
+
+#### Parameters
+
+##### `id?: UniqueId`
+
+The map ID to access. **Recommended**: Always pass this parameter for UI components that are siblings to `BaseMap`.
+
+#### Returns
+
+```tsx
+{
+  setFormat: FormatTypes;                   // Set the desired coordinate system
+  formattedCoord: string;                   // The coordinate in passed format, defaults to decimal degrees
+}
+```
+
+#### Throws
+
+- `Error` if no `id` is provided and hook is used outside of `MapProvider`
+- `Error` if the store is not found for the given map ID
+
+## Events
+
+Hover Coordinate listens for hover events using `@accelint/bus`. BaseMap instances will handle this automatically -
+if using an alternative map component, import `MapEvents.hover` from `base-map/events` and emit your own hover
+actions on the accelint bus to pass the coordinate value to this hook.
 
 [Github Source](https://github.com/gohypergiant/standard-toolkit)

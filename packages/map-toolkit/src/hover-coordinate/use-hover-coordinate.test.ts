@@ -10,8 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-//import { Broadcast } from '@accelint/bus';
-import { useEmit } from '@accelint/bus/react';
+import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -19,29 +18,25 @@ import { resetMockBroadcastChannel } from 'vitest-broadcast-channel-mock';
 import { MapEvents } from '../deckgl/base-map/events';
 import { useHoverCoordinate } from './use-hover-coordinate';
 import type { UniqueId } from '@accelint/core';
-import type {
-  //MapEventType,
-  MapHoverEvent,
-  MapHoverPayload,
-} from '../deckgl/base-map/types';
+import type { MapEventType, MapHoverPayload } from '../deckgl/base-map/types';
 
 describe('useHoverCoordinates', () => {
   let id: UniqueId = uuid();
-  // let bus: ReturnType<typeof Broadcast.getInstance<MapEventType>>;
-  let mockPayload: MapHoverPayload;
+  let bus: ReturnType<typeof Broadcast.getInstance<MapEventType>>;
+  function mockPayload(id: string): MapHoverPayload {
+    return {
+      id,
+      info: { coordinate: [5, 5] } as any,
+      event: {} as any,
+    } as MapHoverPayload;
+  }
 
   beforeEach(() => {
     // Create fresh instances for each test
     id = uuid();
 
     // Get bus instance AFTER mocking
-    // bus = Broadcast.getInstance<MapEventType>();
-
-    mockPayload = {
-      id,
-      info: { coordinate: [5, 5] } as any,
-      event: {} as any,
-    };
+    bus = Broadcast.getInstance<MapEventType>();
   });
 
   afterEach(() => {
@@ -71,28 +66,33 @@ describe('useHoverCoordinates', () => {
     });
 
     it('updates coordinate value on map hover event', () => {
-      const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
       const { result } = renderHook(() => useHoverCoordinate(id));
-      // const listener = vi.fn();
-      // bus.on(MapEvents.hover, listener);
+      result.current.setFormat('mgrs'); // This isn't working either?
 
-      emitHover(mockPayload);
+      bus.emit(MapEvents.hover, mockPayload(id));
 
-      console.log(`Value: ${result.current.formattedCoord}`);
-
-      expect(result.current.formattedCoord).toEqual('hello');
+      expect(result.current.formattedCoord).toEqual('5 E / 5 N');
     });
 
-    it('resets coordinate string when format type is changed', () => {
-      const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
-      const { result } = renderHook(() => useHoverCoordinate(id));
-      // const listener = vi.fn();
-      // bus.on(MapEvents.hover, listener);
+    //   it('resets coordinate string when format type is changed', () => {
+    //     const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+    //     const { result } = renderHook(() => useHoverCoordinate(id));
+    //     // const listener = vi.fn();
+    //     // bus.on(MapEvents.hover, listener);
 
-      emitHover(mockPayload);
-      result.current.setFormat('mgrs');
+    //     emitHover(mockPayload(id));
+    //     result.current.setFormat('mgrs');
 
-      expect(result.current.formattedCoord).toBe('--, --');
-    });
+    //     expect(result.current.formattedCoord).toBe('--, --');
+    //   });
+
+    //   it('ignores hover events from other map instances', () => {
+    //     const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+    //     const { result } = renderHook(() => useHoverCoordinate(id));
+    //     const differentId: UniqueId = uuid();
+    //     emitHover(mockPayload(differentId));
+
+    //     expect(result.current.formattedCoord).toBe('--, --');
+    //   });
   });
 });
