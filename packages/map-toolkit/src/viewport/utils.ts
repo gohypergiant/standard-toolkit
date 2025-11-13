@@ -37,17 +37,12 @@ export function getViewportSize({
 
   const [minLon, minLat, maxLon, maxLat] = bounds;
 
+  // turf already normalizes, but it doesn't hurt to do it ourselves
+  const normalizedMinLon = normalizeLon(minLon);
+  const normalizedMaxLon = normalizeLon(maxLon);
+
   // Validate bounds are within valid geographic ranges
-  if (
-    minLon < -180 ||
-    minLon > 180 ||
-    maxLon < -180 ||
-    maxLon > 180 ||
-    minLat < -90 ||
-    minLat > 90 ||
-    maxLat < -90 ||
-    maxLat > 90
-  ) {
+  if (minLat < -90 || minLat > 90 || maxLat < -90 || maxLat > 90) {
     console.warn(
       'getViewportSize: Invalid bounds - coordinates outside valid ranges',
       { bounds },
@@ -64,9 +59,9 @@ export function getViewportSize({
     return defaultValue;
   }
 
-  const southWest: GeoCoordinate = [minLon, minLat];
-  const southEast: GeoCoordinate = [maxLon, minLat];
-  const northWest: GeoCoordinate = [minLon, maxLat];
+  const southWest: GeoCoordinate = [normalizedMinLon, minLat];
+  const southEast: GeoCoordinate = [normalizedMaxLon, minLat];
+  const northWest: GeoCoordinate = [normalizedMinLon, maxLat];
 
   const width = formatter.format(
     Math.round(distance(southWest, southEast, { units: UNIT_MAP[unit] })),
@@ -77,4 +72,8 @@ export function getViewportSize({
   );
 
   return `${width} x ${height} ${unit.toUpperCase()}`;
+}
+
+function normalizeLon(lon: number): number {
+  return ((((lon + 180) % 360) + 360) % 360) - 180;
 }
