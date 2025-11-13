@@ -1,0 +1,465 @@
+import { Meta } from '@storybook/blocks';
+
+import * as ViewportStories from './viewport-size.stories.tsx';
+
+<Meta of={ViewportStories} />
+
+# Viewport
+
+Utilities for tracking and displaying map viewport state including dimensions, coordinates, zoom level, and bounds. The viewport module provides both hooks and components for monitoring map viewport changes in real-time.
+
+## Features
+
+- **Real-time Updates**: Automatic subscription to viewport events via the event bus
+- **Multiple Units**: Support for kilometers, meters, nautical miles, miles, and feet
+- **Globe View Ready**: Handles longitude normalization and International Date Line crossing
+- **Fan-Out Pattern**: Efficient single event listener per viewport, multiple components can subscribe
+- **Automatic Cleanup**: Subscriptions cleaned up when components unmount
+- **Instance Isolation**: Support for multiple independent map instances
+- **TypeScript**: Fully typed viewport state and components
+- **Localization**: Custom number formatters for internationalization
+
+## Dependencies
+
+Viewport utilities require the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for viewport state synchronization
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
+- [`@turf/distance`](https://turfjs.org/docs/#distance) - Geographic distance calculations
+- `react` - React 19.0.0 or higher
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core @turf/distance react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @turf/distance react
+```
+
+## Components
+
+### ViewportSize
+
+A React component that displays the current viewport dimensions in geographic units. Shows width and height as a formatted string (e.g., "660 x 1,801 NM").
+
+#### Basic Usage
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { ViewportSize } from '@accelint/map-toolkit/viewport';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function MapView() {
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAP_ID} className="absolute inset-0">
+        {/* Deck.gl layers */}
+      </BaseMap>
+      <div className="absolute bottom-4 right-4">
+        <ViewportSize instanceId={MAP_ID} />
+      </div>
+    </div>
+  );
+}
+```
+
+#### With Action Bar
+
+```tsx
+import { ActionBar } from '@accelint/design-toolkit';
+import { ViewportSize } from '@accelint/map-toolkit/viewport';
+
+<ActionBar className="absolute right-4 bottom-4">
+  <ViewportSize instanceId={MAP_ID} unit="km" />
+</ActionBar>
+```
+
+#### Props
+
+##### `instanceId: UniqueId` (required)
+
+Unique identifier for the map instance. Must match the `id` prop passed to `BaseMap`.
+
+##### `unit?: 'km' | 'm' | 'nm' | 'mi' | 'ft'`
+
+Unit of measurement for dimensions. Defaults to `'nm'` (nautical miles).
+
+- `'km'` - Kilometers
+- `'m'` - Meters
+- `'nm'` - Nautical miles (default)
+- `'mi'` - Miles
+- `'ft'` - Feet
+
+##### `className?: string`
+
+CSS class names for the `<span>` element.
+
+##### Standard `<span>` Props
+
+Accepts all standard HTML span attributes (`style`, `onClick`, `data-*`, etc.).
+
+#### Output Format
+
+The component displays: `{width} x {height} {UNIT}`
+
+**Examples:**
+- `"660 x 1,801 NM"` - US formatting, nautical miles
+- `"1,134 x 3,336 KM"` - US formatting, kilometers
+- `"1.134 x 3.336 KM"` - German formatting, kilometers
+- `"-- x -- NM"` - Fallback when bounds unavailable
+
+## Hooks
+
+### useViewportState
+
+A React hook for subscribing to viewport state changes. Returns current bounds, latitude, longitude, and zoom level.
+
+#### Basic Usage
+
+```tsx
+import { useViewportState } from '@accelint/map-toolkit/viewport';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+function MapInfo() {
+  const { bounds, latitude, longitude, zoom } = useViewportState({
+    instanceId: MAP_ID,
+  });
+
+  return (
+    <div className="bg-white p-2 rounded shadow">
+      <div>Lat: {latitude?.toFixed(2)}</div>
+      <div>Lon: {longitude?.toFixed(2)}</div>
+      <div>Zoom: {zoom?.toFixed(1)}</div>
+    </div>
+  );
+}
+```
+
+#### Monitoring Bounds
+
+```tsx
+import { useViewportState } from '@accelint/map-toolkit/viewport';
+import { useEffect } from 'react';
+
+function BoundsMonitor({ instanceId }: { instanceId: UniqueId }) {
+  const { bounds } = useViewportState({ instanceId });
+
+  useEffect(() => {
+    if (bounds && bounds.every(b => !Number.isNaN(b))) {
+      const [minLon, minLat, maxLon, maxLat] = bounds;
+      console.log('Viewport bounds:', { minLon, minLat, maxLon, maxLat });
+    }
+  }, [bounds]);
+
+  return null;
+}
+```
+
+#### Multiple Subscribers
+
+Multiple components can efficiently subscribe to the same viewport:
+
+```tsx
+const MAP_ID = uuid();
+
+function ZoomLevel() {
+  const { zoom } = useViewportState({ instanceId: MAP_ID });
+  return <div>Zoom: {zoom.toFixed(1)}</div>;
+}
+
+function CenterCoordinates() {
+  const { latitude, longitude } = useViewportState({ instanceId: MAP_ID });
+  return <div>Center: {latitude.toFixed(2)}, {longitude.toFixed(2)}</div>;
+}
+
+// Both components share a single event bus listener (fan-out pattern)
+```
+
+#### Parameters
+
+##### `instanceId: UniqueId` (required)
+
+Map instance identifier. Must match the `id` prop passed to `BaseMap`.
+
+##### `subscribe?: (onStoreChange: () => void) => () => void`
+
+Optional custom subscription function for `useSyncExternalStore`. Must be stable (memoized).
+
+##### `getSnapshot?: () => MapViewportPayload`
+
+Optional custom snapshot function. Must be stable (memoized).
+
+##### `getServerSnapshot?: () => MapViewportPayload`
+
+Optional server-side snapshot function for SSR.
+
+#### Return Value
+
+```tsx
+{
+  id: UniqueId;              // Map instance identifier
+  bounds: Bounds;            // [minLon, minLat, maxLon, maxLat]
+  latitude: number;          // Center latitude
+  longitude: number;         // Center longitude
+  zoom: number;              // Zoom level
+}
+```
+
+**Initial State:** All numeric values are `NaN` before the first viewport event fires.
+
+## How It Works
+
+### Fan-Out Architecture
+
+The viewport module implements an efficient fan-out pattern:
+
+1. **Single Bus Listener**: Only one event bus listener per `instanceId`
+2. **Multiple Subscribers**: Multiple components can subscribe without additional listeners
+3. **Event Fan-Out**: One listener notifies all subscribers when viewport changes
+4. **Automatic Cleanup**: Bus listener removed when last subscriber unmounts
+
+This prevents memory leaks and ensures performance even with many components.
+
+### Viewport Events
+
+The `BaseMap` component emits `MapEvents.viewport` events containing:
+
+```tsx
+{
+  id: UniqueId;              // Map instance ID
+  bounds: [number, number, number, number];
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
+```
+
+These events fire:
+- On initial map load
+- When panning the map
+- When zooming in/out
+- When viewport changes programmatically
+
+### Geographic Calculations
+
+The `getViewportSize` utility (used internally by `ViewportSize`):
+
+1. **Normalizes Longitude**: Handles values outside ±180° for globe view
+2. **Handles Date Line**: Correctly calculates distances across International Date Line
+3. **Calculates Width**: Geographic distance between southwest and southeast corners
+4. **Calculates Height**: Geographic distance between southwest and northwest corners
+5. **Formats Output**: Uses provided formatter to localize numbers
+
+## Edge Cases
+
+### Invalid Bounds
+
+When bounds are undefined, contain NaN, or have invalid values:
+
+```tsx
+// Displays: "-- x -- NM"
+<ViewportSize instanceId={MAP_ID} />
+```
+
+### Globe View Support
+
+Handles multi-revolution longitude values from globe projections:
+
+```tsx
+// Bounds with longitude > 360° are normalized
+bounds: [721, 22, 730, 52]  // 721° → 1°, 730° → 10°
+```
+
+### International Date Line
+
+Correctly calculates the short distance across the dateline:
+
+```tsx
+// Crossing dateline: 170°E to 170°W
+bounds: [170, 50, -170, 60]
+// Calculates ~1,100 KM (20° across), not ~18,800 KM (340° wrong way)
+```
+
+### Initial State
+
+Before first viewport event, numeric values are `NaN`:
+
+```tsx
+const { latitude, longitude, zoom } = useViewportState({ instanceId });
+
+if (Number.isNaN(latitude)) {
+  return <div>Loading map...</div>;
+}
+```
+
+## Multiple Map Instances
+
+Each map instance maintains independent viewport state:
+
+```tsx
+const MAIN_MAP_ID = uuid();
+const MINIMAP_ID = uuid();
+
+function MultiMapView() {
+  return (
+    <div className="flex flex-col h-full">
+      <div className="relative h-2/3">
+        <BaseMap id={MAIN_MAP_ID} className="absolute inset-0" />
+        <ViewportSize instanceId={MAIN_MAP_ID} />
+      </div>
+
+      <div className="relative h-1/3">
+        <BaseMap id={MINIMAP_ID} className="absolute inset-0" />
+        <ViewportSize instanceId={MINIMAP_ID} />
+      </div>
+    </div>
+  );
+}
+```
+
+## Utilities
+
+### getViewportSize
+
+Calculate and format viewport dimensions from bounds.
+
+```tsx
+import { getViewportSize } from '@accelint/map-toolkit/viewport';
+
+const result = getViewportSize({
+  bounds: [-82, 22, -71, 52],
+  unit: 'nm',
+});
+// Returns: "612 x 1,801 NM"
+```
+
+#### Parameters
+
+```tsx
+{
+  bounds?: Bounds;            // Geographic bounds [minLon, minLat, maxLon, maxLat]
+  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'nm' | 'mi' | 'ft'
+  formatter?: Intl.NumberFormat; // Custom number formatter
+}
+```
+
+### clearViewportState
+
+Manually clear viewport state for an instance (rarely needed):
+
+```tsx
+import { clearViewportState } from '@accelint/map-toolkit/viewport';
+
+clearViewportState(MAP_ID);
+```
+
+**Note:** Automatic cleanup happens when all subscribers unmount.
+
+## TypeScript Types
+
+```tsx
+import type { UniqueId } from '@accelint/core';
+import type {
+  Bounds,
+  GeoCoordinate,
+  GetViewportSizeArgs,
+  MapViewportPayload,
+  SupportedDistanceUnit,
+  UseViewportStateProps,
+} from '@accelint/map-toolkit/viewport';
+
+// Bounds type
+type Bounds = [
+  minLon: number,
+  minLat: number,
+  maxLon: number,
+  maxLat: number,
+];
+
+// Geographic coordinate
+type GeoCoordinate = [longitude: number, latitude: number];
+
+// Supported units
+type SupportedDistanceUnit = 'km' | 'm' | 'nm' | 'mi' | 'ft';
+
+// Viewport payload
+type MapViewportPayload = {
+  id: UniqueId;
+  bounds: Bounds;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+};
+```
+
+## Troubleshooting
+
+### ViewportSize shows "-- x -- NM"
+
+**Causes:**
+1. Map not initialized (viewport event hasn't fired)
+2. Invalid bounds from map
+3. Wrong `instanceId` passed
+
+**Solutions:**
+1. Ensure `BaseMap` is mounted with matching `id`
+2. Check console for warnings about invalid bounds
+3. Verify `instanceId` matches `BaseMap` `id` prop
+
+### useViewportState returns all NaN values
+
+**Cause:** Viewport event hasn't fired yet (map initializing).
+
+**Solution:** Check for `NaN` and show loading state:
+
+```tsx
+const { latitude } = useViewportState({ instanceId });
+
+if (Number.isNaN(latitude)) {
+  return <div>Initializing map...</div>;
+}
+```
+
+### State not updating
+
+**Causes:**
+1. Wrong `instanceId` (doesn't match `BaseMap` id)
+2. `BaseMap` not mounted
+3. Custom subscribe/getSnapshot not stable
+
+**Solutions:**
+1. Verify `instanceId` matches `BaseMap` `id` prop
+2. Ensure `BaseMap` mounted before components using hooks
+3. Wrap custom functions in `useCallback`
+
+### Dimensions look wrong at high latitudes
+
+**Cause:** Latitude distortion near poles (spherical geometry).
+
+**Solution:** This is expected. At high latitudes, longitude lines converge, making east-west distances smaller.
+
+## Performance
+
+Viewport utilities are optimized for performance:
+
+- ✅ **Fan-out pattern**: Single event listener, multiple subscribers
+- ✅ **Automatic cleanup**: No manual subscription management needed
+- ✅ **Event-driven**: No polling, updates only when viewport changes
+- ✅ **Concurrent safe**: Uses `useSyncExternalStore` for React 18/19
+- ✅ **Efficient calculations**: Distance calculations only run when bounds change
+
+## Related
+
+- [`BaseMap`](../deckgl/base-map/base-map.docs.mdx) - Map component that emits viewport events
+- [`@turf/distance`](https://turfjs.org/docs/#distance) - Geographic distance calculation
+- [`useSyncExternalStore`](https://react.dev/reference/react/useSyncExternalStore) - React hook docs
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus library
+
+## Examples
+
+See the Storybook stories for complete working examples of viewport utilities in action.

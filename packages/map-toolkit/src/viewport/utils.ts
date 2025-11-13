@@ -17,12 +17,44 @@ import type { GeoCoordinate, GetViewportSizeArgs } from './types';
 const numberFormatter = Intl.NumberFormat('en-US');
 
 /**
- * Returns a formatter viewport size string i.e. `660 x 1,801 NM`
- * @param {Object} args
- * @param {Object} args.bounds - 4 number tuple, i.e. `[-82, 22, -71, 52]`
- * @param {string} args.unit - Measure of distance, `km | m | nm | mi | ft`. Defaults to `nm`
- * @param {Intl.NumberFormat} args.formatter - [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat)
- * @returns
+ * Normalizes longitude to -180 to 180 range.
+ * Handles any wraparound including multi-revolution values from globe view.
+ *
+ * @param lon - Longitude value to normalize
+ * @returns Normalized longitude in range [-180, 180]
+ *
+ * @example
+ * ```typescript
+ * normalizeLon(361)   // returns 1
+ * normalizeLon(-181)  // returns 179
+ * normalizeLon(721)   // returns 1
+ * ```
+ */
+function normalizeLon(lon: number): number {
+  return ((((lon + 180) % 360) + 360) % 360) - 180;
+}
+
+/**
+ * Returns a formatted viewport size string i.e. `660 x 1,801 NM`
+ *
+ * Calculates the geographic distance of viewport bounds and formats it
+ * with width x height in the specified unit. Handles longitude normalization
+ * for globe view and International Date Line crossing.
+ *
+ * @param args - Viewport size calculation arguments
+ * @param args.bounds - Geographic bounds [minLon, minLat, maxLon, maxLat]
+ * @param args.unit - Unit of distance measurement: `km | m | nm | mi | ft`. Defaults to `nm`
+ * @param args.formatter - Number formatter for localization (defaults to en-US)
+ * @returns Formatted string like "660 x 1,801 NM" or "-- x -- NM" if invalid
+ *
+ * @example
+ * ```typescript
+ * getViewportSize({ bounds: [-82, 22, -71, 52], unit: 'nm' })
+ * // returns "612 x 1,801 NM"
+ *
+ * getViewportSize({ bounds: [170, 50, -170, 60], unit: 'km' })
+ * // returns "2,050 x 1,111 KM" (handles dateline crossing)
+ * ```
  */
 export function getViewportSize({
   bounds,
@@ -37,26 +69,33 @@ export function getViewportSize({
 
   const [minLon, minLat, maxLon, maxLat] = bounds;
 
-  // turf already normalizes, but it doesn't hurt to do it ourselves
+  // Normalize longitude values to handle globe view multi-revolution coordinates
   const normalizedMinLon = normalizeLon(minLon);
-  const normalizedMaxLon = normalizeLon(maxLon);
+  let normalizedMaxLon = normalizeLon(maxLon);
 
-  // Validate bounds are within valid geographic ranges
+  // Validate latitude bounds are within valid geographic ranges
   if (minLat < -90 || minLat > 90 || maxLat < -90 || maxLat > 90) {
     console.warn(
-      'getViewportSize: Invalid bounds - coordinates outside valid ranges',
+      'getViewportSize: Invalid bounds - latitude outside valid ranges',
       { bounds },
     );
     return defaultValue;
   }
 
-  // Validate that min/max are in correct order
+  // Validate that min/max latitude are in correct order
   if (minLat > maxLat) {
     console.warn(
       'getViewportSize: Invalid bounds - minLat is greater than maxLat',
       { bounds },
     );
     return defaultValue;
+  }
+
+  // Handle International Date Line crossing
+  // If minLon > maxLon after normalization, we're crossing the dateline
+  // Unwrap maxLon to the positive side for correct distance calculation
+  if (normalizedMinLon > normalizedMaxLon) {
+    normalizedMaxLon += 360;
   }
 
   const southWest: GeoCoordinate = [normalizedMinLon, minLat];
@@ -72,8 +111,4 @@ export function getViewportSize({
   );
 
   return `${width} x ${height} ${unit.toUpperCase()}`;
-}
-
-function normalizeLon(lon: number): number {
-  return ((((lon + 180) % 360) + 360) % 360) - 180;
 }

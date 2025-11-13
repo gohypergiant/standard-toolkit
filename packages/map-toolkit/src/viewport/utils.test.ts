@@ -21,6 +21,7 @@ describe('getViewportSize', () => {
     });
     expect(result).toBe('612 x 1,801 NM');
   });
+
   it('can take a custom formatter', () => {
     const formatter = Intl.NumberFormat('de-DE');
     const result = getViewportSize({
@@ -30,18 +31,55 @@ describe('getViewportSize', () => {
     });
     expect(result).toBe('1.134 x 3.336 KM');
   });
+
   it('provides a fallback for undefined bounds', () => {
     const result = getViewportSize({
       bounds: undefined,
     });
     expect(result).toBe('-- x -- NM');
   });
-  it('handles invalid longitude values outside -180 to 180 range', () => {
+
+  it('normalizes longitude values outside -180 to 180 range', () => {
     const result = getViewportSize({
-      bounds: [-200, 22, -71, 52],
+      bounds: [-200, 22, -71, 52], // -200 normalizes to 160
       unit: 'nm',
     });
-    expect(result).toBe('-- x -- NM');
+    // Should calculate distance, not return fallback
+    expect(result).not.toBe('-- x -- NM');
+    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
+  });
+
+  it('handles multi-revolution longitude values (721°)', () => {
+    const result = getViewportSize({
+      bounds: [721, 22, 730, 52], // 721° -> 1°, 730° -> 10°
+      unit: 'nm',
+    });
+    expect(result).not.toBe('-- x -- NM');
+    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
+  });
+
+  it('normalizes negative longitude values beyond -360', () => {
+    const result = getViewportSize({
+      bounds: [-541, 22, -530, 52], // -541° -> 179°, -530° -> -170°
+      unit: 'nm',
+    });
+    expect(result).not.toBe('-- x -- NM');
+    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
+  });
+
+  it('handles International Date Line crossing', () => {
+    const result = getViewportSize({
+      bounds: [170, 50, -170, 60], // Crosses dateline
+      unit: 'nm',
+    });
+    // Should calculate the short distance across the dateline (~20 degrees)
+    // not the long way around (~340 degrees)
+    expect(result).not.toBe('-- x -- NM');
+    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''));
+    // Width should be roughly 20 degrees at 50°N (~700-800 NM)
+    // Not 340 degrees (~18,000+ NM)
+    expect(width).toBeLessThan(2000);
+    expect(width).toBeGreaterThan(500);
   });
 
   it('handles invalid latitude values outside -90 to 90 range', () => {
