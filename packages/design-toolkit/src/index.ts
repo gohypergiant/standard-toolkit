@@ -229,14 +229,12 @@ export {
   FlashcardIdentifier,
   FlashcardSecondary,
   FlashcardSecondaryData,
-  FlashcardSecondaryDetails,
   FlashcardSubheader,
 } from './components/flashcard';
 export { FlashcardStyles } from './components/flashcard/styles';
 export type {
   FlashcardComponentProps,
   FlashcardDetailContainerProps,
-  FlashcardDetailProps,
   FlashcardMetaData,
   FlashcardProps,
 } from './components/flashcard/types';
