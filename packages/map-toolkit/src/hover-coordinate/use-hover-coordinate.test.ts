@@ -13,11 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  mockBroadcastChannel,
-  resetMockBroadcastChannel,
-} from 'vitest-broadcast-channel-mock';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
 import { useHoverCoordinate } from './use-hover-coordinate';
 import type { UniqueId } from '@accelint/core';
@@ -38,19 +34,11 @@ describe('useHoverCoordinate', () => {
   }
 
   beforeEach(() => {
-    // Mock BroadcastChannel FIRST
-    mockBroadcastChannel();
-
     // Create fresh instances for each test
     id = uuid();
 
-    // Get bus instance AFTER mocking
+    // Get bus instance
     bus = Broadcast.getInstance<MapEventType>();
-  });
-
-  afterEach(() => {
-    // Clean up bus
-    resetMockBroadcastChannel();
   });
 
   describe('Hook Behavior', () => {
