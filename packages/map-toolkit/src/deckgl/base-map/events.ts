@@ -15,5 +15,4 @@ export const MapEventsNamespace = 'map';
 export const MapEvents = {
   click: `${MapEventsNamespace}:click`,
   hover: `${MapEventsNamespace}:hover`,
-  viewportChange: `${MapEventsNamespace}:viewport_change`,
 } as const;

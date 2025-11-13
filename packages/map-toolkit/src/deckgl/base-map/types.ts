@@ -12,7 +12,7 @@
 
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
-import type { InteractionState, PickingInfo } from '@deck.gl/core';
+import type { PickingInfo } from '@deck.gl/core';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
 
@@ -78,12 +78,6 @@ export type MapHoverPayload = {
   id: UniqueId;
 };
 
-export type MapViewStatePayload = {
-  latitude: number;
-  longitude: number;
-  interactionState: InteractionState;
-};
-
 /**
  * Type for map click events in the event bus.
  * Combines the event name with the click payload.
@@ -95,12 +89,8 @@ export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
  * Combines the event name with the hover payload.
  */
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
-export type MapViewStateEvent = Payload<
-  typeof MapEvents.viewportChange,
-  MapViewStatePayload
->;
 
 /**
  * Union type of all map event types that can be emitted through the event bus.
  */
-export type MapEventType = MapClickEvent | MapHoverEvent | MapViewStateEvent;
+export type MapEventType = MapClickEvent | MapHoverEvent;

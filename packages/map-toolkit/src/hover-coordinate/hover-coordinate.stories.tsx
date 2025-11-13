@@ -13,7 +13,7 @@
 import { uuid } from '@accelint/core';
 import { useEffect } from 'react';
 import { BaseMap } from '../deckgl/base-map';
-import { FormatTypes, useHoverCoordinate } from './index';
+import { type FormatTypes, useHoverCoordinate } from './use-hover-coordinate';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const BASIC_USAGE_MAP_ID = uuid();
@@ -25,18 +25,9 @@ const meta: Meta = {
   },
   argTypes: {
     format: {
-      options: Object.keys(FormatTypes),
-      mapping: FormatTypes,
+      options: ['dd', 'ddm', 'dms', 'mgrs', 'utm'],
       control: {
         type: 'select',
-        labels: {
-          // 'labels' maps option values to string labels
-          Dd: 'dd',
-          Ddm: 'ddm',
-          Dms: 'dms',
-          Mgrs: 'mgrs',
-          Utm: 'utm',
-        },
       },
     },
   },
@@ -50,7 +41,7 @@ type Props = {
 };
 
 const FormattedCoord = (props: Props) => {
-  const { formattedCoord, setFormat } = useHoverCoordinate();
+  const { formattedCoord, setFormat } = useHoverCoordinate(BASIC_USAGE_MAP_ID);
   useEffect(() => {
     setFormat(props.format);
   }, [props.format, setFormat]);
@@ -72,11 +63,9 @@ const FormattedCoord = (props: Props) => {
 };
 
 export const Default: Story = {
-  args: {
-    format: 'Utm',
-  },
-
+  args: { format: 'ddm' },
   render: (args) => {
+    console.log(args);
     return (
       <div>
         <BaseMap className='h-dvh w-dvw' id={BASIC_USAGE_MAP_ID} />

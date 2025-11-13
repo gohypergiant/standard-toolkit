@@ -22,11 +22,11 @@ import { BASE_MAP_STYLE, PARAMETERS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
-import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
+import type { PickingInfo } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { MapClickEvent, MapHoverEvent, MapViewStateEvent } from './types';
+import type { MapClickEvent, MapHoverEvent } from './types';
 
 /**
  * Props for the BaseMap component.
@@ -126,7 +126,6 @@ export function BaseMap({
   id,
   onClick,
   onHover,
-  onViewStateChange,
   parameters,
   ...rest
 }: BaseMapProps) {
@@ -155,9 +154,6 @@ export function BaseMap({
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
-  const emitViewStateChange = useEmit<MapViewStateEvent>(
-    MapEvents.viewportChange,
-  );
 
   const handleMapClick = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
@@ -213,23 +209,6 @@ export function BaseMap({
     [emitHover, id, onHover],
   );
 
-  const handleViewStateChange = useCallback(
-    (viewStateProps: ViewStateChangeParameters) => {
-      // send full pickingInfo and event to user-defined onHover
-      onViewStateChange?.(viewStateProps);
-
-      // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewState, interactionState } = viewStateProps;
-
-      emitViewStateChange({
-        latitude: viewState.latitude,
-        longitude: viewState.longitude,
-        interactionState,
-      });
-    },
-    [emitViewStateChange, onViewStateChange],
-  );
-
   return (
     <div id={container} className={className}>
       <MapProvider id={id}>
@@ -240,7 +219,6 @@ export function BaseMap({
           useDevicePixels={false}
           onHover={handleMapHover}
           onClick={handleMapClick}
-          onViewStateChange={handleViewStateChange}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
           parameters={{ ...PARAMETERS, ...parameters }}

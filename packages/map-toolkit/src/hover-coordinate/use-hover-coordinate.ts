@@ -12,12 +12,11 @@
 
 import { useOn } from '@accelint/bus/react';
 import { coordinateSystems, createCoordinate } from '@accelint/geo';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MapEvents } from '../deckgl/base-map/events';
-import type {
-  MapHoverEvent,
-  MapViewStateEvent,
-} from '../deckgl/base-map/types';
+import { MapContext } from '../deckgl/base-map/provider';
+import type { UniqueId } from '@accelint/core';
+import type { MapHoverEvent } from '../deckgl/base-map/types';
 
 export type FormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
 
@@ -35,12 +34,33 @@ const prepareCoord = (coord: [number, number]) => {
   return result;
 };
 
-export function useHoverCoordinate() {
+export function useHoverCoordinate(id?: UniqueId) {
+  const contextId = useContext(MapContext);
+  const actualId = id ?? contextId;
+
+  if (!actualId) {
+    throw new Error(
+      'useHoverCoordinate requires either an id parameter or to be used within a MapProvider',
+    );
+  }
+
   const [formattedCoord, setFormattedCoord] = useState('--, --');
   const [format, setFormat] = useState<FormatTypes>('dd');
   const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
 
+  // reset coordinate to default after new format is set
+  useEffect(() => {
+    setFormattedCoord('--, --');
+  }, [format]);
+
   useOn<MapHoverEvent>(MapEvents.hover, (data: MapHoverEvent) => {
+    const eventId = data.payload.id;
+
+    // Ignore hover events from other possible map instances
+    if (actualId !== eventId) {
+      return;
+    }
+
     const coords = data.payload.info.coordinate as [number, number];
 
     if (coords) {
@@ -49,20 +69,6 @@ export function useHoverCoordinate() {
       setFormattedCoord(result);
     }
   });
-
-  // Are any of these map events actually relevant for this ticket?
-  useOn<MapViewStateEvent>(
-    MapEvents.viewportChange,
-    (data: MapViewStateEvent) => {
-      const { latitude, longitude } = data.payload;
-
-      if (latitude && longitude) {
-        const coord = create(`${latitude} / ${longitude}`);
-        const result = format ? coord[`${format}`]() : coord.dd();
-        setFormattedCoord(result);
-      }
-    },
-  );
 
   return { formattedCoord, setFormat };
 }
