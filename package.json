@@ -58,6 +58,9 @@
     "turbo": "^2.5.8",
     "zx": "^8.1.9"
   },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
+  },
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "engines": {
     "node": ">=22",

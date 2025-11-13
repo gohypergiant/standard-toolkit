@@ -54,6 +54,10 @@ importers:
       zx:
         specifier: ^8.1.9
         version: 8.8.5
+    devDependencies:
+      esbuild:
+        specifier: ^0.25.12
+        version: 0.25.12
 
   apps/docs:
     dependencies:
@@ -698,9 +702,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@types/geodesy':
-        specifier: ^2.2.8
-        version: 2.2.8
       esbuild-fix-imports-plugin:
         specifier: ^1.0.23
         version: 1.0.23
@@ -5351,9 +5352,6 @@ packages:
 
   '@types/express@4.17.25':
     resolution: {integrity: sha512-dVd04UKsfpINUnK0yBoYHDF3xu7xVH4BuDotC/xGuycx4CgbP48X/KF/586bcObxT0HENHXEU8Nqtu6NR+eKhw==}
-
-  '@types/geodesy@2.2.8':
-    resolution: {integrity: sha512-nGnmuwiLr7gou7SnjMK803yVrVUV47aguHsPQ0IdLL8W3IkP8jQs+vrV43HZ7pW3sdwKJzuPszfHY9xCu04K2w==}
 
   '@types/geojson-vt@3.2.5':
     resolution: {integrity: sha512-qDO7wqtprzlpe8FfQ//ClPV9xiuoh2nkIgiouIptON9w5jvD/fA4szvP9GBlDVdJ5dldAl0kX/sy3URbWwLx0g==}
@@ -16537,8 +16535,6 @@ snapshots:
       '@types/express-serve-static-core': 4.19.7
       '@types/qs': 6.14.0
       '@types/serve-static': 1.15.10
-
-  '@types/geodesy@2.2.8': {}
 
   '@types/geojson-vt@3.2.5':
     dependencies:
