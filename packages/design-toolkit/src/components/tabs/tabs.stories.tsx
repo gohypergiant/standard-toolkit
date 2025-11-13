@@ -17,7 +17,7 @@ import { Tabs } from '@/components/tabs/index';
 import { TabList } from './list';
 import { TabPanel } from './panel';
 import { Tab } from './tab';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * The `<Tabs>` component is a direct wrapper around the `Tabs` component from
