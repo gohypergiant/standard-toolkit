@@ -71,7 +71,62 @@ const defaultSnapshot: MapViewportPayload = {
 };
 
 /**
+ * Ensures a single bus listener exists for the given instanceId.
+ * All React subscribers will be notified via fan-out when the bus event fires.
+ * This prevents creating N bus listeners for N React components.
+ *
+ * @param instanceId - The unique identifier for the viewport
+ */
+function ensureBusListener(instanceId: UniqueId): void {
+  if (busUnsubscribers.has(instanceId)) {
+    return; // Already listening
+  }
+
+  const unsub = bus.on(MapEvents.viewport, ({ payload }) => {
+    if (instanceId === payload.id) {
+      // Write to store once
+      viewportStore.set(instanceId, payload);
+
+      // Fan-out: notify all React subscribers
+      const subscribers = componentSubscribers.get(instanceId);
+      if (subscribers) {
+        for (const onStoreChange of subscribers) {
+          onStoreChange();
+        }
+      }
+    }
+  });
+
+  busUnsubscribers.set(instanceId, unsub);
+}
+
+/**
+ * Cleans up the bus listener if no React subscribers remain.
+ *
+ * @param instanceId - The unique identifier for the viewport
+ */
+function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
+  const subscribers = componentSubscribers.get(instanceId);
+
+  if (!subscribers || subscribers.size === 0) {
+    // No more React subscribers - clean up bus listener
+    const unsub = busUnsubscribers.get(instanceId);
+    if (unsub) {
+      unsub();
+      busUnsubscribers.delete(instanceId);
+    }
+
+    // Clean up all state
+    viewportStore.delete(instanceId);
+    componentSubscribers.delete(instanceId);
+    subscriptionCache.delete(instanceId);
+    snapshotCache.delete(instanceId);
+  }
+}
+
+/**
  * Creates or retrieves a cached subscription function for a given instanceId.
+ * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
  * Automatically cleans up viewport state when the last subscriber unsubscribes.
  *
  * @param instanceId - The unique identifier for the viewport
