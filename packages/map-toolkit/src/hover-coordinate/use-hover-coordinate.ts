@@ -20,18 +20,23 @@ import type { MapHoverEvent } from '../deckgl/base-map/types';
 
 export type FormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
 
+const MAX_LONGITUDE = 180;
+const LONGITUDE_RANGE = 360;
+const COORDINATE_PRECISION = 8;
 const prepareCoord = (coord: [number, number]) => {
-  // Longitude can be above/below 180 when viewport center is near international date line
-  const lon =
-    coord[0] > 180
-      ? coord[0] - 360
-      : coord[0] < -180
-        ? coord[0] + 360
-        : coord[0];
-  const lat = coord[1];
-  const result = `${Math.abs(lon).toFixed(8) + (lon < 0 ? ' W' : ' E')} / ${Math.abs(lat).toFixed(8) + (lat < 0 ? ' S' : ' N')}`;
+  // Normalize longitude to -180 to 180 range (handles International Date Line)
+  let lon = coord[0];
+  if (lon > MAX_LONGITUDE) {
+    lon -= LONGITUDE_RANGE;
+  } else if (lon < -MAX_LONGITUDE) {
+    lon += LONGITUDE_RANGE;
+  }
 
-  return result;
+  const lat = coord[1];
+  const lonStr = `${Math.abs(lon).toFixed(COORDINATE_PRECISION)} ${lon < 0 ? 'W' : 'E'}`;
+  const latStr = `${Math.abs(lat).toFixed(COORDINATE_PRECISION)} ${lat < 0 ? 'S' : 'N'}`;
+
+  return `${lonStr} / ${latStr}`;
 };
 
 export function useHoverCoordinate(id?: UniqueId) {
@@ -61,11 +66,16 @@ export function useHoverCoordinate(id?: UniqueId) {
       return;
     }
 
-    const coords = data.payload.info.coordinate as [number, number];
-
-    if (coords) {
-      const coord = create(prepareCoord(coords));
-      const result = format ? coord[`${format}`]() : coord.dd();
+    const coords = data.payload.info.coordinate;
+    // Validate it's a proper coordinate tuple
+    if (
+      Array.isArray(coords) &&
+      coords.length === 2 &&
+      typeof coords[0] === 'number' &&
+      typeof coords[1] === 'number'
+    ) {
+      const coord = create(prepareCoord(coords as [number, number]));
+      const result = coord[format]();
       setFormattedCoord(result);
     }
   });

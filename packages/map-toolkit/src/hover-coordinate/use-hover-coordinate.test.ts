@@ -20,7 +20,7 @@ import { useHoverCoordinate } from './use-hover-coordinate';
 import type { UniqueId } from '@accelint/core';
 import type { MapEventType, MapHoverPayload } from '../deckgl/base-map/types';
 
-describe('useHoverCoordinates', () => {
+describe('useHoverCoordinate', () => {
   let id: UniqueId;
   let bus: ReturnType<typeof Broadcast.getInstance<MapEventType>>;
   function createMockPayload(

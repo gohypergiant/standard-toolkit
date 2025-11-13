@@ -4,7 +4,7 @@ import * as HoverCoordinateStories from './hover-coordinate.stories';
 
 <Meta of={HoverCoordinateStories} />
 
-# Cursor LatLong
+# Hover Coordinate
 A hook that retrieves the coordinates of the mouse's current hovered position on a BaseMap.
 
 ## Dependencies
@@ -38,7 +38,7 @@ const MAIN_MAP_ID = uuid();
 
 function HoverCoordinate() {
   const { formattedCoord, setFormat } = useHoverCoordinate(MAIN_MAP_ID);
-  setFormat(FormatTypes.mgrs);
+  setFormat('mgrs');
   return (
     <div className="absolute top-4 left-4">
       {formattedCoord}
@@ -72,7 +72,7 @@ The map ID to access. **Recommended**: Always pass this parameter for UI compone
 
 ```tsx
 {
-  setFormat: FormatTypes;                   // Set the desired coordinate system
+  setFormat: (format: FormatTypes) => void;                   // Set the desired coordinate system
   formattedCoord: string;                   // The coordinate in passed format, defaults to decimal degrees
 }
 ```
@@ -80,7 +80,6 @@ The map ID to access. **Recommended**: Always pass this parameter for UI compone
 #### Throws
 
 - `Error` if no `id` is provided and hook is used outside of `MapProvider`
-- `Error` if the store is not found for the given map ID
 
 ## Events
 
