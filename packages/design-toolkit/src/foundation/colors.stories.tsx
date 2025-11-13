@@ -12,7 +12,7 @@
 
 import { useEffect, useState } from 'react';
 import { tokens } from './token-data';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Foundation/Colors',

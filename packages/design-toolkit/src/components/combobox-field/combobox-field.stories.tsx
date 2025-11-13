@@ -19,7 +19,7 @@ import { OptionsItemDescription } from '../options/item-description';
 import { OptionsItemLabel } from '../options/item-label';
 import { OptionsSection } from '../options/section';
 import { ComboBoxField } from './';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/ComboBoxField',

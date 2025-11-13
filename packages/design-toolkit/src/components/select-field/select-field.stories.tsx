@@ -18,7 +18,7 @@ import { OptionsItemLabel } from '../options/item-label';
 import { OptionsSection } from '../options/section';
 import { SelectField } from './index';
 import type { Key } from '@react-types/shared';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/SelectField',

@@ -17,7 +17,7 @@ import { AccordionGroup } from './group';
 import { AccordionHeader } from './header';
 import { AccordionPanel } from './panel';
 import { AccordionTrigger } from './trigger';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { AccordionGroupProps } from './types';
 
 type Alias = React.FC<AccordionGroupProps>;

@@ -16,7 +16,7 @@ import { Icon } from '../icon';
 import { Button } from './';
 import { LinkButton } from './link';
 import { ToggleButton } from './toggle';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Button',

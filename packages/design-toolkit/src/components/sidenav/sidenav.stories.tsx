@@ -30,7 +30,7 @@ import { SidenavLink } from './link';
 import { SidenavMenu } from './menu';
 import { SidenavMenuItem } from './menu-item';
 import { SidenavTrigger } from './trigger';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
 // this story has a mix of controls from different components

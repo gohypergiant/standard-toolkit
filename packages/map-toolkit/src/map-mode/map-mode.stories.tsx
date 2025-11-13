@@ -23,7 +23,7 @@ import { useRef, useState } from 'react';
 import { BaseMap } from '../deckgl/base-map';
 import { MapModeEvents } from './events';
 import { useMapMode } from './use-map-mode';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   ModeChangeAuthorizationEvent,
   ModeChangeDecisionEvent,

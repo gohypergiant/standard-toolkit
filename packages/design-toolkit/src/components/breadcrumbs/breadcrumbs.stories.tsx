@@ -12,7 +12,7 @@
 
 import { Breadcrumbs } from './';
 import { BreadcrumbItem } from './item';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Breadcrumbs',

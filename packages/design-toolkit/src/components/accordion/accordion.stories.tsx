@@ -20,7 +20,7 @@ import { Accordion } from './';
 import { AccordionHeader } from './header';
 import { AccordionPanel } from './panel';
 import { AccordionTrigger } from './trigger';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * The accordion will stretch to fill the entire width of its parent container.

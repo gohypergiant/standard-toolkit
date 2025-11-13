@@ -62,7 +62,7 @@
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.9.0",
     "tsup": "8.5.0",
-    "vitest": "^2.1.9"
+    "vitest": "^4.0.8"
   },
   "bin": {
     "smeegl": "./dist/main.js"

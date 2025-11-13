@@ -12,7 +12,7 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 import { Table } from './index';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Person = {
   id: string;
