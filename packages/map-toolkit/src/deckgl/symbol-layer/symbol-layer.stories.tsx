@@ -13,7 +13,7 @@
 import '@/deckgl/symbol-layer/fiber';
 import { useId } from 'react';
 import { withDeckGL } from '@/decorators/deckgl';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const MOCK_DATA = [
   {

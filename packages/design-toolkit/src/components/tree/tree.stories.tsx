@@ -32,7 +32,7 @@ import { TreeItemDescription } from './item-description';
 import { TreeItemLabel } from './item-label';
 import { TreeItemPrefixIcon } from './item-prefix-icon';
 import type { Key, Selection } from '@react-types/shared';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { TreeNode } from '@/hooks/use-tree/types';
 
 const meta = {

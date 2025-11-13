@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '../button';
 import { NoticeEventTypes } from './events';
 import { NoticeList } from './list';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   NoticeActionEvent,
   NoticeContent,

@@ -13,7 +13,7 @@
 import { DetailsList } from './';
 import { DetailsListLabel } from './label';
 import { DetailsListValue } from './value';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/DetailsList',

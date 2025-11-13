@@ -24,7 +24,7 @@ import { DrawerMenuItem } from './menu-item';
 import { DrawerPanel } from './panel';
 import { DrawerTrigger } from './trigger';
 import { DrawerView } from './view';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react';
 import type { DrawerMenuProps, DrawerProps } from './types';
 

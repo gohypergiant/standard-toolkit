@@ -16,7 +16,7 @@ import { TableHeader } from './header';
 import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
 import { TableRow } from './row';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Person = {
   id: string;
