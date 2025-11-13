@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import { DocsContainer } from '@storybook/addon-docs/blocks';
 import { withThemeByClassName } from '@storybook/addon-themes';
-import { DocsContainer } from '@storybook/blocks';
-import { type ThemeVars, themes } from '@storybook/theming';
 import { createElement } from 'react';
+import { type ThemeVars, themes } from 'storybook/theming';
 import { Docs } from './docs';
-import type { Preview, ReactRenderer } from '@storybook/react';
+import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import '@accelint/design-foundation/styles';
 import '../src/index.css';
 
@@ -49,7 +49,7 @@ const preview: Preview = {
     },
     layout: 'centered',
     backgrounds: {
-      disable: true, // prevent conflict w/ addon-themes
+      disabled: true,
     },
     options: {
       storySort: {

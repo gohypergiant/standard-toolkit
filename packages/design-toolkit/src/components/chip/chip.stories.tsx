@@ -18,7 +18,7 @@ import { Chip } from './';
 import { DeletableChip } from './deletable';
 import { ChipList } from './list';
 import { SelectableChip } from './selectable';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   ChipListProps,
   DeletableChipProps,

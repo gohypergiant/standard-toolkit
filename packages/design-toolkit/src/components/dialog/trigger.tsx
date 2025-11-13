@@ -10,6 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { DialogTrigger } from 'react-aria-components';
+import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
 
-export { DialogTrigger };
+export const DialogTrigger = AriaDialogTrigger;

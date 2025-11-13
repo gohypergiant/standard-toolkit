@@ -14,7 +14,7 @@
 
 import { uuid } from '@accelint/core';
 import { BaseMap } from '../deckgl/base-map';
-import type { Decorator } from '@storybook/react';
+import type { Decorator } from '@storybook/react-vite';
 
 // Module-level constant - stable across all Storybook renders
 const STORYBOOK_MAP_ID = uuid();

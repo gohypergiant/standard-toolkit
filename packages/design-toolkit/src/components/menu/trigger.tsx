@@ -13,6 +13,6 @@
 'use client';
 
 import 'client-only';
-import { MenuTrigger } from 'react-aria-components';
+import { MenuTrigger as AriaMenuTrigger } from 'react-aria-components';
 
-export { MenuTrigger };
+export const MenuTrigger = AriaMenuTrigger;

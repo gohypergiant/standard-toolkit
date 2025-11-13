@@ -38,7 +38,7 @@ import { KanbanHeaderActions } from './header-actions';
 import { KanbanHeaderSearch } from './header-search';
 import { KanbanHeaderTitle } from './header-title';
 import { columnData } from './mock-data';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { KanbanCardData, KanbanColumnData } from './types';
 
 const meta = {

@@ -14,7 +14,7 @@ import '@/deckgl/text-layer/fiber';
 import { useId } from 'react';
 import { withDeckGL } from '@/decorators/deckgl';
 import type { Color, Position } from '@deck.gl/core';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 interface TextDataPoint {
   position: Position;

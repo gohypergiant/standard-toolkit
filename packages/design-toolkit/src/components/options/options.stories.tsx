@@ -22,7 +22,7 @@ import { OptionsItemContent } from './item-content';
 import { OptionsItemDescription } from './item-description';
 import { OptionsItemLabel } from './item-label';
 import { OptionsSection } from './section';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import type { OptionsItemProps } from './types';
 

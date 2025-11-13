@@ -52,8 +52,7 @@
     "tsup": "8.5.0",
     "type-fest": "^4.41.0",
     "typescript": "^5.8.3",
-    "vitest": "^2.1.9",
-    "vitest-broadcast-channel-mock": "^0.1.0"
+    "vitest": "^4.0.8"
   },
   "optionalDependencies": {
     "react": "^19.0.0"

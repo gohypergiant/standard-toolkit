@@ -11,11 +11,11 @@
  */
 
 import { withThemeByClassName } from '@storybook/addon-themes';
-import type { Preview, ReactRenderer } from '@storybook/react';
+import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import './index.css';
-import { DocsContainer } from '@storybook/blocks';
-import { type ThemeVars, themes } from '@storybook/theming';
+import { DocsContainer } from '@storybook/addon-docs/blocks';
 import { createElement } from 'react';
+import { type ThemeVars, themes } from 'storybook/theming';
 import { Docs } from './docs';
 
 const preview: Preview = {
@@ -53,7 +53,7 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      disable: true, // prevent conflict w/ addon-themes
+      disabled: true,
     },
   },
   decorators: [
