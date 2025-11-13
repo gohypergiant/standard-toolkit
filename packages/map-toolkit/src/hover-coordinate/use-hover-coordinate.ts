@@ -30,17 +30,18 @@ import type { MapHoverEvent } from '../deckgl/base-map/types';
  */
 export type FormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
 
+const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
+
 const MAX_LONGITUDE = 180;
 const LONGITUDE_RANGE = 360;
 const COORDINATE_PRECISION = 8;
 const prepareCoord = (coord: [number, number]) => {
   // Normalize longitude to -180 to 180 range (handles International Date Line)
   let lon = coord[0];
-  if (lon > MAX_LONGITUDE) {
-    lon -= LONGITUDE_RANGE;
-  } else if (lon < -MAX_LONGITUDE) {
-    lon += LONGITUDE_RANGE;
-  }
+  lon =
+    ((((lon + MAX_LONGITUDE) % LONGITUDE_RANGE) + LONGITUDE_RANGE) %
+      LONGITUDE_RANGE) -
+    MAX_LONGITUDE;
 
   const lat = coord[1];
   const lonStr = `${Math.abs(lon).toFixed(COORDINATE_PRECISION)} ${lon < 0 ? 'W' : 'E'}`;
@@ -88,7 +89,6 @@ export function useHoverCoordinate(id?: UniqueId) {
 
   const [formattedCoord, setFormattedCoord] = useState('--, --');
   const [format, setFormat] = useState<FormatTypes>('dd');
-  const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: format change should trigger reset
   useEffect(() => {
