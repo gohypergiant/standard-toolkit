@@ -60,6 +60,7 @@
     "@accelint/bus": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
+    "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/geo": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
