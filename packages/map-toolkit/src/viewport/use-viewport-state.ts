@@ -265,8 +265,16 @@ export function useViewportState({
  * ```
  */
 export function clearViewportState(instanceId: UniqueId): void {
+  // Unsubscribe from bus if listening
+  const unsub = busUnsubscribers.get(instanceId);
+  if (unsub) {
+    unsub();
+    busUnsubscribers.delete(instanceId);
+  }
+
+  // Clear all state
   viewportStore.delete(instanceId);
-  subscriberCounts.delete(instanceId);
+  componentSubscribers.delete(instanceId);
   subscriptionCache.delete(instanceId);
   snapshotCache.delete(instanceId);
 }
