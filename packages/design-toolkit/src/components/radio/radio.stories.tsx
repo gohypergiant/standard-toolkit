@@ -12,7 +12,7 @@
 
 import { RadioGroup } from './group';
 import { Radio } from './index';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { RadioGroupProps } from './types';
 
 type Alias = React.FC<RadioGroupProps>;

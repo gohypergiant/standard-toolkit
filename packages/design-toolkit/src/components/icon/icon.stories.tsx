@@ -13,7 +13,7 @@
 import { Add } from '@accelint/icons';
 import { Icon } from './';
 import { IconProvider } from './context';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Icon',

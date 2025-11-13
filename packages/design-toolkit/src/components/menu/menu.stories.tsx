@@ -24,7 +24,7 @@ import { MenuSection } from './section';
 import { MenuSeparator } from './separator';
 import { MenuSubmenu } from './submenu';
 import { MenuTrigger } from './trigger';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { MenuItemProps } from './types';
 
 const meta = {

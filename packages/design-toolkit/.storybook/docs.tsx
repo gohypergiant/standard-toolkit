@@ -16,7 +16,7 @@ import {
   Primary,
   Subtitle,
   Title,
-} from '@storybook/blocks';
+} from '@storybook/addon-docs/blocks';
 
 export const Docs = () => (
   <>

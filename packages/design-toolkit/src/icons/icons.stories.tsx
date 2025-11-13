@@ -13,7 +13,7 @@
 import { title } from 'radashi';
 import { Icon } from '../components/icon';
 import { default as catalog } from './catalog';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Foundation/Icons',
