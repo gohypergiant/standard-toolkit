@@ -404,6 +404,8 @@
   }
 
   .toggle {
+    composes: button;
+
     &.flat {
       @variant color-mono-muted {
         @apply fg-primary-muted bg-transparent;

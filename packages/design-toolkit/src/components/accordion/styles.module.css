@@ -24,18 +24,16 @@
   .header {
     @apply fg-primary-bold flex w-full items-center gap-s rounded-medium px-s py-xs outline-none;
 
-    @variant group-enabled/accordion {
-      @variant focus-visible-within {
-        @apply bg-interactive-muted-hover;
-      }
+    @variant focus-visible-within {
+      @apply bg-interactive-muted-hover;
+    }
 
-      @variant hover {
-        @apply bg-interactive-muted-hover;
-      }
+    @variant hover {
+      @apply bg-interactive-muted-hover;
+    }
 
-      @variant pressed {
-        @apply bg-interactive-muted-pressed;
-      }
+    @variant pressed {
+      @apply bg-interactive-muted-pressed;
     }
 
     @variant group-disabled/accordion {
