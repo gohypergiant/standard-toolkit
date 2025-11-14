@@ -65,7 +65,6 @@ export {
 } from './components/checkbox/context';
 export { CheckboxGroup } from './components/checkbox/group';
 export { Checkbox } from './components/checkbox';
-export { CheckboxStyles } from './components/checkbox/styles';
 export type {
   CheckboxGroupProps,
   CheckboxProps,
