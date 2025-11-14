@@ -40,7 +40,7 @@ export default defineConfig({
     modules: {
       generateScopedName: (name, filename, css) =>
         /group(-[a-z]+)?\\\/[a-z-]+/.test(name)
-          ? name.replace(/\\/, '')
+          ? name
           : generateScopedNameDefault(name, filename, css),
     },
   },
