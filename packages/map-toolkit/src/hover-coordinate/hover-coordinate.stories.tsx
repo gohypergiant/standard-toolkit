@@ -47,16 +47,7 @@ const FormattedCoord = (props: Props) => {
   }, [props.format, setFormat]);
 
   return (
-    <div
-      className='size-[400px]'
-      style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        color: 'white',
-        height: 'auto',
-      }}
-    >
+    <div className='absolute top-0 left-0 size-[300px] h-auto'>
       {formattedCoord}
     </div>
   );

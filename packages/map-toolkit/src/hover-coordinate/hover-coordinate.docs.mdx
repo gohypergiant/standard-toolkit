@@ -38,9 +38,13 @@ const MAIN_MAP_ID = uuid();
 
 function HoverCoordinate() {
   const { formattedCoord, setFormat } = useHoverCoordinate(MAIN_MAP_ID);
-  setFormat('mgrs');
+
+  useEffect(() => {
+    setFormat('mgrs');
+  }, [setFormat]);
+
   return (
-    <div className="absolute top-4 left-4">
+    <div className="absolute top-0 left-0 size-[300px] h-auto">
       {formattedCoord}
     </div>
   );

@@ -9,7 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import { useOn } from '@accelint/bus/react';
 import { coordinateSystems, createCoordinate } from '@accelint/geo';
 import { useContext, useEffect, useState } from 'react';
@@ -28,7 +30,7 @@ import type { MapHoverEvent } from '../deckgl/base-map/types';
  * @property mgrs - Military Grid Reference System
  * @property utm - Universal Transverse Mercator
  */
-export type FormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
+export type FormatTypes = keyof typeof coordinateSystems;
 
 const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
 
@@ -49,6 +51,12 @@ const prepareCoord = (coord: [number, number]) => {
 
   return `${lonStr} / ${latStr}`;
 };
+
+function isValidCoordinate(value?: number[]): value is [number, number] {
+  return (
+    Array.isArray(value) && value.length === 2 && value.every(Number.isFinite)
+  );
+}
 
 /**
  * React hook that tracks and formats the mouse hover position coordinates on a map.
@@ -105,12 +113,7 @@ export function useHoverCoordinate(id?: UniqueId) {
 
     const coords = data.payload.info.coordinate;
     // Validate it's a proper coordinate tuple
-    if (
-      Array.isArray(coords) &&
-      coords.length === 2 &&
-      typeof coords[0] === 'number' &&
-      typeof coords[1] === 'number'
-    ) {
+    if (isValidCoordinate(coords)) {
       const coord = create(prepareCoord(coords as [number, number]));
       const result = coord[format]();
       setFormattedCoord(result);
