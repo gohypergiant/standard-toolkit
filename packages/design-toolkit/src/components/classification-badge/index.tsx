@@ -12,13 +12,21 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { useContextProps } from 'react-aria-components';
 import { ClassificationBadgeContext } from './context';
-import {
-  ClassificationBadgeStyles,
-  ClassificationBadgeStylesDefaults,
-} from './styles';
+import styles from './styles.module.css';
 import type { ClassificationBadgeProps } from './types';
+
+const fallbackContent = {
+  missing: 'Missing',
+  unclassified: 'Unclassified',
+  cui: 'CUI',
+  confidential: 'Confidential',
+  secret: 'Secret',
+  'top-secret': 'Top Secret',
+  'ts-sci': 'TS/SCI',
+} as const;
 
 /**
  * ClassificationBadge - A specialized badge for security and data classification
@@ -49,17 +57,20 @@ export function ClassificationBadge({
     children,
     className,
     size = 'medium',
-    variant = ClassificationBadgeStylesDefaults.variant,
+    variant = 'missing',
     ...rest
   } = props;
 
   return (
     <span
       {...rest}
-      className={ClassificationBadgeStyles({
-        variant,
+      className={clsx(
+        'group/classification-badge',
+        styles.badge,
+        styles[variant],
         className,
-      })}
+      )}
+      data-content={fallbackContent[variant]}
       data-size={size}
     >
       {children}

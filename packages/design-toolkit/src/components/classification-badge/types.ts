@@ -11,14 +11,15 @@
  */
 
 import type { ComponentPropsWithRef } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { ClassificationBadgeStyles } from './styles';
 
-export type ClassificationBadgeStyleVariants = VariantProps<
-  typeof ClassificationBadgeStyles
->;
-
-export type ClassificationBadgeProps = ClassificationBadgeStyleVariants &
-  ComponentPropsWithRef<'span'> & {
-    size?: 'medium' | 'small';
-  };
+export type ClassificationBadgeProps = ComponentPropsWithRef<'span'> & {
+  size?: 'medium' | 'small';
+  variant?:
+    | 'missing'
+    | 'unclassified'
+    | 'cui'
+    | 'confidential'
+    | 'secret'
+    | 'top-secret'
+    | 'ts-sci';
+};

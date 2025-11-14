@@ -85,14 +85,7 @@ export {
   ClassificationBadgeProvider,
 } from './components/classification-badge/context';
 export { ClassificationBadge } from './components/classification-badge';
-export {
-  ClassificationBadgeStyles,
-  ClassificationBadgeStylesDefaults,
-} from './components/classification-badge/styles';
-export type {
-  ClassificationBadgeProps,
-  ClassificationBadgeStyleVariants,
-} from './components/classification-badge/types';
+export type { ClassificationBadgeProps } from './components/classification-badge/types';
 export {
   ClassificationBannerContext,
   ClassificationBannerProvider,
