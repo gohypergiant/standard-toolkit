@@ -29,15 +29,19 @@ import type { ActionBarProps } from './types';
  *   <Button><Icon><Copy/></Icon></Button>
  * </ActionBar>
  */
-export function ActionBar({ className, ...rest }: ActionBarProps) {
+export function ActionBar({
+  className,
+  size = 'medium',
+  ...rest
+}: ActionBarProps) {
   return (
     <Provider
       values={[
-        [ButtonContext, { variant: 'icon' }],
-        [ToggleButtonContext, { variant: 'icon' }],
+        [ButtonContext, { size, variant: 'icon' }],
+        [ToggleButtonContext, { size, variant: 'icon' }],
       ]}
     >
-      <nav {...rest} className={clsx(styles.bar, className)} />
+      <nav {...rest} className={clsx(styles.bar, className)} data-size={size} />
     </Provider>
   );
 }
