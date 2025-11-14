@@ -11,9 +11,9 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { type UniqueId, uuid } from '@accelint/core';
 import { useSyncExternalStore } from 'react';
 import { MapEvents } from '../deckgl/base-map/events';
+import type { UniqueId } from '@accelint/core';
 import type {
   MapEventType,
   MapViewportPayload,
@@ -60,15 +60,10 @@ const subscriptionCache = new Map<UniqueId, Subscription>();
 const snapshotCache = new Map<UniqueId, () => MapViewportPayload>();
 
 /**
- * Default empty snapshot - stable reference to prevent unnecessary re-renders
+ * Cache of fallback snapshots per instanceId to maintain referential stability.
+ * This prevents unnecessary re-renders when no viewport data exists yet.
  */
-const defaultSnapshot: MapViewportPayload = {
-  id: uuid(),
-  bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
-  latitude: Number.NaN,
-  longitude: Number.NaN,
-  zoom: Number.NaN,
-};
+const fallbackCache = new Map<UniqueId, MapViewportPayload>();
 
 /**
  * Ensures a single bus listener exists for the given instanceId.
@@ -121,6 +116,7 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
     componentSubscribers.delete(instanceId);
     subscriptionCache.delete(instanceId);
     snapshotCache.delete(instanceId);
+    fallbackCache.delete(instanceId);
   }
 }
 
@@ -174,7 +170,21 @@ function getOrCreateSubscription(
  * @returns A snapshot function for useSyncExternalStore
  */
 function getOrCreateSnapshot(instanceId: UniqueId): () => MapViewportPayload {
-  const fallback = { ...defaultSnapshot, id: instanceId };
+  // Get or create stable fallback reference for this instanceId
+  const fallback =
+    fallbackCache.get(instanceId) ??
+    (() => {
+      const newFallback: MapViewportPayload = {
+        id: instanceId,
+        bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
+        latitude: Number.NaN,
+        longitude: Number.NaN,
+        zoom: Number.NaN,
+      };
+      fallbackCache.set(instanceId, newFallback);
+      return newFallback;
+    })();
+
   const snapshot =
     snapshotCache.get(instanceId) ??
     (() => viewportStore.get(instanceId) ?? fallback);
@@ -277,4 +287,5 @@ export function clearViewportState(instanceId: UniqueId): void {
   componentSubscribers.delete(instanceId);
   subscriptionCache.delete(instanceId);
   snapshotCache.delete(instanceId);
+  fallbackCache.delete(instanceId);
 }
