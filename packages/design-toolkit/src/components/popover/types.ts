@@ -12,13 +12,15 @@
 
 import type { ComponentProps, ReactNode } from 'react';
 import type {
+  DialogTriggerProps as AriaDialogTriggerProps,
   HeadingProps as AriaHeadingProps,
   PopoverProps as AriaPopoverProps,
   PopoverRenderProps,
   Pressable,
 } from 'react-aria-components';
 
-export interface PopoverProps {
+export interface PopoverProps
+  extends Pick<AriaDialogTriggerProps, 'onOpenChange' | 'isOpen'> {
   placement?: 'left' | 'right' | 'top' | 'bottom';
   children?: ReactNode;
 }
