@@ -221,6 +221,24 @@ export type {
   DrawerTriggerProps,
 } from './components/drawer/types';
 export { DrawerView } from './components/drawer/view';
+export {
+  Flashcard,
+  FlashcardContext,
+  FlashcardDetailsContainer,
+  FlashcardHeader,
+  FlashcardHero,
+  FlashcardIdentifier,
+  FlashcardSecondary,
+  FlashcardSecondaryData,
+  FlashcardSubheader,
+} from './components/flashcard';
+export { FlashcardStyles } from './components/flashcard/styles';
+export type {
+  FlashcardComponentProps,
+  FlashcardDetailContainerProps,
+  FlashcardMetaData,
+  FlashcardProps,
+} from './components/flashcard/types';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroStyles } from './components/hero/styles';
