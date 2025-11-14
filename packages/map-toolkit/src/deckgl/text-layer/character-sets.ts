@@ -34,6 +34,13 @@ const EXPANDED = `${ASCII_ALL}${LATIN_ALL}`;
 
 export type CharacterSetsKeys = keyof typeof CHARACTER_SETS;
 
+/**
+ * Predefined character sets for TextLayer.
+ *
+ * Use smaller character sets (ASCII_ALL, ASCII_ALPHA_NUMERIC) for better performance,
+ * or use AUTO for dynamic optimization based on content.
+ * EXPANDED includes ASCII and Latin characters with diacritics for international text.
+ */
 export const CHARACTER_SETS = Object.freeze({
   ALL_NUMBERS,
 
