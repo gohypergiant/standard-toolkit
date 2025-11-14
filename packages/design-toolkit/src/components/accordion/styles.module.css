@@ -52,22 +52,14 @@
 
 @layer components.l2 {
   .trigger {
-    @apply w-full cursor-pointer justify-start;
-
-    @variant size-medium {
-      @apply px-0;
-    }
+    @apply w-full cursor-pointer justify-start px-0;
 
     &.cozy {
-      @variant size-medium {
-        @apply gap-s text-header-m;
-      }
+      @apply gap-s text-header-m;
     }
 
     &.compact {
-      @variant size-medium {
-        @apply gap-xs text-header-s;
-      }
+      @apply gap-xs text-header-s;
     }
   }
 }

@@ -74,15 +74,7 @@ export { DeletableChip } from './components/chip/deletable';
 export { Chip } from './components/chip';
 export { ChipList, ChipListRenderingContext } from './components/chip/list';
 export { SelectableChip } from './components/chip/selectable';
-export {
-  BaseChipStyles,
-  ChipStyles,
-  ChipStylesDefaults,
-  DeletableChipStyles,
-  SelectableChipStyles,
-} from './components/chip/styles';
 export type {
-  BaseChipProps,
   ChipListProps,
   ChipProps,
   DeletableChipProps,
