@@ -85,13 +85,16 @@ export function useCoordinateFieldState({
 
   const [segmentValues, setSegmentValues] = useState<string[]>(() => {
     const initialValue = value !== undefined ? value : defaultValue;
-    if (initialValue) {
-      const segments = convertDDToDisplaySegments(initialValue, format);
-      if (segments) {
-        return segments;
-      }
+    if (!initialValue) {
+      return new Array(editableSegmentConfigs.length).fill('');
     }
-    return new Array(editableSegmentConfigs.length).fill('');
+
+    const segments = convertDDToDisplaySegments(initialValue, format);
+    if (!segments) {
+      return new Array(editableSegmentConfigs.length).fill('');
+    }
+
+    return segments;
   });
 
   const convertValueToSegmentsOrClear = useCallback(
@@ -147,15 +150,16 @@ export function useCoordinateFieldState({
     }
 
     const ddValue = convertDisplaySegmentsToDD(updatedValues, format);
-    if (ddValue) {
-      setValidationErrors([]);
-      handleChange(ddValue);
-    } else {
+    if (!ddValue) {
       const errorMsg = 'Invalid coordinate value';
       setValidationErrors([errorMsg]);
       onError?.(errorMsg, { format, segments: updatedValues });
       handleChange(null);
+      return;
     }
+
+    setValidationErrors([]);
+    handleChange(ddValue);
   };
 
   const handleSegmentChange = (index: number, newValue: string) => {

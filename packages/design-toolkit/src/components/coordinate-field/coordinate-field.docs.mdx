@@ -318,7 +318,7 @@ Full keyboard accessibility for efficient data entry:
 ### Size & Appearance
 
 - **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
-- **`enableCopy`** - Whether to show the copy button for copying coordinates in different formats (default: `true`). When enabled, shows a button that opens a popover with all coordinate formats and copy functionality.
+- **`showFormatButton`** - Whether to show the format button for copying coordinates in different formats (default: `true`). When enabled, shows a button that opens a popover with all coordinate formats and copy functionality.
 
 ### Styling
 
@@ -356,7 +356,7 @@ type CoordinateFieldProps = {
   errorMessage?: string;
   format?: CoordinateSystem;
   size?: 'small' | 'medium';
-  enableCopy?: boolean;  // Whether to show the copy button (default: true)
+  showFormatButton?: boolean;  // Whether to show the format button (default: true)
   value?: CoordinateValue;
   defaultValue?: CoordinateValue;
   onChange?: (value: CoordinateValue | null) => void;

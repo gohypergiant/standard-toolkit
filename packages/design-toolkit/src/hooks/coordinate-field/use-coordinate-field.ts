@@ -31,6 +31,7 @@ export interface UseCoordinateFieldResult {
   focus: ReturnType<typeof useCoordinateFocus>;
   paste: ReturnType<typeof useCoordinatePaste>;
   copy: ReturnType<typeof useCoordinateCopy>;
+  registerTimeout: (timeoutId: NodeJS.Timeout) => void;
   fieldProps: {
     id: string;
     role: 'group';
@@ -181,6 +182,7 @@ export function useCoordinateField(
     focus,
     paste,
     copy,
+    registerTimeout,
     fieldProps,
     labelProps,
     descriptionProps,

@@ -17,7 +17,7 @@ import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
 import { filterDOMProps } from '@react-aria/utils';
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Text as AriaText,
   composeRenderProps,
@@ -44,7 +44,10 @@ import { PopoverTrigger } from '../popover/trigger';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
 import { CoordinateFieldContext, CoordinateFieldStateContext } from './context';
-import { getAllCoordinateFormats } from './coordinate-utils';
+import {
+  type CoordinateFormatResult,
+  getAllCoordinateFormats,
+} from './coordinate-utils';
 import { CoordinateSegment } from './segment';
 import { getSegmentLabel } from './segment-configs';
 import { CoordinateFieldStyles } from './styles';
@@ -146,7 +149,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     label: labelProp,
     format = 'dd',
     size = 'medium',
-    enableCopy = true,
+    showFormatButton = true,
     isDisabled = false,
     isInvalid: isInvalidProp = false,
     isRequired = false,
@@ -167,6 +170,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     focus,
     paste,
     copy,
+    registerTimeout,
     fieldProps,
     labelProps,
     descriptionProps,
@@ -190,11 +194,21 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     isInvalid,
     isRequired,
     size,
+    registerTimeout,
   };
 
-  // Memoize all coordinate format conversions to avoid redundant calculations
-  const allCoordinateFormats = useMemo(
-    () => getAllCoordinateFormats(state.currentValue),
+  // Store all coordinate formats, calculated only when popover opens
+  const [allCoordinateFormats, setAllCoordinateFormats] = useState<Record<
+    CoordinateSystem,
+    CoordinateFormatResult
+  > | null>(null);
+
+  const handlePopoverOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (isOpen) {
+        setAllCoordinateFormats(getAllCoordinateFormats(state.currentValue));
+      }
+    },
     [state.currentValue],
   );
 
@@ -222,13 +236,13 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     const paddingWidth = 2;
 
     // Add format button width (icon button is roughly 2.5-3ch)
-    const buttonWidth = enableCopy ? 3.5 : 0;
+    const buttonWidth = showFormatButton ? 3.5 : 0;
 
     // Add gap between input and button (gap-m = 1rem = ~1ch)
-    const inputButtonGap = enableCopy ? 1.5 : 0;
+    const inputButtonGap = showFormatButton ? 1.5 : 0;
 
     return `${segmentWidth + literalWidth + gapWidth + paddingWidth + buttonWidth + inputButtonGap}ch`;
-  }, [state.editableSegmentConfigs, state.segmentConfigs, enableCopy]);
+  }, [state.editableSegmentConfigs, state.segmentConfigs, showFormatButton]);
 
   return (
     <Provider
@@ -324,8 +338,8 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
             })}
           </div>
 
-          {enableCopy && (
-            <Popover>
+          {showFormatButton && (
+            <Popover onOpenChange={handlePopoverOpenChange}>
               <PopoverTrigger>
                 <Button
                   variant='icon'
@@ -350,37 +364,38 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                   <h3>Copy Coordinates</h3>
                 </div>
                 <div className={popoverBody()}>
-                  {COORDINATE_SYSTEMS.map((formatKey) => {
-                    const formatResult = allCoordinateFormats[formatKey];
-                    const isCopied = copy.copiedFormat === formatKey;
+                  {allCoordinateFormats &&
+                    COORDINATE_SYSTEMS.map((formatKey) => {
+                      const formatResult = allCoordinateFormats[formatKey];
+                      const isCopied = copy.copiedFormat === formatKey;
 
-                    return (
-                      <div key={formatKey} className={formatRow()}>
-                        <div className='flex min-w-0 flex-1 flex-col gap-2xs'>
-                          <span className={formatLabel()}>
-                            {COORDINATE_FORMAT_LABELS[formatKey]}
-                          </span>
-                          <span
-                            className={formatValue()}
-                            title={formatResult.value}
+                      return (
+                        <div key={formatKey} className={formatRow()}>
+                          <div className='flex min-w-0 flex-1 flex-col gap-2xs'>
+                            <span className={formatLabel()}>
+                              {COORDINATE_FORMAT_LABELS[formatKey]}
+                            </span>
+                            <span
+                              className={formatValue()}
+                              title={formatResult.value}
+                            >
+                              {formatResult.value}
+                            </span>
+                          </div>
+                          <Button
+                            variant='icon'
+                            color='mono-bold'
+                            aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}
+                            onClick={() => copy.handleCopyFormat(formatKey)}
+                            isDisabled={!formatResult.isValid}
                           >
-                            {formatResult.value}
-                          </span>
+                            <Icon>
+                              {isCopied ? <Check /> : <CopyToClipboard />}
+                            </Icon>
+                          </Button>
                         </div>
-                        <Button
-                          variant='icon'
-                          color='mono-bold'
-                          aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}
-                          onClick={() => copy.handleCopyFormat(formatKey)}
-                          isDisabled={!formatResult.isValid}
-                        >
-                          <Icon>
-                            {isCopied ? <Check /> : <CopyToClipboard />}
-                          </Icon>
-                        </Button>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </PopoverContent>
             </Popover>

@@ -103,9 +103,10 @@ export function CoordinateSegment({
     onChange(newValue);
 
     if (maxLength && newValue.length === maxLength && onAutoAdvance) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         onAutoAdvance();
       }, 0);
+      contextState.registerTimeout(timeoutId);
     }
   };
 

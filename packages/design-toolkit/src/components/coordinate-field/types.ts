@@ -130,6 +130,8 @@ export type CoordinateFieldState = {
   isRequired: boolean;
   /** Size variant of the field */
   size: CoordinateFieldProps['size'];
+  /** Function to register timeouts for cleanup on unmount */
+  registerTimeout: (timeoutId: NodeJS.Timeout) => void;
 };
 
 /**
@@ -233,10 +235,10 @@ export type CoordinateFieldProps = Omit<
     size?: 'small' | 'medium';
 
     /**
-     * Whether to show the copy button for copying coordinates in different formats
+     * Whether to show the format button for copying coordinates in different formats
      * @default true
      */
-    enableCopy?: boolean;
+    showFormatButton?: boolean;
 
     /**
      * Controlled value in Decimal Degrees format

@@ -743,13 +743,13 @@ describe('CoordinateField', () => {
       });
     });
 
-    it('shows format button for both sizes when enableCopy is true', () => {
+    it('shows format button for both sizes when showFormatButton is true', () => {
       const { container: mediumContainer } = render(
         <CoordinateField
           label='Location'
           value={testCoordinate}
           size='medium'
-          enableCopy={true}
+          showFormatButton={true}
         />,
       );
       const mediumButton = mediumContainer.querySelector(
@@ -762,40 +762,40 @@ describe('CoordinateField', () => {
           label='Location'
           value={testCoordinate}
           size='small'
-          enableCopy={true}
+          showFormatButton={true}
         />,
       );
       const smallButton = smallContainer.querySelector('[data-format-button]');
       expect(smallButton).toBeInTheDocument();
     });
 
-    it('hides format button when enableCopy is false for medium size', () => {
+    it('hides format button when showFormatButton is false for medium size', () => {
       const { container } = render(
         <CoordinateField
           label='Location'
           value={testCoordinate}
           size='medium'
-          enableCopy={false}
+          showFormatButton={false}
         />,
       );
       const button = container.querySelector('[data-format-button]');
       expect(button).not.toBeInTheDocument();
     });
 
-    it('hides format button when enableCopy is false for small size', () => {
+    it('hides format button when showFormatButton is false for small size', () => {
       const { container } = render(
         <CoordinateField
           label='Location'
           value={testCoordinate}
           size='small'
-          enableCopy={false}
+          showFormatButton={false}
         />,
       );
       const button = container.querySelector('[data-format-button]');
       expect(button).not.toBeInTheDocument();
     });
 
-    it('shows format button by default (enableCopy defaults to true)', () => {
+    it('shows format button by default (showFormatButton defaults to true)', () => {
       const { container: mediumContainer } = render(
         <CoordinateField
           label='Location'

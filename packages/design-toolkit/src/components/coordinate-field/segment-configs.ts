@@ -34,7 +34,10 @@
 
 import type { CoordinateSystem, SegmentConfig } from './types';
 
+/** Padding for numeric segments (0.25ch ≈ quarter character width for visual spacing) */
 const NUMERIC_PAD = 0.25;
+
+/** Larger padding for final segment to account for container edge (0.5ch ≈ half character) */
 const LAST_PAD = 0.5;
 
 /**

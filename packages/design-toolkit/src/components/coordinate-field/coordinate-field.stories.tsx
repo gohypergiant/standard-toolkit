@@ -83,10 +83,10 @@ const meta = {
         defaultValue: { summary: 'medium' },
       },
     },
-    enableCopy: {
+    showFormatButton: {
       control: 'boolean',
       description:
-        'Whether to show the copy button for copying coordinates in different formats',
+        'Whether to show the format button for copying coordinates in different formats',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'true' },
@@ -203,12 +203,12 @@ export const SmallSize: Story = {
 /**
  * With Copy Button Disabled
  *
- * The copy button can be hidden by setting enableCopy to false.
+ * The copy button can be hidden by setting showFormatButton to false.
  * This works for both medium and small sizes.
  */
 export const WithoutCopyButton: Story = {
   args: {
-    enableCopy: false,
+    showFormatButton: false,
     value: { lat: 40.7128, lon: -74.006 },
   },
   render: (args) => (
