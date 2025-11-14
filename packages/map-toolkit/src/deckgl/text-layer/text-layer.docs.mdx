@@ -1,8 +1,14 @@
-# `@accelint/map-toolkit/deckgl/text-layer`
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as TextLayerStories from './text-layer.stories';
+
+<Meta of={TextLayerStories} />
+
+# Text Layer
 
 A Deck.gl text layer with enhanced styling capabilities including customizable fonts, colors, stroke, and extended character set support.
 
-The `TextLayer` wraps Deck.gl's `TextLayer` with [opinionated defaults](./default-settings.ts) and an [expanded character set](./character-sets.ts). Smaller character subsets are available for performance optimization.
+The `TextLayer` wraps Deck.gl's `TextLayer` with [opinionated defaults](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/map-toolkit/src/deckgl/text-layer/default-settings.ts) and an [expanded character set](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/map-toolkit/src/deckgl/text-layer/character-sets.ts). Smaller character subsets are available for performance optimization.
 
 ## Features
 
@@ -10,6 +16,26 @@ The `TextLayer` wraps Deck.gl's `TextLayer` with [opinionated defaults](./defaul
 - White text with black outline by default
 - Extended character set support
 - Performance-optimized character subsets available
+
+## Dependencies
+
+TextLayer requires the following dependencies:
+
+**Required:**
+- [`@deck.gl/core`](https://deck.gl/) - Deck.gl core library for WebGL visualization
+- [`@deck.gl/layers`](https://deck.gl/) - Deck.gl layers including the base TextLayer
+
+**React Integration:**
+- [`@deckgl-fiber-renderer/dom`](https://github.com/deckgl-fiber-renderer/fiber.gl) - React renderer for Deck.gl
+- `react` - React 19.0.0 or higher for using with the fiber renderer
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @deck.gl/core @deck.gl/layers
+# or
+pnpm add @accelint/map-toolkit @deck.gl/core @deck.gl/layers
+```
 
 ## Usage
 
@@ -25,16 +51,16 @@ const layer = new TextLayer({
   ],
   getText: (d) => d.text,
   getPosition: (d) => d.position,
-  
+
   // Styling options
   getSize: 10, // Font size in pixels (can also be a function: d => d.fontSize)
   fontWeight: 500,
   fontFamily: 'Arial, sans-serif',
   lineHeight: 1.2,
-  
+
   // Colors - provide a Color array directly or a function that returns a Color array
   getColor: [255, 255, 255, 255], // White text
-  
+
   // Stroke
   outlineWidth: 1,
   outlineColor: [0, 0, 0, 255], // Black outline
@@ -62,8 +88,8 @@ export function TextLabelsLayer() {
   const data = useTextData();
 
   return (
-    <textLayer 
-      data={data} 
+    <textLayer
+      data={data}
       getSize={10}
       fontWeight={500}
       lineHeight={1.2}
@@ -73,6 +99,7 @@ export function TextLabelsLayer() {
   );
 }
 ```
+
 
 ## Performance
 
@@ -142,4 +169,4 @@ Interactive Storybook examples are available demonstrating:
 - Per-item color customization
 - Multiple layers composed together
 
-Run `pnpm --filter @accelint/map-toolkit run preview` from the monorepo root to view the interactive Storybook examples.
+Run `pnpm --filter @accelint/map-toolkit run storybook` from the monorepo root to view the interactive Storybook examples.
