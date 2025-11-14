@@ -9,7 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import { getStore } from './store';
