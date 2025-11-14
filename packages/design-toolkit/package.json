@@ -89,6 +89,7 @@
     "@accelint/design-foundation": "workspace:*",
     "@accelint/geo": "workspace:*",
     "@accelint/icons": "workspace:*",
+    "@accelint/logger": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",

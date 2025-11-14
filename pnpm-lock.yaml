@@ -490,6 +490,9 @@ importers:
       '@accelint/icons':
         specifier: workspace:*
         version: link:../icons
+      '@accelint/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@accelint/temporal':
         specifier: workspace:*
         version: link:../temporal

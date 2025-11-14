@@ -10,6 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'debug',
+  prefix: '[CoordinateField]',
+  pretty: true,
+});
+
 /**
  * Coordinate Conversion Utilities
  *
@@ -574,14 +583,10 @@ export function convertDDToDisplaySegments(
     const segments = parseCoordinateStringToSegments(coordString, format);
     return segments;
   } catch (error) {
-    console.error('[convertDDToDisplaySegments] Exception caught:', error);
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('[CoordinateField] Failed to convert DD to display', {
-        error,
-        value,
-        format,
-      });
-    }
+    logger.withError(error).error('Failed to convert DD to display', {
+      value: String(value),
+      format: String(format),
+    } as any);
     return null;
   }
 }
@@ -644,13 +649,10 @@ export function convertDisplaySegmentsToDD(
       lon: LON,
     };
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('[CoordinateField] Failed to convert display to DD', {
-        error,
-        segments,
-        format,
-      });
-    }
+    logger.withError(error).error('Failed to convert display to DD', {
+      segments: JSON.stringify(segments),
+      format: String(format),
+    } as any);
     return null;
   }
 }
@@ -812,12 +814,9 @@ function convertToFormat(
     }
 
     // Log other errors in development
-    if (process.env.NODE_ENV !== 'production') {
-      console.error(`[CoordinateField] Failed to convert to ${format}`, {
-        error,
-        value,
-      });
-    }
+    logger.withError(error).error(`Failed to convert to ${format}`, {
+      value: JSON.stringify(value),
+    } as any);
     return {
       value: COORDINATE_ERROR_MESSAGES.CONVERSION_FAILED,
       isValid: false,
@@ -884,12 +883,9 @@ export function getAllCoordinateFormats(
 
     return result;
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error('[CoordinateField] Failed to get all coordinate formats', {
-        error,
-        value: validValue,
-      });
-    }
+    logger.withError(error).error('Failed to get all coordinate formats', {
+      value: JSON.stringify(validValue),
+    } as any);
     return invalidResult;
   }
 }
@@ -1006,13 +1002,10 @@ export function parseCoordinatePaste(
       }
     } catch (error) {
       // Log parsing errors in development for debugging
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn(`[CoordinateField] Failed to parse as ${format}:`, {
-          error,
-          pastedText: pastedText.trim(),
-          format,
-        });
-      }
+      logger.withError(error).warn(`Failed to parse as ${format}`, {
+        pastedText: pastedText.trim(),
+        format: String(format),
+      } as any);
       // Continue trying other parsers
     }
   }
