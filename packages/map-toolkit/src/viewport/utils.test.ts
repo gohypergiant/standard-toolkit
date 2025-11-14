@@ -75,7 +75,7 @@ describe('getViewportSize', () => {
     // Should calculate the short distance across the dateline (~20 degrees)
     // not the long way around (~340 degrees)
     expect(result).not.toBe('-- x -- NM');
-    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''));
+    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''), 10);
     // Width should be roughly 20 degrees at 50°N (~700-800 NM)
     // Not 340 degrees (~18,000+ NM)
     expect(width).toBeLessThan(2000);
@@ -113,5 +113,49 @@ describe('getViewportSize', () => {
       unit: 'nm',
     });
     expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
+  });
+
+  it('detects multiple world copies at low zoom with narrow bounds', () => {
+    const result = getViewportSize({
+      bounds: [-303.5, -59.5, -267.7, 51.2], // ~36° span (normalized)
+      unit: 'nm',
+      zoom: 1.78, // Very low zoom
+    });
+    // Should return Earth's circumference for width
+    expect(result).toContain('21,639');
+  });
+
+  it('uses proportional calculation for large longitude spans', () => {
+    const result = getViewportSize({
+      bounds: [-127.1, -23.4, 127.7, 67.7], // ~255° span
+      unit: 'nm',
+      zoom: 2.3,
+    });
+    // Should use proportional calculation (255/360 * 21639 ≈ 15,328 NM)
+    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''), 10);
+    expect(width).toBeGreaterThan(15000);
+    expect(width).toBeLessThan(16000);
+  });
+
+  it('uses great circle distance for normal zoom levels', () => {
+    const result = getViewportSize({
+      bounds: [-82, 22, -71, 52],
+      unit: 'nm',
+      zoom: 5, // Normal zoom
+    });
+    // Should use standard great circle distance
+    expect(result).toBe('612 x 1,801 NM');
+  });
+
+  it('caps width at Earth circumference for very large spans', () => {
+    const result = getViewportSize({
+      bounds: [-179, 0, 179, 10], // ~358° span
+      unit: 'nm',
+      zoom: 3,
+    });
+    // Should be capped at Earth's circumference (or very close to it)
+    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''), 10);
+    expect(width).toBeGreaterThan(21000);
+    expect(width).toBeLessThanOrEqual(21639);
   });
 });

@@ -19,6 +19,7 @@ export type GetViewportSizeArgs = {
   bounds?: Bounds;
   unit?: SupportedDistanceUnit;
   formatter?: Intl.NumberFormat;
+  zoom?: number;
 };
 
 export type GeoCoordinate = [longitude: number, latitude: number];

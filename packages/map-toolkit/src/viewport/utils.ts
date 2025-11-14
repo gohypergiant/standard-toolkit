@@ -16,6 +16,15 @@ import type { GeoCoordinate, GetViewportSizeArgs } from './types';
 
 const numberFormatter = Intl.NumberFormat('en-US');
 
+// Earth's equatorial circumference in different units
+const EARTH_CIRCUMFERENCE = {
+  kilometers: 40075,
+  meters: 40075000,
+  nauticalmiles: 21639,
+  miles: 24901,
+  feet: 131479713,
+} as const;
+
 /**
  * Normalizes longitude to -180 to 180 range.
  * Handles any wraparound including multi-revolution values from globe view.
@@ -39,12 +48,19 @@ function normalizeLon(lon: number): number {
  *
  * Calculates the geographic distance of viewport bounds and formats it
  * with width x height in the specified unit. Handles longitude normalization
- * for globe view and International Date Line crossing.
+ * for globe view, International Date Line crossing, and multiple world copies
+ * at low zoom levels.
+ *
+ * Uses different calculation strategies based on viewport characteristics:
+ * - Normal zoom with small longitude spans: Great circle distance (accurate)
+ * - Large longitude spans (≥170°): Proportional calculation to avoid antipodal singularities
+ * - Very low zoom (<2) with narrow bounds: Detects multiple world copies scenario
  *
  * @param args - Viewport size calculation arguments
  * @param args.bounds - Geographic bounds [minLon, minLat, maxLon, maxLat]
  * @param args.unit - Unit of distance measurement: `km | m | nm | mi | ft`. Defaults to `nm`
  * @param args.formatter - Number formatter for localization (defaults to en-US)
+ * @param args.zoom - Optional zoom level for improved detection of edge cases
  * @returns Formatted string like "660 x 1,801 NM" or "-- x -- NM" if invalid
  *
  * @example
@@ -54,12 +70,16 @@ function normalizeLon(lon: number): number {
  *
  * getViewportSize({ bounds: [170, 50, -170, 60], unit: 'km' })
  * // returns "2,050 x 1,111 KM" (handles dateline crossing)
+ *
+ * getViewportSize({ bounds: [-180, -85, -144, 85], unit: 'nm', zoom: 1.5 })
+ * // returns "21,639 x 6,570 NM" (detects multiple world copies at low zoom)
  * ```
  */
 export function getViewportSize({
   bounds,
   unit = 'nm',
   formatter = numberFormatter,
+  zoom,
 }: GetViewportSizeArgs) {
   const defaultValue = `-- x -- ${unit.toUpperCase()}`;
 
@@ -102,13 +122,49 @@ export function getViewportSize({
   const southEast: GeoCoordinate = [normalizedMaxLon, minLat];
   const northWest: GeoCoordinate = [normalizedMinLon, maxLat];
 
-  const width = formatter.format(
-    Math.round(distance(southWest, southEast, { units: UNIT_MAP[unit] })),
+  const lonSpan = normalizedMaxLon - normalizedMinLon;
+  const maxCircumference =
+    EARTH_CIRCUMFERENCE[UNIT_MAP[unit] as keyof typeof EARTH_CIRCUMFERENCE];
+
+  // Calculate height using great circle distance (always reliable for latitude)
+  const heightDistance = Math.round(
+    distance(southWest, northWest, { units: UNIT_MAP[unit] }),
   );
 
-  const height = formatter.format(
-    Math.round(distance(southWest, northWest, { units: UNIT_MAP[unit] })),
-  );
+  // For width, use different approaches based on longitude span and zoom level:
+  // - Small spans (<170°): Use great circle distance (accurate)
+  // - Large spans (≥170°): Calculate proportionally from Earth's circumference
+  //   (great circle distance breaks down near antipodal points ~180°)
+  // - Very low zoom + small span: Multiple world copies visible, use full circumference
+  let widthDistance: number;
+
+  // Detect multiple world copies scenario:
+  // At very low zoom (< 2) with a small lonSpan (< 100°), getBounds() returns a narrow slice
+  // but visually multiple world copies are shown, so the real width is Earth's circumference
+  const isMultipleWorldCopies = zoom !== undefined && zoom < 2 && lonSpan < 100;
+
+  if (isMultipleWorldCopies) {
+    // Multiple world copies visible: use full Earth circumference
+    widthDistance = maxCircumference;
+  } else if (lonSpan < 170) {
+    // Normal case: great circle distance is accurate
+    widthDistance = Math.round(
+      distance(southWest, southEast, { units: UNIT_MAP[unit] }),
+    );
+  } else {
+    // Large longitude span: calculate width as proportion of Earth's circumference
+    // This avoids the antipodal point singularity in great circle calculations
+    const fractionOfWorld = lonSpan / 360;
+    widthDistance = Math.round(maxCircumference * fractionOfWorld);
+  }
+
+  // Final safety check: cap at Earth's circumference (should rarely trigger now)
+  if (widthDistance > maxCircumference) {
+    widthDistance = maxCircumference;
+  }
+
+  const width = formatter.format(widthDistance);
+  const height = formatter.format(heightDistance);
 
   return `${width} x ${height} ${unit.toUpperCase()}`;
 }

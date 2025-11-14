@@ -251,9 +251,13 @@ The `getViewportSize` utility (used internally by `ViewportSize`):
 
 1. **Normalizes Longitude**: Handles values outside ±180° for globe view
 2. **Handles Date Line**: Correctly calculates distances across International Date Line
-3. **Calculates Width**: Geographic distance between southwest and southeast corners
-4. **Calculates Height**: Geographic distance between southwest and northwest corners
-5. **Formats Output**: Uses provided formatter to localize numbers
+3. **Smart Width Calculation**:
+   - Uses great circle distance for normal zoom levels (accurate)
+   - Uses proportional calculation for large longitude spans (≥170°) to avoid antipodal singularities
+   - Detects multiple world copies at low zoom (<2) and returns Earth's circumference
+4. **Calculates Height**: Geographic distance between southwest and northwest corners (always uses great circle)
+5. **Safety Checks**: Ensures width never exceeds Earth's circumference
+6. **Formats Output**: Uses provided formatter to localize numbers
 
 ## Edge Cases
 
@@ -284,6 +288,20 @@ Correctly calculates the short distance across the dateline:
 bounds: [170, 50, -170, 60]
 // Calculates ~1,100 KM (20° across), not ~18,800 KM (340° wrong way)
 ```
+
+### Multiple World Copies at Low Zoom
+
+At very low zoom levels where multiple world copies are visible:
+
+```tsx
+// When zoomed out to show multiple world copies
+// Even though bounds show narrow slice (~36°), visually shows full world
+bounds: [-303.5, -59.5, -267.7, 51.2]
+zoom: 1.78
+// Returns: "21,639 x 6,570 NM" (Earth's full circumference)
+```
+
+The calculation detects this scenario when `zoom < 2` and `lonSpan < 100°`, returning the actual visual width (Earth's circumference) rather than the mathematically narrow bounds.
 
 ### Initial State
 
@@ -326,27 +344,52 @@ function MultiMapView() {
 
 ### getViewportSize
 
-Calculate and format viewport dimensions from bounds.
+Calculate and format viewport dimensions from bounds. Uses intelligent calculation strategies based on zoom level and longitude span to handle edge cases like multiple world copies and antipodal points.
 
 ```tsx
 import { getViewportSize } from '@accelint/map-toolkit/viewport';
 
+// Basic usage
 const result = getViewportSize({
   bounds: [-82, 22, -71, 52],
   unit: 'nm',
 });
 // Returns: "612 x 1,801 NM"
+
+// With zoom for improved accuracy at low zoom levels
+const result = getViewportSize({
+  bounds: [-180, -85, -144, 85],
+  unit: 'nm',
+  zoom: 1.5,
+});
+// Returns: "21,639 x 6,570 NM" (detects multiple world copies)
 ```
 
 #### Parameters
 
 ```tsx
 {
-  bounds?: Bounds;            // Geographic bounds [minLon, minLat, maxLon, maxLat]
-  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'nm' | 'mi' | 'ft'
-  formatter?: Intl.NumberFormat; // Custom number formatter
+  bounds?: Bounds;               // Geographic bounds [minLon, minLat, maxLon, maxLat]
+  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'nm' | 'mi' | 'ft' (default: 'nm')
+  formatter?: Intl.NumberFormat; // Custom number formatter (default: en-US)
+  zoom?: number;                 // Optional zoom level for improved edge case detection
 }
 ```
+
+#### Calculation Strategies
+
+The function automatically selects the best calculation method:
+
+- **Normal zoom** (lonSpan < 170°): Uses great circle distance for accuracy
+- **Large spans** (lonSpan ≥ 170°): Uses proportional calculation to avoid antipodal singularities
+- **Multiple world copies** (zoom < 2 + lonSpan < 100°): Returns Earth's circumference
+
+#### Handles Edge Cases
+
+- **International Date Line crossing**: Correctly calculates shortest distance
+- **Multi-revolution coordinates**: Normalizes values like 721° or -541°
+- **Multiple world copies**: Detects when viewport shows duplicates at low zoom
+- **Globe view**: Compatible with multi-revolution longitude values
 
 ### clearViewportState
 

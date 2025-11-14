@@ -50,7 +50,7 @@ export function ViewportSize({
   unit = 'nm',
   ...rest
 }: ViewportSizeProps) {
-  const { bounds } = useViewportState({ instanceId });
+  const { bounds, zoom } = useViewportState({ instanceId });
 
-  return <span {...rest}>{getViewportSize({ bounds, unit })}</span>;
+  return <span {...rest}>{getViewportSize({ bounds, unit, zoom })}</span>;
 }
