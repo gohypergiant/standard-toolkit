@@ -26,22 +26,22 @@
 
     @variant placement-top {
       @apply -translate-y-1/2;
-      top: attr(data-offset-y_px,0px);
+      top: attr(data-offset-y px,0px);
     }
 
     @variant placement-right {
       @apply translate-x-1/2;
-      right: attr(data-offset-x_px,0px);
+      right: attr(data-offset-x px,0px);
     }
 
     @variant placement-bottom {
       @apply translate-y-1/2;
-      bottom: attr(data-offset-y_px,0px);
+      bottom: attr(data-offset-y px,0px);
     }
 
     @variant placement-left {
       @apply -translate-x-1/2;
-      left: attr(data-offset-x_px,0px);
+      left: attr(data-offset-x px,0px);
     }
 
     @variant color-info {
