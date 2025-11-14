@@ -57,6 +57,7 @@ import {
   COORDINATE_SYSTEMS,
   type CoordinateSystem,
 } from './types';
+import { calculateMaxControlWidth } from './width-utils';
 import type { CoordinateFieldProps } from './types';
 
 const {
@@ -214,35 +215,15 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
 
   // Calculate the maximum width needed for the control container
   // This keeps the outlined container at a fixed width while segments animate
-  const maxControlWidth = useMemo(() => {
-    // Sum all editable segment max widths with their padding
-    const segmentWidth = state.editableSegmentConfigs.reduce((sum, config) => {
-      const maxLen = config.maxLength || 0;
-      const padding = config.pad ?? 0.5;
-      return sum + maxLen + padding;
-    }, 0);
-
-    // Calculate width of literal characters (colons, spaces, etc.)
-    const literalWidth = state.segmentConfigs
-      .filter((c) => c.type === 'literal')
-      .reduce((sum, c) => sum + (c.value?.length || 0), 0);
-
-    // Add gap spacing between segments (0.5rem = ~0.5ch per gap)
-    // Number of gaps = number of segments - 1
-    const gapCount = state.segmentConfigs.length - 1;
-    const gapWidth = gapCount * 0.5;
-
-    // Add container padding (px-s = 0.5rem on each side = ~1ch total)
-    const paddingWidth = 2;
-
-    // Add format button width (icon button is roughly 2.5-3ch)
-    const buttonWidth = showFormatButton ? 3.5 : 0;
-
-    // Add gap between input and button (gap-m = 1rem = ~1ch)
-    const inputButtonGap = showFormatButton ? 1.5 : 0;
-
-    return `${segmentWidth + literalWidth + gapWidth + paddingWidth + buttonWidth + inputButtonGap}ch`;
-  }, [state.editableSegmentConfigs, state.segmentConfigs, showFormatButton]);
+  const maxControlWidth = useMemo(
+    () =>
+      calculateMaxControlWidth(
+        state.editableSegmentConfigs,
+        state.segmentConfigs,
+        showFormatButton,
+      ),
+    [state.editableSegmentConfigs, state.segmentConfigs, showFormatButton],
+  );
 
   return (
     <Provider
