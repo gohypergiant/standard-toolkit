@@ -18,13 +18,13 @@
     grid-template-areas: 'content';
 
     @variant size-medium {
-      @apply size-medium:text-header-m;
+      @apply text-header-m;
       width: 32px;
       height: 32px;
     }
 
     @variant size-small {
-      @apply size-xl size-small:text-header-xs;
+      @apply size-xl text-header-xs;
     }
   }
 
