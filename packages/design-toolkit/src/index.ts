@@ -169,6 +169,7 @@ export { DialogFooter } from './components/dialog/footer';
 export { Dialog } from './components/dialog';
 export { DialogStyles } from './components/dialog/styles';
 export { DialogTitle } from './components/dialog/title';
+export { DialogTrigger } from './components/dialog/trigger';
 export type {
   DialogProps,
   DialogTriggerProps,
@@ -333,6 +334,7 @@ export { MenuSection } from './components/menu/section';
 export { MenuSeparator } from './components/menu/separator';
 export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export { MenuSubmenu } from './components/menu/submenu';
+export { MenuTrigger } from './components/menu/trigger';
 export type {
   MenuItemProps,
   MenuProps,

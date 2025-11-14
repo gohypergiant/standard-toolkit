@@ -22,4 +22,16 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'esnext',
+      supported: {
+        'class-field': true,
+        'class-static-field': true,
+      },
+    },
+  },
+  build: {
+    target: 'esnext',
+  },
 });

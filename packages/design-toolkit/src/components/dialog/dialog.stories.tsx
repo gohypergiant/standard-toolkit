@@ -17,7 +17,7 @@ import { DialogFooter } from './footer';
 import { Dialog } from './index';
 import { DialogTitle } from './title';
 import { DialogTrigger } from './trigger';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Dialog',

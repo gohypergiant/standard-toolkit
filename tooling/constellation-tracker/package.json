@@ -59,7 +59,7 @@
     "@accelint/vitest-config": "workspace:*",
     "@types/node": "^24.9.0",
     "tsup": "8.5.0",
-    "vitest": "^2.1.9"
+    "vitest": "^4.0.8"
   },
   "bin": {
     "constellation-tracker": "./dist/main.js"

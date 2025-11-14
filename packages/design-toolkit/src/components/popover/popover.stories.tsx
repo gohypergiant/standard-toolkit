@@ -20,7 +20,7 @@ import { PopoverContent } from './content';
 import { PopoverFooter } from './footer';
 import { PopoverTitle } from './title';
 import { PopoverTrigger } from './trigger';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * The `<Popover>` component is a direct wrapper around the `Popover` component from

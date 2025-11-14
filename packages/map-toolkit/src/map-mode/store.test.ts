@@ -12,11 +12,11 @@
 
 import { Broadcast } from '@accelint/bus';
 import { type UniqueId, uuid } from '@accelint/core';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   mockBroadcastChannel,
   resetMockBroadcastChannel,
-} from 'vitest-broadcast-channel-mock';
+} from '@accelint/vitest-config/mocks/broadcast-channel';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapModeEvents } from './events';
 import {
   destroyStore,

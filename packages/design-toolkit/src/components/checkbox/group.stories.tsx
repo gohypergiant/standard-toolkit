@@ -12,7 +12,7 @@
 
 import { CheckboxGroup } from './group';
 import { Checkbox } from './index';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CheckboxGroupProps } from './types';
 
 type Alias = React.FC<CheckboxGroupProps>;

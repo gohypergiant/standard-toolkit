@@ -12,7 +12,7 @@
 
 import { useState } from 'react';
 import { Pagination } from './index';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { PaginationProps } from './types';
 
 const meta = {

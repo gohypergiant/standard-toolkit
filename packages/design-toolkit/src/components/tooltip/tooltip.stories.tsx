@@ -15,7 +15,7 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { Tooltip } from './';
 import { TooltipTrigger } from './trigger';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Tooltip',

@@ -31,9 +31,9 @@ describe('globalUnbind', () => {
     vi.clearAllMocks();
 
     // Mock window object
-    global.window = {
+    vi.stubGlobal('window', {
       removeEventListener: mockRemoveEventListener,
-    } as any;
+    });
 
     eventStore.getState().setBound(true);
   });

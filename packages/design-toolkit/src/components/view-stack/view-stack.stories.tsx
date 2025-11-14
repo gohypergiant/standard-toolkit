@@ -17,7 +17,7 @@ import { Icon } from '../icon';
 import { ViewStack } from './index';
 import { ViewStackTrigger } from './trigger';
 import { ViewStackView } from './view';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const ids = {
   stack: uuid(),
