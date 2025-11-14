@@ -40,6 +40,7 @@ export interface UseCoordinateFieldStateOptions {
     | Dispatch<SetStateAction<CoordinateValue | null>>
     | ((value: CoordinateValue | null) => void);
   onError?: (message: string, context?: Record<string, unknown>) => void;
+  registerTimeout?: (timeoutId: NodeJS.Timeout) => void;
 }
 
 export interface UseCoordinateFieldStateResult {
@@ -53,6 +54,7 @@ export interface UseCoordinateFieldStateResult {
   setValidationErrors: (errors: string[]) => void;
   effectiveErrorMessage: string | null;
   applyPastedCoordinate: (pastedValue: CoordinateValue) => void;
+  flushPendingValidation: () => void;
 }
 
 export function useCoordinateFieldState({
@@ -61,11 +63,13 @@ export function useCoordinateFieldState({
   format,
   onChange,
   onError,
+  registerTimeout,
 }: UseCoordinateFieldStateOptions): UseCoordinateFieldStateResult {
   const [internalValue, setInternalValue] = useState<CoordinateValue | null>(
     defaultValue || null,
   );
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentValue = value !== undefined ? value : internalValue;
 
@@ -99,6 +103,12 @@ export function useCoordinateFieldState({
 
   const convertValueToSegmentsOrClear = useCallback(
     (valueToConvert: CoordinateValue | null) => {
+      // Clear any pending validation when value changes
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current);
+        validationTimeoutRef.current = null;
+      }
+
       const segments = valueToConvert
         ? convertDDToDisplaySegments(valueToConvert, format)
         : null;
@@ -168,8 +178,25 @@ export function useCoordinateFieldState({
     setSegmentValues(updatedValues);
 
     if (areAllSegmentsFilled(updatedValues)) {
-      validateAndUpdateCoordinate(updatedValues);
+      // Clear any pending validation timeout
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current);
+      }
+
+      // Debounce validation by 400ms when all segments are full
+      const timeoutId = setTimeout(() => {
+        validateAndUpdateCoordinate(updatedValues);
+        validationTimeoutRef.current = null;
+      }, 400);
+
+      validationTimeoutRef.current = timeoutId;
+      registerTimeout?.(timeoutId);
     } else {
+      // Clear any pending validation when segments become incomplete
+      if (validationTimeoutRef.current) {
+        clearTimeout(validationTimeoutRef.current);
+        validationTimeoutRef.current = null;
+      }
       setValidationErrors([]);
       if (currentValue !== null) {
         handleChange(null);
@@ -178,12 +205,30 @@ export function useCoordinateFieldState({
   };
 
   const applyPastedCoordinate = (pastedValue: CoordinateValue) => {
+    // Clear any pending validation when applying pasted coordinate
+    if (validationTimeoutRef.current) {
+      clearTimeout(validationTimeoutRef.current);
+      validationTimeoutRef.current = null;
+    }
+
     const segments = convertDDToDisplaySegments(pastedValue, format);
 
     if (segments) {
       setSegmentValues(segments);
       setValidationErrors([]);
       handleChange(pastedValue);
+    }
+  };
+
+  const flushPendingValidation = () => {
+    if (validationTimeoutRef.current) {
+      clearTimeout(validationTimeoutRef.current);
+      validationTimeoutRef.current = null;
+
+      // Immediately validate if all segments are filled
+      if (areAllSegmentsFilled(segmentValues)) {
+        validateAndUpdateCoordinate(segmentValues);
+      }
     }
   };
 
@@ -203,5 +248,6 @@ export function useCoordinateFieldState({
     setValidationErrors,
     effectiveErrorMessage,
     applyPastedCoordinate,
+    flushPendingValidation,
   };
 }

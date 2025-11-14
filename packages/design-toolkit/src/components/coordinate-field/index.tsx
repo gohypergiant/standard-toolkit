@@ -296,7 +296,10 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                     state.handleSegmentChange(editableIndex, newValue)
                   }
                   onFocus={() => focus.setFocusedSegmentIndex(editableIndex)}
-                  onBlur={() => focus.setFocusedSegmentIndex(-1)}
+                  onBlur={() => {
+                    focus.setFocusedSegmentIndex(-1);
+                    state.flushPendingValidation();
+                  }}
                   onKeyDown={(e) =>
                     focus.handleSegmentKeyDown(editableIndex, e)
                   }

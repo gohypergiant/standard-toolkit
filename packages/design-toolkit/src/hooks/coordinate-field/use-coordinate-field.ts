@@ -97,6 +97,7 @@ export function useCoordinateField(
     format,
     onChange,
     onError,
+    registerTimeout,
   });
 
   const focus = useCoordinateFocus({
