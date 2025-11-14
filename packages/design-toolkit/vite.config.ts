@@ -12,8 +12,21 @@
 
 import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
+import stringHash from 'string-hash';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
+
+function generateScopedNameDefault(
+  name: string,
+  _filename: string,
+  css: string,
+) {
+  const i = css.indexOf(`.${name}`);
+  const lineNumber = css.substr(0, i).split(/[\r\n]/).length;
+  const hash = stringHash(css).toString(36).substr(0, 5);
+
+  return `_${name}_${hash}_${lineNumber}`;
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -21,6 +34,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+    },
+  },
+  css: {
+    modules: {
+      generateScopedName: (name, filename, css) =>
+        /group(-[a-z]+)?\\\/[a-z-]+/.test(name)
+          ? name.replace(/\\/, '')
+          : generateScopedNameDefault(name, filename, css),
     },
   },
 });

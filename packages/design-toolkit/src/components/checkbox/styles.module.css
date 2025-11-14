@@ -16,11 +16,11 @@
   .group {
     @apply flex gap-xs;
 
-    @variant orientation-horizontal{
+    @variant orientation-horizontal {
       @apply flex-wrap;
     }
 
-    @variant orientation-vertical{
+    @variant orientation-vertical {
       @apply flex-col;
     }
 
