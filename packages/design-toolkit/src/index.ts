@@ -51,12 +51,6 @@ export {
 } from './components/button/context';
 export { Button } from './components/button';
 export { LinkButton } from './components/button/link';
-export {
-  ButtonStyles,
-  ButtonStylesDefaults,
-  LinkButtonStyles,
-  ToggleButtonStyles,
-} from './components/button/styles';
 export { ToggleButton } from './components/button/toggle';
 export type {
   ButtonProps,
