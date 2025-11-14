@@ -16,17 +16,18 @@ import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
+import { useEffectEvent } from '@/react/ponyfill';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
-import type { PickingInfo } from '@deck.gl/core';
+import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { MapClickEvent, MapHoverEvent } from './types';
+import type { MapClickEvent, MapHoverEvent, MapViewportEvent } from './types';
 
 /**
  * Props for the BaseMap component.
@@ -121,12 +122,17 @@ export type BaseMapProps = DeckglProps & {
  * ```
  */
 export function BaseMap({
+  id,
   className,
   children,
-  id,
+  controller = true,
+  interleaved = true,
+  parameters = {},
+  useDevicePixels = false,
+  widgets: widgetsProp = [],
   onClick,
   onHover,
-  parameters,
+  onViewStateChange,
   ...rest
 }: BaseMapProps) {
   const deckglInstance = useDeckgl();
@@ -145,6 +151,7 @@ export function BaseMap({
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
+      attributionControl: { compact: true },
     }),
     [container],
   );
@@ -154,8 +161,9 @@ export function BaseMap({
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+  const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
 
-  const handleMapClick = useCallback(
+  const handleClick = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
@@ -183,7 +191,7 @@ export function BaseMap({
     [emitClick, id, onClick],
   );
 
-  const handleMapHover = useCallback(
+  const handleHover = useCallback(
     (info: PickingInfo, event: MjolnirPointerEvent) => {
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
@@ -209,16 +217,60 @@ export function BaseMap({
     [emitHover, id, onHover],
   );
 
+  const handleViewStateChange = useEffectEvent(
+    (params: ViewStateChangeParameters) => {
+      onViewStateChange?.(params);
+
+      const {
+        viewId,
+        viewState: { latitude, longitude, zoom },
+      } = params;
+
+      // @ts-expect-error squirrelly deckglInstance typing
+      const viewport = deckglInstance._deck
+        .getViewports()
+        // @ts-expect-error squirrelly deckglInstance typing
+        ?.find((vp) => vp.id === viewId);
+
+      emitViewport({
+        id,
+        bounds: viewport?.getBounds(),
+        latitude,
+        longitude,
+        zoom,
+      });
+    },
+  );
+
+  const handleLoad = useEffectEvent(() => {
+    //--- force update viewport state once all viewports initialized ---
+    // @ts-expect-error squirrelly deckglInstance typing
+    deckglInstance._deck.getViewports().forEach((vp) => {
+      handleViewStateChange({
+        viewId: vp.id,
+        viewState: {
+          latitude: vp.latitude,
+          longitude: vp.longitude,
+          zoom: vp.zoom,
+          id: vp.id,
+          bounds: vp.getBounds(),
+        },
+      } as ViewStateChangeParameters);
+    });
+  });
+
   return (
     <div id={container} className={className}>
       <MapProvider id={id}>
         <Deckgl
           {...rest}
-          controller
-          interleaved
-          useDevicePixels={false}
-          onHover={handleMapHover}
-          onClick={handleMapClick}
+          controller={controller}
+          interleaved={interleaved}
+          useDevicePixels={useDevicePixels}
+          onClick={handleClick}
+          onHover={handleHover}
+          onLoad={handleLoad}
+          onViewStateChange={handleViewStateChange}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
           parameters={{ ...PARAMETERS, ...parameters }}

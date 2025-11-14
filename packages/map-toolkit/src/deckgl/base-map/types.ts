@@ -78,6 +78,21 @@ export type MapHoverPayload = {
   id: UniqueId;
 };
 
+export type Bounds = [
+  minLon: number,
+  minLat: number,
+  maxLon: number,
+  maxLat: number,
+];
+
+export type MapViewportPayload = {
+  bounds: Bounds;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  id: UniqueId;
+};
+
 /**
  * Type for map click events in the event bus.
  * Combines the event name with the click payload.
@@ -89,8 +104,9 @@ export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
  * Combines the event name with the hover payload.
  */
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
+export type MapViewportEvent = Payload<
+  typeof MapEvents.viewport,
+  MapViewportPayload
+>;
 
-/**
- * Union type of all map event types that can be emitted through the event bus.
- */
-export type MapEventType = MapClickEvent | MapHoverEvent;
+export type MapEventType = MapClickEvent | MapHoverEvent | MapViewportEvent;

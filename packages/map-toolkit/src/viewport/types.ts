@@ -10,10 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-export const MapEventsNamespace = 'map';
+import type { Bounds } from '../deckgl/base-map/types';
+import type { UNIT_MAP } from './constants';
 
-export const MapEvents = {
-  click: `${MapEventsNamespace}:click`,
-  hover: `${MapEventsNamespace}:hover`,
-  viewport: `${MapEventsNamespace}:viewport`,
-} as const;
+export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
+
+export type GetViewportSizeArgs = {
+  bounds?: Bounds;
+  unit?: SupportedDistanceUnit;
+  formatter?: Intl.NumberFormat;
+};
+
+export type GeoCoordinate = [longitude: number, latitude: number];
