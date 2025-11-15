@@ -16,10 +16,6 @@
   .badge {
     @apply inline-flex items-center justify-center rounded-full px-s py-xs uppercase;
 
-    @variant empty {
-      @apply before:content-[attr(data-content)];
-    }
-
     @variant size-medium {
       @apply text-header-s;
     }
