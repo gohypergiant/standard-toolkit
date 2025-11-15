@@ -10,24 +10,43 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const DetailsListStylesDefaults = {
-  align: 'justify',
-} as const;
+@layer components.l1 {
+  .list {
+    @apply grid gap-x-m font-display text-body-m;
+    grid-template-columns: auto 1fr;
+  }
 
-export const DetailsListStyles = tv({
-  slots: {
-    list: 'grid grid-cols-[auto_1fr] gap-x-m font-display text-body-m',
-    label: 'fg-primary-muted col-start-1',
-    value: 'fg-primary-bold col-start-2',
-  },
-  variants: {
-    align: {
-      left: { label: 'text-left', value: 'text-left' },
-      center: { label: 'text-right', value: 'text-left' },
-      justify: { label: 'text-left', value: 'text-right' },
-    },
-  },
-  defaultVariants: DetailsListStylesDefaults,
-});
+  .label {
+    @apply fg-primary-muted col-start-1;
+
+    &.left {
+      @apply text-left;
+    }
+
+    &.center {
+      @apply text-right;
+    }
+
+    &.justify {
+      @apply text-left;
+    }
+  }
+
+  .value {
+    @apply fg-primary-bold col-start-2;
+
+    &.left {
+      @apply text-left;
+    }
+
+    &.center {
+      @apply text-left;
+    }
+
+    &.justify {
+      @apply text-right;
+    }
+  }
+}

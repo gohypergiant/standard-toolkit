@@ -110,10 +110,6 @@ export {
 } from './components/details-list/context';
 export { DetailsList } from './components/details-list';
 export { DetailsListLabel } from './components/details-list/label';
-export {
-  DetailsListStyles,
-  DetailsListStylesDefaults,
-} from './components/details-list/styles';
 export type {
   DetailsListLabelProps,
   DetailsListProps,

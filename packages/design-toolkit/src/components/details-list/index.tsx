@@ -12,16 +12,15 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   DEFAULT_SLOT,
   TextContext,
   useContextProps,
 } from 'react-aria-components';
 import { DetailsListContext } from './context';
-import { DetailsListStyles, DetailsListStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { DetailsListProps } from './types';
-
-const { list, label, value } = DetailsListStyles();
 
 /**
  * A semantic details list component for displaying metadata in key-value pairs.
@@ -55,24 +54,23 @@ const { list, label, value } = DetailsListStyles();
 export function DetailsList({ ref, ...props }: DetailsListProps) {
   [props, ref] = useContextProps(props, ref ?? null, DetailsListContext);
 
-  const {
-    children,
-    classNames,
-    align = DetailsListStylesDefaults.align,
-    ...rest
-  } = props;
+  const { children, classNames, align = 'justify', ...rest } = props;
 
   return (
     <TextContext
       value={{
         slots: {
           [DEFAULT_SLOT]: {},
-          label: { className: label({ className: classNames?.label, align }) },
-          value: { className: value({ className: classNames?.value, align }) },
+          label: {
+            className: clsx(styles.label, styles[align], classNames?.label),
+          },
+          value: {
+            className: clsx(styles.value, styles[align], classNames?.value),
+          },
         },
       }}
     >
-      <dl {...rest} className={list({ className: classNames?.list, align })}>
+      <dl {...rest} className={clsx(styles.list, classNames?.list)}>
         {children}
       </dl>
     </TextContext>
