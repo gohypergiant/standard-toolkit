@@ -91,14 +91,7 @@ export {
   ClassificationBannerProvider,
 } from './components/classification-banner/context';
 export { ClassificationBanner } from './components/classification-banner';
-export {
-  ClassificationBannerStyles,
-  ClassificationBannerStylesDefaults,
-} from './components/classification-banner/styles';
-export type {
-  ClassificationBannerProps,
-  ClassificationBannerStyleVariants,
-} from './components/classification-banner/types';
+export type { ClassificationBannerProps } from './components/classification-banner/types';
 export { Clock } from './components/clock';
 export type { ClockProps } from './components/clock/types';
 export { ColorPicker } from './components/color-picker';
