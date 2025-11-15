@@ -95,7 +95,6 @@ export type { ClassificationBannerProps } from './components/classification-bann
 export { Clock } from './components/clock';
 export type { ClockProps } from './components/clock/types';
 export { ColorPicker } from './components/color-picker';
-export { ColorPickerStyles } from './components/color-picker/styles';
 export type { ColorPickerProps } from './components/color-picker/types';
 export {
   ComboBoxFieldContext,

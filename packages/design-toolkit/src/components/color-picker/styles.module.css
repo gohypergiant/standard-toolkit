@@ -10,18 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const ColorPickerStyles = tv({
-  slots: {
-    picker: 'flex flex-wrap gap-s',
-    item: [
-      'w-fit cursor-pointer outline outline-transparent outline-offset-1',
-      'focus-visible:outline-interactive-hover',
-      'hover:outline-interactive-hover',
-      'pressed:outline-interactive-pressed',
-      'selected:cursor-default selected:outline-accent-primary-bold',
-    ],
-    swatch: 'size-l',
-  },
-});
+@layer components.l1 {
+  .picker {
+    @apply flex flex-wrap gap-s;
+  }
+
+  .item {
+    @apply w-fit cursor-pointer outline outline-transparent outline-offset-1;
+
+    @variant hover {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-visible {
+      @apply outline-interactive-hover;
+    }
+
+    @variant pressed {
+      @apply outline-interactive-pressed;
+    }
+
+    @variant selected {
+      @apply cursor-default outline-accent-primary-bold;
+    }
+  }
+
+  .swatch {
+    @apply size-l;
+  }
+}
