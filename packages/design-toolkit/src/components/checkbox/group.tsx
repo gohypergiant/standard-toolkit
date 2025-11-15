@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   CheckboxGroup as AriaCheckboxGroup,
   composeRenderProps,
@@ -19,10 +20,8 @@ import {
 } from 'react-aria-components';
 import { Label } from '../label';
 import { CheckboxGroupContext } from './context';
-import { CheckboxStyles } from './styles';
+import styles from './styles.module.css';
 import type { CheckboxGroupProps } from './types';
-
-const { group, groupLabel } = CheckboxStyles();
 
 export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxGroupContext);
@@ -40,7 +39,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.group, (className) =>
-        group({ className }),
+        clsx('group/checkbox-group', styles.group, className),
       )}
       data-orientation={orientation}
     >
@@ -48,7 +47,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
         <>
           {label && (
             <Label
-              className={groupLabel({ className: classNames?.label })}
+              className={clsx(styles.label, classNames?.label)}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >

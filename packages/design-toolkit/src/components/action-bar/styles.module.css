@@ -10,13 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const BreadcrumbsStyles = tv({
-  slots: {
-    list: 'fg-primary-muted flex items-center gap-s',
-    item: 'group/breadcrumb flex items-center gap-s',
-    link: 'current:fg-accent-primary-bold hover:fg-primary-bold',
-    separator: 'group-current/breadcrumb:hidden',
-  },
-});
+@layer components.l1 {
+  .bar {
+    @apply flex w-fit rounded-medium bg-surface-default shadow-elevation-overlay;
+
+    @variant size-medium {
+      @apply gap-s px-m py-s;
+    }
+
+    @variant size-small {
+      @apply gap-xs px-s py-xs;
+    }
+  }
+}

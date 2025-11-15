@@ -12,11 +12,10 @@
 'use client';
 
 import 'client-only';
-import { DialogStyles } from './styles';
+import clsx from 'clsx';
+import styles from './styles.module.css';
 import type { ComponentProps } from 'react';
 
-const { content } = DialogStyles();
-
 export function DialogContent({ children, className }: ComponentProps<'div'>) {
-  return <div className={content({ className })}>{children}</div>;
+  return <div className={clsx(styles.content, className)}>{children}</div>;
 }

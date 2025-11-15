@@ -12,13 +12,21 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { useContextProps } from 'react-aria-components';
 import { ClassificationBannerContext } from './context';
-import {
-  ClassificationBannerStyles,
-  ClassificationBannerStylesDefaults,
-} from './styles';
+import styles from './styles.module.css';
 import type { ClassificationBannerProps } from './types';
+
+const fallbackContent = {
+  missing: 'Missing',
+  unclassified: 'Unclassified',
+  cui: 'CUI',
+  confidential: 'Confidential',
+  secret: 'Secret',
+  'top-secret': 'Top Secret',
+  'ts-sci': 'Top Secret/SCI',
+} as const;
 
 /**
  * ClassificationBanner - A prominent banner for displaying security classification
@@ -41,22 +49,15 @@ export function ClassificationBanner({
     ClassificationBannerContext,
   );
 
-  const {
-    className,
-    variant = ClassificationBannerStylesDefaults.variant,
-    children,
-    ...rest
-  } = props;
+  const { children, className, variant = 'missing', ...rest } = props;
 
   return (
     <div
       {...rest}
-      className={ClassificationBannerStyles({
-        variant,
-        className,
-      })}
+      ref={ref}
+      className={clsx(styles.banner, styles[variant], className)}
     >
-      {children}
+      {children || fallbackContent[variant]}
     </div>
   );
 }

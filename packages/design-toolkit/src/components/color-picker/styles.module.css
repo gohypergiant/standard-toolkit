@@ -10,19 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const AvatarStyles = tv({
-  slots: {
-    avatar: [
-      `group/avatar grid [grid-template-areas:'content'] rounded-full bg-surface-overlay fg-primary-muted`,
-      'size-medium:size-[32px] size-medium:text-header-m',
-      'size-small:size-xl size-small:text-header-xs',
-    ],
-    image:
-      'size-full overflow-hidden rounded-full object-cover object-center [grid-area:content]',
-    fallback: 'flex size-full items-center justify-center [grid-area:content]',
-    content:
-      'relative flex size-full items-center justify-center [grid-area:content]',
-  },
-});
+@layer components.l1 {
+  .picker {
+    @apply flex flex-wrap gap-s;
+  }
+
+  .item {
+    @apply w-fit cursor-pointer outline outline-transparent outline-offset-1;
+
+    @variant hover {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-visible {
+      @apply outline-interactive-hover;
+    }
+
+    @variant pressed {
+      @apply outline-interactive-pressed;
+    }
+
+    @variant selected {
+      @apply cursor-default outline-accent-primary-bold;
+    }
+  }
+
+  .swatch {
+    @apply size-l;
+  }
+}

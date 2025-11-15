@@ -12,11 +12,10 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { composeRenderProps, DisclosurePanel } from 'react-aria-components';
-import { AccordionStyles } from './styles';
+import styles from './styles.module.css';
 import type { AccordionPanelProps } from './types';
-
-const { panel } = AccordionStyles();
 
 export function AccordionPanel({
   ref,
@@ -29,7 +28,7 @@ export function AccordionPanel({
       {...rest}
       ref={ref}
       className={composeRenderProps(className, (className) =>
-        panel({ className }),
+        clsx(styles.panel, className),
       )}
     >
       {children}

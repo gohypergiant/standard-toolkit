@@ -12,9 +12,9 @@
 
 'use client';
 
-import Calendar from '@accelint/icons/calendar';
-import type { DateValue } from '@internationalized/date';
 import 'client-only';
+import Calendar from '@accelint/icons/calendar';
+import clsx from 'clsx';
 import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,
@@ -25,11 +25,9 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
-import { DateFieldStyles, DateFieldStylesDefaults } from './styles';
+import styles from './styles.module.css';
+import type { DateValue } from '@internationalized/date';
 import type { DateFieldProps } from './types';
-
-const { field, label, control, input, segment, description, error } =
-  DateFieldStyles();
 
 const months = [
   'JAN',
@@ -97,7 +95,7 @@ export function DateField<T extends DateValue>({
   inputProps,
   label: labelProp,
   size = 'medium',
-  shortMonth = DateFieldStylesDefaults.shortMonth,
+  shortMonth = true,
   shouldForceLeadingZeros = true,
   isDisabled,
   isInvalid: isInvalidProp,
@@ -111,7 +109,7 @@ export function DateField<T extends DateValue>({
     <AriaDateField<T>
       {...rest}
       className={composeRenderProps(classNames?.field, (className) =>
-        field({ className, shortMonth }),
+        clsx('group/date-field', styles.field, className),
       )}
       shouldForceLeadingZeros={shouldForceLeadingZeros}
       isDisabled={isDisabled}
@@ -126,16 +124,14 @@ export function DateField<T extends DateValue>({
         <>
           {!isSmall && labelProp && (
             <Label
-              className={label({ className: classNames?.label, shortMonth })}
+              className={clsx(styles.label, classNames?.label)}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >
               {labelProp}
             </Label>
           )}
-          <div
-            className={control({ className: classNames?.control, shortMonth })}
-          >
+          <div className={clsx(styles.control, classNames?.control)}>
             {size === 'medium' && (
               <Icon>
                 <Calendar />
@@ -144,10 +140,7 @@ export function DateField<T extends DateValue>({
             <AriaDateInput
               {...inputProps}
               className={composeRenderProps(classNames?.input, (className) =>
-                input({
-                  className,
-                  shortMonth,
-                }),
+                clsx(styles.input, className),
               )}
             >
               {(segmentProp) => {
@@ -160,7 +153,14 @@ export function DateField<T extends DateValue>({
                   <DateSegment
                     className={composeRenderProps(
                       classNames?.segment,
-                      (className) => segment({ className, shortMonth }),
+                      (className) =>
+                        clsx(
+                          styles.segment,
+                          segmentProp.type === 'month' &&
+                            shortMonth &&
+                            styles.shortMonth,
+                          className,
+                        ),
                     )}
                     segment={segmentProp}
                   >
@@ -188,10 +188,7 @@ export function DateField<T extends DateValue>({
           </div>
           {descriptionProp && (!(isSmall || isInvalidProp) || isDisabled) && (
             <AriaText
-              className={description({
-                className: classNames?.description,
-                shortMonth,
-              })}
+              className={clsx(styles.description, classNames?.description)}
               slot='description'
             >
               {descriptionProp}
@@ -199,7 +196,7 @@ export function DateField<T extends DateValue>({
           )}
           <FieldError
             className={composeRenderProps(classNames?.error, (className) =>
-              error({ className, shortMonth }),
+              clsx(styles.error, className),
             )}
           >
             {errorMessage}

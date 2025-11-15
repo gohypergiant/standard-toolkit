@@ -13,12 +13,11 @@
 
 import 'client-only';
 import { ChevronRight } from '@accelint/icons';
+import clsx from 'clsx';
 import { Breadcrumb, composeRenderProps, Link } from 'react-aria-components';
 import { Icon } from '../icon';
-import { BreadcrumbsStyles } from './styles';
+import styles from './styles.module.css';
 import type { BreadcrumbItemProps } from './types';
-
-const { item, link, separator } = BreadcrumbsStyles();
 
 export function BreadcrumbItem({
   children,
@@ -30,7 +29,7 @@ export function BreadcrumbItem({
     <Breadcrumb
       {...rest}
       className={composeRenderProps(classNames?.item, (className) =>
-        item({ className }),
+        clsx('group/breadcrumb', styles.item, className),
       )}
     >
       {composeRenderProps(linkProps ? null : children, (itemChildren) => (
@@ -39,7 +38,7 @@ export function BreadcrumbItem({
             <Link
               {...linkProps}
               className={composeRenderProps(classNames?.link, (className) =>
-                link({ className }),
+                clsx(styles.link, className),
               )}
             >
               {children}
@@ -49,7 +48,7 @@ export function BreadcrumbItem({
           )}
           <Icon
             aria-hidden='true'
-            className={separator({ className: classNames?.separator })}
+            className={clsx(styles.separator, classNames?.separator)}
           >
             <ChevronRight />
           </Icon>

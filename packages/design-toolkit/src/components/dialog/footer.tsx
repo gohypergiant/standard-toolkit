@@ -12,14 +12,13 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { type ComponentProps, useContext } from 'react';
 import { OverlayTriggerStateContext } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';
 import { ButtonContext } from '../button/context';
 import { DialogContext } from './context';
-import { DialogStyles } from './styles';
-
-const { footer } = DialogStyles();
+import styles from './styles.module.css';
 
 export function DialogFooter({
   children,
@@ -31,11 +30,11 @@ export function DialogFooter({
   const state = useContext(OverlayTriggerStateContext);
 
   return (
-    <footer className={footer({ className })}>
+    <footer className={clsx(styles.footer, className)}>
       <ButtonContext.Provider
         value={{
           size,
-          onPress: state?.close ?? (() => undefined),
+          onPress: state?.close ?? undefined,
         }}
       >
         {children}

@@ -21,10 +21,6 @@ export { AccordionGroup } from './components/accordion/group';
 export { AccordionHeader } from './components/accordion/header';
 export { Accordion } from './components/accordion';
 export { AccordionPanel } from './components/accordion/panel';
-export {
-  AccordionStyles,
-  AccordionStylesDefaults,
-} from './components/accordion/styles';
 export { AccordionTrigger } from './components/accordion/trigger';
 export type {
   AccordionGroupProps,
@@ -35,19 +31,15 @@ export type {
   AccordionTriggerProps,
 } from './components/accordion/types';
 export { ActionBar } from './components/action-bar';
-export { ActionBarStyles } from './components/action-bar/styles';
 export type { ActionBarProps } from './components/action-bar/types';
 export { AvatarContext, AvatarProvider } from './components/avatar/context';
 export { Avatar } from './components/avatar';
-export { AvatarStyles } from './components/avatar/styles';
 export type { AvatarProps } from './components/avatar/types';
 export { BadgeContext, BadgeProvider } from './components/badge/context';
 export { Badge } from './components/badge';
-export { BadgeStyles, BadgeStylesDefaults } from './components/badge/styles';
 export type { BadgeProps } from './components/badge/types';
 export { Breadcrumbs } from './components/breadcrumbs';
 export { BreadcrumbItem } from './components/breadcrumbs/item';
-export { BreadcrumbsStyles } from './components/breadcrumbs/styles';
 export type { BreadcrumbItemProps } from './components/breadcrumbs/types';
 export {
   ButtonContext,
@@ -59,12 +51,6 @@ export {
 } from './components/button/context';
 export { Button } from './components/button';
 export { LinkButton } from './components/button/link';
-export {
-  ButtonStyles,
-  ButtonStylesDefaults,
-  LinkButtonStyles,
-  ToggleButtonStyles,
-} from './components/button/styles';
 export { ToggleButton } from './components/button/toggle';
 export type {
   ButtonProps,
@@ -79,7 +65,6 @@ export {
 } from './components/checkbox/context';
 export { CheckboxGroup } from './components/checkbox/group';
 export { Checkbox } from './components/checkbox';
-export { CheckboxStyles } from './components/checkbox/styles';
 export type {
   CheckboxGroupProps,
   CheckboxProps,
@@ -89,15 +74,7 @@ export { DeletableChip } from './components/chip/deletable';
 export { Chip } from './components/chip';
 export { ChipList, ChipListRenderingContext } from './components/chip/list';
 export { SelectableChip } from './components/chip/selectable';
-export {
-  BaseChipStyles,
-  ChipStyles,
-  ChipStylesDefaults,
-  DeletableChipStyles,
-  SelectableChipStyles,
-} from './components/chip/styles';
 export type {
-  BaseChipProps,
   ChipListProps,
   ChipProps,
   DeletableChipProps,
@@ -108,44 +85,24 @@ export {
   ClassificationBadgeProvider,
 } from './components/classification-badge/context';
 export { ClassificationBadge } from './components/classification-badge';
-export {
-  ClassificationBadgeStyles,
-  ClassificationBadgeStylesDefaults,
-} from './components/classification-badge/styles';
-export type {
-  ClassificationBadgeProps,
-  ClassificationBadgeStyleVariants,
-} from './components/classification-badge/types';
+export type { ClassificationBadgeProps } from './components/classification-badge/types';
 export {
   ClassificationBannerContext,
   ClassificationBannerProvider,
 } from './components/classification-banner/context';
 export { ClassificationBanner } from './components/classification-banner';
-export {
-  ClassificationBannerStyles,
-  ClassificationBannerStylesDefaults,
-} from './components/classification-banner/styles';
-export type {
-  ClassificationBannerProps,
-  ClassificationBannerStyleVariants,
-} from './components/classification-banner/types';
+export type { ClassificationBannerProps } from './components/classification-banner/types';
 export { Clock } from './components/clock';
 export type { ClockProps } from './components/clock/types';
 export { ColorPicker } from './components/color-picker';
-export { ColorPickerStyles } from './components/color-picker/styles';
 export type { ColorPickerProps } from './components/color-picker/types';
 export {
   ComboBoxFieldContext,
   ComboBoxFieldProvider,
 } from './components/combobox-field/context';
 export { ComboBoxField } from './components/combobox-field';
-export { ComboBoxStyles } from './components/combobox-field/styles';
 export type { ComboBoxFieldProps } from './components/combobox-field/types';
 export { DateField } from './components/date-field';
-export {
-  DateFieldStyles,
-  DateFieldStylesDefaults,
-} from './components/date-field/styles';
 export type { DateFieldProps } from './components/date-field/types';
 export {
   DetailsListContext,
@@ -153,10 +110,6 @@ export {
 } from './components/details-list/context';
 export { DetailsList } from './components/details-list';
 export { DetailsListLabel } from './components/details-list/label';
-export {
-  DetailsListStyles,
-  DetailsListStylesDefaults,
-} from './components/details-list/styles';
 export type {
   DetailsListLabelProps,
   DetailsListProps,
@@ -167,7 +120,6 @@ export { DialogContent } from './components/dialog/content';
 export { DialogContext } from './components/dialog/context';
 export { DialogFooter } from './components/dialog/footer';
 export { Dialog } from './components/dialog';
-export { DialogStyles } from './components/dialog/styles';
 export { DialogTitle } from './components/dialog/title';
 export { DialogTrigger } from './components/dialog/trigger';
 export type {

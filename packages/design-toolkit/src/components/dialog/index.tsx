@@ -11,8 +11,8 @@
  */
 'use client';
 
-import { PortalProvider } from '@/providers/portal';
 import 'client-only';
+import clsx from 'clsx';
 import {
   Dialog as AriaDialog,
   composeRenderProps,
@@ -20,11 +20,10 @@ import {
   ModalOverlay,
   useContextProps,
 } from 'react-aria-components';
+import { PortalProvider } from '@/providers/portal';
 import { DialogContext } from './context';
-import { DialogStyles } from './styles';
+import styles from './styles.module.css';
 import type { DialogProps } from './types';
-
-const { overlay, modal, dialog } = DialogStyles();
 
 /**
  * Dialog - A modal dialog component for important content and interactions
@@ -62,16 +61,16 @@ export function Dialog({ ref, ...props }: DialogProps) {
           {...rest}
           ref={ref}
           className={composeRenderProps(classNames?.overlay, (className) =>
-            overlay({ className }),
+            clsx('group/dialog', styles.overlay, className),
           )}
           data-size={size}
         >
           <Modal
             className={composeRenderProps(classNames?.modal, (className) =>
-              modal({ className }),
+              clsx(styles.modal, className),
             )}
           >
-            <AriaDialog className={dialog({ className: classNames?.dialog })}>
+            <AriaDialog className={clsx(styles.dialog, classNames?.dialog)}>
               {children}
             </AriaDialog>
           </Modal>
