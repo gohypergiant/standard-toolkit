@@ -11,15 +11,12 @@
  */
 
 import type { ComponentPropsWithRef } from 'react';
+import type { ClassificationBannerProps } from '../classification-banner/types';
 
-export type ClassificationBadgeProps = ComponentPropsWithRef<'span'> & {
-  size?: 'medium' | 'small';
-  variant?:
-    | 'missing'
-    | 'unclassified'
-    | 'cui'
-    | 'confidential'
-    | 'secret'
-    | 'top-secret'
-    | 'ts-sci';
-};
+export type ClassificationBadgeProps = Pick<
+  ClassificationBannerProps,
+  'variant'
+> &
+  ComponentPropsWithRef<'span'> & {
+    size?: 'medium' | 'small';
+  };

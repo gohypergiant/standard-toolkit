@@ -13,16 +13,8 @@
 @reference '../../index.css';
 
 @layer components.l1 {
-  .badge {
-    @apply inline-flex rounded-full px-s py-xs items-center justify-center font-medium text-header-m uppercase;
-
-    @variant size-medium {
-      @apply text-header-s;
-    }
-
-    @variant size-small {
-      @apply text-header-xs;
-    }
+  .banner {
+    @apply px-s py-xs flex items-center justify-center font-medium text-header-m uppercase;
 
     &.missing {
       @apply fg-critical-bold bg-classification-missing;

@@ -54,10 +54,10 @@ export function ClassificationBadge({
   );
 
   const {
+    children,
     className,
     size = 'medium',
     variant = 'missing',
-    children = fallbackContent[variant],
     ...rest
   } = props;
 
@@ -72,7 +72,7 @@ export function ClassificationBadge({
       )}
       data-size={size}
     >
-      {children}
+      {children || fallbackContent[variant]}
     </span>
   );
 }
