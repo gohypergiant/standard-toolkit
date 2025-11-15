@@ -676,9 +676,11 @@ describe('CoordinateField', () => {
           showFormatButton={true}
         />,
       );
-      screen.getByRole('button', {
-        name: /view coordinate in all formats/i,
-      });
+      expect(
+        screen.getByRole('button', {
+          name: /view coordinate in all formats/i,
+        }),
+      ).toBeInTheDocument();
 
       unmount();
       render(
@@ -689,9 +691,11 @@ describe('CoordinateField', () => {
           showFormatButton={true}
         />,
       );
-      screen.getByRole('button', {
-        name: /view coordinate in all formats/i,
-      });
+      expect(
+        screen.getByRole('button', {
+          name: /view coordinate in all formats/i,
+        }),
+      ).toBeInTheDocument();
     });
 
     it('hides format button when showFormatButton is false for medium size', () => {
@@ -732,9 +736,11 @@ describe('CoordinateField', () => {
           size='medium'
         />,
       );
-      screen.getByRole('button', {
-        name: /view coordinate in all formats/i,
-      });
+      expect(
+        screen.getByRole('button', {
+          name: /view coordinate in all formats/i,
+        }),
+      ).toBeInTheDocument();
 
       unmount();
       render(
@@ -744,9 +750,11 @@ describe('CoordinateField', () => {
           size='small'
         />,
       );
-      screen.getByRole('button', {
-        name: /view coordinate in all formats/i,
-      });
+      expect(
+        screen.getByRole('button', {
+          name: /view coordinate in all formats/i,
+        }),
+      ).toBeInTheDocument();
     });
 
     it('disables format button when no valid coordinate', () => {
