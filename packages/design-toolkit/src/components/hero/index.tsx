@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   Header,
   HeadingContext,
@@ -21,10 +22,8 @@ import {
 } from 'react-aria-components';
 import { IconContext } from '../icon/context';
 import { HeroContext } from './context';
-import { HeroStyles } from './styles';
+import styles from './styles.module.css';
 import type { HeroProps } from './types';
-
-const { hero, icon, title, subtitle } = HeroStyles();
 
 /**
  * A versatile hero component that displays an icon alongside primary and secondary content.
@@ -66,22 +65,22 @@ export function Hero({ ref, ...props }: HeroProps) {
       values={[
         [
           IconContext,
-          { className: icon({ className: classNames?.icon }), size: 'large' },
+          { className: clsx(styles.icon, classNames?.icon), size: 'large' },
         ],
         [
           HeadingContext,
-          { className: title({ className: classNames?.title }), level: 2 },
+          { className: clsx(styles.title, classNames?.title), level: 2 },
         ],
         [
           TextContext,
-          { className: subtitle({ className: classNames?.subtitle }) },
+          { className: clsx(styles.subtitle, classNames?.subtitle) },
         ],
       ]}
     >
       <Header
         {...rest}
         ref={ref}
-        className={hero({ className: classNames?.hero })}
+        className={clsx('group/hero', styles.hero, classNames?.hero)}
         data-layout={compact ? 'grid' : 'stack'}
       >
         {children}
