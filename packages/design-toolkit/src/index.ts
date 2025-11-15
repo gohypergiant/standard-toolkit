@@ -128,7 +128,6 @@ export type {
 } from './components/dialog/types';
 export { DividerContext, DividerProvider } from './components/divider/context';
 export { Divider } from './components/divider';
-export { DividerStyles } from './components/divider/styles';
 export type { DividerProps } from './components/divider/types';
 export { DrawerBack } from './components/drawer/back';
 export { DrawerClose } from './components/drawer/close';
