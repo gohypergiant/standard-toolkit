@@ -183,7 +183,6 @@ export { HotkeySet } from './components/hotkey/set';
 export type { HotkeyProps } from './components/hotkey/types';
 export { IconContext, IconProvider } from './components/icon/context';
 export { Icon } from './components/icon';
-export { IconStyles } from './components/icon/styles';
 export type { IconProps } from './components/icon/types';
 export { InputContext } from './components/input/context';
 export { Input } from './components/input';
