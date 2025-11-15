@@ -13,6 +13,7 @@
 
 import { ChevronDown } from '@accelint/icons';
 import 'client-only';
+import clsx from 'clsx';
 import {
   Button,
   ComboBox,
@@ -29,12 +30,9 @@ import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
 import { ComboBoxFieldContext } from './context';
-import { ComboBoxStyles } from './styles';
+import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
-
-const { field, label, control, input, trigger, description, error, popover } =
-  ComboBoxStyles();
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options
@@ -74,7 +72,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.field, (className) =>
-        field({ className }),
+        clsx('group/combobox-field', styles.field, className),
       )}
       menuTrigger={menuTrigger}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
@@ -86,23 +84,23 @@ export function ComboBoxField<T extends OptionsDataItem>({
         <>
           {!!labelProp && !isSmall && (
             <Label
-              className={label({ className: classNames?.label })}
+              className={clsx(styles.label, classNames?.label)}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >
               {labelProp}
             </Label>
           )}
-          <div className={control({ className: classNames?.control })}>
+          <div className={clsx(styles.control, classNames?.control)}>
             <Input
               {...inputProps}
               className={composeRenderProps(classNames?.input, (className) =>
-                input({ className }),
+                clsx(styles.input, className),
               )}
             />
             <Button
               className={composeRenderProps(classNames?.trigger, (className) =>
-                trigger({ className }),
+                clsx(styles.trigger, className),
               )}
             >
               <Icon size='small'>
@@ -112,9 +110,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
           </div>
           {!!descriptionProp && !(isSmall || isInvalid) && (
             <Text
-              className={description({
-                className: classNames?.description,
-              })}
+              className={clsx(styles.description, classNames?.description)}
               slot='description'
             >
               {descriptionProp}
@@ -122,14 +118,14 @@ export function ComboBoxField<T extends OptionsDataItem>({
           )}
           <FieldError
             className={composeRenderProps(classNames?.error, (className) =>
-              error({ className }),
+              clsx(styles.error, className),
             )}
           >
             {errorMessage}
           </FieldError>
           <Popover
             className={composeRenderProps(classNames?.popover, (className) =>
-              popover({ className }),
+              clsx(styles.popover, className),
             )}
           >
             <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>

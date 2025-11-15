@@ -101,7 +101,6 @@ export {
   ComboBoxFieldProvider,
 } from './components/combobox-field/context';
 export { ComboBoxField } from './components/combobox-field';
-export { ComboBoxStyles } from './components/combobox-field/styles';
 export type { ComboBoxFieldProps } from './components/combobox-field/types';
 export { DateField } from './components/date-field';
 export {
