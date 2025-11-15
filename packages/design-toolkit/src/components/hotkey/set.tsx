@@ -13,18 +13,18 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { IconProvider } from '../icon/context';
-import { HotkeyStyles } from './styles';
-import type { HotkeySetProps } from './types';
+import styles from './styles.module.css';
+import type { ComponentPropsWithRef } from 'react';
 
-const { set } = HotkeyStyles();
-
-export function HotkeySet({ children, ...props }: HotkeySetProps) {
-  const { className } = props;
-
+export function HotkeySet({
+  className,
+  ...rest
+}: ComponentPropsWithRef<'div'>) {
   return (
-    <div className={set({ className })}>
-      <IconProvider size='large'>{children}</IconProvider>
-    </div>
+    <IconProvider size='large'>
+      <div {...rest} className={clsx(styles.set, className)} />
+    </IconProvider>
   );
 }

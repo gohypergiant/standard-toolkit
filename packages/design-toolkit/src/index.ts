@@ -174,15 +174,13 @@ export type {
 export { DrawerView } from './components/drawer/view';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
-export { HeroStyles } from './components/hero/styles';
 export { HeroSubtitle } from './components/hero/subtitle';
 export { HeroTitle } from './components/hero/title';
 export type { HeroProps } from './components/hero/types';
 export { HotkeyContext, HotkeyProvider } from './components/hotkey/context';
-export { HotkeySet } from './components/hotkey/hotkey-set';
 export { Hotkey } from './components/hotkey';
-export { HotkeyStyles, HotkeyStylesDefaults } from './components/hotkey/styles';
-export type { HotkeyProps, HotkeySetProps } from './components/hotkey/types';
+export { HotkeySet } from './components/hotkey/set';
+export type { HotkeyProps } from './components/hotkey/types';
 export { IconContext, IconProvider } from './components/icon/context';
 export { Icon } from './components/icon';
 export { IconStyles } from './components/icon/styles';

@@ -13,12 +13,11 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { Keyboard, useContextProps } from 'react-aria-components';
 import { HotkeyContext } from './context';
-import { HotkeyStyles, HotkeyStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { HotkeyProps } from './types';
-
-const { key } = HotkeyStyles();
 
 /**
  * Hotkey - A visual representation of keyboard shortcuts and key combinations
@@ -53,10 +52,15 @@ const { key } = HotkeyStyles();
  */
 export function Hotkey({ ref, children, ...props }: HotkeyProps) {
   [props, ref] = useContextProps(props, ref ?? null, HotkeyContext);
-  const { className, variant = HotkeyStylesDefaults.variant } = props;
+
+  const { className, variant = 'outline', ...rest } = props;
 
   return (
-    <Keyboard ref={ref} {...props} className={key({ className, variant })}>
+    <Keyboard
+      {...rest}
+      ref={ref}
+      className={clsx(styles.key, styles[variant], className)}
+    >
       {children}
     </Keyboard>
   );

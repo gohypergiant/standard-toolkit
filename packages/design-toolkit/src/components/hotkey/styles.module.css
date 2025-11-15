@@ -10,8 +10,27 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ComponentPropsWithRef } from 'react';
+@reference '../../index.css';
 
-export type HotkeyProps = ComponentPropsWithRef<'kbd'> & {
-  variant?: 'flat' | 'icon' | 'outline';
-};
+@layer components.l1 {
+  .key {
+    @apply fg-primary-bold w-fit min-w-xl p-xs text-header-s uppercase;
+
+    &.flat {
+      @apply bg-transparent;
+    }
+
+    &.icon {
+      @apply -mx-xs bg-transparent px-0;
+    }
+
+    &.outline {
+      @apply rounded-medium bg-surface-default outline outline-info-bold;
+      box-shadow: 0 3px var(--outline-info-bold);
+    }
+  }
+
+  .set {
+    @apply fg-primary-muted flex items-center gap-xs text-header-m;
+  }
+}
