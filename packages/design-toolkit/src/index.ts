@@ -103,10 +103,6 @@ export {
 export { ComboBoxField } from './components/combobox-field';
 export type { ComboBoxFieldProps } from './components/combobox-field/types';
 export { DateField } from './components/date-field';
-export {
-  DateFieldStyles,
-  DateFieldStylesDefaults,
-} from './components/date-field/styles';
 export type { DateFieldProps } from './components/date-field/types';
 export {
   DetailsListContext,
