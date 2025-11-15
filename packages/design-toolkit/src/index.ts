@@ -120,7 +120,6 @@ export { DialogContent } from './components/dialog/content';
 export { DialogContext } from './components/dialog/context';
 export { DialogFooter } from './components/dialog/footer';
 export { Dialog } from './components/dialog';
-export { DialogStyles } from './components/dialog/styles';
 export { DialogTitle } from './components/dialog/title';
 export { DialogTrigger } from './components/dialog/trigger';
 export type {
