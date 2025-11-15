@@ -57,8 +57,8 @@ export function calculateMaxControlWidth(
     .reduce((sum, c) => sum + (c.value?.length || 0), 0);
 
   // Add gap spacing between segments
-  // Number of gaps = number of segments - 1
-  const gapCount = segmentConfigs.length - 1;
+  // Number of gaps = number of segments - 1 (minimum 0)
+  const gapCount = Math.max(0, segmentConfigs.length - 1);
   const gapWidth = gapCount * SEGMENT_GAP_WIDTH;
 
   // Add container padding
