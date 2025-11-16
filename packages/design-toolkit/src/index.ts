@@ -306,7 +306,6 @@ export { Pagination } from './components/pagination';
 export { PaginationNext } from './components/pagination/next';
 export { PaginationPages } from './components/pagination/pages';
 export { PaginationPrev } from './components/pagination/prev';
-export { PaginationStyles } from './components/pagination/styles';
 export type {
   PaginationContextValue,
   PaginationNextProps,

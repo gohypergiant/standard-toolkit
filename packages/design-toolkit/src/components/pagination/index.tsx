@@ -14,14 +14,13 @@
 
 import 'client-only';
 import { useControlledState } from '@react-stately/utils';
+import clsx from 'clsx';
 import { PaginationContext } from './context';
 import { PaginationNext } from './next';
 import { PaginationPages } from './pages';
 import { PaginationPrev } from './prev';
-import { PaginationStyles } from './styles';
+import styles from './styles.module.css';
 import type { PaginationProps } from './types';
-
-const { container } = PaginationStyles();
 
 /**
  *
@@ -54,7 +53,7 @@ export function Pagination({
     <PaginationContext.Provider value={{ page, total, isLoading, setPage }}>
       <nav
         {...rest}
-        className={container({ className: classNames?.container })}
+        className={clsx(styles.container, classNames?.container)}
         aria-label={`Page ${page} of ${total}`}
       >
         {children || (

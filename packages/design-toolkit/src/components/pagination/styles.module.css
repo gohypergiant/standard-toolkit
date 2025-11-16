@@ -10,11 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const PaginationStyles = tv({
-  slots: {
-    container: 'flex flex-row gap-s',
-    button: 'size-medium:enabled:fg-primary-bold size-medium:min-w-[32px]',
-  },
-});
+@layer components.l1 {
+  .container {
+    @apply flex flex-row gap-s;
+  }
+}
+
+@layer components.l2 {
+  .button {
+    @apply fg-primary-bold;
+    min-width: 32px;
+  }
+}

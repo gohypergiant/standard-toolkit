@@ -38,6 +38,6 @@ export const NoticeStyles = tv({
     ],
     list: ['flex flex-col gap-y-s'],
     actions:
-      'flex flex-row-reverse items-center gap-s group-size-small/notice:grow-1 group-size-small/notice:basis-1 group-size-small/notice:justify-start',
+      'flex flex-row-reverse items-center gap-s group-size-small/notice:grow group-size-small/notice:basis-1 group-size-small/notice:justify-start',
   },
 });

@@ -13,15 +13,14 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { useContext, useMemo } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { ToggleButton } from '../button/toggle';
 import { PaginationContext } from './context';
-import { PaginationStyles } from './styles';
+import styles from './styles.module.css';
 import { getPaginationRange, range } from './utils';
 import type { PaginationPagesProps } from './types';
-
-const { button } = PaginationStyles();
 
 export function PaginationPages({ className, onPress }: PaginationPagesProps) {
   const { page, total, isLoading, setPage } = useContext(PaginationContext);
@@ -40,7 +39,7 @@ export function PaginationPages({ className, onPress }: PaginationPagesProps) {
     <ToggleButton
       key={`page-${number}`}
       className={composeRenderProps(className, (className) =>
-        button({ className }),
+        clsx(styles.button, className),
       )}
       color='accent'
       variant='flat'
