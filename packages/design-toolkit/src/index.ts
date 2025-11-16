@@ -394,14 +394,7 @@ export type {
   SidenavTriggerProps,
 } from './components/sidenav/types';
 export { Skeleton } from './components/skeleton';
-export {
-  SkeletonStyles,
-  SkeletonStylesDefaults,
-} from './components/skeleton/styles';
-export type {
-  SkeletonProps,
-  SkeletonStyleVariants,
-} from './components/skeleton/types';
+export type { SkeletonProps } from './components/skeleton/types';
 export { Slider } from './components/slider';
 export { SliderStyles } from './components/slider/styles';
 export type { SliderProps } from './components/slider/types';

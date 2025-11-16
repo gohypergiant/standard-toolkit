@@ -80,6 +80,8 @@
 
   .loading {
     /* TODO: Not animation, TW animation CSS vars seem to be missing */
-    @apply motion-safe:animate-spin;
+    @variant motion-safe {
+      @apply animate-spin;
+    }
   }
 }
