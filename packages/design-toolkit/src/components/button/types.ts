@@ -17,7 +17,7 @@ import type {
 } from 'react-aria-components';
 import type { AriaAttributesWithRef } from '@/lib/types';
 
-type Variants = 'filled' | 'flat' | 'icon' | 'outline'; // 'floating';;
+type Variants = 'filled' | 'flat' | 'icon' | 'outline';
 
 export type ButtonStyleVariants = {
   size?: 'large' | 'medium' | 'small' | 'xsmall';

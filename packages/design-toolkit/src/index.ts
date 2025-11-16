@@ -352,14 +352,7 @@ export {
   SearchFieldProvider,
 } from './components/search-field/context';
 export { SearchField } from './components/search-field';
-export {
-  SearchFieldStyles,
-  SearchFieldStylesDefaults,
-} from './components/search-field/styles';
-export type {
-  SearchFieldProps,
-  SearchFieldStyleVariants,
-} from './components/search-field/types';
+export type { SearchFieldProps } from './components/search-field/types';
 export {
   SelectFieldContext,
   SelectFieldProvider,

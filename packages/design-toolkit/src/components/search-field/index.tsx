@@ -13,6 +13,7 @@
 
 import { CancelFill, Loop, Search } from '@accelint/icons';
 import 'client-only';
+import clsx from 'clsx';
 import {
   SearchField as AriaSearchField,
   Button,
@@ -23,10 +24,8 @@ import {
 import { Icon } from '../icon';
 import { IconProvider } from '../icon/context';
 import { SearchFieldContext } from './context';
-import { SearchFieldStyles, SearchFieldStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { SearchFieldProps } from './types';
-
-const { field, input, search, loading, clear } = SearchFieldStyles();
 
 /**
  * SearchField - A customizable search input component built on React Aria Components
@@ -64,7 +63,7 @@ export function SearchField({ ref, ...props }: SearchFieldProps) {
     classNames,
     inputProps,
     isLoading = false,
-    variant = SearchFieldStylesDefaults.variant,
+    variant = 'outline',
     ...rest
   } = props;
 
@@ -74,29 +73,27 @@ export function SearchField({ ref, ...props }: SearchFieldProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(classNames?.field, (className) =>
-          field({ className, variant }),
+          clsx('group/search-field', styles.field, styles[variant], className),
         )}
       >
-        <Icon className={search({ className: classNames?.search, variant })}>
+        <Icon className={clsx(styles.search, classNames?.search)}>
           <Search />
         </Icon>
         <Input
           {...inputProps}
           className={composeRenderProps(classNames?.input, (className) =>
-            input({ className, variant }),
+            clsx(styles.input, className),
           )}
           type='search'
         />
         {isLoading ? (
-          <Icon
-            className={loading({ className: classNames?.loading, variant })}
-          >
+          <Icon className={clsx(styles.loading, classNames?.loading)}>
             <Loop />
           </Icon>
         ) : (
           <Button
             className={composeRenderProps(classNames?.clear, (className) =>
-              clear({ className, variant }),
+              clsx(styles.clear, className),
             )}
           >
             <Icon>
