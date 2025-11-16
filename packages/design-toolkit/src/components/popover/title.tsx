@@ -13,20 +13,19 @@
 'use client';
 
 import 'client-only';
-import { Heading as AriaHeading } from 'react-aria-components';
-import { PopoverStyles } from './styles';
-import type { PopoverTitleProps } from './types';
+import clsx from 'clsx';
+import {
+  Heading as AriaHeading,
+  type HeadingProps,
+} from 'react-aria-components';
+import styles from './styles.module.css';
 
-const { title } = PopoverStyles();
-
-export function PopoverTitle({
-  children,
-  className,
-  ...rest
-}: PopoverTitleProps) {
+export function PopoverTitle({ className, ...rest }: HeadingProps) {
   return (
-    <AriaHeading slot='title' className={title({ className })} {...rest}>
-      {children}
-    </AriaHeading>
+    <AriaHeading
+      {...rest}
+      slot='title'
+      className={clsx(styles.title, className)}
+    />
   );
 }

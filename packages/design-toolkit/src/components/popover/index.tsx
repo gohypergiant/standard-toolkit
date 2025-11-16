@@ -13,7 +13,9 @@
 'use client';
 
 import 'client-only';
-import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
+import clsx from 'clsx';
+import { Popover as AriaPopover, Dialog } from 'react-aria-components';
+import styles from './styles.module.css';
 import type { PopoverProps } from './types';
 
 /**
@@ -25,36 +27,37 @@ import type { PopoverProps } from './types';
  *
  * @example
  * // Basic popover
- * <Popover>
- *   <PopoverTrigger>
- *     <Button>Show Info</Button>
- *   </PopoverTrigger>
- *   <PopoverContent>
- *     <PopoverBody>
+ * <PopoverTrigger>
+ *   <Button>Show Info</Button>
+ *   <Popover>
+ *     <PopoverContent>
  *       <p>Additional information appears here</p>
- *     </PopoverBody>
- *   </PopoverContent>
- * </Popover>
+ *     </PopoverContent>
+ *   </Popover>
+ * </PopoverTrigger>
  *
  * @example
  * // Popover with title and actions
- * <Popover placement="top">
- *   <PopoverTrigger>
- *     <Button>Options</Button>
- *   </PopoverTrigger>
- *   <PopoverContent>
+ * <PopoverTrigger>
+ *   <Button>Options</Button>
+ *   <Popover placement="top">
  *     <PopoverTitle>Quick Actions</PopoverTitle>
- *     <PopoverBody>
+ *     <PopoverContent>
  *       <Button>Edit</Button>
  *       <Button>Delete</Button>
- *     </PopoverBody>
- *   </PopoverContent>
- * </Popover>
+ *     </PopoverContent>
+ *   </Popover>
+ * </PopoverTrigger>
  */
-export function Popover({
-  placement = 'bottom',
-  children,
-  ...rest
-}: PopoverProps) {
-  return <AriaDialogTrigger {...rest}>{children}</AriaDialogTrigger>;
+export function Popover({ children, classNames, ...rest }: PopoverProps) {
+  return (
+    <AriaPopover
+      {...rest}
+      className={clsx(styles.popover, classNames?.popover)}
+    >
+      <Dialog className={clsx(styles.dialog, classNames?.dialog)}>
+        {children}
+      </Dialog>
+    </AriaPopover>
+  );
 }

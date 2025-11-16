@@ -13,24 +13,13 @@
 'use client';
 
 import 'client-only';
-import {
-  Dialog as AriaDialog,
-  Popover as AriaPopover,
-} from 'react-aria-components';
-import { PopoverStyles } from './styles';
-import type { PopoverContentProps } from './types';
-
-const { content } = PopoverStyles();
+import clsx from 'clsx';
+import styles from './styles.module.css';
+import type { ComponentPropsWithRef } from 'react';
 
 export function PopoverContent({
-  children,
   className,
   ...rest
-}: PopoverContentProps) {
-  return (
-    <AriaPopover className={content({ className })} {...rest}>
-      {/* @ts-expect-error package version mismatch TODO */}
-      <AriaDialog>{children}</AriaDialog>
-    </AriaPopover>
-  );
+}: ComponentPropsWithRef<'div'>) {
+  return <div {...rest} className={clsx(styles.content, className)} />;
 }

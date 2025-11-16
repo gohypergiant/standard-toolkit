@@ -313,18 +313,13 @@ export type {
   PaginationPrevProps,
   PaginationProps,
 } from './components/pagination/types';
-export { PopoverBody } from './components/popover/body';
 export { PopoverContent } from './components/popover/content';
 export { PopoverFooter } from './components/popover/footer';
 export { Popover } from './components/popover';
-export { PopoverStyles } from './components/popover/styles';
 export { PopoverTitle } from './components/popover/title';
 export { PopoverTrigger } from './components/popover/trigger';
 export type {
-  PopoverBodyProps,
-  PopoverContentProps,
   PopoverProps,
-  PopoverTitleProps,
   PopoverTriggerProps,
 } from './components/popover/types';
 export {

@@ -10,14 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
+@reference '../../index.css';
 
-import 'client-only';
-import { PopoverStyles } from './styles';
-import type { PopoverBodyProps } from './types';
+@layer components.l1 {
+  .popover {
+    @apply rounded-medium bg-surface-raised p-s outline outline-static;
+    max-width: 280px;
+  }
 
-const { body } = PopoverStyles();
+  .title {
+    @apply fg-primary-bold mb-s text-header-m;
+  }
 
-export function PopoverBody({ children, className }: PopoverBodyProps) {
-  return <div className={body({ className })}>{children}</div>;
+  .content {
+    @apply fg-primary-muted text-body-s;
+  }
+
+  .footer {
+    @apply mt-s flex justify-end gap-s;
+  }
 }

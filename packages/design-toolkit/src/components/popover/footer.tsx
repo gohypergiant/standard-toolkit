@@ -13,17 +13,13 @@
 'use client';
 
 import 'client-only';
-import { PopoverStyles } from './styles';
-import type { ReactNode } from 'react';
-
-const { footer } = PopoverStyles();
+import clsx from 'clsx';
+import styles from './styles.module.css';
+import type { ComponentPropsWithRef } from 'react';
 
 export function PopoverFooter({
   children,
   className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return <div className={footer({ className })}>{children}</div>;
+}: ComponentPropsWithRef<'footer'>) {
+  return <footer className={clsx(styles.footer, className)}>{children}</footer>;
 }
