@@ -358,7 +358,6 @@ export {
   SelectFieldProvider,
 } from './components/select-field/context';
 export { SelectField } from './components/select-field';
-export { SelectFieldStyles } from './components/select-field/styles';
 export type { SelectFieldProps } from './components/select-field/types';
 export { SidenavAvatar } from './components/sidenav/avatar';
 export { SidenavContent } from './components/sidenav/content';

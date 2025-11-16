@@ -11,15 +11,16 @@
  */
 'use client';
 
-import ChevronDown from '@accelint/icons/chevron-down';
 import 'client-only';
+import ChevronDown from '@accelint/icons/chevron-down';
+import clsx from 'clsx';
 import {
-  Popover as AriaPopover,
   Select as AriaSelect,
-  SelectValue as AriaSelectValue,
   composeRenderProps,
   FieldError,
   ListLayout,
+  Popover,
+  SelectValue,
   Text,
   useContextProps,
   Virtualizer,
@@ -29,11 +30,8 @@ import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
 import { SelectFieldContext } from './context';
-import { SelectFieldStyles } from './styles';
+import styles from './styles.module.css';
 import type { SelectFieldProps } from './types';
-
-const { description, error, trigger, label, field, value, popover } =
-  SelectFieldStyles();
 
 /**
  * SelectField - A dropdown selection component with comprehensive form field features
@@ -105,7 +103,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.field, (className) =>
-        field({ className }),
+        clsx('group/select-field', styles.field, className),
       )}
       isInvalid={isInvalid}
       data-size={size}
@@ -116,7 +114,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
           <>
             {showLabel && (
               <Label
-                className={label({ className: classNames?.label })}
+                className={clsx(styles.label, classNames?.label)}
                 isRequired={isRequired}
                 isDisabled={isDisabled}
               >
@@ -125,42 +123,40 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
             )}
             <Button
               className={composeRenderProps(classNames?.trigger, (className) =>
-                trigger({ className }),
+                clsx(styles.trigger, className),
               )}
-              variant='outline'
               size={size}
+              variant='outline'
             >
-              <AriaSelectValue
-                className={value({ className: classNames?.value })}
-              />
+              <SelectValue className={clsx(styles.value, classNames?.value)} />
               <Icon>
                 <ChevronDown className='transform group-open/select-field:rotate-180' />
               </Icon>
             </Button>
             {!!descriptionProp && !(isSmall || isInvalid) && (
               <Text
-                className={description({ className: classNames?.description })}
                 slot='description'
+                className={clsx(styles.description, classNames?.description)}
               >
                 {descriptionProp}
               </Text>
             )}
             <FieldError
               className={composeRenderProps(classNames?.error, (className) =>
-                error({ className }),
+                clsx(styles.error, className),
               )}
             >
               {errorMessage}
             </FieldError>
-            <AriaPopover
+            <Popover
               className={composeRenderProps(classNames?.popover, (className) =>
-                popover({ className }),
+                clsx(styles.popover, className),
               )}
             >
               <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>
                 <Options>{children}</Options>
               </Virtualizer>
-            </AriaPopover>
+            </Popover>
           </>
         ),
       )}
