@@ -1,0 +1,95 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.css';
+
+@layer components.l1 {
+  .group {
+    @apply flex gap-xs;
+
+    @variant orientation-horizontal {
+      @apply flex-wrap;
+    }
+
+    @variant orientation-vertical {
+      @apply flex-col;
+    }
+
+    .label {
+      @apply w-full;
+    }
+  }
+
+  .radio {
+    @apply flex cursor-pointer items-center gap-m;
+
+    @variant group-orientation-horizontal/radio-group {
+      @apply grow;
+    }
+
+    @variant group-orientation-horizontal/radio-group {
+      @apply basis-1/3;
+    }
+
+    @variant disabled {
+      @apply cursor-not-allowed;
+    }
+
+    .label {
+      @apply fg-primary-bold text-body-s;
+
+      @variant group-disabled/radio {
+        @apply fg-disabled;
+      }
+    }
+  }
+
+  .control {
+    @apply my-xxs flex size-l items-center justify-center rounded-full outline-2 outline-interactive before:block before:size-s before:rounded-full;
+
+    @variant group-hover/radio {
+      @apply outline-interactive-hover;
+    }
+
+    @variant group-focus-visible/radio {
+      @apply outline-interactive-hover;
+    }
+
+    @variant group-pressed/radio {
+      @apply outline-interactive-pressed;
+    }
+
+    @variant group-selected/radio {
+      @apply outline-1 outline-accent-primary-bold before:bg-(--fg-accent-primary-bold);
+
+      @variant group-hover/radio {
+        @apply outline-interactive-hover before:bg-(--fg-accent-primary-hover);
+      }
+
+      @variant group-focus-visible/radio {
+        @apply outline-accent-primary-hover before:bg-(--fg-accent-primary-hover);
+      }
+
+      @variant group-pressed/radio {
+        @apply outline-2 outline-info-pressed before:bg-(--fg-accent-primary-pressed);
+      }
+    }
+
+    @variant group-disabled/radio {
+      @apply outline-interactive-disabled;
+
+      @variant group-selected/radio {
+        @apply before:bg-interactive-disabled;
+      }
+    }
+  }
+}

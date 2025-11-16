@@ -346,7 +346,6 @@ export type {
 export { RadioContext } from './components/radio/context';
 export { RadioGroup } from './components/radio/group';
 export { Radio } from './components/radio';
-export { RadioStyles } from './components/radio/styles';
 export type { RadioGroupProps, RadioProps } from './components/radio/types';
 export {
   SearchFieldContext,

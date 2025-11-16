@@ -12,11 +12,10 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { Radio as AriaRadio, composeRenderProps } from 'react-aria-components';
-import { RadioStyles } from './styles';
+import styles from './styles.module.css';
 import type { RadioProps } from './types';
-
-const { radio, control, label } = RadioStyles();
 
 /**
  * Radio - A form control for exclusive selection within a group of options
@@ -54,13 +53,13 @@ export function Radio({ classNames, children, ...rest }: RadioProps) {
     <AriaRadio
       {...rest}
       className={composeRenderProps(classNames?.radio, (className) =>
-        radio({ className }),
+        clsx('group/radio', styles.radio, className),
       )}
     >
       {composeRenderProps(children, (children) => (
         <>
-          <span className={control({ className: classNames?.control })} />
-          <span className={label({ className: classNames?.label })}>
+          <span className={clsx(styles.control, classNames?.control)} />
+          <span className={clsx(styles.label, classNames?.label)}>
             {children}
           </span>
         </>
