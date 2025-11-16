@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   composeRenderProps,
   FieldError,
@@ -23,10 +24,8 @@ import {
 } from 'react-aria-components';
 import { Label } from '../label';
 import { TextAreaFieldContext } from './context';
-import { TextAreaStyles } from './styles';
+import styles from './styles.module.css';
 import type { TextAreaFieldProps } from './types';
-
-const { field, label, input, description, error } = TextAreaStyles();
 
 /**
  * TextAreaField - A multi-line text input component with label and validation
@@ -70,7 +69,7 @@ export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
       aria-label={labelProp}
       ref={ref}
       className={composeRenderProps(classNames?.field, (className) =>
-        field({ className }),
+        clsx('group/text-area-field', styles.field, className),
       )}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       data-size={size}
@@ -81,7 +80,7 @@ export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
         <>
           {!!labelProp && !isSmall && (
             <Label
-              className={label({ className: classNames?.label })}
+              className={clsx(styles.label, classNames?.label)}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >
@@ -91,20 +90,20 @@ export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
           <TextArea
             {...inputProps}
             className={composeRenderProps(classNames?.input, (className) =>
-              input({ className }),
+              clsx(styles.input, className),
             )}
           />
           {!!descriptionProp && !(isSmall || isInvalid) && (
             <Text
               slot='description'
-              className={description({ className: classNames?.description })}
+              className={clsx(styles.description, classNames?.description)}
             >
               {descriptionProp}
             </Text>
           )}
           <FieldError
             className={composeRenderProps(classNames?.error, (className) =>
-              error({ className }),
+              clsx(styles.error, className),
             )}
           >
             {errorMessage}

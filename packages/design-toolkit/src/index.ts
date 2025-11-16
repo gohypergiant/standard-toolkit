@@ -443,7 +443,6 @@ export {
   TextAreaFieldProvider,
 } from './components/text-area-field/context';
 export { TextAreaField } from './components/text-area-field';
-export { TextAreaStyles } from './components/text-area-field/styles';
 export type { TextAreaFieldProps } from './components/text-area-field/types';
 export {
   TextFieldContext,
