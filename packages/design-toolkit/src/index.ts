@@ -451,10 +451,6 @@ export {
 export { TextField } from './components/text-field';
 export type { TextFieldProps } from './components/text-field/types';
 export { TimeField } from './components/time-field';
-export {
-  TimeFieldStyles,
-  TimeFieldSylesDefaults,
-} from './components/time-field/styles';
 export type { TimeFieldProps } from './components/time-field/types';
 export { TooltipContext } from './components/tooltip/context';
 export { Tooltip } from './components/tooltip';

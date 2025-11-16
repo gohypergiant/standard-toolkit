@@ -11,8 +11,9 @@
  */
 'use client';
 
-import { Time } from '@accelint/icons';
 import 'client-only';
+import { Time } from '@accelint/icons';
+import clsx from 'clsx';
 import {
   DateInput as AriaDateInput,
   Text as AriaText,
@@ -24,11 +25,8 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { Label } from '../label';
-import { TimeFieldStyles } from './styles';
+import styles from './styles.module.css';
 import type { TimeFieldProps } from './types';
-
-const { field, label, control, input, description, error, segment } =
-  TimeFieldStyles();
 
 /**
  * TimeField - Form input for time values
@@ -61,7 +59,7 @@ export function TimeField<T extends TimeValue>({
     <AriaTimeField<T>
       {...rest}
       className={composeRenderProps(classNames?.field, (className) =>
-        field({ className }),
+        clsx('group/time-field', styles.field, className),
       )}
       granularity={granularity}
       hourCycle={hourCycle}
@@ -76,16 +74,16 @@ export function TimeField<T extends TimeValue>({
         { isDisabled }, // Rely on internal state, not props, since state could differ from props
       ) => (
         <>
-          {!isSmall && label && (
+          {!isSmall && labelProp && (
             <Label
-              className={label({ className: classNames?.label })}
+              className={clsx(styles.label, classNames?.label)}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >
               {labelProp}
             </Label>
           )}
-          <div className={control({ className: classNames?.control })}>
+          <div className={clsx(styles.control, classNames?.control)}>
             {size === 'medium' && (
               <Icon>
                 <Time />
@@ -94,9 +92,7 @@ export function TimeField<T extends TimeValue>({
             <AriaDateInput
               {...inputProps}
               className={composeRenderProps(classNames?.input, (className) =>
-                input({
-                  className,
-                }),
+                clsx(styles.input, className),
               )}
             >
               {(segmentProp) => (
@@ -104,7 +100,7 @@ export function TimeField<T extends TimeValue>({
                   segment={segmentProp}
                   className={composeRenderProps(
                     classNames?.segment,
-                    (className) => segment({ className }),
+                    (className) => clsx(styles.segment, className),
                   )}
                 />
               )}
@@ -113,17 +109,15 @@ export function TimeField<T extends TimeValue>({
           </div>
           {descriptionProp && !(isSmall || isInvalidProp) && !errorMessage && (
             <AriaText
-              className={description({
-                className: classNames?.description,
-              })}
               slot='description'
+              className={clsx(styles.description, classNames?.description)}
             >
               {descriptionProp}
             </AriaText>
           )}
           <FieldError
             className={composeRenderProps(classNames?.error, (className) =>
-              error({ className }),
+              clsx(styles.error, className),
             )}
           >
             {errorMessage}
