@@ -12,17 +12,15 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   Switch as AriaSwitch,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { SwitchContext } from './context';
-import { SwitchStyles } from './styles';
+import styles from './styles.module.css';
 import type { SwitchProps } from './types';
-
-// "switch" is a reserved term in JS
-const { switch: switchClassNames, control, label } = SwitchStyles();
 
 /**
  * Switch - A toggle control for binary state changes
@@ -70,14 +68,14 @@ export function Switch({ ref, ...props }: SwitchProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.switch, (className) =>
-        switchClassNames({ className, labelPosition }),
+        clsx('group/switch', styles.switch, styles[labelPosition], className),
       )}
     >
       {composeRenderProps(children, (children) => (
         <>
-          <span className={control({ className: classNames?.control })} />
-          {children && (
-            <span className={label({ className: classNames?.label })}>
+          <span className={clsx(styles.control, classNames?.control)} />
+          {children != null && (
+            <span className={clsx(styles.label, classNames?.label)}>
               {children}
             </span>
           )}

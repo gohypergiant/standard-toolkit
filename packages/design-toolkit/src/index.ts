@@ -400,7 +400,6 @@ export { SliderStyles } from './components/slider/styles';
 export type { SliderProps } from './components/slider/types';
 export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';
-export { SwitchStyles } from './components/switch/styles';
 export type { SwitchProps } from './components/switch/types';
 export {
   HeaderColumnAction,
