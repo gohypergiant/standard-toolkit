@@ -15,6 +15,7 @@
 import 'client-only';
 import { CancelFill } from '@accelint/icons';
 import { useControlledState } from '@react-stately/utils';
+import clsx from 'clsx';
 import {
   Input as AriaInput,
   InputContext as AriaInputContext,
@@ -25,11 +26,9 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { IconProvider } from '../icon/context';
 import { InputContext } from './context';
-import { InputStyles, InputStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { ChangeEvent } from 'react';
 import type { InputProps } from './types';
-
-const { container, sizer, prefix, input, suffix, clear } = InputStyles();
 
 // TODO: Improve this implementation so it is more of a realistic event
 const clearInputEvent = {
@@ -54,6 +53,8 @@ const clearInputEvent = {
  *   classNames={{ clear: "hover:bg-info-bold" }}
  * />
  */
+
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: just a little bit over, not worth refactoring
 export function Input({ ref = null, ...props }: InputProps) {
   /**
    * It is necessary to pull in the AriaInputContext to capture defaultValue,
@@ -77,9 +78,9 @@ export function Input({ ref = null, ...props }: InputProps) {
     required,
     size = 'medium',
     suffix: suffixProp,
-    type = InputStylesDefaults.type,
+    type = 'text',
     value: valueProp,
-    isClearable = InputStylesDefaults.isClearable,
+    isClearable = true,
     isInvalid,
     onChange,
     onKeyDown,
@@ -88,8 +89,9 @@ export function Input({ ref = null, ...props }: InputProps) {
 
   const [value, setValue] = useControlledState(valueProp, defaultValue);
   const length = (`${value ?? ''}`.length || placeholder?.length) ?? 0;
-  const hasPrefix = !!prefixProp;
-  const hasSuffix = !!suffixProp;
+  const prefix = !!prefixProp && styles.hasPrefix;
+  const suffix = !!suffixProp && styles.hasSuffix;
+  const clear = isClearable && styles.isClearable;
   const isEmpty = value == null || value === '';
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -103,14 +105,14 @@ export function Input({ ref = null, ...props }: InputProps) {
   return (
     <IconProvider size='small'>
       <div
-        className={container({
-          className: classNames?.container,
-          autoSize,
-          isClearable,
-          prefix: hasPrefix,
-          suffix: hasSuffix,
-          type,
-        })}
+        className={clsx(
+          'group/input',
+          styles.container,
+          prefix,
+          suffix,
+          clear,
+          classNames?.container,
+        )}
         data-disabled={disabled || null}
         data-empty={isEmpty || null}
         data-invalid={isInvalid || null}
@@ -120,39 +122,17 @@ export function Input({ ref = null, ...props }: InputProps) {
         data-required={required || null}
         data-size={size}
       >
-        {hasPrefix && (
-          <span
-            className={prefix({
-              className: classNames?.prefix,
-              autoSize,
-              isClearable,
-              prefix: hasPrefix,
-              suffix: hasSuffix,
-              type,
-            })}
-          >
+        {prefix && (
+          <span className={clsx(styles.prefix, classNames?.prefix)}>
             {prefixProp}
           </span>
         )}
-        <div
-          className={sizer({
-            className: classNames?.sizer,
-            autoSize,
-            type,
-          })}
-        >
+        <div className={clsx(styles.sizer, classNames?.sizer)}>
           <AriaInput
             {...rest}
             ref={ref}
             className={composeRenderProps(classNames?.input, (className) =>
-              input({
-                className,
-                autoSize,
-                isClearable,
-                prefix: hasPrefix,
-                suffix: hasSuffix,
-                type,
-              }),
+              clsx(styles.input, className),
             )}
             disabled={disabled}
             placeholder={placeholder}
@@ -174,16 +154,15 @@ export function Input({ ref = null, ...props }: InputProps) {
             }}
           />
         </div>
-        {hasSuffix && (
+        {suffix && (
           <span
-            className={suffix({
-              className: classNames?.suffix,
-              autoSize,
-              isClearable,
-              prefix: hasPrefix,
-              suffix: hasSuffix,
-              type,
-            })}
+            className={clsx(
+              styles.suffix,
+              prefix,
+              suffix,
+              clear,
+              classNames?.suffix,
+            )}
           >
             {suffixProp}
           </span>
@@ -191,14 +170,7 @@ export function Input({ ref = null, ...props }: InputProps) {
         {isClearable && (
           <Button
             className={composeRenderProps(classNames?.clear, (className) =>
-              clear({
-                className,
-                autoSize,
-                isClearable,
-                prefix: hasPrefix,
-                suffix: hasSuffix,
-                type,
-              }),
+              clsx(styles.clear, prefix, suffix, clear, className),
             )}
             excludeFromTabOrder
             size='small'

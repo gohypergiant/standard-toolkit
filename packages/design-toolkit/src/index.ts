@@ -186,7 +186,6 @@ export { Icon } from './components/icon';
 export type { IconProps } from './components/icon/types';
 export { InputContext } from './components/input/context';
 export { Input } from './components/input';
-export { InputStyles, InputStylesDefaults } from './components/input/styles';
 export type { InputProps } from './components/input/types';
 export { KanbanCardBody } from './components/kanban/card-body';
 export { KanbanCardHeaderActions } from './components/kanban/card-header-actions';
