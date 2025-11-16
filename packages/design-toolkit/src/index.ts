@@ -436,7 +436,6 @@ export { TabsContext, TabsProvider } from './components/tabs/context';
 export { Tabs } from './components/tabs';
 export { TabList } from './components/tabs/list';
 export { TabPanel } from './components/tabs/panel';
-export { TabStyles } from './components/tabs/styles';
 export { Tab } from './components/tabs/tab';
 export type { TabsProps } from './components/tabs/types';
 export {

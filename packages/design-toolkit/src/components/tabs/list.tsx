@@ -13,14 +13,13 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   TabList as AriaTabList,
   composeRenderProps,
   type TabListProps,
 } from 'react-aria-components';
-import { TabStyles } from './styles';
-
-const { list } = TabStyles();
+import styles from './styles.module.css';
 
 /**
  * TabList - Container for tabs
@@ -36,7 +35,7 @@ export function TabList<T extends object>({
     <AriaTabList<T>
       {...rest}
       className={composeRenderProps(className, (className) =>
-        list({ className }),
+        clsx(styles.list, className),
       )}
     >
       {children}

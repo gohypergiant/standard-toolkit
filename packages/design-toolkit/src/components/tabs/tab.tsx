@@ -13,14 +13,13 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   Tab as AriaTab,
   composeRenderProps,
   type TabProps,
 } from 'react-aria-components';
-import { TabStyles } from './styles';
-
-const { tab } = TabStyles();
+import styles from './styles.module.css';
 
 /**
  * Tab - Individual tab component
@@ -32,7 +31,7 @@ export function Tab({ children, className, ...rest }: TabProps) {
     <AriaTab
       {...rest}
       className={composeRenderProps(className, (className) =>
-        tab({ className }),
+        clsx(styles.tab, className),
       )}
     >
       {children}
