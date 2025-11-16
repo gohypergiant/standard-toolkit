@@ -10,12 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const LabelStyles = tv({
-  base: [
-    'group/label text-header-s',
-    'enabled:fg-primary-bold',
-    'disabled:fg-disabled',
-  ],
-});
+@layer components.l1 {
+  .label {
+    @apply text-header-s fg-primary-bold;
+
+    @variant disabled {
+      @apply fg-disabled;
+    }
+  }
+}

@@ -245,7 +245,6 @@ export type {
 } from './components/kanban/types';
 export { LabelContext, LabelProvider } from './components/label/context';
 export { Label } from './components/label';
-export { LabelStyles } from './components/label/styles';
 export type { LabelProps } from './components/label/types';
 export { Lines } from './components/lines';
 export { LinesStyles } from './components/lines/styles';
