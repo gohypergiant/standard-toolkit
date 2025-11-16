@@ -13,46 +13,31 @@
 'use client';
 
 import 'client-only';
-import {
-  type FocusableProviderProps,
-  Pressable,
-} from '@react-aria/interactions';
+import { Pressable } from '@react-aria/interactions';
 import {
   Children,
   type DOMAttributes,
   type ReactElement,
   type ReactNode,
-  type RefAttributes,
 } from 'react';
 import { DialogTrigger } from 'react-aria-components';
 import type { FocusableElement } from '@react-types/shared';
 import type { PopoverTriggerProps } from './types';
-
-function PopoverPressable({
-  children,
-  ref,
-}: FocusableProviderProps & RefAttributes<FocusableElement>) {
-  const [trigger, popover] = Children.toArray(children) as [
-    ReactElement<DOMAttributes<FocusableElement>, string>,
-    ReactNode,
-  ];
-
-  return (
-    <>
-      <Pressable ref={ref}>{trigger}</Pressable>
-      {popover}
-    </>
-  );
-}
 
 export function PopoverTrigger({
   ref,
   children,
   ...rest
 }: PopoverTriggerProps) {
+  const [trigger, popover] = Children.toArray(children) as [
+    ReactElement<DOMAttributes<FocusableElement>, string>,
+    ReactNode,
+  ];
+
   return (
     <DialogTrigger {...rest}>
-      <PopoverPressable ref={ref}>{children}</PopoverPressable>
+      <Pressable ref={ref}>{trigger}</Pressable>
+      {popover}
     </DialogTrigger>
   );
 }
