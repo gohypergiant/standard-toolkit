@@ -10,15 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const LinkStyles = tv({
-  base: [
-    'inline-flex cursor-pointer items-center gap-[0.5ch] px-[0.5ch] align-bottom',
-    'enabled:fg-accent-primary-bold',
-    'enabled:hover:fg-accent-primary-hover enabled:hover:bg-accent-primary-muted',
-    'enabled:focus-visible:fg-accent-primary-hover enabled:focus-visible:bg-accent-primary-muted',
-    'enabled:pressed:fg-accent-primary-pressed enabled:pressed:bg-accent-primary-muted',
-    'disabled:fg-disabled disabled:cursor-not-allowed',
-  ],
-});
+@layer components.l1 {
+  .link {
+    @apply inline-flex cursor-pointer items-center align-bottom fg-accent-primary-bold;
+    padding-inline: 0.5ch;
+    gap: 0.5ch;
+
+    @variant hover {
+      @apply fg-accent-primary-hover bg-accent-primary-muted;
+    }
+
+    @variant focus-visible {
+      @apply fg-accent-primary-hover bg-accent-primary-muted;
+    }
+
+    @variant pressed {
+      @apply fg-accent-primary-pressed bg-accent-primary-muted;
+    }
+
+    @variant disabled {
+      @apply fg-disabled cursor-not-allowed;
+    }
+  }
+}

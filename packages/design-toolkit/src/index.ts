@@ -251,7 +251,6 @@ export { LinesStyles } from './components/lines/styles';
 export type { LinesProps, LinesStylesVariants } from './components/lines/types';
 export { LinkProvider } from './components/link/context';
 export { Link } from './components/link';
-export { LinkStyles } from './components/link/styles';
 export type { LinkProps } from './components/link/types';
 export { MenuContext } from './components/menu/context';
 export { Menu } from './components/menu';
