@@ -454,7 +454,6 @@ export { TimeField } from './components/time-field';
 export type { TimeFieldProps } from './components/time-field/types';
 export { TooltipContext } from './components/tooltip/context';
 export { Tooltip } from './components/tooltip';
-export { TooltipStyles } from './components/tooltip/styles';
 export { TooltipTrigger } from './components/tooltip/trigger';
 export type {
   TooltipProps,

@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const TooltipStyles = tv({
-  base: 'fg-primary-bold flex max-w-[160px] items-center justify-center break-words rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay',
-});
+@layer components.l1 {
+  .tooltip {
+    @apply fg-primary-bold flex items-center justify-center wrap-break-word rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay;
+    max-width: 160px;
+  }
+}

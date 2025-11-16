@@ -11,15 +11,16 @@
  */
 'use client';
 
-import { useIsSSR } from '@react-aria/ssr';
-import { PortalProvider } from '@/providers/portal';
 import 'client-only';
+import { useIsSSR } from '@react-aria/ssr';
+import clsx from 'clsx';
 import { useMemo } from 'react';
 import {
   Tooltip as AriaTooltip,
   composeRenderProps,
 } from 'react-aria-components';
-import { TooltipStyles } from './styles';
+import { PortalProvider } from '@/providers/portal';
+import styles from './styles.module.css';
 import type { TooltipProps } from './types';
 
 /**
@@ -71,8 +72,11 @@ export function Tooltip({
     if (isSSR) {
       return null;
     }
+
     const div = document.createElement('div');
+
     div.setAttribute('class', 'absolute');
+
     return div;
   }, [isSSR]);
 
@@ -81,7 +85,7 @@ export function Tooltip({
       <AriaTooltip
         {...props}
         className={composeRenderProps(className, (className) =>
-          TooltipStyles({ className }),
+          clsx(styles.tooltip, className),
         )}
         offset={offset}
         placement={placement}
