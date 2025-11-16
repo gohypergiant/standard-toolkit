@@ -449,7 +449,6 @@ export {
   TextFieldProvider,
 } from './components/text-field/context';
 export { TextField } from './components/text-field';
-export { TextFieldStyles } from './components/text-field/styles';
 export type { TextFieldProps } from './components/text-field/types';
 export { TimeField } from './components/time-field';
 export {

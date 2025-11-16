@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   TextField as AriaTextField,
   composeRenderProps,
@@ -22,10 +23,8 @@ import {
 import { Input } from '../input';
 import { Label } from '../label';
 import { TextFieldContext } from './context';
-import { TextFieldStyles } from './styles';
+import styles from './styles.module.css';
 import type { TextFieldProps } from './types';
-
-const { field, label, description, error, input } = TextFieldStyles();
 
 /**
  * TextField - A complete form field component with label, input, and validation
@@ -135,7 +134,7 @@ export function TextField({ ref, ...props }: TextFieldProps) {
       aria-label={labelProp}
       ref={ref}
       className={composeRenderProps(classNames?.field, (className) =>
-        field({ className }),
+        clsx('group/text-field', styles.field, className),
       )}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       data-size={size}
@@ -146,7 +145,7 @@ export function TextField({ ref, ...props }: TextFieldProps) {
         <>
           {!!labelProp && !isSmall && (
             <Label
-              className={label({ className: classNames?.label })}
+              className={clsx(styles.label, classNames?.label)}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >
@@ -155,7 +154,10 @@ export function TextField({ ref, ...props }: TextFieldProps) {
           )}
           <Input
             {...inputProps}
-            classNames={{ ...classNames?.input, sizer: input() }}
+            classNames={{
+              ...classNames?.input,
+              sizer: clsx(styles.input, classNames?.input?.sizer),
+            }}
             disabled={isDisabled}
             required={isRequired}
             size={size}
@@ -164,14 +166,14 @@ export function TextField({ ref, ...props }: TextFieldProps) {
           {!!descriptionProp && !(isSmall || isInvalid) && (
             <Text
               slot='description'
-              className={description({ className: classNames?.description })}
+              className={clsx(styles.description, classNames?.description)}
             >
               {descriptionProp}
             </Text>
           )}
           <FieldError
             className={composeRenderProps(classNames?.error, (className) =>
-              error({ className }),
+              clsx(styles.error, className),
             )}
           >
             {errorMessage}

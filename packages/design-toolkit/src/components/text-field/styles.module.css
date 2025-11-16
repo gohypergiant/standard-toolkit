@@ -10,18 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+@reference '../../index.css';
 
-export const TextFieldStyles = tv({
-  slots: {
-    field: 'group/text-field flex flex-col gap-xs',
-    label: '',
-    input:
-      'group-size-medium/input:max-w-none group-size-small/input:max-w-none',
-    description: [
-      'fg-primary-muted text-body-xs',
-      'group-disabled/text-field:fg-disabled',
-    ],
-    error: 'fg-serious-bold text-body-xs',
-  },
-});
+@layer components.l1 {
+  .field {
+    @apply flex flex-col gap-xs;
+  }
+
+  .description {
+    @apply fg-primary-muted text-body-xs;
+
+    @variant group-disabled/text-field {
+      @apply fg-disabled;
+    }
+  }
+
+  .error {
+    @apply fg-serious-bold text-body-xs;
+  }
+}
+
+@layer components.l2 {
+  .input {
+    @apply max-w-none;
+  }
+}
