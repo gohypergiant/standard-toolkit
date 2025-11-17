@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { UniqueId } from '@accelint/core';
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
 
 export type FlashcardComponentProps = PropsWithChildren &
@@ -19,7 +20,7 @@ export type FlashcardProps = FlashcardComponentProps & {
   isLoading?: boolean;
 };
 
-export type FlashcardDetailContainerProps = {
+export type FlashcardDetailContainerProps = ComponentPropsWithRef<'div'> & {
   details?: FlashcardMetaData[];
   classNames?: {
     container?: string;
@@ -30,6 +31,7 @@ export type FlashcardDetailContainerProps = {
 };
 
 export type FlashcardMetaData = {
+  id: UniqueId;
   label: string;
   value: string | number | null;
 };

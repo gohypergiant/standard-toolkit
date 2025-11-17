@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { uuid } from '@accelint/core';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import {
@@ -25,14 +26,14 @@ import {
 
 function setup(isLoading = false) {
   const details = [
-    { label: 'OBJECTID', value: 75 },
-    { label: 'NAME', value: 'Acrisure Stadium' },
-    { label: 'LATITUDE', value: '40-26-48.22N' },
-    { label: 'LONGITUDE', value: '080-00-56.66W' },
-    { label: 'CITY', value: 'Pittsburgh' },
-    { label: 'STATE', value: 'PA' },
-    { label: 'STATUS_CODE', value: 'Open' },
-    { label: 'OPENING_ON', value: null },
+    { label: 'OBJECTID', value: 75, id: uuid() },
+    { label: 'NAME', value: 'Acrisure Stadium', id: uuid() },
+    { label: 'LATITUDE', value: '40-26-48.22N', id: uuid() },
+    { label: 'LONGITUDE', value: '080-00-56.66W', id: uuid() },
+    { label: 'CITY', value: 'Pittsburgh', id: uuid() },
+    { label: 'STATE', value: 'PA', id: uuid() },
+    { label: 'STATUS_CODE', value: 'Open', id: uuid() },
+    { label: 'OPENING_ON', value: null, id: uuid() },
   ];
 
   render(

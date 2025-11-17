@@ -33,7 +33,6 @@
  * </Flashcard>
  */
 'use client';
-import { uuid } from '@accelint/core';
 import 'client-only';
 import { createContext, useContext } from 'react';
 import { Skeleton } from '../skeleton';
@@ -177,11 +176,10 @@ export function FlashcardDetailsContainer(
     >
       {/* Limit to the first 5 items in details array.*/}
       {displayDetails.map((item) => {
-        const detailId = uuid();
         return (
           <div
             className={detailsItem({ className: classNames?.item })}
-            key={detailId}
+            key={item.id}
           >
             <div className={detailsLabel({ className: classNames?.label })}>
               {isLoading ? (
