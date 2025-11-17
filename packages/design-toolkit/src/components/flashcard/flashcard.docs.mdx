@@ -62,7 +62,7 @@ Secondary data information that will appear below the initial header.
 
 ### FlashcardDetailsContainer
 * **`details`** - Array of additional details of the FlashcardMetaData type.
-  * `{ label: string, value: any }` - Additional detail, only first 5 in the array are displayed.
+  * `{ label: string, value: string | number | null, id: UniqueId }` - Additional detail, only first 5 in the array are displayed.
 * **`classNames`** - Object for various class names for the details component.
   * `container` - Styling for container for the additional detail list.
   * `item` - Styling for individual entry in detail list.
