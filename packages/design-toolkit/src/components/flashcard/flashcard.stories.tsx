@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { uuid } from '@accelint/core';
 import {
   Flashcard,
   FlashcardDetailsContainer,
@@ -20,16 +21,16 @@ import {
   FlashcardSecondaryData,
   FlashcardSubheader,
 } from '.';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const DEFAULT_DETAILS = [
-  { label: 'key', value: 'value' },
-  { label: 'key', value: 'value' },
-  { label: 'key', value: 'value' },
-  { label: 'key', value: 'value' },
-  { label: 'key', value: 'value' },
-  { label: 'key', value: 'value' },
-  { label: 'key', value: 'value' },
+  { label: 'key', value: 'value', id: uuid() },
+  { label: 'key', value: 'value', id: uuid() },
+  { label: 'key', value: 'value', id: uuid() },
+  { label: 'key', value: 'value', id: uuid() },
+  { label: 'key', value: 'value', id: uuid() },
+  { label: 'key', value: 'value', id: uuid() },
+  { label: 'key', value: 'value', id: uuid() },
 ];
 
 const meta = {
