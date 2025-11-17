@@ -15,7 +15,7 @@ import { tv } from '@accelint/design-foundation/lib/utils';
 export const BreadcrumbsStyles = tv({
   slots: {
     list: 'fg-primary-muted flex items-center gap-s',
-    item: 'group/breadcrumb flex items-center last:fg-accent-primary-bold',
+    item: 'group/breadcrumb last:fg-accent-primary-bold flex items-center',
     link: 'current:fg-accent-primary-bold hover:fg-primary-bold',
     separator: 'group-current/breadcrumb:hidden',
   },
