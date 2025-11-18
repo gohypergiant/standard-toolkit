@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .tabs {
-    @apply flex w-content;
+    @apply w-content flex;
 
     @variant orientation-horizontal {
       @apply flex-col;
@@ -38,7 +38,7 @@
   }
 
   .tab {
-    @apply fg-primary-muted relative cursor-pointer rounded-small p-s;
+    @apply fg-primary-muted rounded-small p-s relative cursor-pointer;
 
     @variant hover {
       @apply fg-primary-bold;

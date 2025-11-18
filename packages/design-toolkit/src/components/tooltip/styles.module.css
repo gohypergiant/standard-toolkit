@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .tooltip {
-    @apply fg-primary-bold flex items-center justify-center wrap-break-word rounded-small bg-surface-overlay px-s py-xs text-center text-body-xs shadow-elevation-overlay;
+    @apply fg-primary-bold rounded-small bg-surface-overlay px-s py-xs text-body-xs shadow-elevation-overlay flex items-center justify-center text-center wrap-break-word;
     max-width: 160px;
   }
 }

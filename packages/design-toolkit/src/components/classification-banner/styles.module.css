@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .banner {
-    @apply px-s py-xs flex items-center justify-center font-medium text-header-m uppercase;
+    @apply px-s py-xs text-header-m flex items-center justify-center font-medium uppercase;
 
     &.missing {
       @apply fg-critical-bold bg-classification-missing;

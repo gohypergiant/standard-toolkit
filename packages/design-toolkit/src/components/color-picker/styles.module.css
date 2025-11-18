@@ -14,11 +14,11 @@
 
 @layer components.l1 {
   .picker {
-    @apply flex flex-wrap gap-s;
+    @apply gap-s flex flex-wrap;
   }
 
   .item {
-    @apply w-fit cursor-pointer outline outline-transparent outline-offset-1;
+    @apply w-fit cursor-pointer outline outline-offset-1 outline-transparent;
 
     @variant hover {
       @apply outline-interactive-hover;
@@ -33,7 +33,7 @@
     }
 
     @variant selected {
-      @apply cursor-default outline-accent-primary-bold;
+      @apply outline-accent-primary-bold cursor-default;
     }
   }
 

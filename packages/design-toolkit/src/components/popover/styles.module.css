@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .popover {
-    @apply rounded-medium bg-surface-raised p-s outline outline-static;
+    @apply rounded-medium bg-surface-raised p-s outline-static outline;
     max-width: 280px;
   }
 
@@ -27,6 +27,6 @@
   }
 
   .footer {
-    @apply mt-s flex justify-end gap-s;
+    @apply mt-s gap-s flex justify-end;
   }
 }

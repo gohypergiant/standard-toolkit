@@ -26,7 +26,7 @@
     }
 
     &.rectangle {
-      @apply min-h-lh w-full rounded-small;
+      @apply rounded-small min-h-lh w-full;
     }
   }
 }

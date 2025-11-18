@@ -14,11 +14,11 @@
 
 @layer components.l1 {
   .field {
-    @apply flex flex-col gap-xs;
+    @apply gap-xs flex flex-col;
   }
 
   .input {
-    @apply fg-primary-bold block w-full rounded-medium p-s font-display outline outline-interactive;
+    @apply fg-primary-bold rounded-medium p-s font-display outline-interactive block w-full outline;
 
     @variant placeholder-shown {
       @apply fg-primary-muted;

@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .group {
-    @apply flex gap-xs;
+    @apply gap-xs flex;
 
     @variant orientation-horizontal {
       @apply flex-wrap;
@@ -30,7 +30,7 @@
   }
 
   .checkbox {
-    @apply flex cursor-pointer items-center gap-m;
+    @apply gap-m flex cursor-pointer items-center;
 
     @variant disabled {
       @apply cursor-not-allowed;
@@ -54,7 +54,7 @@
   }
 
   .control {
-    @apply flex size-l items-center justify-center rounded-small outline outline-interactive fg-info-bold;
+    @apply size-l rounded-small outline-interactive fg-info-bold flex items-center justify-center outline;
 
     @variant group-hover/checkbox {
       @apply outline-interactive-hover;

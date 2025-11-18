@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .field {
-    @apply flex flex-col gap-xs;
+    @apply gap-xs flex flex-col;
   }
 
   .description {

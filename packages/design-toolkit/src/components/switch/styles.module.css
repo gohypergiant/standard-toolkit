@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .switch {
-    @apply flex cursor-pointer items-center gap-s;
+    @apply gap-s flex cursor-pointer items-center;
 
     @variant disabled {
       @apply cursor-not-allowed;
@@ -30,10 +30,10 @@
   }
 
   .control {
-    @apply flex rounded-round bg-transparent p-xxs outline outline-interactive;
+    @apply rounded-round p-xxs outline-interactive flex bg-transparent outline;
 
     @variant before {
-      @apply block size-m mr-l rounded-full bg-(--fg-primary-muted)
+      @apply size-m mr-l block rounded-full bg-(--fg-primary-muted);
     }
 
     @variant group-hover/switch {
@@ -64,7 +64,7 @@
       @apply outline-accent-primary-bold;
 
       @variant before {
-        @apply mr-0 ml-l bg-(--fg-accent-primary-bold);
+        @apply ml-l mr-0 bg-(--fg-accent-primary-bold);
       }
 
       @variant group-hover/switch {
@@ -93,7 +93,7 @@
     }
 
     @variant group-disabled/switch {
-      @apply bg-transparent outline-interactive-disabled;
+      @apply outline-interactive-disabled bg-transparent;
 
       @variant before {
         @apply bg-(--fg-disabled);

@@ -18,7 +18,7 @@
   }
 
   .modal {
-    @apply flex flex-col justify-center bg-surface-overlay shadow-elevation-overlay;
+    @apply bg-surface-overlay shadow-elevation-overlay flex flex-col justify-center;
 
     @variant group-size-small/dialog {
       @apply rounded-medium;
@@ -30,7 +30,7 @@
   }
 
   .dialog {
-    @apply fg-primary-muted flex flex-col font-light text-body-m;
+    @apply fg-primary-muted text-body-m flex flex-col font-light;
 
     @variant focus-visible {
       @apply outline-none;
@@ -61,7 +61,7 @@
   }
 
   .content {
-    @apply flex flex-col fg-primary-muted;
+    @apply fg-primary-muted flex flex-col;
 
     @variant group-size-small/dialog {
       @apply gap-xs;
@@ -73,7 +73,7 @@
   }
 
   .footer {
-    @apply flex justify-end gap-xs;
+    @apply gap-xs flex justify-end;
 
     @variant group-size-small/dialog {
       @apply mt-l;

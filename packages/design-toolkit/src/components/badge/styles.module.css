@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .badge {
-    @apply fg-primary-bold inline-flex items-center justify-center rounded-full px-xs text-body-xs outline;
+    @apply fg-primary-bold px-xs text-body-xs inline-flex items-center justify-center rounded-full outline;
 
     @variant empty {
       @apply size-s px-none;
@@ -26,22 +26,22 @@
 
     @variant placement-top {
       @apply -translate-y-1/2;
-      top: attr(data-offset-y px,0px);
+      top: attr(data-offset-y px, 0px);
     }
 
     @variant placement-right {
       @apply translate-x-1/2;
-      right: attr(data-offset-x px,0px);
+      right: attr(data-offset-x px, 0px);
     }
 
     @variant placement-bottom {
       @apply translate-y-1/2;
-      bottom: attr(data-offset-y px,0px);
+      bottom: attr(data-offset-y px, 0px);
     }
 
     @variant placement-left {
       @apply -translate-x-1/2;
-      left: attr(data-offset-x px,0px);
+      left: attr(data-offset-x px, 0px);
     }
 
     @variant color-info {
@@ -65,5 +65,3 @@
     }
   }
 }
-
-

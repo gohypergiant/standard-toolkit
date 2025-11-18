@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .key {
-    @apply fg-primary-bold w-fit min-w-xl p-xs text-header-s uppercase;
+    @apply fg-primary-bold p-xs text-header-s w-fit min-w-xl uppercase;
 
     &.flat {
       @apply bg-transparent;
@@ -25,12 +25,12 @@
     }
 
     &.outline {
-      @apply rounded-medium bg-surface-default outline outline-info-bold;
+      @apply rounded-medium bg-surface-default outline-info-bold outline;
       box-shadow: 0 3px var(--outline-info-bold);
     }
   }
 
   .set {
-    @apply fg-primary-muted flex items-center gap-xs text-header-m;
+    @apply fg-primary-muted gap-xs text-header-m flex items-center;
   }
 }

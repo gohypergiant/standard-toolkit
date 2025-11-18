@@ -14,11 +14,11 @@
 
 @layer components.l1 {
   .list {
-    @apply fg-primary-muted flex items-center gap-s;
+    @apply fg-primary-muted gap-s flex items-center;
   }
 
   .item {
-    @apply flex items-center gap-s;
+    @apply gap-s flex items-center;
   }
 
   .link {

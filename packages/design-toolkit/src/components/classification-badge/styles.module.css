@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .badge {
-    @apply inline-flex rounded-full px-s py-xs items-center justify-center font-medium text-header-m uppercase;
+    @apply px-s py-xs text-header-m inline-flex items-center justify-center rounded-full font-medium uppercase;
 
     @variant size-medium {
       @apply text-header-s;

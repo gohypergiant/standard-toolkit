@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .value {
-    @apply flex grow items-center font-display;
+    @apply font-display flex grow items-center;
 
     @variant group-size-small/select-field {
       @apply gap-xs text-body-xs;
@@ -48,7 +48,7 @@
     }
 
     @variant size-small {
-      @apply w-fit py-xxs;
+      @apply py-xxs w-fit;
     }
 
     @variant hover {
@@ -60,7 +60,7 @@
     }
 
     @variant pressed {
-      @apply bg-transparent outline-1 outline-accent-primary-bold;
+      @apply outline-accent-primary-bold bg-transparent outline-1;
     }
 
     @variant group-focus-visible/select-field {

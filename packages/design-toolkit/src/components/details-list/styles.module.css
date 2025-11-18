@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .list {
-    @apply grid gap-x-m font-display text-body-m;
+    @apply gap-x-m font-display text-body-m grid;
     grid-template-columns: auto 1fr;
   }
 

@@ -26,11 +26,11 @@
   }
 
   .title {
-    @apply fg-primary-bold -order-2 mb-xs font-display text-header-l;
+    @apply fg-primary-bold mb-xs font-display text-header-l -order-2;
   }
 
   .subtitle {
-    @apply fg-primary-muted -order-1 block font-display text-body-s;
+    @apply fg-primary-muted font-display text-body-s -order-1 block;
   }
 }
 
@@ -39,7 +39,7 @@
     @apply fg-primary-muted -order-3;
 
     @variant group-layout-grid/hero {
-      @apply absolute top-xxs left-xs
+      @apply top-xxs left-xs absolute;
     }
 
     @variant group-layout-stack/hero {

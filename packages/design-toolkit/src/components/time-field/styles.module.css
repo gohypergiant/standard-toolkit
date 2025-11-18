@@ -14,11 +14,11 @@
 
 @layer components.l1 {
   .field {
-    @apply flex w-fit flex-col gap-xs;
+    @apply gap-xs flex w-fit flex-col;
   }
 
   .control {
-    @apply flex w-full items-center gap-xs rounded-medium px-s py-xs font-display outline outline-interactive fg-primary-bold;
+    @apply gap-xs rounded-medium px-s py-xs font-display outline-interactive fg-primary-bold flex w-full items-center outline;
 
     @variant group-size-medium/time-field {
       @apply text-body-s;

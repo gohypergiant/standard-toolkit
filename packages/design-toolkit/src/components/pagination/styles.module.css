@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .container {
-    @apply flex flex-row gap-s;
+    @apply gap-s flex flex-row;
   }
 }
 

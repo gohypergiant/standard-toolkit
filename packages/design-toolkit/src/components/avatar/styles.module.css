@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .avatar {
-    @apply rounded-full bg-surface-overlay fg-primary-muted grid;
+    @apply bg-surface-overlay fg-primary-muted grid rounded-full;
     grid-template-areas: 'content';
 
     @variant size-medium {

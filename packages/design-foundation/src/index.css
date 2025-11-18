@@ -159,12 +159,12 @@
 }
 
 @utility w-* {
-  width: --value([ *]);
+  width: --value([*]);
 }
 
 @utility icon-* {
-  --icon-color: --value([ *]);
-  --icon-color: --value(--color- *);
+  --icon-color: --value([*]);
+  --icon-color: --value(--color-*);
 }
 
 html {
@@ -186,7 +186,7 @@ html {
     background: var(--bg-interactive-muted-hover);
   }
 
-  ::-webkit-scrollbar-thumb{
+  ::-webkit-scrollbar-thumb {
     background-color: var(--bg-interactive-muted);
     border-radius: var(--radius-large);
     border: 5px solid transparent;

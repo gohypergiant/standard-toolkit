@@ -14,11 +14,11 @@
 
 @layer components.l1 {
   .field {
-    @apply flex flex-col gap-xs;
+    @apply gap-xs flex flex-col;
   }
 
   .control {
-    @apply flex items-center rounded-medium px-s py-xs outline fg-primary-bold outline-interactive;
+    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive flex items-center outline;
 
     @variant placeholder {
       @apply fg-primary-muted;
@@ -41,11 +41,11 @@
     }
 
     @variant group-size-medium/combobox-field {
-      @apply min-w-[160px] max-w-[400px];
+      @apply max-w-[400px] min-w-[160px];
     }
 
     @variant group-size-small/combobox-field {
-      @apply min-w-[80px] max-w-[200px];
+      @apply max-w-[200px] min-w-[80px];
     }
 
     @variant group-invalid/combobox-field {
@@ -58,7 +58,7 @@
   }
 
   .input {
-    @apply grow font-display outline-none;
+    @apply font-display grow outline-none;
 
     @variant group-size-medium/combobox-field {
       @apply text-body-s;

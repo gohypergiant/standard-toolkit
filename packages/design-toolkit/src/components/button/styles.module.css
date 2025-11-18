@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .button {
-    @apply flex w-content shrink-0 cursor-pointer items-center justify-center rounded-medium outline outline-transparent;
+    @apply w-content rounded-medium flex shrink-0 cursor-pointer items-center justify-center outline outline-transparent;
 
     @variant size-large {
       @apply gap-xs px-l py-s text-button-l;
@@ -318,82 +318,82 @@
 
     &.outline {
       @variant color-mono-muted {
-        @apply fg-primary-bold bg-transparent outline outline-interactive;
+        @apply fg-primary-bold outline-interactive bg-transparent outline;
 
         @variant hover {
-          @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+          @apply bg-interactive-muted-hover outline-interactive-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+          @apply bg-interactive-muted-hover outline-interactive-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
+          @apply fg-pressed bg-interactive-muted-pressed outline-interactive-pressed outline-2;
         }
       }
 
       @variant color-mono-bold {
-        @apply fg-primary-bold bg-transparent outline outline-mono-bold;
+        @apply fg-primary-bold outline-mono-bold bg-transparent outline;
 
         @variant hover {
-          @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+          @apply bg-interactive-muted-hover outline-interactive-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+          @apply bg-interactive-muted-hover outline-interactive-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-mono-bold-pressed;
+          @apply fg-pressed bg-interactive-muted-pressed outline-mono-bold-pressed outline-2;
         }
       }
 
       @variant color-accent {
-        @apply fg-primary-bold bg-transparent outline outline-accent-primary-bold;
+        @apply fg-primary-bold outline-accent-primary-bold bg-transparent outline;
 
         @variant hover {
-          @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+          @apply fg-a11y-on-accent bg-accent-primary-hover outline-accent-primary-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+          @apply fg-a11y-on-accent bg-accent-primary-hover outline-accent-primary-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
+          @apply fg-accent-primary-bold bg-accent-primary-pressed outline-accent-primary-pressed outline-2;
         }
       }
 
       @variant color-serious {
-        @apply fg-primary-bold bg-transparent outline outline-serious-bold;
+        @apply fg-primary-bold outline-serious-bold bg-transparent outline;
 
         @variant hover {
-          @apply fg-a11y-on-accent bg-serious-hover outline-2 outline-serious-hover;
+          @apply fg-a11y-on-accent bg-serious-hover outline-serious-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply fg-a11y-on-accent bg-serious-hover outline-2 outline-serious-hover;
+          @apply fg-a11y-on-accent bg-serious-hover outline-serious-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-serious-bold bg-serious-pressed outline-2 outline-serious-pressed;
+          @apply fg-serious-bold bg-serious-pressed outline-serious-pressed outline-2;
         }
       }
 
       @variant color-serious {
-        @apply fg-primary-bold bg-transparent outline outline-critical-bold;
+        @apply fg-primary-bold outline-critical-bold bg-transparent outline;
 
         @variant hover {
-          @apply fg-a11y-on-accent bg-critical-hover outline-2 outline-critical-hover;
+          @apply fg-a11y-on-accent bg-critical-hover outline-critical-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply fg-a11y-on-accent bg-critical-hover outline-2 outline-critical-hover;
+          @apply fg-a11y-on-accent bg-critical-hover outline-critical-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-critical-pressed bg-critical-pressed outline-2 outline-critical-pressed;
+          @apply fg-critical-pressed bg-critical-pressed outline-critical-pressed outline-2;
         }
       }
 
@@ -421,7 +421,7 @@
         }
 
         @variant selected {
-          @apply fg-primary-muted bg-interactive-muted outline outline-interactive-hover;
+          @apply fg-primary-muted bg-interactive-muted outline-interactive-hover outline;
 
           @variant hover {
             @apply bg-interactive-muted-hover outline-2;
@@ -432,7 +432,7 @@
           }
 
           @variant pressed {
-            @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
+            @apply fg-pressed bg-interactive-muted-pressed outline-interactive-pressed outline-2;
           }
         }
       }
@@ -453,18 +453,18 @@
         }
 
         @variant selected {
-          @apply fg-primary-bold outline outline-mono-bold;
+          @apply fg-primary-bold outline-mono-bold outline;
 
           @variant hover {
-            @apply fg-hover bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
+            @apply fg-hover bg-interactive-muted-hover outline-mono-bold-hover outline-2;
           }
 
           @variant focus-visible {
-            @apply bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
+            @apply bg-interactive-muted-hover outline-mono-bold-hover outline-2;
           }
 
           @variant pressed {
-            @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
+            @apply fg-pressed bg-interactive-muted-pressed outline-interactive-pressed outline-2;
           }
         }
       }
@@ -485,18 +485,18 @@
         }
 
         @variant selected {
-          @apply fg-a11y-on-accent bg-accent-primary-bold outline outline-accent-primary-bold;
+          @apply fg-a11y-on-accent bg-accent-primary-bold outline-accent-primary-bold outline;
 
           @variant hover {
-            @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+            @apply fg-a11y-on-accent bg-accent-primary-hover outline-accent-primary-hover outline-2;
           }
 
           @variant focus-visible {
-            @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+            @apply fg-a11y-on-accent bg-accent-primary-hover outline-accent-primary-hover outline-2;
           }
 
           @variant pressed {
-            @apply fg-accent-primary-bold bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
+            @apply fg-accent-primary-bold bg-accent-primary-pressed outline-accent-primary-pressed outline-2;
           }
         }
       }
@@ -517,18 +517,18 @@
         }
 
         @variant selected {
-          @apply fg-primary-bold bg-serious-muted outline outline-serious-bold;
+          @apply fg-primary-bold bg-serious-muted outline-serious-bold outline;
 
           @variant hover {
-            @apply fg-primary-bold bg-serious-hover outline-2 outline-serious-hover;
+            @apply fg-primary-bold bg-serious-hover outline-serious-hover outline-2;
           }
 
           @variant focus-visible {
-            @apply fg-primary-bold bg-serious-hover outline-2 outline-serious-hover;
+            @apply fg-primary-bold bg-serious-hover outline-serious-hover outline-2;
           }
 
           @variant pressed {
-            @apply fg-serious-pressed bg-serious-pressed outline-2 outline-serious-pressed;
+            @apply fg-serious-pressed bg-serious-pressed outline-serious-pressed outline-2;
           }
         }
       }
@@ -549,7 +549,7 @@
         }
 
         @variant selected {
-          @apply fg-primary-bold bg-critical-muted outline outline-critical-bold;
+          @apply fg-primary-bold bg-critical-muted outline-critical-bold outline;
 
           @variant hover {
             @apply fg-a11y-on-accent bg-critical-hover outline-2;
@@ -560,7 +560,7 @@
           }
 
           @variant pressed {
-            @apply fg-critical-bold bg-critical-pressed outline-2 outline-critical-pressed;
+            @apply fg-critical-bold bg-critical-pressed outline-critical-pressed outline-2;
           }
         }
       }
@@ -746,22 +746,22 @@
 
     &.outline {
       @variant color-mono-muted {
-        @apply fg-primary-bold bg-transparent outline outline-interactive;
+        @apply fg-primary-bold outline-interactive bg-transparent outline;
 
         @variant hover {
-          @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+          @apply bg-interactive-muted-hover outline-interactive-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply bg-interactive-muted-hover outline-2 outline-interactive-hover;
+          @apply bg-interactive-muted-hover outline-interactive-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
+          @apply fg-pressed bg-interactive-muted-pressed outline-interactive-pressed outline-2;
         }
 
         @variant selected {
-          @apply fg-primary-muted bg-interactive-muted outline outline-interactive-hover;
+          @apply fg-primary-muted bg-interactive-muted outline-interactive-hover outline;
 
           @variant hover {
             @apply fg-hover bg-interactive-muted-hover outline-2;
@@ -772,20 +772,20 @@
           }
 
           @variant pressed {
-            @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-interactive-pressed;
+            @apply fg-pressed bg-interactive-muted-pressed outline-interactive-pressed outline-2;
           }
         }
       }
 
       @variant color-mono-bold {
-        @apply fg-primary-bold bg-transparent outline outline-mono-bold;
+        @apply fg-primary-bold outline-mono-bold bg-transparent outline;
 
         @variant hover {
-          @apply bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
+          @apply bg-interactive-muted-hover outline-mono-bold-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply bg-interactive-muted-hover outline-2 outline-mono-bold-hover;
+          @apply bg-interactive-muted-hover outline-mono-bold-hover outline-2;
         }
 
         @variant pressed {
@@ -793,67 +793,67 @@
         }
 
         @variant selected {
-          @apply fg-primary-bold bg-interactive-muted-hover outline outline-mono-bold;
+          @apply fg-primary-bold bg-interactive-muted-hover outline-mono-bold outline;
 
           @variant hover {
-            @apply fg-inverse-bold bg-interactive-bold-hover outline-2 outline-mono-bold-hover;
+            @apply fg-inverse-bold bg-interactive-bold-hover outline-mono-bold-hover outline-2;
           }
 
           @variant focus-visible {
-            @apply fg-inverse-bold bg-interactive-bold-hover outline-2 outline-mono-bold-hover;
+            @apply fg-inverse-bold bg-interactive-bold-hover outline-mono-bold-hover outline-2;
           }
 
           @variant pressed {
-            @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-mono-bold-pressed;
+            @apply fg-pressed bg-interactive-muted-pressed outline-mono-bold-pressed outline-2;
           }
         }
       }
 
       @variant color-accent {
-        @apply fg-primary-bold bg-transparent outline outline-mono-bold;
+        @apply fg-primary-bold outline-mono-bold bg-transparent outline;
 
         @variant hover {
-          @apply fg-hover bg-accent-primary-muted outline-2 outline-accent-primary-hover;
+          @apply fg-hover bg-accent-primary-muted outline-accent-primary-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply fg-hover bg-accent-primary-muted outline-2 outline-accent-primary-hover;
+          @apply fg-hover bg-accent-primary-muted outline-accent-primary-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-pressed bg-interactive-muted-pressed outline-2 outline-accent-primary-pressed;
+          @apply fg-pressed bg-interactive-muted-pressed outline-accent-primary-pressed outline-2;
         }
 
         @variant selected {
-          @apply fg-primary-bold bg-accent-primary-muted outline outline-accent-primary-bold;
+          @apply fg-primary-bold bg-accent-primary-muted outline-accent-primary-bold outline;
 
           @variant hover {
-            @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+            @apply fg-a11y-on-accent bg-accent-primary-hover outline-accent-primary-hover outline-2;
           }
 
           @variant focus-visible {
-            @apply fg-a11y-on-accent bg-accent-primary-hover outline-2 outline-accent-primary-hover;
+            @apply fg-a11y-on-accent bg-accent-primary-hover outline-accent-primary-hover outline-2;
           }
 
           @variant pressed {
-            @apply fg-accent-primary-pressed bg-accent-primary-pressed outline-2 outline-accent-primary-pressed;
+            @apply fg-accent-primary-pressed bg-accent-primary-pressed outline-accent-primary-pressed outline-2;
           }
         }
       }
 
       @variant color-serious {
-        @apply fg-primary-bold bg-transparent outline outline-serious-bold;
+        @apply fg-primary-bold outline-serious-bold bg-transparent outline;
 
         @variant hover {
-          @apply fg-primary-bold bg-serious-bold outline-2 outline-serious-hover;
+          @apply fg-primary-bold bg-serious-bold outline-serious-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply fg-primary-bold bg-serious-muted outline-2 outline-serious-hover;
+          @apply fg-primary-bold bg-serious-muted outline-serious-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-serious-bold bg-serious-pressed outline-2 outline-serious-pressed;
+          @apply fg-serious-bold bg-serious-pressed outline-serious-pressed outline-2;
         }
 
         @variant selected {
@@ -868,24 +868,24 @@
           }
 
           @variant pressed {
-            @apply fg-serious-pressed bg-serious-pressed outline-2 outline-serious-pressed;
+            @apply fg-serious-pressed bg-serious-pressed outline-serious-pressed outline-2;
           }
         }
       }
 
       @variant color-critical {
-        @apply fg-primary-bold bg-transparent outline outline-critical-bold;
+        @apply fg-primary-bold outline-critical-bold bg-transparent outline;
 
         @variant hover {
-          @apply fg-primary-bold bg-critical-bold outline-2 outline-critical-hover;
+          @apply fg-primary-bold bg-critical-bold outline-critical-hover outline-2;
         }
 
         @variant focus-visible {
-          @apply fg-primary-bold bg-critical-muted outline-2 outline-critical-hover;
+          @apply fg-primary-bold bg-critical-muted outline-critical-hover outline-2;
         }
 
         @variant pressed {
-          @apply fg-critical-bold bg-critical-pressed outline-2 outline-critical-pressed;
+          @apply fg-critical-bold bg-critical-pressed outline-critical-pressed outline-2;
         }
 
         @variant selected {
@@ -900,7 +900,7 @@
           }
 
           @variant pressed {
-            @apply fg-critical-pressed bg-critical-pressed outline-2 outline-critical-pressed;
+            @apply fg-critical-pressed bg-critical-pressed outline-critical-pressed outline-2;
           }
         }
       }

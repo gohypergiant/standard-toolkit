@@ -14,11 +14,11 @@
 
 @layer components.l1 {
   .list {
-    @apply flex w-content flex-wrap gap-xs;
+    @apply w-content gap-xs flex flex-wrap;
   }
 
   .chip {
-    @apply fg-primary-bold inline-flex gap-xxs w-content items-center justify-center rounded-full outline;
+    @apply fg-primary-bold gap-xxs w-content inline-flex items-center justify-center rounded-full outline;
 
     @variant size-medium {
       @apply px-s py-xs text-body-s;
@@ -50,18 +50,18 @@
   }
 
   .selectable {
-    @apply cursor-pointer outline-interactive;
+    @apply outline-interactive cursor-pointer;
 
     @variant hover {
-      @apply outline-2 outline-interactive-hover;
+      @apply outline-interactive-hover outline-2;
     }
 
     @variant focus-visible {
-      @apply outline-2 outline-interactive-hover;
+      @apply outline-interactive-hover outline-2;
     }
 
     @variant pressed {
-      @apply outline-1 outline-accent-primary-pressed;
+      @apply outline-accent-primary-pressed outline-1;
     }
 
     @variant selected {
@@ -81,7 +81,7 @@
     }
 
     @variant disabled {
-      @apply fg-disabled cursor-not-allowed outline-interactive-disabled;
+      @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
 
       @variant selected {
         @apply bg-interactive-disabled;
@@ -90,7 +90,7 @@
   }
 
   .deletable {
-    @apply cursor-default gap-xs outline-interactive fg-primary-muted;
+    @apply gap-xs outline-interactive fg-primary-muted cursor-default;
 
     @variant has-group-hover/button {
       @apply fg-hover;
@@ -105,14 +105,14 @@
     }
 
     @variant disabled {
-      @apply fg-disabled cursor-not-allowed bg-interactive-disabled outline-interactive-disabled;
+      @apply fg-disabled bg-interactive-disabled outline-interactive-disabled cursor-not-allowed;
     }
   }
 }
 
 @layer components.l2 {
   .remove {
-    @apply p-0 rounded-full;
+    @apply rounded-full p-0;
 
     @variant hover {
       @apply fg-hover;

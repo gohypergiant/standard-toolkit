@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .group {
-    @apply flex gap-xs;
+    @apply gap-xs flex;
 
     @variant orientation-horizontal {
       @apply flex-wrap;
@@ -30,7 +30,7 @@
   }
 
   .radio {
-    @apply flex cursor-pointer items-center gap-m;
+    @apply gap-m flex cursor-pointer items-center;
 
     @variant group-orientation-horizontal/radio-group {
       @apply grow;
@@ -54,10 +54,10 @@
   }
 
   .control {
-    @apply my-xxs flex grow-0 shrink-0 size-l items-center justify-center rounded-full outline-2 outline-interactive;
+    @apply my-xxs size-l outline-interactive flex shrink-0 grow-0 items-center justify-center rounded-full outline-2;
 
     @variant before {
-      @apply block size-s rounded-full;
+      @apply size-s block rounded-full;
     }
 
     @variant group-hover/radio {
@@ -73,7 +73,7 @@
     }
 
     @variant group-selected/radio {
-      @apply outline-1 outline-accent-primary-bold;
+      @apply outline-accent-primary-bold outline-1;
 
       @variant before {
         @apply bg-(--fg-accent-primary-bold);
@@ -96,7 +96,7 @@
       }
 
       @variant group-pressed/radio {
-        @apply outline-2 outline-info-pressed;
+        @apply outline-info-pressed outline-2;
 
         @variant before {
           @apply bg-(--fg-accent-primary-pressed);

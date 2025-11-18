@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .field {
-    @apply fg-primary-bold flex items-center gap-s rounded-round p-s outline;
+    @apply fg-primary-bold gap-s rounded-round p-s flex items-center outline;
 
     @variant hover {
       @apply outline-interactive-hover;
@@ -29,7 +29,7 @@
     }
 
     @variant disabled {
-      @apply fg-disabled cursor-not-allowed outline-interactive-disabled;
+      @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
     }
 
     &.filled {
@@ -42,7 +42,7 @@
   }
 
   .input {
-    @apply block w-full font-display text-body-s outline-none;
+    @apply font-display text-body-s block w-full outline-none;
 
     /* TODO: hide-cancel utility class is missing */
     &::-webkit-search-cancel-button {
