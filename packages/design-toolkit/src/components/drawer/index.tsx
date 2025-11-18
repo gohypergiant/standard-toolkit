@@ -14,15 +14,14 @@
 import { useOn } from '@accelint/bus/react';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
+import clsx from 'clsx';
 import { useCallback, useRef, useState } from 'react';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';
 import { DrawerContext } from './context';
 import { DrawerEventTypes } from './events';
-import { DrawerStyles } from './styles';
+import styles from './styles.module.css';
 import type { DrawerOpenEvent, DrawerProps, DrawerToggleEvent } from './types';
-
-const { drawer } = DrawerStyles();
 
 /**
  * Drawer - Slide-in panel for navigation or contextual content
@@ -109,7 +108,7 @@ export function Drawer({
       >
         <div
           {...rest}
-          className={drawer({ className })}
+          className={clsx('group/drawer', styles.drawer, className)}
           data-open={!!activeView || null}
           data-placement={placement}
           data-size={size}

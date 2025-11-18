@@ -9,13 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
-
-import 'client-only';
-import { DrawerMenuStyles } from './styles';
+import clsx from 'clsx';
+import styles from './styles.module.css';
 import type { DrawerMenuProps } from './types';
-
-const { menu } = DrawerMenuStyles();
 
 export function DrawerMenu({
   className,
@@ -24,13 +20,7 @@ export function DrawerMenu({
   ...rest
 }: DrawerMenuProps) {
   return (
-    <nav
-      {...rest}
-      className={menu({
-        position,
-        className,
-      })}
-    >
+    <nav {...rest} className={clsx(styles.menu, styles[position], className)}>
       {children}
     </nav>
   );

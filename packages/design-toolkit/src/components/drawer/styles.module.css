@@ -1,0 +1,304 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.css';
+
+@layer components.l1 {
+  .layout {
+    --drawer-menu-size: 40px;
+    --drawer-size-small: 100px;
+    --drawer-size-medium: 200px;
+    --drawer-size-large: 400px;
+
+    --drawer-main-row-start: 1;
+    --drawer-main-col-end: 4;
+    --drawer-main-row-end: 4;
+    --drawer-main-col-start: 1;
+
+    --drawer-main-cols: var(--drawer-main-col-start) /
+      var(--drawer-main-col-end);
+    --drawer-main-rows: var(--drawer-main-row-start) /
+      var(--drawer-main-row-end);
+
+    @apply relative grid h-full w-full;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
+
+    @variant push-top {
+      --drawer-main-row-start: 2;
+    }
+
+    @variant push-right {
+      --drawer-main-col-end: 3;
+    }
+
+    @variant push-bottom {
+      --drawer-main-row-end: 3;
+    }
+
+    @variant push-left {
+      --drawer-main-col-start: 2;
+    }
+
+    @variant has-[.group\/sidenav] {
+      --drawer-main-col-start: 2;
+    }
+  }
+
+  .main {
+    @apply relative col-(--drawer-main-cols) row-(--drawer-main-rows);
+  }
+
+  .drawer {
+    @apply bg-surface-default text-body-m pointer-events-none relative flex flex-col;
+
+    @variant placement-top {
+      @apply col-span-full row-start-1 row-end-2;
+
+      @variant group-extend-right/layout {
+        @apply col-end-3;
+      }
+
+      @variant group-extend-left/layout {
+        @apply col-start-2;
+      }
+
+      @variant group-data-[extend=bottom]/layout {
+        @apply col-start-2 col-end-3;
+      }
+    }
+
+    @variant placement-right {
+      @apply col-start-3 col-end-4 row-span-full;
+
+      @variant group-extend-top/layout {
+        @apply row-start-2;
+      }
+
+      @variant group-extend-bottom/layout {
+        @apply row-end-3;
+      }
+
+      @variant group-data-[extend=left]/layout {
+        @apply row-start-2 row-end-3;
+      }
+    }
+
+    @variant placement-bottom {
+      @apply col-span-full row-start-3 row-end-4;
+
+      @variant group-extend-right/layout {
+        @apply col-end-3;
+      }
+
+      @variant group-extend-left/layout {
+        @apply col-start-2;
+      }
+
+      @variant group-data-[extend=top]/layout {
+        @apply col-start-2 col-end-3;
+      }
+    }
+
+    @variant placement-left {
+      @apply col-start-1 col-end-2 row-span-full;
+
+      @variant group-extend-top/layout {
+        @apply row-start-2;
+      }
+
+      @variant group-extend-bottom/layout {
+        @apply row-end-3;
+      }
+
+      @variant group-data-[extend=right]/layout {
+        @apply row-start-2 row-end-3;
+      }
+    }
+
+    & > * {
+      @apply pointer-events-auto;
+    }
+  }
+
+  .menu {
+    @apply rounded-large bg-surface-default p-xs gap-xxs absolute flex;
+
+    @variant group-placement-top/drawer {
+      @apply top-full left-1/2 flex-row rounded-t-none;
+    }
+
+    @variant group-placement-right/drawer {
+      @apply right-full flex-col rounded-r-none;
+    }
+
+    @variant group-placement-bottom/drawer {
+      @apply bottom-full left-1/2 flex-row rounded-b-none;
+    }
+
+    @variant group-placement-left/drawer {
+      @apply left-full flex-col rounded-l-none;
+    }
+
+    &.start {
+      @variant group-placement-top/drawer {
+        @apply left-xl;
+      }
+
+      @variant group-placement-right/drawer {
+        @apply top-xl;
+      }
+
+      @variant group-placement-bottom/drawer {
+        @apply left-xl;
+      }
+
+      @variant group-placement-left/drawer {
+        @apply top-xl;
+      }
+    }
+
+    &.center {
+      @variant group-placement-top/drawer {
+        @apply left-1/2 -translate-x-1/2;
+      }
+
+      @variant group-placement-right/drawer {
+        @apply top-1/2 -translate-y-1/2;
+      }
+
+      @variant group-placement-bottom/drawer {
+        @apply left-1/2 -translate-x-1/2;
+      }
+
+      @variant group-placement-left/drawer {
+        @apply top-1/2 -translate-y-1/2;
+      }
+    }
+
+    &.end {
+      @variant group-placement-top/drawer {
+        @apply right-xl;
+      }
+
+      @variant group-placement-right/drawer {
+        @apply bottom-xl;
+      }
+
+      @variant group-placement-bottom/drawer {
+        @apply right-xl;
+      }
+
+      @variant group-placement-left/drawer {
+        @apply bottom-xl;
+      }
+    }
+  }
+
+  .panel {
+    @apply gap-s p-l hidden h-full min-h-0 flex-col;
+
+    @variant group-open/drawer {
+      @apply flex;
+    }
+
+    @variant group-placement-left/drawer {
+      @variant group-size-large/drawer {
+        @apply w-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply w-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply w-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-right/drawer {
+      @variant group-size-large/drawer {
+        @apply w-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply w-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply w-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-top/drawer {
+      @variant group-size-large/drawer {
+        @apply h-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply h-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply h-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-bottom/drawer {
+      @variant group-size-large/drawer {
+        @apply h-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply h-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply h-(--drawer-size-small);
+      }
+    }
+  }
+
+  .view {
+    @apply gap-s flex h-full flex-col;
+  }
+
+  .header {
+    @apply gap-s flex flex-row items-center justify-between pt-px pr-px;
+  }
+
+  .title {
+    @apply fg-primary-bold w-fit;
+
+    &.large {
+      @apply text-header-l;
+    }
+
+    &.medium {
+      @apply text-header-m;
+    }
+  }
+
+  .content {
+    @apply fg-primary-bold flex max-h-full flex-1 flex-col overflow-y-auto;
+  }
+
+  .footer {
+    @apply fg-primary-bold mt-s flex flex-row items-center justify-end;
+  }
+}
+
+@layer components.l2 {
+  .item {
+    @apply rounded-medium;
+  }
+}

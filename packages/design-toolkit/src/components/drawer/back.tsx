@@ -12,8 +12,8 @@
 
 'use client';
 
-import { ChevronLeft } from '@accelint/icons';
 import 'client-only';
+import { ChevronLeft } from '@accelint/icons';
 import { useContext } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -22,6 +22,7 @@ import { DrawerTrigger } from './trigger';
 
 export function DrawerBack() {
   const { stack } = useContext(ViewStackContext);
+
   return stack.length > 1 ? (
     <DrawerTrigger for='back'>
       <Button variant='icon'>

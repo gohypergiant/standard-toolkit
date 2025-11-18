@@ -10,11 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
-import 'client-only';
+import clsx from 'clsx';
 import { Heading } from 'react-aria-components';
-import { DrawerTitleStyles } from './styles';
+import styles from './styles.module.css';
 import type { DrawerTitleProps } from './types';
 
 /**
@@ -24,13 +22,17 @@ import type { DrawerTitleProps } from './types';
  */
 export function DrawerHeaderTitle({
   className,
-  level,
+  level = 2,
   ...rest
 }: DrawerTitleProps) {
   return (
     <Heading
       {...rest}
-      className={DrawerTitleStyles({ className, level })}
+      className={clsx(
+        styles.title,
+        level <= 3 ? styles.large : styles.medium,
+        className,
+      )}
       level={level}
     />
   );

@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import { useContext, useRef } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { ToggleButton } from '../button/toggle';
@@ -21,11 +22,9 @@ import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import { ViewStackContext } from '../view-stack/context';
 import { DrawerContext } from './context';
-import { DrawerMenuStyles } from './styles';
+import styles from './styles.module.css';
 import { DrawerTrigger } from './trigger';
 import type { DrawerMenuItemProps } from './types';
-
-const { item } = DrawerMenuStyles();
 
 const tooltipPlacementMap = {
   left: 'right',
@@ -59,8 +58,9 @@ export function DrawerMenuItem({
           {...rest}
           ref={tooltipRef}
           className={composeRenderProps(classNames?.item, (className) =>
-            item({ className }),
+            clsx(styles.item, className),
           )}
+          color='accent'
           role='tab'
           variant='icon'
           isSelected={id === view || (stack.length > 1 && stack.includes(id))}
