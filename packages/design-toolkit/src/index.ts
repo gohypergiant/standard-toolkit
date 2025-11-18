@@ -274,7 +274,6 @@ export {
 export { Notice } from './components/notice';
 export { NoticeList } from './components/notice/list';
 export { NoticeIcon } from './components/notice/notice-icon';
-export { NoticeStyles } from './components/notice/styles';
 export type {
   NoticeActionEvent,
   NoticeColor,

@@ -14,10 +14,10 @@
 
 @layer components.l1 {
   .notice {
-    @apply fg-primary-bold flex rounded-medium text-body-s shadow-elevation-overlay outline;
+    @apply fg-primary-bold rounded-medium text-body-s shadow-elevation-overlay flex outline;
 
     @variant size-small {
-      @apply flex-col flex-wrap gap-m p-s;
+      @apply gap-m p-s flex-col flex-wrap;
     }
 
     @variant size-medium {
@@ -78,7 +78,7 @@
   }
 
   .actions {
-    @apply flex flex-row-reverse items-center gap-s;
+    @apply gap-s flex flex-row-reverse items-center;
 
     @variant group-size-small/notice {
       @apply grow justify-start;
@@ -86,7 +86,7 @@
   }
 
   .region {
-    @apply flex flex-col gap-y-s;
+    @apply gap-y-s flex flex-col;
 
     &[data-placement] {
       @apply absolute;
@@ -112,22 +112,22 @@
       center the region horizontally when placement
       is exactly "top" or "bottom"
     */
-    &:where([data-placement="top"]),
-    &:where([data-placement="bottom"]) {
-      @apply -translate-x-1/2 left-1/2;
+    &:where([data-placement='top']),
+    &:where([data-placement='bottom']) {
+      @apply left-1/2 -translate-x-1/2;
     }
 
     /*
       center the region vertically when placement
       is exactly "right" or "left"
     */
-    &:where([data-placement="right"]),
-    &:where([data-placement="left"]) {
-      @apply -translate-y-1/2 top-1/2;
+    &:where([data-placement='right']),
+    &:where([data-placement='left']) {
+      @apply top-1/2 -translate-y-1/2;
     }
   }
 
   .list {
-    @apply flex flex-col gap-y-s;
+    @apply gap-y-s flex flex-col;
   }
 }
