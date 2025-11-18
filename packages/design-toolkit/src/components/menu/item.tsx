@@ -14,7 +14,7 @@
 
 import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useContext } from 'react';
 import {
   MenuItem as AriaMenuItem,

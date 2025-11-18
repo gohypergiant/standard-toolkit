@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Text, type TextProps } from 'react-aria-components';
 import styles from './styles.module.css';
 

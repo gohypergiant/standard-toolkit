@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   MenuSection as AriaMenuSection,
   Collection,
