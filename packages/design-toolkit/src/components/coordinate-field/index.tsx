@@ -332,7 +332,6 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                   className={classNames?.formatButton}
                   aria-label='View coordinate in all formats'
                   isDisabled={!copy.isFormatButtonEnabled}
-                  data-format-button
                 >
                   <Icon>
                     <GlobalShare />
