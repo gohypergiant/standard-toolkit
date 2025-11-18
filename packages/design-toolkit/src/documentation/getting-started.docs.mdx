@@ -2,16 +2,21 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Getting Started" />
 
-# Getting Started
+# Design Toolkit (DTK)
 
-### NPM library
+The Design Toolkit is a collection of React components, patterns, and design tokens built to create consistent, accessible, and visually cohesive applications across Accelint's digital ecosystem. Developed with a focus on performance, modularity, and developer experience, this library provides tools for rapidly building interfaces that adhere to our design system standards while maintaining flexibility for customization.
+
+## Installation
+
+There are two libraries that are required for setting up the design toolkit in your application: the [Design Toolkit](https://www.npmjs.com/package/@accelint/design-toolkit) and the [Design Foundation](https://www.npmjs.com/package/@accelint/design-foundation). The Design Foundation is a collection of design tokens that are used by the Design Toolkit to ensure a consistent design language. The Design Toolkit are the React components and materials that are used in the UI.
 
 **[https://www.npmjs.com/package/@accelint/design-toolkit](https://www.npmjs.com/package/@accelint/design-toolkit)**
 
+### Install DesignTK and DesignFoundation
 
-### Add DesignTK
+`pnpm install @accelint/design-toolkit @accelint/design-foundation`
 
-`npm install @accelint/design-toolkit`
+or install using your preferred package manager such as `npm`.
 
 ### Required versions
 
@@ -19,10 +24,11 @@ import { Meta } from '@storybook/addon-docs/blocks';
 - React >=19
 - Node >= 22
 
-### Install any peer dependencies
+### Install peer dependencies
 
-* tailwind merge
-* zod
+If you don't already the required peer dependencies, install them.
+
+`pnpm install tailwindcss @tailwindcss/postcss postcss react-aria-components`
 
 ## Theming
 
@@ -32,14 +38,7 @@ In order for tailwind to be able to generate the proper styles into your css, yo
 
 The DTK uses the Tailwind library as the css and styling solution and is listed as a peer dependency for your application. While it is not strictly required that you continue to use this library as your application’s solution, we recommend it. For more information about Tailwind’s usage and best practices inside DTK, [read the docs](https://github.com/gohypergiant/standard-toolkit/blob/main/design-toolkit/components/src/documentation/tailwind.md).
 
-#### Install all required dependencies
-
-If they are not already installed from the peer dependency step above, install all required dependencies.
-
-```
-pnpm install tailwindcss tailwind-merge tailwind-variants
-```
-#### Add imports to root css file
+### Add imports
 
 Make the DTK available to your application by importing the styles into your root css and then sourcing the DTK code for generation. Double check the path to the node modules is correct or it won’t generate the correct styles into your project and you will see style problems.
 
@@ -48,13 +47,30 @@ Here, we will use the `globals.css` file as an example, but you can name your cs
 ```css
 // globals.css
 
+@import "@accelint/design-foundation/styles";
+@source "../../node_modules/@accelint/design-foundation"; //path might be different in your app
+
 @import "@accelint/design-toolkit/styles";
 @source "../../node_modules/@accelint/design-toolkit"; //path might be different in your app
-```
 
+```
 Here is an example of the `globals.css` file in a Nextjs example app: [globals.css](https://github.com/gohypergiant/standard-toolkit/blob/main/apps/next/src/app/globals.css)
 
-#### Set up the theme provider
+### Transpile Tailwind
+
+If you are using Nextjs, you will need to transpile the Tailwind CSS by adding the following to your `next.config.js`.
+
+```
+const nextConfig: NextConfig = {
+  transpilePackages: ['@accelint/design-foundation', '@accelint/design-system'],
+  // ...additional config options
+
+  return config;
+  },
+};
+```
+
+### Set up the theme provider
 The Theme Provider is required to be able to toggle between light and dark mode as well as to create overrides to the default theme colors that are exported into Typescript. The Theme Provider is also required to be a client component, so it cannot be imported directly into a server component.
 
 First, create a theme.tsx to export the provider.
@@ -80,13 +96,7 @@ import {ThemeProvider} from './theme.tsx';
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    //   On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    //   document.documentElement.classList.toggle(
-    //     "dark",
-    //     localStorage.theme === "dark" ||
-    //       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
-    //   );
-    <html lang='en' className='font-primary dark'>
+    <html lang='en' className='dark'>
       <body className='w-full h-dvh flex flex-col'>
         <DTKTheme>
           {children}
