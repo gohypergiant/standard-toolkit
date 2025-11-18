@@ -1,13 +1,14 @@
 {
   "recommendations": [
-    "editorconfig.editorconfig",
-    "redhat.vscode-yaml",
     "biomejs.biome",
-    "github.vscode-pull-request-github",
-    "mhutchie.git-graph",
-    "streetsidesoftware.code-spell-checker",
     "bradlc.vscode-tailwindcss",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "github.vscode-pull-request-github",
+    "kamikillerto.vscode-colorize",
+    "mhutchie.git-graph",
     "natqe.reload",
-    "kamikillerto.vscode-colorize"
+    "redhat.vscode-yaml",
+    "streetsidesoftware.code-spell-checker"
   ]
 }

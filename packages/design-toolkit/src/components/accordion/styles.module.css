@@ -22,7 +22,7 @@
   }
 
   .header {
-    @apply fg-primary-bold flex w-full items-center gap-s rounded-medium px-s py-xs outline-none;
+    @apply fg-primary-bold gap-s px-s py-xs rounded-medium flex w-full items-center outline-none;
 
     @variant focus-visible-within {
       @apply bg-interactive-muted-hover;
