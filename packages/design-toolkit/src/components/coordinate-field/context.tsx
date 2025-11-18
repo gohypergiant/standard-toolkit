@@ -18,14 +18,55 @@ import type { ProviderProps } from '@/lib/types';
 import type { CoordinateFieldProps, CoordinateFieldState } from './types';
 
 /**
- * Context for CoordinateField component props
+ * CoordinateField Context Architecture
+ *
+ * This file defines two separate contexts following the React Aria component pattern:
+ *
+ * 1. CoordinateFieldContext (Props Context):
+ *    - Contains user-provided props for the component
+ *    - Used for React Aria's context-based prop merging
+ *    - Part of the public composition API
+ *
+ * 2. CoordinateFieldStateContext (State Context):
+ *    - Contains derived/computed runtime state
+ *    - Used to share state with child components (e.g., CoordinateSegment)
+ *    - Primarily for internal use
+
+ * Separation keeps the public API (props) distinct from internal
+ * implementation details (state), improving maintainability and composition.
+ */
+
+/**
+ * Props Context for CoordinateField component.
+ *
+ * Contains user-provided props (label, format, size, value, onChange, etc.)
+ * and is used by React Aria's useContextProps hook for context-based prop merging.
+ * This enables parent components to provide default props to nested CoordinateField
+ * components, supporting composition patterns.
+ *
+ * Part of the public API - external consumers can use this for component composition.
+ *
+ * @see CoordinateFieldStateContext for internal runtime state
  */
 export const CoordinateFieldContext =
   createContext<ContextValue<CoordinateFieldProps, HTMLDivElement>>(null);
 
 /**
- * Context for CoordinateField state
- * Allows child components (like CoordinateSegment) to access shared state
+ * State Context for CoordinateField component.
+ *
+ * Contains derived/computed runtime state (segmentValues, currentValue,
+ * validationErrors, registerTimeout, etc.) that is shared with child components
+ * like CoordinateSegment. This avoids prop drilling for deeply nested children.
+ *
+ * This follows the React Aria pattern of separating props context (public API)
+ * from state context (internal implementation). While exported for composition
+ * scenarios and testing, this is primarily for internal use.
+ *
+ * @see CoordinateFieldContext for user-provided props
+ * @example
+ * // Used internally by child components
+ * const state = useCoordinateFieldStateContext();
+ * const { segmentValues, isDisabled, registerTimeout } = state;
  */
 export const CoordinateFieldStateContext =
   createContext<CoordinateFieldState | null>(null);
