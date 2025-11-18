@@ -387,7 +387,6 @@ export type {
 export { Skeleton } from './components/skeleton';
 export type { SkeletonProps } from './components/skeleton/types';
 export { Slider } from './components/slider';
-export { SliderStyles } from './components/slider/styles';
 export type { SliderProps } from './components/slider/types';
 export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';

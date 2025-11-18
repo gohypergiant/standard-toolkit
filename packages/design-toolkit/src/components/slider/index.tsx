@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { Fragment } from 'react';
 import {
   Slider as AriaSlider,
@@ -24,21 +25,8 @@ import {
 } from 'react-aria-components';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
-import { SliderStyles } from './styles';
+import styles from './styles.module.css';
 import type { SliderProps } from './types';
-
-const {
-  slider,
-  label,
-  inputs,
-  input,
-  thumb,
-  track,
-  trackBackground,
-  trackValue,
-  minValue,
-  maxValue,
-} = SliderStyles();
 
 /**
  * Slider - An interactive range input component for numeric value selection
@@ -66,7 +54,7 @@ export function Slider({
     <AriaSlider
       {...rest}
       className={composeRenderProps(classNames?.slider, (className) =>
-        slider({ className }),
+        clsx('group/slider', styles.slider, className),
       )}
       maxValue={maxValueProp}
       minValue={minValueProp}
@@ -77,18 +65,18 @@ export function Slider({
       {({ state }) => (
         <>
           {showLabel && (
-            <Label className={label({ className: classNames?.label })}>
+            <Label className={clsx(styles.label, classNames?.label)}>
               {labelProp}
             </Label>
           )}
           {showInput && (
-            <div className={inputs({ className: classNames?.inputs })}>
+            <div className={clsx(styles.inputs, classNames?.inputs)}>
               {state.values.map((value, index) => (
                 <Input
                   key={`number-field-${index === 0 ? 'min' : 'max'}`}
                   className={composeRenderProps(
                     classNames?.input,
-                    (className) => input({ className }),
+                    (className) => clsx(styles.input, className),
                   )}
                   value={value}
                   disabled={state.isDisabled}
@@ -105,20 +93,19 @@ export function Slider({
           )}
           <AriaSliderTrack
             className={composeRenderProps(classNames?.track, (className) =>
-              track({ className }),
+              clsx(styles.track, className),
             )}
           >
             <div
-              className={trackBackground({
-                className: classNames?.trackBackground,
-              })}
+              className={clsx(
+                styles.trackBackground,
+                classNames?.trackBackground,
+              )}
             />
             {state.values.map((_, index) => (
               <Fragment key={`slider-${index === 0 ? 'min' : 'max'}`}>
                 <div
-                  className={trackValue({
-                    className: classNames?.trackValue,
-                  })}
+                  className={clsx(styles.trackValue, classNames?.trackValue)}
                   data-start={
                     state.values.length === 1 ? 0 : state.getThumbPercent(0)
                   }
@@ -133,7 +120,7 @@ export function Slider({
                     index={index}
                     className={composeRenderProps(
                       classNames?.thumb,
-                      (className) => thumb({ className }),
+                      (className) => clsx(styles.thumb, className),
                     )}
                   />
                   <Tooltip placement='top'>
@@ -145,13 +132,13 @@ export function Slider({
           </AriaSliderTrack>
           <Text
             slot='min'
-            className={minValue({ className: classNames?.minValue })}
+            className={clsx(styles.minValue, classNames?.minValue)}
           >
             {minValueProp}
           </Text>
           <Text
             slot='max'
-            className={maxValue({ className: classNames?.maxValue })}
+            className={clsx(styles.maxValue, classNames?.maxValue)}
           >
             {maxValueProp}
           </Text>
