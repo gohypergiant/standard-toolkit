@@ -85,11 +85,49 @@
     }
   }
 
-  /* .region {
+  .region {
+    @apply flex flex-col gap-y-s;
 
+    &[data-placement] {
+      @apply absolute;
+    }
+
+    @variant placement-top {
+      @apply top-0;
+    }
+
+    @variant placement-bottom {
+      @apply bottom-0;
+    }
+
+    @variant placement-right {
+      @apply right-0;
+    }
+
+    @variant placement-left {
+      @apply left-0;
+    }
+
+    /*
+      center the region horizontally when placement
+      is exactly "top" or "bottom"
+    */
+    &:where([data-placement="top"]),
+    &:where([data-placement="bottom"]) {
+      @apply -translate-x-1/2 left-1/2;
+    }
+
+    /*
+      center the region vertically when placement
+      is exactly "right" or "left"
+    */
+    &:where([data-placement="right"]),
+    &:where([data-placement="left"]) {
+      @apply -translate-y-1/2 top-1/2;
+    }
   }
 
   .list {
-
-  } */
+    @apply flex flex-col gap-y-s;
+  }
 }
