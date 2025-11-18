@@ -52,24 +52,58 @@ export function useCoordinateCopy({
     null,
   );
 
-  const fallbackCopyToClipboard = (text: string) => {
+  /**
+   * Fallback clipboard copy for browsers that don't support navigator.clipboard API.
+   * Creates a temporary textarea, copies text using document.execCommand('copy'),
+   * and provides visual feedback by setting copiedFormat state for 2 seconds.
+   *
+   * @param text - The coordinate string to copy to clipboard
+   * @param formatToCopy - The coordinate format being copied (for UI feedback)
+   */
+  const fallbackCopyToClipboard = (
+    text: string,
+    formatToCopy: CoordinateSystem,
+  ) => {
+    // Create temporary textarea for copy operation
     const textArea = document.createElement('textarea');
     textArea.value = text;
+    // Position off-screen so it's not visible to user
     textArea.style.position = 'fixed';
     textArea.style.left = '-999999px';
     textArea.style.top = '-999999px';
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
+
     try {
       document.execCommand('copy');
-      setCopiedFormat(null);
+
+      // Set copied format to show Check icon in UI
+      setCopiedFormat(formatToCopy);
+
+      // Reset to null after 2 seconds to return to Copy icon
+      registerTimeout(
+        setTimeout(() => {
+          setCopiedFormat(null);
+        }, COPY_FEEDBACK_DURATION_MS),
+      );
     } catch (err) {
       logger.withError(err).warn('Fallback copy to clipboard failed');
     }
+
+    // Clean up temporary textarea
     document.body.removeChild(textArea);
   };
 
+  /**
+   * Handles copying a coordinate in the specified format to the clipboard.
+   * Uses modern clipboard API (navigator.clipboard.writeText) with fallback
+   * to document.execCommand for older browsers.
+   *
+   * Sets copiedFormat state to show visual feedback (Check icon) for 2 seconds.
+   *
+   * @param formatToCopy - The coordinate format to copy (dd, ddm, dms, mgrs, utm)
+   */
   const handleCopyFormat = async (formatToCopy: CoordinateSystem) => {
     if (!currentValue) {
       return;
@@ -83,15 +117,21 @@ export function useCoordinateCopy({
     }
 
     try {
+      // Modern clipboard API - copy and show feedback
       await navigator.clipboard.writeText(formatResult.value);
+
+      // Set copied format to show Check icon in UI
       setCopiedFormat(formatToCopy);
+
+      // Reset to null after 2 seconds to return to Copy icon
       registerTimeout(
         setTimeout(() => {
           setCopiedFormat(null);
         }, COPY_FEEDBACK_DURATION_MS),
       );
     } catch (_err) {
-      fallbackCopyToClipboard(formatResult.value);
+      // Fall back to document.execCommand for older browsers
+      fallbackCopyToClipboard(formatResult.value, formatToCopy);
     }
   };
 
