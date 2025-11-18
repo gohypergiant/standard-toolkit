@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   Menu as AriaMenu,
   composeRenderProps,
@@ -20,10 +21,8 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { MenuContext } from './context';
-import { MenuStyles, MenuStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { MenuProps } from './types';
-
-const { menu, popover } = MenuStyles();
 
 /**
  * Menu - A dropdown menu component with keyboard navigation and selection
@@ -95,7 +94,7 @@ export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
     classNames,
     popoverProps,
     selectionMode = 'single',
-    variant = MenuStylesDefaults.variant,
+    variant = 'cozy',
     ...rest
   } = props;
 
@@ -103,7 +102,7 @@ export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
     <Popover
       {...popoverProps}
       className={composeRenderProps(classNames?.popover, (className) =>
-        popover({ className }),
+        clsx(styles.popover, className),
       )}
     >
       <MenuContext.Provider value={{ variant }}>
@@ -111,7 +110,7 @@ export function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {
           {...rest}
           ref={ref}
           className={composeRenderProps(classNames?.menu, (className) =>
-            menu({ className, variant }),
+            clsx('group/menu', styles.menu, styles[variant], className),
           )}
           selectionMode={selectionMode}
         >

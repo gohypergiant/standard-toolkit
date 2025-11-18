@@ -13,15 +13,14 @@
 'use client';
 
 import 'client-only';
+import clsx from 'clsx';
 import {
   MenuSection as AriaMenuSection,
   Collection,
   Header,
 } from 'react-aria-components';
-import { MenuStyles } from './styles';
+import styles from './styles.module.css';
 import type { MenuSectionProps } from './types';
-
-const { section, header } = MenuStyles();
 
 export function MenuSection<T extends object>({
   children,
@@ -31,12 +30,9 @@ export function MenuSection<T extends object>({
   ...rest
 }: MenuSectionProps<T>) {
   return (
-    <AriaMenuSection
-      {...rest}
-      className={section({ className: classNames?.section })}
-    >
+    <AriaMenuSection {...rest} className={classNames?.section}>
       {title && (
-        <Header className={header({ className: classNames?.header })}>
+        <Header className={clsx(styles.header, classNames?.header)}>
           {title}
         </Header>
       )}
