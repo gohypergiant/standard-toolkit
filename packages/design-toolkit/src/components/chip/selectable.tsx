@@ -32,7 +32,7 @@ export function SelectableChip({ ref, ...props }: SelectableChipProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(className, (className) =>
-        clsx('group/chip', styles.selectable, className),
+        clsx('group/chip', styles.chip, styles.selectable, className),
       )}
       data-size={size}
     />

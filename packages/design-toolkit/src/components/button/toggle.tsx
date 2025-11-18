@@ -77,7 +77,13 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          clsx('group/button', styles.toggle, styles[variant], className),
+          clsx(
+            'group/button',
+            styles.button,
+            styles.toggle,
+            styles[variant],
+            className,
+          ),
         )}
         data-color={color}
         data-size={size}

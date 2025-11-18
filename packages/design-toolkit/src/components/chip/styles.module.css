@@ -50,7 +50,6 @@
   }
 
   .selectable {
-    composes: chip;
     @apply cursor-pointer outline-interactive;
 
     @variant hover {
@@ -91,7 +90,6 @@
   }
 
   .deletable {
-    composes: chip;
     @apply cursor-default gap-xs outline-interactive fg-primary-muted;
 
     @variant has-group-hover/button {

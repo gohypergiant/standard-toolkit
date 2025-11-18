@@ -43,7 +43,7 @@ export function DeletableChip({ ref, ...props }: DeletableChipProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.chip, (className) =>
-        clsx('group/chip', styles.deletable, className),
+        clsx('group/chip', styles.chip, styles.deletable, className),
       )}
       textValue={textValue}
       data-size={size}
