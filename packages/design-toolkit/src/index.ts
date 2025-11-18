@@ -259,7 +259,6 @@ export { MenuItemLabel } from './components/menu/item-label';
 export { MenuItem } from './components/menu/item';
 export { MenuSection } from './components/menu/section';
 export { MenuSeparator } from './components/menu/separator';
-export { MenuStyles, MenuStylesDefaults } from './components/menu/styles';
 export { MenuSubmenu } from './components/menu/submenu';
 export { MenuTrigger } from './components/menu/trigger';
 export type {
