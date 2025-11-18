@@ -106,6 +106,10 @@ export function useCoordinateField(
 
   const handlePasteValueApplied = (pastedValue: CoordinateValue) => {
     state.applyPastedCoordinate(pastedValue);
+
+    // Defer focus until after React commits state updates to the DOM.
+    // applyPastedCoordinate triggers setSegmentValues which updates the input
+    // elements, and we need those updates to complete before focusing.
     registerTimeout(
       setTimeout(() => {
         focus.focusFirstSegment();
