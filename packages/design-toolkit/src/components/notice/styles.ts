@@ -14,20 +14,6 @@ import { tv } from '@accelint/design-foundation/lib/utils';
 
 export const NoticeStyles = tv({
   slots: {
-    notice: [
-      'group/notice fg-primary-bold flex rounded-medium text-body-s shadow-elevation-overlay outline',
-      'size-small:flex-col size-small:flex-wrap size-small:gap-m size-small:p-s group-data-placement/region:size-small:min-w-[120px] group-data-placement/region:size-small:max-w-[320px]',
-      'size-medium:gap-l size-medium:p-l group-data-placement/region:size-medium:min-w-[200px] group-data-placement/region:size-medium:max-w-[640px]',
-      'color-info:bg-info-muted color-info:outline-info-bold',
-      'color-advisory:bg-advisory-muted color-advisory:outline-accent-primary-bold',
-      'color-normal:bg-normal-muted color-normal:outline-normal-bold',
-      'color-serious:bg-serious-muted color-serious:outline-serious-bold',
-      'color-critical:bg-critical-muted color-critical:outline-critical-bold',
-    ],
-    content: [
-      'flex flex-1 items-center group-size-medium/notice:gap-l group-size-small/notice:gap-m',
-    ],
-    message: 'flex-1 group-size-small/notice:basis-10/12',
     region: [
       'group/region flex flex-col gap-y-s',
       'data-placement:absolute',
@@ -37,7 +23,5 @@ export const NoticeStyles = tv({
       'placement-left:left-0 data-[placement=left]:top-1/2',
     ],
     list: ['flex flex-col gap-y-s'],
-    actions:
-      'flex flex-row-reverse items-center gap-s group-size-small/notice:grow group-size-small/notice:basis-1 group-size-small/notice:justify-start',
   },
 });
