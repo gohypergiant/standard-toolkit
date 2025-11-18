@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useContextProps } from 'react-aria-components';
 import { ClassificationBannerContext } from './context';
 import styles from './styles.module.css';

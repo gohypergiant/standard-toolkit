@@ -14,7 +14,7 @@
 
 import 'client-only';
 import ChevronRight from '@accelint/icons/chevron-right';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { Button } from '../button';

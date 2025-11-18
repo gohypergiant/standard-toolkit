@@ -14,7 +14,7 @@
 
 import 'client-only';
 import Calendar from '@accelint/icons/calendar';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,

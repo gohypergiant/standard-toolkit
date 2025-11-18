@@ -102,7 +102,7 @@ export const Default: Story = {
       <DrawerLayout
         extend={extend}
         push={
-          (push as unknown as string[]).join(' ') as DrawerLayoutProps['push']
+          (push as unknown as string[])?.join(' ') as DrawerLayoutProps['push']
         }
       >
         <DrawerLayoutMain>

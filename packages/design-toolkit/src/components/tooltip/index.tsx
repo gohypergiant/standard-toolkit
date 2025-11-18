@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { useIsSSR } from '@react-aria/ssr';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useMemo } from 'react';
 import {
   Tooltip as AriaTooltip,

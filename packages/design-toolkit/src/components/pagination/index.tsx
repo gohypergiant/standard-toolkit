@@ -14,7 +14,7 @@
 
 import 'client-only';
 import { useControlledState } from '@react-stately/utils';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { PaginationContext } from './context';
 import { PaginationNext } from './next';
 import { PaginationPages } from './pages';

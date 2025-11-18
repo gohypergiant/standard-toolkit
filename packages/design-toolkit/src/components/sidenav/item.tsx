@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { useContext, useRef } from 'react';
 import {
   composeRenderProps,
@@ -23,10 +24,8 @@ import { IconContext } from '../icon/context';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import { SidenavContext } from './context';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type { SidenavItemProps } from './types';
-
-const { item, text, transient, tooltip } = SidenavStyles();
 
 /**
  * SidenavItem - Item component for sidenav
@@ -48,7 +47,7 @@ export function SidenavItem({
     <Provider
       values={[
         [IconContext, { size: 'medium' }],
-        [TextContext, { className: text({ className: transient() }) }],
+        [TextContext, { className: clsx(styles.text, styles.transient) }],
       ]}
     >
       <TooltipTrigger isDisabled={isOpen}>
@@ -56,12 +55,12 @@ export function SidenavItem({
           {...rest}
           ref={ref}
           className={composeRenderProps(classNames?.button, (className) =>
-            item({ className }),
+            clsx('group/item', styles.item, className),
           )}
         >
           {children}
         </ToggleButton>
-        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
+        <Tooltip parentRef={ref} placement='right' className={styles.tooltip}>
           {textValue}
         </Tooltip>
       </TooltipTrigger>

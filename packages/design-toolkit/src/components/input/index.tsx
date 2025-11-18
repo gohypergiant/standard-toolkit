@@ -15,7 +15,7 @@
 import 'client-only';
 import { CancelFill } from '@accelint/icons';
 import { useControlledState } from '@react-stately/utils';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   Input as AriaInput,
   InputContext as AriaInputContext,

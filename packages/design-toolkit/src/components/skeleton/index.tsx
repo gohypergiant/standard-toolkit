@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import styles from './styles.module.css';
 import type { SkeletonProps } from './types';
 

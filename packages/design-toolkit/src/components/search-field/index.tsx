@@ -13,7 +13,7 @@
 
 import { CancelFill, Loop, Search } from '@accelint/icons';
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   SearchField as AriaSearchField,
   Button,

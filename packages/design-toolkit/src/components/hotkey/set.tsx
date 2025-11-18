@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { IconProvider } from '../icon/context';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';

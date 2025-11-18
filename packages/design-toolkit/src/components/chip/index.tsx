@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { Tag as AriaTag, useContextProps } from 'react-aria-components';
 import { IconProvider } from '../icon/context';

@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Provider } from 'react-aria-components';
 import { ButtonContext, ToggleButtonContext } from '../button/context';
 import styles from './styles.module.css';

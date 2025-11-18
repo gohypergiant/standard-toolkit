@@ -13,7 +13,7 @@
 
 import { Check, Remove } from '@accelint/icons';
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   Checkbox as AriaCheckbox,
   composeRenderProps,

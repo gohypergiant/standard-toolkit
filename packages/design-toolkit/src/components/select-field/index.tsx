@@ -13,7 +13,7 @@
 
 import 'client-only';
 import ChevronDown from '@accelint/icons/chevron-down';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   Select as AriaSelect,
   composeRenderProps,

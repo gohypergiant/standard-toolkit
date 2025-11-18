@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   Tab as AriaTab,
   composeRenderProps,

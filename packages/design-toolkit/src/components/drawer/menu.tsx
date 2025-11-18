@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import styles from './styles.module.css';
 import type { DrawerMenuProps } from './types';
 

@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import styles from './styles.module.css';
 import type { ComponentProps } from 'react';
 

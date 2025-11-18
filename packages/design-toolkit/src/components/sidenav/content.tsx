@@ -12,12 +12,11 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { Provider } from 'react-aria-components';
 import { DividerContext } from '../divider/context';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type { SidenavContentProps } from './types';
-
-const { content, divider } = SidenavStyles();
 
 /**
  * SidenavContent - Container for sidenav content
@@ -30,8 +29,8 @@ export function SidenavContent({
   ...rest
 }: SidenavContentProps) {
   return (
-    <Provider values={[[DividerContext, { className: divider() }]]}>
-      <div {...rest} className={content({ className })}>
+    <Provider values={[[DividerContext, { className: styles.divider }]]}>
+      <div {...rest} className={clsx(styles.content, className)}>
         {children}
       </div>
     </Provider>

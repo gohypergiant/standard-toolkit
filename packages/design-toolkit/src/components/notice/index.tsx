@@ -14,7 +14,7 @@
 
 import { Cancel } from '@accelint/icons';
 import 'client-only';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   Text,
   UNSTABLE_Toast as Toast,

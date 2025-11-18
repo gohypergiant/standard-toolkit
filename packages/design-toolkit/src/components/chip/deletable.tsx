@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { CancelFill } from '@accelint/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   Tag as AriaTag,
   composeRenderProps,

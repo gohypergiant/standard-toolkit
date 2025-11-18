@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { ChevronRight } from '@accelint/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Breadcrumb, composeRenderProps, Link } from 'react-aria-components';
 import { Icon } from '../icon';
 import styles from './styles.module.css';

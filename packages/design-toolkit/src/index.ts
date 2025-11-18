@@ -151,13 +151,6 @@ export { DrawerLayout } from './components/drawer/layout';
 export { DrawerMenuItem } from './components/drawer/menu-item';
 export { DrawerMenu } from './components/drawer/menu';
 export { DrawerPanel } from './components/drawer/panel';
-export {
-  DrawerMenuStyles,
-  DrawerMenuStylesDefaults,
-  DrawerStyles,
-  DrawerTitleStyles,
-  DrawerTitleStylesDefaults,
-} from './components/drawer/styles';
 export { DrawerTrigger } from './components/drawer/trigger';
 export type {
   DrawerContextValue,
@@ -372,7 +365,6 @@ export { SidenavItem } from './components/sidenav/item';
 export { SidenavLink } from './components/sidenav/link';
 export { SidenavMenuItem } from './components/sidenav/menu-item';
 export { SidenavMenu } from './components/sidenav/menu';
-export { SidenavStyles } from './components/sidenav/styles';
 export { SidenavTrigger } from './components/sidenav/trigger';
 export type {
   SidenavAvatarProps,
