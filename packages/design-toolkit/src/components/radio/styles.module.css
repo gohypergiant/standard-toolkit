@@ -56,7 +56,7 @@
   .control {
     @apply my-xxs size-l outline-interactive flex shrink-0 grow-0 items-center justify-center rounded-full outline-2;
 
-    @variant before {
+    &:before {
       @apply size-s block rounded-full;
     }
 
@@ -75,14 +75,14 @@
     @variant group-selected/radio {
       @apply outline-accent-primary-bold outline-1;
 
-      @variant before {
+      &:before {
         @apply bg-(--fg-accent-primary-bold);
       }
 
       @variant group-hover/radio {
         @apply outline-interactive-hover;
 
-        @variant before {
+        &:before {
           @apply bg-(--fg-accent-primary-hover);
         }
       }
@@ -90,7 +90,7 @@
       @variant group-focus-visible/radio {
         @apply outline-accent-primary-hover;
 
-        @variant before {
+        &:before {
           @apply bg-(--fg-accent-primary-hover);
         }
       }
@@ -98,7 +98,7 @@
       @variant group-pressed/radio {
         @apply outline-info-pressed outline-2;
 
-        @variant before {
+        &:before {
           @apply bg-(--fg-accent-primary-pressed);
         }
       }
@@ -108,7 +108,7 @@
       @apply outline-interactive-disabled;
 
       @variant group-selected/radio {
-        @variant before {
+        &:before {
           @apply bg-interactive-disabled;
         }
       }

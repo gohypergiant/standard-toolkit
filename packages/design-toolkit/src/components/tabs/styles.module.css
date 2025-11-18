@@ -71,47 +71,47 @@
     @variant group-orientation-horizontal/tabs {
       @apply rounded-b-none;
 
-      @variant after {
+      &:after {
         @apply absolute bottom-0 left-0 block h-px w-full bg-(--outline-static);
       }
 
       @variant hover {
-        @variant after {
+        &:after {
           @apply bg-(--outline-interactive-hover);
         }
       }
 
       @variant focus-visible {
-        @variant after {
+        &:after {
           @apply bg-(--outline-accent-primary-bold);
         }
       }
 
       @variant pressed {
-        @variant after {
+        &:after {
           @apply bg-(--outline-interactive-pressed);
         }
       }
 
       @variant selected {
-        @variant after {
+        &:after {
           @apply bg-(--outline-accent-primary-bold);
         }
 
         @variant hover {
-          @variant after {
+          &:after {
             @apply bg-(--outline-accent-primary-hover);
           }
         }
 
         @variant focus-visible {
-          @variant after {
+          &:after {
             @apply bg-(--outline-accent-primary-hover);
           }
         }
 
         @variant pressed {
-          @variant after {
+          &:after {
             @apply bg-(--outline-accent-primary-pressed);
           }
         }
@@ -126,7 +126,7 @@
       }
 
       @variant group-orientation-horizontal/tabs {
-        @variant after {
+        &:after {
           @apply bg-(--outline-interactive-disabled);
         }
       }
