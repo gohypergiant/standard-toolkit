@@ -14,6 +14,7 @@
 
 import { Cancel } from '@accelint/icons';
 import 'client-only';
+import clsx from 'clsx';
 import {
   Text,
   UNSTABLE_Toast as Toast,
@@ -22,11 +23,9 @@ import {
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NoticeIcon } from './notice-icon';
-import { NoticeStyles } from './styles';
+import styles from './styles.module.css';
 import type { ButtonProps } from '../button/types';
 import type { NoticeColor, NoticeProps } from './types';
-
-const { notice, content, actions, message: description } = NoticeStyles();
 
 const ButtonColorMap: Record<NoticeColor, ButtonProps['color']> = {
   normal: 'mono-bold',
@@ -53,23 +52,23 @@ export function Notice({
 }: NoticeProps) {
   return (
     <Toast
-      className={notice({ className: classNames?.notice })}
+      className={clsx('group/notice', styles.notice, classNames?.notice)}
       toast={{ key: id, content: message, onClose }}
       data-color={color}
       data-size={size}
     >
-      <ToastContent className={content({ className: classNames?.content })}>
+      <ToastContent className={clsx(styles.content, classNames?.content)}>
         {!hideIcon && size === 'medium' && (
           <NoticeIcon color={color} size={size} />
         )}
         <Text
           slot='description'
-          className={description({ className: classNames?.message })}
+          className={clsx(styles.message, classNames?.message)}
         >
           {message}
         </Text>
         {(primary || secondary) && (
-          <div className={actions({ className: classNames?.actions })}>
+          <div className={clsx(styles.actions, classNames?.actions)}>
             {primary && (
               <Button
                 color={ButtonColorMap[color]}
