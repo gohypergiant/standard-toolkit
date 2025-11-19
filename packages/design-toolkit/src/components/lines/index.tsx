@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { LinesStyles } from './styles';
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
 import type { LinesProps } from './types';
 
 /**
@@ -25,13 +26,14 @@ import type { LinesProps } from './types';
 export function Lines({
   className,
   size = 'medium',
-  variant,
+  variant = 'branch',
   isVisible = true,
 }: LinesProps) {
   return (
     <div
-      className={LinesStyles({ className, variant, isVisible })}
+      className={clsx(styles.lines, styles[variant], className)}
       data-size={size}
+      data-visible={isVisible || null}
     />
   );
 }
