@@ -58,32 +58,32 @@ function normalizeLon(lon: number): number {
  *
  * @param args - Viewport size calculation arguments
  * @param args.bounds - Geographic bounds [minLon, minLat, maxLon, maxLat]
+ * @param args.zoom - Zoom level for detection of edge cases like multiple world copies
  * @param args.unit - Unit of distance measurement: `km | m | nm | mi | ft`. Defaults to `nm`
  * @param args.formatter - Number formatter for localization (defaults to en-US)
- * @param args.zoom - Optional zoom level for improved detection of edge cases
  * @returns Formatted string like "660 x 1,801 NM" or "-- x -- NM" if invalid
  *
  * @example
  * ```typescript
- * getViewportSize({ bounds: [-82, 22, -71, 52], unit: 'nm' })
+ * getViewportSize({ bounds: [-82, 22, -71, 52], zoom: 5, unit: 'nm' })
  * // returns "612 x 1,801 NM"
  *
- * getViewportSize({ bounds: [170, 50, -170, 60], unit: 'km' })
+ * getViewportSize({ bounds: [170, 50, -170, 60], zoom: 4, unit: 'km' })
  * // returns "2,050 x 1,111 KM" (handles dateline crossing)
  *
- * getViewportSize({ bounds: [-180, -85, -144, 85], unit: 'nm', zoom: 1.5 })
+ * getViewportSize({ bounds: [-180, -85, -144, 85], zoom: 1.5, unit: 'nm' })
  * // returns "21,639 x 6,570 NM" (detects multiple world copies at low zoom)
  * ```
  */
 export function getViewportSize({
   bounds,
+  zoom,
   unit = 'nm',
   formatter = numberFormatter,
-  zoom,
 }: GetViewportSizeArgs) {
   const defaultValue = `-- x -- ${unit.toUpperCase()}`;
 
-  if (!bounds || bounds.every((b) => Number.isNaN(b))) {
+  if (bounds.every((b) => Number.isNaN(b))) {
     return defaultValue;
   }
 
@@ -141,7 +141,7 @@ export function getViewportSize({
   // Detect multiple world copies scenario:
   // At very low zoom (< 2) with a small lonSpan (< 100°), getBounds() returns a narrow slice
   // but visually multiple world copies are shown, so the real width is Earth's circumference
-  const isMultipleWorldCopies = zoom !== undefined && zoom < 2 && lonSpan < 100;
+  const isMultipleWorldCopies = zoom < 2 && lonSpan < 100;
 
   if (isMultipleWorldCopies) {
     // Multiple world copies visible: use full Earth circumference

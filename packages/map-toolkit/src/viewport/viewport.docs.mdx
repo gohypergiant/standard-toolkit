@@ -350,17 +350,18 @@ Calculate and format viewport dimensions from bounds. Uses intelligent calculati
 import { getViewportSize } from '@accelint/map-toolkit/viewport';
 
 // Basic usage
-const result = getViewportSize({
+getViewportSize({
   bounds: [-82, 22, -71, 52],
+  zoom: 5,
   unit: 'nm',
 });
 // Returns: "612 x 1,801 NM"
 
-// With zoom for improved accuracy at low zoom levels
-const result = getViewportSize({
+// At low zoom levels, detects multiple world copies
+getViewportSize({
   bounds: [-180, -85, -144, 85],
-  unit: 'nm',
   zoom: 1.5,
+  unit: 'nm',
 });
 // Returns: "21,639 x 6,570 NM" (detects multiple world copies)
 ```
@@ -369,10 +370,10 @@ const result = getViewportSize({
 
 ```tsx
 {
-  bounds?: Bounds;               // Geographic bounds [minLon, minLat, maxLon, maxLat]
+  bounds: Bounds;                // Geographic bounds [minLon, minLat, maxLon, maxLat]
+  zoom: number;                  // Zoom level for edge case detection
   unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'nm' | 'mi' | 'ft' (default: 'nm')
   formatter?: Intl.NumberFormat; // Custom number formatter (default: en-US)
-  zoom?: number;                 // Optional zoom level for improved edge case detection
 }
 ```
 

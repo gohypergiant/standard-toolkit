@@ -17,6 +17,7 @@ describe('getViewportSize', () => {
   it('converts the bounds to a string', () => {
     const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
+      zoom: 5,
       unit: 'nm',
     });
     expect(result).toBe('612 x 1,801 NM');
@@ -26,15 +27,17 @@ describe('getViewportSize', () => {
     const formatter = Intl.NumberFormat('de-DE');
     const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
+      zoom: 5,
       unit: 'km',
       formatter,
     });
     expect(result).toBe('1.134 x 3.336 KM');
   });
 
-  it('provides a fallback for undefined bounds', () => {
+  it('provides a fallback for NaN bounds', () => {
     const result = getViewportSize({
-      bounds: undefined,
+      bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
+      zoom: 5,
     });
     expect(result).toBe('-- x -- NM');
   });
@@ -42,6 +45,7 @@ describe('getViewportSize', () => {
   it('normalizes longitude values outside -180 to 180 range', () => {
     const result = getViewportSize({
       bounds: [-200, 22, -71, 52], // -200 normalizes to 160
+      zoom: 5,
       unit: 'nm',
     });
     // Should calculate distance, not return fallback
@@ -52,6 +56,7 @@ describe('getViewportSize', () => {
   it('handles multi-revolution longitude values (721°)', () => {
     const result = getViewportSize({
       bounds: [721, 22, 730, 52], // 721° -> 1°, 730° -> 10°
+      zoom: 5,
       unit: 'nm',
     });
     expect(result).not.toBe('-- x -- NM');
@@ -61,6 +66,7 @@ describe('getViewportSize', () => {
   it('normalizes negative longitude values beyond -360', () => {
     const result = getViewportSize({
       bounds: [-541, 22, -530, 52], // -541° -> 179°, -530° -> -170°
+      zoom: 5,
       unit: 'nm',
     });
     expect(result).not.toBe('-- x -- NM');
@@ -70,6 +76,7 @@ describe('getViewportSize', () => {
   it('handles International Date Line crossing', () => {
     const result = getViewportSize({
       bounds: [170, 50, -170, 60], // Crosses dateline
+      zoom: 5,
       unit: 'nm',
     });
     // Should calculate the short distance across the dateline (~20 degrees)
@@ -85,6 +92,7 @@ describe('getViewportSize', () => {
   it('handles invalid latitude values outside -90 to 90 range', () => {
     const result = getViewportSize({
       bounds: [-82, -100, -71, 52],
+      zoom: 5,
       unit: 'nm',
     });
     expect(result).toBe('-- x -- NM');
@@ -93,6 +101,7 @@ describe('getViewportSize', () => {
   it('handles invalid bounds where minLat > maxLat', () => {
     const result = getViewportSize({
       bounds: [-82, 52, -71, 22],
+      zoom: 5,
       unit: 'nm',
     });
     expect(result).toBe('-- x -- NM');
@@ -100,16 +109,18 @@ describe('getViewportSize', () => {
 
   it('works with all supported units', () => {
     const bounds: [number, number, number, number] = [-82, 22, -71, 52];
-    expect(getViewportSize({ bounds, unit: 'km' })).toContain('KM');
-    expect(getViewportSize({ bounds, unit: 'm' })).toContain('M');
-    expect(getViewportSize({ bounds, unit: 'nm' })).toContain('NM');
-    expect(getViewportSize({ bounds, unit: 'mi' })).toContain('MI');
-    expect(getViewportSize({ bounds, unit: 'ft' })).toContain('FT');
+    const zoom = 5;
+    expect(getViewportSize({ bounds, zoom, unit: 'km' })).toContain('KM');
+    expect(getViewportSize({ bounds, zoom, unit: 'm' })).toContain('M');
+    expect(getViewportSize({ bounds, zoom, unit: 'nm' })).toContain('NM');
+    expect(getViewportSize({ bounds, zoom, unit: 'mi' })).toContain('MI');
+    expect(getViewportSize({ bounds, zoom, unit: 'ft' })).toContain('FT');
   });
 
   it('handles edge case of bounds at world extents', () => {
     const result = getViewportSize({
       bounds: [-180, -90, 180, 90],
+      zoom: 3,
       unit: 'nm',
     });
     expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
