@@ -285,7 +285,7 @@ export class Broadcast<
       return;
     }
 
-    if (!this.channel.onmessage) {
+    if (!this.listeners[type]?.length) {
       console.warn('No listeners registered for this event type:', type);
       return;
     }

@@ -32,6 +32,93 @@ describe('broadcast', () => {
     resetMockBroadcastChannel();
   });
 
+  it('sets channel name from config', () => {
+    const bus = new Broadcast({ channelName: 'custom-channel' });
+    // @ts-expect-error Accessing protected property
+    expect(bus.channelName).toBe('custom-channel');
+  });
+
+  it('onmessage', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+    const fn = vi.fn();
+    // @ts-expect-error Accessing protected property
+    bus.handleListeners = fn;
+
+    // Simulate an error event
+    const event = new MessageEvent('message', {
+      data: 'test',
+    });
+
+    // @ts-expect-error Accessing protected property
+    bus.channel.onmessage(event);
+
+    expect(fn).toHaveBeenCalled();
+  });
+
+  it('onmessageerror', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+    const consoleMock = vi.spyOn(console, 'error');
+
+    // Simulate an error event
+    const event = new MessageEvent('message', {
+      data: 'test',
+    });
+
+    // @ts-expect-error Accessing protected property
+    bus.channel.onmessageerror(event);
+
+    expect(consoleMock).toHaveBeenCalled();
+    expect(consoleMock).toHaveBeenCalledWith(
+      'BroadcastChannel message error',
+      event,
+    );
+  });
+
+  it('setEventEmitOptions', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+    bus.setEventEmitOptions('test', { target: 'self' });
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get('test'),
+    ).toEqual({ target: 'self' });
+
+    bus.setEventEmitOptions('test', null);
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get('test'),
+    ).toBeUndefined();
+  });
+
+  it('setEventsEmitOptions', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+    bus.setEventsEmitOptions(new Map([['test', { target: 'self' }]]));
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get('test'),
+    ).toEqual({ target: 'self' });
+  });
+
+  it('setGlobalEmitOptions', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+    bus.setGlobalEmitOptions({ target: 'self' });
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get(bus.id),
+    ).toEqual({ target: 'self' });
+  });
+
+  it('should warn if no listeners for event', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+    const consoleMock = vi.spyOn(console, 'warn');
+
+    bus.emit('test', 'test');
+
+    expect(consoleMock).toHaveBeenCalled();
+  });
+
   it('on', () => {
     const bus = Broadcast.getInstance<Payload<'test', string>>();
     const fn = vi.fn();
@@ -107,6 +194,17 @@ describe('broadcast', () => {
 
     bus.on('test', fn);
     bus.off('test', fn);
+    bus.emit('test', 'test');
+
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('deleteEvent', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+    const fn = vi.fn();
+
+    bus.on('test', fn);
+    bus.deleteEvent('test');
     bus.emit('test', 'test');
 
     expect(fn).not.toHaveBeenCalled();
