@@ -12,10 +12,10 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import { clsx } from 'clsx';
+import { Badge } from '../badge';
+import styles from './styles.module.css';
 import type { KanbanMenuProps } from './types';
-
-const { colHeaderActions, colHeaderActionsCount } = KanbanStyles();
 
 export function KanbanColumnHeaderActions({
   className,
@@ -24,8 +24,8 @@ export function KanbanColumnHeaderActions({
   ...rest
 }: KanbanMenuProps) {
   return (
-    <div className={colHeaderActions({ className })} {...rest}>
-      <div className={colHeaderActionsCount()}>{cardCount ?? 0}</div>
+    <div className={clsx(styles.colHeaderActions, className)} {...rest}>
+      <Badge>{cardCount ?? 0}</Badge>
       {children}
     </div>
   );

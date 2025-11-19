@@ -12,8 +12,9 @@
 'use client';
 import 'client-only';
 
+import { clsx } from 'clsx';
 import { useColumnInteractions } from '../../hooks/kanban';
-import { ColumnStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanColProps } from './types';
 
 export function KanbanColumn({
@@ -26,7 +27,9 @@ export function KanbanColumn({
 
   return (
     <ol
-      className={ColumnStyles({ isHighlighted, isActive, className })}
+      data-focus-visible={isHighlighted || undefined}
+      data-drop-target={isActive || undefined}
+      className={clsx(styles.column, className)}
       ref={ref}
       {...rest}
     >

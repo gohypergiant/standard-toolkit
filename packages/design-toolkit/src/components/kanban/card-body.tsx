@@ -12,10 +12,8 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { cardBody } = KanbanStyles();
 
 export function KanbanCardBody({
   children,
@@ -23,7 +21,7 @@ export function KanbanCardBody({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={cardBody({ className })} {...rest}>
+    <div className={styles.cardBody} {...rest}>
       {children}
     </div>
   );

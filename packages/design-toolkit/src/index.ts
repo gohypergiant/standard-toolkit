@@ -283,11 +283,6 @@ export {
   useDragContext,
 } from './components/kanban/kanban';
 export { columnData } from './components/kanban/mock-data';
-export {
-  CardInnerStyles,
-  ColumnStyles,
-  KanbanStyles,
-} from './components/kanban/styles';
 export type {
   KanbanCardData,
   KanbanCardProps,
