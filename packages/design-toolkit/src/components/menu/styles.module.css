@@ -62,7 +62,6 @@
           @apply fg-a11y-on-accent bg-accent-primary-bold;
 
           &:before {
-            /* note: i also see this bg-(--outline-accent-primary-pressed). which one is correct? */
             @apply bg-(--outline-accent-primary-hover);
           }
         }
