@@ -102,7 +102,11 @@
   }
 
   .columnContentActions {
-    @apply fg-primary-bold shadow-elevation-overlay gap-s bg-surface-default py-xs text-body-s w-full items-center justify-start font-medium hover:cursor-pointer;
+    @apply fg-primary-bold shadow-elevation-overlay gap-s bg-surface-default py-xs text-body-s w-full items-center justify-start font-medium;
+
+    @variant hover {
+      @apply cursor-pointer;
+    }
   }
 }
 
