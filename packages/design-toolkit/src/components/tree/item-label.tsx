@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from 'clsx';
 import { Text, type TextProps } from 'react-aria-components';
-import { TreeStyles } from './styles';
-
-const { label } = TreeStyles();
+import styles from './styles.module.css';
 
 /**
  * ItemLabel - Label for a tree item
@@ -21,5 +20,5 @@ const { label } = TreeStyles();
  * Renders the primary text label for a tree item
  */
 export function TreeItemLabel({ children, className }: TextProps) {
-  return <Text className={label({ className })}>{children}</Text>;
+  return <Text className={clsx(styles.label, className)}>{children}</Text>;
 }

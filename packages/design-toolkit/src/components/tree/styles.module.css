@@ -1,0 +1,183 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.css';
+
+@layer components.l1 {
+  .tree {
+    @apply overflow-auto outline-hidden;
+  }
+
+  .item {
+    @apply fg-primary-bold px-s rounded-medium;
+
+    @variant not-visible {
+      @apply fg-primary-muted;
+    }
+
+    @variant not-viewable {
+      @apply fg-primary-muted;
+    }
+
+    @variant hover {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant focus-visible {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant pressed {
+      @apply bg-interactive-muted-pressed;
+    }
+
+    @variant drop-target {
+      @apply outline-accent-primary-bold border;
+      background-color: --alpha(var(--bg-accent-primary-muted) / 20%);
+    }
+
+    @variant disabled {
+      @apply cursor-not-allowed border-none;
+
+      @variant hover {
+        @apply bg-transparent;
+      }
+
+      @variant data-[drop-target=true] {
+        @apply bg-transparent;
+      }
+    }
+
+    &.cozy {
+      @apply min-h-s;
+    }
+
+    &.compact {
+      @apply min-h-l;
+    }
+
+    &.crammed {
+      @apply min-h-s;
+    }
+  }
+
+  .content {
+    @apply px-xs flex w-full items-center justify-items-start overflow-x-auto outline-hidden;
+
+    &.cozy {
+      @apply text-header-m;
+      min-height: 48px;
+    }
+
+    &.compact {
+      @apply gap-xs text-header-s;
+      min-height: 36px;
+    }
+
+    &.crammed {
+      @apply gap-xs text-header-s;
+    }
+  }
+
+  .display {
+    @apply grid flex-1 items-center;
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas:
+      'icon label space action'
+      'icon description space action';
+
+    &.cozy {
+      @apply gap-x-s px-xs;
+    }
+
+    &.compact {
+      @apply gap-x-s px-xxs;
+    }
+
+    &.crammed {
+      @apply gap-x-xs px-xxs;
+    }
+  }
+
+  .icon {
+    grid-area: icon;
+  }
+
+  .label {
+    grid-area: label;
+
+    @variant not-has-[+[data-slot=description]] {
+      @apply row-span-full;
+    }
+
+    &.cozy,
+    &.compact,
+    &.crammed {
+      @apply gap-xs;
+    }
+  }
+
+  .description {
+    @apply fg-primary-muted text-body-s;
+    grid-area: description;
+  }
+
+  .actions {
+    @apply flex shrink-0 items-center;
+    grid-area: action;
+
+    &.cozy {
+      @apply gap-x-xs;
+    }
+
+    &.compact {
+      @apply gap-x-xxs;
+    }
+
+    &.crammed {
+      @apply gap-x-xxs;
+    }
+  }
+
+  .spacing {
+    &.cozy {
+      min-height: 46px;
+      width: 28px;
+    }
+
+    &.compact {
+      min-height: 38px;
+      width: 20px;
+    }
+
+    &.crammed {
+      @apply min-h-xl;
+      width: 20px;
+    }
+  }
+
+  .visibility,
+  .expansion,
+  .drag {
+    @apply fg-primary-bold;
+
+    @variant color-mono-bold {
+      @variant group-not-visible/tree-item {
+        @apply fg-primary-muted;
+      }
+
+      @variant group-not-viewable/tree-item {
+        @apply fg-primary-muted;
+      }
+    }
+  }
+}

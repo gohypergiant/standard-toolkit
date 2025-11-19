@@ -17,9 +17,9 @@ import type {
   TreeProps as AriaTreeProps,
   RenderProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
 import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
-import type { TreeStyles } from './styles';
+
+export type TreeStyleVariant = 'cozy' | 'compact' | 'crammed';
 
 export type TreeProps<T> = Omit<
   AriaTreeProps<TreeNode<T>>,
@@ -29,18 +29,18 @@ export type TreeProps<T> = Omit<
   | 'expandedKeys'
   | 'selectedKeys'
   | 'onSelectionChange'
-> &
-  VariantProps<typeof TreeStyles> & {
-    disabledKeys?: Set<Key>;
-    dragAndDropConfig?: DragAndDropConfig;
-    expandedKeys?: Set<Key>;
-    selectedKeys?: Set<Key>;
-    visibleKeys?: Set<Key>;
-    showRuleLines?: boolean;
-    showVisibility?: boolean;
-    onVisibilityChange?: (keys: Set<Key>) => void;
-    onSelectionChange?: (keys: Set<Key>) => void;
-  };
+> & {
+  disabledKeys?: Set<Key>;
+  dragAndDropConfig?: DragAndDropConfig;
+  expandedKeys?: Set<Key>;
+  selectedKeys?: Set<Key>;
+  visibleKeys?: Set<Key>;
+  showRuleLines?: boolean;
+  showVisibility?: boolean;
+  onVisibilityChange?: (keys: Set<Key>) => void;
+  onSelectionChange?: (keys: Set<Key>) => void;
+  variant?: TreeStyleVariant;
+};
 
 export type TreeItemProps = Omit<AriaTreeItemProps, 'id'> & {
   id: Key;
@@ -51,11 +51,11 @@ export type TreeItemContentProps = Pick<
   'children'
 >;
 
-export type TreeItemContentRenderProps = AriaTreeItemContentRenderProps &
-  VariantProps<typeof TreeStyles> & {
-    isViewable?: boolean;
-    isVisible?: boolean;
-  };
+export type TreeItemContentRenderProps = AriaTreeItemContentRenderProps & {
+  isViewable?: boolean;
+  isVisible?: boolean;
+  variant?: TreeStyleVariant;
+};
 
 export type TreeContextValue = Required<
   Pick<
