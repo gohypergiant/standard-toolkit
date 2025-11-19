@@ -32,14 +32,15 @@
   .control {
     @apply rounded-round p-xxs outline-interactive flex bg-transparent outline;
 
-    @variant before {
+    &:before {
       @apply size-m mr-l block rounded-full bg-(--fg-primary-muted);
+      content: '';
     }
 
     @variant group-hover/switch {
       @apply bg-interactive-muted-hover outline-interactive-hover;
 
-      @variant before {
+      &:before {
         @apply bg-(--fg-primary-bold);
       }
     }
@@ -47,7 +48,7 @@
     @variant group-focus-visible/switch {
       @apply bg-interactive-muted-hover outline-interactive-hover;
 
-      @variant before {
+      &:before {
         @apply bg-(--fg-primary-bold);
       }
     }
@@ -55,7 +56,7 @@
     @variant group-pressed/switch {
       @apply bg-interactive-muted-pressed outline-interactive-pressed;
 
-      @variant before {
+      &:before {
         @apply bg-(--fg-pressed);
       }
     }
@@ -63,14 +64,14 @@
     @variant group-selected/switch {
       @apply outline-accent-primary-bold;
 
-      @variant before {
+      &:before {
         @apply ml-l mr-0 bg-(--fg-accent-primary-bold);
       }
 
       @variant group-hover/switch {
         @apply bg-accent-primary-muted outline-accent-primary-bold;
 
-        @variant before {
+        &:before {
           @apply bg-(--fg-accent-primary-hover);
         }
       }
@@ -78,7 +79,7 @@
       @variant group-focus-visible/switch {
         @apply bg-accent-primary-muted outline-interactive-hover;
 
-        @variant before {
+        &:before {
           @apply bg-(--fg-accent-primary-hover);
         }
       }
@@ -86,7 +87,7 @@
       @variant group-pressed/switch {
         @apply bg-accent-primary-pressed outline-accent-primary-pressed;
 
-        @variant before {
+        &:before {
           @apply bg-(--fg-accent-primary-pressed);
         }
       }
@@ -95,7 +96,7 @@
     @variant group-disabled/switch {
       @apply outline-interactive-disabled bg-transparent;
 
-      @variant before {
+      &:before {
         @apply bg-(--fg-disabled);
       }
 
