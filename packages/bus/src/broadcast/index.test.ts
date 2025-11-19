@@ -17,6 +17,7 @@ import {
 } from '@accelint/vitest-config/mocks/broadcast-channel';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Broadcast } from './index';
+import type { StructuredCloneable } from 'type-fest';
 import type { Payload } from './types';
 
 describe('broadcast', () => {
@@ -194,6 +195,58 @@ describe('broadcast', () => {
       payload: 'test',
       source: bus.id,
       target,
+    });
+  });
+
+  it.for([
+    [''],
+    [new Boolean(1)],
+    [null],
+    [undefined],
+    [true],
+    [1],
+    [BigInt(9007199254740991)],
+    [Number.NaN],
+    [Number.POSITIVE_INFINITY],
+    [[]],
+    [new ArrayBuffer(8)],
+    [new DataView(new ArrayBuffer(8))],
+    [new Date('2025-01-01T00:00:00.000Z')],
+    [/ab+c/i],
+    [new Error('Test error')],
+    [
+      new Map([
+        ['key1', 'value1'],
+        ['key2', 'value2'],
+      ]),
+    ],
+    [new Set([1, 2, 3])],
+    [new Uint8Array([1, 2, 3, 4])],
+  ])('should serialize %s correctly', ([testValue]) => {
+    const bus =
+      Broadcast.getInstance<
+        Payload<'test', Exclude<StructuredCloneable, undefined>>
+      >();
+
+    let returnedData = {};
+    const fn = vi.fn().mockImplementation((data) => {
+      returnedData = data;
+    });
+
+    const payload = {
+      type: 'test',
+      value: testValue,
+    };
+
+    bus.on('test', fn);
+    bus.emit('test', payload);
+
+    expect(fn).toHaveBeenCalled();
+    expect(returnedData).toStrictEqual({
+      type: 'test',
+      payload: payload,
+      source: bus.id,
+      target: undefined,
     });
   });
 });

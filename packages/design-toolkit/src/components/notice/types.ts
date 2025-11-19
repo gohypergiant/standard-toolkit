@@ -14,6 +14,7 @@
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { ToastListProps } from 'react-aria-components';
+import type { StructuredCloneable } from 'type-fest';
 import type { ButtonProps } from '../button/types';
 import type { NoticeEventTypes } from './events';
 
@@ -36,7 +37,7 @@ export type NoticeContent = {
   secondary?: ActionButtonProps;
   timeout?: number;
   target?: UniqueId;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, StructuredCloneable>;
 };
 
 export type NoticeIconProps = {
@@ -102,7 +103,7 @@ export type NoticeDequeueEvent = Payload<
     id?: UniqueId;
     target?: UniqueId;
     color?: NoticeColor;
-    metadata?: Record<string, unknown>;
+    metadata?: Record<string, StructuredCloneable>;
   }
 >;
 
