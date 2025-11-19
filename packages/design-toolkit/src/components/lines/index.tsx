@@ -31,13 +31,9 @@ export function Lines({
 }: LinesProps) {
   return (
     <div
-      className={clsx(
-        styles.lines,
-        className,
-        styles[variant],
-        !isVisible && styles.isNotVisible,
-      )}
+      className={clsx(styles.lines, styles[variant], className)}
       data-size={size}
+      data-visible={isVisible}
     />
   );
 }

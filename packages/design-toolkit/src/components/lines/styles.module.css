@@ -88,8 +88,8 @@
         50% 1px;
     }
 
-    &.isNotVisible {
-      @apply bg-none;
+    @variant not-visible {
+      @apply invisible;
     }
   }
 }
