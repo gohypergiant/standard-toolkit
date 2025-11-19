@@ -11,12 +11,9 @@
  */
 
 import type { ComponentProps } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { LinesStyles } from '@/components/lines/styles';
 
-export type LinesProps = Omit<ComponentProps<'div'>, 'size'> &
-  LinesStylesVariants & {
-    size?: 'large' | 'medium' | 'small';
-  };
-
-export type LinesStylesVariants = VariantProps<typeof LinesStyles>;
+export type LinesProps = Omit<ComponentProps<'div'>, 'size'> & {
+  size?: 'large' | 'medium' | 'small';
+  variant?: 'branch' | 'vert' | 'last';
+  isVisible?: boolean;
+};
