@@ -33,7 +33,7 @@ export function Lines({
     <div
       className={clsx(styles.lines, styles[variant], className)}
       data-size={size}
-      data-visible={isVisible}
+      data-visible={isVisible || null}
     />
   );
 }
