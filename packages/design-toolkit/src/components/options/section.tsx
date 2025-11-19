@@ -9,14 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
+import { clsx } from 'clsx';
 import { Collection, Header, ListBoxSection } from 'react-aria-components';
-import { OptionsStyles } from './styles';
+import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsSectionProps } from './types';
-
-const { section, header: headerClassNames } = OptionsStyles();
 
 export function OptionsSection<T extends OptionsDataItem>({
   children,
@@ -27,9 +24,9 @@ export function OptionsSection<T extends OptionsDataItem>({
   return (
     <ListBoxSection
       id={header}
-      className={section({ className: classNames?.section })}
+      className={clsx(styles.section, classNames?.section)}
     >
-      <Header className={headerClassNames({ className: classNames?.header })}>
+      <Header className={clsx(styles.header, classNames?.header)}>
         {header}
       </Header>
       <Collection items={items}>{children}</Collection>

@@ -9,17 +9,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
+import type { TextProps } from 'react-aria-components';
 
-import 'client-only';
-import { OptionsStyles } from './styles';
-import type { OptionsItemTextProps } from './types';
-
-const { content } = OptionsStyles();
-
-export function OptionsItemContent({
-  className,
-  ...rest
-}: OptionsItemTextProps) {
-  return <div {...rest} className={content({ className })} />;
+export function OptionsItemContent({ className, ...rest }: TextProps) {
+  return <div {...rest} className={clsx(styles.content, className)} />;
 }

@@ -2,6 +2,7 @@
   "recommendations": [
     "biomejs.biome",
     "bradlc.vscode-tailwindcss",
+    "clinyong.vscode-css-modules",
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "github.vscode-pull-request-github",
