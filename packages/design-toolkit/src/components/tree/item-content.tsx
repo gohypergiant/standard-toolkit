@@ -11,6 +11,7 @@
  */
 
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
+import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components';
 import { Button } from '../button';
@@ -19,11 +20,9 @@ import { Icon } from '../icon';
 import { IconProvider } from '../icon/context';
 import { TreeContext, TreeItemContext } from './context';
 import { TreeLines } from './lines';
-import { TreeStyles } from './styles';
+import styles from './styles.module.css';
 import type { Key } from '@react-types/shared';
 import type { TreeItemContentProps } from './types';
-
-const { content, display, spacing, drag, expansion, visibility } = TreeStyles();
 
 /**
  * ItemContent - Content of a tree item
@@ -67,7 +66,7 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
         return (
           <IconProvider size={size}>
             <div
-              className={content({ variant })}
+              className={clsx('group', styles.content, styles[variant])}
               data-last-of-set={isLastOfSet}
             >
               {showVisibility && (
@@ -77,7 +76,7 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                   size={size}
                   onPress={handlePress}
                   isDisabled={isDisabled}
-                  className={visibility()}
+                  className={styles.visibility}
                 >
                   <Icon>{isVisible ? <Show /> : <Hide />}</Icon>
                 </Button>
@@ -90,14 +89,14 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                   slot='chevron'
                   variant='icon'
                   size={size}
-                  className={expansion()}
+                  className={styles.expansion}
                 >
                   <Icon>{isExpanded ? <ChevronDown /> : <ChevronUp />}</Icon>
                 </Button>
               ) : (
-                <div className={spacing({ variant })} />
+                <div className={clsx(styles.spacing, styles[variant])} />
               )}
-              <div className={display({ variant })}>
+              <div className={clsx(styles.display, styles[variant])}>
                 {typeof children === 'function'
                   ? children({
                       ...renderProps,
@@ -121,7 +120,7 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                   variant='icon'
                   size={size}
                   isDisabled={isDisabled}
-                  className={drag({})}
+                  className={styles.drag}
                 >
                   <Icon>
                     <DragVert />

@@ -12,16 +12,15 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { useContext } from 'react';
 import {
   TreeItem as AriaTreeItem,
   composeRenderProps,
 } from 'react-aria-components';
 import { TreeContext, TreeItemContext } from './context';
-import { TreeStyles } from './styles';
+import styles from './styles.module.css';
 import type { TreeItemProps } from './types';
-
-const { item } = TreeStyles();
 
 /**
  * TreeItem - Individual node in a tree
@@ -49,7 +48,7 @@ export function TreeItem({ className, id, ...rest }: TreeItemProps) {
         {...rest}
         id={id}
         className={composeRenderProps(className, (className) =>
-          item({ className }),
+          clsx('group/tree-item', styles.item, className),
         )}
         data-viewable={isViewable || null}
         data-visible={isVisible || null}
