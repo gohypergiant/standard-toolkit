@@ -197,9 +197,8 @@
   }
 
   .label {
-    grid-area: label;
-
     @apply truncate;
+    grid-area: label;
 
     @variant group-not-has-[>_[slot=description]]/menu-item {
       @apply row-span-full;
@@ -207,9 +206,8 @@
   }
 
   .description {
-    grid-area: description;
-
     @apply fg-primary-muted text-body-xs truncate;
+    grid-area: description;
 
     @variant group-hover/menu-item {
       @apply fg-primary-bold;
