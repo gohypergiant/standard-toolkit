@@ -22,7 +22,7 @@ export function KanbanHeader({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={clsx(styles.header, className)} {...rest}>
+    <div {...rest} className={clsx(styles.header, className)}>
       {children}
     </div>
   );

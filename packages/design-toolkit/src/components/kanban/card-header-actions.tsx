@@ -22,7 +22,7 @@ export function KanbanCardHeaderActions({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={clsx(styles.cardHeaderActions, className)} {...rest}>
+    <div {...rest} className={clsx(styles.cardHeaderActions, className)}>
       {children}
     </div>
   );

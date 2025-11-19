@@ -27,11 +27,11 @@ export function KanbanColumn({
 
   return (
     <ol
+      {...rest}
       data-focus-visible={isHighlighted || undefined}
       data-drop-target={isActive || undefined}
       className={clsx(styles.column, className)}
       ref={ref}
-      {...rest}
     >
       {children}
     </ol>

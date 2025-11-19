@@ -22,7 +22,7 @@ export function KanbanColumnHeaderTitle({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <span className={clsx(styles.columnTitle, className)} {...rest}>
+    <span {...rest} className={clsx(styles.columnTitle, className)}>
       {children}
     </span>
   );

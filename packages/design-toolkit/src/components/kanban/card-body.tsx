@@ -22,7 +22,7 @@ export function KanbanCardBody({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={clsx(styles.cardBody, className)} {...rest}>
+    <div {...rest} className={clsx(styles.cardBody, className)}>
       {children}
     </div>
   );

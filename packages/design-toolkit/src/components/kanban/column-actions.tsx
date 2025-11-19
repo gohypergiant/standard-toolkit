@@ -25,7 +25,7 @@ export function KanbanColumnActions({
   ...rest
 }: KanbanColContentActionProps) {
   return (
-    <div className={clsx(styles.columnHeader, className)} {...rest}>
+    <div {...rest} className={clsx(styles.columnHeader, className)}>
       <Button variant='flat' onPress={onAddCard} {...rest}>
         <Icon>
           <Add />

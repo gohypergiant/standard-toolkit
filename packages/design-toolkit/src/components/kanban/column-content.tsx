@@ -30,7 +30,7 @@ export function KanbanColumnContent({
 
   return (
     <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
-      <div className={clsx(styles.columnContent, className)} {...rest}>
+      <div {...rest} className={clsx(styles.columnContent, className)}>
         {children}
       </div>
     </SortableContext>

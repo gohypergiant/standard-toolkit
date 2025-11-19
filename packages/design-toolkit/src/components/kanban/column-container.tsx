@@ -22,7 +22,7 @@ export function KanbanColumnContainer({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={clsx(styles.columnItems, className)} {...rest}>
+    <div {...rest} className={clsx(styles.columnItems, className)}>
       {children}
     </div>
   );

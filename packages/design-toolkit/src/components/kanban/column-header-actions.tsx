@@ -24,7 +24,7 @@ export function KanbanColumnHeaderActions({
   ...rest
 }: KanbanMenuProps) {
   return (
-    <div className={clsx(styles.colHeaderActions, className)} {...rest}>
+    <div {...rest} className={clsx(styles.colHeaderActions, className)}>
       <Badge>{cardCount ?? 0}</Badge>
       {children}
     </div>
