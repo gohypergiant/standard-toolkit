@@ -26,6 +26,10 @@
       @apply min-h-l;
     }
 
+    @variant not-visible {
+      @apply invisible;
+    }
+
     &.branch {
       background-image:
         repeating-linear-gradient(
@@ -86,10 +90,6 @@
       background-size:
         1px 50%,
         50% 1px;
-    }
-
-    @variant not-visible {
-      @apply invisible;
     }
   }
 }
