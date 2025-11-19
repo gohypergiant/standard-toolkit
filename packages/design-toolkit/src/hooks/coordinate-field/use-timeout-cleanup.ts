@@ -10,25 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Color } from '@deck.gl/core';
-import type { TextLayerProps as DglTextLayerProps } from '@deck.gl/layers';
+import { useEffect, useRef } from 'react';
 
-export const defaultSettings: Partial<DglTextLayerProps> = {
-  fontFamily: 'system-ui, sans-serif',
-  fontSettings: {
-    fontSize: 22,
-    sdf: true,
-    buffer: 10,
-    cutoff: 0.19,
-    radius: 10,
-    smoothing: 0.1,
-  },
-  fontWeight: 500,
-  getAlignmentBaseline: 'center',
-  getColor: [255, 255, 255, 255] as Color,
-  getSize: 12,
-  getTextAnchor: 'middle',
-  lineHeight: 1,
-  outlineColor: [0, 0, 0, 255] as Color,
-  outlineWidth: 2,
-} as const;
+export interface UseTimeoutCleanupResult {
+  registerTimeout: (timeoutId: NodeJS.Timeout) => void;
+}
+
+export function useTimeoutCleanup(): UseTimeoutCleanupResult {
+  const timeoutIdsRef = useRef<Set<NodeJS.Timeout>>(new Set());
+
+  const registerTimeout = (timeoutId: NodeJS.Timeout) => {
+    timeoutIdsRef.current.add(timeoutId);
+  };
+
+  useEffect(() => {
+    return () => {
+      timeoutIdsRef.current.forEach(clearTimeout);
+      timeoutIdsRef.current.clear();
+    };
+  }, []);
+
+  return { registerTimeout };
+}
