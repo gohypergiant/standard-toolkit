@@ -12,8 +12,8 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { SearchField } from '@/components/search-field/index';
 import { SearchFieldProvider } from './context';
+import { SearchField } from './index';
 import type { SearchFieldProps } from './types';
 
 function setup({

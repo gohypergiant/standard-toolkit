@@ -487,9 +487,15 @@ importers:
       '@accelint/design-foundation':
         specifier: workspace:*
         version: link:../design-foundation
+      '@accelint/geo':
+        specifier: workspace:*
+        version: link:../geo
       '@accelint/icons':
         specifier: workspace:*
         version: link:../icons
+      '@accelint/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@accelint/temporal':
         specifier: workspace:*
         version: link:../temporal

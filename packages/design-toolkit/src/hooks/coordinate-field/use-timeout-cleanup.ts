@@ -10,13 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import { tv } from '@accelint/design-foundation/lib/utils';
+import { useEffect, useRef } from 'react';
 
-export const BreadcrumbsStyles = tv({
-  slots: {
-    list: 'fg-primary-muted flex items-center gap-s',
-    item: 'group/breadcrumb last:fg-accent-primary-bold flex items-center',
-    link: 'current:fg-accent-primary-bold hover:fg-primary-bold',
-    separator: 'group-current/breadcrumb:hidden',
-  },
-});
+export interface UseTimeoutCleanupResult {
+  registerTimeout: (timeoutId: NodeJS.Timeout) => void;
+}
+
+export function useTimeoutCleanup(): UseTimeoutCleanupResult {
+  const timeoutIdsRef = useRef<Set<NodeJS.Timeout>>(new Set());
+
+  const registerTimeout = (timeoutId: NodeJS.Timeout) => {
+    timeoutIdsRef.current.add(timeoutId);
+  };
+
+  useEffect(() => {
+    return () => {
+      timeoutIdsRef.current.forEach(clearTimeout);
+      timeoutIdsRef.current.clear();
+    };
+  }, []);
+
+  return { registerTimeout };
+}
