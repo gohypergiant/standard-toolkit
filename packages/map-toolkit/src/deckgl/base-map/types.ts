@@ -20,7 +20,13 @@ import type { MapEvents } from './events';
  * PickingInfo without the viewport property, as it cannot be serialized through the event bus.
  * The viewport contains function properties that would break serialization.
  */
-type NonFuncPickingInfo = Omit<PickingInfo, 'viewport'>;
+type NonFuncPickingInfo = Omit<
+  PickingInfo,
+  'viewport' | 'layer' | 'sourceLayer'
+> & {
+  layerId?: NonNullable<PickingInfo['layer']>['id'];
+  sourceLayerId?: NonNullable<PickingInfo['sourceLayer']>['id'];
+};
 
 /**
  * MjolnirGestureEvent without function properties and non-serializable objects.

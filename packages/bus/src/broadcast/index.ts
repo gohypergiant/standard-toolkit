@@ -248,7 +248,7 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param payload - The event payload -- must be serializable by the structured clone algorithm. (https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)
-   * @param options.echo - If true (default), also deliver to this context via channel.onmessage.
+   * @param options - Emit options to control delivery.
    *
    * @example
    * bus.emit(
