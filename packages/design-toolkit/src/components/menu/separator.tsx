@@ -13,11 +13,10 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { Separator, type SeparatorProps } from 'react-aria-components';
-import { MenuStyles } from './styles';
-
-const { separator } = MenuStyles();
+import styles from './styles.module.css';
 
 export function MenuSeparator({ className, ...rest }: SeparatorProps) {
-  return <Separator {...rest} className={separator({ className })} />;
+  return <Separator {...rest} className={clsx(styles.separator, className)} />;
 }

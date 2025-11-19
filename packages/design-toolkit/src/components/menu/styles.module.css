@@ -1,0 +1,414 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.css';
+
+@layer components.l1 {
+  .menu {
+    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto outline;
+  }
+
+  .item {
+    @apply gap-x-s px-s text-body-s fg-primary-bold relative grid cursor-pointer items-center outline outline-transparent;
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas: 'icon label space action' 'icon description space action';
+
+    &:before {
+      @apply pointer-events-none absolute top-0 left-0 h-full w-xs;
+    }
+
+    &.cozy {
+      @apply pt-s pb-s;
+    }
+
+    &.compact {
+      @apply pt-xs pb-xs;
+    }
+
+    @variant color-info {
+      @variant focus-visible {
+        @apply bg-accent-primary-muted;
+      }
+
+      @variant hover {
+        @apply bg-accent-primary-muted;
+      }
+
+      @variant open {
+        @apply bg-accent-primary-muted;
+      }
+
+      @variant pressed {
+        @apply fg-accent-primary-bold bg-accent-primary-pressed;
+      }
+
+      @variant selected {
+        @apply bg-accent-primary-muted;
+
+        &:before {
+          @apply bg-accent-primary-bold;
+        }
+
+        @variant hover {
+          @apply fg-a11y-on-accent bg-accent-primary-bold;
+
+          &:before {
+            @apply bg-(--outline-accent-primary-hover);
+          }
+        }
+
+        @variant focus-visible {
+          @apply fg-a11y-on-accent bg-accent-primary-bold;
+
+          &:before {
+            @apply bg-(--outline-accent-primary-hover);
+          }
+        }
+
+        @variant pressed {
+          @apply fg-accent-primary-bold bg-accent-primary-pressed;
+
+          &:before {
+            @apply bg-accent-primary-pressed;
+          }
+        }
+      }
+    }
+
+    @variant color-serious {
+      @apply fg-serious-bold;
+
+      @variant focus-visible {
+        @apply fg-primary-bold bg-serious-muted;
+      }
+
+      @variant hover {
+        @apply fg-primary-bold bg-serious-muted;
+      }
+
+      @variant open {
+        @apply bg-serious-muted;
+      }
+
+      @variant pressed {
+        @apply fg-serious-bold bg-serious-pressed;
+      }
+
+      @variant selected {
+        @apply fg-primary-bold bg-serious-muted;
+
+        &:before {
+          @apply bg-serious-bold;
+        }
+
+        @variant hover {
+          @apply fg-a11y-on-accent bg-serious-bold;
+          &:before {
+            @apply bg-(--outline-serious-hover);
+          }
+        }
+
+        @variant focus-visible {
+          @apply fg-a11y-on-accent bg-serious-bold;
+
+          &:before {
+            @apply bg-(--outline-serious-hover);
+          }
+        }
+
+        @variant pressed {
+          @apply fg-serious-bold bg-serious-pressed;
+
+          &:before {
+            @apply bg-(--outline-serious-pressed);
+          }
+        }
+      }
+    }
+
+    @variant color-critical {
+      @apply fg-critical-bold;
+
+      @variant focus-visible {
+        @apply fg-primary-bold bg-critical-muted;
+      }
+
+      @variant hover {
+        @apply fg-primary-bold bg-critical-muted;
+      }
+
+      @variant open {
+        @apply bg-critical-muted;
+      }
+
+      @variant pressed {
+        @apply fg-critical-bold bg-critical-pressed;
+      }
+
+      @variant selected {
+        @apply fg-primary-bold bg-critical-muted;
+
+        &:before {
+          @apply bg-(--outline-critical-bold);
+        }
+
+        @variant hover {
+          @apply bg-critical-bold fg-a11y-on-accent;
+        }
+
+        @variant focus-visible {
+          @apply fg-a11y-on-accent bg-critical-bold;
+        }
+
+        @variant pressed {
+          @apply fg-critical-bold bg-critical-pressed;
+
+          &:before {
+            @apply bg-(--outline-critical-pressed);
+          }
+        }
+      }
+    }
+
+    @variant disabled {
+      @apply fg-disabled cursor-not-allowed bg-transparent;
+
+      @variant selected {
+        @apply bg-interactive-disabled;
+
+        &:before {
+          @apply bg-(--outline-interactive);
+        }
+      }
+    }
+  }
+
+  .icon {
+    grid-area: icon;
+  }
+
+  .label {
+    @apply truncate;
+    grid-area: label;
+
+    @variant group-not-has-[>_[slot=description]]/menu-item {
+      @apply row-span-full;
+    }
+  }
+
+  .description {
+    @apply fg-primary-muted text-body-xs truncate;
+    grid-area: description;
+
+    @variant group-hover/menu-item {
+      @apply fg-primary-bold;
+
+      @variant group-selected/menu-item {
+        @apply fg-a11y-on-accent;
+      }
+    }
+
+    @variant group-focus-visible/menu-item {
+      @apply fg-primary-bold;
+
+      @variant group-selected/menu-item {
+        @apply fg-a11y-on-accent;
+      }
+    }
+
+    @variant group-color-info/menu-item {
+      @variant group-pressed/menu-item {
+        @apply fg-accent-primary-bold;
+
+        @variant group-selected/menu-item {
+          @apply fg-accent-primary-bold;
+        }
+      }
+    }
+
+    @variant group-color-serious/menu-item {
+      @variant group-hover/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-focus-visible/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-pressed/menu-item {
+        @apply fg-serious-bold;
+      }
+
+      @variant group-selected/menu-item {
+        @apply fg-primary-bold;
+
+        @variant group-hover/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-pressed/menu-item {
+          @apply fg-serious-bold;
+        }
+      }
+    }
+
+    @variant group-color-critical/menu-item {
+      @variant group-hover/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-focus-visible/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-pressed/menu-item {
+        @apply fg-critical-bold;
+      }
+
+      @variant group-selected/menu-item {
+        @apply fg-primary-bold;
+
+        @variant group-hover/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-pressed/menu-item {
+          @apply fg-critical-bold;
+        }
+      }
+    }
+
+    @variant group-disabled/menu-item {
+      @apply fg-disabled;
+    }
+  }
+
+  .more {
+    grid-area: action;
+  }
+
+  .header {
+    @apply fg-primary-muted px-s py-xs text-header-xs;
+  }
+
+  .separator {
+    @apply outline-static mx-m my-xs outline;
+  }
+
+  .hotkey {
+    grid-area: action;
+
+    @variant group-hover/menu-item {
+      @apply fg-primary-bold;
+    }
+
+    @variant group-focus-visible/menu-item {
+      @apply fg-primary-bold;
+    }
+
+    @variant group-color-info/menu-item {
+      @variant group-pressed/menu-item {
+        @apply fg-accent-primary-bold;
+      }
+
+      @variant group-selected/menu-item {
+        @variant group-hover/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-pressed/menu-item {
+          @apply fg-accent-primary-bold;
+        }
+      }
+    }
+
+    @variant group-color-serious/menu-item {
+      @apply fg-serious-bold;
+
+      @variant group-hover/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-focus-visible/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-pressed/menu-item {
+        @apply fg-serious-bold;
+      }
+
+      @variant group-selected/menu-item {
+        @variant group-hover/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-pressed/menu-item {
+          @apply fg-serious-bold;
+        }
+      }
+    }
+
+    @variant group-color-critical/menu-item {
+      @apply fg-critical-bold;
+
+      @variant group-hover/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-focus-visible/menu-item {
+        @apply fg-primary-bold;
+      }
+
+      @variant group-pressed/menu-item {
+        @apply fg-critical-bold;
+      }
+
+      @variant group-selected/menu-item {
+        @variant group-hover/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/menu-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-pressed/menu-item {
+          @apply fg-critical-bold;
+        }
+      }
+    }
+
+    @variant group-disabled/menu-item {
+      @apply fg-disabled;
+    }
+  }
+
+  .popover {
+    @apply outline-none;
+  }
+}
