@@ -73,3 +73,10 @@
     @apply w-full;
   }
 }
+
+@layer components.l2 {
+  .ruleLines {
+    min-height: 46px;
+    width: 20px;
+  }
+}
