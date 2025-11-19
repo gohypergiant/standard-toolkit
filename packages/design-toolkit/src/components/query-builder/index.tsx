@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from 'clsx';
 import { createContext, useMemo } from 'react';
 import { QueryBuilder as RQBBuilder } from 'react-querybuilder';
 import { ActionElement } from './action-element';
@@ -19,35 +20,10 @@ import { CloneAction, LockAction, RemoveRuleAction } from './actions';
 import { CombinatorSelector } from './combinator-selector';
 import { Rule } from './rule';
 import { RuleGroup } from './rule-group';
-import { QueryBuilderStyles } from './styles';
+import styles from './styles.module.css';
 import { ValueEditor } from './value-editor';
 import { ValueSelector } from './value-selector';
 import type { QueryBuilderContextType, QueryBuilderProps } from './types';
-
-const {
-  queryBuilder,
-  ruleGroup,
-  header,
-  combinators,
-  cloneGroup,
-  removeGroup,
-  cloneRule,
-  fields,
-  value,
-  addRule,
-  addGroup,
-  operators,
-  valueListItem,
-  valueSource,
-  removeRule,
-  valid,
-  invalid,
-  disabled,
-  lockRule,
-  lockGroup,
-  body,
-  rule,
-} = QueryBuilderStyles();
 
 /**
  * QueryBuilder - A visual interface for building complex database queries
@@ -110,28 +86,33 @@ export function QueryBuilder({
    */
   const mergedClassnames = useMemo(() => {
     return {
-      queryBuilder: queryBuilder(),
-      ruleGroup: ruleGroup(),
-      header: header(),
-      combinators: combinators(),
-      fields: fields(),
-      operators: operators(),
-      value: value(),
-      valueListItem: valueListItem(),
-      valueSource: valueSource(),
-      cloneGroup: cloneGroup(),
-      cloneRule: cloneRule(),
-      lockGroup: lockGroup(),
-      lockRule: lockRule(),
-      disabled: disabled(),
-      valid: valid(),
-      invalid: invalid(),
-      removeRule: removeRule(),
-      addRule: addRule(),
-      addGroup: addGroup(),
-      removeGroup: removeGroup(),
-      rule: rule({ variant: orientation }),
-      body: body({ showRuleLines: showRuleLines }),
+      queryBuilder: styles.queryBuilder,
+      ruleGroup: clsx('group', styles.ruleGroup),
+      header: styles.header,
+      combinators: styles.combinators,
+      fields: styles.fields,
+      operators: '',
+      value: styles.value,
+      valueListItem: '',
+      valueSource: '',
+      cloneGroup: styles.cloneGroup,
+      cloneRule: styles.cloneRule,
+      lockGroup: styles.lockGroup,
+      lockRule: styles.lockRule,
+      disabled: '',
+      valid: '',
+      invalid: '',
+      removeRule: '',
+      addRule: '',
+      addGroup: '',
+      removeGroup: '',
+      rule: clsx(styles.rule, styles[orientation]),
+      body: clsx(
+        'group',
+        styles.body,
+        showRuleLines && styles.showRuleLines,
+        !showRuleLines && styles.hideRuleLines,
+      ),
       ...controlClassnames,
     };
   }, [controlClassnames, showRuleLines, orientation]);

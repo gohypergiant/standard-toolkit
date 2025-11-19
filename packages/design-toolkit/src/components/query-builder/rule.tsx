@@ -22,10 +22,7 @@ import {
   useStopEventPropagation,
 } from 'react-querybuilder';
 import { Lines } from '../lines';
-import { RuleStyles } from './styles';
 import type { QueryBuilderContextType } from './types';
-
-const { lines } = RuleStyles();
 
 const QueryBuilderLines = memo(function QueryBuilderLines({
   path,
@@ -44,7 +41,7 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
       variant={line}
       size='small'
       isVisible={context.showRuleLines}
-      className={lines()}
+      className='min-h-[46px] w-[20px]'
     />
   );
 });
