@@ -14,13 +14,16 @@ import { describe, expect, it } from 'vitest';
 import { getViewportSize } from './utils';
 
 describe('getViewportSize', () => {
-  it('converts the bounds to a string', () => {
+  it('calculates viewport size using zoom-based formula', () => {
     const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
       zoom: 5,
+      width: 800,
+      height: 600,
       unit: 'nm',
     });
-    expect(result).toBe('612 x 1,801 NM');
+    // Should return a formatted string with calculated distances
+    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
   });
 
   it('can take a custom formatter', () => {
@@ -28,80 +31,61 @@ describe('getViewportSize', () => {
     const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
       zoom: 5,
+      width: 800,
+      height: 600,
       unit: 'km',
       formatter,
     });
-    expect(result).toBe('1.134 x 3.336 KM');
+    // German format uses periods as thousand separators
+    expect(result).toMatch(/^\d{1,3}(\.\d{3})* x \d{1,3}(\.\d{3})* KM$/);
   });
 
   it('provides a fallback for NaN bounds', () => {
     const result = getViewportSize({
       bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
       zoom: 5,
+      width: 800,
+      height: 600,
     });
     expect(result).toBe('-- x -- NM');
   });
 
-  it('normalizes longitude values outside -180 to 180 range', () => {
+  it('provides a fallback for NaN zoom', () => {
     const result = getViewportSize({
-      bounds: [-200, 22, -71, 52], // -200 normalizes to 160
-      zoom: 5,
-      unit: 'nm',
+      bounds: [-82, 22, -71, 52],
+      zoom: Number.NaN,
+      width: 800,
+      height: 600,
     });
-    // Should calculate distance, not return fallback
-    expect(result).not.toBe('-- x -- NM');
-    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
+    expect(result).toBe('-- x -- NM');
   });
 
-  it('handles multi-revolution longitude values (721°)', () => {
+  it('provides a fallback for zero width', () => {
     const result = getViewportSize({
-      bounds: [721, 22, 730, 52], // 721° -> 1°, 730° -> 10°
+      bounds: [-82, 22, -71, 52],
       zoom: 5,
-      unit: 'nm',
+      width: 0,
+      height: 600,
     });
-    expect(result).not.toBe('-- x -- NM');
-    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
+    expect(result).toBe('-- x -- NM');
   });
 
-  it('normalizes negative longitude values beyond -360', () => {
+  it('provides a fallback for zero height', () => {
     const result = getViewportSize({
-      bounds: [-541, 22, -530, 52], // -541° -> 179°, -530° -> -170°
+      bounds: [-82, 22, -71, 52],
       zoom: 5,
-      unit: 'nm',
+      width: 800,
+      height: 0,
     });
-    expect(result).not.toBe('-- x -- NM');
-    expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
-  });
-
-  it('handles International Date Line crossing', () => {
-    const result = getViewportSize({
-      bounds: [170, 50, -170, 60], // Crosses dateline
-      zoom: 5,
-      unit: 'nm',
-    });
-    // Should calculate the short distance across the dateline (~20 degrees)
-    // not the long way around (~340 degrees)
-    expect(result).not.toBe('-- x -- NM');
-    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''), 10);
-    // Width should be roughly 20 degrees at 50°N (~700-800 NM)
-    // Not 340 degrees (~18,000+ NM)
-    expect(width).toBeLessThan(2000);
-    expect(width).toBeGreaterThan(500);
+    expect(result).toBe('-- x -- NM');
   });
 
   it('handles invalid latitude values outside -90 to 90 range', () => {
     const result = getViewportSize({
       bounds: [-82, -100, -71, 52],
       zoom: 5,
-      unit: 'nm',
-    });
-    expect(result).toBe('-- x -- NM');
-  });
-
-  it('handles invalid bounds where minLat > maxLat', () => {
-    const result = getViewportSize({
-      bounds: [-82, 52, -71, 22],
-      zoom: 5,
+      width: 800,
+      height: 600,
       unit: 'nm',
     });
     expect(result).toBe('-- x -- NM');
@@ -110,63 +94,180 @@ describe('getViewportSize', () => {
   it('works with all supported units', () => {
     const bounds: [number, number, number, number] = [-82, 22, -71, 52];
     const zoom = 5;
-    expect(getViewportSize({ bounds, zoom, unit: 'km' })).toContain('KM');
-    expect(getViewportSize({ bounds, zoom, unit: 'm' })).toContain('M');
-    expect(getViewportSize({ bounds, zoom, unit: 'nm' })).toContain('NM');
-    expect(getViewportSize({ bounds, zoom, unit: 'mi' })).toContain('MI');
-    expect(getViewportSize({ bounds, zoom, unit: 'ft' })).toContain('FT');
+    const width = 800;
+    const height = 600;
+    expect(
+      getViewportSize({ bounds, zoom, width, height, unit: 'km' }),
+    ).toContain('KM');
+    expect(
+      getViewportSize({ bounds, zoom, width, height, unit: 'm' }),
+    ).toContain('M');
+    expect(
+      getViewportSize({ bounds, zoom, width, height, unit: 'nm' }),
+    ).toContain('NM');
+    expect(
+      getViewportSize({ bounds, zoom, width, height, unit: 'mi' }),
+    ).toContain('MI');
+    expect(
+      getViewportSize({ bounds, zoom, width, height, unit: 'ft' }),
+    ).toContain('FT');
   });
 
-  it('handles edge case of bounds at world extents', () => {
+  it('calculates larger dimensions at lower zoom levels', () => {
+    const bounds: [number, number, number, number] = [-82, 22, -71, 52];
+    const width = 800;
+    const height = 600;
+
+    const lowZoomResult = getViewportSize({
+      bounds,
+      zoom: 2,
+      width,
+      height,
+      unit: 'nm',
+    });
+
+    const highZoomResult = getViewportSize({
+      bounds,
+      zoom: 8,
+      width,
+      height,
+      unit: 'nm',
+    });
+
+    // Extract width values
+    const lowZoomWidth = Number.parseInt(
+      lowZoomResult.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+    const highZoomWidth = Number.parseInt(
+      highZoomResult.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+
+    // Lower zoom should show larger area
+    expect(lowZoomWidth).toBeGreaterThan(highZoomWidth);
+  });
+
+  it('calculates proportional dimensions based on pixel size', () => {
+    const bounds: [number, number, number, number] = [-82, 22, -71, 52];
+    const zoom = 5;
+
+    const smallViewport = getViewportSize({
+      bounds,
+      zoom,
+      width: 400,
+      height: 300,
+      unit: 'nm',
+    });
+
+    const largeViewport = getViewportSize({
+      bounds,
+      zoom,
+      width: 800,
+      height: 600,
+      unit: 'nm',
+    });
+
+    // Extract width values
+    const smallWidth = Number.parseInt(
+      smallViewport.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+    const largeWidth = Number.parseInt(
+      largeViewport.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+
+    // Larger pixel viewport should show larger area at same zoom
+    expect(largeWidth).toBeGreaterThan(smallWidth);
+    // Should be approximately 2x (800/400)
+    expect(largeWidth / smallWidth).toBeCloseTo(2, 0);
+  });
+
+  it('adjusts for latitude in the calculation', () => {
+    const zoom = 5;
+    const width = 800;
+    const height = 600;
+
+    // Near equator
+    const equatorResult = getViewportSize({
+      bounds: [-82, -5, -71, 5],
+      zoom,
+      width,
+      height,
+      unit: 'nm',
+    });
+
+    // Near pole
+    const poleResult = getViewportSize({
+      bounds: [-82, 70, -71, 80],
+      zoom,
+      width,
+      height,
+      unit: 'nm',
+    });
+
+    // Extract width values
+    const equatorWidth = Number.parseInt(
+      equatorResult.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+    const poleWidth = Number.parseInt(
+      poleResult.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+
+    // Same zoom/pixels at higher latitude should show smaller area due to Mercator projection
+    expect(poleWidth).toBeLessThan(equatorWidth);
+  });
+
+  it('handles bounds at world extents', () => {
     const result = getViewportSize({
-      bounds: [-180, -90, 180, 90],
-      zoom: 3,
+      bounds: [-180, -85, 180, 85],
+      zoom: 1,
+      width: 1024,
+      height: 768,
       unit: 'nm',
     });
     expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
   });
 
-  it('detects multiple world copies at low zoom with narrow bounds', () => {
-    const result = getViewportSize({
-      bounds: [-303.5, -59.5, -267.7, 51.2], // ~36° span (normalized)
-      unit: 'nm',
-      zoom: 1.78, // Very low zoom
-    });
-    // Should return Earth's circumference for width
-    expect(result).toContain('21,639');
-  });
+  it('maintains stable output without flickering on pan', () => {
+    // At same zoom and pixel dimensions, result should be identical
+    // regardless of where the map is panned
+    const zoom = 3;
+    const width = 800;
+    const height = 600;
 
-  it('uses proportional calculation for large longitude spans', () => {
-    const result = getViewportSize({
-      bounds: [-127.1, -23.4, 127.7, 67.7], // ~255° span
+    const result1 = getViewportSize({
+      bounds: [-100, 20, -60, 50],
+      zoom,
+      width,
+      height,
       unit: 'nm',
-      zoom: 2.3,
     });
-    // Should use proportional calculation (255/360 * 21639 ≈ 15,328 NM)
-    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''), 10);
-    expect(width).toBeGreaterThan(15000);
-    expect(width).toBeLessThan(16000);
-  });
 
-  it('uses great circle distance for normal zoom levels', () => {
-    const result = getViewportSize({
-      bounds: [-82, 22, -71, 52],
+    const result2 = getViewportSize({
+      bounds: [40, 30, 80, 60],
+      zoom,
+      width,
+      height,
       unit: 'nm',
-      zoom: 5, // Normal zoom
     });
-    // Should use standard great circle distance
-    expect(result).toBe('612 x 1,801 NM');
-  });
 
-  it('caps width at Earth circumference for very large spans', () => {
-    const result = getViewportSize({
-      bounds: [-179, 0, 179, 10], // ~358° span
-      unit: 'nm',
-      zoom: 3,
-    });
-    // Should be capped at Earth's circumference (or very close to it)
-    const width = Number.parseInt(result.split(' x ')[0].replace(/,/g, ''), 10);
-    expect(width).toBeGreaterThan(21000);
-    expect(width).toBeLessThanOrEqual(21639);
+    // Width should be nearly the same (small differences due to latitude)
+    const width1 = Number.parseInt(
+      result1.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+    const width2 = Number.parseInt(
+      result2.split(' x ')[0].replace(/,/g, ''),
+      10,
+    );
+
+    // Should be within 30% of each other (accounting for latitude differences)
+    expect(Math.abs(width1 - width2) / Math.max(width1, width2)).toBeLessThan(
+      0.3,
+    );
   });
 });

@@ -90,6 +90,10 @@ export type MapViewportPayload = {
   latitude: number;
   longitude: number;
   zoom: number;
+  /** Viewport width in pixels */
+  width: number;
+  /** Viewport height in pixels */
+  height: number;
   id: UniqueId;
 };
 

@@ -180,6 +180,8 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => MapViewportPayload {
         latitude: Number.NaN,
         longitude: Number.NaN,
         zoom: Number.NaN,
+        width: 0,
+        height: 0,
       };
       fallbackCache.set(instanceId, newFallback);
       return newFallback;

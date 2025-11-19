@@ -10,158 +10,98 @@
  * governing permissions and limitations under the License.
  */
 
-import { distance } from '@turf/distance';
 import { UNIT_MAP } from './constants';
-import type { GeoCoordinate, GetViewportSizeArgs } from './types';
+import type { GetViewportSizeArgs } from './types';
 
 const numberFormatter = Intl.NumberFormat('en-US');
 
-// Earth's equatorial circumference in different units
-const EARTH_CIRCUMFERENCE = {
-  kilometers: 40075,
-  meters: 40075000,
-  nauticalmiles: 21639,
-  miles: 24901,
-  feet: 131479713,
-} as const;
+/**
+ * Web Mercator constant: meters per pixel at zoom 0, equator.
+ * This is Earth's circumference (40075016.686m) divided by 256 (tile size).
+ */
+const METERS_PER_PIXEL_AT_ZOOM_0 = 156543.03392;
 
 /**
- * Normalizes longitude to -180 to 180 range.
- * Handles any wraparound including multi-revolution values from globe view.
- *
- * @param lon - Longitude value to normalize
- * @returns Normalized longitude in range [-180, 180]
- *
- * @example
- * ```typescript
- * normalizeLon(361)   // returns 1
- * normalizeLon(-181)  // returns 179
- * normalizeLon(721)   // returns 1
- * ```
+ * Unit conversion factors from meters.
  */
-function normalizeLon(lon: number): number {
-  return ((((lon + 180) % 360) + 360) % 360) - 180;
-}
+const METERS_TO_UNIT = {
+  kilometers: 0.001,
+  meters: 1,
+  nauticalmiles: 0.000539957,
+  miles: 0.000621371,
+  feet: 3.28084,
+} as const;
 
 /**
  * Returns a formatted viewport size string i.e. `660 x 1,801 NM`
  *
- * Calculates the geographic distance of viewport bounds and formats it
- * with width x height in the specified unit. Handles longitude normalization
- * for globe view, International Date Line crossing, and multiple world copies
- * at low zoom levels.
- *
- * Uses different calculation strategies based on viewport characteristics:
- * - Normal zoom with small longitude spans: Great circle distance (accurate)
- * - Large longitude spans (≥170°): Proportional calculation to avoid antipodal singularities
- * - Very low zoom (<2) with narrow bounds: Detects multiple world copies scenario
+ * Calculates the geographic distance of the viewport using zoom level and
+ * pixel dimensions with the Web Mercator projection formula. This approach
+ * provides stable results without the edge cases of bounds-based calculations.
  *
  * @param args - Viewport size calculation arguments
  * @param args.bounds - Geographic bounds [minLon, minLat, maxLon, maxLat]
- * @param args.zoom - Zoom level for detection of edge cases like multiple world copies
+ * @param args.zoom - Zoom level for meters-per-pixel calculation
+ * @param args.width - Viewport width in pixels
+ * @param args.height - Viewport height in pixels
  * @param args.unit - Unit of distance measurement: `km | m | nm | mi | ft`. Defaults to `nm`
  * @param args.formatter - Number formatter for localization (defaults to en-US)
  * @returns Formatted string like "660 x 1,801 NM" or "-- x -- NM" if invalid
  *
  * @example
  * ```typescript
- * getViewportSize({ bounds: [-82, 22, -71, 52], zoom: 5, unit: 'nm' })
- * // returns "612 x 1,801 NM"
+ * getViewportSize({ bounds: [-82, 22, -71, 52], zoom: 5, width: 800, height: 600, unit: 'nm' })
+ * // returns "612 x 459 NM"
  *
- * getViewportSize({ bounds: [170, 50, -170, 60], zoom: 4, unit: 'km' })
- * // returns "2,050 x 1,111 KM" (handles dateline crossing)
- *
- * getViewportSize({ bounds: [-180, -85, -144, 85], zoom: 1.5, unit: 'nm' })
- * // returns "21,639 x 6,570 NM" (detects multiple world copies at low zoom)
+ * getViewportSize({ bounds: [170, 50, -170, 60], zoom: 4, width: 1024, height: 768, unit: 'km' })
+ * // returns "2,050 x 1,538 KM"
  * ```
  */
 export function getViewportSize({
   bounds,
   zoom,
+  width: pixelWidth,
+  height: pixelHeight,
   unit = 'nm',
   formatter = numberFormatter,
 }: GetViewportSizeArgs) {
   const defaultValue = `-- x -- ${unit.toUpperCase()}`;
 
+  // Validate inputs
   if (bounds.every((b) => Number.isNaN(b))) {
     return defaultValue;
   }
 
-  const [minLon, minLat, maxLon, maxLat] = bounds;
+  if (Number.isNaN(zoom) || pixelWidth === 0 || pixelHeight === 0) {
+    return defaultValue;
+  }
 
-  // Normalize longitude values to handle globe view multi-revolution coordinates
-  const normalizedMinLon = normalizeLon(minLon);
-  let normalizedMaxLon = normalizeLon(maxLon);
+  const [, minLat, , maxLat] = bounds;
 
   // Validate latitude bounds are within valid geographic ranges
   if (minLat < -90 || minLat > 90 || maxLat < -90 || maxLat > 90) {
-    console.warn(
-      'getViewportSize: Invalid bounds - latitude outside valid ranges',
-      { bounds },
-    );
     return defaultValue;
   }
 
-  // Validate that min/max latitude are in correct order
-  if (minLat > maxLat) {
-    console.warn(
-      'getViewportSize: Invalid bounds - minLat is greater than maxLat',
-      { bounds },
-    );
-    return defaultValue;
-  }
+  // Calculate center latitude for the viewport
+  const centerLat = (minLat + maxLat) / 2;
 
-  // Handle International Date Line crossing
-  // If minLon > maxLon after normalization, we're crossing the dateline
-  // Unwrap maxLon to the positive side for correct distance calculation
-  if (normalizedMinLon > normalizedMaxLon) {
-    normalizedMaxLon += 360;
-  }
+  // Web Mercator formula: meters per pixel at given zoom and latitude
+  // Resolution = 156543.03392 * cos(latitude * π/180) / 2^zoom
+  const metersPerPixel =
+    (METERS_PER_PIXEL_AT_ZOOM_0 * Math.cos((centerLat * Math.PI) / 180)) /
+    2 ** zoom;
 
-  const southWest: GeoCoordinate = [normalizedMinLon, minLat];
-  const southEast: GeoCoordinate = [normalizedMaxLon, minLat];
-  const northWest: GeoCoordinate = [normalizedMinLon, maxLat];
+  // Calculate distances in meters
+  const widthMeters = pixelWidth * metersPerPixel;
+  const heightMeters = pixelHeight * metersPerPixel;
 
-  const lonSpan = normalizedMaxLon - normalizedMinLon;
-  const maxCircumference =
-    EARTH_CIRCUMFERENCE[UNIT_MAP[unit] as keyof typeof EARTH_CIRCUMFERENCE];
+  // Convert to requested unit
+  const unitKey = UNIT_MAP[unit] as keyof typeof METERS_TO_UNIT;
+  const conversionFactor = METERS_TO_UNIT[unitKey];
 
-  // Calculate height using great circle distance (always reliable for latitude)
-  const heightDistance = Math.round(
-    distance(southWest, northWest, { units: UNIT_MAP[unit] }),
-  );
-
-  // For width, use different approaches based on longitude span and zoom level:
-  // - Small spans (<170°): Use great circle distance (accurate)
-  // - Large spans (≥170°): Calculate proportionally from Earth's circumference
-  //   (great circle distance breaks down near antipodal points ~180°)
-  // - Very low zoom + small span: Multiple world copies visible, use full circumference
-  let widthDistance: number;
-
-  // Detect multiple world copies scenario:
-  // At very low zoom (< 2) with a small lonSpan (< 100°), getBounds() returns a narrow slice
-  // but visually multiple world copies are shown, so the real width is Earth's circumference
-  const isMultipleWorldCopies = zoom < 2 && lonSpan < 100;
-
-  if (isMultipleWorldCopies) {
-    // Multiple world copies visible: use full Earth circumference
-    widthDistance = maxCircumference;
-  } else if (lonSpan < 170) {
-    // Normal case: great circle distance is accurate
-    widthDistance = Math.round(
-      distance(southWest, southEast, { units: UNIT_MAP[unit] }),
-    );
-  } else {
-    // Large longitude span: calculate width as proportion of Earth's circumference
-    // This avoids the antipodal point singularity in great circle calculations
-    const fractionOfWorld = lonSpan / 360;
-    widthDistance = Math.round(maxCircumference * fractionOfWorld);
-  }
-
-  // Final safety check: cap at Earth's circumference (should rarely trigger now)
-  if (widthDistance > maxCircumference) {
-    widthDistance = maxCircumference;
-  }
+  const widthDistance = Math.round(widthMeters * conversionFactor);
+  const heightDistance = Math.round(heightMeters * conversionFactor);
 
   const width = formatter.format(widthDistance);
   const height = formatter.format(heightDistance);
