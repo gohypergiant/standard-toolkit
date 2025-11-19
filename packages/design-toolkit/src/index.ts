@@ -458,7 +458,6 @@ export { TreeItemLabel } from './components/tree/item-label';
 export { TreeItemPrefixIcon } from './components/tree/item-prefix-icon';
 export { TreeItem } from './components/tree/item';
 export { TreeLines } from './components/tree/lines';
-export { TreeStyles, TreeStylesDefaults } from './components/tree/styles';
 export type {
   TreeContextValue,
   TreeItemContentProps,
@@ -466,6 +465,7 @@ export type {
   TreeItemContextValue,
   TreeItemProps,
   TreeProps,
+  TreeStyleVariant,
 } from './components/tree/types';
 export {
   ViewStackContext,
