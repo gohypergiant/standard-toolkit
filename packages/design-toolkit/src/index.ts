@@ -102,6 +102,70 @@ export {
 } from './components/combobox-field/context';
 export { ComboBoxField } from './components/combobox-field';
 export type { ComboBoxFieldProps } from './components/combobox-field/types';
+export {
+  CoordinateFieldContext,
+  CoordinateFieldProvider,
+  CoordinateFieldStateContext,
+  CoordinateFieldStateProvider,
+  useCoordinateFieldStateContext,
+} from './components/coordinate-field/context';
+export {
+  COORDINATE_EPSILON,
+  COORDINATE_ERROR_MESSAGES,
+  areAllSegmentsFilled,
+  areCoordinatesEqual,
+  convertDDToDisplaySegments,
+  convertDisplaySegmentsToDD,
+  deduplicateMatchesByLocation,
+  formatSegmentsToCoordinateString,
+  getAllCoordinateFormats,
+  hasAnySegmentValue,
+  isCompleteCoordinate,
+  parseCoordinatePaste,
+  parseCoordinateStringToSegments,
+  validateCoordinateSegments,
+} from './components/coordinate-field/coordinate-utils';
+export type { CoordinateFormatResult } from './components/coordinate-field/coordinate-utils';
+export { CoordinateField } from './components/coordinate-field';
+export {
+  EXPECTED_SEGMENT_COUNTS,
+  ddSegmentConfigs,
+  ddmSegmentConfigs,
+  dmsSegmentConfigs,
+  getEditableSegmentCount,
+  getFormatDescription,
+  getSegmentConfigs,
+  getSegmentLabel,
+  mgrsSegmentConfigs,
+  utmSegmentConfigs,
+} from './components/coordinate-field/segment-configs';
+export { CoordinateSegment } from './components/coordinate-field/segment';
+export {
+  CoordinateFieldStyles,
+  CoordinateFieldStylesDefaults,
+} from './components/coordinate-field/styles';
+export {
+  COORDINATE_FORMAT_LABELS,
+  COORDINATE_FORMAT_NAMES,
+  COORDINATE_SYSTEMS,
+} from './components/coordinate-field/types';
+export type {
+  CoordinateFieldProps,
+  CoordinateFieldState,
+  CoordinateSegmentProps,
+  CoordinateSystem,
+  CoordinateValue,
+  ParsedCoordinateMatch,
+  SegmentConfig,
+  SegmentType,
+} from './components/coordinate-field/types';
+export {
+  CONTAINER_PADDING_WIDTH,
+  FORMAT_BUTTON_WIDTH,
+  INPUT_BUTTON_GAP,
+  SEGMENT_GAP_WIDTH,
+  calculateMaxControlWidth,
+} from './components/coordinate-field/width-utils';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field/types';
 export {
@@ -488,6 +552,30 @@ export type {
   ViewStackViewProps,
 } from './components/view-stack/types';
 export { ViewStackView } from './components/view-stack/view';
+export { useCoordinateCopy } from './hooks/coordinate-field/use-coordinate-copy';
+export type {
+  UseCoordinateCopyOptions,
+  UseCoordinateCopyResult,
+} from './hooks/coordinate-field/use-coordinate-copy';
+export { useCoordinateFieldState } from './hooks/coordinate-field/use-coordinate-field-state';
+export type {
+  UseCoordinateFieldStateOptions,
+  UseCoordinateFieldStateResult,
+} from './hooks/coordinate-field/use-coordinate-field-state';
+export { useCoordinateField } from './hooks/coordinate-field/use-coordinate-field';
+export type { UseCoordinateFieldResult } from './hooks/coordinate-field/use-coordinate-field';
+export { useCoordinateFocus } from './hooks/coordinate-field/use-coordinate-focus';
+export type {
+  UseCoordinateFocusOptions,
+  UseCoordinateFocusResult,
+} from './hooks/coordinate-field/use-coordinate-focus';
+export { useCoordinatePaste } from './hooks/coordinate-field/use-coordinate-paste';
+export type {
+  UseCoordinatePasteOptions,
+  UseCoordinatePasteResult,
+} from './hooks/coordinate-field/use-coordinate-paste';
+export { useTimeoutCleanup } from './hooks/coordinate-field/use-timeout-cleanup';
+export type { UseTimeoutCleanupResult } from './hooks/coordinate-field/use-timeout-cleanup';
 export { useCardInteractions, useColumnInteractions } from './hooks/kanban';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';

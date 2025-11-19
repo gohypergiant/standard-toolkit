@@ -71,6 +71,7 @@ export function NoticeList({
 
   useOn(NoticeEventTypes.queue, (data) => {
     if ((id && data.payload.target === id) || !id) {
+      const timeout = defaultTimeout ?? data.payload.timeout;
       queue.add(
         {
           ...data.payload,
@@ -78,9 +79,12 @@ export function NoticeList({
           color: defaultColor || data.payload.color,
         },
         {
-          timeout: defaultTimeout ?? data.payload.timeout,
+          timeout,
         },
       );
+      if (timeout) {
+        queue.resumeAll();
+      }
     }
   });
 
