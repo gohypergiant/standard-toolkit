@@ -16,7 +16,12 @@ import type { UNIT_MAP } from './constants';
 export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
 
 export type GetViewportSizeArgs = {
-  bounds?: Bounds;
+  bounds: Bounds;
+  zoom: number;
+  /** Viewport width in pixels */
+  width: number;
+  /** Viewport height in pixels */
+  height: number;
   unit?: SupportedDistanceUnit;
   formatter?: Intl.NumberFormat;
 };
