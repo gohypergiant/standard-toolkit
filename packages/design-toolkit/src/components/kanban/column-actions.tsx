@@ -13,7 +13,7 @@
 import 'client-only';
 
 import { Add } from '@accelint/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import styles from './styles.module.css';
