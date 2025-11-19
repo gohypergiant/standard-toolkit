@@ -14,7 +14,7 @@ import type { Axis } from '@react-types/overlays';
 import type { ComponentPropsWithRef } from 'react';
 
 export type BadgeProps = ComponentPropsWithRef<'span'> & {
-  children?: string;
+  children?: boolean | null | number | string;
   color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';
   offset?: number | { x?: number; y?: number };
   placement?: Axis | `${'top' | 'bottom'} ${'left' | 'right'}`;
