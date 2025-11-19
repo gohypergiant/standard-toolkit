@@ -383,11 +383,6 @@ export {
 } from './components/query-builder/actions';
 export { CombinatorSelector } from './components/query-builder/combinator-selector';
 export { QueryBuilder } from './components/query-builder';
-export {
-  QueryBuilderStyles,
-  QueryBuilderStylesDefaults,
-  RuleStyles,
-} from './components/query-builder/styles';
 export type {
   ClassNames,
   DefaultRQBProps,

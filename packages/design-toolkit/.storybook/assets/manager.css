@@ -13,7 +13,7 @@
 .sidebar-header > div > a {
   font-size: 2em;
 
-  &:before {
+  @variant before {
     display: block;
     font-size: 0.8em;
     color: #565759;

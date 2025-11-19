@@ -22,7 +22,7 @@
     grid-template-columns: auto auto 1fr auto;
     grid-template-areas: 'icon label space action' 'icon description space action';
 
-    &:before {
+    @variant before {
       @apply pointer-events-none absolute top-0 left-0 h-full w-xs;
     }
 
@@ -54,14 +54,14 @@
       @variant selected {
         @apply bg-accent-primary-muted;
 
-        &:before {
+        @variant before {
           @apply bg-accent-primary-bold;
         }
 
         @variant hover {
           @apply fg-a11y-on-accent bg-accent-primary-bold;
 
-          &:before {
+          @variant before {
             @apply bg-(--outline-accent-primary-hover);
           }
         }
@@ -69,7 +69,7 @@
         @variant focus-visible {
           @apply fg-a11y-on-accent bg-accent-primary-bold;
 
-          &:before {
+          @variant before {
             @apply bg-(--outline-accent-primary-hover);
           }
         }
@@ -77,7 +77,7 @@
         @variant pressed {
           @apply fg-accent-primary-bold bg-accent-primary-pressed;
 
-          &:before {
+          @variant before {
             @apply bg-accent-primary-pressed;
           }
         }
@@ -106,13 +106,13 @@
       @variant selected {
         @apply fg-primary-bold bg-serious-muted;
 
-        &:before {
+        @variant before {
           @apply bg-serious-bold;
         }
 
         @variant hover {
           @apply fg-a11y-on-accent bg-serious-bold;
-          &:before {
+          @variant before {
             @apply bg-(--outline-serious-hover);
           }
         }
@@ -120,7 +120,7 @@
         @variant focus-visible {
           @apply fg-a11y-on-accent bg-serious-bold;
 
-          &:before {
+          @variant before {
             @apply bg-(--outline-serious-hover);
           }
         }
@@ -128,7 +128,7 @@
         @variant pressed {
           @apply fg-serious-bold bg-serious-pressed;
 
-          &:before {
+          @variant before {
             @apply bg-(--outline-serious-pressed);
           }
         }
@@ -157,7 +157,7 @@
       @variant selected {
         @apply fg-primary-bold bg-critical-muted;
 
-        &:before {
+        @variant before {
           @apply bg-(--outline-critical-bold);
         }
 
@@ -172,7 +172,7 @@
         @variant pressed {
           @apply fg-critical-bold bg-critical-pressed;
 
-          &:before {
+          @variant before {
             @apply bg-(--outline-critical-pressed);
           }
         }
@@ -185,7 +185,7 @@
       @variant selected {
         @apply bg-interactive-disabled;
 
-        &:before {
+        @variant before {
           @apply bg-(--outline-interactive);
         }
       }

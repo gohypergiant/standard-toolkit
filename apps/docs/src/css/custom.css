@@ -79,7 +79,7 @@
   position: relative;
   z-index: 1;
 
-  &:after {
+  @variant after {
     --space: 10px;
 
     background: linear-gradient(to left, var(--hg-teal), var(--hg-blue));
