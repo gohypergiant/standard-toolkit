@@ -13,7 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { MapEvents, type MapEventType } from '@/deckgl';
 import { MapModeEvents } from '../map-mode/events';
-import { getStore as getModeStore } from '../map-mode/store';
+import { getCurrentModeOwner } from '../map-mode/store';
 import { MapCursorEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { ModeChangedEvent } from '../map-mode/types';
@@ -40,38 +40,79 @@ const DEFAULT_CURSORS: CursorDefaults = {
  * Typed event bus instance for map cursor events.
  * Provides type-safe event emission and listening for all map cursor state changes.
  */
-const bus = Broadcast.getInstance<MapCursorEventType | MapEventType>();
+const mapCursorBus = Broadcast.getInstance<MapCursorEventType | MapEventType>();
 
 /**
- * Module-level state storage
+ * Type representing the state for a single map cursor instance
  */
+type MapCursorState = {
+  /** Map of owner-to-cursor mappings */
+  cursorOwners: Map<string, CSSCursorType>;
+  /** Current active cursor */
+  currentCursor: CSSCursorType | null;
+  /** Current cursor owner */
+  currentOwner: string | null;
+  /** Current cursor state (default/hover/drag) */
+  cursorState: CursorState;
+};
 
-/** Map of owner-to-cursor mappings per instance */
-const cursorOwners = new Map<UniqueId, Map<string, CSSCursorType>>();
+/**
+ * Store for map cursor state keyed by instanceId
+ */
+const cursorStore = new Map<UniqueId, MapCursorState>();
 
-/** Current cursor per instance */
-const currentCursors = new Map<UniqueId, CSSCursorType | null>();
-
-/** Current owner per instance */
-const currentOwners = new Map<UniqueId, string | null>();
-
-/** Cursor state (default/hover/drag) per instance */
-const cursorStates = new Map<UniqueId, CursorState>();
-
-/** React component subscribers per instance (for fan-out notifications) */
+/**
+ * Track React component subscribers per instanceId (for fan-out notifications).
+ * Each Set contains onStoreChange callbacks from useSyncExternalStore.
+ */
 const componentSubscribers = new Map<UniqueId, Set<() => void>>();
 
-/** Cache of bus unsubscribe functions (1 per instance) */
-const busUnsubscribers = new Map<UniqueId, Array<() => void>>();
+/**
+ * Cache of bus unsubscribe functions (1 per instanceId).
+ * This ensures we only have one bus listener per map cursor instance, regardless of
+ * how many React components subscribe to it.
+ */
+const busUnsubscribers = new Map<UniqueId, () => void>();
 
-/** Cache of subscription functions per instance */
-const subscriptionCache = new Map<
+type Subscription = (onStoreChange: () => void) => () => void;
+/**
+ * Cache of subscription functions per instanceId to avoid recreating on every render
+ */
+const subscriptionCache = new Map<UniqueId, Subscription>();
+
+/**
+ * Cache of snapshot functions per instanceId to maintain referential stability
+ */
+const snapshotCache = new Map<UniqueId, () => CSSCursorType>();
+
+/**
+ * Cache of requestCursorChange functions per instanceId to maintain referential stability
+ */
+const requestCursorChangeCache = new Map<
   UniqueId,
-  (onStoreChange: () => void) => () => void
+  (cursor: CSSCursorType, owner: string) => void
 >();
 
-/** Cache of snapshot functions per instance */
-const snapshotCache = new Map<UniqueId, () => CSSCursorType>();
+/**
+ * Cache of clearCursor functions per instanceId to maintain referential stability
+ */
+const clearCursorCache = new Map<UniqueId, (owner: string) => void>();
+
+/**
+ * Get or create cursor state for a given instanceId
+ */
+function getOrCreateState(instanceId: UniqueId): MapCursorState {
+  if (!cursorStore.has(instanceId)) {
+    cursorStore.set(instanceId, {
+      cursorOwners: new Map(),
+      currentCursor: null,
+      currentOwner: null,
+      cursorState: 'default',
+    });
+  }
+  // biome-ignore lint/style/noNonNullAssertion: State guaranteed to exist after has() check above
+  return cursorStore.get(instanceId)!;
+}
 
 /**
  * Get current cursor snapshot for a given instance (for useSyncExternalStore)
@@ -82,42 +123,39 @@ const snapshotCache = new Map<UniqueId, () => CSSCursorType>();
  * 3. Default cursor based on state
  */
 function getSnapshot(instanceId: UniqueId): CSSCursorType {
+  const state = cursorStore.get(instanceId);
+  if (!state) {
+    return DEFAULT_CURSORS.default;
+  }
+
   // Priority 1: Mode owner's cursor
-  const modeStore = getModeStore(instanceId);
-  if (modeStore) {
-    const modeOwner = modeStore.getCurrentModeOwner();
-    if (modeOwner) {
-      const owners = cursorOwners.get(instanceId);
-      const modeOwnerCursor = owners?.get(modeOwner);
-      if (modeOwnerCursor) {
-        return modeOwnerCursor;
-      }
+  const modeOwner = getCurrentModeOwner(instanceId);
+  if (modeOwner) {
+    const modeOwnerCursor = state.cursorOwners.get(modeOwner);
+    if (modeOwnerCursor) {
+      return modeOwnerCursor;
     }
   }
 
   // Priority 2: Most recent cursor (only if owner entry still exists)
-  const currentCursor = currentCursors.get(instanceId);
-  const currentOwner = currentOwners.get(instanceId);
-  if (currentCursor && currentOwner) {
-    const owners = cursorOwners.get(instanceId);
-    if (owners?.has(currentOwner)) {
-      return currentCursor;
+  if (state.currentCursor && state.currentOwner) {
+    if (state.cursorOwners.has(state.currentOwner)) {
+      return state.currentCursor;
     }
   }
 
   // Priority 3: Default cursor based on state
-  const state = cursorStates.get(instanceId) ?? 'default';
-  return DEFAULT_CURSORS[state];
+  return DEFAULT_CURSORS[state.cursorState];
 }
 
 /**
- * Notify all subscribers for a given instance
+ * Notify all React subscribers for a given instanceId
  */
-function notify(instanceId: UniqueId): void {
+function notifySubscribers(instanceId: UniqueId): void {
   const subscribers = componentSubscribers.get(instanceId);
   if (subscribers) {
-    for (const listener of subscribers) {
-      listener();
+    for (const onStoreChange of subscribers) {
+      onStoreChange();
     }
   }
 }
@@ -127,58 +165,49 @@ function notify(instanceId: UniqueId): void {
  */
 function handleCursorChangeRequest(
   instanceId: UniqueId,
+  state: MapCursorState,
   cursor: CSSCursorType,
   requestOwner: string,
 ): void {
-  // Store the cursor for this owner
-  let owners = cursorOwners.get(instanceId);
-  if (!owners) {
-    owners = new Map();
-    cursorOwners.set(instanceId, owners);
-  }
-
   const previousCursor = getSnapshot(instanceId);
 
   // Skip if same cursor is already stored for this owner
-  if (owners.get(requestOwner) === cursor) {
+  if (state.cursorOwners.get(requestOwner) === cursor) {
     return;
   }
 
   // Store cursor for this owner
-  owners.set(requestOwner, cursor);
+  state.cursorOwners.set(requestOwner, cursor);
 
   // Check if requester is the mode owner or if mode is ownerless
-  const modeStore = getModeStore(instanceId);
-  const modeOwner = modeStore?.getCurrentModeOwner();
-  const currentMode = modeStore?.getSnapshot();
-  const isOwnerlessMode = !modeOwner || currentMode === 'default';
+  const modeOwner = getCurrentModeOwner(instanceId);
+  const isOwnerlessMode = !modeOwner;
   const isRequestOwnerModeOwner = requestOwner === modeOwner;
 
   // Grant or reject based on ownership
   if (isOwnerlessMode || isRequestOwnerModeOwner) {
     // Accept: store and apply cursor
-    currentCursors.set(instanceId, cursor);
-    currentOwners.set(instanceId, requestOwner);
+    state.currentCursor = cursor;
+    state.currentOwner = requestOwner;
 
     const newCursor = getSnapshot(instanceId);
 
     // Emit changed event only if cursor actually changed
     if (previousCursor !== newCursor) {
-      bus.emit(MapCursorEvents.changed, {
+      mapCursorBus.emit(MapCursorEvents.changed, {
         previousCursor,
         currentCursor: newCursor,
         owner: requestOwner,
         id: instanceId,
       });
-      notify(instanceId);
+      notifySubscribers(instanceId);
     }
   } else {
     // Reject: stored for future auto-apply, but emit rejection event
-    const currentOwner = currentOwners.get(instanceId);
-    bus.emit(MapCursorEvents.rejected, {
+    mapCursorBus.emit(MapCursorEvents.rejected, {
       rejectedCursor: cursor,
       rejectedOwner: requestOwner,
-      currentOwner: currentOwner || modeOwner || 'unknown',
+      currentOwner: state.currentOwner || modeOwner || 'unknown',
       reason: 'not-owner',
       id: instanceId,
     });
@@ -190,45 +219,49 @@ function handleCursorChangeRequest(
  */
 function handleCursorStateChange(
   instanceId: UniqueId,
-  state: CursorState,
+  state: MapCursorState,
+  newState: CursorState,
 ): void {
-  const currentState = cursorStates.get(instanceId) ?? 'default';
-  if (currentState !== state) {
+  if (state.cursorState !== newState) {
     const previousCursor = getSnapshot(instanceId);
-    cursorStates.set(instanceId, state);
+    state.cursorState = newState;
     const newCursor = getSnapshot(instanceId);
 
     if (previousCursor !== newCursor) {
-      bus.emit(MapCursorEvents.changeState, {
-        state,
+      mapCursorBus.emit(MapCursorEvents.changeState, {
+        state: newState,
         id: instanceId,
       });
-      notify(instanceId);
+      notifySubscribers(instanceId);
     }
   }
 }
 
 /**
- * Ensures a single set of bus listeners exists for the given instance.
- * All React subscribers will be notified via fan-out when bus events fire.
+ * Ensures a single bus listener exists for the given instanceId.
+ * All React subscribers will be notified via fan-out when the bus events fire.
  * This prevents creating N bus listeners for N React components.
+ *
+ * @param instanceId - The unique identifier for the map cursor instance
  */
-function ensureBusListeners(instanceId: UniqueId): void {
+function ensureBusListener(instanceId: UniqueId): void {
   if (busUnsubscribers.has(instanceId)) {
     return; // Already listening
   }
 
-  const unsubs: Array<() => void> = [];
+  const state = getOrCreateState(instanceId);
 
   // Listen for cursor change requests
-  const unsubRequest = bus.on(MapCursorEvents.changeRequest, (event) => {
-    const { cursor, owner: requestOwner, id } = event.payload;
-    if (id !== instanceId) {
-      return;
-    }
-    handleCursorChangeRequest(instanceId, cursor, requestOwner);
-  });
-  unsubs.push(unsubRequest);
+  const unsubRequest = mapCursorBus.on(
+    MapCursorEvents.changeRequest,
+    (event) => {
+      const { cursor, owner: requestOwner, id } = event.payload;
+      if (id !== instanceId) {
+        return;
+      }
+      handleCursorChangeRequest(instanceId, state, cursor, requestOwner);
+    },
+  );
 
   // Listen for mode changes
   const modeBus = Broadcast.getInstance<ModeChangedEvent>();
@@ -239,38 +272,35 @@ function ensureBusListeners(instanceId: UniqueId): void {
 
     const previousCursor = getSnapshot(instanceId);
 
-    // When returning to default mode, clear the previous mode owner's cursor
-    if (event.payload.currentMode === 'default') {
-      const currentOwner = currentOwners.get(instanceId);
-      if (currentOwner) {
-        const owners = cursorOwners.get(instanceId);
-        owners?.delete(currentOwner);
-      }
-      currentCursors.set(instanceId, null);
-      currentOwners.set(instanceId, null);
-      notify(instanceId);
+    // When mode changes, clear current cursor tracking (but keep owner's cursor in storage)
+    // This allows the cursor to fall back to state-based default until a new owner sets it
+    if (
+      event.payload.currentMode === 'default' ||
+      event.payload.previousMode !== event.payload.currentMode
+    ) {
+      state.currentCursor = null;
+      state.currentOwner = null;
+      notifySubscribers(instanceId);
     }
 
     // Defer cursor change check until after new mode owner is registered
     queueMicrotask(() => {
       const newCursor = getSnapshot(instanceId);
       if (previousCursor !== newCursor) {
-        const modeStore = getModeStore(instanceId);
-        const newModeOwner = modeStore?.getCurrentModeOwner() || 'system';
-        bus.emit(MapCursorEvents.changed, {
+        const newModeOwner = getCurrentModeOwner(instanceId) || 'system';
+        mapCursorBus.emit(MapCursorEvents.changed, {
           previousCursor,
           currentCursor: newCursor,
           owner: newModeOwner,
           id: instanceId,
         });
-        notify(instanceId);
+        notifySubscribers(instanceId);
       }
     });
   });
-  unsubs.push(unsubModeChange);
 
   // Listen for map hover events
-  const unsubHover = bus.on(MapEvents.hover, (event) => {
+  const unsubHover = mapCursorBus.on(MapEvents.hover, (event) => {
     const {
       id,
       info: { picked },
@@ -278,75 +308,84 @@ function ensureBusListeners(instanceId: UniqueId): void {
     if (id !== instanceId) {
       return;
     }
-    handleCursorStateChange(instanceId, picked ? 'hover' : 'default');
+    handleCursorStateChange(instanceId, state, picked ? 'hover' : 'default');
   });
-  unsubs.push(unsubHover);
 
   // Listen for map click events
-  const unsubClick = bus.on(MapEvents.click, (event) => {
+  const unsubClick = mapCursorBus.on(MapEvents.click, (event) => {
     const { id } = event.payload;
     if (id !== instanceId) {
       return;
     }
-    handleCursorStateChange(instanceId, 'default');
+    handleCursorStateChange(instanceId, state, 'default');
   });
-  unsubs.push(unsubClick);
 
   // Listen for map drag events
-  const unsubDrag = bus.on(MapEvents.drag, (event) => {
+  const unsubDrag = mapCursorBus.on(MapEvents.drag, (event) => {
     const { id } = event.payload;
     if (id !== instanceId) {
       return;
     }
-    handleCursorStateChange(instanceId, 'drag');
+    handleCursorStateChange(instanceId, state, 'drag');
   });
-  unsubs.push(unsubDrag);
 
-  busUnsubscribers.set(instanceId, unsubs);
+  // Store composite cleanup function
+  busUnsubscribers.set(instanceId, () => {
+    unsubRequest();
+    unsubModeChange();
+    unsubHover();
+    unsubClick();
+    unsubDrag();
+  });
 }
 
 /**
- * Cleans up the bus listeners if no React subscribers remain.
+ * Cleans up the bus listener if no React subscribers remain.
+ *
+ * @param instanceId - The unique identifier for the map cursor instance
  */
-function cleanupBusListenersIfNeeded(instanceId: UniqueId): void {
+function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
   const subscribers = componentSubscribers.get(instanceId);
 
   if (!subscribers || subscribers.size === 0) {
-    // No more React subscribers - clean up bus listeners
-    const unsubs = busUnsubscribers.get(instanceId);
-    if (unsubs) {
-      for (const unsub of unsubs) {
-        unsub();
-      }
+    // No more React subscribers - clean up bus listener
+    const unsub = busUnsubscribers.get(instanceId);
+    if (unsub) {
+      unsub();
       busUnsubscribers.delete(instanceId);
     }
 
     // Clean up all state
-    cursorOwners.delete(instanceId);
-    currentCursors.delete(instanceId);
-    currentOwners.delete(instanceId);
-    cursorStates.delete(instanceId);
+    cursorStore.delete(instanceId);
     componentSubscribers.delete(instanceId);
     subscriptionCache.delete(instanceId);
     snapshotCache.delete(instanceId);
+    requestCursorChangeCache.delete(instanceId);
+    clearCursorCache.delete(instanceId);
   }
 }
 
 /**
- * Creates or retrieves a cached subscription function for a given instance.
+ * Creates or retrieves a cached subscription function for a given instanceId.
  * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
  * Automatically cleans up cursor state when the last subscriber unsubscribes.
+ *
+ * @param instanceId - The unique identifier for the map cursor instance
+ * @returns A subscription function for useSyncExternalStore
  */
-function getOrCreateSubscription(
+export function getOrCreateSubscription(
   instanceId: UniqueId,
 ): (onStoreChange: () => void) => () => void {
   const subscription =
     subscriptionCache.get(instanceId) ??
     ((onStoreChange: () => void) => {
-      // Ensure single bus listeners exist for this instance
-      ensureBusListeners(instanceId);
+      // Ensure state exists
+      getOrCreateState(instanceId);
 
-      // Get or create the subscriber set for this map instance
+      // Ensure single bus listener exists for this instanceId
+      ensureBusListener(instanceId);
+
+      // Get or create the subscriber set for this map instance, then add this component's callback
       let subscriberSet = componentSubscribers.get(instanceId);
       if (!subscriberSet) {
         subscriberSet = new Set();
@@ -354,112 +393,115 @@ function getOrCreateSubscription(
       }
       subscriberSet.add(onStoreChange);
 
-      // Return cleanup function
+      // Return cleanup function to remove this component's subscription
       return () => {
         const currentSubscriberSet = componentSubscribers.get(instanceId);
         if (currentSubscriberSet) {
           currentSubscriberSet.delete(onStoreChange);
         }
-        cleanupBusListenersIfNeeded(instanceId);
+
+        // Clean up bus listener if this was the last React subscriber
+        cleanupBusListenerIfNeeded(instanceId);
       };
     });
 
   subscriptionCache.set(instanceId, subscription);
+
   return subscription;
 }
 
 /**
- * Creates or retrieves a cached snapshot function for a given instance.
+ * Creates or retrieves a cached snapshot function for a given instanceId.
+ * The cursor returned gets equality checked, so it needs to be stable or React re-renders unnecessarily.
+ *
+ * @param instanceId - The unique identifier for the map cursor instance
+ * @returns A snapshot function for useSyncExternalStore
  */
-function getOrCreateSnapshotGetter(instanceId: UniqueId): () => CSSCursorType {
+export function getOrCreateSnapshot(instanceId: UniqueId): () => CSSCursorType {
   const snapshot =
     snapshotCache.get(instanceId) ?? (() => getSnapshot(instanceId));
 
   snapshotCache.set(instanceId, snapshot);
+
   return snapshot;
 }
 
 /**
- * Request a cursor change for a given map instance.
+ * Creates or retrieves a cached requestCursorChange function for a given instanceId.
+ * This maintains referential stability for the function reference.
  *
- * @param instanceId - The unique identifier for the map instance
- * @param cursor - The desired CSS cursor type
- * @param owner - Unique identifier of the component requesting the change
+ * @param instanceId - The unique identifier for the map cursor instance
+ * @returns A requestCursorChange function for this instance
  */
-export function requestCursorChange(
+export function getOrCreateRequestCursorChange(
   instanceId: UniqueId,
-  cursor: CSSCursorType,
-  owner: string,
-): void {
-  const trimmedCursor = cursor.trim();
-  const trimmedOwner = owner.trim();
+): (cursor: CSSCursorType, owner: string) => void {
+  const requestCursorChange =
+    requestCursorChangeCache.get(instanceId) ??
+    ((cursor: CSSCursorType, owner: string) => {
+      const trimmedCursor = cursor.trim();
+      const trimmedOwner = owner.trim();
 
-  if (!trimmedCursor) {
-    throw new Error('requestCursorChange requires non-empty cursor');
-  }
-  if (!trimmedOwner) {
-    throw new Error('requestCursorChange requires non-empty owner');
-  }
+      if (!trimmedCursor) {
+        throw new Error('requestCursorChange requires non-empty cursor');
+      }
+      if (!trimmedOwner) {
+        throw new Error('requestCursorChange requires non-empty owner');
+      }
 
-  bus.emit(MapCursorEvents.changeRequest, {
-    cursor: trimmedCursor as CSSCursorType,
-    owner: trimmedOwner,
-    id: instanceId,
-  });
+      mapCursorBus.emit(MapCursorEvents.changeRequest, {
+        cursor: trimmedCursor as CSSCursorType,
+        owner: trimmedOwner,
+        id: instanceId,
+      });
+    });
+
+  requestCursorChangeCache.set(instanceId, requestCursorChange);
+
+  return requestCursorChange;
 }
 
 /**
- * Clear cursor for a specific owner in a given map instance.
+ * Creates or retrieves a cached clearCursor function for a given instanceId.
+ * This maintains referential stability for the function reference.
  *
- * @param instanceId - The unique identifier for the map instance
- * @param owner - The owner whose cursor should be cleared
+ * @param instanceId - The unique identifier for the map cursor instance
+ * @returns A clearCursor function for this instance
  */
-export function clearCursor(instanceId: UniqueId, owner: string): void {
-  const owners = cursorOwners.get(instanceId);
-  if (!owners) {
-    return;
-  }
-
-  const hadCursor = owners.has(owner);
-  owners.delete(owner);
-
-  // If this was the current owner, clear current tracking
-  const currentOwner = currentOwners.get(instanceId);
-  if (currentOwner === owner) {
-    currentCursors.set(instanceId, null);
-    currentOwners.set(instanceId, null);
-  }
-
-  // Only notify if cursor changed
-  if (hadCursor) {
-    notify(instanceId);
-  }
-}
-
-/**
- * Get the subscription function for useSyncExternalStore.
- *
- * @param instanceId - The unique identifier for the map instance
- * @returns A subscription function
- */
-export function getSubscription(
+export function getOrCreateClearCursor(
   instanceId: UniqueId,
-): (onStoreChange: () => void) => () => void {
-  return getOrCreateSubscription(instanceId);
-}
+): (owner: string) => void {
+  const clearCursor =
+    clearCursorCache.get(instanceId) ??
+    ((owner: string) => {
+      const state = cursorStore.get(instanceId);
+      if (!state) {
+        return;
+      }
 
-/**
- * Get the snapshot getter function for useSyncExternalStore.
- *
- * @param instanceId - The unique identifier for the map instance
- * @returns A function that returns the current cursor
- */
-export function getSnapshotGetter(instanceId: UniqueId): () => CSSCursorType {
-  return getOrCreateSnapshotGetter(instanceId);
+      const hadCursor = state.cursorOwners.has(owner);
+      state.cursorOwners.delete(owner);
+
+      // If this was the current owner, clear current tracking
+      if (state.currentOwner === owner) {
+        state.currentCursor = null;
+        state.currentOwner = null;
+      }
+
+      // Only notify if cursor changed
+      if (hadCursor) {
+        notifySubscribers(instanceId);
+      }
+    });
+
+  clearCursorCache.set(instanceId, clearCursor);
+
+  return clearCursor;
 }
 
 /**
  * Get the current cursor for a given instance (direct access, not reactive).
+ * @internal - For internal map-toolkit use only
  *
  * @param instanceId - The unique identifier for the map instance
  * @returns The current cursor
@@ -469,29 +511,33 @@ export function getCursor(instanceId: UniqueId): CSSCursorType {
 }
 
 /**
- * Manually clear all cursor state for a specific instance.
+ * Manually clear all cursor state for a specific instanceId.
  * This is typically not needed as cleanup happens automatically when all subscribers unmount.
+ * Use this only in advanced scenarios where manual cleanup is required.
  *
- * @param instanceId - The unique identifier for the map instance
+ * @param instanceId - The unique identifier for the map cursor instance to clear
+ *
+ * @example
+ * ```tsx
+ * // Manual cleanup (rarely needed)
+ * clearCursorState('my-map-instance');
+ * ```
  */
 export function clearCursorState(instanceId: UniqueId): void {
   // Unsubscribe from bus if listening
-  const unsubs = busUnsubscribers.get(instanceId);
-  if (unsubs) {
-    for (const unsub of unsubs) {
-      unsub();
-    }
+  const unsub = busUnsubscribers.get(instanceId);
+  if (unsub) {
+    unsub();
     busUnsubscribers.delete(instanceId);
   }
 
   // Clear all state
-  cursorOwners.delete(instanceId);
-  currentCursors.delete(instanceId);
-  currentOwners.delete(instanceId);
-  cursorStates.delete(instanceId);
+  cursorStore.delete(instanceId);
   componentSubscribers.delete(instanceId);
   subscriptionCache.delete(instanceId);
   snapshotCache.delete(instanceId);
+  requestCursorChangeCache.delete(instanceId);
+  clearCursorCache.delete(instanceId);
 }
 
 // Legacy API compatibility (for tests and existing code)

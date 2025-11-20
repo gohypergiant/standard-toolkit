@@ -14,10 +14,7 @@
 
 import 'client-only';
 import { createContext, type ReactNode, useEffect } from 'react';
-import {
-  destroyStore as destroyCursorStore,
-  getOrCreateStore as getOrCreateCursorStore,
-} from '../../map-cursor/store';
+import { clearCursorState } from '../../map-cursor/store';
 import { clearMapModeState } from '../../map-mode/store';
 import type { UniqueId } from '@accelint/core';
 
@@ -146,11 +143,11 @@ export type MapProviderProps = {
  */
 export function MapProvider({ children, id }: MapProviderProps) {
   // Cleanup when component unmounts
-  // State is created automatically on first subscription in useMapMode
+  // State is created automatically on first subscription in useMapMode/useMapCursor
   useEffect(() => {
     return () => {
       clearMapModeState(id);
-      destroyCursorStore(id);
+      clearCursorState(id);
     };
   }, [id]);
 

@@ -27,7 +27,7 @@ import { useMapMode } from '../map-mode/use-map-mode';
 import { MapCursorEvents } from './events';
 import { useMapCursor, useMapCursorEffect } from './use-map-cursor';
 import type { UniqueId } from '@accelint/core';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   ModeChangeAuthorizationEvent,
   ModeChangeDecisionEvent,

@@ -10,19 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useSyncExternalStore,
-} from 'react';
+import { useContext, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import {
-  clearCursor as clearCursorModule,
-  getSnapshotGetter,
-  getSubscription,
-  requestCursorChange as requestCursorChangeModule,
+  getOrCreateClearCursor,
+  getOrCreateRequestCursorChange,
+  getOrCreateSnapshot,
+  getOrCreateSubscription,
 } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { CSSCursorType } from './types';
@@ -42,10 +36,9 @@ export type UseMapCursorReturn = {
 /**
  * Hook to access the map cursor state and actions.
  *
- * This hook uses `useSyncExternalStore` to subscribe to the external `MapCursorStore`,
- * providing concurrent-safe cursor state updates. The hybrid architecture separates:
- * - Map instance identity (from `MapContext` or parameter)
- * - Cursor state management (from `MapCursorStore` via `useSyncExternalStore`)
+ * This hook uses `useSyncExternalStore` to subscribe to map cursor state changes,
+ * providing concurrent-safe cursor state updates. Uses a fan-out pattern where
+ * a single bus listener per map instance notifies N React component subscribers.
  *
  * **Owner-based Priority System:**
  * - Mode owners (from MapModeStore) have highest priority
@@ -55,7 +48,6 @@ export type UseMapCursorReturn = {
  * @param id - Optional map instance ID. If not provided, will use the ID from `MapContext`.
  * @returns The current cursor, requestCursorChange function, and clearCursor function
  * @throws Error if no `id` is provided and hook is used outside of `MapProvider`
- * @throws Error if store doesn't exist for the given map ID
  *
  * @example
  * ```tsx
@@ -99,35 +91,20 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
     );
   }
 
-  // Subscribe to store using useSyncExternalStore with module functions
+  // Subscribe to store using useSyncExternalStore with fan-out pattern
   const cursor = useSyncExternalStore(
-    getSubscription(actualId),
-    getSnapshotGetter(actualId),
-  );
-
-  // Create stable callback functions
-  const requestCursorChange = useCallback(
-    (cursor: CSSCursorType, owner: string) => {
-      requestCursorChangeModule(actualId, cursor, owner);
-    },
-    [actualId],
-  );
-
-  const clearCursor = useCallback(
-    (owner: string) => {
-      clearCursorModule(actualId, owner);
-    },
-    [actualId],
+    getOrCreateSubscription(actualId),
+    getOrCreateSnapshot(actualId),
   );
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       cursor,
-      requestCursorChange,
-      clearCursor,
+      requestCursorChange: getOrCreateRequestCursorChange(actualId),
+      clearCursor: getOrCreateClearCursor(actualId),
     }),
-    [cursor, requestCursorChange, clearCursor],
+    [cursor, actualId],
   );
 }
 
