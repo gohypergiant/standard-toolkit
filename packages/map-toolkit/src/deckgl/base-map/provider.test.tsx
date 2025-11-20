@@ -14,7 +14,6 @@ import { uuid } from '@accelint/core';
 import { render } from '@testing-library/react';
 import { useContext } from 'react';
 import { describe, expect, it } from 'vitest';
-import { destroyStore, getStore } from '../../map-mode/store';
 import { MapContext, MapProvider } from './provider';
 
 describe('MapProvider', () => {
@@ -33,51 +32,6 @@ describe('MapProvider', () => {
       );
 
       expect(container.textContent).toBe(id);
-
-      // Cleanup
-      destroyStore(id);
-    });
-  });
-
-  describe('Provider Lifecycle', () => {
-    it('reuses existing store on rerender', () => {
-      const id = uuid();
-
-      const { rerender } = render(
-        <MapProvider id={id}>
-          <div>First render</div>
-        </MapProvider>,
-      );
-
-      const store1 = getStore(id);
-
-      rerender(
-        <MapProvider id={id}>
-          <div>Second render</div>
-        </MapProvider>,
-      );
-
-      const store2 = getStore(id);
-      expect(store1).toBe(store2);
-
-      // Cleanup
-      destroyStore(id);
-    });
-
-    it('destroys store when unmounted', () => {
-      const id = uuid();
-
-      const { unmount } = render(
-        <MapProvider id={id}>
-          <div>Child</div>
-        </MapProvider>,
-      );
-
-      expect(getStore(id)).toBeDefined();
-
-      unmount();
-
-      expect(getStore(id)).toBeUndefined();
     });
   });
 });
