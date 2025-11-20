@@ -168,7 +168,13 @@ export function BaseMap({
       onClick?.(info, event);
 
       // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
+      // extract layerId and sourceLayerId before omission to preserve layer identification
       const { viewport, layer, sourceLayer, ...infoRest } = info;
+      const infoObject = {
+        layerId: layer?.id,
+        sourceLayerId: sourceLayer?.id,
+        ...infoRest,
+      };
 
       const {
         stopImmediatePropagation,
@@ -183,7 +189,7 @@ export function BaseMap({
       } = event;
 
       emitClick({
-        info: infoRest,
+        info: infoObject,
         event: eventRest,
         id,
       });
@@ -197,7 +203,13 @@ export function BaseMap({
       onHover?.(info, event);
 
       // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
+      // extract layerId and sourceLayerId before omission to preserve layer identification
       const { viewport, layer, sourceLayer, ...infoRest } = info;
+      const infoObject = {
+        layerId: layer?.id,
+        sourceLayerId: sourceLayer?.id,
+        ...infoRest,
+      };
 
       const {
         stopImmediatePropagation,
@@ -210,7 +222,7 @@ export function BaseMap({
       } = event;
 
       emitHover({
-        info: infoRest,
+        info: infoObject,
         event: eventRest,
         id,
       });
