@@ -13,7 +13,6 @@
 'use client';
 
 import 'client-only';
-import { Information } from '@accelint/icons';
 import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
@@ -204,8 +203,6 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
       ),
     [state.editableSegmentConfigs, state.segmentConfigs, showFormatButton],
   );
-
-  console.log(allCoordinateFormats);
 
   return (
     <Provider
