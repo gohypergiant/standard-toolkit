@@ -16,15 +16,13 @@ export const FlashcardStyles = tv({
   slots: {
     container:
       'min-w-[128px] rounded-medium font-display outline outline-interactive-hover',
-    hero: 'flex flex-col gap-s bg-surface-muted p-s',
-    identifier: 'flex flex-col',
+    hero: 'mb-s flex flex-col bg-surface-muted p-s',
     header: 'fg-primary-bold text-body-m',
     subHeader: 'fg-primary-muted text-body-xs',
-    secondaryContainer: 'flex flex-col gap-s p-s',
-    secondaryData: 'fg-primary-muted text-body-xs',
-    detailsContainer: 'flex w-full flex-col justify-between text-body-xs',
-    detailsItem: 'flex w-full flex-row justify-between text-body-xs',
-    detailsLabel: 'fg-primary-muted',
+    flashcardData: 'fg-primary-muted px-s text-body-xs',
+    detailsList: 'p-s pb-s text-body-xs',
+    detailsLabel:
+      'fg-primary-muted nth-of-type-6:hidden [&:nth-of-type(6)~*]:hidden',
     detailsValue: 'fg-primary-bold',
     skeleton: 'min-h-[8px] py-0',
   },

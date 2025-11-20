@@ -10,49 +10,27 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * Example usage.
- *
- * <Flashcard>
- *  <FlashcardHero>
- *    <FlashcardIdentifier>
- *      <FlashcardHeader>
- *        {header}
- *      </FlashcardHeader>
- *      <FlashcardSubheader>
- *        {subHeader}
- *      </FlashcardSubheader>
- *    </FlashcardIdentifier>
- *  </FlashcardHero>
- *  <FlashcardSecondary>
- *    <FlashcardSecondaryData>
- *      {secondaryData}
- *    </FlashcardSecondaryData>
- *    <FlashcardDetailsContainer details={details} />
- *  </FlashcardSecondary>
- * </Flashcard>
- */
 'use client';
 import 'client-only';
 import { createContext, useContext } from 'react';
+import { DetailsList } from '../details-list';
+import { DetailsListLabel } from '../details-list/label';
+import { DetailsListValue } from '../details-list/value';
 import { Skeleton } from '../skeleton';
 import { FlashcardStyles } from './styles';
 import type {
   FlashcardComponentProps,
-  FlashcardDetailContainerProps,
+  FlashcardDetailsListProps,
   FlashcardProps,
 } from './types';
 
 const {
   container,
   hero,
-  identifier,
   header,
   subHeader,
-  secondaryContainer,
-  secondaryData,
-  detailsContainer,
-  detailsItem,
+  flashcardData,
+  detailsList,
   detailsLabel,
   detailsValue,
   skeleton,
@@ -62,6 +40,24 @@ export const FlashcardContext = createContext<FlashcardProps>({
   isLoading: false,
 });
 
+/**
+ * Example usage.
+ *
+ * <Flashcard isLoading={isLoading}>
+ *  <FlashcardHero>
+ *    <FlashcardHeader>
+ *      {header}
+ *    </FlashcardHeader>
+ *    <FlashcardSubheader>
+ *      {subHeader}
+ *    </FlashcardSubheader>
+ *  </FlashcardHero>
+ *  <FlashcardAdditionalData>
+ *    {secondaryData}
+ *  </FlashcardAdditionalData>
+ *  <FlashcardDetailsContainer details={details} />
+ * </Flashcard>
+ */
 export function Flashcard(props: FlashcardProps) {
   const { isLoading, children, className, ...rest } = props;
 
@@ -81,7 +77,7 @@ export function FlashcardHero(props: FlashcardComponentProps) {
 
   if (isLoading) {
     return (
-      <div {...rest} className={hero({ className })}>
+      <div {...rest} className={hero({ className: 'gap-s' })}>
         <Skeleton className={skeleton()} />
         <Skeleton className={skeleton({ className: 'max-w-1/2' })} />
       </div>
@@ -95,17 +91,6 @@ export function FlashcardHero(props: FlashcardComponentProps) {
   );
 }
 FlashcardHero.displayName = 'FlashcardHero';
-
-export function FlashcardIdentifier(props: FlashcardComponentProps) {
-  const { children, className, ...rest } = props;
-
-  return (
-    <div {...rest} className={identifier({ className })}>
-      {children}
-    </div>
-  );
-}
-FlashcardIdentifier.displayName = 'FlashcardIdentifier';
 
 export function FlashcardHeader(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
@@ -129,18 +114,7 @@ export function FlashcardSubheader(props: FlashcardComponentProps) {
 }
 FlashcardSubheader.displayName = 'FlashcardSubheader';
 
-export function FlashcardSecondary(props: FlashcardComponentProps) {
-  const { children, className, ...rest } = props;
-
-  return (
-    <div {...rest} className={secondaryContainer({ className })}>
-      {children}
-    </div>
-  );
-}
-FlashcardSecondary.displayName = 'FlashcardSecondary';
-
-export function FlashcardSecondaryData(props: FlashcardComponentProps) {
+export function FlashcardAdditionalData(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
   const { isLoading } = useContext(FlashcardContext);
 
@@ -150,51 +124,48 @@ export function FlashcardSecondaryData(props: FlashcardComponentProps) {
   }
 
   return (
-    <h2 {...rest} className={secondaryData({ className })}>
+    <div {...rest} className={flashcardData({ className })}>
       {children}
-    </h2>
-  );
-}
-FlashcardSecondaryData.displayName = 'FlashcardSecondaryData';
-
-export function FlashcardDetailsContainer(
-  props: FlashcardDetailContainerProps,
-) {
-  const { details, classNames, ...rest } = props;
-  const { isLoading } = useContext(FlashcardContext);
-
-  if (!details?.length) {
-    return null;
-  }
-
-  const displayDetails = details.slice(0, 5);
-
-  return (
-    <div
-      {...rest}
-      className={detailsContainer({ className: classNames?.container })}
-    >
-      {/* Limit to the first 5 items in details array.*/}
-      {displayDetails.map((item) => {
-        return (
-          <div
-            className={detailsItem({ className: classNames?.item })}
-            key={item.id}
-          >
-            <div className={detailsLabel({ className: classNames?.label })}>
-              {isLoading ? (
-                <Skeleton className={skeleton({ className: 'my-xxs' })} />
-              ) : (
-                item.label
-              )}
-            </div>
-            <div className={detailsValue({ className: classNames?.value })}>
-              {isLoading ? <Skeleton className={skeleton()} /> : item.value}
-            </div>
-          </div>
-        );
-      })}
     </div>
   );
 }
-FlashcardDetailsContainer.displayName = 'FlashcardDetailsContainer';
+FlashcardAdditionalData.displayName = 'FlashcardAdditionalData';
+
+export const FlashcardDetailsList = (props: FlashcardDetailsListProps) => {
+  const { children, ...rest } = props;
+  return (
+    // TODO: Update props to include classnames, what is wrong with ...rest?
+    <DetailsList {...rest} align='justify' classNames={{ list: detailsList() }}>
+      {children}
+    </DetailsList>
+  );
+};
+
+export const FlashcardDetailLabel = (props: FlashcardComponentProps) => {
+  const { isLoading } = useContext(FlashcardContext);
+  const { className, children, ...rest } = props;
+  return (
+    <DetailsListLabel {...rest} className={detailsLabel({ className })}>
+      {isLoading ? (
+        <Skeleton className={skeleton({ className: 'my-xxs' })} />
+      ) : (
+        children
+      )}
+    </DetailsListLabel>
+  );
+};
+
+export const FlashcardDetailValue = (props: FlashcardComponentProps) => {
+  const { isLoading } = useContext(FlashcardContext);
+  const { className, children, ...rest } = props;
+  return (
+    <DetailsListValue {...rest} className={detailsValue({ className })}>
+      {isLoading ? (
+        <Skeleton className={skeleton({ className: 'my-xxs' })} />
+      ) : (
+        children
+      )}
+    </DetailsListValue>
+  );
+};
+FlashcardDetailValue.displayName = 'FlashcardDetailValue';
