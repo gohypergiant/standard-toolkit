@@ -137,19 +137,19 @@ function getOrCreateSubscription(
       // Ensure single bus listener exists for this instanceId
       ensureBusListener(instanceId);
 
-      // Add this React subscriber to the fan-out set
-      let subscribers = componentSubscribers.get(instanceId);
-      if (!subscribers) {
-        subscribers = new Set();
-        componentSubscribers.set(instanceId, subscribers);
+      // Get or create the subscriber set for this map instance, then add this component's callback
+      let subscriberSet = componentSubscribers.get(instanceId);
+      if (!subscriberSet) {
+        subscriberSet = new Set();
+        componentSubscribers.set(instanceId, subscriberSet);
       }
-      subscribers.add(onStoreChange);
+      subscriberSet.add(onStoreChange);
 
-      // Return cleanup function for THIS React subscriber
+      // Return cleanup function to remove this component's subscription
       return () => {
-        const subscribers = componentSubscribers.get(instanceId);
-        if (subscribers) {
-          subscribers.delete(onStoreChange);
+        const currentSubscriberSet = componentSubscribers.get(instanceId);
+        if (currentSubscriberSet) {
+          currentSubscriberSet.delete(onStoreChange);
         }
 
         // Clean up bus listener if this was the last React subscriber
