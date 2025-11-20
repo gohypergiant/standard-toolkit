@@ -75,6 +75,7 @@ export { Chip } from './components/chip';
 export { ChipList, ChipListRenderingContext } from './components/chip/list';
 export { SelectableChip } from './components/chip/selectable';
 export type {
+  ChipContextValue,
   ChipListProps,
   ChipProps,
   DeletableChipProps,
@@ -279,11 +280,6 @@ export {
   useDragContext,
 } from './components/kanban/kanban';
 export { columnData } from './components/kanban/mock-data';
-export {
-  CardInnerStyles,
-  ColumnStyles,
-  KanbanStyles,
-} from './components/kanban/styles';
 export type {
   KanbanCardData,
   KanbanCardProps,

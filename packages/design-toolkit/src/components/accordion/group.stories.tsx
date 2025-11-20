@@ -20,14 +20,12 @@ import { AccordionTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { AccordionGroupProps } from './types';
 
-type Alias = React.FC<AccordionGroupProps>;
-
 /**
  * The accordion group will stretch to fill the entire width of its parent container.
  */
 const meta = {
   title: 'Components/AccordionGroup',
-  component: AccordionGroup as Alias,
+  component: AccordionGroup,
   args: {
     allowsMultipleExpanded: false,
     variant: 'cozy',
@@ -44,12 +42,11 @@ const meta = {
       subtitle: 'Group together multiple <Accordion> components.',
     },
   },
-} satisfies Meta<Alias>;
+} satisfies Meta<AccordionGroupProps>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   render: ({ children, ...args }) => (
     <div className='w-[280px]'>
       <AccordionGroup {...args}>

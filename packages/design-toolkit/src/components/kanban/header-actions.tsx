@@ -12,10 +12,9 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { headerActions } = KanbanStyles();
 
 export function KanbanHeaderActions({
   children,
@@ -23,7 +22,7 @@ export function KanbanHeaderActions({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={headerActions({ className })} {...rest}>
+    <div {...rest} className={clsx(styles.headerActions, className)}>
       {children}
     </div>
   );

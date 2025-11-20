@@ -12,10 +12,9 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { colContainer } = KanbanStyles();
 
 export function KanbanColumnContainer({
   children,
@@ -23,7 +22,7 @@ export function KanbanColumnContainer({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={colContainer({ className })} {...rest}>
+    <div {...rest} className={clsx(styles.columnItems, className)}>
       {children}
     </div>
   );

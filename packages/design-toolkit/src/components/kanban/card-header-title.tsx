@@ -12,10 +12,9 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { cardTitle } = KanbanStyles();
 
 export function KanbanCardHeaderTitle({
   className,
@@ -23,7 +22,7 @@ export function KanbanCardHeaderTitle({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <span className={cardTitle({ className })} {...rest}>
+    <span {...rest} className={clsx(styles.cardTitle, className)}>
       {children}
     </span>
   );

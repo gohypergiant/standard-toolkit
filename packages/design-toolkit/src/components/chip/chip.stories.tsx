@@ -11,7 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './';
@@ -19,6 +19,7 @@ import { DeletableChip } from './deletable';
 import { ChipList } from './list';
 import { SelectableChip } from './selectable';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ChipListProps } from './types';
 
 const meta = {
   title: 'Components/Chip',
@@ -97,12 +98,10 @@ const selectableData = [
     label: 'Selectable chip',
   },
 ];
-const metaFromSelectable = {
-  ...meta,
-  component: ChipList,
-} satisfies Meta<typeof ChipList>;
 
-export const SelectableChipList: StoryObj<typeof metaFromSelectable> = {
+export const SelectableChipList: StoryObj<
+  FC<ChipListProps<unknown> & { isDisabled?: boolean }>
+> = {
   args: {
     disallowEmptySelection: false,
     selectionMode: 'multiple',
@@ -136,12 +135,10 @@ const deletableChips = new Set([
   'Deletable chip 2',
   'Deletable chip 3',
 ]);
-const metaFromDeletable = {
-  ...meta,
-  component: ChipList,
-} satisfies Meta<typeof ChipList>;
 
-export const DeletableChipList: StoryObj<typeof metaFromDeletable> = {
+export const DeletableChipList: StoryObj<
+  FC<ChipListProps<unknown> & { isDisabled?: boolean }>
+> = {
   args: {
     isDisabled: false,
   },

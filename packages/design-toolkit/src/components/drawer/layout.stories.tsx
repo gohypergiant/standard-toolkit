@@ -31,8 +31,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
 
-type Alias = React.FC<DrawerLayoutProps>;
-
 const ids = {
   top: {
     drawer: uuid(),
@@ -74,7 +72,7 @@ const ids = {
 
 const meta = {
   title: 'Components/DrawerLayout',
-  component: DrawerLayout as Alias,
+  component: DrawerLayout,
   args: {
     extend: 'left right',
   },
@@ -91,12 +89,11 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<Alias>;
+} satisfies Meta<DrawerLayoutProps>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   render: ({ extend, push }) => (
     <div className='h-screen w-full'>
       <DrawerLayout
