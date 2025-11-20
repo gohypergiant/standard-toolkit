@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import { Information } from '@accelint/icons';
 import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
@@ -41,6 +42,7 @@ import { Icon } from '../icon';
 import { Label } from '../label';
 import { Popover } from '../popover';
 import { PopoverContent } from '../popover/content';
+import { PopoverTitle } from '../popover/title';
 import { PopoverTrigger } from '../popover/trigger';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
@@ -203,6 +205,8 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     [state.editableSegmentConfigs, state.segmentConfigs, showFormatButton],
   );
 
+  console.log(allCoordinateFormats);
+
   return (
     <Provider
       values={[
@@ -305,30 +309,24 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <Popover
-              onOpenChange={handlePopoverOpenChange}
-              placement='bottom'
-              offset={8}
-            >
-              <PopoverTrigger>
-                <Button
-                  variant='icon'
-                  size={size}
-                  color='mono-bold'
-                  className={classNames?.formatButton}
-                  aria-label='View coordinate in all formats'
-                  isDisabled={!copy.isFormatButtonEnabled}
-                >
-                  <Icon>
-                    <GlobalShare />
-                  </Icon>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className={styles.popover}>
-                <div className={styles.popoverHeader}>
-                  <h3>Copy Coordinates</h3>
-                </div>
-                <div className={styles.popoverBody}>
+            <PopoverTrigger onOpenChange={handlePopoverOpenChange}>
+              <Button
+                variant='icon'
+                size={size}
+                color='mono-bold'
+                className={classNames?.formatButton}
+                aria-label='View coordinate in all formats'
+                isDisabled={!copy.isFormatButtonEnabled}
+              >
+                <Icon>
+                  <GlobalShare />
+                </Icon>
+              </Button>
+              <Popover>
+                <PopoverTitle className={styles.popoverTitle}>
+                  Copy Coordinates
+                </PopoverTitle>
+                <PopoverContent>
                   {allCoordinateFormats &&
                     COORDINATE_SYSTEMS.map((formatKey) => {
                       const formatResult = allCoordinateFormats[formatKey];
@@ -336,7 +334,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
 
                       return (
                         <div key={formatKey} className={styles.formatRow}>
-                          <div className='flex min-w-0 flex-1 flex-col gap-2xs'>
+                          <div className={styles.formatLabels}>
                             <span className={styles.formatLabel}>
                               {COORDINATE_FORMAT_LABELS[formatKey]}
                             </span>
@@ -361,9 +359,9 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                         </div>
                       );
                     })}
-                </div>
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+            </PopoverTrigger>
           )}
         </div>
 

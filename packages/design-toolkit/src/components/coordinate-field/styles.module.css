@@ -77,20 +77,16 @@
     @apply fg-serious-bold text-body-xs;
   }
 
-  .popoverContent {
-    @apply rounded-medium bg-surface-overlay shadow-elevation-raised outline-static max-h-[300px] p-0 outline;
-  }
-
-  .popoverHeader {
-    @apply fg-primary-muted p-s text-header-s;
-  }
-
-  .popoverBody {
-    @apply p-s flex flex-col;
+  .popoverTitle {
+    @apply fg-primary-muted text-header-s;
   }
 
   .formatRow {
     @apply gap-s px-xs py-s flex items-start justify-between;
+  }
+
+  .formatLabels {
+    @apply flex min-w-0 flex-1 flex-col;
   }
 
   .formatLabel {
