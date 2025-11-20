@@ -284,7 +284,7 @@ The BaseMap component comes with the following defaults:
 
 ```typescript
 type MapClickPayload = {
-  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
+  info: NonFuncPickingInfo; // PickingInfo with viewport, layer, and sourceLayer omitted for serialization
   event: NonFuncMjolnirGestureEvent; // Event with functions omitted for serialization
 };
 ```
@@ -293,9 +293,9 @@ type MapClickPayload = {
 
 ```typescript
 type MapHoverPayload = {
-  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
+  info: NonFuncPickingInfo; // PickingInfo with viewport, layer, and sourceLayer omitted for serialization
   event: NonFuncMjolnirPointerEvent; // Event with functions omitted for serialization
 };
 ```
 
-Note: Function properties and the viewport are omitted from event payloads to allow proper serialization through the event bus.
+Note: Function properties, viewport, layer, and sourceLayer are omitted from event payloads to allow proper serialization through the event bus.
