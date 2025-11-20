@@ -11,9 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useEffectEvent, useRef } from 'react';
 import { Broadcast } from '../broadcast';
-import { useEffectEvent } from './ponyfill';
 import type { EmitOptions, ExtractEvent, Payload } from '../broadcast/types';
 
 /**

@@ -55,14 +55,14 @@
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@svgr/cli": "^8.1.0",
-    "@types/react": "19.1.13",
-    "@types/react-dom": "19.1.11",
+    "@types/react": "19.2.6",
+    "@types/react-dom": "19.2.3",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "tsup": "8.5.0"
   },
   "peerDependencies": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   },
   "publishConfig": {
     "access": "public"

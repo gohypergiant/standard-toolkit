@@ -64,19 +64,19 @@
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@types/node": "^24.9.0",
-    "@types/react": "19.1.13",
-    "@types/react-dom": "19.1.11",
+    "@types/react": "19.2.6",
+    "@types/react-dom": "19.2.3",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "lodash": "^4.17.21",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "tsup": "8.5.0",
     "typescript": "5.8.3"
   },
   "peerDependencies": {
     "lodash": "^4.17.21",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   },
   "engines": {
     "node": ">=22",
