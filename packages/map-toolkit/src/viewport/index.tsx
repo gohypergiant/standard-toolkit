@@ -10,11 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-export const MapEventsNamespace = 'map';
-
-export const MapEvents = {
-  click: `${MapEventsNamespace}:click`,
-  hover: `${MapEventsNamespace}:hover`,
-  drag: `${MapEventsNamespace}:drag`,
-  viewport: `${MapEventsNamespace}:viewport`,
-} as const;
+export { UNIT_MAP } from './constants';
+export {
+  clearViewportState,
+  type UseViewportStateProps,
+  useViewportState,
+} from './use-viewport-state';
+export { getViewportSize } from './utils';
+export { ViewportSize, type ViewportSizeProps } from './viewport-size';
+export type {
+  GeoCoordinate,
+  GetViewportSizeArgs,
+  SupportedDistanceUnit,
+} from './types';
