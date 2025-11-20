@@ -2,4 +2,4 @@
 "@accelint/map-toolkit": minor
 ---
 
-Add a hook to retrieve the current coordinates for the mouse hovered position.
+Add `useCursorCoordinates`, a hook to retrieve the current coordinates for the mouse hovered position

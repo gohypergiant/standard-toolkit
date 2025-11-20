@@ -15,11 +15,11 @@ import { uuid } from '@accelint/core';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
-import { useHoverCoordinate } from './use-hover-coordinate';
+import { useCursorCoordinates } from './use-cursor-coordinates';
 import type { UniqueId } from '@accelint/core';
 import type { MapEventType, MapHoverPayload } from '../deckgl/base-map/types';
 
-describe('useHoverCoordinate', () => {
+describe('useCursorCoordinates', () => {
   let id: UniqueId;
   let bus: ReturnType<typeof Broadcast.getInstance<MapEventType>>;
   function createMockPayload(
@@ -43,29 +43,29 @@ describe('useHoverCoordinate', () => {
 
   describe('Hook Behavior', () => {
     it('returns default placeholder on mount', () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       expect(result.current.formattedCoord).toBe('--, --');
     });
 
     it('provides setFormat function', () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       expect(typeof result.current.setFormat).toBe('function');
     });
 
     it('throws error when used outside MapProvider without id', () => {
       expect(() => {
-        renderHook(() => useHoverCoordinate());
+        renderHook(() => useCursorCoordinates());
       }).toThrow(
-        'useHoverCoordinate requires either an id parameter or to be used within a MapProvider',
+        'useCursorCoordinates requires either an id parameter or to be used within a MapProvider',
       );
     });
   });
 
   describe('Format Changes', () => {
-    it('resets coordinate string to placeholder when format type is changed', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+    it('preserves coordinate when format type is changed', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       // First emit an event to set a coordinate
       act(() => {
@@ -76,19 +76,22 @@ describe('useHoverCoordinate', () => {
         expect(result.current.formattedCoord).not.toBe('--, --');
       });
 
+      const initialFormat = result.current.formattedCoord;
+
       // Change format
       act(() => {
         result.current.setFormat('mgrs');
       });
 
-      // Should reset to placeholder after state update
+      // Should show coordinate in new format, not placeholder
       await waitFor(() => {
-        expect(result.current.formattedCoord).toBe('--, --');
+        expect(result.current.formattedCoord).not.toBe('--, --');
+        expect(result.current.formattedCoord).not.toBe(initialFormat);
       });
     });
 
-    it('displays new format after emitting event post-format change', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+    it('displays new format immediately when format is changed', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       // Set initial coordinate
       act(() => {
@@ -107,26 +110,19 @@ describe('useHoverCoordinate', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).toBe('--, --');
-      });
-
-      // Emit another hover event
-      act(() => {
-        bus.emit(MapEvents.hover, createMockPayload(id, [45, 45]));
-      });
-
-      await waitFor(() => {
+        // Should immediately show the coordinate in new format, not placeholder
+        expect(result.current.formattedCoord).not.toBe('--, --');
         // Should be different from the dd format
         expect(result.current.formattedCoord).not.toBe(firstFormat);
         // DDM format will have space-separated values
-        expect(result.current.formattedCoord).not.toBe('--, --');
+        expect(result.current.formattedCoord).toContain('45');
       });
     });
   });
 
   describe('Multiple Map Instances', () => {
     it('ignores hover events from other map instances', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
       const differentId: UniqueId = uuid();
 
       // Emit event for different map
@@ -151,8 +147,12 @@ describe('useHoverCoordinate', () => {
       const map1Id = uuid();
       const map2Id = uuid();
 
-      const { result: result1 } = renderHook(() => useHoverCoordinate(map1Id));
-      const { result: result2 } = renderHook(() => useHoverCoordinate(map2Id));
+      const { result: result1 } = renderHook(() =>
+        useCursorCoordinates(map1Id),
+      );
+      const { result: result2 } = renderHook(() =>
+        useCursorCoordinates(map2Id),
+      );
 
       // Emit to map 1
       act(() => {
@@ -182,7 +182,7 @@ describe('useHoverCoordinate', () => {
 
   describe('Edge Cases - Coordinate Boundaries', () => {
     it('handles negative longitude (western hemisphere)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [-122.4194, 37.7749]));
@@ -195,7 +195,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles negative latitude (southern hemisphere)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [151.2093, -33.8688]));
@@ -208,7 +208,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles both negative coordinates (SW hemisphere)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [-70.6693, -33.4489]));
@@ -221,7 +221,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles zero coordinates (null island)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [0, 0]));
@@ -233,7 +233,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles maximum longitude boundary (180°)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [180, 0]));
@@ -245,7 +245,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles minimum longitude boundary (-180°)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [-180, 0]));
@@ -257,7 +257,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles maximum latitude boundary (90°)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [0, 90]));
@@ -269,7 +269,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles minimum latitude boundary (-90°)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [0, -90]));
@@ -283,7 +283,7 @@ describe('useHoverCoordinate', () => {
 
   describe('Edge Cases - International Date Line', () => {
     it('normalizes longitude > 180 (wraps from east)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       // 181° should become -179°
       act(() => {
@@ -297,7 +297,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('normalizes longitude < -180 (wraps from west)', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       // -181° should become 179°
       act(() => {
@@ -311,7 +311,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('normalizes large positive longitude values', async () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       // 361° should become 1°
       act(() => {
@@ -327,7 +327,7 @@ describe('useHoverCoordinate', () => {
 
   describe('Edge Cases - Invalid Coordinates', () => {
     it('handles events with null coordinate gracefully', () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, null));
@@ -338,7 +338,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles events with undefined coordinate gracefully', () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, undefined));
@@ -349,7 +349,7 @@ describe('useHoverCoordinate', () => {
     });
 
     it('handles events with malformed coordinate array gracefully', () => {
-      const { result } = renderHook(() => useHoverCoordinate(id));
+      const { result } = renderHook(() => useCursorCoordinates(id));
 
       const payload = {
         id,

@@ -9,4 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export { type FormatTypes, useHoverCoordinate } from './use-hover-coordinate';
+
+/**
+ * Cursor Coordinates
+ *
+ * Hook for tracking and displaying formatted cursor coordinates on map components.
+ * Supports multiple coordinate systems including Decimal Degrees, DMS, MGRS, and UTM.
+ *
+ * @module @accelint/map-toolkit/cursor-coordinates
+ */
+export {
+  type CoordinateFormatTypes,
+  clearCursorCoordinateState,
+  useCursorCoordinates,
+} from './use-cursor-coordinates';

@@ -11,23 +11,41 @@
  */
 
 import { uuid } from '@accelint/core';
+import { ActionBar } from '@accelint/design-toolkit';
 import { useEffect } from 'react';
 import { BaseMap } from '../deckgl/base-map';
-import { type FormatTypes, useHoverCoordinate } from './use-hover-coordinate';
+import {
+  type CoordinateFormatTypes,
+  useCursorCoordinates,
+} from './use-cursor-coordinates';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const BASIC_USAGE_MAP_ID = uuid();
 
 const meta: Meta = {
-  title: 'Hover Coordinate',
+  title: 'Cursor Coordinates',
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component:
+          'Hook for displaying formatted cursor coordinates on a map. Supports multiple coordinate systems and automatically tracks cursor position.',
+      },
+    },
   },
   argTypes: {
     format: {
+      description: 'Coordinate format system to display',
       options: ['dd', 'ddm', 'dms', 'mgrs', 'utm'],
       control: {
         type: 'select',
+        labels: {
+          dd: 'Decimal Degrees',
+          ddm: 'Degrees Decimal Minutes',
+          dms: 'Degrees Minutes Seconds',
+          mgrs: 'MGRS (Military Grid)',
+          utm: 'UTM (Universal Transverse Mercator)',
+        },
       },
     },
   },
@@ -37,30 +55,37 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 type Props = {
-  format: FormatTypes;
+  format: CoordinateFormatTypes;
 };
 
-const FormattedCoord = (props: Props) => {
-  const { formattedCoord, setFormat } = useHoverCoordinate(BASIC_USAGE_MAP_ID);
+const CursorCoordinateDisplay = (props: Props) => {
+  const { formattedCoord, setFormat } =
+    useCursorCoordinates(BASIC_USAGE_MAP_ID);
   useEffect(() => {
     setFormat(props.format);
   }, [props.format, setFormat]);
 
   return (
-    <div className='absolute top-0 left-0 size-[300px] h-auto'>
+    <ActionBar className='absolute right-l bottom-xxl'>
       {formattedCoord}
-    </div>
+    </ActionBar>
   );
 };
 
 export const Default: Story = {
   args: { format: 'ddm' },
-  render: (args: Partial<Props>) => {
-    return (
-      <div>
-        <BaseMap className='h-dvh w-dvw' id={BASIC_USAGE_MAP_ID} />
-        <FormattedCoord {...(args as Props)} />
-      </div>
-    );
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Basic cursor coordinate display showing the current format. Hover over the map to see coordinates update in real-time.',
+      },
+    },
   },
+  render: (args: Partial<Props>) => (
+    <>
+      <BaseMap className='h-dvh w-dvw' id={BASIC_USAGE_MAP_ID} />
+      <CursorCoordinateDisplay {...(args as Props)} />
+    </>
+  ),
 };
