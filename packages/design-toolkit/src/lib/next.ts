@@ -10,23 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import path from 'node:path';
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
-import tsConfigPaths from 'vite-tsconfig-paths';
-import { generateScopedName } from './src/lib/vite';
+import { generateScopedClassName } from './css';
+import type { LoaderContext } from 'webpack';
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [tsConfigPaths(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  css: {
-    modules: {
-      generateScopedName,
-    },
-  },
-});
+type GetLocalIdent = (
+  context: LoaderContext<object>,
+  localIdentName: string,
+  localName: string,
+  options: object,
+) => string;
+
+export const getLocalIdent: GetLocalIdent = (
+  context,
+  _localIdentName,
+  localName,
+  _options,
+) => {
+  return generateScopedClassName(localName, context.resourcePath);
+};

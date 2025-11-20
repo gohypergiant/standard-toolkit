@@ -578,6 +578,8 @@ export type {
   UseTreeState,
   UseTreeStateOptions,
 } from './hooks/use-tree/types';
+export { generateScopedClassName } from './lib/css';
+export { getLocalIdent } from './lib/next';
 export type {
   AriaAttributes,
   AriaAttributesWithRef,
@@ -593,6 +595,7 @@ export type {
   StyleRenderProps,
 } from './lib/types';
 export { isSlottedContextValue } from './lib/utils';
+export { generateScopedName } from './lib/vite';
 export { PortalProvider } from './providers/portal';
 export { ThemeProvider, useTheme } from './providers/theme-provider';
 export type { ThemeMode } from './providers/theme-provider';

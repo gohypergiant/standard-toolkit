@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLocalIdent } from '@accelint/design-toolkit/lib/next';
 import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
 import type { NextConfig } from 'next';
 
@@ -38,6 +39,25 @@ const nextConfig: NextConfig = {
         }),
       );
     }
+
+    // Find the CSS loader rules
+    const rules = config.module.rules
+      .find((rule) => typeof rule.oneOf === 'object')
+      .oneOf.filter((rule) => Array.isArray(rule.use));
+
+    rules.forEach((rule) => {
+      rule.use.forEach((loader) => {
+        if (
+          typeof loader === 'object' &&
+          loader.loader &&
+          loader.loader.includes('/css-loader/') &&
+          loader.options &&
+          loader.options.modules
+        ) {
+          loader.options.modules.getLocalIdent = getLocalIdent;
+        }
+      });
+    });
 
     return config;
   },

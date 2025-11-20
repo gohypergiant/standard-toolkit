@@ -10,23 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import path from 'node:path';
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
-import tsConfigPaths from 'vite-tsconfig-paths';
-import { generateScopedName } from './src/lib/vite';
+import stringHash from 'string-hash';
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [tsConfigPaths(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  css: {
-    modules: {
-      generateScopedName,
-    },
-  },
-});
+export function generateScopedClassName(className: string, fileName: string) {
+  return className.startsWith('group\\/')
+    ? className
+    : `_${className}_${stringHash(fileName).toString(36).substring(0, 5)}`;
+}
