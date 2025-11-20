@@ -31,6 +31,8 @@ const defaultPayload = {
   longitude: Number.NaN,
   id: instanceId,
   bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
+  width: 0,
+  height: 0,
 };
 
 describe('useViewportState', () => {
@@ -72,6 +74,8 @@ describe('useViewportState', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [-122.5, 37.7, -122.3, 37.8],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -99,6 +103,8 @@ describe('useViewportState', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     const payload2: MapViewportPayload = {
@@ -107,6 +113,8 @@ describe('useViewportState', () => {
       longitude: -74.006,
       zoom: 12,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -151,6 +159,8 @@ describe('useViewportState', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -170,6 +180,8 @@ describe('useViewportState', () => {
       longitude: -74.006,
       zoom: 12,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -188,6 +200,8 @@ describe('useViewportState', () => {
       longitude: -0.1278,
       zoom: 8,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     const customSubscribe = vi.fn(() => {
@@ -231,6 +245,8 @@ describe('useViewportState', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -250,6 +266,8 @@ describe('useViewportState', () => {
       longitude: -74.006,
       zoom: 12,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     expect(() => {
@@ -277,6 +295,8 @@ describe('clearViewportState', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [0, 0, 0, 0],
+      width: 800,
+      height: 600,
     };
 
     act(() => {

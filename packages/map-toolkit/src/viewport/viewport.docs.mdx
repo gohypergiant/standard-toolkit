@@ -26,15 +26,14 @@ Viewport utilities require the following dependencies:
 **Required:**
 - [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for viewport state synchronization
 - [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
-- [`@turf/distance`](https://turfjs.org/docs/#distance) - Geographic distance calculations
 - `react` - React 19.0.0 or higher
 
 **Installation:**
 
 ```bash
-npm install @accelint/map-toolkit @accelint/bus @accelint/core @turf/distance react
+npm install @accelint/map-toolkit @accelint/bus @accelint/core react
 # or
-pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @turf/distance react
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core react
 ```
 
 ## Components
@@ -207,10 +206,12 @@ Optional server-side snapshot function for SSR.
   latitude: number;          // Center latitude
   longitude: number;         // Center longitude
   zoom: number;              // Zoom level
+  width: number;             // Viewport width in pixels
+  height: number;            // Viewport height in pixels
 }
 ```
 
-**Initial State:** All numeric values are `NaN` before the first viewport event fires.
+**Initial State:** Numeric coordinate values are `NaN` and pixel dimensions are `0` before the first viewport event fires.
 
 ## How It Works
 
@@ -236,6 +237,8 @@ The `BaseMap` component emits `MapEvents.viewport` events containing:
   latitude: number;
   longitude: number;
   zoom: number;
+  width: number;             // Viewport width in pixels
+  height: number;            // Viewport height in pixels
 }
 ```
 
@@ -247,52 +250,53 @@ These events fire:
 
 ### Geographic Calculations
 
-The `getViewportSize` utility (used internally by `ViewportSize`):
+The `getViewportSize` utility (used internally by `ViewportSize`) uses a **zoom-based Web Mercator calculation** for stable, predictable results:
 
-1. **Normalizes Longitude**: Handles values outside ±180° for globe view
-2. **Handles Date Line**: Correctly calculates distances across International Date Line
-3. **Calculates Width**: Geographic distance between southwest and southeast corners
-4. **Calculates Height**: Geographic distance between southwest and northwest corners
+1. **Web Mercator Formula**: Calculates meters per pixel using `156543.03392 × cos(lat × π/180) / 2^zoom`
+2. **Pixel-Based Dimensions**: Multiplies viewport pixel dimensions by meters-per-pixel
+3. **Latitude Adjustment**: Accounts for Mercator projection distortion at different latitudes
+4. **Unit Conversion**: Converts meters to requested unit (km, m, nm, mi, ft)
 5. **Formats Output**: Uses provided formatter to localize numbers
+
+This approach provides stable results without the edge cases of bounds-based calculations, making it ideal for quick spatial orientation (not precision measurement).
 
 ## Edge Cases
 
-### Invalid Bounds
+### Invalid Inputs
 
-When bounds are undefined, contain NaN, or have invalid values:
+When inputs are invalid, displays fallback text:
 
 ```tsx
-// Displays: "-- x -- NM"
+// Displays: "-- x -- NM" when:
+// - Bounds contain NaN values
+// - Zoom is NaN
+// - Width or height is 0
+// - Latitude outside ±90°
 <ViewportSize instanceId={MAP_ID} />
 ```
 
-### Globe View Support
+### Stable Panning
 
-Handles multi-revolution longitude values from globe projections:
+Unlike bounds-based calculations, the zoom-based approach provides stable output when panning. At the same zoom level and viewport size, the calculated dimensions remain consistent regardless of pan position (with minor variation from latitude differences).
 
-```tsx
-// Bounds with longitude > 360° are normalized
-bounds: [721, 22, 730, 52]  // 721° → 1°, 730° → 10°
-```
+### Latitude Distortion
 
-### International Date Line
-
-Correctly calculates the short distance across the dateline:
+Due to Mercator projection, the same pixel dimensions represent different geographic distances at different latitudes:
 
 ```tsx
-// Crossing dateline: 170°E to 170°W
-bounds: [170, 50, -170, 60]
-// Calculates ~1,100 KM (20° across), not ~18,800 KM (340° wrong way)
+// At equator: larger geographic area per pixel
+// At high latitudes: smaller geographic area per pixel
+// This is expected behavior reflecting the projection's characteristics
 ```
 
 ### Initial State
 
-Before first viewport event, numeric values are `NaN`:
+Before first viewport event, numeric values are `NaN` or `0`:
 
 ```tsx
-const { latitude, longitude, zoom } = useViewportState({ instanceId });
+const { latitude, longitude, zoom, width, height } = useViewportState({ instanceId });
 
-if (Number.isNaN(latitude)) {
+if (Number.isNaN(latitude) || width === 0) {
   return <div>Loading map...</div>;
 }
 ```
@@ -326,27 +330,61 @@ function MultiMapView() {
 
 ### getViewportSize
 
-Calculate and format viewport dimensions from bounds.
+Calculate and format viewport dimensions using zoom level and pixel dimensions. Uses the Web Mercator projection formula for stable, predictable results ideal for quick spatial orientation.
 
 ```tsx
 import { getViewportSize } from '@accelint/map-toolkit/viewport';
 
-const result = getViewportSize({
+// Basic usage
+getViewportSize({
   bounds: [-82, 22, -71, 52],
+  zoom: 5,
+  width: 800,
+  height: 600,
   unit: 'nm',
 });
-// Returns: "612 x 1,801 NM"
+// Returns: "612 x 459 NM"
+
+// With different zoom level
+getViewportSize({
+  bounds: [-82, 22, -71, 52],
+  zoom: 8,
+  width: 800,
+  height: 600,
+  unit: 'km',
+});
+// Returns: "113 x 85 KM"
 ```
 
 #### Parameters
 
 ```tsx
 {
-  bounds?: Bounds;            // Geographic bounds [minLon, minLat, maxLon, maxLat]
-  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'nm' | 'mi' | 'ft'
-  formatter?: Intl.NumberFormat; // Custom number formatter
+  bounds: Bounds;                // Geographic bounds [minLon, minLat, maxLon, maxLat]
+  zoom: number;                  // Zoom level for meters-per-pixel calculation
+  width: number;                 // Viewport width in pixels
+  height: number;                // Viewport height in pixels
+  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'nm' | 'mi' | 'ft' (default: 'nm')
+  formatter?: Intl.NumberFormat; // Custom number formatter (default: en-US)
 }
 ```
+
+#### Calculation Method
+
+Uses the Web Mercator projection formula:
+
+```
+metersPerPixel = 156543.03392 × cos(centerLatitude × π/180) / 2^zoom
+width = pixelWidth × metersPerPixel
+height = pixelHeight × metersPerPixel
+```
+
+#### Benefits
+
+- **Stable output**: No flickering when panning at any zoom level
+- **Predictable**: Same zoom + pixel dimensions = consistent calculated size
+- **Simple**: No complex edge case detection needed
+- **Appropriate for purpose**: Ideal for "about how big is this" spatial orientation
 
 ### clearViewportState
 
@@ -394,6 +432,8 @@ type MapViewportPayload = {
   latitude: number;
   longitude: number;
   zoom: number;
+  width: number;   // Viewport width in pixels
+  height: number;  // Viewport height in pixels
 };
 ```
 
@@ -415,12 +455,12 @@ type MapViewportPayload = {
 
 **Cause:** Viewport event hasn't fired yet (map initializing).
 
-**Solution:** Check for `NaN` and show loading state:
+**Solution:** Check for `NaN` or `0` and show loading state:
 
 ```tsx
-const { latitude } = useViewportState({ instanceId });
+const { latitude, width } = useViewportState({ instanceId });
 
-if (Number.isNaN(latitude)) {
+if (Number.isNaN(latitude) || width === 0) {
   return <div>Initializing map...</div>;
 }
 ```
@@ -456,9 +496,9 @@ Viewport utilities are optimized for performance:
 ## Related
 
 - [`BaseMap`](../deckgl/base-map/base-map.docs.mdx) - Map component that emits viewport events
-- [`@turf/distance`](https://turfjs.org/docs/#distance) - Geographic distance calculation
 - [`useSyncExternalStore`](https://react.dev/reference/react/useSyncExternalStore) - React hook docs
 - [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus library
+- [Web Mercator projection](https://en.wikipedia.org/wiki/Web_Mercator_projection) - The projection formula used for calculations
 
 ## Examples
 

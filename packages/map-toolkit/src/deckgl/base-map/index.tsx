@@ -237,6 +237,8 @@ export function BaseMap({
         latitude,
         longitude,
         zoom,
+        width: viewport?.width ?? 0,
+        height: viewport?.height ?? 0,
       });
     },
   );
@@ -253,6 +255,8 @@ export function BaseMap({
           zoom: vp.zoom,
           id: vp.id,
           bounds: vp.getBounds(),
+          width: vp.width,
+          height: vp.height,
         },
       } as ViewStateChangeParameters);
     });

@@ -49,6 +49,8 @@ describe('ViewportSize', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [-82, 22, -71, 52],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -77,6 +79,8 @@ describe('ViewportSize', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [-82, 22, -71, 52],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -110,6 +114,8 @@ describe('ViewportSize', () => {
       longitude: -122.4194,
       zoom: 10,
       bounds: [-82, 22, -71, 52],
+      width: 800,
+      height: 600,
     };
 
     act(() => {
@@ -124,12 +130,15 @@ describe('ViewportSize', () => {
 
     const firstContent = screen.getByTestId('viewport-size').textContent;
 
+    // Different zoom level should result in different calculated size
     const payload2: MapViewportPayload = {
       id: instanceId,
       bounds: [-100, 30, -90, 40],
       latitude: 37.7749,
       longitude: -122.4194,
-      zoom: 10,
+      zoom: 8, // Different zoom for different output
+      width: 800,
+      height: 600,
     };
 
     act(() => {
