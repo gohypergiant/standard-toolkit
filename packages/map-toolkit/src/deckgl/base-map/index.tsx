@@ -16,6 +16,7 @@ import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
+import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
@@ -26,7 +27,12 @@ import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { MapClickEvent, MapHoverEvent, MapViewportEvent } from './types';
+import type {
+  MapClickEvent,
+  MapDragEvent,
+  MapHoverEvent,
+  MapViewportEvent,
+} from './types';
 
 /**
  * Props for the BaseMap component.
@@ -130,6 +136,7 @@ export function BaseMap({
   useDevicePixels = false,
   widgets: widgetsProp = [],
   onClick,
+  onDrag,
   onHover,
   onViewStateChange,
   ...rest
@@ -160,6 +167,7 @@ export function BaseMap({
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+  const emitDrag = useEmit<MapDragEvent>(MapEvents.drag);
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
 
   const handleClick = useCallback(
@@ -196,7 +204,7 @@ export function BaseMap({
       onHover?.(info, event);
 
       // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, ...infoRest } = info;
+      const { viewport, layer, ...infoRest } = info;
       const {
         stopImmediatePropagation,
         stopPropagation,
@@ -215,6 +223,36 @@ export function BaseMap({
     },
     [emitHover, id, onHover],
   );
+
+  const handleMapDrag = useCallback(
+    (info: PickingInfo, event: MjolnirGestureEvent) => {
+      // send full pickingInfo and event to user-defined onDrag
+      onDrag?.(info, event);
+
+      // the bus cannot serialize functions, so we omit them from the event payloads
+      const { viewport, layer, ...infoRest } = info;
+      const {
+        stopImmediatePropagation,
+        stopPropagation,
+        preventDefault,
+        srcEvent,
+        rootElement,
+        target,
+        ...eventRest
+      } = event;
+
+      emitDrag({
+        info: infoRest,
+        event: eventRest,
+        id,
+      });
+    },
+    [emitDrag, id, onDrag],
+  );
+
+  const handleGetCursor = useCallback(() => {
+    return getCursor(id);
+  }, [id]);
 
   const handleViewStateChange = useEffectEvent(
     (params: ViewStateChangeParameters) => {
@@ -274,6 +312,8 @@ export function BaseMap({
           onHover={handleHover}
           onLoad={handleLoad}
           onViewStateChange={handleViewStateChange}
+          onDrag={handleMapDrag}
+          getCursor={handleGetCursor}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
           parameters={{ ...PARAMETERS, ...parameters }}

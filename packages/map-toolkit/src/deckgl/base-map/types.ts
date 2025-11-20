@@ -20,7 +20,7 @@ import type { MapEvents } from './events';
  * PickingInfo without the viewport property, as it cannot be serialized through the event bus.
  * The viewport contains function properties that would break serialization.
  */
-type NonFuncPickingInfo = Omit<PickingInfo, 'viewport'>;
+type NonFuncPickingInfo = Omit<PickingInfo, 'viewport' | 'layer'>;
 
 /**
  * MjolnirGestureEvent without function properties and non-serializable objects.
@@ -78,6 +78,19 @@ export type MapHoverPayload = {
   id: UniqueId;
 };
 
+/**
+ * Payload for map drag events emitted through the event bus.
+ * Contains picking information about what is being dragged and the pointer event details.
+ */
+export type MapDragPayload = {
+  /** Information about the picked object and its properties */
+  info: NonFuncPickingInfo;
+  /** The gesture event that triggered the drag */
+  event: NonFuncMjolnirGestureEvent;
+  /** The map instance the event occurred within */
+  id: UniqueId;
+};
+
 export type Bounds = [
   minLon: number,
   minLat: number,
@@ -108,9 +121,15 @@ export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
  * Combines the event name with the hover payload.
  */
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
+
+export type MapDragEvent = Payload<typeof MapEvents.drag, MapDragPayload>;
 export type MapViewportEvent = Payload<
   typeof MapEvents.viewport,
   MapViewportPayload
 >;
 
-export type MapEventType = MapClickEvent | MapHoverEvent | MapViewportEvent;
+export type MapEventType =
+  | MapClickEvent
+  | MapDragEvent
+  | MapHoverEvent
+  | MapViewportEvent;

@@ -10,11 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-export const MapEventsNamespace = 'map';
-
-export const MapEvents = {
-  click: `${MapEventsNamespace}:click`,
-  hover: `${MapEventsNamespace}:hover`,
-  drag: `${MapEventsNamespace}:drag`,
-  viewport: `${MapEventsNamespace}:viewport`,
+/**
+ * Event keys for map cursor state changes.
+ * These events are used for communication between cursor stores and consumers.
+ */
+export const MapCursorEvents = {
+  /** Emitted when a component requests a cursor change */
+  changeRequest: 'cursor:change-request',
+  /** Emitted when the cursor has been changed */
+  changed: 'cursor:changed',
+  /** Emitted when a cursor change request is rejected */
+  rejected: 'cursor:rejected',
+  /** Emitted when map cursor state changes eg. hover/drag */
+  changeState: 'cursor:change-state',
 } as const;
