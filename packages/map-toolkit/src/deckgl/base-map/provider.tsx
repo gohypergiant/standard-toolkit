@@ -18,7 +18,7 @@ import {
   destroyStore as destroyCursorStore,
   getOrCreateStore as getOrCreateCursorStore,
 } from '../../map-cursor/store';
-import { destroyStore, getOrCreateStore } from '../../map-mode/store';
+import { clearMapModeState } from '../../map-mode/store';
 import type { UniqueId } from '@accelint/core';
 
 /**
@@ -64,14 +64,14 @@ export type MapProviderProps = {
  * Consumers should pass the `id` prop to `BaseMap`, which will create this provider automatically.
  *
  * This component uses a hybrid architecture combining React Context (for map instance identity)
- * with an external observable store (for state management). The provider:
+ * with module-level state management (for map mode state). The provider:
  * - Provides a unique `id` via Context
- * - Creates an isolated MapModeStore instance for this map
+ * - Cleans up map mode state when unmounted
  * - Allows components to subscribe to mode changes via `useMapMode` hook (which uses `useSyncExternalStore`)
  *
- * The external store manages a state machine for map modes where components can request
- * mode changes with ownership. When a mode is owned by a component, other components
- * must request authorization to change to a different mode. The store handles:
+ * The module-level state management system implements a state machine for map modes where
+ * components can request mode changes with ownership. When a mode is owned by a component,
+ * other components must request authorization to change to a different mode. The system handles:
  *
  * - Automatic mode changes when no ownership conflicts exist
  * - Authorization flow when switching between owned modes
@@ -107,14 +107,13 @@ export type MapProviderProps = {
  *
  * ## Instance ID Stability and Lifecycle
  *
- * The provider uses React's `key` prop to force a complete remount when the `id` changes.
- * This ensures:
- * - Clean cleanup of the old store (no memory leaks)
- * - Fresh initialization for the new ID
- * - All child components remount with the new context
+ * The provider's cleanup mechanism (via `useEffect`) ensures proper state management:
+ * - Map mode state is cleaned up when the provider unmounts
+ * - Changing the `id` prop will trigger cleanup of the old state via the effect dependency
+ * - State is lazily initialized on first subscription (no manual creation needed)
  *
  * While the `id` prop should typically remain stable (created as a module-level constant
- * or with `useState`), changing it will work correctly due to the remount behavior.
+ * or with `useState`), changing it will work correctly due to the cleanup mechanism.
  *
  * @param props - Provider props including children and required id
  * @returns Provider component that wraps children with map instance identity context
@@ -145,36 +144,15 @@ export type MapProviderProps = {
  * });
  * ```
  */
-/**
- * Public wrapper that forces remount when id changes.
- * This ensures clean lifecycle management and prevents memory leaks.
- */
 export function MapProvider({ children, id }: MapProviderProps) {
-  // Force remount when id changes - each id gets a fresh component instance
-  return (
-    <MapProviderInternal key={id} id={id}>
-      {children}
-    </MapProviderInternal>
-  );
-}
-
-/**
- * Internal implementation with guaranteed stable id.
- * The id cannot change without a remount due to the key prop above.
- */
-function MapProviderInternal({ children, id }: MapProviderProps) {
-  // Create stores synchronously before children render
-  // This is required for useSyncExternalStore pattern
-  getOrCreateStore(id);
-  getOrCreateCursorStore(id);
-
   // Cleanup when component unmounts
+  // State is created automatically on first subscription in useMapMode
   useEffect(() => {
     return () => {
-      destroyStore(id);
+      clearMapModeState(id);
       destroyCursorStore(id);
     };
-  }, [id]); // id is stable within this component's lifetime due to key prop
+  }, [id]);
 
   return <MapContext.Provider value={id}>{children}</MapContext.Provider>;
 }
