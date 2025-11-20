@@ -21,9 +21,8 @@ export const FlashcardStyles = tv({
     subHeader: 'fg-primary-muted text-body-xs',
     flashcardData: 'fg-primary-muted px-s text-body-xs',
     detailsList: 'p-s pb-s text-body-xs',
-    detailsLabel:
-      'fg-primary-muted nth-of-type-6:hidden [&:nth-of-type(6)~*]:hidden',
-    detailsValue: 'fg-primary-bold',
+    detailsLabel: 'fg-primary-muted nth-of-type-[n+6]:hidden',
+    detailsValue: 'fg-primary-bold nth-of-type-[n+6]:hidden',
     skeleton: 'min-h-[8px] py-0',
   },
 });

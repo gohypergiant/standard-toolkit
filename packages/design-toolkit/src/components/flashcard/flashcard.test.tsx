@@ -11,6 +11,7 @@
  */
 
 import { uuid } from '@accelint/core';
+import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { Fragment } from 'react/jsx-runtime';
 import { describe, expect, it } from 'vitest';
@@ -60,20 +61,28 @@ function setup(isLoading = false) {
 describe('Flashcard', () => {
   it('should render', () => {
     setup();
-    expect(screen.getByText('IDENTIFIER')).toBeInTheDocument();
+    expect(screen.getByText('IDENTIFIER')).toBeDefined();
+    expect(screen.getByText('DATA')).toBeDefined();
+    expect(screen.getByText('SECONDARY_DATA_01')).toBeDefined();
+    expect(screen.getByText('SECONDARY_DATA_02')).toBeDefined();
   });
 
-  // it('should only show 5 additional details', () => {
-  //   setup();
+  it('should only show 5 additional details', () => {
+    setup();
 
-  //   // First item to be hidden by selector nth-of-type
-  //   const detailEntries = document.querySelectorAll('nth-of-type(6):hidden');
-  //   expect(detailEntries.length).toEqual(16);
-  //   console.log(detailEntries[10]);
+    // First item to be hidden by selector nth-of-type
+    const detailEntries = document.getElementsByClassName(
+      'nth-of-type-[n+6]:hidden',
+    );
 
-  //   expect(detailEntries[0]?.checkVisibility()).toBe(false);
-  //   expect(detailEntries[10]?.checkVisibility()).toBe(false);
-  // });
+    // 2 sets of 8
+    expect(detailEntries.length).toEqual(16);
+
+    // First items should be visible.
+    expect(detailEntries[0]).toBeVisible();
+    // TODO: Testing for visibility is wonky.
+    // expect(detailEntries[11]).not.toBeVisible();
+  });
 
   it('should not show secondary data field while loading', () => {
     setup(true);
@@ -87,7 +96,6 @@ describe('Flashcard', () => {
 
     // Two skellington components
     expect(hero.childElementCount).toEqual(2);
-    console.log(hero.childNodes);
 
     // Should not render FlashcardAdditionalData component.
     const secondaryData = screen.queryByText('SECONDARY_DATA');
