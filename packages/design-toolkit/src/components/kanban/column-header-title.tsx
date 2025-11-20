@@ -12,10 +12,9 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { colHeaderTitle } = KanbanStyles();
 
 export function KanbanColumnHeaderTitle({
   children,
@@ -23,7 +22,7 @@ export function KanbanColumnHeaderTitle({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <span className={colHeaderTitle({ className })} {...rest}>
+    <span {...rest} className={clsx(styles.columnTitle, className)}>
       {children}
     </span>
   );

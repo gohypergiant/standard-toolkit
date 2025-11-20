@@ -283,11 +283,6 @@ export {
   useDragContext,
 } from './components/kanban/kanban';
 export { columnData } from './components/kanban/mock-data';
-export {
-  CardInnerStyles,
-  ColumnStyles,
-  KanbanStyles,
-} from './components/kanban/styles';
 export type {
   KanbanCardData,
   KanbanCardProps,
@@ -347,11 +342,9 @@ export { OptionsItemDescription } from './components/options/item-description';
 export { OptionsItemLabel } from './components/options/item-label';
 export { OptionsItem } from './components/options/item';
 export { OptionsSection } from './components/options/section';
-export { OptionsStyles } from './components/options/styles';
 export type {
   OptionsDataItem,
   OptionsItemProps,
-  OptionsItemTextProps,
   OptionsProps,
   OptionsSectionProps,
 } from './components/options/types';

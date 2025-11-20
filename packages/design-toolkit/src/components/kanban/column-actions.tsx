@@ -13,12 +13,11 @@
 import 'client-only';
 
 import { Add } from '@accelint/icons';
+import { clsx } from 'clsx';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { KanbanStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanColContentActionProps } from './types';
-
-const { colHeader } = KanbanStyles();
 
 export function KanbanColumnActions({
   className,
@@ -26,7 +25,7 @@ export function KanbanColumnActions({
   ...rest
 }: KanbanColContentActionProps) {
   return (
-    <div className={colHeader({ className })} {...rest}>
+    <div {...rest} className={clsx(styles.columnHeader, className)}>
       <Button variant='flat' onPress={onAddCard} {...rest}>
         <Icon>
           <Add />
