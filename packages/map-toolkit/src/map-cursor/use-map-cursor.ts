@@ -10,9 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { useContext, useEffect, useMemo, useSyncExternalStore } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+} from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
-import { getStore } from './store';
+import {
+  clearCursor as clearCursorModule,
+  getSnapshotGetter,
+  getSubscription,
+  requestCursorChange as requestCursorChangeModule,
+} from './store';
 import type { UniqueId } from '@accelint/core';
 import type { CSSCursorType } from './types';
 
@@ -88,26 +99,35 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
     );
   }
 
-  // Get the store for this map instance
-  const store = getStore(actualId);
+  // Subscribe to store using useSyncExternalStore with module functions
+  const cursor = useSyncExternalStore(
+    getSubscription(actualId),
+    getSnapshotGetter(actualId),
+  );
 
-  if (!store) {
-    throw new Error(
-      `MapCursorStore not found for map instance: ${actualId}. Ensure a store has been created for this map instance (e.g., via MapProvider or getOrCreateStore).`,
-    );
-  }
+  // Create stable callback functions
+  const requestCursorChange = useCallback(
+    (cursor: CSSCursorType, owner: string) => {
+      requestCursorChangeModule(actualId, cursor, owner);
+    },
+    [actualId],
+  );
 
-  // Subscribe to store using useSyncExternalStore
-  const cursor = useSyncExternalStore(store.subscribe, store.getSnapshot);
+  const clearCursor = useCallback(
+    (owner: string) => {
+      clearCursorModule(actualId, owner);
+    },
+    [actualId],
+  );
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       cursor,
-      requestCursorChange: store.requestCursorChange,
-      clearCursor: store.clearCursor,
+      requestCursorChange,
+      clearCursor,
     }),
-    [cursor, store],
+    [cursor, requestCursorChange, clearCursor],
   );
 }
 

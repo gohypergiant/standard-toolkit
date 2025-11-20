@@ -15,8 +15,8 @@
 import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useId, useMemo, useRef } from 'react';
-import { useMapCursor } from '../../map-cursor/use-map-cursor';
+import { useCallback, useId, useMemo } from 'react';
+import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
@@ -136,6 +136,7 @@ export function BaseMap({
   useDevicePixels = false,
   widgets: widgetsProp = [],
   onClick,
+  onDrag,
   onHover,
   onViewStateChange,
   ...rest
@@ -164,45 +165,9 @@ export function BaseMap({
   // Use the custom hook to handle MapLibre
   useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
 
-  return (
-    <div id={container} className={className}>
-      <MapProvider id={id}>
-        <BaseMapInternal
-          id={id}
-          onClick={onClick}
-          onHover={onHover}
-          parameters={parameters}
-          {...rest}
-        >
-          {children}
-        </BaseMapInternal>
-      </MapProvider>
-    </div>
-  );
-}
-
-/**
- * Internal component that has access to MapProvider context.
- * Separated to enable cursor management via useMapCursor hook.
- */
-function BaseMapInternal({
-  id,
-  onClick,
-  onDrag,
-  onHover,
-  parameters,
-  children,
-  ...rest
-}: Omit<BaseMapProps, 'className'>) {
-  const { cursor } = useMapCursor(id);
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
   const emitDrag = useEmit<MapDragEvent>(MapEvents.drag);
-
-  // Use ref to store current cursor value for synchronous access in getCursor
-  // This avoids closure/memoization issues with useCallback
-  const cursorRef = useRef(cursor);
-  cursorRef.current = cursor;
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
 
   const handleClick = useCallback(
@@ -261,7 +226,7 @@ function BaseMapInternal({
 
   const handleMapDrag = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
-      // send full pickingInfo and event to user-defined onHover
+      // send full pickingInfo and event to user-defined onDrag
       onDrag?.(info, event);
 
       // the bus cannot serialize functions, so we omit them from the event payloads
@@ -286,8 +251,8 @@ function BaseMapInternal({
   );
 
   const handleGetCursor = useCallback(() => {
-    return cursorRef.current;
-  }, []);
+    return getCursor(id);
+  }, [id]);
 
   const handleViewStateChange = useEffectEvent(
     (params: ViewStateChangeParameters) => {

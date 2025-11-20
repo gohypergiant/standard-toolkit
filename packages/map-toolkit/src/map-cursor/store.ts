@@ -40,378 +40,481 @@ const DEFAULT_CURSORS: CursorDefaults = {
  * Typed event bus instance for map cursor events.
  * Provides type-safe event emission and listening for all map cursor state changes.
  */
-const mapCursorBus = Broadcast.getInstance<MapCursorEventType | MapEventType>();
+const bus = Broadcast.getInstance<MapCursorEventType | MapEventType>();
 
 /**
- * External store for managing map cursor state.
- *
- * This store implements the observable pattern for use with React's `useSyncExternalStore` hook.
- * It manages cursor state with owner-based priority, allowing components to request cursor changes
- * while respecting ownership hierarchy (mode owner > non-owners).
- *
- * Each store instance is identified by a unique `id` and operates independently,
- * enabling scenarios with multiple isolated map instances (e.g., main map + minimap).
- * Stores communicate via the event bus and filter events by `id` to ensure isolation.
- *
- * **Priority System**:
- * - Mode owner (from MapModeStore) has highest priority
- * - Only one cursor per owner (stored in Map<owner, cursor>)
- * - Non-owners can set cursors only in default mode or ownerless modes
- * - All requests are stored and auto-applied when requester becomes mode owner
- *
- * @see {getOrCreateStore} - Creates or retrieves a store for a given map instance
- * @see {destroyStore} - Destroys a store and cleans up its resources
+ * Module-level state storage
  */
-export class MapCursorStore {
-  private readonly cursorOwners = new Map<string, CSSCursorType>();
-  private readonly listeners = new Set<() => void>();
-  private readonly bus = mapCursorBus;
-  private readonly unsubscribers: Array<() => void> = [];
-  private currentCursor: CSSCursorType | null = null;
-  private currentOwner: string | null = null;
-  private cursorState: CursorState = 'default';
 
-  constructor(private readonly id: UniqueId) {
-    this.id = id;
-    // Subscribe to bus events
-    this.setupEventListeners();
+/** Map of owner-to-cursor mappings per instance */
+const cursorOwners = new Map<UniqueId, Map<string, CSSCursorType>>();
+
+/** Current cursor per instance */
+const currentCursors = new Map<UniqueId, CSSCursorType | null>();
+
+/** Current owner per instance */
+const currentOwners = new Map<UniqueId, string | null>();
+
+/** Cursor state (default/hover/drag) per instance */
+const cursorStates = new Map<UniqueId, CursorState>();
+
+/** React component subscribers per instance (for fan-out notifications) */
+const componentSubscribers = new Map<UniqueId, Set<() => void>>();
+
+/** Cache of bus unsubscribe functions (1 per instance) */
+const busUnsubscribers = new Map<UniqueId, Array<() => void>>();
+
+/** Cache of subscription functions per instance */
+const subscriptionCache = new Map<
+  UniqueId,
+  (onStoreChange: () => void) => () => void
+>();
+
+/** Cache of snapshot functions per instance */
+const snapshotCache = new Map<UniqueId, () => CSSCursorType>();
+
+/**
+ * Get current cursor snapshot for a given instance (for useSyncExternalStore)
+ *
+ * Priority order:
+ * 1. Mode owner's cursor (if exists and mode is owned)
+ * 2. Most recent cursor (only if currentOwner still has an entry in storage)
+ * 3. Default cursor based on state
+ */
+function getSnapshot(instanceId: UniqueId): CSSCursorType {
+  // Priority 1: Mode owner's cursor
+  const modeStore = getModeStore(instanceId);
+  if (modeStore) {
+    const modeOwner = modeStore.getCurrentModeOwner();
+    if (modeOwner) {
+      const owners = cursorOwners.get(instanceId);
+      const modeOwnerCursor = owners?.get(modeOwner);
+      if (modeOwnerCursor) {
+        return modeOwnerCursor;
+      }
+    }
   }
 
-  /**
-   * Get current cursor snapshot (for useSyncExternalStore)
-   *
-   * Priority order:
-   * 1. Mode owner's cursor (if exists and mode is owned)
-   * 2. Most recent cursor (only if currentOwner still has an entry in storage)
-   * 3. Default cursor
-   *
-   * The owner entry check prevents returning stale cursors after cleanup.
-   * For example, when a mode owner returns to default, their cursor entry is
-   * deleted from storage, so their cached cursor won't be returned.
-   */
-  getSnapshot = (): CSSCursorType => {
-    // Priority 1: Mode owner's cursor
-    const modeStore = getModeStore(this.id);
-    if (modeStore) {
-      const modeOwner = modeStore.getCurrentModeOwner();
-      if (modeOwner) {
-        const modeOwnerCursor = this.cursorOwners.get(modeOwner);
-        if (modeOwnerCursor) {
-          return modeOwnerCursor;
-        }
-      }
+  // Priority 2: Most recent cursor (only if owner entry still exists)
+  const currentCursor = currentCursors.get(instanceId);
+  const currentOwner = currentOwners.get(instanceId);
+  if (currentCursor && currentOwner) {
+    const owners = cursorOwners.get(instanceId);
+    if (owners?.has(currentOwner)) {
+      return currentCursor;
     }
+  }
 
-    // Priority 2: Most recent cursor (only if owner entry still exists)
-    if (this.currentCursor && this.currentOwner) {
-      if (this.cursorOwners.has(this.currentOwner)) {
-        return this.currentCursor;
-      }
-    }
+  // Priority 3: Default cursor based on state
+  const state = cursorStates.get(instanceId) ?? 'default';
+  return DEFAULT_CURSORS[state];
+}
 
-    // Priority 3: Default cursor
-    return DEFAULT_CURSORS[this.cursorState];
-  };
-
-  /**
-   * Subscribe to cursor changes (for useSyncExternalStore)
-   */
-  subscribe = (listener: () => void): (() => void) => {
-    this.listeners.add(listener);
-    return () => {
-      this.listeners.delete(listener);
-    };
-  };
-
-  /**
-   * Request a cursor change
-   *
-   * Components request cursor changes via this method. The request will be:
-   * - **Accepted and applied immediately** if:
-   *   - Requester is the mode owner
-   *   - No mode owner exists (default/ownerless mode)
-   *   - Cursor is different from current cursor
-   * - **Rejected for immediate application** if:
-   *   - Requester is not the mode owner and a mode owner exists
-   *   - Cursor is stored and will auto-apply when requester becomes owner
-   * - **Skipped** if:
-   *   - Same cursor is already stored for this owner (no event)
-   *   - Same cursor is already displayed (no change event)
-   *
-   * @param cursor - The desired CSS cursor type
-   * @param requestOwner - Unique identifier of the component requesting the change
-   * @throws Error if either parameter is empty or whitespace-only
-   *
-   * @example
-   * ```ts
-   * // Mode owner requesting cursor change (accepted immediately)
-   * store.requestCursorChange('crosshair', 'drawing-tool');
-   *
-   * // Non-owner requesting in default mode (accepted immediately)
-   * store.requestCursorChange('pointer', 'layer-component');
-   *
-   * // Non-owner requesting in owned mode (rejected but stored)
-   * store.requestCursorChange('pointer', 'other-component'); // Rejected, stored for later
-   *
-   * // Requesting same cursor again (skipped, no event)
-   * store.requestCursorChange('pointer', 'layer-component'); // No-op
-   * ```
-   */
-  requestCursorChange = (cursor: CSSCursorType, requestOwner: string): void => {
-    const trimmedCursor = cursor.trim();
-    const trimmedRequestOwner = requestOwner.trim();
-
-    if (!trimmedCursor) {
-      throw new Error('requestCursorChange requires non-empty cursor');
-    }
-    if (!trimmedRequestOwner) {
-      throw new Error('requestCursorChange requires non-empty requestOwner');
-    }
-
-    this.bus.emit(MapCursorEvents.changeRequest, {
-      cursor: trimmedCursor as CSSCursorType,
-      owner: trimmedRequestOwner,
-      id: this.id,
-    });
-  };
-
-  /**
-   * Notify all subscribers of state change
-   */
-  private notify(): void {
-    for (const listener of this.listeners) {
+/**
+ * Notify all subscribers for a given instance
+ */
+function notify(instanceId: UniqueId): void {
+  const subscribers = componentSubscribers.get(instanceId);
+  if (subscribers) {
+    for (const listener of subscribers) {
       listener();
     }
   }
+}
 
-  /**
-   * Setup event listeners for bus events
-   */
-  private setupEventListeners(): void {
-    // Listen for cursor change requests
-    const unsubRequest = this.bus.on(MapCursorEvents.changeRequest, (event) => {
-      const { cursor, owner: requestOwner, id } = event.payload;
-
-      // Filter: only handle if targeted at this map
-      if (id !== this.id) {
-        return;
-      }
-
-      this.handleCursorChangeRequest(cursor, requestOwner);
-    });
-    this.unsubscribers.push(unsubRequest);
-
-    // Listen for mode changes to handle cursor updates when ownership changes
-    const modeBus = Broadcast.getInstance<ModeChangedEvent>();
-    const unsubModeChange = modeBus.on(MapModeEvents.changed, (event) => {
-      // Filter: only handle if targeted at this map
-      if (event.payload.id !== this.id) {
-        return;
-      }
-
-      const previousCursor = this.getSnapshot();
-
-      // When returning to default mode, clear the previous mode owner's cursor
-      // Preserves other components' stored cursor preferences for future use
-      if (event.payload.currentMode === 'default') {
-        if (this.currentOwner) {
-          this.cursorOwners.delete(this.currentOwner);
-        }
-        this.currentCursor = null;
-        this.currentOwner = null;
-
-        // Notify immediately to trigger React re-render
-        this.notify();
-      }
-
-      // Defer cursor change check until after new mode owner is registered
-      // Mode changed event fires before ownership is established
-      queueMicrotask(() => {
-        const newCursor = this.getSnapshot();
-        if (previousCursor !== newCursor) {
-          const modeStore = getModeStore(this.id);
-          const newModeOwner = modeStore?.getCurrentModeOwner() || 'system';
-          this.bus.emit(MapCursorEvents.changed, {
-            previousCursor,
-            currentCursor: newCursor,
-            owner: newModeOwner,
-            id: this.id,
-          });
-          this.notify();
-        }
-      });
-    });
-    this.unsubscribers.push(unsubModeChange);
-
-    const unsubHover = this.bus.on(MapEvents.hover, (event) => {
-      const {
-        id,
-        info: { picked },
-      } = event.payload;
-
-      // Filter: only handle if targeted at this map
-      if (id !== this.id) {
-        return;
-      }
-
-      picked
-        ? this.handleCursorStateChange('hover')
-        : this.handleCursorStateChange('default');
-    });
-    this.unsubscribers.push(unsubHover);
-
-    const unsubClick = this.bus.on(MapEvents.click, (event) => {
-      const { id } = event.payload;
-
-      // Filter: only handle if targeted at this map
-      if (id !== this.id) {
-        return;
-      }
-
-      this.handleCursorStateChange('default');
-    });
-    this.unsubscribers.push(unsubClick);
+/**
+ * Handle cursor change request for a given instance
+ */
+function handleCursorChangeRequest(
+  instanceId: UniqueId,
+  cursor: CSSCursorType,
+  requestOwner: string,
+): void {
+  // Store the cursor for this owner
+  let owners = cursorOwners.get(instanceId);
+  if (!owners) {
+    owners = new Map();
+    cursorOwners.set(instanceId, owners);
   }
 
-  private handleCursorStateChange = (state: CursorState): void => {
-    if (this.cursorState !== state) {
-      this.cursorState = state;
+  const previousCursor = getSnapshot(instanceId);
 
-      this.cursorOwners.clear();
+  // Skip if same cursor is already stored for this owner
+  if (owners.get(requestOwner) === cursor) {
+    return;
+  }
 
-      this.bus.emit(MapCursorEvents.changeState, {
+  // Store cursor for this owner
+  owners.set(requestOwner, cursor);
+
+  // Check if requester is the mode owner or if mode is ownerless
+  const modeStore = getModeStore(instanceId);
+  const modeOwner = modeStore?.getCurrentModeOwner();
+  const currentMode = modeStore?.getSnapshot();
+  const isOwnerlessMode = !modeOwner || currentMode === 'default';
+  const isRequestOwnerModeOwner = requestOwner === modeOwner;
+
+  // Grant or reject based on ownership
+  if (isOwnerlessMode || isRequestOwnerModeOwner) {
+    // Accept: store and apply cursor
+    currentCursors.set(instanceId, cursor);
+    currentOwners.set(instanceId, requestOwner);
+
+    const newCursor = getSnapshot(instanceId);
+
+    // Emit changed event only if cursor actually changed
+    if (previousCursor !== newCursor) {
+      bus.emit(MapCursorEvents.changed, {
+        previousCursor,
+        currentCursor: newCursor,
+        owner: requestOwner,
+        id: instanceId,
+      });
+      notify(instanceId);
+    }
+  } else {
+    // Reject: stored for future auto-apply, but emit rejection event
+    const currentOwner = currentOwners.get(instanceId);
+    bus.emit(MapCursorEvents.rejected, {
+      rejectedCursor: cursor,
+      rejectedOwner: requestOwner,
+      currentOwner: currentOwner || modeOwner || 'unknown',
+      reason: 'not-owner',
+      id: instanceId,
+    });
+  }
+}
+
+/**
+ * Handle cursor state change (default/hover/drag)
+ */
+function handleCursorStateChange(
+  instanceId: UniqueId,
+  state: CursorState,
+): void {
+  const currentState = cursorStates.get(instanceId) ?? 'default';
+  if (currentState !== state) {
+    const previousCursor = getSnapshot(instanceId);
+    cursorStates.set(instanceId, state);
+    const newCursor = getSnapshot(instanceId);
+
+    if (previousCursor !== newCursor) {
+      bus.emit(MapCursorEvents.changeState, {
         state,
-        id: this.id,
+        id: instanceId,
       });
-
-      this.notify();
+      notify(instanceId);
     }
-  };
+  }
+}
 
-  /**
-   * Handle cursor change request logic with owner-based priority
-   *
-   * All cursor requests are stored in the cursorOwners map, regardless of permission.
-   * This enables automatic cursor application when the requester later becomes mode owner.
-   */
-  private handleCursorChangeRequest(
-    cursor: CSSCursorType,
-    requestOwner: string,
-  ): void {
-    const modeStore = getModeStore(this.id);
-    const modeOwner = modeStore?.getCurrentModeOwner();
+/**
+ * Ensures a single set of bus listeners exists for the given instance.
+ * All React subscribers will be notified via fan-out when bus events fire.
+ * This prevents creating N bus listeners for N React components.
+ */
+function ensureBusListeners(instanceId: UniqueId): void {
+  if (busUnsubscribers.has(instanceId)) {
+    return; // Already listening
+  }
 
-    const hasPermission = !modeOwner || requestOwner === modeOwner;
-    const previousCursor = this.getSnapshot();
-    const existingCursor = this.cursorOwners.get(requestOwner);
-    const isNewCursor = existingCursor !== cursor;
+  const unsubs: Array<() => void> = [];
 
-    // Store new cursor requests for auto-application when requester becomes owner
-    if (isNewCursor) {
-      this.cursorOwners.set(requestOwner, cursor);
+  // Listen for cursor change requests
+  const unsubRequest = bus.on(MapCursorEvents.changeRequest, (event) => {
+    const { cursor, owner: requestOwner, id } = event.payload;
+    if (id !== instanceId) {
+      return;
+    }
+    handleCursorChangeRequest(instanceId, cursor, requestOwner);
+  });
+  unsubs.push(unsubRequest);
+
+  // Listen for mode changes
+  const modeBus = Broadcast.getInstance<ModeChangedEvent>();
+  const unsubModeChange = modeBus.on(MapModeEvents.changed, (event) => {
+    if (event.payload.id !== instanceId) {
+      return;
     }
 
-    if (!hasPermission && modeOwner) {
-      // Reject immediate application, emit event only for new requests
-      if (isNewCursor) {
-        this.bus.emit(MapCursorEvents.rejected, {
-          rejectedCursor: cursor,
-          rejectedOwner: requestOwner,
-          currentOwner: modeOwner,
-          reason: `Cursor change to ${cursor} rejected: "${requestOwner}" is not the mode owner. To change cursor, request map mode change.`,
-          id: this.id,
-        });
+    const previousCursor = getSnapshot(instanceId);
+
+    // When returning to default mode, clear the previous mode owner's cursor
+    if (event.payload.currentMode === 'default') {
+      const currentOwner = currentOwners.get(instanceId);
+      if (currentOwner) {
+        const owners = cursorOwners.get(instanceId);
+        owners?.delete(currentOwner);
       }
-      return;
+      currentCursors.set(instanceId, null);
+      currentOwners.set(instanceId, null);
+      notify(instanceId);
     }
 
-    // Skip if cursor not changing
-    if (previousCursor === cursor) {
+    // Defer cursor change check until after new mode owner is registered
+    queueMicrotask(() => {
+      const newCursor = getSnapshot(instanceId);
+      if (previousCursor !== newCursor) {
+        const modeStore = getModeStore(instanceId);
+        const newModeOwner = modeStore?.getCurrentModeOwner() || 'system';
+        bus.emit(MapCursorEvents.changed, {
+          previousCursor,
+          currentCursor: newCursor,
+          owner: newModeOwner,
+          id: instanceId,
+        });
+        notify(instanceId);
+      }
+    });
+  });
+  unsubs.push(unsubModeChange);
+
+  // Listen for map hover events
+  const unsubHover = bus.on(MapEvents.hover, (event) => {
+    const {
+      id,
+      info: { picked },
+    } = event.payload;
+    if (id !== instanceId) {
       return;
     }
+    handleCursorStateChange(instanceId, picked ? 'hover' : 'default');
+  });
+  unsubs.push(unsubHover);
 
-    // Accept and apply
-    this.currentCursor = cursor;
-    this.currentOwner = requestOwner;
+  // Listen for map click events
+  const unsubClick = bus.on(MapEvents.click, (event) => {
+    const { id } = event.payload;
+    if (id !== instanceId) {
+      return;
+    }
+    handleCursorStateChange(instanceId, 'default');
+  });
+  unsubs.push(unsubClick);
 
-    this.bus.emit(MapCursorEvents.changed, {
-      previousCursor,
-      currentCursor: cursor,
-      owner: requestOwner,
-      id: this.id,
+  // Listen for map drag events
+  const unsubDrag = bus.on(MapEvents.drag, (event) => {
+    const { id } = event.payload;
+    if (id !== instanceId) {
+      return;
+    }
+    handleCursorStateChange(instanceId, 'drag');
+  });
+  unsubs.push(unsubDrag);
+
+  busUnsubscribers.set(instanceId, unsubs);
+}
+
+/**
+ * Cleans up the bus listeners if no React subscribers remain.
+ */
+function cleanupBusListenersIfNeeded(instanceId: UniqueId): void {
+  const subscribers = componentSubscribers.get(instanceId);
+
+  if (!subscribers || subscribers.size === 0) {
+    // No more React subscribers - clean up bus listeners
+    const unsubs = busUnsubscribers.get(instanceId);
+    if (unsubs) {
+      for (const unsub of unsubs) {
+        unsub();
+      }
+      busUnsubscribers.delete(instanceId);
+    }
+
+    // Clean up all state
+    cursorOwners.delete(instanceId);
+    currentCursors.delete(instanceId);
+    currentOwners.delete(instanceId);
+    cursorStates.delete(instanceId);
+    componentSubscribers.delete(instanceId);
+    subscriptionCache.delete(instanceId);
+    snapshotCache.delete(instanceId);
+  }
+}
+
+/**
+ * Creates or retrieves a cached subscription function for a given instance.
+ * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
+ * Automatically cleans up cursor state when the last subscriber unsubscribes.
+ */
+function getOrCreateSubscription(
+  instanceId: UniqueId,
+): (onStoreChange: () => void) => () => void {
+  const subscription =
+    subscriptionCache.get(instanceId) ??
+    ((onStoreChange: () => void) => {
+      // Ensure single bus listeners exist for this instance
+      ensureBusListeners(instanceId);
+
+      // Get or create the subscriber set for this map instance
+      let subscriberSet = componentSubscribers.get(instanceId);
+      if (!subscriberSet) {
+        subscriberSet = new Set();
+        componentSubscribers.set(instanceId, subscriberSet);
+      }
+      subscriberSet.add(onStoreChange);
+
+      // Return cleanup function
+      return () => {
+        const currentSubscriberSet = componentSubscribers.get(instanceId);
+        if (currentSubscriberSet) {
+          currentSubscriberSet.delete(onStoreChange);
+        }
+        cleanupBusListenersIfNeeded(instanceId);
+      };
     });
 
-    this.notify();
+  subscriptionCache.set(instanceId, subscription);
+  return subscription;
+}
+
+/**
+ * Creates or retrieves a cached snapshot function for a given instance.
+ */
+function getOrCreateSnapshotGetter(instanceId: UniqueId): () => CSSCursorType {
+  const snapshot =
+    snapshotCache.get(instanceId) ?? (() => getSnapshot(instanceId));
+
+  snapshotCache.set(instanceId, snapshot);
+  return snapshot;
+}
+
+/**
+ * Request a cursor change for a given map instance.
+ *
+ * @param instanceId - The unique identifier for the map instance
+ * @param cursor - The desired CSS cursor type
+ * @param owner - Unique identifier of the component requesting the change
+ */
+export function requestCursorChange(
+  instanceId: UniqueId,
+  cursor: CSSCursorType,
+  owner: string,
+): void {
+  const trimmedCursor = cursor.trim();
+  const trimmedOwner = owner.trim();
+
+  if (!trimmedCursor) {
+    throw new Error('requestCursorChange requires non-empty cursor');
+  }
+  if (!trimmedOwner) {
+    throw new Error('requestCursorChange requires non-empty owner');
   }
 
-  /**
-   * Clear cursor for a specific owner
-   * Useful when a component unmounts or wants to relinquish cursor control
-   *
-   * @param owner - The owner whose cursor should be cleared
-   */
-  clearCursor = (owner: string): void => {
-    const hadCursor = this.cursorOwners.has(owner);
-    this.cursorOwners.delete(owner);
+  bus.emit(MapCursorEvents.changeRequest, {
+    cursor: trimmedCursor as CSSCursorType,
+    owner: trimmedOwner,
+    id: instanceId,
+  });
+}
 
-    // If clearing the current owner, reset to default or find next cursor
-    if (this.currentOwner === owner) {
-      this.currentCursor = null;
-      this.currentOwner = null;
-    }
+/**
+ * Clear cursor for a specific owner in a given map instance.
+ *
+ * @param instanceId - The unique identifier for the map instance
+ * @param owner - The owner whose cursor should be cleared
+ */
+export function clearCursor(instanceId: UniqueId, owner: string): void {
+  const owners = cursorOwners.get(instanceId);
+  if (!owners) {
+    return;
+  }
 
-    if (hadCursor) {
-      this.notify();
+  const hadCursor = owners.has(owner);
+  owners.delete(owner);
+
+  // If this was the current owner, clear current tracking
+  const currentOwner = currentOwners.get(instanceId);
+  if (currentOwner === owner) {
+    currentCursors.set(instanceId, null);
+    currentOwners.set(instanceId, null);
+  }
+
+  // Only notify if cursor changed
+  if (hadCursor) {
+    notify(instanceId);
+  }
+}
+
+/**
+ * Get the subscription function for useSyncExternalStore.
+ *
+ * @param instanceId - The unique identifier for the map instance
+ * @returns A subscription function
+ */
+export function getSubscription(
+  instanceId: UniqueId,
+): (onStoreChange: () => void) => () => void {
+  return getOrCreateSubscription(instanceId);
+}
+
+/**
+ * Get the snapshot getter function for useSyncExternalStore.
+ *
+ * @param instanceId - The unique identifier for the map instance
+ * @returns A function that returns the current cursor
+ */
+export function getSnapshotGetter(instanceId: UniqueId): () => CSSCursorType {
+  return getOrCreateSnapshotGetter(instanceId);
+}
+
+/**
+ * Get the current cursor for a given instance (direct access, not reactive).
+ *
+ * @param instanceId - The unique identifier for the map instance
+ * @returns The current cursor
+ */
+export function getCursor(instanceId: UniqueId): CSSCursorType {
+  return getSnapshot(instanceId);
+}
+
+/**
+ * Manually clear all cursor state for a specific instance.
+ * This is typically not needed as cleanup happens automatically when all subscribers unmount.
+ *
+ * @param instanceId - The unique identifier for the map instance
+ */
+export function clearCursorState(instanceId: UniqueId): void {
+  // Unsubscribe from bus if listening
+  const unsubs = busUnsubscribers.get(instanceId);
+  if (unsubs) {
+    for (const unsub of unsubs) {
+      unsub();
     }
+    busUnsubscribers.delete(instanceId);
+  }
+
+  // Clear all state
+  cursorOwners.delete(instanceId);
+  currentCursors.delete(instanceId);
+  currentOwners.delete(instanceId);
+  cursorStates.delete(instanceId);
+  componentSubscribers.delete(instanceId);
+  subscriptionCache.delete(instanceId);
+  snapshotCache.delete(instanceId);
+}
+
+// Legacy API compatibility (for tests and existing code)
+/** @deprecated Use module functions directly */
+export function getOrCreateStore(id: UniqueId): {
+  getSnapshot: () => CSSCursorType;
+} {
+  return {
+    getSnapshot: () => getSnapshot(id),
   };
-
-  /**
-   * Clean up store resources
-   */
-  destroy(): void {
-    // Unsubscribe from all bus events
-    for (const unsubscribe of this.unsubscribers) {
-      unsubscribe();
-    }
-    this.unsubscribers.length = 0;
-
-    // Clear all state
-    this.cursorOwners.clear();
-    this.listeners.clear();
-  }
 }
 
-/**
- * Global store registry
- */
-const storeRegistry = new Map<UniqueId, MapCursorStore>();
-
-/**
- * Get or create a store for a given map instance
- */
-export function getOrCreateStore(id: UniqueId): MapCursorStore {
-  let store = storeRegistry.get(id);
-  if (!store) {
-    store = new MapCursorStore(id);
-    storeRegistry.set(id, store);
-  }
-  return store;
-}
-
-/**
- * Destroy and remove a store from the registry
- */
+/** @deprecated Use clearCursorState instead */
 export function destroyStore(id: UniqueId): void {
-  const store = storeRegistry.get(id);
-  if (store) {
-    store.destroy();
-    storeRegistry.delete(id);
-  }
+  clearCursorState(id);
 }
 
-/**
- * Get a store by map ID (for testing/advanced use)
- */
-export function getStore(id: UniqueId): MapCursorStore | undefined {
-  return storeRegistry.get(id);
+/** @deprecated Use direct function calls instead */
+export function getStore(
+  id: UniqueId,
+): { getSnapshot: () => CSSCursorType } | undefined {
+  // Always return a store object since we don't track "existence" anymore
+  return {
+    getSnapshot: () => getSnapshot(id),
+  };
 }

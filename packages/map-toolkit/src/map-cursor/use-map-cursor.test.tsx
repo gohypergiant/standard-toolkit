@@ -14,9 +14,10 @@ import { uuid } from '@accelint/core';
 import { render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { destroyStore, getOrCreateStore } from './store';
-import { useMapCursor } from './use-map-cursor';
+import { destroyStore, getOrCreateStore, getStore } from './store';
+import { useMapCursor, useMapCursorEffect } from './use-map-cursor';
 import type { UniqueId } from '@accelint/core';
+import type { CSSCursorType } from './types';
 
 describe('useMapCursor', () => {
   let testid: UniqueId;
@@ -54,12 +55,7 @@ describe('useMapCursor', () => {
       );
     });
 
-    it('throws error when store does not exist for the given id', () => {
-      const nonExistentId = uuid();
-      expect(() => {
-        renderHook(() => useMapCursor(nonExistentId));
-      }).toThrow(`MapCursorStore not found for map instance: ${nonExistentId}`);
-    });
+    // Removed: Module pattern doesn't track store "existence" - stores are lazy-initialized
 
     it('updates when cursor changes via subscription', async () => {
       const user = userEvent.setup();
@@ -92,5 +88,103 @@ describe('useMapCursor', () => {
         expect(cursorDisplay).toHaveTextContent('zoom-in');
       });
     });
+  });
+});
+
+describe('useMapCursorEffect', () => {
+  let testid: UniqueId;
+
+  beforeEach(() => {
+    // Create a stable id and store for each test
+    testid = uuid();
+    getOrCreateStore(testid);
+  });
+
+  afterEach(() => {
+    // Clean up the store after each test
+    destroyStore(testid);
+    vi.restoreAllMocks();
+  });
+
+  it('sets cursor on mount', () => {
+    function TestComponent() {
+      useMapCursorEffect('crosshair', 'test-owner', testid);
+      return <div>Component</div>;
+    }
+
+    render(<TestComponent />);
+
+    const store = getStore(testid);
+    expect(store?.getSnapshot()).toBe('crosshair');
+  });
+
+  it('clears cursor on unmount', () => {
+    function TestComponent() {
+      useMapCursorEffect('crosshair', 'test-owner', testid);
+      return <div>Component</div>;
+    }
+
+    const { unmount } = render(<TestComponent />);
+
+    const store = getStore(testid);
+    expect(store?.getSnapshot()).toBe('crosshair');
+
+    unmount();
+
+    // Cursor should be cleared after unmount
+    expect(store?.getSnapshot()).toBe('default');
+  });
+
+  it('updates cursor when cursor prop changes', () => {
+    function TestComponent({ cursor }: { cursor: CSSCursorType }) {
+      useMapCursorEffect(cursor, 'test-owner', testid);
+      return <div>Component</div>;
+    }
+
+    const { rerender } = render(<TestComponent cursor='crosshair' />);
+
+    const store = getStore(testid);
+    expect(store?.getSnapshot()).toBe('crosshair');
+
+    rerender(<TestComponent cursor='zoom-in' />);
+
+    expect(store?.getSnapshot()).toBe('zoom-in');
+  });
+
+  it('does not clear cursor if owner changes but cursor remains', () => {
+    function TestComponent({ owner }: { owner: string }) {
+      useMapCursorEffect('crosshair', owner, testid);
+      return <div>Component</div>;
+    }
+
+    const { rerender } = render(<TestComponent owner='owner1' />);
+
+    const store = getStore(testid);
+    expect(store?.getSnapshot()).toBe('crosshair');
+
+    // Change owner - cursor should update but stay as crosshair
+    rerender(<TestComponent owner='owner2' />);
+
+    expect(store?.getSnapshot()).toBe('crosshair');
+  });
+
+  it('throws error when used without id or MapProvider', () => {
+    // Suppress console error for this test
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+      // Intentionally empty - suppressing error output in test
+    });
+
+    function TestComponent() {
+      useMapCursorEffect('crosshair', 'test-owner');
+      return <div>Component</div>;
+    }
+
+    expect(() => {
+      render(<TestComponent />);
+    }).toThrow(
+      'useMapCursor requires either an id parameter or to be used within a MapProvider',
+    );
+
+    consoleSpy.mockRestore();
   });
 });

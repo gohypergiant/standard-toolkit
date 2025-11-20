@@ -17,6 +17,7 @@ import {
   mockBroadcastChannel,
   resetMockBroadcastChannel,
 } from 'vitest-broadcast-channel-mock';
+import { MapEvents } from '../deckgl/base-map/events';
 import { MapModeEvents } from '../map-mode/events';
 // Import actual map-mode store functions for integration tests
 import {
@@ -30,13 +31,16 @@ import {
   getStore,
   MapCursorStore,
 } from './store';
+import type { MapEventType } from '../deckgl/base-map/types';
 import type { MapModeEventType } from '../map-mode/types';
 import type { MapCursorEventType } from './types';
 
 describe('MapCursorStore', () => {
   let store: MapCursorStore;
   let id: UniqueId;
-  let bus: ReturnType<typeof Broadcast.getInstance<MapCursorEventType>>;
+  let bus: ReturnType<
+    typeof Broadcast.getInstance<MapCursorEventType | MapEventType>
+  >;
 
   beforeEach(() => {
     // Mock BroadcastChannel FIRST
@@ -45,8 +49,8 @@ describe('MapCursorStore', () => {
     // Create fresh instances for each test
     id = uuid();
 
-    // Get bus instance AFTER mocking
-    bus = Broadcast.getInstance<MapCursorEventType>();
+    // Get bus instance AFTER mocking - supports both cursor and map events
+    bus = Broadcast.getInstance<MapCursorEventType | MapEventType>();
 
     // Create store AFTER bus is initialized
     store = new MapCursorStore(id);
@@ -478,6 +482,118 @@ describe('MapCursorStore', () => {
 
       expect(listener).toHaveBeenCalled();
       expect(store.getSnapshot()).toBe('pointer');
+    });
+  });
+
+  describe('Cursor State Changes', () => {
+    it('changes cursor to pointer on hover event', () => {
+      const listener = vi.fn();
+      store.subscribe(listener);
+
+      (bus as any).emit(MapEvents.hover, {
+        info: { picked: true },
+        event: {},
+        id,
+      });
+
+      expect(listener).toHaveBeenCalled();
+      expect(store.getSnapshot()).toBe('pointer');
+    });
+
+    it('changes cursor to default when hover ends', () => {
+      const listener = vi.fn();
+      store.subscribe(listener);
+
+      // First hover to set pointer
+      (bus as any).emit(MapEvents.hover, {
+        info: { picked: true },
+        event: {},
+        id,
+      });
+      expect(store.getSnapshot()).toBe('pointer');
+
+      listener.mockClear();
+
+      // Hover ends (not picked)
+      (bus as any).emit(MapEvents.hover, {
+        info: { picked: false },
+        event: {},
+        id,
+      });
+
+      expect(listener).toHaveBeenCalled();
+      expect(store.getSnapshot()).toBe('default');
+    });
+
+    it('changes cursor to grabbing on drag event', () => {
+      const listener = vi.fn();
+      store.subscribe(listener);
+
+      (bus as any).emit(MapEvents.drag, {
+        info: {},
+        event: {},
+        id,
+      });
+
+      expect(listener).toHaveBeenCalled();
+      expect(store.getSnapshot()).toBe('grabbing');
+    });
+
+    it('changes cursor to default on click event', () => {
+      const listener = vi.fn();
+      store.subscribe(listener);
+
+      // First set to grabbing via drag
+      (bus as any).emit(MapEvents.drag, {
+        info: {},
+        event: {},
+        id,
+      });
+      expect(store.getSnapshot()).toBe('grabbing');
+
+      listener.mockClear();
+
+      // Click resets to default
+      (bus as any).emit(MapEvents.click, {
+        info: {},
+        event: {},
+        id,
+      });
+
+      expect(listener).toHaveBeenCalled();
+      expect(store.getSnapshot()).toBe('default');
+    });
+
+    it('does not change cursor for events from other maps', () => {
+      const listener = vi.fn();
+      store.subscribe(listener);
+
+      const otherMapId = uuid();
+
+      (bus as any).emit(MapEvents.drag, {
+        info: {},
+        event: {},
+        id: otherMapId, // Different map ID
+      });
+
+      expect(listener).not.toHaveBeenCalled();
+      expect(store.getSnapshot()).toBe('default');
+    });
+
+    it('respects custom cursor over state-based cursor', () => {
+      // Set custom cursor
+      store.requestCursorChange('crosshair', 'test-owner');
+      expect(store.getSnapshot()).toBe('crosshair');
+
+      // Drag event should not override custom cursor
+      (bus as any).emit(MapEvents.drag, {
+        info: {},
+        event: {},
+        id,
+      });
+
+      // Custom cursor should still be active
+      expect(store.getSnapshot()).toBe('crosshair');
     });
   });
 
