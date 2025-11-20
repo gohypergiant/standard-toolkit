@@ -73,10 +73,6 @@
     @apply fg-serious-bold text-body-xs;
   }
 
-  .popoverTitle {
-    @apply fg-primary-muted text-header-s;
-  }
-
   .formatRow {
     @apply gap-s px-xs py-s flex items-start justify-between;
   }
@@ -93,18 +89,6 @@
     @apply fg-primary-muted font-display text-body-s truncate;
   }
 
-  .modalTitle {
-    @apply fg-primary-bold mb-s text-header-s font-bold;
-  }
-
-  .modalDescription {
-    @apply fg-primary-muted mb-m text-body-s;
-  }
-
-  .formatOptions {
-    @apply mb-m gap-xs flex flex-col;
-  }
-
   .formatOptionContent {
     @apply gap-xs flex flex-1 flex-col;
   }
@@ -117,7 +101,25 @@
     @apply fg-primary-muted font-display text-body-xs break-all;
   }
 
+  .modalDescription {
+    @apply fg-primary-muted mb-m text-body-s;
+  }
+}
+
+@layer components.l2 {
+  .formatOptions {
+    @apply mb-m gap-xs flex flex-col;
+  }
+
+  .modalTitle {
+    @apply fg-primary-bold mb-s text-header-s font-bold;
+  }
+
   .modalActions {
     @apply gap-s flex justify-end;
+  }
+
+  .popoverTitle {
+    @apply fg-primary-muted text-header-s;
   }
 }

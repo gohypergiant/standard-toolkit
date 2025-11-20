@@ -396,7 +396,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
               </p>
 
               <RadioGroup
-                classNames={{ group: styles.modalOptions }}
+                classNames={{ group: styles.formatOptions }}
                 value={paste.selectedDisambiguationFormat}
                 onChange={(value) =>
                   paste.setSelectedDisambiguationFormat(
