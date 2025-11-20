@@ -354,6 +354,19 @@ getViewportSize({
   unit: 'km',
 });
 // Returns: "113 x 85 KM"
+
+// With useViewportState for dynamic updates
+function CustomViewportDisplay({ instanceId }: { instanceId: UniqueId }) {
+  const viewport = useViewportState({ instanceId });
+
+  return (
+    <div className="space-y-1">
+      <div>Kilometers: {getViewportSize({ ...viewport, unit: 'km' })}</div>
+      <div>Nautical Miles: {getViewportSize({ ...viewport, unit: 'nm' })}</div>
+      <div>Miles: {getViewportSize({ ...viewport, unit: 'mi' })}</div>
+    </div>
+  );
+}
 ```
 
 #### Parameters

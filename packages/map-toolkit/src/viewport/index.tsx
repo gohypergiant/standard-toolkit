@@ -16,6 +16,7 @@ export {
   type UseViewportStateProps,
   useViewportState,
 } from './use-viewport-state';
+export { getViewportSize } from './utils';
 export { ViewportSize, type ViewportSizeProps } from './viewport-size';
 export type {
   GeoCoordinate,
