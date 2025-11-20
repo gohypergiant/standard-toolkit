@@ -62,9 +62,9 @@
     },
     "./styles": {
       "import": {
-        "default": "./dist/index.css"
+        "default": "./dist/index.module.css"
       },
-      "default": "./dist/index.css"
+      "default": "./dist/index.module.css"
     }
   },
   "scripts": {
