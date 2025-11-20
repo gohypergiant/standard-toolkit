@@ -39,7 +39,6 @@ import { DialogTrigger } from '../dialog/trigger';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Popover } from '../popover';
-import { PopoverContent } from '../popover/content';
 import { PopoverTrigger } from '../popover/trigger';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
@@ -323,23 +322,21 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <Popover onOpenChange={handlePopoverOpenChange}>
-              <PopoverTrigger>
-                <Button
-                  variant='icon'
-                  size={size}
-                  color='mono-bold'
-                  className={classNames?.formatButton}
-                  aria-label='View coordinate in all formats'
-                  isDisabled={!copy.isFormatButtonEnabled}
-                >
-                  <Icon>
-                    <GlobalShare />
-                  </Icon>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className={popoverContent()}
+            <PopoverTrigger onOpenChange={handlePopoverOpenChange}>
+              <Button
+                variant='icon'
+                size={size}
+                color='mono-bold'
+                className={classNames?.formatButton}
+                aria-label='View coordinate in all formats'
+                isDisabled={!copy.isFormatButtonEnabled}
+              >
+                <Icon>
+                  <GlobalShare />
+                </Icon>
+              </Button>
+              <Popover
+                classNames={{ popover: popoverContent() }}
                 placement='bottom'
                 offset={8}
               >
@@ -380,8 +377,8 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                       );
                     })}
                 </div>
-              </PopoverContent>
-            </Popover>
+              </Popover>
+            </PopoverTrigger>
           )}
         </div>
 

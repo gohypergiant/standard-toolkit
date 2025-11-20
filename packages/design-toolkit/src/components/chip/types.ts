@@ -29,9 +29,7 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
     'dependencies' | 'items' | 'children' | 'renderEmptyState'
   > &
   RefAttributes<HTMLDivElement> &
-  BaseChipProps & {
-    isDisabled?: boolean;
-  };
+  BaseChipProps;
 
 export type ChipProps = Omit<ComponentPropsWithRef<'div'>, 'size' | 'onClick'> &
   BaseChipProps & {
@@ -50,3 +48,7 @@ export type DeletableChipProps = Omit<TagProps, 'className'> &
       remove?: ButtonProps['className'];
     };
   };
+
+export type ChipContextValue = ChipProps &
+  SelectableChipProps &
+  DeletableChipProps;

@@ -15,8 +15,6 @@ import { Checkbox } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CheckboxGroupProps } from './types';
 
-type Alias = React.FC<CheckboxGroupProps>;
-
 /**
  * The `<CheckboxGroup>` component is a direct wrapper around the equiavalent component from
  * `react-aria-components`.
@@ -28,7 +26,7 @@ type Alias = React.FC<CheckboxGroupProps>;
  */
 const meta = {
   title: 'Components/CheckboxGroup',
-  component: CheckboxGroup as Alias,
+  component: CheckboxGroup,
   args: {
     label: 'Header',
     orientation: 'vertical',
@@ -46,12 +44,11 @@ const meta = {
       exclude: ['validationBehavior'],
     },
   },
-} satisfies Meta<Alias>;
+} satisfies Meta<CheckboxGroupProps>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   render: ({ children, ...args }) => (
     <CheckboxGroup {...args}>
       <Checkbox value='value1'>Checkbox text</Checkbox>

@@ -35,6 +35,7 @@ export function ChipList<T extends object>({
   const {
     children,
     className,
+    color,
     dependencies,
     items,
     renderEmptyState,
@@ -44,7 +45,7 @@ export function ChipList<T extends object>({
 
   return (
     <ChipListRenderingContext.Provider value>
-      <ChipProvider size={size}>
+      <ChipProvider color={color} size={size}>
         <AriaTagGroup {...rest}>
           <AriaTagList<T>
             ref={ref}
