@@ -13,10 +13,9 @@
 'use client';
 
 import 'client-only';
-import { useEmit } from '@accelint/bus/react';
+import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
-import { useEffectEvent } from '@/react/ponyfill';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
