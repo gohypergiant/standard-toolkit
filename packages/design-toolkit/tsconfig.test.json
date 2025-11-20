@@ -4,7 +4,6 @@
   "include": ["./src/**/*.test.ts", "./src/**/*.test.tsx", "./src/test/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "composite": true,
     "noEmit": true,
     "types": ["@testing-library/jest-dom/vitest", "node"]
   }
