@@ -10,10 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-export const MapEventsNamespace = 'map';
+import { useEffect, useRef } from 'react';
 
-export const MapEvents = {
-  click: `${MapEventsNamespace}:click`,
-  hover: `${MapEventsNamespace}:hover`,
-  viewport: `${MapEventsNamespace}:viewport`,
-} as const;
+export interface UseTimeoutCleanupResult {
+  registerTimeout: (timeoutId: NodeJS.Timeout) => void;
+}
+
+export function useTimeoutCleanup(): UseTimeoutCleanupResult {
+  const timeoutIdsRef = useRef<Set<NodeJS.Timeout>>(new Set());
+
+  const registerTimeout = (timeoutId: NodeJS.Timeout) => {
+    timeoutIdsRef.current.add(timeoutId);
+  };
+
+  useEffect(() => {
+    return () => {
+      timeoutIdsRef.current.forEach(clearTimeout);
+      timeoutIdsRef.current.clear();
+    };
+  }, []);
+
+  return { registerTimeout };
+}
