@@ -17,6 +17,8 @@ import { useEffectEvent } from './ponyfill';
 import type { StructuredCloneable } from 'type-fest';
 import type { EmitOptions, ExtractEvent, Payload } from '../broadcast/types';
 
+export { useEffectEvent } from './ponyfill';
+
 /**
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having
  * to reimplement generics each time

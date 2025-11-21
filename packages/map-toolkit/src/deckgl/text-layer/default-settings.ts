@@ -11,9 +11,9 @@
  */
 
 import type { Color } from '@deck.gl/core';
-import type { TextLayerProps } from '@deck.gl/layers';
+import type { TextLayerProps as DglTextLayerProps } from '@deck.gl/layers';
 
-export const defaultSettings: Partial<TextLayerProps> = {
+export const defaultSettings: Partial<DglTextLayerProps> = {
   fontFamily: 'system-ui, sans-serif',
   fontSettings: {
     fontSize: 22,

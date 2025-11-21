@@ -11,8 +11,8 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NoticeEventTypes } from './events';
 import { NoticeList } from './list';
 import type { NoticeListProps, NoticeQueueEvent } from './types';
@@ -50,6 +50,122 @@ describe('NoticeList', () => {
     });
     await waitFor(() => {
       expect(screen.queryByText('Hello 3')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('auto-dismiss behavior', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('should auto-dismiss notice after defaultTimeout', async () => {
+      setup({ defaultTimeout: 1000 });
+
+      act(() => {
+        bus.emit(NoticeEventTypes.queue, {
+          message: 'Timed message',
+        });
+      });
+
+      // Verify notice appears
+      expect(screen.getByText('Timed message')).toBeInTheDocument();
+
+      // Advance time by the default timeout duration
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1000);
+      });
+
+      // Verify notice is dismissed
+      expect(screen.queryByText('Timed message')).not.toBeInTheDocument();
+    });
+
+    it('should use specific timeout when no defaultTimeout is set', async () => {
+      setup({}); // No defaultTimeout
+
+      act(() => {
+        bus.emit(NoticeEventTypes.queue, {
+          message: 'Custom timeout message',
+          timeout: 1000,
+        });
+      });
+
+      // Verify notice appears
+      expect(screen.getByText('Custom timeout message')).toBeInTheDocument();
+
+      // Advance time by the specific timeout (1000ms)
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1000);
+      });
+
+      // Verify notice is dismissed after specific timeout
+      expect(
+        screen.queryByText('Custom timeout message'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('should dismiss multiple notices independently based on their timeouts', async () => {
+      setup({});
+
+      act(() => {
+        // Emit first notice with 1000ms timeout
+        bus.emit(NoticeEventTypes.queue, {
+          message: 'First notice',
+          timeout: 1000,
+        });
+
+        // Emit second notice with 2000ms timeout
+        bus.emit(NoticeEventTypes.queue, {
+          message: 'Second notice',
+          timeout: 2000,
+        });
+      });
+
+      // Verify both notices appear
+      expect(screen.getByText('First notice')).toBeInTheDocument();
+      expect(screen.getByText('Second notice')).toBeInTheDocument();
+
+      // Advance time by 1000ms
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1000);
+      });
+
+      // First notice should be dismissed, second should remain
+      expect(screen.queryByText('First notice')).not.toBeInTheDocument();
+      expect(screen.getByText('Second notice')).toBeInTheDocument();
+
+      // Advance time by another 1000ms (total: 2000ms)
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1000);
+      });
+
+      // Second notice should now be dismissed
+      expect(screen.queryByText('Second notice')).not.toBeInTheDocument();
+    });
+
+    it('should not auto-dismiss notice without timeout', async () => {
+      setup({});
+
+      act(() => {
+        bus.emit(NoticeEventTypes.queue, {
+          message: 'Persistent message',
+          // No timeout specified
+        });
+      });
+
+      // Verify notice appears
+      expect(screen.getByText('Persistent message')).toBeInTheDocument();
+
+      // Advance time significantly
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(5000);
+      });
+
+      // Verify notice still exists (not auto-dismissed)
+      expect(screen.getByText('Persistent message')).toBeInTheDocument();
     });
   });
 });
