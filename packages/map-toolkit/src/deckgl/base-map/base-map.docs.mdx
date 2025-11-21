@@ -284,8 +284,9 @@ The BaseMap component comes with the following defaults:
 
 ```typescript
 type MapClickPayload = {
-  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
+  info: NonFuncPickingInfo; // Modified PickingInfo for serialization
   event: NonFuncMjolnirGestureEvent; // Event with functions omitted for serialization
+  id: UniqueId; // The map instance ID
 };
 ```
 
@@ -293,9 +294,23 @@ type MapClickPayload = {
 
 ```typescript
 type MapHoverPayload = {
-  info: NonFuncPickingInfo; // PickingInfo with viewport omitted for serialization
+  info: NonFuncPickingInfo; // Modified PickingInfo for serialization
   event: NonFuncMjolnirPointerEvent; // Event with functions omitted for serialization
+  id: UniqueId; // The map instance ID
 };
 ```
 
-Note: Function properties and the viewport are omitted from event payloads to allow proper serialization through the event bus.
+### `NonFuncPickingInfo`
+
+The picking info is modified for serialization through the event bus:
+
+**Omitted properties** (contain non-serializable functions/objects):
+- `viewport` - Contains methods and non-cloneable objects
+- `layer` - Contains layer methods and configuration
+- `sourceLayer` - Contains source layer methods and configuration
+
+**Added properties** (extracted before omission):
+- `layerId?: string` - The ID of the picked layer (extracted from `layer.id`)
+- `sourceLayerId?: string` - The ID of the source layer if applicable (extracted from `sourceLayer.id`)
+
+This transformation allows you to identify which layer was interacted with while maintaining compatibility with the structured clone algorithm required by the event bus.

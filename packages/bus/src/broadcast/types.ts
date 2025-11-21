@@ -11,6 +11,7 @@
  */
 
 import type { UniqueId } from '@accelint/core';
+import type { StructuredCloneable } from 'type-fest';
 
 /** Broadcast configuration type. */
 export type BroadcastConfig = {
@@ -26,10 +27,12 @@ export type Listener<P extends { type: string; payload?: unknown } = Payload> =
     callback: (data: P) => void;
   };
 
+export type StructuredCloneableData = StructuredCloneable;
+
 /** Listener callback payload type. */
 export type Payload<
   T extends string = string,
-  P = undefined,
+  P extends StructuredCloneableData = undefined,
 > = P extends undefined
   ? {
       type: T;
@@ -44,8 +47,10 @@ export type Payload<
     };
 
 export type ExtractEvent<
-  // biome-ignore lint/suspicious/noExplicitAny: proper use of `any`
-  P extends { type: string; payload?: unknown } = Payload<string, any>,
+  P extends { type: string; payload?: unknown } = Payload<
+    string,
+    StructuredCloneableData
+  >,
   T extends P['type'] = P['type'],
 > = {
   [K in P['type']]: Extract<P, { type: K }>;
