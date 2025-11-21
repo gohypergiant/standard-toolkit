@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import * as matchers from '@testing-library/jest-dom/matchers';
-import { cleanup } from '@testing-library/react';
-import { afterEach, expect } from 'vitest';
+/// <reference types="@testing-library/jest-dom/vitest" />
 
-expect.extend(matchers);
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
 
 afterEach(() => {
   cleanup();

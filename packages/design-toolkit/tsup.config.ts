@@ -37,7 +37,7 @@ export default defineConfig({
   loader: {
     '.css': 'copy',
   },
-  tsconfig: './tsconfig.dist.json',
+  tsconfig: './tsconfig.build.json',
   metafile: true,
   bundle: false,
   clean: true,
