@@ -12,10 +12,11 @@
  */
 
 import { flexRender } from '@tanstack/react-table';
+import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { HeaderColumnAction } from './constants/table';
 import { TableContext } from './context';
-import { TableCellStyles } from './styles';
+import styles from './styles.module.css';
 import type { TableCellProps } from './types';
 
 export function TableCell<T>({
@@ -26,22 +27,19 @@ export function TableCell<T>({
   ...rest
 }: TableCellProps<T>) {
   const { columnSelection, persistNumerals } = useContext(TableContext);
-  const isKebab = cell?.column.id === HeaderColumnAction.KEBAB;
   const isNumeral = cell?.column.id === HeaderColumnAction.NUMERAL;
   const isSelected = cell?.column.id === columnSelection;
-  const narrow = isNumeral || isKebab;
   const notPersistNums = isNumeral && !persistNumerals;
 
   return (
     <td
       {...rest}
       ref={ref}
-      className={TableCellStyles({
+      className={clsx(
+        styles.cell,
+        notPersistNums && styles.hideInRow,
         className,
-        narrow,
-        isNumeral,
-        notPersistNums,
-      })}
+      )}
       data-selected={isSelected || null}
     >
       {children ||
