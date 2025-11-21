@@ -10,18 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import { connection } from 'next/server';
-import { BusExample } from './bus';
-import { testLogs } from './log-test';
+@import "@accelint/design-foundation/styles";
+@source "../node_modules/@accelint/design-foundation";
+@import "@accelint/design-toolkit/styles";
+@source "../node_modules/@accelint/design-toolkit";
 
-export default async function Home() {
-  await connection();
+@layer theme {
+  :root {
+    /* overrides */
 
-  testLogs();
+    @variant light {
+      /* overrides */
+    }
 
-  return (
-    <div className='flex flex-col items-center justify-center h-full'>
-      <BusExample />
-    </div>
-  );
+    @variant dark {
+      /* overrides */
+    }
+  }
 }

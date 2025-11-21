@@ -10,13 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { logger } from '@/app/log-test';
-import type { NextRequest } from 'next/server';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { ActionBarExampleServer } from './server';
 
-export async function POST(request: NextRequest) {
-  const res = await request.json();
-
-  logger.withMetadata(res).info('OTEL ROUTE');
-
-  return Response.json({ data: 'ok!' });
+export function ActionBarExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <ActionBarExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }

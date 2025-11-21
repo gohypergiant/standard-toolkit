@@ -10,16 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import { Broadcast } from '@accelint/bus';
+import { BentoGroup } from '~/components/bento';
+import { AvatarExample } from '~/features/avatar';
 
-const bus = Broadcast.getInstance();
+// biome-ignore lint/style/useNamingConvention: nextjs convention
+export const experimental_ppr = true;
 
-let value = 0;
-
-function inc() {
-  value++;
-
-  console.log('value: ', value);
+export default function Page() {
+  return (
+    <BentoGroup>
+      <AvatarExample />
+    </BentoGroup>
+  );
 }
-
-bus.on('inc', inc);
