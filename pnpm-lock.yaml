@@ -996,6 +996,9 @@ importers:
       node-fetch:
         specifier: ^2.6.7
         version: 2.7.0
+      react:
+        specifier: 19.0.0
+        version: 19.0.0
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
@@ -1066,9 +1069,6 @@ importers:
       mjolnir.js:
         specifier: ^3.0.0
         version: 3.0.0
-      react:
-        specifier: 19.0.0
-        version: 19.0.0
 
   packages/math:
     devDependencies:

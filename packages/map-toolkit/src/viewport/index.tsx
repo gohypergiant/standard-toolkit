@@ -9,17 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export { MapModeEvents, MapModeEventsNamespace } from './events';
-export { clearMapModeState, getCurrentModeOwner } from './store';
-export { type UseMapModeReturn, useMapMode } from './use-map-mode';
+
+export { UNIT_MAP } from './constants';
+export {
+  clearViewportState,
+  type UseViewportStateProps,
+  useViewportState,
+} from './use-viewport-state';
+export { getViewportSize } from './utils';
+export { ViewportSize, type ViewportSizeProps } from './viewport-size';
 export type {
-  MapModeEventType,
-  ModeChangeAuthorizationEvent,
-  ModeChangeAuthorizationPayload,
-  ModeChangeDecisionEvent,
-  ModeChangeDecisionPayload,
-  ModeChangedEvent,
-  ModeChangedPayload,
-  ModeChangeRequestEvent,
-  ModeChangeRequestPayload,
+  GeoCoordinate,
+  GetViewportSizeArgs,
+  SupportedDistanceUnit,
 } from './types';
