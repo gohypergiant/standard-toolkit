@@ -142,10 +142,6 @@ export {
 } from './components/coordinate-field/segment-configs';
 export { CoordinateSegment } from './components/coordinate-field/segment';
 export {
-  CoordinateFieldStyles,
-  CoordinateFieldStylesDefaults,
-} from './components/coordinate-field/styles';
-export {
   COORDINATE_FORMAT_LABELS,
   COORDINATE_FORMAT_NAMES,
   COORDINATE_SYSTEMS,
