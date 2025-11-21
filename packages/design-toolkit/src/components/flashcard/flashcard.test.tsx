@@ -61,19 +61,20 @@ function setup(isLoading = false) {
 describe('Flashcard', () => {
   it('should render', () => {
     setup();
-    expect(screen.getByText('IDENTIFIER')).toBeDefined();
-    expect(screen.getByText('DATA')).toBeDefined();
-    expect(screen.getByText('SECONDARY_DATA_01')).toBeDefined();
-    expect(screen.getByText('SECONDARY_DATA_02')).toBeDefined();
+    expect(screen.getByText('IDENTIFIER')).toBeInTheDocument();
+    expect(screen.getByText('DATA')).toBeInTheDocument();
+    expect(screen.getByText('SECONDARY_DATA_01')).toBeInTheDocument();
+    expect(screen.getByText('SECONDARY_DATA_02')).toBeInTheDocument();
   });
 
   it('should only show 5 additional details', () => {
     setup();
 
     // 1st element label.
-    expect(screen.queryByText('OBJECTID')).toBeInTheDocument();
+    expect(screen.getByText('OBJECTID')).toBeInTheDocument();
+
     // 6th element label.
-    // expect(screen.queryByText('STATE')).not.toBeInTheDocument();
+    expect(screen.queryByText('STATE')).toHaveClass('nth-of-type-[n+6]:hidden');
   });
 
   it('should not show secondary data field while loading', () => {
@@ -81,10 +82,10 @@ describe('Flashcard', () => {
 
     // Should not render header text.
     const header = screen.queryByText('IDENTIFIER');
-    expect(header).toBeNull();
+    expect(header).not.toBeInTheDocument();
 
     const hero = screen.getByTestId('hero');
-    expect(hero).toBeDefined();
+    expect(hero).toBeInTheDocument();
 
     // Two skellington components
     expect(hero.childElementCount).toEqual(2);
@@ -92,6 +93,6 @@ describe('Flashcard', () => {
 
     // Should not render FlashcardAdditionalData component.
     const secondaryData = screen.queryByText('SECONDARY_DATA');
-    expect(secondaryData).toBeNull();
+    expect(secondaryData).not.toBeInTheDocument();
   });
 });
