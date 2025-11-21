@@ -47,7 +47,13 @@
   }
 
   .row {
-    @apply border-1 border-transparent;
+    @variant group-not-selected/tbody {
+      @apply border-1 border-transparent;
+
+      @variant first-of-type {
+        border-top-color: var(--outline-static);
+      }
+    }
 
     @variant has-[+[data-selected]] {
       @variant not-selected {
@@ -67,12 +73,6 @@
 
       @variant first-of-type {
         border-top-color: var(--outline-accent-primary-bold);
-      }
-    }
-
-    @variant group-not-selected/tbody {
-      @variant first-of-type {
-        border-top-color: var(--outline-static);
       }
     }
   }
