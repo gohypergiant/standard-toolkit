@@ -55,7 +55,18 @@ export const FlashcardContext = createContext<FlashcardProps>({
  *  <FlashcardAdditionalData>
  *    {secondaryData}
  *  </FlashcardAdditionalData>
- *  <FlashcardDetailsContainer details={details} />
+ *  <FlashcardDetailsList>
+ *    {detail.map((detail) => (
+ *     <Fragment id={detail.id}>
+ *       <FlashcardDetailLabel>
+ *         {detail.label}
+ *       </FlashcardDetailsLabel>
+ *       <FlashcardDetailsValue>
+ *         {detail.value}
+ *       </FlashcardDetailsValue>
+ *     </Fragment>
+ *     ))}
+ *  </FlashcardDetailsList>
  * </Flashcard>
  */
 export function Flashcard(props: FlashcardProps) {
