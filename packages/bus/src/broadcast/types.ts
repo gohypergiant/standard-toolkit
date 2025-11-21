@@ -27,10 +27,12 @@ export type Listener<P extends { type: string; payload?: unknown } = Payload> =
     callback: (data: P) => void;
   };
 
+export type StructuredCloneableData = StructuredCloneable;
+
 /** Listener callback payload type. */
 export type Payload<
   T extends string = string,
-  P extends StructuredCloneable = undefined,
+  P extends StructuredCloneableData = undefined,
 > = P extends undefined
   ? {
       type: T;
@@ -47,7 +49,7 @@ export type Payload<
 export type ExtractEvent<
   P extends { type: string; payload?: unknown } = Payload<
     string,
-    StructuredCloneable
+    StructuredCloneableData
   >,
   T extends P['type'] = P['type'],
 > = {
