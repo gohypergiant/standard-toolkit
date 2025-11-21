@@ -5,7 +5,7 @@ import * as TableStories from './table.stories';
 <Meta of={TableStories} />
 
 # Table
-The Table component standardizes table setup, configuration, and behavior (e.g. sorting, column ordering, row selecting, etc.) across the app. 
+The Table component standardizes table setup, configuration, and behavior (e.g. sorting, column ordering, row selecting, etc.) across the app.
 It's built using Tanstack React Table and simplifies table usage by requiring only columns and data props and supports customizations via optional configuration props.
 
 It is composed of the following components:
@@ -54,7 +54,7 @@ const dataExample = [
 
 <Table columns={columnsExample} data={dataExample}/>
 
-//Static 
+//Static
 <Table {...args}>
     <TableHeader>
     <TableRow>
@@ -77,19 +77,40 @@ const dataExample = [
 <Canvas of={TableStories.Default} />
 
 ### Common Props
-* **`columns`** - Array of column defintions 
-* **`data`** - Array of data objects 
+* **`columns`** - Array of column defintions
+* **`data`** - Array of data objects
 * **`showCheckBox`** - Boolean to determine if we should show checkbox column
 * **`kebabPosition`** - Position of the kebab menu, either 'left' or 'right'.
 * **`persistHeaderKebabMenu`** - Boolean to persist header kebab
 * **`persistRowKebabMenu`** - Boolean to persist row kebab
 * **`persistNumerals`** - Boolean to persist numeral columns
-* **`enableSorting`** - Boolean to enable sorting 
-* **`enableColumnReordering`** - Boolean to enable column ordering 
-* **`enableRowActions`** - Boolean to enable row actions 
-* **`manualSorting`** - Boolean to enable server side sorting. 
+* **`enableSorting`** - Boolean to enable sorting
+* **`enableColumnReordering`** - Boolean to enable column ordering
+* **`enableRowActions`** - Boolean to enable row actions
+* **`manualSorting`** - Boolean to enable server side sorting.
 * **`onSortChange`** - Prop for when server is handling sorting for data. Used when `manualSorting` is set to true.
-* **`onColumnReorderChange`** - Prop for when server is handling column reordering logic of data  
+* **`onColumnReorderChange`** - Prop for when server is handling column reordering logic of data
+* **`onRowSelectionChange`** - Callback triggered when row selection changes. Receives an array of selected row IDs.
+* **`initialSelectedRowIds`** - Array of row IDs to be pre-selected when the table first renders.
+
+### Column Width Customization
+Columns can have custom widths applied via the `meta.className` property in column definitions:
+
+```tsx
+columnHelper.accessor('age', {
+  id: 'age',
+  meta: {
+    className: 'w-[80px]', // Fixed pixel width using bracket notation
+  },
+  header: () => 'Age',
+})
+```
+
+**Important Notes:**
+- Use bracket notation for explicit pixel widths: `w-[200px]`
+- Add `table-fixed` class to the table for fixed column widths: `<Table className="table-fixed" .../>`
+- Use `w-full table-fixed` to make the table full-width with specific column sizes
+- Columns without specified widths will share remaining space equally
 
 ## Implementation Notes
 The `Table` component uses Tanstack React Table from `Tanstack`.
