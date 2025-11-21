@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Fragment } from 'react';
 import {
   Slider as AriaSlider,

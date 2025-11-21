@@ -12,8 +12,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { ChevronDown } from '@accelint/icons';
-import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { composeRenderProps, Heading } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';

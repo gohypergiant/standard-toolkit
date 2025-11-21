@@ -13,8 +13,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useControlledState } from '@react-stately/utils';
-import { clsx } from 'clsx';
 import { PaginationContext } from './context';
 import { PaginationNext } from './next';
 import { PaginationPages } from './pages';

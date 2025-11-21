@@ -11,8 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { flexRender } from '@tanstack/react-table';
-import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { HeaderColumnAction } from './constants/table';
 import { TableContext } from './context';

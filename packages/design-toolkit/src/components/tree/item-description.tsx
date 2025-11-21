@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
 import { Text, type TextProps } from 'react-aria-components';
 import { TreeContext } from './context';

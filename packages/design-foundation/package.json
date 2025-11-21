@@ -54,20 +54,23 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
+  "dependencies": {
+    "@fontsource-variable/roboto-flex": "^5.2.8",
+    "@fontsource-variable/roboto-mono": "^5.2.8",
+    "clsx": "^2.1.1",
+    "tailwindcss": "^4.1.11"
+  },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@fontsource-variable/roboto-flex": "^5.2.8",
-    "@fontsource-variable/roboto-mono": "^5.2.8",
     "@tailwindcss/cli": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^24.9.0",
     "autoprefixer": "^10.4.21",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.11",
     "tinyglobby": "^0.2.15",
     "tsup": "8.5.0",
     "typescript": "5.8.3",
@@ -75,11 +78,6 @@
     "vite": "^7.2.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.8"
-  },
-  "peerDependencies": {
-    "@fontsource-variable/roboto-flex": "^5.2.8",
-    "@fontsource-variable/roboto-mono": "^5.2.8",
-    "tailwindcss": "^4.1.11"
   },
   "optionalDependencies": {
     "@types/css-modules": "^1.0.5"

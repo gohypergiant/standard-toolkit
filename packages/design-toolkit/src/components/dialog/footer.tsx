@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { type ComponentProps, useContext } from 'react';
 import { OverlayTriggerStateContext } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';

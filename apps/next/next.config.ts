@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLocalIdent } from '@accelint/design-toolkit/lib/next';
+import { getLocalIdent } from '@accelint/design-toolkit/lib/webpack';
 import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
 import type { NextConfig } from 'next';
 import type { Configuration, RuleSetRule } from 'webpack';

@@ -12,8 +12,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Kebab } from '@accelint/icons';
-import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { Header, Provider } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';

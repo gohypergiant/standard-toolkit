@@ -24,7 +24,7 @@ import {
 } from '@tanstack/react-table';
 import type { Key } from '@react-types/shared';
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';

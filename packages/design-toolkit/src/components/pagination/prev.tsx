@@ -13,8 +13,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronLeft from '@accelint/icons/chevron-left';
-import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { Button } from '../button';

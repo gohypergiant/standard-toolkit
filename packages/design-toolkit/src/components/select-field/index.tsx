@@ -12,8 +12,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
-import { clsx } from 'clsx';
 import {
   Select as AriaSelect,
   composeRenderProps,

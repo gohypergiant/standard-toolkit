@@ -12,10 +12,10 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { designTokens } from '@accelint/design-foundation/tokens/index';
 import { Person } from '@accelint/icons';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
-import { clsx } from 'clsx';
 import { useContextProps } from 'react-aria-components';
 import { BadgeProvider } from '../badge/context';
 import { Icon } from '../icon';

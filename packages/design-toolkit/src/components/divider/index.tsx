@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useLayoutEffect, useState } from 'react';
 import { useContextProps } from 'react-aria-components';
 import { DividerContext } from './context';

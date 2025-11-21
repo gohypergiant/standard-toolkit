@@ -9,13 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { clsx } from '@accelint/design-foundation/lib/utils';
-import styles from './styles.module.css';
-import type { ComponentPropsWithRef } from 'react';
 
-export function DrawerLayoutMain({
-  className,
-  ...rest
-}: ComponentPropsWithRef<'main'>) {
-  return <main {...rest} className={clsx(styles.main, className)} />;
-}
+import { clsx as classNames } from 'clsx';
+
+/**
+ * We reexport this utility from the package of the same name to serve as the goto
+ * usage point for consumers. This helps to guarantee a standard interface and approach
+ * while providing an entrypoint if we ever need to customize the internal behavior
+ */
+export const clsx = classNames;

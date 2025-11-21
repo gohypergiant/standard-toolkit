@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
 import { Tag as AriaTag, useContextProps } from 'react-aria-components';
 import { IconProvider } from '../icon/context';

@@ -17,7 +17,7 @@ import { uuid } from '@accelint/core';
 import { useToastRegion } from '@react-aria/toast';
 import { useToastQueue } from '@react-stately/toast';
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   composeRenderProps,

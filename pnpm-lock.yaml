@@ -398,6 +398,19 @@ importers:
         version: 4.1.12
 
   packages/design-foundation:
+    dependencies:
+      '@fontsource-variable/roboto-flex':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource-variable/roboto-mono':
+        specifier: ^5.2.8
+        version: 5.2.8
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      tailwindcss:
+        specifier: ^4.1.11
+        version: 4.1.17
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -411,12 +424,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@fontsource-variable/roboto-flex':
-        specifier: ^5.2.8
-        version: 5.2.8
-      '@fontsource-variable/roboto-mono':
-        specifier: ^5.2.8
-        version: 5.2.8
       '@tailwindcss/cli':
         specifier: ^4.1.11
         version: 4.1.17
@@ -435,15 +442,6 @@ importers:
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
-      tailwind-merge:
-        specifier: ^3.3.1
-        version: 3.4.0
-      tailwind-variants:
-        specifier: ^2.0.1
-        version: 2.1.0(tailwind-merge@3.4.0)(tailwindcss@4.1.17)
-      tailwindcss:
-        specifier: ^4.1.11
-        version: 4.1.17
       tinyglobby:
         specifier: ^0.2.15
         version: 0.2.15
@@ -484,6 +482,9 @@ importers:
       '@react-stately/data':
         specifier: ^3.13.2
         version: 3.14.1(react@19.0.0)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       string-hash:
         specifier: ^1.1.3
         version: 1.1.3
@@ -524,12 +525,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@fontsource-variable/roboto-flex':
-        specifier: ^5.2.8
-        version: 5.2.8
-      '@fontsource-variable/roboto-mono':
-        specifier: ^5.2.8
-        version: 5.2.8
       '@internationalized/date':
         specifier: ^3.10.0
         version: 3.10.0
@@ -626,9 +621,6 @@ importers:
       client-only:
         specifier: ^0.0.1
         version: 0.0.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       esbuild-fix-imports-plugin:
         specifier: ^1.0.23
         version: 1.0.23
@@ -659,15 +651,6 @@ importers:
       storybook:
         specifier: ^9.1.16
         version: 9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
-      tailwind-merge:
-        specifier: ^3.3.1
-        version: 3.4.0
-      tailwind-variants:
-        specifier: ^2.0.1
-        version: 2.1.0(tailwind-merge@3.4.0)(tailwindcss@4.1.17)
-      tailwindcss:
-        specifier: ^4.1.11
-        version: 4.1.17
       tinyglobby:
         specifier: ^0.2.15
         version: 0.2.15
@@ -10227,19 +10210,6 @@ packages:
     resolution: {integrity: sha512-kJ9VlRxNCsBD5pJAE29oXeBYbPLhEySQmK4HdpsLv81I6fcDDW17xeJqMwiU3H7/woAVsbgq25DJNS8BeiN5+w==}
     engines: {node: '>=18.18.0'}
     hasBin: true
-
-  tailwind-merge@3.4.0:
-    resolution: {integrity: sha512-uSaO4gnW+b3Y2aWoWfFpX62vn2sR3skfhbjsEnaBI81WD1wBLlHZe5sWf0AqjksNdYTbGBEd0UasQMT3SNV15g==}
-
-  tailwind-variants@2.1.0:
-    resolution: {integrity: sha512-82m0eRex0z6A3GpvfoTCpHr+wWJmbecfVZfP3mqLoDxeya5tN4mYJQZwa5Aw1hRZTedwpu1D2JizYenoEdyD8w==}
-    engines: {node: '>=16.x', pnpm: '>=7.x'}
-    peerDependencies:
-      tailwind-merge: '>=3.0.0'
-      tailwindcss: '*'
-    peerDependenciesMeta:
-      tailwind-merge:
-        optional: true
 
   tailwindcss@4.1.17:
     resolution: {integrity: sha512-j9Ee2YjuQqYT9bbRTfTZht9W/ytp5H+jJpZKiYdP/bpnXARAuELt9ofP0lPnmHjbga7SNQIxdTAXCmtKVYjN+Q==}
@@ -22341,14 +22311,6 @@ snapshots:
       ts-toolbelt: 9.6.0
     transitivePeerDependencies:
       - typescript
-
-  tailwind-merge@3.4.0: {}
-
-  tailwind-variants@2.1.0(tailwind-merge@3.4.0)(tailwindcss@4.1.17):
-    dependencies:
-      tailwindcss: 4.1.17
-    optionalDependencies:
-      tailwind-merge: 3.4.0
 
   tailwindcss@4.1.17: {}
 

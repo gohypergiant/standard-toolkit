@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { HeadingContext, Provider, TextContext } from 'react-aria-components';
 import { AvatarContext } from '../avatar/context';
 import { IconContext } from '../icon/context';

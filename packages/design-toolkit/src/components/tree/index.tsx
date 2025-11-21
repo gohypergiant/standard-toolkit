@@ -14,7 +14,7 @@
 import { Cache } from '@/hooks/use-tree/actions/cache';
 import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useMemo } from 'react';
 import {
   Tree as AriaTree,

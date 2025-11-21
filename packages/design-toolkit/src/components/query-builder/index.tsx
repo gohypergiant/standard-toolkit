@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { createContext, useMemo } from 'react';
 import { QueryBuilder as RQBBuilder } from 'react-querybuilder';
 import { ActionElement } from './action-element';

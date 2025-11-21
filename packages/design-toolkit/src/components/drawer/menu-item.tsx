@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useRef } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { ToggleButton } from '../button/toggle';

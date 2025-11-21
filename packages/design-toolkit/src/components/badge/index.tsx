@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContextProps } from 'react-aria-components';
 import { BadgeContext } from './context';
 import styles from './styles.module.css';

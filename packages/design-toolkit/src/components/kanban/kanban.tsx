@@ -12,6 +12,7 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   type CollisionDetection,
   closestCenter,
@@ -25,7 +26,6 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { clsx } from 'clsx';
 import { createContext, useContext, useState } from 'react';
 import { parseDropTarget, useKanban } from '@/components/kanban/context';
 import styles from './styles.module.css';

@@ -12,8 +12,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Time } from '@accelint/icons';
-import { clsx } from 'clsx';
 import {
   DateInput as AriaDateInput,
   Text as AriaText,

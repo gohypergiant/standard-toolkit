@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { memo, useContext } from 'react';
 import { Lines } from '../lines';
 import { TreeContext } from './context';

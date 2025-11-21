@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { useOn } from '@accelint/bus/react';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useState } from 'react';
 import { DEFAULT_SLOT, HeadingContext, Provider } from 'react-aria-components';
 import { SidenavContext } from './context';

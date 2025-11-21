@@ -13,8 +13,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import Calendar from '@accelint/icons/calendar';
-import { clsx } from 'clsx';
 import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,

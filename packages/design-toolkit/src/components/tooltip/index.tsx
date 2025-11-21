@@ -12,8 +12,8 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useIsSSR } from '@react-aria/ssr';
-import { clsx } from 'clsx';
 import { useMemo } from 'react';
 import {
   Tooltip as AriaTooltip,

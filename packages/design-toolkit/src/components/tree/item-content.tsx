@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
-import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components';
 import { Button } from '../button';

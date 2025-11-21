@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { type ComponentPropsWithRef, useContext } from 'react';
 import { Header } from 'react-aria-components';
 import { ViewStackContext } from '../view-stack/context';

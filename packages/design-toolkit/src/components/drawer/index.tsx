@@ -14,7 +14,7 @@
 import { useOn } from '@accelint/bus/react';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useCallback, useRef, useState } from 'react';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';

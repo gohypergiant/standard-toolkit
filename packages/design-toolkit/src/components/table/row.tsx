@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { TableCell } from './cell';
 import styles from './styles.module.css';
 import type { TableRowProps } from './types';

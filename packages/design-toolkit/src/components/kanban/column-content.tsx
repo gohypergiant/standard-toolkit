@@ -12,11 +12,11 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { clsx } from 'clsx';
 import styles from './styles.module.css';
 import type { KanbanColContentProps } from './types';
 

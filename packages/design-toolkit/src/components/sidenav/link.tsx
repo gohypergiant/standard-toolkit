@@ -13,7 +13,7 @@
 
 import { ArrowNortheast } from '@accelint/icons';
 import 'client-only';
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useRef } from 'react';
 import {
   composeRenderProps,

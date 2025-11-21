@@ -46,7 +46,7 @@
   }
 
   .segment {
-    @apply flex-shrink-0 text-right transition-[width] duration-150 ease-in-out outline-none;
+    @apply shrink-0 text-right transition-[width] duration-150 ease-in-out outline-none;
 
     @variant placeholder-shown {
       @apply fg-primary-muted;

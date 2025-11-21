@@ -11,9 +11,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
 import { flexRender, type Header } from '@tanstack/react-table';
-import { clsx } from 'clsx';
 import { useContext, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { clsx } from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { LinesProps } from './types';
 

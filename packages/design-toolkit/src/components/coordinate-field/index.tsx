@@ -13,11 +13,11 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
 import { filterDOMProps } from '@react-aria/utils';
-import { clsx } from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 import {
   Text as AriaText,

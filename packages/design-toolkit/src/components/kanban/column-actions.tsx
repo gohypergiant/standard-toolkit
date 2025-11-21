@@ -12,8 +12,8 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Add } from '@accelint/icons';
-import { clsx } from 'clsx';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import styles from './styles.module.css';

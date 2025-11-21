@@ -13,8 +13,8 @@
 
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { ChevronLeft } from '@accelint/icons';
-import { clsx } from 'clsx';
 import { useContext } from 'react';
 import { Button, composeRenderProps, Header } from 'react-aria-components';
 import { Icon } from '../icon';
