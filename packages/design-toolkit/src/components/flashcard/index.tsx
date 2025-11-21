@@ -78,14 +78,14 @@ export function FlashcardHero(props: FlashcardComponentProps) {
   if (isLoading) {
     return (
       <div {...rest} className={hero({ className: 'gap-s' })}>
-        <Skeleton className={skeleton()} />
+        <Skeleton className={skeleton()} data-testid='hero-skeleton' />
         <Skeleton className={skeleton({ className: 'max-w-1/2' })} />
       </div>
     );
   }
 
   return (
-    <div {...rest} className={hero()}>
+    <div {...rest} className={hero({ className })}>
       {children}
     </div>
   );
@@ -131,17 +131,22 @@ export function FlashcardAdditionalData(props: FlashcardComponentProps) {
 }
 FlashcardAdditionalData.displayName = 'FlashcardAdditionalData';
 
-export const FlashcardDetailsList = (props: FlashcardDetailsListProps) => {
-  const { children, ...rest } = props;
+export function FlashcardDetailsList(props: FlashcardDetailsListProps) {
+  const { children, className, ...rest } = props;
   return (
     // TODO: Update props to include classnames, what is wrong with ...rest?
-    <DetailsList {...rest} align='justify' classNames={{ list: detailsList() }}>
+    <DetailsList
+      {...rest}
+      align='justify'
+      classNames={{ list: detailsList({ className }) }}
+    >
       {children}
     </DetailsList>
   );
-};
+}
+FlashcardDetailsList.displayName = 'FlashcardDetailsList';
 
-export const FlashcardDetailLabel = (props: FlashcardComponentProps) => {
+export function FlashcardDetailLabel(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
   const { className, children, ...rest } = props;
   return (
@@ -153,9 +158,10 @@ export const FlashcardDetailLabel = (props: FlashcardComponentProps) => {
       )}
     </DetailsListLabel>
   );
-};
+}
+FlashcardDetailLabel.displayName = 'FlashcardDetailLabel';
 
-export const FlashcardDetailValue = (props: FlashcardComponentProps) => {
+export function FlashcardDetailValue(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
   const { className, children, ...rest } = props;
   return (
@@ -167,5 +173,5 @@ export const FlashcardDetailValue = (props: FlashcardComponentProps) => {
       )}
     </DetailsListValue>
   );
-};
+}
 FlashcardDetailValue.displayName = 'FlashcardDetailValue';
