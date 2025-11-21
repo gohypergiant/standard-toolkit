@@ -311,6 +311,8 @@ describe('broadcast', () => {
     ],
     [new Set([1, 2, 3])],
     [new Uint8Array([1, 2, 3, 4])],
+    [{}],
+    [{ nested: { deeply: { value: 42 } } }],
   ])('should serialize %s correctly', ([testValue]) => {
     const bus =
       Broadcast.getInstance<
