@@ -9,17 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export { MapModeEvents, MapModeEventsNamespace } from './events';
-export { clearMapModeState, getCurrentModeOwner } from './store';
-export { type UseMapModeReturn, useMapMode } from './use-map-mode';
-export type {
-  MapModeEventType,
-  ModeChangeAuthorizationEvent,
-  ModeChangeAuthorizationPayload,
-  ModeChangeDecisionEvent,
-  ModeChangeDecisionPayload,
-  ModeChangedEvent,
-  ModeChangedPayload,
-  ModeChangeRequestEvent,
-  ModeChangeRequestPayload,
-} from './types';
+
+export const UNIT_MAP = {
+  km: 'kilometers',
+  m: 'meters',
+  nm: 'nauticalmiles',
+  mi: 'miles',
+  ft: 'feet',
+} as const;
