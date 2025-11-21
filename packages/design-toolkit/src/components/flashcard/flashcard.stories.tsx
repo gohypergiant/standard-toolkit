@@ -21,7 +21,7 @@ import {
   FlashcardHeader,
   FlashcardHero,
   FlashcardSubheader,
-} from './index';
+} from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const DEFAULT_DETAILS = [
