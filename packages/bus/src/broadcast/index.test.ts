@@ -44,7 +44,7 @@ describe('broadcast', () => {
     // @ts-expect-error Accessing protected property
     bus.handleListeners = fn;
 
-    // Simulate an error event
+    // Simulate an message event
     const event = new MessageEvent('message', {
       data: 'test',
     });
