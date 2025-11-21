@@ -12,6 +12,7 @@
 
 import { isUUID, type UniqueId, uuid } from '@accelint/core';
 import { DEFAULT_CONFIG } from './constants';
+import type { StructuredCloneable } from 'type-fest';
 import type {
   BroadcastConfig,
   EmitOptions,
@@ -24,8 +25,7 @@ import type {
 export class Broadcast<
   P extends { type: string; payload?: unknown; target?: UniqueId } = Payload<
     string,
-    // biome-ignore lint/suspicious/noExplicitAny: intentional
-    any
+    StructuredCloneable
   >,
 > {
   protected channel: BroadcastChannel | null = null;
@@ -53,8 +53,10 @@ export class Broadcast<
    * @param config - Optional custom configuration.
    */
   static getInstance<
-    // biome-ignore lint/suspicious/noExplicitAny: intentional
-    T extends { type: string; payload?: unknown } = Payload<string, any>,
+    T extends { type: string; payload?: unknown } = Payload<
+      string,
+      StructuredCloneable
+    >,
   >(config?: BroadcastConfig) {
     Broadcast.instance ??= new Broadcast<T>(config);
 
@@ -245,8 +247,8 @@ export class Broadcast<
    *
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
-   * @param payload - The event payload.
-   * @param options.echo - If true (default), also deliver to this context via channel.onmessage.
+   * @param payload - The event payload -- must be serializable by the structured clone algorithm. (https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)
+   * @param options - Emit options to control delivery.
    *
    * @example
    * bus.emit(
@@ -280,11 +282,6 @@ export class Broadcast<
   ) {
     if (!this.channel) {
       console.warn('Cannot emit: BroadcastChannel is not initialized.');
-      return;
-    }
-
-    if (!this.channel.onmessage) {
-      console.warn('No listeners registered for this event type:', type);
       return;
     }
 
