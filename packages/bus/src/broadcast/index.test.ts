@@ -110,15 +110,6 @@ describe('broadcast', () => {
     ).toEqual({ target: 'self' });
   });
 
-  it('should warn if no listeners for event', () => {
-    const bus = Broadcast.getInstance<Payload<'test', string>>();
-    const consoleMock = vi.spyOn(console, 'warn');
-
-    bus.emit('test', 'test');
-
-    expect(consoleMock).toHaveBeenCalled();
-  });
-
   it('on', () => {
     const bus = Broadcast.getInstance<Payload<'test', string>>();
     const fn = vi.fn();

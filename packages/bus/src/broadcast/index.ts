@@ -285,11 +285,6 @@ export class Broadcast<
       return;
     }
 
-    if (!this.listeners[type]?.length) {
-      console.warn('No listeners registered for this event type:', type);
-      return;
-    }
-
     const { target = 'all' } = {
       ...this.emitOptions.get(this.id),
       ...this.emitOptions.get(type),
