@@ -11,8 +11,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from 'clsx';
 import { TableCell } from './cell';
-import { TableRowStyles } from './styles';
+import styles from './styles.module.css';
 import type { TableRowProps } from './types';
 
 export function TableRow<T>({
@@ -28,7 +29,7 @@ export function TableRow<T>({
     <tr
       {...rest}
       ref={ref}
-      className={TableRowStyles({ className })}
+      className={clsx('group/row', styles.row, className)}
       data-pinned={row?.getIsPinned() || null}
       data-selected={row?.getIsSelected() || null}
     >

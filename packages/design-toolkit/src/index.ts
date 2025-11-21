@@ -454,16 +454,6 @@ export type {
 } from './components/table/constants/table';
 export { TableContext } from './components/table/context';
 export { Table } from './components/table';
-export {
-  TableBodyStyles,
-  TableCellStyles,
-  TableCellStylesDefaults,
-  TableHeaderCellStyles,
-  TableHeaderCellStylesDefaults,
-  TableHeaderStyles,
-  TableRowStyles,
-  TableStyles,
-} from './components/table/styles';
 export type {
   TableBodyProps,
   TableCellProps,

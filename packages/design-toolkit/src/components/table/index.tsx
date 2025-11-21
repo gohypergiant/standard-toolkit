@@ -24,6 +24,7 @@ import {
 } from '@tanstack/react-table';
 import type { Key } from '@react-types/shared';
 import 'client-only';
+import { clsx } from 'clsx';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
@@ -35,10 +36,8 @@ import { MenuTrigger } from '../menu/trigger';
 import { TableBody } from './body';
 import { TableContext } from './context';
 import { TableHeader } from './header';
-import { TableStyles } from './styles';
+import styles from './styles.module.css';
 import type { TableProps } from './types';
-
-const { menuItem, notPersistRowKebab } = TableStyles();
 
 type RowActionsMenuProps<T> = {
   row: Row<T>;
@@ -55,10 +54,11 @@ function RowActionsMenu<T>({
 }: RowActionsMenuProps<T>) {
   const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
   const isPinned = !!row.getIsPinned();
+  const hideRowKebab = !persistRowKebabMenu;
 
   return (
     enableRowActions && (
-      <div className={persistRowKebabMenu ? '' : notPersistRowKebab()}>
+      <div className={clsx(hideRowKebab && styles.hideInRow)}>
         <MenuTrigger>
           <Button variant='icon' aria-label={`row ${row.index + 1} actions`}>
             <Icon>
@@ -66,22 +66,17 @@ function RowActionsMenu<T>({
             </Icon>
           </Button>
           <Menu>
-            <MenuItem
-              classNames={{ item: menuItem() }}
-              onAction={() => row.pin(isPinned ? false : 'top')}
-            >
+            <MenuItem onAction={() => row.pin(isPinned ? false : 'top')}>
               {isPinned ? 'Unpin' : 'Pin'}
             </MenuItem>
             <MenuSeparator />
             <MenuItem
-              classNames={{ item: menuItem() }}
               onAction={() => moveRowsUp(row, rows)}
               isDisabled={isPinned || row.index === 0}
             >
               Move Up
             </MenuItem>
             <MenuItem
-              classNames={{ item: menuItem() }}
               onAction={() => moveRowsDown(row, rows)}
               isDisabled={isPinned || row.index === rows.length - 1}
             >
