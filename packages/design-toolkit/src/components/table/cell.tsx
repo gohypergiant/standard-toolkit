@@ -31,13 +31,19 @@ export function TableCell<T>({
   const isSelected = cell?.column.id === columnSelection;
   const narrow = isNumeral || isKebab;
   const notPersistNums = isNumeral && !persistNumerals;
+  const mergedClassName = [
+    (cell?.column.columnDef.meta as { className?: string })?.className,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <td
       {...rest}
       ref={ref}
       className={TableCellStyles({
-        className,
+        className: mergedClassName,
         narrow,
         isNumeral,
         notPersistNums,

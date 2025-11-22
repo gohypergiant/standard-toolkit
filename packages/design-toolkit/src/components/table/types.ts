@@ -116,6 +116,16 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @param index - The new index position of the column after reordering.
    */
   onColumnReorderChange?: (index: number) => void;
+  /**
+   * Callback function triggered when row selection changes.
+   *
+   * @param selectedRowIds - Array of selected row IDs.
+   */
+  onRowSelectionChange?: (selectedRowIds: string[]) => void;
+  /**
+   * Initial row IDs to be selected when the table first renders.
+   */
+  initialSelectedRowIds?: string[];
 };
 
 /**

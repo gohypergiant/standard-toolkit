@@ -168,12 +168,18 @@ export function TableHeaderCell<T>({
         ? 'descending'
         : undefined;
 
+  const mergedClassName = [
+    (header?.column.columnDef.meta as { className?: string })?.className,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <th {...rest} ref={ref} aria-sort={sortLabel}>
+    <th {...rest} ref={ref} aria-sort={sortLabel} className={mergedClassName}>
       <div
         className={TableHeaderCellStyles({
           narrow,
-          className,
           isKebabEnabled: showKebab,
         })}
         data-selected={header?.column.id === columnSelection || null}

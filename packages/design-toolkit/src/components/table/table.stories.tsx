@@ -11,6 +11,7 @@
  */
 
 import { createColumnHelper } from '@tanstack/react-table';
+import { useState } from 'react';
 import { Table } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -191,4 +192,127 @@ export const SortableColumns: Story = {
     },
   },
   render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+const columnsWithClassName = [
+  columnHelper.accessor('firstName', {
+    id: 'firstName',
+    cell: (info) => info.getValue(),
+    header: () => <span>First Name</span>,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => <i>{info.getValue()}</i>,
+    header: () => <span>Last Name</span>,
+  }),
+  columnHelper.accessor('age', {
+    id: 'age',
+    meta: {
+      className: 'w-[80px]',
+    },
+    cell: (info) => info.renderValue(),
+    header: () => 'Age',
+  }),
+  columnHelper.accessor('visits', {
+    id: 'visits',
+    meta: {
+      className: 'w-[80px]',
+    },
+    header: () => <span>Visits</span>,
+  }),
+];
+
+export const ColumnSizing: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Columns can use CSS classes for width control via the `meta.className` property. This example uses Tailwind width utilities (`w-*`). Note: For fixed column widths to work properly, add `table-layout: fixed` to the table (e.g., `className="table-fixed"`).',
+      },
+    },
+    layout: 'fullscreen',
+  },
+  render: () => (
+    <Table
+      className='w-full table-fixed'
+      columns={columnsWithClassName}
+      data={defaultData}
+      showCheckbox={false}
+      enableSorting={false}
+      enableColumnReordering={false}
+      enableRowActions={false}
+      key='column-sizing-classname'
+    />
+  ),
+};
+
+export const RowSelection: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Row selection can be tracked using the `onRowSelectionChange` callback. The callback receives an array of selected row IDs. Enable row selection by setting `showCheckbox={true}`.',
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string[]>([]);
+
+    return (
+      <>
+        <Table
+          className='w-full table-fixed'
+          columns={columnsWithClassName}
+          data={defaultData}
+          onRowSelectionChange={setSelected}
+          showCheckbox={true}
+          enableSorting={false}
+          enableColumnReordering={false}
+          enableRowActions={false}
+          key='column-sizing-classname'
+        />
+        {selected.length ? (
+          <p>
+            {selected.length} selected rows: {selected.join(', ')}
+          </p>
+        ) : null}
+      </>
+    );
+  },
+};
+
+export const InitialRowSelection: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Rows can be pre-selected on initial render using the `initialSelectedRowIds` prop. Pass an array of row IDs that should be selected when the table first loads.',
+      },
+    },
+  },
+  render: () => {
+    const [selected, setSelected] = useState<string[]>(['tanner', 'joe']);
+
+    return (
+      <>
+        <Table
+          className='w-full table-fixed'
+          columns={columnsWithClassName}
+          data={defaultData}
+          initialSelectedRowIds={['tanner', 'joe']}
+          onRowSelectionChange={setSelected}
+          showCheckbox={true}
+          enableSorting={false}
+          enableColumnReordering={false}
+          enableRowActions={false}
+          key='initial-row-selection'
+        />
+        {selected.length ? (
+          <p>
+            {selected.length} selected rows: {selected.join(', ')}
+          </p>
+        ) : null}
+      </>
+    );
+  },
 };

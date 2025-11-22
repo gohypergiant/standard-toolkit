@@ -118,6 +118,8 @@ export function Table<T extends { id: Key }>({
   manualSorting = false,
   onSortChange,
   onColumnReorderChange,
+  onRowSelectionChange,
+  initialSelectedRowIds,
   ...rest
 }: TableProps<T>) {
   const {
@@ -127,7 +129,14 @@ export function Table<T extends { id: Key }>({
   } = useListData({
     initialItems: dataProp,
   });
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>(() => {
+    return initialSelectedRowIds
+      ? initialSelectedRowIds.reduce((acc, id) => {
+          acc[id] = true;
+          return acc;
+        }, {} as RowSelectionState)
+      : {};
+  });
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
   const [rowPinning, setRowPinning] = useState<RowPinningState>({
     top: [],
@@ -203,6 +212,9 @@ export function Table<T extends { id: Key }>({
   const actionColumn: NonNullable<typeof columnsProp>[number] = useMemo(
     () => ({
       id: 'kebab',
+      meta: {
+        className: 'w-[32px]', // Fixed width
+      },
       cell: ({ row }) => (
         <RowActionsMenu
           moveRowsUp={moveRowsUp}
@@ -225,6 +237,9 @@ export function Table<T extends { id: Key }>({
     () => [
       {
         id: 'numeral',
+        meta: {
+          className: 'w-[32px]', // Fixed width
+        },
         cell: ({ row }) =>
           row.getIsPinned() ? (
             <Icon size='small'>
@@ -238,6 +253,9 @@ export function Table<T extends { id: Key }>({
         ? ([
             {
               id: 'selection',
+              meta: {
+                className: 'w-[32px]', // Fixed width
+              },
               header: ({ table }) => (
                 <Checkbox
                   isSelected={table.getIsAllRowsSelected()}
@@ -273,6 +291,22 @@ export function Table<T extends { id: Key }>({
     onColumnReorderChange?.(index);
   };
 
+  const handleRowSelectionChange = useCallback(
+    (
+      updater:
+        | RowSelectionState
+        | ((old: RowSelectionState) => RowSelectionState),
+    ) => {
+      setRowSelection((prev) => {
+        const next = typeof updater === 'function' ? updater(prev) : updater;
+        const selectedIds = Object.keys(next).filter((id) => next[id]);
+        onRowSelectionChange?.(selectedIds);
+        return next;
+      });
+    },
+    [onRowSelectionChange],
+  );
+
   const {
     getHeaderGroups,
     getTopRows,
@@ -297,8 +331,10 @@ export function Table<T extends { id: Key }>({
     },
     enableRowSelection: true,
     enableRowPinning: true,
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
     manualSorting: manualSorting,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: handleRowSelectionChange,
     onRowPinningChange: setRowPinning,
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
