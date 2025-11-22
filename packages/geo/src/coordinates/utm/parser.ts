@@ -52,7 +52,12 @@ function detailedErrors(input: string) {
 // biome-ignore lint/suspicious/noExplicitAny: Format is unused
 export function parseUTM(_format: any, input: string) {
   try {
-    const utm = Utm.parse(input);
+    // Preprocess: ensure space between zone and hemisphere for geodesy parser
+    // Convert "18N 585628 4511644" to "18 N 585628 4511644"
+    // The geodesy library requires 4 space-separated elements
+    const normalized = input.trim().replace(/^(\d{1,2})([NS])\s+/i, '$1 $2 ');
+
+    const utm = Utm.parse(normalized);
     const latlon = utm.toLatLon();
 
     return parse(`${latlon.lat} / ${latlon.lon}`, 'LATLON');
