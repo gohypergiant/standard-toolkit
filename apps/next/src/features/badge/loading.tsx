@@ -10,15 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+import { Suspense } from 'react';
+import type { PropsWithChildren } from 'react';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: true,
-  experimental: {
-    ppr: false, // enable once we are on next 16
-    reactCompiler: false, // enable once we are on next 16
-  },
-};
+export function Fallback() {
+  return <div>Loading...</div>;
+}
 
-export default nextConfig;
+export function LoadingComponent(props: PropsWithChildren) {
+  const { children } = props;
+
+  return <Suspense fallback={<Fallback />}>{children}</Suspense>;
+}

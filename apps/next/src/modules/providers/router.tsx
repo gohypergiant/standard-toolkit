@@ -10,14 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { Nav } from './nav';
+'use client';
 
-describe('Nav', () => {
-  it('should render', () => {
-    render(<Nav />);
+import { useRouter } from 'next/navigation';
+import { RouterProvider as RacRouterProvider } from 'react-aria-components';
+import type { PropsWithChildren } from 'react';
 
-    expect(screen.getAllByText(/Example/gi).length).not.toBe(0);
-  });
-});
+declare module 'react-aria-components' {
+  interface RouterConfig {
+    routerOptions: NonNullable<
+      Parameters<ReturnType<typeof useRouter>['push']>[1]
+    >;
+  }
+}
+
+export function RouterProvider({ children }: PropsWithChildren) {
+  const router = useRouter();
+
+  return (
+    <RacRouterProvider navigate={router.push}>{children}</RacRouterProvider>
+  );
+}

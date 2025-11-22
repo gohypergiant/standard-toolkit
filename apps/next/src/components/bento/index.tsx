@@ -10,15 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+import type { PropsWithChildren } from 'react';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: true,
-  experimental: {
-    ppr: false, // enable once we are on next 16
-    reactCompiler: false, // enable once we are on next 16
-  },
-};
+export function BentoGroup(props: PropsWithChildren) {
+  const { children } = props;
 
-export default nextConfig;
+  return <div className='grid gap-l'>{children}</div>;
+}
+
+export function BentoItem(props: PropsWithChildren) {
+  const { children } = props;
+  return (
+    <div className='p-l outline-static outline rounded-large'>{children}</div>
+  );
+}

@@ -9,37 +9,27 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
-'use client';
-
-import { ThemeProvider as DTKThemeProvider } from '@accelint/design-toolkit';
+import 'server-only';
+import { Nav } from '~/modules/nav';
+import { RouterProvider } from '~/modules/providers/router';
+import { ThemeProvider } from '~/modules/providers/theme';
 import type { PropsWithChildren } from 'react';
+import './globals.css';
 
-export function DTKTheme({ children }: PropsWithChildren) {
+// biome-ignore lint/style/useNamingConvention: nextjs convention
+export const experimental_ppr = true;
+
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <DTKThemeProvider
-      overrides={{
-        light: {
-          bg: {
-            accent: {
-              primary: {
-                bold: [255, 107, 26, 1],
-              },
-            },
-          },
-        },
-        dark: {
-          bg: {
-            accent: {
-              primary: {
-                bold: [196, 211, 0, 1],
-              },
-            },
-          },
-        },
-      }}
-    >
-      {children}
-    </DTKThemeProvider>
+    <html lang='en' className='font-primary dark'>
+      <body className='w-full h-full p-l top-xxl relative'>
+        <RouterProvider>
+          <ThemeProvider>
+            {children}
+            <Nav />
+          </ThemeProvider>
+        </RouterProvider>
+      </body>
+    </html>
   );
 }

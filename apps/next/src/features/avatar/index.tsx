@@ -10,8 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { BusExample } from '../bus';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { AvatarExampleServer } from './server';
 
-export default function Page() {
-  return <BusExample />;
+export function AvatarExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <AvatarExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }

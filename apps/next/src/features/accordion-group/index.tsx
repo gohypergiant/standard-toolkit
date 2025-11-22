@@ -10,12 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { Buttons } from '../buttons';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { AccordionGroupExampleServer } from './server';
 
-export default function ButtonsPage() {
+export function AccordionGroupExample() {
   return (
-    <div className='flex flex-col items-center justify-center w-full h-full'>
-      <Buttons />
-    </div>
+    <ErrorComponent>
+      <LoadingComponent>
+        <AccordionGroupExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
   );
 }

@@ -10,15 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { BadgeExampleServer } from './server';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: true,
-  experimental: {
-    ppr: false, // enable once we are on next 16
-    reactCompiler: false, // enable once we are on next 16
-  },
-};
-
-export default nextConfig;
+export function BadgeExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <BadgeExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
+}

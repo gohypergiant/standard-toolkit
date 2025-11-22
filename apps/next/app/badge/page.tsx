@@ -10,15 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+import { BentoGroup } from '~/components/bento';
+import { BadgeExample } from '~/features/badge';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: true,
-  experimental: {
-    ppr: false, // enable once we are on next 16
-    reactCompiler: false, // enable once we are on next 16
-  },
-};
+// biome-ignore lint/style/useNamingConvention: nextjs convention
+export const experimental_ppr = true;
 
-export default nextConfig;
+export default function Page() {
+  return (
+    <BentoGroup>
+      <BadgeExample />
+    </BentoGroup>
+  );
+}
