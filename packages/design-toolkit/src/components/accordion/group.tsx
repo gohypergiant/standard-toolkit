@@ -12,18 +12,17 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { composeRenderProps, DisclosureGroup } from 'react-aria-components';
 import { AccordionContext } from './context';
-import { AccordionStyles, AccordionStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { AccordionGroupProps } from './types';
-
-const { group } = AccordionStyles();
 
 export function AccordionGroup({
   ref,
   children,
   className,
-  variant = AccordionStylesDefaults.variant,
+  variant = 'cozy',
   isDisabled,
   ...rest
 }: AccordionGroupProps) {
@@ -33,10 +32,7 @@ export function AccordionGroup({
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          group({
-            className,
-            variant,
-          }),
+          clsx('group/accordion-group', styles.group, className),
         )}
       >
         {children}

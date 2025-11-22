@@ -118,24 +118,42 @@ function setup(
 describe('Sidenav', () => {
   it('should not render expanded content', async () => {
     setup();
-
-    expect(screen.queryByText('Application Header')).toHaveClass(/hidden/);
-    expect(screen.queryByText('subheader')).toHaveClass(/hidden/);
-    expect(screen.queryByText('Title')).toHaveClass(/hidden/);
-    expect(screen.queryByText('Nav item')).toHaveClass(/hidden/);
-    expect(screen.queryByText('External')).toHaveClass(/hidden/);
-    expect(screen.queryByText('Link item')).toHaveClass(/hidden/);
-    expect(screen.queryByTestId('menu')).toBeInTheDocument();
-    expect(screen.queryByText('FullName')).toHaveClass(/hidden/);
-    expect(screen.queryByText('test@example.com')).toHaveClass(/hidden/);
+    screen.debug();
+    expect(
+      screen.getByText('Application Header').classList.toString(),
+    ).includes('transient');
+    expect(screen.getByText('subheader').classList.toString()).includes(
+      'transient',
+    );
+    expect(screen.getByText('Title').classList.toString()).includes(
+      'transient',
+    );
+    expect(screen.getByText('Nav item').classList.toString()).includes(
+      'transient',
+    );
+    expect(screen.getByText('External').classList.toString()).includes(
+      'transient',
+    );
+    expect(screen.getByText('Link item').classList.toString()).includes(
+      'transient',
+    );
+    expect(screen.getByTestId('menu')).toBeInTheDocument();
+    expect(screen.getByText('FullName').classList.toString()).includes(
+      'transient',
+    );
+    expect(screen.getByText('test@example.com').classList.toString()).includes(
+      'transient',
+    );
 
     expect(screen.queryByText('Settings')).not.toBeInTheDocument();
     expect(screen.queryByText('Menu Item')).not.toBeInTheDocument();
     expect(screen.queryByText('Menu Item 2')).not.toBeInTheDocument();
+
     await userEvent.click(screen.getByTestId('menu'));
-    expect(screen.queryByText('Settings')).toBeInTheDocument();
-    expect(screen.queryByText('Menu Item')).toBeInTheDocument();
-    expect(screen.queryByText('Menu Item 2')).toBeInTheDocument();
+
+    expect(screen.getByText('Settings')).toBeInTheDocument();
+    expect(screen.getByText('Menu Item')).toBeInTheDocument();
+    expect(screen.getByText('Menu Item 2')).toBeInTheDocument();
   });
 
   it('should open externally', async () => {

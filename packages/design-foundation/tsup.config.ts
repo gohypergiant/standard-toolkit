@@ -17,7 +17,7 @@ import {
   fixExtensionsPlugin,
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
-import { globSync } from 'glob';
+import { globSync } from 'tinyglobby';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -29,7 +29,7 @@ export default defineConfig({
   entry: [
     'src/**/*.{ts,tsx,css}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
-    '!**/__fixtures__',
+    '!**/__*__',
   ],
   loader: {
     '.css': 'copy',
@@ -40,7 +40,10 @@ export default defineConfig({
   clean: true,
   dts: {
     entry: Object.fromEntries(
-      globSync('src/**/*.{ts,tsx}').map((file) => [
+      globSync([
+        'src/**/*.{ts,tsx}',
+        '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
+      ]).map((file) => [
         path.relative(
           'src',
           file.slice(0, file.length - path.extname(file).length),

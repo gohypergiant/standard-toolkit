@@ -12,13 +12,12 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { composeRenderProps, ListBoxItem } from 'react-aria-components';
 import { IconProvider } from '../icon/context';
 import { OptionsItemLabel } from './item-label';
-import { OptionsStyles } from './styles';
+import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsItemProps } from './types';
-
-const { item, icon } = OptionsStyles();
 
 export function OptionsItem<T extends OptionsDataItem>({
   children,
@@ -31,14 +30,14 @@ export function OptionsItem<T extends OptionsDataItem>({
     <ListBoxItem
       {...rest}
       className={composeRenderProps(classNames?.item, (className) =>
-        item({ className }),
+        clsx('group/options-item', styles.item, className),
       )}
       textValue={textValue}
       data-color={color}
     >
       {composeRenderProps(children, (children) => (
         <IconProvider
-          className={icon({ className: classNames?.icon })}
+          className={clsx(styles.icon, classNames?.icon)}
           size='small'
         >
           {typeof children === 'string' ? (

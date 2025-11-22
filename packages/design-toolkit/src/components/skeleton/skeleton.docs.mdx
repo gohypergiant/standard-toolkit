@@ -13,7 +13,7 @@ The Skeleton component provides a flexible skeleton loader for indicating loadin
 <Skeleton />
 
 // Circular placeholder (useful for avatars)
-<Skeleton shape="circ" />
+<Skeleton variant="circle" />
 
 // With loading text content
 <Skeleton>Loading content...</Skeleton>
@@ -31,8 +31,8 @@ The Skeleton component provides a flexible skeleton loader for indicating loadin
 
 ## Variants
 
-* **rect** - Rectangular placeholder with rounded corners (default)
-* **circ** - Circular placeholder, useful for avatars or circular elements
+* **rectangle** - Rectangular placeholder with rounded corners (default)
+* **circle** - Circular placeholder, useful for avatars or circular elements
 
 The shape can be controlled via the `shape` prop. Both variants include a subtle pulse animation for better visual feedback.
 
@@ -40,7 +40,7 @@ The shape can be controlled via the `shape` prop. Both variants include a subtle
 
 ## Props
 
-* **`shape`** - Visual shape: `'rect'` (default) or `'circ'`
+* **`variant`** - Visual shape: `'rectangle'` (default) or `'circle'`
 * **`className`** - Additional CSS classes for custom styling
 * **`children`** - Optional content to display inside the skeleton (useful for text placeholders)
 
@@ -55,8 +55,8 @@ The underlying element is a `div` with:
 - Base styling including light foreground color, transparent background, and padding
 - Pulse animation for visual feedback during loading states
 - Shape-specific styling:
-  - **Rect**: Full width with minimum height, rounded corners
-  - **Circ**: Square aspect ratio with full border radius
+  - **Rectangle**: Full width with minimum height, rounded corners
+  - **Circle**: Square aspect ratio with full border radius
 
 The component automatically handles:
 - Responsive sizing based on content

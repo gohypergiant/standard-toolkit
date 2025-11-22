@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   composeRenderProps,
   Link,
@@ -19,7 +20,7 @@ import {
 } from 'react-aria-components';
 import { IconProvider } from '../icon/context';
 import { LinkButtonContext } from './context';
-import { LinkButtonStyles } from './styles';
+import styles from './styles.module.css';
 import type { LinkButtonProps } from './types';
 
 /**
@@ -64,7 +65,7 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
     className,
     color = 'mono-muted',
     size = 'medium',
-    variant,
+    variant = 'filled',
     ...rest
   } = props;
 
@@ -74,10 +75,7 @@ export function LinkButton({ ref, ...props }: LinkButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          LinkButtonStyles({
-            className,
-            variant,
-          }),
+          clsx('group/button', styles.button, styles[variant], className),
         )}
         data-color={color}
         data-size={size}

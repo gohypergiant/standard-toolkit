@@ -14,6 +14,7 @@
 import { Cache } from '@/hooks/use-tree/actions/cache';
 import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useMemo } from 'react';
 import {
   Tree as AriaTree,
@@ -23,10 +24,8 @@ import {
   useDragAndDrop,
 } from 'react-aria-components';
 import { TreeContext } from './context';
-import { TreeStyles, TreeStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { TreeProps } from './types';
-
-const { tree } = TreeStyles();
 
 const defaultRenderDropIndicator = (target: DropTarget) => (
   <DropIndicator target={target} className='border border-highlight-hover' />
@@ -64,7 +63,7 @@ export function Tree<T>({
   showRuleLines = true,
   showVisibility = true,
   selectionMode = 'multiple',
-  variant = TreeStylesDefaults.variant,
+  variant = 'cozy',
   visibleKeys: visibleKeysProp,
   onVisibilityChange,
   onSelectionChange,
@@ -189,7 +188,7 @@ export function Tree<T>({
       <AriaTree
         {...rest}
         className={composeRenderProps(className, (className) =>
-          tree({ className, variant }),
+          clsx(styles.tree, className),
         )}
         disabledKeys={disabledKeys}
         dragAndDropHooks={dragAndDropHooks}

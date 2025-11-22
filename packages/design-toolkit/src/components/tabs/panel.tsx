@@ -13,14 +13,13 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   TabPanel as AriaTabPanel,
   composeRenderProps,
   type TabPanelProps,
 } from 'react-aria-components';
-import { TabStyles } from './styles';
-
-const { panel } = TabStyles();
+import styles from './styles.module.css';
 
 /**
  * TabPanel - Content panel for tabs
@@ -32,7 +31,7 @@ export function TabPanel({ children, className, ...rest }: TabPanelProps) {
     <AriaTabPanel
       {...rest}
       className={composeRenderProps(className, (className) =>
-        panel({ className }),
+        clsx(styles.panel, className),
       )}
     >
       {children}

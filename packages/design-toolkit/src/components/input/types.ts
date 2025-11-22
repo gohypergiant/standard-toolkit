@@ -12,13 +12,10 @@
 
 import type { ReactNode, RefAttributes } from 'react';
 import type { InputProps as AriaInputProps } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
 import type { ButtonProps } from '../button/types';
-import type { InputStyles } from './styles';
 
-export type InputProps = Omit<AriaInputProps, 'className' | 'size' | 'type'> &
-  RefAttributes<HTMLInputElement> &
-  Omit<VariantProps<typeof InputStyles>, 'prefix' | 'suffix' | 'isEmpty'> & {
+export type InputProps = Omit<AriaInputProps, 'className' | 'size'> &
+  RefAttributes<HTMLInputElement> & {
     classNames?: {
       container?: string;
       sizer?: string;
@@ -27,8 +24,10 @@ export type InputProps = Omit<AriaInputProps, 'className' | 'size' | 'type'> &
       prefix?: string;
       suffix?: string;
     };
+    autoSize?: boolean;
     prefix?: ReactNode;
     size?: 'medium' | 'small';
     suffix?: ReactNode;
+    isClearable?: boolean;
     isInvalid?: boolean;
   };

@@ -12,9 +12,10 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Label as AriaLabel, useContextProps } from 'react-aria-components';
 import { LabelContext } from './context';
-import { LabelStyles } from './styles';
+import styles from './styles.module.css';
 import type { LabelProps } from './types';
 
 /**
@@ -44,7 +45,7 @@ export function Label({ ref, ...props }: LabelProps) {
   return (
     <AriaLabel
       {...rest}
-      className={LabelStyles({ className })}
+      className={clsx('group/label', styles.label, className)}
       data-disabled={isDisabled || null}
       data-required={isRequired || null}
     >

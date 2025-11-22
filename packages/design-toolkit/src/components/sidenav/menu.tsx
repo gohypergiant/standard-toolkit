@@ -11,8 +11,9 @@
  */
 'use client';
 
-import { ChevronDown } from '@accelint/icons';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { ChevronDown } from '@accelint/icons';
 import { useContext, useRef } from 'react';
 import {
   Button,
@@ -27,11 +28,8 @@ import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import { SidenavContext } from './context';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type { SidenavMenuProps } from './types';
-
-const { menu, menuButton, menuPanel, panelContent, tooltip, transient } =
-  SidenavStyles();
 
 /**
  * SidenavMenu - Menu component for sidenav
@@ -51,19 +49,19 @@ export function SidenavMenu({
   return isOpen ? (
     <Disclosure
       className={composeRenderProps(classNames?.menu, (className) =>
-        menu({ className }),
+        clsx('group/menu', styles.menu, className),
       )}
     >
       <Button
         {...rest}
         slot='trigger'
         className={composeRenderProps(classNames?.button, (className) =>
-          menuButton({ className }),
+          clsx(styles.trigger, className),
         )}
       >
         {icon}
         <Heading slot='menu'>{title}</Heading>
-        <Icon className={transient({ className: classNames?.icon })}>
+        <Icon className={clsx(styles.transient, classNames?.icon)}>
           <ChevronDown className='transform group-expanded/menu:rotate-180' />
         </Icon>
       </Button>
@@ -73,7 +71,7 @@ export function SidenavMenu({
           (className) => className ?? '',
         )}
       >
-        <div className={panelContent({ className: classNames?.panelContent })}>
+        <div className={clsx(styles.content, classNames?.panelContent)}>
           {children}
         </div>
       </DisclosurePanel>
@@ -85,24 +83,24 @@ export function SidenavMenu({
           {...rest}
           ref={ref}
           className={composeRenderProps(classNames?.button, (className) =>
-            menuButton({ className }),
+            clsx(styles.trigger, className),
           )}
         >
           {icon}
         </Button>
-        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
+        <Tooltip parentRef={ref} placement='right' className={styles.tooltip}>
           {title}
         </Tooltip>
       </TooltipTrigger>
       <Popover
         className={composeRenderProps(classNames?.popoverPanel, (className) =>
-          menuPanel({ className }),
+          clsx(styles.panel, className),
         )}
         placement='right top'
         shouldFlip={false}
       >
         <Heading slot='panel'>{title}</Heading>
-        <div className={panelContent({ className: classNames?.panelContent })}>
+        <div className={clsx(styles.content, classNames?.panelContent)}>
           {children}
         </div>
       </Popover>

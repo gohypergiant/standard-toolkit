@@ -31,8 +31,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
 
-type Alias = React.FC<DrawerLayoutProps>;
-
 const ids = {
   top: {
     drawer: uuid(),
@@ -74,10 +72,9 @@ const ids = {
 
 const meta = {
   title: 'Components/DrawerLayout',
-  component: DrawerLayout as Alias,
+  component: DrawerLayout,
   args: {
     extend: 'left right',
-    push: 'left right',
   },
   argTypes: {
     extend: {
@@ -85,162 +82,178 @@ const meta = {
       options: ['top bottom', 'left right', 'top', 'bottom', 'left', 'right'],
     },
     push: {
-      control: 'text',
+      control: 'multi-select',
+      options: ['top', 'right', 'bottom', 'left'],
     },
   },
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta<Alias>;
+} satisfies Meta<DrawerLayoutProps>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: ({ extend, push }) => {
-    return (
-      <div className='h-screen w-full'>
-        <DrawerLayout extend={extend} push={push}>
-          <DrawerLayoutMain>
-            <div
-              className='flex h-full items-center justify-center bg-surface-overlay'
-              style={
-                {
-                  '--single': '40px',
-                  '--double': 'calc(2 * var(--single))',
-                  backgroundImage: `
+export const Default: StoryObj<typeof meta> = {
+  render: ({ extend, push }) => (
+    <div className='h-screen w-full'>
+      <DrawerLayout
+        extend={extend}
+        push={
+          (push as unknown as string[])?.join(' ') as DrawerLayoutProps['push']
+        }
+      >
+        <DrawerLayoutMain>
+          <div
+            className='flex h-full items-center justify-center bg-surface-overlay'
+            style={
+              {
+                '--single': '40px',
+                '--double': 'calc(2 * var(--single))',
+                backgroundImage: `
             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.8) 99%),
             radial-gradient(closest-side, transparent 98%, rgba(0,0,0,.4) 99%)
           `,
-                  backgroundSize: 'var(--double) var(--double)',
-                  backgroundPosition:
-                    'center, calc(50% + var(--single)) calc(50% + var(--single))',
-                } as CSSProperties
-              }
-            >
-              <div className='flex w-1/2 flex-col rounded-large bg-surface-overlay p-xl outline-2 outline-info-bold [&>*]:my-s'>
-                <p>This page is for demo purposes only!</p>
-              </div>
+                backgroundSize: 'var(--double) var(--double)',
+                backgroundPosition:
+                  'center, calc(50% + var(--single)) calc(50% + var(--single))',
+              } as CSSProperties
+            }
+          >
+            <div className='flex w-1/2 flex-col rounded-large bg-surface-overlay p-xl outline-2 outline-info-bold [&>*]:my-s'>
+              <p>This page is for demo purposes only!</p>
             </div>
-          </DrawerLayoutMain>
+          </div>
+        </DrawerLayoutMain>
 
-          <Drawer id={ids.top.drawer} placement='top' size='medium'>
-            <DrawerMenu>
-              <DrawerMenuItem toggle for={ids.top.views.a} textValue='Menu A'>
-                <ChevronDown className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.top.views.b} textValue='Menu B'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.top.views.c} textValue='Menu C'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.top.views.d} textValue='Menu D'>
-                <Placeholder />
-              </DrawerMenuItem>
-            </DrawerMenu>
+        <Drawer
+          id={ids.top.drawer}
+          className='bg-[#ff00008b]'
+          placement='top'
+          size='medium'
+        >
+          <DrawerMenu>
+            <DrawerMenuItem toggle for={ids.top.views.a} textValue='Menu A'>
+              <ChevronDown className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.top.views.b} textValue='Menu B'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.top.views.c} textValue='Menu C'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.top.views.d} textValue='Menu D'>
+              <Placeholder />
+            </DrawerMenuItem>
+          </DrawerMenu>
 
-            <DrawerPanel>
-              <DrawerHeader>
-                <DrawerHeaderTitle>Top</DrawerHeaderTitle>
-              </DrawerHeader>
-              <DrawerContent>
-                {Object.entries(ids.top.views).map(([_, id]) => (
-                  <DrawerView id={id} key={id} />
-                ))}
-              </DrawerContent>
-            </DrawerPanel>
-          </Drawer>
+          <DrawerPanel>
+            <DrawerHeader>
+              <DrawerHeaderTitle>Top</DrawerHeaderTitle>
+            </DrawerHeader>
+            <DrawerContent>
+              {Object.entries(ids.top.views).map(([_, id]) => (
+                <DrawerView id={id} key={id} />
+              ))}
+            </DrawerContent>
+          </DrawerPanel>
+        </Drawer>
 
-          <Drawer id={ids.bottom.drawer} placement='bottom'>
-            <DrawerMenu>
-              <DrawerMenuItem
-                toggle
-                for={ids.bottom.views.a}
-                textValue='Menu A'
-              >
-                <ChevronUp className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.bottom.views.b} textValue='Menu B'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.bottom.views.c} textValue='Menu C'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.bottom.views.d} textValue='Menu D'>
-                <Placeholder />
-              </DrawerMenuItem>
-            </DrawerMenu>
+        <Drawer
+          id={ids.bottom.drawer}
+          className='bg-[#0000ff8a]'
+          placement='bottom'
+        >
+          <DrawerMenu>
+            <DrawerMenuItem toggle for={ids.bottom.views.a} textValue='Menu A'>
+              <ChevronUp className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.bottom.views.b} textValue='Menu B'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.bottom.views.c} textValue='Menu C'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.bottom.views.d} textValue='Menu D'>
+              <Placeholder />
+            </DrawerMenuItem>
+          </DrawerMenu>
 
-            <DrawerPanel>
-              <DrawerHeader>
-                <DrawerHeaderTitle>Bottom</DrawerHeaderTitle>
-              </DrawerHeader>
-              <DrawerContent>
-                {Object.entries(ids.bottom.views).map(([_, id]) => (
-                  <DrawerView id={id} key={id} />
-                ))}
-              </DrawerContent>
-            </DrawerPanel>
-          </Drawer>
+          <DrawerPanel>
+            <DrawerHeader>
+              <DrawerHeaderTitle>Bottom</DrawerHeaderTitle>
+            </DrawerHeader>
+            <DrawerContent>
+              {Object.entries(ids.bottom.views).map(([_, id]) => (
+                <DrawerView id={id} key={id} />
+              ))}
+            </DrawerContent>
+          </DrawerPanel>
+        </Drawer>
 
-          <Drawer id={ids.left.drawer} placement='left'>
-            <DrawerMenu>
-              <DrawerMenuItem toggle for={ids.left.views.a} textValue='Menu A'>
-                <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.left.views.b} textValue='Menu B'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.left.views.c} textValue='Menu C'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.left.views.d} textValue='Menu D'>
-                <Placeholder />
-              </DrawerMenuItem>
-            </DrawerMenu>
+        <Drawer
+          id={ids.left.drawer}
+          className='bg-[#ffd90087]'
+          placement='left'
+        >
+          <DrawerMenu>
+            <DrawerMenuItem toggle for={ids.left.views.a} textValue='Menu A'>
+              <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.left.views.b} textValue='Menu B'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.left.views.c} textValue='Menu C'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.left.views.d} textValue='Menu D'>
+              <Placeholder />
+            </DrawerMenuItem>
+          </DrawerMenu>
 
-            <DrawerPanel>
-              <DrawerHeader>
-                <DrawerHeaderTitle>Left</DrawerHeaderTitle>
-              </DrawerHeader>
-              <DrawerContent>
-                {Object.entries(ids.left.views).map(([_, id]) => (
-                  <DrawerView id={id} key={id} />
-                ))}
-              </DrawerContent>
-            </DrawerPanel>
-          </Drawer>
+          <DrawerPanel>
+            <DrawerHeader>
+              <DrawerHeaderTitle>Left</DrawerHeaderTitle>
+            </DrawerHeader>
+            <DrawerContent>
+              {Object.entries(ids.left.views).map(([_, id]) => (
+                <DrawerView id={id} key={id} />
+              ))}
+            </DrawerContent>
+          </DrawerPanel>
+        </Drawer>
 
-          <Drawer id={ids.right.drawer} placement='right'>
-            <DrawerMenu>
-              <DrawerMenuItem toggle for={ids.right.views.a} textValue='Menu A'>
-                <ChevronLeft className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.right.views.b} textValue='Menu B'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.right.views.c} textValue='Menu C'>
-                <Placeholder />
-              </DrawerMenuItem>
-              <DrawerMenuItem for={ids.right.views.d} textValue='Menu D'>
-                <Placeholder />
-              </DrawerMenuItem>
-            </DrawerMenu>
+        <Drawer
+          id={ids.right.drawer}
+          className='bg-[#00800084]'
+          placement='right'
+        >
+          <DrawerMenu>
+            <DrawerMenuItem toggle for={ids.right.views.a} textValue='Menu A'>
+              <ChevronLeft className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.right.views.b} textValue='Menu B'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.right.views.c} textValue='Menu C'>
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem for={ids.right.views.d} textValue='Menu D'>
+              <Placeholder />
+            </DrawerMenuItem>
+          </DrawerMenu>
 
-            <DrawerPanel>
-              <DrawerHeader>
-                <DrawerHeaderTitle>Right</DrawerHeaderTitle>
-              </DrawerHeader>
-              <DrawerContent>
-                {Object.entries(ids.right.views).map(([_, id]) => (
-                  <DrawerView id={id} key={id} />
-                ))}
-              </DrawerContent>
-            </DrawerPanel>
-          </Drawer>
-        </DrawerLayout>
-      </div>
-    );
-  },
+          <DrawerPanel>
+            <DrawerHeader>
+              <DrawerHeaderTitle>Right</DrawerHeaderTitle>
+            </DrawerHeader>
+            <DrawerContent>
+              {Object.entries(ids.right.views).map(([_, id]) => (
+                <DrawerView id={id} key={id} />
+              ))}
+            </DrawerContent>
+          </DrawerPanel>
+        </Drawer>
+      </DrawerLayout>
+    </div>
+  ),
 };

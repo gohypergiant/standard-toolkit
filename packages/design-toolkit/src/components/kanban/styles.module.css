@@ -1,0 +1,117 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .kanban {
+    @apply h-full w-full;
+  }
+
+  .header {
+    @apply p-m flex flex-row items-center justify-between;
+  }
+
+  .headerTitle {
+    @apply fg-primary-bold text-header-l;
+  }
+
+  .headerActions {
+    @apply flex flex-row items-center;
+  }
+
+  .card {
+    @apply rounded-large bg-surface-raised p-s pb-m flex w-full flex-col text-wrap outline outline-transparent transition-all;
+
+    @variant hover {
+      @apply outline-interactive-hover;
+    }
+
+    @variant current {
+      @apply bg-accent-primary-bold outline-accent-primary-pressed;
+    }
+
+    @variant dragging {
+      @apply hidden;
+    }
+  }
+
+  .cardContainerOuter {
+    @apply flex w-full flex-col;
+  }
+
+  .cardHeader {
+    @apply gap-s text-header-m flex flex-row items-center justify-between p-0;
+  }
+
+  .cardBody {
+    @apply fg-primary-muted text-body-m;
+  }
+
+  .cardTitle {
+    @apply fg-primary-bold font-medium;
+  }
+
+  .cardActions {
+    @apply flex flex-row items-center;
+  }
+
+  .column {
+    @apply p-xs flex h-full flex-1 flex-col items-center overflow-x-hidden overflow-y-auto outline outline-transparent;
+
+    min-width: 210px;
+
+    @variant focus-visible {
+      @apply rounded-large outline-interactive-hover outline;
+    }
+
+    @variant drop-target {
+      @apply rounded-large outline-accent-primary-bold outline;
+    }
+  }
+
+  .columnItems {
+    @apply gap-xs p-m flex h-full w-full flex-row overflow-x-auto;
+  }
+
+  .columnHeader {
+    @apply fg-primary-bold gap-m bg-surface-default p-s text-header-m flex w-full items-center justify-between;
+  }
+
+  .columnHeaderActions {
+    @apply fg-primary-muted gap-s flex flex-row items-center;
+  }
+
+  .columnTitle {
+    @apply fg-primary-bold gap-s text-body-s flex flex-row items-center font-medium;
+  }
+
+  .columnContent {
+    @apply my-s gap-s relative flex h-full w-full flex-1 flex-grow flex-col flex-nowrap overflow-y-auto px-px;
+
+    min-height: 200px;
+  }
+
+  .columnContentActions {
+    @apply fg-primary-bold shadow-elevation-overlay gap-s bg-surface-default py-xs text-body-s w-full items-center justify-start font-medium;
+
+    @variant hover {
+      @apply cursor-pointer;
+    }
+  }
+}
+
+@layer components.l2 {
+  .divider {
+    @apply mb-s h-xxs bg-accent-primary-bold;
+  }
+}

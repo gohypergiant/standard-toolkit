@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { SkeletonStyles, SkeletonStylesDefaults } from './styles';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import styles from './styles.module.css';
 import type { SkeletonProps } from './types';
 
 /**
@@ -25,7 +26,7 @@ import type { SkeletonProps } from './types';
  *
  * @example
  * // Circular placeholder (useful for avatars)
- * <Skeleton shape="circ" />
+ * <Skeleton variant="circle" />
  *
  * @example
  * // With loading text content
@@ -45,8 +46,13 @@ import type { SkeletonProps } from './types';
  */
 export function Skeleton({
   className,
-  shape = SkeletonStylesDefaults.shape,
+  variant = 'rectangle',
   ...rest
 }: SkeletonProps) {
-  return <div {...rest} className={SkeletonStyles({ className, shape })} />;
+  return (
+    <div
+      {...rest}
+      className={clsx(styles.skeleton, styles[variant], className)}
+    />
+  );
 }

@@ -12,14 +12,12 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { HeadingContext, Provider, TextContext } from 'react-aria-components';
 import { AvatarContext } from '../avatar/context';
 import { IconContext } from '../icon/context';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type { SidenavAvatarProps } from './types';
-
-const { avatar, avatarHeading, avatarIcon, avatarText, transient } =
-  SidenavStyles();
 
 /**
  * SidenavAvatar - Avatar component for sidenav
@@ -34,16 +32,13 @@ export function SidenavAvatar({
   return (
     <Provider
       values={[
-        [IconContext, { size: 'large', className: avatarIcon() }],
-        [
-          HeadingContext,
-          { className: avatarHeading({ className: transient() }) },
-        ],
-        [TextContext, { className: avatarText({ className: transient() }) }],
-        [AvatarContext, { classNames: { avatar: avatarIcon() } }],
+        [IconContext, { size: 'large', className: styles.icon }],
+        [HeadingContext, { className: clsx(styles.heading, styles.transient) }],
+        [TextContext, { className: clsx(styles.text, styles.transient) }],
+        [AvatarContext, { classNames: { avatar: styles.icon } }],
       ]}
     >
-      <div {...rest} className={avatar({ className })}>
+      <div {...rest} className={clsx(styles.avatar, className)}>
         {children}
       </div>
     </Provider>

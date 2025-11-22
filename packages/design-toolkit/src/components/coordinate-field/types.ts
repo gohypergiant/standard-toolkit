@@ -21,8 +21,6 @@ import type {
   FieldErrorProps,
   LabelProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
-import type { CoordinateFieldStyles } from './styles';
 
 /**
  * Supported coordinate systems for display and input
@@ -191,8 +189,7 @@ export type CoordinateFieldProps = Omit<
   | 'onChange'
   | 'name' // Not applicable to multi-segment fields
 > &
-  RefAttributes<HTMLDivElement> &
-  VariantProps<typeof CoordinateFieldStyles> & {
+  RefAttributes<HTMLDivElement> & {
     /**
      * Custom class names for component slots
      */

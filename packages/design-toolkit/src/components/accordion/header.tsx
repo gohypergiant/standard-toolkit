@@ -11,8 +11,9 @@
  */
 'use client';
 
-import { Kebab } from '@accelint/icons';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { Kebab } from '@accelint/icons';
 import { useContext } from 'react';
 import { Header, Provider } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';
@@ -20,10 +21,8 @@ import { ButtonContext } from '../button/context';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';
 import { AccordionContext } from './context';
-import { AccordionStyles, AccordionStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { AccordionHeaderProps } from './types';
-
-const { header } = AccordionStyles();
 
 export function AccordionHeader({
   ref,
@@ -32,8 +31,7 @@ export function AccordionHeader({
 }: AccordionHeaderProps) {
   const context = useContext(AccordionContext);
   const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    AccordionStylesDefaults.variant;
+    (isSlottedContextValue(context) ? undefined : context?.variant) ?? 'cozy';
   const isDisabled =
     (isSlottedContextValue(context) ? undefined : context?.isDisabled) ?? false;
 
@@ -55,13 +53,7 @@ export function AccordionHeader({
         ],
       ]}
     >
-      <Header
-        ref={ref}
-        className={header({
-          className,
-          variant,
-        })}
-      >
+      <Header ref={ref} className={clsx(styles.header, className)}>
         {children}
       </Header>
     </Provider>

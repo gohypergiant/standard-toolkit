@@ -10,12 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { memo, useContext } from 'react';
 import { Lines } from '../lines';
 import { TreeContext } from './context';
-import { TreeStyles } from './styles';
-
-const { spacing } = TreeStyles();
+import styles from './styles.module.css';
 
 export const TreeLines = memo(function TreeLines({
   level,
@@ -38,7 +37,7 @@ export const TreeLines = memo(function TreeLines({
         variant={line}
         size={size}
         isVisible={showRuleLines}
-        className={spacing({ variant })}
+        className={clsx(styles.spacing, styles[variant])}
       />
     );
   });

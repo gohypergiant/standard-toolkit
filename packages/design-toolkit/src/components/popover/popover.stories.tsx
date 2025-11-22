@@ -15,7 +15,6 @@ import { Button } from '@/components/button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Popover } from './';
-import { PopoverBody } from './body';
 import { PopoverContent } from './content';
 import { PopoverFooter } from './footer';
 import { PopoverTitle } from './title';
@@ -45,43 +44,38 @@ const meta = {
 } satisfies Meta<typeof Popover>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Simple: Story = {
+export const Simple: StoryObj<typeof meta> = {
   render: ({ ...args }) => (
-    <Popover>
-      <PopoverTrigger>
-        <Icon className='fg-primary-bold'>
-          <Information />
-        </Icon>
-      </PopoverTrigger>
-      <PopoverContent {...args}>
+    <PopoverTrigger>
+      <Icon className='fg-primary-bold'>
+        <Information />
+      </Icon>
+      <Popover {...args}>
         <PopoverTitle>Popover Title</PopoverTitle>
-        <PopoverBody>
+        <PopoverContent>
           Lorum Ipsum text for the dialog shall go here.
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </PopoverTrigger>
   ),
 };
 
-export const WithActions: Story = {
+export const WithActions: StoryObj<typeof meta> = {
   render: () => (
-    <Popover>
-      <PopoverTrigger>
-        <Button variant='icon'>
-          <Icon>
-            <Delete />
-          </Icon>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
+    <PopoverTrigger>
+      <Button variant='icon'>
+        <Icon>
+          <Delete />
+        </Icon>
+      </Button>
+      <Popover>
         {({ close }) => (
           <>
             <PopoverTitle>Delete Item</PopoverTitle>
-            <PopoverBody>
+            <PopoverContent>
               Are you sure you want to delete this item?
-            </PopoverBody>
+            </PopoverContent>
             <PopoverFooter>
               <Button variant='flat' onPress={close}>
                 Cancel
@@ -92,31 +86,29 @@ export const WithActions: Story = {
             </PopoverFooter>
           </>
         )}
-      </PopoverContent>
-    </Popover>
+      </Popover>
+    </PopoverTrigger>
   ),
 };
 
-export const CustomComposition: Story = {
+export const CustomComposition: StoryObj<typeof meta> = {
   render: () => {
     return (
-      <Popover>
-        <PopoverTrigger>
-          <span className='fg-primary-bold'>Settings</span>
-        </PopoverTrigger>
-        <PopoverContent className='min-w-sm'>
+      <PopoverTrigger>
+        <span className='fg-primary-bold'>Settings</span>
+        <Popover classNames={{ popover: 'min-w-sm' }}>
           {() => (
             <>
               <PopoverTitle>Notification Settings</PopoverTitle>
-              <PopoverBody className='space-y-s'>
+              <PopoverContent className='space-y-s'>
                 <Checkbox>Email Notifications</Checkbox>
                 <Checkbox>Push Notifications</Checkbox>
                 <Checkbox>SMS Notifications</Checkbox>
-              </PopoverBody>
+              </PopoverContent>
             </>
           )}
-        </PopoverContent>
-      </Popover>
+        </Popover>
+      </PopoverTrigger>
     );
   },
 };

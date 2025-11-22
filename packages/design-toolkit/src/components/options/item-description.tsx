@@ -9,20 +9,18 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Text } from 'react-aria-components';
-import { OptionsStyles } from './styles';
-import type { OptionsItemTextProps } from './types';
+import styles from './styles.module.css';
+import type { TextProps } from 'react-aria-components';
 
-const { description } = OptionsStyles();
-
-export function OptionsItemDescription({
-  className,
-  ...rest
-}: OptionsItemTextProps) {
+export function OptionsItemDescription({ className, ...rest }: TextProps) {
   return (
-    <Text {...rest} slot='description' className={description({ className })} />
+    <Text
+      {...rest}
+      slot='description'
+      className={clsx(styles.description, className)}
+    />
   );
 }

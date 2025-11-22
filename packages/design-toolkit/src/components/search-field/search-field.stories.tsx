@@ -20,7 +20,7 @@ const meta = {
     inputProps: {
       placeholder: 'Search...',
     },
-    variant: 'outlined',
+    variant: 'outline',
     isDisabled: false,
     isLoading: false,
   },
@@ -31,8 +31,8 @@ const meta = {
     },
     variant: {
       control: 'select',
-      options: ['outlined', 'filled'],
-      table: { defaultValue: { summary: 'outlined' } },
+      options: ['outline', 'filled'],
+      table: { defaultValue: { summary: 'outline' } },
     },
     isLoading: {
       control: 'boolean',
@@ -47,9 +47,8 @@ const meta = {
 } satisfies Meta<typeof SearchField>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   render: ({ ...args }) => (
     <SearchField {...args} aria-label='Storybook Search Field Component' />
   ),

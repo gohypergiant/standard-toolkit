@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { createContext } from 'react';
 import {
   TagGroup as AriaTagGroup,
@@ -20,10 +21,8 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { ChipContext, ChipProvider } from './context';
-import { ChipStyles } from './styles';
+import styles from './styles.module.css';
 import type { ChipListProps } from './types';
-
-const { list } = ChipStyles();
 
 export const ChipListRenderingContext = createContext(false);
 
@@ -36,6 +35,7 @@ export function ChipList<T extends object>({
   const {
     children,
     className,
+    color,
     dependencies,
     items,
     renderEmptyState,
@@ -45,12 +45,12 @@ export function ChipList<T extends object>({
 
   return (
     <ChipListRenderingContext.Provider value>
-      <ChipProvider size={size}>
+      <ChipProvider color={color} size={size}>
         <AriaTagGroup {...rest}>
           <AriaTagList<T>
             ref={ref}
             className={composeRenderProps(className, (className) =>
-              list({ className }),
+              clsx('group/chip-list', styles.list, className),
             )}
             dependencies={dependencies}
             items={items}

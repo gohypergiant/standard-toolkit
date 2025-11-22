@@ -10,12 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
 import { Text, type TextProps } from 'react-aria-components';
 import { TreeContext } from './context';
-import { TreeStyles } from './styles';
-
-const { description } = TreeStyles();
+import styles from './styles.module.css';
 
 /**
  * ItemDescription - Description for a tree item
@@ -28,7 +27,7 @@ export function TreeItemDescription({ children, className }: TextProps) {
   return variant !== 'crammed' ? (
     <Text
       data-slot='description'
-      className={description({ className, variant })}
+      className={clsx(styles.description, className)}
     >
       {children}
     </Text>

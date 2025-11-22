@@ -24,8 +24,6 @@ import type {
   PropsWithChildren,
   SetStateAction,
 } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { TableCellStyles, TableHeaderCellStyles } from './styles';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
@@ -179,44 +177,35 @@ export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
 /**
  * Props for a table cell component.
  *
- * Extends the standard HTML `<td>` element attributes and includes variant styling props.
+ * Extends the standard HTML `<td>` element attributes.
  *
  * @remarks
  * - Inherits all properties from `TdHTMLAttributes<HTMLTableCellElement>`.
- * - Includes variant properties from `cellStyles`.
  * - Optionally accepts a `ref` to the underlying `<td>` element.
  *
  * @property ref - Optional React ref for the table cell element.
  * @property className - Optional class name for custom styling.
- * @property narrow - Optional boolean to apply narrow styling.
- * @property numeral - Optional boolean to apply numeral styling.
- * @property persistent - Optional boolean to control visibility behavior.
- *   If true, the cell is always visible.
- *   If false, the cell content is only visible on hover or when the row is hovered.
  */
-export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
-  VariantProps<typeof TableCellStyles> & {
-    cell?: Cell<T, unknown>;
-  };
+export type TableCellProps<T> = ComponentPropsWithRef<'td'> & {
+  cell?: Cell<T, unknown>;
+};
 
 /**
  * Props for a table header cell component.
  *
- * This type combines standard HTML `<th>` element attributes, style variant props,
+ * This type combines standard HTML `<th>` element attributes
  * and ref attributes for a table header cell.
  *
- * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> &
-  VariantProps<typeof TableHeaderCellStyles> & {
-    header?: Header<T, unknown>;
-  };
+export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> & {
+  header?: Header<T, unknown>;
+};
 
 /**
  * Props for the table header (`<thead>`) component.
  *
- * Extends standard HTML attributes and ref attributes for an HTMLTableSectionElement.
+ * Accepts standard HTML attributes and ref attributes for an HTMLTableSectionElement.
  *
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}

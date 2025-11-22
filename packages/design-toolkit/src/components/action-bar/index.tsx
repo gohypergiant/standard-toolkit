@@ -12,9 +12,10 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Provider } from 'react-aria-components';
 import { ButtonContext, ToggleButtonContext } from '../button/context';
-import { ActionBarStyles } from './styles';
+import styles from './styles.module.css';
 import type { ActionBarProps } from './types';
 
 /**
@@ -28,15 +29,19 @@ import type { ActionBarProps } from './types';
  *   <Button><Icon><Copy/></Icon></Button>
  * </ActionBar>
  */
-export function ActionBar({ className, ...rest }: ActionBarProps) {
+export function ActionBar({
+  className,
+  size = 'medium',
+  ...rest
+}: ActionBarProps) {
   return (
     <Provider
       values={[
-        [ButtonContext, { variant: 'icon' }],
-        [ToggleButtonContext, { variant: 'icon' }],
+        [ButtonContext, { size, variant: 'icon' }],
+        [ToggleButtonContext, { size, variant: 'icon' }],
       ]}
     >
-      <nav {...rest} className={ActionBarStyles({ className })} />
+      <nav {...rest} className={clsx(styles.bar, className)} data-size={size} />
     </Provider>
   );
 }

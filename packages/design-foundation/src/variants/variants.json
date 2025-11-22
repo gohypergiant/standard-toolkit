@@ -8,10 +8,20 @@
   "color-serious": "[data-color=\"serious\"]",
   "color-critical": "[data-color=\"critical\"]",
 
+  "extend-left": "[data-extend~=\"left\"]",
+  "extend-right": "[data-extend~=\"right\"]",
+  "extend-top": "[data-extend~=\"top\"]",
+  "extend-bottom": "[data-extend~=\"bottom\"]",
+
   "placement-left": "[data-placement~=\"left\"]",
   "placement-right": "[data-placement~=\"right\"]",
   "placement-top": "[data-placement~=\"top\"]",
   "placement-bottom": "[data-placement~=\"bottom\"]",
+
+  "push-left": "[data-push~=\"left\"]",
+  "push-right": "[data-push~=\"right\"]",
+  "push-top": "[data-push~=\"top\"]",
+  "push-bottom": "[data-push~=\"bottom\"]",
 
   "size-xlarge": "[data-size=\"xlarge\"]",
   "size-large": "[data-size=\"large\"]",

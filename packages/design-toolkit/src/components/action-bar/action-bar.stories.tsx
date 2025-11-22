@@ -22,16 +22,24 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
+  args: {
+    size: 'medium',
+  },
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['medium', 'small'],
+    },
+  },
 } satisfies Meta<typeof ActionBar>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: () => {
+export const Default: StoryObj<typeof meta> = {
+  render: (args) => {
     return (
       <div className='relative h-[400px] bg-surface-overlay'>
-        <ActionBar className='absolute top-s left-s'>
+        <ActionBar {...args} className='absolute top-s left-s'>
           <Button>
             <Icon>
               <Placeholder />
@@ -53,11 +61,11 @@ export const Default: Story = {
   },
 };
 
-export const Toggle: Story = {
-  render: () => {
+export const Toggle: StoryObj<typeof meta> = {
+  render: (args) => {
     return (
       <div className='relative h-[400px] bg-surface-overlay'>
-        <ActionBar className='absolute top-s left-s'>
+        <ActionBar {...args} className='absolute top-s left-s'>
           <ToggleButton>
             <Icon>
               <Placeholder />

@@ -13,6 +13,7 @@
 
 import { ArrowNortheast } from '@accelint/icons';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useRef } from 'react';
 import {
   composeRenderProps,
@@ -24,10 +25,8 @@ import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import { SidenavContext } from './context';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type { SidenavLinkProps } from './types';
-
-const { link, text, transient, tooltip } = SidenavStyles();
 
 /**
  * SidenavLink - Link component for sidenav
@@ -47,26 +46,28 @@ export function SidenavLink({
 
   return (
     <Provider
-      values={[[TextContext, { className: text({ className: transient() }) }]]}
+      values={[
+        [TextContext, { className: clsx(styles.text, styles.transient) }],
+      ]}
     >
       <TooltipTrigger isDisabled={isOpen}>
         <Link
           {...rest}
           ref={ref}
           className={composeRenderProps(classNames?.button, (className) =>
-            link({ className }),
+            clsx('group/link', styles.link, className),
           )}
         >
           {composeRenderProps(children, (children) => (
             <>
               {children}
-              <Icon className={transient()}>
+              <Icon className={styles.transient}>
                 <ArrowNortheast />
               </Icon>
             </>
           ))}
         </Link>
-        <Tooltip parentRef={ref} placement='right' className={tooltip()}>
+        <Tooltip parentRef={ref} placement='right' className={styles.tooltip}>
           {textValue}
           <Icon>
             <ArrowNortheast />

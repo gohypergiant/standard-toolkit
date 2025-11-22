@@ -9,15 +9,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
-'use client';
-
-import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { composeRenderProps, ToggleButton } from 'react-aria-components';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type { SidenavMenuItemProps } from './types';
-
-const { menuItem } = SidenavStyles();
 
 /**
  * SidenavMenuItem - Menu item component for sidenav
@@ -33,7 +28,7 @@ export function SidenavMenuItem({
     <ToggleButton
       {...rest}
       className={composeRenderProps(className, (className) =>
-        menuItem({ className }),
+        clsx(styles.item, className),
       )}
     >
       {children}

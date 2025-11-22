@@ -11,8 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { TableRow } from './row';
-import { TableBodyStyles } from './styles';
 import type { TableBodyProps } from './types';
 
 export function TableBody<T>({
@@ -23,13 +23,7 @@ export function TableBody<T>({
   ...rest
 }: TableBodyProps<T>) {
   return (
-    <tbody
-      {...rest}
-      ref={ref}
-      className={TableBodyStyles({
-        className,
-      })}
-    >
+    <tbody {...rest} ref={ref} className={clsx('group/tbody', className)}>
       {children || rows?.map((row) => <TableRow key={row.id} row={row} />)}
     </tbody>
   );

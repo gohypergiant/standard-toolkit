@@ -12,14 +12,13 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Breadcrumbs as AriaBreadcrumbs,
   type BreadcrumbProps,
   type BreadcrumbsProps,
 } from 'react-aria-components';
-import { BreadcrumbsStyles } from './styles';
-
-const { list } = BreadcrumbsStyles();
+import styles from './styles.module.css';
 
 /**
  * Breadcrumbs - Accessible breadcrumb navigation
@@ -38,7 +37,7 @@ export function Breadcrumbs({
   className,
 }: BreadcrumbsProps<BreadcrumbProps>) {
   return (
-    <AriaBreadcrumbs className={list({ className })}>
+    <AriaBreadcrumbs className={clsx(styles.list, className)}>
       {children}
     </AriaBreadcrumbs>
   );

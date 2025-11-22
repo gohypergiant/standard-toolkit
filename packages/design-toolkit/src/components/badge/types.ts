@@ -12,12 +12,10 @@
 
 import type { Axis } from '@react-types/overlays';
 import type { ComponentPropsWithRef } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { BadgeStyles } from './styles';
 
-export type BadgeProps = ComponentPropsWithRef<'span'> &
-  VariantProps<typeof BadgeStyles> & {
-    children?: string;
-    offset?: number | { x?: number; y?: number };
-    placement?: Axis | `${'top' | 'bottom'} ${'left' | 'right'}`;
-  };
+export type BadgeProps = ComponentPropsWithRef<'span'> & {
+  children?: boolean | null | number | string;
+  color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';
+  offset?: number | { x?: number; y?: number };
+  placement?: Axis | `${'top' | 'bottom'} ${'left' | 'right'}`;
+};

@@ -13,22 +13,22 @@
 /* this @layer declaration needs to be before the stylesheet imports */
 @layer properties, theme, base, old_ds_reset, old_ds_framework, old_ds_overrides, components, components.l1, components.l2, components.l3, components.l4, components.l5, utilities;
 
-@import "@accelint/design-foundation/styles";
-@source "../../node_modules/@accelint/design-foundation";
-@import "@accelint/design-toolkit/styles";
-@source "../../node_modules/@accelint/design-toolkit";
+@import '@accelint/design-foundation/styles';
+@source '../../node_modules/@accelint/design-foundation';
+@import '@accelint/design-toolkit/styles';
+@source '../../node_modules/@accelint/design-toolkit';
 
 @layer theme {
   :root {
-    --fiona-orange-bold: #FF6B1A;
-    --fiona-orange-hover: #9E4820;
-    --fiona-orange-pressed: #7A361A;
+    --fiona-orange-bold: #ff6b1a;
+    --fiona-orange-hover: #9e4820;
+    --fiona-orange-pressed: #7a361a;
     --fiona-orange-muted: #b35123;
 
-    --shrek-green-bold: #C4D300;
-    --shrek-green-hover: #D1E000;
-    --shrek-green-pressed: #8A9400;
-    --shrek-green-muted: #4F5400;
+    --shrek-green-bold: #c4d300;
+    --shrek-green-hover: #d1e000;
+    --shrek-green-pressed: #8a9400;
+    --shrek-green-muted: #4f5400;
 
     @variant light {
       --bg-accent-primary-bold: var(--fiona-orange-bold);

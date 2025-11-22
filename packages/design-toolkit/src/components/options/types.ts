@@ -16,7 +16,6 @@ import type {
   ListBoxItemProps,
   ListBoxProps,
   ListBoxSectionProps,
-  TextProps,
 } from 'react-aria-components';
 import type { IconProps } from '../icon/types';
 
@@ -56,5 +55,3 @@ export type OptionsSectionProps<T extends OptionsDataItem> = Omit<
   };
   header?: string;
 };
-
-export type OptionsItemTextProps = TextProps;

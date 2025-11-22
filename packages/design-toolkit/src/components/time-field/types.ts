@@ -18,26 +18,23 @@ import type {
   LabelProps,
   TimeValue,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
-import type { TimeFieldStyles } from './styles';
 
 export type TimeFieldProps<T extends TimeValue> = Omit<
   AriaTimeFieldProps<T>,
   'children' | 'className' | 'placeholder'
-> &
-  VariantProps<typeof TimeFieldStyles> & {
-    classNames?: {
-      field?: AriaTimeFieldProps<T>['className'];
-      label?: LabelProps['className'];
-      control?: string;
-      input?: DateInputProps['className'];
-      segment?: DateSegmentProps['className'];
-      description?: string;
-      error?: FieldErrorProps['className'];
-    };
-    label?: string;
+> & {
+  classNames?: {
+    field?: AriaTimeFieldProps<T>['className'];
+    label?: LabelProps['className'];
+    control?: string;
+    input?: DateInputProps['className'];
+    segment?: DateSegmentProps['className'];
     description?: string;
-    errorMessage?: string;
-    size?: 'small' | 'medium';
-    inputProps?: Omit<DateInputProps, 'children' | 'className'>;
+    error?: FieldErrorProps['className'];
   };
+  label?: string;
+  inputProps?: Omit<DateInputProps, 'children' | 'className'>;
+  description?: string;
+  errorMessage?: string;
+  size?: 'small' | 'medium';
+};

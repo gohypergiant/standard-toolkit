@@ -13,14 +13,13 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Text, type TextProps } from 'react-aria-components';
-import { MenuStyles } from './styles';
-
-const { label } = MenuStyles();
+import styles from './styles.module.css';
 
 export function MenuItemLabel({ children, className, ...rest }: TextProps) {
   return (
-    <Text {...rest} slot='label' className={label({ className })}>
+    <Text {...rest} slot='label' className={clsx(styles.label, className)}>
       {children}
     </Text>
   );

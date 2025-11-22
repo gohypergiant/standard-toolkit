@@ -10,12 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HTMLAttributes, PropsWithChildren, RefAttributes } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { HotkeyStyles } from './styles';
+import type { ComponentPropsWithRef } from 'react';
 
-export type HotkeyProps = HTMLAttributes<HTMLElement> &
-  VariantProps<typeof HotkeyStyles> &
-  RefAttributes<HTMLElement>;
-
-export type HotkeySetProps = HTMLAttributes<HTMLDivElement> & PropsWithChildren;
+export type HotkeyProps = ComponentPropsWithRef<'kbd'> & {
+  variant?: 'flat' | 'icon' | 'outline';
+};

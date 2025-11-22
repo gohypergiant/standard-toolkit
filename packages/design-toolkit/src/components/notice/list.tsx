@@ -17,6 +17,7 @@ import { uuid } from '@accelint/core';
 import { useToastRegion } from '@react-aria/toast';
 import { useToastQueue } from '@react-stately/toast';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   composeRenderProps,
@@ -29,7 +30,7 @@ import {
 import { Button } from '../button';
 import { Notice } from './';
 import { NoticeEventTypes } from './events';
-import { NoticeStyles } from './styles';
+import styles from './styles.module.css';
 import { matchesMetadata } from './utils';
 import type {
   NoticeActionEvent,
@@ -38,8 +39,6 @@ import type {
   NoticeListProps,
   NoticeQueueEvent,
 } from './types';
-
-const { list, region } = NoticeStyles();
 
 export function NoticeList({
   id,
@@ -128,7 +127,7 @@ export function NoticeList({
       )}
       <ToastList
         className={composeRenderProps(classNames?.list, (className) =>
-          list({ className }),
+          clsx(styles.list, className),
         )}
       >
         {({ toast }: { toast: QueuedToast<NoticeContent> }) => (
@@ -161,7 +160,7 @@ export function NoticeList({
 
   return global ? (
     <ToastRegion
-      className={region({ className: classNames?.region })}
+      className={clsx('group/region', styles.region, classNames?.region)}
       data-placement={placement}
       queue={queue}
     >
@@ -170,7 +169,7 @@ export function NoticeList({
   ) : (
     <div
       {...regionProps}
-      className={region({ className: classNames?.region })}
+      className={clsx('group/region', styles.region, classNames?.region)}
       data-placement={placement}
       ref={ref}
     >

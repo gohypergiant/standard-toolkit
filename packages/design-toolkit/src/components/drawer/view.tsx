@@ -12,13 +12,12 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { type ComponentPropsWithRef, useContext, useEffect } from 'react';
 import { ViewStackView } from '../view-stack/view';
 import { DrawerContext } from './context';
-import { DrawerStyles } from './styles';
+import styles from './styles.module.css';
 import type { ViewStackViewProps } from '../view-stack/types';
-
-const { view } = DrawerStyles();
 
 export function DrawerView({
   id,
@@ -36,7 +35,7 @@ export function DrawerView({
 
   return (
     <ViewStackView id={id}>
-      <div {...rest} className={view({ className })} role='tabpanel'>
+      <div {...rest} className={clsx(styles.view, className)} role='tabpanel'>
         {children}
       </div>
     </ViewStackView>

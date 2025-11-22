@@ -15,14 +15,14 @@ import type { ProviderProps } from '@/lib/types';
 import 'client-only';
 import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
-import type { BaseChipProps } from './types';
+import type { ChipContextValue } from './types';
 
 export const ChipContext =
-  createContext<ContextValue<BaseChipProps, HTMLDivElement>>(null);
+  createContext<ContextValue<ChipContextValue, HTMLDivElement>>(null);
 
 export function ChipProvider({
   children,
   ...props
-}: ProviderProps<BaseChipProps>) {
+}: ProviderProps<ChipContextValue>) {
   return <ChipContext.Provider value={props}>{children}</ChipContext.Provider>;
 }

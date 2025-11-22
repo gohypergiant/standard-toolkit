@@ -11,9 +11,9 @@
  */
 'use client';
 
+import 'client-only';
 import { isUUID, type UniqueId } from '@accelint/core';
 import { Pressable } from '@react-aria/interactions';
-import 'client-only';
 import { useContext } from 'react';
 import { ViewStackContext } from '../view-stack/context';
 import { useDrawerEmit } from './context';

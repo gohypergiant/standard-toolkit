@@ -9,13 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
-
-import 'client-only';
-import { DrawerStyles } from './styles';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import styles from './styles.module.css';
 import type { DrawerLayoutProps } from './types';
-
-const { layout } = DrawerStyles();
 
 export function DrawerLayout({
   className,
@@ -26,9 +22,9 @@ export function DrawerLayout({
   return (
     <div
       {...rest}
-      className={layout({ className })}
+      className={clsx('group/layout', styles.layout, className)}
       data-extend={extend}
-      data-push={push}
+      data-push={push || null}
     />
   );
 }

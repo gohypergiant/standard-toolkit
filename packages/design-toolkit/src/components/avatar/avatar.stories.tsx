@@ -47,29 +47,26 @@ const meta = {
 } satisfies Meta<typeof Avatar>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: Avatar,
-};
+export const Default: StoryObj<typeof meta> = {};
 
-export const WithBadge: Story = {
+export const WithBadge: StoryObj<typeof meta> = {
   render: ({ children, ...args }) => (
     <div className='flex items-center gap-m'>
       <Avatar {...args}>
-        <Badge variant='critical'>99+</Badge>
+        <Badge color='critical'>99+</Badge>
       </Avatar>
       <Avatar {...args}>
-        <Badge variant='serious'>1</Badge>
+        <Badge color='serious'>1</Badge>
       </Avatar>
       <Avatar {...args}>
-        <Badge variant='normal' />
+        <Badge color='normal' />
       </Avatar>
     </div>
   ),
 };
 
-export const WithContent: Story = {
+export const WithContent: StoryObj<typeof meta> = {
   args: {
     children: <span className='fg-primary-bold text-shadow-2xs'>DS</span>,
   },
@@ -82,7 +79,7 @@ export const WithContent: Story = {
         </Icon>
       </Avatar>
       <Avatar {...args} classNames={{ content: 'items-end' }}>
-        <Badge offset={0} placement='bottom' variant='critical'>
+        <Badge offset={0} placement='bottom' color='critical'>
           Offline
         </Badge>
       </Avatar>
@@ -100,7 +97,7 @@ const fallbackPropsIcon = {
 };
 const fallbackPropsInitials = { children: <>DS</> };
 
-export const WithFallback: Story = {
+export const WithFallback: StoryObj<typeof meta> = {
   args: {
     imageProps: { alt: 'broken url', src: 'http://not-here' },
   },

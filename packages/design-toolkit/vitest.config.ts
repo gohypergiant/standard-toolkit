@@ -11,12 +11,19 @@
  */
 
 import baseConfig from '@accelint/vitest-config/dom';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, mergeConfig } from 'vitest/config';
+import { generateScopedName } from './src/lib/vite';
 
 export default mergeConfig(
   baseConfig,
   defineConfig({
-    plugins: [],
+    plugins: [tailwindcss()],
+    css: {
+      modules: {
+        generateScopedName,
+      },
+    },
     test: {
       globals: true,
       setupFiles: './src/test/setup.ts',

@@ -13,7 +13,6 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import { TreeStylesDefaults } from './styles';
 import type { TreeContextValue, TreeItemContextValue } from './types';
 
 /**
@@ -23,7 +22,7 @@ export const TreeContext = createContext<TreeContextValue>({
   visibilityComputedKeys: new Set(),
   showRuleLines: true,
   showVisibility: false,
-  variant: TreeStylesDefaults.variant,
+  variant: 'cozy',
   isStatic: true,
   onVisibilityChange: () => undefined,
 });

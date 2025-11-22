@@ -28,14 +28,6 @@
 @import './variants/variants.css';
 
 /**
- * Provides an escalation selector allowing for easier bump in specificity
- * instead of having to target the same level established by a previous style.
- *
- * Can be stacked if necessary, just don't get carried away with power.
- */
-@custom-variant sudo (&&);
-
-/**
  * DesignTK chooses to implement outlines instead of borders to make it so
  * that the style doesn't impact box model dimensions. This way elements with
  * or without a "border" are consistently sized based on content and padding alone
@@ -159,12 +151,12 @@
 }
 
 @utility w-* {
-  width: --value([ *]);
+  width: --value([*]);
 }
 
 @utility icon-* {
-  --icon-color: --value([ *]);
-  --icon-color: --value(--color- *);
+  --icon-color: --value([*]);
+  --icon-color: --value(--color-*);
 }
 
 html {
@@ -186,7 +178,7 @@ html {
     background: var(--bg-interactive-muted-hover);
   }
 
-  ::-webkit-scrollbar-thumb{
+  ::-webkit-scrollbar-thumb {
     background-color: var(--bg-interactive-muted);
     border-radius: var(--radius-large);
     border: 5px solid transparent;

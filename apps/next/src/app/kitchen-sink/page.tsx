@@ -122,10 +122,10 @@ export default function KitchenSink() {
             {divider}
             <ChipList>
               <Chip>chip</Chip>
-              <Chip variant='normal'>chip</Chip>
-              <Chip variant='advisory'>chip</Chip>
-              <Chip variant='serious'>chip</Chip>
-              <Chip variant='critical'>chip</Chip>
+              <Chip color='normal'>chip</Chip>
+              <Chip color='advisory'>chip</Chip>
+              <Chip color='serious'>chip</Chip>
+              <Chip color='critical'>chip</Chip>
             </ChipList>
             {divider}
             <Slider

@@ -12,6 +12,7 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   type CollisionDetection,
   closestCenter,
@@ -27,10 +28,8 @@ import {
 } from '@dnd-kit/core';
 import { createContext, useContext, useState } from 'react';
 import { parseDropTarget, useKanban } from '@/components/kanban/context';
-import { CardInnerStyles, KanbanStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanProps } from './types';
-
-const { container, cardHeader, cardTitle, cardBody } = KanbanStyles();
 
 // Context for sharing active drag state
 
@@ -108,16 +107,16 @@ export function Kanban({ children, className, ...rest }: KanbanProps) {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={container({ className })} {...rest}>
+        <div className={clsx(styles.kanban, className)} {...rest}>
           {children}
         </div>
         <DragOverlay>
           {activeCard ? (
-            <div className={CardInnerStyles({ isActive: true })}>
-              <div className={cardHeader()}>
-                <span className={cardTitle()}>{activeCard.title}</span>
+            <div data-current className={clsx(styles.card)}>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardTitle}>{activeCard.title}</span>
               </div>
-              <div className={cardBody()}>{activeCard.body}</div>
+              <div className={styles.cardBody}>{activeCard.body}</div>
             </div>
           ) : null}
         </DragOverlay>

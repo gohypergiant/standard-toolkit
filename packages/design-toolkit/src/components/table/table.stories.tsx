@@ -164,6 +164,11 @@ const meta = {
     },
   },
   tags: ['autodocs'],
+  parameters: {
+    controls: {
+      exclude: ['columns', 'data'],
+    },
+  },
 } satisfies Meta<typeof Table<Person>>;
 
 export default meta;

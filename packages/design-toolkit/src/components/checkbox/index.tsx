@@ -13,6 +13,7 @@
 
 import { Check, Remove } from '@accelint/icons';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Checkbox as AriaCheckbox,
   composeRenderProps,
@@ -20,10 +21,8 @@ import {
 } from 'react-aria-components';
 import { Icon } from '../icon';
 import { CheckboxContext } from './context';
-import { CheckboxStyles } from './styles';
+import styles from './styles.module.css';
 import type { CheckboxProps } from './types';
-
-const { checkbox, control, label } = CheckboxStyles();
 
 /**
  * Checkbox - A form control for binary or multiple selection with group support
@@ -68,21 +67,21 @@ export function Checkbox({ ref, ...props }: CheckboxProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.checkbox, (className) =>
-        checkbox({ className }),
+        clsx('group/checkbox', styles.checkbox, className),
       )}
     >
       {composeRenderProps(
         children,
         (children, { isIndeterminate, isSelected }) => (
           <>
-            <span className={control({ className: classNames?.control })}>
+            <span className={clsx(styles.control, classNames?.control)}>
               <Icon size='small'>
                 {isIndeterminate && !isSelected && <Remove />}
                 {isSelected && <Check />}
               </Icon>
             </span>
             {children && (
-              <span className={label({ className: classNames?.label })}>
+              <span className={clsx(styles.label, classNames?.label)}>
                 {children}
               </span>
             )}

@@ -12,16 +12,15 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   composeRenderProps,
   Disclosure,
   useContextProps,
 } from 'react-aria-components';
 import { AccordionContext } from './context';
-import { AccordionStyles, AccordionStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { AccordionProps } from './types';
-
-const { accordion } = AccordionStyles();
 
 /**
  * Accordion - A collapsible content component with expandable sections
@@ -68,13 +67,7 @@ const { accordion } = AccordionStyles();
 export function Accordion({ ref, ...props }: AccordionProps) {
   [props, ref] = useContextProps(props, ref ?? null, AccordionContext);
 
-  const {
-    children,
-    className,
-    variant = AccordionStylesDefaults.variant,
-    isDisabled,
-    ...rest
-  } = props;
+  const { children, className, variant = 'cozy', isDisabled, ...rest } = props;
 
   return (
     <AccordionContext.Provider
@@ -86,9 +79,7 @@ export function Accordion({ ref, ...props }: AccordionProps) {
       <Disclosure
         {...rest}
         className={composeRenderProps(className, (className) =>
-          accordion({
-            className,
-          }),
+          clsx('group/accordion', styles.accordion, className),
         )}
         isDisabled={isDisabled}
       >

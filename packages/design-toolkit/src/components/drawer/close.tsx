@@ -12,8 +12,8 @@
 
 'use client';
 
-import { Cancel } from '@accelint/icons';
 import 'client-only';
+import { Cancel } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { DrawerTrigger } from './trigger';

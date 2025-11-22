@@ -11,18 +11,17 @@
  */
 'use client';
 
-import { useEmit } from '@accelint/bus/react';
-import { ChevronLeft } from '@accelint/icons';
 import 'client-only';
+import { useEmit } from '@accelint/bus/react';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { ChevronLeft } from '@accelint/icons';
 import { useContext } from 'react';
 import { Button, composeRenderProps, Header } from 'react-aria-components';
 import { Icon } from '../icon';
 import { SidenavContext } from './context';
 import { SidenavEventTypes } from './events';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type { SidenavHeaderProps, SidenavToggleEvent } from './types';
-
-const { header, toggle, transient } = SidenavStyles();
 
 /**
  * SidenavHeader - Header component for sidenav
@@ -38,15 +37,15 @@ export function SidenavHeader({
   const { id } = useContext(SidenavContext);
 
   return (
-    <Header {...rest} className={header({ className: classNames?.header })}>
+    <Header {...rest} className={clsx(styles.header, classNames?.header)}>
       <Button
         className={composeRenderProps(classNames?.button, (className) =>
-          toggle({ className }),
+          clsx(styles.toggle, className),
         )}
         onPress={() => emit({ id })}
       >
         {children}
-        <Icon className={transient()}>
+        <Icon className={styles.transient}>
           <ChevronLeft />
         </Icon>
       </Button>

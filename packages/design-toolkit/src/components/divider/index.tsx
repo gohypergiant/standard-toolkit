@@ -13,9 +13,11 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { useLayoutEffect, useState } from 'react';
 import { useContextProps } from 'react-aria-components';
 import { DividerContext } from './context';
-import { DividerStyles } from './styles';
+import styles from './styles.module.css';
 import type { DividerProps } from './types';
 
 /**
@@ -37,11 +39,32 @@ export function Divider({ ref, ...props }: DividerProps) {
 
   const { className, orientation = 'horizontal', ...rest } = props;
 
+  const [stretch, setStretch] = useState(false);
+
+  /**
+   * CSS flexbox doesn't play nice with height. Unfortunately, there's no
+   * way to detect if a parent element is using CSS flexbox, so we have
+   * to detect it using JS
+   */
+  useLayoutEffect(() => {
+    const parent = ref.current?.parentElement;
+
+    if (
+      parent &&
+      window
+        .getComputedStyle(parent)
+        .getPropertyValue('display')
+        .includes('flex')
+    ) {
+      setStretch(true);
+    }
+  }, [ref.current]);
+
   return (
     <hr
       {...rest}
       ref={ref}
-      className={DividerStyles({ className })}
+      className={clsx(styles.divider, stretch && styles.stretch, className)}
       data-orientation={orientation}
     />
   );

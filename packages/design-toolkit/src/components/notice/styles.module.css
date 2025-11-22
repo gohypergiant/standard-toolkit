@@ -1,0 +1,133 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .notice {
+    @apply fg-primary-bold rounded-medium text-body-s shadow-elevation-overlay flex outline;
+
+    @variant size-small {
+      @apply gap-m p-s flex-col flex-wrap;
+    }
+
+    @variant size-medium {
+      @apply gap-l p-l;
+    }
+
+    @variant group-data-placement/region {
+      @variant size-small {
+        min-width: 120px;
+        max-width: 320px;
+      }
+
+      @variant size-medium {
+        min-width: 200px;
+        max-width: 640px;
+      }
+    }
+
+    @variant color-info {
+      @apply bg-info-muted outline-info-bold;
+    }
+
+    @variant color-advisory {
+      @apply bg-advisory-muted outline-accent-primary-bold;
+    }
+
+    @variant color-normal {
+      @apply color-normal:bg-normal-muted color-normal:outline-normal-bold;
+    }
+
+    @variant color-serious {
+      @apply color-serious:bg-serious-muted color-serious:outline-serious-bold;
+    }
+
+    @variant color-critical {
+      @apply color-critical:bg-critical-muted color-critical:outline-critical-bold;
+    }
+  }
+
+  .content {
+    @apply flex flex-1 items-center;
+
+    @variant group-size-medium/notice {
+      @apply gap-l;
+    }
+
+    @variant group-size-small/notice {
+      @apply gap-m;
+    }
+  }
+
+  .message {
+    @apply flex-1;
+
+    @variant group-size-small/notice {
+      @apply basis-10/12;
+    }
+  }
+
+  .actions {
+    @apply gap-s flex flex-row-reverse items-center;
+
+    @variant group-size-small/notice {
+      @apply grow justify-start;
+    }
+  }
+
+  .region {
+    @apply gap-y-s flex flex-col;
+
+    &[data-placement] {
+      @apply absolute;
+    }
+
+    @variant placement-top {
+      @apply top-0;
+    }
+
+    @variant placement-bottom {
+      @apply bottom-0;
+    }
+
+    @variant placement-right {
+      @apply right-0;
+    }
+
+    @variant placement-left {
+      @apply left-0;
+    }
+
+    /*
+      center the region horizontally when placement
+      is exactly "top" or "bottom"
+    */
+    &:where([data-placement='top']),
+    &:where([data-placement='bottom']) {
+      @apply left-1/2 -translate-x-1/2;
+    }
+
+    /*
+      center the region vertically when placement
+      is exactly "right" or "left"
+    */
+    &:where([data-placement='right']),
+    &:where([data-placement='left']) {
+      @apply top-1/2 -translate-y-1/2;
+    }
+  }
+
+  .list {
+    @apply gap-y-s flex flex-col;
+  }
+}
