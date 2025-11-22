@@ -15,7 +15,7 @@ metadata:
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/bus/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 2.0.0
+    package/version: 3.0.0
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus

@@ -1,5 +1,91 @@
 # @accelint/design-toolkit
 
+## 8.0.0
+
+### Major Changes
+
+- 80db585: BREAKING CHANGES:
+  Design Toolkit no longer exports `tv`, this is now available from Design Foundation
+
+  Created new package @accelint/design-foundation that houses all of the Tailwind tokens, variants, base styles and utilities for easier reuse without having a dependency on the larger Design Toolkit
+
+  Updated Map Toolkit Storybook and NextJS demo app styles to import the new Design Foundation
+
+### Minor Changes
+
+- 3f9d14b: Added a Kanban component with a drag-and-drop board for organizing tasks and workflows.
+- 3d6a25b: Add prefix and suffix to (text) Input and TextField components.
+- e463867: New feature added: Pagination. A lightweight implementation to allow users to navigate pages, with previous and next links.
+- b48a3bd: Add CoordinateField component with support for multiple coordinate systems (DD, DDM, DMS, MGRS, UTM).
+
+### Patch Changes
+
+- a5dfc06: Update all fields component to have the correct width
+- 874edd5: ## Breaking Change: Structured Clone Constraint
+
+  The event bus payload is now constrained to values that are serializable by the [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This constraint aligns the TypeScript types with the actual runtime behavior of the `BroadcastChannel` API.
+
+  ### What this means
+
+  You can no longer pass the following types in event payloads:
+  - Functions
+  - Symbols
+  - DOM nodes
+  - Prototype chains (class instances lose their methods)
+  - Properties with `undefined` values (they're omitted)
+
+  ### How to migrate
+
+  **❌ Before:**
+
+  ```typescript
+  bus.emit("user-action", {
+    callback: () => console.log("done"), // ❌ Function
+    userData: userClass, // ❌ Class instance with methods
+    element: document.getElementById("foo"), // ❌ DOM node
+  });
+  ```
+
+  **✅ After:**
+
+  ```typescript
+  // Option 1: Send only data, handle logic separately
+  bus.emit("user-action", {
+    actionType: "complete", // ✅ Primitive
+    userData: { id: userClass.id, name: userClass.name }, // ✅ Plain object
+    elementId: "foo", // ✅ Reference by ID
+  });
+
+  // Option 2: Use event types to trigger behavior
+  bus.on("user-action-complete", () => {
+    console.log("done"); // Handle callback logic in listener
+  });
+  ```
+
+  ### Supported types
+  - Primitives (string, number, boolean, null, BigInt)
+  - Plain objects and arrays
+  - Date, RegExp, Map, Set
+  - Typed arrays (Uint8Array, etc.)
+  - ArrayBuffer, Blob, File
+
+  ### Finding issues
+
+  TypeScript will now catch most violations at compile time. Runtime errors from `BroadcastChannel.postMessage()` indicate non-serializable values that slipped through.
+
+- 2470426: Updates the styling of the last child in breadcrumb to match designs
+- 4ca8fe5: fixes semantic token discrepancy
+
+  plus updates state styles of switch, text-area-field, checkbox, option-item and menu-item
+
+- 67edb84: Fixes an issue where the MenuTrigger and DrawerTrigger components were not being properly exported.
+- abc5365: Fix issue where the timer does not start unless hovered for notices.
+- Updated dependencies [80db585]
+- Updated dependencies [874edd5]
+- Updated dependencies [e8535c4]
+  - @accelint/design-foundation@0.1.0
+  - @accelint/bus@3.0.0
+
 ## 7.0.1
 
 ### Patch Changes
