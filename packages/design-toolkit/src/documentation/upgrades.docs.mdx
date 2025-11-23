@@ -2,11 +2,21 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Upgrade Guides" />
 
-### Release Notes
+### All Release Notes
 [All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
 
+* [Upgrade to v8](#v8)
+* [Upgrade to v7](#v7)
+* [Upgrade to v6](#v6)
+* [Upgrade to v5](#v5)
+
+These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
+
+[Go directly to migration steps for v8](#migration).
+
+<hr />
+<a id="v8"></a>
 # Upgrade to v8
-This guide explains how to migrate from Design Toolkit v7 to v8. You can also migrate from an earlier version, but if you are still on a v4 or earlier, it would be better to two-step it: first migrate to v5 and then to v8. [Go directly to migration steps](#migration)
 
 ## Improvements and Breaking Changes
 This release removes support for the [Tailwind Variants](https://www.tailwind-variants.org/) library and instead uses [CSS Modules](https://github.com/css-modules/css-modules) as the primary css solution. Because the Design Foundation library will no longer export tailwind variant and tailwind merge utilities it will no longer be an officially supported approach.
@@ -38,6 +48,7 @@ Previously, the precedence of a style was entirely dictated by the rendering ord
 
 Now, Tailwind’s utility classes will always override anything defined in Tailwind’s component layer, which is where all Design Toolkit components are assigned. Because Tailwind's single components layer was too limited for our complex, multi-state components, we’ve expanded the component layer into five sub-layers: L1 through L5.
 
+* `@layer theme` - for theme based css vars and styles
 * `@layer base` - for resetting of browser defaults
 * `@layer components` - for defining reusable component styles, such as buttons, cards, or forms
   * `components.l1` - lowest component precedence and the primary layer for all Design Toolkit components
@@ -266,13 +277,98 @@ The main issue is with external composes (composes: `foo from './file.css'`). Ta
 ### 4. Edit your root global.css file _(only if necessary)_
 If you are breaking out the specific layers individually in your application, you will need to manually add in (in correct order) the additional layers exported with the Design Toolkit. This is *only* necessary if you need to specifically control layers -- otherwise it will be handled automatically.
 
-# Upgrade to v7
+### 5. Make additional adjustments
+* If you are using the `Popover` component, you will have to alter it's structure slightly.
+* For any `Badge` and `Chip` components change `variant` prop to `color`
 
+<hr />
+<a id="v7"></a>
+# Upgrade to v7
+The Design Toolkit was refactored to eliminate the the dot syntax for referencing subcomponents. This change was made to address a critical bug inside React Server Components inside Nextjs.
+
+For example, `Drawer.Header` becomes `DrawerHeader` and so on. To migrate your code base, you will need to remove all dot notation from components currently in use in your code base.
+
+This release also updates the import/export paths for the components. If you are not importing from the root @accelint/design-toolkit path, then you will need to update your imports as follows:
+
+For example
+* RootComponent `@accelint/design-toolkit/root-component` --> `@accelint/design-toolkit/components/root-component/index`
+* RootComponentHeader goes from `@accelint/design-toolkit/root-component` to `@accelint/design-toolkit/components/root-component/header`
+
+<hr />
+<a id="v6"></a>
 # Upgrade to v6
 
+* **Tooltip** The structure is now a light wrapper around the Tooltip implementation. Tooltip has been replaced with `Tooltip.Trigger` and `Tooltip.Body` has been replaced with `Tooltip`. [Take a look at the story for details on usage](https://design-toolkit.accelint.io/?path=/docs/components-tooltip--playground).
+
+* **Fontsource** An upstream update to package naming cascades requires us to change how we import according to the [v5 migration blog](https://fontsource.org/docs/getting-started/migrate-v5) on fontsource.
+
+Before:
+```
+"@fontsource/roboto-flex": "^5.2.8",
+"@fontsource/roboto-mono": "^5.2.8",
+```
+After:
+```
+"@fontsource-variable/roboto-flex": "^5.2.8",
+"@fontsource-variable/roboto-mono": "^5.2.8",
+```
+
+<hr />
+<a id="v5"></a>
 # Upgrade to v5
 
-## Design token changes
+This release adds support for light mode and introduces some breaking token name changes.
 
-# Prior versions
+## Change brand color from **seafoam green** to **skyfoam blue**
+If you do not want the default brand color to change in your application, you will have to apply overrides. In your `globals.css` file (or whatever you have named your root css file), you can add any overrides to the css that are needed. Make sure to account for both light and dark mode colors if you are supporting both modes in your application. While you can override any css var in the theme this way, it is HIGHLY RECOMMENDED you only override colors to ensure consistent behavior from the components.
+
+For example:
+
+```
+@layer theme {
+  :root {
+    --fiona-orange-bold: #FF6B1A;
+    --fiona-orange-hover: #9E4820;
+    --fiona-orange-pressed: #7A361A;
+    --fiona-orange-muted: #b35123;
+
+    --shrek-green-bold: #C4D300;
+    --shrek-green-hover: #D1E000;
+    --shrek-green-pressed: #8A9400;
+    --shrek-green-muted: #4F5400;
+
+    @variant light {
+      --bg-accent-primary-bold: var(--fiona-orange-bold);
+      --bg-accent-primary-hover: var(--fiona-orange-hover);
+      --bg-accent-primary-pressed: var(--fiona-orange-pressed);
+      --bg-accent-primary-muted: var(--fiona-orange-muted);
+      --fg-accent-primary-bold: var(--fiona-orange-bold);
+      --fg-accent-primary-hover: var(--fiona-orange-hover);
+      --fg-accent-primary-pressed: var(--fiona-orange-pressed);
+      --outline-accent-primary-bold: var(--fiona-orange-bold);
+      --outline-accent-primary-hover: var(--fiona-orange-hover);
+      --outline-accent-primary-pressed: var(--fiona-orange-pressed);
+    }
+    @variant dark {
+      --bg-accent-primary-bold: var(--shrek-green-bold);
+      --bg-accent-primary-hover: var(--shrek-green-hover);
+      --bg-accent-primary-pressed: var(--shrek-green-pressed);
+      --bg-accent-primary-muted: var(--shrek-green-muted);
+      --fg-accent-primary-bold: var(--shrek-green-bold);
+      --fg-accent-primary-hover: var(--shrek-green-hover);
+      --fg-accent-primary-pressed: var(--shrek-green-pressed);
+      --outline-accent-primary-bold: var(--shrek-green-bold);
+      --outline-accent-primary-hover: var(--shrek-green-hover);
+      --outline-accent-primary-pressed: var(--shrek-green-pressed);
+    }
+  }
+}
+```
+
+Version 5.0.0 of the Design Toolkit also changed the naming convention for some design system tokens. If you are migrating from the old names to the new names, there is a script that will help migrate class names. To run the script, create a copy of the script into your own application and then point it at your `src` directory. This is meant to be a one-time example migration script and you can delete it after your token migration is complete.
+
+**For example (run this in your own application):**
+`pnpm zx scripts/token-migration.mjs "src"`
+
+The example script can be found here and modified for your code base - `[design-toolkit/components/scripts/token-migration.mjs](https://github.com/gohypergiant/standard-toolkit/blob/7ab50ade20f673c500d40abab1a3081e8796f35b/design-toolkit/components/scripts/token-migration.mjs)`.
 
