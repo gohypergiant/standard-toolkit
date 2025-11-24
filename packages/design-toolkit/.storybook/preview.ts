@@ -22,6 +22,7 @@ import '../src/index.module.css';
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: '^on.*' },
+    disableSaveFromUI: true,
     docs: {
       // biome-ignore lint/suspicious/noExplicitAny: this is the sb type
       container: (props: any) => {
