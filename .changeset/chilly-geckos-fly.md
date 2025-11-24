@@ -1,6 +1,6 @@
 ---
 "@accelint/design-toolkit": major
-"@accelint/design-foundation": minor
+"@accelint/design-foundation": major
 "@accelint/prettier-config": minor
 ---
 
