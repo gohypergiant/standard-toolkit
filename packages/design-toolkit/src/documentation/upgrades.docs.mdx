@@ -327,39 +327,49 @@ For example:
 ```
 @layer theme {
   :root {
-    --fiona-orange-bold: #FF6B1A;
-    --fiona-orange-hover: #9E4820;
-    --fiona-orange-pressed: #7A361A;
-    --fiona-orange-muted: #b35123;
+    /* override a11y accent (if needed)*/
+    --fg-a11y-on-accent: #151517;
 
-    --shrek-green-bold: #C4D300;
-    --shrek-green-hover: #D1E000;
-    --shrek-green-pressed: #8A9400;
-    --shrek-green-muted: #4F5400;
+    /*  custom color ramp */
+    --seafoam-primary-50: #ebfffa;
+    --seafoam-primary-100: #b9ffec;
+    --seafoam-primary-200: #8affdf;
+    --seafoam-primary-300: #5affd2;
+    --seafoam-primary-400: #28f5be;
+    --seafoam-primary-500: #16d3a0;
+    --seafoam-primary-600: #059971;
+    --seafoam-primary-700: #01684c;
+    --seafoam-primary-800: #014130;
+    --seafoam-primary-900: #012a1f;
 
     @variant light {
-      --bg-accent-primary-bold: var(--fiona-orange-bold);
-      --bg-accent-primary-hover: var(--fiona-orange-hover);
-      --bg-accent-primary-pressed: var(--fiona-orange-pressed);
-      --bg-accent-primary-muted: var(--fiona-orange-muted);
-      --fg-accent-primary-bold: var(--fiona-orange-bold);
-      --fg-accent-primary-hover: var(--fiona-orange-hover);
-      --fg-accent-primary-pressed: var(--fiona-orange-pressed);
-      --outline-accent-primary-bold: var(--fiona-orange-bold);
-      --outline-accent-primary-hover: var(--fiona-orange-hover);
-      --outline-accent-primary-pressed: var(--fiona-orange-pressed);
+      --bg-accent-primary-bold: var(--seafoam-primary-400);
+      --bg-accent-primary-hover: var(--seafoam-primary-300);
+      --bg-accent-primary-pressed: var(--seafoam-primary-600);
+      --bg-accent-primary-muted: var(--seafoam-primary-100);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-600);
+      --fg-accent-primary-hover: var(--seafoam-primary-500);
+      --fg-accent-primary-pressed: var(--seafoam-primary-700);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-600);
+      --outline-accent-primary-hover: var(--seafoam-primary-500);
+      --outline-accent-primary-pressed: var(--seafoam-primary-700);
     }
+
     @variant dark {
-      --bg-accent-primary-bold: var(--shrek-green-bold);
-      --bg-accent-primary-hover: var(--shrek-green-hover);
-      --bg-accent-primary-pressed: var(--shrek-green-pressed);
-      --bg-accent-primary-muted: var(--shrek-green-muted);
-      --fg-accent-primary-bold: var(--shrek-green-bold);
-      --fg-accent-primary-hover: var(--shrek-green-hover);
-      --fg-accent-primary-pressed: var(--shrek-green-pressed);
-      --outline-accent-primary-bold: var(--shrek-green-bold);
-      --outline-accent-primary-hover: var(--shrek-green-hover);
-      --outline-accent-primary-pressed: var(--shrek-green-pressed);
+      --bg-accent-primary-bold: var(--seafoam-primary-400);
+      --bg-accent-primary-hover: var(--seafoam-primary-300);
+      --bg-accent-primary-pressed: var(--seafoam-primary-600);
+      --bg-accent-primary-muted: var(--seafoam-primary-900);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-400);
+      --fg-accent-primary-hover: var(--seafoam-primary-300);
+      --fg-accent-primary-pressed: var(--seafoam-primary-600);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-400);
+      --outline-accent-primary-hover: var(--seafoam-primary-300);
+      --outline-accent-primary-pressed: var(--seafoam-primary-600);
     }
   }
 }
