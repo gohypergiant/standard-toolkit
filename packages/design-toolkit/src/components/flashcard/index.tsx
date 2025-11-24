@@ -43,6 +43,7 @@ export const FlashcardContext = createContext<FlashcardProps>({
 /**
  * Example usage.
  *
+ * ```tsx
  * <Flashcard isLoading={isLoading}>
  *  <FlashcardHero>
  *    <FlashcardHeader>
@@ -68,6 +69,7 @@ export const FlashcardContext = createContext<FlashcardProps>({
  *     ))}
  *  </FlashcardDetailsList>
  * </Flashcard>
+ * ```
  */
 export function Flashcard(props: FlashcardProps) {
   const { isLoading, children, className, ...rest } = props;
@@ -145,7 +147,6 @@ FlashcardAdditionalData.displayName = 'FlashcardAdditionalData';
 export function FlashcardDetailsList(props: FlashcardDetailsListProps) {
   const { children, className, ...rest } = props;
   return (
-    // TODO: Update props to include classnames, what is wrong with ...rest?
     <DetailsList
       {...rest}
       align='justify'

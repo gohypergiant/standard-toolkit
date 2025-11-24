@@ -19,7 +19,7 @@ A quick visual identifier for multiple points of data for a given map entity.
     { label: 'key', value: 'value', id: 'unique-id-7' },
   ];
 
-  <Flashcard>
+  <Flashcard isLoading={isLoading}>
     <FlashcardHero>
       <FlashcardHeader>Identifier</FlashcardHeader>
       <FlashcardSubheader>DATA</FlashcardSubheader>
@@ -29,8 +29,8 @@ A quick visual identifier for multiple points of data for a given map entity.
     <FlashcardDetailsList>
       {details.map((detail) => (
         <Fragment key={detail.id}>
-          <FlashcardDetailLabel>{detail.label}</FlashcardDetailLabel>
-          <FlashcardDetailValue>{detail.value}</FlashcardDetailValue>
+          <FlashcardDetailsLabel>{detail.label}</FlashcardDetailsLabel>
+          <FlashcardDetailsValue>{detail.value}</FlashcardDetailsValue>
         </Fragment>
       ))}
     </FlashcardDetailsList>
@@ -43,25 +43,25 @@ A quick visual identifier for multiple points of data for a given map entity.
 ## Props
 The Flashcard component accepts all standard HTML div attributes.
 
-* **`isLoading`** - Set visual state for loading on the Flashcard component.
+- **`isLoading`** - Set visual state for loading on the Flashcard component.
 
 ### FlashcardHero
-Upper half of the Flashcard to provide identifier data for the object being observed.
+- Upper half of the Flashcard to provide identifier data for the object being observed.
 
 ### FlashcardHeader
-Main identifier for Flashcard.
+- Main identifier for Flashcard.
 
 ### FlashcardSubheader
-Subheading for main identifier.
+- Subheading for main identifier.
 
 ### FlashcardAdditionalData
-Secondary data information that will appear below the initial header.
+- Secondary data information that will appear below the initial header.
 
 ### FlashcardDetailsList
-A wrapper for the **`DetailsList`** component.
+- A wrapper for the **`DetailsList`** component.
 
 ### FlashcardDetailsLabel
-A wrapper for the **`DetailsLabel`** component. Displays a **`Skeleton`** component when **`isLoading`**
+- A wrapper for the **`DetailsLabel`** component. Displays a **`Skeleton`** component when **`isLoading`**
 
 ### FlashcardDetailsValue
-A wrapper for the **`DetailsValue`** component. Displays a **`Skeleton`** component when **`isLoading`**
+- A wrapper for the **`DetailsValue`** component. Displays a **`Skeleton`** component when **`isLoading`**
