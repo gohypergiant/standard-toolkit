@@ -12,6 +12,7 @@
 
 import { addons } from 'storybook/manager-api';
 import { create } from 'storybook/theming';
+import manifest from '../package.json';
 
 // Detect user system preference
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -19,7 +20,7 @@ const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 addons.setConfig({
   theme: create({
     base: prefersDark ? 'dark' : 'light',
-    brandTitle: 'Design Toolkit',
+    brandTitle: `Design Toolkit <span style="font-size: 0.4em; display: block;">v${manifest.version}</span>`,
     brandUrl: 'https://design-toolkit.accelint.io/',
     brandTarget: '_self',
   }),
