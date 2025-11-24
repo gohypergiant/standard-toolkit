@@ -19,9 +19,10 @@ These guides explain how to migrate from Design Toolkit prior versions. If you a
 # Upgrade to v8
 
 ## Improvements and Breaking Changes
-This release removes support for the [Tailwind Variants](https://www.tailwind-variants.org/) library and instead uses [CSS Modules](https://github.com/css-modules/css-modules) as the primary css solution. Because the Design Foundation library will no longer export tailwind variant and tailwind merge utilities it will no longer be an officially supported approach.
+The most notable change in this release is the removal of support for the [Tailwind Variants](https://www.tailwind-variants.org/)
+library. We still use Tailwind, and utility classes can be applied directly in JSX, but we’re choosing a different approach for managing complex selectors and variants. Because the Design Foundation library will no longer export tailwind variant and tailwind merge utilities it will no longer be an officially supported approach.
 
-See below for details on how to migrate your application and why we chose to refactor.
+Instead, the Design Toolkit is using [CSS Modules](https://github.com/css-modules/css-modules) to build styles and recommending it for consuming applications as well. See below for details on how to migrate your application and why we chose to refactor.
 
 ### Easier debugging
 Many of our components support a wide matrix of props and states that influence their appearance. Under the previous Tailwind Variant approach, this resulted in large clusters of classes on each element. Because all variant classes were applied unconditionally, the DOM became noisy, repetitive, and difficult to reason about.
@@ -46,7 +47,7 @@ We’ve revamped our styling system to make components cleaner and easier to wor
 ### More control with style precedence
 Previously, the precedence of a style was entirely dictated by the rendering order of tailwind classes, which then required the addition of specificity control selectors, such as `:enabled` and `:sudo`. Using css modules, we can use the standard CSS cascade (later styles have higher precedence) while simplifying selectors.
 
-Now, Tailwind’s utility classes will always override anything defined in Tailwind’s component layer, which is where all Design Toolkit components are assigned. Because Tailwind's single components layer was too limited for our complex, multi-state components, we’ve expanded the component layer into five sub-layers: L1 through L5.
+Now, Tailwind’s utility classes will always override anything defined in Tailwind’s component layer, which is where all Design Toolkit components are assigned. Because Tailwind's single components layer was too limited for our complex, multi-state components, we’ve expanded the component layer into five sub-layers: L1 through L5. While it is possible for you to define your own css layers in your application as well, we recommend against it unless there is a very compelling reason.
 
 * `@layer theme` - for theme based css vars and styles
 * `@layer base` - for resetting of browser defaults

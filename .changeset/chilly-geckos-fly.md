@@ -13,7 +13,7 @@ Breaking Changes:
 * `sudo:` custom variant utility removed.
 
 Improvements:
-* CSS Modules is now the primary styling solution
+* Introducing CSS modules as another tool for working with Tailwind
 * Components now use 1–3 core classes instead of large utility sets. 
 * State-based styles are applied only when active, reducing DOM noise.
 * Variant syntax updated: use @variant blocks with @apply instead of chained selectors.
