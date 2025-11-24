@@ -23,6 +23,7 @@ interface MockChannel {
   close: MockFunctionResult;
   name: string;
   onmessage: ((event: MessageEvent) => void) | null;
+  onmessageerror: ((event: MessageEvent) => void) | null;
   postMessage: MockFunctionResult;
   removeEventListener: MockFunctionResult;
 }
@@ -32,8 +33,8 @@ const channels = new Map<string, MockChannel>();
 export function mockBroadcastChannel() {
   globalThis.BroadcastChannel = class BroadcastChannel {
     name: string;
-    onmessage: ((event: MessageEvent) => void) | null = null;
-    onmessageerror: ((event: MessageEvent) => void) | null = null;
+    onmessage: ((event: MessageEvent) => void) | null = vi.fn();
+    onmessageerror: ((event: MessageEvent) => void) | null = vi.fn();
 
     addEventListener = vi.fn();
     removeEventListener = vi.fn();
@@ -75,7 +76,8 @@ export function mockBroadcastChannel() {
 
       const channel: MockChannel = {
         name,
-        onmessage: null,
+        onmessage: this.onmessage,
+        onmessageerror: this.onmessageerror,
         addEventListener: this.addEventListener,
         removeEventListener: this.removeEventListener,
         postMessage: this.postMessage,

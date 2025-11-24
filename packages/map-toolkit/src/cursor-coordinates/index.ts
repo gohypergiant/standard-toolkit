@@ -11,17 +11,15 @@
  */
 
 /**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ * Cursor Coordinates
+ *
+ * Hook for tracking and displaying formatted cursor coordinates on map components.
+ * Supports multiple coordinate systems including Decimal Degrees, DMS, MGRS, and UTM.
+ *
+ * @module @accelint/map-toolkit/cursor-coordinates
  */
-
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
-export { Broadcast } from './broadcast';
-export type {
-  BroadcastConfig,
-  EmitOptions,
-  ExtractEvent,
-  Listener,
-  Payload,
-  StructuredCloneableData,
-} from './broadcast/types';
+export {
+  type CoordinateFormatTypes,
+  clearCursorCoordinateState,
+  useCursorCoordinates,
+} from './use-cursor-coordinates';
