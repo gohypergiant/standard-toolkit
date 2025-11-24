@@ -243,7 +243,7 @@ There are a few important things to notice above:
 
 * **Arbitrary values** - when you want to apply arbitrary values, it is better to write those in plain css for clarity. `@apply` directive should come before any custom css. This could apply to other styles as well, for example `grid-template-area` which is basically impossible to do without an arbitrary value. Essentially, anytime you are using the square bracket syntax, an arbitrary value in a class property would be preferred.
 
-* **Pseudo-selectors** - although pseudo-selectors can be written with the `@variant` directive, there is a preference to use the direct CSS selectors pattern, with the ampersand colon syntax.
+* **Pseudo-elements** - although [pseudo-elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/Pseudo-elements) (such as :before or :after) can be written with the `@variant` directive, there is a preference to use the direct CSS selectors pattern, with the ampersand colon syntax.
 
 * **@variant** - this directive is used to reference both built-in tailwind variants (hover, focus, disabled, etc...) and for the custom variants exported by the Design Toolkit (color-info, size-large, etc... [here is the complete list](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css)). [Details](https://tailwindcss.com/docs/functions-and-directives#variant-directive)
 
