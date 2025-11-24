@@ -19,13 +19,15 @@
 
   .item {
     @apply gap-s flex items-center;
-  }
 
-  .link {
     @variant current {
       @apply fg-accent-primary-bold;
     }
+  }
+}
 
+@layer components.l2 {
+  .link {
     @variant hover {
       @apply fg-primary-bold;
     }
