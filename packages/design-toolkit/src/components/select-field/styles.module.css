@@ -71,4 +71,8 @@
       @apply outline-serious-bold;
     }
   }
+
+  .popover {
+    @apply min-w-(--trigger-width);
+  }
 }
