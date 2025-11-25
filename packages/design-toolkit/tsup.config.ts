@@ -11,14 +11,12 @@
  */
 
 import fs from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import {
   fixAliasPlugin,
   fixExtensionsPlugin,
   fixFolderImportsPlugin,
 } from 'esbuild-fix-imports-plugin';
-import { globSync } from 'tinyglobby';
+import { glob } from 'tinyglobby';
 import { defineConfig } from 'tsup';
 
 const CHECK = /client-only/;
@@ -32,6 +30,7 @@ export default defineConfig({
   entry: [
     'src/**/*.{ts,tsx,css}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
+    '!src/**/*.module.css',
     '!**/__*__',
     '!storybook-static',
     '!src/test',
@@ -43,27 +42,14 @@ export default defineConfig({
   metafile: true,
   bundle: false,
   clean: true,
-  dts: {
-    entry: Object.fromEntries(
-      globSync([
-        'src/**/*.{ts,tsx}',
-        '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
-      ]).map((file) => [
-        path.relative(
-          'src',
-          file.slice(0, file.length - path.extname(file).length),
-        ),
-        fileURLToPath(new URL(file, import.meta.url)),
-      ]),
-    ),
-  },
+  dts: true,
   format: 'esm',
   minify: true,
   sourcemap: true,
   splitting: true,
   treeshake: true,
   onSuccess: async () => {
-    const files = globSync(['dist/**/*.js', '!dist/**/*.js.map']);
+    const files = await glob(['dist/**/*.js', '!dist/**/*.js.map']);
 
     for (let i = 0; i < files.length; i++) {
       const path = files[i];
