@@ -16,28 +16,44 @@
   .field {
     @apply fg-primary-bold gap-s rounded-round p-s flex items-center outline;
 
-    @variant hover {
-      @apply outline-interactive-hover;
-    }
-
-    @variant focus-visible-within {
-      @apply outline-accent-primary-bold;
-    }
-
-    @variant pressed {
-      @apply outline-interactive-pressed;
-    }
-
-    @variant disabled {
-      @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
-    }
-
     &.filled {
       @apply bg-surface-raised outline-static;
+
+      @variant hover {
+        @apply outline-interactive-hover;
+      }
+
+      @variant focus-visible-within {
+        @apply outline-accent-primary-bold;
+      }
+
+      @variant pressed {
+        @apply outline-interactive-pressed;
+      }
+
+      @variant disabled {
+        @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
+      }
     }
 
     &.outline {
       @apply outline-interactive;
+
+      @variant hover {
+        @apply outline-interactive-hover;
+      }
+
+      @variant focus-visible-within {
+        @apply outline-accent-primary-bold;
+      }
+
+      @variant pressed {
+        @apply outline-interactive-pressed;
+      }
+
+      @variant disabled {
+        @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
+      }
     }
   }
 
