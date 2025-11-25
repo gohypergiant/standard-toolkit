@@ -9,17 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export { MapModeEvents, MapModeEventsNamespace } from './events';
-export { clearMapModeState, getCurrentModeOwner } from './store';
-export { type UseMapModeReturn, useMapMode } from './use-map-mode';
-export type {
-  MapModeEventType,
-  ModeChangeAuthorizationEvent,
-  ModeChangeAuthorizationPayload,
-  ModeChangeDecisionEvent,
-  ModeChangeDecisionPayload,
-  ModeChangedEvent,
-  ModeChangedPayload,
-  ModeChangeRequestEvent,
-  ModeChangeRequestPayload,
-} from './types';
+
+/**
+ * Cursor Coordinates
+ *
+ * Hook for tracking and displaying formatted cursor coordinates on map components.
+ * Supports multiple coordinate systems including Decimal Degrees, DMS, MGRS, and UTM.
+ *
+ * @module @accelint/map-toolkit/cursor-coordinates
+ */
+export {
+  type CoordinateFormatTypes,
+  clearCursorCoordinateState,
+  useCursorCoordinates,
+} from './use-cursor-coordinates';

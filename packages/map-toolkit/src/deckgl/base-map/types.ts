@@ -17,10 +17,19 @@ import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
 
 /**
- * PickingInfo without the viewport property, as it cannot be serialized through the event bus.
- * The viewport contains function properties that would break serialization.
+ * PickingInfo modified for serialization through the event bus.
+ * Omits viewport, layer, and sourceLayer (which contain non-serializable functions),
+ * and adds layerId and sourceLayerId extracted from the original layer objects.
  */
-type NonFuncPickingInfo = Omit<PickingInfo, 'viewport'>;
+type NonFuncPickingInfo = Omit<
+  PickingInfo,
+  'viewport' | 'layer' | 'sourceLayer'
+> & {
+  /** ID of the picked layer (extracted from layer.id before omission) */
+  layerId?: NonNullable<PickingInfo['layer']>['id'];
+  /** ID of the source layer if applicable (extracted from sourceLayer.id before omission) */
+  sourceLayerId?: NonNullable<PickingInfo['sourceLayer']>['id'];
+};
 
 /**
  * MjolnirGestureEvent without function properties and non-serializable objects.
@@ -78,6 +87,25 @@ export type MapHoverPayload = {
   id: UniqueId;
 };
 
+export type Bounds = [
+  minLon: number,
+  minLat: number,
+  maxLon: number,
+  maxLat: number,
+];
+
+export type MapViewportPayload = {
+  bounds: Bounds;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  /** Viewport width in pixels */
+  width: number;
+  /** Viewport height in pixels */
+  height: number;
+  id: UniqueId;
+};
+
 /**
  * Type for map click events in the event bus.
  * Combines the event name with the click payload.
@@ -89,8 +117,9 @@ export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
  * Combines the event name with the hover payload.
  */
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
+export type MapViewportEvent = Payload<
+  typeof MapEvents.viewport,
+  MapViewportPayload
+>;
 
-/**
- * Union type of all map event types that can be emitted through the event bus.
- */
-export type MapEventType = MapClickEvent | MapHoverEvent;
+export type MapEventType = MapClickEvent | MapHoverEvent | MapViewportEvent;
