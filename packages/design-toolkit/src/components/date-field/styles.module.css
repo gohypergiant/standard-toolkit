@@ -70,20 +70,20 @@
 
     @variant type-month {
       @variant group-size-medium/date-field {
-        @apply w-[calc(2ch+(2*var(--typography-body-s-spacing)))];
+        width: calc(2ch + (2 * var(--typography-body-s-spacing)));
       }
 
       @variant group-size-small/date-field {
-        @apply w-[calc(2ch+(2*var(--typography-body-xs-spacing)))];
+        width: calc(2ch + (2 * var(--typography-body-xs-spacing)));
       }
 
       &.shortMonth {
         @variant group-size-medium/date-field {
-          @apply w-[calc(3ch+(3*var(--typography-body-s-spacing)))];
+          width: calc(3ch + (3 * var(--typography-body-s-spacing)));
         }
 
         @variant group-size-small/date-field {
-          @apply w-[calc(3ch+(3*var(--typography-body-xs-spacing)))];
+          width: calc(3ch + (3 * var(--typography-body-xs-spacing)));
         }
       }
     }

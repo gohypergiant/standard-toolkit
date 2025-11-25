@@ -94,6 +94,8 @@
   }
 
   .popover {
-    @apply -ml-s min-w-[calc(var(--trigger-width)+(var(--spacing-s)*2))];
+    --trigger-width: initial; /* is inlined by react aria components on render */
+    @apply -ml-s;
+    min-width: calc(var(--trigger-width) + (var(--spacing-s) * 2));
   }
 }

@@ -107,18 +107,18 @@
       &.autoSize {
         @variant group-size-medium/input {
           width: calc(
-            (var(--length) * 1ch)+
-              ((var(--length)-1) * var(--typography-body-s-spacing))
+            (var(--length) * 1ch) +
+              ((var(--length) - 1) * var(--typography-body-s-spacing))
           );
         }
 
         @variant group-size-small/input {
           min-width: calc(
-            2ch+ ((var(--length)-1) * var(--typography-body-xs-spacing))
+            2ch + ((var(--length) - 1) * var(--typography-body-xs-spacing))
           );
           width: calc(
-            (var(--length) * 1ch)+
-              ((var(--length)-1) * var(--typography-body-xs-spacing))
+            (var(--length) * 1ch) +
+              ((var(--length) - 1) * var(--typography-body-xs-spacing))
           );
         }
       }
