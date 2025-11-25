@@ -130,7 +130,7 @@ Therefore, any application using this library must configure CSS modules to leav
 Use the exported `getLocalIdent` function and apply it to every CSS loader rule. Because Webpack configurations vary—especially in Next.js—we do not ship automatic rule-discovery. Consumers must insert `getLocalIdent` into their own Webpack loader definitions, using our examples as a reference.
 
 ```ts
-import { getLocalIdent } from '@accelint/design-toolkit/lib/webpack';
+import { getLocalIdent } from '@accelint/design-foundation/lib/webpack';
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@accelint/design-foundation', '@accelint/design-system'],
@@ -176,7 +176,7 @@ export default nextConfig;
 
 **Vite**
 ```ts
-import { generateScopedName } from './src/lib/vite';
+import { generateScopedName } from '@accelint/design-foundation/lib/vite';
 
 export default defineConfig({
 
