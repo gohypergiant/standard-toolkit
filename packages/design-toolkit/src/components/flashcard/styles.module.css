@@ -18,4 +18,42 @@
 
     min-width: 128px;
   }
+
+  .hero {
+    @apply mb-s flex flex-col bg-surface-muted p-s;
+  }
+
+  .header {
+    @apply fg-primary-bold text-body-m;
+  }
+
+  .subheader {
+    @apply fg-primary-muted text-body-xs;
+  }
+
+  .flashcard-data {
+    @apply fg-primary-muted px-s text-body-xs;
+  }
+
+  .flashcard-details-list {
+    @apply p-s pb-s text-body-xs;
+  }
+
+  .flashcard-details-label {
+    @apply fg-primary-muted nth-of-type-[n+6]:hidden;
+
+
+
+  }
+  .flashcard-details-value {
+    @apply fg-primary-bold nth-of-type-[n+6]:hidden;
+  }
+
+  /* Do we want to keep the tailwind class for this?
+  .flashcard-details-label:nth-of-type(6),
+  .flashcard-details-value:nth-of-type(6) {
+    display: none;
+  } */
+
+
 }
