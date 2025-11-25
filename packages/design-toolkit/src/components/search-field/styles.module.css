@@ -56,7 +56,9 @@
       }
     }
   }
+}
 
+@layer components.l2 {
   .input {
     @apply font-display text-body-s block w-full outline-none;
 
@@ -91,13 +93,6 @@
 
     @variant group-disabled/search-field {
       @apply invisible;
-    }
-  }
-
-  .loading {
-    /* TODO: Not animation, TW animation CSS vars seem to be missing */
-    @variant motion-safe {
-      @apply animate-spin;
     }
   }
 }

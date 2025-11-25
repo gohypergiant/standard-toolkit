@@ -87,7 +87,9 @@ export function SearchField({ ref, ...props }: SearchFieldProps) {
           type='search'
         />
         {isLoading ? (
-          <Icon className={clsx(styles.loading, classNames?.loading)}>
+          <Icon
+            className={clsx(classNames?.loading, isLoading && 'animate-spin')}
+          >
             <Loop />
           </Icon>
         ) : (
