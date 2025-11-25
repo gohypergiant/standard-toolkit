@@ -372,6 +372,7 @@ export { Link } from './components/link';
 export { LinkStyles } from './components/link/styles';
 export type { LinkProps } from './components/link/types';
 export { MenuContext } from './components/menu/context';
+export { MenuHeader } from './components/menu/header';
 export { Menu } from './components/menu';
 export { MenuItemDescription } from './components/menu/item-description';
 export { MenuItemLabel } from './components/menu/item-label';
