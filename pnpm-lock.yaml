@@ -684,9 +684,6 @@ importers:
       vitest:
         specifier: ^4.0.8
         version: 4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(happy-dom@19.0.2)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
-      webpack:
-        specifier: ^5.103.0
-        version: 5.103.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.25.12)
       zod:
         specifier: ^4.1.12
         version: 4.1.12
