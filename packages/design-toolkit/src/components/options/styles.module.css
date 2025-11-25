@@ -32,6 +32,7 @@
     &:before {
       @apply pointer-events-none absolute top-0 left-0 h-full;
       width: 4px;
+      content: '';
     }
 
     @variant hover {
