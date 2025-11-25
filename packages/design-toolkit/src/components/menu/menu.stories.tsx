@@ -17,6 +17,7 @@ import { Button } from '../button';
 import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
 import { Menu } from './';
+import { MenuHeader } from './header';
 import { MenuItem } from './item';
 import { MenuItemDescription } from './item-description';
 import { MenuItemLabel } from './item-label';
@@ -336,6 +337,117 @@ export const ContextMenu: Story = {
           </Menu>
         </div>
       </div>
+    );
+  },
+};
+
+export const DynamicMenuHeader: Story = {
+  render: (args) => {
+    const _example = () => (
+      <>
+        <div>Bad Example</div>
+        <div>Bad Example 2</div>
+      </>
+    );
+
+    return (
+      <MenuTrigger>
+        <Button variant='icon' aria-label='Menu'>
+          <Icon>
+            <Kebab />
+          </Icon>
+        </Button>
+        <Menu {...args}>
+          <MenuHeader>
+            <div>This is data.</div>
+            <div>This is also data.</div>
+          </MenuHeader>
+          <MenuItem>
+            <Icon>
+              <Placeholder />
+            </Icon>
+            <MenuItemLabel>Songbirds</MenuItemLabel>
+            <Hotkey variant='flat'>⌘A</Hotkey>
+          </MenuItem>
+          <MenuSeparator />
+          <MenuSubmenu>
+            <MenuItem>
+              <MenuItemLabel>North American Birds</MenuItemLabel>
+            </MenuItem>
+            <Menu
+              selectedKeys={new Set(['selected-1', 'selected-2', 'selected-3'])}
+            >
+              <MenuItem>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <MenuItemLabel>Blue Jay</MenuItemLabel>
+                <MenuItemDescription>Cyanocitta cristata</MenuItemDescription>
+              </MenuItem>
+              <MenuItem isDisabled>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <MenuItemLabel>Gray catbird</MenuItemLabel>
+                <MenuItemDescription>
+                  Dumetella carolinensis
+                </MenuItemDescription>
+              </MenuItem>
+              <MenuItem id='selected-1' color='serious'>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <MenuItemLabel>Mallard</MenuItemLabel>
+                <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
+                <Hotkey variant='flat'>⌘V</Hotkey>
+              </MenuItem>
+              <MenuItem id='selected-2' color='critical'>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <MenuItemLabel>Chimney swift</MenuItemLabel>
+                <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
+              </MenuItem>
+              <MenuItem id='selected-3'>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>
+                <MenuItemDescription>
+                  Dumetella carolinensis
+                </MenuItemDescription>
+                <Hotkey variant='flat'>⌘X</Hotkey>
+              </MenuItem>
+            </Menu>
+          </MenuSubmenu>
+          <MenuSeparator />
+          <MenuSection>
+            <MenuItem color='serious'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Mallard</MenuItemLabel>
+              <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
+              <Hotkey variant='flat'>⌘V</Hotkey>
+            </MenuItem>
+            <MenuItem color='critical'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Chimney swift</MenuItemLabel>
+              <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
+            </MenuItem>
+            <MenuItem>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>
+              <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
+              <Hotkey variant='flat'>⌘X</Hotkey>
+            </MenuItem>
+          </MenuSection>
+        </Menu>
+      </MenuTrigger>
     );
   },
 };
