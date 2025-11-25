@@ -129,18 +129,21 @@
   }
 
   .trackValue {
+    --track-value-start: attr(data-start %);
+    --track-value-end: attr(data-end %);
+
     @apply bg-accent-primary-bold absolute rounded-full;
 
     @variant group-orientation-horizontal/slider {
       @apply h-xxs top-1/2 -translate-y-1/2;
-      right: calc(100% - attr(data-end percentage) * 100);
-      left: calc(attr(data-start percentage) * 100);
+      right: calc(100% - var(--track-value-end) * 100);
+      left: calc(var(--track-value-start) * 100);
     }
 
     @variant group-orientation-vertical/slider {
       @apply w-xxs left-1/2 -translate-x-1/2;
-      top: calc(100% - attr(data-end percentage) * 100);
-      bottom: calc(attr(data-start percentage) * 100);
+      top: calc(100% - var(--track-value-start) * 100);
+      bottom: calc(var(--track-value-end) * 100);
     }
   }
 
