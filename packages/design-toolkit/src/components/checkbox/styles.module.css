@@ -37,11 +37,7 @@
     }
 
     @variant group-orientation-horizontal/checkbox-group {
-      @apply grow;
-    }
-
-    @variant group-orientation-horizontal/checkbox-group {
-      @apply basis-1/3;
+      @apply grow basis-1/3;
     }
 
     .label {
@@ -54,7 +50,7 @@
   }
 
   .control {
-    @apply size-l rounded-small outline-interactive fg-info-bold flex items-center justify-center outline;
+    @apply size-l rounded-small outline-interactive fg-info-bold my-xxs flex items-center justify-center outline;
 
     @variant group-hover/checkbox {
       @apply outline-interactive-hover;
@@ -93,7 +89,7 @@
     }
 
     @variant group-selected/checkbox {
-      @apply fg-a11y-on-accent bg-accent-primary-bold;
+      @apply fg-a11y-on-accent bg-accent-primary-bold outline-accent-primary-bold;
 
       @variant group-hover/checkbox {
         @apply bg-accent-primary-hover outline-accent-primary-hover;
