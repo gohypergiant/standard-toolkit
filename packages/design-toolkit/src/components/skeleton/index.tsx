@@ -52,12 +52,7 @@ export function Skeleton({
   return (
     <div
       {...rest}
-      className={clsx(
-        'motion-safe:animate-pulse',
-        styles.skeleton,
-        styles[variant],
-        className,
-      )}
+      className={clsx(styles.skeleton, styles[variant], className)}
     />
   );
 }

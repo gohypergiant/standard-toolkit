@@ -27,6 +27,11 @@
 
 @import './variants/variants.css';
 
+@source inline('{motion-safe:}');
+@source inline('animate-spin');
+@source inline('animate-ping');
+@source inline('animate-pulse');
+
 /**
  * DesignTK chooses to implement outlines instead of borders to make it so
  * that the style doesn't impact box model dimensions. This way elements with

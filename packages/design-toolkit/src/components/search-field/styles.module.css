@@ -95,4 +95,10 @@
       @apply invisible;
     }
   }
+
+  .loading {
+    @variant motion-safe {
+      @apply animate-spin;
+    }
+  }
 }
