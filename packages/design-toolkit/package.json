@@ -146,7 +146,6 @@
     "vite": "^7.2.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.8",
-    "webpack": "^5.103.0",
     "zod": "^4.1.12"
   },
   "peerDependencies": {
