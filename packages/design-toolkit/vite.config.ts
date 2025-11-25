@@ -11,10 +11,10 @@
  */
 
 import path from 'node:path';
+import { generateScopedName } from '@accelint/design-foundation/lib/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
-import { generateScopedName } from './src/lib/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
