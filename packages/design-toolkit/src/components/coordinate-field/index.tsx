@@ -319,7 +319,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                   <GlobalShare />
                 </Icon>
               </Button>
-              <Popover>
+              <Popover classNames={{ popover: styles.popover }}>
                 <PopoverTitle className={styles.popoverTitle}>
                   Copy Coordinates
                 </PopoverTitle>

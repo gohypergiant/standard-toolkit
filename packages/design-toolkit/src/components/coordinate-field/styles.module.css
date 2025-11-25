@@ -119,6 +119,10 @@
     @apply gap-s flex justify-end;
   }
 
+  .popover {
+    min-height: 280px;
+  }
+
   .popoverTitle {
     @apply fg-primary-muted text-header-s;
   }
