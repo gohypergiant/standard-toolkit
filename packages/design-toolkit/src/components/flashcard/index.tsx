@@ -158,7 +158,7 @@ export function FlashcardDetailsList(props: FlashcardDetailsListProps) {
 }
 FlashcardDetailsList.displayName = 'FlashcardDetailsList';
 
-export function FlashcardDetailLabel(props: FlashcardComponentProps) {
+export function FlashcardDetailsLabel(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
   const { className, children, ...rest } = props;
   return (
@@ -171,9 +171,9 @@ export function FlashcardDetailLabel(props: FlashcardComponentProps) {
     </DetailsListLabel>
   );
 }
-FlashcardDetailLabel.displayName = 'FlashcardDetailLabel';
+FlashcardDetailsLabel.displayName = 'FlashcardDetailsLabel';
 
-export function FlashcardDetailValue(props: FlashcardComponentProps) {
+export function FlashcardDetailsValue(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
   const { className, children, ...rest } = props;
   return (
@@ -186,4 +186,4 @@ export function FlashcardDetailValue(props: FlashcardComponentProps) {
     </DetailsListValue>
   );
 }
-FlashcardDetailValue.displayName = 'FlashcardDetailValue';
+FlashcardDetailsValue.displayName = 'FlashcardDetailsValue';

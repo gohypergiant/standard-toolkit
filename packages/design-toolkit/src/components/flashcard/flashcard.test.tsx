@@ -18,9 +18,9 @@ import { describe, expect, it } from 'vitest';
 import {
   Flashcard,
   FlashcardAdditionalData,
-  FlashcardDetailLabel,
+  FlashcardDetailsLabel,
   FlashcardDetailsList,
-  FlashcardDetailValue,
+  FlashcardDetailsValue,
   FlashcardHeader,
   FlashcardHero,
   FlashcardSubheader,
@@ -49,8 +49,8 @@ function setup(isLoading = false) {
       <FlashcardDetailsList data-testid='secondary'>
         {details.map((detail) => (
           <Fragment key={detail.id}>
-            <FlashcardDetailLabel>{detail.label}</FlashcardDetailLabel>
-            <FlashcardDetailValue>{detail.value}</FlashcardDetailValue>
+            <FlashcardDetailsLabel>{detail.label}</FlashcardDetailsLabel>
+            <FlashcardDetailsValue>{detail.value}</FlashcardDetailsValue>
           </Fragment>
         ))}
       </FlashcardDetailsList>
