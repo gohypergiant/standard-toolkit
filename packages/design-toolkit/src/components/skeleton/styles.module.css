@@ -17,6 +17,7 @@
     /* TODO: bg-[color]/[opacity] isn't working, nesting of Skeleton isn't working ATM */
     @apply fg-primary-bold bg-interactive-disabled px-l py-s;
 
+    /* TODO: animation styles non-functional with @apply directive */
     @variant motion-safe {
       @apply animate-pulse;
     }
