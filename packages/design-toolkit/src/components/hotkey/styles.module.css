@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .key {
-    @apply fg-primary-bold p-xs text-header-s w-fit min-w-xl uppercase;
+    @apply fg-primary-bold p-xs text-header-s font-primary w-fit min-w-xl uppercase;
 
     &.flat {
       @apply bg-transparent;
@@ -25,8 +25,8 @@
     }
 
     &.outline {
-      @apply rounded-medium bg-surface-default outline-info-bold outline;
-      box-shadow: 0 3px var(--outline-info-bold);
+      @apply rounded-medium bg-surface-default outline-static outline;
+      box-shadow: 0 3px var(--outline-static);
     }
   }
 
