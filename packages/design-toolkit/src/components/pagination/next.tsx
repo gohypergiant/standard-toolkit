@@ -32,7 +32,7 @@ export function PaginationNext({ className, onPress }: PaginationNextProps) {
       className={composeRenderProps(className, (className) =>
         clsx(styles.button, className),
       )}
-      color='accent'
+      color='mono-bold'
       variant='icon'
       isDisabled={page >= total || isNavigationDisabled(total, page)}
       onPress={() => {

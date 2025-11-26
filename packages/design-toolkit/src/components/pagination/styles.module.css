@@ -20,7 +20,6 @@
 
 @layer components.l2 {
   .button {
-    @apply fg-primary-bold;
     min-width: 32px;
   }
 }
