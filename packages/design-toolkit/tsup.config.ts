@@ -49,12 +49,11 @@ export default defineConfig({
     // Add 'use client' directive to files that need it
     const jsFiles = await glob(['dist/**/*.js', '!dist/**/*.js.map']);
 
-    for (let i = 0; i < jsFiles.length; i++) {
-      const filePath = jsFiles[i];
-      const content = await fs.readFile(filePath, 'utf-8');
+    for (const file of jsFiles) {
+      const content = await fs.readFile(file, 'utf-8');
 
       if (CHECK.test(content)) {
-        fs.writeFile(filePath, `${"'use client';"}\n\n${content}`);
+        await fs.writeFile(file, `${"'use client';"}\n\n${content}`);
       }
     }
 
@@ -62,11 +61,9 @@ export default defineConfig({
     const cssModuleFiles = await glob(['src/**/*.module.css']);
 
     for (const srcFile of cssModuleFiles) {
-      const relativePath = path.relative('src', srcFile);
-      const destFile = path.join('dist', relativePath);
-      const destDir = path.dirname(destFile);
+      const destFile = path.join('dist', path.relative('src', srcFile));
 
-      await fs.mkdir(destDir, { recursive: true });
+      await fs.mkdir(path.dirname(destFile), { recursive: true });
       await fs.copyFile(srcFile, destFile);
     }
   },
