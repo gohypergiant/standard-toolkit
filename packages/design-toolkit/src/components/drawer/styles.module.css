@@ -131,7 +131,7 @@
   }
 
   .menu {
-    @apply rounded-large bg-surface-default p-xs gap-xxs absolute flex;
+    @apply rounded-large bg-surface-default p-xs gap-xs absolute flex;
 
     @variant group-placement-top/drawer {
       @apply top-full left-1/2 flex-row rounded-t-none;

@@ -55,7 +55,6 @@ export function DrawerMenuItem({
     <TooltipTrigger>
       <DrawerTrigger for={`${action}:${id}`}>
         <ToggleButton
-          {...rest}
           ref={tooltipRef}
           className={composeRenderProps(classNames?.item, (className) =>
             clsx(styles.item, className),
@@ -64,6 +63,7 @@ export function DrawerMenuItem({
           role='tab'
           variant='icon'
           isSelected={id === view || (stack.length > 1 && stack.includes(id))}
+          {...rest}
         >
           {composeRenderProps(children, (children) => (
             <Icon>{children}</Icon>
