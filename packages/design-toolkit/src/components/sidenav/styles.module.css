@@ -148,26 +148,6 @@
   .menu {
     @apply text-body-s relative;
 
-    .trigger {
-      @apply gap-s rounded-medium p-xs flex w-full cursor-pointer items-center justify-center;
-
-      @variant hover {
-        @apply bg-interactive-muted-hover;
-      }
-
-      @variant focus-visible {
-        @apply bg-interactive-muted-hover outline-none;
-      }
-
-      @variant pressed {
-        @apply bg-interactive-muted-hover;
-      }
-
-      @variant group-closed/sidenav {
-        @apply max-w-fit;
-      }
-    }
-
     .heading {
       @apply flex-1 text-left;
     }
@@ -214,6 +194,26 @@
           padding-left: 32px;
         }
       }
+    }
+  }
+
+  .trigger {
+    @apply gap-s rounded-medium p-xs flex w-full cursor-pointer items-center justify-center;
+
+    @variant hover {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant focus-visible {
+      @apply bg-interactive-muted-hover outline-none;
+    }
+
+    @variant pressed {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant group-closed/sidenav {
+      @apply max-w-fit;
     }
   }
 
