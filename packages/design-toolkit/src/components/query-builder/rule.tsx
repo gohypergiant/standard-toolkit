@@ -145,7 +145,7 @@ export function Rule(props: RuleProps) {
           listsAsArrays={listsAsArrays}
           parseNumbers={parseNumbers}
           separator={valueEditorSeparator}
-          className={classNames.value}
+          className={rule.classNames.value}
           handleOnChange={generateOnChangeHandler('value')}
           rule={rule.rule}
           {...coreRuleProps}

@@ -49,11 +49,12 @@
     @apply gap-xs py-s flex;
 
     &.horizontal {
+      @apply items-center;
       min-height: 50px;
     }
 
     &.vertical {
-      @apply flex-col;
+      @apply flex-col items-stretch;
     }
   }
 
@@ -78,5 +79,9 @@
   .ruleLines {
     min-height: 46px;
     width: 20px;
+  }
+
+  .textInput {
+    @apply min-h-xl;
   }
 }
