@@ -110,6 +110,7 @@ export const Default: Story = {
                   <Heading>{section}</Heading>
                   {items.map((item) => (
                     <SidenavItem
+                      key={item.id}
                       id={item.id}
                       textValue={item.text}
                       isDisabled={item.disabled}
