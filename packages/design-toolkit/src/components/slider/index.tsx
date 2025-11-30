@@ -12,12 +12,11 @@
 'use client';
 
 import 'client-only';
-import { Fragment } from 'react';
+import { Fragment, useMemo } from 'react';
 import {
   Slider as AriaSlider,
   SliderTrack as AriaSliderTrack,
   composeRenderProps,
-  Input,
   Label,
   SliderThumb,
   Text,
@@ -25,43 +24,196 @@ import {
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import { SliderStyles } from './styles';
-import type { SliderProps } from './types';
+import type { SliderMarker, SliderMarkersConfig, SliderProps } from './types';
 
 const {
   slider,
   label,
-  inputs,
-  input,
   thumb,
   track,
   trackBackground,
   trackValue,
   minValue,
   maxValue,
+  markers: markersStyle,
+  marker: markerStyle,
+  markerDot,
+  markerLabel,
 } = SliderStyles();
+
+/**
+ * Normalizes the markers configuration into a consistent array format
+ */
+function normalizeMarkers(
+  markersConfig: SliderMarkersConfig | undefined,
+  min: number,
+  max: number,
+): SliderMarker[] {
+  if (markersConfig === undefined) {
+    return [];
+  }
+
+  // Number of evenly spaced markers
+  if (typeof markersConfig === 'number') {
+    if (markersConfig < 2) {
+      return [];
+    }
+    const step = (max - min) / (markersConfig - 1);
+    return Array.from({ length: markersConfig }, (_, i) => ({
+      value: min + step * i,
+    }));
+  }
+
+  // Array of numbers or marker objects
+  if (Array.isArray(markersConfig)) {
+    return markersConfig.map((item) =>
+      typeof item === 'number' ? { value: item } : item,
+    );
+  }
+
+  return [];
+}
+
+/**
+ * Calculates the greatest common divisor of marker intervals
+ * to determine an appropriate step value for snapping
+ */
+function calculateStepFromMarkers(
+  markers: SliderMarker[],
+  min: number,
+  max: number,
+): number | undefined {
+  if (markers.length < 2) {
+    return undefined;
+  }
+
+  // Sort markers by value
+  const sortedValues = [...markers.map((m) => m.value)].sort((a, b) => a - b);
+
+  // Calculate GCD of all intervals
+  const gcd = (a: number, b: number): number => {
+    // Handle floating point by working with a precision
+    const precision = 1e-10;
+    a = Math.abs(a);
+    b = Math.abs(b);
+    while (b > precision) {
+      const temp = b;
+      b = a % b;
+      a = temp;
+    }
+    return a;
+  };
+
+  // Find GCD of all differences between consecutive markers
+  let step = sortedValues[1] - sortedValues[0];
+  for (let i = 2; i < sortedValues.length; i++) {
+    step = gcd(step, sortedValues[i] - sortedValues[i - 1]);
+  }
+
+  // Also ensure step works from min value
+  if (sortedValues[0] !== min) {
+    step = gcd(step, sortedValues[0] - min);
+  }
+
+  return step > 0 ? step : undefined;
+}
+
+/**
+ * Checks if a marker with a label exists at the given value
+ */
+function hasLabeledMarkerAtValue(
+  markers: SliderMarker[],
+  value: number,
+): boolean {
+  return markers.some(
+    (marker) =>
+      marker.value === value && marker.label !== undefined && marker.label !== '',
+  );
+}
 
 /**
  * Slider - An interactive range input component for numeric value selection
  *
- * Provides accessible slider functionality with optional input field integration,
- * flexible layouts, and comprehensive keyboard and mouse interaction support.
+ * Provides accessible slider functionality with flexible layouts and
+ * comprehensive keyboard and mouse interaction support.
  * Perfect for settings, filters, or any numeric input requiring visual feedback.
  *
  * @example
  * // Basic slider
  * <Slider label="Volume" defaultValue={50} />
+ *
+ * @example
+ * // Slider with evenly spaced markers
+ * <Slider label="Progress" markers={5} />
+ *
+ * @example
+ * // Slider with specific marker values
+ * <Slider label="Temperature" markers={[0, 25, 50, 75, 100]} />
+ *
+ * @example
+ * // Slider with labeled markers
+ * <Slider
+ *   label="Quality"
+ *   markers={[
+ *     { value: 0, label: 'Low' },
+ *     { value: 50, label: 'Medium' },
+ *     { value: 100, label: 'High' },
+ *   ]}
+ *   showMarkerLabels
+ * />
+ *
+ * @example
+ * // Slider that snaps to marker values only
+ * <Slider
+ *   label="Rating"
+ *   markers={[0, 25, 50, 75, 100]}
+ *   snapToMarkers
+ * />
  */
 export function Slider({
   classNames,
   label: labelProp,
   layout = 'grid',
+  markers: markersProp,
   maxValue: maxValueProp = 100,
   minValue: minValueProp = 0,
   orientation = 'horizontal',
-  showInput,
   showLabel = true,
+  showMarkerLabels = false,
+  snapToMarkers = false,
+  step: stepProp,
   ...rest
 }: SliderProps) {
+  const normalizedMarkers = useMemo(
+    () => normalizeMarkers(markersProp, minValueProp, maxValueProp),
+    [markersProp, minValueProp, maxValueProp],
+  );
+
+  // Calculate step for snapping to markers
+  const calculatedStep = useMemo(() => {
+    if (snapToMarkers && normalizedMarkers.length >= 2) {
+      return calculateStepFromMarkers(
+        normalizedMarkers,
+        minValueProp,
+        maxValueProp,
+      );
+    }
+    return undefined;
+  }, [snapToMarkers, normalizedMarkers, minValueProp, maxValueProp]);
+
+  // Use provided step, or calculated step if snapToMarkers is enabled
+  const effectiveStep = stepProp ?? calculatedStep;
+
+  // Determine if min/max labels should be hidden (only when labeled markers exist at those values)
+  const hideMinValue =
+    showMarkerLabels && hasLabeledMarkerAtValue(normalizedMarkers, minValueProp);
+  const hideMaxValue =
+    showMarkerLabels && hasLabeledMarkerAtValue(normalizedMarkers, maxValueProp);
+
+  const getMarkerPercent = (value: number) => {
+    return ((value - minValueProp) / (maxValueProp - minValueProp)) * 100;
+  };
+
   return (
     <AriaSlider
       {...rest}
@@ -71,6 +223,7 @@ export function Slider({
       maxValue={maxValueProp}
       minValue={minValueProp}
       orientation={orientation}
+      step={effectiveStep}
       aria-label={showLabel ? undefined : labelProp}
       data-layout={layout}
     >
@@ -80,28 +233,6 @@ export function Slider({
             <Label className={label({ className: classNames?.label })}>
               {labelProp}
             </Label>
-          )}
-          {showInput && (
-            <div className={inputs({ className: classNames?.inputs })}>
-              {state.values.map((value, index) => (
-                <Input
-                  key={`number-field-${index === 0 ? 'min' : 'max'}`}
-                  className={composeRenderProps(
-                    classNames?.input,
-                    (className) => input({ className }),
-                  )}
-                  value={value}
-                  disabled={state.isDisabled}
-                  data-disabled={state.isDisabled || undefined}
-                  onChange={(event) =>
-                    state.setThumbValue(
-                      index,
-                      Number.parseFloat(event.target.value),
-                    )
-                  }
-                />
-              ))}
-            </div>
           )}
           <AriaSliderTrack
             className={composeRenderProps(classNames?.track, (className) =>
@@ -113,6 +244,42 @@ export function Slider({
                 className: classNames?.trackBackground,
               })}
             />
+            {/* Markers */}
+            {normalizedMarkers.length > 0 && (
+              <div className={markersStyle({ className: classNames?.markers })}>
+                {normalizedMarkers.map((marker, index) => {
+                  const percent = getMarkerPercent(marker.value);
+                  const positionStyle =
+                    orientation === 'horizontal'
+                      ? { left: `${percent}%` }
+                      : { bottom: `${percent}%` };
+
+                  return (
+                    <div
+                      key={`marker-${index}`}
+                      className={markerStyle({ className: classNames?.marker })}
+                      style={positionStyle}
+                      aria-hidden="true"
+                    >
+                      <div
+                        className={markerDot({
+                          className: classNames?.markerDot,
+                        })}
+                      />
+                      {showMarkerLabels && marker.label && (
+                        <span
+                          className={markerLabel({
+                            className: classNames?.markerLabel,
+                          })}
+                        >
+                          {marker.label}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             {state.values.map((_, index) => (
               <Fragment key={`slider-${index === 0 ? 'min' : 'max'}`}>
                 <div
@@ -126,9 +293,7 @@ export function Slider({
                     state.values.length === 1 ? 0 : 1,
                   )}
                 />
-                <TooltipTrigger
-                  isDisabled={!showInput || state.isThumbDragging(index)}
-                >
+                <TooltipTrigger isDisabled={state.isThumbDragging(index)}>
                   <SliderThumb
                     index={index}
                     className={composeRenderProps(
@@ -146,12 +311,14 @@ export function Slider({
           <Text
             slot='min'
             className={minValue({ className: classNames?.minValue })}
+            hidden={hideMinValue}
           >
             {minValueProp}
           </Text>
           <Text
             slot='max'
             className={maxValue({ className: classNames?.maxValue })}
+            hidden={hideMaxValue}
           >
             {maxValueProp}
           </Text>

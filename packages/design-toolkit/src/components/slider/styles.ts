@@ -30,17 +30,6 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:group-layout-grid/slider:col-span-2',
       'group-disabled/slider:fg-disabled',
     ],
-    inputs: [
-      'order-5 flex gap-s',
-      'group-layout-grid/slider:col-start-3 group-layout-grid/slider:row-start-1',
-      'group-orientation-horizontal/slider:flex-row',
-      'group-orientation-vertical/slider:flex-col-reverse',
-      'group-orientation-vertical/slider:group-layout-grid/slider:row-start-4',
-    ],
-    input: [
-      'fg-primary-bold w-[50px] rounded-medium px-s py-xs font-display text-body-m outline outline-interactive',
-      'group-disabled/slider:fg-disabled group-disabled/slider:cursor-not-allowed group-disabled/slider:outline-interactive-disabled',
-    ],
     track: [
       'relative order-3 h-full',
       'group-orientation-horizontal/slider:h-[20px] group-orientation-horizontal/slider:w-full',
@@ -85,6 +74,29 @@ export const SliderStyles = tv({
       'group-orientation-horizontal/slider:group-layout-grid/slider:col-start-3',
       'group-orientation-horizontal/slider:group-layout-grid/slider:row-start-3',
       'group-orientation-horizontal/slider:group-layout-grid/slider:justify-self-end',
+      'group-disabled/slider:fg-disabled',
+    ],
+    markers: [
+      'absolute pointer-events-none',
+      'group-orientation-horizontal/slider:top-1/2 group-orientation-horizontal/slider:left-0 group-orientation-horizontal/slider:right-0 group-orientation-horizontal/slider:h-0',
+      'group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:top-0 group-orientation-vertical/slider:bottom-0 group-orientation-vertical/slider:w-0',
+    ],
+    marker: [
+      'absolute flex flex-col items-center',
+      'group-orientation-horizontal/slider:-translate-x-1/2',
+      'group-orientation-vertical/slider:-translate-y-1/2',
+    ],
+    markerDot: [
+      'rounded-full bg-surface-inverse',
+      'h-xs w-xs',
+      'group-orientation-horizontal/slider:-translate-y-1/2',
+      'group-orientation-vertical/slider:-translate-x-1/2',
+      'group-disabled/slider:bg-surface-muted',
+    ],
+    markerLabel: [
+      'fg-primary-muted font-display text-body-xs whitespace-nowrap',
+      'group-orientation-horizontal/slider:mt-m',
+      'group-orientation-vertical/slider:ml-m',
       'group-disabled/slider:fg-disabled',
     ],
   },

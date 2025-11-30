@@ -11,27 +11,53 @@
  */
 import type {
   SliderProps as AriaSliderProps,
-  InputProps,
   LabelProps,
   SliderThumbProps,
   SliderTrackProps,
 } from 'react-aria-components';
 
+export type SliderMarker = {
+  value: number;
+  label?: string;
+};
+
+export type SliderMarkersConfig =
+  | number // Number of evenly spaced markers (includes min/max)
+  | SliderMarker[] // Explicit marker positions with optional labels
+  | number[]; // Array of values without labels
+
 export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
   classNames?: {
     slider?: AriaSliderProps['className'];
     label?: LabelProps['className'];
-    inputs?: string;
-    input?: InputProps['className'];
     track?: SliderTrackProps['className'];
     trackBackground?: string;
     trackValue?: string;
     thumb?: SliderThumbProps['className'];
     minValue?: string;
     maxValue?: string;
+    markers?: string;
+    marker?: string;
+    markerDot?: string;
+    markerLabel?: string;
   };
   label: string;
   layout?: 'grid' | 'stack';
-  showInput?: boolean;
+  /**
+   * Configure discrete marker points on the slider track.
+   * - number: Creates evenly spaced markers (e.g., 5 creates markers at 0%, 25%, 50%, 75%, 100%)
+   * - number[]: Array of specific values to mark
+   * - SliderMarker[]: Array of objects with value and optional label
+   */
+  markers?: SliderMarkersConfig;
   showLabel?: boolean;
+  /**
+   * Whether to show labels on markers (only applies when markers have labels)
+   */
+  showMarkerLabels?: boolean;
+  /**
+   * When true, the slider can only be set to marker values.
+   * Requires markers to be defined. The slider will snap to the nearest marker.
+   */
+  snapToMarkers?: boolean;
 };
