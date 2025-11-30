@@ -81,7 +81,6 @@ function normalizeMarkers(
 function calculateStepFromMarkers(
   markers: SliderMarker[],
   min: number,
-  max: number,
 ): number | undefined {
   if (markers.length < 2) {
     return undefined;
@@ -91,11 +90,11 @@ function calculateStepFromMarkers(
   const sortedValues = [...markers.map((m) => m.value)].sort((a, b) => a - b);
 
   // Calculate GCD of all intervals
-  const gcd = (a: number, b: number): number => {
+  const gcd = (num1: number, num2: number): number => {
     // Handle floating point by working with a precision
     const precision = 1e-10;
-    a = Math.abs(a);
-    b = Math.abs(b);
+    let a = Math.abs(num1);
+    let b = Math.abs(num2);
     while (b > precision) {
       const temp = b;
       b = a % b;
@@ -105,14 +104,25 @@ function calculateStepFromMarkers(
   };
 
   // Find GCD of all differences between consecutive markers
-  let step = sortedValues[1] - sortedValues[0];
+  const firstValue = sortedValues[0];
+  const secondValue = sortedValues[1];
+
+  if (firstValue === undefined || secondValue === undefined) {
+    return undefined;
+  }
+
+  let step = secondValue - firstValue;
   for (let i = 2; i < sortedValues.length; i++) {
-    step = gcd(step, sortedValues[i] - sortedValues[i - 1]);
+    const currentValue = sortedValues[i];
+    const previousValue = sortedValues[i - 1];
+    if (currentValue !== undefined && previousValue !== undefined) {
+      step = gcd(step, currentValue - previousValue);
+    }
   }
 
   // Also ensure step works from min value
-  if (sortedValues[0] !== min) {
-    step = gcd(step, sortedValues[0] - min);
+  if (firstValue !== min) {
+    step = gcd(step, firstValue - min);
   }
 
   return step > 0 ? step : undefined;
@@ -127,7 +137,9 @@ function hasLabeledMarkerAtValue(
 ): boolean {
   return markers.some(
     (marker) =>
-      marker.value === value && marker.label !== undefined && marker.label !== '',
+      marker.value === value &&
+      marker.label !== undefined &&
+      marker.label !== '',
   );
 }
 
@@ -192,23 +204,21 @@ export function Slider({
   // Calculate step for snapping to markers
   const calculatedStep = useMemo(() => {
     if (snapToMarkers && normalizedMarkers.length >= 2) {
-      return calculateStepFromMarkers(
-        normalizedMarkers,
-        minValueProp,
-        maxValueProp,
-      );
+      return calculateStepFromMarkers(normalizedMarkers, minValueProp);
     }
     return undefined;
-  }, [snapToMarkers, normalizedMarkers, minValueProp, maxValueProp]);
+  }, [snapToMarkers, normalizedMarkers, minValueProp]);
 
   // Use provided step, or calculated step if snapToMarkers is enabled
   const effectiveStep = stepProp ?? calculatedStep;
 
   // Determine if min/max labels should be hidden (only when labeled markers exist at those values)
   const hideMinValue =
-    showMarkerLabels && hasLabeledMarkerAtValue(normalizedMarkers, minValueProp);
+    showMarkerLabels &&
+    hasLabeledMarkerAtValue(normalizedMarkers, minValueProp);
   const hideMaxValue =
-    showMarkerLabels && hasLabeledMarkerAtValue(normalizedMarkers, maxValueProp);
+    showMarkerLabels &&
+    hasLabeledMarkerAtValue(normalizedMarkers, maxValueProp);
 
   const getMarkerPercent = (value: number) => {
     return ((value - minValueProp) / (maxValueProp - minValueProp)) * 100;
@@ -247,7 +257,7 @@ export function Slider({
             {/* Markers */}
             {normalizedMarkers.length > 0 && (
               <div className={markersStyle({ className: classNames?.markers })}>
-                {normalizedMarkers.map((marker, index) => {
+                {normalizedMarkers.map((marker) => {
                   const percent = getMarkerPercent(marker.value);
                   const positionStyle =
                     orientation === 'horizontal'
@@ -256,10 +266,10 @@ export function Slider({
 
                   return (
                     <div
-                      key={`marker-${index}`}
+                      key={`marker-${marker.value}`}
                       className={markerStyle({ className: classNames?.marker })}
                       style={positionStyle}
-                      aria-hidden="true"
+                      aria-hidden='true'
                     >
                       <div
                         className={markerDot({

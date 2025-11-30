@@ -94,8 +94,8 @@ export const WithEvenlySpacedMarkers: Story = {
 export const WithSpecificMarkerValues: Story = {
   args: {
     defaultValue: 50,
-    label: 'Temperature',
-    markers: [0, 32, 68, 100],
+    label: 'Temperature (°F)',
+    markers: [0, 32, 72, 100],
   },
   render: ({ ...args }) => {
     return (
@@ -245,9 +245,9 @@ export const SnapToUnevenMarkers: Story = {
     label: 'Zoom Level',
     markers: [
       { value: 0, label: '1x' },
-      { value: 25, label: '2x' },
-      { value: 50, label: '4x' },
-      { value: 75, label: '8x' },
+      { value: 10, label: '2x' },
+      { value: 25, label: '4x' },
+      { value: 50, label: '8x' },
       { value: 100, label: '16x' },
     ],
     snapToMarkers: true,

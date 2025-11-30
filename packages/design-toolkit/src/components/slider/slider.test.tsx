@@ -49,12 +49,7 @@ describe('Slider', () => {
 
   it('should render with label', () => {
     render(
-      <Slider
-        defaultValue={50}
-        label='Volume'
-        minValue={0}
-        maxValue={100}
-      />,
+      <Slider defaultValue={50} label='Volume' minValue={0} maxValue={100} />,
     );
 
     expect(screen.getByText('Volume')).toBeInTheDocument();
@@ -86,7 +81,9 @@ describe('Slider', () => {
         />,
       );
 
-      const markerDots = container.querySelectorAll('[aria-hidden="true"] > div');
+      const markerDots = container.querySelectorAll(
+        '[aria-hidden="true"] > div',
+      );
       expect(markerDots).toHaveLength(5);
     });
 
@@ -101,7 +98,9 @@ describe('Slider', () => {
         />,
       );
 
-      const markerDots = container.querySelectorAll('[aria-hidden="true"] > div');
+      const markerDots = container.querySelectorAll(
+        '[aria-hidden="true"] > div',
+      );
       expect(markerDots).toHaveLength(5);
     });
 
@@ -242,7 +241,9 @@ describe('Slider', () => {
         />,
       );
 
-      const markerDots = container.querySelectorAll('[aria-hidden="true"] > div');
+      const markerDots = container.querySelectorAll(
+        '[aria-hidden="true"] > div',
+      );
       expect(markerDots).toHaveLength(0);
     });
 
