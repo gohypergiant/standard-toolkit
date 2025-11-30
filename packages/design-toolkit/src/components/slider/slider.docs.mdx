@@ -23,12 +23,20 @@ It is composed of the following components:
   layout="stack"
 />
 
-// Range slider
+// Slider with input field
+<Slider
+  label="Volume"
+  defaultValue={50}
+  showInput
+/>
+
+// Range slider with input fields
 <Slider
   label="Price Range"
   defaultValue={[20, 80]}
   minValue={0}
   maxValue={100}
+  showInput
   layout="grid"
 />
 
@@ -100,6 +108,16 @@ It is composed of the following components:
 
 <Canvas of={SliderStories.Default} />
 
+## Input Fields
+
+Enable numeric input fields for direct value entry with the `showInput` prop.
+
+### Single Value with Input
+<Canvas of={SliderStories.WithInput} />
+
+### Range with Input
+<Canvas of={SliderStories.RangeWithInput} />
+
 ## Markers
 
 Markers provide visual reference points along the slider track, useful for indicating discrete stops, important values, or labeled positions.
@@ -164,6 +182,7 @@ Combine `snapToMarkers` with range sliders for discrete range selection.
 * **`minValue`** - Minimum allowed value (default: 0)
 * **`maxValue`** - Maximum allowed value (default: 100)
 * **`showLabel`** - Whether to display the label (default: true)
+* **`showInput`** - Whether to display numeric input fields (default: false)
 * **`value`** - Controlled value (single number or `[min, max]` for range)
 * **`defaultValue`** - Initial value (single number or `[min, max]` for range)
 * **`onChange`** - Callback when value changes
@@ -184,6 +203,8 @@ Combine `snapToMarkers` with range sliders for discrete range selection.
   * `trackValue` - Applied to the slider track value
   * `trackBackground` - Applied to the slider track background
   * `thumb` - Applied to the slider thumb
+  * `inputs` - Applied to the input fields wrapper div
+  * `input` - Applied to the input field
   * `label` - Applied to the label
   * `minValue` - Applied to the minimum value
   * `maxValue` - Applied to the maximum value
@@ -205,6 +226,7 @@ The underlying elements are:
 - `div` for the slider track and background
 - `div` elements for marker dots and labels (when markers are configured)
 - `button` elements for the slider thumbs
+- `input` elements for numeric input fields (when enabled)
 - `span` elements for min/max value display
 
 The component automatically handles accessibility features including:
@@ -213,7 +235,7 @@ The component automatically handles accessibility features including:
 - Focus management
 - Form integration
 - Value announcements
-- Tooltip display for current values on hover
+- Tooltip display for current values (hidden when input fields are shown)
 - Markers are rendered with `aria-hidden="true"` as they are purely visual indicators
 
 The component integrates with the Tooltip system to show current values on hover and provides flexible layout options through CSS Grid-based positioning.

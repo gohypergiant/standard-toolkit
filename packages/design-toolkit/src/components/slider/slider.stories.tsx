@@ -23,6 +23,7 @@ const meta = {
     maxValue: 100,
     minValue: 0,
     orientation: 'horizontal',
+    showInput: false,
     showLabel: true,
     isDisabled: false,
   },
@@ -47,6 +48,10 @@ const meta = {
       control: 'boolean',
       description: 'When true, the slider can only be set to marker values',
     },
+    showInput: {
+      control: 'boolean',
+      description: 'Whether to display numeric input fields',
+    },
   },
 } satisfies Meta<typeof Slider>;
 
@@ -63,9 +68,39 @@ export const Default: Story = {
   },
 };
 
+export const WithInput: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Volume',
+    showInput: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
 export const Range: Story = {
   args: {
     defaultValue: [20, 80],
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const RangeWithInput: Story = {
+  args: {
+    defaultValue: [20, 80],
+    label: 'Price Range',
+    showInput: true,
   },
   render: ({ ...args }) => {
     return (

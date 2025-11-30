@@ -11,6 +11,7 @@
  */
 import type {
   SliderProps as AriaSliderProps,
+  InputProps,
   LabelProps,
   SliderThumbProps,
   SliderTrackProps,
@@ -30,6 +31,8 @@ export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
   classNames?: {
     slider?: AriaSliderProps['className'];
     label?: LabelProps['className'];
+    inputs?: string;
+    input?: InputProps['className'];
     track?: SliderTrackProps['className'];
     trackBackground?: string;
     trackValue?: string;
@@ -50,6 +53,10 @@ export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
    * - SliderMarker[]: Array of objects with value and optional label
    */
   markers?: SliderMarkersConfig;
+  /**
+   * Whether to display numeric input fields for direct value entry
+   */
+  showInput?: boolean;
   showLabel?: boolean;
   /**
    * Whether to show labels on markers (only applies when markers have labels)

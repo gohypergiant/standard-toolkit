@@ -69,6 +69,65 @@ describe('Slider', () => {
     expect(screen.queryByText('Volume')).not.toBeInTheDocument();
   });
 
+  describe('input', () => {
+    it('should render input when showInput is true', () => {
+      const { container } = render(
+        <Slider
+          defaultValue={50}
+          label='Volume'
+          showInput
+          minValue={0}
+          maxValue={100}
+        />,
+      );
+
+      // Get the text input (not the hidden range input)
+      const textInputs = container.querySelectorAll(
+        'input:not([type="range"])',
+      );
+      expect(textInputs).toHaveLength(1);
+      expect(textInputs[0]).toHaveValue('50');
+    });
+
+    it('should render two inputs for range slider', () => {
+      const { container } = render(
+        <Slider
+          defaultValue={[20, 80]}
+          label='Range'
+          showInput
+          minValue={0}
+          maxValue={100}
+        />,
+      );
+
+      // Get the text inputs (not the hidden range inputs)
+      const textInputs = container.querySelectorAll(
+        'input:not([type="range"])',
+      );
+      expect(textInputs).toHaveLength(2);
+      expect(textInputs[0]).toHaveValue('20');
+      expect(textInputs[1]).toHaveValue('80');
+    });
+
+    it('should not render input when showInput is false', () => {
+      const { container } = render(
+        <Slider
+          defaultValue={50}
+          label='Volume'
+          showInput={false}
+          minValue={0}
+          maxValue={100}
+        />,
+      );
+
+      // Should not have any text inputs (only the hidden range input)
+      const textInputs = container.querySelectorAll(
+        'input:not([type="range"])',
+      );
+      expect(textInputs).toHaveLength(0);
+    });
+  });
+
   describe('markers', () => {
     it('should render evenly spaced markers when given a number', () => {
       const { container } = render(

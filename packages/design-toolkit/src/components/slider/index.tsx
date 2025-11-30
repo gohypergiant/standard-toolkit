@@ -17,6 +17,7 @@ import {
   Slider as AriaSlider,
   SliderTrack as AriaSliderTrack,
   composeRenderProps,
+  Input,
   Label,
   SliderThumb,
   Text,
@@ -29,6 +30,8 @@ import type { SliderMarker, SliderMarkersConfig, SliderProps } from './types';
 const {
   slider,
   label,
+  inputs,
+  input,
   thumb,
   track,
   trackBackground,
@@ -146,13 +149,17 @@ function hasLabeledMarkerAtValue(
 /**
  * Slider - An interactive range input component for numeric value selection
  *
- * Provides accessible slider functionality with flexible layouts and
- * comprehensive keyboard and mouse interaction support.
+ * Provides accessible slider functionality with optional input field integration,
+ * flexible layouts, and comprehensive keyboard and mouse interaction support.
  * Perfect for settings, filters, or any numeric input requiring visual feedback.
  *
  * @example
  * // Basic slider
  * <Slider label="Volume" defaultValue={50} />
+ *
+ * @example
+ * // Slider with input field
+ * <Slider label="Opacity" defaultValue={50} showInput />
  *
  * @example
  * // Slider with evenly spaced markers
@@ -190,6 +197,7 @@ export function Slider({
   maxValue: maxValueProp = 100,
   minValue: minValueProp = 0,
   orientation = 'horizontal',
+  showInput,
   showLabel = true,
   showMarkerLabels = false,
   snapToMarkers = false,
@@ -243,6 +251,28 @@ export function Slider({
             <Label className={label({ className: classNames?.label })}>
               {labelProp}
             </Label>
+          )}
+          {showInput && (
+            <div className={inputs({ className: classNames?.inputs })}>
+              {state.values.map((value, index) => (
+                <Input
+                  key={`number-field-${index === 0 ? 'min' : 'max'}`}
+                  className={composeRenderProps(
+                    classNames?.input,
+                    (className) => input({ className }),
+                  )}
+                  value={value}
+                  disabled={state.isDisabled}
+                  data-disabled={state.isDisabled || undefined}
+                  onChange={(event) =>
+                    state.setThumbValue(
+                      index,
+                      Number.parseFloat(event.target.value),
+                    )
+                  }
+                />
+              ))}
+            </div>
           )}
           <AriaSliderTrack
             className={composeRenderProps(classNames?.track, (className) =>
@@ -303,7 +333,9 @@ export function Slider({
                     state.values.length === 1 ? 0 : 1,
                   )}
                 />
-                <TooltipTrigger isDisabled={state.isThumbDragging(index)}>
+                <TooltipTrigger
+                  isDisabled={showInput || state.isThumbDragging(index)}
+                >
                   <SliderThumb
                     index={index}
                     className={composeRenderProps(

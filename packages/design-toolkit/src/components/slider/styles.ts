@@ -30,6 +30,17 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:group-layout-grid/slider:col-span-2',
       'group-disabled/slider:fg-disabled',
     ],
+    inputs: [
+      'order-5 flex gap-s',
+      'group-layout-grid/slider:col-start-3 group-layout-grid/slider:row-start-1',
+      'group-orientation-horizontal/slider:flex-row',
+      'group-orientation-vertical/slider:flex-col-reverse',
+      'group-orientation-vertical/slider:group-layout-grid/slider:row-start-4',
+    ],
+    input: [
+      'fg-primary-bold w-[50px] rounded-medium px-s py-xs font-display text-body-m outline outline-interactive',
+      'group-disabled/slider:fg-disabled group-disabled/slider:cursor-not-allowed group-disabled/slider:outline-interactive-disabled',
+    ],
     track: [
       'relative order-3 h-full',
       'group-orientation-horizontal/slider:h-[20px] group-orientation-horizontal/slider:w-full',
@@ -48,10 +59,10 @@ export const SliderStyles = tv({
       'group-orientation-vertical/slider:-translate-x-1/2 group-orientation-vertical/slider:top-[calc(100%-attr(data-end_%)*100)] group-orientation-vertical/slider:bottom-[calc(attr(data-start_%)*100)] group-orientation-vertical/slider:left-1/2 group-orientation-vertical/slider:w-xxs',
     ],
     thumb: [
-      'z-10 h-m w-m rounded-full bg-(--fg-accent-primary-bold) outline-transparent',
-      'hover:bg-(--fg-accent-primary-hover)',
-      'dragging:bg-(--fg-a11y-on-accent) dragging:outline dragging:outline-interactive-hover dragging:ring-8 dragging:ring-[rgba(110,209,255,0.08)]',
-      'disabled:cursor-not-allowed disabled:bg-(--fg-disabled)',
+      'z-10 h-m w-m rounded-full outline-transparent [background-color:var(--fg-accent-primary-bold)]',
+      'hover:[background-color:var(--fg-accent-primary-hover)]',
+      'dragging:outline dragging:outline-interactive-hover dragging:ring-8 dragging:ring-[rgba(110,209,255,0.08)] dragging:[background-color:var(--fg-a11y-on-accent)]',
+      'disabled:cursor-not-allowed disabled:[background-color:var(--fg-disabled)]',
       'group-orientation-horizontal/slider:top-1/2',
       'group-orientation-vertical/slider:left-1/2',
     ],
