@@ -583,10 +583,13 @@ export function convertDDToDisplaySegments(
     const segments = parseCoordinateStringToSegments(coordString, format);
     return segments;
   } catch (error) {
-    logger.withError(error).error('Failed to convert DD to display', {
-      value: String(value),
-      format: String(format),
-    } as any);
+    logger
+      .withContext({
+        value: String(value),
+        format: String(format),
+      })
+      .withError(error)
+      .error('Failed to convert DD to display');
     return null;
   }
 }
@@ -649,10 +652,13 @@ export function convertDisplaySegmentsToDD(
       lon: LON,
     };
   } catch (error) {
-    logger.withError(error).error('Failed to convert display to DD', {
-      segments: JSON.stringify(segments),
-      format: String(format),
-    } as any);
+    logger
+      .withContext({
+        segments: JSON.stringify(segments),
+        format: String(format),
+      })
+      .withError(error)
+      .error('Failed to convert display to DD');
     return null;
   }
 }
@@ -814,9 +820,12 @@ function convertToFormat(
     }
 
     // Log other errors in development
-    logger.withError(error).error(`Failed to convert to ${format}`, {
-      value: JSON.stringify(value),
-    } as any);
+    logger
+      .withContext({
+        value: JSON.stringify(value),
+      })
+      .withError(error)
+      .error(`Failed to convert to ${format}`);
     return {
       value: COORDINATE_ERROR_MESSAGES.CONVERSION_FAILED,
       isValid: false,
@@ -883,9 +892,12 @@ export function getAllCoordinateFormats(
 
     return result;
   } catch (error) {
-    logger.withError(error).error('Failed to get all coordinate formats', {
-      value: JSON.stringify(validValue),
-    } as any);
+    logger
+      .withContext({
+        value: JSON.stringify(validValue),
+      })
+      .withError(error)
+      .error('Failed to get all coordinate formats');
     return invalidResult;
   }
 }
@@ -1002,10 +1014,13 @@ export function parseCoordinatePaste(
       }
     } catch (error) {
       // Log parsing errors in development for debugging
-      logger.withError(error).warn(`Failed to parse as ${format}`, {
-        pastedText: pastedText.trim(),
-        format: String(format),
-      } as any);
+      logger
+        .withContext({
+          pastedText: pastedText.trim(),
+          format: String(format),
+        })
+        .withError(error)
+        .warn(`Failed to parse as ${format}`);
       // Continue trying other parsers
     }
   }

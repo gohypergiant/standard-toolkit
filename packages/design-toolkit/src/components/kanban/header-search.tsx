@@ -18,10 +18,10 @@ import type { KanbanSearchProps } from './types';
 export function KanbanHeaderSearch({ classNames, ...rest }: KanbanSearchProps) {
   return (
     <SearchField
-      variant='outlined'
+      {...rest}
+      variant='outline'
       classNames={classNames}
       aria-label='Search'
-      {...rest}
     />
   );
 }

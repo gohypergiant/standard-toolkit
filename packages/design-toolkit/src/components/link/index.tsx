@@ -12,13 +12,14 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Link as AriaLink,
   composeRenderProps,
   LinkContext,
   useContextProps,
 } from 'react-aria-components';
-import { LinkStyles } from './styles';
+import styles from './styles.module.css';
 import type { LinkProps } from './types';
 
 /**
@@ -45,7 +46,7 @@ export function Link({ ref, ...props }: LinkProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(className, (className) =>
-        LinkStyles({ className }),
+        clsx(styles.link, className),
       )}
       data-visited={(allowsVisited && isVisited) || null}
     />

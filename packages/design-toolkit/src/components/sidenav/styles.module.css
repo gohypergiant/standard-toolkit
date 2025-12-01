@@ -1,0 +1,311 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .sidenav {
+    @apply fg-a11y-on-accent gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
+
+    @variant closed {
+      @apply items-center;
+    }
+
+    @variant group-push-left/layout {
+      @apply relative;
+    }
+  }
+
+  .header {
+    @apply mb-m flex justify-center;
+  }
+
+  .content {
+    @apply gap-xs flex h-full max-h-full w-fit flex-col;
+
+    @variant group-open/sidenav {
+      @apply w-full;
+    }
+
+    @variant group-closed/sidenav {
+      @apply items-center;
+    }
+  }
+
+  .avatar {
+    @apply gap-x-m grid w-full grid-rows-2 items-center;
+    grid-template-areas: 'content heading' 'content text';
+    grid-template-columns: auto 1fr;
+
+    @variant group-closed/sidenav {
+      @apply flex;
+    }
+
+    .icon {
+      grid-area: content;
+    }
+
+    .heading {
+      @apply fg-primary-bold text-body-m text-left;
+      grid-area: heading;
+    }
+
+    .text {
+      @apply fg-primary-muted text-body-s grow text-left;
+      grid-area: text;
+    }
+  }
+
+  .heading {
+    @apply text-body-xs uppercase;
+  }
+
+  .item {
+    @apply gap-s rounded-medium p-xs text-body-m flex w-full cursor-pointer items-center justify-center;
+
+    @variant hover {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant focus-visible {
+      @apply bg-interactive-muted-hover outline-none;
+    }
+
+    @variant pressed {
+      @apply bg-accent-primary-pressed;
+    }
+
+    @variant selected {
+      @apply bg-accent-primary-bold;
+
+      @variant hover {
+        @apply bg-accent-primary-hover;
+      }
+
+      @variant focus-visible {
+        @apply bg-accent-primary-hover;
+      }
+
+      @variant pressed {
+        @apply bg-accent-primary-pressed;
+      }
+    }
+
+    @variant disabled {
+      @apply fg-disabled cursor-not-allowed;
+    }
+
+    @variant group-open/sidenav {
+      @apply px-s;
+    }
+
+    @variant group-closed/sidenav {
+      @apply max-w-fit;
+    }
+  }
+
+  .text {
+    @apply text-body-s grow text-left;
+  }
+
+  .link {
+    @apply gap-s rounded-medium p-xs text-body-m flex w-full cursor-pointer items-center justify-center;
+
+    @variant hover {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant focus-visible {
+      @apply bg-interactive-muted-hover outline-none;
+    }
+
+    @variant pressed {
+      @apply bg-accent-primary-pressed;
+    }
+
+    @variant disabled {
+      @apply fg-disabled cursor-not-allowed;
+    }
+
+    @variant group-open/sidenav {
+      @apply w-full;
+    }
+
+    @variant group-closed/sidenav {
+      @apply max-w-fit;
+    }
+  }
+
+  .menu {
+    @apply text-body-s relative;
+
+    .heading {
+      @apply flex-1 text-left;
+    }
+
+    .item {
+      @apply gap-s rounded-medium p-s text-body-s flex w-full cursor-pointer items-center text-left;
+
+      @variant hover {
+        @apply bg-interactive-muted-hover;
+      }
+
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover outline-none;
+      }
+
+      @variant pressed {
+        @apply bg-accent-primary-pressed;
+      }
+
+      @variant selected {
+        @apply bg-accent-primary-bold;
+
+        @variant hover {
+          @apply bg-accent-primary-hover;
+        }
+
+        @variant focus-visible {
+          @apply bg-accent-primary-hover;
+        }
+
+        @variant pressed {
+          @apply bg-accent-primary-pressed;
+        }
+      }
+
+      @variant disabled {
+        @apply fg-disabled cursor-not-allowed;
+      }
+
+      @variant group-expanded/menu {
+        @apply block;
+
+        @variant group-open/sidenav {
+          padding-left: 32px;
+        }
+      }
+    }
+  }
+
+  .trigger {
+    @apply gap-s rounded-medium p-xs flex w-full cursor-pointer items-center justify-center;
+
+    @variant hover {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant focus-visible {
+      @apply bg-interactive-muted-hover outline-none;
+    }
+
+    @variant pressed {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant group-closed/sidenav {
+      @apply max-w-fit;
+    }
+  }
+
+  .panel {
+    @apply fg-primary-bold rounded-medium bg-surface-raised outline-static outline;
+
+    .heading {
+      @apply rounded-t-medium bg-surface-overlay px-m py-s text-body-s;
+    }
+
+    .content {
+      @apply gap-xs bg-surface-default px-xs py-xs flex w-full flex-col;
+    }
+
+    .item {
+      @apply gap-s rounded-medium p-s text-body-s flex w-full cursor-pointer items-center text-left;
+
+      @variant hover {
+        @apply bg-interactive-muted-hover;
+      }
+
+      @variant focus-visible {
+        @apply bg-interactive-muted-hover outline-none;
+      }
+
+      @variant pressed {
+        @apply bg-accent-primary-pressed;
+      }
+
+      @variant selected {
+        @apply bg-accent-primary-bold;
+
+        @variant hover {
+          @apply bg-accent-primary-hover;
+        }
+
+        @variant focus-visible {
+          @apply bg-accent-primary-hover;
+        }
+
+        @variant pressed {
+          @apply bg-accent-primary-pressed;
+        }
+      }
+
+      @variant disabled {
+        @apply fg-disabled cursor-not-allowed;
+      }
+    }
+  }
+
+  .transient {
+    @variant group-closed/sidenav {
+      @apply hidden;
+    }
+  }
+}
+
+@layer components.l2 {
+  .divider {
+    @apply my-s;
+  }
+
+  .toggle {
+    @apply gap-s rounded-medium p-xs flex cursor-pointer items-center;
+
+    @variant hover {
+      @apply bg-interactive-muted-hover;
+    }
+
+    @variant focus-visible {
+      @apply bg-interactive-muted-hover outline-none;
+    }
+
+    @variant pressed {
+      @apply bg-interactive-muted-pressed;
+    }
+
+    @variant group-open/sidenav {
+      @apply px-s;
+    }
+  }
+
+  .tooltip {
+    @apply gap-s text-body-s absolute flex items-center whitespace-nowrap;
+
+    @variant group-disabled/item {
+      @apply fg-disabled;
+    }
+
+    @variant group-disabled/link {
+      @apply fg-disabled;
+    }
+  }
+}

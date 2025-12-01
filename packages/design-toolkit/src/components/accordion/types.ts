@@ -18,18 +18,18 @@ import type {
   DisclosureProps,
   Heading,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
 import type { RenderPropsClassName } from '@/lib/types';
-import type { AccordionStyles } from './styles';
 
-export type AccordionStyleVariants = VariantProps<typeof AccordionStyles>;
+export type AccordionStyleVariants = {
+  variant?: 'compact' | 'cozy';
+};
 
 export type AccordionGroupProps = DisclosureGroupProps &
-  Pick<AccordionStyleVariants, 'variant'> &
+  AccordionStyleVariants &
   RefAttributes<HTMLDivElement>;
 
 export type AccordionProps = DisclosureProps &
-  Pick<AccordionStyleVariants, 'variant'> &
+  AccordionStyleVariants &
   RefAttributes<HTMLDivElement>;
 
 export type AccordionHeaderProps = ComponentPropsWithRef<'header'>;
