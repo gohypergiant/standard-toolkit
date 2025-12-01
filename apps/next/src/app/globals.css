@@ -11,7 +11,7 @@
  */
 
 /* this @layer declaration needs to be before the stylesheet imports */
-@layer properties, theme, base, old_ds_reset, old_ds_framework, old_ds_overrides, components, components.l1, components.l2, components.l3, components.l4, components.l5, utilities;
+/*@layer properties, theme, base, old_ds_reset, old_ds_framework, old_ds_overrides, components, components.l1, components.l2, components.l3, components.l4, components.l5, utilities;*/
 
 @import '@accelint/design-foundation/styles';
 @source '../../node_modules/@accelint/design-foundation';
