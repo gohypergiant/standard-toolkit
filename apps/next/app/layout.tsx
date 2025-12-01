@@ -9,12 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+// NOTE: !! this must be first import
+import './globals.css';
 import 'server-only';
 import { Nav } from '~/modules/nav';
 import { RouterProvider } from '~/modules/providers/router';
 import { ThemeProvider } from '~/modules/providers/theme';
 import type { PropsWithChildren } from 'react';
-import './globals.css';
 
 // biome-ignore lint/style/useNamingConvention: nextjs convention
 export const experimental_ppr = true;

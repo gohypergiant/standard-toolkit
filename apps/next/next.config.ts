@@ -19,9 +19,9 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
-    ppr: false, // enable once we are on next 16
-    reactCompiler: false, // enable once we are on next 16
-    cssChunking: 'strict',
+    // ppr: false, // enable once we are on next 16
+    // reactCompiler: false, // enable once we are on next 16
+    // cssChunking: 'strict',
   },
 };
 
