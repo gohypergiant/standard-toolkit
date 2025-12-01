@@ -388,6 +388,39 @@ importers:
         specifier: ^4.1.12
         version: 4.1.12
 
+  packages/dataset:
+    devDependencies:
+      '@accelint/constellation-tracker':
+        specifier: workspace:*
+        version: link:../../tooling/constellation-tracker
+      '@accelint/core':
+        specifier: workspace:*
+        version: link:../core
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
+      esbuild-fix-imports-plugin:
+        specifier: ^1.0.23
+        version: 1.0.23
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^4.0.8
+        version: 4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(happy-dom@19.0.2)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
+
   packages/design-foundation:
     devDependencies:
       '@accelint/biome-config':
