@@ -504,7 +504,7 @@ export type LayerDataset<
    * Available presentation modes per field.
    *
    * @remarks
-   * Structure: Record<fieldName, (LayerConfigType | ExtensionType)[] | null>
+   * Structure: `Record<fieldName, (LayerConfigType | ExtensionType)[] | null>`
    *
    * - Key: Field name from the dataset
    * - Value: Array of supported visualization types
