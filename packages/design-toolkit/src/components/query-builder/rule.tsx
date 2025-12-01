@@ -22,10 +22,8 @@ import {
   useStopEventPropagation,
 } from 'react-querybuilder';
 import { Lines } from '../lines';
-import { RuleStyles } from './styles';
+import styles from './styles.module.css';
 import type { QueryBuilderContextType } from './types';
-
-const { lines } = RuleStyles();
 
 const QueryBuilderLines = memo(function QueryBuilderLines({
   path,
@@ -44,7 +42,7 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
       variant={line}
       size='small'
       isVisible={context.showRuleLines}
-      className={lines()}
+      className={styles.ruleLines}
     />
   );
 });
@@ -147,7 +145,7 @@ export function Rule(props: RuleProps) {
           listsAsArrays={listsAsArrays}
           parseNumbers={parseNumbers}
           separator={valueEditorSeparator}
-          className={classNames.value}
+          className={rule.classNames.value}
           handleOnChange={generateOnChangeHandler('value')}
           rule={rule.rule}
           {...coreRuleProps}

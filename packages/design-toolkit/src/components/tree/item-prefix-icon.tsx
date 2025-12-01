@@ -10,11 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Icon } from '../icon';
-import { TreeStyles } from './styles';
+import styles from './styles.module.css';
 import type { IconProps } from '../icon/types';
-
-const { icon } = TreeStyles();
 
 /**
  * ItemIcon - Icon for a tree item
@@ -22,5 +21,5 @@ const { icon } = TreeStyles();
  * Renders an icon for a tree item
  */
 export function TreeItemPrefixIcon({ children, className }: IconProps) {
-  return <Icon className={icon({ className })}>{children}</Icon>;
+  return <Icon className={clsx(styles.icon, className)}>{children}</Icon>;
 }

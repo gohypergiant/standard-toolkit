@@ -13,16 +13,15 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Tabs as AriaTabs,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { TabsContext } from './context';
-import { TabStyles } from './styles';
+import styles from './styles.module.css';
 import type { TabsProps } from './types';
-
-const { tabs } = TabStyles();
 
 /**
  * Tabs - A tab navigation component for organizing content into sections
@@ -80,7 +79,7 @@ export function Tabs({ ref, ...props }: TabsProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(className, (className) =>
-        tabs({ className }),
+        clsx('group/tabs', styles.tabs, className),
       )}
     >
       {children}

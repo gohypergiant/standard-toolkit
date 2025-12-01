@@ -102,10 +102,9 @@ export type SidenavContextValue = {
   isOpen: boolean;
 };
 
-export type SidenavMenuProps = {
+export type SidenavMenuProps = PropsWithChildren & {
   title: string;
   icon: React.ReactNode;
-  children: React.ReactNode;
   classNames?: {
     menu?: DisclosureProps['className'];
     button?: ButtonProps['className'];

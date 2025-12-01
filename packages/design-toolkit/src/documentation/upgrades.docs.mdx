@@ -1,0 +1,385 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Upgrade Guides" />
+
+### All Release Notes
+[All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
+
+* [Upgrade to v8](#v8)
+* [Upgrade to v7](#v7)
+* [Upgrade to v6](#v6)
+* [Upgrade to v5](#v5)
+
+These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
+
+[Go directly to migration steps for v8](#migration).
+
+<hr />
+<a id="v8"></a>
+# Upgrade to v8
+
+## Improvements and Breaking Changes
+The most notable change in this release is the removal of support for the [Tailwind Variants](https://www.tailwind-variants.org/)
+library. We still use Tailwind, and utility classes can be applied directly in JSX, but we’re choosing a different approach for managing complex selectors and variants. Because the Design Foundation library will no longer export tailwind variant and tailwind merge utilities it will no longer be an officially supported approach.
+
+Instead, the Design Toolkit is using [CSS Modules](https://github.com/css-modules/css-modules) to build styles and recommending it for consuming applications as well. See below for details on how to migrate your application and why we chose to refactor.
+
+### Easier debugging
+Many of our components support a wide matrix of props and states that influence their appearance. Under the previous Tailwind Variant approach, this resulted in large clusters of classes on each element. Because all variant classes were applied unconditionally, the DOM became noisy, repetitive, and difficult to reason about.
+
+With our updated approach, components typically use only one to three classes. State-based selectors are still fully supported, but they now appear only when the corresponding state is active. This produces cleaner markup and a more standard, maintainable development experience for anyone working with our library.
+
+<div style={{ display: 'flex', justifyContent: 'space-around', width: '500px' }}>
+  <div style={{ flex: 1, padding: '0 10px' }}>
+    <img src="./css_before.png" style={{ width: '100%' }} />
+    <figcaption style={{ textAlign: 'center' }}>Before</figcaption>
+  </div>
+  <div style={{ flex: 1, padding: '0 10px' }}>
+    <img src="./css_after.png" alt="Image 2" style={{ width: '100%' }} />
+    <figcaption style={{ textAlign: 'center' }}>After</figcaption>
+  </div>
+</div>
+
+
+### Simpler reading and writing styles
+We’ve revamped our styling system to make components cleaner and easier to work with. Instead of large sets of utility classes, components now use only a few core classes. State-based styles still exist but are included only when the relevant state is active, reducing noise in both markup and output CSS. Variant syntax has changed: rather than chaining selectors with colons, use `@variant` blocks with `@apply` inside a class to define variant styles locally.
+
+### More control with style precedence
+Previously, the precedence of a style was entirely dictated by the rendering order of tailwind classes, which then required the addition of specificity control selectors, such as `:enabled` and `:sudo`. Using css modules, we can use the standard CSS cascade (later styles have higher precedence) while simplifying selectors.
+
+Now, Tailwind’s utility classes will always override anything defined in Tailwind’s component layer, which is where all Design Toolkit components are assigned. Because Tailwind's single components layer was too limited for our complex, multi-state components, we’ve expanded the component layer into five sub-layers: L1 through L5. While it is possible for you to define your own css layers in your application as well, we recommend against it unless there is a very compelling reason.
+
+* `@layer theme` - for theme based css vars and styles
+* `@layer base` - for resetting of browser defaults
+* `@layer components` - for defining reusable component styles, such as buttons, cards, or forms
+  * `components.l1` - lowest component precedence and the primary layer for all Design Toolkit components
+  * `components.l2` - one step above `l1`, used within the Design Toolkit for composition -- for example `Dialog` that composes a styled `Button`
+  * `components.l3` - application-level reusable components and their overrides
+  * `components.l4` - `components.l5` - for deeper overrides or edge cases
+* `@layer utilities` built-in or custom utility, used for the page-level and inline styles. has the highest precedence
+
+**You Must Use Higher Layers for Overrides** While it may be tempting to place override styles back on the same layer (e.g., L1) if you don’t immediately see any conflicts, this is unsafe for two reasons:
+
+* **Hidden State Conflicts** - Many components have multiple states. A style might appear conflict-free in the default state but collide with styles applied in other states.
+* **Upgrades Can Break Assumptions** - Even a non-breaking update of DTK may adjust styles at L1. Any assumptions you made when checking for conflicts would need to be re-validated across your whole component set.
+
+Therefore, when creating application-specific components, use layers `l3 - l5` and when you want to override base components, use the `@utilities` layer from Tailwind (any built-in utility or custom utility classes already exist on this layer).
+
+[See details on migrating to this approach](#css-modules)
+
+### Better Performance
+Another key motivation for this redesign was performance. Our previous system relied on TV and tw-merge, but tw-merge does not correctly or efficiently resolve variant selectors. To work around this, we built a custom resolver that stripped selectors, compared styles, merged them, and then rebuilt the final output. While functionally correct, this process proved expensive: in large UIs, selector resolution and merging consumed a significant amount of CPU, creating noticeable runtime overhead.
+
+By moving to a more conventional, class-driven styling approach, we eliminate the need for this custom resolution logic entirely. This avoids the costly computation path and improves runtime performance, especially at scale.
+
+It's worth noting that this change does not reduce payload size. Previously, we shipped a large amount of JSX containing many utility classes; now, those styles are generated in CSS instead. In terms of bytes shipped, this is effectively a lateral change—but it removes the CPU bottleneck caused by dynamic selector resolution.
+
+### Code Quality
+One additional benefit of the new styling approach is significantly better validation during CSS module compilation. When the compiler encounters an invalid class name, it now throws an error immediately. Our previous system (CB) did not provide this level of validation, which allowed invalid or unused class names to slip through undetected.
+
+During the migration, we discovered roughly a dozen such invalid classes across our components—classes that effectively did nothing but were never surfaced as issues.
+
+With the new system, invalid class names fail fast, ensuring that dead or misspelled styles are caught early. This improves overall code quality, prevents silent styling bugs, and helps keep the component library maintainable over time.
+
+### Removal of the `sudo:` utility
+Because we have moved to using layers to manage css precedence, there is no more need for the `sudo:` variant. This was used to increase the specificity of a class but it is no longer needed, so it was removed. This removal will not cause any errors in your source, but it should still be removed for clarity.
+
+### Additional variants
+Additional custom variant were added for flexibility:
+
+* **`extend-left`** (&:where([data-extend~="left"]));
+* **`extend-right`** (&:where([data-extend~="right"]));
+* **`extend-top`** (&:where([data-extend~="top"]));
+* **`extend-bottom`** (&:where([data-extend~="bottom"]));
+* **`push-left`** (&:where([data-push~="left"]));
+* **`push-right`** (&:where([data-push~="right"]));
+* **`push-top`** (&:where([data-push~="top"]));
+* **`push-bottom`** (&:where([data-push~="bottom"]));
+
+### Badge and Chip component prop name change
+To improve consistency across the component library, the variant prop on the Badge and Chip components has been renamed to color. This aligns these components with others—such as Button—that already use a color prop to express visual styling choices.
+
+Because the old variant prop is no longer recognized, this update is a breaking change. Consumers using variant will need to update their components to use the new color prop.
+
+### Popover structure
+To align the Popover component with the structures used by Dialog and Tooltip, we have updated its API to follow the RCV-recommended pattern. Previously, PopoverTrigger was used only as a wrapper around a “triggerable” element. This led to structural inconsistencies across components. This change brings Popover in line with the rest of the system, but it is a breaking change. Any existing Popover usage must be updated to reflect the new structure.
+
+With the new design:
+
+* PopoverTrigger is now the root element of the popover.
+* The triggerable element (e.g., a Button, icon, or text node) should be a direct child of PopoverTrigger.
+* The Popover content element is also a child of PopoverTrigger, and contains the popover’s title and body.
+
+### Action Bar
+Added a size prop to simplify usage in different UI contexts.
+
+<a id="migration"></a>
+## Migration steps
+
+### 1. Enable compiling CSS Modules _(only if necessary)_
+Applications consuming this library must have CSS Modules enabled. For frameworks like Next.js, this requires no additional configuration — CSS modules support comes built in. However, other frameworks may require extra setup to ensure CSS Modules compile correctly.
+
+**This requirement is unavoidable.** The Design Toolkit ships Tailwind-based styles that must be compiled within the application’s build pipeline, not precompiled at the library level. Additionally, most applications define their own namespaces or component-level styles, which also rely on CSS modules. Because both the library and the application depend on this mechanism, CSS Modules support must be present in the consuming project.
+
+### 2. Prevent hashing of Tailwind named groups
+Many components in the library use Tailwind [named groups](https://tailwindcss.com/docs/hover-focus-and-other-states#differentiating-nested-groups) (e.g., `group/button`) to allow child elements to style themselves based on the state of a parent component. For example, a custom icon inside a Button may use selectors like `group-hover/button` to react to hover or press states. For these patterns to work, the group class name must remain exactly as written in JSX, global and static — it cannot be transformed or hashed.
+
+Therefore, any application using this library must configure CSS modules to leave named group classes un-hashed. **Failing to do so will break group-based state styling throughout the design system.** We now provide two custom functions `generateScopedClassName` and `getLocalIdent` which will prevent unwanted hashing when applied correctly. This ensures named group classes remain stable while all other classes continue to benefit from scoped CSS Module behavior.
+
+**Webpack / Next.js**
+Use the exported `getLocalIdent` function and apply it to every CSS loader rule. Because Webpack configurations vary—especially in Next.js—we do not ship automatic rule-discovery. Consumers must insert `getLocalIdent` into their own Webpack loader definitions, using our examples as a reference.
+
+```ts
+import { getLocalIdent } from '@accelint/design-foundation/lib/webpack';
+
+const nextConfig: NextConfig = {
+  transpilePackages: ['@accelint/design-foundation', '@accelint/design-system'],
+  webpack(config: Configuration, { dev, nextRuntime, webpack, isServer }) {
+
+    //...your other config
+
+    const rules = (
+      config.module?.rules?.find(
+        (rule) =>
+          rule != null &&
+          typeof rule === 'object' &&
+          typeof rule.oneOf === 'object',
+      ) as RuleSetRule | undefined
+    )?.oneOf?.filter(
+      (rule) =>
+        rule != null && typeof rule === 'object' && Array.isArray(rule.use),
+    ) as RuleSetRule[] | undefined;
+
+    rules?.forEach((rule) => {
+      if (Array.isArray(rule.use)) {
+        rule.use.forEach((loader) => {
+          if (
+            loader != null &&
+            typeof loader === 'object' &&
+            loader.loader &&
+            loader.loader.includes('/css-loader/') &&
+            loader.options &&
+            typeof loader.options !== 'string' &&
+            loader.options.modules
+          ) {
+            loader.options.modules.getLocalIdent = getLocalIdent;
+          }
+        });
+      }
+    });
+
+    return config;
+  },
+};
+export default nextConfig;
+```
+
+**Vite**
+```ts
+import { generateScopedName } from '@accelint/design-foundation/lib/vite';
+
+export default defineConfig({
+
+  //...your other config
+
+  css: {
+    modules: {
+      generateScopedName,
+    },
+  },
+});
+```
+
+<a id="css-modules"></a>
+### 3. Migrate to CSS modules and clsx
+Previously, we recommended using the [tailwind variants](https://www.tailwind-variants.org/) library to control css application, but because of performance and other reasons listed above, we no longer recommend that approach. While there is no formal enforcement of the these patterns, standards, consistency and code quality will allow us to move with velocity and quality.
+
+In places in your code base where you are already using [tailwind variants](https://www.tailwind-variants.org/), replace it with the following approach.
+
+```css
+/* makes all classnames available for reference */
+@reference '../../index.module.css';
+
+/* assigns classes to appropriate layer */
+@layer components.l3 {
+
+  .example {
+    /* using apply directive to reference tailwind utility classes */
+    @apply fg-primary-bold px-xs text-body-xs;
+
+    /* using arbitrary css */
+    max-width: 250px;
+
+    /* using pseudo-selectors */
+    &:before {
+      @apply pointer-events-none absolute top-0 left-0;
+      content: '*';
+    }
+
+    /* using built-in tailwind variants */
+    @variant hover {
+      @apply bg-critical-bold outline-critical-bold;
+    }
+
+    /* using custom design toolkit variants */
+    @variant color-serious {
+      @apply bg-serious-muted outline-serious-bold;
+    }
+
+    /* using order to establish precedence with variants */
+    @variant disabled {
+      @apply bg-critical-muted outline-critical-bold;
+    }
+  }
+}
+```
+
+There are a few important things to notice above:
+
+* **@reference** - the use of the `@reference` directive at the top of your css module is required to avoid duplication of applied classes. [Details](https://tailwindcss.com/docs/functions-and-directives#reference-directive)
+
+* **@layer** -- assigns the classes in that group to a layer. In an application-specific component, that would most likely be `l3`. [Detaiils](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@layer)
+
+* **@apply** - when you want to use tailwind classnames, use the `@apply` directive. [Details](https://tailwindcss.com/docs/functions-and-directives#apply-directive)
+
+* **Arbitrary values** - when you want to apply arbitrary values, it is better to write those in plain css for clarity. `@apply` directive should come before any custom css. This could apply to other styles as well, for example `grid-template-area` which is basically impossible to do without an arbitrary value. Essentially, anytime you are using the square bracket syntax, an arbitrary value in a class property would be preferred.
+
+* **Pseudo-elements** - although [pseudo-elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/Pseudo-elements) (such as :before or :after) can be written with the `@variant` directive, there is a preference to use the direct CSS selectors pattern, with the ampersand colon syntax.
+
+* **@variant** - this directive is used to reference both built-in tailwind variants (hover, focus, disabled, etc...) and for the custom variants exported by the Design Toolkit (color-info, size-large, etc... [here is the complete list](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css)). [Details](https://tailwindcss.com/docs/functions-and-directives#variant-directive)
+
+#### Variants and selectors
+Components that support visual variants (e.g., `cozy` and `compact`) expose those variant styles through CSS Modules. Every class defined in the component’s stylesheet is available as a top-level property on the imported styles object. This allows variant classes to be selected using simple object access—e.g., `styles[variant]`. If you want to create your own variants in application-specific components, this is the typical pattern we use in the Design Toolkit:
+
+```jsx
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+<div className={clsx(
+  styles.base,
+    styles[variant],      // e.g., "cozy" or "compact"
+    className             // passed in from the consumer
+)}>example</div>
+```
+
+This pattern ensures the base styles, variant styles, and consumer-provided overrides are all composed cleanly. You may use any of clsx’s supported patterns for conditional classes. The library does not enforce a specific style for conditional class composition, for example both are valid:
+
+* **Boolean expressions** ```clsx(isActive && styles.active)```
+* **Object notation** ```clsx({ [styles.active]: isActive })```
+
+However, note that TypeScript types for CSS Modules mark class names as string | undefined, which means they cannot be used directly as object keys. To work around this, wrap them in template literals:
+
+```clsx({ [`${styles.active}`]: isActive })```
+
+#### Avoid using `composes` with css modules
+Although CSS Modules supports the composes keyword, it is not supported in this library. Even though local composes may appear to work, we recommend avoiding it for consistency. Instead, apply multiple classes directly in JSX (e.g., via clsx).
+
+The main issue is with external composes (composes: `foo from './file.css'`). Tailwind processes styles before CSS Modules, but external composes pulls in the original, unprocessed source file. This bypasses Tailwind entirely, resulting in missing or incorrect styles. Because of how both tools operate, this cannot be reliably fixed. Instead, compose styles in JSX, not in CSS Modules. This ensures predictable Tailwind processing and consistent behavior across all components.
+
+### 4. Edit your root global.css file _(only if necessary)_
+If you are breaking out the specific layers individually in your application, you will need to manually add in (in correct order) the additional layers exported with the Design Toolkit. This is *only* necessary if you need to specifically control layers -- otherwise it will be handled automatically.
+
+### 5. Make additional adjustments
+* If you are using the `Popover` component, you will have to alter it's structure slightly.
+* For any `Badge` and `Chip` components change `variant` prop to `color`
+
+<hr />
+<a id="v7"></a>
+# Upgrade to v7
+The Design Toolkit was refactored to eliminate the the dot syntax for referencing subcomponents. This change was made to address a critical bug inside React Server Components inside Nextjs.
+
+For example, `Drawer.Header` becomes `DrawerHeader` and so on. To migrate your code base, you will need to remove all dot notation from components currently in use in your code base.
+
+This release also updates the import/export paths for the components. If you are not importing from the root @accelint/design-toolkit path, then you will need to update your imports as follows:
+
+For example
+* RootComponent `@accelint/design-toolkit/root-component` --> `@accelint/design-toolkit/components/root-component/index`
+* RootComponentHeader goes from `@accelint/design-toolkit/root-component` to `@accelint/design-toolkit/components/root-component/header`
+
+<hr />
+<a id="v6"></a>
+# Upgrade to v6
+
+* **Tooltip** The structure is now a light wrapper around the Tooltip implementation. Tooltip has been replaced with `Tooltip.Trigger` and `Tooltip.Body` has been replaced with `Tooltip`. [Take a look at the story for details on usage](https://design-toolkit.accelint.io/?path=/docs/components-tooltip--playground).
+
+* **Fontsource** An upstream update to package naming cascades requires us to change how we import according to the [v5 migration blog](https://fontsource.org/docs/getting-started/migrate-v5) on fontsource.
+
+Before:
+```
+"@fontsource/roboto-flex": "^5.2.8",
+"@fontsource/roboto-mono": "^5.2.8",
+```
+After:
+```
+"@fontsource-variable/roboto-flex": "^5.2.8",
+"@fontsource-variable/roboto-mono": "^5.2.8",
+```
+
+<hr />
+<a id="v5"></a>
+# Upgrade to v5
+
+This release adds support for light mode and introduces some breaking token name changes.
+
+## Change brand color from **seafoam green** to **skyfoam blue**
+If you do not want the default brand color to change in your application, you will have to apply overrides. In your `globals.css` file (or whatever you have named your root css file), you can add any overrides to the css that are needed. Make sure to account for both light and dark mode colors if you are supporting both modes in your application. While you can override any css var in the theme this way, it is HIGHLY RECOMMENDED you only override colors to ensure consistent behavior from the components.
+
+For example:
+
+```
+@layer theme {
+  :root {
+    /* override a11y accent (if needed)*/
+    --fg-a11y-on-accent: #151517;
+
+    /*  custom color ramp */
+    --seafoam-primary-50: #ebfffa;
+    --seafoam-primary-100: #b9ffec;
+    --seafoam-primary-200: #8affdf;
+    --seafoam-primary-300: #5affd2;
+    --seafoam-primary-400: #28f5be;
+    --seafoam-primary-500: #16d3a0;
+    --seafoam-primary-600: #059971;
+    --seafoam-primary-700: #01684c;
+    --seafoam-primary-800: #014130;
+    --seafoam-primary-900: #012a1f;
+
+    @variant light {
+      --bg-accent-primary-bold: var(--seafoam-primary-400);
+      --bg-accent-primary-hover: var(--seafoam-primary-300);
+      --bg-accent-primary-pressed: var(--seafoam-primary-600);
+      --bg-accent-primary-muted: var(--seafoam-primary-100);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-600);
+      --fg-accent-primary-hover: var(--seafoam-primary-500);
+      --fg-accent-primary-pressed: var(--seafoam-primary-700);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-600);
+      --outline-accent-primary-hover: var(--seafoam-primary-500);
+      --outline-accent-primary-pressed: var(--seafoam-primary-700);
+    }
+
+    @variant dark {
+      --bg-accent-primary-bold: var(--seafoam-primary-400);
+      --bg-accent-primary-hover: var(--seafoam-primary-300);
+      --bg-accent-primary-pressed: var(--seafoam-primary-600);
+      --bg-accent-primary-muted: var(--seafoam-primary-900);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-400);
+      --fg-accent-primary-hover: var(--seafoam-primary-300);
+      --fg-accent-primary-pressed: var(--seafoam-primary-600);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-400);
+      --outline-accent-primary-hover: var(--seafoam-primary-300);
+      --outline-accent-primary-pressed: var(--seafoam-primary-600);
+    }
+  }
+}
+```
+
+Version 5.0.0 of the Design Toolkit also changed the naming convention for some design system tokens. If you are migrating from the old names to the new names, there is a script that will help migrate class names. To run the script, create a copy of the script into your own application and then point it at your `src` directory. This is meant to be a one-time example migration script and you can delete it after your token migration is complete.
+
+**For example (run this in your own application):**
+`pnpm zx scripts/token-migration.mjs "src"`
+
+The example script can be found here and modified for your code base - [token-migration.mjs](https://github.com/gohypergiant/standard-toolkit/blob/7ab50ade20f673c500d40abab1a3081e8796f35b/design-toolkit/components/scripts/token-migration.mjs).
+

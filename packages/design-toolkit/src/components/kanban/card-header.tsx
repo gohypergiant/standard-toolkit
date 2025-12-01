@@ -12,11 +12,10 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { KanbanHeader } from './header';
-import { KanbanStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { cardHeader } = KanbanStyles();
 
 export function KanbanCardHeader({
   className,
@@ -24,7 +23,7 @@ export function KanbanCardHeader({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <KanbanHeader className={cardHeader({ className })} {...rest}>
+    <KanbanHeader {...rest} className={clsx(styles.cardHeader, className)}>
       {children}
     </KanbanHeader>
   );

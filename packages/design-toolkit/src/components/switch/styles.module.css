@@ -1,0 +1,116 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .switch {
+    @apply gap-s flex cursor-pointer items-center;
+
+    @variant disabled {
+      @apply cursor-not-allowed;
+    }
+
+    &.start {
+      @apply flex-row-reverse;
+    }
+
+    &.end {
+      @apply flex-row;
+    }
+  }
+
+  .control {
+    @apply rounded-round p-xxs outline-interactive flex bg-transparent outline;
+
+    &:before {
+      @apply size-m mr-l block rounded-full bg-(--fg-primary-muted);
+      content: '';
+    }
+
+    @variant group-hover/switch {
+      @apply bg-interactive-muted-hover outline-interactive-hover;
+
+      &:before {
+        @apply bg-(--fg-primary-bold);
+      }
+    }
+
+    @variant group-focus-visible/switch {
+      @apply bg-interactive-muted-hover outline-interactive-hover;
+
+      &:before {
+        @apply bg-(--fg-primary-bold);
+      }
+    }
+
+    @variant group-pressed/switch {
+      @apply bg-interactive-muted-pressed outline-interactive-pressed;
+
+      &:before {
+        @apply bg-(--fg-pressed);
+      }
+    }
+
+    @variant group-selected/switch {
+      @apply outline-accent-primary-bold;
+
+      &:before {
+        @apply ml-l mr-0 bg-(--fg-accent-primary-bold);
+      }
+
+      @variant group-hover/switch {
+        @apply bg-accent-primary-muted outline-accent-primary-bold;
+
+        &:before {
+          @apply bg-(--fg-accent-primary-hover);
+        }
+      }
+
+      @variant group-focus-visible/switch {
+        @apply bg-accent-primary-muted outline-interactive-hover;
+
+        &:before {
+          @apply bg-(--fg-accent-primary-hover);
+        }
+      }
+
+      @variant group-pressed/switch {
+        @apply bg-accent-primary-pressed outline-accent-primary-pressed;
+
+        &:before {
+          @apply bg-(--fg-accent-primary-pressed);
+        }
+      }
+    }
+
+    @variant group-disabled/switch {
+      @apply outline-interactive-disabled bg-transparent;
+
+      &:before {
+        @apply bg-(--fg-disabled);
+      }
+
+      @variant group-selected/switch {
+        @apply bg-interactive-disabled;
+      }
+    }
+  }
+
+  .label {
+    @apply fg-primary-bold text-body-s;
+
+    @variant group-disabled/switch {
+      @apply fg-disabled;
+    }
+  }
+}

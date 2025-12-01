@@ -19,7 +19,6 @@ import { MenuTrigger } from '../menu/trigger';
 import { Accordion } from './';
 import { AccordionHeader } from './header';
 import { AccordionPanel } from './panel';
-import { AccordionStylesDefaults } from './styles';
 import { AccordionTrigger } from './trigger';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -31,7 +30,7 @@ const meta = {
   component: Accordion,
   args: {
     isDisabled: false,
-    variant: AccordionStylesDefaults.variant,
+    variant: 'cozy',
   },
   argTypes: {
     variant: {
