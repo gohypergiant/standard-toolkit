@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { designTokens } from '@accelint/design-foundation/tokens/index';
 import { Person } from '@accelint/icons';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
@@ -20,10 +21,8 @@ import { BadgeProvider } from '../badge/context';
 import { Icon } from '../icon';
 import { IconProvider } from '../icon/context';
 import { AvatarContext } from './context';
-import { AvatarStyles } from './styles';
+import styles from './styles.module.css';
 import type { AvatarProps } from './types';
-
-const { avatar, image, fallback, content } = AvatarStyles();
 
 /**
  * Avatar - A user profile image component with fallback support
@@ -71,17 +70,17 @@ export function Avatar({ ref, ...props }: AvatarProps) {
       <Root
         {...rest}
         ref={ref}
-        className={avatar({ size, className: classNames?.avatar })}
+        className={clsx('group/avatar', styles.avatar, classNames?.avatar)}
         role='img'
         data-size={size}
       >
         <Image
           {...imageProps}
-          className={image({ className: classNames?.image, size })}
+          className={clsx(styles.image, classNames?.image)}
         />
         <Fallback
           {...fallbackProps}
-          className={fallback({ className: classNames?.fallback, size })}
+          className={clsx(styles.fallback, classNames?.fallback)}
         >
           {fallbackProps?.children || (
             <Icon>
@@ -90,7 +89,7 @@ export function Avatar({ ref, ...props }: AvatarProps) {
           )}
         </Fallback>
         <BadgeProvider offset={designTokens.spacing.xs} placement='top right'>
-          <span className={content({ className: classNames?.content, size })}>
+          <span className={clsx(styles.content, classNames?.content)}>
             {children}
           </span>
         </BadgeProvider>

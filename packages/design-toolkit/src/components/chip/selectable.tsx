@@ -12,16 +12,15 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Tag as AriaTag,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
 import { ChipContext } from './context';
-import { SelectableChipStyles } from './styles';
+import styles from './styles.module.css';
 import type { SelectableChipProps } from './types';
-
-const { chip: selectableChip } = SelectableChipStyles();
 
 export function SelectableChip({ ref, ...props }: SelectableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
@@ -33,7 +32,7 @@ export function SelectableChip({ ref, ...props }: SelectableChipProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(className, (className) =>
-        selectableChip({ className, size }),
+        clsx('group/chip', styles.chip, styles.selectable, className),
       )}
       data-size={size}
     />

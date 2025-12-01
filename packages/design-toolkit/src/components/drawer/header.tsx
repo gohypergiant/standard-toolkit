@@ -12,15 +12,14 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { type ComponentPropsWithRef, useContext } from 'react';
 import { Header } from 'react-aria-components';
 import { ViewStackContext } from '../view-stack/context';
 import { DrawerBack } from './back';
 import { DrawerClose } from './close';
 import { DrawerHeaderTitle } from './header-title';
-import { DrawerStyles } from './styles';
-
-const { header } = DrawerStyles();
+import styles from './styles.module.css';
 
 export function DrawerHeader({
   className,
@@ -29,16 +28,14 @@ export function DrawerHeader({
   ...rest
 }: ComponentPropsWithRef<'header'>) {
   const { stack } = useContext(ViewStackContext);
-  const level = stack.length > 1 ? 4 : 1;
+  const level = stack.length > 1 ? 4 : 2;
 
   return (
-    <Header {...rest} className={header({ className })}>
-      {title ? (
+    <Header {...rest} className={clsx(styles.header, className)}>
+      {children == null ? (
         <>
           <DrawerBack />
-          <DrawerHeaderTitle level={level} className='w-fit'>
-            {title}
-          </DrawerHeaderTitle>
+          <DrawerHeaderTitle level={level}>{title}</DrawerHeaderTitle>
           <DrawerClose />
         </>
       ) : (

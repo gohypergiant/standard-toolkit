@@ -17,10 +17,9 @@ import type {
   TagListProps,
   TagProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
-import type { ChipStyles } from './styles';
 
-export type BaseChipProps = {
+type BaseChipProps = {
+  color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';
   size?: 'medium' | 'small';
 };
 
@@ -32,17 +31,16 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   RefAttributes<HTMLDivElement> &
   BaseChipProps;
 
-export type ChipProps = VariantProps<typeof ChipStyles> &
-  Omit<ComponentPropsWithRef<'div'>, 'size' | 'onClick'> &
+export type ChipProps = Omit<ComponentPropsWithRef<'div'>, 'size' | 'onClick'> &
   BaseChipProps & {
     className?: string;
   };
 
-export type SelectableChipProps = Omit<TagProps, 'isDisabled'> &
+export type SelectableChipProps = TagProps &
   RefAttributes<HTMLDivElement> &
   BaseChipProps;
 
-export type DeletableChipProps = Omit<TagProps, 'className' | 'isDisabled'> &
+export type DeletableChipProps = Omit<TagProps, 'className'> &
   RefAttributes<HTMLDivElement> &
   BaseChipProps & {
     classNames?: {
@@ -50,3 +48,7 @@ export type DeletableChipProps = Omit<TagProps, 'className' | 'isDisabled'> &
       remove?: ButtonProps['className'];
     };
   };
+
+export type ChipContextValue = ChipProps &
+  SelectableChipProps &
+  DeletableChipProps;

@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Button as AriaButton,
   composeRenderProps,
@@ -19,7 +20,7 @@ import {
 } from 'react-aria-components';
 import { IconProvider } from '../icon/context';
 import { ButtonContext } from './context';
-import { ButtonStyles } from './styles';
+import styles from './styles.module.css';
 import type { ButtonProps } from './types';
 
 /**
@@ -64,7 +65,7 @@ export function Button({ ref, ...props }: ButtonProps) {
     className,
     color = 'mono-muted',
     size = 'medium',
-    variant,
+    variant = 'filled',
     ...rest
   } = props;
 
@@ -74,10 +75,7 @@ export function Button({ ref, ...props }: ButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          ButtonStyles({
-            className,
-            variant,
-          }),
+          clsx('group/button', styles.button, styles[variant], className),
         )}
         data-color={color}
         data-size={size}
