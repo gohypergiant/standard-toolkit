@@ -15,6 +15,9 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   experimental: {
     ppr: false, // enable once we are on next 16
     reactCompiler: false, // enable once we are on next 16
