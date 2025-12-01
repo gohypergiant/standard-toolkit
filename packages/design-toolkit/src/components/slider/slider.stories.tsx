@@ -219,22 +219,6 @@ export const RangeWithMarkers: Story = {
   },
 };
 
-export const DisabledWithMarkers: Story = {
-  args: {
-    defaultValue: 50,
-    label: 'Disabled Slider',
-    isDisabled: true,
-    markers: 5,
-  },
-  render: ({ ...args }) => {
-    return (
-      <div className='size-[400px]'>
-        <Slider {...args} />
-      </div>
-    );
-  },
-};
-
 export const SnapToMarkers: Story = {
   args: {
     defaultValue: 50,
