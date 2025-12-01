@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
   experimental: {
     ppr: false, // enable once we are on next 16
     reactCompiler: false, // enable once we are on next 16
+    cssChunking: 'strict',
   },
 };
 
