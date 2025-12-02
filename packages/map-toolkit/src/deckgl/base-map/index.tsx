@@ -29,10 +29,59 @@ import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type {
   MapClickEvent,
-  MapDragEvent,
   MapHoverEvent,
   MapViewportEvent,
+  SerializablePickingInfo,
 } from './types';
+
+/**
+ * Serializes PickingInfo for event bus transmission.
+ * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
+ */
+function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
+  const { viewport, layer, sourceLayer, ...infoRest } = info;
+  return {
+    layerId: layer?.id,
+    sourceLayerId: sourceLayer?.id,
+    ...infoRest,
+  };
+}
+
+/**
+ * Serializes MjolnirGestureEvent for event bus transmission.
+ * Omits non-serializable properties like functions, DOM elements, and pointer arrays.
+ */
+function serializeGestureEvent(event: MjolnirGestureEvent) {
+  const {
+    stopImmediatePropagation,
+    stopPropagation,
+    preventDefault,
+    srcEvent,
+    rootElement,
+    target,
+    changedPointers,
+    pointers,
+    ...eventRest
+  } = event;
+  return eventRest;
+}
+
+/**
+ * Serializes MjolnirPointerEvent for event bus transmission.
+ * Omits non-serializable properties like functions and DOM elements.
+ */
+function serializePointerEvent(event: MjolnirPointerEvent) {
+  const {
+    stopImmediatePropagation,
+    stopPropagation,
+    preventDefault,
+    srcEvent,
+    rootElement,
+    target,
+    ...eventRest
+  } = event;
+  return eventRest;
+}
 
 /**
  * Props for the BaseMap component.
@@ -136,7 +185,6 @@ export function BaseMap({
   useDevicePixels = false,
   widgets: widgetsProp = [],
   onClick,
-  onDrag,
   onHover,
   onViewStateChange,
   ...rest
@@ -167,7 +215,6 @@ export function BaseMap({
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
-  const emitDrag = useEmit<MapDragEvent>(MapEvents.drag);
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
 
   const handleClick = useCallback(
@@ -175,30 +222,9 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
 
-      // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
-      // extract layerId and sourceLayerId before omission to preserve layer identification
-      const { viewport, layer, sourceLayer, ...infoRest } = info;
-      const infoObject = {
-        layerId: layer?.id,
-        sourceLayerId: sourceLayer?.id,
-        ...infoRest,
-      };
-
-      const {
-        stopImmediatePropagation,
-        stopPropagation,
-        preventDefault,
-        srcEvent,
-        rootElement,
-        target,
-        changedPointers,
-        pointers,
-        ...eventRest
-      } = event;
-
       emitClick({
-        info: infoObject,
-        event: eventRest,
+        info: serializePickingInfo(info),
+        event: serializeGestureEvent(event),
         id,
       });
     },
@@ -210,58 +236,13 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
 
-      // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
-      // extract layerId and sourceLayerId before omission to preserve layer identification
-      const { viewport, layer, sourceLayer, ...infoRest } = info;
-      const infoObject = {
-        layerId: layer?.id,
-        sourceLayerId: sourceLayer?.id,
-        ...infoRest,
-      };
-
-      const {
-        stopImmediatePropagation,
-        stopPropagation,
-        preventDefault,
-        srcEvent,
-        rootElement,
-        target,
-        ...eventRest
-      } = event;
-
       emitHover({
-        info: infoObject,
-        event: eventRest,
+        info: serializePickingInfo(info),
+        event: serializePointerEvent(event),
         id,
       });
     },
     [emitHover, id, onHover],
-  );
-
-  const handleMapDrag = useCallback(
-    (info: PickingInfo, event: MjolnirGestureEvent) => {
-      // send full pickingInfo and event to user-defined onDrag
-      onDrag?.(info, event);
-
-      // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, layer, ...infoRest } = info;
-      const {
-        stopImmediatePropagation,
-        stopPropagation,
-        preventDefault,
-        srcEvent,
-        rootElement,
-        target,
-        ...eventRest
-      } = event;
-
-      emitDrag({
-        info: infoRest,
-        event: eventRest,
-        id,
-      });
-    },
-    [emitDrag, id, onDrag],
   );
 
   const handleGetCursor = useCallback(() => {
@@ -326,7 +307,6 @@ export function BaseMap({
           onHover={handleHover}
           onLoad={handleLoad}
           onViewStateChange={handleViewStateChange}
-          onDrag={handleMapDrag}
           getCursor={handleGetCursor}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.

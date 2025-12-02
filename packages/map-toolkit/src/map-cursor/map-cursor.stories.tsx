@@ -33,7 +33,11 @@ import type {
   ModeChangeDecisionEvent,
   ModeChangedEvent,
 } from '../map-mode/types';
-import type { CSSCursorType } from './types';
+import type {
+  CSSCursorType,
+  CursorChangedEvent,
+  CursorRejectedEvent,
+} from './types';
 
 // Common cursor types to demonstrate
 const EXAMPLE_CURSORS: CSSCursorType[] = [
@@ -186,8 +190,8 @@ export const WithModeOwner: Story = {
     const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
 
     // Listen for cursor rejection events
-    useOn(MapCursorEvents.rejected, (event) => {
-      if ('payload' in event && event.payload.id === WITH_MODE_OWNER_MAP_ID) {
+    useOn<CursorRejectedEvent>(MapCursorEvents.rejected, (event) => {
+      if (event.payload.id === WITH_MODE_OWNER_MAP_ID) {
         emitNotice({
           message: event.payload.reason,
           color: 'critical',
@@ -508,8 +512,8 @@ export const IntegrationWithModeAuth: Story = {
       });
 
       // Listen for cursor changes
-      useOn(MapCursorEvents.changed, (event) => {
-        if (!('payload' in event) || event.payload.id !== INTEGRATION_MAP_ID) {
+      useOn<CursorChangedEvent>(MapCursorEvents.changed, (event) => {
+        if (event.payload.id !== INTEGRATION_MAP_ID) {
           return;
         }
         addLog(
@@ -518,8 +522,8 @@ export const IntegrationWithModeAuth: Story = {
       });
 
       // Listen for cursor rejections
-      useOn(MapCursorEvents.rejected, (event) => {
-        if (!('payload' in event) || event.payload.id !== INTEGRATION_MAP_ID) {
+      useOn<CursorRejectedEvent>(MapCursorEvents.rejected, (event) => {
+        if (event.payload.id !== INTEGRATION_MAP_ID) {
           return;
         }
         addLog(

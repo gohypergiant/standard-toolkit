@@ -21,14 +21,6 @@ import type React from 'react';
  */
 export type CSSCursorType = NonNullable<React.CSSProperties['cursor']>;
 
-export type CursorDefaults = {
-  default: CSSCursorType;
-  hover: CSSCursorType;
-  drag: CSSCursorType;
-};
-
-export type CursorState = keyof CursorDefaults;
-
 /**
  * Payload for cursor change request events
  */
@@ -71,18 +63,34 @@ export type CursorRejectionPayload = {
   id: UniqueId;
 };
 
-export type CursorStateChangedPayload = {
-  /** The new state of the cursor - default, hover or drag */
-  state: CursorState;
-  /** The map instance ID */
-  id: UniqueId;
-};
+/**
+ * Typed event for cursor change request
+ */
+export type CursorChangeRequestEvent = Payload<
+  'cursor:change-request',
+  CursorChangeRequestPayload
+>;
+
+/**
+ * Typed event for cursor changed
+ */
+export type CursorChangedEvent = Payload<
+  'cursor:changed',
+  CursorChangedPayload
+>;
+
+/**
+ * Typed event for cursor rejected
+ */
+export type CursorRejectedEvent = Payload<
+  'cursor:rejected',
+  CursorRejectionPayload
+>;
 
 /**
  * Union of all cursor event payloads
  */
 export type MapCursorEventType =
-  | Payload<'cursor:change-request', CursorChangeRequestPayload>
-  | Payload<'cursor:changed', CursorChangedPayload>
-  | Payload<'cursor:rejected', CursorRejectionPayload>
-  | Payload<'cursor:change-state', CursorStateChangedPayload>;
+  | CursorChangeRequestEvent
+  | CursorChangedEvent
+  | CursorRejectedEvent;

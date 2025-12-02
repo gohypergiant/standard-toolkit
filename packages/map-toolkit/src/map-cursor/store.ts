@@ -11,36 +11,23 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { MapEvents, type MapEventType } from '@/deckgl';
 import { MapModeEvents } from '../map-mode/events';
 import { getCurrentModeOwner } from '../map-mode/store';
 import { MapCursorEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { ModeChangedEvent } from '../map-mode/types';
-import type {
-  CSSCursorType,
-  CursorDefaults,
-  CursorState,
-  MapCursorEventType,
-} from './types';
+import type { CSSCursorType, MapCursorEventType } from './types';
 
 /**
- * Default cursor values based on map interaction state
+ * Default cursor value
  */
-const DEFAULT_CURSORS: CursorDefaults = {
-  /** Default cursor when not interacting */
-  default: 'default' as CSSCursorType,
-  /** Cursor when hovering over interactive elements */
-  hover: 'pointer' as CSSCursorType,
-  /** Cursor when dragging the map */
-  drag: 'grabbing' as CSSCursorType,
-} as const;
+const DEFAULT_CURSOR: CSSCursorType = 'default';
 
 /**
  * Typed event bus instance for map cursor events.
  * Provides type-safe event emission and listening for all map cursor state changes.
  */
-const mapCursorBus = Broadcast.getInstance<MapCursorEventType | MapEventType>();
+const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
 
 /**
  * Type representing the state for a single map cursor instance
@@ -52,8 +39,6 @@ type MapCursorState = {
   currentCursor: CSSCursorType | null;
   /** Current cursor owner */
   currentOwner: string | null;
-  /** Current cursor state (default/hover/drag) */
-  cursorState: CursorState;
 };
 
 /**
@@ -107,7 +92,6 @@ function getOrCreateState(instanceId: UniqueId): MapCursorState {
       cursorOwners: new Map(),
       currentCursor: null,
       currentOwner: null,
-      cursorState: 'default',
     });
   }
   // biome-ignore lint/style/noNonNullAssertion: State guaranteed to exist after has() check above
@@ -120,12 +104,12 @@ function getOrCreateState(instanceId: UniqueId): MapCursorState {
  * Priority order:
  * 1. Mode owner's cursor (if exists and mode is owned)
  * 2. Most recent cursor (only if currentOwner still has an entry in storage)
- * 3. Default cursor based on state
+ * 3. Default cursor
  */
 function getSnapshot(instanceId: UniqueId): CSSCursorType {
   const state = cursorStore.get(instanceId);
   if (!state) {
-    return DEFAULT_CURSORS.default;
+    return DEFAULT_CURSOR;
   }
 
   // Priority 1: Mode owner's cursor
@@ -144,8 +128,8 @@ function getSnapshot(instanceId: UniqueId): CSSCursorType {
     }
   }
 
-  // Priority 3: Default cursor based on state
-  return DEFAULT_CURSORS[state.cursorState];
+  // Priority 3: Default cursor
+  return DEFAULT_CURSOR;
 }
 
 /**
@@ -215,29 +199,6 @@ function handleCursorChangeRequest(
 }
 
 /**
- * Handle cursor state change (default/hover/drag)
- */
-function handleCursorStateChange(
-  instanceId: UniqueId,
-  state: MapCursorState,
-  newState: CursorState,
-): void {
-  if (state.cursorState !== newState) {
-    const previousCursor = getSnapshot(instanceId);
-    state.cursorState = newState;
-    const newCursor = getSnapshot(instanceId);
-
-    if (previousCursor !== newCursor) {
-      mapCursorBus.emit(MapCursorEvents.changeState, {
-        state: newState,
-        id: instanceId,
-      });
-      notifySubscribers(instanceId);
-    }
-  }
-}
-
-/**
  * Ensures a single bus listener exists for the given instanceId.
  * All React subscribers will be notified via fan-out when the bus events fire.
  * This prevents creating N bus listeners for N React components.
@@ -299,43 +260,10 @@ function ensureBusListener(instanceId: UniqueId): void {
     });
   });
 
-  // Listen for map hover events
-  const unsubHover = mapCursorBus.on(MapEvents.hover, (event) => {
-    const {
-      id,
-      info: { picked },
-    } = event.payload;
-    if (id !== instanceId) {
-      return;
-    }
-    handleCursorStateChange(instanceId, state, picked ? 'hover' : 'default');
-  });
-
-  // Listen for map click events
-  const unsubClick = mapCursorBus.on(MapEvents.click, (event) => {
-    const { id } = event.payload;
-    if (id !== instanceId) {
-      return;
-    }
-    handleCursorStateChange(instanceId, state, 'default');
-  });
-
-  // Listen for map drag events
-  const unsubDrag = mapCursorBus.on(MapEvents.drag, (event) => {
-    const { id } = event.payload;
-    if (id !== instanceId) {
-      return;
-    }
-    handleCursorStateChange(instanceId, state, 'drag');
-  });
-
   // Store composite cleanup function
   busUnsubscribers.set(instanceId, () => {
     unsubRequest();
     unsubModeChange();
-    unsubHover();
-    unsubClick();
-    unsubDrag();
   });
 }
 
