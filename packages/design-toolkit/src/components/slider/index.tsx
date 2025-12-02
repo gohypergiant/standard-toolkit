@@ -62,100 +62,6 @@ function normalizeMarkers(
 }
 
 /**
- * Calculates the GCD of two numbers with floating point precision
- */
-function gcd(num1: number, num2: number): number {
-  const precision = 1e-10;
-  let a = Math.abs(num1);
-  let b = Math.abs(num2);
-  while (b > precision) {
-    const temp = b;
-    b = a % b;
-    a = temp;
-  }
-  return a;
-}
-
-/**
- * Gets sorted marker values from markers array
- */
-function getSortedMarkerValues(markers: SliderMarker[]): number[] {
-  return [...markers.map((m) => m.value)].sort((a, b) => a - b);
-}
-
-/**
- * Checks if markers are evenly spaced
- */
-function areMarkersEvenlySpaced(sortedValues: number[]): boolean {
-  if (sortedValues.length < 2) {
-    return true;
-  }
-
-  const firstValue = sortedValues[0];
-  const secondValue = sortedValues[1];
-
-  if (firstValue === undefined || secondValue === undefined) {
-    return true;
-  }
-
-  const expectedInterval = secondValue - firstValue;
-
-  for (let i = 2; i < sortedValues.length; i++) {
-    const currentValue = sortedValues[i];
-    const previousValue = sortedValues[i - 1];
-    if (currentValue === undefined || previousValue === undefined) {
-      continue;
-    }
-    const interval = currentValue - previousValue;
-    if (Math.abs(interval - expectedInterval) > 0.0001) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/**
- * Calculates an appropriate step value for snapping to markers.
- * For evenly spaced markers, returns the interval.
- * For unevenly spaced markers, calculates GCD of all intervals.
- */
-function calculateStepFromMarkers(markers: SliderMarker[]): number | undefined {
-  if (markers.length < 2) {
-    return undefined;
-  }
-
-  const sortedValues = getSortedMarkerValues(markers);
-  const firstValue = sortedValues[0];
-  const secondValue = sortedValues[1];
-
-  if (firstValue === undefined || secondValue === undefined) {
-    return undefined;
-  }
-
-  const firstInterval = secondValue - firstValue;
-
-  if (areMarkersEvenlySpaced(sortedValues)) {
-    return firstInterval;
-  }
-
-  // Calculate GCD of all intervals
-  let step = firstInterval;
-  for (let i = 2; i < sortedValues.length; i++) {
-    const currentValue = sortedValues[i];
-    const previousValue = sortedValues[i - 1];
-    if (currentValue !== undefined && previousValue !== undefined) {
-      step = gcd(step, currentValue - previousValue);
-    }
-  }
-
-  // Also ensure step works from min (first marker)
-  step = gcd(step, firstValue);
-
-  return step > 0 ? step : 1;
-}
-
-/**
  * Snaps a value to the nearest marker
  */
 function snapToNearestMarker(value: number, markers: SliderMarker[]): number {
@@ -302,17 +208,6 @@ export function Slider({
         : [defaultValue]
       : undefined;
 
-  // Calculate step for snapping to markers
-  const calculatedStep = useMemo(() => {
-    if (snapToMarkers && normalizedMarkers.length >= 2) {
-      return calculateStepFromMarkers(normalizedMarkers);
-    }
-    return undefined;
-  }, [snapToMarkers, normalizedMarkers]);
-
-  // Use provided step, or calculated step if snapToMarkers is enabled
-  const effectiveStep = stepProp ?? calculatedStep;
-
   // Determine if min/max labels should be hidden (only when labeled markers exist at those values)
   const hideMinValue =
     showMarkerLabels &&
@@ -372,7 +267,7 @@ export function Slider({
       onChange={handleChange}
       onChangeEnd={handleChangeEnd}
       orientation={orientation}
-      step={effectiveStep}
+      step={stepProp}
       value={sliderValue}
       aria-label={showLabel ? undefined : labelProp}
       data-layout={layout}
