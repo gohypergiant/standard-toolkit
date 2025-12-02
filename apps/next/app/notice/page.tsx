@@ -10,25 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+import { BentoGroup } from '~/components/bento';
+import { NoticeExample } from '~/features/notice';
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
+// biome-ignore lint/style/useNamingConvention: nextjs convention
+export const experimental_ppr = true;
 
-export function BadgeExampleServer() {
+export default function Page() {
   return (
-    <>
-      <PropCombos />
-    </>
+    <BentoGroup>
+      <NoticeExample />
+    </BentoGroup>
   );
 }

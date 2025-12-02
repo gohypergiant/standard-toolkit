@@ -10,25 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+/**
+ * Barrel export for MemLab Playwright test utilities
+ *
+ * This module provides shared test infrastructure for memory leak testing
+ * across all component features. Import from this module in your test files:
+ *
+ * @example
+ * import { expect, forceGC, test, waitForCleanup, createComponentTests } from '~/memlab/playwright';
+ */
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
-
-export function BadgeExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
-}
+export { expect, forceGC, test, waitForCleanup } from './fixtures';
+export {
+  createComponentTests,
+  createMountUnmountScenario,
+  createStressTestScenario,
+} from './test-builder';
+export type { MemlabTestFixtures } from './fixtures';
+export type { ComponentTestConfig, TestScenario } from './test-builder';
