@@ -15,7 +15,7 @@ const log = (...args: unknown[]): void => {
   console.log(...args);
 };
 
-const groupClassPlugin = (): Plugin => {
+const globalGroupPlugin = (): Plugin => {
   log('[@accelint/global-group-postcss-plugin] PLUGIN INVOKED');
 
   const transform = parser((selectors: Root) => {
@@ -66,6 +66,6 @@ const groupClassPlugin = (): Plugin => {
   };
 };
 
-groupClassPlugin.postcss = true;
+globalGroupPlugin.postcss = true;
 
-export default groupClassPlugin;
+export default globalGroupPlugin;
