@@ -11,30 +11,19 @@
  */
 
 'use client';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import 'client-only';
 import { createContext, useContext } from 'react';
 import { DetailsList } from '../details-list';
 import { DetailsListLabel } from '../details-list/label';
 import { DetailsListValue } from '../details-list/value';
 import { Skeleton } from '../skeleton';
-import { FlashcardStyles } from './styles';
+import styles from './styles.module.css';
 import type {
   FlashcardComponentProps,
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './types';
-
-const {
-  container,
-  hero,
-  header,
-  subHeader,
-  flashcardData,
-  detailsList,
-  detailsLabel,
-  detailsValue,
-  skeleton,
-} = FlashcardStyles();
 
 export const FlashcardContext = createContext<FlashcardProps>({
   isLoading: false,
@@ -76,7 +65,7 @@ export function Flashcard(props: FlashcardProps) {
 
   return (
     <FlashcardContext.Provider value={{ isLoading }}>
-      <div {...rest} className={container({ className })}>
+      <div {...rest} className={clsx(styles.container, className)}>
         {children}
       </div>
     </FlashcardContext.Provider>
@@ -90,15 +79,18 @@ export function FlashcardHero(props: FlashcardComponentProps) {
 
   if (isLoading) {
     return (
-      <div {...rest} className={hero({ className: 'gap-s' })}>
-        <Skeleton className={skeleton()} data-testid='hero-skeleton' />
-        <Skeleton className={skeleton({ className: 'max-w-1/2' })} />
+      <div {...rest} className={clsx(styles.hero, className, 'gap-s')}>
+        <Skeleton
+          className={clsx(styles.skeleton)}
+          data-testid='hero-skeleton'
+        />
+        <Skeleton className={clsx(styles.skeleton, styles.half)} />
       </div>
     );
   }
 
   return (
-    <div {...rest} className={hero({ className })}>
+    <div {...rest} className={clsx(styles.hero, className)}>
       {children}
     </div>
   );
@@ -109,7 +101,7 @@ export function FlashcardHeader(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
 
   return (
-    <div {...rest} className={header({ className })}>
+    <div {...rest} className={clsx(styles.header, className)}>
       {children}
     </div>
   );
@@ -120,7 +112,7 @@ export function FlashcardSubheader(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
 
   return (
-    <div {...rest} className={subHeader({ className })}>
+    <div {...rest} className={clsx(styles.subheader, className)}>
       {children}
     </div>
   );
@@ -137,7 +129,7 @@ export function FlashcardAdditionalData(props: FlashcardComponentProps) {
   }
 
   return (
-    <div {...rest} className={flashcardData({ className })}>
+    <div {...rest} className={clsx(styles.data, className)}>
       {children}
     </div>
   );
@@ -150,7 +142,8 @@ export function FlashcardDetailsList(props: FlashcardDetailsListProps) {
     <DetailsList
       {...rest}
       align='justify'
-      classNames={{ list: detailsList({ className }) }}
+      // classNames={{ list: detailsList({ className }) }}
+      classNames={{ list: clsx(styles['details-list'], className) }}
     >
       {children}
     </DetailsList>
@@ -162,9 +155,12 @@ export function FlashcardDetailsLabel(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
   const { className, children, ...rest } = props;
   return (
-    <DetailsListLabel {...rest} className={detailsLabel({ className })}>
+    <DetailsListLabel
+      {...rest}
+      className={clsx(styles['details-label'], className)}
+    >
       {isLoading ? (
-        <Skeleton className={skeleton({ className: 'my-xxs' })} />
+        <Skeleton className={clsx(styles.skeleton, styles.smaller)} />
       ) : (
         children
       )}
@@ -177,9 +173,12 @@ export function FlashcardDetailsValue(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
   const { className, children, ...rest } = props;
   return (
-    <DetailsListValue {...rest} className={detailsValue({ className })}>
+    <DetailsListValue
+      {...rest}
+      className={clsx(styles['details-value'], className)}
+    >
       {isLoading ? (
-        <Skeleton className={skeleton({ className: 'my-xxs' })} />
+        <Skeleton className={clsx(styles.skeleton, styles.smaller)} />
       ) : (
         children
       )}

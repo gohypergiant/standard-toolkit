@@ -10,17 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '../../index.module.css'
+@reference '../../index.module.css';
 
 @layer components.l1 {
   .container {
-    @apply rounded-medium font-display outline outline-interactive-hover;
+    @apply rounded-medium font-display outline-interactive-hover outline;
 
     min-width: 128px;
   }
 
   .hero {
-    @apply mb-s flex flex-col bg-surface-muted p-s;
+    @apply mb-s bg-surface-muted p-s flex flex-col;
   }
 
   .header {
@@ -31,29 +31,30 @@
     @apply fg-primary-muted text-body-xs;
   }
 
-  .flashcard-data {
+  .data {
     @apply fg-primary-muted px-s text-body-xs;
   }
 
-  .flashcard-details-list {
+  .details-list {
     @apply p-s pb-s text-body-xs;
   }
 
-  .flashcard-details-label {
+  .details-label {
     @apply fg-primary-muted nth-of-type-[n+6]:hidden;
-
-
-
   }
-  .flashcard-details-value {
+  .details-value {
     @apply fg-primary-bold nth-of-type-[n+6]:hidden;
   }
 
-  /* Do we want to keep the tailwind class for this?
-  .flashcard-details-label:nth-of-type(6),
-  .flashcard-details-value:nth-of-type(6) {
-    display: none;
-  } */
+  .skeleton {
+    @apply min-h-[8px] py-0;
+  }
 
+  .half {
+    @apply max-w-1/2;
+  }
 
+  .smaller {
+    @apply my-xxs;
+  }
 }
