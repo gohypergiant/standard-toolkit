@@ -233,9 +233,7 @@ export {
   FlashcardDetailsLabel,
   FlashcardDetailsList,
   FlashcardDetailsValue,
-  FlashcardHeader,
   FlashcardHero,
-  FlashcardSubheader,
 } from './components/flashcard';
 export type {
   FlashcardComponentProps,

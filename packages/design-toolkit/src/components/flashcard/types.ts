@@ -18,6 +18,8 @@ export type FlashcardComponentProps = PropsWithChildren &
 
 export type FlashcardProps = FlashcardComponentProps & {
   isLoading?: boolean;
+  header: string;
+  subheader: string;
 };
 
 export type FlashcardDetailsListProps = FlashcardComponentProps &

@@ -14,6 +14,7 @@
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import 'client-only';
 import { createContext, useContext } from 'react';
+import { Heading, Text } from 'react-aria-components';
 import { DetailsList } from '../details-list';
 import { DetailsListLabel } from '../details-list/label';
 import { DetailsListValue } from '../details-list/value';
@@ -27,21 +28,16 @@ import type {
 
 export const FlashcardContext = createContext<FlashcardProps>({
   isLoading: false,
+  header: '',
+  subheader: '',
 });
 
 /**
  * Example usage.
  *
  * ```tsx
- * <Flashcard isLoading={isLoading}>
- *  <FlashcardHero>
- *    <FlashcardHeader>
- *      {header}
- *    </FlashcardHeader>
- *    <FlashcardSubheader>
- *      {subHeader}
- *    </FlashcardSubheader>
- *  </FlashcardHero>
+ * <Flashcard isLoading={isLoading} header="Identifier" subheader="DATA">
+ *  <FlashcardHero />
  *  <FlashcardAdditionalData>
  *    {secondaryData}
  *  </FlashcardAdditionalData>
@@ -61,10 +57,10 @@ export const FlashcardContext = createContext<FlashcardProps>({
  * ```
  */
 export function Flashcard(props: FlashcardProps) {
-  const { isLoading, children, className, ...rest } = props;
+  const { isLoading, header, subheader, children, className, ...rest } = props;
 
   return (
-    <FlashcardContext.Provider value={{ isLoading }}>
+    <FlashcardContext.Provider value={{ isLoading, header, subheader }}>
       <div {...rest} className={clsx(styles.container, className)}>
         {children}
       </div>
@@ -75,7 +71,7 @@ Flashcard.displayName = 'Flashcard';
 
 export function FlashcardHero(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
-  const { isLoading } = useContext(FlashcardContext);
+  const { isLoading, header, subheader } = useContext(FlashcardContext);
 
   if (isLoading) {
     return (
@@ -88,33 +84,17 @@ export function FlashcardHero(props: FlashcardComponentProps) {
 
   return (
     <div {...rest} className={clsx(styles.hero, className)}>
-      {children}
+      <FlashcardHeader className={styles.header}>{header}</FlashcardHeader>
+      <FlashcardSubheader className={styles.subheader}>
+        {subheader}
+      </FlashcardSubheader>
     </div>
   );
 }
 FlashcardHero.displayName = 'FlashcardHero';
 
-export function FlashcardHeader(props: FlashcardComponentProps) {
-  const { children, className, ...rest } = props;
-
-  return (
-    <div {...rest} className={clsx(styles.header, className)}>
-      {children}
-    </div>
-  );
-}
-FlashcardHeader.displayName = 'FlashcardHeader';
-
-export function FlashcardSubheader(props: FlashcardComponentProps) {
-  const { children, className, ...rest } = props;
-
-  return (
-    <div {...rest} className={clsx(styles.subheader, className)}>
-      {children}
-    </div>
-  );
-}
-FlashcardSubheader.displayName = 'FlashcardSubheader';
+const FlashcardHeader = Heading;
+const FlashcardSubheader = Text;
 
 export function FlashcardAdditionalData(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;

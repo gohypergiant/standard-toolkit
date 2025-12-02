@@ -18,9 +18,7 @@ import {
   FlashcardDetailsLabel,
   FlashcardDetailsList,
   FlashcardDetailsValue,
-  FlashcardHeader,
   FlashcardHero,
-  FlashcardSubheader,
 } from '.';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -39,19 +37,18 @@ const meta = {
   component: Flashcard,
   args: {
     isLoading: false,
+    header: 'IDENTIFIER',
+    subheader: 'DATA',
   },
 } satisfies Meta<typeof Flashcard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
-  render: ({ children, ...args }) => {
+  render: (args) => {
     return (
       <Flashcard {...args}>
-        <FlashcardHero>
-          <FlashcardHeader>IDENTIFIER</FlashcardHeader>
-          <FlashcardSubheader>DATA</FlashcardSubheader>
-        </FlashcardHero>
+        <FlashcardHero />
         <FlashcardAdditionalData>SECONDARY_DATA_01</FlashcardAdditionalData>
         <FlashcardAdditionalData>SECONDARY_DATA_02</FlashcardAdditionalData>
         <FlashcardDetailsList data-testid='secondary'>

@@ -21,9 +21,7 @@ import {
   FlashcardDetailsLabel,
   FlashcardDetailsList,
   FlashcardDetailsValue,
-  FlashcardHeader,
   FlashcardHero,
-  FlashcardSubheader,
 } from '.';
 
 function setup(isLoading = false) {
@@ -39,11 +37,8 @@ function setup(isLoading = false) {
   ];
 
   render(
-    <Flashcard isLoading={isLoading}>
-      <FlashcardHero data-testid='hero'>
-        <FlashcardHeader>IDENTIFIER</FlashcardHeader>
-        <FlashcardSubheader>DATA</FlashcardSubheader>
-      </FlashcardHero>
+    <Flashcard isLoading={isLoading} header='IDENTIFIER' subheader='DATA'>
+      <FlashcardHero data-testid='hero' />
       <FlashcardAdditionalData>SECONDARY_DATA_01</FlashcardAdditionalData>
       <FlashcardAdditionalData>SECONDARY_DATA_02</FlashcardAdditionalData>
       <FlashcardDetailsList data-testid='secondary'>

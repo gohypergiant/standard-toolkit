@@ -19,11 +19,8 @@ A quick visual identifier for multiple points of data for a given map entity.
     { label: 'key', value: 'value', id: 'unique-id-7' },
   ];
 
-  <Flashcard isLoading={isLoading}>
-    <FlashcardHero>
-      <FlashcardHeader>Identifier</FlashcardHeader>
-      <FlashcardSubheader>DATA</FlashcardSubheader>
-    </FlashcardHero>
+  <Flashcard isLoading={isLoading} header='Identifier' subheader='DATA'>
+    <FlashcardHero />
     <FlashcardAdditionalData>SECONDARY_DATA_01</FlashcardAdditionalData>
     <FlashcardAdditionalData>SECONDARY_DATA_02</FlashcardAdditionalData>
     <FlashcardDetailsList>
@@ -44,15 +41,11 @@ A quick visual identifier for multiple points of data for a given map entity.
 The Flashcard component accepts all standard HTML div attributes.
 
 - **`isLoading`** - Set visual state for loading on the Flashcard component.
+- **`header`** - Wrapper for Heading component, displays top level text for Flashcard.
+- **`isLoading`** - Wrapper for Text component, displays subheading text for Flashcard.
 
 ### FlashcardHero
 - Upper half of the Flashcard to provide identifier data for the object being observed.
-
-### FlashcardHeader
-- Main identifier for Flashcard.
-
-### FlashcardSubheader
-- Subheading for main identifier.
 
 ### FlashcardAdditionalData
 - Secondary data information that will appear below the initial header.
