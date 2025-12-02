@@ -15,6 +15,7 @@
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/geo": "workspace:*",
+    "@accelint/global-group-postcss-plugin": "workspace:*",
     "@accelint/icons": "workspace:*",
     "@accelint/logger": "workspace:*",
     "@accelint/temporal": "workspace:*",
