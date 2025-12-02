@@ -237,7 +237,6 @@ export {
   FlashcardHero,
   FlashcardSubheader,
 } from './components/flashcard';
-export { FlashcardStyles } from './components/flashcard/styles';
 export type {
   FlashcardComponentProps,
   FlashcardDetailsListProps,
