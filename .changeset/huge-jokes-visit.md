@@ -10,4 +10,3 @@
 - Expanded migration guide with practical troubleshooting checklist of 5 common migration mistakes + solutions
 - Added detailed JSDoc documentation explaining hash collision probability (~0.0008% for typical projects)
 - Added Next.js 15.x compatibility notes to webpack configuration
-  
