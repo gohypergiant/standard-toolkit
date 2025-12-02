@@ -11,10 +11,7 @@
  */
 
 import type { ComponentPropsWithRef } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { SkeletonStyles } from './styles';
 
-export type SkeletonStyleVariants = VariantProps<typeof SkeletonStyles>;
-
-export type SkeletonProps = ComponentPropsWithRef<'div'> &
-  SkeletonStyleVariants;
+export type SkeletonProps = ComponentPropsWithRef<'div'> & {
+  variant?: 'rectangle' | 'circle';
+};

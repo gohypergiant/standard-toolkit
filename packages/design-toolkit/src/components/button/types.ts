@@ -15,22 +15,19 @@ import type {
   ToggleButtonProps as AriaToggleButtonProps,
   LinkProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
 import type { AriaAttributesWithRef } from '@/lib/types';
-import type { ButtonStyles, ToggleButtonStyles } from './styles';
 
-type ButtonVariantProps = {
+type Variants = 'filled' | 'flat' | 'icon' | 'outline';
+
+export type ButtonStyleVariants = {
   size?: 'large' | 'medium' | 'small' | 'xsmall';
   color?: 'mono-muted' | 'mono-bold' | 'accent' | 'serious' | 'critical';
+  variant?: Variants;
 };
 
-export type ButtonStyleVariants = VariantProps<typeof ButtonStyles> &
-  ButtonVariantProps;
-
-export type ToggleButtonStyleVariants = VariantProps<
-  typeof ToggleButtonStyles
-> &
-  ButtonVariantProps;
+export type ToggleButtonStyleVariants = Omit<ButtonStyleVariants, 'variant'> & {
+  variant?: Exclude<Variants, 'filled'>;
+};
 
 export type ButtonProps = AriaButtonProps &
   ButtonStyleVariants &

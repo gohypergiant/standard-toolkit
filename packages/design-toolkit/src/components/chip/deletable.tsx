@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { CancelFill } from '@accelint/icons';
 import {
   Tag as AriaTag,
@@ -21,10 +22,8 @@ import {
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { ChipContext } from './context';
-import { DeletableChipStyles } from './styles';
+import styles from './styles.module.css';
 import type { DeletableChipProps } from './types';
-
-const { chip: deletableChip, remove } = DeletableChipStyles();
 
 export function DeletableChip({ ref, ...props }: DeletableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
@@ -44,7 +43,7 @@ export function DeletableChip({ ref, ...props }: DeletableChipProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.chip, (className) =>
-        deletableChip({ className, size }),
+        clsx('group/chip', styles.chip, styles.deletable, className),
       )}
       textValue={textValue}
       data-size={size}
@@ -60,11 +59,12 @@ export function DeletableChip({ ref, ...props }: DeletableChipProps) {
           <>
             {children}
             <Button
-              variant='icon'
-              size={size}
               slot='remove'
+              color='mono-muted'
+              size={size}
+              variant='icon'
               className={composeRenderProps(classNames?.remove, (className) =>
-                remove({ className }),
+                clsx(styles.remove, className),
               )}
             >
               <Icon size={iconSize}>

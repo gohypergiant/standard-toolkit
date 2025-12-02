@@ -18,30 +18,27 @@ import type {
   FieldErrorProps,
   LabelProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
-import type { DateFieldStyles } from './styles';
 
 export type DateFieldProps<T extends DateValue> = Omit<
   AriaDateFieldProps<T>,
   'children' | 'className' | 'placeholder'
-> &
-  VariantProps<typeof DateFieldStyles> & {
-    classNames?: {
-      field?: AriaDateFieldProps<T>['className'];
-      label?: LabelProps['className'];
-      control?: string;
-      input?: DateInputProps['className'];
-      segment?: DateSegmentProps['className'];
-      description?: string;
-      error?: FieldErrorProps['className'];
-    };
-    label?: string;
+> & {
+  classNames?: {
+    field?: AriaDateFieldProps<T>['className'];
+    label?: LabelProps['className'];
+    control?: string;
+    input?: DateInputProps['className'];
+    segment?: DateSegmentProps['className'];
     description?: string;
-    errorMessage?: string;
-    inputProps?: Omit<DateInputProps, 'children' | 'className'>;
-    /**
-     * When true, will convert month value to 3 letter abbreviation when not editing
-     */
-    shortMonth?: boolean;
-    size?: 'small' | 'medium';
+    error?: FieldErrorProps['className'];
   };
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  inputProps?: Omit<DateInputProps, 'children' | 'className'>;
+  /**
+   * When true, will convert month value to 3 letter abbreviation when not editing
+   */
+  shortMonth?: boolean;
+  size?: 'small' | 'medium';
+};

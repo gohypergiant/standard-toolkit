@@ -12,10 +12,9 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { colHeader } = KanbanStyles();
 
 export function KanbanColumnHeader({
   children,
@@ -23,7 +22,7 @@ export function KanbanColumnHeader({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={colHeader({ className })} {...rest}>
+    <div {...rest} className={clsx(styles.columnHeader, className)}>
       {children}
     </div>
   );

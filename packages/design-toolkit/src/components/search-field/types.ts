@@ -15,12 +15,8 @@ import type {
   SearchFieldProps as AriaSearchFieldProps,
   InputProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
 import type { ButtonProps } from '../button/types';
 import type { IconProps } from '../icon/types';
-import type { SearchFieldStyles } from './styles';
-
-export type SearchFieldStyleVariants = VariantProps<typeof SearchFieldStyles>;
 
 export interface SearchFieldProps
   extends Omit<AriaSearchFieldProps, 'className' | 'pattern' | 'type'>,
@@ -33,7 +29,7 @@ export interface SearchFieldProps
     search?: IconProps['className'];
   };
   inputProps?: Omit<InputProps, 'type'>;
-  variant?: 'filled' | 'outlined';
+  variant?: 'filled' | 'outline';
   /** Displays a loading spinner. */
   isLoading?: boolean;
 }

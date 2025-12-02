@@ -175,8 +175,15 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
 
-      // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, ...infoRest } = info;
+      // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
+      // extract layerId and sourceLayerId before omission to preserve layer identification
+      const { viewport, layer, sourceLayer, ...infoRest } = info;
+      const infoObject = {
+        layerId: layer?.id,
+        sourceLayerId: sourceLayer?.id,
+        ...infoRest,
+      };
+
       const {
         stopImmediatePropagation,
         stopPropagation,
@@ -190,7 +197,7 @@ export function BaseMap({
       } = event;
 
       emitClick({
-        info: infoRest,
+        info: infoObject,
         event: eventRest,
         id,
       });
@@ -203,8 +210,15 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
 
-      // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, layer, ...infoRest } = info;
+      // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
+      // extract layerId and sourceLayerId before omission to preserve layer identification
+      const { viewport, layer, sourceLayer, ...infoRest } = info;
+      const infoObject = {
+        layerId: layer?.id,
+        sourceLayerId: sourceLayer?.id,
+        ...infoRest,
+      };
+
       const {
         stopImmediatePropagation,
         stopPropagation,
@@ -216,7 +230,7 @@ export function BaseMap({
       } = event;
 
       emitHover({
-        info: infoRest,
+        info: infoObject,
         event: eventRest,
         id,
       });

@@ -14,6 +14,7 @@
 import { useEffect, useRef } from 'react';
 import { Broadcast } from '../broadcast';
 import { useEffectEvent } from './ponyfill';
+import type { StructuredCloneable } from 'type-fest';
 import type { EmitOptions, ExtractEvent, Payload } from '../broadcast/types';
 
 export { useEffectEvent } from './ponyfill';
@@ -24,8 +25,10 @@ export { useEffectEvent } from './ponyfill';
  * @param options emit options that will be applied for all emits of all events
  */
 export function useBus<
-  // biome-ignore lint/suspicious/noExplicitAny: intentional
-  P extends { type: string; payload?: unknown } = Payload<string, any>,
+  P extends { type: string; payload?: unknown } = Payload<
+    string,
+    StructuredCloneable
+  >,
 >(options?: EmitOptions | null) {
   const bus = useRef(Broadcast.getInstance<P>());
 
@@ -96,8 +99,10 @@ export function useEmit<
  * @param callback handler that matches event type and receives cooresponding payload
  */
 export function useOn<
-  // biome-ignore lint/suspicious/noExplicitAny: intentional
-  P extends { type: string; payload?: unknown } = Payload<string, any>,
+  P extends { type: string; payload?: unknown } = Payload<
+    string,
+    StructuredCloneable
+  >,
   T extends P['type'] = P['type'],
 >(type: T, callback: (data: ExtractEvent<P, T>) => void) {
   const bus = useRef(Broadcast.getInstance<P>());
@@ -113,8 +118,10 @@ export function useOn<
  * @param callback handler that matches event type and receives cooresponding payload
  */
 export function useOnce<
-  // biome-ignore lint/suspicious/noExplicitAny: intentional
-  P extends { type: string; payload?: unknown } = Payload<string, any>,
+  P extends { type: string; payload?: unknown } = Payload<
+    string,
+    StructuredCloneable
+  >,
   T extends P['type'] = P['type'],
 >(type: T, callback: (data: ExtractEvent<P, T>) => void) {
   const bus = useRef(Broadcast.getInstance<P>());

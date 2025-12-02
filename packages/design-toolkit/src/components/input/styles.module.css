@@ -1,0 +1,175 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .container {
+    --length: attr(data-length type(<number>), 0);
+    @apply gap-xs rounded-medium px-s py-xs font-display outline-interactive grid items-center outline;
+    grid-template-areas: 'input clear';
+
+    @variant size-medium {
+      @apply text-body-s;
+    }
+
+    @variant size-small {
+      @apply text-body-xs;
+    }
+
+    @variant hover {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-visible-within {
+      @apply outline-accent-primary-bold;
+    }
+
+    @variant pressed {
+      @apply outline-interactive-pressed;
+    }
+
+    @variant invalid {
+      @apply outline-serious-bold;
+    }
+
+    @variant disabled {
+      @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
+    }
+
+    &.hasPrefix {
+      grid-template-areas: 'prefix input';
+    }
+
+    &.hasSuffix {
+      grid-template-areas: 'input suffix';
+    }
+
+    &.hasPrefix.hasSuffix {
+      grid-template-areas: 'prefix input suffix';
+    }
+
+    &.isClearable {
+      &.hasPrefix {
+        grid-template-areas: 'prefix input clear';
+      }
+
+      &.hasSuffix {
+        grid-template-areas: 'input suffix-1 suffix-2';
+      }
+
+      &.hasPrefix.hasSuffix {
+        grid-template-areas: 'prefix input suffix-1 suffix-2';
+      }
+    }
+  }
+
+  .prefix {
+    grid-area: prefix;
+  }
+
+  .sizer {
+    grid-area: input;
+
+    &:has([type='color']),
+    &:has([type='date']),
+    &:has([type='datetime-local']),
+    &:has([type='email']),
+    &:has([type='number']),
+    &:has([type='password']),
+    &:has([type='search']),
+    &:has([type='tel']),
+    &:has([type='text']),
+    &:has([type='time']),
+    &:has([type='url']) {
+      @variant group-size-medium/input {
+        min-width: 160px;
+        max-width: 400px;
+      }
+
+      @variant group-size-small/input {
+        min-width: 80px;
+        max-width: 200px;
+      }
+    }
+
+    &:has([type='number']),
+    &:has([type='text']) {
+      &.autoSize {
+        @variant group-size-medium/input {
+          width: calc(
+            (var(--length) * 1ch) +
+              ((var(--length) - 1) * var(--typography-body-s-spacing))
+          );
+        }
+
+        @variant group-size-small/input {
+          min-width: calc(
+            2ch + ((var(--length) - 1) * var(--typography-body-xs-spacing))
+          );
+          width: calc(
+            (var(--length) * 1ch) +
+              ((var(--length) - 1) * var(--typography-body-xs-spacing))
+          );
+        }
+      }
+    }
+  }
+
+  .input {
+    @apply w-full outline-none;
+
+    &[type='number'] {
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        appearance: none;
+      }
+    }
+  }
+
+  .suffix {
+    grid-area: suffix;
+
+    &.hasSuffix.isClearable {
+      grid-area: suffix-2;
+
+      @variant group-focus-within/input {
+        @variant group-not-data-empty/input {
+          grid-area: suffix-1;
+        }
+      }
+    }
+  }
+
+  .clear {
+    @apply -my-xs -mr-s invisible;
+    grid-area: clear;
+
+    @variant group-focus-within/input {
+      @variant group-not-data-empty/input {
+        @apply visible;
+      }
+    }
+
+    &.hasSuffix.isClearable {
+      grid-area: suffix-1;
+
+      @variant group-focus-within/input {
+        @variant group-not-data-empty/input {
+          grid-area: suffix-2;
+        }
+      }
+    }
+  }
+}

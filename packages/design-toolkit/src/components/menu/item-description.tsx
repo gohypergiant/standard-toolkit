@@ -13,10 +13,9 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Text, type TextProps } from 'react-aria-components';
-import { MenuStyles } from './styles';
-
-const { description } = MenuStyles();
+import styles from './styles.module.css';
 
 export function MenuItemDescription({
   children,
@@ -24,7 +23,11 @@ export function MenuItemDescription({
   ...rest
 }: TextProps) {
   return (
-    <Text {...rest} slot='description' className={description({ className })}>
+    <Text
+      {...rest}
+      slot='description'
+      className={clsx(styles.description, className)}
+    >
       {children}
     </Text>
   );

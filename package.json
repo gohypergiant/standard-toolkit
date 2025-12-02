@@ -15,6 +15,9 @@
     "bench": "turbo bench",
     "build": "turbo build",
     "build:design-preview": "pnpm --filter=@accelint/design-toolkit build-storybook -o ../../packages/design-toolkit/build",
+    "build:design-toolkit": "turbo run build --filter=@accelint/design-toolkit",
+    "build:docs": "turbo run build --filter=@accelint/docs",
+    "build:map-toolkit": "turbo run build --filter=@accelint/map-toolkit",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version && pnpm run constellation-tracker",
@@ -33,7 +36,7 @@
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",
     "dev": "turbo dev",
-    "format": "pnpm biome check --linter-enabled=false . --write",
+    "format": "pnpm biome check --linter-enabled=false . --write && pnpm prettier . --write",
     "indexer": "turbo index",
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
@@ -42,8 +45,9 @@
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
-  "dependencies": {
+  "devDependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/prettier-config": "workspace:*",
     "@babel/parser": "^7.25.8",
     "@biomejs/biome": "^2.3.5",
     "@changesets/changelog-git": "^0.2.0",
@@ -51,6 +55,8 @@
     "@ls-lint/ls-lint": "^2.3.1",
     "@swc/core": "^1.7.36",
     "lefthook": "^1.9.3",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.7.1",
     "rimraf": "^5.0.10",
     "syncpack": "^13.0.4",
     "taze": "^0.17.2",

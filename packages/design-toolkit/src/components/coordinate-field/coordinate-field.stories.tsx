@@ -23,7 +23,7 @@ import {
   type CoordinateValue,
 } from './types';
 import type { Key } from '@react-types/shared';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * CoordinateField Storybook Stories
@@ -206,7 +206,7 @@ export const SmallSize: Story = {
  * The copy button can be hidden by setting showFormatButton to false.
  * This works for both medium and small sizes.
  */
-export const WithoutCopyButton: Story = {
+export const WithoutFormatButton: Story = {
   args: {
     showFormatButton: false,
     value: { lat: 40.7128, lon: -74.006 },
