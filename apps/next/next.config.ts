@@ -41,7 +41,24 @@ const nextConfig: NextConfig = {
       );
     }
 
-    // Find the CSS loader rules
+    /**
+     * Custom CSS Module Class Name Hashing
+     *
+     * Injects our custom `getLocalIdent` function into webpack's css-loader to prevent
+     * hashing of Tailwind named group classes (e.g., `group/button`) while scoping all
+     * other CSS module class names.
+     *
+     * IMPORTANT: This configuration is tested with Next.js 15.x. Future Next.js versions
+     * may restructure webpack rules, requiring updates to the rule traversal logic below.
+     *
+     * How it works:
+     * 1. Finds the webpack rule containing CSS loaders (identified by `oneOf` property)
+     * 2. Iterates through each rule's loader chain
+     * 3. Locates css-loader instances with CSS modules enabled
+     * 4. Replaces the default getLocalIdent with our custom implementation
+     *
+     * See: packages/design-foundation/src/lib/webpack.ts for getLocalIdent implementation
+     */
     const rules = (
       config.module?.rules?.find(
         (rule) =>

@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateScopedClassName > Integration with CSS modules > snapshot: common component class names 1`] = `
+{
+  "button": "_button_kakjr",
+  "filled": "_filled_kakjr",
+  "flat": "_flat_kakjr",
+  "groupButton": "group\\/button",
+  "outline": "_outline_kakjr",
+}
+`;

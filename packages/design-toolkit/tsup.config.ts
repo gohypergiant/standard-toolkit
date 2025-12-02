@@ -57,14 +57,27 @@ export default defineConfig({
       }
     }
 
-    // Copy CSS module files
+    // Copy CSS module files to dist
     const cssModuleFiles = await glob(['src/**/*.module.css']);
+    let copiedCount = 0;
 
     for (const srcFile of cssModuleFiles) {
       const destFile = path.join('dist', path.relative('src', srcFile));
 
       await fs.mkdir(path.dirname(destFile), { recursive: true });
       await fs.copyFile(srcFile, destFile);
+      copiedCount++;
     }
+
+    // Verify all CSS modules were copied
+    const copiedFiles = await glob(['dist/**/*.module.css']);
+
+    if (copiedFiles.length !== cssModuleFiles.length) {
+      throw new Error(
+        `CSS module copy verification failed: Expected ${cssModuleFiles.length} files, but found ${copiedFiles.length} in dist`,
+      );
+    }
+
+    console.log(`✓ Copied ${copiedCount} CSS module files to dist`);
   },
 });

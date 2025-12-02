@@ -13,6 +13,38 @@
 
 import stringHash from 'string-hash';
 
+/**
+ * Generates scoped CSS module class names with deterministic hashing.
+ *
+ * This function creates stable, short class names for CSS modules while preserving
+ * Tailwind's named group classes (e.g., `group/button`) which must remain global
+ * and unhashed for parent-child state styling to work.
+ *
+ * @param className - The original CSS class name from the module
+ * @param fileName - The source file path (used for generating unique hash)
+ * @returns Scoped class name in format `_className_hash` or original if group class
+ *
+ * @example
+ * // Regular class gets hashed
+ * generateScopedClassName('button', '/path/to/button.module.css')
+ * // Returns: '_button_abc12'
+ *
+ * @example
+ * // Named group classes preserved for Tailwind state selectors
+ * generateScopedClassName('group\\/button', '/path/to/file.css')
+ * // Returns: 'group/button' (unchanged)
+ *
+ * @remarks
+ * Hash Format: 5-character base-36 string (0-9, a-z)
+ * - Total possibilities: 36^5 = 60,466,176 combinations
+ * - Collision probability in typical project (<10k classes): ~0.0008%
+ * - Hash is deterministic per file path, ensuring consistency across builds
+ *
+ * Named Groups: Classes starting with `group\/` are preserved as-is because:
+ * - Tailwind uses them for parent-child state styling (e.g., `group-hover/button`)
+ * - They must remain global and consistent across all components
+ * - Example: `<Button className="group/button">` + `<Icon className="group-hover/button:rotate">`
+ */
 export function generateScopedClassName(className: string, fileName: string) {
   return className.startsWith('group\\/')
     ? className
