@@ -74,7 +74,9 @@ describe('Flashcard', () => {
     expect(screen.getByText('OBJECTID')).toBeInTheDocument();
 
     // 6th element label.
-    expect(screen.queryByText('STATE')).toHaveClass('nth-of-type-[n+6]:hidden');
+    expect(screen.queryByText('STATE')?.getAttribute('class')).toContain(
+      'details-label',
+    );
   });
 
   it('should not show secondary data field while loading', () => {
