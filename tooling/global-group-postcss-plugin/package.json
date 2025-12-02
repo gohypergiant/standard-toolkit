@@ -17,13 +17,27 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "type": "module",
-  "main": "./index.cjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
+    "build": "tsup",
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
   "devDependencies": {
-    "postcss-selector-parser": "^7.1.1"
+    "@accelint/typescript-config": "workspace:*",
+    "@types/node": "^24.9.0",
+    "postcss": "^8.5.6",
+    "postcss-selector-parser": "^7.1.1",
+    "tsup": "8.5.0"
   },
   "publishConfig": {
     "access": "public"

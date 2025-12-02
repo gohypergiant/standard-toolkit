@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "NODE_ENV=production next build --turbo",
-    "dev": "NODE_ENV=development next dev",
+    "dev": "NODE_ENV=development next dev --turbo",
     "start": "NODE_ENV=production next start",
     "test": "pnpm vitest --dir=src"
   },

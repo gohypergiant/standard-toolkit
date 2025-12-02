@@ -1360,9 +1360,21 @@ importers:
 
   tooling/global-group-postcss-plugin:
     devDependencies:
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^24.9.0
+        version: 24.10.0
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
       postcss-selector-parser:
         specifier: ^7.1.1
         version: 7.1.1
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
 
   tooling/prettier-config:
     dependencies:
