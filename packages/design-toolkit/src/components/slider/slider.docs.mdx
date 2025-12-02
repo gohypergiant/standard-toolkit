@@ -54,20 +54,6 @@ It is composed of the following components:
   classNames={{slider: 'w-full max-w-md'}}
 />
 
-// With evenly spaced markers
-<Slider
-  label="Progress"
-  defaultValue={50}
-  markers={5}
-/>
-
-// With specific marker values
-<Slider
-  label="Temperature"
-  defaultValue={68}
-  markers={[0, 32, 68, 100]}
-/>
-
 // With labeled markers
 <Slider
   label="Quality"
@@ -122,27 +108,10 @@ Enable numeric input fields for direct value entry with the `showInput` prop.
 
 Markers provide visual reference points along the slider track, useful for indicating discrete stops, important values, or labeled positions.
 
-### Evenly Spaced Markers
-Pass a number to create evenly distributed markers along the track.
-
-<Canvas of={SliderStories.WithEvenlySpacedMarkers} />
-
-### Specific Value Markers
-Pass an array of numbers to place markers at specific values.
-
-<Canvas of={SliderStories.WithSpecificMarkerValues} />
-
 ### Labeled Markers
 Pass an array of marker objects with `value` and optional `label` properties, then enable `showMarkerLabels` to display text labels.
 
 <Canvas of={SliderStories.WithLabeledMarkers} />
-
-<Canvas of={SliderStories.WithDetailedLabeledMarkers} />
-
-### Vertical Slider with Markers
-Markers work with vertical orientation as well.
-
-<Canvas of={SliderStories.VerticalWithMarkers} />
 
 ### Range Slider with Markers
 Markers can be combined with range sliders.

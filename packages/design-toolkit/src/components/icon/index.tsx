@@ -12,9 +12,10 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContextProps } from 'react-aria-components';
 import { IconContext } from './context';
-import { IconStyles } from './styles';
+import styles from './styles.module.css';
 import type { IconProps } from './types';
 
 /**
@@ -55,7 +56,7 @@ export function Icon({ ref, ...props }: IconProps) {
     <span
       {...rest}
       ref={ref}
-      className={IconStyles({ className })}
+      className={clsx(styles.icon, className)}
       data-size={size}
     >
       {children}

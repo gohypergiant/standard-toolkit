@@ -12,11 +12,10 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Heading } from 'react-aria-components';
-import { KanbanStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { headerTitle } = KanbanStyles();
 
 export function KanbanHeaderTitle({
   children,
@@ -24,7 +23,7 @@ export function KanbanHeaderTitle({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <Heading className={headerTitle({ className })} {...rest}>
+    <Heading {...rest} className={clsx(styles.headerTitle, className)}>
       {children}
     </Heading>
   );

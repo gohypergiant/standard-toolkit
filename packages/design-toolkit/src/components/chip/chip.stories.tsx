@@ -11,7 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Chip } from './';
@@ -19,15 +19,7 @@ import { DeletableChip } from './deletable';
 import { ChipList } from './list';
 import { SelectableChip } from './selectable';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type {
-  ChipListProps,
-  DeletableChipProps,
-  SelectableChipProps,
-} from './types';
-
-type AliasBase = ChipListProps<unknown> & { isDisabled: boolean };
-type AliasSelectable = React.FC<AliasBase & SelectableChipProps>;
-type AliasDeletable = React.FC<AliasBase & DeletableChipProps>;
+import type { ChipListProps } from './types';
 
 const meta = {
   title: 'Components/Chip',
@@ -46,28 +38,15 @@ const meta = {
   },
 } satisfies Meta<typeof Chip>;
 
-const metaFromSelectable = {
-  ...meta,
-  component: ChipList as AliasSelectable,
-} satisfies Meta<AliasSelectable>;
-
-const metaFromDeletable = {
-  ...meta,
-  component: ChipList as AliasDeletable,
-} satisfies Meta<AliasDeletable>;
-
 export default meta;
-type Story = StoryObj<typeof meta>;
-type StoryForSelectable = StoryObj<typeof metaFromSelectable>;
-type StoryForDeletable = StoryObj<typeof metaFromDeletable>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   args: {
     children: 'Chip',
-    variant: 'info',
+    color: 'info',
   },
   argTypes: {
-    variant: {
+    color: {
       control: 'select',
       options: ['info', 'advisory', 'normal', 'serious', 'critical'],
     },
@@ -82,25 +61,22 @@ export const Default: Story = {
   ),
 };
 
-export const List: Story = {
-  args: {
-    variant: 'info',
-  },
+export const List: StoryObj<typeof meta> = {
   argTypes: {
-    variant: {
+    color: {
       control: 'select',
       options: ['info', 'advisory', 'normal', 'serious', 'critical'],
     },
   },
   parameters: {
     controls: {
-      exclude: ['children', 'className', 'variant'],
+      exclude: ['children', 'className', 'color'],
     },
   },
   render: ({ size }) => (
     <ChipList size={size}>
-      {List.argTypes?.variant?.options?.map((label) => (
-        <Chip key={label} className='capitalize' variant={label}>
+      {List.argTypes?.color?.options?.map((label) => (
+        <Chip key={label} className='capitalize' color={label}>
           {label}
         </Chip>
       ))}
@@ -123,7 +99,9 @@ const selectableData = [
   },
 ];
 
-export const SelectableChipList: StoryForSelectable = {
+export const SelectableChipList: StoryObj<
+  FC<ChipListProps<unknown> & { isDisabled?: boolean }>
+> = {
   args: {
     disallowEmptySelection: false,
     selectionMode: 'multiple',
@@ -158,7 +136,9 @@ const deletableChips = new Set([
   'Deletable chip 3',
 ]);
 
-export const DeletableChipList: StoryForDeletable = {
+export const DeletableChipList: StoryObj<
+  FC<ChipListProps<unknown> & { isDisabled?: boolean }>
+> = {
   args: {
     isDisabled: false,
   },
@@ -167,7 +147,7 @@ export const DeletableChipList: StoryForDeletable = {
       exclude: ['children'],
     },
   },
-  render: ({ children, id, className, style, size, isDisabled, ...rest }) => {
+  render: ({ children, id, style, size, isDisabled, ...rest }) => {
     const [chips, setChips] = useState(deletableChips);
 
     return (

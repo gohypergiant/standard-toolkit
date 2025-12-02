@@ -12,7 +12,8 @@
 'use client';
 
 import 'client-only';
-import { Fragment, useMemo } from 'react';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { Fragment, useMemo, useState } from 'react';
 import {
   Slider as AriaSlider,
   SliderTrack as AriaSliderTrack,
@@ -24,25 +25,8 @@ import {
 } from 'react-aria-components';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
-import { SliderStyles } from './styles';
+import styles from './styles.module.css';
 import type { SliderMarker, SliderMarkersConfig, SliderProps } from './types';
-
-const {
-  slider,
-  label,
-  inputs,
-  input,
-  thumb,
-  track,
-  trackBackground,
-  trackValue,
-  minValue,
-  maxValue,
-  markers: markersStyle,
-  marker: markerStyle,
-  markerDot,
-  markerLabel,
-} = SliderStyles();
 
 /**
  * Normalizes the markers configuration into a consistent array format
@@ -78,35 +62,70 @@ function normalizeMarkers(
 }
 
 /**
- * Calculates the greatest common divisor of marker intervals
- * to determine an appropriate step value for snapping
+ * Calculates the GCD of two numbers with floating point precision
  */
-function calculateStepFromMarkers(
-  markers: SliderMarker[],
-  min: number,
-): number | undefined {
+function gcd(num1: number, num2: number): number {
+  const precision = 1e-10;
+  let a = Math.abs(num1);
+  let b = Math.abs(num2);
+  while (b > precision) {
+    const temp = b;
+    b = a % b;
+    a = temp;
+  }
+  return a;
+}
+
+/**
+ * Gets sorted marker values from markers array
+ */
+function getSortedMarkerValues(markers: SliderMarker[]): number[] {
+  return [...markers.map((m) => m.value)].sort((a, b) => a - b);
+}
+
+/**
+ * Checks if markers are evenly spaced
+ */
+function areMarkersEvenlySpaced(sortedValues: number[]): boolean {
+  if (sortedValues.length < 2) {
+    return true;
+  }
+
+  const firstValue = sortedValues[0];
+  const secondValue = sortedValues[1];
+
+  if (firstValue === undefined || secondValue === undefined) {
+    return true;
+  }
+
+  const expectedInterval = secondValue - firstValue;
+
+  for (let i = 2; i < sortedValues.length; i++) {
+    const currentValue = sortedValues[i];
+    const previousValue = sortedValues[i - 1];
+    if (currentValue === undefined || previousValue === undefined) {
+      continue;
+    }
+    const interval = currentValue - previousValue;
+    if (Math.abs(interval - expectedInterval) > 0.0001) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Calculates an appropriate step value for snapping to markers.
+ * For evenly spaced markers, returns the interval.
+ * For unevenly spaced markers, calculates GCD of all intervals.
+ */
+function calculateStepFromMarkers(markers: SliderMarker[]): number | undefined {
   if (markers.length < 2) {
     return undefined;
   }
 
-  // Sort markers by value
-  const sortedValues = [...markers.map((m) => m.value)].sort((a, b) => a - b);
-
-  // Calculate GCD of all intervals
-  const gcd = (num1: number, num2: number): number => {
-    // Handle floating point by working with a precision
-    const precision = 1e-10;
-    let a = Math.abs(num1);
-    let b = Math.abs(num2);
-    while (b > precision) {
-      const temp = b;
-      b = a % b;
-      a = temp;
-    }
-    return a;
-  };
-
-  // Find GCD of all differences between consecutive markers
+  const sortedValues = getSortedMarkerValues(markers);
   const firstValue = sortedValues[0];
   const secondValue = sortedValues[1];
 
@@ -114,7 +133,14 @@ function calculateStepFromMarkers(
     return undefined;
   }
 
-  let step = secondValue - firstValue;
+  const firstInterval = secondValue - firstValue;
+
+  if (areMarkersEvenlySpaced(sortedValues)) {
+    return firstInterval;
+  }
+
+  // Calculate GCD of all intervals
+  let step = firstInterval;
   for (let i = 2; i < sortedValues.length; i++) {
     const currentValue = sortedValues[i];
     const previousValue = sortedValues[i - 1];
@@ -123,12 +149,37 @@ function calculateStepFromMarkers(
     }
   }
 
-  // Also ensure step works from min value
-  if (firstValue !== min) {
-    step = gcd(step, firstValue - min);
+  // Also ensure step works from min (first marker)
+  step = gcd(step, firstValue);
+
+  return step > 0 ? step : 1;
+}
+
+/**
+ * Snaps a value to the nearest marker
+ */
+function snapToNearestMarker(value: number, markers: SliderMarker[]): number {
+  if (markers.length === 0) {
+    return value;
   }
 
-  return step > 0 ? step : undefined;
+  const firstMarker = markers[0];
+  if (firstMarker === undefined) {
+    return value;
+  }
+
+  let nearestValue = firstMarker.value;
+  let minDistance = Math.abs(value - nearestValue);
+
+  for (const marker of markers) {
+    const distance = Math.abs(value - marker.value);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearestValue = marker.value;
+    }
+  }
+
+  return nearestValue;
 }
 
 /**
@@ -191,17 +242,21 @@ function hasLabeledMarkerAtValue(
  */
 export function Slider({
   classNames,
+  defaultValue,
   label: labelProp,
   layout = 'grid',
   markers: markersProp,
   maxValue: maxValueProp = 100,
   minValue: minValueProp = 0,
+  onChange: onChangeProp,
+  onChangeEnd: onChangeEndProp,
   orientation = 'horizontal',
   showInput,
   showLabel = true,
   showMarkerLabels = false,
   snapToMarkers = false,
   step: stepProp,
+  value: valueProp,
   ...rest
 }: SliderProps) {
   const normalizedMarkers = useMemo(
@@ -209,13 +264,51 @@ export function Slider({
     [markersProp, minValueProp, maxValueProp],
   );
 
+  // Internal state for controlled snapping behavior
+  const [internalValue, setInternalValue] = useState<number[] | undefined>(
+    () => {
+      if (
+        snapToMarkers &&
+        normalizedMarkers.length > 0 &&
+        defaultValue !== undefined
+      ) {
+        const values = Array.isArray(defaultValue)
+          ? defaultValue
+          : [defaultValue];
+        return values.map((v) => snapToNearestMarker(v, normalizedMarkers));
+      }
+      return undefined;
+    },
+  );
+
+  // Determine if we're in controlled mode
+  const isControlled = valueProp !== undefined;
+
+  // When snapToMarkers is enabled and uncontrolled, use internal state
+  const shouldUseInternalState =
+    snapToMarkers && !isControlled && normalizedMarkers.length > 0;
+
+  // Normalize value props to arrays for AriaSlider
+  const normalizedValueProp =
+    valueProp !== undefined
+      ? Array.isArray(valueProp)
+        ? valueProp
+        : [valueProp]
+      : undefined;
+  const normalizedDefaultValue =
+    defaultValue !== undefined
+      ? Array.isArray(defaultValue)
+        ? defaultValue
+        : [defaultValue]
+      : undefined;
+
   // Calculate step for snapping to markers
   const calculatedStep = useMemo(() => {
     if (snapToMarkers && normalizedMarkers.length >= 2) {
-      return calculateStepFromMarkers(normalizedMarkers, minValueProp);
+      return calculateStepFromMarkers(normalizedMarkers);
     }
     return undefined;
-  }, [snapToMarkers, normalizedMarkers, minValueProp]);
+  }, [snapToMarkers, normalizedMarkers]);
 
   // Use provided step, or calculated step if snapToMarkers is enabled
   const effectiveStep = stepProp ?? calculatedStep;
@@ -232,34 +325,73 @@ export function Slider({
     return ((value - minValueProp) / (maxValueProp - minValueProp)) * 100;
   };
 
+  // Handle onChange - snap values when snapToMarkers is enabled
+  const handleChange = (values: number[]) => {
+    if (snapToMarkers && normalizedMarkers.length > 0) {
+      const snappedValues = values.map((v) =>
+        snapToNearestMarker(v, normalizedMarkers),
+      );
+      if (shouldUseInternalState) {
+        setInternalValue(snappedValues);
+      }
+      onChangeProp?.(snappedValues);
+    } else {
+      onChangeProp?.(values);
+    }
+  };
+
+  // Handle onChangeEnd
+  const handleChangeEnd = (values: number[]) => {
+    if (snapToMarkers && normalizedMarkers.length > 0) {
+      const snappedValues = values.map((v) =>
+        snapToNearestMarker(v, normalizedMarkers),
+      );
+      onChangeEndProp?.(snappedValues);
+    } else {
+      onChangeEndProp?.(values);
+    }
+  };
+
+  // Determine the value prop to pass to AriaSlider
+  const sliderValue = shouldUseInternalState
+    ? internalValue
+    : normalizedValueProp;
+  const sliderDefaultValue = shouldUseInternalState
+    ? undefined
+    : normalizedDefaultValue;
+
   return (
     <AriaSlider
       {...rest}
       className={composeRenderProps(classNames?.slider, (className) =>
-        slider({ className }),
+        clsx('group/slider', styles.slider, className),
       )}
+      defaultValue={sliderDefaultValue}
       maxValue={maxValueProp}
       minValue={minValueProp}
+      onChange={handleChange}
+      onChangeEnd={handleChangeEnd}
       orientation={orientation}
       step={effectiveStep}
+      value={sliderValue}
       aria-label={showLabel ? undefined : labelProp}
       data-layout={layout}
     >
       {({ state }) => (
         <>
           {showLabel && (
-            <Label className={label({ className: classNames?.label })}>
+            <Label className={clsx(styles.label, classNames?.label)}>
               {labelProp}
             </Label>
           )}
           {showInput && (
-            <div className={inputs({ className: classNames?.inputs })}>
+            <div className={clsx(styles.inputs, classNames?.inputs)}>
               {state.values.map((value, index) => (
                 <Input
                   key={`number-field-${index === 0 ? 'min' : 'max'}`}
                   className={composeRenderProps(
                     classNames?.input,
-                    (className) => input({ className }),
+                    (className) => clsx(styles.input, className),
                   )}
                   value={value}
                   disabled={state.isDisabled}
@@ -276,17 +408,18 @@ export function Slider({
           )}
           <AriaSliderTrack
             className={composeRenderProps(classNames?.track, (className) =>
-              track({ className }),
+              clsx(styles.track, className),
             )}
           >
             <div
-              className={trackBackground({
-                className: classNames?.trackBackground,
-              })}
+              className={clsx(
+                styles.trackBackground,
+                classNames?.trackBackground,
+              )}
             />
             {/* Markers */}
             {normalizedMarkers.length > 0 && (
-              <div className={markersStyle({ className: classNames?.markers })}>
+              <div className={clsx(styles.markers, classNames?.markers)}>
                 {normalizedMarkers.map((marker) => {
                   const percent = getMarkerPercent(marker.value);
                   const positionStyle =
@@ -297,20 +430,22 @@ export function Slider({
                   return (
                     <div
                       key={`marker-${marker.value}`}
-                      className={markerStyle({ className: classNames?.marker })}
+                      className={clsx(styles.marker, classNames?.marker)}
                       style={positionStyle}
                       aria-hidden='true'
                     >
                       <div
-                        className={markerDot({
-                          className: classNames?.markerDot,
-                        })}
+                        className={clsx(
+                          styles.markerDot,
+                          classNames?.markerDot,
+                        )}
                       />
                       {showMarkerLabels && marker.label && (
                         <span
-                          className={markerLabel({
-                            className: classNames?.markerLabel,
-                          })}
+                          className={clsx(
+                            styles.markerLabel,
+                            classNames?.markerLabel,
+                          )}
                         >
                           {marker.label}
                         </span>
@@ -323,9 +458,7 @@ export function Slider({
             {state.values.map((_, index) => (
               <Fragment key={`slider-${index === 0 ? 'min' : 'max'}`}>
                 <div
-                  className={trackValue({
-                    className: classNames?.trackValue,
-                  })}
+                  className={clsx(styles.trackValue, classNames?.trackValue)}
                   data-start={
                     state.values.length === 1 ? 0 : state.getThumbPercent(0)
                   }
@@ -340,7 +473,7 @@ export function Slider({
                     index={index}
                     className={composeRenderProps(
                       classNames?.thumb,
-                      (className) => thumb({ className }),
+                      (className) => clsx(styles.thumb, className),
                     )}
                   />
                   <Tooltip placement='top'>
@@ -352,14 +485,14 @@ export function Slider({
           </AriaSliderTrack>
           <Text
             slot='min'
-            className={minValue({ className: classNames?.minValue })}
+            className={clsx(styles.minValue, classNames?.minValue)}
             hidden={hideMinValue}
           >
             {minValueProp}
           </Text>
           <Text
             slot='max'
-            className={maxValue({ className: classNames?.maxValue })}
+            className={clsx(styles.maxValue, classNames?.maxValue)}
             hidden={hideMaxValue}
           >
             {maxValueProp}

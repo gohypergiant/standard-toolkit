@@ -12,14 +12,13 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { KanbanStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanColContentProps } from './types';
-
-const { colContent } = KanbanStyles();
 
 export function KanbanColumnContent({
   children,
@@ -31,7 +30,7 @@ export function KanbanColumnContent({
 
   return (
     <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
-      <div className={colContent({ className })} {...rest}>
+      <div {...rest} className={clsx(styles.columnContent, className)}>
         {children}
       </div>
     </SortableContext>

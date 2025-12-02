@@ -12,17 +12,18 @@
 
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type { TextProps } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
-import type { DetailsListStyles } from './styles';
 
-export type DetailsListProps = Omit<ComponentPropsWithRef<'dl'>, 'className'> &
-  VariantProps<typeof DetailsListStyles> & {
-    classNames?: {
-      list?: string;
-      label?: string;
-      value?: string;
-    };
+export type DetailsListProps = Omit<
+  ComponentPropsWithRef<'dl'>,
+  'className'
+> & {
+  classNames?: {
+    list?: string;
+    label?: string;
+    value?: string;
   };
+  align?: 'center' | 'justify' | 'left';
+};
 
 export type DetailsListLabelProps = Omit<TextProps, 'elementType'> &
   RefAttributes<HTMLElement>;

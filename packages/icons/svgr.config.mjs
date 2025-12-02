@@ -24,6 +24,7 @@ export default {
   replaceAttrValues: {
     '#898989': 'currentColor',
   },
+  prettier: false,
   svgoConfig: {
     plugins: [
       {

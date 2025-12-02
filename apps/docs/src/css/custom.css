@@ -19,9 +19,9 @@
 /* You can override the default Infima variables here. */
 :root {
   --hg-navy: #122836;
-  --hg-blue: #2D629F;
-  --hg-teal: #02B6A2;
-  --hg-yellow: #FDF051;
+  --hg-blue: #2d629f;
+  --hg-teal: #02b6a2;
+  --hg-yellow: #fdf051;
 
   --ifm-color-primary: var(--hg-blue);
   --ifm-color-primary-dark: #29588f;
@@ -70,11 +70,11 @@
   --ifm-footer-background-color: var(--hg-teal);
 
   background: linear-gradient(
-      to right,
-      var(--hg-yellow),
-      var(--hg-teal),
-      var(--hg-blue)
-    );
+    to right,
+    var(--hg-yellow),
+    var(--hg-teal),
+    var(--hg-blue)
+  );
   overflow: hidden;
   position: relative;
   z-index: 1;
@@ -82,11 +82,7 @@
   &:after {
     --space: 10px;
 
-    background: linear-gradient(
-      to left,
-      var(--hg-teal),
-      var(--hg-blue)
-    );
+    background: linear-gradient(to left, var(--hg-teal), var(--hg-blue));
     border-radius: 50px 0 0 0;
     border: 1px solid white;
     content: '';
@@ -114,11 +110,7 @@
   :after {
     --space: 5px;
 
-    background: linear-gradient(
-      to left,
-      white,
-      transparent
-    );
+    background: linear-gradient(to left, white, transparent);
     content: '';
     height: calc(100% - var(--space) * 2);
     left: 0;

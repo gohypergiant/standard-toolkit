@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   ToggleButton as AriaToggleButton,
   composeRenderProps,
@@ -19,7 +20,7 @@ import {
 } from 'react-aria-components';
 import { IconProvider } from '../icon/context';
 import { ToggleButtonContext } from './context';
-import { ToggleButtonStyles } from './styles';
+import styles from './styles.module.css';
 import type { ToggleButtonProps } from './types';
 
 /**
@@ -66,7 +67,7 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
     className,
     color = 'mono-muted',
     size = 'medium',
-    variant,
+    variant = 'filled',
     ...rest
   } = props;
 
@@ -76,10 +77,13 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
         {...rest}
         ref={ref}
         className={composeRenderProps(className, (className) =>
-          ToggleButtonStyles({
+          clsx(
+            'group/button',
+            styles.button,
+            styles.toggle,
+            styles[variant],
             className,
-            variant,
-          }),
+          ),
         )}
         data-color={color}
         data-size={size}

@@ -12,16 +12,15 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   ColorSwatch,
   ColorSwatchPicker,
   ColorSwatchPickerItem,
   composeRenderProps,
 } from 'react-aria-components';
-import { ColorPickerStyles } from './styles';
+import styles from './styles.module.css';
 import type { ColorPickerProps } from './types';
-
-const { picker, item, swatch } = ColorPickerStyles();
 
 /**
  * A color picker component that renders a grid of color swatches for selection.
@@ -68,20 +67,20 @@ export function ColorPicker({ classNames, items, ...rest }: ColorPickerProps) {
     <ColorSwatchPicker
       {...rest}
       className={composeRenderProps(classNames?.picker, (className) =>
-        picker({ className }),
+        clsx(styles.picker, className),
       )}
     >
       {items.map((color) => (
         <ColorSwatchPickerItem
           key={color.toString('hexa')}
           className={composeRenderProps(classNames?.item, (className) =>
-            item({ className }),
+            clsx(styles.item, className),
           )}
           color={color}
         >
           <ColorSwatch
             className={composeRenderProps(classNames?.swatch, (className) =>
-              swatch({ className }),
+              clsx(styles.swatch, className),
             )}
           />
         </ColorSwatchPickerItem>

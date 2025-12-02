@@ -22,12 +22,14 @@ import { Switch } from '../switch';
 import { TextAreaField } from '../text-area-field';
 import { TextField } from '../text-field';
 import { multiValueOperators } from './constants';
+import styles from './styles.module.css';
 import { getValidationResult } from './utils';
 import { ValueSelector } from './value-selector';
 import type { InputProps } from '../input/types';
 import type { QueryBuilderValueEditors } from './types';
 
 function CheckboxValueEditor({
+  className,
   disabled,
   fieldData: { name, validator },
   handleOnChange,
@@ -38,6 +40,7 @@ function CheckboxValueEditor({
 
   return (
     <Checkbox
+      classNames={{ checkbox: className }}
       isDisabled={disabled}
       isSelected={value}
       onChange={handleOnChange}
@@ -48,6 +51,7 @@ function CheckboxValueEditor({
 }
 
 function RadioGroupValueEditor({
+  className,
   disabled,
   fieldData: { name, validator },
   handleOnChange,
@@ -59,6 +63,7 @@ function RadioGroupValueEditor({
 
   return (
     <RadioGroup
+      classNames={{ group: className }}
       value={value}
       isDisabled={disabled}
       onChange={handleOnChange}
@@ -78,6 +83,7 @@ function RadioGroupValueEditor({
 const defaultOptions: unknown[] = [];
 
 function SelectValueEditor({
+  className,
   disabled,
   fieldData: { name, validator },
   handleOnChange,
@@ -92,6 +98,7 @@ function SelectValueEditor({
   return (
     <ValueSelector
       {...rest}
+      className={className}
       disabled={disabled}
       multiple={type === 'multiselect'}
       options={values}
@@ -105,6 +112,7 @@ function SelectValueEditor({
 }
 
 function SwitchValueEditor({
+  className,
   disabled,
   fieldData: { name, validator },
   handleOnChange,
@@ -115,6 +123,7 @@ function SwitchValueEditor({
 
   return (
     <Switch
+      classNames={{ switch: className }}
       isDisabled={disabled}
       isSelected={Boolean(value)}
       onChange={handleOnChange}
@@ -132,6 +141,7 @@ function TextValueEditor({
   inputType,
   rule,
   value,
+  className,
 }: ValueEditorProps) {
   const { valid, reasons } = getValidationResult(rule, validator);
 
@@ -143,6 +153,7 @@ function TextValueEditor({
       }}
       size='small'
       value={value}
+      classNames={{ field: className, input: { container: styles.textInput } }}
       isDisabled={disabled}
       isInvalid={!valid}
       onChange={handleOnChange}
@@ -155,6 +166,7 @@ function TextValueEditor({
 }
 
 function TextareaValueEditor({
+  className,
   disabled,
   fieldData: { name, placeholder, validator },
   handleOnChange,
@@ -165,6 +177,7 @@ function TextareaValueEditor({
 
   return (
     <TextAreaField
+      classNames={{ field: className }}
       size='small'
       errorMessage={reasons?.join('/n')}
       inputProps={{ placeholder }}
