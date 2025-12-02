@@ -17,7 +17,6 @@ import { Button } from '../button';
 import { Hotkey } from '../hotkey';
 import { Icon } from '../icon';
 import { Menu } from './';
-import { MenuHeader } from './header';
 import { MenuItem } from './item';
 import { MenuItemDescription } from './item-description';
 import { MenuItemLabel } from './item-label';
@@ -343,11 +342,11 @@ export const ContextMenu: Story = {
 
 export const DynamicMenuHeader: Story = {
   render: (args) => {
-    const _example = () => (
-      <>
-        <div>Bad Example</div>
-        <div>Bad Example 2</div>
-      </>
+    const SampleProp = () => (
+      <div>
+        <div className='text-body-m'>Additional Notable Species</div>
+        <div className='text-body-xs'>These birds sound made up.</div>
+      </div>
     );
 
     return (
@@ -358,10 +357,6 @@ export const DynamicMenuHeader: Story = {
           </Icon>
         </Button>
         <Menu {...args}>
-          <MenuHeader>
-            <div>This is data.</div>
-            <div>This is also data.</div>
-          </MenuHeader>
           <MenuItem>
             <Icon>
               <Placeholder />
@@ -421,7 +416,7 @@ export const DynamicMenuHeader: Story = {
             </Menu>
           </MenuSubmenu>
           <MenuSeparator />
-          <MenuSection>
+          <MenuSection title={<SampleProp />}>
             <MenuItem color='serious'>
               <Icon>
                 <Placeholder />
