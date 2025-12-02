@@ -21,6 +21,22 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@accelint/design-foundation', '@accelint/design-system'],
   productionBrowserSourceMaps: true,
 
+  /**
+   * ⚠️ TURBOPACK NOT SUPPORTED
+   *
+   * This application requires custom webpack configuration for CSS module hashing.
+   * Turbopack does not support webpack config hooks, which would cause Tailwind
+   * named group classes (e.g., group/button) to be incorrectly hashed, breaking
+   * parent-child state styling throughout the design system.
+   *
+   * DO NOT use:
+   * - `next dev --turbo`
+   * - `experimental.turbo` config option
+   *
+   * Webpack will remain the bundler for this app until Turbopack supports
+   * custom CSS module class name generation via a public API.
+   */
+
   webpack(config: Configuration, { dev, nextRuntime, webpack, isServer }) {
     if (!isServer && config.optimization) {
       config.optimization.providedExports = true;
