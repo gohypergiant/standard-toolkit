@@ -11,7 +11,7 @@
     "ui"
   ],
   "subPath": "packages/design-toolkit",
-  "version": "7.0.1",
+  "version": "8.0.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -81,6 +81,9 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "string-hash": "^1.1.3"
   },
   "dependencies": {
     "string-hash": "^1.1.3"
