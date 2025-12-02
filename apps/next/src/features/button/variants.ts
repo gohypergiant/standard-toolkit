@@ -10,25 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+import type { ButtonProps } from '@accelint/design-toolkit/components/button/types';
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
-
-export function BadgeExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
-}
+export const PROP_COMBOS: ButtonProps[] = [
+  { variant: 'filled' },
+  { variant: 'outline' },
+  { variant: 'flat' },
+  { variant: 'icon' },
+  { variant: 'filled', size: 'small' },
+  { variant: 'filled', size: 'medium' },
+  { variant: 'filled', size: 'large' },
+  { variant: 'filled', color: 'accent' },
+  { variant: 'filled', color: 'critical' },
+  { variant: 'filled', color: 'serious' },
+  { variant: 'filled', isDisabled: true },
+  { variant: 'outline', isDisabled: true },
+];

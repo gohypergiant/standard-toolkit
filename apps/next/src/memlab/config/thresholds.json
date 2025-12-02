@@ -1,0 +1,78 @@
+{
+  "global": {
+    "maxLeakedObjects": 0,
+    "maxRetainedSize": 1048576,
+    "notes": "Default: zero tolerance for leaks, max 1MB retained"
+  },
+  "components": {
+    "drawer": {
+      "maxLeakedObjects": 2,
+      "maxRetainedSize": 524288,
+      "notes": "Drawer uses portal and ViewStack - may have minor DOM cleanup delays",
+      "knownIssues": []
+    },
+    "button": {
+      "maxLeakedObjects": 0,
+      "maxRetainedSize": 10240,
+      "notes": "Simple component with zero tolerance for leaks"
+    },
+    "tooltip": {
+      "maxLeakedObjects": 2,
+      "maxRetainedSize": 102400,
+      "notes": "Uses React Aria's overlay system and portal - may have minor leaks from floating positioning during stress tests"
+    },
+    "dialog": {
+      "maxLeakedObjects": 2,
+      "maxRetainedSize": 262144,
+      "notes": "Modal overlay with portal rendering - uses PortalProvider and ModalOverlay"
+    },
+    "notice": {
+      "maxLeakedObjects": 3,
+      "maxRetainedSize": 524288,
+      "notes": "Uses @accelint/bus for event subscriptions and toast queue - critical to verify subscription cleanup"
+    },
+    "intentional-leak": {
+      "maxLeakedObjects": 100,
+      "maxRetainedSize": 10485760,
+      "notes": "Intentional leak test page - high thresholds to allow leak detection verification. Tests validate that MemLab correctly detects memory leaks.",
+      "knownIssues": [
+        "Intentional DOM element leaks",
+        "Intentional closure leaks"
+      ]
+    },
+    "accordion": {
+      "maxLeakedObjects": 0,
+      "maxRetainedSize": 20480,
+      "notes": "Simple expand/collapse component - zero tolerance for leaks"
+    },
+    "accordiongroup": {
+      "maxLeakedObjects": 0,
+      "maxRetainedSize": 30720,
+      "notes": "Coordinated accordions - zero tolerance for leaks"
+    },
+    "badge": {
+      "maxLeakedObjects": 0,
+      "maxRetainedSize": 10240,
+      "notes": "Simple display component - zero tolerance for leaks"
+    },
+    "avatar": {
+      "maxLeakedObjects": 6,
+      "maxRetainedSize": 163840,
+      "notes": "Image component using @radix-ui/react-avatar. Radix's useImageLoadingStatus hook creates window.Image() objects that persist after unmount during rapid mount/unmount cycles. This is expected browser behavior - pending image loads cannot be cancelled via standard DOM APIs. The hook's cleanup removes event listeners but not the image reference or pending network request.",
+      "knownIssues": [
+        "Radix Avatar useImageLoadingStatus does not clear image.src on unmount",
+        "Browser retains pending Image objects until load/error completes"
+      ]
+    },
+    "actionbar": {
+      "maxLeakedObjects": 0,
+      "maxRetainedSize": 10240,
+      "notes": "Static container for icon buttons - zero tolerance for leaks"
+    }
+  },
+  "baseline": {
+    "enabled": true,
+    "file": ".memlab-baseline.json",
+    "trackTrends": true
+  }
+}

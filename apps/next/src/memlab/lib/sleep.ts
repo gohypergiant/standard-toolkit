@@ -10,25 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
-
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
-
-export function BadgeExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
+/**
+ * Returns a promise that resolves after the specified number of milliseconds.
+ * Useful for adding delays in async functions.
+ *
+ * @param ms - The number of milliseconds to sleep
+ * @returns A promise that resolves after the specified delay
+ *
+ * @example
+ * await sleep(100); // Wait 100ms
+ */
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

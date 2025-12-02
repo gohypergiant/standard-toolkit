@@ -11,7 +11,7 @@
  */
 
 import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
+import { Notice } from '@accelint/design-toolkit/components/notice/index';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
@@ -19,13 +19,13 @@ function PropCombos() {
   return PROP_COMBOS.map((props, k) => {
     return (
       <BentoItem key={k}>
-        <Badge {...props} />
+        <Notice message='This is a notice message' {...props} />
       </BentoItem>
     );
   });
 }
 
-export function BadgeExampleServer() {
+export function NoticeExampleServer() {
   return (
     <>
       <PropCombos />

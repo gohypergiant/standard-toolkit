@@ -10,25 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+import type { AccordionProps } from '@accelint/design-toolkit/components/accordion/types';
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
-
-export function BadgeExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
-}
+export const PROP_COMBOS: AccordionProps[] = [
+  { variant: 'cozy' },
+  { variant: 'compact' },
+  { variant: 'cozy', isDisabled: true },
+  { variant: 'compact', isDisabled: true },
+  { variant: 'cozy', isExpanded: true },
+  { variant: 'compact', isExpanded: true },
+  { variant: 'cozy', isExpanded: true, isDisabled: true },
+  { variant: 'compact', isExpanded: true, isDisabled: true },
+];

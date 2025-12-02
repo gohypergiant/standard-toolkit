@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "lastUpdated": "2025-12-02T20:30:18.577Z",
+  "components": {
+    "button": {
+      "component": "button",
+      "timestamp": "2025-12-02T20:28:24.769Z",
+      "leakCount": 0,
+      "totalRetainedSize": 0,
+      "passed": true
+    },
+    "dialog": {
+      "component": "dialog",
+      "timestamp": "2025-12-02T20:28:43.380Z",
+      "leakCount": 0,
+      "totalRetainedSize": 0,
+      "passed": true
+    },
+    "drawer": {
+      "component": "drawer",
+      "timestamp": "2025-12-02T20:29:06.267Z",
+      "leakCount": 1,
+      "totalRetainedSize": 22752,
+      "passed": true
+    },
+    "intentional-leak": {
+      "component": "intentional-leak",
+      "timestamp": "2025-12-02T20:29:26.470Z",
+      "leakCount": 0,
+      "totalRetainedSize": 0,
+      "passed": true
+    },
+    "notice": {
+      "component": "notice",
+      "timestamp": "2025-12-02T20:29:58.394Z",
+      "leakCount": 0,
+      "totalRetainedSize": 0,
+      "passed": true
+    },
+    "tooltip": {
+      "component": "tooltip",
+      "timestamp": "2025-12-02T20:30:18.577Z",
+      "leakCount": 3,
+      "totalRetainedSize": 69588,
+      "passed": false
+    }
+  },
+  "history": [
+    {
+      "timestamp": "2025-12-02T18:23:29.328Z",
+      "components": {
+        "button": {
+          "leakCount": 0,
+          "totalRetainedSize": 0
+        },
+        "dialog": {
+          "leakCount": 0,
+          "totalRetainedSize": 0
+        },
+        "drawer": {
+          "leakCount": 1,
+          "totalRetainedSize": 22752
+        },
+        "intentional-leak": {
+          "leakCount": 0,
+          "totalRetainedSize": 0
+        },
+        "notice": {
+          "leakCount": 0,
+          "totalRetainedSize": 0
+        },
+        "tooltip": {
+          "leakCount": 3,
+          "totalRetainedSize": 69588
+        }
+      }
+    }
+  ]
+}
