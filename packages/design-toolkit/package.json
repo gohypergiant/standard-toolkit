@@ -85,9 +85,6 @@
   "dependencies": {
     "string-hash": "^1.1.3"
   },
-  "dependencies": {
-    "string-hash": "^1.1.3"
-  },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
