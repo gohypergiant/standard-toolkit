@@ -1,0 +1,101 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .field {
+    @apply gap-xs flex flex-col;
+  }
+
+  .control {
+    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive flex items-center outline;
+
+    @variant placeholder {
+      @apply fg-primary-muted;
+    }
+
+    @variant hover {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-visible {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-within {
+      @apply outline-accent-primary-bold;
+    }
+
+    @variant pressed {
+      @apply outline-interactive-pressed;
+    }
+
+    @variant group-size-medium/combobox-field {
+      @apply max-w-[400px] min-w-[160px];
+    }
+
+    @variant group-size-small/combobox-field {
+      @apply max-w-[200px] min-w-[80px];
+    }
+
+    @variant group-invalid/combobox-field {
+      @apply outline-serious-bold;
+    }
+
+    @variant group-disabled/combobox-field {
+      @apply fg-disabled outline-interactive-disabled;
+    }
+  }
+
+  .input {
+    @apply font-display grow outline-none;
+
+    @variant group-size-medium/combobox-field {
+      @apply text-body-s;
+    }
+
+    @variant group-size-small/combobox-field {
+      @apply text-body-xs;
+    }
+  }
+
+  .trigger {
+    @apply fg-primary-bold;
+
+    @variant group-open/combobox-field {
+      @apply rotate-180 transform;
+    }
+
+    @variant group-disabled/combobox-field {
+      @apply fg-disabled;
+    }
+  }
+
+  .description {
+    @apply fg-primary-muted text-body-xs;
+
+    @variant group-disabled/combobox-field {
+      @apply fg-disabled;
+    }
+  }
+
+  .error {
+    @apply fg-serious-bold text-body-xs;
+  }
+
+  .popover {
+    --trigger-width: initial; /* is inlined by react aria components on render */
+    @apply -ml-s;
+    min-width: calc(var(--trigger-width) + (var(--spacing-s) * 2));
+  }
+}

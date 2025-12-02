@@ -13,6 +13,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
@@ -40,6 +41,7 @@ import { Icon } from '../icon';
 import { Label } from '../label';
 import { Popover } from '../popover';
 import { PopoverContent } from '../popover/content';
+import { PopoverTitle } from '../popover/title';
 import { PopoverTrigger } from '../popover/trigger';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
@@ -50,7 +52,7 @@ import {
 } from './coordinate-utils';
 import { CoordinateSegment } from './segment';
 import { getSegmentLabel } from './segment-configs';
-import { CoordinateFieldStyles } from './styles';
+import styles from './styles.module.css';
 import {
   COORDINATE_FORMAT_LABELS,
   COORDINATE_FORMAT_NAMES,
@@ -59,29 +61,6 @@ import {
 } from './types';
 import { calculateMaxControlWidth } from './width-utils';
 import type { CoordinateFieldProps } from './types';
-
-const {
-  field,
-  label,
-  control,
-  input,
-  segment,
-  description,
-  error,
-  popoverContent,
-  popoverHeader,
-  popoverBody,
-  formatRow,
-  formatLabel,
-  formatValue,
-  modalTitle,
-  modalDescription,
-  formatOptions,
-  formatOptionContent,
-  formatOptionLabel,
-  formatOptionValue,
-  modalActions,
-} = CoordinateFieldStyles();
 
 /**
  * CoordinateField - A comprehensive coordinate input component with multiple format support
@@ -248,14 +227,18 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
         {...DOMProps}
         {...fieldProps}
         ref={ref}
-        className={field({ className: classNames?.field })}
+        className={clsx(
+          'group/coordinate-field',
+          styles.field,
+          classNames?.field,
+        )}
         data-size={size}
         data-disabled={isDisabled || null}
         data-invalid={isInvalid || null}
       >
         {!isSmall && labelProp && (
           <Label
-            className={label({ className: classNames?.label })}
+            className={classNames?.label}
             isDisabled={isDisabled}
             isRequired={isRequired}
           >
@@ -264,11 +247,11 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
         )}
 
         <div
-          className={control({ className: classNames?.control })}
+          className={clsx(styles.control, classNames?.control)}
           style={{ width: maxControlWidth }}
         >
           <div
-            className={input({ className: classNames?.input })}
+            className={clsx(styles.input, classNames?.input)}
             onPasteCapture={paste.handleInputPaste}
             data-input-container
           >
@@ -310,7 +293,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                   placeholder={config.placeholder}
                   maxLength={config.maxLength}
                   pad={config.pad}
-                  className={segment({ className: classNames?.segment })}
+                  className={clsx(styles.segment, classNames?.segment)}
                   isDisabled={isDisabled}
                   allowedChars={config.allowedChars}
                   segmentRef={focus.segmentRefs[editableIndex]}
@@ -323,43 +306,37 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <Popover onOpenChange={handlePopoverOpenChange}>
-              <PopoverTrigger>
-                <Button
-                  variant='icon'
-                  size={size}
-                  color='mono-bold'
-                  className={classNames?.formatButton}
-                  aria-label='View coordinate in all formats'
-                  isDisabled={!copy.isFormatButtonEnabled}
-                >
-                  <Icon>
-                    <GlobalShare />
-                  </Icon>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className={popoverContent()}
-                placement='bottom'
-                offset={8}
+            <PopoverTrigger onOpenChange={handlePopoverOpenChange}>
+              <Button
+                variant='icon'
+                size={size}
+                color='mono-bold'
+                className={classNames?.formatButton}
+                aria-label='View coordinate in all formats'
+                isDisabled={!copy.isFormatButtonEnabled}
               >
-                <div className={popoverHeader()}>
-                  <h3>Copy Coordinates</h3>
-                </div>
-                <div className={popoverBody()}>
+                <Icon>
+                  <GlobalShare />
+                </Icon>
+              </Button>
+              <Popover classNames={{ popover: styles.popover }}>
+                <PopoverTitle className={styles.popoverTitle}>
+                  Copy Coordinates
+                </PopoverTitle>
+                <PopoverContent>
                   {allCoordinateFormats &&
                     COORDINATE_SYSTEMS.map((formatKey) => {
                       const formatResult = allCoordinateFormats[formatKey];
                       const isCopied = copy.copiedFormat === formatKey;
 
                       return (
-                        <div key={formatKey} className={formatRow()}>
-                          <div className='flex min-w-0 flex-1 flex-col gap-2xs'>
-                            <span className={formatLabel()}>
+                        <div key={formatKey} className={styles.formatRow}>
+                          <div className={styles.formatLabels}>
+                            <span className={styles.formatLabel}>
                               {COORDINATE_FORMAT_LABELS[formatKey]}
                             </span>
                             <span
-                              className={formatValue()}
+                              className={styles.formatValue}
                               title={formatResult.value}
                             >
                               {formatResult.value}
@@ -379,18 +356,16 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                         </div>
                       );
                     })}
-                </div>
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+            </PopoverTrigger>
           )}
         </div>
 
         {/* Description is hidden when field is invalid (unless disabled) to make room for error message */}
         {descriptionProp && !isSmall && (!isInvalid || isDisabled) && (
           <AriaText
-            className={description({
-              className: classNames?.description,
-            })}
+            className={clsx(styles.description, classNames?.description)}
             slot='description'
           >
             {descriptionProp}
@@ -399,7 +374,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
 
         <FieldError
           className={composeRenderProps(classNames?.error, (className) =>
-            error({ className }),
+            clsx(styles.error, className),
           )}
         >
           {effectiveErrorMessage}
@@ -411,17 +386,17 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
         >
           <Button className='hidden'>Hidden Trigger</Button>
           <Dialog size='small'>
-            <DialogTitle className={modalTitle()}>
+            <DialogTitle className={styles.modalTitle}>
               Select Coordinate Format
             </DialogTitle>
             <DialogContent>
-              <p className={modalDescription()}>
+              <p className={styles.modalDescription}>
                 The pasted value matches multiple coordinate formats. Please
                 select the correct interpretation:
               </p>
 
               <RadioGroup
-                classNames={{ group: formatOptions() }}
+                classNames={{ group: styles.formatOptions }}
                 value={paste.selectedDisambiguationFormat}
                 onChange={(value) =>
                   paste.setSelectedDisambiguationFormat(
@@ -431,11 +406,11 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
               >
                 {paste.disambiguationMatches.map((match) => (
                   <Radio key={match.format} value={match.format}>
-                    <div className={formatOptionContent()}>
-                      <span className={formatOptionLabel()}>
+                    <div className={styles.modalOptionContent}>
+                      <span className={styles.formatOptionLabel}>
                         {COORDINATE_FORMAT_NAMES[match.format]}
                       </span>
-                      <span className={formatOptionValue()}>
+                      <span className={styles.formatOptionValue}>
                         {match.displayString}
                       </span>
                     </div>
@@ -443,7 +418,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                 ))}
               </RadioGroup>
             </DialogContent>
-            <DialogFooter className={modalActions()}>
+            <DialogFooter className={styles.modalActions}>
               <Button
                 variant='flat'
                 onPress={() => paste.setShowDisambiguationModal(false)}

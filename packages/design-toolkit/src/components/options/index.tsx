@@ -12,16 +12,15 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   composeRenderProps,
   ListBox,
   useContextProps,
 } from 'react-aria-components';
 import { OptionsContext } from './context';
-import { OptionsStyles } from './styles';
+import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsProps } from './types';
-
-const { list } = OptionsStyles();
 
 /**
  * Options - A flexible list component for selectable items with rich content
@@ -77,7 +76,7 @@ export function Options<T extends OptionsDataItem>({
       {...rest}
       ref={ref}
       className={composeRenderProps(className, (className) =>
-        list({ className }),
+        clsx('group/options', styles.list, className),
       )}
       data-size={size}
     >

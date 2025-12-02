@@ -12,15 +12,14 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
 import { Tag as AriaTag, useContextProps } from 'react-aria-components';
 import { IconProvider } from '../icon/context';
 import { ChipContext } from './context';
 import { ChipListRenderingContext } from './list';
-import { ChipStyles, ChipStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { ChipProps } from './types';
-
-const { chip } = ChipStyles();
 
 /**
  * Chip - A compact element for displaying tags, filters, or selectable items
@@ -61,19 +60,15 @@ export function Chip({ ref, ...props }: ChipProps) {
 
   const context = useContext(ChipListRenderingContext);
   const Component = context ? AriaTag : 'div';
-  const {
-    className,
-    size = 'medium',
-    variant = ChipStylesDefaults.variant,
-    ...rest
-  } = props;
+  const { className, color = 'info', size = 'medium', ...rest } = props;
 
   return (
     <IconProvider size={size === 'medium' ? 'small' : 'xsmall'}>
       <Component
         {...rest}
         ref={ref}
-        className={chip({ size, variant, className })}
+        className={clsx('group/chip', styles.chip, className)}
+        data-color={color}
         data-size={size}
       />
     </IconProvider>

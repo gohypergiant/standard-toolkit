@@ -19,13 +19,13 @@ const meta = {
   args: {
     className: undefined,
     children: undefined,
-    variant: 'info',
+    color: 'info',
   },
   argTypes: {
     children: {
       control: 'text',
     },
-    variant: {
+    color: {
       control: 'select',
       options: ['info', 'normal', 'serious', 'critical', 'advisory'],
     },

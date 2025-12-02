@@ -14,6 +14,7 @@
 
 import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
 import {
   MenuItem as AriaMenuItem,
@@ -27,10 +28,8 @@ import { isSlottedContextValue } from '../../lib/utils';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';
 import { MenuContext } from './context';
-import { MenuStyles, MenuStylesDefaults } from './styles';
+import styles from './styles.module.css';
 import type { MenuItemProps } from './types';
-
-const { item, icon, more, hotkey } = MenuStyles();
 
 export function MenuItem({
   children,
@@ -40,14 +39,13 @@ export function MenuItem({
 }: MenuItemProps) {
   const context = useContext(MenuContext);
   const variant =
-    (isSlottedContextValue(context) ? undefined : context?.variant) ??
-    MenuStylesDefaults.variant;
+    (isSlottedContextValue(context) ? undefined : context?.variant) ?? 'cozy';
 
   return (
     <AriaMenuItem
       {...rest}
       className={composeRenderProps(classNames?.item, (className) =>
-        item({ className, variant }),
+        clsx('group/menu-item', styles.item, styles[variant], className),
       )}
       data-color={color}
     >
@@ -56,16 +54,16 @@ export function MenuItem({
           values={[
             [
               KeyboardContext,
-              { className: hotkey({ className: classNames?.hotkey }) },
+              { className: clsx(styles.hotkey, classNames?.hotkey) },
             ],
             [
               IconContext,
               {
                 slots: {
                   [DEFAULT_SLOT]: {
-                    className: icon({ className: classNames?.icon }),
+                    className: clsx(styles.icon, classNames?.icon),
                   },
-                  submenu: { className: more({ className: classNames?.more }) },
+                  submenu: { className: clsx(styles.more, classNames?.more) },
                 },
               },
             ],

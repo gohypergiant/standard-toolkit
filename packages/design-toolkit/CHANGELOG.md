@@ -1,5 +1,118 @@
 # @accelint/design-toolkit
 
+## 8.0.0
+### Major Changes
+
+- f3a9fb3: This release contains a number of breaking changes and will require some migration steps. For detailed information about why the changes were made and how to migrate, [consult our v8 migration guide](https://design-toolkit.accelint.io/?path=/docs/upgrade-guides--playground).
+  
+  Breaking Changes:
+  * Removed support for Tailwind Variants in Design Foundation - functions `tv`, `mergeVariants` and `twMerge` are no longer exported
+  * Badge & Chip prop `variant` is renamed to `color` to align with Button
+  * Popover structure updated – PopoverTrigger is now the root; triggerable elements and popover content must be direct children.
+  * `sudo:` custom variant utility removed.
+  
+  Improvements:
+  * Introducing CSS modules as another tool for working with Tailwind
+  * Components now use 1–3 core classes instead of large utility sets.
+  * State-based styles are applied only when active, reducing DOM noise.
+  * Variant syntax updated: use @variant blocks with @apply instead of chained selectors.
+  * CSS layer system expanded: `components.l1–l5` for controlled style precedence; use higher layers (l3–l5) or @utilities for overrides.
+  * Improved CSS validation – invalid class names now throw errors during compilation.
+  * Eliminated CPU-intensive TV/tw-merge resolution; runtime performance improved at scale.
+  
+  New Features:
+  * Added additional custom variants: extend-left/right/top/bottom, push-left/right/top/bottom.
+  * Action Bar: added size prop for flexible usage.
+  
+  Migration Guide:
+  * [Visit the v8 migration guide](https://design-toolkit.accelint.io/?path=/docs/upgrade-guides--playground) for detailed information about migration
+  * CSS Modules are required – Next.js supports out-of-the-box; other frameworks may need setup.
+  * Named group classes (group/*) must not be hashed – use provided generateScopedClassName (Vite) or getLocalIdent (Webpack/Next.js).
+  * Use `clsx` exported from the DTK for conditional class composition rather than `tv` at the path `@accelint/design-foundation/lib/utils`
+  * When using css modules in your application, avoid composes – external composes bypass Tailwind processing
+- 80db585: BREAKING CHANGES:
+  Design Toolkit no longer exports `tv`, this is now available from Design Foundation
+  
+  Created new package @accelint/design-foundation that houses all of the Tailwind tokens, variants, base styles and utilities for easier reuse without having a dependency on the larger Design Toolkit
+  
+  Updated Map Toolkit Storybook and NextJS demo app styles to import the new Design Foundation
+
+### Minor Changes
+
+- 3f9d14b: Added a Kanban component with a drag-and-drop board for organizing tasks and workflows.
+- 3d6a25b: Add prefix and suffix to (text) Input and TextField components.
+- e463867: New feature added: Pagination. A lightweight implementation to allow users to navigate pages, with previous and next links.
+- b48a3bd: Add CoordinateField component with support for multiple coordinate systems (DD, DDM, DMS, MGRS, UTM).
+
+### Patch Changes
+
+- a5dfc06: Update all fields component to have the correct width
+- 874edd5: ## Breaking Change: Structured Clone Constraint
+  
+  The event bus payload is now constrained to values that are serializable by the [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This constraint aligns the TypeScript types with the actual runtime behavior of the `BroadcastChannel` API.
+  
+  ### What this means
+  
+  You can no longer pass the following types in event payloads:
+  
+  - Functions
+  - Symbols
+  - DOM nodes
+  - Prototype chains (class instances lose their methods)
+  - Properties with `undefined` values (they're omitted)
+  
+  ### How to migrate
+  
+  **❌ Before:**
+  
+  ```typescript
+  bus.emit('user-action', {
+    callback: () => console.log('done'), // ❌ Function
+    userData: userClass, // ❌ Class instance with methods
+    element: document.getElementById('foo'), // ❌ DOM node
+  });
+  ```
+  
+  **✅ After:**
+  
+  ```typescript
+  // Option 1: Send only data, handle logic separately
+  bus.emit('user-action', {
+    actionType: 'complete', // ✅ Primitive
+    userData: { id: userClass.id, name: userClass.name }, // ✅ Plain object
+    elementId: 'foo', // ✅ Reference by ID
+  });
+  
+  // Option 2: Use event types to trigger behavior
+  bus.on('user-action-complete', () => {
+    console.log('done'); // Handle callback logic in listener
+  });
+  ```
+  
+  ### Supported types
+  
+  - Primitives (string, number, boolean, null, BigInt)
+  - Plain objects and arrays
+  - Date, RegExp, Map, Set
+  - Typed arrays (Uint8Array, etc.)
+  - ArrayBuffer, Blob, File
+  
+  ### Finding issues
+  
+  TypeScript will now catch most violations at compile time. Runtime errors from `BroadcastChannel.postMessage()` indicate non-serializable values that slipped through.
+- 2470426: Updates the styling of the last child in breadcrumb to match designs
+- 4ca8fe5: fixes semantic token discrepancy
+  
+  plus updates state styles of switch, text-area-field, checkbox, option-item and menu-item
+- 67edb84: Fixes an issue where the MenuTrigger and DrawerTrigger components were not being properly exported.
+- abc5365: Fix issue where the timer does not start unless hovered for notices.
+- Updated dependencies [f3a9fb3]
+- Updated dependencies [80db585]
+- Updated dependencies [874edd5]
+- Updated dependencies [e8535c4]
+  - @accelint/design-foundation@1.0.0
+  - @accelint/bus@3.0.0
+
 ## 7.0.1
 
 ### Patch Changes

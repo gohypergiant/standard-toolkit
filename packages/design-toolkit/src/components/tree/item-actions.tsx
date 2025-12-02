@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { TreeStyles } from './styles';
-import type { PropsWithChildren } from 'react';
-
-const { actions } = TreeStyles();
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { type PropsWithChildren, useContext } from 'react';
+import { TreeContext } from './context';
+import styles from './styles.module.css';
 
 /**
  * ItemActions - Action buttons for a tree item
@@ -24,5 +24,10 @@ export function TreeItemActions({
   children,
   className,
 }: PropsWithChildren & { className?: string }) {
-  return <div className={actions({ className })}>{children}</div>;
+  const { variant } = useContext(TreeContext);
+  return (
+    <div className={clsx(styles.actions, styles[variant], className)}>
+      {children}
+    </div>
+  );
 }

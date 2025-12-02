@@ -11,25 +11,25 @@
  */
 
 import { Skeleton } from './';
-import { SkeletonStylesDefaults } from './styles';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Components/Skeleton',
   component: Skeleton,
-  args: SkeletonStylesDefaults,
+  args: {
+    variant: 'rectangle',
+  },
   argTypes: {
-    shape: {
+    variant: {
       control: 'select',
-      options: ['circ', 'rect'],
+      options: ['circle', 'rectangle'],
     },
   },
 } satisfies Meta<typeof Skeleton>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   render: (args) => (
     <div className='w-[280px]'>
       <Skeleton {...args} />
@@ -37,7 +37,7 @@ export const Default: Story = {
   ),
 };
 
-export const Nested: Story = {
+export const Nested: StoryObj<typeof meta> = {
   render: (args) => (
     <div className='w-[280px]'>
       <Skeleton className='mb-xl p-m' {...args}>
@@ -54,7 +54,7 @@ export const Nested: Story = {
   ),
 };
 
-export const Text: Story = {
+export const Text: StoryObj<typeof meta> = {
   render: (args) => (
     <div className='w-[280px]'>
       <Skeleton {...args}>Loading content...</Skeleton>

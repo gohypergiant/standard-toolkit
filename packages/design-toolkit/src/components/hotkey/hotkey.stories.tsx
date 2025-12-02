@@ -13,7 +13,7 @@
 import MouseRightClick from '@accelint/icons/mouse-right-click';
 import { Icon } from '../icon';
 import { Hotkey } from './';
-import { HotkeySet } from './hotkey-set';
+import { HotkeySet } from './set';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
@@ -22,9 +22,8 @@ const meta = {
 } satisfies Meta<typeof Hotkey>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default: StoryObj<typeof meta> = {
   args: {
     children: 'ctrl',
     variant: 'outline',
@@ -52,7 +51,7 @@ export const Default: Story = {
   },
 };
 
-export const KeysSet: Story = {
+export const KeysSet: StoryObj<typeof meta> = {
   render: () => {
     return (
       <div className='flex flex-col gap-xl'>

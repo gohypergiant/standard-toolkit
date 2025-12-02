@@ -11,4 +11,8 @@
  */
 import type { HTMLAttributes, PropsWithChildren } from 'react';
 
-export type ActionBarProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
+export type ActionBarProps = PropsWithChildren<
+  HTMLAttributes<HTMLDivElement>
+> & {
+  size?: 'medium' | 'small';
+};

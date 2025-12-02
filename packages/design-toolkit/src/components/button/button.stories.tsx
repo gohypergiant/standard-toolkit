@@ -23,7 +23,9 @@ const meta = {
   component: Button,
   args: {
     children: 'Button',
+    color: 'mono-muted',
     size: 'medium',
+    variant: 'filled',
     isDisabled: false,
   },
   argTypes: {
@@ -37,7 +39,7 @@ const meta = {
     },
     variant: {
       control: 'select',
-      options: ['filled', 'outline', 'flat', 'icon', 'floating'],
+      options: ['filled', 'outline', 'flat', 'icon'],
     },
   },
   parameters: {
@@ -56,30 +58,13 @@ const meta = {
   },
 } satisfies Meta<typeof Button>;
 
-const metaForLink = {
-  ...meta,
-  component: LinkButton,
-} satisfies Meta<typeof LinkButton>;
-
-const metaForToggle = {
-  ...meta,
-  component: ToggleButton,
-} satisfies Meta<typeof ToggleButton>;
-
 export default meta;
-type Story = StoryObj<typeof meta>;
-type StoryForLink = StoryObj<typeof metaForLink>;
-type StoryForToggle = StoryObj<typeof metaForToggle>;
 
-export const Default: Story = {
-  args: {
-    color: 'mono-muted',
-    variant: 'flat',
-  },
+export const Default: StoryObj<typeof meta> = {
   render: ({ children, ...props }) => (
     <Button {...props}>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === 'icon' ? (
           <Icon>
             <Placeholder />
           </Icon>
@@ -91,15 +76,16 @@ export const Default: Story = {
   ),
 };
 
-export const Link: StoryForLink = {
-  args: {
-    color: 'mono-muted',
-    variant: 'flat',
-  },
+const metaForLink = {
+  ...meta,
+  component: LinkButton,
+} satisfies Meta<typeof LinkButton>;
+
+export const Link: StoryObj<typeof metaForLink> = {
   render: ({ children, ...props }) => (
     <LinkButton {...props} href='/'>
       {composeRenderProps(children, (children) =>
-        props.variant === 'icon' || props.variant === 'floating' ? (
+        props.variant === 'icon' ? (
           <Icon>
             <Placeholder />
           </Icon>
@@ -111,9 +97,16 @@ export const Link: StoryForLink = {
   ),
 };
 
-export const Toggle: StoryForToggle = {
+const metaForToggle = {
+  ...meta,
+  component: ToggleButton,
   args: {
-    color: 'mono-muted',
+    variant: 'flat',
+  },
+} satisfies Meta<typeof ToggleButton>;
+
+export const Toggle: StoryObj<typeof metaForToggle> = {
+  args: {
     variant: 'flat',
   },
   argTypes: {

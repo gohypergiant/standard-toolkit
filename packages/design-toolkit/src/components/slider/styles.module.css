@@ -1,0 +1,220 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .slider {
+    @apply gap-s isolate flex;
+
+    @variant layout-grid {
+      @apply grid;
+    }
+
+    @variant layout-stack {
+      @apply flex;
+    }
+
+    @variant orientation-vertical {
+      @apply h-full w-fit;
+
+      @variant layout-grid {
+        grid-template-columns: auto auto auto;
+        grid-template-rows: auto auto 1fr auto;
+      }
+
+      @variant layout-stack {
+        @apply flex-col;
+      }
+    }
+
+    @variant orientation-horizontal {
+      @variant layout-grid {
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto auto;
+      }
+
+      @variant layout-stack {
+        @apply w-full items-center;
+      }
+    }
+  }
+
+  .label {
+    @apply fg-primary-bold order-1;
+
+    @variant group-layout-grid/slider {
+      @apply col-start-1;
+
+      @variant group-orientation-vertical/slider {
+        @apply col-span-2;
+      }
+    }
+
+    @variant group-disabled/slider {
+      @apply fg-disabled;
+    }
+  }
+
+  .inputs {
+    @apply gap-s order-5 flex;
+
+    @variant group-layout-grid/slider {
+      @apply col-start-3 row-start-1;
+    }
+
+    @variant group-orientation-horizontal/slider {
+      @apply flex-row;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply flex-col-reverse;
+
+      @variant group-layout-grid/slider {
+        @apply row-start-4;
+      }
+    }
+  }
+
+  .input {
+    @apply fg-primary-bold rounded-medium px-s py-xs font-display text-body-m outline-interactive outline;
+    width: 50px;
+
+    @variant group-disabled/slider {
+      @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
+    }
+  }
+
+  .track {
+    @apply relative order-3 h-full;
+
+    @variant group-orientation-horizontal/slider {
+      @apply w-full;
+      height: 20px;
+
+      @variant group-layout-grid/slider {
+        @apply col-span-3 row-start-2;
+      }
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply h-full;
+      width: 20px;
+
+      @variant group-layout-grid/slider {
+        @apply col-start-2 row-span-3 row-start-2;
+      }
+    }
+  }
+
+  .trackBackground {
+    @apply bg-surface-muted absolute rounded-full;
+
+    @variant group-orientation-horizontal/slider {
+      @apply h-xxs top-1/2 w-full -translate-y-1/2;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply w-xxs left-1/2 h-full -translate-x-1/2;
+    }
+  }
+
+  .trackValue {
+    --track-value-start: attr(data-start %);
+    --track-value-end: attr(data-end %);
+
+    @apply bg-accent-primary-bold absolute rounded-full;
+
+    @variant group-orientation-horizontal/slider {
+      @apply h-xxs top-1/2 -translate-y-1/2;
+      right: calc(100% - var(--track-value-end) * 100);
+      left: calc(var(--track-value-start) * 100);
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply w-xxs left-1/2 -translate-x-1/2;
+      top: calc(100% - var(--track-value-start) * 100);
+      bottom: calc(var(--track-value-end) * 100);
+    }
+  }
+
+  .thumb {
+    @apply h-m w-m z-10 rounded-full bg-(--fg-accent-primary-bold) outline-transparent;
+
+    @variant hover {
+      @apply bg-(--fg-accent-primary-hover);
+    }
+
+    @variant dragging {
+      --tw-ring-color: rgba(110, 209, 255, 0.08);
+      @apply outline-interactive-hover bg-(--fg-a11y-on-accent) ring-8 outline;
+    }
+
+    @variant group-orientation-horizontal/slider {
+      @apply top-1/2;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply left-1/2;
+    }
+
+    @variant disabled {
+      @apply cursor-not-allowed bg-(--fg-disabled);
+    }
+  }
+
+  .minValue {
+    @apply fg-primary-muted font-display text-body-m flex items-center;
+
+    @variant group-orientation-vertical/slider {
+      @apply order-4 col-start-1 row-start-4;
+
+      @variant group-layout-grid/slider {
+        @apply self-end justify-self-end;
+      }
+    }
+
+    @variant group-orientation-horizontal/slider {
+      @apply order-2;
+
+      @variant group-layout-grid/slider {
+        @apply col-start-1 row-start-3;
+      }
+    }
+
+    @variant group-disabled/slider {
+      @apply fg-disabled;
+    }
+  }
+
+  .maxValue {
+    @apply fg-primary-muted font-display text-body-m order-4 flex items-center;
+
+    @variant group-orientation-vertical/slider {
+      @apply order-2;
+
+      @variant group-layout-grid/slider {
+        @apply col-start-1 row-start-2 justify-self-end;
+      }
+    }
+
+    @variant group-orientation-horizontal/slider {
+      @variant group-layout-grid/slider {
+        @apply col-start-3 row-start-3 justify-self-end;
+      }
+    }
+
+    @variant group-disabled/slider {
+      @apply fg-disabled;
+    }
+  }
+}
