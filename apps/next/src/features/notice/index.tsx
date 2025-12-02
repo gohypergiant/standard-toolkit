@@ -11,24 +11,16 @@
  */
 
 import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { NoticeExampleServer } from './server';
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
-
-export function BadgeExampleServer() {
+export function NoticeExample() {
   return (
-    <>
-      <PropCombos />
-    </>
+    <ErrorComponent>
+      <LoadingComponent>
+        <NoticeExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
   );
 }

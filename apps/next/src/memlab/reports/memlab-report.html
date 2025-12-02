@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemLab Memory Leak Report</title>
+  <style>
+    /* Design Foundation Tokens - Light Theme */
+    :root {
+      /* Surface */
+      --bg-surface-default: #eff1f2;
+      --bg-surface-raised: #ffffff;
+      --bg-surface-muted: rgba(0, 0, 0, 0.08);
+
+      /* Text */
+      --fg-primary-bold: #212223;
+      --fg-primary-muted: #565759;
+      --fg-inverse-bold: #ffffff;
+      --fg-a11y-on-accent: #ffffff;
+
+      /* Utility Colors - Normal (Success/Passed) */
+      --fg-normal-bold: #2bbf35;
+      --bg-normal-muted: #c2f5c5;
+
+      /* Utility Colors - Critical (Error/Failed) */
+      --fg-critical-bold: #ff2e27;
+      --bg-critical-muted: #ffc4c2;
+
+      /* Utility Colors - Advisory (Info) */
+      --fg-advisory-bold: #3c67a0;
+      --bg-advisory-muted: #c4deff;
+
+      /* Accent Primary */
+      --bg-accent-primary-bold: #004f7e;
+      --bg-accent-primary-pressed: #002C52;
+
+      /* Borders/Outlines */
+      --outline-static: #c3c5c7;
+
+      /* Shadows */
+      --shadow-elevation-raised: 0 1px 4px 0 rgba(0, 0, 0, 0.16);
+      --shadow-elevation-overlay: 0 4px 8px 0 rgba(0, 0, 0, 0.16);
+
+      /* Radius */
+      --radius-small: 2px;
+      --radius-medium: 4px;
+      --radius-large: 8px;
+      --radius-round: 9999px;
+
+      /* Spacing */
+      --spacing-xs: 4px;
+      --spacing-s: 8px;
+      --spacing-m: 12px;
+      --spacing-l: 16px;
+      --spacing-xl: 24px;
+      --spacing-xxl: 32px;
+    }
+
+    /* Dark Theme */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* Surface */
+        --bg-surface-default: #151517;
+        --bg-surface-raised: #212223;
+        --bg-surface-muted: rgba(255, 255, 255, 0.08);
+
+        /* Text */
+        --fg-primary-bold: #ffffff;
+        --fg-primary-muted: #c3c5c7;
+        --fg-inverse-bold: #212223;
+        --fg-a11y-on-accent: #ffffff;
+
+        /* Utility Colors - Normal (Success/Passed) */
+        --fg-normal-bold: #2bbf35;
+        --bg-normal-muted: #08210a;
+
+        /* Utility Colors - Critical (Error/Failed) */
+        --fg-critical-bold: #ff2e27;
+        --bg-critical-muted: #290200;
+
+        /* Utility Colors - Advisory (Info) */
+        --fg-advisory-bold: #62a6ff;
+        --bg-advisory-muted: #0e1825;
+
+        /* Accent Primary */
+        --bg-accent-primary-bold: #004f7e;
+        --bg-accent-primary-pressed: #002C52;
+
+        /* Borders/Outlines */
+        --outline-static: #414245;
+
+        /* Shadows */
+        --shadow-elevation-raised: 0 1px 4px 0 rgba(0, 0, 0, 0.80);
+        --shadow-elevation-overlay: 0 4px 8px 0 rgba(0, 0, 0, 0.80);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: var(--fg-primary-bold);
+      background: var(--bg-surface-default);
+      padding: var(--spacing-xxl);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--bg-accent-primary-bold);
+      color: var(--fg-a11y-on-accent);
+      padding: var(--spacing-xxl);
+      border-radius: var(--radius-large);
+      margin-bottom: var(--spacing-xxl);
+      box-shadow: var(--shadow-elevation-raised);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-s);
+    }
+
+    header .timestamp {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-l);
+      margin-bottom: var(--spacing-xxl);
+    }
+
+    .summary-card {
+      background: var(--bg-surface-raised);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-large);
+      box-shadow: var(--shadow-elevation-raised);
+    }
+
+    .summary-card h3 {
+      font-size: 0.875rem;
+      color: var(--fg-primary-muted);
+      margin-bottom: var(--spacing-s);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .summary-card.passed .value { color: var(--fg-normal-bold); }
+    .summary-card.failed .value { color: var(--fg-critical-bold); }
+    .summary-card.info .value { color: var(--fg-advisory-bold); }
+
+    .components {
+      display: grid;
+      gap: var(--spacing-l);
+    }
+
+    .component-card {
+      background: var(--bg-surface-raised);
+      border-radius: var(--radius-large);
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation-raised);
+    }
+
+    .component-header {
+      padding: var(--spacing-l) var(--spacing-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--outline-static);
+    }
+
+    .component-header h2 {
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-s);
+    }
+
+    .status-badge {
+      padding: var(--spacing-xs) var(--spacing-m);
+      border-radius: var(--radius-round);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-badge.passed {
+      background: var(--bg-normal-muted);
+      color: var(--fg-normal-bold);
+    }
+
+    .status-badge.failed {
+      background: var(--bg-critical-muted);
+      color: var(--fg-critical-bold);
+    }
+
+    .component-body {
+      padding: var(--spacing-xl);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-l);
+      margin-bottom: var(--spacing-l);
+    }
+
+    .metric {
+      padding: var(--spacing-l);
+      background: var(--bg-surface-muted);
+      border-radius: var(--radius-medium);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--fg-primary-muted);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .metric-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .leaks-list {
+      margin-top: var(--spacing-l);
+    }
+
+    .leaks-list h4 {
+      font-size: 0.875rem;
+      color: var(--fg-primary-muted);
+      margin-bottom: var(--spacing-s);
+    }
+
+    .leak-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacing-s);
+      background: var(--bg-critical-muted);
+      border-radius: var(--radius-small);
+      margin-bottom: var(--spacing-xs);
+      font-size: 0.875rem;
+    }
+
+    .leak-item .name {
+      color: var(--fg-critical-bold);
+    }
+
+    .leak-item .size {
+      color: var(--fg-primary-muted);
+    }
+
+    .baseline-comparison {
+      margin-top: var(--spacing-l);
+      padding: var(--spacing-l);
+      background: var(--bg-advisory-muted);
+      border-radius: var(--radius-medium);
+    }
+
+    .baseline-comparison h4 {
+      font-size: 0.875rem;
+      color: var(--fg-advisory-bold);
+      margin-bottom: var(--spacing-s);
+    }
+
+    .delta {
+      font-size: 0.875rem;
+      padding: var(--spacing-xs) var(--spacing-s);
+      border-radius: var(--radius-small);
+    }
+
+    .delta.positive {
+      background: var(--bg-critical-muted);
+      color: var(--fg-critical-bold);
+    }
+
+    .delta.negative {
+      background: var(--bg-normal-muted);
+      color: var(--fg-normal-bold);
+    }
+
+    .delta.neutral {
+      background: var(--bg-surface-muted);
+      color: var(--fg-primary-muted);
+    }
+
+    footer {
+      margin-top: var(--spacing-xxl);
+      text-align: center;
+      color: var(--fg-primary-muted);
+      font-size: 0.875rem;
+    }
+
+    .trend-chart {
+      margin-top: var(--spacing-xxl);
+      padding: var(--spacing-xl);
+      background: var(--bg-surface-raised);
+      border-radius: var(--radius-large);
+      box-shadow: var(--shadow-elevation-raised);
+    }
+
+    .trend-chart h3 {
+      margin-bottom: var(--spacing-l);
+    }
+
+    .chart-placeholder {
+      height: 200px;
+      background: var(--bg-surface-muted);
+      border-radius: var(--radius-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fg-primary-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔬 MemLab Memory Leak Report</h1>
+      <p class="timestamp">Generated: 2025-12-03T14:55:34.024Z</p>
+    </header>
+
+    <div class="summary">
+      <div class="summary-card passed">
+        <h3>Passed</h3>
+        <div class="value">4</div>
+      </div>
+      <div class="summary-card failed">
+        <h3>Failed</h3>
+        <div class="value">2</div>
+      </div>
+      <div class="summary-card info">
+        <h3>Total Leaks</h3>
+        <div class="value">4</div>
+      </div>
+      <div class="summary-card info">
+        <h3>Total Retained</h3>
+        <div class="value">2.00 MB</div>
+      </div>
+    </div>
+
+    <div class="components">
+      
+    <div class="component-card">
+      <div class="component-header">
+        <h2>
+          ✅ button
+        </h2>
+        <span class="status-badge passed">PASSED</span>
+      </div>
+      <div class="component-body">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Leak Count</div>
+            <div class="metric-value">0 / 0</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Retained Size</div>
+            <div class="metric-value">0 B</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Threshold</div>
+            <div class="metric-value">10.00 KB</div>
+          </div>
+        </div>
+
+        <p style="color: var(--fg-normal-bold);">No memory leaks detected!</p>
+
+        
+    <div class="baseline-comparison">
+      <h4>📊 Baseline Comparison</h4>
+      <div style="display: flex; gap: var(--spacing-l); margin-top: var(--spacing-s);">
+        <div>
+          <span>Leaks: </span>
+          <span class="delta neutral">
+            +0
+          </span>
+          <span style="color: var(--fg-primary-muted); font-size: 0.75rem;"> vs baseline (0)</span>
+        </div>
+        <div>
+          <span>Size: </span>
+          <span class="delta neutral">
+            +0 B
+          </span>
+        </div>
+      </div>
+      
+      
+    </div>
+  
+
+        <p style="margin-top: var(--spacing-l); font-size: 0.875rem; color: var(--fg-primary-muted);"><strong>Notes:</strong> Simple component with zero tolerance for leaks</p>
+      </div>
+    </div>
+  
+
+    <div class="component-card">
+      <div class="component-header">
+        <h2>
+          ✅ dialog
+        </h2>
+        <span class="status-badge passed">PASSED</span>
+      </div>
+      <div class="component-body">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Leak Count</div>
+            <div class="metric-value">0 / 2</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Retained Size</div>
+            <div class="metric-value">0 B</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Threshold</div>
+            <div class="metric-value">256.00 KB</div>
+          </div>
+        </div>
+
+        <p style="color: var(--fg-normal-bold);">No memory leaks detected!</p>
+
+        
+    <div class="baseline-comparison">
+      <h4>📊 Baseline Comparison</h4>
+      <div style="display: flex; gap: var(--spacing-l); margin-top: var(--spacing-s);">
+        <div>
+          <span>Leaks: </span>
+          <span class="delta neutral">
+            +0
+          </span>
+          <span style="color: var(--fg-primary-muted); font-size: 0.75rem;"> vs baseline (0)</span>
+        </div>
+        <div>
+          <span>Size: </span>
+          <span class="delta neutral">
+            +0 B
+          </span>
+        </div>
+      </div>
+      
+      
+    </div>
+  
+
+        <p style="margin-top: var(--spacing-l); font-size: 0.875rem; color: var(--fg-primary-muted);"><strong>Notes:</strong> Modal overlay with portal rendering - uses PortalProvider and ModalOverlay</p>
+      </div>
+    </div>
+  
+
+    <div class="component-card">
+      <div class="component-header">
+        <h2>
+          ❌ drawer
+        </h2>
+        <span class="status-badge failed">FAILED</span>
+      </div>
+      <div class="component-body">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Leak Count</div>
+            <div class="metric-value">1 / 2</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Retained Size</div>
+            <div class="metric-value">1.93 MB</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Threshold</div>
+            <div class="metric-value">512.00 KB</div>
+          </div>
+        </div>
+
+        
+    <div class="leaks-list">
+      <h4>Detected Leaks (1)</h4>
+      
+        <div class="leak-item">
+          <span class="name">Detached &lt;header class=&quot;mb-s flex flex-row items-center justify-between gap-s pt-px pr-px&quot;&gt;</span>
+          <span class="size">1.93 MB</span>
+        </div>
+      
+      
+    </div>
+  
+
+        
+    <div class="baseline-comparison">
+      <h4>📊 Baseline Comparison</h4>
+      <div style="display: flex; gap: var(--spacing-l); margin-top: var(--spacing-s);">
+        <div>
+          <span>Leaks: </span>
+          <span class="delta neutral">
+            +0
+          </span>
+          <span style="color: var(--fg-primary-muted); font-size: 0.75rem;"> vs baseline (1)</span>
+        </div>
+        <div>
+          <span>Size: </span>
+          <span class="delta positive">
+            +1.91 MB
+          </span>
+        </div>
+      </div>
+      <p style="color: var(--fg-critical-bold); margin-top: var(--spacing-s); font-weight: 600;">⚠️ Regression detected</p>
+      
+    </div>
+  
+
+        <p style="margin-top: var(--spacing-l); font-size: 0.875rem; color: var(--fg-primary-muted);"><strong>Notes:</strong> Drawer uses portal and ViewStack - may have minor DOM cleanup delays</p>
+      </div>
+    </div>
+  
+
+    <div class="component-card">
+      <div class="component-header">
+        <h2>
+          ✅ intentional-leak
+        </h2>
+        <span class="status-badge passed">PASSED</span>
+      </div>
+      <div class="component-body">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Leak Count</div>
+            <div class="metric-value">0 / 100</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Retained Size</div>
+            <div class="metric-value">0 B</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Threshold</div>
+            <div class="metric-value">10.00 MB</div>
+          </div>
+        </div>
+
+        <p style="color: var(--fg-normal-bold);">No memory leaks detected!</p>
+
+        
+    <div class="baseline-comparison">
+      <h4>📊 Baseline Comparison</h4>
+      <div style="display: flex; gap: var(--spacing-l); margin-top: var(--spacing-s);">
+        <div>
+          <span>Leaks: </span>
+          <span class="delta neutral">
+            +0
+          </span>
+          <span style="color: var(--fg-primary-muted); font-size: 0.75rem;"> vs baseline (0)</span>
+        </div>
+        <div>
+          <span>Size: </span>
+          <span class="delta neutral">
+            +0 B
+          </span>
+        </div>
+      </div>
+      
+      
+    </div>
+  
+
+        <p style="margin-top: var(--spacing-l); font-size: 0.875rem; color: var(--fg-primary-muted);"><strong>Notes:</strong> Intentional leak test page - high thresholds to allow leak detection verification. Tests validate that MemLab correctly detects memory leaks.</p>
+      </div>
+    </div>
+  
+
+    <div class="component-card">
+      <div class="component-header">
+        <h2>
+          ✅ notice
+        </h2>
+        <span class="status-badge passed">PASSED</span>
+      </div>
+      <div class="component-body">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Leak Count</div>
+            <div class="metric-value">0 / 3</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Retained Size</div>
+            <div class="metric-value">0 B</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Threshold</div>
+            <div class="metric-value">512.00 KB</div>
+          </div>
+        </div>
+
+        <p style="color: var(--fg-normal-bold);">No memory leaks detected!</p>
+
+        
+    <div class="baseline-comparison">
+      <h4>📊 Baseline Comparison</h4>
+      <div style="display: flex; gap: var(--spacing-l); margin-top: var(--spacing-s);">
+        <div>
+          <span>Leaks: </span>
+          <span class="delta neutral">
+            +0
+          </span>
+          <span style="color: var(--fg-primary-muted); font-size: 0.75rem;"> vs baseline (0)</span>
+        </div>
+        <div>
+          <span>Size: </span>
+          <span class="delta neutral">
+            +0 B
+          </span>
+        </div>
+      </div>
+      
+      
+    </div>
+  
+
+        <p style="margin-top: var(--spacing-l); font-size: 0.875rem; color: var(--fg-primary-muted);"><strong>Notes:</strong> Uses @accelint/bus for event subscriptions and toast queue - critical to verify subscription cleanup</p>
+      </div>
+    </div>
+  
+
+    <div class="component-card">
+      <div class="component-header">
+        <h2>
+          ❌ tooltip
+        </h2>
+        <span class="status-badge failed">FAILED</span>
+      </div>
+      <div class="component-body">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Leak Count</div>
+            <div class="metric-value">3 / 1</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Retained Size</div>
+            <div class="metric-value">67.96 KB</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Threshold</div>
+            <div class="metric-value">100.00 KB</div>
+          </div>
+        </div>
+
+        
+    <div class="leaks-list">
+      <h4>Detected Leaks (3)</h4>
+      
+        <div class="leak-item">
+          <span class="name">Detached &lt;div class=&quot;absolute&quot;&gt;</span>
+          <span class="size">22.65 KB</span>
+        </div>
+      
+        <div class="leak-item">
+          <span class="name">Detached &lt;div class=&quot;absolute&quot;&gt;</span>
+          <span class="size">22.65 KB</span>
+        </div>
+      
+        <div class="leak-item">
+          <span class="name">Detached &lt;div class=&quot;absolute&quot;&gt;</span>
+          <span class="size">22.65 KB</span>
+        </div>
+      
+      
+    </div>
+  
+
+        
+    <div class="baseline-comparison">
+      <h4>📊 Baseline Comparison</h4>
+      <div style="display: flex; gap: var(--spacing-l); margin-top: var(--spacing-s);">
+        <div>
+          <span>Leaks: </span>
+          <span class="delta neutral">
+            +0
+          </span>
+          <span style="color: var(--fg-primary-muted); font-size: 0.75rem;"> vs baseline (3)</span>
+        </div>
+        <div>
+          <span>Size: </span>
+          <span class="delta neutral">
+            +0 B
+          </span>
+        </div>
+      </div>
+      
+      
+    </div>
+  
+
+        <p style="margin-top: var(--spacing-l); font-size: 0.875rem; color: var(--fg-primary-muted);"><strong>Notes:</strong> Uses React Aria's overlay system and portal - may have minor leaks from floating positioning</p>
+      </div>
+    </div>
+  
+    </div>
+
+    
+    <div class="trend-chart">
+      <h3>📈 Historical Trend (Last 1 runs)</h3>
+      <div class="chart-placeholder">
+        <table style="width: 100%; background: var(--bg-surface-raised); padding: var(--spacing-l);">
+          <thead>
+            <tr style="text-align: left; border-bottom: 1px solid var(--outline-static);">
+              <th style="padding: var(--spacing-s);">Date</th>
+              <th style="padding: var(--spacing-s);">Commit</th>
+              <th style="padding: var(--spacing-s);">Components</th>
+              <th style="padding: var(--spacing-s);">Total Leaks</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+              <tr style="border-bottom: 1px solid var(--bg-surface-muted);">
+                <td style="padding: var(--spacing-s); font-size: 0.875rem;">12/2/2025</td>
+                <td style="padding: var(--spacing-s); font-family: monospace; font-size: 0.75rem;">N/A</td>
+                <td style="padding: var(--spacing-s); font-size: 0.875rem;">button, dialog, drawer, intentional-leak, notice, tooltip</td>
+                <td style="padding: var(--spacing-s); font-size: 0.875rem;">4</td>
+              </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+
+    <footer>
+      <p>Generated by MemLab Memory Leak Testing Framework</p>
+      <p>© 2025 Hypergiant Galactic Systems Inc.</p>
+    </footer>
+  </div>
+</body>
+</html>

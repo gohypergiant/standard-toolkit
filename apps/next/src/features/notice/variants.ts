@@ -10,25 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+import { uuid } from '@accelint/core';
+import type { NoticeProps } from '@accelint/design-toolkit/components/notice/types';
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
+export type NoticeVariant = Pick<NoticeProps, 'color' | 'size' | 'id'>;
 
-export function BadgeExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
-}
+export const PROP_COMBOS: NoticeVariant[] = [
+  { color: 'info', size: 'medium', id: uuid() },
+  { color: 'advisory', size: 'medium', id: uuid() },
+  { color: 'normal', size: 'medium', id: uuid() },
+  { color: 'serious', size: 'medium', id: uuid() },
+  { color: 'critical', size: 'medium', id: uuid() },
+  { color: 'info', size: 'small', id: uuid() },
+  { color: 'critical', size: 'small', id: uuid() },
+];

@@ -10,25 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+import { TooltipExample } from '~/features/tooltip/client';
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
-
-export function BadgeExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
+export default function Page() {
+  return <TooltipExample />;
 }
