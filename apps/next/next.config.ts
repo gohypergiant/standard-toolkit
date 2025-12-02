@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLocalIdent } from '@accelint/design-foundation/lib/webpack';
 import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
 import type { NextConfig } from 'next';
+import type { Configuration, RuleSetRule } from 'webpack';
 
 const withVanillaExtract = createVanillaExtractPlugin();
 
@@ -19,17 +21,17 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@accelint/design-foundation', '@accelint/design-system'],
   productionBrowserSourceMaps: true,
 
-  webpack(config, { dev, nextRuntime, webpack, isServer }) {
-    if (!isServer) {
+  webpack(config: Configuration, { dev, nextRuntime, webpack, isServer }) {
+    if (!isServer && config.optimization) {
       config.optimization.providedExports = true;
     }
 
-    if (!dev) {
+    if (!dev && config.optimization) {
       config.optimization.usedExports = 'global';
     }
 
     if (!nextRuntime) {
-      config.plugins.push(
+      config.plugins?.push(
         new webpack.BannerPlugin({
           banner: '$RefreshReg$ = () => {};\n$RefreshSig$ = () => () => {};\n',
           raw: true,
@@ -38,6 +40,37 @@ const nextConfig: NextConfig = {
         }),
       );
     }
+
+    // Find the CSS loader rules
+    const rules = (
+      config.module?.rules?.find(
+        (rule) =>
+          rule != null &&
+          typeof rule === 'object' &&
+          typeof rule.oneOf === 'object',
+      ) as RuleSetRule | undefined
+    )?.oneOf?.filter(
+      (rule) =>
+        rule != null && typeof rule === 'object' && Array.isArray(rule.use),
+    ) as RuleSetRule[] | undefined;
+
+    rules?.forEach((rule) => {
+      if (Array.isArray(rule.use)) {
+        rule.use.forEach((loader) => {
+          if (
+            loader != null &&
+            typeof loader === 'object' &&
+            loader.loader &&
+            loader.loader.includes('/css-loader/') &&
+            loader.options &&
+            typeof loader.options !== 'string' &&
+            loader.options.modules
+          ) {
+            loader.options.modules.getLocalIdent = getLocalIdent;
+          }
+        });
+      }
+    });
 
     return config;
   },

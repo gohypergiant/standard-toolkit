@@ -1,0 +1,118 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .group {
+    @apply gap-xs flex;
+
+    @variant orientation-horizontal {
+      @apply flex-wrap;
+    }
+
+    @variant orientation-vertical {
+      @apply flex-col;
+    }
+
+    .label {
+      @apply w-full;
+    }
+  }
+
+  .radio {
+    @apply gap-m flex cursor-pointer items-center;
+
+    @variant group-orientation-horizontal/radio-group {
+      @apply grow;
+    }
+
+    @variant group-orientation-horizontal/radio-group {
+      @apply basis-1/3;
+    }
+
+    @variant disabled {
+      @apply cursor-not-allowed;
+    }
+
+    .label {
+      @apply fg-primary-bold text-body-s;
+
+      @variant group-disabled/radio {
+        @apply fg-disabled;
+      }
+    }
+  }
+
+  .control {
+    @apply my-xxs size-l outline-interactive flex shrink-0 grow-0 items-center justify-center rounded-full outline-2;
+
+    &:before {
+      @apply size-s block rounded-full;
+      content: '';
+    }
+
+    @variant group-hover/radio {
+      @apply outline-interactive-hover;
+    }
+
+    @variant group-focus-visible/radio {
+      @apply outline-interactive-hover;
+    }
+
+    @variant group-pressed/radio {
+      @apply outline-interactive-pressed;
+    }
+
+    @variant group-selected/radio {
+      @apply outline-accent-primary-bold outline-1;
+
+      &:before {
+        @apply bg-(--fg-accent-primary-bold);
+      }
+
+      @variant group-hover/radio {
+        @apply outline-interactive-hover;
+
+        &:before {
+          @apply bg-(--fg-accent-primary-hover);
+        }
+      }
+
+      @variant group-focus-visible/radio {
+        @apply outline-accent-primary-hover;
+
+        &:before {
+          @apply bg-(--fg-accent-primary-hover);
+        }
+      }
+
+      @variant group-pressed/radio {
+        @apply outline-info-pressed outline-2;
+
+        &:before {
+          @apply bg-(--fg-accent-primary-pressed);
+        }
+      }
+    }
+
+    @variant group-disabled/radio {
+      @apply outline-interactive-disabled;
+
+      @variant group-selected/radio {
+        &:before {
+          @apply bg-interactive-disabled;
+        }
+      }
+    }
+  }
+}

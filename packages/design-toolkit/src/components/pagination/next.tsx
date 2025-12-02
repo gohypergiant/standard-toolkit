@@ -13,17 +13,16 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronRight from '@accelint/icons/chevron-right';
 import { useContext } from 'react';
 import { composeRenderProps } from 'react-aria-components';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { PaginationContext } from './context';
-import { PaginationStyles } from './styles';
+import styles from './styles.module.css';
 import { isNavigationDisabled } from './utils';
 import type { PaginationNextProps } from './types';
-
-const { button } = PaginationStyles();
 
 export function PaginationNext({ className, onPress }: PaginationNextProps) {
   const { page, total, setPage } = useContext(PaginationContext);
@@ -31,9 +30,9 @@ export function PaginationNext({ className, onPress }: PaginationNextProps) {
   return (
     <Button
       className={composeRenderProps(className, (className) =>
-        button({ className }),
+        clsx(styles.button, className),
       )}
-      color='accent'
+      color='mono-bold'
       variant='icon'
       isDisabled={page >= total || isNavigationDisabled(total, page)}
       onPress={() => {

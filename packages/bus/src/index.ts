@@ -23,4 +23,5 @@ export type {
   ExtractEvent,
   Listener,
   Payload,
+  StructuredCloneableData,
 } from './broadcast/types';

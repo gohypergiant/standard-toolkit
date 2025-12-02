@@ -12,7 +12,7 @@
 
 import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
-import React, { type ComponentProps, useState } from 'react';
+import { type ComponentProps, Fragment, useState } from 'react';
 import { Heading, Text } from 'react-aria-components';
 import { Avatar } from '../avatar';
 import { Button } from '../button';
@@ -88,7 +88,7 @@ export const Default: Story = {
               <SidenavTrigger for={id}>
                 <Button variant='icon' size='large'>
                   <Icon>
-                    <ExpandLeftPanel className='' />
+                    <ExpandLeftPanel />
                   </Icon>
                 </Button>
               </SidenavTrigger>
@@ -106,11 +106,12 @@ export const Default: Story = {
             </SidenavHeader>
             <SidenavContent>
               {Object.entries(sections).map(([section, items], i) => (
-                <React.Fragment key={section}>
+                <Fragment key={section}>
                   <Heading>{section}</Heading>
                   {items.map((item) => (
                     <SidenavItem
                       key={item.id}
+                      id={item.id}
                       textValue={item.text}
                       isDisabled={item.disabled}
                       isSelected={activeItem === item.id}
@@ -125,7 +126,7 @@ export const Default: Story = {
                     </SidenavItem>
                   ))}
                   {i !== Object.entries(sections).length - 1 && <Divider />}
-                </React.Fragment>
+                </Fragment>
               ))}
               <Divider />
               <Heading>External</Heading>

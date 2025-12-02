@@ -12,13 +12,12 @@
 'use client';
 import 'client-only';
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useCardInteractions } from '../../hooks/kanban';
 import { Divider } from '../divider';
 import { useDragContext } from './kanban';
-import { CardInnerStyles, KanbanStyles } from './styles';
+import styles from './styles.module.css';
 import type { KanbanCardProps } from './types';
-
-const { cardContainerOuter, divider } = KanbanStyles();
 
 export function KanbanCard({
   className,
@@ -35,18 +34,15 @@ export function KanbanCard({
   const showPlaceholder = activeId && activeId !== card.id && closestEdge;
 
   return (
-    <li className={cardContainerOuter()} ref={ref} style={style}>
+    <li className={styles.cardContainerOuter} ref={ref} style={style}>
       {showPlaceholder && closestEdge === 'top' && (
-        <Divider className={divider()} />
+        <Divider className={styles.divider} />
       )}
 
       <div
-        className={CardInnerStyles({
-          className,
-          isActive,
-          dragging: isDragging,
-        })}
-        data-dragging={isDragging}
+        data-dragging={isDragging || undefined}
+        data-current={isActive || undefined}
+        className={clsx(styles.card, className)}
         {...attributes}
         {...listeners}
         {...rest}
@@ -55,7 +51,7 @@ export function KanbanCard({
       </div>
 
       {showPlaceholder && closestEdge === 'bottom' && (
-        <Divider className={divider()} />
+        <Divider className={styles.divider} />
       )}
     </li>
   );

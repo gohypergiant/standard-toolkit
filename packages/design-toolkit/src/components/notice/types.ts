@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Payload } from '@accelint/bus';
+import type { Payload, StructuredCloneableData } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { ToastListProps } from 'react-aria-components';
 import type { ButtonProps } from '../button/types';
@@ -36,7 +36,7 @@ export type NoticeContent = {
   secondary?: ActionButtonProps;
   timeout?: number;
   target?: UniqueId;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, StructuredCloneableData>;
 };
 
 export type NoticeIconProps = {
@@ -102,7 +102,7 @@ export type NoticeDequeueEvent = Payload<
     id?: UniqueId;
     target?: UniqueId;
     color?: NoticeColor;
-    metadata?: Record<string, unknown>;
+    metadata?: Record<string, StructuredCloneableData>;
   }
 >;
 

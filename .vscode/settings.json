@@ -9,6 +9,9 @@
   "search.exclude": {
     "pnpm-lock.yaml": true
   },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
@@ -18,11 +21,20 @@
   "[javascriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "[tailwindcss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
   },
   "cSpell.words": [
     "accelint",
@@ -42,19 +54,5 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit"
   },
-  "yaml.format.singleQuote": true,
-  "tailwindCSS.classFunctions": [
-    "tw",
-    "clsx",
-    "tw\\.[a-z-]+",
-    "cn",
-    "cva",
-    "tv"
-  ],
-  "[markdown]": {
-    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
-  },
-  "[xml]": {
-    "editor.defaultFormatter": "redhat.vscode-xml"
-  }
+  "yaml.format.singleQuote": true
 }

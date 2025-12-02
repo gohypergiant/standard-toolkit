@@ -12,14 +12,13 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Heading, type HeadingProps } from 'react-aria-components';
-import { DialogStyles } from './styles';
-
-const { title } = DialogStyles();
+import styles from './styles.module.css';
 
 export function DialogTitle({ children, className }: HeadingProps) {
   return (
-    <Heading slot='title' className={title({ className })}>
+    <Heading slot='title' className={clsx(styles.title, className)}>
       {children}
     </Heading>
   );

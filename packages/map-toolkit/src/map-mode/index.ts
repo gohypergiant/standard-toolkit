@@ -10,12 +10,7 @@
  * governing permissions and limitations under the License.
  */
 export { MapModeEvents, MapModeEventsNamespace } from './events';
-export {
-  destroyStore,
-  getOrCreateStore,
-  getStore,
-  MapModeStore,
-} from './store';
+export { clearMapModeState, getCurrentModeOwner } from './store';
 export { type UseMapModeReturn, useMapMode } from './use-map-mode';
 export type {
   MapModeEventType,

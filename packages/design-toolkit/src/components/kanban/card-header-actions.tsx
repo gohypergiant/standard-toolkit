@@ -12,10 +12,9 @@
 'use client';
 import 'client-only';
 
-import { KanbanStyles } from './styles';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
-
-const { cardActions } = KanbanStyles();
 
 export function KanbanCardHeaderActions({
   children,
@@ -23,7 +22,7 @@ export function KanbanCardHeaderActions({
   ...rest
 }: KanbanComponentProps) {
   return (
-    <div className={cardActions({ className })} {...rest}>
+    <div {...rest} className={clsx(styles.cardHeaderActions, className)}>
       {children}
     </div>
   );

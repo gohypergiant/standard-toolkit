@@ -17,6 +17,7 @@ import {
 } from '@accelint/vitest-config/mocks/broadcast-channel';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Broadcast } from './index';
+import type { StructuredCloneable } from 'type-fest';
 import type { Payload } from './types';
 
 describe('broadcast', () => {
@@ -29,6 +30,84 @@ describe('broadcast', () => {
 
   afterEach(() => {
     resetMockBroadcastChannel();
+  });
+
+  it('sets channel name from config', () => {
+    const bus = new Broadcast({ channelName: 'custom-channel' });
+    // @ts-expect-error Accessing protected property
+    expect(bus.channelName).toBe('custom-channel');
+  });
+
+  it('onmessage', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+    const fn = vi.fn();
+    // @ts-expect-error Accessing protected property
+    bus.handleListeners = fn;
+
+    // Simulate an message event
+    const event = new MessageEvent('message', {
+      data: 'test',
+    });
+
+    // @ts-expect-error Accessing protected property
+    bus.channel.onmessage(event);
+
+    expect(fn).toHaveBeenCalled();
+  });
+
+  it('onmessageerror', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+    const consoleMock = vi.spyOn(console, 'error');
+
+    // Simulate an error event
+    const event = new MessageEvent('message', {
+      data: 'test',
+    });
+
+    // @ts-expect-error Accessing protected property
+    bus.channel.onmessageerror(event);
+
+    expect(consoleMock).toHaveBeenCalled();
+    expect(consoleMock).toHaveBeenCalledWith(
+      'BroadcastChannel message error',
+      event,
+    );
+  });
+
+  it('setEventEmitOptions', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+    bus.setEventEmitOptions('test', { target: 'self' });
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get('test'),
+    ).toEqual({ target: 'self' });
+
+    bus.setEventEmitOptions('test', null);
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get('test'),
+    ).toBeUndefined();
+  });
+
+  it('setEventsEmitOptions', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+    bus.setEventsEmitOptions(new Map([['test', { target: 'self' }]]));
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get('test'),
+    ).toEqual({ target: 'self' });
+  });
+
+  it('setGlobalEmitOptions', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+    bus.setGlobalEmitOptions({ target: 'self' });
+    expect(
+      // @ts-expect-error Accessing protected property
+      bus.emitOptions.get(bus.id),
+    ).toEqual({ target: 'self' });
   });
 
   it('on', () => {
@@ -106,6 +185,17 @@ describe('broadcast', () => {
 
     bus.on('test', fn);
     bus.off('test', fn);
+    bus.emit('test', 'test');
+
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('deleteEvent', () => {
+    const bus = Broadcast.getInstance<Payload<'test', string>>();
+    const fn = vi.fn();
+
+    bus.on('test', fn);
+    bus.deleteEvent('test');
     bus.emit('test', 'test');
 
     expect(fn).not.toHaveBeenCalled();
@@ -194,6 +284,60 @@ describe('broadcast', () => {
       payload: 'test',
       source: bus.id,
       target,
+    });
+  });
+
+  it.for([
+    [''],
+    [new Boolean(1)],
+    [null],
+    [undefined],
+    [true],
+    [1],
+    [BigInt(9007199254740991)],
+    [Number.NaN],
+    [Number.POSITIVE_INFINITY],
+    [[]],
+    [new ArrayBuffer(8)],
+    [new DataView(new ArrayBuffer(8))],
+    [new Date('2025-01-01T00:00:00.000Z')],
+    [/ab+c/i],
+    [new Error('Test error')],
+    [
+      new Map([
+        ['key1', 'value1'],
+        ['key2', 'value2'],
+      ]),
+    ],
+    [new Set([1, 2, 3])],
+    [new Uint8Array([1, 2, 3, 4])],
+    [{}],
+    [{ nested: { deeply: { value: 42 } } }],
+  ])('should serialize %s correctly', ([testValue]) => {
+    const bus =
+      Broadcast.getInstance<
+        Payload<'test', Exclude<StructuredCloneable, undefined>>
+      >();
+
+    let returnedData = {};
+    const fn = vi.fn().mockImplementation((data) => {
+      returnedData = data;
+    });
+
+    const payload = {
+      type: 'test',
+      value: testValue,
+    };
+
+    bus.on('test', fn);
+    bus.emit('test', payload);
+
+    expect(fn).toHaveBeenCalled();
+    expect(returnedData).toStrictEqual({
+      type: 'test',
+      payload: payload,
+      source: bus.id,
+      target: undefined,
     });
   });
 });
