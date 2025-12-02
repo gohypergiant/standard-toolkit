@@ -47,8 +47,8 @@ export const FlashcardContext = createContext<FlashcardProps>({
  *  </FlashcardAdditionalData>
  *  <FlashcardDetailsList>
  *    {detail.map((detail) => (
- *     <Fragment id={detail.id}>
- *       <FlashcardDetailLabel>
+ *     <Fragment key={detail.id}>
+ *       <FlashcardDetailsLabel>
  *         {detail.label}
  *       </FlashcardDetailsLabel>
  *       <FlashcardDetailsValue>
@@ -80,10 +80,7 @@ export function FlashcardHero(props: FlashcardComponentProps) {
   if (isLoading) {
     return (
       <div {...rest} className={clsx(styles.hero, className, 'gap-s')}>
-        <Skeleton
-          className={clsx(styles.skeleton)}
-          data-testid='hero-skeleton'
-        />
+        <Skeleton className={styles.skeleton} data-testid='hero-skeleton' />
         <Skeleton className={clsx(styles.skeleton, styles.half)} />
       </div>
     );
@@ -142,7 +139,6 @@ export function FlashcardDetailsList(props: FlashcardDetailsListProps) {
     <DetailsList
       {...rest}
       align='justify'
-      // classNames={{ list: detailsList({ className }) }}
       classNames={{ list: clsx(styles['details-list'], className) }}
     >
       {children}
