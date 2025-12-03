@@ -1050,3 +1050,57 @@ export const WithHover: Story = {
     );
   },
 };
+
+const WITH_DRAG_MAP_ID = uuid();
+
+/**
+ * Example showing cursor changes during drag operations.
+ * Demonstrates using onDragStart/onDragEnd with the cursor API.
+ */
+export const WithDrag: Story = {
+  render: () => {
+    function DragCursorDemo() {
+      const { cursor, requestCursorChange } = useMapCursor(WITH_DRAG_MAP_ID);
+
+      // Set default cursor to 'grab'
+      useMapCursorEffect('grab', 'drag-handler', WITH_DRAG_MAP_ID);
+
+      const handleDragStart = useCallback(() => {
+        requestCursorChange('grabbing', 'drag-handler');
+      }, [requestCursorChange]);
+
+      const handleDragEnd = useCallback(() => {
+        requestCursorChange('grab', 'drag-handler');
+      }, [requestCursorChange]);
+
+      return (
+        <>
+          <BaseMap
+            className='absolute inset-0'
+            id={WITH_DRAG_MAP_ID}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          />
+          <div className='absolute top-l left-l flex w-[300px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+            <p className='font-bold text-header-l'>Drag Cursor Demo</p>
+            <p className='text-body-s text-content-secondary'>
+              Click and drag the map to see the cursor change to 'grabbing'.
+              Release to revert.
+            </p>
+            <Divider />
+            <div className='flex items-center gap-s'>
+              <p className='text-body-m'>Current cursor:</p>
+              <code className='text-body-m'>{cursor}</code>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <DragCursorDemo />
+      </div>
+    );
+  },
+};

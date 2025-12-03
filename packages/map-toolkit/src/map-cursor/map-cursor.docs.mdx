@@ -191,6 +191,72 @@ function DrawingMode() {
 }
 ```
 
+### 4. Cursor changes on layer hover
+
+Change the cursor when hovering over pickable layers using the `onHover` callback:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { useCallback } from 'react';
+
+function HoverableLayer() {
+  const { requestCursorChange, clearCursor } = useMapCursor(MAIN_MAP_ID);
+
+  const handleHover = useCallback(
+    (info: { picked: boolean }) => {
+      if (info.picked) {
+        requestCursorChange('pointer', 'my-layer');
+      } else {
+        clearCursor('my-layer');
+      }
+    },
+    [requestCursorChange, clearCursor],
+  );
+
+  return (
+    <scatterplotLayer
+      data={myData}
+      pickable={true}
+      onHover={handleHover}
+    />
+  );
+}
+```
+
+### 5. Cursor changes during drag
+
+Change the cursor during map drag operations using `onDragStart`/`onDragEnd` callbacks:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapCursor, useMapCursorEffect } from '@accelint/map-toolkit/map-cursor';
+import { useCallback } from 'react';
+
+function DraggableMap() {
+  const { requestCursorChange } = useMapCursor(MAIN_MAP_ID);
+
+  // Set default cursor to 'grab'
+  useMapCursorEffect('grab', 'drag-handler', MAIN_MAP_ID);
+
+  const handleDragStart = useCallback(() => {
+    requestCursorChange('grabbing', 'drag-handler');
+  }, [requestCursorChange]);
+
+  const handleDragEnd = useCallback(() => {
+    requestCursorChange('grab', 'drag-handler');
+  }, [requestCursorChange]);
+
+  return (
+    <BaseMap
+      id={MAIN_MAP_ID}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    />
+  );
+}
+```
+
 ## Multiple Map Instances
 
 When you need multiple independent maps, provide unique `id` props to each `BaseMap`. Cursor state is completely isolated between instances:
@@ -615,6 +681,9 @@ See the Storybook stories for complete working examples:
 - **BasicUsage**: Simple cursor control from a toolbar
 - **AutomaticCursorEffect**: Using `useMapCursorEffect` for lifecycle management
 - **WithModeOwner**: Cursor priority with mode ownership, rejections, and notices
+- **IntegrationWithModeAuth**: Advanced integration showing cursor management with map mode authorization
+- **WithHover**: Cursor changes on layer hover using `onHover` callback with `info.picked`
+- **WithDrag**: Cursor changes during drag operations using `onDragStart`/`onDragEnd` callbacks
 
 ## Troubleshooting
 
