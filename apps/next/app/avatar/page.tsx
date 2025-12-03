@@ -10,36 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
+import { BentoGroup } from '~/components/bento';
+import { AvatarExample } from '~/features/avatar';
 
-import { ThemeProvider as DTKThemeProvider } from '@accelint/design-toolkit';
-import type { PropsWithChildren } from 'react';
+// biome-ignore lint/style/useNamingConvention: nextjs convention
+export const experimental_ppr = true;
 
-export function DTKTheme({ children }: PropsWithChildren) {
+export default function Page() {
   return (
-    <DTKThemeProvider
-      overrides={{
-        light: {
-          bg: {
-            accent: {
-              primary: {
-                bold: [255, 107, 26, 1],
-              },
-            },
-          },
-        },
-        dark: {
-          bg: {
-            accent: {
-              primary: {
-                bold: [196, 211, 0, 1],
-              },
-            },
-          },
-        },
-      }}
-    >
-      {children}
-    </DTKThemeProvider>
+    <BentoGroup>
+      <AvatarExample />
+    </BentoGroup>
   );
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,17 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@accelint/vitest-config/dom';
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { Suspense } from 'react';
+import type { PropsWithChildren } from 'react';
 
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    plugins: [],
-    test: {
-      globals: true,
-      setupFiles: './src/test/setup.ts',
-      environment: 'jsdom',
-    },
-  }),
-);
+export function Fallback() {
+  return <div>Loading...</div>;
+}
+
+export function LoadingComponent(props: PropsWithChildren) {
+  const { children } = props;
+
+  return <Suspense fallback={<Fallback />}>{children}</Suspense>;
+}

@@ -10,19 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+import { Link } from '@accelint/design-toolkit/components/link/index';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  experimental: {
-    // ppr: false, // enable once we are on next 16
-    // reactCompiler: false, // enable once we are on next 16
-    // cssChunking: 'strict', // triage side effects on css modules
-  },
-};
+const LINKS = [
+  { path: '/', label: 'All' },
+  { path: '/accordion', label: 'Accordion' },
+  { path: '/accordion-group', label: 'Accordion Group' },
+  { path: '/avatar', label: 'Avatar' },
+  { path: '/badge', label: 'Badge' },
+];
 
-export default nextConfig;
+export function Nav() {
+  return (
+    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-overlay'>
+      {LINKS.map((link, k) => {
+        return (
+          <Link key={link.path} href={link.path}>
+            {link.label}
+          </Link>
+        );
+      })}
+    </div>
+  );
+}

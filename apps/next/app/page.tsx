@@ -10,8 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import { BusExample } from '../bus';
+import 'server-only';
+import { BentoGroup } from '~/components/bento';
+import { AccordionExample } from '~/features/accordion';
+import { AccordionGroupExample } from '~/features/accordion-group';
+import { ActionBarExample } from '~/features/action-bar';
+import { AvatarExample } from '~/features/avatar';
+import { BadgeExample } from '~/features/badge';
+
+// biome-ignore lint/style/useNamingConvention: nextjs convention
+export const experimental_ppr = true;
 
 export default function Page() {
-  return <BusExample />;
+  return (
+    <BentoGroup>
+      <AccordionExample />
+      <AccordionGroupExample />
+      <ActionBarExample />
+      <AvatarExample />
+      <BadgeExample />
+    </BentoGroup>
+  );
 }

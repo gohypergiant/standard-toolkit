@@ -10,16 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { Broadcast } from '@accelint/bus';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { AvatarExampleServer } from './server';
 
-const bus = Broadcast.getInstance();
-
-let value = 0;
-
-function inc() {
-  value++;
-
-  console.log('value: ', value);
+export function AvatarExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <AvatarExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }
-
-bus.on('inc', inc);

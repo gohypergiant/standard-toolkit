@@ -10,19 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+'use client';
+import 'client-only';
+import { ErrorBoundary } from 'react-error-boundary';
+import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  experimental: {
-    // ppr: false, // enable once we are on next 16
-    // reactCompiler: false, // enable once we are on next 16
-    // cssChunking: 'strict', // triage side effects on css modules
-  },
-};
+function onError(err: Error, info: ErrorInfo) {
+  console.error(err);
+  console.error(info.componentStack);
+}
 
-export default nextConfig;
+function Fallback() {
+  return <div>Error</div>;
+}
+
+export function ErrorComponent(props: PropsWithChildren) {
+  const { children } = props;
+
+  return (
+    <ErrorBoundary fallback={<Fallback />} onError={onError}>
+      {children}
+    </ErrorBoundary>
+  );
+}

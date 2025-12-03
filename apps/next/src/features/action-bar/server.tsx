@@ -10,30 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-import { Button } from '@accelint/design-toolkit/components/button/index';
+import 'server-only';
+import { ActionBar } from '@accelint/design-toolkit/components/action-bar/index';
 import { Icon } from '@accelint/design-toolkit/components/icon/index';
-import Placeholder from '@accelint/icons/placeholder';
+import PlaceholderIcon from '@accelint/icons/placeholder';
+import { BentoItem } from '~/components/bento';
 
-export function Buttons() {
+function Example1() {
+  return (
+    <BentoItem>
+      <ActionBar>
+        <Icon>
+          <PlaceholderIcon />
+        </Icon>
+        <Icon>
+          <PlaceholderIcon />
+        </Icon>
+        <Icon>
+          <PlaceholderIcon />
+        </Icon>
+      </ActionBar>
+    </BentoItem>
+  );
+}
+
+export function ActionBarExampleServer() {
   return (
     <>
-      <h1 className='text-header-xl text-default-light mb-l'>BUTTONS!!!!</h1>
-      <h2 className='text-header-l text-default-light'>
-        Design Toolkit buttons
-      </h2>
-      <div className='p-m flex gap-m items-center mb-l'>
-        <Button>
-          <Icon>
-            <Placeholder />
-          </Icon>
-          Primary Button
-        </Button>
-        <Button color='critical'>Critical Button</Button>
-        <Button className='bg-advisory-bold hover:bg-advisory-hover fg-info-bold'>
-          Custom Button
-        </Button>
-      </div>
+      <Example1 />
     </>
   );
 }
