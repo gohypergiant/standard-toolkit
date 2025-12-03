@@ -35,7 +35,7 @@ export default defineConfig({
     '!storybook-static',
     '!src/test',
   ],
-  tsconfig: './tsconfig.dist.json',
+  tsconfig: './tsconfig.build.json',
   metafile: true,
   bundle: false,
   clean: true,
