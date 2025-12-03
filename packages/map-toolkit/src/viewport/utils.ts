@@ -68,7 +68,7 @@ export function getViewportSize({
   const defaultValue = `-- x -- ${unit.toUpperCase()}`;
 
   // Validate inputs
-  if (bounds.every((b) => Number.isNaN(b))) {
+  if (!bounds || bounds.every((b) => Number.isNaN(b))) {
     return defaultValue;
   }
 

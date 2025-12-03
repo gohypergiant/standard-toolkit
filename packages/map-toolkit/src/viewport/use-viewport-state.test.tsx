@@ -30,7 +30,7 @@ const defaultPayload = {
   latitude: Number.NaN,
   longitude: Number.NaN,
   id: instanceId,
-  bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
+  bounds: undefined,
   width: 0,
   height: 0,
 };

@@ -202,7 +202,7 @@ Optional server-side snapshot function for SSR.
 ```tsx
 {
   id: UniqueId;              // Map instance identifier
-  bounds: Bounds;            // [minLon, minLat, maxLon, maxLat]
+  bounds?: Bounds;           // [minLon, minLat, maxLon, maxLat], undefined before first event
   latitude: number;          // Center latitude
   longitude: number;         // Center longitude
   zoom: number;              // Zoom level
@@ -211,7 +211,7 @@ Optional server-side snapshot function for SSR.
 }
 ```
 
-**Initial State:** Numeric coordinate values are `NaN` and pixel dimensions are `0` before the first viewport event fires.
+**Initial State:** `bounds` is `undefined`, numeric coordinate values are `NaN`, and pixel dimensions are `0` before the first viewport event fires.
 
 ## How It Works
 
@@ -268,6 +268,7 @@ When inputs are invalid, displays fallback text:
 
 ```tsx
 // Displays: "-- x -- NM" when:
+// - Bounds is undefined (before first viewport event)
 // - Bounds contain NaN values
 // - Zoom is NaN
 // - Width or height is 0
@@ -373,7 +374,7 @@ function CustomViewportDisplay({ instanceId }: { instanceId: UniqueId }) {
 
 ```tsx
 {
-  bounds: Bounds;                // Geographic bounds [minLon, minLat, maxLon, maxLat]
+  bounds?: Bounds;               // Geographic bounds [minLon, minLat, maxLon, maxLat]
   zoom: number;                  // Zoom level for meters-per-pixel calculation
   width: number;                 // Viewport width in pixels
   height: number;                // Viewport height in pixels
@@ -441,7 +442,7 @@ type SupportedDistanceUnit = 'km' | 'm' | 'nm' | 'mi' | 'ft';
 // Viewport payload
 type MapViewportPayload = {
   id: UniqueId;
-  bounds: Bounds;
+  bounds?: Bounds; // undefined before first viewport event
   latitude: number;
   longitude: number;
   zoom: number;

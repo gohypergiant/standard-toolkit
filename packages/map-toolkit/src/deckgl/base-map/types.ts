@@ -21,7 +21,7 @@ import type { MapEvents } from './events';
  * Omits viewport, layer, and sourceLayer (which contain non-serializable functions),
  * and adds layerId and sourceLayerId extracted from the original layer objects.
  */
-type NonFuncPickingInfo = Omit<
+export type SerializablePickingInfo = Omit<
   PickingInfo,
   'viewport' | 'layer' | 'sourceLayer'
 > & {
@@ -67,7 +67,7 @@ type NonFuncMjolnirPointerEvent = Omit<
  */
 export type MapClickPayload = {
   /** Information about the picked object and its properties */
-  info: NonFuncPickingInfo;
+  info: SerializablePickingInfo;
   /** The gesture event that triggered the click */
   event: NonFuncMjolnirGestureEvent;
   /** The map instance the event occurred within */
@@ -80,7 +80,7 @@ export type MapClickPayload = {
  */
 export type MapHoverPayload = {
   /** Information about the picked object and its properties */
-  info: NonFuncPickingInfo;
+  info: SerializablePickingInfo;
   /** The pointer event that triggered the hover */
   event: NonFuncMjolnirPointerEvent;
   /** The map instance the event occurred within */
@@ -95,7 +95,8 @@ export type Bounds = [
 ];
 
 export type MapViewportPayload = {
-  bounds: Bounds;
+  /** Viewport bounds, undefined if viewport not yet initialized */
+  bounds?: Bounds;
   latitude: number;
   longitude: number;
   zoom: number;
@@ -117,6 +118,7 @@ export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
  * Combines the event name with the hover payload.
  */
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
+
 export type MapViewportEvent = Payload<
   typeof MapEvents.viewport,
   MapViewportPayload

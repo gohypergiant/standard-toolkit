@@ -10,21 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Bounds } from '../deckgl/base-map/types';
-import type { UNIT_MAP } from './constants';
-
-export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
-
-export type GetViewportSizeArgs = {
-  /** Geographic bounds, undefined if viewport not yet initialized */
-  bounds?: Bounds;
-  zoom: number;
-  /** Viewport width in pixels */
-  width: number;
-  /** Viewport height in pixels */
-  height: number;
-  unit?: SupportedDistanceUnit;
-  formatter?: Intl.NumberFormat;
-};
-
-export type GeoCoordinate = [longitude: number, latitude: number];
+/**
+ * Event keys for map cursor state changes.
+ * These events are used for communication between cursor stores and consumers.
+ */
+export const MapCursorEvents = {
+  /** Emitted when a component requests a cursor change */
+  changeRequest: 'cursor:change-request',
+  /** Emitted when the cursor has been changed */
+  changed: 'cursor:changed',
+  /** Emitted when a cursor change request is rejected */
+  rejected: 'cursor:rejected',
+} as const;
