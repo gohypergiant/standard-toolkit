@@ -95,7 +95,8 @@ export type Bounds = [
 ];
 
 export type MapViewportPayload = {
-  bounds: Bounds;
+  /** Viewport bounds, undefined if viewport not yet initialized */
+  bounds?: Bounds;
   latitude: number;
   longitude: number;
   zoom: number;
