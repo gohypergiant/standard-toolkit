@@ -36,8 +36,6 @@ import stringHash from 'string-hash';
  *
  * @remarks
  * Hash Format: 5-character base-36 string (0-9, a-z)
- * - Total possibilities: 36^5 = 60,466,176 combinations
- * - Collision probability in typical project (<10k classes): ~0.0008%
  * - Hash is deterministic per file path, ensuring consistency across builds
  *
  * Named Groups: Classes starting with `group\/` are preserved as-is because:

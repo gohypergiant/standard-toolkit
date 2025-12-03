@@ -270,10 +270,12 @@ However, note that TypeScript types for CSS Modules mark class names as string |
 
 ```clsx({ [`${styles.active}`]: isActive })```
 
-#### Avoid using `composes` with css modules
-Although CSS Modules supports the composes keyword, it is not supported in this library. Even though local composes may appear to work, we recommend avoiding it for consistency. Instead, apply multiple classes directly in JSX (e.g., via clsx).
+#### Avoid using `composes` with CSS Modules
+The `composes` keyword is not supported in this library. Do not use it. Compose styles in JSX instead (e.g., via `clsx`).
 
-The main issue is with external composes (composes: `foo from './file.css'`). Tailwind processes styles before CSS Modules, but external composes pulls in the original, unprocessed source file. This bypasses Tailwind entirely, resulting in missing or incorrect styles. Because of how both tools operate, this cannot be reliably fixed. Instead, compose styles in JSX, not in CSS Modules. This ensures predictable Tailwind processing and consistent behavior across all components.
+While local `composes` may appear to work, external `composes` (e.g., `composes: foo from './file.css'`) fails because Tailwind processes styles before CSS Modules. External composes pulls in the original, unprocessed source file, bypassing Tailwind entirely and resulting in missing or incorrect styles. This cannot be reliably fixed due to how both tools operate.
+
+For consistency and predictable behavior, always compose styles in JSX rather than CSS Modules.
 
 ### 4. Common Mistakes & Troubleshooting
 
@@ -307,13 +309,15 @@ import styles from './styles.module.css';
 
 **To verify**:
 ```tsx
-// Inspect the DOM - you should see:
-<button class="group/button _button_abc12">
+// If you see this, hashing is broken:
+<button class="_group__button_xyz99 _button_abc12">  {/* ❌ WRONG */}
   <svg class="group-hover/button:scale-110" />
 </button>
 
-// If you see this instead, hashing is broken:
-<button class="_group__button_xyz99 _button_abc12">  {/* ❌ WRONG */}
+// Inspect the DOM - you should see:
+<button class="group/button _button_abc12">  {/* ✅ CORRECT */}
+  <svg class="group-hover/button:scale-110" />
+</button>
 ```
 
 #### Mistake 3: Using wrong layer for overrides
