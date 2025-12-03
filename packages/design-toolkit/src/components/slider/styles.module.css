@@ -217,4 +217,61 @@
       @apply fg-disabled;
     }
   }
+
+  .markers {
+    @apply pointer-events-none absolute;
+
+    @variant group-orientation-horizontal/slider {
+      @apply top-1/2 right-0 left-0 h-0;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply top-0 bottom-0 left-1/2 w-0;
+    }
+  }
+
+  .marker {
+    @apply absolute flex flex-col items-center;
+
+    @variant group-orientation-horizontal/slider {
+      @apply -translate-x-1/2;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply -translate-y-1/2;
+    }
+  }
+
+  .markerDot {
+    @apply bg-surface-overlay rounded-full;
+    @apply h-xs w-xs;
+
+    @variant group-orientation-horizontal/slider {
+      @apply -translate-y-1/2;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply -translate-x-1/2;
+    }
+
+    @variant group-disabled/slider {
+      @apply bg-surface-muted;
+    }
+  }
+
+  .markerLabel {
+    @apply fg-primary-muted font-display text-body-xs whitespace-nowrap;
+
+    @variant group-orientation-horizontal/slider {
+      @apply mt-m;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply ml-m;
+    }
+
+    @variant group-disabled/slider {
+      @apply fg-disabled;
+    }
+  }
 }
