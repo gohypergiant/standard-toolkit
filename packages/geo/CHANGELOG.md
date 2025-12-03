@@ -1,5 +1,10 @@
 # @accelint/geo
 
+## 0.4.0
+### Minor Changes
+
+- cfe734a: Fix @accelint/geo UTM parsing and formatting. UTM format will no longer return MGRS format.
+
 ## 0.3.0
 
 ### Minor Changes

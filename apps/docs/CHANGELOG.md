@@ -1,5 +1,12 @@
 # @accelint/docs
 
+## 0.1.24
+### Patch Changes
+
+- Updated dependencies [cfe734a]
+  - @accelint/geo@0.4.0
+  - @accelint/ntds@0.2.2
+
 ## 0.1.23
 
 ### Patch Changes
