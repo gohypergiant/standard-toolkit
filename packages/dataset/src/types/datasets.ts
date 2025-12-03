@@ -104,13 +104,18 @@ export type FilterDialect = 'cql' | 'gml';
  * - `f32`: 32-bit floating point
  * - `f64`: 64-bit floating point
  *
- * Composite types:
- * - `(f32, f32)`: e.g. Coordinate pair (longitude, latitude)
- *
  * Temporal types:
  * - `date`: Date without time component
  * - `datetime`: Date with time and timezone
  * - `time`: Time of day without date
+ *
+ * Geometry types:
+ * - `point`: Single coordinate pair (longitude, latitude)
+ * - `multipoint`: Collection of point geometries
+ * - `linestring`: Sequence of connected line segments
+ * - `multilinestring`: Collection of linestring geometries
+ * - `polygon`: Closed area defined by linear rings
+ * - `multipolygon`: Collection of polygon geometries
  *
  * @example
  * ```typescript
@@ -120,25 +125,21 @@ export type FilterDialect = 'cql' | 'gml';
  * ```
  */
 export type LayerDatasetFieldTypes =
-  | '(f32, f32)'
   | 'bool'
-  | 'bool[]'
   | 'date'
-  | 'date[]'
   | 'datetime'
-  | 'datetime[]'
   | 'f32'
-  | 'f32[]'
   | 'f64'
-  | 'f64[]'
   | 'i32'
-  | 'i32[]'
   | 'i64'
-  | 'i64[]'
   | 'str'
-  | 'str[]'
   | 'time'
-  | 'time[]';
+  | 'point'
+  | 'multipoint'
+  | 'linestring'
+  | 'multilinestring'
+  | 'polygon'
+  | 'multipolygon';
 
 /**
  * Configuration for a single field within a dataset.
