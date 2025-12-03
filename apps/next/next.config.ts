@@ -21,6 +21,22 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@accelint/design-foundation', '@accelint/design-system'],
   productionBrowserSourceMaps: true,
 
+  /**
+   * ⚠️ TURBOPACK NOT SUPPORTED
+   *
+   * This application requires custom webpack configuration for CSS module hashing.
+   * Turbopack does not support webpack config hooks, which would cause Tailwind
+   * named group classes (e.g., group/button) to be incorrectly hashed, breaking
+   * parent-child state styling throughout the design system.
+   *
+   * DO NOT use:
+   * - `next dev --turbo`
+   * - `experimental.turbo` config option
+   *
+   * Webpack will remain the bundler for this app until Turbopack supports
+   * custom CSS module class name generation via a public API.
+   */
+
   webpack(config: Configuration, { dev, nextRuntime, webpack, isServer }) {
     if (!isServer && config.optimization) {
       config.optimization.providedExports = true;
@@ -41,7 +57,24 @@ const nextConfig: NextConfig = {
       );
     }
 
-    // Find the CSS loader rules
+    /**
+     * Custom CSS Module Class Name Hashing
+     *
+     * Injects our custom `getLocalIdent` function into webpack's css-loader to prevent
+     * hashing of Tailwind named group classes (e.g., `group/button`) while scoping all
+     * other CSS module class names.
+     *
+     * IMPORTANT: This configuration is tested with Next.js 15.x. Future Next.js versions
+     * may restructure webpack rules, requiring updates to the rule traversal logic below.
+     *
+     * How it works:
+     * 1. Finds the webpack rule containing CSS loaders (identified by `oneOf` property)
+     * 2. Iterates through each rule's loader chain
+     * 3. Locates css-loader instances with CSS modules enabled
+     * 4. Replaces the default getLocalIdent with our custom implementation
+     *
+     * See: packages/design-foundation/src/lib/webpack.ts for getLocalIdent implementation
+     */
     const rules = (
       config.module?.rules?.find(
         (rule) =>

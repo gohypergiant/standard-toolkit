@@ -275,10 +275,133 @@ Although CSS Modules supports the composes keyword, it is not supported in this 
 
 The main issue is with external composes (composes: `foo from './file.css'`). Tailwind processes styles before CSS Modules, but external composes pulls in the original, unprocessed source file. This bypasses Tailwind entirely, resulting in missing or incorrect styles. Because of how both tools operate, this cannot be reliably fixed. Instead, compose styles in JSX, not in CSS Modules. This ensures predictable Tailwind processing and consistent behavior across all components.
 
-### 4. Edit your root global.css file _(only if necessary)_
+### 4. Common Mistakes & Troubleshooting
+
+#### Mistake 1: Using external `composes` in CSS Modules
+**Problem**: Styles from external files appear missing or unstyled.
+
+```css
+/* ❌ WRONG - Bypasses Tailwind processing */
+@reference '../other/styles.module.css';
+
+.button {
+  composes: baseButton from '../other/styles.module.css';
+}
+```
+
+**Solution**: Compose in JSX instead.
+```tsx
+/* ✅ CORRECT */
+import otherStyles from '../other/styles.module.css';
+import styles from './styles.module.css';
+
+<button className={clsx(otherStyles.baseButton, styles.button)} />
+```
+
+#### Mistake 2: Forgetting to configure named group hashing
+**Problem**: Group-based state styling doesn't work (e.g., `group-hover/button:scale-110` has no effect).
+
+**Root Cause**: Build tool is hashing `group/button` classes, breaking Tailwind's group selector pattern.
+
+**Solution**: Ensure you've configured `getLocalIdent` (Webpack/Next.js) or `generateScopedName` (Vite) as shown in migration steps 2.
+
+**To verify**:
+```tsx
+// Inspect the DOM - you should see:
+<button class="group/button _button_abc12">
+  <svg class="group-hover/button:scale-110" />
+</button>
+
+// If you see this instead, hashing is broken:
+<button class="_group__button_xyz99 _button_abc12">  {/* ❌ WRONG */}
+```
+
+#### Mistake 3: Using wrong layer for overrides
+**Problem**: Custom styles are ignored or component styles bleed through.
+
+```css
+/* ❌ WRONG - Using same layer as design toolkit */
+@layer components.l1 {
+  .button {
+    @apply bg-red-500;  /* Won't override DTK button */
+  }
+}
+```
+
+**Solution**: Use higher precedence layers for application components.
+```css
+/* ✅ CORRECT - Application components use l3+ */
+@layer components.l3 {
+  .customButton {
+    @apply bg-red-500;  /* Will override properly */
+  }
+}
+
+/* ✅ CORRECT - Inline utility overrides */
+<Button className="bg-red-500" />  {/* Utilities always win */}
+```
+
+#### Mistake 4: Not importing `@reference` directive
+**Problem**: Build output contains duplicate Tailwind utilities, bloating bundle size.
+
+```css
+/* ❌ WRONG - No @reference */
+@layer components.l3 {
+  .button {
+    @apply px-4 py-2 rounded-md;  /* These get duplicated */
+  }
+}
+```
+
+**Solution**: Always include `@reference` at the top of CSS modules.
+```css
+/* ✅ CORRECT */
+@reference '../../index.module.css';
+
+@layer components.l3 {
+  .button {
+    @apply px-4 py-2 rounded-md;  /* Utilities referenced, not duplicated */
+  }
+}
+```
+
+#### Mistake 5: Incorrect variant prop naming
+**Problem**: Badge or Chip components appear unstyled.
+
+```tsx
+{/* ❌ WRONG - variant prop no longer exists */}
+<Badge variant="success">New</Badge>
+<Chip variant="critical">Error</Chip>
+```
+
+**Solution**: Use `color` prop instead.
+```tsx
+{/* ✅ CORRECT */}
+<Badge color="success">New</Badge>
+<Chip color="critical">Error</Chip>
+```
+
+#### Troubleshooting: CSS modules not loading
+**Symptoms**: Components render with no styles at all.
+
+**Checklist**:
+1. ✅ CSS modules enabled in build tool? (Next.js: built-in, Vite: check config)
+2. ✅ Import path uses `.module.css` extension?
+3. ✅ CSS file exists and is in correct location?
+4. ✅ Build completed successfully without errors?
+5. ✅ Check browser DevTools: are CSS files being loaded?
+
+**Still not working?** Clear build cache and restart dev server:
+```bash
+rm -rf .next dist node_modules/.vite
+pnpm install
+pnpm dev
+```
+
+### 5. Edit your root global.css file _(only if necessary)_
 If you are breaking out the specific layers individually in your application, you will need to manually add in (in correct order) the additional layers exported with the Design Toolkit. This is *only* necessary if you need to specifically control layers -- otherwise it will be handled automatically.
 
-### 5. Make additional adjustments
+### 6. Make additional adjustments
 * If you are using the `Popover` component, you will have to alter it's structure slightly.
 * For any `Badge` and `Chip` components change `variant` prop to `color`
 
