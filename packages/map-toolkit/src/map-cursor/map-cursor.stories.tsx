@@ -1013,11 +1013,19 @@ const MOCK_DATA = [
 export const WithHover: Story = {
   render: () => {
     function SymbolHoverLayer() {
-      const { requestCursorChange } = useMapCursor(BASIC_USAGE_MAP_ID);
+      const { requestCursorChange, clearCursor } =
+        useMapCursor(BASIC_USAGE_MAP_ID);
 
-      const hoverCallback = useCallback(() => {
-        requestCursorChange('crosshair', 'symbol-layer');
-      }, [requestCursorChange]);
+      const hoverCallback = useCallback(
+        (info: { picked: boolean }) => {
+          if (info.picked) {
+            requestCursorChange('pointer', 'symbol-layer');
+          } else {
+            clearCursor('symbol-layer');
+          }
+        },
+        [requestCursorChange, clearCursor],
+      );
 
       return (
         <symbolLayer
