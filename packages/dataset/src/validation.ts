@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { z } from 'zod/v3';
+import { z } from 'zod';
 
 /**
  * Supported data formats for layer datasets.
@@ -152,7 +152,7 @@ export function validateSchema<T>(schema: z.ZodType<T>): (data: unknown) => T {
       return schema.parse(data);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const formattedErrors = error.errors
+        const formattedErrors = error.issues
           .map((err) => `${err.path.join('.')}: ${err.message}`)
           .join('\n');
 

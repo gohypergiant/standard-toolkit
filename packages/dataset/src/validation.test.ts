@@ -58,5 +58,8 @@ describe('validateDatasetConfig', () => {
     const ds = genericDatasetConfig('UNIT', 'TEST');
 
     expect(() => validateDatasetConfig(ds)).toThrow();
+    expect(() => validateDatasetConfig(ds)).toThrow(`Validation failed:
+serviceType: Invalid option: expected one of "VTS"|"WMS"|"WFS"|"FS"|"Unknown"
+dataType: Invalid option: expected one of "GEOJSON"|"ARROW"|"Unknown"`);
   });
 });
