@@ -48,29 +48,40 @@ function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
 }
 
 /**
- * Serializes MjolnirGestureEvent for event bus transmission.
- * Omits non-serializable properties like functions, DOM elements, and pointer arrays.
+ * Strips non-serializable properties from MjolnirGestureEvent for event bus transmission.
+ * Removes functions, DOM elements, and PointerEvent objects that cannot be cloned.
  */
-function serializeGestureEvent(event: MjolnirGestureEvent) {
-  const {
-    stopImmediatePropagation,
-    stopPropagation,
-    preventDefault,
-    srcEvent,
-    rootElement,
-    target,
-    changedPointers,
-    pointers,
-    ...eventRest
-  } = event;
-  return eventRest;
-}
-
+function serializeMjolnirEvent(
+  event: MjolnirGestureEvent,
+): Omit<
+  MjolnirGestureEvent,
+  | 'stopPropagation'
+  | 'preventDefault'
+  | 'stopImmediatePropagation'
+  | 'srcEvent'
+  | 'rootElement'
+  | 'target'
+  | 'changedPointers'
+  | 'pointers'
+>;
 /**
- * Serializes MjolnirPointerEvent for event bus transmission.
- * Omits non-serializable properties like functions and DOM elements.
+ * Strips non-serializable properties from MjolnirPointerEvent for event bus transmission.
+ * Removes functions and DOM elements that cannot be cloned.
  */
-function serializePointerEvent(event: MjolnirPointerEvent) {
+function serializeMjolnirEvent(
+  event: MjolnirPointerEvent,
+): Omit<
+  MjolnirPointerEvent,
+  | 'stopPropagation'
+  | 'preventDefault'
+  | 'stopImmediatePropagation'
+  | 'srcEvent'
+  | 'rootElement'
+  | 'target'
+>;
+function serializeMjolnirEvent(
+  event: MjolnirGestureEvent | MjolnirPointerEvent,
+) {
   const {
     stopImmediatePropagation,
     stopPropagation,
@@ -78,9 +89,16 @@ function serializePointerEvent(event: MjolnirPointerEvent) {
     srcEvent,
     rootElement,
     target,
-    ...eventRest
+    ...rest
   } = event;
-  return eventRest;
+
+  // Remove pointer arrays if present (only on MjolnirGestureEvent)
+  if ('changedPointers' in rest) {
+    const { changedPointers, pointers, ...gestureRest } = rest;
+    return gestureRest;
+  }
+
+  return rest;
 }
 
 /**
@@ -224,7 +242,7 @@ export function BaseMap({
 
       emitClick({
         info: serializePickingInfo(info),
-        event: serializeGestureEvent(event),
+        event: serializeMjolnirEvent(event),
         id,
       });
     },
@@ -238,7 +256,7 @@ export function BaseMap({
 
       emitHover({
         info: serializePickingInfo(info),
-        event: serializePointerEvent(event),
+        event: serializeMjolnirEvent(event),
         id,
       });
     },
