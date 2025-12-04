@@ -75,6 +75,7 @@
     "@deckgl-fiber-renderer/dom": "^1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",
+    "@math.gl/web-mercator": "^4.1.0",
     "@storybook/addon-docs": "^9.1.16",
     "@storybook/addon-themes": "^9.1.16",
     "@storybook/builder-vite": "^9.1.16",
@@ -95,6 +96,7 @@
     "node-fetch": "^2.6.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-map-gl": "^8.1.0",
     "storybook": "^9.1.16",
     "tailwindcss": "^4.1.11",
     "tsup": "8.5.0",
@@ -117,9 +119,11 @@
     "@deckgl-fiber-renderer/dom": "1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",
+    "@math.gl/web-mercator": "^4.1.0",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "3.0.2",
-    "mjolnir.js": "^3.0.0"
+    "mjolnir.js": "^3.0.0",
+    "react-map-gl": "^8.1.0"
   },
   "publishConfig": {
     "access": "public"
