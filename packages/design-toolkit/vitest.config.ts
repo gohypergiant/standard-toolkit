@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { generateScopedName } from '@accelint/design-foundation/lib/vite';
 import baseConfig from '@accelint/vitest-config/dom';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, mergeConfig } from 'vitest/config';
@@ -19,11 +18,6 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     plugins: [tailwindcss()],
-    css: {
-      modules: {
-        generateScopedName,
-      },
-    },
     test: {
       globals: true,
       setupFiles: './src/test/setup.ts',

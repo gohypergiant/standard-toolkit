@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-const config = {
-  plugins: ['@tailwindcss/postcss', '@accelint/global-group-postcss-plugin'],
+export default {
+  plugins: {
+    '@tailwind/postcss': {},
+    '@accelint/global-group-postcss-plugin': {},
+  },
 };
-export default config;
