@@ -15,9 +15,13 @@
 import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useId, useMemo } from 'react';
-import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
-import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
+import { type PropsWithChildren, useCallback, useId, useMemo } from 'react';
+import {
+  Map as MapLibre,
+  useControl,
+  type ViewState,
+} from 'react-map-gl/maplibre';
+import { useCameraState } from '@/camera';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
@@ -45,7 +49,44 @@ export type BaseMapProps = DeckglProps & {
    * from components rendered outside of the BaseMap's children (i.e., as siblings).
    */
   id: UniqueId;
+  /**
+   * Default view for the map: '2D', '2.5D', or '3D'. Defaults to '2D'.
+   */
+  defaultView?: '2D' | '2.5D' | '3D';
 };
+
+const ViewWrapper = ({
+  children,
+  defaultView,
+}: PropsWithChildren<{ defaultView?: BaseMapProps['defaultView'] }>) => {
+  switch (defaultView) {
+    case '2D':
+      return (
+        <mapView id='2D' controller>
+          {children}
+        </mapView>
+      );
+    case '2.5D':
+      return (
+        <mapView id='2.5D' controller>
+          {children}
+        </mapView>
+      );
+    case '3D':
+      return (
+        <globeView id='3D' resolution={1} controller>
+          {children}
+        </globeView>
+      );
+  }
+};
+
+function AddDeckglControl() {
+  const deckglInstance = useDeckgl();
+  useControl(() => deckglInstance as IControl);
+
+  return null;
+}
 
 /**
  * A React component that provides a Deck.gl-powered base map with MapLibre GL integration.
@@ -129,6 +170,7 @@ export function BaseMap({
   parameters = {},
   useDevicePixels = false,
   widgets: widgetsProp = [],
+  defaultView = '2D',
   onClick,
   onHover,
   onViewStateChange,
@@ -137,26 +179,39 @@ export function BaseMap({
   const deckglInstance = useDeckgl();
   const container = useId();
 
+  const { cameraState, setCameraState } = useCameraState({ instanceId: id });
+
+  const viewState = useMemo<ViewState>(
+    () => ({
+      // @ts-expect-error squirrelly deckglInstance typing
+      ...(deckglInstance?._deck?._getViewState() as ViewState),
+      ...cameraState,
+    }),
+    // @ts-expect-error squirrelly deckglInstance typing
+    [cameraState, deckglInstance?._deck?._getViewState],
+  );
+
   // Memoize MapLibre options to avoid creating new object on every render
   const mapOptions = useMemo(
     () => ({
       container,
-      center: [INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude] as [
-        number,
-        number,
-      ],
-      zoom: INITIAL_VIEW_STATE.zoom,
+      zoom: viewState.zoom,
+      pitch: viewState.pitch,
+      bearing: viewState.bearing,
+      latitude: viewState.latitude,
+      longitude: viewState.longitude,
       doubleClickZoom: false,
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
       attributionControl: { compact: true },
+      projection: cameraState.projection,
     }),
-    [container],
+    [viewState, container, cameraState.projection],
   );
 
   // Use the custom hook to handle MapLibre
-  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
+  //useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -260,7 +315,8 @@ export function BaseMap({
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
     // @ts-expect-error squirrelly deckglInstance typing
-    deckglInstance._deck.getViewports().forEach((vp) => {
+    const viewports = deckglInstance._deck.getViewports() ?? [];
+    for (const vp of viewports) {
       handleViewStateChange({
         viewId: vp.id,
         viewState: {
@@ -273,27 +329,33 @@ export function BaseMap({
           height: vp.height,
         },
       } as ViewStateChangeParameters);
-    });
+    }
   });
 
   return (
     <div id={container} className={className}>
       <MapProvider id={id}>
-        <Deckgl
-          {...rest}
-          controller={controller}
-          interleaved={interleaved}
-          useDevicePixels={useDevicePixels}
-          onClick={handleClick}
-          onHover={handleHover}
-          onLoad={handleLoad}
-          onViewStateChange={handleViewStateChange}
-          // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
-          // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
-          parameters={{ ...PARAMETERS, ...parameters }}
+        <MapLibre
+          onMove={(evt) => setCameraState(id, evt.viewState)}
+          mapStyle={BASE_MAP_STYLE}
+          {...mapOptions}
         >
-          {children}
-        </Deckgl>
+          <Deckgl
+            {...rest}
+            interleaved={interleaved}
+            useDevicePixels={useDevicePixels}
+            onClick={handleClick}
+            onHover={handleHover}
+            onLoad={handleLoad}
+            onViewStateChange={handleViewStateChange}
+            // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
+            // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
+            parameters={{ ...PARAMETERS, ...parameters }}
+          >
+            <AddDeckglControl />
+            <ViewWrapper defaultView={defaultView}>{children}</ViewWrapper>
+          </Deckgl>
+        </MapLibre>
       </MapProvider>
     </div>
   );
