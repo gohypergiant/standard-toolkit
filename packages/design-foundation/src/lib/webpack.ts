@@ -21,7 +21,7 @@ type GetLocalIdent = (
   options: object,
 ) => string;
 
-/** @deprecated Use @accelint/tailwind-css-modules-plugin with postcss instead */
+/** @deprecated Use @accelint/tailwind-group-postcss-plugin with postcss instead */
 export const getLocalIdent: GetLocalIdent = (
   context,
   _localIdentName,

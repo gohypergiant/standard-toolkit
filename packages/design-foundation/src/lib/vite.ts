@@ -19,5 +19,5 @@ type GenerateScopedName = Exclude<
   string | undefined
 >;
 
-/** @deprecated Use @accelint/tailwind-css-modules-plugin with postcss instead */
+/** @deprecated Use @accelint/tailwind-group-postcss-plugin with postcss instead */
 export const generateScopedName: GenerateScopedName = generateScopedClassName;
