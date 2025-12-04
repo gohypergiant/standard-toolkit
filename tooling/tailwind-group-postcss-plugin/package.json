@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package",
-  "name": "@accelint/global-group-postcss-plugin",
+  "name": "@accelint/tailwind-group-postcss-plugin",
   "title": "Global Group Postcss Plugin",
   "description": "Postcss plugin for making group classes global",
   "author": "https://hypergiant.com",
