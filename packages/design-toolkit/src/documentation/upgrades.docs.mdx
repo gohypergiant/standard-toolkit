@@ -190,14 +190,41 @@ export default defineConfig({
 });
 ```
 
+<a id="styles-import"></a>
+### 3. Import `@accelint/design-foundation/styles` CSS
+`@accelint/design-foundation/styles` declares layers, defines theme variables/utility classes, etc., that are needed by the components exported from `@accelint/design-toolkit`. This will also be needed for your own application-level styling.
+
+Add the following to your application's top-level component (e.g., `App.tsx`) to ensure the `@accelint/design-foundation/styles` CSS is available/loaded in your application:
+
+```ts
+import '@accelint/design-foundation/styles';
+```
+#### Importing within Storybook
+Storybook's standard configuration folder is `.storybook`. The appropriate place to perform global imports (such as CSS imports) is inside of `.storybook/preview.ts`. [Details](https://storybook.js.org/docs/configure#configure-story-rendering)
+
+Add the import statement above to `.storybook/preview.ts` to apply the `@accelint/design-foundation/styles` CSS to all stories.
+
 <a id="css-modules"></a>
-### 3. Migrate to CSS modules and clsx
+### 4. Migrate to CSS modules and clsx
 Previously, we recommended using the [tailwind variants](https://www.tailwind-variants.org/) library to control css application, but because of performance and other reasons listed above, we no longer recommend that approach. While there is no formal enforcement of the these patterns, standards, consistency and code quality will allow us to move with velocity and quality.
 
 In places in your code base where you are already using [tailwind variants](https://www.tailwind-variants.org/), replace it with the following approach.
 
+At the top-level of your `src` directory, create `index.module.css` and add a `@reference` statement:
+
 ```css
-/* makes all classnames available for reference */
+@reference "@accelint/design-foundation/styles";
+```
+
+This references the `@accelint/design-foundation/styles` stylesheet, allowing you to use these styles (e.g., `@apply` classes) without duplicating any CSS in your application's output. [Details](https://tailwindcss.com/docs/functions-and-directives#reference-directive)
+
+All CSS modules (files) in your application should then reference this top-level `index.module.css` file:
+
+```css
+/*
+makes all classnames available for reference. this
+is pointing to the top-level index.module.css.
+*/
 @reference '../../index.module.css';
 
 /* assigns classes to appropriate layer */
@@ -236,9 +263,7 @@ In places in your code base where you are already using [tailwind variants](http
 
 There are a few important things to notice above:
 
-* **@reference** - the use of the `@reference` directive at the top of your css module is required to avoid duplication of applied classes. [Details](https://tailwindcss.com/docs/functions-and-directives#reference-directive)
-
-* **@layer** -- assigns the classes in that group to a layer. In an application-specific component, that would most likely be `l3`. [Detaiils](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@layer)
+* **@layer** -- assigns the classes in that group to a layer. In an application-specific component, that would most likely be `l3`. [Details](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@layer)
 
 * **@apply** - when you want to use tailwind classnames, use the `@apply` directive. [Details](https://tailwindcss.com/docs/functions-and-directives#apply-directive)
 
@@ -249,16 +274,23 @@ There are a few important things to notice above:
 * **@variant** - this directive is used to reference both built-in tailwind variants (hover, focus, disabled, etc...) and for the custom variants exported by the Design Toolkit (color-info, size-large, etc... [here is the complete list](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css)). [Details](https://tailwindcss.com/docs/functions-and-directives#variant-directive)
 
 #### Variants and selectors
-Components that support visual variants (e.g., `cozy` and `compact`) expose those variant styles through CSS Modules. Every class defined in the component’s stylesheet is available as a top-level property on the imported styles object. This allows variant classes to be selected using simple object access—e.g., `styles[variant]`. If you want to create your own variants in application-specific components, this is the typical pattern we use in the Design Toolkit:
+Components that support visual variants (e.g., `cozy` and `compact`) expose those variant styles through CSS Modules. **Every class defined in the component’s stylesheet is available as a top-level property on the imported styles object.** This allows variant classes to be selected using simple object access—e.g., `styles[variant]`. If you want to create your own variants in application-specific components, this is the typical pattern we use in the Design Toolkit:
 
 ```jsx
 import { clsx } from '@accelint/design-foundation/lib/utils';
 
-<div className={clsx(
-  styles.base,
-    styles[variant],      // e.g., "cozy" or "compact"
-    className             // passed in from the consumer
-)}>example</div>
+// import the local stylesheet and use as an object.
+import styles from './index.module.css'
+
+export function SomeComponent() {
+  return (
+    <div className={clsx(
+      styles.base,
+        styles[variant],      // e.g., "cozy" or "compact"
+        className             // passed in from the consumer
+    )}>example</div>
+  )
+}
 ```
 
 This pattern ensures the base styles, variant styles, and consumer-provided overrides are all composed cleanly. You may use any of clsx’s supported patterns for conditional classes. The library does not enforce a specific style for conditional class composition, for example both are valid:
@@ -275,10 +307,10 @@ Although CSS Modules supports the composes keyword, it is not supported in this 
 
 The main issue is with external composes (composes: `foo from './file.css'`). Tailwind processes styles before CSS Modules, but external composes pulls in the original, unprocessed source file. This bypasses Tailwind entirely, resulting in missing or incorrect styles. Because of how both tools operate, this cannot be reliably fixed. Instead, compose styles in JSX, not in CSS Modules. This ensures predictable Tailwind processing and consistent behavior across all components.
 
-### 4. Edit your root global.css file _(only if necessary)_
+### 5. Edit your root global.css file _(only if necessary)_
 If you are breaking out the specific layers individually in your application, you will need to manually add in (in correct order) the additional layers exported with the Design Toolkit. This is *only* necessary if you need to specifically control layers -- otherwise it will be handled automatically.
 
-### 5. Make additional adjustments
+### 6. Make additional adjustments
 * If you are using the `Popover` component, you will have to alter it's structure slightly.
 * For any `Badge` and `Chip` components change `variant` prop to `color`
 
