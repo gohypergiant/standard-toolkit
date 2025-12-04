@@ -1,30 +1,27 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
 import parser, { type ClassName, type Root } from 'postcss-selector-parser';
 import type { Plugin, Rule } from 'postcss';
 
 const PROCESSED = Symbol('global-group-class-processed');
-
 interface ProcessedRule extends Rule {
   [PROCESSED]?: boolean;
 }
 
-const log = (...args: unknown[]): void => {
-  if (!process.env.DEBUG) {
-    return;
-  }
-
-  console.log(...args);
-};
-
 const globalGroupPlugin = (): Plugin => {
-  log('[@accelint/global-group-postcss-plugin] PLUGIN INVOKED');
-
   const transform = parser((selectors: Root) => {
     selectors.walkClasses((currentClassNode: ClassName) => {
       if (currentClassNode.value.startsWith('group/')) {
-        log(
-          `[@accelint/global-group-postcss-plugin] Found group/* class: .${currentClassNode.value}`,
-        );
-
         const globalWrapped = parser
           .pseudo({
             value: ':global',
@@ -42,26 +39,17 @@ const globalGroupPlugin = (): Plugin => {
 
     Rule(rule: ProcessedRule) {
       const filePath = rule.root().source?.input.file;
-      if (!filePath?.endsWith('.module.css')) {
+      if (
         // do not apply this transformation if file is not a css module
-        return;
-      }
-
-      if (rule[PROCESSED]) {
+        !filePath?.endsWith('.module.css') ||
         // ensure we don't wrap in :global() more than once
+        rule[PROCESSED]
+      ) {
         return;
       }
 
-      const originalSelector = rule.selector;
       rule.selector = transform.processSync(rule.selector);
-
-      if (rule.selector !== originalSelector) {
-        rule[PROCESSED] = true;
-
-        log('[@accelint/global-group-postcss-plugin] Transformed:');
-        log(`    Before: ${originalSelector}`);
-        log(`    After:  ${rule.selector}\n\n`);
-      }
+      rule[PROCESSED] = true;
     },
   };
 };
