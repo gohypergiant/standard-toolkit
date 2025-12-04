@@ -57,9 +57,9 @@ export type BaseMapProps = DeckglProps & {
 
 const ViewWrapper = ({
   children,
-  defaultView,
-}: PropsWithChildren<{ defaultView?: BaseMapProps['defaultView'] }>) => {
-  switch (defaultView) {
+  view,
+}: PropsWithChildren<{ view?: BaseMapProps['defaultView'] }>) => {
+  switch (view) {
     case '2D':
       return (
         <mapView id='2D' controller>
@@ -353,7 +353,7 @@ export function BaseMap({
             parameters={{ ...PARAMETERS, ...parameters }}
           >
             <AddDeckglControl />
-            <ViewWrapper defaultView={defaultView}>{children}</ViewWrapper>
+            <ViewWrapper view={cameraState.view}>{children}</ViewWrapper>
           </Deckgl>
         </MapLibre>
       </MapProvider>

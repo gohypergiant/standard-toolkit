@@ -15,7 +15,7 @@ import { fitBounds } from '@math.gl/web-mercator';
 import { useMemo, useSyncExternalStore } from 'react';
 import { CameraEventTypes } from './events';
 import type { UniqueId } from '@accelint/core';
-import type { CameraEvent } from './types';
+import type { CameraEvent, ProjectionType, ViewType } from './types';
 
 const bus = Broadcast.getInstance<CameraEvent>();
 
@@ -25,7 +25,8 @@ export type CameraState = {
   zoom: number;
   pitch: number;
   bearing: number;
-  projection: 'mercator' | 'globe';
+  projection: ProjectionType;
+  view: ViewType;
 };
 
 export type UseCameraStateProps = {
@@ -82,6 +83,7 @@ function getOrCreateState(instanceId: UniqueId): CameraState {
       pitch: 0,
       bearing: 0,
       projection: 'mercator',
+      view: '2D',
     });
   }
   // biome-ignore lint/style/noNonNullAssertion: State guaranteed to exist after has() check above
@@ -115,21 +117,18 @@ function ensureBusListener(instanceId: UniqueId): void {
 
   const state = getOrCreateState(instanceId);
 
-  const unsubCenterOn = bus.on(
-    CameraEventTypes.centerOnCoordinates,
-    ({ payload }) => {
-      if (instanceId === payload.id) {
-        Object.assign<CameraState, Partial<CameraState>>(state, {
-          latitude: payload.latitude,
-          longitude: payload.longitude,
-          zoom: payload.zoom ?? state.zoom,
-          bearing: payload.heading ?? state.bearing,
-          pitch: payload.pitch ?? state.pitch,
-        });
-        notifySubscribers(instanceId);
-      }
-    },
-  );
+  const unsubSetCenter = bus.on(CameraEventTypes.setCenter, ({ payload }) => {
+    if (instanceId === payload.id) {
+      Object.assign<CameraState, Partial<CameraState>>(state, {
+        latitude: payload.latitude,
+        longitude: payload.longitude,
+        zoom: payload.zoom ?? state.zoom,
+        bearing: payload.heading ?? state.bearing,
+        pitch: payload.pitch ?? state.pitch,
+      });
+      notifySubscribers(instanceId);
+    }
+  });
 
   const unsubFitBounds = bus.on(CameraEventTypes.fitBounds, ({ payload }) => {
     if (instanceId === payload.id) {
@@ -153,9 +152,64 @@ function ensureBusListener(instanceId: UniqueId): void {
     }
   });
 
+  const unsubSetProjection = bus.on(
+    CameraEventTypes.setProjection,
+    ({ payload }) => {
+      if (instanceId === payload.id) {
+        state.projection = payload.projection;
+        if (payload.projection === 'globe') {
+          state.view = '3D';
+        } else {
+          // TODO handle 2.5D case?
+          state.view = '2D';
+        }
+        notifySubscribers(instanceId);
+      }
+    },
+  );
+
+  const unsubSetView = bus.on(CameraEventTypes.setView, ({ payload }) => {
+    if (instanceId === payload.id) {
+      state.view = payload.view;
+      if (payload.view === '3D') {
+        state.projection = 'globe';
+      } else {
+        state.projection = 'mercator';
+      }
+
+      notifySubscribers(instanceId);
+    }
+  });
+
+  const unsubSetZoom = bus.on(CameraEventTypes.setZoom, ({ payload }) => {
+    if (instanceId === payload.id) {
+      state.zoom = payload.zoom;
+      notifySubscribers(instanceId);
+    }
+  });
+
+  const unsubSetBearing = bus.on(CameraEventTypes.setBearing, ({ payload }) => {
+    if (instanceId === payload.id) {
+      state.bearing = payload.bearing;
+      notifySubscribers(instanceId);
+    }
+  });
+
+  const unsubSetPitch = bus.on(CameraEventTypes.setPitch, ({ payload }) => {
+    if (instanceId === payload.id && state.projection === 'mercator') {
+      state.pitch = payload.pitch;
+      notifySubscribers(instanceId);
+    }
+  });
+
   busUnsubscribers.set(instanceId, () => {
-    unsubCenterOn();
+    unsubSetCenter();
     unsubFitBounds();
+    unsubSetProjection();
+    unsubSetView();
+    unsubSetZoom();
+    unsubSetBearing();
+    unsubSetPitch();
   });
 }
 
@@ -241,10 +295,11 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => CameraState {
       const newFallback: CameraState = {
         latitude: 0,
         longitude: 0,
-        zoom: Number.NaN,
-        pitch: Number.NaN,
-        bearing: Number.NaN,
+        zoom: 0,
+        pitch: 0,
+        bearing: 0,
         projection: 'mercator',
+        view: '2D',
       };
       fallbackCache.set(instanceId, newFallback);
       return newFallback;

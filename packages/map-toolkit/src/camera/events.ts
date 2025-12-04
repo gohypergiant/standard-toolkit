@@ -13,7 +13,12 @@
 export const CameraEventNamespace = 'camera';
 
 export const CameraEventTypes = {
-  centerOnCoordinates: `${CameraEventNamespace}:centerOnCoordinates`,
+  setView: `${CameraEventNamespace}:setView`,
+  setProjection: `${CameraEventNamespace}:setProjection`,
+  setZoom: `${CameraEventNamespace}:setZoom`,
+  setBearing: `${CameraEventNamespace}:setBearing`,
+  setPitch: `${CameraEventNamespace}:setPitch`,
+  setCenter: `${CameraEventNamespace}:setCenter`,
   fitBounds: `${CameraEventNamespace}:fitBounds`,
   reset: `${CameraEventNamespace}:reset`,
 } as const;

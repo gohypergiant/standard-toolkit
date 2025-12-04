@@ -15,7 +15,11 @@ import type { UniqueId } from '@accelint/core/utility/uuid';
 import type { Bounds } from '@/deckgl/base-map/types';
 import type { CameraEventTypes } from './events';
 
-export type CameraCenterOnCoordinatesPayload = {
+export type ProjectionType = 'mercator' | 'globe';
+
+export type ViewType = '2D' | '2.5D' | '3D';
+
+export type CameraSetCenterPayload = {
   /** Identifier of the camera */
   id: UniqueId;
   /** Latitude of the target coordinate */
@@ -52,14 +56,39 @@ export type CameraResetPayload = {
   id: UniqueId;
 };
 
-export type CameraCenterOnCoordinatesEvent = Payload<
-  typeof CameraEventTypes.centerOnCoordinates,
-  CameraCenterOnCoordinatesPayload
+export type CameraSetCenterEvent = Payload<
+  typeof CameraEventTypes.setCenter,
+  CameraSetCenterPayload
 >;
 
 export type CameraFitBoundsEvent = Payload<
   typeof CameraEventTypes.fitBounds,
   CameraFitBoundsPayload
+>;
+
+export type CameraSetProjectionEvent = Payload<
+  typeof CameraEventTypes.setProjection,
+  { id: UniqueId; projection: ProjectionType }
+>;
+
+export type CameraSetViewEvent = Payload<
+  typeof CameraEventTypes.setView,
+  { id: UniqueId; view: ViewType }
+>;
+
+export type CameraSetZoomEvent = Payload<
+  typeof CameraEventTypes.setZoom,
+  { id: UniqueId; zoom: number }
+>;
+
+export type CameraSetBearingEvent = Payload<
+  typeof CameraEventTypes.setBearing,
+  { id: UniqueId; bearing: number }
+>;
+
+export type CameraSetPitchEvent = Payload<
+  typeof CameraEventTypes.setPitch,
+  { id: UniqueId; pitch: number }
 >;
 
 export type CameraResetEvent = Payload<
@@ -68,6 +97,11 @@ export type CameraResetEvent = Payload<
 >;
 
 export type CameraEvent =
-  | CameraCenterOnCoordinatesEvent
+  | CameraSetCenterEvent
   | CameraFitBoundsEvent
+  | CameraSetProjectionEvent
+  | CameraSetViewEvent
+  | CameraSetZoomEvent
+  | CameraSetBearingEvent
+  | CameraSetPitchEvent
   | CameraResetEvent;
