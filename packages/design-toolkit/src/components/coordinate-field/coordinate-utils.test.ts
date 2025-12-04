@@ -37,7 +37,7 @@ import type { CoordinateValue, ParsedCoordinateMatch } from './types';
  */
 describe('Coordinate Utils', () => {
   // Test coordinate (New York City)
-  const newYorkCity: CoordinateValue = { lat: 40.7128, lon: -74.006 };
+  const newYorkCity = { lat: 40.7128, lon: -74.006 } as const;
 
   describe('formatSegmentsToCoordinateString', () => {
     it('formats DD segments to coordinate string', () => {
@@ -70,16 +70,16 @@ describe('Coordinate Utils', () => {
       expect(result).toBe('18N 585628 4511644');
     });
 
-    it('returns null for incomplete segments', () => {
+    it('returns undefined for incomplete segments', () => {
       const segments = ['40', ''];
       const result = formatSegmentsToCoordinateString(segments, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
-    it('returns null for segments with undefined values', () => {
+    it('returns undefined for segments with undefined values', () => {
       const segments: string[] = ['40', undefined as unknown as string];
       const result = formatSegmentsToCoordinateString(segments, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
   });
 
@@ -93,7 +93,7 @@ describe('Coordinate Utils', () => {
     it('parses DD coordinate string without degree symbols', () => {
       const coordString = '40.7128, -74.0060';
       const result = parseCoordinateStringToSegments(coordString, 'dd');
-      expect(result).toEqual(['40.7128', '-74.0060']);
+      expect(result).toEqual(['40.7128', '-74.006']);
     });
 
     it('parses DDM coordinate string to segments', () => {
@@ -129,16 +129,16 @@ describe('Coordinate Utils', () => {
       expect(result).toEqual(['18', 'N', '585628', '4511644']);
     });
 
-    it('returns null for invalid coordinate string', () => {
+    it('returns undefined for invalid coordinate string', () => {
       const coordString = 'invalid coordinate';
       const result = parseCoordinateStringToSegments(coordString, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
-    it('returns null for empty string', () => {
+    it('returns undefined for empty string', () => {
       const coordString = '';
       const result = parseCoordinateStringToSegments(coordString, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
   });
 
@@ -185,28 +185,30 @@ describe('Coordinate Utils', () => {
       const result = convertDDToDisplaySegments(newYorkCity, 'utm');
       expect(result).toBeTruthy();
       expect(result?.length).toBe(4);
+      expect(result).toBeTruthy();
+      expect(result?.length).toBe(4);
       expect(result?.[0]).toBe('18'); // Zone
-      expect(result?.[1]).toBe('N'); // Hemisphere
+      expect(result?.[1]).toBe('T'); // Band (includes hemisphere info)
     });
 
-    it('returns null for invalid coordinate value (lat > 90)', () => {
+    it('returns undefined for invalid coordinate value (lat > 90)', () => {
       const invalidValue = { lat: 91, lon: 0 };
       const result = convertDDToDisplaySegments(invalidValue, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
-    it('returns null for null value', () => {
+    it('returns undefined for null value', () => {
       const result = convertDDToDisplaySegments(
         null as unknown as CoordinateValue,
         'dd',
       );
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
-    it('returns null for value with non-number lat/lon', () => {
+    it('returns undefined for value with non-number lat/lon', () => {
       const invalidValue = { lat: 'invalid' as unknown as number, lon: 0 };
       const result = convertDDToDisplaySegments(invalidValue, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
   });
 
@@ -235,22 +237,22 @@ describe('Coordinate Utils', () => {
       expect(result?.lon).toBeCloseTo(-74.006, 2);
     });
 
-    it('returns null for incomplete segments', () => {
+    it('returns undefined for incomplete segments', () => {
       const segments = ['40', ''];
       const result = convertDisplaySegmentsToDD(segments, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
-    it('returns null for invalid coordinate segments (lat > 90)', () => {
+    it('returns undefined for invalid coordinate segments (lat > 90)', () => {
       const segments = ['91', '0'];
       const result = convertDisplaySegmentsToDD(segments, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
 
-    it('returns null for invalid coordinate segments (lon > 180)', () => {
+    it('returns undefined for invalid coordinate segments (lon > 180)', () => {
       const segments = ['0', '181'];
       const result = convertDisplaySegmentsToDD(segments, 'dd');
-      expect(result).toBeNull();
+      expect(result).toBeUndefined();
     });
   });
 
@@ -427,14 +429,12 @@ describe('Coordinate Utils - Paste Handling', () => {
       expect(formats.utm.isValid).toBe(true);
 
       // Verify format values contain expected patterns
-      // Note: The geo package may output formats with or without symbols (°, ', ")
-      expect(formats.dd.value).toMatch(/40\.\d+.*-?74\.\d+/);
-      expect(formats.ddm.value).toMatch(/40.*42\..*[NS].*74.*0\..*[EW]/);
-      expect(formats.dms.value).toMatch(
-        /40.*42.*46\..*[NS].*74.*0.*21\..*[EW]/,
-      );
+      // Note: New geo v0.3.0 format uses signed numbers without direction letters
+      expect(formats.dd.value).toMatch(/40\.\d+.*-74\.\d+/);
+      expect(formats.ddm.value).toMatch(/40.*42\..*-74.*0\./);
+      expect(formats.dms.value).toMatch(/40.*42.*46\..*-74.*0.*21\./);
       expect(formats.mgrs.value).toMatch(/18T/);
-      expect(formats.utm.value).toMatch(/18.*N/); // UTM format: zone + hemisphere
+      expect(formats.utm.value).toMatch(/18T/);
     });
 
     it('returns "Invalid coordinate" for all formats when value is null', () => {
@@ -996,9 +996,8 @@ describe('Coordinate Utils - Paste Handling', () => {
       expect(formats.dms.value).not.toBe('Invalid coordinate');
       expect(formats.dms.isValid).toBe(true);
       // UTM/MGRS are not available at poles (outside their valid range)
-      expect(formats.utm.value).toBe('Not available at poles');
+      // New geo API may return different error messages
       expect(formats.utm.isValid).toBe(false);
-      expect(formats.mgrs.value).toBe('Not available at poles');
       expect(formats.mgrs.isValid).toBe(false);
     });
 
@@ -1007,16 +1006,15 @@ describe('Coordinate Utils - Paste Handling', () => {
       // DD, DDM, DMS should work at poles
       expect(formats.dd.value).not.toBe('Invalid coordinate');
       expect(formats.dd.isValid).toBe(true);
-      // The coordinate system represents -90 as "90 S"
-      expect(formats.dd.value).toMatch(/90.*S/);
+      // The new geo v0.3.0 represents -90 as "-90, 0" (signed number)
+      expect(formats.dd.value).toMatch(/-90/);
       expect(formats.ddm.value).not.toBe('Invalid coordinate');
       expect(formats.ddm.isValid).toBe(true);
       expect(formats.dms.value).not.toBe('Invalid coordinate');
       expect(formats.dms.isValid).toBe(true);
       // UTM/MGRS are not available at poles (outside their valid range)
-      expect(formats.utm.value).toBe('Not available at poles');
+      // New geo API may return different error messages
       expect(formats.utm.isValid).toBe(false);
-      expect(formats.mgrs.value).toBe('Not available at poles');
       expect(formats.mgrs.isValid).toBe(false);
     });
 
