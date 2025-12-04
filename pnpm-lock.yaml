@@ -1089,6 +1089,9 @@ importers:
       '@accelint/geo':
         specifier: workspace:*
         version: link:../geo
+      '@accelint/hotkey-manager':
+        specifier: workspace:*
+        version: link:../hotkey-manager
       '@deck.gl/core':
         specifier: 9.1.14
         version: 9.1.14
