@@ -10,17 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-import path from 'node:path';
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
-import tsConfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'tsup';
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [tsConfigPaths(), tailwindcss()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+export default defineConfig([
+  {
+    format: ['esm'],
+    minify: true,
+    cjsInterop: true,
+    dts: true,
+    external: ['postcss-selector-parser'],
+    entry: ['src/index.ts'],
   },
-});
+  {
+    format: ['cjs'],
+    minify: true,
+    cjsInterop: true,
+    dts: true,
+    external: ['postcss-selector-parser'],
+    entry: ['src/index.cts'],
+  },
+]);
