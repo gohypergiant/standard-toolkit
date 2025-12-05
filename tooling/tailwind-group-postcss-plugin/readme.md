@@ -9,9 +9,11 @@ Tailwind has some nifty utilities for [styling based on parent state](https://ta
 # Example transformation flow from source -> postcss -> css modules
 
 Without this plugin:
+
 <img width="847" height="576" alt="Screenshot 2025-12-01 at 9 02 31 PM" src="https://github.com/user-attachments/assets/8e403cfa-aacc-445b-b24b-4bfb64f566c6" />
 
 With this plugin:
+
 <img width="784" height="709" alt="Screenshot 2025-12-01 at 9 04 10 PM" src="https://github.com/user-attachments/assets/5ca6c4a7-bc81-48d3-9714-b8c7de906d6a" />
 
 # usage
