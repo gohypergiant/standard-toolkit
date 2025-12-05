@@ -11,7 +11,9 @@
  */
 
 import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
+import { Button } from '@accelint/design-toolkit/components/button/index';
+import { Tooltip } from '@accelint/design-toolkit/components/tooltip/index';
+import { TooltipTrigger } from '@accelint/design-toolkit/components/tooltip/trigger';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
@@ -19,13 +21,16 @@ function PropCombos() {
   return PROP_COMBOS.map((props, k) => {
     return (
       <BentoItem key={k}>
-        <Badge {...props} />
+        <TooltipTrigger>
+          <Button variant='outline'>{props.placement} tooltip</Button>
+          <Tooltip {...props}>Tooltip positioned at {props.placement}</Tooltip>
+        </TooltipTrigger>
       </BentoItem>
     );
   });
 }
 
-export function BadgeExampleServer() {
+export function TooltipExampleServer() {
   return (
     <>
       <PropCombos />

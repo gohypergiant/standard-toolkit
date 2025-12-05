@@ -10,25 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
+import type { DialogProps } from '@accelint/design-toolkit/components/dialog/types';
 
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Badge {...props} />
-      </BentoItem>
-    );
-  });
-}
+export type DialogVariant = Pick<DialogProps, 'size'>;
 
-export function BadgeExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
-}
+export const PROP_COMBOS: DialogVariant[] = [
+  { size: 'small' },
+  { size: 'large' },
+];

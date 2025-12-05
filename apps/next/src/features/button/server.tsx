@@ -11,21 +11,32 @@
  */
 
 import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
+import { Button } from '@accelint/design-toolkit/components/button/index';
+import { Icon } from '@accelint/design-toolkit/components/icon/index';
+import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => {
+    const isIconVariant = props.variant === 'icon';
     return (
       <BentoItem key={k}>
-        <Badge {...props} />
+        <Button {...props}>
+          {isIconVariant ? (
+            <Icon>
+              <PlaceholderIcon />
+            </Icon>
+          ) : (
+            'Button'
+          )}
+        </Button>
       </BentoItem>
     );
   });
 }
 
-export function BadgeExampleServer() {
+export function ButtonExampleServer() {
   return (
     <>
       <PropCombos />

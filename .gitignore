@@ -31,3 +31,9 @@ storybook-static
 
 
 *storybook.log
+
+# MemLab - Generated artifacts (don't commit)
+apps/next/src/memlab/reports/*.json
+apps/next/src/memlab/reports/html
+apps/next/src/memlab/reports/memlab-report.html
+apps/next/test-results/

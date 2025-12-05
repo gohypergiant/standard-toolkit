@@ -1,0 +1,200 @@
+# Memory Leak Testing Workflow
+#
+# This workflow runs MemLab memory leak tests for design-toolkit components
+# when changes are made to relevant packages. It generates reports and posts
+# a summary comment on pull requests.
+#
+# The workflow:
+# 1. Builds the @apps/next application
+# 2. Runs Playwright tests that capture heap snapshots
+# 3. Analyzes snapshots with MemLab for memory leaks
+# 4. Posts results as a PR comment
+
+name: Memory Leak Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'packages/design-toolkit/**'
+      - 'packages/design-foundation/**'
+      - 'apps/next/**'
+      - '.github/workflows/memlab.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+  RUNNER_NODE_VERSION: 22
+  RUNNER_PNPM_VERSION: 10.9.0
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  memlab:
+    name: Memory Leak Detection
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-memlab-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-memlab-
+            ${{ runner.os }}-turbo-
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.RUNNER_PNPM_VERSION }}
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.RUNNER_NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+        shell: bash
+
+      - name: Build packages
+        run: pnpm run build
+        shell: bash
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+        working-directory: apps/next
+        shell: bash
+
+      - name: Run MemLab tests
+        id: memlab
+        timeout-minutes: 25
+        run: |
+          pnpm memlab:ci || echo "MEMLAB_FAILED=true" >> $GITHUB_OUTPUT
+        working-directory: apps/next
+        shell: bash
+        continue-on-error: true
+
+      - name: Upload MemLab reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: memlab-reports
+          path: apps/next/src/memlab/reports/
+          retention-days: 30
+
+      - name: Post PR Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const reportDir = 'apps/next/src/memlab/reports';
+            let results = [];
+            let hasFailures = false;
+
+            // Read all JSON reports
+            try {
+              const files = fs.readdirSync(reportDir)
+                .filter(f => f.endsWith('.json') && f !== 'results.json');
+
+              for (const file of files) {
+                const content = fs.readFileSync(path.join(reportDir, file), 'utf-8');
+                const report = JSON.parse(content);
+                results.push(report);
+                if (!report.passed) {
+                  hasFailures = true;
+                }
+              }
+            } catch (error) {
+              console.log('No reports found or error reading reports:', error.message);
+            }
+
+            // Generate summary table
+            let summary = '';
+            if (results.length > 0) {
+              const rows = results.map(r => {
+                const retained = r.totalRetainedSize < 1024
+                  ? `${r.totalRetainedSize} B`
+                  : r.totalRetainedSize < 1048576
+                    ? `${(r.totalRetainedSize / 1024).toFixed(2)} KB`
+                    : `${(r.totalRetainedSize / 1048576).toFixed(2)} MB`;
+                return `| ${r.component} | ${r.leakCount} | ${retained} | ${r.passed ? '✅' : '❌'} |`;
+              }).join('\n');
+
+              summary = `| Component | Leaks | Retained Size | Status |
+            |-----------|-------|---------------|--------|
+            ${rows}`;
+            } else {
+              summary = '_No memory leak test results available._';
+            }
+
+            const status = hasFailures ? '❌ Some tests failed' : results.length > 0 ? '✅ All tests passed' : '⚠️ No tests ran';
+
+            const body = `## 🧠 Memory Leak Test Results
+
+            **Status:** ${status}
+
+            ${summary}
+
+            <details>
+            <summary>📋 Test Details</summary>
+
+            - **Components tested:** ${results.length}
+            - **Total leaks detected:** ${results.reduce((sum, r) => sum + r.leakCount, 0)}
+            - **Workflow run:** [View details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+
+            </details>
+
+            ---
+            <sub>🤖 Generated by MemLab + Playwright</sub>`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Memory Leak Test Results')
+            );
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      - name: Fail if tests failed
+        if: steps.memlab.outputs.MEMLAB_FAILED == 'true'
+        run: exit 1
