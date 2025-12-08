@@ -124,10 +124,31 @@ Applications consuming this library must have CSS Modules enabled. For framework
 ### 2. Prevent hashing of Tailwind named groups
 Many components in the library use Tailwind [named groups](https://tailwindcss.com/docs/hover-focus-and-other-states#differentiating-nested-groups) (e.g., `group/button`) to allow child elements to style themselves based on the state of a parent component. For example, a custom icon inside a Button may use selectors like `group-hover/button` to react to hover or press states. For these patterns to work, the group class name must remain exactly as written in JSX, global and static — it cannot be transformed or hashed.
 
-Therefore, any application using this library must configure CSS modules to leave named group classes un-hashed. **Failing to do so will break group-based state styling throughout the design system.** We now provide two custom functions `generateScopedClassName` and `getLocalIdent` which will prevent unwanted hashing when applied correctly. This ensures named group classes remain stable while all other classes continue to benefit from scoped CSS Module behavior.
+Therefore, any application using this library must configure CSS modules to leave named group classes un-hashed. **Failing to do so will break group-based state styling throughout the design system.**
 
-**Webpack / Next.js**
-Use the exported `getLocalIdent` function and apply it to every CSS loader rule. Because Webpack configurations vary—especially in Next.js—we do not ship automatic rule-discovery. Consumers must insert `getLocalIdent` into their own Webpack loader definitions, using our examples as a reference.
+**Next.js 15+ with Turbopack (Recommended)**
+
+If using Next.js 15+ with Turbopack (`next dev --turbo` or `next build --turbo`), no additional configuration is needed. Turbopack handles CSS modules correctly out of the box.
+
+**Vite**
+```ts
+import { generateScopedName } from '@accelint/design-foundation/lib/vite';
+
+export default defineConfig({
+
+  //...your other config
+
+  css: {
+    modules: {
+      generateScopedName,
+    },
+  },
+});
+```
+
+**Webpack (Legacy)**
+
+For applications still using webpack (including Next.js without Turbopack), use the exported `getLocalIdent` function and apply it to every CSS loader rule. Because webpack configurations vary—especially in Next.js—we do not ship automatic rule-discovery. Consumers must insert `getLocalIdent` into their own webpack loader definitions, using the example below as a reference.
 
 ```ts
 import { getLocalIdent } from '@accelint/design-foundation/lib/webpack';
@@ -172,22 +193,6 @@ const nextConfig: NextConfig = {
   },
 };
 export default nextConfig;
-```
-
-**Vite**
-```ts
-import { generateScopedName } from '@accelint/design-foundation/lib/vite';
-
-export default defineConfig({
-
-  //...your other config
-
-  css: {
-    modules: {
-      generateScopedName,
-    },
-  },
-});
 ```
 
 <a id="css-modules"></a>
