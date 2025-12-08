@@ -41,6 +41,7 @@ export function TableCell<T>({
         className,
       )}
       data-selected={isSelected || null}
+      style={{ width: cell?.column.getSize() }}
     >
       {children ||
         (cell && flexRender(cell.column.columnDef.cell, cell.getContext()))}
