@@ -63,7 +63,14 @@ const layerDatasetFieldSchema = z.object({
   nullable: z.boolean(),
   type: layerDatasetFieldTypeSchema,
   label: z.string(),
-  availableValues: z.array(z.record(z.string(), z.unknown())).optional(),
+  availableValues: z
+    .array(
+      z.object({
+        name: z.string(),
+        label: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 /**
