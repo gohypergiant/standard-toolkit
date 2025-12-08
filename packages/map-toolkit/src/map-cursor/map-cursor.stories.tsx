@@ -1013,18 +1013,23 @@ const MOCK_DATA = [
 export const WithHover: Story = {
   render: () => {
     function SymbolHoverLayer() {
-      const { requestCursorChange, clearCursor } =
+      const { cursor, requestCursorChange, clearCursor } =
         useMapCursor(BASIC_USAGE_MAP_ID);
 
+      // Guard to avoid unnecessary bus events on repeated hover callbacks
+      // note: the store dedupes repeated requests from the same owner for the same cursor
+      // but best practice is to not send unnecessary bus events in the first place
       const hoverCallback = useCallback(
         (info: { picked: boolean }) => {
           if (info.picked) {
-            requestCursorChange('pointer', 'symbol-layer');
+            if (cursor !== 'pointer') {
+              requestCursorChange('pointer', 'symbol-layer');
+            }
           } else {
             clearCursor('symbol-layer');
           }
         },
-        [requestCursorChange, clearCursor],
+        [cursor, requestCursorChange, clearCursor],
       );
 
       return (

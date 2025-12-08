@@ -84,6 +84,25 @@ const requestCursorChangeCache = new Map<
 const clearCursorCache = new Map<UniqueId, (owner: string) => void>();
 
 /**
+ * All state caches that need cleanup when an instance is removed
+ */
+const stateCaches = [
+  cursorStore,
+  componentSubscribers,
+  subscriptionCache,
+  snapshotCache,
+  requestCursorChangeCache,
+  clearCursorCache,
+] as const;
+
+/**
+ * Clear all cached state for a given instanceId
+ */
+function clearAllCaches(instanceId: UniqueId): void {
+  stateCaches.map((cache) => cache.delete(instanceId));
+}
+
+/**
  * Get or create cursor state for a given instanceId
  */
 function getOrCreateState(instanceId: UniqueId): MapCursorState {
@@ -284,12 +303,7 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
     }
 
     // Clean up all state
-    cursorStore.delete(instanceId);
-    componentSubscribers.delete(instanceId);
-    subscriptionCache.delete(instanceId);
-    snapshotCache.delete(instanceId);
-    requestCursorChangeCache.delete(instanceId);
-    clearCursorCache.delete(instanceId);
+    clearAllCaches(instanceId);
   }
 }
 
@@ -460,12 +474,7 @@ export function clearCursorState(instanceId: UniqueId): void {
   }
 
   // Clear all state
-  cursorStore.delete(instanceId);
-  componentSubscribers.delete(instanceId);
-  subscriptionCache.delete(instanceId);
-  snapshotCache.delete(instanceId);
-  requestCursorChangeCache.delete(instanceId);
-  clearCursorCache.delete(instanceId);
+  clearAllCaches(instanceId);
 }
 
 // Legacy API compatibility (for tests and existing code)
