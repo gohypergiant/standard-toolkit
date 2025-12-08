@@ -1,5 +1,15 @@
 # @apps/next
 
+## 0.3.7
+### Patch Changes
+
+- Updated dependencies [cfe734a]
+- Updated dependencies [2a7c001]
+- Updated dependencies [582dfd9]
+- Updated dependencies [c15d06f]
+  - @accelint/geo@0.4.0
+  - @accelint/design-toolkit@9.0.0
+
 ## 0.3.6
 ### Patch Changes
 
