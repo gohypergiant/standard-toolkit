@@ -11,13 +11,12 @@
  */
 
 import baseConfig from '@accelint/vitest-config/dom';
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import { defineConfig, mergeConfig } from 'vitest/config';
 
 export default mergeConfig(
   baseConfig,
   defineConfig({
-    plugins: [vanillaExtractPlugin()],
+    plugins: [],
     test: {
       globals: true,
       setupFiles: './src/test/setup.ts',

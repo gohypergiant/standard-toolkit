@@ -11,6 +11,7 @@
  */
 
 import { createColumnHelper } from '@tanstack/react-table';
+import { useState } from 'react';
 import { Table } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -125,10 +126,12 @@ const columns = [
     id: 'age',
     cell: (info) => info.renderValue(),
     header: () => 'Age',
+    size: 42,
   }),
   columnHelper.accessor('visits', {
     id: 'visits',
     header: () => <span>Visits</span>,
+    size: 42,
   }),
   columnHelper.accessor('status', {
     id: 'status',
@@ -154,6 +157,7 @@ const meta = {
     enableSorting: true,
     enableColumnReordering: true,
     enableRowActions: true,
+    fullWidth: false,
   },
   argTypes: {
     kebabPosition: {
@@ -196,4 +200,93 @@ export const SortableColumns: Story = {
     },
   },
   render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+export const ColumnSizing: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Columns can have custom sizes defined using the `size` property in the column definition. The table automatically applies these widths.',
+      },
+    },
+    layout: 'fullscreen',
+  },
+  render: () => {
+    const columnsWithSizing = [
+      columnHelper.accessor('firstName', {
+        id: 'firstName',
+        cell: (info) => info.getValue(),
+        header: () => <span>First Name</span>,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        cell: (info) => <i>{info.getValue()}</i>,
+        header: () => <span>Last Name</span>,
+      }),
+      columnHelper.accessor('age', {
+        id: 'age',
+        cell: (info) => info.renderValue(),
+        header: () => 'Age',
+        size: 42,
+      }),
+      columnHelper.accessor('visits', {
+        id: 'visits',
+        header: () => <span>Visits</span>,
+        size: 42,
+      }),
+      columnHelper.accessor('status', {
+        id: 'status',
+        header: 'Status',
+      }),
+      columnHelper.accessor('progress', {
+        id: 'progress',
+        header: 'Profile Progress',
+        size: 64,
+      }),
+    ];
+
+    return <Table columns={columnsWithSizing} data={defaultData} fullWidth />;
+  },
+};
+
+export const InitialRowSelection: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Use the `rowSelection` prop to specify which rows should be selected initially, and `onRowSelectionChange` to track selection changes. The callback receives an updater function or direct value following TanStack Table's API pattern. In this example, the first two rows (tanner and joe) are pre-selected, and selected row IDs are displayed below the table.",
+      },
+    },
+  },
+  render: () => {
+    const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({
+      tanner: true,
+      joe: true,
+    });
+
+    return (
+      <div>
+        <Table
+          columns={columns}
+          data={defaultData}
+          showCheckbox
+          rowSelection={selectedRows}
+          onRowSelectionChange={setSelectedRows}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Selected Row IDs:</strong>
+          {Object.values(selectedRows).filter(Boolean).length > 0 ? (
+            <p>
+              {Object.keys(selectedRows)
+                .filter((id) => selectedRows[id])
+                .join(', ')}
+            </p>
+          ) : (
+            <p>No rows selected</p>
+          )}
+        </div>
+      </div>
+    );
+  },
 };

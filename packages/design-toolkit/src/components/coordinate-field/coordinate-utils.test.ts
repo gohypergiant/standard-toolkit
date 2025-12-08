@@ -183,21 +183,10 @@ describe('Coordinate Utils', () => {
 
     it('converts DD value to UTM segments', () => {
       const result = convertDDToDisplaySegments(newYorkCity, 'utm');
-      // NOTE: The geo package currently returns MGRS format for coord.utm() (known issue)
-      // which then fails to parse as UTM, so this conversion is expected to fail
-      // TODO: Fix geo package to return proper UTM format or update parser to handle MGRS
-      if (result === null) {
-        // Expected behavior with current geo package issue
-        expect(result).toBeNull();
-      } else if (result.length === 5) {
-        // If it somehow returns MGRS format segments
-        expect(result[0]).toBe('18'); // Zone
-        expect(result[1]).toBe('T'); // Band
-      } else if (result.length === 4) {
-        // If it returns proper UTM format (future fix)
-        expect(result[0]).toBe('18'); // Zone
-        expect(result[1]).toBe('N'); // Hemisphere
-      }
+      expect(result).toBeTruthy();
+      expect(result?.length).toBe(4);
+      expect(result?.[0]).toBe('18'); // Zone
+      expect(result?.[1]).toBe('N'); // Hemisphere
     });
 
     it('returns null for invalid coordinate value (lat > 90)', () => {
@@ -401,22 +390,10 @@ describe('Coordinate Utils', () => {
 
     it('successfully converts DD → UTM → DD', () => {
       const utmSegments = convertDDToDisplaySegments(newYorkCity, 'utm');
-      // NOTE: The geo package currently returns MGRS format for UTM (known issue)
-      // Skip this test for now as UTM parsing doesn't work with MGRS format
-      if (!utmSegments || utmSegments.length === 5) {
-        // Either conversion failed or returned MGRS format (5 segments instead of 4)
-        // We cannot test round-trip with MGRS when expecting UTM
-        expect(true).toBe(true); // Skip this test
-        return;
-      }
+      expect(utmSegments).toBeTruthy();
+      expect(utmSegments?.length).toBe(4); // UTM has 4 segments
 
-      const backToDD = convertDisplaySegmentsToDD(utmSegments, 'utm');
-      // UTM round-trip may not work due to geo package limitations
-      if (!backToDD) {
-        expect(true).toBe(true); // Skip - UTM conversion not fully supported
-        return;
-      }
-
+      const backToDD = convertDisplaySegmentsToDD(utmSegments!, 'utm');
       expect(backToDD).toBeTruthy();
       // UTM conversion has good precision
       expect(backToDD?.lat).toBeCloseTo(newYorkCity.lat, 4);
@@ -457,9 +434,7 @@ describe('Coordinate Utils - Paste Handling', () => {
         /40.*42.*46\..*[NS].*74.*0.*21\..*[EW]/,
       );
       expect(formats.mgrs.value).toMatch(/18T/);
-      // NOTE: The geo package currently returns MGRS format for UTM (known issue)
-      // So we expect MGRS pattern (18T WL...) instead of UTM pattern (18N ...)
-      expect(formats.utm.value).toMatch(/18T/);
+      expect(formats.utm.value).toMatch(/18.*N/); // UTM format: zone + hemisphere
     });
 
     it('returns "Invalid coordinate" for all formats when value is null', () => {

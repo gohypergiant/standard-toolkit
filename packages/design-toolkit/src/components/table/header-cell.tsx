@@ -158,7 +158,12 @@ export function TableHeaderCell<T>({
         : undefined;
 
   return (
-    <th {...rest} ref={ref} aria-sort={sortLabel}>
+    <th
+      {...rest}
+      aria-sort={sortLabel}
+      ref={ref}
+      style={{ width: header?.getSize() }}
+    >
       <div
         className={clsx('group/header-cell', styles.headerCell, className)}
         data-selected={header?.column.id === columnSelection || null}
@@ -167,7 +172,6 @@ export function TableHeaderCell<T>({
           (header && (
             <>
               {header.column.id !== HeaderColumnAction.KEBAB &&
-                // {header.column.id !== '8' &&
                 renderProps &&
                 flexRender(header.column.columnDef.header, renderProps)}
               <HeaderCellMenu header={header} />
