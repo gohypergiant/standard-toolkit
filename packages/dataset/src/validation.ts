@@ -46,11 +46,8 @@ const layerDatasetFieldTypeSchema = z.enum([
  * Built-in layer types for Deck.gl visualization layers.
  */
 const layerConfigTypeSchema = z.union([
-  z.literal('icon'),
-  z.literal('point'),
-  z.literal('path'),
-  z.literal('polygon'),
-  z.literal('raster'),
+  z.enum(['icon', 'point', 'path', 'polygon', 'raster']),
+  // NOTE: For custom, extended layer types
   z.string(),
 ]);
 
@@ -92,6 +89,7 @@ const layerDatasetMetadataSchema = z.object({
   maxRequests: z.number().optional(),
   refetchInterval: z.number().optional(),
   defaultFields: z.array(z.string()),
+  batchSize: z.number().optional(),
   filterDialect: z.enum(['cql', 'gml']).optional(),
 });
 
@@ -157,7 +155,10 @@ export function validateSchema<T>(schema: z.ZodType<T>): (data: unknown) => T {
     } catch (error) {
       if (error instanceof z.ZodError) {
         const formattedErrors = error.issues
-          .map((err) => `${err.path.join('.')}: ${err.message}`)
+          .map((err) => {
+            const path = err.path.join('.');
+            return path ? `${path}: ${err.message}` : err.message;
+          })
           .join('\n');
 
         throw new Error(`Validation failed:\n${formattedErrors}`);
