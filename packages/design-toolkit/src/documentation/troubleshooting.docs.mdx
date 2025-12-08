@@ -1,0 +1,94 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Troubleshooting" />
+
+# Troubleshooting CSS Modules
+
+Common issues and solutions when working with CSS Modules in the Design Toolkit.
+
+## Common Mistakes
+
+### Using external `composes` in CSS Modules
+**Problem**: Styles from external files appear missing or unstyled.
+
+```css
+/* ❌ WRONG - Bypasses Tailwind processing */
+@reference '../other/styles.module.css';
+
+.button {
+  composes: baseButton from '../other/styles.module.css';
+}
+```
+
+**Solution**: Compose in JSX instead.
+```tsx
+/* ✅ CORRECT */
+import otherStyles from '../other/styles.module.css';
+import styles from './styles.module.css';
+
+<button className={clsx(otherStyles.baseButton, styles.button)} />
+```
+
+### Forgetting to configure named group hashing
+**Problem**: Group-based state styling doesn't work (e.g., `group-hover/button:scale-110` has no effect).
+
+**Root Cause**: Build tool is hashing `group/button` classes, breaking Tailwind's group selector pattern.
+
+**Solution**: Ensure you've configured `getLocalIdent` (Webpack/Next.js) or `generateScopedName` (Vite) as shown in the [Upgrade Guide](?path=/docs/upgrade-guides--docs#prevent-hashing-of-tailwind-named-groups).
+
+**To verify**:
+```tsx
+// If you see this, hashing is broken:
+<button class="_group__button_xyz99 _button_abc12">  {/* ❌ WRONG */}
+  <svg class="group-hover/button:scale-110" />
+</button>
+
+// Inspect the DOM - you should see:
+<button class="group/button _button_abc12">  {/* ✅ CORRECT */}
+  <svg class="group-hover/button:scale-110" />
+</button>
+```
+
+### Using wrong layer for overrides
+**Problem**: Custom styles are ignored or component styles bleed through.
+
+```css
+/* ❌ WRONG - Using same layer as design toolkit */
+@layer components.l1 {
+  .button {
+    @apply bg-red-500;  /* Won't override DTK button */
+  }
+}
+```
+
+**Solution**: Use higher precedence layers for application components.
+```css
+/* ✅ CORRECT - Application components use l3+ */
+@layer components.l3 {
+  .customButton {
+    @apply bg-red-500;  /* Will override properly */
+  }
+}
+
+/* ✅ CORRECT - Inline utility overrides */
+<Button className="bg-red-500" />  {/* Utilities always win */}
+```
+
+## CSS Modules Not Loading
+
+**Symptoms**: Components render with no styles at all.
+
+**Checklist**:
+1. ✅ Design foundation styles imported in globals.css? (`@import '@accelint/design-foundation/styles';`)
+2. ✅ CSS modules enabled in build tool? (Next.js: built-in, Vite: check config)
+3. ✅ Import path uses `.module.css` extension?
+4. ✅ CSS file exists and is in correct location?
+5. ✅ Build completed successfully without errors?
+6. ✅ Check browser DevTools: are CSS files being loaded?
+
+**Still not working?** Clear build cache and restart dev server:
+```bash
+rm -rf .next dist node_modules/.vite
+pnpm install
+pnpm dev
+```
