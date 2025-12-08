@@ -182,237 +182,249 @@ export const AutomaticCursorEffect: Story = {
 };
 
 /**
+ * Story component extracted to a named function to ensure proper React hook lifecycle.
+ *
+ * When hooks like `useOn` or `useEmit` are called directly inside a Storybook
+ * `render: () => { ... }` function, Storybook's decorator system can cause the
+ * render function to be invoked multiple times without proper cleanup, resulting
+ * in duplicate event listeners on the singleton bus.
+ *
+ * By extracting to a named component and rendering via `render: () => <Component />`,
+ * React manages the component lifecycle correctly and cleanup functions run as expected.
+ */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Storybook UI example with multiple conditional renders
+function WithModeOwnerStory() {
+  const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
+
+  // Listen for cursor rejection events
+  useOn<CursorRejectedEvent>(MapCursorEvents.rejected, (event) => {
+    if (event.payload.id === WITH_MODE_OWNER_MAP_ID) {
+      emitNotice({
+        message: event.payload.reason,
+        color: 'critical',
+      });
+    }
+  });
+
+  function InstructionPanel() {
+    const { mode } = useMapMode(WITH_MODE_OWNER_MAP_ID);
+
+    return (
+      <div className='-translate-x-1/2 absolute top-l left-1/2 w-[400px] rounded-lg bg-surface-accent-subtle p-l shadow-elevation-overlay'>
+        <p className='mb-s font-bold text-content-accent text-header-m'>
+          Cursor Priority Rules
+        </p>
+        <ul className='space-y-xs text-body-s text-content-secondary'>
+          <li className='flex items-start gap-xs'>
+            <span className='text-content-accent'>•</span>
+            <span>
+              <strong>Default Mode:</strong> Anyone can change the cursor (most
+              recent request wins)
+            </span>
+          </li>
+          <li className='flex items-start gap-xs'>
+            <span className='text-content-accent'>•</span>
+            <span>
+              <strong>Owned Mode:</strong> Only the mode owner can change the
+              cursor
+            </span>
+          </li>
+          <li className='flex items-start gap-xs'>
+            <span className='text-content-accent'>•</span>
+            <span>
+              Non-owners' requests are rejected and shown as error notices
+            </span>
+          </li>
+        </ul>
+        <div className='mt-m border-border-subtle border-t pt-m'>
+          <div className='flex items-center gap-s text-body-s'>
+            <span className='text-content-secondary'>Current mode:</span>
+            <code
+              className={
+                mode === 'default'
+                  ? 'text-content-success'
+                  : 'text-content-warning'
+              }
+            >
+              {mode}
+            </code>
+            <span className='text-content-tertiary'>
+              {mode === 'default'
+                ? '(anyone can change cursor)'
+                : '(owner only)'}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Storybook UI example with multiple conditional renders
+  function ModeOwnerToolbar() {
+    const { mode, requestModeChange } = useMapMode(WITH_MODE_OWNER_MAP_ID);
+    const { cursor, requestCursorChange, clearCursor } = useMapCursor(
+      WITH_MODE_OWNER_MAP_ID,
+    );
+    const ownerId = useRef('mode-owner');
+
+    const isDefaultMode = mode === 'default';
+    const isDrawingMode = mode === 'drawing';
+    const isDefaultCursor = cursor === 'default';
+    const isCrosshairCursor = cursor === 'crosshair';
+
+    return (
+      <div className='absolute top-l left-l flex w-[300px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+        <p className='font-bold text-header-l'>Mode Owner Controls</p>
+
+        <div className='flex flex-col gap-s'>
+          <p className='text-body-s text-content-secondary'>Map Mode</p>
+          <div className='grid grid-cols-2 gap-s'>
+            <Button
+              variant={isDefaultMode ? 'filled' : 'outline'}
+              color={isDefaultMode ? 'accent' : 'mono-muted'}
+              onPress={() => {
+                requestModeChange('default', ownerId.current);
+                clearCursor(ownerId.current);
+              }}
+            >
+              Default
+            </Button>
+            <Button
+              variant={isDrawingMode ? 'filled' : 'outline'}
+              color={isDrawingMode ? 'accent' : 'mono-muted'}
+              onPress={() => requestModeChange('drawing', ownerId.current)}
+            >
+              Drawing
+            </Button>
+          </div>
+        </div>
+
+        <div className='flex flex-col gap-s'>
+          <p className='text-body-s text-content-secondary'>
+            Cursor (Owner Priority)
+          </p>
+          <div className='grid grid-cols-2 gap-s'>
+            <Button
+              variant={isDefaultCursor ? 'filled' : 'outline'}
+              color={isDefaultCursor ? 'accent' : 'mono-muted'}
+              onPress={() => requestCursorChange('default', ownerId.current)}
+            >
+              Default
+            </Button>
+            <Button
+              variant={isCrosshairCursor ? 'filled' : 'outline'}
+              color={isCrosshairCursor ? 'accent' : 'mono-muted'}
+              onPress={() => requestCursorChange('crosshair', ownerId.current)}
+            >
+              Crosshair
+            </Button>
+          </div>
+        </div>
+
+        <Button
+          variant='outline'
+          color='mono-muted'
+          onPress={() => clearCursor(ownerId.current)}
+        >
+          Clear My Cursor
+        </Button>
+
+        <Divider />
+        <div className='flex flex-col gap-s text-body-s'>
+          <div className='flex items-center gap-s'>
+            <span className='text-content-secondary'>Mode:</span>
+            <code>{mode}</code>
+          </div>
+          <div className='flex items-center gap-s'>
+            <span className='text-content-secondary'>Cursor:</span>
+            <code>{cursor}</code>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function NonOwnerToolbar() {
+    const { cursor, requestCursorChange, clearCursor } = useMapCursor(
+      WITH_MODE_OWNER_MAP_ID,
+    );
+    const ownerId = useRef('non-owner');
+
+    return (
+      <div className='absolute top-l right-l flex w-[300px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+        <p className='font-bold text-header-l'>Non-Owner Controls</p>
+
+        <div className='flex flex-col gap-s'>
+          <p className='text-body-s text-content-secondary'>
+            Cursor (Will be rejected if mode is owned)
+          </p>
+          <div className='grid grid-cols-2 gap-s'>
+            <Button
+              variant={cursor === 'pointer' ? 'filled' : 'outline'}
+              color={cursor === 'pointer' ? 'accent' : 'mono-muted'}
+              onPress={() => requestCursorChange('pointer', ownerId.current)}
+            >
+              Pointer
+            </Button>
+            <Button
+              variant={cursor === 'help' ? 'filled' : 'outline'}
+              color={cursor === 'help' ? 'accent' : 'mono-muted'}
+              onPress={() => requestCursorChange('help', ownerId.current)}
+            >
+              Help
+            </Button>
+          </div>
+        </div>
+
+        <Button
+          variant='outline'
+          color='mono-muted'
+          onPress={() => clearCursor(ownerId.current)}
+        >
+          Clear My Cursor
+        </Button>
+
+        <div className='rounded-md bg-surface-contrast-subtle p-s text-body-s text-content-secondary'>
+          <p className='mb-xs font-semibold'>Try this:</p>
+          <ol className='list-inside list-decimal space-y-xs'>
+            <li>Click Pointer or Help to set cursor</li>
+            <li>Switch mode to "Drawing" on the left</li>
+            <li>Try changing cursor here (will be rejected)</li>
+            <li>Clear your cursor to allow mode owner control</li>
+          </ol>
+        </div>
+
+        <Divider />
+        <div className='flex items-center gap-s text-body-s'>
+          <span className='text-content-secondary'>Current:</span>
+          <code>{cursor}</code>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className='relative h-dvh w-dvw'>
+      <BaseMap className='absolute inset-0' id={WITH_MODE_OWNER_MAP_ID} />
+      <InstructionPanel />
+      <ModeOwnerToolbar />
+      <NonOwnerToolbar />
+      <NoticeList
+        placement='bottom'
+        defaultColor='critical'
+        defaultTimeout={5000}
+        hideClearAll
+      />
+    </div>
+  );
+}
+
+/**
  * Demonstrates cursor priority with map mode ownership.
  * Mode owners have priority for cursor changes.
  */
 export const WithModeOwner: Story = {
-  render: () => {
-    const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
-
-    // Listen for cursor rejection events
-    useOn<CursorRejectedEvent>(MapCursorEvents.rejected, (event) => {
-      if (event.payload.id === WITH_MODE_OWNER_MAP_ID) {
-        emitNotice({
-          message: event.payload.reason,
-          color: 'critical',
-        });
-      }
-    });
-
-    function InstructionPanel() {
-      const { mode } = useMapMode(WITH_MODE_OWNER_MAP_ID);
-
-      return (
-        <div className='-translate-x-1/2 absolute top-l left-1/2 w-[400px] rounded-lg bg-surface-accent-subtle p-l shadow-elevation-overlay'>
-          <p className='mb-s font-bold text-content-accent text-header-m'>
-            Cursor Priority Rules
-          </p>
-          <ul className='space-y-xs text-body-s text-content-secondary'>
-            <li className='flex items-start gap-xs'>
-              <span className='text-content-accent'>•</span>
-              <span>
-                <strong>Default Mode:</strong> Anyone can change the cursor
-                (most recent request wins)
-              </span>
-            </li>
-            <li className='flex items-start gap-xs'>
-              <span className='text-content-accent'>•</span>
-              <span>
-                <strong>Owned Mode:</strong> Only the mode owner can change the
-                cursor
-              </span>
-            </li>
-            <li className='flex items-start gap-xs'>
-              <span className='text-content-accent'>•</span>
-              <span>
-                Non-owners' requests are rejected and shown as error notices
-              </span>
-            </li>
-          </ul>
-          <div className='mt-m border-border-subtle border-t pt-m'>
-            <div className='flex items-center gap-s text-body-s'>
-              <span className='text-content-secondary'>Current mode:</span>
-              <code
-                className={
-                  mode === 'default'
-                    ? 'text-content-success'
-                    : 'text-content-warning'
-                }
-              >
-                {mode}
-              </code>
-              <span className='text-content-tertiary'>
-                {mode === 'default'
-                  ? '(anyone can change cursor)'
-                  : '(owner only)'}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Storybook UI example with multiple conditional renders
-    function ModeOwnerToolbar() {
-      const { mode, requestModeChange } = useMapMode(WITH_MODE_OWNER_MAP_ID);
-      const { cursor, requestCursorChange, clearCursor } = useMapCursor(
-        WITH_MODE_OWNER_MAP_ID,
-      );
-      const ownerId = useRef('mode-owner');
-
-      const isDefaultMode = mode === 'default';
-      const isDrawingMode = mode === 'drawing';
-      const isDefaultCursor = cursor === 'default';
-      const isCrosshairCursor = cursor === 'crosshair';
-
-      return (
-        <div className='absolute top-l left-l flex w-[300px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Mode Owner Controls</p>
-
-          <div className='flex flex-col gap-s'>
-            <p className='text-body-s text-content-secondary'>Map Mode</p>
-            <div className='grid grid-cols-2 gap-s'>
-              <Button
-                variant={isDefaultMode ? 'filled' : 'outline'}
-                color={isDefaultMode ? 'accent' : 'mono-muted'}
-                onPress={() => {
-                  requestModeChange('default', ownerId.current);
-                  clearCursor(ownerId.current);
-                }}
-              >
-                Default
-              </Button>
-              <Button
-                variant={isDrawingMode ? 'filled' : 'outline'}
-                color={isDrawingMode ? 'accent' : 'mono-muted'}
-                onPress={() => requestModeChange('drawing', ownerId.current)}
-              >
-                Drawing
-              </Button>
-            </div>
-          </div>
-
-          <div className='flex flex-col gap-s'>
-            <p className='text-body-s text-content-secondary'>
-              Cursor (Owner Priority)
-            </p>
-            <div className='grid grid-cols-2 gap-s'>
-              <Button
-                variant={isDefaultCursor ? 'filled' : 'outline'}
-                color={isDefaultCursor ? 'accent' : 'mono-muted'}
-                onPress={() => requestCursorChange('default', ownerId.current)}
-              >
-                Default
-              </Button>
-              <Button
-                variant={isCrosshairCursor ? 'filled' : 'outline'}
-                color={isCrosshairCursor ? 'accent' : 'mono-muted'}
-                onPress={() =>
-                  requestCursorChange('crosshair', ownerId.current)
-                }
-              >
-                Crosshair
-              </Button>
-            </div>
-          </div>
-
-          <Button
-            variant='outline'
-            color='mono-muted'
-            onPress={() => clearCursor(ownerId.current)}
-          >
-            Clear My Cursor
-          </Button>
-
-          <Divider />
-          <div className='flex flex-col gap-s text-body-s'>
-            <div className='flex items-center gap-s'>
-              <span className='text-content-secondary'>Mode:</span>
-              <code>{mode}</code>
-            </div>
-            <div className='flex items-center gap-s'>
-              <span className='text-content-secondary'>Cursor:</span>
-              <code>{cursor}</code>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    function NonOwnerToolbar() {
-      const { cursor, requestCursorChange, clearCursor } = useMapCursor(
-        WITH_MODE_OWNER_MAP_ID,
-      );
-      const ownerId = useRef('non-owner');
-
-      return (
-        <div className='absolute top-l right-l flex w-[300px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Non-Owner Controls</p>
-
-          <div className='flex flex-col gap-s'>
-            <p className='text-body-s text-content-secondary'>
-              Cursor (Will be rejected if mode is owned)
-            </p>
-            <div className='grid grid-cols-2 gap-s'>
-              <Button
-                variant={cursor === 'pointer' ? 'filled' : 'outline'}
-                color={cursor === 'pointer' ? 'accent' : 'mono-muted'}
-                onPress={() => requestCursorChange('pointer', ownerId.current)}
-              >
-                Pointer
-              </Button>
-              <Button
-                variant={cursor === 'help' ? 'filled' : 'outline'}
-                color={cursor === 'help' ? 'accent' : 'mono-muted'}
-                onPress={() => requestCursorChange('help', ownerId.current)}
-              >
-                Help
-              </Button>
-            </div>
-          </div>
-
-          <Button
-            variant='outline'
-            color='mono-muted'
-            onPress={() => clearCursor(ownerId.current)}
-          >
-            Clear My Cursor
-          </Button>
-
-          <div className='rounded-md bg-surface-contrast-subtle p-s text-body-s text-content-secondary'>
-            <p className='mb-xs font-semibold'>Try this:</p>
-            <ol className='list-inside list-decimal space-y-xs'>
-              <li>Click Pointer or Help to set cursor</li>
-              <li>Switch mode to "Drawing" on the left</li>
-              <li>Try changing cursor here (will be rejected)</li>
-              <li>Clear your cursor to allow mode owner control</li>
-            </ol>
-          </div>
-
-          <Divider />
-          <div className='flex items-center gap-s text-body-s'>
-            <span className='text-content-secondary'>Current:</span>
-            <code>{cursor}</code>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className='relative h-dvh w-dvw'>
-        <BaseMap className='absolute inset-0' id={WITH_MODE_OWNER_MAP_ID} />
-        <InstructionPanel />
-        <ModeOwnerToolbar />
-        <NonOwnerToolbar />
-        <NoticeList
-          placement='bottom'
-          defaultColor='critical'
-          defaultTimeout={5000}
-          hideClearAll
-        />
-      </div>
-    );
-  },
+  render: () => <WithModeOwnerStory />,
 };
 
 /**
