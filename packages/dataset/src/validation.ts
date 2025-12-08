@@ -157,6 +157,7 @@ export function validateSchema<T>(schema: z.ZodType<T>): (data: unknown) => T {
         const formattedErrors = error.issues
           .map((err) => {
             const path = err.path.join('.');
+
             return path ? `${path}: ${err.message}` : err.message;
           })
           .join('\n');
