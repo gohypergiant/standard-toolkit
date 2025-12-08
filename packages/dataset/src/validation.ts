@@ -25,25 +25,21 @@ const layerServiceTypeSchema = z.enum(['VTS', 'WMS', 'WFS', 'FS', 'Unknown']);
  * Data type specification for proper handling and validation.
  */
 const layerDatasetFieldTypeSchema = z.enum([
-  '(f32, f32)',
   'bool',
-  'bool[]',
   'date',
-  'date[]',
   'datetime',
-  'datetime[]',
   'f32',
-  'f32[]',
   'f64',
-  'f64[]',
   'i32',
-  'i32[]',
   'i64',
-  'i64[]',
+  'linestring',
+  'multilinestring',
+  'multipoint',
+  'multipolygon',
+  'point',
+  'polygon',
   'str',
-  'str[]',
   'time',
-  'time[]',
 ]);
 
 /**
@@ -54,6 +50,7 @@ const layerConfigTypeSchema = z.union([
   z.literal('point'),
   z.literal('path'),
   z.literal('polygon'),
+  z.literal('raster'),
   z.string(),
 ]);
 
