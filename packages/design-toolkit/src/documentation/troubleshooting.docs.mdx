@@ -6,6 +6,25 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 Common issues and solutions when working with CSS Modules in the Design Toolkit.
 
+## CSS Modules Not Loading
+
+**Symptoms**: Components render with no styles at all.
+
+**Checklist**:
+1. ✅ Design foundation styles imported in globals.css? (`@import '@accelint/design-foundation/styles';`)
+2. ✅ CSS modules enabled in build tool? (Next.js: built-in, Vite: check config)
+3. ✅ Import path uses `.module.css` extension?
+4. ✅ CSS file exists and is in correct location?
+5. ✅ Build completed successfully without errors?
+6. ✅ Check browser DevTools: are CSS files being loaded?
+
+**Still not working?** Clear build cache and restart dev server:
+```bash
+rm -rf .next dist node_modules/.vite
+pnpm install
+pnpm dev
+```
+
 ## Common Mistakes
 
 ### Using external `composes` in CSS Modules
@@ -72,23 +91,4 @@ import styles from './styles.module.css';
 
 /* ✅ CORRECT - Inline utility overrides */
 <Button className="bg-red-500" />  {/* Utilities always win */}
-```
-
-## CSS Modules Not Loading
-
-**Symptoms**: Components render with no styles at all.
-
-**Checklist**:
-1. ✅ Design foundation styles imported in globals.css? (`@import '@accelint/design-foundation/styles';`)
-2. ✅ CSS modules enabled in build tool? (Next.js: built-in, Vite: check config)
-3. ✅ Import path uses `.module.css` extension?
-4. ✅ CSS file exists and is in correct location?
-5. ✅ Build completed successfully without errors?
-6. ✅ Check browser DevTools: are CSS files being loaded?
-
-**Still not working?** Clear build cache and restart dev server:
-```bash
-rm -rf .next dist node_modules/.vite
-pnpm install
-pnpm dev
 ```
