@@ -1032,10 +1032,10 @@ export const WithHover: Story = {
       // but best practice is to not send unnecessary bus events in the first place
       const hoverCallback = useCallback(
         (info: { picked: boolean }) => {
-          if (info.picked && cursor !== 'pointer') {
-            requestCursorChange('pointer', 'symbol-layer');
-          } else {
+          if (!info.picked) {
             clearCursor('symbol-layer');
+          } else if (cursor !== 'pointer') {
+            requestCursorChange('pointer', 'symbol-layer');
           }
         },
         [cursor, requestCursorChange, clearCursor],
