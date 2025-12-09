@@ -10,8 +10,7 @@
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "composite": true,
-    "noEmit": false,
+    "noEmit": true,
     "types": ["@testing-library/jest-dom/vitest", "node"]
   }
 }

@@ -1,26 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@accelint/typescript-config/tsc/dom/library",
-  "include": ["./src", "./.storybook/*.tsx"],
-  "exclude": [
-    "node_modules",
-    "**/*.bench.ts",
-    "**/*.css",
-    "**/*.module.css",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.stories.tsx",
-    "**/*.test-d.ts"
-  ],
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "lib": ["ESNext", "DOM"],
-    "rootDir": "./",
-    "outDir": "dist",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "types": ["@testing-library/jest-dom/vitest", "css-modules", "node"]
-  },
-  "references": [{ "path": "./tsconfig.vitest.json" }]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.dist.json" },
+    { "path": "./tsconfig.vitest.json" }
+  ]
 }
