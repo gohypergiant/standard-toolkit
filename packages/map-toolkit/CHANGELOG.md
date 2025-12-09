@@ -1,6 +1,9 @@
 # @accelint/map-toolkit
 
 ## 0.3.1
+
+### Patch Changes
+
 - Updated dependencies
   - @accelint/geo@0.4.0
 
