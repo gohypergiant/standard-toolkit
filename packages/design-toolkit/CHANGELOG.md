@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 9.0.0
+## 8.1.0
 ### Minor Changes
 
 - 2a7c001: Adds Flashcard, A display component to quickly summarize information at a glance, with multiple options to show data.
