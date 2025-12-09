@@ -5,7 +5,7 @@ import * as TableStories from './table.stories';
 <Meta of={TableStories} />
 
 # Table
-The Table component standardizes table setup, configuration, and behavior (e.g. sorting, column ordering, row selecting, etc.) across the app. 
+The Table component standardizes table setup, configuration, and behavior (e.g. sorting, column ordering, row selecting, etc.) across the app.
 It's built using Tanstack React Table and simplifies table usage by requiring only columns and data props and supports customizations via optional configuration props.
 
 It is composed of the following components:
@@ -54,7 +54,7 @@ const dataExample = [
 
 <Table columns={columnsExample} data={dataExample}/>
 
-//Static 
+//Static
 <Table {...args}>
     <TableHeader>
     <TableRow>
@@ -77,19 +77,63 @@ const dataExample = [
 <Canvas of={TableStories.Default} />
 
 ### Common Props
-* **`columns`** - Array of column defintions 
-* **`data`** - Array of data objects 
+* **`columns`** - Array of column definitions
+* **`data`** - Array of data objects
 * **`showCheckBox`** - Boolean to determine if we should show checkbox column
 * **`kebabPosition`** - Position of the kebab menu, either 'left' or 'right'.
 * **`persistHeaderKebabMenu`** - Boolean to persist header kebab
 * **`persistRowKebabMenu`** - Boolean to persist row kebab
 * **`persistNumerals`** - Boolean to persist numeral columns
-* **`enableSorting`** - Boolean to enable sorting 
-* **`enableColumnReordering`** - Boolean to enable column ordering 
-* **`enableRowActions`** - Boolean to enable row actions 
-* **`manualSorting`** - Boolean to enable server side sorting. 
+* **`enableSorting`** - Boolean to enable sorting
+* **`enableColumnReordering`** - Boolean to enable column ordering
+* **`enableRowActions`** - Boolean to enable row actions
+* **`manualSorting`** - Boolean to enable server side sorting.
 * **`onSortChange`** - Prop for when server is handling sorting for data. Used when `manualSorting` is set to true.
-* **`onColumnReorderChange`** - Prop for when server is handling column reordering logic of data  
+* **`onColumnReorderChange`** - Prop for when server is handling column reordering logic of data
+* **`rowSelection`** - Initial row selection state. An object mapping row IDs to their selection state (e.g., `{ 'row-1': true, 'row-2': true }`)
+* **`onRowSelectionChange`** - Callback function triggered when row selection changes. Receives an updater function or direct value following TanStack Table's API pattern.
+* **`fullWidth`** - Boolean to make the table take full width with fixed layout (applies 'w-full table-fixed' classes)
+
+## Column Sizing
+
+The table supports custom column widths. You can define a `size` property in your column definitions to set a fixed width:
+
+```tsx
+const columns = [
+  columnHelper.accessor('firstName', {
+    id: 'firstName',
+    header: 'First Name',
+    size: 150,      // Width in pixels
+  }),
+  // ...other columns
+];
+```
+
+<Canvas of={TableStories.ColumnSizing} />
+
+## Row Selection
+
+The table provides row selection capabilities with both initial selection and change tracking.
+
+### Initial Selection and Change Tracking
+
+You can specify which rows should be selected initially with the `rowSelection` prop, and track selection changes with the `onRowSelectionChange` callback. This follows TanStack Table's API pattern, where the callback receives an updater function or direct value.
+
+```tsx
+const [selectedRows, setSelectedRows] = useState({ 'tanner': true, 'joe': true });
+
+<Table
+  columns={columns}
+  data={data}
+  showCheckbox
+  rowSelection={selectedRows}
+  onRowSelectionChange={setSelectedRows}
+/>
+```
+
+The `rowSelection` prop is an object that maps row IDs to boolean values, where `true` indicates the row is selected. The `onRowSelectionChange` callback receives updates whenever the selection changes, allowing you to sync the state with other components or perform custom logic.
+
+<Canvas of={TableStories.InitialRowSelection} />
 
 ## Implementation Notes
 The `Table` component uses Tanstack React Table from `Tanstack`.

@@ -78,10 +78,13 @@
   }
 
   .hideInRow {
-    @apply invisible;
+    /* making the `td` not visible was causing the bg color to not show for selected rows */
+    & > * {
+      @apply invisible;
 
-    @variant group-hover/row {
-      @apply visible;
+      @variant group-hover/row {
+        @apply visible;
+      }
     }
   }
 
