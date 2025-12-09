@@ -29,6 +29,9 @@ export default mergeConfig(
       setupFiles: './src/test/setup.ts',
       environment: 'jsdom',
       exclude: ['./storybook-static'],
+      typecheck: {
+        tsconfig: './tsconfig.vitest.json',
+      },
     },
   }),
 );

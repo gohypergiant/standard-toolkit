@@ -20,6 +20,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["@testing-library/jest-dom", "css-modules", "node"]
-  }
+    "types": ["@testing-library/jest-dom/vitest", "css-modules", "node"]
+  },
+  "references": [{ "path": "./tsconfig.vitest.json" }]
 }

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "include": [
+    "./src/**/*.test.ts",
+    "./src/**/*.test.tsx",
+    "./src/test/**/*",
+    "**/*.bench.ts",
+    "**/*.test-d.ts"
+  ],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "types": ["@testing-library/jest-dom/vitest", "node"]
+  }
+}
