@@ -192,7 +192,6 @@ export const AutomaticCursorEffect: Story = {
  * By extracting to a named component and rendering via `render: () => <Component />`,
  * React manages the component lifecycle correctly and cleanup functions run as expected.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Storybook UI example with multiple conditional renders
 function WithModeOwnerStory() {
   const emitNotice = useEmit<NoticeQueueEvent>(NoticeEventTypes.queue);
 
@@ -555,7 +554,7 @@ export const IntegrationWithModeAuth: Story = {
             id,
           });
         },
-        [emitDecision],
+        [emitDecision, addLog],
       );
 
       // Helper: Show authorization dialog for Shapes feature
@@ -594,7 +593,7 @@ export const IntegrationWithModeAuth: Story = {
             ]);
           }
         },
-        [pendingAuths],
+        [pendingAuths, addLog],
       );
 
       // Listen for authorization requests
@@ -1033,10 +1032,8 @@ export const WithHover: Story = {
       // but best practice is to not send unnecessary bus events in the first place
       const hoverCallback = useCallback(
         (info: { picked: boolean }) => {
-          if (info.picked) {
-            if (cursor !== 'pointer') {
-              requestCursorChange('pointer', 'symbol-layer');
-            }
+          if (info.picked && cursor !== 'pointer') {
+            requestCursorChange('pointer', 'symbol-layer');
           } else {
             clearCursor('symbol-layer');
           }
