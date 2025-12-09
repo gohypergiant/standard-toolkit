@@ -199,15 +199,25 @@ export default nextConfig;
 ### 3. Import `@accelint/design-foundation/styles` CSS
 `@accelint/design-foundation/styles` declares layers, defines theme variables/utility classes, etc., that are needed by the components exported from `@accelint/design-toolkit`. This will also be needed for your own application-level styling.
 
-Add the following to your application's top-level component (e.g., `App.tsx`) to ensure the `@accelint/design-foundation/styles` CSS is available/loaded in your application:
-
-```ts
-import '@accelint/design-foundation/styles';
+Create a `globals.css` file at the root of your `src` directory (if it does not already exist) and add the necessary `@import` statement:
+```css
+@import '@accelint/design-foundation/styles';
 ```
-#### Importing within Storybook
-Storybook's standard configuration folder is `.storybook`. The appropriate place to perform global imports (such as CSS imports) is inside of `.storybook/preview.ts`. [Details](https://storybook.js.org/docs/configure#configure-story-rendering)
 
-Add the import statement above to `.storybook/preview.ts` to apply the `@accelint/design-foundation/styles` CSS to all stories.
+Next, import the `globals.css` file within one of your application's top-level component files (e.g., `app.tsx`, `layout.tsx`):
+```ts
+import './globals.css';
+```
+
+If you have an alias for `src` directory configured (e.g., `@` or `~`), the import would look like:
+```ts
+import '@/globals.css';
+```
+
+#### Importing within Storybook
+Storybook's standard configuration directory is `.storybook`. The appropriate place to perform global imports (such as CSS imports) is inside of `.storybook/preview.ts`. [Details](https://storybook.js.org/docs/configure#configure-story-rendering)
+
+Add the `globals.css` import statement above to `.storybook/preview.ts` to apply the `@accelint/design-foundation/styles` CSS to all stories.
 
 <a id="css-modules"></a>
 ### 4. Migrate to CSS modules and `clsx`
@@ -215,7 +225,7 @@ Previously, we recommended using the [tailwind variants](https://www.tailwind-va
 
 In places in your code base where you are already using [tailwind variants](https://www.tailwind-variants.org/), replace it with the following approach.
 
-At the top-level of your `src` directory, create `index.module.css` and add a `@reference` statement:
+At the top-level of your `src` directory, create `style.module.css` and add a `@reference` statement:
 
 ```css
 @reference "@accelint/design-foundation/styles";
@@ -223,14 +233,14 @@ At the top-level of your `src` directory, create `index.module.css` and add a `@
 
 This references the `@accelint/design-foundation/styles` stylesheet, allowing you to use these styles (e.g., `@apply` classes) without duplicating any CSS in your application's output. [Details](https://tailwindcss.com/docs/functions-and-directives#reference-directive)
 
-All CSS modules (files) in your application should then reference this top-level `index.module.css` file:
+All CSS modules (files) in your application should then reference this top-level `style.module.css` file:
 
 ```css
 /*
 makes all classnames available for reference. this
-is pointing to the top-level index.module.css.
+is pointing to the top-level style.module.css.
 */
-@reference '../../index.module.css';
+@reference '../../style.module.css';
 
 /* assigns classes to appropriate layer */
 @layer components.l3 {
@@ -285,7 +295,7 @@ Components that support visual variants (e.g., `cozy` and `compact`) expose thos
 import { clsx } from '@accelint/design-foundation/lib/utils';
 
 // import the local stylesheet and use as an object.
-import styles from './index.module.css'
+import styles from './style.module.css'
 
 export function SomeComponent() {
   return (

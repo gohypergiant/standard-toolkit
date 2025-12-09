@@ -11,7 +11,8 @@ Common issues and solutions when working with CSS Modules in the Design Toolkit.
 **Symptoms**: Components render with no styles at all.
 
 **Checklist**:
-1. ✅ Design foundation styles imported in globals.css? (`@import '@accelint/design-foundation/styles';`)
+1. ✅ Design foundation styles imported in `globals.css`? (`@import '@accelint/design-foundation/styles';`)
+    - Ensure `globals.css` is being imported in the application.
 2. ✅ CSS modules enabled in build tool? (Next.js: built-in, Vite: check config)
 3. ✅ Import path uses `.module.css` extension?
 4. ✅ CSS file exists and is in correct location?
