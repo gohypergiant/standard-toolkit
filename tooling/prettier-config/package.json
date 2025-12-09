@@ -10,7 +10,7 @@
     "tooling"
   ],
   "subPath": "tooling/prettier-config",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -22,11 +22,19 @@
     "./catalog-info.yaml",
     "./CHANGELOG.md",
     "./package.json",
+    "./prettier.config.js",
     "./README.md"
   ],
+  "exports": {
+    "./config": "./prettier.config.js"
+  },
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
+  },
+  "dependencies": {
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.7.1"
   },
   "publishConfig": {
     "access": "public"

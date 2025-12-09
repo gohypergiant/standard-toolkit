@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   RadioGroup as AriaRadioGroup,
   composeRenderProps,
@@ -19,10 +20,8 @@ import {
 } from 'react-aria-components';
 import { Label } from '../label';
 import { RadioContext } from './context';
-import { RadioStyles } from './styles';
+import styles from './styles.module.css';
 import type { RadioGroupProps } from './types';
-
-const { group, groupLabel } = RadioStyles();
 
 /**
  * RadioGroup - Container component for Radio buttons
@@ -40,14 +39,14 @@ export function RadioGroup({ ref, ...props }: RadioGroupProps) {
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.group, (className) =>
-        group({ className }),
+        clsx('group/radio-group', styles.group, className),
       )}
     >
       {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
         <>
           {label && (
             <Label
-              className={groupLabel({ className: classNames?.label })}
+              className={clsx(styles.label, classNames?.label)}
               isDisabled={isDisabled}
               isRequired={isRequired}
             >

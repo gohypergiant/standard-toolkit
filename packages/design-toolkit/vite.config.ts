@@ -11,6 +11,7 @@
  */
 
 import path from 'node:path';
+import { generateScopedName } from '@accelint/design-foundation/lib/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
@@ -21,6 +22,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+    },
+  },
+  css: {
+    modules: {
+      generateScopedName,
     },
   },
 });

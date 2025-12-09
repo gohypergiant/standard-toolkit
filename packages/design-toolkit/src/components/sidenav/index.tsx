@@ -11,22 +11,20 @@
  */
 'use client';
 
-import { useOn } from '@accelint/bus/react';
 import 'client-only';
+import { useOn } from '@accelint/bus/react';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useState } from 'react';
 import { DEFAULT_SLOT, HeadingContext, Provider } from 'react-aria-components';
 import { SidenavContext } from './context';
 import { SidenavEventTypes } from './events';
-import { SidenavStyles } from './styles';
+import styles from './styles.module.css';
 import type {
   SidenavCloseEvent,
   SidenavOpenEvent,
   SidenavProps,
   SidenavToggleEvent,
 } from './types';
-
-const { sidenav, heading, transient, menuHeading, panelHeading } =
-  SidenavStyles();
 
 /**
  * Sidenav - Collapsible side navigation panel
@@ -123,10 +121,10 @@ export function Sidenav({
           {
             slots: {
               [DEFAULT_SLOT]: {
-                className: heading({ className: transient() }),
+                className: clsx(styles.heading, styles.transient),
               },
-              menu: { className: menuHeading({ className: transient() }) },
-              panel: { className: panelHeading() },
+              menu: { className: clsx(styles.heading, styles.transient) },
+              panel: { className: styles.heading },
             },
           },
         ],
@@ -135,7 +133,7 @@ export function Sidenav({
     >
       <nav
         {...rest}
-        className={sidenav({ className })}
+        className={clsx('group/sidenav', styles.sidenav, className)}
         data-open={isOpen || null}
       >
         {children}

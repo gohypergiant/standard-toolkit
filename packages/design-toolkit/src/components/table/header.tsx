@@ -12,7 +12,6 @@
  */
 
 import { TableHeaderCell } from './header-cell';
-import { TableHeaderStyles } from './styles';
 import type { TableHeaderProps } from './types';
 
 export function TableHeader<T>({
@@ -24,7 +23,7 @@ export function TableHeader<T>({
   ...rest
 }: TableHeaderProps<T>) {
   return (
-    <thead {...rest} ref={ref} className={TableHeaderStyles(className)}>
+    <thead {...rest} ref={ref} className={className}>
       {children ||
         headerGroups?.map((headerGroup) => (
           <tr key={headerGroup.id}>

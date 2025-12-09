@@ -1,0 +1,60 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as FlashcardStories from './flashcard.stories';
+
+<Meta of={FlashcardStories} />
+
+# Flashcard
+A quick visual identifier for multiple points of data for a given map entity.
+
+## Example Usage
+```tsx
+  const details = [
+    { label: 'key', value: 'value', id: 'unique-id-1' },
+    { label: 'key', value: 'value', id: 'unique-id-2' },
+    { label: 'key', value: 'value', id: 'unique-id-3' },
+    { label: 'key', value: 'value', id: 'unique-id-4' },
+    { label: 'key', value: 'value', id: 'unique-id-5' },
+    { label: 'key', value: 'value', id: 'unique-id-6' },
+    { label: 'key', value: 'value', id: 'unique-id-7' },
+  ];
+
+  <Flashcard isLoading={isLoading} header='Identifier' subheader='DATA'>
+    <FlashcardHero />
+    <FlashcardAdditionalData>SECONDARY_DATA_01</FlashcardAdditionalData>
+    <FlashcardAdditionalData>SECONDARY_DATA_02</FlashcardAdditionalData>
+    <FlashcardDetailsList>
+      {details.map((detail) => (
+        <Fragment key={detail.id}>
+          <FlashcardDetailsLabel>{detail.label}</FlashcardDetailsLabel>
+          <FlashcardDetailsValue>{detail.value}</FlashcardDetailsValue>
+        </Fragment>
+      ))}
+    </FlashcardDetailsList>
+  </Flashcard>
+```
+
+<Canvas of={FlashcardStories.Default} />
+
+
+## Props
+The Flashcard component accepts all standard HTML div attributes.
+
+- **`isLoading`** - Set visual state for loading on the Flashcard component.
+- **`header`** - Wrapper for Heading component, displays top level text for Flashcard.
+- **`isLoading`** - Wrapper for Text component, displays subheading text for Flashcard.
+
+### FlashcardHero
+- Upper half of the Flashcard to provide identifier data for the object being observed.
+
+### FlashcardAdditionalData
+- Secondary data information that will appear below the initial header.
+
+### FlashcardDetailsList
+- A wrapper for the **`DetailsList`** component.
+
+### FlashcardDetailsLabel
+- A wrapper for the **`DetailsLabel`** component. Displays a **`Skeleton`** component when **`isLoading`**
+
+### FlashcardDetailsValue
+- A wrapper for the **`DetailsValue`** component. Displays a **`Skeleton`** component when **`isLoading`**

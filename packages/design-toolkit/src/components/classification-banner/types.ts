@@ -11,12 +11,14 @@
  */
 
 import type { ComponentPropsWithRef } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { ClassificationBannerStyles } from './styles';
 
-export type ClassificationBannerStyleVariants = VariantProps<
-  typeof ClassificationBannerStyles
->;
-
-export type ClassificationBannerProps = ClassificationBannerStyleVariants &
-  ComponentPropsWithRef<'div'>;
+export type ClassificationBannerProps = ComponentPropsWithRef<'div'> & {
+  variant?:
+    | 'missing'
+    | 'unclassified'
+    | 'cui'
+    | 'confidential'
+    | 'secret'
+    | 'top-secret'
+    | 'ts-sci';
+};

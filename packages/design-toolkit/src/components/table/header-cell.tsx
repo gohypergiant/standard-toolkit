@@ -11,6 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
 import { flexRender, type Header } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
@@ -26,10 +27,8 @@ import {
   SortDirection,
 } from './constants/table';
 import { TableContext } from './context';
-import { TableHeaderCellStyles, TableStyles } from './styles';
+import styles from './styles.module.css';
 import type { TableHeaderCellProps } from './types';
-
-const { menuItem } = TableStyles();
 
 function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   const {
@@ -45,6 +44,7 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   } = useContext(TableContext);
 
   const [hoveredArrow, setHoveredArrow] = useState(false);
+  const hideHeaderKebab = !persistHeaderKebabMenu;
 
   if (
     headerColumnActionValues.includes(
@@ -58,92 +58,86 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   const sort = header.column.getIsSorted();
 
   return (
-    <MenuTrigger
-      onOpenChange={(isOpen) =>
-        setColumnSelection(isOpen ? header.column.id : null)
-      }
-    >
-      <Button
-        variant='icon'
-        aria-label='Menu'
-        onHoverChange={setHoveredArrow}
-        className={TableHeaderCellStyles({
-          notPersistHeaderKebab: !persistHeaderKebabMenu,
-        })}
+    <div className={clsx(hideHeaderKebab && styles.hideInHeader)}>
+      <MenuTrigger
+        onOpenChange={(isOpen) =>
+          setColumnSelection(isOpen ? header.column.id : null)
+        }
       >
-        <Icon>
-          {(!sort || hoveredArrow) && <Kebab />}
-          {!hoveredArrow && sort === SortDirection.DESC && <ArrowDown />}
-          {!hoveredArrow && sort === SortDirection.ASC && <ArrowUp />}
-        </Icon>
-      </Button>
-      <Menu>
-        {enableColumnReordering && (
-          <>
-            <MenuItem
-              classNames={{ item: menuItem() }}
-              onAction={() => {
-                const index = header.column.getIndex();
-                moveColumnLeft(index);
-                handleColumnReordering?.(index);
-              }}
-              isDisabled={header.column.getIsFirstColumn('center')}
-            >
-              Move Column Left
-            </MenuItem>
-            <MenuItem
-              classNames={{ item: menuItem() }}
-              onAction={() => {
-                const index = header.column.getIndex();
-                moveColumnRight(index);
-                handleColumnReordering?.(index);
-              }}
-              isDisabled={header.column.getIsLastColumn('center')}
-            >
-              Move Column Right
-            </MenuItem>
-          </>
-        )}
-        {enableColumnReordering && enableSorting && <MenuSeparator />}
-        {enableSorting && (
-          <>
-            <MenuItem
-              classNames={{ item: menuItem() }}
-              onAction={() => {
-                manualSorting
-                  ? handleSortChange?.(header.column.id, SortDirection.ASC)
-                  : header.column.toggleSorting(false);
-              }}
-              isDisabled={sort === SortDirection.ASC}
-            >
-              Sort Ascending
-            </MenuItem>
-            <MenuItem
-              classNames={{ item: menuItem() }}
-              onAction={() => {
-                manualSorting
-                  ? handleSortChange?.(header.column.id, SortDirection.DESC)
-                  : header.column.toggleSorting(true);
-              }}
-              isDisabled={sort === SortDirection.DESC}
-            >
-              Sort Descending
-            </MenuItem>
-            <MenuItem
-              classNames={{ item: menuItem() }}
-              onAction={() => {
-                manualSorting
-                  ? handleSortChange?.(header.column.id, null)
-                  : header.column.clearSorting();
-              }}
-              isDisabled={!sort}
-            >
-              Clear Sort
-            </MenuItem>
-          </>
-        )}
-      </Menu>
-    </MenuTrigger>
+        <Button
+          variant='icon'
+          aria-label='Menu'
+          onHoverChange={setHoveredArrow}
+        >
+          <Icon>
+            {(!sort || hoveredArrow) && <Kebab />}
+            {!hoveredArrow && sort === SortDirection.DESC && <ArrowDown />}
+            {!hoveredArrow && sort === SortDirection.ASC && <ArrowUp />}
+          </Icon>
+        </Button>
+        <Menu>
+          {enableColumnReordering && (
+            <>
+              <MenuItem
+                onAction={() => {
+                  const index = header.column.getIndex();
+                  moveColumnLeft(index);
+                  handleColumnReordering?.(index);
+                }}
+                isDisabled={header.column.getIsFirstColumn('center')}
+              >
+                Move Column Left
+              </MenuItem>
+              <MenuItem
+                onAction={() => {
+                  const index = header.column.getIndex();
+                  moveColumnRight(index);
+                  handleColumnReordering?.(index);
+                }}
+                isDisabled={header.column.getIsLastColumn('center')}
+              >
+                Move Column Right
+              </MenuItem>
+            </>
+          )}
+          {enableColumnReordering && enableSorting && <MenuSeparator />}
+          {enableSorting && (
+            <>
+              <MenuItem
+                onAction={() => {
+                  manualSorting
+                    ? handleSortChange?.(header.column.id, SortDirection.ASC)
+                    : header.column.toggleSorting(false);
+                }}
+                isDisabled={sort === SortDirection.ASC}
+              >
+                Sort Ascending
+              </MenuItem>
+              <MenuItem
+                onAction={() => {
+                  manualSorting
+                    ? handleSortChange?.(header.column.id, SortDirection.DESC)
+                    : header.column.toggleSorting(true);
+                }}
+                isDisabled={sort === SortDirection.DESC}
+              >
+                Sort Descending
+              </MenuItem>
+              <MenuItem
+                onAction={() => {
+                  manualSorting
+                    ? handleSortChange?.(header.column.id, null)
+                    : header.column.clearSorting();
+                }}
+                isDisabled={!sort}
+              >
+                Clear Sort
+              </MenuItem>
+            </>
+          )}
+        </Menu>
+      </MenuTrigger>
+    </div>
   );
 }
 
@@ -154,13 +148,8 @@ export function TableHeaderCell<T>({
   header,
   ...rest
 }: TableHeaderCellProps<T>) {
-  const { columnSelection, enableColumnReordering, enableSorting } =
-    useContext(TableContext);
-  const showKebab = enableColumnReordering || enableSorting;
+  const { columnSelection } = useContext(TableContext);
   const renderProps = header?.getContext();
-  const narrow =
-    header?.column.id === HeaderColumnAction.NUMERAL ||
-    header?.column.id === HeaderColumnAction.KEBAB;
   const sortLabel =
     header?.column.getIsSorted() === SortDirection.ASC
       ? 'ascending'
@@ -169,20 +158,20 @@ export function TableHeaderCell<T>({
         : undefined;
 
   return (
-    <th {...rest} ref={ref} aria-sort={sortLabel}>
+    <th
+      {...rest}
+      aria-sort={sortLabel}
+      ref={ref}
+      style={{ width: header?.getSize() }}
+    >
       <div
-        className={TableHeaderCellStyles({
-          narrow,
-          className,
-          isKebabEnabled: showKebab,
-        })}
+        className={clsx('group/header-cell', styles.headerCell, className)}
         data-selected={header?.column.id === columnSelection || null}
       >
         {children ||
           (header && (
             <>
               {header.column.id !== HeaderColumnAction.KEBAB &&
-                // {header.column.id !== '8' &&
                 renderProps &&
                 flexRender(header.column.columnDef.header, renderProps)}
               <HeaderCellMenu header={header} />

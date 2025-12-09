@@ -24,6 +24,7 @@ import {
 } from '@tanstack/react-table';
 import type { Key } from '@react-types/shared';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
@@ -35,10 +36,15 @@ import { MenuTrigger } from '../menu/trigger';
 import { TableBody } from './body';
 import { TableContext } from './context';
 import { TableHeader } from './header';
-import { TableStyles } from './styles';
+import styles from './styles.module.css';
 import type { TableProps } from './types';
 
-const { menuItem, notPersistRowKebab } = TableStyles();
+// This width is for columns in the table that provide features:
+// - Row count
+// - Row actions kebab
+// - Row selection (checkbox)
+// These columns should not need to grow with table width
+const META_COLUMN_WIDTH = 32;
 
 type RowActionsMenuProps<T> = {
   row: Row<T>;
@@ -55,10 +61,11 @@ function RowActionsMenu<T>({
 }: RowActionsMenuProps<T>) {
   const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
   const isPinned = !!row.getIsPinned();
+  const hideRowKebab = !persistRowKebabMenu;
 
   return (
     enableRowActions && (
-      <div className={persistRowKebabMenu ? '' : notPersistRowKebab()}>
+      <div className={clsx(hideRowKebab && styles.hideInRow)}>
         <MenuTrigger>
           <Button variant='icon' aria-label={`row ${row.index + 1} actions`}>
             <Icon>
@@ -66,22 +73,17 @@ function RowActionsMenu<T>({
             </Icon>
           </Button>
           <Menu>
-            <MenuItem
-              classNames={{ item: menuItem() }}
-              onAction={() => row.pin(isPinned ? false : 'top')}
-            >
+            <MenuItem onAction={() => row.pin(isPinned ? false : 'top')}>
               {isPinned ? 'Unpin' : 'Pin'}
             </MenuItem>
             <MenuSeparator />
             <MenuItem
-              classNames={{ item: menuItem() }}
               onAction={() => moveRowsUp(row, rows)}
               isDisabled={isPinned || row.index === 0}
             >
               Move Up
             </MenuItem>
             <MenuItem
-              classNames={{ item: menuItem() }}
               onAction={() => moveRowsDown(row, rows)}
               isDisabled={isPinned || row.index === rows.length - 1}
             >
@@ -108,6 +110,7 @@ export function Table<T extends { id: Key }>({
   columns: columnsProp,
   data: dataProp,
   showCheckbox,
+  rowSelection: rowSelectionProp,
   kebabPosition = 'right',
   persistRowKebabMenu = true,
   persistHeaderKebabMenu = true,
@@ -118,6 +121,8 @@ export function Table<T extends { id: Key }>({
   manualSorting = false,
   onSortChange,
   onColumnReorderChange,
+  onRowSelectionChange,
+  fullWidth = false,
   ...rest
 }: TableProps<T>) {
   const {
@@ -127,12 +132,15 @@ export function Table<T extends { id: Key }>({
   } = useListData({
     initialItems: dataProp,
   });
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>(
+    rowSelectionProp ?? {},
+  );
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
   const [rowPinning, setRowPinning] = useState<RowPinningState>({
     top: [],
     bottom: [],
   });
+
   /**
    * moveUpSelectedRows moves the selected rows up in the table.
    * It finds the first selected row, determines its index,
@@ -211,6 +219,7 @@ export function Table<T extends { id: Key }>({
           rows={getRowModel().rows}
         />
       ),
+      size: META_COLUMN_WIDTH,
     }),
     [moveRowsUp, moveRowsDown],
   );
@@ -233,6 +242,7 @@ export function Table<T extends { id: Key }>({
           ) : (
             <span data-testid='numeral'>{row.index + 1}</span>
           ),
+        size: META_COLUMN_WIDTH,
       },
       ...(showCheckbox
         ? ([
@@ -252,6 +262,7 @@ export function Table<T extends { id: Key }>({
                   onChange={row.toggleSelected}
                 />
               ),
+              size: META_COLUMN_WIDTH,
             },
           ] satisfies NonNullable<typeof columnsProp>)
         : []),
@@ -273,6 +284,18 @@ export function Table<T extends { id: Key }>({
     onColumnReorderChange?.(index);
   };
 
+  const handleRowSelectionChange = useCallback(
+    (
+      updaterOrValue:
+        | RowSelectionState
+        | ((old: RowSelectionState) => RowSelectionState),
+    ) => {
+      setRowSelection(updaterOrValue);
+      onRowSelectionChange?.(updaterOrValue);
+    },
+    [onRowSelectionChange],
+  );
+
   const {
     getHeaderGroups,
     getTopRows,
@@ -286,6 +309,7 @@ export function Table<T extends { id: Key }>({
     enableSorting,
     initialState: {
       columnOrder: columns.map(({ id }) => id ?? ''),
+      rowSelection: rowSelectionProp ?? {},
     },
     state: {
       rowSelection,
@@ -298,7 +322,7 @@ export function Table<T extends { id: Key }>({
     enableRowSelection: true,
     enableRowPinning: true,
     manualSorting: manualSorting,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: handleRowSelectionChange,
     onRowPinningChange: setRowPinning,
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
@@ -346,8 +370,14 @@ export function Table<T extends { id: Key }>({
     [setColumnOrder],
   );
 
+  const className = clsx(fullWidth && 'w-full table-fixed', rest.className);
+
   if (children) {
-    return <table {...rest}>{children}</table>;
+    return (
+      <table {...rest} className={className}>
+        {children}
+      </table>
+    );
   }
 
   return (
@@ -368,7 +398,7 @@ export function Table<T extends { id: Key }>({
         handleColumnReordering,
       }}
     >
-      <table {...rest}>
+      <table {...rest} className={className}>
         <TableHeader
           headerGroups={getHeaderGroups()}
           columnSelection={columnSelection}

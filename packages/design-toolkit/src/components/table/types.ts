@@ -17,6 +17,7 @@ import type {
   Header,
   HeaderGroup,
   Row,
+  RowSelectionState,
 } from '@tanstack/react-table';
 import type {
   ComponentPropsWithRef,
@@ -24,8 +25,6 @@ import type {
   PropsWithChildren,
   SetStateAction,
 } from 'react';
-import type { VariantProps } from 'tailwind-variants';
-import type { TableCellStyles, TableHeaderCellStyles } from './styles';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
@@ -46,6 +45,13 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * Whether to display a checkbox column.
    */
   showCheckbox?: boolean;
+
+  /**
+   * Initial row selection state.
+   * An object mapping row IDs to their selection state (true = selected).
+   * Example: { 'row-1': true, 'row-2': true }
+   */
+  rowSelection?: RowSelectionState;
 
   /**
    * Position of the kebab menu, either 'left' or 'right'.
@@ -116,6 +122,35 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @param index - The new index position of the column after reordering.
    */
   onColumnReorderChange?: (index: number) => void;
+  /**
+   * Callback function triggered when row selection changes.
+   * Receives an updater function or direct value following TanStack Table's API pattern.
+   *
+   * @param updaterOrValue - Either a function that receives the old state and returns new state,
+   * or a direct RowSelectionState object.
+   *
+   * @example
+   * // Using with state setter
+   * onRowSelectionChange={setSelectedRows}
+   *
+   * @example
+   * // Using with custom handler
+   * onRowSelectionChange={(updater) => {
+   *   const newState = typeof updater === 'function' ? updater(oldState) : updater;
+   *   console.log('Selected rows:', newState);
+   * }}
+   */
+  onRowSelectionChange?: (
+    updaterOrValue:
+      | RowSelectionState
+      | ((old: RowSelectionState) => RowSelectionState),
+  ) => void;
+  /**
+   * Whether the table should take full width and use fixed layout.
+   * When true, applies 'w-full table-fixed' classes.
+   * @default false
+   */
+  fullWidth?: boolean;
 };
 
 /**
@@ -179,44 +214,35 @@ export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
 /**
  * Props for a table cell component.
  *
- * Extends the standard HTML `<td>` element attributes and includes variant styling props.
+ * Extends the standard HTML `<td>` element attributes.
  *
  * @remarks
  * - Inherits all properties from `TdHTMLAttributes<HTMLTableCellElement>`.
- * - Includes variant properties from `cellStyles`.
  * - Optionally accepts a `ref` to the underlying `<td>` element.
  *
  * @property ref - Optional React ref for the table cell element.
  * @property className - Optional class name for custom styling.
- * @property narrow - Optional boolean to apply narrow styling.
- * @property numeral - Optional boolean to apply numeral styling.
- * @property persistent - Optional boolean to control visibility behavior.
- *   If true, the cell is always visible.
- *   If false, the cell content is only visible on hover or when the row is hovered.
  */
-export type TableCellProps<T> = ComponentPropsWithRef<'td'> &
-  VariantProps<typeof TableCellStyles> & {
-    cell?: Cell<T, unknown>;
-  };
+export type TableCellProps<T> = ComponentPropsWithRef<'td'> & {
+  cell?: Cell<T, unknown>;
+};
 
 /**
  * Props for a table header cell component.
  *
- * This type combines standard HTML `<th>` element attributes, style variant props,
+ * This type combines standard HTML `<th>` element attributes
  * and ref attributes for a table header cell.
  *
- * @see {@link VariantProps}
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> &
-  VariantProps<typeof TableHeaderCellStyles> & {
-    header?: Header<T, unknown>;
-  };
+export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> & {
+  header?: Header<T, unknown>;
+};
 
 /**
  * Props for the table header (`<thead>`) component.
  *
- * Extends standard HTML attributes and ref attributes for an HTMLTableSectionElement.
+ * Accepts standard HTML attributes and ref attributes for an HTMLTableSectionElement.
  *
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}

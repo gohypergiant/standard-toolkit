@@ -19,18 +19,16 @@ import type {
   TextProps as AriaTextProps,
   PopoverProps,
 } from 'react-aria-components';
-import type { VariantProps } from 'tailwind-variants';
 import type { IconProps } from '../icon/types';
-import type { MenuStyles } from './styles';
 
 export type MenuProps<T> = Omit<AriaMenuProps<T>, 'className'> &
-  VariantProps<typeof MenuStyles> &
   RefAttributes<HTMLDivElement> & {
     classNames?: {
       menu?: AriaMenuProps<T>['className'];
       popover?: PopoverProps['className'];
     };
     popoverProps?: Omit<AriaPopoverProps, 'children' | 'className'>;
+    variant?: 'compact' | 'cozy';
   };
 
 export type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {

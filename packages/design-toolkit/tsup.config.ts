@@ -11,6 +11,7 @@
  */
 
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import {
   fixAliasPlugin,
   fixExtensionsPlugin,
@@ -28,15 +29,12 @@ export default defineConfig({
     fixExtensionsPlugin(),
   ],
   entry: [
-    'src/**/*.{ts,tsx,css}',
+    'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
-    '!**/__fixtures__',
+    '!**/__*__',
     '!storybook-static',
     '!src/test',
   ],
-  loader: {
-    '.css': 'copy',
-  },
   tsconfig: './tsconfig.dist.json',
   metafile: true,
   bundle: false,
@@ -48,15 +46,25 @@ export default defineConfig({
   splitting: true,
   treeshake: true,
   onSuccess: async () => {
-    const files = await glob(['dist/**/*.js', '!dist/**/*.js.map']);
+    // Add 'use client' directive to files that need it
+    const jsFiles = await glob(['dist/**/*.js', '!dist/**/*.js.map']);
 
-    for (let i = 0; i < files.length; i++) {
-      const path = files[i];
-      const content = await fs.readFile(path, 'utf-8');
+    for (const file of jsFiles) {
+      const content = await fs.readFile(file, 'utf-8');
 
       if (CHECK.test(content)) {
-        fs.writeFile(path, `${"'use client';"}\n\n${content}`);
+        await fs.writeFile(file, `${"'use client';"}\n\n${content}`);
       }
+    }
+
+    // Copy CSS module files
+    const cssModuleFiles = await glob(['src/**/*.module.css']);
+
+    for (const srcFile of cssModuleFiles) {
+      const destFile = path.join('dist', path.relative('src', srcFile));
+
+      await fs.mkdir(path.dirname(destFile), { recursive: true });
+      await fs.copyFile(srcFile, destFile);
     }
   },
 });
