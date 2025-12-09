@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ReactElement, ReactNode, RefAttributes } from 'react';
+import type { ReactElement, RefAttributes } from 'react';
 import type {
   MenuItemProps as AriaMenuItemProps,
   MenuProps as AriaMenuProps,
@@ -47,5 +47,5 @@ export type MenuSectionProps<T> = Omit<AriaMenuSectionProps<T>, 'className'> & {
     section?: AriaMenuSectionProps<T>['className'];
     header?: string;
   };
-  title?: string | ReactNode | ReactElement;
+  title?: string | ReactElement;
 };
