@@ -176,19 +176,19 @@ describe('generateScopedClassName', () => {
       expect(result).toMatch(/^[_a-zA-Z0-9-]+$/);
     });
 
-    it('snapshot: common component class names', () => {
+    it('generates expected class names for common components', () => {
       const filePath =
         '/packages/design-toolkit/src/components/button/styles.module.css';
 
-      const classNames = {
-        button: generateScopedClassName('button', filePath),
-        filled: generateScopedClassName('filled', filePath),
-        flat: generateScopedClassName('flat', filePath),
-        outline: generateScopedClassName('outline', filePath),
-        groupButton: generateScopedClassName('group\\/button', filePath),
-      };
-
-      expect(classNames).toMatchSnapshot();
+      expect(generateScopedClassName('button', filePath)).toBe('_button_kakjr');
+      expect(generateScopedClassName('filled', filePath)).toBe('_filled_kakjr');
+      expect(generateScopedClassName('flat', filePath)).toBe('_flat_kakjr');
+      expect(generateScopedClassName('outline', filePath)).toBe(
+        '_outline_kakjr',
+      );
+      expect(generateScopedClassName('group\\/button', filePath)).toBe(
+        'group\\/button',
+      );
     });
   });
 });

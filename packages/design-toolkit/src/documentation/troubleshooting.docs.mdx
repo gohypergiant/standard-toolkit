@@ -55,17 +55,22 @@ import styles from './styles.module.css';
 
 **Solution**: Ensure you've configured `getLocalIdent` (Webpack/Next.js) or `generateScopedName` (Vite) as shown in the [Upgrade Guide](?path=/docs/upgrade-guides--docs#prevent-hashing-of-tailwind-named-groups).
 
-**To verify**:
-```tsx
-// If you see this, hashing is broken:
-<button class="_group__button_xyz99 _button_abc12">  {/* ❌ WRONG */}
-  <svg class="group-hover/button:scale-110" />
-</button>
+**To verify**: Inspect the compiled CSS output. If named groups are being hashed, you'll see selectors like:
 
-// Inspect the DOM - you should see:
-<button class="group/button _button_abc12">  {/* ✅ CORRECT */}
-  <svg class="group-hover/button:scale-110" />
-</button>
+```css
+/* ❌ WRONG - group name is hashed, breaking the selector */
+&:is(:where(.styles_group__accordion_abc12):where([disabled])) {
+  cursor: not-allowed;
+}
+```
+
+The class should remain unhashed:
+
+```css
+/* ✅ CORRECT - group name preserved */
+&:is(:where(.group\/accordion):where([disabled])) {
+  cursor: not-allowed;
+}
 ```
 
 ### Using wrong layer for overrides
