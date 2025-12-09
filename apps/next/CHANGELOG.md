@@ -8,7 +8,7 @@
 - Updated dependencies [582dfd9]
 - Updated dependencies [c15d06f]
   - @accelint/geo@0.4.0
-  - @accelint/design-toolkit@9.0.0
+  - @accelint/design-toolkit@8.1.0
 
 ## 0.3.6
 ### Patch Changes
