@@ -342,7 +342,7 @@ export const ContextMenu: Story = {
 
 export const DynamicMenuHeader: Story = {
   render: (args) => {
-    const SampleProp = () => (
+    const SectionHeader = () => (
       <div>
         <div className='text-body-m'>Additional Notable Species</div>
         <div className='text-body-xs'>These birds sound made up.</div>
@@ -416,7 +416,7 @@ export const DynamicMenuHeader: Story = {
             </Menu>
           </MenuSubmenu>
           <MenuSeparator />
-          <MenuSection title={<SampleProp />}>
+          <MenuSection title={<SectionHeader />}>
             <MenuItem color='serious'>
               <Icon>
                 <Placeholder />
