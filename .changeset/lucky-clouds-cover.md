@@ -1,5 +1,4 @@
 ---
-"@accelint/design-toolkit": patch
 "@apps/next": patch
 ---
 
