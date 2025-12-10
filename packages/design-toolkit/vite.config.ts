@@ -13,12 +13,13 @@
 import path from 'node:path';
 import { generateScopedName } from '@accelint/design-foundation/lib/vite';
 import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [tsConfigPaths(), tailwindcss()],
+  plugins: [react(), tsConfigPaths(), tailwindcss()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

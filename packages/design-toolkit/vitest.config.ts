@@ -30,7 +30,7 @@ export default mergeConfig(
       environment: 'jsdom',
       exclude: ['./storybook-static'],
       typecheck: {
-        tsconfig: './tsconfig.vitest.json',
+        tsconfig: './tsconfig.dev.json',
       },
     },
   }),

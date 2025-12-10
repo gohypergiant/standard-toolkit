@@ -3,6 +3,6 @@
   "files": [],
   "references": [
     { "path": "./tsconfig.dist.json" },
-    { "path": "./tsconfig.vitest.json" }
+    { "path": "./tsconfig.dev.json" }
   ]
 }
