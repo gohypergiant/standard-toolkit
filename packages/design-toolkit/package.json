@@ -126,6 +126,7 @@
     "@types/node": "^24.9.0",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
+    "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.21",
     "client-only": "^0.0.1",
     "esbuild-fix-imports-plugin": "^1.0.23",
