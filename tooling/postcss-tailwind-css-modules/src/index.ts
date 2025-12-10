@@ -21,16 +21,17 @@ interface ProcessedRule extends Rule {
 const globalGroupPlugin = (): Plugin => {
   const transform = parser((selectors: Root) => {
     selectors.walkClasses((currentClassNode: ClassName) => {
-      if (currentClassNode.value.startsWith('group/')) {
-        const globalWrapped = parser
-          .pseudo({
-            value: ':global',
-          })
-          .append(
-            parser.selector({ value: '' }).append(currentClassNode.clone()),
-          );
-        currentClassNode.replaceWith(globalWrapped);
+      if (!currentClassNode.value.startsWith('group/')) {
+        return;
       }
+      const globalWrapped = parser
+        .pseudo({
+          value: ':global',
+        })
+        .append(
+          parser.selector({ value: '' }).append(currentClassNode.clone()),
+        );
+      currentClassNode.replaceWith(globalWrapped);
     });
   });
 
