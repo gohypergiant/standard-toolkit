@@ -1,5 +1,25 @@
 # @apps/next
 
+## 0.3.8
+### Patch Changes
+
+- 01bdf1e: Updated to use new @accelint/postcss-tailwind-css-modules plugin
+- Updated dependencies [01bdf1e]
+- Updated dependencies [01bdf1e]
+  - @accelint/design-foundation@1.0.1
+  - @accelint/postcss-tailwind-css-modules@1.0.0
+  - @accelint/design-toolkit@8.1.1
+
+## 0.3.7
+### Patch Changes
+
+- Updated dependencies [cfe734a]
+- Updated dependencies [2a7c001]
+- Updated dependencies [582dfd9]
+- Updated dependencies [c15d06f]
+  - @accelint/geo@0.4.0
+  - @accelint/design-toolkit@8.1.0
+
 ## 0.3.6
 ### Patch Changes
 

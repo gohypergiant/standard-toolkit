@@ -42,6 +42,8 @@ import stringHash from 'string-hash';
  * - Tailwind uses them for parent-child state styling (e.g., `group-hover/button`)
  * - They must remain global and consistent across all components
  * - Example: `<Button className="group/button">` + `<Icon className="group-hover/button:rotate">`
+ *
+ * @deprecated Use @accelint/postcss-tailwind-css-modules with postcss instead
  */
 export function generateScopedClassName(className: string, fileName: string) {
   return className.startsWith('group\\/')
