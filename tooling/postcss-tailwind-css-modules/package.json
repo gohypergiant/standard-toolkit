@@ -32,12 +32,17 @@
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
+  "dependencies": {
+    "postcss": "^8.5.6",
+    "postcss-selector-parser": "^7.1.1"
+  },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@types/node": "^24.9.0",
-    "postcss": "^8.5.6",
-    "postcss-selector-parser": "^7.1.1",
     "tsup": "8.5.0"
+  },
+  "peerDependencies": {
+    "@tailwindcss/postcss": "^4.1.17"
   },
   "publishConfig": {
     "access": "public"
