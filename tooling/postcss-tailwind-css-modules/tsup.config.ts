@@ -16,7 +16,6 @@ export default defineConfig([
   {
     format: ['esm'],
     minify: true,
-    cjsInterop: true,
     dts: true,
     external: ['postcss-selector-parser'],
     entry: ['src/index.ts'],
@@ -24,7 +23,6 @@ export default defineConfig([
   {
     format: ['cjs'],
     minify: true,
-    cjsInterop: true,
     dts: true,
     external: ['postcss-selector-parser'],
     entry: ['src/index.cts'],
