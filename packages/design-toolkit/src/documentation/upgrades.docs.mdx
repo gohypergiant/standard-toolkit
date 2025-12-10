@@ -126,11 +126,28 @@ Many components in the library use Tailwind [named groups](https://tailwindcss.c
 
 Therefore, any application using this library must configure CSS modules to leave named group classes un-hashed. **Failing to do so will break group-based state styling throughout the design system.**
 
-**Next.js 15+ with Turbopack (Recommended)**
+**PostCSS Plugin (Recommended for all bundlers)**
 
-If using Next.js 15+ with Turbopack (`next dev --turbo` or `next build --turbo`), no additional configuration is needed. Turbopack handles CSS modules correctly out of the box.
+The `@accelint/postcss-tailwind-css-modules` plugin handles named group classes at the PostCSS level, which works with Vite, Webpack, and Turbopack. This is the recommended approach.
 
-**Vite**
+```bash
+pnpm add -D @accelint/postcss-tailwind-css-modules
+```
+
+Add the plugin to your `postcss.config.mjs`:
+```js
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    '@accelint/postcss-tailwind-css-modules': {},
+  },
+};
+```
+
+**Vite (Legacy)**
+
+> **Note:** The PostCSS plugin above is now the recommended approach. This method is deprecated and will be removed in a future release.
+
 ```ts
 import { generateScopedName } from '@accelint/design-foundation/lib/vite';
 
@@ -147,6 +164,8 @@ export default defineConfig({
 ```
 
 **Webpack (Legacy)**
+
+> **Note:** The PostCSS plugin above is now the recommended approach. This method is deprecated and will be removed in a future release.
 
 For applications still using webpack (including Next.js without Turbopack), use the exported `getLocalIdent` function and apply it to every CSS loader rule. Because webpack configurations vary—especially in Next.js—we do not ship automatic rule-discovery. Consumers must insert `getLocalIdent` into their own webpack loader definitions, using the example below as a reference.
 
