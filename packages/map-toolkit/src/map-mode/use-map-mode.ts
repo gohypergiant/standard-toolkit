@@ -16,6 +16,7 @@ import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import {
   getOrCreateRequestModeChange,
+  getOrCreateServerSnapshot,
   getOrCreateSnapshot,
   getOrCreateSubscription,
 } from './store';
@@ -80,9 +81,11 @@ export function useMapMode(id?: UniqueId): UseMapModeReturn {
   }
 
   // Subscribe to store using useSyncExternalStore with fan-out pattern
+  // Third parameter provides server snapshot for SSR/RSC compatibility
   const mode = useSyncExternalStore(
     getOrCreateSubscription(actualId),
     getOrCreateSnapshot(actualId),
+    getOrCreateServerSnapshot(actualId),
   );
 
   // Memoize the return value to prevent unnecessary re-renders

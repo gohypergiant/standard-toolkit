@@ -17,6 +17,7 @@ import { MapContext } from '../deckgl/base-map/provider';
 import {
   getOrCreateClearCursor,
   getOrCreateRequestCursorChange,
+  getOrCreateServerSnapshot,
   getOrCreateSnapshot,
   getOrCreateSubscription,
 } from './store';
@@ -94,9 +95,11 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
   }
 
   // Subscribe to store using useSyncExternalStore with fan-out pattern
+  // Third parameter provides server snapshot for SSR/RSC compatibility
   const cursor = useSyncExternalStore(
     getOrCreateSubscription(actualId),
     getOrCreateSnapshot(actualId),
+    getOrCreateServerSnapshot(actualId),
   );
 
   // Memoize the return value to prevent unnecessary re-renders

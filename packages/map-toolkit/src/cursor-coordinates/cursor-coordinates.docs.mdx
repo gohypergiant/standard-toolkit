@@ -7,6 +7,15 @@ import * as CursorCoordinatesStories from './cursor-coordinates.stories';
 # Cursor Coordinates
 A hook that retrieves the coordinates of the mouse's current hovered position on a BaseMap.
 
+## Features
+
+- **Multiple Coordinate Formats**: Supports DD (Decimal Degrees), DDM (Degrees Decimal Minutes), DMS (Degrees Minutes Seconds), MGRS, and UTM formats
+- **Hybrid Architecture**: React integration uses `useSyncExternalStore` for concurrent-safe updates
+- **SSR/RSC Compatible**: Full support for server-side rendering and React Server Components
+- **Instance Isolation**: Support for multiple independent map instances
+- **Efficient Fan-out**: Single bus listener per map instance, regardless of component subscribers
+- **Automatic Cleanup**: State is cleaned up when all subscribers unmount
+
 ## Dependencies
 
 Cursor Coordinates requires the following dependencies:

@@ -71,6 +71,12 @@ const subscriptionCache = new Map<UniqueId, Subscription>();
 const snapshotCache = new Map<UniqueId, () => CSSCursorType>();
 
 /**
+ * Cache of server snapshot functions per instanceId to maintain referential stability.
+ * Server snapshots always return default cursor since cursor state is client-only.
+ */
+const serverSnapshotCache = new Map<UniqueId, () => CSSCursorType>();
+
+/**
  * Cache of requestCursorChange functions per instanceId to maintain referential stability
  */
 const requestCursorChangeCache = new Map<
@@ -91,6 +97,7 @@ const stateCaches = [
   componentSubscribers,
   subscriptionCache,
   snapshotCache,
+  serverSnapshotCache,
   requestCursorChangeCache,
   clearCursorCache,
 ] as const;
@@ -366,6 +373,25 @@ export function getOrCreateSnapshot(instanceId: UniqueId): () => CSSCursorType {
   snapshotCache.set(instanceId, snapshot);
 
   return snapshot;
+}
+
+/**
+ * Creates or retrieves a cached server snapshot function for a given instanceId.
+ * Server snapshots always return the default cursor since cursor state is client-only.
+ * Required for SSR/RSC compatibility with useSyncExternalStore.
+ *
+ * @param instanceId - The unique identifier for the map cursor instance
+ * @returns A server snapshot function for useSyncExternalStore
+ */
+export function getOrCreateServerSnapshot(
+  instanceId: UniqueId,
+): () => CSSCursorType {
+  const serverSnapshot =
+    serverSnapshotCache.get(instanceId) ?? (() => DEFAULT_CURSOR);
+
+  serverSnapshotCache.set(instanceId, serverSnapshot);
+
+  return serverSnapshot;
 }
 
 /**
