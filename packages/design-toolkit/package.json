@@ -93,6 +93,7 @@
     "@accelint/geo": "workspace:*",
     "@accelint/icons": "workspace:*",
     "@accelint/logger": "workspace:*",
+    "@accelint/postcss-tailwind-css-modules": "workspace:*",
     "@accelint/prettier-config": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
