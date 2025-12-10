@@ -9,6 +9,7 @@
     "dev-tk",
     "tooling"
   ],
+  "subPath": "tooling/postcss-tailwind-css-modules",
   "version": "0.0.1",
   "private": false,
   "license": "Apache-2.0",
