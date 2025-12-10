@@ -1,5 +1,10 @@
 # @accelint/design-toolkit
 
+## 1.0.1
+### Patch Changes
+
+- 01bdf1e: Adds deprecated warning to generateScopedClassName, generateScopedName, and getLocalIdent utils
+
 ## 1.0.0
 ### Major Changes
 

@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 8.1.1
+### Patch Changes
+
+- Updated dependencies [01bdf1e]
+  - @accelint/design-foundation@1.0.1
+
 ## 8.1.0
 ### Minor Changes
 
