@@ -10,22 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import baseConfig from '@accelint/vitest-config/dom';
-import tailwindcss from '@tailwindcss/vite';
-import { defineConfig, mergeConfig } from 'vitest/config';
-
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    plugins: [tailwindcss()],
-    test: {
-      globals: true,
-      setupFiles: './src/test/setup.ts',
-      environment: 'jsdom',
-      exclude: ['./storybook-static'],
-      typecheck: {
-        tsconfig: './tsconfig.dev.json',
-      },
-    },
-  }),
-);
+export default {
+  plugins: {
+    '@accelint/postcss-tailwind-css-modules': {},
+  },
+};
