@@ -1,6 +1,6 @@
 {
   "name": "@apps/next",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "private": true,
   "type": "module",
   "scripts": {
@@ -40,7 +40,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
-    "next": "^15.5.6",
+    "next": "^15.5.7",
     "postcss": "^8.5.6",
     "radashi": "^12.6.2",
     "react": "^19.0.0",
