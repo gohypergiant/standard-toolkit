@@ -183,9 +183,9 @@ importers:
       '@accelint/logger':
         specifier: workspace:*
         version: link:../../packages/logger
-      '@accelint/tailwind-group-postcss-plugin':
+      '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
-        version: link:../../tooling/tailwind-group-postcss-plugin
+        version: link:../../tooling/postcss-tailwind-css-modules
       '@accelint/temporal':
         specifier: workspace:*
         version: link:../../packages/temporal
@@ -624,12 +624,12 @@ importers:
       '@accelint/logger':
         specifier: workspace:*
         version: link:../logger
+      '@accelint/postcss-tailwind-css-modules':
+        specifier: workspace:*
+        version: link:../../tooling/postcss-tailwind-css-modules
       '@accelint/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/prettier-config
-      '@accelint/tailwind-group-postcss-plugin':
-        specifier: workspace:*
-        version: link:../../tooling/tailwind-group-postcss-plugin
       '@accelint/temporal':
         specifier: workspace:*
         version: link:../temporal
@@ -1361,6 +1361,24 @@ importers:
 
   tooling/eslint-config: {}
 
+  tooling/postcss-tailwind-css-modules:
+    devDependencies:
+      '@accelint/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^24.9.0
+        version: 24.10.0
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
+      postcss-selector-parser:
+        specifier: ^7.1.1
+        version: 7.1.1
+      tsup:
+        specifier: 8.5.0
+        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+
   tooling/prettier-config:
     dependencies:
       prettier:
@@ -1424,24 +1442,6 @@ importers:
       vitest:
         specifier: ^4.0.8
         version: 4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(happy-dom@19.0.2)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
-
-  tooling/tailwind-group-postcss-plugin:
-    devDependencies:
-      '@accelint/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/node':
-        specifier: ^24.9.0
-        version: 24.10.0
-      postcss:
-        specifier: ^8.5.6
-        version: 8.5.6
-      postcss-selector-parser:
-        specifier: ^7.1.1
-        version: 7.1.1
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
 
   tooling/typescript-config: {}
 

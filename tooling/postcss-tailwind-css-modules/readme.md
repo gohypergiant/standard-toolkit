@@ -1,10 +1,13 @@
 # About
 
-`@accelint/tailwind-group-postcss-plugin` is a postcss plugin that uses https://www.npmjs.com/package/postcss-selector-parser under the hood to wrap class nodes that start with `group/` in a `:global(...)` pseudo class.
+`@accelint/postcss-tailwind-css-modules` is a postcss plugin that uses https://www.npmjs.com/package/postcss-selector-parser under the hood to wrap specific class nodes in a `:global(...)` pseudo class.
 
 # What problem does this solve?
 
 Tailwind has some nifty utilities for [styling based on parent state](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state). However, these utility classes use global classes under the hood. Without this plugin, those classes get hashed by css modules and styling based on parent state breaks.
+
+> [!NOTE]  
+> currently the plugin fixes `group/` classes. Future updates can expand the functionality to support other classes that may have a similar problem, like `peer/` classes.
 
 # Example transformation flow from source -> postcss -> css modules
 
@@ -25,7 +28,7 @@ Add this plugin to your postcss config. it must come AFTER the tailwind postcss 
 export default {
   plugins: {
     '@tailwindcss/postcss': {},
-    '@accelint/tailwind-group-postcss-plugin': {},
+    '@accelint/postcss-tailwind-css-modules': {},
   },
 };
 ```
@@ -38,10 +41,10 @@ Your postcss.config.js file only needs our plugin, as tailwind's postcss stuff i
 ```
 export default {
   plugins: {
-    '@accelint/tailwind-group-postcss-plugin': {},
+    '@accelint/postcss-tailwind-css-modules': {},
   },
 };
 ```
 
 > [!NOTE]  
-> the array syntax for postcss plugin configuration does not seem to work with vite. i.e. `plugins: ['@accelint/tailwind-group-postcss-plugin']` will cause errors.
+> the array syntax for postcss plugin configuration does not seem to work with vite. i.e. `plugins: ['@accelint/postcss-tailwind-css-modules']` will cause errors.

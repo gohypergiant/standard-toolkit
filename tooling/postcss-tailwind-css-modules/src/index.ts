@@ -35,7 +35,7 @@ const globalGroupPlugin = (): Plugin => {
   });
 
   return {
-    postcssPlugin: '@accelint/tailwind-group-postcss-plugin',
+    postcssPlugin: '@accelint/postcss-tailwind-css-modules',
 
     Rule(rule: ProcessedRule) {
       const filePath = rule.root().source?.input.file;

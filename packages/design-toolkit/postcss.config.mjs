@@ -12,6 +12,6 @@
 
 export default {
   plugins: {
-    '@accelint/tailwind-group-postcss-plugin': {},
+    '@accelint/postcss-tailwind-css-modules': {},
   },
 };

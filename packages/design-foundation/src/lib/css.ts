@@ -13,7 +13,7 @@
 
 import stringHash from 'string-hash';
 
-/** @deprecated Use @accelint/tailwind-group-postcss-plugin with postcss instead */
+/** @deprecated Use @accelint/postcss-tailwind-css-modules with postcss instead */
 export function generateScopedClassName(className: string, fileName: string) {
   return className.startsWith('group\\/')
     ? className

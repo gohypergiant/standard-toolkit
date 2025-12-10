@@ -13,6 +13,6 @@
 export default {
   plugins: {
     '@tailwindcss/postcss': {},
-    '@accelint/tailwind-group-postcss-plugin': {},
+    '@accelint/postcss-tailwind-css-modules': {},
   },
 };
