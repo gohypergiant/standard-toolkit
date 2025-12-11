@@ -364,6 +364,9 @@ importers:
       esbuild-fix-imports-plugin:
         specifier: ^1.0.23
         version: 1.0.23
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
@@ -3628,6 +3631,7 @@ packages:
 
   '@ls-lint/ls-lint@2.3.1':
     resolution: {integrity: sha512-vPe6IDByQnQRTxcAYjTxrmga/tSIui50VBFTB5KIJWY3OOFmxE2VtymjeSEfQfiMbhZV/ZPAqYy2lt8pZFQ0Rw==}
+    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 

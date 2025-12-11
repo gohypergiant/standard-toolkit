@@ -16,9 +16,12 @@ export default defineConfig({
   plugins: [],
   entry: [
     'src/**/*.{ts,tsx}',
+    '!src/test',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
   ],
+  // NOTE: because we mark react as an optional dep, tsdown does not treat it as an external
+  external: ['react'],
   clean: true,
   dts: true,
   format: 'esm',
@@ -42,8 +45,6 @@ export default defineConfig({
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
- */
-
-`,
+ */\n\n`,
   },
 });
