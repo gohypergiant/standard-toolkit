@@ -10,7 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import { createCoordinate } from '@accelint/geo';
 import { getLogger } from '@accelint/logger';
+import {
+  COORDINATE_SYSTEMS,
+  type CoordinateSystem,
+  type CoordinateValue,
+  type ParsedCoordinateMatch,
+} from './types';
 
 const logger = getLogger({
   enabled: process.env.NODE_ENV !== 'production',
@@ -43,10 +50,10 @@ const logger = getLogger({
  *
  * ```typescript
  * // What geo provides:
- * const coord = createCoordinate(coordinateSystems.ddm, 'LATLON')('40 42.768 N / 74 0.36 W');
- * coord.dd()   // Returns: "40.7128 N / 74.006 W"  (formatted string)
- * coord.ddm()  // Returns: "40 42.768 N / 74 0.36 W" (formatted string)
- * coord.raw    // Returns: { LAT: 40.7128, LON: -74.006 } (only DD numbers)
+ * const coord = createCoordinate('latlon', '40 42.768 N / 74 0.36 W');
+ * coord.toString({ format: 'dd' })   // Returns: "40.7128, -74.006" (formatted string)
+ * coord.toString({ format: 'ddm' })  // Returns: "40° 42.768', -74° 0.36'" (formatted string)
+ * coord.lat, coord.lon               // Returns: 40.7128, -74.006 (DD numbers)
  * ```
  *
  * The coordinate-field component needs segment-level data for individual input fields:
@@ -56,8 +63,8 @@ const logger = getLogger({
  * ### Current Limitations and Duplication
  *
  * Because the geo package only exposes:
- * 1. **Formatters** that return complete strings (coord.ddm(), coord.dms(), etc.)
- * 2. **Raw values** in Decimal Degrees only (coord.raw)
+ * 1. **Formatters** that return complete strings (coord.toString({ format: ... }))
+ * 2. **Raw values** in Decimal Degrees only (coord.lat, coord.lon)
  *
  * This module must:
  * 1. Build coordinate strings from segments → Pass to geo for parsing
@@ -99,14 +106,6 @@ const logger = getLogger({
  *   - Necessary given current geo API limitations
  */
 
-import { coordinateSystems, createCoordinate } from '@accelint/geo';
-import {
-  COORDINATE_SYSTEMS,
-  type CoordinateSystem,
-  type CoordinateValue,
-  type ParsedCoordinateMatch,
-} from './types';
-
 /** Epsilon for coordinate equality comparison (≈11cm precision at equator) */
 export const COORDINATE_EPSILON = 0.000001;
 
@@ -138,15 +137,15 @@ export interface CoordinateFormatResult {
  *
  * @internal
  */
-function formatDDSegments(segments: string[]): string | null {
+function formatDDSegments(segments: string[]): string | undefined {
   if (segments.length < 2) {
-    return null;
+    return undefined;
   }
   const latNum = Number.parseFloat(segments[0] as string);
   const lonNum = Number.parseFloat(segments[1] as string);
 
   if (Number.isNaN(latNum) || Number.isNaN(lonNum)) {
-    return null;
+    return undefined;
   }
 
   const latDir = latNum >= 0 ? 'N' : 'S';
@@ -163,10 +162,11 @@ function formatDDSegments(segments: string[]): string | null {
  *
  * @internal
  */
-function formatDDMSegments(segments: string[]): string | null {
+function formatDDMSegments(segments: string[]): string | undefined {
   if (segments.length < 6) {
-    return null;
+    return undefined;
   }
+
   return `${segments[0]}° ${segments[1]}' ${segments[2]}, ${segments[3]}° ${segments[4]}' ${segments[5]}`;
 }
 
@@ -178,10 +178,11 @@ function formatDDMSegments(segments: string[]): string | null {
  *
  * @internal
  */
-function formatDMSSegments(segments: string[]): string | null {
+function formatDMSSegments(segments: string[]): string | undefined {
   if (segments.length < 8) {
-    return null;
+    return undefined;
   }
+
   return `${segments[0]}° ${segments[1]}' ${segments[2]}" ${segments[3]}, ${segments[4]}° ${segments[5]}' ${segments[6]}" ${segments[7]}`;
 }
 
@@ -193,10 +194,11 @@ function formatDMSSegments(segments: string[]): string | null {
  *
  * @internal
  */
-function formatMGRSSegments(segments: string[]): string | null {
+function formatMGRSSegments(segments: string[]): string | undefined {
   if (segments.length < 5) {
-    return null;
+    return undefined;
   }
+
   return `${segments[0]}${segments[1]} ${segments[2]} ${segments[3]} ${segments[4]}`;
 }
 
@@ -208,10 +210,11 @@ function formatMGRSSegments(segments: string[]): string | null {
  *
  * @internal
  */
-function formatUTMSegments(segments: string[]): string | null {
+function formatUTMSegments(segments: string[]): string | undefined {
   if (segments.length < 4) {
-    return null;
+    return undefined;
   }
+
   return `${segments[0]}${segments[1]} ${segments[2]} ${segments[3]}`;
 }
 
@@ -234,9 +237,9 @@ function formatUTMSegments(segments: string[]): string | null {
 export function formatSegmentsToCoordinateString(
   segments: string[],
   format: CoordinateSystem,
-): string | null {
+): string | undefined {
   if (segments.some((seg) => seg === '' || seg === undefined)) {
-    return null;
+    return undefined;
   }
 
   try {
@@ -252,87 +255,63 @@ export function formatSegmentsToCoordinateString(
       case 'utm':
         return formatUTMSegments(segments);
       default:
-        return null;
+      // NOTE: intentionally empty; return undefined
     }
   } catch (_error) {
-    return null;
+    // NOTE: intentionally empty; return undefined
   }
 }
 
 /**
  * Parse DD coordinate string to segments
  *
- * Extracts segment values from a formatted DD coordinate string. This duplicates
- * parsing logic from @accelint/geo's parseDecimalDegrees, but is necessary because
- * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.
- *
- * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).
+ * Extracts segment values from a formatted DD coordinate string.
  *
  * @internal
  */
-function parseDDCoordinateString(coordString: string): string[] | null {
-  // DD formats from @accelint/geo (no degree symbols):
-  // "40.7128 N / -74.006 W" or "0 N / 180 W"
-  // Also handle user input with symbols:
-  // "89.765432° N / 123.456789° W" or "89.765432, -123.456789"
+function parseDDCoordinateString(coordString: string): string[] | undefined {
+  const { lat, lon } = createCoordinate('wgs', coordString);
 
-  // Match DD format with optional degree symbols and optional direction letters
-  const match = coordString.match(
-    /([-]?\d+\.?\d*)°?\s*([NS])?\s*[,/\s]+\s*([-]?\d+\.?\d*)°?\s*([EW])?/i,
-  );
-  if (!match) {
-    return null;
+  if (lat && lon) {
+    return [lat, lon].map(String);
   }
-
-  let lat = match[1];
-  let lon = match[3];
-
-  if (!(lat && lon)) {
-    return null;
-  }
-
-  if (match[2]?.toUpperCase() === 'S' && !lat.startsWith('-')) {
-    lat = `-${lat}`;
-  }
-  if (match[4]?.toUpperCase() === 'W' && !lon.startsWith('-')) {
-    lon = `-${lon}`;
-  }
-
-  return [lat, lon];
 }
 
 /**
  * Parse DDM coordinate string to segments
  *
- * Extracts segment values from a formatted DDM coordinate string. This duplicates
- * parsing logic from @accelint/geo's parseDegreesDecimalMinutes, but is necessary because
- * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.
- *
- * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).
+ * Extracts segment values from a formatted DDM coordinate string.
  *
  * @internal
  */
-function parseDDMCoordinateString(coordString: string): string[] | null {
-  // DDM formats from @accelint/geo (no symbols):
-  // "40 42.768 N / 74 0.36 W"
-  // Also handle user input with symbols:
-  // "89° 45.9259' N / 123° 27.4073' W"
+function parseDDMCoordinateString(coordString: string): string[] | undefined {
+  const { lat, lon } = createCoordinate('wgs', coordString).tokens({
+    format: 'ddm',
+  }) as Record<'lat' | 'lon', { degrees: number; minutes: number }>;
 
-  // Match DDM format with optional degree and minute symbols
-  const match = coordString.match(
-    /(\d+)°?\s+([\d.]+)'?\s+([NS])\s*[,/]\s*(\d+)°?\s+([\d.]+)'?\s+([EW])/i,
-  );
-  if (!match) {
-    return null;
+  if (lat && lon) {
+    const [compassLat, compassLon] = [
+      lat.degrees < 0 ? 'S' : 'N',
+      lon.degrees < 0 ? 'W' : 'E',
+    ];
+
+    if (lat.degrees < 0) {
+      lat.degrees = Math.abs(lat.degrees);
+    }
+
+    if (lon.degrees < 0) {
+      lon.degrees = Math.abs(lon.degrees);
+    }
+
+    return [
+      lat.degrees,
+      lat.minutes,
+      compassLat,
+      lon.degrees,
+      lon.minutes,
+      compassLon,
+    ].map(String);
   }
-  return [
-    match[1] as string,
-    match[2] as string,
-    match[3] as string,
-    match[4] as string,
-    match[5] as string,
-    match[6] as string,
-  ];
 }
 
 /**
@@ -346,29 +325,39 @@ function parseDDMCoordinateString(coordString: string): string[] | null {
  *
  * @internal
  */
-function parseDMSCoordinateString(coordString: string): string[] | null {
-  // DMS formats from @accelint/geo (no symbols):
-  // "40 42 46.08 N / 74 0 21.60 W"
-  // Also handle user input with symbols:
-  // "89° 45' 55.56" N / 123° 27' 24.44" W"
+function parseDMSCoordinateString(coordString: string): string[] | undefined {
+  const { lat, lon } = createCoordinate('wgs', coordString).tokens({
+    format: 'dms',
+  }) as Record<
+    'lat' | 'lon',
+    { degrees: number; minutes: number; seconds: number }
+  >;
 
-  // Match DMS format with optional degree, minute, and second symbols
-  const match = coordString.match(
-    /(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([NS])\s*[,/]\s*(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([EW])/i,
-  );
-  if (!match) {
-    return null;
+  if (lat && lon) {
+    const [compassLat, compassLon] = [
+      lat.degrees < 0 ? 'S' : 'N',
+      lon.degrees < 0 ? 'W' : 'E',
+    ];
+
+    if (lat.degrees < 0) {
+      lat.degrees = Math.abs(lat.degrees);
+    }
+
+    if (lon.degrees < 0) {
+      lon.degrees = Math.abs(lon.degrees);
+    }
+
+    return [
+      lat.degrees,
+      lat.minutes,
+      lat.seconds,
+      compassLat,
+      lon.degrees,
+      lon.minutes,
+      lon.seconds,
+      compassLon,
+    ].map(String);
   }
-  return [
-    match[1] as string,
-    match[2] as string,
-    match[3] as string,
-    match[4] as string,
-    match[5] as string,
-    match[6] as string,
-    match[7] as string,
-    match[8] as string,
-  ];
 }
 
 /**
@@ -382,19 +371,40 @@ function parseDMSCoordinateString(coordString: string): string[] | null {
  *
  * @internal
  */
-function parseMGRSCoordinateString(coordString: string): string[] | null {
-  // MGRS: "18T WM 12345 67890"
-  const match = coordString.match(/(\d+)([A-Z])\s+([A-Z]{2})\s+(\d+)\s+(\d+)/i);
-  if (!match) {
-    return null;
+function parseMGRSCoordinateString(coordString: string): string[] | undefined {
+  // MGRS formats:
+  // New compact format from @accelint/geo v0.3.0: "18TXL8395907350"
+  // Old spaced format: "18T WM 12345 67890" or "18T WL 80654 06346"
+
+  // Try compact format first (no spaces)
+  const compactMatch = coordString.match(
+    /(\d+)([A-Z])([A-Z]{2})(\d{5})(\d{5})/i,
+  );
+
+  if (compactMatch) {
+    return [
+      compactMatch[1] as string,
+      compactMatch[2] as string,
+      compactMatch[3] as string,
+      compactMatch[4] as string,
+      compactMatch[5] as string,
+    ];
   }
-  return [
-    match[1] as string,
-    match[2] as string,
-    match[3] as string,
-    match[4] as string,
-    match[5] as string,
-  ];
+
+  // Try spaced format
+  const spacedMatch = coordString.match(
+    /(\d+)([A-Z])\s+([A-Z]{2})\s+(\d+)\s+(\d+)/i,
+  );
+
+  if (spacedMatch) {
+    return [
+      spacedMatch[1] as string,
+      spacedMatch[2] as string,
+      spacedMatch[3] as string,
+      spacedMatch[4] as string,
+      spacedMatch[5] as string,
+    ];
+  }
 }
 
 /**
@@ -408,18 +418,22 @@ function parseMGRSCoordinateString(coordString: string): string[] | null {
  *
  * @internal
  */
-function parseUTMCoordinateString(coordString: string): string[] | null {
-  // UTM: "18N 585628 4511644" or "18 N 585628 4511644" (with optional space)
-  const match = coordString.match(/(\d+)\s*([NS])\s+(\d+)\s+(\d+)/i);
-  if (!match) {
-    return null;
+function parseUTMCoordinateString(coordString: string): string[] | undefined {
+  // UTM formats from @accelint/geo v0.3.0:
+  // "18T 583959 4507351" (zone, band/hemisphere, easting, northing)
+  // Also handle: "18N 585628 4511644" or "18 N 585628 4511644"
+
+  // The new format includes zone letter (band) instead of just hemisphere
+  const match = coordString.match(/(\d+)\s*([A-Z])\s+(\d+)\s+(\d+)/i);
+
+  if (match) {
+    return [
+      match[1] as string,
+      match[2] as string,
+      match[3] as string,
+      match[4] as string,
+    ];
   }
-  return [
-    match[1] as string,
-    match[2] as string,
-    match[3] as string,
-    match[4] as string,
-  ];
 }
 
 /**
@@ -447,7 +461,7 @@ function parseUTMCoordinateString(coordString: string): string[] | null {
  * of the circular conversion described in convertDDToDisplaySegments.
  *
  * **Why we can't use geo parsers directly**: The geo parsers return coord objects with
- * only `coord.raw` (DD numbers) and formatting methods. They don't expose the parsed
+ * only `coord.lat/coord.lon` (DD numbers) and formatting methods. They don't expose the parsed
  * segment components we need for the UI (e.g., the degrees, minutes, and direction values).
  *
  * **Parsing Order**:
@@ -461,28 +475,26 @@ function parseUTMCoordinateString(coordString: string): string[] | null {
 export function parseCoordinateStringToSegments(
   coordString: string,
   format: CoordinateSystem,
-): string[] | null {
-  if (!coordString) {
-    return null;
-  }
-
-  try {
-    switch (format) {
-      case 'dd':
-        return parseDDCoordinateString(coordString);
-      case 'ddm':
-        return parseDDMCoordinateString(coordString);
-      case 'dms':
-        return parseDMSCoordinateString(coordString);
-      case 'mgrs':
-        return parseMGRSCoordinateString(coordString);
-      case 'utm':
-        return parseUTMCoordinateString(coordString);
-      default:
-        return null;
+): string[] | undefined {
+  if (coordString) {
+    try {
+      switch (format) {
+        case 'dd':
+          return parseDDCoordinateString(coordString);
+        case 'ddm':
+          return parseDDMCoordinateString(coordString);
+        case 'dms':
+          return parseDMSCoordinateString(coordString);
+        case 'mgrs':
+          return parseMGRSCoordinateString(coordString);
+        case 'utm':
+          return parseUTMCoordinateString(coordString);
+        default:
+        // NOTE: intentionally empty; return undefined
+      }
+    } catch (_error) {
+      // NOTE: intentionally empty; return undefined
     }
-  } catch (_error) {
-    return null;
   }
 }
 
@@ -498,9 +510,9 @@ export function parseCoordinateStringToSegments(
  * pattern discussed in the module documentation. The flow is:
  *
  * 1. Start with DD value: `{ lat: 40.7128, lon: -74.0060 }`
- * 2. Convert to coordinate string: `"40.7128 / -74.006"`
+ * 2. Convert to coordinate string: `"40.7128, -74.006"`
  * 3. Parse with geo package (creates coord object with internal parsed state)
- * 4. Format to target system using geo: `coord.ddm()` → `"40 42.768 N / 74 0.36 W"`
+ * 4. Format to target system using geo: `coord.toString({ format: 'ddm' })` → `"40° 42.768', -74° 0.36'"`
  * 5. Parse the formatted string AGAIN with regex to extract segments: `['40', '42.768', 'N', ...]`
  *
  * This is inefficient because:
@@ -509,7 +521,7 @@ export function parseCoordinateStringToSegments(
  * - The regex parsing duplicates work the geo parsers already did
  *
  * However, this approach is necessary because:
- * - The geo package only exposes `coord.raw` (DD numbers) and formatted strings
+ * - The geo package only exposes `coord.lat/coord.lon` (DD numbers) and formatted strings
  * - It doesn't expose the intermediate component values we need for the UI segments
  * - We need individual segment values for separate input fields
  *
@@ -530,51 +542,45 @@ export function parseCoordinateStringToSegments(
 export function convertDDToDisplaySegments(
   value: CoordinateValue,
   format: CoordinateSystem,
-): string[] | null {
+): string[] | undefined {
   if (
     !value ||
     typeof value.lat !== 'number' ||
     typeof value.lon !== 'number'
   ) {
-    return null;
+    return undefined;
   }
 
   try {
-    const create = createCoordinate(coordinateSystems.dd, 'LATLON');
-
     // Round to 5 decimal places to prevent precision issues with geo package
-    // Use signed numbers (not cardinal directions) for reliable conversions to all formats
+    // Use signed numbers for reliable conversions to all formats
     const lat = Number(value.lat.toFixed(5));
     const lon = Number(value.lon.toFixed(5));
-    const inputCoordString = `${lat} / ${lon}`;
+    const inputCoordString = `${lat}, ${lon}`;
 
-    const coord = create(inputCoordString);
-
-    if (!coord.valid) {
-      return null;
-    }
+    const coord = createCoordinate('latlon', inputCoordString);
 
     // Format the coordinate using geo package formatters
-    // These return complete coordinate strings (e.g., "40 42.768 N / 74 0.36 W")
+    // These return complete coordinate strings (e.g., "40° 42.768', -74° 0.36'")
     let coordString: string;
     switch (format) {
       case 'dd':
-        coordString = coord.dd();
+        coordString = coord.toString({ format: 'dd' });
         break;
       case 'ddm':
-        coordString = coord.ddm();
+        coordString = coord.toString({ format: 'ddm' });
         break;
       case 'dms':
-        coordString = coord.dms();
+        coordString = coord.toString({ format: 'dms' });
         break;
       case 'mgrs':
-        coordString = coord.mgrs();
+        coordString = coord.toMGRS().toString();
         break;
       case 'utm':
-        coordString = coord.utm();
+        coordString = coord.toUTM().toString();
         break;
       default:
-        return null;
+        return undefined;
     }
 
     // Parse the formatted string to extract individual segment values
@@ -583,14 +589,8 @@ export function convertDDToDisplaySegments(
     const segments = parseCoordinateStringToSegments(coordString, format);
     return segments;
   } catch (error) {
-    logger
-      .withContext({
-        value: String(value),
-        format: String(format),
-      })
-      .withError(error)
-      .error('Failed to convert DD to display');
-    return null;
+    logger.withError(error).error('Failed to convert DD to display');
+    return undefined;
   }
 }
 
@@ -606,11 +606,11 @@ export function convertDDToDisplaySegments(
  * 1. Start with UI segments: `['40', '42.768', 'N', '74', '0.36', 'W']`
  * 2. Build coordinate string: `"40° 42.768' N, 74° 0.36' W"`
  * 3. Parse with geo package (validates and converts internally)
- * 4. Extract DD from coord.raw: `{ lat: 40.7128, lon: -74.0060 }`
+ * 4. Extract DD from coord.lat/lon: `{ lat: 40.7128, lon: -74.0060 }`
  *
  * This is efficient because:
  * - We let geo do what it's designed for: parsing and validating coordinate strings
- * - We extract the DD values directly from `coord.raw` (no string parsing needed)
+ * - We extract the DD values directly from `coord.lat/coord.lon` (no string parsing needed)
  * - Single direction: Segments → String → Geo Parse → DD (no circular conversion)
  *
  * Contrast with `convertDDToDisplaySegments` which has the circular pattern:
@@ -627,39 +627,49 @@ export function convertDDToDisplaySegments(
 export function convertDisplaySegmentsToDD(
   segments: string[],
   format: CoordinateSystem,
-): CoordinateValue | null {
+): CoordinateValue | undefined {
   // Build coordinate string from segments for geo parsing
   const coordString = formatSegmentsToCoordinateString(segments, format);
   if (!coordString) {
-    return null;
+    return undefined;
   }
 
   try {
     // Parse and validate with geo package
-    const create = createCoordinate(coordinateSystems[format], 'LATLON');
-    const coord = create(coordString);
-
-    if (!coord.valid) {
-      // Return null for invalid coordinates (errors will be handled separately)
-      return null;
+    // Map format to system: dd/ddm/dms -> 'latlon', mgrs -> 'mgrs', utm -> 'utm'
+    if (format === 'dd' || format === 'ddm' || format === 'dms') {
+      const coord = createCoordinate('latlon', coordString);
+      // Extract DD values directly from coord.lat/lon (no string parsing needed)
+      return {
+        lat: coord.lat,
+        lon: coord.lon,
+      };
     }
 
-    // Extract DD values directly from coord.raw (no string parsing needed)
-    const { LAT, LON } = coord.raw;
+    if (format === 'mgrs') {
+      const mgrsCoord = createCoordinate('mgrs', coordString);
+      // Convert MGRS to WGS to get lat/lon
+      const wgsCoord = mgrsCoord.toWGS();
+      return {
+        lat: wgsCoord.lat,
+        lon: wgsCoord.lon,
+      };
+    }
 
-    return {
-      lat: LAT,
-      lon: LON,
-    };
+    if (format === 'utm') {
+      const utmCoord = createCoordinate('utm', coordString);
+      // Convert UTM to WGS to get lat/lon
+      const wgsCoord = utmCoord.toWGS();
+      return {
+        lat: wgsCoord.lat,
+        lon: wgsCoord.lon,
+      };
+    }
+
+    return undefined;
   } catch (error) {
-    logger
-      .withContext({
-        segments: JSON.stringify(segments),
-        format: String(format),
-      })
-      .withError(error)
-      .error('Failed to convert display to DD');
-    return null;
+    logger.withError(error).error('Failed to convert display to DD');
+    return undefined;
   }
 }
 
@@ -691,10 +701,14 @@ export function validateCoordinateSegments(
   }
 
   try {
-    const create = createCoordinate(coordinateSystems[format], 'LATLON');
-    const coord = create(coordString);
-
-    if (!coord.valid) {
+    // Map format to system: dd/ddm/dms -> 'latlon', mgrs -> 'mgrs', utm -> 'utm'
+    if (format === 'dd' || format === 'ddm' || format === 'dms') {
+      createCoordinate('latlon', coordString);
+    } else if (format === 'mgrs') {
+      createCoordinate('mgrs', coordString);
+    } else if (format === 'utm') {
+      createCoordinate('utm', coordString);
+    } else {
       return ['Invalid coordinate value'];
     }
 
@@ -776,32 +790,29 @@ function isGeographicLimitationError(error: unknown): boolean {
  */
 function convertToFormat(
   coord: {
-    dd: () => string;
-    ddm: () => string;
-    dms: () => string;
-    mgrs: () => string;
-    utm: () => string;
+    toString: (options?: { format?: 'dd' | 'ddm' | 'dms' }) => string;
+    toMGRS: () => { toString: () => string };
+    toUTM: () => { toString: () => string };
   },
   format: CoordinateSystem,
-  value: CoordinateValue,
 ): CoordinateFormatResult {
   try {
     let formattedValue: string;
     switch (format) {
       case 'dd':
-        formattedValue = coord.dd();
+        formattedValue = coord.toString({ format: 'dd' });
         break;
       case 'ddm':
-        formattedValue = coord.ddm();
+        formattedValue = coord.toString({ format: 'ddm' });
         break;
       case 'dms':
-        formattedValue = coord.dms();
+        formattedValue = coord.toString({ format: 'dms' });
         break;
       case 'mgrs':
-        formattedValue = coord.mgrs();
+        formattedValue = coord.toMGRS().toString();
         break;
       case 'utm':
-        formattedValue = coord.utm();
+        formattedValue = coord.toUTM().toString();
         break;
       default:
         return { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false };
@@ -820,12 +831,7 @@ function convertToFormat(
     }
 
     // Log other errors in development
-    logger
-      .withContext({
-        value: JSON.stringify(value),
-      })
-      .withError(error)
-      .error(`Failed to convert to ${format}`);
+    logger.withError(error).error(`Failed to convert to ${format}`);
     return {
       value: COORDINATE_ERROR_MESSAGES.CONVERSION_FAILED,
       isValid: false,
@@ -877,27 +883,20 @@ export function getAllCoordinateFormats(
   const validValue = value as CoordinateValue;
 
   try {
-    const create = createCoordinate(coordinateSystems.dd, 'LATLON');
-    const coord = create(`${validValue.lat} / ${validValue.lon}`);
-
-    if (!coord.valid) {
-      return invalidResult;
-    }
+    const coord = createCoordinate(
+      'latlon',
+      `${validValue.lat}, ${validValue.lon}`,
+    );
 
     const result = {} as Record<CoordinateSystem, CoordinateFormatResult>;
 
     for (const format of COORDINATE_SYSTEMS) {
-      result[format] = convertToFormat(coord, format, validValue);
+      result[format] = convertToFormat(coord, format);
     }
 
     return result;
   } catch (error) {
-    logger
-      .withContext({
-        value: JSON.stringify(validValue),
-      })
-      .withError(error)
-      .error('Failed to get all coordinate formats');
+    logger.withError(error).error('Failed to get all coordinate formats');
     return invalidResult;
   }
 }
@@ -979,48 +978,53 @@ export function parseCoordinatePaste(
 
   for (const format of COORDINATE_SYSTEMS) {
     try {
-      const create = createCoordinate(coordinateSystems[format], 'LATLON');
-      const coord = create(pastedText.trim());
+      // Map format to system: dd/ddm/dms -> 'latlon', mgrs -> 'mgrs', utm -> 'utm'
+      let lat: number;
+      let lon: number;
+      let displayString: string;
 
-      if (coord.valid) {
-        const { LAT, LON } = coord.raw;
+      if (format === 'dd' || format === 'ddm' || format === 'dms') {
+        const coord = createCoordinate('latlon', pastedText.trim());
+        lat = coord.lat;
+        lon = coord.lon;
 
-        let displayString: string;
         switch (format) {
           case 'dd':
-            displayString = coord.dd();
+            displayString = coord.toString({ format: 'dd' });
             break;
           case 'ddm':
-            displayString = coord.ddm();
+            displayString = coord.toString({ format: 'ddm' });
             break;
           case 'dms':
-            displayString = coord.dms();
-            break;
-          case 'mgrs':
-            displayString = coord.mgrs();
-            break;
-          case 'utm':
-            displayString = coord.utm();
+            displayString = coord.toString({ format: 'dms' });
             break;
           default:
             displayString = '';
         }
-
-        matches.push({
-          format,
-          value: { lat: LAT, lon: LON },
-          displayString,
-        });
+      } else if (format === 'mgrs') {
+        const mgrsCoord = createCoordinate('mgrs', pastedText.trim());
+        const wgsCoord = mgrsCoord.toWGS();
+        lat = wgsCoord.lat;
+        lon = wgsCoord.lon;
+        displayString = mgrsCoord.toString();
+      } else if (format === 'utm') {
+        const utmCoord = createCoordinate('utm', pastedText.trim());
+        const wgsCoord = utmCoord.toWGS();
+        lat = wgsCoord.lat;
+        lon = wgsCoord.lon;
+        displayString = utmCoord.toString();
+      } else {
+        continue;
       }
+
+      matches.push({
+        format,
+        value: { lat, lon },
+        displayString,
+      });
     } catch (error) {
       // Log parsing errors in development for debugging
-      logger
-        .withContext({
-          pastedText: pastedText.trim(),
-          format: String(format),
-        })
-        .withError(error)
-        .warn(`Failed to parse as ${format}`);
+      logger.withError(error).warn(`Failed to parse as ${format}`);
       // Continue trying other parsers
     }
   }

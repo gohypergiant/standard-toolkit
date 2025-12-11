@@ -1,0 +1,57 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parse UTM > valid coordinates > "01C 100000 1100000" 1`] = `
+{
+  "easting": 100000,
+  "hemisphere": "S",
+  "northing": 1100000,
+  "precision": {
+    "easting": 6,
+    "northing": 7,
+  },
+  "zoneLetter": "C",
+  "zoneNumber": 1,
+}
+`;
+
+exports[`parse UTM > valid coordinates > "33M 100000 9100000" 1`] = `
+{
+  "easting": 100000,
+  "hemisphere": "S",
+  "northing": 9100000,
+  "precision": {
+    "easting": 6,
+    "northing": 7,
+  },
+  "zoneLetter": "M",
+  "zoneNumber": 33,
+}
+`;
+
+exports[`parse UTM > valid coordinates > "59X 100000 7900000" 1`] = `
+{
+  "easting": 100000,
+  "hemisphere": "N",
+  "northing": 7900000,
+  "precision": {
+    "easting": 6,
+    "northing": 7,
+  },
+  "zoneLetter": "X",
+  "zoneNumber": 59,
+}
+`;
+
+exports[`parse UTM > valid coordinates > "60W 100000 7000000" 1`] = `
+{
+  "easting": 100000,
+  "hemisphere": "N",
+  "northing": 7000000,
+  "precision": {
+    "easting": 6,
+    "northing": 7,
+  },
+  "zoneLetter": "W",
+  "zoneNumber": 60,
+}
+`;

@@ -285,12 +285,13 @@ describe('useCursorCoordinates', () => {
     it('normalizes longitude > 180 (wraps from east)', async () => {
       const { result } = renderHook(() => useCursorCoordinates(id));
 
-      // 181° should become -179°
+      // 181° should become -179° <-- not spec-compliant; not sure if this common use
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [181, 0]));
       });
 
       await waitFor(() => {
+        // console.log(result.current.formattedCoord);
         expect(result.current.formattedCoord).toContain('179');
         expect(result.current.formattedCoord).toContain('W');
       });
@@ -299,7 +300,7 @@ describe('useCursorCoordinates', () => {
     it('normalizes longitude < -180 (wraps from west)', async () => {
       const { result } = renderHook(() => useCursorCoordinates(id));
 
-      // -181° should become 179°
+      // -181° should become 179° <-- not spec-compliant; not sure if this common use
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [-181, 0]));
       });
@@ -313,7 +314,7 @@ describe('useCursorCoordinates', () => {
     it('normalizes large positive longitude values', async () => {
       const { result } = renderHook(() => useCursorCoordinates(id));
 
-      // 361° should become 1°
+      // 361° should become 1° <-- not spec-compliant; not sure if this common use
       act(() => {
         bus.emit(MapEvents.hover, createMockPayload(id, [361, 0]));
       });

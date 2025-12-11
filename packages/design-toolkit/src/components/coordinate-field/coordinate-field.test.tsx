@@ -359,7 +359,7 @@ describe('CoordinateField', () => {
       it('returns null for incomplete segments', () => {
         const segments = ['40', ''];
         const result = formatSegmentsToCoordinateString(segments, 'dd');
-        expect(result).toBeNull();
+        expect(result).toBeUndefined();
       });
     });
 
@@ -406,7 +406,7 @@ describe('CoordinateField', () => {
       it('returns null for invalid coordinate string', () => {
         const coordString = 'invalid coordinate';
         const result = parseCoordinateStringToSegments(coordString, 'dd');
-        expect(result).toBeNull();
+        expect(result).toBeUndefined();
       });
     });
 
@@ -414,8 +414,8 @@ describe('CoordinateField', () => {
       it('converts DD value to DD segments', () => {
         const result = convertDDToDisplaySegments(newYorkCity, 'dd');
         expect(result?.length).toBe(2);
-        expect(Number.parseFloat(result?.[0])).toBeCloseTo(40.7128, 4);
-        expect(Number.parseFloat(result?.[1])).toBeCloseTo(-74.006, 3);
+        expect(Number.parseFloat(`${result?.[0]}`)).toBeCloseTo(40.7128, 4);
+        expect(Number.parseFloat(`${result?.[1]}`)).toBeCloseTo(-74.006, 3);
       });
 
       it('converts DD value to DDM segments', () => {
@@ -445,16 +445,17 @@ describe('CoordinateField', () => {
 
       it('converts DD value to UTM segments', () => {
         const result = convertDDToDisplaySegments(newYorkCity, 'utm');
+        // New geo v0.3.0 returns UTM format with zone letter (band) instead of just hemisphere
         expect(result?.length).toBe(4);
         expect(result?.[0]).toBe('18');
-        expect(result?.[1]).toBe('N');
+        expect(result?.[1]).toBe('T'); // Band (includes hemisphere info)
       });
 
-      it('returns null for invalid coordinate value', () => {
+      it('returns undefined for invalid coordinate value', () => {
         // Invalid lat > 90
         const invalidValue = { lat: 91, lon: 0 };
         const result = convertDDToDisplaySegments(invalidValue, 'dd');
-        expect(result).toBeNull();
+        expect(result).toBeUndefined();
       });
     });
 
@@ -480,16 +481,16 @@ describe('CoordinateField', () => {
         expect(result?.lon).toBeCloseTo(-74.006, 2);
       });
 
-      it('returns null for incomplete segments', () => {
+      it('returns undefined for incomplete segments', () => {
         const segments = ['40', ''];
         const result = convertDisplaySegmentsToDD(segments, 'dd');
-        expect(result).toBeNull();
+        expect(result).toBeUndefined();
       });
 
-      it('returns null for invalid coordinate segments', () => {
+      it('returns undefined for invalid coordinate segments', () => {
         const segments = ['91', '0'];
         const result = convertDisplaySegmentsToDD(segments, 'dd');
-        expect(result).toBeNull();
+        expect(result).toBeUndefined();
       });
     });
 
