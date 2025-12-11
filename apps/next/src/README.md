@@ -78,7 +78,7 @@ One of the larger downsides with this approach is that the component is not rend
 
 ### Stream data from server to client
 
-This has a small advantage over awaiting data on the server in that you can prevent the request waterfall situation from ocurring as easily. Additionally, if you are unable to physically request data during a `build` command then this can be more lucrative from a PPR perpsective. Structurally it looks almost identical to awaiting data in a RSC.
+This has a small advantage over awaiting data on the server in that you can prevent the request waterfall situation from occurring as easily. Additionally, if you are unable to physically request data during a `build` command then this can be more lucrative from a PPR perspective. Structurally it looks almost identical to awaiting data in a RSC.
 
 - https://nextjs.org/docs/app/getting-started/data-fetching-and-streaming#with-the-use-hook
 - https://react.dev/reference/react/use
