@@ -25,25 +25,66 @@
     "./package.json",
     "./README.md"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/*/index.d.ts",
-        "default": "./dist/*/index.js"
-      },
-      "default": "./dist/*/index.js"
-    }
+    ".": "./dist/index.js",
+    "./array/concat": "./dist/array/concat/index.js",
+    "./array/every": "./dist/array/every/index.js",
+    "./array/filter": "./dist/array/filter/index.js",
+    "./array/find": "./dist/array/find/index.js",
+    "./array/find-index": "./dist/array/find-index/index.js",
+    "./array/find-last": "./dist/array/find-last/index.js",
+    "./array/find-last-index": "./dist/array/find-last-index/index.js",
+    "./array/includes": "./dist/array/includes/index.js",
+    "./array/index-of": "./dist/array/index-of/index.js",
+    "./array/map": "./dist/array/map/index.js",
+    "./array/push": "./dist/array/push/index.js",
+    "./array/reduce": "./dist/array/reduce/index.js",
+    "./array/reduce-right": "./dist/array/reduce-right/index.js",
+    "./array/reverse": "./dist/array/reverse/index.js",
+    "./array/shift": "./dist/array/shift/index.js",
+    "./array/slice": "./dist/array/slice/index.js",
+    "./array/some": "./dist/array/some/index.js",
+    "./array/unshift": "./dist/array/unshift/index.js",
+    "./combinators/apply": "./dist/combinators/apply/index.js",
+    "./combinators/apply-to": "./dist/combinators/apply-to/index.js",
+    "./combinators/composition": "./dist/combinators/composition/index.js",
+    "./combinators/constant": "./dist/combinators/constant/index.js",
+    "./combinators/fork": "./dist/combinators/fork/index.js",
+    "./combinators/identity": "./dist/combinators/identity/index.js",
+    "./combinators/inverse-constant": "./dist/combinators/inverse-constant/index.js",
+    "./composition/compose": "./dist/composition/compose/index.js",
+    "./composition/curry": "./dist/composition/curry/index.js",
+    "./composition/pipe": "./dist/composition/pipe/index.js",
+    "./iterable/create-iterable": "./dist/iterable/create-iterable/index.js",
+    "./iterable/range": "./dist/iterable/range/index.js",
+    "./logical/and": "./dist/logical/and/index.js",
+    "./logical/equality": "./dist/logical/equality/index.js",
+    "./logical/nand": "./dist/logical/nand/index.js",
+    "./logical/nor": "./dist/logical/nor/index.js",
+    "./logical/not": "./dist/logical/not/index.js",
+    "./logical/nullish-or": "./dist/logical/nullish-or/index.js",
+    "./logical/or": "./dist/logical/or/index.js",
+    "./logical/xor": "./dist/logical/xor/index.js",
+    "./object/associate": "./dist/object/associate/index.js",
+    "./object/lens": "./dist/object/lens/index.js",
+    "./object/property": "./dist/object/property/index.js",
+    "./safe-enum/get-safe-enum-values": "./dist/safe-enum/get-safe-enum-values/index.js",
+    "./safe-enum/is-literal-enum": "./dist/safe-enum/is-literal-enum/index.js",
+    "./safe-enum/safe-enum": "./dist/safe-enum/safe-enum/index.js",
+    "./safe-enum/valid-enum-structures": "./dist/safe-enum/valid-enum-structures/index.js",
+    "./types": "./dist/types.js",
+    "./utility/lookup": "./dist/utility/lookup/index.js",
+    "./utility/noop": "./dist/utility/noop/index.js",
+    "./utility/once": "./dist/utility/once/index.js",
+    "./utility/tap": "./dist/utility/tap/index.js",
+    "./utility/uuid": "./dist/utility/uuid/index.js",
+    "./*": "./*"
   },
   "scripts": {
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/core",
@@ -54,8 +95,7 @@
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "esbuild-fix-imports-plugin": "^1.0.23",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "type-fest": "^4.41.0",
     "typescript": "5.8.3",
     "uuid": "^11.1.0",
@@ -65,6 +105,10 @@
   "peerDependencies": {
     "uuid": "^11.1.0",
     "zod": "^4.1.12"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "publishConfig": {
     "access": "public"
