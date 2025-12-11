@@ -25,43 +25,41 @@
     "./package.json",
     "./README.md"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/*/index.d.ts",
-        "default": "./dist/*/index.js"
-      },
-      "default": "./dist/*/index.js"
-    }
+    ".": "./dist/index.js",
+    "./azimuth-to-cardinal": "./dist/azimuth-to-cardinal/index.js",
+    "./boolean-to-number": "./dist/boolean-to-number/index.js",
+    "./to-boolean": "./dist/to-boolean/index.js",
+    "./zxy-to-bbox": "./dist/zxy-to-bbox/index.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/converters",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
-  "dependencies": {
-    "@accelint/constants": "workspace:*"
-  },
   "devDependencies": {
+    "@accelint/constants": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "esbuild-fix-imports-plugin": "^1.0.23",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "typescript": "5.8.3",
     "vitest": "^4.0.8"
+  },
+  "peerDependencies": {
+    "@accelint/constants": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "publishConfig": {
     "access": "public"
