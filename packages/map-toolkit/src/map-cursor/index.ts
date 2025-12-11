@@ -10,21 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Bounds } from '../deckgl/base-map/types';
-import type { UNIT_MAP } from './constants';
-
-export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
-
-export type GetViewportSizeArgs = {
-  /** Geographic bounds, undefined if viewport not yet initialized */
-  bounds?: Bounds;
-  zoom: number;
-  /** Viewport width in pixels */
-  width: number;
-  /** Viewport height in pixels */
-  height: number;
-  unit?: SupportedDistanceUnit;
-  formatter?: Intl.NumberFormat;
-};
-
-export type GeoCoordinate = [longitude: number, latitude: number];
+export { MapCursorEvents } from './events';
+export { destroyStore, getOrCreateStore } from './store';
+export { useMapCursor, useMapCursorEffect } from './use-map-cursor';
+export type {
+  CSSCursorType,
+  CursorChangedEvent,
+  CursorChangeRequestEvent,
+  CursorRejectedEvent,
+  MapCursorEventType,
+} from './types';
+export type { UseMapCursorReturn } from './use-map-cursor';

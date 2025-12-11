@@ -114,6 +114,12 @@ const subscriptionCache = new Map<UniqueId, Subscription>();
 const snapshotCache = new Map<UniqueId, () => string>();
 
 /**
+ * Cache of server snapshot functions per instanceId to maintain referential stability.
+ * Server snapshots always return default coordinate since coordinate state is client-only.
+ */
+const serverSnapshotCache = new Map<UniqueId, () => string>();
+
+/**
  * Ensures a single bus listener exists for the given instanceId.
  * All React subscribers will be notified via fan-out when the bus event fires.
  * This prevents creating N bus listeners for N React components.
@@ -178,6 +184,7 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
     componentSubscribers.delete(instanceId);
     subscriptionCache.delete(instanceId);
     snapshotCache.delete(instanceId);
+    serverSnapshotCache.delete(instanceId);
   }
 }
 
@@ -257,6 +264,23 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => string {
 }
 
 /**
+ * Creates or retrieves a cached server snapshot function for a given instanceId.
+ * Server snapshots always return the default coordinate since coordinate state is client-only.
+ * Required for SSR/RSC compatibility with useSyncExternalStore.
+ *
+ * @param instanceId - The unique identifier for the map
+ * @returns A server snapshot function for useSyncExternalStore
+ */
+function getOrCreateServerSnapshot(instanceId: UniqueId): () => string {
+  const serverSnapshot =
+    serverSnapshotCache.get(instanceId) ?? (() => DEFAULT_COORDINATE);
+
+  serverSnapshotCache.set(instanceId, serverSnapshot);
+
+  return serverSnapshot;
+}
+
+/**
  * Updates the format for a given map instance and notifies subscribers.
  *
  * @param instanceId - The unique identifier for the map
@@ -307,6 +331,7 @@ export function clearCursorCoordinateState(instanceId: UniqueId): void {
   componentSubscribers.delete(instanceId);
   subscriptionCache.delete(instanceId);
   snapshotCache.delete(instanceId);
+  serverSnapshotCache.delete(instanceId);
 }
 
 /**
@@ -372,9 +397,11 @@ export function useCursorCoordinates(id?: UniqueId) {
 
   // Subscribe to coordinate changes using useSyncExternalStore
   // This must happen after store initialization
+  // Third parameter provides server snapshot for SSR/RSC compatibility
   const formattedCoord = useSyncExternalStore<string>(
     getOrCreateSubscription(actualId),
     getOrCreateSnapshot(actualId),
+    getOrCreateServerSnapshot(actualId),
   );
 
   // Memoize the return value to prevent unnecessary re-renders

@@ -16,6 +16,7 @@ import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
+import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
@@ -26,7 +27,79 @@ import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { MapClickEvent, MapHoverEvent, MapViewportEvent } from './types';
+import type {
+  MapClickEvent,
+  MapHoverEvent,
+  MapViewportEvent,
+  SerializablePickingInfo,
+} from './types';
+
+/**
+ * Serializes PickingInfo for event bus transmission.
+ * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
+ */
+function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
+  const { viewport, layer, sourceLayer, ...infoRest } = info;
+  return {
+    layerId: layer?.id,
+    sourceLayerId: sourceLayer?.id,
+    ...infoRest,
+  };
+}
+
+/**
+ * Strips non-serializable properties from MjolnirGestureEvent for event bus transmission.
+ * Removes functions, DOM elements, and PointerEvent objects that cannot be cloned.
+ */
+function serializeMjolnirEvent(
+  event: MjolnirGestureEvent,
+): Omit<
+  MjolnirGestureEvent,
+  | 'stopPropagation'
+  | 'preventDefault'
+  | 'stopImmediatePropagation'
+  | 'srcEvent'
+  | 'rootElement'
+  | 'target'
+  | 'changedPointers'
+  | 'pointers'
+>;
+/**
+ * Strips non-serializable properties from MjolnirPointerEvent for event bus transmission.
+ * Removes functions and DOM elements that cannot be cloned.
+ */
+function serializeMjolnirEvent(
+  event: MjolnirPointerEvent,
+): Omit<
+  MjolnirPointerEvent,
+  | 'stopPropagation'
+  | 'preventDefault'
+  | 'stopImmediatePropagation'
+  | 'srcEvent'
+  | 'rootElement'
+  | 'target'
+>;
+function serializeMjolnirEvent(
+  event: MjolnirGestureEvent | MjolnirPointerEvent,
+) {
+  const {
+    stopImmediatePropagation,
+    stopPropagation,
+    preventDefault,
+    srcEvent,
+    rootElement,
+    target,
+    ...rest
+  } = event;
+
+  // Remove pointer arrays if present (only on MjolnirGestureEvent)
+  if ('changedPointers' in rest) {
+    const { changedPointers, pointers, ...gestureRest } = rest;
+    return gestureRest;
+  }
+
+  return rest;
+}
 
 /**
  * Props for the BaseMap component.
@@ -167,30 +240,9 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
 
-      // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
-      // extract layerId and sourceLayerId before omission to preserve layer identification
-      const { viewport, layer, sourceLayer, ...infoRest } = info;
-      const infoObject = {
-        layerId: layer?.id,
-        sourceLayerId: sourceLayer?.id,
-        ...infoRest,
-      };
-
-      const {
-        stopImmediatePropagation,
-        stopPropagation,
-        preventDefault,
-        srcEvent,
-        rootElement,
-        target,
-        changedPointers,
-        pointers,
-        ...eventRest
-      } = event;
-
       emitClick({
-        info: infoObject,
-        event: eventRest,
+        info: serializePickingInfo(info),
+        event: serializeMjolnirEvent(event),
         id,
       });
     },
@@ -202,33 +254,18 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
 
-      // omit viewport, layer, and sourceLayer (contain functions) for event bus serialization
-      // extract layerId and sourceLayerId before omission to preserve layer identification
-      const { viewport, layer, sourceLayer, ...infoRest } = info;
-      const infoObject = {
-        layerId: layer?.id,
-        sourceLayerId: sourceLayer?.id,
-        ...infoRest,
-      };
-
-      const {
-        stopImmediatePropagation,
-        stopPropagation,
-        preventDefault,
-        srcEvent,
-        rootElement,
-        target,
-        ...eventRest
-      } = event;
-
       emitHover({
-        info: infoObject,
-        event: eventRest,
+        info: serializePickingInfo(info),
+        event: serializeMjolnirEvent(event),
         id,
       });
     },
     [emitHover, id, onHover],
   );
+
+  const handleGetCursor = useCallback(() => {
+    return getCursor(id);
+  }, [id]);
 
   const handleViewStateChange = useEffectEvent(
     (params: ViewStateChangeParameters) => {
@@ -288,6 +325,7 @@ export function BaseMap({
           onHover={handleHover}
           onLoad={handleLoad}
           onViewStateChange={handleViewStateChange}
+          getCursor={handleGetCursor}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
           parameters={{ ...PARAMETERS, ...parameters }}
