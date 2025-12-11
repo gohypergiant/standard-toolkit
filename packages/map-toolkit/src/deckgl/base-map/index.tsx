@@ -31,6 +31,7 @@ import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type { ViewType } from '@/camera/types';
 import type {
   MapClickEvent,
   MapHoverEvent,
@@ -131,7 +132,7 @@ export type BaseMapProps = DeckglProps & {
 const ViewWrapper = ({
   children,
   view,
-}: PropsWithChildren<{ view?: BaseMapProps['defaultView'] }>) => {
+}: PropsWithChildren<{ view?: ViewType }>) => {
   switch (view) {
     case '2D':
       return (
@@ -252,13 +253,17 @@ export function BaseMap({
   const deckglInstance = useDeckgl();
   const container = useId();
 
-  const { cameraState, setCameraState } = useCameraState({ instanceId: id });
+  const { cameraState, setCameraState } = useCameraState({
+    instanceId: id,
+    initialCameraState: { view: defaultView },
+  });
 
   const viewState = useMemo<ViewState>(
     () => ({
       // @ts-expect-error squirrelly deckglInstance typing
       ...(deckglInstance?._deck?._getViewState() as ViewState),
       ...cameraState,
+      bearing: cameraState.rotation,
     }),
     // @ts-expect-error squirrelly deckglInstance typing
     [cameraState, deckglInstance?._deck?._getViewState],
@@ -279,12 +284,12 @@ export function BaseMap({
       rollEnabled: false,
       attributionControl: { compact: true },
       projection: cameraState.projection,
+      maxPitch: cameraState.view === '2D' ? 0 : 85,
     }),
-    [viewState, container, cameraState.projection],
+    [viewState, container, cameraState.projection, cameraState.view],
   );
 
   // Use the custom hook to handle MapLibre
-  //useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);

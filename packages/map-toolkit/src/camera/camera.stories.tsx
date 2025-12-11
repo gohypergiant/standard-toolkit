@@ -10,91 +10,133 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffectEvent } from '@accelint/bus/react';
+import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { useEffect } from 'react';
-import { useArgs } from 'storybook/preview-api';
+import { Button } from '@accelint/design-toolkit/components/button/index';
+import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
+import { SelectField } from '@accelint/design-toolkit/components/select-field/index';
+import { Slider } from '@accelint/design-toolkit/components/slider/index';
 import { BaseMap } from '../deckgl/base-map';
+import { CameraEventTypes } from './events';
 import { useCameraState } from './use-camera-state';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CameraEvent, ProjectionType, ViewType } from './types';
 
-const BASE_MAP_STORY_ID = uuid();
+const CAMERA_STORY_ID = uuid();
 
 const meta: Meta = {
   title: 'Camera',
-  args: {
-    zoom: 0,
-    pitch: 0,
-    bearing: 0,
-    projection: 'mercator',
-  },
-  argTypes: {
-    zoom: {
-      control: {
-        type: 'range',
-        min: 0,
-        max: 22,
-        step: 0.1,
-      },
-    },
-    pitch: {
-      control: {
-        type: 'range',
-        min: 0,
-        max: 90,
-        step: 1,
-      },
-    },
-    bearing: {
-      control: {
-        type: 'range',
-        min: -180,
-        max: 180,
-        step: 1,
-      },
-    },
-    projection: {
-      control: 'select',
-      options: ['mercator', 'globe'],
-    },
-  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function CameraToolbar() {
+  const bus = Broadcast.getInstance<CameraEvent>();
+  const { cameraState } = useCameraState({ instanceId: CAMERA_STORY_ID });
+  return (
+    <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <p className='font-bold text-header-l'>Camera controls</p>
+      <div className='relative flex flex-col gap-s'>
+        <Button
+          variant='filled'
+          color='mono-muted'
+          onPress={() =>
+            bus.emit(CameraEventTypes.reset, { id: CAMERA_STORY_ID })
+          }
+          className='w-full'
+        >
+          Reset Camera
+        </Button>
+
+        <Slider
+          label='Zoom'
+          showLabel
+          showInput
+          value={cameraState.zoom}
+          minValue={0}
+          maxValue={22}
+          layout='stack'
+          onChange={(value) => {
+            typeof value === 'number' &&
+              bus.emit(CameraEventTypes.setZoom, {
+                id: CAMERA_STORY_ID,
+                zoom: value,
+              });
+          }}
+        />
+
+        <Slider
+          label='Pitch'
+          showLabel
+          showInput
+          value={cameraState.pitch}
+          minValue={0}
+          maxValue={65}
+          layout='stack'
+          onChange={(value) => {
+            typeof value === 'number' &&
+              bus.emit(CameraEventTypes.setPitch, {
+                id: CAMERA_STORY_ID,
+                pitch: value,
+              });
+          }}
+        />
+        <Slider
+          label='Rotation'
+          showLabel
+          showInput
+          value={cameraState.rotation}
+          minValue={0}
+          maxValue={360}
+          layout='stack'
+          onChange={(value) => {
+            typeof value === 'number' &&
+              bus.emit(CameraEventTypes.setRotation, {
+                id: CAMERA_STORY_ID,
+                rotation: value,
+              });
+          }}
+        />
+        <SelectField
+          label='Projection'
+          value={cameraState.projection}
+          onChange={(value) => {
+            bus.emit(CameraEventTypes.setProjection, {
+              id: CAMERA_STORY_ID,
+              projection: value as ProjectionType,
+            });
+          }}
+        >
+          <OptionsItem id='mercator'>Mercator</OptionsItem>
+          <OptionsItem id='globe'>Globe</OptionsItem>
+        </SelectField>
+        <SelectField
+          label='View'
+          value={cameraState.view}
+          onChange={(value) => {
+            bus.emit(CameraEventTypes.setView, {
+              id: CAMERA_STORY_ID,
+              view: value as ViewType,
+            });
+          }}
+        >
+          <OptionsItem id='2D'>2D</OptionsItem>
+          <OptionsItem id='2.5D'>2.5D</OptionsItem>
+          <OptionsItem id='3D'>3D</OptionsItem>
+        </SelectField>
+      </div>
+    </div>
+  );
+}
+
 export const BasicUsage: Story = {
-  args: {
-    zoom: 0,
-  },
-
   render: function Render() {
-    const [{ zoom, pitch, bearing, projection }] = useArgs();
-
-    const { cameraState: currentCameraState, setCameraState } = useCameraState({
-      instanceId: BASE_MAP_STORY_ID,
-    });
-
-    const onChange = useEffectEvent((cameraState) => {
-      const {
-        zoom: newZoom,
-        pitch: newPitch,
-        bearing: newBearing,
-        projection: newProjection,
-      } = cameraState;
-      setCameraState(BASE_MAP_STORY_ID, {
-        ...currentCameraState,
-        zoom: newZoom,
-        pitch: newPitch,
-        bearing: newBearing,
-        projection: newProjection,
-      });
-    });
-
-    useEffect(() => {
-      onChange({ zoom, pitch, bearing, projection });
-    }, [zoom, pitch, bearing, projection, onChange]);
-
-    return <BaseMap id={BASE_MAP_STORY_ID} className='h-screen w-screen' />;
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={CAMERA_STORY_ID} />
+        <CameraToolbar />
+      </div>
+    );
   },
 };

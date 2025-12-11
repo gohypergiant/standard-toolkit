@@ -1,0 +1,740 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as CameraStories from './camera.stories';
+
+<Meta of={CameraStories} />
+
+# Camera
+
+A framework-agnostic state management system for camera control in web mapping applications. The Camera module provides a reactive, event-driven API for managing map camera state including position, zoom, rotation, pitch, and projection modes.
+
+## Features
+
+- **Event-Driven Architecture**: Uses a broadcast event bus for decoupled camera control
+- **Multiple View Modes**: Support for 2D, 2.5D, and 3D camera views
+- **Projection Types**: Switch between Mercator and Globe projections
+- **Concurrent-Safe**: Built on `useSyncExternalStore` for React 18+ concurrent features
+- **Automatic Cleanup**: Manages subscriptions and state lifecycle automatically
+- **Type-Safe Events**: Full TypeScript support with discriminated union types
+- **Framework Agnostic**: Core logic works independently of React
+- **Fan-Out Pattern**: Single bus listener per camera instance, supporting N # of React subscribers
+
+## Dependencies
+
+Map Mode requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for decoupled communication between mode consumers
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
+
+**React Integration:**
+- `react` - React 19.0.0 or higher for the `useCameraState` hook
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core react
+```
+
+## Basic Usage
+
+### Hook Usage
+
+```tsx
+import { useCameraState } from '@accelint/map-toolkit/camera';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+function CameraInfo() {
+  const { cameraState } = useCameraState({
+    instanceId: MAP_ID,
+  });
+
+  return (
+    <div className="bg-white p-2 rounded shadow">
+      <div>Lat: {cameraState.latitude.toFixed(2)}</div>
+      <div>Lon: {cameraState.longitude.toFixed(2)}</div>
+      <div>Zoom: {cameraState.zoom.toFixed(1)}</div>
+      <div>Pitch: {cameraState.pitch}°</div>
+      <div>Rotation: {cameraState.rotation}°</div>
+      <div>View: {cameraState.view}</div>
+      <div>Projection: {cameraState.projection}</div>
+    </div>
+  );
+}
+```
+
+### Controlling the Camera
+
+```tsx
+import { Broadcast } from '@accelint/bus';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
+
+const bus = Broadcast.getInstance<CameraEvent>();
+
+function CameraControls({ instanceId }: { instanceId: UniqueId }) {
+  const handleSetCenter = () => {
+    bus.emit(CameraEventTypes.setCenter, {
+      id: instanceId,
+      latitude: 37.7749,
+      longitude: -122.4194,
+      zoom: 10,
+    });
+  };
+
+  const handleFitBounds = () => {
+    bus.emit(CameraEventTypes.fitBounds, {
+      id: instanceId,
+      bounds: [-122.5, 37.7, -122.3, 37.8], // [minLon, minLat, maxLon, maxLat]
+      width: 800,
+      height: 600,
+      padding: 20,
+    });
+  };
+
+  const handleSetView = (view: '2D' | '2.5D' | '3D') => {
+    bus.emit(CameraEventTypes.setView, {
+      id: instanceId,
+      view,
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={handleSetCenter}>Go to San Francisco</button>
+      <button onClick={handleFitBounds}>Fit Bay Area</button>
+      <button onClick={() => handleSetView('2D')}>2D View</button>
+      <button onClick={() => handleSetView('2.5D')}>2.5D View</button>
+      <button onClick={() => handleSetView('3D')}>3D View</button>
+    </div>
+  );
+}
+```
+
+## Camera State
+
+### CameraState Type
+
+The camera state is a discriminated union based on the view type:
+
+**2D State**
+```typescript
+{
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: 0;              // Always 0 in 2D
+  rotation: number;      // 0-360 degrees
+  projection: 'mercator';
+  view: '2D';
+}
+```
+
+**2.5D State**
+```typescript
+{
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: number;         // 0-85 degrees
+  rotation: number;      // 0-360 degrees
+  projection: 'mercator';
+  view: '2.5D';
+}
+```
+
+**3D State**
+```typescript
+{
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: number;         // Always 0 in 3D
+  rotation: number;           // 0-360 degrees
+  projection: 'globe';
+  view: '3D';
+}
+```
+
+### Initial Camera State
+
+You can provide an initial camera state when using the hook:
+
+```tsx
+const { cameraState } = useCameraState({
+  instanceId: MAP_ID,
+  initialCameraState: {
+    latitude: 38.9072,
+    longitude: -77.0369,
+    zoom: 10,
+    pitch: 45,
+    rotation: 0,
+    projection: 'mercator',
+    view: '2.5D',
+  },
+});
+```
+
+## Camera Events
+
+### setCenter
+
+Move the camera to a specific location with optional zoom, heading, and pitch.
+
+```tsx
+bus.emit(CameraEventTypes.setCenter, {
+  id: instanceId,
+  latitude: 40.7128,
+  longitude: -74.0060,
+  zoom: 12,           // optional
+  heading: 45,        // optional rotation in degrees
+  pitch: 30,          // optional pitch in degrees
+});
+```
+
+### fitBounds
+
+Fit the camera to show a specific bounding box.
+
+```tsx
+bus.emit(CameraEventTypes.fitBounds, {
+  id: instanceId,
+  bounds: [-122.5, 37.7, -122.3, 37.8], // [minLon, minLat, maxLon, maxLat]
+  width: 800,         // viewport width in pixels
+  height: 600,        // viewport height in pixels
+  padding: 50,        // optional padding in pixels
+  heading: 0,         // optional rotation
+  pitch: 0,           // optional pitch
+});
+```
+
+### setView
+
+Change the camera view mode (2D, 2.5D, or 3D). This automatically adjusts projection and pitch/rotation constraints.
+
+```tsx
+// Switch to 2.5D view (sets pitch to 45°)
+bus.emit(CameraEventTypes.setView, {
+  id: instanceId,
+  view: '2.5D',
+});
+
+// Switch to 3D view (changes to globe projection, resets rotation)
+bus.emit(CameraEventTypes.setView, {
+  id: instanceId,
+  view: '3D',
+});
+
+// Switch to 2D view (resets pitch to 0°)
+bus.emit(CameraEventTypes.setView, {
+  id: instanceId,
+  view: '2D',
+});
+```
+
+### setProjection
+
+Change the map projection type.
+
+```tsx
+// Switch to globe projection (automatically sets view to 3D)
+bus.emit(CameraEventTypes.setProjection, {
+  id: instanceId,
+  projection: 'globe',
+});
+
+// Switch to Mercator projection (automatically sets view to 2D)
+bus.emit(CameraEventTypes.setProjection, {
+  id: instanceId,
+  projection: 'mercator',
+});
+```
+
+### setZoom
+
+Change the zoom level.
+
+```tsx
+bus.emit(CameraEventTypes.setZoom, {
+  id: instanceId,
+  zoom: 14,
+});
+```
+
+### setRotation
+
+Set the rotation angle (bearing/heading). Only works in 2D and 2.5D modes.
+
+```tsx
+bus.emit(CameraEventTypes.setRotation, {
+  id: instanceId,
+  rotation: 90, // 0-360 degrees
+});
+```
+
+### setPitch
+
+Set the pitch (tilt) angle. Only works with Mercator projection (2D/2.5D modes).
+
+```tsx
+bus.emit(CameraEventTypes.setPitch, {
+  id: instanceId,
+  pitch: 45, // 0-65 degrees
+});
+```
+
+### reset
+
+Reset the camera to initial state, with optional preservation of zoom, pitch, or rotation.
+
+```tsx
+// Full reset
+bus.emit(CameraEventTypes.reset, {
+  id: instanceId,
+});
+
+// Reset but keep current zoom
+bus.emit(CameraEventTypes.reset, {
+  id: instanceId,
+  zoom: false,
+});
+
+// Reset but keep pitch and rotation
+bus.emit(CameraEventTypes.reset, {
+  id: instanceId,
+  pitch: false,
+  rotation: false,
+});
+```
+
+## Hook API
+
+### useCameraState
+
+#### Parameters
+
+##### `instanceId: UniqueId` (required)
+
+The unique identifier for the camera instance. Must match the `id` prop passed to your map component.
+
+##### `initialCameraState?: Partial<CameraState>`
+
+Optional initial camera state. If not provided, defaults to:
+```typescript
+{
+  latitude: 0,
+  longitude: 0,
+  zoom: 0,
+  pitch: 0,
+  rotation: 0,
+  projection: 'mercator',
+  view: '2D',
+}
+```
+
+##### `subscribe?: (onStoreChange: () => void) => () => void`
+
+Optional custom subscription function for `useSyncExternalStore`. Must be stable (memoized).
+
+##### `getSnapshot?: () => CameraState`
+
+Optional custom snapshot function. Must be stable (memoized).
+
+##### `getServerSnapshot?: () => CameraState`
+
+Optional server-side snapshot function for SSR.
+
+#### Return Value
+
+```typescript
+{
+  cameraState: CameraState;
+  setCameraState: (instanceId: UniqueId, state: Partial<CameraState>) => void;
+}
+```
+
+- `cameraState`: Current camera state object
+- `setCameraState`: Function to manually update camera state (advanced use case)
+
+## View Modes
+
+### 2D View
+
+Traditional flat map view with rotation enabled.
+
+- **Projection**: Mercator
+- **Pitch**: Fixed at 0°
+- **Rotation**: 0-360°
+- **Use Cases**: Standard mapping, route planning, overview maps
+
+### 2.5D View
+
+Tilted perspective view for depth perception.
+
+- **Projection**: Mercator
+- **Pitch**: 0-65° (defaults to 45°)
+- **Rotation**: 0-360°
+- **Use Cases**: Urban planning, terrain visualization, building visualization
+
+### 3D View
+
+Globe view for world-scale visualization.
+
+- **Projection**: Globe
+- **Pitch**: 0-65°
+- **Rotation**: Fixed at 0°
+- **Use Cases**: Global data visualization, satellite imagery, flight paths
+
+## Multiple Camera Instances
+
+You can manage multiple independent cameras by using different instance IDs:
+
+```tsx
+const MAP_1_ID = uuid();
+const MAP_2_ID = uuid();
+
+function MultiMapView() {
+  const { cameraState: camera1 } = useCameraState({ instanceId: MAP_1_ID });
+  const { cameraState: camera2 } = useCameraState({ instanceId: MAP_2_ID });
+
+  return (
+    <div className="grid grid-cols-2">
+      <BaseMap id={MAP_1_ID} />
+      <BaseMap id={MAP_2_ID} />
+    </div>
+  );
+}
+```
+
+## Advanced Usage
+
+### Custom Subscription
+
+For advanced use cases, you can provide custom subscription and snapshot functions:
+
+```tsx
+const customSubscribe = useCallback((onStoreChange: () => void) => {
+  // Custom subscription logic
+  const unsubscribe = myCustomEventSystem.subscribe(onStoreChange);
+  return unsubscribe;
+}, []);
+
+const customGetSnapshot = useCallback(() => {
+  return myCustomStore.getCameraState();
+}, []);
+
+const { cameraState } = useCameraState({
+  instanceId: MAP_ID,
+  subscribe: customSubscribe,
+  getSnapshot: customGetSnapshot,
+});
+```
+
+### Manual State Updates
+
+While the event bus is the recommended approach, you can manually update camera state:
+
+```tsx
+const { cameraState, setCameraState } = useCameraState({ instanceId: MAP_ID });
+
+const handleClick = () => {
+  setCameraState(MAP_ID, {
+    latitude: 51.5074,
+    longitude: -0.1278,
+    zoom: 10,
+  });
+};
+```
+
+## Performance
+
+### Fan-Out Pattern
+
+The camera system uses an efficient fan-out pattern:
+
+1. **Single Bus Listener**: One event bus listener per camera instance
+2. **Multiple Subscribers**: N React components can subscribe to the same camera
+3. **Automatic Cleanup**: When all subscribers unmount, the bus listener is removed
+
+This prevents creating duplicate listeners and ensures efficient memory usage.
+
+### Referential Stability
+
+The hook maintains referential stability for snapshot functions and subscriptions using internal caching. This prevents unnecessary re-renders when the underlying state hasn't changed.
+
+## Edge Cases
+
+### Before Initialization
+
+Before the first camera event or if no initial state is provided:
+
+```tsx
+const { cameraState } = useCameraState({ instanceId: MAP_ID });
+
+// Default values before initialization
+console.log(cameraState);
+// {
+//   latitude: 0,
+//   longitude: 0,
+//   zoom: 0,
+//   pitch: 0,
+//   rotation: 0,
+//   projection: 'mercator',
+//   view: '2D'
+// }
+```
+
+### View/Projection Constraints
+
+When changing views or projections, certain properties are automatically adjusted:
+
+- **2D → 2.5D**: Pitch set to 45°
+- **2D → 3D**: Projection changed to 'globe', rotation reset to 0°
+- **3D → 2D**: Projection changed to 'mercator', pitch reset to 0°
+- **Setting Globe Projection**: View automatically set to '3D'
+- **Setting Mercator Projection**: View automatically set to '2D', pitch reset to 0°
+
+### Pitch Constraints
+
+Pitch can only be set when using Mercator projection. Attempting to set pitch in globe projection mode will be ignored:
+
+```tsx
+// This works (2.5D view with Mercator projection)
+bus.emit(CameraEventTypes.setPitch, {
+  id: instanceId,
+  pitch: 45,
+});
+
+// This is ignored (3D view with Globe projection)
+// Globe projection doesn't support custom pitch
+```
+
+## Utilities
+
+### clearCameraState
+
+Manually clear camera state for an instance (rarely needed):
+
+```tsx
+import { clearCameraState } from '@accelint/map-toolkit/camera';
+
+clearCameraState(MAP_ID);
+```
+
+**Note:** Automatic cleanup happens when all subscribers unmount.
+
+## TypeScript Types
+
+```typescript
+import type {
+  CameraState,
+  CameraEvent,
+  ProjectionType,
+  ViewType,
+  UseCameraStateProps,
+  CameraSetCenterPayload,
+  CameraFitBoundsPayload,
+  CameraResetPayload,
+} from '@accelint/map-toolkit/camera';
+```
+
+## Troubleshooting
+
+### Camera not updating
+
+**Causes:**
+1. Wrong `instanceId` (doesn't match map instance)
+2. Event emitted before camera state initialized
+3. Custom subscribe/getSnapshot not stable
+
+**Solutions:**
+1. Verify `instanceId` matches across components
+2. Ensure camera state is initialized before emitting events
+3. Wrap custom functions in `useCallback`
+
+### Pitch/Rotation not working
+
+**Cause:** View/projection constraints preventing the change.
+
+**Solution:** Check the current view mode:
+- Pitch only works with Mercator projection (2D/2.5D)
+- Rotation only works in 2D/2.5D modes (not 3D/globe)
+
+### Multiple subscribers causing issues
+
+**Cause:** Creating new subscription functions on each render.
+
+**Solution:** The hook handles this automatically. If using custom subscriptions, ensure they're memoized with `useCallback`.
+
+## Related
+
+- Viewport - Track viewport state and bounds
+- BaseMap - Base map component
+- @accelint/bus - Event bus system
+
+## Examples
+
+### Camera Toolbar
+
+A complete example of a camera control toolbar:
+
+```tsx
+import { Broadcast } from '@accelint/bus';
+import { useCameraState, CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
+
+function CameraToolbar({ instanceId }: { instanceId: UniqueId }) {
+  const bus = Broadcast.getInstance<CameraEvent>();
+  const { cameraState } = useCameraState({ instanceId });
+
+  return (
+    <div className="camera-toolbar">
+      <button onClick={() => bus.emit(CameraEventTypes.reset, { id: instanceId })}>
+        Reset
+      </button>
+
+      <input
+        type="range"
+        min={0}
+        max={22}
+        value={cameraState.zoom}
+        onChange={(e) =>
+          bus.emit(CameraEventTypes.setZoom, {
+            id: instanceId,
+            zoom: Number(e.target.value),
+          })
+        }
+      />
+
+      <select
+        value={cameraState.view}
+        onChange={(e) =>
+          bus.emit(CameraEventTypes.setView, {
+            id: instanceId,
+            view: e.target.value as ViewType,
+          })
+        }
+      >
+        <option value="2D">2D</option>
+        <option value="2.5D">2.5D</option>
+        <option value="3D">3D</option>
+      </select>
+    </div>
+  );
+}
+```
+
+### Synchronized Cameras
+
+Keep multiple cameras in sync:
+
+```tsx
+import { useEffect } from 'react';
+import { Broadcast } from '@accelint/bus';
+import { useCameraState, CameraEventTypes } from '@accelint/map-toolkit/camera';
+
+function SyncedMaps() {
+  const PRIMARY_ID = uuid();
+  const SECONDARY_ID = uuid();
+  const bus = Broadcast.getInstance<CameraEvent>();
+
+  const { cameraState: primaryState } = useCameraState({ instanceId: PRIMARY_ID });
+
+  // Sync secondary camera to primary
+  useEffect(() => {
+    bus.emit(CameraEventTypes.setCenter, {
+      id: SECONDARY_ID,
+      latitude: primaryState.latitude,
+      longitude: primaryState.longitude,
+      zoom: primaryState.zoom,
+    });
+  }, [primaryState.latitude, primaryState.longitude, primaryState.zoom]);
+
+  return (
+    <div className="grid grid-cols-2">
+      <BaseMap id={PRIMARY_ID} />
+      <BaseMap id={SECONDARY_ID} />
+    </div>
+  );
+}
+```
+
+### Animated Camera Transitions
+
+Create smooth camera transitions with animation libraries:
+
+```tsx
+import { useSpring, animated } from 'react-spring';
+import { Broadcast } from '@accelint/bus';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+
+function AnimatedCamera({ instanceId }: { instanceId: UniqueId }) {
+  const bus = Broadcast.getInstance<CameraEvent>();
+
+  const animatedPosition = useSpring({
+    from: { lat: 0, lng: 0, zoom: 2 },
+    to: { lat: 37.7749, lng: -122.4194, zoom: 12 },
+    config: { duration: 2000 },
+  });
+
+  useEffect(() => {
+    const unsubscribe = animatedPosition.lat.onChange((value) => {
+      bus.emit(CameraEventTypes.setCenter, {
+        id: instanceId,
+        latitude: value,
+        longitude: animatedPosition.lng.get(),
+        zoom: animatedPosition.zoom.get(),
+      });
+    });
+
+    return unsubscribe;
+  }, [animatedPosition, instanceId]);
+
+  return null;
+}
+```
+```
+
+This comprehensive documentation covers all aspects of the camera feature including:
+
+1. **Overview and Features** - What it does and key capabilities
+2. **Installation** - How to get started
+3. **Basic Usage** - Simple examples for common use cases
+4. **Camera State** - Detailed type information and state structure
+5. **Camera Events** - Complete API reference for all event types
+6. **Hook API** - Parameter and return value documentation
+7. **View Modes** - Explanation of 2D, 2.5D, and 3D views
+8. **Multiple Instances** - How to manage multiple cameras
+9. **Advanced Usage** - Custom subscriptions and manual updates
+10. **Performance** - Optimization details and patterns
+11. **Edge Cases** - Common gotchas and how to handle them
+12. **Utilities** - Helper functions
+13. **TypeScript Types** - Available type exports
+14. **Troubleshooting** - Common issues and solutions
+15. **Related** - Links to related features
+16. **Examples** - Complete real-world usage examples
+
+The documentation follows the same style and structure as the viewport documentation you have in your codebase, ensuring consistency across your toolkit.This comprehensive documentation covers all aspects of the camera feature including:
+
+1. **Overview and Features** - What it does and key capabilities
+2. **Installation** - How to get started
+3. **Basic Usage** - Simple examples for common use cases
+4. **Camera State** - Detailed type information and state structure
+5. **Camera Events** - Complete API reference for all event types
+6. **Hook API** - Parameter and return value documentation
+7. **View Modes** - Explanation of 2D, 2.5D, and 3D views
+8. **Multiple Instances** - How to manage multiple cameras
+9. **Advanced Usage** - Custom subscriptions and manual updates
+10. **Performance** - Optimization details and patterns
+11. **Edge Cases** - Common gotchas and how to handle them
+12. **Utilities** - Helper functions
+13. **TypeScript Types** - Available type exports
+14. **Troubleshooting** - Common issues and solutions
+15. **Related** - Links to related features
+16. **Examples** - Complete real-world usage examples
+
+The documentation follows the same style and structure as the viewport documentation you have in your codebase, ensuring consistency across your toolkit.

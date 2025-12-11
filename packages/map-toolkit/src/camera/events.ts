@@ -16,7 +16,7 @@ export const CameraEventTypes = {
   setView: `${CameraEventNamespace}:setView`,
   setProjection: `${CameraEventNamespace}:setProjection`,
   setZoom: `${CameraEventNamespace}:setZoom`,
-  setBearing: `${CameraEventNamespace}:setBearing`,
+  setRotation: `${CameraEventNamespace}:setRotation`,
   setPitch: `${CameraEventNamespace}:setPitch`,
   setCenter: `${CameraEventNamespace}:setCenter`,
   fitBounds: `${CameraEventNamespace}:fitBounds`,

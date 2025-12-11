@@ -54,6 +54,9 @@ export type CameraFitBoundsPayload = {
 export type CameraResetPayload = {
   /** Identifier of the camera */
   id: UniqueId;
+  zoom?: boolean;
+  pitch?: boolean;
+  rotation?: boolean;
 };
 
 export type CameraSetCenterEvent = Payload<
@@ -81,9 +84,9 @@ export type CameraSetZoomEvent = Payload<
   { id: UniqueId; zoom: number }
 >;
 
-export type CameraSetBearingEvent = Payload<
-  typeof CameraEventTypes.setBearing,
-  { id: UniqueId; bearing: number }
+export type CameraSetRotationEvent = Payload<
+  typeof CameraEventTypes.setRotation,
+  { id: UniqueId; rotation: number }
 >;
 
 export type CameraSetPitchEvent = Payload<
@@ -102,6 +105,6 @@ export type CameraEvent =
   | CameraSetProjectionEvent
   | CameraSetViewEvent
   | CameraSetZoomEvent
-  | CameraSetBearingEvent
+  | CameraSetRotationEvent
   | CameraSetPitchEvent
   | CameraResetEvent;

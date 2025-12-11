@@ -1010,6 +1010,9 @@ importers:
       '@accelint/design-toolkit':
         specifier: workspace:*
         version: link:../design-toolkit
+      '@accelint/postcss-tailwind-css-modules':
+        specifier: workspace:*
+        version: link:../../tooling/postcss-tailwind-css-modules
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -1061,6 +1064,9 @@ importers:
       node-fetch:
         specifier: ^2.6.7
         version: 2.7.0
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -3634,6 +3640,7 @@ packages:
 
   '@ls-lint/ls-lint@2.3.1':
     resolution: {integrity: sha512-vPe6IDByQnQRTxcAYjTxrmga/tSIui50VBFTB5KIJWY3OOFmxE2VtymjeSEfQfiMbhZV/ZPAqYy2lt8pZFQ0Rw==}
+    cpu: [x64, arm64, s390x, ppc64le]
     os: [darwin, linux, win32]
     hasBin: true
 

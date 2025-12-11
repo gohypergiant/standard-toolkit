@@ -10,38 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { MapViewState } from '@deck.gl/core';
-
-export const INITIAL_2D_VIEW_STATE: MapViewState = {
-  longitude: -77.0369,
-  latitude: 38.9072,
-  zoom: 4,
-  minZoom: 1,
-  maxZoom: 22,
-  pitch: 0,
-  minPitch: 0,
-  maxPitch: 0,
-  bearing: 0,
-};
-
-export const INITIAL_2_5D_VIEW_STATE: MapViewState = {
-  longitude: -77.0369,
-  latitude: 38.9072,
-  zoom: 4,
-  minZoom: 1,
-  maxZoom: 22,
-  pitch: 45,
-  minPitch: 0,
-  maxPitch: 85,
-  bearing: 0,
-};
-
-export const INITIAL_3D_VIEW_STATE: MapViewState = {
-  longitude: -77.0369,
-  latitude: 38.9072,
-  zoom: 4,
-  minZoom: 1,
-  maxZoom: 22,
-  pitch: 0,
-  bearing: 0,
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    '@accelint/postcss-tailwind-css-modules': {},
+  },
 };

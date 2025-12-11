@@ -17,20 +17,47 @@ import { CameraEventTypes } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { CameraEvent, ProjectionType, ViewType } from './types';
 
-const bus = Broadcast.getInstance<CameraEvent>();
+/**
+ * Typed event bus instance for camera events.
+ * Provides type-safe event emission and listening for all camera state changes.
+ */
+const cameraBus = Broadcast.getInstance<CameraEvent>();
 
-export type CameraState = {
+type CameraState2D = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: 0;
+  rotation: number;
+  projection: 'mercator';
+  view: '2D';
+};
+
+type CameraState3D = {
   latitude: number;
   longitude: number;
   zoom: number;
   pitch: number;
-  bearing: number;
-  projection: ProjectionType;
-  view: ViewType;
+  rotation: number;
+  projection: 'globe';
+  view: '3D';
 };
+
+type CameraState2Point5D = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: number;
+  rotation: number;
+  projection: 'mercator';
+  view: '2.5D';
+};
+
+export type CameraState = CameraState2D | CameraState3D | CameraState2Point5D;
 
 export type UseCameraStateProps = {
   instanceId: UniqueId;
+  initialCameraState?: Partial<CameraState>;
   subscribe?: Parameters<typeof useSyncExternalStore<CameraState>>[0];
   getSnapshot?: Parameters<typeof useSyncExternalStore<CameraState>>[1];
   getServerSnapshot?: Parameters<typeof useSyncExternalStore<CameraState>>[2];
@@ -72,19 +99,62 @@ const snapshotCache = new Map<UniqueId, () => CameraState>();
 const fallbackCache = new Map<UniqueId, CameraState>();
 
 /*
- * Get or create camera state for a given instanceId
+ * Helper to build initial camera state from partial input
  */
-function getOrCreateState(instanceId: UniqueId): CameraState {
-  if (!cameraStore.has(instanceId)) {
-    cameraStore.set(instanceId, {
+function buildInitialCameraState(
+  initialCameraState?: Partial<CameraState>,
+): CameraState {
+  if (!initialCameraState) {
+    return {
       latitude: 0,
       longitude: 0,
       zoom: 0,
       pitch: 0,
-      bearing: 0,
+      rotation: 0,
       projection: 'mercator',
       view: '2D',
-    });
+    };
+  }
+
+  const is2Point5D = initialCameraState.view === '2.5D';
+  const is3D =
+    initialCameraState.view === '3D' ||
+    initialCameraState.projection === 'globe';
+
+  let projection: ProjectionType;
+  let view: ViewType;
+
+  if (is3D) {
+    projection = 'globe';
+    view = '3D';
+  } else if (is2Point5D) {
+    projection = 'mercator';
+    view = '2.5D';
+  } else {
+    projection = initialCameraState.projection ?? 'mercator';
+    view = initialCameraState.view ?? '2D';
+  }
+
+  return {
+    latitude: initialCameraState.latitude ?? 0,
+    longitude: initialCameraState.longitude ?? 0,
+    zoom: initialCameraState.zoom ?? 0,
+    pitch: is2Point5D ? (initialCameraState.pitch ?? 45) : 0,
+    rotation: is3D ? 0 : (initialCameraState.rotation ?? 0),
+    projection,
+    view,
+  } as CameraState;
+}
+
+/*
+ * Get or create camera state for a given instanceId
+ */
+function getOrCreateState(
+  instanceId: UniqueId,
+  initialCameraState?: Partial<CameraState>,
+): CameraState {
+  if (!cameraStore.has(instanceId)) {
+    cameraStore.set(instanceId, buildInitialCameraState(initialCameraState));
   }
   // biome-ignore lint/style/noNonNullAssertion: State guaranteed to exist after has() check above
   return cameraStore.get(instanceId)!;
@@ -95,7 +165,7 @@ function getOrCreateState(instanceId: UniqueId): CameraState {
  */
 function notifySubscribers(instanceId: UniqueId): void {
   const subscribers = componentSubscribers.get(instanceId);
-  console.log('here');
+
   if (subscribers) {
     for (const onStoreChange of subscribers) {
       onStoreChange();
@@ -109,106 +179,172 @@ function notifySubscribers(instanceId: UniqueId): void {
  * This prevents creating N bus listeners for N React components.
  *
  * @param instanceId - The unique identifier for the camera
+ * @param initialCameraState - Optional initial camera state to set when creating the listener
  */
-function ensureBusListener(instanceId: UniqueId): void {
+function ensureBusListener(
+  instanceId: UniqueId,
+  initialCameraState?: Partial<CameraState>,
+): void {
   if (busUnsubscribers.has(instanceId)) {
     return; // Already listening
   }
 
-  const state = getOrCreateState(instanceId);
-
-  const unsubSetCenter = bus.on(CameraEventTypes.setCenter, ({ payload }) => {
-    if (instanceId === payload.id) {
-      Object.assign<CameraState, Partial<CameraState>>(state, {
-        latitude: payload.latitude,
-        longitude: payload.longitude,
-        zoom: payload.zoom ?? state.zoom,
-        bearing: payload.heading ?? state.bearing,
-        pitch: payload.pitch ?? state.pitch,
-      });
-      notifySubscribers(instanceId);
-    }
-  });
-
-  const unsubFitBounds = bus.on(CameraEventTypes.fitBounds, ({ payload }) => {
-    if (instanceId === payload.id) {
-      const { longitude, latitude, zoom } = fitBounds({
-        width: payload.width,
-        height: payload.height,
-        bounds: [
-          [payload.bounds[0], payload.bounds[1]],
-          [payload.bounds[2], payload.bounds[3]],
-        ],
-        padding: payload.padding,
-      });
-      Object.assign<CameraState, Partial<CameraState>>(state, {
-        latitude: latitude,
-        longitude: longitude,
-        zoom: zoom,
-        bearing: payload.heading ?? state.bearing,
-        pitch: payload.pitch ?? state.pitch,
-      });
-      notifySubscribers(instanceId);
-    }
-  });
-
-  const unsubSetProjection = bus.on(
-    CameraEventTypes.setProjection,
+  const unsubResetCamera = cameraBus.on(
+    CameraEventTypes.reset,
     ({ payload }) => {
       if (instanceId === payload.id) {
-        state.projection = payload.projection;
-        if (payload.projection === 'globe') {
-          state.view = '3D';
-        } else {
-          // TODO handle 2.5D case?
-          state.view = '2D';
-        }
+        const state = getOrCreateState(instanceId, initialCameraState);
+        const newState = {
+          ...buildInitialCameraState({
+            ...state,
+            zoom:
+              payload.zoom === false ? state.zoom : initialCameraState?.zoom,
+            pitch:
+              payload.pitch === false ? state.pitch : initialCameraState?.pitch,
+            rotation:
+              payload.rotation === false
+                ? state.rotation
+                : initialCameraState?.rotation,
+          } as Partial<CameraState>),
+        };
+
+        cameraStore.set(instanceId, newState);
+
         notifySubscribers(instanceId);
       }
     },
   );
 
-  const unsubSetView = bus.on(CameraEventTypes.setView, ({ payload }) => {
+  const unsubSetCenter = cameraBus.on(
+    CameraEventTypes.setCenter,
+    ({ payload }) => {
+      if (instanceId === payload.id) {
+        const state = getOrCreateState(instanceId, initialCameraState);
+        const newState = {
+          ...state,
+          latitude: payload.latitude,
+          longitude: payload.longitude,
+          zoom: payload.zoom ?? state.zoom,
+          rotation: payload.heading ?? state.rotation,
+          pitch: payload.pitch ?? state.pitch,
+        } as CameraState;
+        cameraStore.set(instanceId, newState);
+        notifySubscribers(instanceId);
+      }
+    },
+  );
+
+  const unsubFitBounds = cameraBus.on(
+    CameraEventTypes.fitBounds,
+    ({ payload }) => {
+      if (instanceId === payload.id) {
+        const state = getOrCreateState(instanceId, initialCameraState);
+        const { longitude, latitude, zoom } = fitBounds({
+          width: payload.width,
+          height: payload.height,
+          bounds: [
+            [payload.bounds[0], payload.bounds[1]],
+            [payload.bounds[2], payload.bounds[3]],
+          ],
+          padding: payload.padding,
+        });
+        const newState = {
+          ...state,
+          latitude: latitude,
+          longitude: longitude,
+          zoom: zoom,
+          rotation: payload.heading ?? state.rotation,
+          pitch: payload.pitch ?? state.pitch,
+        } as CameraState;
+        cameraStore.set(instanceId, newState);
+        notifySubscribers(instanceId);
+      }
+    },
+  );
+
+  const unsubSetProjection = cameraBus.on(
+    CameraEventTypes.setProjection,
+    ({ payload }) => {
+      if (instanceId === payload.id) {
+        const state = getOrCreateState(instanceId, initialCameraState);
+        const newState = { ...state };
+        newState.projection = payload.projection;
+        if (payload.projection === 'globe') {
+          newState.view = '3D';
+        } else {
+          newState.view = '2D';
+          newState.pitch = 0;
+        }
+        cameraStore.set(instanceId, newState);
+        notifySubscribers(instanceId);
+      }
+    },
+  );
+
+  const unsubSetView = cameraBus.on(CameraEventTypes.setView, ({ payload }) => {
     if (instanceId === payload.id) {
-      state.view = payload.view;
+      const state = getOrCreateState(instanceId, initialCameraState);
+      const newState = { ...state };
+      newState.view = payload.view;
       if (payload.view === '3D') {
-        state.projection = 'globe';
+        newState.projection = 'globe';
+        newState.pitch = 0;
       } else {
-        state.projection = 'mercator';
+        newState.projection = 'mercator';
       }
 
+      if (payload.view === '2.5D') {
+        newState.pitch = 45;
+      }
+      cameraStore.set(instanceId, newState);
       notifySubscribers(instanceId);
     }
   });
 
-  const unsubSetZoom = bus.on(CameraEventTypes.setZoom, ({ payload }) => {
+  const unsubSetZoom = cameraBus.on(CameraEventTypes.setZoom, ({ payload }) => {
     if (instanceId === payload.id) {
-      state.zoom = payload.zoom;
+      const state = getOrCreateState(instanceId, initialCameraState);
+      const newState = { ...state };
+      newState.zoom = payload.zoom;
+      cameraStore.set(instanceId, newState);
       notifySubscribers(instanceId);
     }
   });
 
-  const unsubSetBearing = bus.on(CameraEventTypes.setBearing, ({ payload }) => {
-    if (instanceId === payload.id) {
-      state.bearing = payload.bearing;
-      notifySubscribers(instanceId);
-    }
-  });
+  const unsubSetRotation = cameraBus.on(
+    CameraEventTypes.setRotation,
+    ({ payload }) => {
+      if (instanceId === payload.id) {
+        const state = getOrCreateState(instanceId, initialCameraState);
+        const newState = { ...state };
+        newState.rotation = payload.rotation;
+        cameraStore.set(instanceId, newState);
+        notifySubscribers(instanceId);
+      }
+    },
+  );
 
-  const unsubSetPitch = bus.on(CameraEventTypes.setPitch, ({ payload }) => {
-    if (instanceId === payload.id && state.projection === 'mercator') {
-      state.pitch = payload.pitch;
-      notifySubscribers(instanceId);
-    }
-  });
+  const unsubSetPitch = cameraBus.on(
+    CameraEventTypes.setPitch,
+    ({ payload }) => {
+      const state = getOrCreateState(instanceId, initialCameraState);
+      if (instanceId === payload.id && state.view === '2.5D') {
+        const newState = { ...state };
+        newState.pitch = payload.pitch;
+        cameraStore.set(instanceId, newState);
+        notifySubscribers(instanceId);
+      }
+    },
+  );
 
   busUnsubscribers.set(instanceId, () => {
+    unsubResetCamera();
     unsubSetCenter();
     unsubFitBounds();
     unsubSetProjection();
     unsubSetView();
     unsubSetZoom();
-    unsubSetBearing();
+    unsubSetRotation();
     unsubSetPitch();
   });
 }
@@ -248,12 +384,13 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
  */
 function getOrCreateSubscription(
   instanceId: UniqueId,
+  initialCameraState?: Partial<CameraState>,
 ): (onStoreChange: () => void) => () => void {
   const subscription =
     subscriptionCache.get(instanceId) ??
     ((onStoreChange: () => void) => {
       // Ensure single bus listener exists for this instanceId
-      ensureBusListener(instanceId);
+      ensureBusListener(instanceId, initialCameraState);
 
       // Get or create the subscriber set for this map instance, then add this component's callback
       let subscriberSet = componentSubscribers.get(instanceId);
@@ -297,7 +434,7 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => CameraState {
         longitude: 0,
         zoom: 0,
         pitch: 0,
-        bearing: 0,
+        rotation: 0,
         projection: 'mercator',
         view: '2D',
       };
@@ -328,8 +465,8 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => CameraState {
  *   longitude: -122.4194,
  *   zoom: 10,
  *   pitch: 30,
- *   bearing: 0,
- *   projection: 'MERCATOR',
+ *   rotation: 0,
+ *   projection: 'mercator',
  * });
  * ```
  */
@@ -338,7 +475,7 @@ function setCameraState(
   state: Partial<CameraState>,
 ): void {
   const currentState = getOrCreateState(instanceId);
-  cameraStore.set(instanceId, { ...currentState, ...state });
+  cameraStore.set(instanceId, { ...currentState, ...state } as CameraState);
   notifySubscribers(instanceId);
 }
 
@@ -355,7 +492,7 @@ function setCameraState(
  * @param subscribe - Optional custom subscription function
  * @param getSnapshot - Optional custom snapshot getter
  * @param getServerSnapshot - Optional server-side snapshot getter
- * @returns Current camera state including latitude, longitude, zoom, pitch, bearing, projection
+ * @returns Current camera state including latitude, longitude, zoom, pitch, rotation, projection
  *
  * @example
  * ```tsx
@@ -398,12 +535,13 @@ function setCameraState(
  */
 export function useCameraState({
   instanceId,
+  initialCameraState,
   subscribe,
   getSnapshot,
   getServerSnapshot,
 }: UseCameraStateProps) {
   const cameraState = useSyncExternalStore<CameraState>(
-    subscribe ?? getOrCreateSubscription(instanceId),
+    subscribe ?? getOrCreateSubscription(instanceId, initialCameraState),
     getSnapshot ?? getOrCreateSnapshot(instanceId),
     getServerSnapshot,
   );
