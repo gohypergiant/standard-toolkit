@@ -54,7 +54,7 @@ import styles from './styles.module.css';
 
 **Root Cause**: Build tool is hashing `group/button` classes, breaking Tailwind's group selector pattern.
 
-**Solution**: Ensure you've configured `getLocalIdent` (Webpack/Next.js) or `generateScopedName` (Vite) as shown in the [Upgrade Guide](?path=/docs/upgrade-guides--docs#prevent-hashing-of-tailwind-named-groups).
+**Solution**: Ensure you've configured the `@accelint/postcss-tailwind-css-modules` plugin as shown in the [Upgrade Guide](?path=/docs/upgrade-guides--docs#prevent-hashing-of-tailwind-named-groups).
 
 **To verify**: Inspect the compiled CSS output. If named groups are being hashed, you'll see selectors like:
 
