@@ -47,6 +47,9 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
+  "dependencies": {
+    "type-fest": "^4.41.0"
+  },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
@@ -63,18 +66,17 @@
     "vitest": "^4.0.8"
   },
   "peerDependencies": {
-    "@accelint/core": "workspace:*",
-    "type-fest": "^4.41.0"
+    "@accelint/core": "workspace:*"
   },
   "optionalDependencies": {
     "react": "19.0.0"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "sideEffects": false
 }

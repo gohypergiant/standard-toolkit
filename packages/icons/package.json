@@ -23,6 +23,8 @@
     "./dist/**",
     "./catalog-info.yaml"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
@@ -279,13 +281,11 @@
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js"
+  "publishConfig": {
+    "access": "public"
+  }
 }

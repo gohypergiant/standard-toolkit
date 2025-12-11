@@ -336,6 +336,10 @@ importers:
         version: 5.103.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.25.12)
 
   packages/bus:
+    dependencies:
+      type-fest:
+        specifier: ^4.41.0
+        version: 4.41.0
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -364,9 +368,6 @@ importers:
       tsdown:
         specifier: ^0.17.2
         version: 0.17.2(typescript@5.8.3)
-      type-fest:
-        specifier: ^4.41.0
-        version: 4.41.0
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -799,10 +800,6 @@ importers:
         version: 4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(happy-dom@19.0.2)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
 
   packages/geo:
-    dependencies:
-      geodesy:
-        specifier: ^2.4.0
-        version: 2.4.0
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
@@ -816,6 +813,9 @@ importers:
       '@types/geodesy':
         specifier: ^2.2.8
         version: 2.2.8
+      geodesy:
+        specifier: ^2.4.0
+        version: 2.4.0
       tsdown:
         specifier: ^0.17.2
         version: 0.17.2(typescript@5.8.3)
@@ -970,15 +970,24 @@ importers:
       '@accelint/biome-config':
         specifier: workspace:*
         version: link:../../tooling/biome-config
+      '@accelint/bus':
+        specifier: workspace:*
+        version: link:../bus
       '@accelint/constellation-tracker':
         specifier: workspace:*
         version: link:../../tooling/constellation-tracker
+      '@accelint/core':
+        specifier: workspace:*
+        version: link:../core
       '@accelint/design-foundation':
         specifier: workspace:*
         version: link:../design-foundation
       '@accelint/design-toolkit':
         specifier: workspace:*
         version: link:../design-toolkit
+      '@accelint/geo':
+        specifier: workspace:*
+        version: link:../geo
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -1055,15 +1064,6 @@ importers:
         specifier: ^4.0.8
         version: 4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(happy-dom@19.0.2)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
     optionalDependencies:
-      '@accelint/bus':
-        specifier: workspace:*
-        version: link:../bus
-      '@accelint/core':
-        specifier: workspace:*
-        version: link:../core
-      '@accelint/geo':
-        specifier: workspace:*
-        version: link:../geo
       '@deck.gl/core':
         specifier: 9.1.14
         version: 9.1.14
@@ -1168,14 +1168,13 @@ importers:
         version: 5.8.3
 
   packages/predicates:
-    dependencies:
-      '@accelint/core':
-        specifier: workspace:*
-        version: link:../core
     devDependencies:
       '@accelint/constellation-tracker':
         specifier: workspace:*
         version: link:../../tooling/constellation-tracker
+      '@accelint/core':
+        specifier: workspace:*
+        version: link:../core
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config

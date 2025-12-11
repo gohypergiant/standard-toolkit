@@ -25,6 +25,8 @@
     "./package.json",
     "./README.md"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
@@ -64,9 +66,6 @@
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
-  "peerDependencies": {
-    "@accelint/core": "workspace:*"
-  },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
@@ -78,6 +77,9 @@
     "typescript": "5.8.3",
     "vitest": "^4.0.8"
   },
+  "peerDependencies": {
+    "@accelint/core": "workspace:*"
+  },
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
@@ -85,7 +87,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
-  "main": "./dist/index.js",
-  "module": "./dist/index.js"
+  "sideEffects": false
 }

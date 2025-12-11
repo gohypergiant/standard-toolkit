@@ -17,6 +17,8 @@
     "./README.md",
     "dist/**"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
@@ -85,14 +87,12 @@
   "optionalDependencies": {
     "react": "^19.0.0"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
   },
-  "sideEffects": false,
-  "main": "./dist/index.js",
-  "module": "./dist/index.js"
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
 }

@@ -57,12 +57,12 @@
   "peerDependencies": {
     "@accelint/constants": "workspace:*"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "sideEffects": false
 }
