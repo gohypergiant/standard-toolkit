@@ -45,7 +45,7 @@
       "maxRetainedSize": 20480,
       "notes": "Simple expand/collapse component - zero tolerance for leaks"
     },
-    "accordiongroup": {
+    "accordion-group": {
       "maxLeakedObjects": 0,
       "maxRetainedSize": 30720,
       "notes": "Coordinated accordions - zero tolerance for leaks"
