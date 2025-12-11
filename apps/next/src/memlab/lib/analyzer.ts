@@ -95,9 +95,10 @@ function getCachedThresholds(thresholdFile: string): ThresholdConfig {
       }
     }
 
-    cachedThresholds = JSON.parse(content);
+    const parsed: ThresholdConfig = JSON.parse(content);
+    cachedThresholds = parsed;
     cachedThresholdsPath = thresholdFile;
-    return cachedThresholds!;
+    return cachedThresholds;
   } catch (error) {
     console.warn(`⚠️ Failed to load threshold config: ${error}`);
     return {
