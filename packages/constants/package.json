@@ -27,24 +27,13 @@
   ],
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/*/index.d.ts",
-        "default": "./dist/*/index.js"
-      },
-      "default": "./dist/*/index.js"
-    }
+    ".": "./dist/index.js",
+    "./coordinates": "./dist/coordinates/index.js",
+    "./*": "./*"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/constants",
@@ -54,13 +43,14 @@
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "esbuild-fix-imports-plugin": "^1.0.23",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "typescript": "5.8.3",
     "vitest": "^4.0.8"
   },
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js"
 }
