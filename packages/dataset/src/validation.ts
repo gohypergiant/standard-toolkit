@@ -25,35 +25,29 @@ const layerServiceTypeSchema = z.enum(['VTS', 'WMS', 'WFS', 'FS', 'Unknown']);
  * Data type specification for proper handling and validation.
  */
 const layerDatasetFieldTypeSchema = z.enum([
-  '(f32, f32)',
   'bool',
-  'bool[]',
   'date',
-  'date[]',
   'datetime',
-  'datetime[]',
   'f32',
-  'f32[]',
   'f64',
-  'f64[]',
   'i32',
-  'i32[]',
   'i64',
-  'i64[]',
+  'linestring',
+  'multilinestring',
+  'multipoint',
+  'multipolygon',
+  'point',
+  'polygon',
   'str',
-  'str[]',
   'time',
-  'time[]',
 ]);
 
 /**
  * Built-in layer types for Deck.gl visualization layers.
  */
 const layerConfigTypeSchema = z.union([
-  z.literal('icon'),
-  z.literal('point'),
-  z.literal('path'),
-  z.literal('polygon'),
+  z.enum(['icon', 'point', 'path', 'polygon', 'raster']),
+  // NOTE: For custom, extended layer types
   z.string(),
 ]);
 
@@ -66,7 +60,14 @@ const layerDatasetFieldSchema = z.object({
   nullable: z.boolean(),
   type: layerDatasetFieldTypeSchema,
   label: z.string(),
-  availableValues: z.array(z.record(z.string(), z.unknown())).optional(),
+  availableValues: z
+    .array(
+      z.object({
+        name: z.string(),
+        label: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 /**
@@ -88,6 +89,7 @@ const layerDatasetMetadataSchema = z.object({
   maxRequests: z.number().optional(),
   refetchInterval: z.number().optional(),
   defaultFields: z.array(z.string()),
+  batchSize: z.number().optional(),
   filterDialect: z.enum(['cql', 'gml']).optional(),
 });
 
@@ -153,7 +155,11 @@ export function validateSchema<T>(schema: z.ZodType<T>): (data: unknown) => T {
     } catch (error) {
       if (error instanceof z.ZodError) {
         const formattedErrors = error.issues
-          .map((err) => `${err.path.join('.')}: ${err.message}`)
+          .map((err) => {
+            const path = err.path.join('.');
+
+            return path ? `${path}: ${err.message}` : err.message;
+          })
           .join('\n');
 
         throw new Error(`Validation failed:\n${formattedErrors}`);
