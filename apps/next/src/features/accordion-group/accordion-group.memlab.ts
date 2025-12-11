@@ -13,7 +13,7 @@
 import { createComponentTests } from '~/memlab/playwright/test-builder';
 
 createComponentTests({
-  componentName: 'AccordionGroup',
+  componentName: 'accordion-group',
   testPagePath: '/accordion-group/client',
   testSelector: '[data-testid="memlab-accordion-group-test"]',
   scenarios: [
