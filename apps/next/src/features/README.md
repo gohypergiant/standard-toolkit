@@ -20,7 +20,7 @@ my-feature/
 2. For all **client** component files, make sure to include `"use client"` and `import 'client-only'`. These statements are not required in non-JSX files, like `styles.css.ts` or `constants.ts`.
 3. Whenever possible, leverage rendering with `{children}` to allow for the interleaving and composition of client and server components.
 4. Always include a `<Suspense />` and `<ErrorBoundary />` for the feature to handle error and loading states.
-5. Feature domains should remain self-contained and should not import from other feature domains. Avoid importing from sibling features.self-contained. i.e. do not import from sibling features.
+5. Features must be self-contained and should not import from sibling features.
 
 _Note that `index.tsx` is **NOT** a barrel export in this setup._
 
