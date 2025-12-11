@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { execSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import { formatBytes } from './heap-snapshot';
 import type { AnalysisResult, MemlabReport } from './types';
@@ -308,7 +309,6 @@ export function generateBaselineReport(
  */
 export function getGitCommitHash(): string | undefined {
   try {
-    const { execSync } = require('node:child_process');
     return execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim();
   } catch {
     return undefined;
