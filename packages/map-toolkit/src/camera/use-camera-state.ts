@@ -366,11 +366,13 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
     }
 
     // Clean up all state
-    cameraStore.delete(instanceId);
-    componentSubscribers.delete(instanceId);
-    subscriptionCache.delete(instanceId);
-    snapshotCache.delete(instanceId);
-    fallbackCache.delete(instanceId);
+    [
+      cameraStore,
+      componentSubscribers,
+      subscriptionCache,
+      snapshotCache,
+      fallbackCache,
+    ].map((map) => map.delete(instanceId));
   }
 }
 
