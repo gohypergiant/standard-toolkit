@@ -57,7 +57,7 @@ export default defineConfig({
       }
     }
 
-    // Copy CSS module files
+    // Copy CSS module files to dist
     const cssModuleFiles = await glob(['src/**/*.module.css']);
 
     for (const srcFile of cssModuleFiles) {
@@ -66,5 +66,7 @@ export default defineConfig({
       await fs.mkdir(path.dirname(destFile), { recursive: true });
       await fs.copyFile(srcFile, destFile);
     }
+
+    console.log(`✓ Copied ${cssModuleFiles.length} CSS module files to dist`);
   },
 });
