@@ -98,7 +98,16 @@ export async function forceGC(page: Page) {
 }
 
 /**
- * Helper to wait for a brief period to allow React cleanup
+ * Helper to wait for a brief period to allow React cleanup and GC settling.
+ *
+ * Note: While Playwright discourages waitForTimeout for general testing
+ * (see https://playwright.dev/docs/api/class-page#page-wait-for-timeout),
+ * memory leak testing is a special case where we need to allow time for:
+ * - React's useEffect cleanup functions to execute
+ * - Garbage collector to process dereferenced objects
+ * - Async cleanup operations with no observable DOM/network signals
+ *
+ * There is no condition to wait for - we're waiting for the JS runtime to settle.
  */
 export async function waitForCleanup(page: Page, ms = 500) {
   await page.waitForTimeout(ms);
