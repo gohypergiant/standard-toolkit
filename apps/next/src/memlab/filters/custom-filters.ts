@@ -13,6 +13,29 @@
 import type { IHeapEdge, IHeapNode, IHeapSnapshot } from '@memlab/core';
 
 /**
+ * Retained size thresholds (in bytes) for leak detection.
+ * These values filter out small/insignificant nodes to reduce false positives.
+ */
+
+/** Minimum retained size to flag detached HTML elements */
+const MIN_DETACHED_DOM_ELEMENT_SIZE = 500;
+
+/** Minimum retained size to flag React component instances */
+const MIN_COMPONENT_RETAINED_SIZE = 1000;
+
+/** Minimum retained size to flag retained event listener arrays */
+const MIN_LISTENERS_RETAINED_SIZE = 1000;
+
+/** Minimum retained size to flag portal container elements */
+const MIN_PORTAL_RETAINED_SIZE = 1000;
+
+/** Minimum retained size to flag Broadcast singleton references */
+const MIN_BROADCAST_RETAINED_SIZE = 5000;
+
+/** Minimum retained size to flag Context objects with consumer references */
+const MIN_CONTEXT_RETAINED_SIZE = 10000;
+
+/**
  * Custom leak filter interface matching MemLab's ILeakFilter
  */
 export interface CustomLeakFilter {
@@ -60,7 +83,10 @@ export const fiberNodeFilter: CustomLeakFilter = {
     }
 
     // Detect React component instances that weren't cleaned up
-    if (name.includes('Component') && node.retainedSize > 1000) {
+    if (
+      name.includes('Component') &&
+      node.retainedSize > MIN_COMPONENT_RETAINED_SIZE
+    ) {
       return true;
     }
 
@@ -69,7 +95,7 @@ export const fiberNodeFilter: CustomLeakFilter = {
     if (
       name.startsWith('HTML') &&
       name.endsWith('Element') &&
-      node.retainedSize > 500
+      node.retainedSize > MIN_DETACHED_DOM_ELEMENT_SIZE
     ) {
       return true;
     }
@@ -119,7 +145,7 @@ export const busSubscriptionFilter: CustomLeakFilter = {
     // Detect Broadcast singleton references
     if (name === 'Broadcast' || name.includes('Broadcast')) {
       // Only flag if retained size is significant
-      if (node.retainedSize > 5000) {
+      if (node.retainedSize > MIN_BROADCAST_RETAINED_SIZE) {
         return true;
       }
     }
@@ -138,7 +164,10 @@ export const busSubscriptionFilter: CustomLeakFilter = {
     }
 
     // Detect retained listeners array entries
-    if (name === 'listeners' && node.retainedSize > 1000) {
+    if (
+      name === 'listeners' &&
+      node.retainedSize > MIN_LISTENERS_RETAINED_SIZE
+    ) {
       return true;
     }
 
@@ -176,7 +205,7 @@ export const contextLeakFilter: CustomLeakFilter = {
     // Detect Context objects
     if (name === 'Context' || name.includes('Context')) {
       // Only flag if retained size suggests consumer references
-      if (node.retainedSize > 10000) {
+      if (node.retainedSize > MIN_CONTEXT_RETAINED_SIZE) {
         return true;
       }
     }
@@ -202,7 +231,10 @@ export const portalLeakFilter: CustomLeakFilter = {
     const name = node.name || '';
 
     // Detect portal container elements (div elements with significant retained size)
-    if (name === 'HTMLDivElement' && node.retainedSize > 1000) {
+    if (
+      name === 'HTMLDivElement' &&
+      node.retainedSize > MIN_PORTAL_RETAINED_SIZE
+    ) {
       return true;
     }
 
