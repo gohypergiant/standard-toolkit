@@ -25,45 +25,64 @@
     "./package.json",
     "./README.md"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/*/index.d.ts",
-        "default": "./dist/*/index.js"
-      },
-      "default": "./dist/*/index.js"
-    }
+    ".": "./dist/index.js",
+    "./does-end-with": "./dist/does-end-with/index.js",
+    "./does-not-end-with": "./dist/does-not-end-with/index.js",
+    "./does-not-start-with": "./dist/does-not-start-with/index.js",
+    "./does-start-with": "./dist/does-start-with/index.js",
+    "./is-bbox": "./dist/is-bbox/index.js",
+    "./is-between": "./dist/is-between/index.js",
+    "./is-equal": "./dist/is-equal/index.js",
+    "./is-greater": "./dist/is-greater/index.js",
+    "./is-greater-equal": "./dist/is-greater-equal/index.js",
+    "./is-in": "./dist/is-in/index.js",
+    "./is-latitude": "./dist/is-latitude/index.js",
+    "./is-lesser": "./dist/is-lesser/index.js",
+    "./is-lesser-equal": "./dist/is-lesser-equal/index.js",
+    "./is-like": "./dist/is-like/index.js",
+    "./is-longitude": "./dist/is-longitude/index.js",
+    "./is-not-between": "./dist/is-not-between/index.js",
+    "./is-not-equal": "./dist/is-not-equal/index.js",
+    "./is-not-in": "./dist/is-not-in/index.js",
+    "./is-not-like": "./dist/is-not-like/index.js",
+    "./is-nothing": "./dist/is-nothing/index.js",
+    "./is-noyes": "./dist/is-noyes/index.js",
+    "./is-number": "./dist/is-number/index.js",
+    "./is-something": "./dist/is-something/index.js",
+    "./is-string": "./dist/is-string/index.js",
+    "./is-worker": "./dist/is-worker/index.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/predicates",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
-  "dependencies": {
-    "@accelint/core": "workspace:*"
-  },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/core": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@vitest/web-worker": "^4.0.8",
-    "esbuild-fix-imports-plugin": "^1.0.23",
     "fast-check": "^4.1.1",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "typescript": "5.8.3",
     "vitest": "^4.0.8"
+  },
+  "peerDependencies": {
+    "@accelint/core": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "publishConfig": {
     "access": "public"

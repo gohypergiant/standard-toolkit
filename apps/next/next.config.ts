@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
+    // optimizePackageImports: ['@accelint/*'],
     // ppr: false, // enable once we are on next 16
     // reactCompiler: false, // enable once we are on next 16
     // cssChunking: 'strict', // triage side effects on css modules

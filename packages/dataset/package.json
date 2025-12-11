@@ -25,18 +25,18 @@
     "./package.json",
     "./README.md"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    }
+    ".": "./dist/index.js",
+    "./lenses": "./dist/lenses.js",
+    "./types/datasets": "./dist/types/datasets.js",
+    "./validation": "./dist/validation.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/dataset",
@@ -48,8 +48,7 @@
     "@accelint/core": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "esbuild-fix-imports-plugin": "^1.0.23",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "type-fest": "^4.41.0",
     "typescript": "5.8.3",
     "vitest": "^4.0.8",
@@ -58,6 +57,10 @@
   "peerDependencies": {
     "@accelint/core": "workspace:*",
     "zod": "^4.1.12"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "publishConfig": {
     "access": "public"
