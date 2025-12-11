@@ -34,7 +34,7 @@ Using `import 'server-only'` and `import 'client-only'` is an effective way to i
 
 #### We can interleave client and server components freely
 
-So long as we properly render `{children}`, this pattern is completely composable from a server and client component perspective. Meaning we can techincally nest this pattern either implicitly or explicitly in userland code. E.g. say we have a more complex component, assuming each folder has the same structure:
+So long as we properly render `{children}`, this pattern is completely composable from a server and client component perspective. Meaning we can technically nest this pattern either implicitly or explicitly in userland code. E.g. say we have a more complex component, assuming each folder has the same structure:
 
 ```
 my-component/
