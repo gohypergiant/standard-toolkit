@@ -10,8 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLogger } from '@accelint/logger';
 import { expect, forceGC, test, waitForCleanup } from './fixtures';
 import type { Page } from '@playwright/test';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'debug',
+  prefix: '[MemLab:TestBuilder]',
+  pretty: true,
+});
 
 /**
  * Scenario definition for a memory leak test
@@ -179,16 +187,22 @@ export function createMountUnmountScenario(
       if (contentSelector) {
         await page
           .waitForSelector(contentSelector, { state: 'hidden', timeout: 5000 })
-          // biome-ignore lint/suspicious/noEmptyBlockStatements: intentional swallow
-          .catch(() => {});
+          .catch(() => {
+            logger.debug(
+              `Selector "${contentSelector}" did not reach hidden state within timeout - continuing`,
+            );
+          });
       }
       // Toggle back on
       await page.click(toggleSelector);
       if (contentSelector) {
         await page
           .waitForSelector(contentSelector, { state: 'visible', timeout: 5000 })
-          // biome-ignore lint/suspicious/noEmptyBlockStatements: intentional swallow
-          .catch(() => {});
+          .catch(() => {
+            logger.debug(
+              `Selector "${contentSelector}" did not reach visible state within timeout - continuing`,
+            );
+          });
       }
     },
     expectedLeaks: 0,
