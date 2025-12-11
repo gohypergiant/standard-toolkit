@@ -381,7 +381,7 @@
         }
       }
 
-      @variant color-serious {
+      @variant color-critical {
         @apply fg-primary-bold outline-critical-bold bg-transparent outline;
 
         @variant hover {
