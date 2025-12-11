@@ -27,25 +27,53 @@
   ],
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
+    ".": "./dist/index.js",
+    "./cartesian": "./dist/cartesian.js",
+    "./coordinates/coordinate": "./dist/coordinates/coordinate.js",
+    "./coordinates/latlon/decimal-degrees/formatter": "./dist/coordinates/latlon/decimal-degrees/formatter.js",
+    "./coordinates/latlon/decimal-degrees/parser": "./dist/coordinates/latlon/decimal-degrees/parser.js",
+    "./coordinates/latlon/decimal-degrees/system": "./dist/coordinates/latlon/decimal-degrees/system.js",
+    "./coordinates/latlon/degrees-decimal-minutes/formatter": "./dist/coordinates/latlon/degrees-decimal-minutes/formatter.js",
+    "./coordinates/latlon/degrees-decimal-minutes/parser": "./dist/coordinates/latlon/degrees-decimal-minutes/parser.js",
+    "./coordinates/latlon/degrees-decimal-minutes/system": "./dist/coordinates/latlon/degrees-decimal-minutes/system.js",
+    "./coordinates/latlon/degrees-minutes-seconds/formatter": "./dist/coordinates/latlon/degrees-minutes-seconds/formatter.js",
+    "./coordinates/latlon/degrees-minutes-seconds/parser": "./dist/coordinates/latlon/degrees-minutes-seconds/parser.js",
+    "./coordinates/latlon/degrees-minutes-seconds/system": "./dist/coordinates/latlon/degrees-minutes-seconds/system.js",
+    "./coordinates/latlon/internal": "./dist/coordinates/latlon/internal/index.js",
+    "./coordinates/latlon/internal/coordinate-system": "./dist/coordinates/latlon/internal/coordinate-system.js",
+    "./coordinates/latlon/internal/create-cache": "./dist/coordinates/latlon/internal/create-cache.js",
+    "./coordinates/latlon/internal/exhaustive-errors": "./dist/coordinates/latlon/internal/exhaustive-errors.js",
+    "./coordinates/latlon/internal/format": "./dist/coordinates/latlon/internal/format.js",
+    "./coordinates/latlon/internal/in-range": "./dist/coordinates/latlon/internal/in-range.js",
+    "./coordinates/latlon/internal/lexer": "./dist/coordinates/latlon/internal/lexer.js",
+    "./coordinates/latlon/internal/ordinal": "./dist/coordinates/latlon/internal/ordinal.js",
+    "./coordinates/latlon/internal/parse": "./dist/coordinates/latlon/internal/parse.js",
+    "./coordinates/latlon/internal/parse-format": "./dist/coordinates/latlon/internal/parse-format.js",
+    "./coordinates/latlon/internal/pipes": "./dist/coordinates/latlon/internal/pipes/index.js",
+    "./coordinates/latlon/internal/pipes/check-ambiguous": "./dist/coordinates/latlon/internal/pipes/check-ambiguous.js",
+    "./coordinates/latlon/internal/pipes/check-numbers": "./dist/coordinates/latlon/internal/pipes/check-numbers.js",
+    "./coordinates/latlon/internal/pipes/fix-bearings": "./dist/coordinates/latlon/internal/pipes/fix-bearings.js",
+    "./coordinates/latlon/internal/pipes/fix-dividers": "./dist/coordinates/latlon/internal/pipes/fix-dividers.js",
+    "./coordinates/latlon/internal/pipes/genome": "./dist/coordinates/latlon/internal/pipes/genome.js",
+    "./coordinates/latlon/internal/pipes/simpler": "./dist/coordinates/latlon/internal/pipes/simpler.js",
+    "./coordinates/latlon/internal/violation": "./dist/coordinates/latlon/internal/violation.js",
+    "./coordinates/mgrs/parser": "./dist/coordinates/mgrs/parser.js",
+    "./coordinates/mgrs/system": "./dist/coordinates/mgrs/system.js",
+    "./coordinates/utm/parser": "./dist/coordinates/utm/parser.js",
+    "./coordinates/utm/system": "./dist/coordinates/utm/system.js",
+    "./patterning": "./dist/patterning.js",
     "./package.json": "./package.json"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/geo",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
-  "dependencies": {
+  "peerDependencies": {
     "geodesy": "^2.4.0"
   },
   "devDependencies": {
@@ -53,13 +81,19 @@
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/geodesy": "^2.2.8",
-    "esbuild-fix-imports-plugin": "^1.0.23",
-    "tsup": "8.5.0",
+    "geodesy": "^2.4.0",
+    "tsdown": "^0.17.2",
     "typescript": "5.8.3",
     "vitest": "^4.0.8"
   },
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js"
 }

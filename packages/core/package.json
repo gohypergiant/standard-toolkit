@@ -81,7 +81,7 @@
     "./utility/once": "./dist/utility/once/index.js",
     "./utility/tap": "./dist/utility/tap/index.js",
     "./utility/uuid": "./dist/utility/uuid/index.js",
-    "./*": "./*"
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "pnpm tsdown",

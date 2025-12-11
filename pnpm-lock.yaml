@@ -467,12 +467,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       type-fest:
         specifier: ^4.41.0
         version: 4.41.0
@@ -791,12 +788,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -822,12 +816,9 @@ importers:
       '@types/geodesy':
         specifier: ^2.2.8
         version: 2.2.8
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -871,15 +862,12 @@ importers:
       '@types/react':
         specifier: ^19.1.9
         version: 19.1.13
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
       happy-dom:
         specifier: ^19.0.2
         version: 19.0.2
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       type-fest:
         specifier: ^4.41.0
         version: 4.41.0
@@ -924,12 +912,9 @@ importers:
       '@types/react-dom':
         specifier: 19.1.11
         version: 19.1.11(@types/react@19.1.13)
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
 
   packages/logger:
     dependencies:
@@ -967,15 +952,12 @@ importers:
       '@testing-library/react':
         specifier: ^16.3.0
         version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
       loglayer:
         specifier: ^6.10.0
         version: 6.10.0
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1042,9 +1024,6 @@ importers:
       client-only:
         specifier: ^0.0.1
         version: 0.0.1
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
       node-fetch:
         specifier: ^2.6.7
         version: 2.7.0
@@ -1060,9 +1039,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.11
         version: 4.1.17
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       type-fest:
         specifier: ^4.41.0
         version: 4.41.0
@@ -1136,12 +1115,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1175,9 +1151,6 @@ importers:
       '@types/react-dom':
         specifier: 19.1.11
         version: 19.1.11(@types/react@19.1.13)
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1187,9 +1160,9 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1212,15 +1185,12 @@ importers:
       '@vitest/web-worker':
         specifier: ^4.0.8
         version: 4.0.8(vitest@4.0.8(@types/debug@4.1.12)(@types/node@24.10.0)(happy-dom@19.0.2)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
       fast-check:
         specifier: ^4.1.1
         version: 4.3.0
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1239,12 +1209,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1267,12 +1234,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3
@@ -1291,12 +1255,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      esbuild-fix-imports-plugin:
-        specifier: ^1.0.23
-        version: 1.0.23
-      tsup:
-        specifier: 8.5.0
-        version: 8.5.0(@swc/core@1.15.1(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.8.3)(yaml@2.8.1)
+      tsdown:
+        specifier: ^0.17.2
+        version: 0.17.2(typescript@5.8.3)
       typescript:
         specifier: 5.8.3
         version: 5.8.3

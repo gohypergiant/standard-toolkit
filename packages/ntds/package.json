@@ -27,25 +27,61 @@
   ],
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
-    "./spritesheets/*.png": "./dist/spritesheets/*.png",
-    "./spritesheets/*.json": "./dist/spritesheets/*.json",
-    "./spritesheets/*": {
-      "import": {
-        "types": "./dist/spritesheets/*.d.ts",
-        "default": "./dist/spritesheets/*.js"
-      },
-      "default": "./dist/spritesheets/*.js"
-    }
+    ".": "./dist/index.js",
+    "./constants": "./dist/constants.js",
+    "./core": "./dist/core/index.js",
+    "./core/air-base-friend": "./dist/core/air-base-friend.js",
+    "./core/air-base-hostile": "./dist/core/air-base-hostile.js",
+    "./core/air-base-unknown": "./dist/core/air-base-unknown.js",
+    "./core/air-friend": "./dist/core/air-friend.js",
+    "./core/air-group-friend": "./dist/core/air-group-friend.js",
+    "./core/air-group-hostile": "./dist/core/air-group-hostile.js",
+    "./core/air-group-unknown": "./dist/core/air-group-unknown.js",
+    "./core/air-hostile": "./dist/core/air-hostile.js",
+    "./core/air-unknown": "./dist/core/air-unknown.js",
+    "./core/base-friend": "./dist/core/base-friend.js",
+    "./core/base-hostile": "./dist/core/base-hostile.js",
+    "./core/base-unknown": "./dist/core/base-unknown.js",
+    "./core/carrier-friend": "./dist/core/carrier-friend.js",
+    "./core/carrier-hostile": "./dist/core/carrier-hostile.js",
+    "./core/carrier-unknown": "./dist/core/carrier-unknown.js",
+    "./core/communications": "./dist/core/communications.js",
+    "./core/helicopter-friend": "./dist/core/helicopter-friend.js",
+    "./core/helicopter-hostile": "./dist/core/helicopter-hostile.js",
+    "./core/helicopter-unknown": "./dist/core/helicopter-unknown.js",
+    "./core/land-friend": "./dist/core/land-friend.js",
+    "./core/land-hostile": "./dist/core/land-hostile.js",
+    "./core/land-unknown": "./dist/core/land-unknown.js",
+    "./core/mine-field": "./dist/core/mine-field.js",
+    "./core/missile-friend": "./dist/core/missile-friend.js",
+    "./core/missile-hostile": "./dist/core/missile-hostile.js",
+    "./core/missile-unknown": "./dist/core/missile-unknown.js",
+    "./core/pol": "./dist/core/pol.js",
+    "./core/port": "./dist/core/port.js",
+    "./core/runway": "./dist/core/runway.js",
+    "./core/sam": "./dist/core/sam.js",
+    "./core/structure": "./dist/core/structure.js",
+    "./core/sub-group-friend": "./dist/core/sub-group-friend.js",
+    "./core/sub-group-hostile": "./dist/core/sub-group-hostile.js",
+    "./core/sub-group-unknown": "./dist/core/sub-group-unknown.js",
+    "./core/sub-surface-friend": "./dist/core/sub-surface-friend.js",
+    "./core/sub-surface-hostile": "./dist/core/sub-surface-hostile.js",
+    "./core/sub-surface-unknown": "./dist/core/sub-surface-unknown.js",
+    "./core/surface-friend": "./dist/core/surface-friend.js",
+    "./core/surface-group-friend": "./dist/core/surface-group-friend.js",
+    "./core/surface-group-hostile": "./dist/core/surface-group-hostile.js",
+    "./core/surface-group-unknown": "./dist/core/surface-group-unknown.js",
+    "./core/surface-hostile": "./dist/core/surface-hostile.js",
+    "./core/surface-unknown": "./dist/core/surface-unknown.js",
+    "./core/target": "./dist/core/target.js",
+    "./core/torpedo-friend": "./dist/core/torpedo-friend.js",
+    "./core/torpedo-hostile": "./dist/core/torpedo-hostile.js",
+    "./core/torpedo-unknown": "./dist/core/torpedo-unknown.js",
+    "./spritesheets/masked": "./dist/spritesheets/masked.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsup && pnpm copy",
+    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsdown && pnpm copy",
     "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
     "build:icons:masked": "smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
     "constellation-tracker": "constellation-tracker",
@@ -66,11 +102,10 @@
     "@types/node": "^24.9.0",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
-    "esbuild-fix-imports-plugin": "^1.0.23",
     "lodash": "^4.17.21",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "typescript": "5.8.3"
   },
   "peerDependencies": {
@@ -80,10 +115,12 @@
   },
   "engines": {
     "node": ">=22",
-    "pnpm": ">=9"
+    "pnpm": ">=10"
   },
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js"
 }
