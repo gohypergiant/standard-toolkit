@@ -120,7 +120,7 @@ export type FilterDialect = 'cql' | 'gml';
  * @example
  * ```typescript
  * const temperatureField: LayerDatasetFieldTypes = 'f32';
- * const locationField: LayerDatasetFieldTypes = '(f32, f32)';
+ * const locationField: LayerDatasetFieldTypes = 'point';
  * const isActiveField: LayerDatasetFieldTypes = 'bool';
  * ```
  */
@@ -132,14 +132,14 @@ export type LayerDatasetFieldTypes =
   | 'f64'
   | 'i32'
   | 'i64'
-  | 'str'
-  | 'time'
-  | 'point'
-  | 'multipoint'
   | 'linestring'
   | 'multilinestring'
+  | 'multipoint'
+  | 'multipolygon'
+  | 'point'
   | 'polygon'
-  | 'multipolygon';
+  | 'str'
+  | 'time';
 
 /**
  * Configuration for a single field within a dataset.
@@ -200,20 +200,19 @@ export type LayerDatasetField = {
 
   /**
    * Predefined options for select/dropdown components.
-   * Key-value pairs where key is the internal value and value is display text.
+   * Array of structured options with internal name and display label.
    * Only populated for fields with finite, enumerable options.
    *
    * @example
    * ```typescript
-   * {
-   *   'urban': 'Urban Area',
-   *   'suburban': 'Suburban Area',
-   *   'rural': 'Rural Area'
-   * }
+   * [
+   *   { name: 'urban', label: 'Urban Area' },
+   *   { name: 'suburban', label: 'Suburban Area' },
+   *   { name: 'rural', label: 'Rural Area' }
+   * ]
    * ```
    */
-  // biome-ignore lint/suspicious/noExplicitAny: This is intentional
-  availableValues?: Record<string, any>;
+  availableValues?: { name: string; label: string }[];
 };
 
 /**
