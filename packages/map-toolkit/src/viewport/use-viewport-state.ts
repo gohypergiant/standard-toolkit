@@ -176,7 +176,7 @@ function getOrCreateSnapshot(instanceId: UniqueId): () => MapViewportPayload {
     (() => {
       const newFallback: MapViewportPayload = {
         id: instanceId,
-        bounds: [Number.NaN, Number.NaN, Number.NaN, Number.NaN],
+        bounds: undefined,
         latitude: Number.NaN,
         longitude: Number.NaN,
         zoom: Number.NaN,

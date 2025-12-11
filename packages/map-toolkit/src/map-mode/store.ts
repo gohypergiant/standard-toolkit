@@ -74,6 +74,12 @@ const subscriptionCache = new Map<UniqueId, Subscription>();
 const snapshotCache = new Map<UniqueId, () => string>();
 
 /**
+ * Cache of server snapshot functions per instanceId to maintain referential stability.
+ * Server snapshots always return default mode since mode state is client-only.
+ */
+const serverSnapshotCache = new Map<UniqueId, () => string>();
+
+/**
  * Cache of requestModeChange functions per instanceId to maintain referential stability
  */
 const requestModeChangeCache = new Map<
@@ -454,6 +460,7 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
     componentSubscribers.delete(instanceId);
     subscriptionCache.delete(instanceId);
     snapshotCache.delete(instanceId);
+    serverSnapshotCache.delete(instanceId);
     requestModeChangeCache.delete(instanceId);
   }
 }
@@ -524,6 +531,23 @@ export function getOrCreateSnapshot(instanceId: UniqueId): () => string {
   snapshotCache.set(instanceId, snapshot);
 
   return snapshot;
+}
+
+/**
+ * Creates or retrieves a cached server snapshot function for a given instanceId.
+ * Server snapshots always return the default mode since mode state is client-only.
+ * Required for SSR/RSC compatibility with useSyncExternalStore.
+ *
+ * @param instanceId - The unique identifier for the map mode instance
+ * @returns A server snapshot function for useSyncExternalStore
+ */
+export function getOrCreateServerSnapshot(instanceId: UniqueId): () => string {
+  const serverSnapshot =
+    serverSnapshotCache.get(instanceId) ?? (() => DEFAULT_MODE);
+
+  serverSnapshotCache.set(instanceId, serverSnapshot);
+
+  return serverSnapshot;
 }
 
 /**
@@ -599,5 +623,6 @@ export function clearMapModeState(instanceId: UniqueId): void {
   componentSubscribers.delete(instanceId);
   subscriptionCache.delete(instanceId);
   snapshotCache.delete(instanceId);
+  serverSnapshotCache.delete(instanceId);
   requestModeChangeCache.delete(instanceId);
 }

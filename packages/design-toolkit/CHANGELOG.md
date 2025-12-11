@@ -1,5 +1,24 @@
 # @accelint/design-toolkit
 
+## 8.1.1
+### Patch Changes
+
+- Updated dependencies [01bdf1e]
+  - @accelint/design-foundation@1.0.1
+
+## 8.1.0
+### Minor Changes
+
+- 2a7c001: Adds Flashcard, A display component to quickly summarize information at a glance, with multiple options to show data.
+- c15d06f: Add features from TanStack Table to Table component: column width, selection change callback.
+
+### Patch Changes
+
+- cfe734a: Fix @accelint/geo UTM parsing and formatting. UTM format will no longer return MGRS format.
+- 582dfd9: Add @accelint/logger as a peer dependency to design-toolkit
+- Updated dependencies [cfe734a]
+  - @accelint/geo@0.4.0
+
 ## 8.0.0
 ### Major Changes
 
