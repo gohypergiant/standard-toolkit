@@ -15,7 +15,7 @@
 import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { type PropsWithChildren, useCallback, useId, useMemo } from 'react';
+import { useCallback, useId, useMemo } from 'react';
 import {
   Map as MapLibre,
   useControl,
@@ -31,7 +31,6 @@ import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { ViewType } from '@/camera/types';
 import type {
   MapClickEvent,
   MapHoverEvent,
@@ -127,32 +126,6 @@ export type BaseMapProps = DeckglProps & {
    * Default view for the map: '2D', '2.5D', or '3D'. Defaults to '2D'.
    */
   defaultView?: '2D' | '2.5D' | '3D';
-};
-
-const ViewWrapper = ({
-  children,
-  view,
-}: PropsWithChildren<{ view?: ViewType }>) => {
-  switch (view) {
-    case '2D':
-      return (
-        <mapView id='2D' controller>
-          {children}
-        </mapView>
-      );
-    case '2.5D':
-      return (
-        <mapView id='2.5D' controller>
-          {children}
-        </mapView>
-      );
-    case '3D':
-      return (
-        <globeView id='3D' resolution={1} controller>
-          {children}
-        </globeView>
-      );
-  }
 };
 
 function AddDeckglControl() {
@@ -396,7 +369,7 @@ export function BaseMap({
             parameters={{ ...PARAMETERS, ...parameters }}
           >
             <AddDeckglControl />
-            <ViewWrapper view={cameraState.view}>{children}</ViewWrapper>
+            {children}
           </Deckgl>
         </MapLibre>
       </MapProvider>
