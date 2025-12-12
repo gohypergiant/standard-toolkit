@@ -14,6 +14,7 @@
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
     "build": "turbo build",
+    "preview": "turbo preview",
     "build:design-toolkit": "turbo run build --filter=@accelint/design-toolkit",
     "build:map-toolkit": "turbo run build --filter=@accelint/map-toolkit",
     "changeset": "pnpm exec changeset",
