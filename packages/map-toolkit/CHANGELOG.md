@@ -1,5 +1,18 @@
 # @accelint/map-toolkit
 
+## 0.4.0
+### Minor Changes
+
+- 8802d14: Add map-cursor controller to map-toolkit.
+
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+- Updated dependencies [34c42a0]
+  - @accelint/core@0.5.1
+  - @accelint/bus@3.0.1
+  - @accelint/geo@0.4.1
+
 ## 0.3.1
 
 ### Patch Changes

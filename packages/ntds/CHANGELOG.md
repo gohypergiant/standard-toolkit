@@ -1,5 +1,10 @@
 # @accelint/ntds
 
+## 0.2.3
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+
 ## 0.2.2
 
 ### Patch Changes
