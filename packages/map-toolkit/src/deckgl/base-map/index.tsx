@@ -13,13 +13,14 @@
 'use client';
 
 import 'client-only';
-import { useEffectEvent, useEmit } from '@accelint/bus/react';
+import { useEffectEvent, useEmit, useOn } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
 import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
-import { BASE_MAP_STYLE, PARAMETERS } from './constants';
+import { ShapeEvents } from '../shapes/shared/events';
+import { BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
@@ -27,6 +28,7 @@ import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type { ShapeModeChangedEvent } from '../shapes/shared/events';
 import type {
   MapClickEvent,
   MapHoverEvent,
@@ -118,6 +120,12 @@ export type BaseMapProps = DeckglProps & {
    * from components rendered outside of the BaseMap's children (i.e., as siblings).
    */
   id: UniqueId;
+  /**
+   * Picking radius in pixels (default: 5).
+   * Creates a detection radius around the pointer for pickable objects.
+   * Higher values make thin lines and small shapes easier to hover.
+   */
+  pickingRadius?: number;
 };
 
 /**
@@ -205,6 +213,7 @@ export function BaseMap({
   onClick,
   onHover,
   onViewStateChange,
+  pickingRadius,
   ...rest
 }: BaseMapProps) {
   const deckglInstance = useDeckgl();
@@ -229,7 +238,24 @@ export function BaseMap({
   );
 
   // Use the custom hook to handle MapLibre
-  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
+  const mapLibreInstance = useMapLibre(
+    deckglInstance as IControl,
+    BASE_MAP_STYLE,
+    mapOptions,
+  );
+
+  // Listen for shape mode changes and disable map panning during modify mode
+  // This prevents map panning from interfering with edit handle dragging
+  useOn<ShapeModeChangedEvent>(ShapeEvents.modeChanged, (event) => {
+    if (mapLibreInstance) {
+      const shouldDisablePanning = event.payload.mode === 'modify';
+      if (shouldDisablePanning) {
+        mapLibreInstance.dragPan.disable();
+      } else {
+        mapLibreInstance.dragPan.enable();
+      }
+    }
+  });
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -322,6 +348,7 @@ export function BaseMap({
           interleaved={interleaved}
           useDevicePixels={useDevicePixels}
           onClick={handleClick}
+          pickingRadius={pickingRadius ?? PICKING_RADIUS}
           onHover={handleHover}
           onLoad={handleLoad}
           onViewStateChange={handleViewStateChange}

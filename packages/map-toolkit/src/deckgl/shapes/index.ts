@@ -10,47 +10,49 @@
  * governing permissions and limitations under the License.
  */
 
-export { BaseMap, type BaseMapProps } from './base-map';
-export { BASE_MAP_STYLE, PARAMETERS } from './base-map/constants';
-export { MapEvents, MapEventsNamespace } from './base-map/events';
+'use client';
+
 // Display Shape Layer exports
+export { DisplayShapeLayer } from './display-shape-layer/index';
+// Constant exports
 export {
   DASH_ARRAYS,
   DEFAULT_COLORS,
   DEFAULT_STYLE_PROPERTIES,
-  DisplayShapeLayer,
   ERROR_MESSAGES,
-  SHAPE_EVENTS,
   SHAPE_LAYER_IDS,
-  SHAPE_MODES,
-  ShapeEvents,
-  ShapeFeatureType,
-  ShapeModes,
   STROKE_PATTERNS,
   STROKE_WIDTHS,
-} from './shapes';
-export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
+} from './shared/constants';
+// Event exports
+// Note: emitShapeEvent, onShapeEvent, offShapeEvent are deprecated.
+// Use useEmit and useOn from '@accelint/bus/react' directly instead.
+export {
+  SHAPE_EVENTS,
+  SHAPE_MODES,
+  ShapeEvents,
+  ShapeModes,
+} from './shared/events';
+export { ShapeFeatureType } from './shared/types';
 export type {
-  MapClickEvent,
-  MapClickPayload,
-  MapEventType,
-  MapHoverEvent,
-  MapHoverPayload,
-} from './base-map/types';
-export type {
-  CircleEditProperties,
-  CircleRadius,
   DisplayShapeLayerProps,
-  EditableShape,
+  StyledFeature,
+  StyledFeatureProperties,
+} from './display-shape-layer/types';
+export type {
   EditShapeMode,
   ShapeEventHandler,
   ShapeEventPayload,
   ShapeEventType,
+} from './shared/events';
+// Shared type exports
+export type {
+  CircleEditProperties,
+  CircleRadius,
+  EditableShape,
   ShapeFeature,
   ShapeFeatureProperties,
   ShapeFeatureTypeValues,
   ShapeId,
-  StyledFeature,
-  StyledFeatureProperties,
   StyleProperties,
-} from './shapes';
+} from './shared/types';
