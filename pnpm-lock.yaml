@@ -4,10 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@loglayer/plugin': 2.2.1
-  '@loglayer/shared': 2.5.3
-
 importers:
 
   .:
@@ -817,10 +813,10 @@ importers:
   packages/logger:
     dependencies:
       '@loglayer/plugin':
-        specifier: 2.2.1
-        version: 2.2.1
+        specifier: ^2.1.6
+        version: 2.2.5
       '@loglayer/transport':
-        specifier: ^2.2.1
+        specifier: ^2.3.4
         version: 2.3.11
       '@loglayer/transport-simple-pretty-terminal':
         specifier: ^2.2.1
@@ -2421,12 +2417,20 @@ packages:
     resolution: {integrity: sha512-kntdCN9MtNctoMpDBMk9D1begChINbdYJNso5YLB0bbKNIy819rKfarSn7Xmtcq0aBxFUHPp04wj6XnvWseFOQ==}
     engines: {node: '>=18'}
 
-  '@loglayer/plugin@2.2.1':
-    resolution: {integrity: sha512-BlcnAXb98wbZcXY2FerD7vvzpUaCMmN9+sEQp0+VFAMZUOJ0x4fNXjPCij8QEYAyO0RvH3yOrZkjd1u4cBFu9w==}
+  '@loglayer/plugin@2.1.6':
+    resolution: {integrity: sha512-jZWnExpiYl+BefpiZC34/Finuu9fucxkPfz6re0xF1cUSOmZjy3fGeQtB+zVFYQz7mf6bWbN8dn5z22cH+Hdug==}
+    engines: {node: '>=18'}
+
+  '@loglayer/plugin@2.2.5':
+    resolution: {integrity: sha512-t8+EAVJ9o1SD488T0h214k9uSsmMEFHbHQ514mnEEC6fpie0WkzrwUy1uqjpA2mjiMKZ108XVYLQhziprEklgw==}
     engines: {node: '>=18'}
 
   '@loglayer/shared@2.5.3':
     resolution: {integrity: sha512-KT8ic1wWstCKOjZNR6Vqpk9rK7PPx/QPjGhfqePGYjo6l9R94mSHry+zdtYjIrIPvQHbnzsp/wd6lj6IvD3MvQ==}
+    engines: {node: '>=18'}
+
+  '@loglayer/shared@3.1.1':
+    resolution: {integrity: sha512-Q7S6kbf3Gb9Tk26H5K4ZMXdfErfmEtXv3sO/0UeLeynxAryh2lg7FOnE/W4owtqkj9q6dxdpVk3eYJsBji3Nbg==}
     engines: {node: '>=18'}
 
   '@loglayer/transport-simple-pretty-terminal@2.2.15':
@@ -8092,11 +8096,17 @@ snapshots:
     dependencies:
       '@loglayer/shared': 2.5.3
 
-  '@loglayer/plugin@2.2.1':
+  '@loglayer/plugin@2.1.6':
     dependencies:
       '@loglayer/shared': 2.5.3
 
+  '@loglayer/plugin@2.2.5':
+    dependencies:
+      '@loglayer/shared': 3.1.1
+
   '@loglayer/shared@2.5.3': {}
+
+  '@loglayer/shared@3.1.1': {}
 
   '@loglayer/transport-simple-pretty-terminal@2.2.15':
     dependencies:
@@ -8106,7 +8116,7 @@ snapshots:
 
   '@loglayer/transport@2.3.11':
     dependencies:
-      '@loglayer/shared': 2.5.3
+      '@loglayer/shared': 3.1.1
 
   '@loglayer/transport@2.3.4':
     dependencies:
@@ -11519,7 +11529,7 @@ snapshots:
   loglayer@6.10.0:
     dependencies:
       '@loglayer/context-manager': 1.1.6
-      '@loglayer/plugin': 2.2.1
+      '@loglayer/plugin': 2.1.6
       '@loglayer/shared': 2.5.3
       '@loglayer/transport': 2.3.4
 

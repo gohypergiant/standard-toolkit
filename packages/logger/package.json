@@ -46,8 +46,8 @@
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "dependencies": {
-    "@loglayer/plugin": "^2.2.1",
-    "@loglayer/transport": "^2.2.1",
+    "@loglayer/plugin": "^2.1.6",
+    "@loglayer/transport": "^2.3.4",
     "@loglayer/transport-simple-pretty-terminal": "^2.2.1",
     "callsites": "^4.2.0",
     "serialize-error": "^12.0.0"

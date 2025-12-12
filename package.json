@@ -65,21 +65,5 @@
     "node": ">=22",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@10.25.0",
-  "pnpm": {
-    "overrides": {
-      "@loglayer/plugin": "2.2.1",
-      "@loglayer/shared": "2.5.3"
-    },
-    "overridesReason": {
-      "@loglayer/plugin": "multiple versions installed creating conflicting types issue",
-      "@loglayer/shared": "multiple versions installed creating conflicting types issue"
-    },
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "react": "^19",
-        "react-dom": "^19"
-      }
-    }
-  }
+  "packageManager": "pnpm@10.25.0"
 }
