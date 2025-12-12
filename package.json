@@ -15,7 +15,6 @@
     "bench": "turbo bench",
     "build": "turbo build",
     "build:design-toolkit": "turbo run build --filter=@accelint/design-toolkit",
-    "build:docs": "turbo run build --filter=@accelint/docs",
     "build:map-toolkit": "turbo run build --filter=@accelint/map-toolkit",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",

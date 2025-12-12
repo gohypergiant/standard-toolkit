@@ -1,13 +1,13 @@
 name: CI
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
     types: [opened, synchronize]
 env:
   TURBO_TELEMETRY_DISABLED: 1
   RUNNER_NODE_VERSION: 22
-  RUNNER_PNPM_VERSION: 10.9.0 # specified in root package.json
+  RUNNER_PNPM_VERSION: 10 # specified in root package.json
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
@@ -32,10 +32,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install
       - run: pnpm run build
       - run: pnpm run lint
       - run: pnpm run test
       - run: pnpm run lint:fs
-
