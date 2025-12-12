@@ -115,17 +115,17 @@ export type ShapeSelectedEvent = Payload<
   'shapes:selected',
   {
     shapeId: ShapeId;
-    /** Map instance ID for multi-map scenarios */
-    id?: UniqueId;
+    /** Map instance ID for multi-map event isolation */
+    mapId: UniqueId;
   }
 >;
 
 export type ShapeDeselectedEvent = Payload<
   'shapes:deselected',
   {
-    /** Map instance ID for multi-map scenarios */
-    id?: UniqueId;
-  } | null
+    /** Map instance ID for multi-map event isolation */
+    mapId: UniqueId;
+  }
 >;
 
 export type ShapeHoveredEvent = Payload<
@@ -133,8 +133,8 @@ export type ShapeHoveredEvent = Payload<
   {
     /** Shape ID being hovered, or null when hover ends */
     shapeId: ShapeId | null;
-    /** Map instance ID for multi-map scenarios */
-    id?: UniqueId;
+    /** Map instance ID for multi-map event isolation */
+    mapId: UniqueId;
   }
 >;
 

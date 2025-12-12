@@ -19,6 +19,7 @@
 export const MAP_INTERACTION = {
   LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
   ICON_SIZE: 38, // Size of shape icons
+  ICON_HOVER_SIZE_INCREASE: 5, // Additional pixels added on hover
 } as const;
 
 /**

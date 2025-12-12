@@ -43,6 +43,29 @@ import type { DisplayShapeLayerProps } from './types';
 const shapeBus = Broadcast.getInstance<ShapeEvent>();
 
 /**
+ * Type guard to validate that an object is an EditableShape
+ */
+function isEditableShape(obj: unknown): obj is EditableShape {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    'id' in obj &&
+    'feature' in obj &&
+    'shapeType' in obj
+  );
+}
+
+/**
+ * State interface for DisplayShapeLayer
+ */
+interface DisplayShapeLayerState {
+  /** Index of currently hovered shape, undefined when not hovering */
+  hoverIndex?: number;
+  /** Allow additional properties from base layer state */
+  [key: string]: unknown;
+}
+
+/**
  * DisplayShapeLayer - Read-only shapes visualization layer
  *
  * A composite deck.gl layer for displaying geographic shapes with interactive features.
@@ -64,26 +87,49 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * 2. **Main GeoJsonLayer**: Shape geometries with styling and interaction
  * 3. **Label layer**: Text labels (if showLabels enabled)
  *
+ * ## Icon Atlas Constraint
+ * When using icons for Point geometries, all shapes in a single layer must share the
+ * same icon atlas. The layer uses the first atlas found across all features. If you
+ * need icons from different atlases, use separate DisplayShapeLayer instances.
+ *
  * ## Event Bus Integration
  * Automatically emits shape events that can be consumed anywhere in your app:
  * - `shapes:selected` - Emitted when a shape is clicked (includes mapId)
  * - `shapes:hovered` - Emitted when hovering over a shape or when hover ends (includes mapId)
- * - `shapes:deselected` - Emitted when clicking empty space (via map click handler)
  *
- * @example Basic usage with Fiber renderer and map instance ID
+ * **Note on deselection:** The layer emits `shapes:selected` automatically, but deselection
+ * requires consumer-side wiring. Listen to `MapEvents.click` and emit `shapes:deselected`
+ * when clicking empty space (`info.index === -1`). See the example below.
+ *
+ * @example Basic usage with selection and deselection
  * ```tsx
  * import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+ * import { useEmit, useOn } from '@accelint/bus/react';
  * import { uuid } from '@accelint/core';
  *
  * const MAP_ID = uuid();
  *
  * function MapWithShapes() {
  *   const [selectedId, setSelectedId] = useState<string>();
+ *   const emitDeselected = useEmit(ShapeEvents.deselected);
  *
- *   // Listen to shape selection events, filtered by map ID
+ *   // Listen to shape selection events (automatic from layer)
  *   useOn(ShapeEvents.selected, (event) => {
- *     if (event.payload.id !== MAP_ID) return;
+ *     if (event.payload.mapId !== MAP_ID) return;
  *     setSelectedId(event.payload.shapeId);
+ *   });
+ *
+ *   // Listen to deselection events
+ *   useOn(ShapeEvents.deselected, (event) => {
+ *     if (event.payload.mapId !== MAP_ID) return;
+ *     setSelectedId(undefined);
+ *   });
+ *
+ *   // Handle deselection when clicking empty space (consumer-side wiring)
+ *   useOn(MapEvents.click, (event) => {
+ *     if (selectedId && event.payload.id === MAP_ID && event.payload.info.index === -1) {
+ *       emitDeselected({ mapId: MAP_ID });
+ *     }
  *   });
  *
  *   return (
@@ -119,11 +165,24 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * ```
  */
 export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
+  // State is typed via DisplayShapeLayerState but deck.gl doesn't support generic state
+  declare state: DisplayShapeLayerState;
+
   static override layerName = 'DisplayShapeLayer';
 
   static override defaultProps = {
     ...DEFAULT_DISPLAY_PROPS,
   };
+
+  /**
+   * Clean up state when layer is destroyed
+   */
+  override finalizeState(): void {
+    // Clear hover state to prevent stale references
+    if (this.state?.hoverIndex !== undefined) {
+      this.setState({ hoverIndex: undefined });
+    }
+  }
 
   /**
    * Override getPickingInfo to handle events from sublayers
@@ -192,16 +251,19 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return;
     }
 
-    const shape = info.object.properties?._shape as EditableShape;
+    const shape = info.object.properties?._shape;
 
-    if (shape) {
-      // Emit shape selected event via bus (include mapId for multi-map isolation)
-      shapeBus.emit(ShapeEvents.selected, { shapeId: shape.id, id: mapId });
+    // Validate shape structure before using
+    if (!isEditableShape(shape)) {
+      return;
+    }
 
-      // Call callback if provided
-      if (onShapeClick) {
-        onShapeClick(shape);
-      }
+    // Emit shape selected event via bus (include mapId for multi-map isolation)
+    shapeBus.emit(ShapeEvents.selected, { shapeId: shape.id, mapId });
+
+    // Call callback if provided
+    if (onShapeClick) {
+      onShapeClick(shape);
     }
   };
 
@@ -211,16 +273,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private handleShapeHover = (info: PickingInfo): void => {
     const { onShapeHover, mapId } = this.props;
 
-    // Extract shape from info if present
-    let shape: EditableShape | null = null;
-    if (info.object) {
-      shape = info.object.properties?._shape as EditableShape;
-    }
+    // Extract and validate shape from info if present
+    const rawShape = info.object?.properties?._shape;
+    const shape = isEditableShape(rawShape) ? rawShape : null;
 
     // Emit shape hovered event via bus (include mapId for multi-map isolation)
     shapeBus.emit(ShapeEvents.hovered, {
       shapeId: shape?.id ?? null,
-      id: mapId,
+      mapId,
     });
 
     // Call callback if provided
@@ -232,14 +292,15 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   /**
    * Render highlight sublayer (underneath main layer)
    */
-  private renderHighlightLayer() {
+  private renderHighlightLayer(
+    features: EditableShape['feature'][],
+  ): GeoJsonLayer | null {
     const { selectedShapeId, highlightColor } = this.props;
 
     if (!selectedShapeId) {
       return null;
     }
 
-    const features = this.getFeaturesWithId();
     const selectedFeature = features.find(
       (f) => f.properties?.shapeId === selectedShapeId,
     );
@@ -298,6 +359,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Behavior
       pickable: false,
       updateTriggers: {
+        getLineColor: [highlightColor],
         getLineWidth: [selectedShapeId, features],
         ...(hasIcon
           ? {
@@ -312,18 +374,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   /**
    * Check if any features have icon configuration
    */
-  private hasIcons(): boolean {
-    const features = this.getFeaturesWithId();
+  private hasIcons(features: EditableShape['feature'][]): boolean {
     return features.some((f) => f.properties?.styleProperties?.icon);
   }
 
   /**
    * Render main shapes layer
    */
-  private renderMainLayer() {
+  private renderMainLayer(features: EditableShape['feature'][]): GeoJsonLayer {
     const { pickable } = this.props;
-    const features = this.getFeaturesWithId();
-    const hasIcons = this.hasIcons();
+    const hasIcons = this.hasIcons(features);
 
     // Collect icon atlas and mapping from features
     const iconAtlas = features.find(
@@ -374,7 +434,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
                 d.properties?.styleProperties?.icon?.size ??
                 MAP_INTERACTION.ICON_SIZE;
               const isHovered = index === this.state?.hoverIndex;
-              return isHovered ? iconSize + 5 : iconSize;
+              return isHovered
+                ? iconSize + MAP_INTERACTION.ICON_HOVER_SIZE_INCREASE
+                : iconSize;
             },
             getIconColor: getStrokeColor,
             getIconPixelOffset: (d: EditableShape['feature']) => {
@@ -418,7 +480,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   /**
    * Render labels layer
    */
-  private renderLabelsLayer() {
+  private renderLabelsLayer(): ReturnType<typeof createShapeLabelLayer> | null {
     const { showLabels, data, labelOptions } = this.props;
 
     if (!showLabels) {
@@ -436,9 +498,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Render all sublayers
    */
   renderLayers(): Layer[] {
+    // Compute features once per render cycle for performance
+    const features = this.getFeaturesWithId();
+
     return [
-      this.renderHighlightLayer(),
-      this.renderMainLayer(),
+      this.renderHighlightLayer(features),
+      this.renderMainLayer(features),
       this.renderLabelsLayer(),
     ].filter(Boolean) as Layer[];
   }

@@ -88,7 +88,7 @@ function MapWithShapes() {
   // Listen to shape selection events from the event bus
   useOn(ShapeEvents.selected, (event) => {
     // Filter by map instance ID for multi-map scenarios
-    if (event.payload.id !== MAP_ID) return;
+    if (event.payload.mapId !== MAP_ID) return;
     setSelectedId(event.payload.shapeId);
   });
 
@@ -367,7 +367,7 @@ When `pickable={true}`, shapes show hover feedback:
 
 ## Event Bus Integration
 
-The layer automatically emits events via `@accelint/bus`. All events include an optional `id` field for multi-map scenarios.
+The layer automatically emits events via `@accelint/bus`. All events include a required `mapId` field for multi-map isolation.
 
 ### shapes:selected
 
@@ -380,7 +380,7 @@ import { ShapeEvents, type ShapeSelectedEvent } from '@accelint/map-toolkit/deck
 function MyComponent() {
   useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
     // Filter by map instance ID for multi-map scenarios
-    if (event.payload.id !== MAP_ID) return;
+    if (event.payload.mapId !== MAP_ID) return;
     console.log('Selected shape ID:', event.payload.shapeId);
   });
 
@@ -402,7 +402,7 @@ function MyComponent() {
 
   // Change cursor on shape hover
   useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
-    if (event.payload.id !== MAP_ID) return;
+    if (event.payload.mapId !== MAP_ID) return;
 
     if (event.payload.shapeId) {
       requestCursorChange('pointer', 'display-shapes');
@@ -417,7 +417,7 @@ function MyComponent() {
 
 ### shapes:deselected
 
-Emitted when clicking empty space (requires map click handler):
+Emitted when clicking empty space. **Note:** The layer emits `shapes:selected` automatically, but deselection requires consumer-side wiring. Listen to `MapEvents.click` and emit `shapes:deselected` when clicking empty space:
 
 ```tsx
 import { useEmit, useOn } from '@accelint/bus/react';
@@ -430,7 +430,7 @@ function MyComponent() {
   useOn(MapEvents.click, (event) => {
     // If clicked empty space and have selection
     if (selectedId && event.payload.id === MAP_ID && event.payload.info.index === -1) {
-      emitDeselected({ id: MAP_ID });
+      emitDeselected({ mapId: MAP_ID });
     }
   });
 
@@ -471,6 +471,10 @@ In addition to event bus integration, the layer provides callback props:
 />
 ```
 
+## Icon Atlas Constraint
+
+When using icons for Point geometries, **all shapes in a single DisplayShapeLayer must share the same icon atlas**. The layer uses the first atlas found across all features. If you need icons from different atlases, use separate DisplayShapeLayer instances.
+
 ## Performance Considerations
 
 - The layer uses deck.gl's `updateTriggers` to minimize re-renders
@@ -485,7 +489,7 @@ In addition to event bus integration, the layer provides callback props:
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `string` | *required* | Unique layer ID |
-| `mapId` | `UniqueId` | `undefined` | Map instance ID for event bus isolation in multi-map scenarios |
+| `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
 | `data` | `EditableShape[]` | *required* | Array of shapes to display |
 | `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
 | `onShapeClick` | `(shape: EditableShape) => void` | `undefined` | Callback when shape is clicked |

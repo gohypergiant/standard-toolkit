@@ -50,10 +50,10 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
 
   /**
    * Map instance ID for event bus isolation in multi-map scenarios.
-   * When provided, shape events will include this ID in their payload,
+   * Shape events will include this ID in their payload,
    * allowing listeners to filter events by map instance.
    */
-  mapId?: UniqueId;
+  mapId: UniqueId;
 
   /**
    * Array of shapes to display

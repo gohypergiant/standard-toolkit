@@ -98,7 +98,7 @@ export const BasicDisplayAndEvents: Story = {
     // Listen to shape selection events emitted automatically by DisplayShapeLayer
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
       // Filter by map instance ID
-      if (event.payload.id !== DISPLAY_MAP_ID) {
+      if (event.payload.mapId !== DISPLAY_MAP_ID) {
         return;
       }
 
@@ -120,7 +120,7 @@ export const BasicDisplayAndEvents: Story = {
     // Listen to shape deselection events
     useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, (event) => {
       // Filter by map instance ID
-      if (event.payload?.id !== DISPLAY_MAP_ID) {
+      if (event.payload.mapId !== DISPLAY_MAP_ID) {
         return;
       }
 
@@ -138,7 +138,7 @@ export const BasicDisplayAndEvents: Story = {
     // Listen to shape hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
       // Filter by map instance ID
-      if (event.payload.id !== DISPLAY_MAP_ID) {
+      if (event.payload.mapId !== DISPLAY_MAP_ID) {
         return;
       }
 
@@ -158,7 +158,7 @@ export const BasicDisplayAndEvents: Story = {
         event.payload.id === DISPLAY_MAP_ID &&
         event.payload.info.index === -1
       ) {
-        emitDeselected({ id: DISPLAY_MAP_ID });
+        emitDeselected({ mapId: DISPLAY_MAP_ID });
       }
     });
 
@@ -362,7 +362,7 @@ export const LabelPositioning: Story = {
 
     // Listen to shape selection events
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
-      if (event.payload.id !== LABEL_POSITIONS_MAP_ID) {
+      if (event.payload.mapId !== LABEL_POSITIONS_MAP_ID) {
         return;
       }
       setSelectedId(event.payload.shapeId);
@@ -370,7 +370,7 @@ export const LabelPositioning: Story = {
 
     // Listen to shape deselection events
     useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, (event) => {
-      if (event.payload?.id !== LABEL_POSITIONS_MAP_ID) {
+      if (event.payload.mapId !== LABEL_POSITIONS_MAP_ID) {
         return;
       }
       setSelectedId(undefined);
@@ -378,7 +378,7 @@ export const LabelPositioning: Story = {
 
     // Listen to shape hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
-      if (event.payload.id !== LABEL_POSITIONS_MAP_ID) {
+      if (event.payload.mapId !== LABEL_POSITIONS_MAP_ID) {
         return;
       }
       if (event.payload.shapeId) {
@@ -395,7 +395,7 @@ export const LabelPositioning: Story = {
         event.payload.id === LABEL_POSITIONS_MAP_ID &&
         event.payload.info.index === -1
       ) {
-        emitDeselected({ id: LABEL_POSITIONS_MAP_ID });
+        emitDeselected({ mapId: LABEL_POSITIONS_MAP_ID });
       }
     });
 
@@ -501,7 +501,7 @@ export const WithPointIcons: Story = {
 
     // Listen to shape selection events
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
-      if (event.payload.id !== WITH_ICONS_MAP_ID) {
+      if (event.payload.mapId !== WITH_ICONS_MAP_ID) {
         return;
       }
       setSelectedId(event.payload.shapeId);
@@ -509,7 +509,7 @@ export const WithPointIcons: Story = {
 
     // Listen to shape deselection events
     useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, (event) => {
-      if (event.payload?.id !== WITH_ICONS_MAP_ID) {
+      if (event.payload.mapId !== WITH_ICONS_MAP_ID) {
         return;
       }
       setSelectedId(undefined);
@@ -517,7 +517,7 @@ export const WithPointIcons: Story = {
 
     // Listen to shape hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
-      if (event.payload.id !== WITH_ICONS_MAP_ID) {
+      if (event.payload.mapId !== WITH_ICONS_MAP_ID) {
         return;
       }
       if (event.payload.shapeId) {
@@ -534,7 +534,7 @@ export const WithPointIcons: Story = {
         event.payload.id === WITH_ICONS_MAP_ID &&
         event.payload.info.index === -1
       ) {
-        emitDeselected({ id: WITH_ICONS_MAP_ID });
+        emitDeselected({ mapId: WITH_ICONS_MAP_ID });
       }
     });
 
