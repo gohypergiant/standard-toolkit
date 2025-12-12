@@ -43,12 +43,12 @@
     {
       "dependencies": ["react", "react-dom", "@types/react", "@types/react-dom"],
       "label": "Ensure React packages are within the same range across project",
-      "policy": "sameRange"
+      "pinVersion": "^19"
     },
     {
       "dependencies": ["@deck.gl/**"],
       "label": "Ensure Deck.gl packages are within the same range across project",
-      "policy": "sameRange"
+      "pinVersion": "~9.1"
     },
     {
       "dependencies": ["@react-aria/**", "react-aria-components"],
