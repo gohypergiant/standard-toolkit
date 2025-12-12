@@ -54,6 +54,10 @@
   .trigger {
     @apply w-full cursor-pointer justify-start px-0;
 
+    @variant disabled {
+      @apply cursor-not-allowed;
+    }
+
     &.cozy {
       @apply gap-s text-header-m;
     }
