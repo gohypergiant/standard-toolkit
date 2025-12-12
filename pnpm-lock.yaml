@@ -139,10 +139,10 @@ importers:
         specifier: ^2.3.0
         version: 2.4.1(react@19.0.0)
       react:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0
       react-dom:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0(react@19.0.0)
       rehype-katex:
         specifier: ^7
@@ -205,20 +205,20 @@ importers:
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/dnd':
-        specifier: ^3.10.1
-        version: 3.11.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ~3.10.1
+        version: 3.10.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/interactions':
-        specifier: ^3.25.3
+        specifier: ~3.25.3
         version: 3.25.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/overlays':
-        specifier: ^3.29.1
-        version: 3.30.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ~3.29.1
+        version: 3.29.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/ssr':
-        specifier: ^3.9.10
+        specifier: ~3.9.10
         version: 3.9.10(react@19.0.0)
       '@react-aria/utils':
-        specifier: ^3.30.0
-        version: 3.31.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ~3.30.0
+        version: 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/color':
         specifier: ^3.9.0
         version: 3.9.2(react@19.0.0)
@@ -262,13 +262,13 @@ importers:
         specifier: ^12.6.2
         version: 12.7.1
       react:
-        specifier: ^19.0.0
+        specifier: ^19
         version: 19.0.0
       react-aria-components:
-        specifier: 1.12.1
+        specifier: ~1.12.1
         version: 1.12.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom:
-        specifier: ^19.0.0
+        specifier: ^19
         version: 19.0.0(react@19.0.0)
       react-error-boundary:
         specifier: ^6.0.0
@@ -314,10 +314,10 @@ importers:
         specifier: ^24.9.0
         version: 24.10.3
       '@types/react':
-        specifier: 19.1.13
+        specifier: ^19
         version: 19.1.13
       '@types/react-dom':
-        specifier: 19.1.11
+        specifier: ^19
         version: 19.1.11(@types/react@19.1.13)
       jsdom:
         specifier: ^25.0.1
@@ -363,7 +363,7 @@ importers:
         specifier: ^16.3.0
         version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/react':
-        specifier: 19.1.13
+        specifier: ^19
         version: 19.1.13
       tsdown:
         specifier: ^0.17.3
@@ -631,23 +631,23 @@ importers:
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/dnd':
-        specifier: ^3.10.1
-        version: 3.11.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ~3.10.1
+        version: 3.10.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/interactions':
-        specifier: ^3.25.3
+        specifier: ~3.25.3
         version: 3.25.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/overlays':
-        specifier: ^3.29.1
-        version: 3.30.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ~3.29.1
+        version: 3.29.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/ssr':
-        specifier: ^3.9.10
+        specifier: ~3.9.10
         version: 3.9.10(react@19.0.0)
       '@react-aria/toast':
-        specifier: ^3.0.7
+        specifier: ~3.0.7
         version: 3.0.8(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/utils':
-        specifier: ^3.30.0
-        version: 3.31.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ~3.30.0
+        version: 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/color':
         specifier: ^3.9.0
         version: 3.9.2(react@19.0.0)
@@ -706,10 +706,10 @@ importers:
         specifier: ^24.9.0
         version: 24.10.3
       '@types/react':
-        specifier: 19.1.13
+        specifier: ^19
         version: 19.1.13
       '@types/react-dom':
-        specifier: 19.1.11
+        specifier: ^19
         version: 19.1.11(@types/react@19.1.13)
       '@vitejs/plugin-react':
         specifier: ^4.3.2
@@ -736,13 +736,13 @@ importers:
         specifier: ^12.6.2
         version: 12.7.1
       react:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0
       react-aria-components:
-        specifier: 1.12.1
+        specifier: ~1.12.1
         version: 1.12.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-dom:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0(react@19.0.0)
       react-querybuilder:
         specifier: 8.10.0
@@ -860,7 +860,7 @@ importers:
         specifier: ^16.3.0
         version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.11(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/react':
-        specifier: ^19.1.9
+        specifier: ^19
         version: 19.1.13
       happy-dom:
         specifier: ^19.0.2
@@ -885,10 +885,10 @@ importers:
   packages/icons:
     dependencies:
       react:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0
       react-dom:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0(react@19.0.0)
     devDependencies:
       '@accelint/biome-config':
@@ -907,10 +907,10 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
       '@types/react':
-        specifier: 19.1.13
+        specifier: ^19
         version: 19.1.13
       '@types/react-dom':
-        specifier: 19.1.11
+        specifier: ^19
         version: 19.1.11(@types/react@19.1.13)
       tsdown:
         specifier: ^0.17.3
@@ -1025,10 +1025,10 @@ importers:
         specifier: ^24.9.0
         version: 24.10.3
       '@types/react':
-        specifier: 19.1.13
+        specifier: ^19
         version: 19.1.13
       '@types/react-dom':
-        specifier: 19.1.11
+        specifier: ^19
         version: 19.1.11(@types/react@19.1.13)
       client-only:
         specifier: ^0.0.1
@@ -1037,10 +1037,10 @@ importers:
         specifier: ^2.6.7
         version: 2.7.0
       react:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0
       react-dom:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0(react@19.0.0)
       storybook:
         specifier: ^9.1.16
@@ -1146,19 +1146,19 @@ importers:
         specifier: ^24.9.0
         version: 24.10.3
       '@types/react':
-        specifier: 19.1.13
+        specifier: ^19
         version: 19.1.13
       '@types/react-dom':
-        specifier: 19.1.11
+        specifier: ^19
         version: 19.1.11(@types/react@19.1.13)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
       react:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0
       react-dom:
-        specifier: 19.0.0
+        specifier: ^19
         version: 19.0.0(react@19.0.0)
       tsdown:
         specifier: ^0.17.3
@@ -4285,6 +4285,12 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
+  '@react-aria/dnd@3.10.1':
+    resolution: {integrity: sha512-EWiFbRoWs0zBlBbdPvd7gPyA3B8TPUtMfSUnLBCjwc+N0YaUoizZxW2VYgpAkZYAlVrPYV6n2Gs+98PHKZ8rsg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+
   '@react-aria/dnd@3.11.3':
     resolution: {integrity: sha512-MyTziciik1Owz3rqDghu0K3ZtTFvmj/R2ZsLDwbU9N4hKqGX/BKnrI8SytTn8RDqVv5LmA/GhApLngiupTAsXw==}
     peerDependencies:
@@ -4368,6 +4374,12 @@ packages:
 
   '@react-aria/numberfield@3.12.2':
     resolution: {integrity: sha512-M2b+z0HIXiXpGAWOQkO2kpIjaLNUXJ5Q3/GMa3Fkr+B1piFX0VuOynYrtddKVrmXCe+r5t+XcGb0KS29uqv7nQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+
+  '@react-aria/overlays@3.29.1':
+    resolution: {integrity: sha512-Yz92XNPnbrTnxrvNrY/fXJ3iWaYNrj0q24ddvZNNKDcWak0S1/mQeUwNb+PwS2AryhFU5VQqKz5rNsM96TKmPQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -4494,6 +4506,12 @@ packages:
 
   '@react-aria/tree@3.1.4':
     resolution: {integrity: sha512-6pbFeN0dAsCOrFGUKU39CNjft20zCAjLfMqfkRWisL+JkUHI2nq6odUJF5jJTsU1C+1951+3oFOmVxPX+K+akQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+      react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+
+  '@react-aria/utils@3.30.1':
+    resolution: {integrity: sha512-zETcbDd6Vf9GbLndO6RiWJadIZsBU2MMm23rBACXLmpRztkrIqPEb2RVdlLaq1+GklDx0Ii6PfveVjx+8S5U6A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -15082,7 +15100,7 @@ snapshots:
       '@react-aria/listbox': 3.15.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/searchfield': 3.8.9(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/textfield': 3.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/utils': 3.31.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/utils': 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/autocomplete': 3.0.0-beta.3(react@19.0.0)
       '@react-stately/combobox': 3.12.0(react@19.0.0)
       '@react-types/autocomplete': 3.0.0-alpha.34(react@19.0.0)
@@ -15150,7 +15168,7 @@ snapshots:
     dependencies:
       '@react-aria/interactions': 3.25.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/ssr': 3.9.10(react@19.0.0)
-      '@react-aria/utils': 3.31.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/utils': 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-types/shared': 3.32.1(react@19.0.0)
       '@swc/helpers': 0.5.17
       react: 19.0.0
@@ -15236,6 +15254,22 @@ snapshots:
       '@react-aria/utils': 3.31.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/disclosure': 3.0.8(react@19.0.0)
       '@react-types/button': 3.14.1(react@19.0.0)
+      '@swc/helpers': 0.5.17
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  '@react-aria/dnd@3.10.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@internationalized/string': 3.2.7
+      '@react-aria/i18n': 3.12.13(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/interactions': 3.25.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/live-announcer': 3.4.4
+      '@react-aria/overlays': 3.29.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/utils': 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-stately/collections': 3.12.8(react@19.0.0)
+      '@react-stately/dnd': 3.7.1(react@19.0.0)
+      '@react-types/button': 3.14.1(react@19.0.0)
+      '@react-types/shared': 3.32.1(react@19.0.0)
       '@swc/helpers': 0.5.17
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
@@ -15416,6 +15450,22 @@ snapshots:
       '@react-stately/numberfield': 3.10.2(react@19.0.0)
       '@react-types/button': 3.14.1(react@19.0.0)
       '@react-types/numberfield': 3.8.15(react@19.0.0)
+      '@react-types/shared': 3.32.1(react@19.0.0)
+      '@swc/helpers': 0.5.17
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  '@react-aria/overlays@3.29.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@react-aria/focus': 3.21.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/i18n': 3.12.13(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/interactions': 3.25.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/ssr': 3.9.10(react@19.0.0)
+      '@react-aria/utils': 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/visually-hidden': 3.8.28(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-stately/overlays': 3.6.20(react@19.0.0)
+      '@react-types/button': 3.14.1(react@19.0.0)
+      '@react-types/overlays': 3.9.2(react@19.0.0)
       '@react-types/shared': 3.32.1(react@19.0.0)
       '@swc/helpers': 0.5.17
       react: 19.0.0
@@ -15644,7 +15694,7 @@ snapshots:
     dependencies:
       '@react-aria/focus': 3.21.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/i18n': 3.12.13(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/utils': 3.31.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/utils': 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-types/shared': 3.32.1(react@19.0.0)
       '@swc/helpers': 0.5.17
       react: 19.0.0
@@ -15681,6 +15731,17 @@ snapshots:
       '@react-types/button': 3.14.1(react@19.0.0)
       '@react-types/shared': 3.32.1(react@19.0.0)
       '@swc/helpers': 0.5.17
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  '@react-aria/utils@3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@react-aria/ssr': 3.9.10(react@19.0.0)
+      '@react-stately/flags': 3.1.2
+      '@react-stately/utils': 3.10.8(react@19.0.0)
+      '@react-types/shared': 3.32.1(react@19.0.0)
+      '@swc/helpers': 0.5.17
+      clsx: 2.1.1
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
@@ -21374,11 +21435,11 @@ snapshots:
       '@react-aria/focus': 3.21.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/interactions': 3.25.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/live-announcer': 3.4.4
-      '@react-aria/overlays': 3.30.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/overlays': 3.29.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/ssr': 3.9.10(react@19.0.0)
       '@react-aria/textfield': 3.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/toolbar': 3.0.0-beta.20(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      '@react-aria/utils': 3.31.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@react-aria/utils': 3.30.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-aria/virtualizer': 4.1.10(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@react-stately/autocomplete': 3.0.0-beta.3(react@19.0.0)
       '@react-stately/layout': 4.5.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)

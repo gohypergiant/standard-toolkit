@@ -102,18 +102,18 @@
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@types/node": "^24.9.0",
-    "@types/react": "19.1.13",
-    "@types/react-dom": "19.1.11",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "lodash": "^4.17.21",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "^19",
+    "react-dom": "^19",
     "tsdown": "^0.17.3",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "lodash": "^4.17.21",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "engines": {
     "node": ">=22",
