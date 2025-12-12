@@ -1,5 +1,24 @@
 # @accelint/design-toolkit
 
+## 8.1.2
+### Patch Changes
+
+- 00f3d35: Updates data type for MenuSection to allow for title to be a ReactElement in addition to a string.
+- 2281c63: - Added comprehensive test suite (15 tests, 100% coverage) for CSS module hashing logic
+  - Added typecheck script to design-toolkit package.json
+  - Added separate troubleshooting guide for CSS module issues
+  - Added detailed JSDoc documentation for CSS module hashing function
+- c1c3fbc: Fix button styles when variant=outline and color=critical or serious
+- Updated dependencies [34c42a0]
+- Updated dependencies [2281c63]
+  - @accelint/temporal@0.1.3
+  - @accelint/logger@0.1.3
+  - @accelint/icons@2.1.1
+  - @accelint/core@0.5.1
+  - @accelint/bus@3.0.1
+  - @accelint/geo@0.4.1
+  - @accelint/design-foundation@1.0.2
+
 ## 8.1.1
 ### Patch Changes
 
