@@ -51,7 +51,7 @@
     "ora": "^8.2.0",
     "radash": "^12.1.1",
     "true-myth": "^9.0.1",
-    "typescript": "5.8.3",
+    "typescript": "^5.9.3",
     "yaml": "^2.8.1"
   },
   "devDependencies": {

@@ -53,7 +53,7 @@
     "lodash": "^4.17.21",
     "ora": "^8.2.0",
     "true-myth": "^9.0.1",
-    "typescript": "5.8.3"
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",

@@ -65,7 +65,7 @@
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
     "jsdom": "25.0.1",
-    "typescript": "5.8.3",
+    "typescript": "^5.9.3",
     "vite": "^7.2.2",
     "vitest": "^4.0.8",
     "webpack": "^5.103.0"
