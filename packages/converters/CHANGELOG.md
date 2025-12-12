@@ -1,5 +1,12 @@
 # @accelint/converters
 
+## 0.3.5
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+- Updated dependencies [34c42a0]
+  - @accelint/constants@0.1.8
+
 ## 0.3.4
 
 ### Patch Changes

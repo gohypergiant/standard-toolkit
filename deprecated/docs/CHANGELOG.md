@@ -1,5 +1,19 @@
 # @accelint/docs
 
+## 0.1.25
+### Patch Changes
+
+- Updated dependencies [34c42a0]
+  - @accelint/converters@0.3.5
+  - @accelint/formatters@0.1.8
+  - @accelint/predicates@0.4.4
+  - @accelint/constants@0.1.8
+  - @accelint/temporal@0.1.3
+  - @accelint/core@0.5.1
+  - @accelint/math@0.1.8
+  - @accelint/ntds@0.2.3
+  - @accelint/geo@0.4.1
+
 ## 0.1.24
 ### Patch Changes
 
