@@ -32,7 +32,7 @@ import {
   getHoverLineWidth,
   getStrokeColor,
 } from './utils/display-style';
-import type { PickingInfo } from '@deck.gl/core';
+import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { EditableShape } from '../shared/types';
 import type { DisplayShapeLayerProps } from './types';
 
@@ -435,11 +435,11 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   /**
    * Render all sublayers
    */
-  renderLayers() {
+  renderLayers(): Layer[] {
     return [
       this.renderHighlightLayer(),
       this.renderMainLayer(),
       this.renderLabelsLayer(),
-    ].filter(Boolean);
+    ].filter(Boolean) as Layer[];
   }
 }
