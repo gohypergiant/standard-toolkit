@@ -79,13 +79,12 @@
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@types/geodesy": "^2.2.8",
-    "geodesy": "^2.4.0",
     "tsdown": "^0.17.3",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
   },
-  "peerDependencies": {
+  "dependencies": {
+    "@types/geodesy": "^2.2.8",
     "geodesy": "^2.4.0"
   },
   "engines": {

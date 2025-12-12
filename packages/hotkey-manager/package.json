@@ -11,11 +11,11 @@
   },
   "type": "module",
   "files": [
+    "dist/**",
     "./catalog-info.yaml",
     "./CHANGELOG.md",
     "./package.json",
-    "./README.md",
-    "dist/**"
+    "./README.md"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -77,12 +77,14 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19",
-    "happy-dom": "^19.0.2",
     "react": "^19",
     "tsdown": "^0.17.3",
     "type-fest": "^5.3.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
+  },
+  "peerDependencies": {
+    "@accelint/core": "workspace:*"
   },
   "optionalDependencies": {
     "react": "^19"

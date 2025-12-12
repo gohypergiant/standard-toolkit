@@ -98,20 +98,17 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
-    "@accelint/design-toolkit": "workspace:*",
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "lodash": "^4.17.21",
     "react": "^19",
     "react-dom": "^19",
     "tsdown": "^0.17.3",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "lodash": "^4.17.21",
     "react": "^19",
     "react-dom": "^19"
   },
