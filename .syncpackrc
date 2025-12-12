@@ -8,7 +8,8 @@
         "**",
         "!@deck.gl/**",
         "!@react-aria/**",
-        "!react-aria-components"
+        "!react-aria-components",
+        "!react-querybuilder"
       ],
       "label": "By default all packages have minor semver range",
       "packages": [
@@ -20,7 +21,8 @@
       "dependencies": [
         "@deck.gl/**",
         "@react-aria/**",
-        "react-aria-components"
+        "react-aria-components",
+        "react-querybuilder"
       ],
       "label": "Packages that require patch semver range due to issues",
       "packages": [
