@@ -1,3 +1,0 @@
-# Second Page
-
-Cool beans

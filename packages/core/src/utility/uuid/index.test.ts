@@ -17,9 +17,13 @@ it('should return true for a UUID', () => {
   expect(isUUID(uuid())).toBe(true);
 });
 
-it.each([false, null, 10, '', 'Foo', {}])(
-  'should return false for other values: %s',
-  (input) => {
-    expect(isUUID(input)).toBe(false);
-  },
-);
+it.each([
+  false,
+  null,
+  10,
+  '',
+  'Foo',
+  {},
+])('should return false for other values: %s', (input) => {
+  expect(isUUID(input)).toBe(false);
+});

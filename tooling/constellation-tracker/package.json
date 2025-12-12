@@ -51,15 +51,15 @@
     "ora": "^8.2.0",
     "radash": "^12.1.1",
     "true-myth": "^9.0.1",
-    "typescript": "5.8.3",
+    "typescript": "^5.9.3",
     "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@types/node": "^24.9.0",
-    "tsup": "8.5.0",
-    "vitest": "^4.0.8"
+    "@types/node": "^22",
+    "tsup": "^8.5.0",
+    "vitest": "^4.0.15"
   },
   "bin": {
     "constellation-tracker": "./dist/main.js"

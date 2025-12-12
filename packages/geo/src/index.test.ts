@@ -92,14 +92,14 @@ describe.each`
   ${'DDM'} | ${parseDegreesDecimalMinutes}
   ${'DMS'} | ${parseDegreesMinutesSeconds}
 `('exhastive error checks for %s', ({ parser, system }) => {
-  describe.each(['LATLON', 'LONLAT'] as [Format, Format])(
-    'exhaustive errors for DD %s',
-    (format) => {
-      it.each(EXHAUSTIVE_ERRORS[system][format] as string[])('%s', (input) => {
-        expect(parser(format, input)[1].length !== 0);
-      });
-    },
-  );
+  describe.each(['LATLON', 'LONLAT'] as [
+    Format,
+    Format,
+  ])('exhaustive errors for DD %s', (format) => {
+    it.each(EXHAUSTIVE_ERRORS[system][format] as string[])('%s', (input) => {
+      expect(parser(format, input)[1].length !== 0);
+    });
+  });
 });
 
 describe('raw coordinate parsing', () => {

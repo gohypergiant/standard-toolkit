@@ -46,8 +46,8 @@
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "dependencies": {
-    "@loglayer/plugin": "^2.2.1",
-    "@loglayer/transport": "^2.2.1",
+    "@loglayer/plugin": "^2.1.6",
+    "@loglayer/transport": "^2.3.4",
     "@loglayer/transport-simple-pretty-terminal": "^2.2.1",
     "callsites": "^4.2.0",
     "serialize-error": "^12.0.0"
@@ -57,12 +57,12 @@
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "loglayer": "^6.10.0",
-    "tsdown": "^0.17.2",
-    "typescript": "5.8.3",
-    "vitest": "^4.0.8"
+    "tsdown": "^0.17.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
   },
   "peerDependencies": {
     "loglayer": "^6.10.0"

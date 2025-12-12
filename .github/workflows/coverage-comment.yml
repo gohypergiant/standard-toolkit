@@ -22,8 +22,6 @@ permissions:
 
 env:
   TURBO_TELEMETRY_DISABLED: 1
-  RUNNER_NODE_VERSION: 22
-  RUNNER_PNPM_VERSION: 10.9.0
   COVERAGE_SUMMARY_FILE: coverage/coverage-summary.json
   BASE_COVERAGE_SUMMARY_FILE: coverage/base-coverage-summary.json
 
@@ -37,44 +35,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          ref: ${{ github.base_ref }}
-          fetch-depth: 0
+          fetch-depth: 2
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: ${{ env.RUNNER_PNPM_VERSION }}
           run_install: false
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          node-version-file: 'package.json'
+          cache: 'pnpm'
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Install dependencies
         run: pnpm install
-        shell: bash
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Build packages
         run: pnpm run build
-        shell: bash
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Run tests with coverage
         run: pnpm run test
-        shell: bash
         continue-on-error: true
 
       - name: Generate per-package coverage summary (main)
         run: node ./.github/scripts/generate-summary.mjs base-
-        shell: bash
 
       - name: Upload coverage summary artifact (main)
         uses: actions/upload-artifact@v4
@@ -88,44 +75,34 @@ jobs:
     needs: coverage-main
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
+          fetch-depth: 2
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: ${{ env.RUNNER_PNPM_VERSION }}
           run_install: false
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          cache: 'pnpm'
+          node-version-file: 'package.json'
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Install dependencies
         run: pnpm install
-        shell: bash
 
-      # NOTE: shared step; if editing make sure to review the other(s)
       - name: Build packages
         run: pnpm run build
-        shell: bash
 
       # NOTE: shared step; if editing make sure to review the other(s)
       - name: Run tests with coverage
         run: pnpm run test
-        shell: bash
         continue-on-error: true
 
       - name: Generate per-package coverage summary (PR)
         run: node ./.github/scripts/generate-summary.mjs ""
-        shell: bash
 
       - name: Download base coverage summary artifact
         uses: actions/download-artifact@v4
