@@ -73,9 +73,9 @@
     "@accelint/vitest-config": "workspace:*",
     "@vitest/web-worker": "^4.0.8",
     "fast-check": "^4.1.1",
-    "tsdown": "^0.17.2",
+    "tsdown": "^0.17.3",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.15"
   },
   "peerDependencies": {
     "@accelint/core": "workspace:*"

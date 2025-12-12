@@ -40,7 +40,7 @@
     "@vitejs/plugin-react": "^4.3.2",
     "@vitest/coverage-istanbul": "^4.0.8",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.15"
   },
   "publishConfig": {
     "access": "public"

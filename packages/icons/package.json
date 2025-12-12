@@ -275,7 +275,7 @@
     "@svgr/cli": "^8.1.0",
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
-    "tsdown": "^0.17.2"
+    "tsdown": "^0.17.3"
   },
   "peerDependencies": {
     "react": "19.0.0",

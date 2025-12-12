@@ -44,9 +44,9 @@
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "tsdown": "^0.17.2",
+    "tsdown": "^0.17.3",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.15"
   },
   "engines": {
     "node": ">=22",

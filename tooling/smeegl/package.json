@@ -61,8 +61,8 @@
     "@accelint/vitest-config": "workspace:*",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.9.0",
-    "tsup": "8.5.0",
-    "vitest": "^4.0.8"
+    "tsup": "^8.5.0",
+    "vitest": "^4.0.15"
   },
   "bin": {
     "smeegl": "./dist/main.js"
