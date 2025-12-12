@@ -24,7 +24,7 @@ import { BaseMap as BaseMapComponent } from '../base-map';
 import { MapEvents } from '../base-map/events';
 import { createSavedViewport } from '../saved-viewports';
 import { STORAGE_ID } from '../saved-viewports/storage';
-import type { KeyOption, NonEmptyArray } from '@accelint/hotkey-manager';
+import type { KeyCombination } from '@accelint/hotkey-manager';
 import type { MapViewState } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { MapViewportEvent, MapViewportPayload } from '../base-map/types';
@@ -42,47 +42,106 @@ const setCurrentViewport = (newState: MapViewState) => {
   bus.emit(MapEvents.viewport, currentViewport);
 };
 
-const DIGIT_KEYS = [
+const DIGIT_KEYS: KeyCombination[] = [
   {
+    id: '',
     code: Keycode.Digit0,
+    alt: false,
+    ctrl: false,
+    shift: false,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit1,
+    alt: false,
+    ctrl: false,
     shift: true,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit2,
+    alt: false,
+    ctrl: false,
     shift: true,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit3,
+    alt: false,
+    ctrl: false,
     shift: true,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit4,
+    alt: false,
+    ctrl: false,
+    shift: false,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit5,
+    alt: false,
+    ctrl: false,
+    shift: false,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit6,
+    alt: false,
+    ctrl: false,
+    shift: false,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit7,
+    alt: false,
+    ctrl: false,
+    shift: false,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit8,
+    alt: false,
+    ctrl: false,
+    shift: false,
+    meta: false,
+    autoMacStyle: false,
   },
   {
+    id: '',
     code: Keycode.Digit9,
+    alt: false,
+    ctrl: false,
+    shift: false,
+    meta: false,
+    autoMacStyle: false,
   },
 ];
+
+type NonEmptyArray<T> = [T, ...T[]];
 
 const useSavedViewportHotkey = createSavedViewport({
   threshold: 1000,
   getCurrentViewport,
   setCurrentViewport,
-  key: DIGIT_KEYS as NonEmptyArray<KeyOption>,
+  key: DIGIT_KEYS as NonEmptyArray<KeyCombination>,
 });
 
 const meta: Meta = {
@@ -100,9 +159,24 @@ function ViewportsToolbar() {
   >({});
   const [activeSlot, setActiveSlot] = useState<number | null>(null);
 
-  const getViewPort = (key) => {
+  const getViewPort = (key: KeyCombination) => {
     const storageKey = keyToId(key);
     return savedViewports[storageKey];
+  };
+
+  const getSlotIndex = (e: KeyboardEvent) => {
+    const matchKey: KeyCombination = {
+      id: e.key,
+      code: e.code as Keycode,
+      ctrl: e.ctrlKey,
+      alt: e.altKey,
+      shift: e.shiftKey,
+      meta: e.metaKey,
+      autoMacStyle: false,
+    };
+    return DIGIT_KEYS.findIndex((key) => {
+      return keyToString(key) === keyToString(matchKey);
+    });
   };
 
   // Listen for viewport changes to clear active slot indicator
@@ -126,16 +200,7 @@ function ViewportsToolbar() {
 
     // Listen for viewport restoration events
     const handleKeyUp = (e: KeyboardEvent) => {
-      const matchKey = {
-        code: e.code,
-        ctrl: e.ctrlKey,
-        alt: e.altKey,
-        shift: e.shiftKey,
-        meta: e.metaKey,
-      };
-      const slotIndex = DIGIT_KEYS.findIndex((key) => {
-        return keyToString(key) === keyToString(matchKey);
-      });
+      const slotIndex = getSlotIndex(e);
       if (slotIndex === -1) {
         return;
       }
@@ -145,16 +210,7 @@ function ViewportsToolbar() {
 
     // Listen for save events (hold key)
     const handleKeyDown = (e: KeyboardEvent) => {
-      const matchKey = {
-        code: e.code,
-        ctrl: e.ctrlKey,
-        alt: e.altKey,
-        shift: e.shiftKey,
-        meta: e.metaKey,
-      };
-      const slotIndex = DIGIT_KEYS.findIndex((key) => {
-        return keyToString(key) === keyToString(matchKey);
-      });
+      const slotIndex = getSlotIndex(e);
       if (slotIndex !== -1) {
         // Debounce viewport reload during hold
         const timeout = setTimeout(() => loadViewports(), 100);
