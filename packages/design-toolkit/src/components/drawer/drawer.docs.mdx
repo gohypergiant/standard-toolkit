@@ -1,0 +1,175 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as DrawerStories from './drawer.stories';
+
+<Meta of={DrawerStories}/>
+
+# Drawer
+
+The Drawer component provides a flexible, accessible UI pattern for displaying content in a panel that slides in from the edge of the viewport. It is commonly used for navigation, menus, or contextual panels. The Drawer is built on top of the ViewStack system, allowing for stacked views, programmatic triggers, and nested navigation.
+
+It is composed of the following components:
+
+- **Drawer** – Root component that manages the drawer state and view stack
+- **DrawerLayout** – Container for layout structure, supports extending specific drawer's layout and drawer's push/overlay behavior
+- **DrawerMenu** – Navigation menu for switching between views
+- **DrawerMenuItem** – Individual menu item, can trigger open/toggle for a drawer as well as show a specific view. Supports tooltips for better accessibility and user experience.
+- **DrawerPanel** – Main panel container for drawer content
+- **DrawerView** – Content region for a specific view, mapped to a unique id
+- **DrawerHeader** – Header region, typically for titles or actions. Supports a `title` prop for automatic header layout with back/close buttons
+- **DrawerHeaderTitle** – Heading element, supports semantic levels and styling
+- **DrawerContent** – Main content area within a view
+- **DrawerFooter** – Footer region for actions or supplementary info
+- **DrawerTrigger** – Programmatic trigger for drawer/view actions
+
+The Drawer enforces a predictable child structure: only one DrawerPanel is allowed per Drawer, and DrawerMenu is optional.
+
+## Example Usage
+
+### Using the Simplified Title Prop
+```tsx
+const ids = {
+  drawer: uuid(),
+  a: uuid(),
+  b: uuid(),
+};
+
+<Drawer id={ids.drawer} defaultView={ids.a}>
+  <DrawerMenu>
+    <DrawerMenuItem for={ids.a}>View A</DrawerMenuItem>
+    <DrawerMenuItem for={ids.b}>View B</DrawerMenuItem>
+  </DrawerMenu>
+  <DrawerPanel>
+    <DrawerView id={ids.a}>
+      <DrawerHeader title="Title A" />
+      <DrawerContent>
+        Content for View A
+      </DrawerContent>
+      <DrawerFooter>
+        Footer Actions
+      </DrawerFooter>
+    </DrawerView>
+    <DrawerView id={ids.b}>
+      <DrawerHeader title="Title B" />
+      <DrawerContent>
+        Content for View B
+      </DrawerContent>
+      <DrawerFooter>
+        Footer Actions
+      </DrawerFooter>
+    </DrawerView>
+  </DrawerPanel>
+</Drawer>
+```
+
+### Using Custom Header Layout
+```tsx
+const ids = {
+  drawer: uuid(),
+  a: uuid(),
+  b: uuid(),
+};
+
+<Drawer id={ids.drawer} defaultView={ids.a}>
+  <DrawerMenu>
+    <DrawerMenuItem for={ids.a} textValue="View A">View A</DrawerMenuItem>
+    <DrawerMenuItem for={ids.b} textValue="View B">View B</DrawerMenuItem>
+  </DrawerMenu>
+  <DrawerPanel>
+    <DrawerView id={ids.a}>
+      <DrawerHeader>
+        <DrawerHeaderTitle level={2}>Title A</DrawerHeaderTitle>
+        {/* Custom actions can go here */}
+      </DrawerHeader>
+      <DrawerContent>
+        Content for View A
+      </DrawerContent>
+      <DrawerFooter>
+        Footer Actions
+      </DrawerFooter>
+    </DrawerView>
+    <DrawerView id={ids.b}>
+      <DrawerHeader>
+        <DrawerHeaderTitle level={2}>Title B</DrawerHeaderTitle>
+      </DrawerHeader>
+      <DrawerContent>
+        Content for View B
+      </DrawerContent>
+      <DrawerFooter>
+        Footer Actions
+      </DrawerFooter>
+    </DrawerView>
+  </DrawerPanel>
+</Drawer>
+```
+
+<Canvas of={DrawerStories.StaticHeaderFooter} />
+
+## DrawerHeader
+
+The DrawerHeader component provides two ways to create headers:
+
+### Simplified Header with Title Prop
+
+For common use cases, you can use the `title` prop to automatically create a header with:
+- A back button (when navigating to nested views)
+- The title text
+- A close button
+
+```tsx
+<DrawerHeader title="My Title" />
+```
+
+This automatically handles the layout and provides appropriate semantic heading levels based on the view stack depth.
+
+### Custom Header Layout
+
+For more control over the header content, you can use a compositional approach:
+
+```tsx
+<DrawerHeader>
+  <DrawerHeaderTitle level={2}>My Title</DrawerHeaderTitle>
+  <DrawerClose />
+</DrawerHeader>
+```
+## DrawerMenuItem
+
+The DrawerMenuItem component represents individual navigation items within the drawer menu.
+
+- **`for`** - The unique identifier fo the view this item should navigate to
+- **`toggle`** - When `true`, the menu item will toggle the visibility of the associated view instead of just opening it
+- **`textValue`** - Text that will be displayed in a tooltip when hovering over the menu item
+- **`classNames`** - Optional class names for custom styling of the item and tooltip
+  - `item` - Class name applied to the menu item
+  - `tooltip` - Class name applied to the tooltip
+
+When `textValue` is provided, a tooltip will appear on hover, enhancing accessibility and user experience.
+
+## DrawerView
+
+The DrawerView is the content region that will be visible when that view's id is active. The view can be deeply nested and contain any content.
+
+## DrawerTrigger
+
+DrawerTrigger enables transitioning between views or controlling the drawer programmatically. The `for` prop dictates its behavior:
+
+- `'open'`, `'toggle'`, `'close'`: Control the drawer state
+- A `UniqueId`: Pushes the corresponding view onto the stack
+- `[any combination of the above]` (array): Each event is fired in sequence
+
+## Variants
+
+* **small** - Compact drawer with minimal width, suitable for simple navigation
+* **medium** - Standard drawer size with balanced content space (default)
+* **large** - Spacious drawer with maximum content area for complex interfaces
+
+## Implementation Notes
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/drawer)
+
+- Uses Tagged UUIDs for unique view identification
+- Events are managed via `@accelint/bus` for open/toggle/close actions
+- Integrates with ViewStack for stacked navigation and triggers
+- Accessible by default, with ARIA roles and keyboard support
+
+See [ViewStack documentation](?path=/docs/components-viewstack--playground) for details on how to use the ViewStack component.

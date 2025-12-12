@@ -19,7 +19,7 @@ export default defineConfig({
     watch: false,
     coverage: {
       provider: 'istanbul',
-      reporter: ['json', 'lcov'],
+      reporter: ['json', 'json-summary', 'lcov', 'text'],
       reportsDirectory: './coverage',
       enabled: true,
       clean: true,

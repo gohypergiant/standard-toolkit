@@ -1,0 +1,104 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as CursorCoordinatesStories from './cursor-coordinates.stories';
+
+<Meta of={CursorCoordinatesStories} />
+
+# Cursor Coordinates
+A hook that retrieves the coordinates of the mouse's current hovered position on a BaseMap.
+
+## Features
+
+- **Multiple Coordinate Formats**: Supports DD (Decimal Degrees), DDM (Degrees Decimal Minutes), DMS (Degrees Minutes Seconds), MGRS, and UTM formats
+- **Hybrid Architecture**: React integration uses `useSyncExternalStore` for concurrent-safe updates
+- **SSR/RSC Compatible**: Full support for server-side rendering and React Server Components
+- **Instance Isolation**: Support for multiple independent map instances
+- **Efficient Fan-out**: Single bus listener per map instance, regardless of component subscribers
+- **Automatic Cleanup**: State is cleaned up when all subscribers unmount
+
+## Dependencies
+
+Cursor Coordinates requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for decoupled communication between map components
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
+- [`@accelint/geo`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/geo) - Geographic coordinate system conversion utilities
+
+**React Integration:**
+- `react` - React 19.0.0 or higher for the `useCursorCoordinates` hook and context
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core @accelint/geo react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @accelint/geo react
+```
+
+## Example usage
+```tsx
+import { uuid } from '@accelint/core';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+import { useEffect } from 'react';
+
+// Module-level constant shared across components
+const MAIN_MAP_ID = uuid();
+
+function CursorCoordinateDisplay() {
+  const { formattedCoord, setFormat } = useCursorCoordinates(MAIN_MAP_ID);
+
+  useEffect(() => {
+    setFormat('mgrs');
+  }, [setFormat]);
+
+  return (
+    <div className="absolute top-0 left-0 size-[300px] h-auto">
+      {formattedCoord}
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0" />
+      <CursorCoordinateDisplay />
+    </div>
+  );
+}
+```
+
+## React API Reference
+
+### `useCursorCoordinates(id?)`
+
+Hook to access hovered coordinate of a map instance.
+
+#### Parameters
+
+##### `id?: UniqueId`
+
+The map ID to access. **Recommended**: Always pass this parameter for UI components that are siblings to `BaseMap`.
+
+#### Returns
+
+```tsx
+{
+  setFormat: (format: CoordinateFormatTypes) => void;  // Set the desired coordinate system format
+  formattedCoord: string;                               // The formatted coordinate string in the current format
+}
+```
+
+#### Throws
+
+- `Error` if no `id` is provided and hook is used outside of `MapProvider`
+
+## Events
+
+Cursor Coordinates listens for hover events using `@accelint/bus`. `BaseMap` instances handle this automatically.
+If using an alternative map component, import `MapEvents.hover` from `@accelint/map-toolkit/deckgl/base-map`
+and emit hover events on the event bus with the coordinate data to integrate with this hook.
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit)

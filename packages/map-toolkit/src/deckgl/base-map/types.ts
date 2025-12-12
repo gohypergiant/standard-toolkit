@@ -17,13 +17,19 @@ import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
 
 /**
- * PickingInfo without the viewport, layer and sourceLayer properties,
- * as they contain function properties that cannot be serialized through the event bus.
+ * PickingInfo modified for serialization through the event bus.
+ * Omits viewport, layer, and sourceLayer (which contain non-serializable functions),
+ * and adds layerId and sourceLayerId extracted from the original layer objects.
  */
-type NonFuncPickingInfo = Omit<
+export type SerializablePickingInfo = Omit<
   PickingInfo,
   'viewport' | 'layer' | 'sourceLayer'
->;
+> & {
+  /** ID of the picked layer (extracted from layer.id before omission) */
+  layerId?: NonNullable<PickingInfo['layer']>['id'];
+  /** ID of the source layer if applicable (extracted from sourceLayer.id before omission) */
+  sourceLayerId?: NonNullable<PickingInfo['sourceLayer']>['id'];
+};
 
 /**
  * MjolnirGestureEvent without function properties and non-serializable objects.
@@ -61,7 +67,7 @@ type NonFuncMjolnirPointerEvent = Omit<
  */
 export type MapClickPayload = {
   /** Information about the picked object and its properties */
-  info: NonFuncPickingInfo;
+  info: SerializablePickingInfo;
   /** The gesture event that triggered the click */
   event: NonFuncMjolnirGestureEvent;
   /** The map instance the event occurred within */
@@ -74,10 +80,30 @@ export type MapClickPayload = {
  */
 export type MapHoverPayload = {
   /** Information about the picked object and its properties */
-  info: NonFuncPickingInfo;
+  info: SerializablePickingInfo;
   /** The pointer event that triggered the hover */
   event: NonFuncMjolnirPointerEvent;
   /** The map instance the event occurred within */
+  id: UniqueId;
+};
+
+export type Bounds = [
+  minLon: number,
+  minLat: number,
+  maxLon: number,
+  maxLat: number,
+];
+
+export type MapViewportPayload = {
+  /** Viewport bounds, undefined if viewport not yet initialized */
+  bounds?: Bounds;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  /** Viewport width in pixels */
+  width: number;
+  /** Viewport height in pixels */
+  height: number;
   id: UniqueId;
 };
 
@@ -93,7 +119,9 @@ export type MapClickEvent = Payload<typeof MapEvents.click, MapClickPayload>;
  */
 export type MapHoverEvent = Payload<typeof MapEvents.hover, MapHoverPayload>;
 
-/**
- * Union type of all map event types that can be emitted through the event bus.
- */
-export type MapEventType = MapClickEvent | MapHoverEvent;
+export type MapViewportEvent = Payload<
+  typeof MapEvents.viewport,
+  MapViewportPayload
+>;
+
+export type MapEventType = MapClickEvent | MapHoverEvent | MapViewportEvent;

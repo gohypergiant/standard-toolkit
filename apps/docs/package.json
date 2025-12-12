@@ -1,6 +1,6 @@
 {
   "name": "@accelint/docs",
-  "version": "0.1.23",
+  "version": "0.1.25",
   "private": true,
   "scripts": {
     "build": "pnpm run build:typedoc && pnpm run build:docusaurus",
@@ -24,7 +24,7 @@
     "@accelint/predicates": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "^2.3.5",
     "@codesandbox/sandpack-react": "^2.20.0",
     "@docusaurus/core": "^3.9.2",
     "@docusaurus/module-type-aliases": "^3.9.2",

@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 
 import * as MapModeStories from './map-mode.stories';
 
@@ -12,6 +12,7 @@ A framework-agnostic state management system for coordinating map interaction mo
 
 - **Framework Agnostic**: Core mode logic works independently of React or any UI framework
 - **Hybrid Architecture**: React integration combines Context (for map instance identity) with external store pattern (state management via `useSyncExternalStore`)
+- **SSR/RSC Compatible**: Full support for server-side rendering and React Server Components
 - **Mode Ownership**: Track which component/feature owns each mode to prevent conflicts
 - **Authorization Flow**: Built-in authorization system when switching between modes owned by different components
 - **Instance Isolation**: Support for multiple independent map instances (e.g., main map + minimap)
@@ -260,21 +261,28 @@ function MultiMapView() {
 
 ## Framework-Agnostic Usage
 
-While the examples above use React, the core `MapModeStore` works with any framework or vanilla JavaScript. The store implements the [**subscribe/notify pattern**](https://react.dev/reference/react/useSyncExternalStore#subscribing-to-an-external-store) (also known as the Observer pattern) and can be used directly:
+While the examples above use React, the core map-mode state management works with any framework or vanilla JavaScript. The module-level functions implement the [**subscribe/notify pattern**](https://react.dev/reference/react/useSyncExternalStore#subscribing-to-an-external-store) (also known as the Observer pattern) and can be used directly:
 
 ```typescript
-import { getOrCreateStore, destroyStore } from '@accelint/map-toolkit/map-mode';
+import {
+  getOrCreateSubscription,
+  getOrCreateSnapshot,
+  getOrCreateRequestModeChange,
+  clearMapModeState
+} from '@accelint/map-toolkit/map-mode';
 import { uuid } from '@accelint/core';
 
 // Create a map ID
 const id = uuid();
 
-// Get or create the store for this instance
-const store = getOrCreateStore(id);
+// Get the subscription function for this instance
+const subscribe = getOrCreateSubscription(id);
+const getSnapshot = getOrCreateSnapshot(id);
+const requestModeChange = getOrCreateRequestModeChange(id);
 
 // Subscribe to mode changes
-const unsubscribe = store.subscribe(() => {
-  const currentMode = store.getSnapshot();
+const unsubscribe = subscribe(() => {
+  const currentMode = getSnapshot();
   console.log('Mode changed to:', currentMode);
 
   // Update your UI, trigger side effects, etc.
@@ -282,11 +290,11 @@ const unsubscribe = store.subscribe(() => {
 });
 
 // Request a mode change
-store.requestModeChange('drawing', 'my-component-id');
+requestModeChange('drawing', 'my-component-id');
 
 // Clean up when done
 unsubscribe();
-destroyStore(id);
+clearMapModeState(id);
 ```
 
 ### Using the Event Bus Directly
@@ -660,18 +668,22 @@ export function App() {
 
 **Note**: Only custom Deck.gl layer components rendered as children of `BaseMap` can use `useMapMode()` without parameters (via context). Regular UI components must pass `id`.
 
-### Error: "MapModeStore not found for map instance: [id]"
+### Mode State Initialization
 
-**Cause**: Calling `useMapMode(id)` with an ID that doesn't have a store created yet, or after the store was destroyed.
+**Behavior**: Map mode state is created automatically on first subscription when `useMapMode` is called.
 
-**Solution**: Ensure `BaseMap` with the matching `id` is mounted before any components try to use `useMapMode` with that ID.
+**Key Points**:
+- No manual store creation needed - state is lazily initialized
+- Multiple components can use `useMapMode` with the same `id` safely
+- Cleanup happens automatically when all subscribers unmount
+- `clearMapModeState(id)` can be used for manual cleanup in advanced scenarios
 
 ### ID Changes Cause Remount
 
 **Behavior**: When the `id` prop passed to `BaseMap` changes, the component performs a complete remount.
 
 **Impact**:
-- The old store is properly cleaned up (no memory leaks)
+- Map mode state is properly cleaned up (no memory leaks)
 - All child components remount with the new ID
 - Map state is reset to default
 - All pending mode change requests are cleared

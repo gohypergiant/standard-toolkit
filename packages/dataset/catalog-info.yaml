@@ -1,0 +1,36 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: accelint_dataset
+  title: Accelint Dataset
+  description: >-
+    A simple, consistent representation of data.
+
+
+    Dependencies:
+
+    accelint_constellation-tracker@1.0.1, accelint_core@0.5.1,
+    accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.5
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/dataset/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 0.1.1
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/dataset
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:accelint_constellation-tracker
+    - component:accelint_core
+    - component:accelint_typescript-config
+    - component:accelint_vitest-config

@@ -1,0 +1,143 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as TableStories from './table.stories';
+
+<Meta of={TableStories} />
+
+# Table
+The Table component standardizes table setup, configuration, and behavior (e.g. sorting, column ordering, row selecting, etc.) across the app.
+It's built using Tanstack React Table and simplifies table usage by requiring only columns and data props and supports customizations via optional configuration props.
+
+It is composed of the following components:
+
+- **Table** - The root wrapper component that renders the full table structure.
+- **TableHeader** - Renders the table header section `(<thead>)` and maps over header groups provided by TanStack React Table
+- **TableHeaderCell** - Represents an individual header cell `(<th>)`, often with optional support for sorting, filtering, or custom labels.
+- **TableBody** - Renders the table body section `(<tbody>)` and maps over the visible rows from the table instance.
+- **TableRow** - Represents a single table row `(<tr>)`, rendered using the row model from TanStack.
+- **TableCell** - An individual data cell `(<td>)` within a row, rendering cell content using the column’s cell accessor or custom render logic.
+
+## Example usage
+```tsx
+const columnHelper = createColumnHelper<Person>();
+
+const columnsExample = [
+columnHelper.accessor("firstName", {
+    id: "firstName",
+    cell: (info) => info.getValue(),
+    header: () => <span>First Name</span>,
+}),
+columnHelper.accessor((row) => row.lastName, {
+    id: "lastName",
+    cell: (info) => <i>{info.getValue()}</i>,
+    header: () => <span>Last Name</span>,
+}),
+];
+
+const dataExample = [
+    {
+        id: "tanner",
+        firstName: "tanner",
+        lastName: "linsley",
+    },
+    {
+        id: "joe",
+        firstName: "joe",
+        lastName: "dirte",
+    },
+    {
+        id: "jane",
+        firstName: "jane",
+        lastName: "doe",
+    },
+];
+
+<Table columns={columnsExample} data={dataExample}/>
+
+//Static
+<Table {...args}>
+    <TableHeader>
+    <TableRow>
+        <TableHeaderCell>First Name</TableHeaderCell>
+        <TableHeaderCell>Last Name</TableHeaderCell>
+    </TableRow>
+    </TableHeader>
+    <TableBody>
+    {dataExample.map((person) => (
+        <TableRow key={person.id}>
+        <TableCell>{person.firstName}</TableCell>
+        <TableCell>{person.lastName}</TableCell>
+        </TableRow>
+    ))}
+    </TableBody>
+</Table>
+
+```
+
+<Canvas of={TableStories.Default} />
+
+### Common Props
+* **`columns`** - Array of column definitions
+* **`data`** - Array of data objects
+* **`showCheckBox`** - Boolean to determine if we should show checkbox column
+* **`kebabPosition`** - Position of the kebab menu, either 'left' or 'right'.
+* **`persistHeaderKebabMenu`** - Boolean to persist header kebab
+* **`persistRowKebabMenu`** - Boolean to persist row kebab
+* **`persistNumerals`** - Boolean to persist numeral columns
+* **`enableSorting`** - Boolean to enable sorting
+* **`enableColumnReordering`** - Boolean to enable column ordering
+* **`enableRowActions`** - Boolean to enable row actions
+* **`manualSorting`** - Boolean to enable server side sorting.
+* **`onSortChange`** - Prop for when server is handling sorting for data. Used when `manualSorting` is set to true.
+* **`onColumnReorderChange`** - Prop for when server is handling column reordering logic of data
+* **`rowSelection`** - Initial row selection state. An object mapping row IDs to their selection state (e.g., `{ 'row-1': true, 'row-2': true }`)
+* **`onRowSelectionChange`** - Callback function triggered when row selection changes. Receives an updater function or direct value following TanStack Table's API pattern.
+* **`fullWidth`** - Boolean to make the table take full width with fixed layout (applies 'w-full table-fixed' classes)
+
+## Column Sizing
+
+The table supports custom column widths. You can define a `size` property in your column definitions to set a fixed width:
+
+```tsx
+const columns = [
+  columnHelper.accessor('firstName', {
+    id: 'firstName',
+    header: 'First Name',
+    size: 150,      // Width in pixels
+  }),
+  // ...other columns
+];
+```
+
+<Canvas of={TableStories.ColumnSizing} />
+
+## Row Selection
+
+The table provides row selection capabilities with both initial selection and change tracking.
+
+### Initial Selection and Change Tracking
+
+You can specify which rows should be selected initially with the `rowSelection` prop, and track selection changes with the `onRowSelectionChange` callback. This follows TanStack Table's API pattern, where the callback receives an updater function or direct value.
+
+```tsx
+const [selectedRows, setSelectedRows] = useState({ 'tanner': true, 'joe': true });
+
+<Table
+  columns={columns}
+  data={data}
+  showCheckbox
+  rowSelection={selectedRows}
+  onRowSelectionChange={setSelectedRows}
+/>
+```
+
+The `rowSelection` prop is an object that maps row IDs to boolean values, where `true` indicates the row is selected. The `onRowSelectionChange` callback receives updates whenever the selection changes, allowing you to sync the state with other components or perform custom logic.
+
+<Canvas of={TableStories.InitialRowSelection} />
+
+## Implementation Notes
+The `Table` component uses Tanstack React Table from `Tanstack`.
+
+[Docs](https://tanstack.com/table/latest)
+
+[Github Source](https://github.com/tanstack/table)

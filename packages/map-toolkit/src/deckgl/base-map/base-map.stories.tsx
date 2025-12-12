@@ -14,7 +14,7 @@ import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { MapEvents } from './events';
 import { BaseMap as BaseMapComponent } from './index';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { MapClickEvent, MapHoverEvent } from '../base-map/types';
 
 const meta: Meta = {

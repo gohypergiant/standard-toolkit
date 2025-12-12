@@ -13,9 +13,10 @@
 'use client';
 
 import 'client-only';
-import { useEmit, useOn } from '@accelint/bus/react';
+import { useEffectEvent, useEmit, useOn } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
+import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { ShapeEvents } from '../shapes/shared/events';
@@ -23,12 +24,84 @@ import { BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
-import type { PickingInfo } from '@deck.gl/core';
+import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { ShapeModeChangedEvent } from '../shapes/shared/events';
-import type { MapClickEvent, MapHoverEvent } from './types';
+import type {
+  MapClickEvent,
+  MapHoverEvent,
+  MapViewportEvent,
+  SerializablePickingInfo,
+} from './types';
+
+/**
+ * Serializes PickingInfo for event bus transmission.
+ * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
+ */
+function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
+  const { viewport, layer, sourceLayer, ...infoRest } = info;
+  return {
+    layerId: layer?.id,
+    sourceLayerId: sourceLayer?.id,
+    ...infoRest,
+  };
+}
+
+/**
+ * Strips non-serializable properties from MjolnirGestureEvent for event bus transmission.
+ * Removes functions, DOM elements, and PointerEvent objects that cannot be cloned.
+ */
+function serializeMjolnirEvent(
+  event: MjolnirGestureEvent,
+): Omit<
+  MjolnirGestureEvent,
+  | 'stopPropagation'
+  | 'preventDefault'
+  | 'stopImmediatePropagation'
+  | 'srcEvent'
+  | 'rootElement'
+  | 'target'
+  | 'changedPointers'
+  | 'pointers'
+>;
+/**
+ * Strips non-serializable properties from MjolnirPointerEvent for event bus transmission.
+ * Removes functions and DOM elements that cannot be cloned.
+ */
+function serializeMjolnirEvent(
+  event: MjolnirPointerEvent,
+): Omit<
+  MjolnirPointerEvent,
+  | 'stopPropagation'
+  | 'preventDefault'
+  | 'stopImmediatePropagation'
+  | 'srcEvent'
+  | 'rootElement'
+  | 'target'
+>;
+function serializeMjolnirEvent(
+  event: MjolnirGestureEvent | MjolnirPointerEvent,
+) {
+  const {
+    stopImmediatePropagation,
+    stopPropagation,
+    preventDefault,
+    srcEvent,
+    rootElement,
+    target,
+    ...rest
+  } = event;
+
+  // Remove pointer arrays if present (only on MjolnirGestureEvent)
+  if ('changedPointers' in rest) {
+    const { changedPointers, pointers, ...gestureRest } = rest;
+    return gestureRest;
+  }
+
+  return rest;
+}
 
 /**
  * Props for the BaseMap component.
@@ -129,12 +202,17 @@ export type BaseMapProps = DeckglProps & {
  * ```
  */
 export function BaseMap({
+  id,
   className,
   children,
-  id,
+  controller = true,
+  interleaved = true,
+  parameters = {},
+  useDevicePixels = false,
+  widgets: widgetsProp = [],
   onClick,
   onHover,
-  parameters,
+  onViewStateChange,
   pickingRadius,
   ...rest
 }: BaseMapProps) {
@@ -154,6 +232,7 @@ export function BaseMap({
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
+      attributionControl: { compact: true },
     }),
     [container],
   );
@@ -180,8 +259,9 @@ export function BaseMap({
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
+  const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
 
-  const handleMapClick = useCallback(
+  const handleClick = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
@@ -201,15 +281,15 @@ export function BaseMap({
       } = event;
 
       emitClick({
-        info: infoRest,
-        event: eventRest,
+        info: serializePickingInfo(info),
+        event: serializeMjolnirEvent(event),
         id,
       });
     },
     [emitClick, id, onClick],
   );
 
-  const handleMapHover = useCallback(
+  const handleHover = useCallback(
     (info: PickingInfo, event: MjolnirPointerEvent) => {
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
@@ -228,25 +308,78 @@ export function BaseMap({
       } = event;
 
       emitHover({
-        info: infoRest,
-        event: eventRest,
+        info: serializePickingInfo(info),
+        event: serializeMjolnirEvent(event),
         id,
       });
     },
     [emitHover, id, onHover],
   );
 
+  const handleGetCursor = useCallback(() => {
+    return getCursor(id);
+  }, [id]);
+
+  const handleViewStateChange = useEffectEvent(
+    (params: ViewStateChangeParameters) => {
+      onViewStateChange?.(params);
+
+      const {
+        viewId,
+        viewState: { latitude, longitude, zoom },
+      } = params;
+
+      // @ts-expect-error squirrelly deckglInstance typing
+      const viewport = deckglInstance._deck
+        .getViewports()
+        // @ts-expect-error squirrelly deckglInstance typing
+        ?.find((vp) => vp.id === viewId);
+
+      emitViewport({
+        id,
+        bounds: viewport?.getBounds(),
+        latitude,
+        longitude,
+        zoom,
+        width: viewport?.width ?? 0,
+        height: viewport?.height ?? 0,
+      });
+    },
+  );
+
+  const handleLoad = useEffectEvent(() => {
+    //--- force update viewport state once all viewports initialized ---
+    // @ts-expect-error squirrelly deckglInstance typing
+    deckglInstance._deck.getViewports().forEach((vp) => {
+      handleViewStateChange({
+        viewId: vp.id,
+        viewState: {
+          latitude: vp.latitude,
+          longitude: vp.longitude,
+          zoom: vp.zoom,
+          id: vp.id,
+          bounds: vp.getBounds(),
+          width: vp.width,
+          height: vp.height,
+        },
+      } as ViewStateChangeParameters);
+    });
+  });
+
   return (
     <div id={container} className={className}>
       <MapProvider id={id}>
         <Deckgl
           {...rest}
-          controller
-          interleaved
-          useDevicePixels={false}
+          controller={controller}
+          interleaved={interleaved}
+          useDevicePixels={useDevicePixels}
+          onClick={handleClick}
           pickingRadius={pickingRadius ?? PICKING_RADIUS}
-          onHover={handleMapHover}
-          onClick={handleMapClick}
+          onHover={handleHover}
+          onLoad={handleLoad}
+          onViewStateChange={handleViewStateChange}
+          getCursor={handleGetCursor}
           // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
           // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
           parameters={{ ...PARAMETERS, ...parameters }}

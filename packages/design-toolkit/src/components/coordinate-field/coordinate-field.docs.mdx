@@ -1,0 +1,789 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as CoordinateFieldStories from './coordinate-field.stories';
+
+<Meta of={CoordinateFieldStories} />
+
+# CoordinateField
+
+A comprehensive coordinate input component supporting multiple coordinate systems (DD, DDM, DMS, MGRS, UTM) with validation, format conversion, and paste handling. The CoordinateField provides an interface for entering geographic coordinates in various formats, with automatic conversion and validation.
+
+All coordinate values are internally normalized to Decimal Degrees (DD) format for consistency, while allowing users to input and view coordinates in their preferred coordinate system.
+
+## Features
+
+- **Multiple Coordinate Systems** - Support for DD, DDM, DMS, MGRS, and UTM coordinate formats
+- **Segmented Input** - Masked input with logical segment breaks for coordinate parts
+- **Validation** - Validates coordinates using the `@accelint/geo` library
+- **Format Conversion** - View and copy coordinates in all supported formats via an accessible popover
+- **Paste Handling** - Detects and parses pasted coordinates in any supported format
+- **Keyboard Navigation** - Full keyboard accessibility with intuitive segment navigation (Tab, Arrow keys, Home, End)
+- **Accessible** - WCAG 2.1 AA compliant with comprehensive screen reader support and ARIA attributes
+
+## When to Use
+
+Use CoordinateField when you need:
+
+- Geographic coordinate input in forms or applications
+- Support for multiple coordinate system formats
+- Validation of coordinate values against standard ranges and formats
+- Conversion between different coordinate representations
+- Coordinate entry with paste support
+- Accessibility-compliant coordinate input for all users
+
+## Example usage
+
+```tsx
+import { CoordinateField } from '@accelint/design-toolkit';
+
+// Basic usage
+<CoordinateField
+  label="Location"
+  description="Enter a coordinate in Decimal Degrees"
+  format="dd"
+/>
+
+// With default value
+<CoordinateField
+  label="Target Position"
+  format="ddm"
+  defaultValue={{ lat: 40.7128, lon: -74.006 }}
+  onChange={(value) => console.log('Coordinate:', value)}
+/>
+
+// Controlled component
+<CoordinateField
+  label="Current Location"
+  format="dms"
+  value={coordinates}
+  onChange={setCoordinates}
+  isRequired
+/>
+```
+
+## Supported Coordinate Systems
+
+### Decimal Degrees (DD)
+
+The simplest and most common coordinate format, using decimal values for latitude and longitude.
+
+**Format:** `latitude, longitude`
+**Example:** `40.7128, -74.0060` (New York City)
+**Range:** Latitude: -90 to 90, Longitude: -180 to 180
+**Precision:** Up to 6-8 decimal places for sub-meter accuracy
+
+**When to use DD:**
+- General purpose applications and mapping tools
+- GPS devices and mobile applications
+- Simple data storage and exchange
+- When precision to 5-6 decimal places is sufficient
+- Integration with most modern mapping APIs
+
+<Canvas of={CoordinateFieldStories.DecimalDegrees} />
+
+### Degrees Decimal Minutes (DDM)
+
+A hybrid format commonly used in navigation and aviation, combining whole degrees with decimal minutes.
+
+**Format:** `DD° MM.MMMM' N/S, DD° MM.MMMM' E/W`
+**Example:** `40° 42.768' N, 74° 0.360' W` (New York City)
+**Range:** Degrees: 0-90 (lat) or 0-180 (lon), Minutes: 0-59.9999
+**Precision:** Decimal minutes provide meter-level accuracy
+
+**When to use DDM:**
+- Navigation applications (marine, aviation)
+- Aviation charts and marine navigation
+- When you need a balance between precision and readability
+- Professional navigation and surveying contexts
+
+<Canvas of={CoordinateFieldStories.DegreesDecimalMinutes} />
+
+### Degrees Minutes Seconds (DMS)
+
+Traditional format used in surveying, cartography, and historical mapping, dividing degrees into minutes and seconds.
+
+**Format:** `DD° MM' SS.SS" N/S, DD° MM' SS.SS" E/W`
+**Example:** `40° 42' 46.08" N, 74° 0' 21.60" W` (New York City)
+**Range:** Degrees: 0-90 (lat) or 0-180 (lon), Minutes: 0-59, Seconds: 0-59.99
+**Precision:** Seconds with decimals provide high accuracy
+
+**When to use DMS:**
+- Surveying and mapping applications
+- Historical data that uses DMS format
+- Traditional cartography and land records
+- When compatibility with paper maps is needed
+- Educational contexts teaching coordinate systems
+
+<Canvas of={CoordinateFieldStories.DegreesMinutesSeconds} />
+
+### MGRS (Military Grid Reference System)
+
+A grid-based coordinate system used by NATO militaries, dividing the Earth into grid zones with alphanumeric identifiers.
+
+**Format:** `ZZ[A-Z] [A-Z][A-Z] EEEEE NNNNN`
+**Example:** `18T WL 80654 06346` (New York City)
+**Components:**
+- Grid Zone Designator (e.g., 18T)
+- 100km Square ID (e.g., WL)
+- Easting (5 digits)
+- Northing (5 digits)
+
+**When to use MGRS:**
+- Military applications and operations
+- Search and rescue operations
+- Emergency response coordination
+- When grid-based references are preferred
+- NATO and allied military communications
+
+<Canvas of={CoordinateFieldStories.MGRS} />
+
+### UTM (Universal Transverse Mercator)
+
+A metric grid system dividing the world into 60 zones, commonly used in scientific research and GIS applications.
+
+**Format:** `ZZ[N/S] EEEEEE NNNNNNN`
+**Example:** `18N 585628 4511644` (New York City)
+**Components:**
+- Zone number (1-60)
+- Hemisphere (N or S)
+- Easting (6-7 digits in meters)
+- Northing (7 digits in meters)
+
+**When to use UTM:**
+- Scientific research and GIS applications
+- Engineering and construction projects
+- When metric measurements are required
+- Working within specific UTM zones
+- Cartographic applications requiring planar coordinates
+
+<Canvas of={CoordinateFieldStories.UTM} />
+
+## Sizes
+
+The CoordinateField component supports two size variants:
+
+* **medium** - Standard size with label, location icon, and format conversion button (default)
+* **small** - Compact size with minimal footprint, no label or format button display
+
+The **medium** size is recommended for most use cases as it provides the full feature set including the format conversion popover. Use **small** size in dense layouts, data tables, or when space is constrained.
+
+<Canvas of={CoordinateFieldStories.Default} />
+
+## Core Features
+
+### Segmented Input
+
+The component uses a segmented input approach where each logical part of the coordinate is a separate editable segment. This provides:
+
+- **Clear structure** - Visual separation of coordinate components
+- **Masked input** - Literal separators (°, ', ", commas) are pre-added
+- **Auto-advance** - Automatically moves to the next segment when current is complete
+- **Character filtering** - Each segment only accepts valid characters for its type
+
+Segment types vary by coordinate format:
+- **DD**: 2 segments (latitude, longitude)
+- **DDM**: 6 segments (lat degrees, lat minutes, lat direction, lon degrees, lon minutes, lon direction)
+- **DMS**: 8 segments (lat degrees, lat minutes, lat seconds, lat direction, lon degrees, lon minutes, lon seconds, lon direction)
+- **MGRS**: 5 segments (zone, band, grid square, easting, northing)
+- **UTM**: 4 segments (zone, hemisphere, easting, northing)
+
+### Format Conversion Popover
+
+The format conversion popover displays the current coordinate in all 5 supported formats with one-click copy functionality.
+
+**Features:**
+- Click the globe icon button to open the popover
+- View the coordinate in DD, DDM, DMS, MGRS, and UTM simultaneously
+- Each format displays: format label (e.g., "DD", "DDM"), formatted coordinate value, and copy button
+- Copy any format to clipboard with a single click
+- Visual feedback (checkmark icon) when copying is successful
+- Only enabled when a valid coordinate is entered
+
+**Note:** The popover displays format labels and values only. For detailed explanations of each coordinate system and when to use them, see the "Supported Coordinate Systems" section above.
+
+<Canvas of={CoordinateFieldStories.FormatPopoverDemo} />
+
+### Paste Handling
+
+CoordinateField intelligently handles pasted coordinates in any supported format:
+
+1. **Paste any format** - Paste coordinates in DD, DDM, DMS, MGRS, or UTM
+2. **Auto-detection** - The component automatically detects which format was pasted
+3. **Auto-conversion** - The pasted value is converted to the current display format
+4. **Disambiguation** - If multiple formats match, a modal allows you to choose the correct interpretation
+
+**Example pasting behavior:**
+- Paste `"40.7128, -74.0060"` into a DDM field → Converts to `40° 42.768' N, 74° 0.360' W`
+- Paste `"18T WL 80654 06346"` into a DD field → Converts to `40.7128, -74.006`
+- Paste ambiguous value → Shows dialog to select the intended format
+
+<Canvas of={CoordinateFieldStories.PasteHandling} />
+
+### Paste Error Handling
+
+When an invalid coordinate is pasted, the `onError` callback is invoked, allowing you to handle the error as needed:
+
+```tsx
+<CoordinateField
+  label="Location"
+  format="dd"
+  onError={(message, context) => {
+    // Display error to user
+    setErrorMessage(message);
+
+    // Or log for debugging
+    console.error('Paste failed:', message, context);
+  }}
+/>
+```
+
+**Important:** Error display is **not automatic** - you control how and when to show paste errors to users. The `onError` callback provides the error message and context, but displaying it is the implementor's responsibility.
+
+**Common paste errors:**
+- `"Pasted text is not a valid coordinate format"` - The pasted text couldn't be parsed as any supported coordinate system
+- Context includes the `pastedText` for debugging purposes
+
+**Example implementation with error display:**
+
+```tsx
+function CoordinateInput() {
+  const [value, setValue] = useState<CoordinateValue | null>(null);
+  const [error, setError] = useState('');
+
+  return (
+    <CoordinateField
+      label="Coordinates"
+      value={value}
+      onChange={(newValue) => {
+        setValue(newValue);
+        // Clear error when valid input is provided
+        if (newValue) setError('');
+      }}
+      onError={(message) => setError(message)}
+      isInvalid={!!error}
+      errorMessage={error}
+    />
+  );
+}
+```
+
+<Canvas of={CoordinateFieldStories.PasteHandling} />
+
+### Validation
+
+Validation using coordinate parsers from `@accelint/geo`:
+
+- **Range validation** - Latitude must be -90 to 90, longitude must be -180 to 180
+- **Format-specific validation** - Minutes must be 0-59, seconds must be 0-59, etc.
+- **Complete coordinate validation** - Only validates when all segments are filled
+- **Clear error messages** - Validation errors are displayed from the parser
+- **null on invalid** - The onChange callback receives null for invalid coordinates
+
+<Canvas of={CoordinateFieldStories.ValidationDemo} />
+
+### Keyboard Navigation
+
+Full keyboard accessibility for efficient data entry:
+
+- **Tab / Shift+Tab** - Move forward/backward between segments
+- **Arrow Left / Right** - Move between segments when at segment boundaries
+- **Home** - Jump to the first segment
+- **End** - Jump to the last segment
+- **Backspace** - Delete character, or jump to previous segment if current is empty (auto-retreat)
+- **Delete** - Delete character at cursor
+- **Auto-advance** - Automatically move to next segment when current is full
+- **Auto-retreat** - Backspace on an empty segment moves focus to the previous segment
+- **Character filtering** - Invalid characters are prevented from being entered. Each segment type accepts specific characters (e.g., numeric segments allow `[0-9\-\.]`, direction segments allow `[NSEW]`)
+
+## Props
+
+### Core Props
+
+- **`label`** - Text label displayed above the input field (medium size only)
+- **`description`** - Helper text displayed below the input field. Note: Hidden when field is in small size or invalid state (unless disabled)
+- **`errorMessage`** - Error message displayed when validation fails
+- **`isRequired`** - Whether the field is required (adds required indicator to label)
+- **`isDisabled`** - Whether the field is disabled
+- **`isInvalid`** - Whether to show the field in an invalid state
+- **`aria-label`** - Accessible label for screen readers. Required for accessibility when using small size without a visible label
+
+### Coordinate Configuration
+
+- **`format`** - Display format: `'dd'` | `'ddm'` | `'dms'` | `'mgrs'` | `'utm'` (default: `'dd'`)
+- **`value`** - Controlled value in Decimal Degrees format `{ lat: number, lon: number }`
+- **`defaultValue`** - Uncontrolled default value in Decimal Degrees format
+- **`onChange`** - Callback when value changes: `(value: CoordinateValue | null) => void`. Receives `null` when coordinate is invalid or incomplete
+- **`onError`** - Callback for internal errors during parsing or format conversion: `(message: string, context?: Record<string, unknown>) => void`. Useful for error monitoring, logging, or debugging. Not typically needed for form validation (use `onChange` returning `null` instead)
+
+### Size & Appearance
+
+- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
+- **`showFormatButton`** - Whether to show the format button for copying coordinates in different formats (default: `true`). When enabled, shows a button that opens a popover with all coordinate formats and copy functionality.
+
+### Styling
+
+- **`classNames`** - Object containing custom class names for different parts:
+  - `field` - Main container
+  - `label` - Label element
+  - `control` - Control container (icon + input + button)
+  - `input` - Input container with segments
+  - `segment` - Individual segment
+  - `description` - Description text
+  - `error` - Error message
+  - `formatButton` - Format conversion button
+
+**Note:** Internal popover and modal styling (popover content, format rows, copy buttons, etc.) cannot be customized via the `classNames` prop. These use predefined styles for consistency.
+
+### Form Integration
+
+- **`id`** - Unique identifier for the field
+
+**Note:** The `name` prop is not supported for CoordinateField as it uses a multi-segment input architecture. For form integration, use the `onChange` callback to capture the coordinate value and manage form state externally.
+
+## Types
+
+```typescript
+type CoordinateSystem = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
+
+type CoordinateValue = {
+  lat: number;  // Latitude in decimal degrees (-90 to 90)
+  lon: number;  // Longitude in decimal degrees (-180 to 180)
+};
+
+type CoordinateFieldProps = {
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  format?: CoordinateSystem;
+  size?: 'small' | 'medium';
+  showFormatButton?: boolean;  // Whether to show the format button (default: true)
+  value?: CoordinateValue;
+  defaultValue?: CoordinateValue;
+  onChange?: (value: CoordinateValue | null) => void;
+  onError?: (message: string, context?: Record<string, unknown>) => void;
+  isDisabled?: boolean;
+  isRequired?: boolean;
+  isInvalid?: boolean;
+  'aria-label'?: string;  // Required for accessibility when using small size without visible label
+  classNames?: {
+    field?: string;
+    label?: string;
+    control?: string;
+    input?: string;
+    segment?: string;
+    description?: string;
+    error?: string;
+    formatButton?: string;
+  };
+  id?: string;
+};
+```
+
+### Important Type Notes
+
+- **Internal Format**: All `value`, `defaultValue`, and `onChange` values use Decimal Degrees (DD) format
+- **Display Format**: The `format` prop only controls how the coordinate is displayed to the user
+- **Validation**: The `onChange` callback receives `null` when the coordinate is invalid or incomplete
+- **Auto-conversion**: When `format` changes, the component automatically converts the value to the new display format
+
+## Examples
+
+### Basic Usage
+
+The simplest way to use CoordinateField is with `defaultValue` for an uncontrolled component:
+
+```tsx
+import { CoordinateField } from '@accelint/design-toolkit';
+
+function App() {
+  const handleChange = (value) => {
+    console.log('Coordinate:', value);
+    // value is always in DD format: { lat: number, lon: number }
+  };
+
+  return (
+    <CoordinateField
+      label="Location"
+      description="Enter a coordinate in Decimal Degrees"
+      format="dd"
+      defaultValue={{ lat: 40.7128, lon: -74.006 }}
+      onChange={handleChange}
+    />
+  );
+}
+```
+
+<Canvas of={CoordinateFieldStories.WithInitialValue} />
+
+### Controlled Component
+
+For more control over the value state:
+
+```tsx
+import { useState } from 'react';
+import { CoordinateField, type CoordinateValue } from '@accelint/design-toolkit';
+
+function App() {
+  const [location, setLocation] = useState<CoordinateValue>({
+    lat: 40.7128,
+    lon: -74.006
+  });
+
+  return (
+    <CoordinateField
+      label="Location"
+      format="dd"
+      value={location}
+      onChange={setLocation}
+    />
+  );
+}
+```
+
+<Canvas of={CoordinateFieldStories.Controlled} />
+
+### Different Formats
+
+The component supports 5 coordinate formats. The internal value is always DD, but display can be in any format:
+
+```tsx
+// Display in DDM format, but value prop and onChange always use DD
+<CoordinateField
+  label="Location (DDM)"
+  format="ddm"
+  value={{ lat: 40.7128, lon: -74.006 }}
+  onChange={(value) => {
+    // value is in DD format: { lat: 40.7128, lon: -74.006 }
+    console.log('DD value:', value);
+  }}
+/>
+```
+
+<Canvas of={CoordinateFieldStories.AllFormats} />
+
+### With Validation
+
+The component automatically validates coordinates using the `@accelint/geo` library:
+
+```tsx
+function ValidatedCoordinateField() {
+  const [error, setError] = useState(null);
+
+  return (
+    <CoordinateField
+      label="Location"
+      description="Enter a valid coordinate"
+      format="dd"
+      isRequired
+      errorMessage={error}
+      onChange={(value) => {
+        if (value === null) {
+          // Invalid or incomplete coordinate
+          setError('Please enter a valid coordinate');
+        } else {
+          // Valid coordinate
+          setError(null);
+          console.log('Valid coordinate:', value);
+        }
+      }}
+    />
+  );
+}
+```
+
+<Canvas of={CoordinateFieldStories.ValidationDemo} />
+
+### With Error Monitoring
+
+Use the `onError` callback to monitor internal errors during parsing or format conversion:
+
+```tsx
+function CoordinateFieldWithErrorMonitoring() {
+  const [coordinate, setCoordinate] = useState(null);
+
+  return (
+    <CoordinateField
+      label="Location"
+      format="dd"
+      value={coordinate}
+      onChange={setCoordinate}
+      onError={(message, context) => {
+        // Log internal errors for debugging or monitoring
+        console.error('CoordinateField internal error:', message, context);
+
+        // Optional: Send to error tracking service
+        // errorTrackingService.log({ message, context });
+      }}
+    />
+  );
+}
+```
+
+**Note:** The `onError` callback is for internal errors during parsing or conversion. For form validation, use `onChange` which returns `null` for invalid coordinates.
+
+### Form Integration
+
+Integrating CoordinateField into a form:
+
+```tsx
+function LocationForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    coordinates: null,
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.coordinates) {
+      // Submit form with coordinate data
+      console.log('Submitting:', formData);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Location name"
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+      />
+
+      <CoordinateField
+        label="Coordinates"
+        format="dd"
+        isRequired
+        onChange={(coordinates) => setFormData({ ...formData, coordinates })}
+      />
+
+      <button type="submit">Save Location</button>
+    </form>
+  );
+}
+```
+
+<Canvas of={CoordinateFieldStories.FormIntegration} />
+
+### Small Size
+
+Use the small size variant for compact layouts:
+
+```tsx
+<CoordinateField
+  size="small"
+  format="dd"
+  defaultValue={{ lat: 40.7128, lon: -74.006 }}
+/>
+```
+
+<Canvas of={CoordinateFieldStories.SmallSize} />
+
+### Disabled State
+
+```tsx
+<CoordinateField
+  label="Read-only Location"
+  format="dd"
+  value={{ lat: 40.7128, lon: -74.006 }}
+  isDisabled
+/>
+```
+
+<Canvas of={CoordinateFieldStories.Disabled} />
+
+### Required Field
+
+```tsx
+<CoordinateField
+  label="Target Coordinates"
+  description="This field is required"
+  format="dd"
+  isRequired
+/>
+```
+
+<Canvas of={CoordinateFieldStories.Required} />
+
+## Best Practices
+
+### Choosing a Format
+
+Select the appropriate coordinate format based on your use case:
+
+- Use **DD** for general purpose applications, web mapping, GPS data, and modern APIs
+- Use **DDM** for navigation applications, aviation, and marine charts
+- Use **DMS** for surveying, traditional cartography, and historical data
+- Use **MGRS** for military applications and search/rescue operations
+- Use **UTM** for scientific research, GIS applications, and metric-based measurements
+
+### Validation Handling
+
+Always handle the `null` case in your `onChange` callback for invalid or incomplete coordinates:
+
+```tsx
+<CoordinateField
+  onChange={(value) => {
+    if (value === null) {
+      // Handle invalid coordinate
+      setError('Please enter a valid coordinate');
+      setCanSubmit(false);
+    } else {
+      // Handle valid coordinate
+      setError(null);
+      setCanSubmit(true);
+      saveCoordinate(value);
+    }
+  }}
+/>
+```
+
+### Size Selection
+
+- Use **medium** size when the field is a primary input with full context and features
+- Use **small** size in compact layouts, data tables, or repeated forms
+- Note: Medium size includes the format popover button; small size does not
+
+### Performance Considerations
+
+- Use **uncontrolled mode** (`defaultValue`) for better performance when you don't need to control every change
+- Use **controlled mode** (`value`) when you need to validate or transform the value externally
+- The component validates only when all segments are filled, preventing unnecessary validation during typing
+
+### User Experience
+
+- Provide clear `description` text with format examples to guide users
+- Use the format popover to help users understand how their coordinate appears in other systems
+- Allow users to paste coordinates in any format - the component will handle conversion
+- Mark fields as `isRequired` when applicable to set user expectations
+
+## Accessibility
+
+CoordinateField is WCAG 2.1 AA compliant with comprehensive accessibility features:
+
+### Keyboard Navigation
+
+All functionality is fully accessible via keyboard:
+
+- **Tab order** follows logical segment progression
+- **Arrow keys** for intuitive segment navigation
+- **Home/End** for quick navigation to first/last segment
+- All interactive elements (segments, format button, popover) are keyboard accessible
+- No keyboard traps - users can always escape from the component
+
+### Screen Reader Support
+
+- **ARIA labels** on all segments with descriptive semantic text (e.g., "Latitude", "Latitude degrees", "Longitude minutes", "MGRS zone")
+- **Error messages** announced to screen readers via ARIA live regions
+- **Format button** has descriptive aria-label
+- **Dialog/Modal** for disambiguation has proper ARIA roles and labels
+- **Validation feedback** is announced in real-time
+
+### Focus Management
+
+- **Clear focus indicators** on all interactive segments
+- **Focus automatically moves** to appropriate segment during auto-advance
+- **Focus restored** after modal interactions
+- **No focus loss** during value updates or format changes
+
+### Color and Contrast
+
+- **Error states** don't rely solely on color - use icons and text
+- **Focus indicators** are highly visible and meet contrast requirements
+- **Text** meets WCAG contrast requirements (4.5:1 minimum)
+- **Disabled state** is clearly indicated visually and via ARIA
+
+## Troubleshooting
+
+### Pasted coordinate not recognized
+
+**Problem:** When pasting a coordinate, you get an error that it's not a valid format.
+
+**Solutions:**
+- Ensure the pasted text is a complete coordinate, not a single value
+- Check that the format matches one of the 5 supported systems (DD, DDM, DMS, MGRS, UTM)
+- Remove any extra text or formatting around the coordinate
+- Try pasting just the coordinate values without labels or descriptions
+
+### Value not updating
+
+**Problem:** The coordinate value doesn't update when you change segments.
+
+**Solutions:**
+- For controlled mode, ensure you're updating the `value` prop in your `onChange` callback
+- Check that the value is in DD format: `{ lat: number, lon: number }`
+- Verify latitude is between -90 and 90
+- Verify longitude is between -180 and 180
+- Check browser console for validation errors
+
+### Validation errors not showing
+
+**Problem:** Expected validation errors are not displayed.
+
+**Solutions:**
+- Check that all segments are filled - validation only runs when the coordinate is complete
+- Ensure `errorMessage` prop is set if using external validation
+- Check browser console for validation messages from the parser
+- Verify `isInvalid` is not set to false when you expect errors
+
+### Format popover not showing
+
+**Problem:** The format conversion popover button is not visible or clickable.
+
+**Solutions:**
+- Verify `size` is set to `'medium'` - popover only shows for medium size
+- Ensure a valid coordinate is entered - button is disabled for invalid coordinates
+- Check that `isDisabled` is not set to true
+- Try filling all segments completely
+
+### Keyboard navigation not working
+
+**Problem:** Tab or arrow keys don't move between segments as expected.
+
+**Solutions:**
+- Ensure the component has focus - click into a segment first
+- Check that `isDisabled` is not set to true
+- Try pressing Tab key to ensure focus is within the component
+- Check browser console for JavaScript errors
+
+### Wrong format interpretation after paste
+
+**Problem:** Pasted coordinate is interpreted as the wrong format.
+
+**Solutions:**
+- If disambiguation modal appears, select the correct format
+- Ensure the pasted coordinate matches the standard format exactly
+- Try adding more specific formatting (e.g., include degree symbols for DMS)
+- Manually enter the coordinate if auto-detection continues to fail
+
+## Implementation Notes
+
+The `CoordinateField` component is built on top of React Aria Components, providing robust accessibility and keyboard navigation. It integrates with the `@accelint/geo` library for coordinate parsing, validation, and conversion.
+
+[React Aria Docs](https://react-spectrum.adobe.com/react-aria/index.html)
+
+[GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/coordinate-field)
+
+Key technical features:
+
+- **Segmented Input Architecture** - Custom segment components with intelligent navigation
+- **Industry-Standard Validation** - Uses `@accelint/geo` coordinate parsers for all 5 formats
+- **Smart Paste Detection** - Tries all parsers to identify pasted coordinate format
+- **Automatic Conversion** - Converts between DD (internal) and display format seamlessly
+- **Disambiguation Modal** - Allows user selection when multiple formats match pasted text
+- **Full Keyboard Support** - Implements complete keyboard navigation with auto-advance/retreat
+- **Accessibility First** - WCAG 2.1 AA compliant with comprehensive ARIA support
+
+The underlying HTML structure uses semantic form elements with proper ARIA labeling, error handling, and focus management. The component is optimized for both desktop and mobile interactions.
+
+## Interactive Examples
+
+For interactive examples and a live testing playground, explore the [CoordinateField Storybook stories](/?path=/docs/components-coordinatefield--docs).
+
+The Storybook includes:
+- All coordinate format examples (DD, DDM, DMS, MGRS, UTM)
+- Validation and error state demonstrations
+- Paste handling examples
+- Format conversion popover demo
+- Controlled and uncontrolled component patterns
+- Form integration examples
+- Size variants and styling options

@@ -1,5 +1,67 @@
 # @apps/next
 
+## 0.3.9
+### Patch Changes
+
+- Updated dependencies [00f3d35]
+- Updated dependencies [34c42a0]
+- Updated dependencies [2281c63]
+- Updated dependencies [c1c3fbc]
+  - @accelint/design-toolkit@8.1.2
+  - @accelint/temporal@0.1.3
+  - @accelint/logger@0.1.3
+  - @accelint/icons@2.1.1
+  - @accelint/core@0.5.1
+  - @accelint/bus@3.0.1
+  - @accelint/geo@0.4.1
+  - @accelint/design-foundation@1.0.2
+
+## 0.3.8
+### Patch Changes
+
+- 01bdf1e: Updated to use new @accelint/postcss-tailwind-css-modules plugin
+- Updated dependencies [01bdf1e]
+- Updated dependencies [01bdf1e]
+  - @accelint/design-foundation@1.0.1
+  - @accelint/postcss-tailwind-css-modules@1.0.0
+  - @accelint/design-toolkit@8.1.1
+
+## 0.3.7
+### Patch Changes
+
+- Updated dependencies [cfe734a]
+- Updated dependencies [2a7c001]
+- Updated dependencies [582dfd9]
+- Updated dependencies [c15d06f]
+  - @accelint/geo@0.4.0
+  - @accelint/design-toolkit@8.1.0
+
+## 0.3.6
+### Patch Changes
+
+- 80db585: BREAKING CHANGES:
+  Design Toolkit no longer exports `tv`, this is now available from Design Foundation
+  
+  Created new package @accelint/design-foundation that houses all of the Tailwind tokens, variants, base styles and utilities for easier reuse without having a dependency on the larger Design Toolkit
+  
+  Updated Map Toolkit Storybook and NextJS demo app styles to import the new Design Foundation
+- Updated dependencies [3f9d14b]
+- Updated dependencies [f3a9fb3]
+- Updated dependencies [3d6a25b]
+- Updated dependencies [a5dfc06]
+- Updated dependencies [80db585]
+- Updated dependencies [874edd5]
+- Updated dependencies [2470426]
+- Updated dependencies [4ca8fe5]
+- Updated dependencies [e463867]
+- Updated dependencies [e8535c4]
+- Updated dependencies [67edb84]
+- Updated dependencies [abc5365]
+- Updated dependencies [b48a3bd]
+  - @accelint/design-toolkit@8.0.0
+  - @accelint/design-foundation@1.0.0
+  - @accelint/bus@3.0.0
+
 ## 0.3.5
 
 ### Patch Changes

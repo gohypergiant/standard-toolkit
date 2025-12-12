@@ -1,0 +1,51 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: accelint_design-toolkit
+  title: Design Toolkit
+  description: >-
+    An open-source component library to serve as part of the entire ecosystem of
+    UX for Accelint.
+
+
+    Dependencies:
+
+    accelint_biome-config@1.0.2, accelint_bus@3.0.1,
+    accelint_constellation-tracker@1.0.1, accelint_core@0.5.1,
+    accelint_design-foundation@1.0.2, accelint_geo@0.4.1, accelint_icons@2.1.1,
+    accelint_logger@0.1.3, accelint_postcss-tailwind-css-modules@1.0.0,
+    accelint_prettier-config@0.2.0, accelint_temporal@0.1.3,
+    accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.5
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-toolkit/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 8.1.2
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - design-tk
+    - tooling
+    - ui
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:accelint_biome-config
+    - component:accelint_bus
+    - component:accelint_constellation-tracker
+    - component:accelint_core
+    - component:accelint_design-foundation
+    - component:accelint_geo
+    - component:accelint_icons
+    - component:accelint_logger
+    - component:accelint_postcss-tailwind-css-modules
+    - component:accelint_prettier-config
+    - component:accelint_temporal
+    - component:accelint_typescript-config
+    - component:accelint_vitest-config

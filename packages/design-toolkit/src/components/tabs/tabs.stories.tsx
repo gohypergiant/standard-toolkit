@@ -1,0 +1,93 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */
+
+import { Add, Check, Group } from '@accelint/icons';
+import { Icon } from '@/components/icon';
+import { Tabs } from '@/components/tabs/index';
+import { TabList } from './list';
+import { TabPanel } from './panel';
+import { Tab } from './tab';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+/**
+ * The `<Tabs>` component is a direct wrapper around the `Tabs` component from
+ * `react-aria-components`.
+ *
+ * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/Tabs.html">here</a>.
+ *
+ * ## Composition Requirements
+ *
+ * Error boundaries for incorrect usage of this component:
+ *
+ * - `Tabs` must include a `TabList`
+ */
+const meta = {
+  title: 'Components/Tabs',
+  component: Tabs,
+  args: {
+    orientation: 'horizontal',
+    isDisabled: false,
+  },
+  argTypes: {
+    orientation: {
+      control: 'select',
+      options: ['horizontal', 'vertical'],
+    },
+  },
+} satisfies Meta<typeof Tabs>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  render: ({ ...args }) => (
+    <div className='flex w-full flex-row flex-wrap gap-m'>
+      <div className='w-[300px]'>
+        <Tabs {...args}>
+          <TabList>
+            <Tab id='Storybook-Tab-1'>Tab 1</Tab>
+            <Tab id='Storybook-Tab-2'>Tab 2</Tab>
+            <Tab id='Storybook-Tab-3'>Tab 3</Tab>
+          </TabList>
+          <TabPanel id='Storybook-Tab-1'>Panel 1</TabPanel>
+          <TabPanel id='Storybook-Tab-2'>Panel 2</TabPanel>
+          <TabPanel id='Storybook-Tab-3'>Panel 3</TabPanel>
+        </Tabs>
+      </div>
+      <div className='w-[300px]'>
+        <Tabs {...args}>
+          <TabList>
+            <Tab id='Storybook-Tab-1'>
+              <Icon>
+                <Add />
+              </Icon>
+            </Tab>
+            <Tab id='Storybook-Tab-2'>
+              <Icon>
+                <Check />
+              </Icon>
+            </Tab>
+            <Tab id='Storybook-Tab-3'>
+              <Icon>
+                <Group />
+              </Icon>
+            </Tab>
+          </TabList>
+          <TabPanel id='Storybook-Tab-1'>Panel 1</TabPanel>
+          <TabPanel id='Storybook-Tab-2'>Panel 2</TabPanel>
+          <TabPanel id='Storybook-Tab-3'>Panel 3</TabPanel>
+        </Tabs>
+      </div>
+    </div>
+  ),
+};

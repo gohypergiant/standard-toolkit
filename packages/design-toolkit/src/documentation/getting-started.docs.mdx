@@ -1,0 +1,210 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Getting Started" />
+
+# Getting Started
+
+### NPM library
+
+**[https://www.npmjs.com/package/@accelint/design-toolkit](https://www.npmjs.com/package/@accelint/design-toolkit)**
+
+
+### Add DesignTK
+
+`npm install @accelint/design-toolkit`
+
+### Required versions
+
+- Typescript >= 5.8
+- React >=19
+- Node >= 22
+
+### Install any peer dependencies
+
+* tailwind merge
+* zod
+
+## Theming
+
+In order for tailwind to be able to generate the proper styles into your css, you need to source the design toolkit components into your styles css.
+
+### Tailwind Config
+
+The DTK uses the Tailwind library as the css and styling solution and is listed as a peer dependency for your application. While it is not strictly required that you continue to use this library as your application’s solution, we recommend it. For more information about Tailwind’s usage and best practices inside DTK, [read the docs](https://github.com/gohypergiant/standard-toolkit/blob/main/design-toolkit/components/src/documentation/tailwind.md).
+
+#### Install all required dependencies
+
+If they are not already installed from the peer dependency step above, install all required dependencies.
+
+```
+pnpm install tailwindcss tailwind-merge tailwind-variants
+```
+#### Add imports to root css file
+
+Make the DTK available to your application by importing the styles into your root css and then sourcing the DTK code for generation. Double check the path to the node modules is correct or it won’t generate the correct styles into your project and you will see style problems.
+
+Here, we will use the `globals.css` file as an example, but you can name your css file whatever you want as long as it is available to your entire project.
+
+```css
+// globals.css
+
+@import "@accelint/design-toolkit/styles";
+@source "../../node_modules/@accelint/design-toolkit"; //path might be different in your app
+```
+
+Here is an example of the `globals.css` file in a Nextjs example app: [globals.css](https://github.com/gohypergiant/standard-toolkit/blob/main/apps/next/src/app/globals.css)
+
+#### Set up the theme provider
+The Theme Provider is required to be able to toggle between light and dark mode as well as to create overrides to the default theme colors that are exported into Typescript. The Theme Provider is also required to be a client component, so it cannot be imported directly into a server component.
+
+First, create a theme.tsx to export the provider.
+```tsx
+'use client';
+
+import {PropsWithChildren} from 'react';
+import { ThemeProvider as DTKThemeProvider } from '@accelint/design-toolkit';
+
+export function ThemeProvider({ children }: PropsWithChildren) {
+  return (
+    <DTKThemeProvider>
+      {children}
+    </DTKThemeProvider>
+  );
+}
+```
+
+And then it can wrap your root component. Note: if theme state is coming from some persisted store, that will need to be handled from https://tailwindcss.com/docs/dark-mode#with-system-theme-support
+
+```tsx
+import {ThemeProvider} from './theme.tsx';
+
+export default function RootLayout({ children }: PropsWithChildren) {
+  return (
+    //   On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    //   document.documentElement.classList.toggle(
+    //     "dark",
+    //     localStorage.theme === "dark" ||
+    //       (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
+    //   );
+    <html lang='en' className='font-primary dark'>
+      <body className='w-full h-dvh flex flex-col'>
+        <DTKTheme>
+          {children}
+        </DTKTheme>
+      </body>
+    </html>
+  );
+}
+```
+
+### Overrides
+
+The DTK theme has a default color theme for accent colors that are “Accelint Blue” out of the box, but you can override those colors with a different color pallet.
+
+#### CSS
+
+In your `globals.css` file, you can add any overrides to the css that are needed. Make sure to account for both light and dark mode colors if you are supporting both modes in your application. While you can override any css var in the theme this way, it is HIGHLY RECOMMENDED you only override colors to ensure consistent behavior from the components.
+
+```css
+// globals.css
+
+@layer theme {
+  :root {
+    --fiona-orange-bold: #FF6B1A;
+    --fiona-orange-hover: #9E4820;
+    --fiona-orange-pressed: #7A361A;
+    --fiona-orange-muted: #b35123;
+
+    --shrek-green-bold: #C4D300;
+    --shrek-green-hover: #D1E000;
+    --shrek-green-pressed: #8A9400;
+    --shrek-green-muted: #4F5400;
+
+    @variant light {
+      --bg-accent-primary-bold: var(--fiona-orange-bold);
+      --bg-accent-primary-hover: var(--fiona-orange-hover);
+      --bg-accent-primary-pressed: var(--fiona-orange-pressed);
+      --bg-accent-primary-muted: var(--fiona-orange-muted);
+      --fg-accent-primary-bold: var(--fiona-orange-bold);
+      --fg-accent-primary-hover: var(--fiona-orange-hover);
+      --fg-accent-primary-pressed: var(--fiona-orange-pressed);
+      --outline-accent-primary-bold: var(--fiona-orange-bold);
+      --outline-accent-primary-hover: var(--fiona-orange-hover);
+      --outline-accent-primary-pressed: var(--fiona-orange-pressed);
+    }
+    @variant dark {
+      --bg-accent-primary-bold: var(--shrek-green-bold);
+      --bg-accent-primary-hover: var(--shrek-green-hover);
+      --bg-accent-primary-pressed: var(--shrek-green-pressed);
+      --bg-accent-primary-muted: var(--shrek-green-muted);
+      --fg-accent-primary-bold: var(--shrek-green-bold);
+      --fg-accent-primary-hover: var(--shrek-green-hover);
+      --fg-accent-primary-pressed: var(--shrek-green-pressed);
+      --outline-accent-primary-bold: var(--shrek-green-bold);
+      --outline-accent-primary-hover: var(--shrek-green-hover);
+      --outline-accent-primary-pressed: var(--shrek-green-pressed);
+    }
+  }
+}
+```
+
+#### Typescript
+
+You will also need to repeat those overrides into the Provider so that the TS tokens match the css tokens above.
+
+```tsx
+import { ThemeProvider } from '@accelint/design-toolkit';
+
+<ThemeProvider
+      overrides={{
+        light: {
+          bg: {
+            accent: {
+              primary: {
+                bold: [255, 107, 26, 1],
+              },
+            },
+          },
+        },
+        dark: {
+          bg: {
+            accent: {
+              primary: {
+                bold: [196, 211, 0, 1],
+              },
+            },
+          },
+        },
+      }}
+    >
+      //...etc
+    </ThemeProvider>
+```
+
+### Light Mode / Dark Mode
+
+Design toolkit supports both light mode and dark mode. When setting up a new project, you will need to assign a default mode — either `light` or `dark`. To change the mode programmatically, use the `useTheme()` hook:
+
+```css
+  const { mode, toggleMode } = useTheme();
+
+  const handleModeToggle = useCallback(() => {
+    toggleMode(mode === 'light' ? 'dark' : 'light');
+  }, [mode, toggleMode]);
+```
+
+### Token Naming Migration
+
+Version `5.0.0` of the Design Toolkit changed the naming convention for some design system tokens. For a complete list of the “before” and “after” name changes, [you can review them here](https://www.figma.com/design/9kqcWHdToDaWhvZSpkCO7c/CORE-DS-Design-Initiatives?node-id=48839-95940&p=f&t=fy8vpKRBV6eY80hi-0) in Figma
+
+![](/api/attachments.redirect?id=6572ca7f-fe83-4395-aaf7-38e919720821)
+
+
+If you are migrating from the old names to the new names, there is a script that will help migrate class names. To run the script, create a copy of the script into your own application and then point it at your `src` directory.
+
+**For example:**
+
+`pnpm zx scripts/token-migration.mjs "src"`
+
+The script can be found here and modified for your code base - [design-toolkit/components/scripts/token-migration.mjs](https://github.com/gohypergiant/standard-toolkit/blob/main/design-toolkit/components/scripts/token-migration.mjs).
+

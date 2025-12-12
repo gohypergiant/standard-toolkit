@@ -1,5 +1,15 @@
 # @accelint/geo
 
+## 0.4.1
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+
+## 0.4.0
+### Minor Changes
+
+- cfe734a: Fix @accelint/geo UTM parsing and formatting. UTM format will no longer return MGRS format.
+
 ## 0.3.0
 
 ### Minor Changes

@@ -16,7 +16,7 @@ import { render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapModeEvents } from './events';
-import { destroyStore, getOrCreateStore } from './store';
+import { clearMapModeState } from './store';
 import { useMapMode } from './use-map-mode';
 import type { UniqueId } from '@accelint/core';
 import type {
@@ -28,14 +28,13 @@ describe('useMapMode', () => {
   let testid: UniqueId;
 
   beforeEach(() => {
-    // Create a stable id and store for each test
+    // Create a stable id for each test
     testid = uuid();
-    getOrCreateStore(testid);
   });
 
   afterEach(() => {
     // Clean up the store after each test
-    destroyStore(testid);
+    clearMapModeState(testid);
     vi.restoreAllMocks();
   });
 
@@ -58,13 +57,6 @@ describe('useMapMode', () => {
       }).toThrow(
         'useMapMode requires either an id parameter or to be used within a MapProvider',
       );
-    });
-
-    it('throws error when store does not exist for the given id', () => {
-      const nonExistentId = uuid();
-      expect(() => {
-        renderHook(() => useMapMode(nonExistentId));
-      }).toThrow(`MapModeStore not found for map instance: ${nonExistentId}`);
     });
 
     it('updates when mode changes via subscription', async () => {
@@ -101,37 +93,6 @@ describe('useMapMode', () => {
   });
 
   describe('Integration with Store', () => {
-    it('calls store.requestModeChange when hook method is called', async () => {
-      const user = userEvent.setup();
-
-      function TestComponent() {
-        const { mode, requestModeChange } = useMapMode(testid);
-
-        return (
-          <div>
-            <span data-testid='mode'>{mode}</span>
-            <button
-              type='button'
-              onClick={() => requestModeChange('drawing', 'owner1')}
-              data-testid='change-mode'
-            >
-              Change
-            </button>
-          </div>
-        );
-      }
-
-      render(<TestComponent />);
-
-      expect(screen.getByTestId('mode')).toHaveTextContent('default');
-
-      await user.click(screen.getByTestId('change-mode'));
-
-      await waitFor(() => {
-        expect(screen.getByTestId('mode')).toHaveTextContent('drawing');
-      });
-    });
-
     it('triggers authorization flow when ownership conflict exists', async () => {
       const user = userEvent.setup();
       const onAuthRequest = vi.fn();

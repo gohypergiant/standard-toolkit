@@ -9,10 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
+import 'client-only';
 import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
-import { getStore } from './store';
+import {
+  getOrCreateRequestModeChange,
+  getOrCreateServerSnapshot,
+  getOrCreateSnapshot,
+  getOrCreateSubscription,
+} from './store';
 import type { UniqueId } from '@accelint/core';
 
 /**
@@ -28,15 +35,13 @@ export type UseMapModeReturn = {
 /**
  * Hook to access the map mode state and actions.
  *
- * This hook uses `useSyncExternalStore` to subscribe to the external `MapModeStore`,
- * providing concurrent-safe mode state updates. The hybrid architecture separates:
- * - Map instance identity (from `MapContext` or parameter)
- * - Mode state management (from `MapModeStore` via `useSyncExternalStore`)
+ * This hook uses `useSyncExternalStore` to subscribe to map mode state changes,
+ * providing concurrent-safe mode state updates. Uses a fan-out pattern where
+ * a single bus listener per map instance notifies N React component subscribers.
  *
  * @param id - Optional map instance ID. If not provided, will use the ID from `MapContext`.
  * @returns The current map mode and requestModeChange function
  * @throws Error if no `id` is provided and hook is used outside of `MapProvider`
- * @throws Error if store doesn't exist for the given map ID
  *
  * @example
  * ```tsx
@@ -75,24 +80,20 @@ export function useMapMode(id?: UniqueId): UseMapModeReturn {
     );
   }
 
-  // Get the store for this map instance
-  const store = getStore(actualId);
-
-  if (!store) {
-    throw new Error(
-      `MapModeStore not found for map instance: ${actualId}. Ensure a store has been created for this map instance (e.g., via MapProvider or getOrCreateStore).`,
-    );
-  }
-
-  // Subscribe to store using useSyncExternalStore
-  const mode = useSyncExternalStore(store.subscribe, store.getSnapshot);
+  // Subscribe to store using useSyncExternalStore with fan-out pattern
+  // Third parameter provides server snapshot for SSR/RSC compatibility
+  const mode = useSyncExternalStore(
+    getOrCreateSubscription(actualId),
+    getOrCreateSnapshot(actualId),
+    getOrCreateServerSnapshot(actualId),
+  );
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       mode,
-      requestModeChange: store.requestModeChange,
+      requestModeChange: getOrCreateRequestModeChange(actualId),
     }),
-    [mode, store],
+    [mode, actualId],
   );
 }

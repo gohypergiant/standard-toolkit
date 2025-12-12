@@ -1,5 +1,12 @@
 # @accelint/predicates
 
+## 0.4.4
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+- Updated dependencies [34c42a0]
+  - @accelint/core@0.5.1
+
 ## 0.4.3
 
 ### Patch Changes

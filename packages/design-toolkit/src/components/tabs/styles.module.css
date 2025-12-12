@@ -1,0 +1,140 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '../../index.module.css';
+
+@layer components.l1 {
+  .tabs {
+    @apply w-content flex;
+
+    @variant orientation-horizontal {
+      @apply flex-col;
+    }
+
+    @variant orientation-vertical {
+      @apply flex-row;
+    }
+  }
+
+  .list {
+    @apply flex;
+
+    @variant orientation-horizontal {
+      @apply flex-row;
+    }
+
+    @variant orientation-vertical {
+      @apply flex-col;
+    }
+  }
+
+  .tab {
+    @apply fg-primary-muted rounded-small p-s relative cursor-pointer;
+
+    @variant hover {
+      @apply fg-primary-bold;
+    }
+
+    @variant focus-visible {
+      @apply fg-primary-bold;
+    }
+
+    @variant pressed {
+      @apply fg-pressed;
+    }
+
+    @variant selected {
+      @apply fg-accent-primary-bold bg-accent-primary-muted;
+
+      @variant hover {
+        @apply fg-accent-primary-hover bg-accent-primary-hover;
+      }
+
+      @variant focus-visible {
+        @apply fg-accent-primary-hover bg-accent-primary-hover;
+      }
+
+      @variant pressed {
+        @apply fg-accent-primary-pressed bg-interactive-muted-pressed;
+      }
+    }
+
+    @variant group-orientation-horizontal/tabs {
+      @apply rounded-b-none;
+
+      &:after {
+        @apply absolute bottom-0 left-0 block h-px w-full bg-(--outline-static);
+        content: '';
+      }
+
+      @variant hover {
+        &:after {
+          @apply bg-(--outline-interactive-hover);
+        }
+      }
+
+      @variant focus-visible {
+        &:after {
+          @apply bg-(--outline-accent-primary-bold);
+        }
+      }
+
+      @variant pressed {
+        &:after {
+          @apply bg-(--outline-interactive-pressed);
+        }
+      }
+
+      @variant selected {
+        &:after {
+          @apply bg-(--outline-accent-primary-bold);
+        }
+
+        @variant hover {
+          &:after {
+            @apply bg-(--outline-accent-primary-hover);
+          }
+        }
+
+        @variant focus-visible {
+          &:after {
+            @apply bg-(--outline-accent-primary-hover);
+          }
+        }
+
+        @variant pressed {
+          &:after {
+            @apply bg-(--outline-accent-primary-pressed);
+          }
+        }
+      }
+    }
+
+    @variant disabled {
+      @apply fg-disabled cursor-not-allowed;
+
+      @variant selected {
+        @apply bg-interactive-disabled;
+      }
+
+      @variant group-orientation-horizontal/tabs {
+        &:after {
+          @apply bg-(--outline-interactive-disabled);
+        }
+      }
+    }
+  }
+
+  .panel {
+    @apply fg-primary-bold p-s;
+  }
+}
