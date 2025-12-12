@@ -47,28 +47,28 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/prettier-config": "workspace:*",
-    "@babel/parser": "^7.25.8",
-    "@biomejs/biome": "^2.3.5",
-    "@changesets/changelog-git": "^0.2.0",
-    "@changesets/cli": "^2.27.9",
+    "@babel/parser": "^7.28.5",
+    "@biomejs/biome": "^2.3.8",
+    "@changesets/changelog-git": "^0.2.1",
+    "@changesets/cli": "^2.29.8",
     "@ls-lint/ls-lint": "^2.3.1",
-    "@swc/core": "^1.7.36",
-    "lefthook": "^1.9.3",
-    "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.7.1",
+    "@swc/core": "^1.15.3",
+    "lefthook": "^2.0.11",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "rimraf": "^6.1.2",
     "syncpack": "^13.0.4",
-    "taze": "^0.17.2",
-    "tsx": "^4.20.5",
-    "turbo": "^2.5.8",
-    "zx": "^8.1.9"
+    "taze": "^19.9.2",
+    "tsx": "^4.21.0",
+    "turbo": "^2.6.3",
+    "zx": "^8.8.5"
   },
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@10.9.0",
+  "packageManager": "pnpm@10.25.0",
   "pnpm": {
     "overrides": {
       "@loglayer/plugin": "2.2.1",
