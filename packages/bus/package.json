@@ -69,7 +69,7 @@
     "@accelint/core": "workspace:*"
   },
   "optionalDependencies": {
-    "react": "19.0.0"
+    "react": "^19"
   },
   "engines": {
     "node": ">=22",
