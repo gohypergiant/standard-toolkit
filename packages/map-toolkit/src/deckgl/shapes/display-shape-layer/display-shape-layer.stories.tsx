@@ -454,19 +454,8 @@ export const LabelPositioning: Story = {
     );
 
     return (
-      <div className='flex h-dvh w-dvw flex-col'>
-        {/* Info banner */}
-        <div className='bg-purple-600 p-3 text-white'>
-          <div className='font-bold'>
-            Interactive Label Positioning Controls
-          </div>
-          <div className='text-sm'>
-            Use the Storybook controls panel to adjust label positions for each
-            geometry type
-          </div>
-        </div>
-
-        <BaseMap className='flex-1' id={LABEL_POSITIONS_MAP_ID}>
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={LABEL_POSITIONS_MAP_ID}>
           <displayShapeLayer
             id='shapes-label-positioning'
             mapId={LABEL_POSITIONS_MAP_ID}
@@ -477,6 +466,17 @@ export const LabelPositioning: Story = {
             labelOptions={labelOptions}
           />
         </BaseMap>
+
+        {/* Info banner */}
+        <div className='absolute top-l left-l z-10 rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Label Positioning</p>
+          <p className='mt-s text-body-s text-content-secondary'>
+            Use the Storybook controls panel to adjust
+          </p>
+          <p className='mt-xs text-body-s text-content-secondary'>
+            label positions for each geometry type
+          </p>
+        </div>
       </div>
     );
   },
