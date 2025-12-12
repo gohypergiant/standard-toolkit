@@ -1,95 +1,50 @@
 {
   "$schema": "./node_modules/syncpack/dist/schema.json",
-  "dependencyTypes": [
-    "dev",
-    "prod",
-    "peer",
-    "overrides"
-  ],
-  "formatRepository": false,
+  "formatRepository": true,
+  "formatBugs": true,
   "semverGroups": [
     {
       "dependencies": [
-        "tsup",
-        "@types/react*",
-        "react",
-        "typescript",
-        "jsdom"
+        "**",
+        "!@deck.gl/**"
       ],
-      "packages": [],
-      "range": ""
-    },
-    {
-      "dependencies": [
-        "**"
-      ],
+      "label": "By default all packages start with minor semver range",
       "packages": [
         "**"
       ],
       "range": "^"
+    },
+    {
+      "dependencies": [
+        "@deck.gl/**"
+      ],
+      "label": "Packages that require patch semver range due to issues",
+      "packages": [
+        "**"
+      ],
+      "range": "~"
     }
-  ],
-  "sortFirst": [
-    "$schema",
-    "name",
-    "title",
-    "description",
-    "author",
-    "owner",
-    "keywords",
-    "subPath",
-    "version",
-    "private",
-    "license",
-    "repository",
-    "type",
-    "files",
-    "main",
-    "module",
-    "source",
-    "types",
-    "exports",
-    "workspaces",
-    "scripts",
-    "dependencies",
-    "devDependencies",
-    "peerDependencies",
-    "optionalDependencies",
-    "overrides"
   ],
   "versionGroups": [
     {
       "dependencies": [
         "@accelint/**"
       ],
-      "label": "Use * for local packages",
+      "label": "Use workspace:* for workspace packages",
       "packages": [
         "**"
       ],
       "pinVersion": "workspace:*"
     },
     {
-      "dependencies": [
-        "typescript"
-      ],
-      "isIgnored": true,
-      "label": "Manually set typescript version based on dependencies"
+      "dependencies": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "label": "Ensure React & React DOM are within the same range across project",
+      "policy": "sameRange"
     },
     {
-      "dependencies": [
-        "react*",
-        "jsdom",
-        "@types/react*"
-      ],
-      "isIgnored": true,
-      "label": "Keep react components in sync manually"
-    },
-    {
-      "dependencies": [
-        "tailwind*"
-      ],
-      "isIgnored": true,
-      "label": "Tailwind specific"
+      "dependencies": ["@deck.gl/**"],
+      "label": "Ensure Deck.glare within the same range across project",
+      "policy": "sameRange"
     }
   ]
 }
