@@ -49,7 +49,7 @@
     "react-error-boundary": "^6.0.0",
     "react-querybuilder": "8.10.0",
     "server-only": "^0.0.1",
-    "tailwindcss": "^4.1.17",
+    "tailwindcss": "^4.1.18",
     "uuid": "^11.1.0",
     "zod": "^4.1.12"
   },
@@ -64,10 +64,8 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "jsdom": "^25.0.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.7",
-    "vitest": "^4.0.15",
-    "webpack": "^5.103.0"
+    "vitest": "^4.0.15"
   }
 }
