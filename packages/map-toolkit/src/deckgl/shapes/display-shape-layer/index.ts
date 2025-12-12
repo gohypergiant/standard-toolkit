@@ -56,6 +56,7 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * - **Customizable labels**: Flexible label positioning with per-shape or global options
  * - **Style properties**: Full control over colors, stroke patterns, and opacity
  * - **Event bus integration**: Automatically emits shape events via @accelint/bus
+ * - **Multi-map support**: Events include map instance ID for isolation
  *
  * ## Layer Structure
  * Renders three sublayers (in order):
@@ -65,25 +66,31 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  *
  * ## Event Bus Integration
  * Automatically emits shape events that can be consumed anywhere in your app:
- * - `shapes:selected` - Emitted when a shape is clicked
+ * - `shapes:selected` - Emitted when a shape is clicked (includes mapId)
+ * - `shapes:hovered` - Emitted when hovering over a shape or when hover ends (includes mapId)
  * - `shapes:deselected` - Emitted when clicking empty space (via map click handler)
  *
- * @example Basic usage with Fiber renderer
+ * @example Basic usage with Fiber renderer and map instance ID
  * ```tsx
  * import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+ * import { uuid } from '@accelint/core';
+ *
+ * const MAP_ID = uuid();
  *
  * function MapWithShapes() {
  *   const [selectedId, setSelectedId] = useState<string>();
  *
- *   // Listen to shape selection events
+ *   // Listen to shape selection events, filtered by map ID
  *   useOn(ShapeEvents.selected, (event) => {
+ *     if (event.payload.id !== MAP_ID) return;
  *     setSelectedId(event.payload.shapeId);
  *   });
  *
  *   return (
- *     <BaseMap>
+ *     <BaseMap id={MAP_ID}>
  *       <displayShapeLayer
  *         id="my-shapes"
+ *         mapId={MAP_ID}
  *         data={shapes}
  *         selectedShapeId={selectedId}
  *         showLabels={true}
@@ -179,7 +186,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Handle shape click
    */
   private handleShapeClick = (info: PickingInfo): void => {
-    const { onShapeClick } = this.props;
+    const { onShapeClick, mapId } = this.props;
 
     if (!info.object) {
       return;
@@ -188,8 +195,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const shape = info.object.properties?._shape as EditableShape;
 
     if (shape) {
-      // Emit shape selected event via bus
-      shapeBus.emit(ShapeEvents.selected, { shapeId: shape.id });
+      // Emit shape selected event via bus (include mapId for multi-map isolation)
+      shapeBus.emit(ShapeEvents.selected, { shapeId: shape.id, id: mapId });
 
       // Call callback if provided
       if (onShapeClick) {
@@ -202,13 +209,19 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Handle shape hover
    */
   private handleShapeHover = (info: PickingInfo): void => {
-    const { onShapeHover } = this.props;
+    const { onShapeHover, mapId } = this.props;
 
     // Extract shape from info if present
     let shape: EditableShape | null = null;
     if (info.object) {
       shape = info.object.properties?._shape as EditableShape;
     }
+
+    // Emit shape hovered event via bus (include mapId for multi-map isolation)
+    shapeBus.emit(ShapeEvents.hovered, {
+      shapeId: shape?.id ?? null,
+      id: mapId,
+    });
 
     // Call callback if provided
     if (onShapeHover) {

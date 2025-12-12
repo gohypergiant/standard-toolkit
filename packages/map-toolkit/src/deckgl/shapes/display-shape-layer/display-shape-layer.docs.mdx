@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 
 import * as DisplayShapeLayerStories from './display-shape-layer.stories';
 
@@ -17,6 +17,8 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Customizable labels**: Flexible label positioning with per-shape or global options
 - **Style properties**: Full control over colors, stroke patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
+- **Multi-map support**: Events include map instance ID for isolation
+- **Cursor integration**: Works with map-cursor for hover cursor changes
 
 ## Dependencies
 
@@ -49,7 +51,11 @@ import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import { useOn } from '@accelint/bus/react';
 import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
+import { uuid } from '@accelint/core';
 import { useState } from 'react';
+
+// Stable map ID for event isolation
+const MAP_ID = uuid();
 
 function MapWithShapes() {
   const [selectedId, setSelectedId] = useState<string>();
@@ -81,13 +87,16 @@ function MapWithShapes() {
 
   // Listen to shape selection events from the event bus
   useOn(ShapeEvents.selected, (event) => {
+    // Filter by map instance ID for multi-map scenarios
+    if (event.payload.id !== MAP_ID) return;
     setSelectedId(event.payload.shapeId);
   });
 
   return (
-    <BaseMap>
+    <BaseMap id={MAP_ID}>
       <displayShapeLayer
         id="my-shapes"
+        mapId={MAP_ID}
         data={shapes}
         selectedShapeId={selectedId}
         showLabels={true}
@@ -358,7 +367,7 @@ When `pickable={true}`, shapes show hover feedback:
 
 ## Event Bus Integration
 
-The layer automatically emits events via `@accelint/bus`:
+The layer automatically emits events via `@accelint/bus`. All events include an optional `id` field for multi-map scenarios.
 
 ### shapes:selected
 
@@ -366,11 +375,40 @@ Emitted when a shape is clicked:
 
 ```tsx
 import { useOn } from '@accelint/bus/react';
-import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
+import { ShapeEvents, type ShapeSelectedEvent } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
 
 function MyComponent() {
-  useOn(ShapeEvents.selected, (event) => {
+  useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
+    // Filter by map instance ID for multi-map scenarios
+    if (event.payload.id !== MAP_ID) return;
     console.log('Selected shape ID:', event.payload.shapeId);
+  });
+
+  // ...
+}
+```
+
+### shapes:hovered
+
+Emitted when hovering over a shape (or when hover ends):
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { ShapeEvents, type ShapeHoveredEvent } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+
+function MyComponent() {
+  const { requestCursorChange, clearCursor } = useMapCursor(MAP_ID);
+
+  // Change cursor on shape hover
+  useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
+    if (event.payload.id !== MAP_ID) return;
+
+    if (event.payload.shapeId) {
+      requestCursorChange('pointer', 'display-shapes');
+    } else {
+      clearCursor('display-shapes');
+    }
   });
 
   // ...
@@ -382,16 +420,17 @@ function MyComponent() {
 Emitted when clicking empty space (requires map click handler):
 
 ```tsx
-import { useEmit } from '@accelint/bus/react';
+import { useEmit, useOn } from '@accelint/bus/react';
+import { ShapeEvents, type ShapeDeselectedEvent } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
 import { MapEvents } from '@accelint/map-toolkit/deckgl/base-map/events';
 
 function MyComponent() {
-  const emitDeselected = useEmit(ShapeEvents.deselected);
+  const emitDeselected = useEmit<ShapeDeselectedEvent>(ShapeEvents.deselected);
 
   useOn(MapEvents.click, (event) => {
     // If clicked empty space and have selection
-    if (selectedId && event.payload.info.index === -1) {
-      emitDeselected(null);
+    if (selectedId && event.payload.id === MAP_ID && event.payload.info.index === -1) {
+      emitDeselected({ id: MAP_ID });
     }
   });
 
@@ -446,6 +485,7 @@ In addition to event bus integration, the layer provides callback props:
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `string` | *required* | Unique layer ID |
+| `mapId` | `UniqueId` | `undefined` | Map instance ID for event bus isolation in multi-map scenarios |
 | `data` | `EditableShape[]` | *required* | Array of shapes to display |
 | `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
 | `onShapeClick` | `(shape: EditableShape) => void` | `undefined` | Callback when shape is clicked |

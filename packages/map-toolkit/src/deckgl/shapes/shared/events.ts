@@ -13,12 +13,11 @@
 'use client';
 
 import type { Payload } from '@accelint/bus';
+import type { UniqueId } from '@accelint/core';
 import type { EditMode, ShapeId } from './types';
 
 /**
  * Shape lifecycle and interaction events
- *
- * Note: No shapes:clicked or shapes:hovered events - use BaseMap's map:click and map:hover instead
  */
 export const ShapeEvents = {
   /** Started drawing new shape */
@@ -39,6 +38,8 @@ export const ShapeEvents = {
   selected: 'shapes:selected',
   /** Selection cleared */
   deselected: 'shapes:deselected',
+  /** Shape hovered (for cursor changes) */
+  hovered: 'shapes:hovered',
   /** Validation error (consumer integrates with NoticeList) */
   validationError: 'shapes:validation-error',
   /** Mode changed (for map interaction coordination) */
@@ -114,10 +115,28 @@ export type ShapeSelectedEvent = Payload<
   'shapes:selected',
   {
     shapeId: ShapeId;
+    /** Map instance ID for multi-map scenarios */
+    id?: UniqueId;
   }
 >;
 
-export type ShapeDeselectedEvent = Payload<'shapes:deselected', null>;
+export type ShapeDeselectedEvent = Payload<
+  'shapes:deselected',
+  {
+    /** Map instance ID for multi-map scenarios */
+    id?: UniqueId;
+  } | null
+>;
+
+export type ShapeHoveredEvent = Payload<
+  'shapes:hovered',
+  {
+    /** Shape ID being hovered, or null when hover ends */
+    shapeId: ShapeId | null;
+    /** Map instance ID for multi-map scenarios */
+    id?: UniqueId;
+  }
+>;
 
 export type ShapeValidationErrorEvent = Payload<
   'shapes:validation-error',
@@ -147,6 +166,7 @@ export type ShapeEvent =
   | ShapeDeletedEvent
   | ShapeSelectedEvent
   | ShapeDeselectedEvent
+  | ShapeHoveredEvent
   | ShapeValidationErrorEvent
   | ShapeModeChangedEvent;
 

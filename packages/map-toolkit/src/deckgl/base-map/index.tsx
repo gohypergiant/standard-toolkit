@@ -266,20 +266,6 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onClick
       onClick?.(info, event);
 
-      // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, layer, sourceLayer, ...infoRest } = info;
-      const {
-        stopImmediatePropagation,
-        stopPropagation,
-        preventDefault,
-        srcEvent,
-        rootElement,
-        target,
-        changedPointers,
-        pointers,
-        ...eventRest
-      } = event;
-
       emitClick({
         info: serializePickingInfo(info),
         event: serializeMjolnirEvent(event),
@@ -293,19 +279,6 @@ export function BaseMap({
     (info: PickingInfo, event: MjolnirPointerEvent) => {
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
-
-      // the bus cannot serialize functions, so we omit them from the event payloads
-      const { viewport, layer, sourceLayer, ...infoRest } = info;
-
-      const {
-        stopImmediatePropagation,
-        stopPropagation,
-        preventDefault,
-        srcEvent,
-        rootElement,
-        target,
-        ...eventRest
-      } = event;
 
       emitHover({
         info: serializePickingInfo(info),

@@ -12,6 +12,7 @@
 
 'use client';
 
+import type { UniqueId } from '@accelint/core';
 import type { CompositeLayerProps } from '@deck.gl/core';
 import type {
   EditableShape,
@@ -46,6 +47,13 @@ export type StyledFeatureProperties = SharedStyledFeature['properties'];
 export interface DisplayShapeLayerProps extends CompositeLayerProps {
   /** Unique layer ID - required for deck.gl layer management */
   id: string;
+
+  /**
+   * Map instance ID for event bus isolation in multi-map scenarios.
+   * When provided, shape events will include this ID in their payload,
+   * allowing listeners to filter events by map instance.
+   */
+  mapId?: UniqueId;
 
   /**
    * Array of shapes to display
