@@ -36,6 +36,22 @@ const meta = {
       control: 'select',
       options: ['horizontal', 'vertical'],
     },
+    markers: {
+      control: 'object',
+      description: 'Configure discrete marker points on the slider track',
+    },
+    showMarkerLabels: {
+      control: 'boolean',
+      description: 'Whether to show labels on markers',
+    },
+    snapToMarkers: {
+      control: 'boolean',
+      description: 'When true, the slider can only be set to marker values',
+    },
+    showInput: {
+      control: 'boolean',
+      description: 'Whether to display numeric input fields',
+    },
   },
 } satisfies Meta<typeof Slider>;
 
@@ -52,10 +68,159 @@ export const Default: Story = {
   },
 };
 
+export const WithInput: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Volume',
+    showInput: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
 export const Range: Story = {
   args: {
-    defaultValue: [20, 30],
+    defaultValue: [20, 80],
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const RangeWithInput: Story = {
+  args: {
+    defaultValue: [20, 80],
+    label: 'Price Range',
     showInput: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const WithLabeledMarkers: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Quality',
+    markers: [
+      { value: 0, label: 'Low' },
+      { value: 50, label: 'Medium' },
+      { value: 100, label: 'High' },
+    ],
+    showMarkerLabels: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const RangeWithMarkers: Story = {
+  args: {
+    defaultValue: [25, 75],
+    label: 'Price Range',
+    markers: [0, 25, 50, 75, 100],
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const SnapToMarkers: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Discrete Selection',
+    markers: [0, 25, 50, 75, 100],
+    snapToMarkers: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const SnapToLabeledMarkers: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Rating',
+    markers: [
+      { value: 0, label: 'Poor' },
+      { value: 25, label: 'Fair' },
+      { value: 50, label: 'Good' },
+      { value: 75, label: 'Great' },
+      { value: 100, label: 'Excellent' },
+    ],
+    snapToMarkers: true,
+    showMarkerLabels: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const SnapToUnevenMarkers: Story = {
+  args: {
+    defaultValue: 0,
+    label: 'Zoom Level',
+    markers: [
+      { value: 0, label: '1x' },
+      { value: 10, label: '2x' },
+      { value: 25, label: '4x' },
+      { value: 50, label: '8x' },
+      { value: 100, label: '16x' },
+    ],
+    snapToMarkers: true,
+    showMarkerLabels: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const RangeWithSnap: Story = {
+  args: {
+    defaultValue: [25, 75],
+    label: 'Price Range',
+    markers: [
+      { value: 0, label: '$0' },
+      { value: 25, label: '$25' },
+      { value: 50, label: '$50' },
+      { value: 75, label: '$75' },
+      { value: 100, label: '$100' },
+    ],
+    snapToMarkers: true,
+    showMarkerLabels: true,
   },
   render: ({ ...args }) => {
     return (
