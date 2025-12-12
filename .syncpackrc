@@ -54,6 +54,11 @@
       "dependencies": ["@react-aria/**", "react-aria-components"],
       "label": "Ensure RAC packages are within the same range across project",
       "policy": "sameRange"
+    },
+    {
+      "dependencies": ["@types/node"],
+      "label": "Ensure node types match engine version",
+      "pinVersion": "^22"
     }
   ]
 }

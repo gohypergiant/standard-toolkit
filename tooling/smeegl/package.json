@@ -60,7 +60,7 @@
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^24.9.0",
+    "@types/node": "^22",
     "tsup": "^8.5.0",
     "vitest": "^4.0.15"
   },

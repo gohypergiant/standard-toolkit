@@ -101,7 +101,7 @@
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
-    "@types/node": "^24.9.0",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "lodash": "^4.17.21",
