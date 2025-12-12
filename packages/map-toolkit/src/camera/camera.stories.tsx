@@ -71,6 +71,7 @@ function CameraToolbar() {
           showLabel
           showInput
           value={cameraState.pitch}
+          isDisabled={cameraState.view !== '2.5D'}
           minValue={0}
           maxValue={65}
           layout='stack'
