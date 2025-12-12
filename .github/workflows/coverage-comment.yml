@@ -22,8 +22,6 @@ permissions:
 
 env:
   TURBO_TELEMETRY_DISABLED: 1
-  RUNNER_NODE_VERSION: 22
-  RUNNER_PNPM_VERSION: 10.9.0
   COVERAGE_SUMMARY_FILE: coverage/coverage-summary.json
   BASE_COVERAGE_SUMMARY_FILE: coverage/base-coverage-summary.json
 
@@ -46,15 +44,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: ${{ env.RUNNER_PNPM_VERSION }}
           run_install: false
 
       # NOTE: shared step; if editing make sure to review the other(s)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          cache: 'pnpm'
 
       # NOTE: shared step; if editing make sure to review the other(s)
       - name: Install dependencies
@@ -97,15 +93,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: ${{ env.RUNNER_PNPM_VERSION }}
           run_install: false
 
       # NOTE: shared step; if editing make sure to review the other(s)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          cache: 'pnpm'
 
       # NOTE: shared step; if editing make sure to review the other(s)
       - name: Install dependencies

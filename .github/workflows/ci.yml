@@ -6,7 +6,6 @@ on:
     types: [opened, synchronize]
 env:
   TURBO_TELEMETRY_DISABLED: 1
-  RUNNER_NODE_VERSION: 22
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
@@ -29,7 +28,6 @@ jobs:
           run_install: false
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.RUNNER_NODE_VERSION }}
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm run build

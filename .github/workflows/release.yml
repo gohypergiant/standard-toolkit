@@ -5,8 +5,6 @@ on:
       - main
 env:
   TURBO_TELEMETRY_DISABLED: 1
-  RUNNER_NODE_VERSION: 22
-  RUNNER_PNPM_VERSION: 10.9.0 # specified in root package.json
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
@@ -28,13 +26,11 @@ jobs:
             ${{ runner.os }}-turbo-
       - uses: pnpm/action-setup@v4
         with:
-          version: ${{ env.RUNNER_PNPM_VERSION }}
           run_install: false
       - uses: actions/setup-node@v4
         with:
-          registry-url: "https://registry.npmjs.org"
-          node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
       - run: pnpm install
       - name: Creating .npmrc
         run: |
@@ -47,8 +43,8 @@ jobs:
         with:
           publish: pnpm run changeset:release
           version: pnpm run changeset:version
-          commit: "build: version packages"
-          title: "Changeset Action: Version Packages + Publish"
+          commit: 'build: version packages'
+          title: 'Changeset Action: Version Packages + Publish'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
