@@ -14,6 +14,9 @@ importers:
       '@accelint/prettier-config':
         specifier: workspace:*
         version: link:tooling/prettier-config
+      '@accelint/turbo-select':
+        specifier: workspace:*
+        version: link:tooling/turbo-select
       '@babel/parser':
         specifier: ^7.28.5
         version: 7.28.5
@@ -32,12 +35,6 @@ importers:
       '@swc/core':
         specifier: ^1.15.3
         version: 1.15.3(@swc/helpers@0.5.17)
-      '@types/prompts':
-        specifier: ^2.4.9
-        version: 2.4.9
-      glob:
-        specifier: ^13.0.0
-        version: 13.0.0
       lefthook:
         specifier: ^2.0.11
         version: 2.0.11
@@ -47,9 +44,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.7.2
         version: 0.7.2(prettier@3.7.4)
-      prompts:
-        specifier: ^2.4.2
-        version: 2.4.2
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
@@ -65,9 +59,6 @@ importers:
       turbo:
         specifier: ^2.6.3
         version: 2.6.3
-      yaml:
-        specifier: ^2.8.1
-        version: 2.8.2
       zx:
         specifier: ^8.8.5
         version: 8.8.5
@@ -1302,6 +1293,24 @@ importers:
       vitest:
         specifier: ^4.0.15
         version: 4.0.15(@types/node@22.19.2)(happy-dom@19.0.2)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
+
+  tooling/turbo-select:
+    devDependencies:
+      '@types/prompts':
+        specifier: ^2.4.9
+        version: 2.4.9
+      glob:
+        specifier: ^13.0.0
+        version: 13.0.0
+      prompts:
+        specifier: ^2.4.2
+        version: 2.4.2
+      yaml:
+        specifier: ^2.8.1
+        version: 2.8.2
+      zx:
+        specifier: ^8.8.5
+        version: 8.8.5
 
   tooling/typescript-config: {}
 
