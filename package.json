@@ -39,7 +39,6 @@
     "lint:fs": "pnpm ls-lint",
     "lint:deps": "pnpm syncpack lint",
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
-    "turbo-select": "pnpm zx scripts/turbo-select.mjs",
     "test": "turbo test"
   },
   "devDependencies": {
