@@ -34,8 +34,15 @@ jobs:
           node-version: ${{ env.RUNNER_NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install
+      - run: pnpm run format
       - run: pnpm run build
       - run: pnpm run lint
       - run: pnpm run test
       - run: pnpm run lint:fs
-
+      - name: Enforce formatting
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "::error::Formatting issues detected. Please run 'pnpm run format' locally and commit the changes."
+            git diff --name-only
+            exit 1
+          fi
