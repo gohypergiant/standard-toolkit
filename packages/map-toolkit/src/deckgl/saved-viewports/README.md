@@ -17,46 +17,22 @@ pnpm add @accelint/map-toolkit @accelint/hotkey-manager
 
 Provide an options object to `createSavedViewport`, which wires up hotkey bindings and storage logic. Optional parameters are used to provide interfaces to custom persistence locations.
 
-### Example: Defining custom hook using `createSavedViewport`
+## Default Keyboard Shortcuts
 
-```ts
-import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+By default, the following keys are bound:
+- `0-9`: Quick restore viewport from slot
+- `Hold 0-9`: Save current viewport to slot
 
-const getCurrentViewport = () => {
-  // Gets viewport from locally managed store
-}
+The hold threshold is configurable via the `threshold` option (default: 1000ms).
 
-const setCurrentViewport = (viewport) => {
-  // Locally stores viewport
-};
+## Example Implementation
 
-export const useSavedViewports = createSavedViewport({
-  threshold: 500, // Optional: ms to trigger save on key hold
-  getCurrentViewport,
-  setCurrentViewport,
-  // Optionally, provide custom persistence methods for external store:
-  // getSavedViewport: (id) => { ... },
-  // setSavedViewport: (id, viewport) => { ... },
-});
-```
+The `ViewportsToolbar` component in the Storybook stories demonstrates
+a reference implementation. This is NOT a production-ready component,
+but rather an example showing how you might build UI around the
+saved-viewports hook.
 
-### Example: Using custom hook
-
-```tsx
-import React from 'react';
-import { useSavedViewports } from './your-custom-hook-file';
-import { globalBind } from '@accelint/hotkey-manager';
-
-globalBind();
-
-export function MapComponent() {
-  // This will register the hotkeys for saving/recalling viewports
-  useSavedViewports();
-
-  // ...render your Deck.gl map here...
-  return <div>Map goes here</div>;
-}
-```
+See `viewports-toolbar.tsx` for implementation details.
 
 > **Note:** The `globalBind` method must be called in the same client file as your custom hook to ensure the hotkeys are registered and work correctly.
 
@@ -68,6 +44,16 @@ export function MapComponent() {
 
 ## API
 - `createSavedViewport(options)`: Registers hotkeys for saving/recalling viewports. See example above for options.
+
+## Troubleshooting
+
+**Keys not working?**
+- Ensure `globalBind()` is called before using the hook
+- Check browser console for hotkey conflicts
+
+**Viewports not persisting?**
+- Verify localStorage is enabled in the browser
+- Check for storage quota issues
 
 ---
 
