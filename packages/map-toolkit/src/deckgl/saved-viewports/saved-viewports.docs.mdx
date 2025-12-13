@@ -1,0 +1,264 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as SavedViewportsStories from './saved-viewports.stories';
+
+<Meta of={SavedViewportsStories} />
+
+# Saved Viewports
+
+A hotkey-based system for saving and restoring map viewport positions. Allows users to quickly save up to 10 viewport states (using number keys 0-9) and instantly return to them later, improving navigation efficiency in map-based applications.
+
+## Features
+
+- **Keyboard Shortcuts**: Save and restore viewports using number keys (0-9)
+- **Hold to Save**: Hold a number key for 3 seconds to save the current viewport
+- **Tap to Restore**: Tap a number key to instantly restore a saved viewport
+- **Persistent Storage**: Viewports are saved to localStorage and persist across sessions
+- **Event Bus Integration**: Leverages `@accelint/bus` for viewport state synchronization
+- **Customizable**: Configure threshold timing, storage mechanisms, and hotkey bindings
+- **TypeScript**: Fully typed with comprehensive type definitions
+- **Multiple Instances**: Support for multiple independent map instances via unique identifiers
+
+## Dependencies
+
+Saved Viewports requires the following dependencies:
+
+**Required:**
+- [`@accelint/hotkey-manager`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/hotkey-manager) - Hotkey registration and event handling
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for viewport state synchronization
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
+- [`@deck.gl/core`](https://deck.gl/) - Deck.gl core library for MapViewState types
+- `react` - React 19.0.0 or higher
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/hotkey-manager @accelint/bus @accelint/core @deck.gl/core react
+# or
+pnpm add @accelint/map-toolkit @accelint/hotkey-manager @accelint/bus @accelint/core @deck.gl/core react
+```
+
+## Usage
+
+### With Event Bus Integration
+
+The recommended pattern uses `@accelint/bus` to synchronize viewport state between the map and saved viewport system:
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+import { useOn } from '@accelint/bus/react';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { MapEvents } from '@accelint/map-toolkit/deckgl/base-map';
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+import { globalBind } from '@accelint/hotkey-manager';
+import type { MapViewState } from '@deck.gl/core';
+import type { MapViewportEvent, MapViewportPayload } from '@accelint/map-toolkit/deckgl/base-map';
+
+globalBind();
+
+const bus = Broadcast.getInstance<MapViewportEvent>();
+let currentViewport: MapViewportPayload;
+
+const useSavedViewportHotkey = createSavedViewport({
+  threshold: 1000,//ms
+  getCurrentViewport: () => currentViewport,
+  setCurrentViewport: (newState: MapViewState) => {
+    // Merge new state with current viewport
+    currentViewport = {
+      ...currentViewport,
+      ...newState,
+    };
+    // Emit to notify other components
+    bus.emit(MapEvents.viewport, currentViewport);
+  },
+});
+
+export function MapView() {
+  useSavedViewportHotkey();
+
+  // Subscribe to viewport changes from BaseMap
+  useOn<MapViewportEvent>(MapEvents.viewport, (event) => {
+    currentViewport = {
+      ...currentViewport,
+      ...event.payload,
+    };
+    console.log('Viewport updated:', currentViewport);
+  });
+
+  return <BaseMap id={MAP_ID} className="w-full h-full" />;
+}
+```
+
+### Custom Storage
+
+Provide your own storage mechanism instead of using the default localStorage:
+
+```typescript
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+import type { MapViewState } from '@deck.gl/core';
+import type { KeyCombinationId } from '@accelint/hotkey-manager';
+
+// Custom storage in memory or external service
+const viewportCache = new Map<string, MapViewState>();
+
+const useSavedViewportHotkey = createSavedViewport({
+  threshold: 3000,
+  getCurrentViewport: () => currentViewState,
+  setCurrentViewport: (newState) => {
+    currentViewState = newState;
+  },
+  getSavedViewport: (id: KeyCombinationId, uniqueIdentifier?: string) => {
+    const key = uniqueIdentifier ? `${uniqueIdentifier}-${id}` : id;
+    return viewportCache.get(key);
+  },
+  setSavedViewport: (
+    id: KeyCombinationId,
+    viewport: MapViewState,
+    uniqueIdentifier?: string,
+  ) => {
+    const key = uniqueIdentifier ? `${uniqueIdentifier}-${id}` : id;
+    viewportCache.set(key, viewport);
+    console.log(`Saved viewport to key: ${key}`);
+  },
+});
+```
+
+### Custom Hotkeys
+
+Override the default number keys with custom key combinations:
+
+```typescript
+import { Keycode } from '@accelint/hotkey-manager';
+
+const useSavedViewportHotkey = createSavedViewport({
+  threshold: 2000,
+  getCurrentViewport: () => currentViewport,
+  setCurrentViewport: (newState: MapViewState) => {
+    currentViewport = {
+      ...currentViewport,
+      ...newState,
+    };
+  },
+  key: [
+    {
+      id: '1',
+      code: Keycode.Digit1,
+      alt: false,
+      ctrl: true,
+      shift: false,
+      meta: false,
+      autoMacStyle: false,
+    },// CTRL+1
+    {
+      id: '2',
+      code: Keycode.Digit2,
+      alt: false,
+      ctrl: false,
+      shift: true,
+      meta: false,
+      autoMacStyle: false,
+    },// SHIFT+2
+    {
+      id: '3',
+      code: Keycode.Digit3,
+      alt: false,
+      ctrl: false,
+      shift: false,
+      meta: false,
+      autoMacStyle: false,
+    },// 3
+  ],
+});
+```
+
+## API
+
+### `createSavedViewport(options)`
+
+Creates a React hook that registers hotkeys for saving and restoring viewports.
+
+#### Parameters
+
+##### `options: SavedViewportOptions`
+
+Configuration object with the following properties:
+
+###### `getCurrentViewport: () => MapViewState` (required)
+
+Function that returns the current map viewport state. Called when saving a viewport.
+
+###### `setCurrentViewport: (viewport: MapViewState) => void` (required)
+
+Function that receives a viewport state and applies it to the map. Called when restoring a saved viewport.
+
+###### `threshold?: number`
+
+Milliseconds to hold a key before saving. Defaults to `3000` (3 seconds).
+
+###### `uniqueIdentifier?: string`
+
+Optional identifier to namespace saved viewports. Useful for multiple map instances.
+
+###### `getSavedViewport?: (id: KeyCombinationId, uniqueIdentifier?: string) => MapViewState`
+
+Custom function to retrieve saved viewports. If not provided, uses localStorage.
+
+###### `setSavedViewport?: (id: KeyCombinationId, viewport: MapViewState, uniqueIdentifier?: string) => void`
+
+Custom function to persist saved viewports. If not provided, uses localStorage.
+
+###### `key?: KeyCombination[]`
+
+Custom key combinations to use instead of default number keys (0-9). Accepts an array of `KeyCombination` objects from `@accelint/hotkey-manager`.
+
+#### Returns
+
+Returns a React hook function that must be called within a component to activate the hotkeys.
+
+## How It Works
+
+* **Initialization**: Call `globalBind()` once at the application root to initialize the hotkey manager
+* **Hook Creation**: Create the saved viewport hook with `createSavedViewport()` at module level
+* **Hook Activation**: Call the returned hook inside a React component to activate the hotkeys
+* **State Tracking**: Use `useOn` to subscribe to `MapEvents.viewport` and update module-level viewport state
+* **Saving**: Hold a number key (0-9) for 3 seconds to save the current viewport
+* **Restoring**: Tap the same number key to restore the saved viewport
+* **Persistence**: Viewports are saved to localStorage and persist across sessions
+* **State Sync**: Restored viewports are emitted via the event bus to update the map
+
+## Storage Format
+
+By default, viewports are stored in localStorage with the following structure:
+
+```typescript
+// Key format: deckgl-saved-viewports:{uniqueIdentifier?}:{keyId}
+// Example: deckgl-saved-viewports:Digit0
+
+{
+  "latitude": 38.9072,
+  "longitude": -77.0369,
+  "zoom": 10,
+  "pitch": 0,
+  "bearing": 0,
+  // ... other MapViewState properties
+}
+```
+
+## Notes
+
+- **Global Binding Required**: You must call `globalBind()` from `@accelint/hotkey-manager` before using saved viewports
+- **Single Hotkey Set**: `globalBind()` ensures only one set of hotkeys is active globally
+- **Hotkey Conflicts**: Check for existing hotkey bindings from other tools or components. Conflicting key bindings can interfere with event processing and prevent saved viewports from working correctly. Use unique key combinations or coordinate with other hotkey consumers in your application.
+- **React Hook**: The returned function from `createSavedViewport()` is a React hook and must follow React hook rules
+- **Module-Level State**: Use module-level variables to track viewport state to avoid stale closures in callbacks
+- **Event Bus Pattern**: The event bus provides bidirectional state synchronization between BaseMap and saved viewports
+- **Type Safety**: Use `MapViewportPayload` for viewport state and `MapViewportEvent` for event bus typing
+- **State Merging**: Merge new state with existing viewport to preserve properties like `id`, `bounds`, `width`, and `height`
+- **Storage Namespacing**: Use `uniqueIdentifier` to separate saved viewports for different map types in localStorage
+- **Storage Limits**: localStorage has size limits (typically 5-10MB); consider custom storage for heavy usage
+
+## Related
+
+- [BaseMap](?path=/docs/deckgl-base-map--docs) - The main map component
+- [Viewport](?path=/docs/viewport--docs) - Viewport state tracking and display
+- [@accelint/hotkey-manager](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/hotkey-manager) - Hotkey management system
