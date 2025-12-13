@@ -19,5 +19,10 @@
         }
       }
     }
+  },
+  "css": {
+    "formatter": {
+      "enabled": false
+    }
   }
 }
