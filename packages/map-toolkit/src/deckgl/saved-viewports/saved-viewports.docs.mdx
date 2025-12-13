@@ -60,7 +60,7 @@ const bus = Broadcast.getInstance<MapViewportEvent>();
 let currentViewport: MapViewportPayload;
 
 const useSavedViewportHotkey = createSavedViewport({
-  threshold: 3000,
+  threshold: 1000,//ms
   getCurrentViewport: () => currentViewport,
   setCurrentViewport: (newState: MapViewState) => {
     // Merge new state with current viewport
@@ -140,9 +140,33 @@ const useSavedViewportHotkey = createSavedViewport({
     };
   },
   key: [
-    { code: Keycode.KeyF, modifiers: ['ctrl'] }, // Ctrl+F
-    { code: Keycode.KeyG, modifiers: ['ctrl'] }, // Ctrl+G
-    { code: Keycode.KeyH, modifiers: ['ctrl'] }, // Ctrl+H
+    {
+      id: '1',
+      code: Keycode.Digit1,
+      alt: false,
+      ctrl: true,
+      shift: false,
+      meta: false,
+      autoMacStyle: false,
+    },// CTRL+1
+    {
+      id: '2',
+      code: Keycode.Digit2,
+      alt: false,
+      ctrl: false,
+      shift: true,
+      meta: false,
+      autoMacStyle: false,
+    },// SHIFT+2
+    {
+      id: '3',
+      code: Keycode.Digit3,
+      alt: false,
+      ctrl: false,
+      shift: false,
+      meta: false,
+      autoMacStyle: false,
+    },// 3
   ],
 });
 ```
