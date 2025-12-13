@@ -65,9 +65,5 @@ if (!selectedPackages?.length) {
 }
 
 const filters = selectedPackages.map((p) => `--filter=${p}`);
-try {
-  await exec({ stdio: 'inherit' })`turbo run ${task} ${filters}`;
-} catch {
-  // Turbo handles its own error output
-  process.exit(1);
-}
+
+await exec({ stdio: 'inherit' })`turbo run ${task} ${filters}`.nothrow();
