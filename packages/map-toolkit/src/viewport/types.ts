@@ -16,7 +16,8 @@ import type { UNIT_MAP } from './constants';
 export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
 
 export type GetViewportSizeArgs = {
-  bounds: Bounds;
+  /** Geographic bounds, undefined if viewport not yet initialized */
+  bounds?: Bounds;
   zoom: number;
   /** Viewport width in pixels */
   width: number;

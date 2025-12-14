@@ -17,6 +17,7 @@ import type {
   Header,
   HeaderGroup,
   Row,
+  RowSelectionState,
 } from '@tanstack/react-table';
 import type {
   ComponentPropsWithRef,
@@ -44,6 +45,13 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * Whether to display a checkbox column.
    */
   showCheckbox?: boolean;
+
+  /**
+   * Initial row selection state.
+   * An object mapping row IDs to their selection state (true = selected).
+   * Example: { 'row-1': true, 'row-2': true }
+   */
+  rowSelection?: RowSelectionState;
 
   /**
    * Position of the kebab menu, either 'left' or 'right'.
@@ -114,6 +122,35 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @param index - The new index position of the column after reordering.
    */
   onColumnReorderChange?: (index: number) => void;
+  /**
+   * Callback function triggered when row selection changes.
+   * Receives an updater function or direct value following TanStack Table's API pattern.
+   *
+   * @param updaterOrValue - Either a function that receives the old state and returns new state,
+   * or a direct RowSelectionState object.
+   *
+   * @example
+   * // Using with state setter
+   * onRowSelectionChange={setSelectedRows}
+   *
+   * @example
+   * // Using with custom handler
+   * onRowSelectionChange={(updater) => {
+   *   const newState = typeof updater === 'function' ? updater(oldState) : updater;
+   *   console.log('Selected rows:', newState);
+   * }}
+   */
+  onRowSelectionChange?: (
+    updaterOrValue:
+      | RowSelectionState
+      | ((old: RowSelectionState) => RowSelectionState),
+  ) => void;
+  /**
+   * Whether the table should take full width and use fixed layout.
+   * When true, applies 'w-full table-fixed' classes.
+   * @default false
+   */
+  fullWidth?: boolean;
 };
 
 /**

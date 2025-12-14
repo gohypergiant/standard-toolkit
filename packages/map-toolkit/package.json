@@ -12,7 +12,7 @@
     "maplibre"
   ],
   "subPath": "packages/map-toolkit",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -29,24 +29,45 @@
   ],
   "types": "./dist/index.d.ts",
   "exports": {
-    "./*": {
-      "import": {
-        "types": "./dist/*/index.d.ts",
-        "default": "./dist/*/index.js"
-      },
-      "default": "./dist/*/index.js"
-    },
-    "./*/fiber": {
-      "import": {
-        "types": "./dist/*/fiber.d.ts",
-        "default": "./dist/*/fiber.js"
-      },
-      "default": "./dist/*/fiber.js"
-    }
+    "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
+    "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",
+    "./deckgl": "./dist/deckgl/index.js",
+    "./deckgl/base-map": "./dist/deckgl/base-map/index.js",
+    "./deckgl/base-map/constants": "./dist/deckgl/base-map/constants.js",
+    "./deckgl/base-map/events": "./dist/deckgl/base-map/events.js",
+    "./deckgl/base-map/provider": "./dist/deckgl/base-map/provider.js",
+    "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
+    "./deckgl/symbol-layer": "./dist/deckgl/symbol-layer/index.js",
+    "./deckgl/symbol-layer/fiber": "./dist/deckgl/symbol-layer/fiber.js",
+    "./deckgl/text-layer": "./dist/deckgl/text-layer/index.js",
+    "./deckgl/text-layer/character-sets": "./dist/deckgl/text-layer/character-sets.js",
+    "./deckgl/text-layer/default-settings": "./dist/deckgl/text-layer/default-settings.js",
+    "./deckgl/text-layer/fiber": "./dist/deckgl/text-layer/fiber.js",
+    "./decorators/deckgl": "./dist/decorators/deckgl.js",
+    "./map-cursor": "./dist/map-cursor/index.js",
+    "./map-cursor/events": "./dist/map-cursor/events.js",
+    "./map-cursor/store": "./dist/map-cursor/store.js",
+    "./map-cursor/types": "./dist/map-cursor/types.js",
+    "./map-cursor/use-map-cursor": "./dist/map-cursor/use-map-cursor.js",
+    "./map-mode": "./dist/map-mode/index.js",
+    "./map-mode/events": "./dist/map-mode/events.js",
+    "./map-mode/store": "./dist/map-mode/store.js",
+    "./map-mode/types": "./dist/map-mode/types.js",
+    "./map-mode/use-map-mode": "./dist/map-mode/use-map-mode.js",
+    "./maplibre": "./dist/maplibre/index.js",
+    "./maplibre/constants": "./dist/maplibre/constants.js",
+    "./maplibre/hooks/use-maplibre": "./dist/maplibre/hooks/use-maplibre.js",
+    "./viewport": "./dist/viewport/index.js",
+    "./viewport/constants": "./dist/viewport/constants.js",
+    "./viewport/types": "./dist/viewport/types.js",
+    "./viewport/use-viewport-state": "./dist/viewport/use-viewport-state.js",
+    "./viewport/utils": "./dist/viewport/utils.js",
+    "./viewport/viewport-size": "./dist/viewport/viewport-size.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "build-storybook": "pnpm storybook build",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
@@ -88,7 +109,6 @@
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.11",
     "client-only": "^0.0.1",
-    "esbuild-fix-imports-plugin": "^1.0.23",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "^3.0.2",
     "mjolnir.js": "^3.0.0",
@@ -97,16 +117,19 @@
     "react-dom": "19.0.0",
     "storybook": "^9.1.16",
     "tailwindcss": "^4.1.11",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "type-fest": "^4.41.0",
     "typescript": "5.8.3",
     "vite": "^7.2.2",
     "vitest": "^4.0.8"
   },
-  "optionalDependencies": {
+  "peerDependencies": {
     "@accelint/bus": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/geo": "workspace:*",
+    "react": "19.0.0"
+  },
+  "optionalDependencies": {
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "9.1.14",
     "@deck.gl/geo-layers": "9.1.14",
@@ -120,6 +143,10 @@
     "maplibre-gl": "^5.7.1",
     "milsymbol": "3.0.2",
     "mjolnir.js": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "publishConfig": {
     "access": "public"

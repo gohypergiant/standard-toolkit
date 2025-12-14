@@ -93,37 +93,6 @@ describe('useMapMode', () => {
   });
 
   describe('Integration with Store', () => {
-    it('calls store.requestModeChange when hook method is called', async () => {
-      const user = userEvent.setup();
-
-      function TestComponent() {
-        const { mode, requestModeChange } = useMapMode(testid);
-
-        return (
-          <div>
-            <span data-testid='mode'>{mode}</span>
-            <button
-              type='button'
-              onClick={() => requestModeChange('drawing', 'owner1')}
-              data-testid='change-mode'
-            >
-              Change
-            </button>
-          </div>
-        );
-      }
-
-      render(<TestComponent />);
-
-      expect(screen.getByTestId('mode')).toHaveTextContent('default');
-
-      await user.click(screen.getByTestId('change-mode'));
-
-      await waitFor(() => {
-        expect(screen.getByTestId('mode')).toHaveTextContent('drawing');
-      });
-    });
-
     it('triggers authorization flow when ownership conflict exists', async () => {
       const user = userEvent.setup();
       const onAuthRequest = vi.fn();

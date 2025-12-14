@@ -27,6 +27,13 @@ import { MenuSubmenu } from './submenu';
 import { MenuTrigger } from './trigger';
 import type { MenuProps } from './types';
 
+const SectionHeader = () => (
+  <div data-testid='second-section'>
+    <div>Section</div>
+    <div>Subheader for Section</div>
+  </div>
+);
+
 function setup({
   children = (
     <>
@@ -82,6 +89,15 @@ function setup({
           <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>
         </MenuItem>
       </MenuSection>
+      <MenuSection title={<SectionHeader />}>
+        <MenuItem>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <MenuItemLabel>Mallard</MenuItemLabel>
+          <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
+        </MenuItem>
+      </MenuSection>
     </>
   ),
   ...rest
@@ -111,5 +127,19 @@ describe('Menu', () => {
     await user.click(screen.getByRole('button'));
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('should display section header with text string', async () => {
+    setup();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByText('Additional Notable Species')).toBeInTheDocument();
+  });
+
+  it('should display section header with ReactElement', async () => {
+    setup();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByTestId('second-section')).toBeInTheDocument();
   });
 });

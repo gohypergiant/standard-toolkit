@@ -1,5 +1,10 @@
 # @accelint/temporal
 
+## 0.1.3
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+
 ## 0.1.2
 
 ### Patch Changes

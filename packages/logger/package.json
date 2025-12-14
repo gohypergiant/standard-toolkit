@@ -10,7 +10,7 @@
     "tooling"
   ],
   "subPath": "packages/logger",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": false,
   "license": "Apache-2.0",
   "repository": {
@@ -25,26 +25,19 @@
     "./package.json",
     "./README.md"
   ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/*/index.d.ts",
-        "default": "./dist/*/index.js"
-      },
-      "default": "./dist/*/index.js"
-    }
+    ".": "./dist/index.js",
+    "./default": "./dist/default/index.js",
+    "./plugins/callsite": "./dist/plugins/callsite.js",
+    "./plugins/environment": "./dist/plugins/environment.js",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsup",
+    "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/logger",
@@ -66,14 +59,17 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
-    "esbuild-fix-imports-plugin": "^1.0.23",
     "loglayer": "^6.10.0",
-    "tsup": "8.5.0",
+    "tsdown": "^0.17.2",
     "typescript": "5.8.3",
     "vitest": "^4.0.8"
   },
   "peerDependencies": {
     "loglayer": "^6.10.0"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "publishConfig": {
     "access": "public"
