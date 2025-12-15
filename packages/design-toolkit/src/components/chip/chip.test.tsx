@@ -40,27 +40,30 @@ describe('Chip', () => {
     expect(chip).toHaveAttribute('data-size', 'medium');
   });
 
-  it.each(['info', 'advisory', 'normal', 'serious', 'critical'] as const)(
-    'should render with color="%s"',
-    (color) => {
-      setup({ color });
+  it.each([
+    'info',
+    'advisory',
+    'normal',
+    'serious',
+    'critical',
+  ] as const)('should render with color="%s"', (color) => {
+    setup({ color });
 
-      const chip = screen.getByText('Foo').closest('[data-color]');
+    const chip = screen.getByText('Foo').closest('[data-color]');
 
-      expect(chip).toHaveAttribute('data-color', color);
-    },
-  );
+    expect(chip).toHaveAttribute('data-color', color);
+  });
 
-  it.each(['medium', 'small'] as const)(
-    'should render with size="%s"',
-    (size) => {
-      setup({ size });
+  it.each([
+    'medium',
+    'small',
+  ] as const)('should render with size="%s"', (size) => {
+    setup({ size });
 
-      const chip = screen.getByText('Foo').closest('[data-size]');
+    const chip = screen.getByText('Foo').closest('[data-size]');
 
-      expect(chip).toHaveAttribute('data-size', size);
-    },
-  );
+    expect(chip).toHaveAttribute('data-size', size);
+  });
 
   it('should apply custom className', () => {
     setup({ className: 'custom-class' });

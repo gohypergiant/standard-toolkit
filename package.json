@@ -30,7 +30,10 @@
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.25.0",
   "private": true,
-  "repository": "gohypergiant/standard-toolkit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",

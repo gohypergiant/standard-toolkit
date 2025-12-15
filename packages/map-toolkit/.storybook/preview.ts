@@ -51,6 +51,7 @@ const preview: Preview = {
       story: {
         inline: true, // withThemesByClassName applies in docs too
       },
+      codePanel: true,
     },
     backgrounds: {
       disabled: true,

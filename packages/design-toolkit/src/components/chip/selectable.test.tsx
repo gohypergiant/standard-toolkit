@@ -71,16 +71,19 @@ describe('SelectableChip', () => {
     expect(chip).toHaveAttribute('data-color', 'normal');
   });
 
-  it.each(['info', 'advisory', 'normal', 'serious', 'critical'] as const)(
-    'should render with color="%s"',
-    (color) => {
-      setup({ color });
+  it.each([
+    'info',
+    'advisory',
+    'normal',
+    'serious',
+    'critical',
+  ] as const)('should render with color="%s"', (color) => {
+    setup({ color });
 
-      const chip = screen.getByText('Selectable Chip').closest('[data-color]');
+    const chip = screen.getByText('Selectable Chip').closest('[data-color]');
 
-      expect(chip).toHaveAttribute('data-color', color);
-    },
-  );
+    expect(chip).toHaveAttribute('data-color', color);
+  });
 
   it('should apply data-size attribute with default value from ChipList context', () => {
     setup();
@@ -91,16 +94,16 @@ describe('SelectableChip', () => {
     expect(chip).toHaveAttribute('data-size', 'small');
   });
 
-  it.each(['medium', 'small'] as const)(
-    'should render with size="%s"',
-    (size) => {
-      setup({ size });
+  it.each([
+    'medium',
+    'small',
+  ] as const)('should render with size="%s"', (size) => {
+    setup({ size });
 
-      const chip = screen.getByText('Selectable Chip').closest('[data-size]');
+    const chip = screen.getByText('Selectable Chip').closest('[data-size]');
 
-      expect(chip).toHaveAttribute('data-size', size);
-    },
-  );
+    expect(chip).toHaveAttribute('data-size', size);
+  });
 
   it('should apply custom className', () => {
     setup({ className: 'custom-selectable-class' });

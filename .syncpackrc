@@ -1,7 +1,7 @@
 {
-  "$schema": "./node_modules/syncpack/dist/schema.json",
-  "formatRepository": true,
-  "formatBugs": true,
+  "$schema": "./node_modules/syncpack/schema.json",
+  "formatRepository": false,
+  "formatBugs": false,
   "semverGroups": [
     {
       "dependencies": [
