@@ -67,13 +67,23 @@ import type { AccordionProps } from './types';
 export function Accordion({ ref, ...props }: AccordionProps) {
   [props, ref] = useContextProps(props, ref ?? null, AccordionContext);
 
-  const { children, className, variant = 'cozy', isDisabled, ...rest } = props;
+  const {
+    children,
+    className,
+    variant = 'cozy',
+    defaultExpanded,
+    isDisabled,
+    isExpanded,
+    ...rest
+  } = props;
 
   return (
     <AccordionContext.Provider
       value={{
         variant,
+        defaultExpanded,
         isDisabled,
+        isExpanded,
       }}
     >
       <Disclosure
@@ -81,6 +91,7 @@ export function Accordion({ ref, ...props }: AccordionProps) {
         className={composeRenderProps(className, (className) =>
           clsx('group/accordion', styles.accordion, className),
         )}
+        isExpanded={defaultExpanded || isExpanded}
         isDisabled={isDisabled}
       >
         {children}
