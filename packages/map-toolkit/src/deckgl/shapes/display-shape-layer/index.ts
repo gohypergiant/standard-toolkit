@@ -382,10 +382,29 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Check if any features have icon configuration
+   * Extract icon configuration from features in a single pass.
+   * Returns the first icon's atlas and mapping (all shapes share the same atlas).
+   * Uses early return for O(1) best case when first feature has icons.
    */
-  private hasIcons(features: EditableShape['feature'][]): boolean {
-    return features.some((f) => f.properties?.styleProperties?.icon);
+  private getIconConfig(features: EditableShape['feature'][]): {
+    hasIcons: boolean;
+    atlas?: string;
+    mapping?: Record<
+      string,
+      { x: number; y: number; width: number; height: number; mask?: boolean }
+    >;
+  } {
+    for (const f of features) {
+      const icon = f.properties?.styleProperties?.icon;
+      if (icon) {
+        return {
+          hasIcons: true,
+          atlas: icon.atlas,
+          mapping: icon.mapping,
+        };
+      }
+    }
+    return { hasIcons: false };
   }
 
   /**
@@ -393,15 +412,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    */
   private renderMainLayer(features: EditableShape['feature'][]): GeoJsonLayer {
     const { pickable } = this.props;
-    const hasIcons = this.hasIcons(features);
 
-    // Collect icon atlas and mapping from features
-    const iconAtlas = features.find(
-      (f) => f.properties?.styleProperties?.icon?.atlas,
-    )?.properties?.styleProperties?.icon?.atlas;
-    const iconMapping = features.find(
-      (f) => f.properties?.styleProperties?.icon?.mapping,
-    )?.properties?.styleProperties?.icon?.mapping;
+    // Single-pass icon config extraction (O(1) best case with early return)
+    const {
+      hasIcons,
+      atlas: iconAtlas,
+      mapping: iconMapping,
+    } = this.getIconConfig(features);
 
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}`,

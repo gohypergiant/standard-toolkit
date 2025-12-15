@@ -516,7 +516,7 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 - **Label position caching**: Label positions are computed once per shape using a WeakMap cache
 - **Hover event deduplication**: The `shapes:hovered` event only emits when the hovered shape actually changes
 - **Update triggers**: The layer uses deck.gl's `updateTriggers` to minimize re-renders
-- **Icon atlas sharing**: Icon atlases are shared across all Point geometries for efficiency
+- **Icon config extraction**: Icon atlas and mapping are extracted in a single pass with early return (O(1) best case)
 - Use `pickable={false}` to disable interaction and improve performance for static displays
 
 ## API Reference
