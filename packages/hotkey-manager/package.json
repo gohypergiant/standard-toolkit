@@ -1,25 +1,33 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/hotkey-manager",
-  "author": "https://hypergiant.com",
   "version": "0.1.1",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "dependencies": {
+    "immer": "^10.1.1",
+    "radashi": "^12.6.2",
+    "zustand": "^5.0.3"
   },
-  "type": "module",
-  "files": [
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md",
-    "dist/**"
-  ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/core": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19",
+    "happy-dom": "^20.0.11",
+    "react": "^19",
+    "tsdown": "^0.18.0",
+    "type-fest": "^5.3.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./actions/global-bind": "./dist/actions/global-bind/index.js",
@@ -55,6 +63,27 @@
     "./types/non-empty-array": "./dist/types/non-empty-array/index.js",
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "optionalDependencies": {
+    "react": "^19"
+  },
+  "peerDependencies": {
+    "@accelint/core": "workspace:*"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "gohypergiant/standard-toolkit",
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
@@ -63,36 +92,7 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
-  "dependencies": {
-    "immer": "^10.1.1",
-    "radashi": "^12.6.2",
-    "zustand": "^5.0.3"
-  },
-  "devDependencies": {
-    "@accelint/biome-config": "workspace:*",
-    "@accelint/core": "workspace:*",
-    "@accelint/typescript-config": "workspace:*",
-    "@accelint/vitest-config": "workspace:*",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.6.4",
-    "@testing-library/react": "^16.3.0",
-    "@types/react": "^19.1.9",
-    "happy-dom": "^19.0.2",
-    "react": "^19.0.0",
-    "tsdown": "^0.17.2",
-    "type-fest": "^4.41.0",
-    "typescript": "^5.8.3",
-    "vitest": "^4.0.8"
-  },
-  "optionalDependencies": {
-    "react": "^19.0.0"
-  },
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

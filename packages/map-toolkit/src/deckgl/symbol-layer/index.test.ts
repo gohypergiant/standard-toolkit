@@ -96,6 +96,7 @@ describe('SymbolLayer', () => {
     });
 
     // Generate icon first time
+    // biome-ignore lint/complexity/useLiteralKeys: protected function
     const icon1 = layer['generateIcon'](TEST_DATA[0], {
       index: 0,
       data: TEST_DATA,
@@ -103,6 +104,7 @@ describe('SymbolLayer', () => {
     });
 
     // Generate same icon second time
+    // biome-ignore lint/complexity/useLiteralKeys: protected function
     const icon2 = layer['generateIcon'](TEST_DATA[0], {
       index: 0,
       data: TEST_DATA,
@@ -120,7 +122,9 @@ describe('SymbolLayer', () => {
       data: TEST_DATA,
     });
 
+    // biome-ignore lint/complexity/useLiteralKeys: protected function
     const key1 = layer['generateCacheKey']('SIDC123', { size: 32 });
+    // biome-ignore lint/complexity/useLiteralKeys: protected function
     const key2 = layer['generateCacheKey']('SIDC123', { size: 64 });
 
     expect(key1).not.toBe(key2);
@@ -137,6 +141,7 @@ describe('SymbolLayer', () => {
     });
 
     // Generate an icon to trigger option merging
+    // biome-ignore lint/complexity/useLiteralKeys: protected function
     const icon = layer['generateIcon'](TEST_DATA[0], {
       index: 0,
       data: TEST_DATA,

@@ -24,7 +24,8 @@ governing permissions and limitations under the License. -->
 
 Developer Toolkit development is governed by the Technical Steering Committee (TSC). Current members:
 
+- [Ray Knight](https://github.com/ArrayKnight)
 - [Bryan Kizer](https://github.com/belsrc)
 - [Brenna Switzer](https://github.com/switzerb)
-- [Brandon Pierce](https://github.com/brandonjpierce)
 - [Jacob Foster](https://github.com/shadyendless)
+- [Brandon Pierce](https://github.com/brandonjpierce)
