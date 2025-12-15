@@ -20,7 +20,7 @@ import { getCachedConfig } from '../lib/config';
  * Cleans up old snapshot directories to prevent disk space exhaustion.
  * Snapshots older than `snapshotRetentionDays` are removed.
  */
-export default async function globalSetup() {
+export default function globalSetup() {
   const config = getCachedConfig();
 
   console.log('\n🧹 MemLab Global Setup');
@@ -45,7 +45,9 @@ export default async function globalSetup() {
   const entries = fs.readdirSync(snapshotDir, { withFileTypes: true });
 
   for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
+    if (!entry.isDirectory()) {
+      continue;
+    }
 
     const dirPath = path.join(snapshotDir, entry.name);
 
