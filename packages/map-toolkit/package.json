@@ -1,81 +1,9 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/map-toolkit",
-  "title": "Accelint Map Toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "deckgl",
-    "geospatial",
-    "map-tk",
-    "maplibre"
-  ],
-  "subPath": "packages/map-toolkit",
   "version": "0.4.0",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md"
-  ],
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
-    "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",
-    "./deckgl": "./dist/deckgl/index.js",
-    "./deckgl/base-map": "./dist/deckgl/base-map/index.js",
-    "./deckgl/base-map/constants": "./dist/deckgl/base-map/constants.js",
-    "./deckgl/base-map/events": "./dist/deckgl/base-map/events.js",
-    "./deckgl/base-map/provider": "./dist/deckgl/base-map/provider.js",
-    "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
-    "./deckgl/symbol-layer": "./dist/deckgl/symbol-layer/index.js",
-    "./deckgl/symbol-layer/fiber": "./dist/deckgl/symbol-layer/fiber.js",
-    "./deckgl/text-layer": "./dist/deckgl/text-layer/index.js",
-    "./deckgl/text-layer/character-sets": "./dist/deckgl/text-layer/character-sets.js",
-    "./deckgl/text-layer/default-settings": "./dist/deckgl/text-layer/default-settings.js",
-    "./deckgl/text-layer/fiber": "./dist/deckgl/text-layer/fiber.js",
-    "./decorators/deckgl": "./dist/decorators/deckgl.js",
-    "./map-cursor": "./dist/map-cursor/index.js",
-    "./map-cursor/events": "./dist/map-cursor/events.js",
-    "./map-cursor/store": "./dist/map-cursor/store.js",
-    "./map-cursor/types": "./dist/map-cursor/types.js",
-    "./map-cursor/use-map-cursor": "./dist/map-cursor/use-map-cursor.js",
-    "./map-mode": "./dist/map-mode/index.js",
-    "./map-mode/events": "./dist/map-mode/events.js",
-    "./map-mode/store": "./dist/map-mode/store.js",
-    "./map-mode/types": "./dist/map-mode/types.js",
-    "./map-mode/use-map-mode": "./dist/map-mode/use-map-mode.js",
-    "./maplibre": "./dist/maplibre/index.js",
-    "./maplibre/constants": "./dist/maplibre/constants.js",
-    "./maplibre/hooks/use-maplibre": "./dist/maplibre/hooks/use-maplibre.js",
-    "./viewport": "./dist/viewport/index.js",
-    "./viewport/constants": "./dist/viewport/constants.js",
-    "./viewport/types": "./dist/viewport/types.js",
-    "./viewport/use-viewport-state": "./dist/viewport/use-viewport-state.js",
-    "./viewport/utils": "./dist/viewport/utils.js",
-    "./viewport/viewport-size": "./dist/viewport/viewport-size.js",
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsdown",
-    "build-storybook": "pnpm storybook build",
-    "constellation-tracker": "constellation-tracker",
-    "dev": "pnpm tsc --watch",
-    "lint": "pnpm biome lint",
-    "preview": "pnpm storybook dev -p 6006",
-    "test": "pnpm vitest --dir=src",
-    "test:watch": "pnpm vitest --dir=src --watch"
-  },
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
@@ -123,12 +51,61 @@
     "vite": "^7.2.7",
     "vitest": "^4.0.15"
   },
-  "peerDependencies": {
-    "@accelint/bus": "workspace:*",
-    "@accelint/core": "workspace:*",
-    "@accelint/geo": "workspace:*",
-    "react": "^19"
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
+  "exports": {
+    "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
+    "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",
+    "./deckgl": "./dist/deckgl/index.js",
+    "./deckgl/base-map": "./dist/deckgl/base-map/index.js",
+    "./deckgl/base-map/constants": "./dist/deckgl/base-map/constants.js",
+    "./deckgl/base-map/events": "./dist/deckgl/base-map/events.js",
+    "./deckgl/base-map/provider": "./dist/deckgl/base-map/provider.js",
+    "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
+    "./deckgl/symbol-layer": "./dist/deckgl/symbol-layer/index.js",
+    "./deckgl/symbol-layer/fiber": "./dist/deckgl/symbol-layer/fiber.js",
+    "./deckgl/text-layer": "./dist/deckgl/text-layer/index.js",
+    "./deckgl/text-layer/character-sets": "./dist/deckgl/text-layer/character-sets.js",
+    "./deckgl/text-layer/default-settings": "./dist/deckgl/text-layer/default-settings.js",
+    "./deckgl/text-layer/fiber": "./dist/deckgl/text-layer/fiber.js",
+    "./decorators/deckgl": "./dist/decorators/deckgl.js",
+    "./map-cursor": "./dist/map-cursor/index.js",
+    "./map-cursor/events": "./dist/map-cursor/events.js",
+    "./map-cursor/store": "./dist/map-cursor/store.js",
+    "./map-cursor/types": "./dist/map-cursor/types.js",
+    "./map-cursor/use-map-cursor": "./dist/map-cursor/use-map-cursor.js",
+    "./map-mode": "./dist/map-mode/index.js",
+    "./map-mode/events": "./dist/map-mode/events.js",
+    "./map-mode/store": "./dist/map-mode/store.js",
+    "./map-mode/types": "./dist/map-mode/types.js",
+    "./map-mode/use-map-mode": "./dist/map-mode/use-map-mode.js",
+    "./maplibre": "./dist/maplibre/index.js",
+    "./maplibre/constants": "./dist/maplibre/constants.js",
+    "./maplibre/hooks/use-maplibre": "./dist/maplibre/hooks/use-maplibre.js",
+    "./viewport": "./dist/viewport/index.js",
+    "./viewport/constants": "./dist/viewport/constants.js",
+    "./viewport/types": "./dist/viewport/types.js",
+    "./viewport/use-viewport-state": "./dist/viewport/use-viewport-state.js",
+    "./viewport/utils": "./dist/viewport/utils.js",
+    "./viewport/viewport-size": "./dist/viewport/viewport-size.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "deckgl",
+    "geospatial",
+    "map-tk",
+    "maplibre"
+  ],
+  "license": "Apache-2.0",
   "optionalDependencies": {
     "@deck.gl/core": "9.1.14",
     "@deck.gl/extensions": "9.1.14",
@@ -144,12 +121,32 @@
     "milsymbol": "3.0.2",
     "mjolnir.js": "^3.0.0"
   },
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "@accelint/bus": "workspace:*",
+    "@accelint/core": "workspace:*",
+    "@accelint/geo": "workspace:*",
+    "react": "^19"
   },
+  "private": false,
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "repository": "gohypergiant/standard-toolkit",
+  "scripts": {
+    "bench": "pnpm vitest bench --run --dir src",
+    "build": "pnpm tsdown",
+    "build-storybook": "pnpm storybook build",
+    "constellation-tracker": "constellation-tracker",
+    "dev": "pnpm tsc --watch",
+    "lint": "pnpm biome lint",
+    "preview": "pnpm storybook dev -p 6006",
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
+  },
+  "sideEffects": false,
+  "subPath": "packages/map-toolkit",
+  "title": "Accelint Map Toolkit",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

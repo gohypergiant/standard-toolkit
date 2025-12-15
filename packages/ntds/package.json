@@ -1,33 +1,26 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/ntds",
-  "title": "Accelint NTDS",
   "description": "An NTDS-compliant offering of a set of SVG Icon Components with fill color inputs for general usage, and a spritesheet for icons to be used in the COP.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "packages/ntds",
   "version": "0.2.3",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/smeegl": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19",
+    "react-dom": "^19",
+    "tsdown": "^0.18.0",
+    "typescript": "^5.9.3"
   },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md"
-  ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./constants": "./dist/constants.js",
@@ -82,6 +75,30 @@
     "./spritesheets/masked": "./dist/spritesheets/masked.js",
     "./package.json": "./package.json"
   },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "gohypergiant/standard-toolkit",
   "scripts": {
     "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsdown && pnpm copy",
     "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
@@ -95,29 +112,9 @@
     "license": "pnpm zx ../../scripts/license.mjs --files src",
     "lint": "pnpm biome lint"
   },
-  "devDependencies": {
-    "@accelint/biome-config": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
-    "@accelint/smeegl": "workspace:*",
-    "@accelint/typescript-config": "workspace:*",
-    "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "react": "^19",
-    "react-dom": "^19",
-    "tsdown": "^0.18.0",
-    "typescript": "^5.9.3"
-  },
-  "peerDependencies": {
-    "react": "^19",
-    "react-dom": "^19"
-  },
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "packages/ntds",
+  "title": "Accelint NTDS",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

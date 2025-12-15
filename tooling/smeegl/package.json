@@ -1,47 +1,11 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/smeegl",
-  "title": "Smeegl",
   "description": "A small, spreet-based spritesheet/texture package for use with Deck.gl.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "tooling/smeegl",
   "version": "0.3.3",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md"
-  ],
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/lib.d.ts",
-        "default": "./dist/lib.js"
-      },
-      "default": "./dist/lib.js"
-    }
-  },
-  "scripts": {
-    "build": "pnpm tsc && pnpm license && pnpm format",
-    "constellation-tracker": "constellation-tracker",
-    "format": "pnpm biome format . --write",
-    "license": "pnpm zx ../../scripts/license.mjs",
-    "lint": "pnpm biome lint",
-    "postinstall": "pnpm run build",
-    "test": "pnpm vitest --dir=test"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "bin": {
+    "smeegl": "./dist/main.js"
   },
   "dependencies": {
     "ansis": "^4.0.0",
@@ -64,11 +28,44 @@
     "tsup": "^8.5.0",
     "vitest": "^4.0.15"
   },
-  "bin": {
-    "smeegl": "./dist/main.js"
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/lib.d.ts",
+        "default": "./dist/lib.js"
+      },
+      "default": "./dist/lib.js"
+    }
   },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "owner": "default/pathfinder",
+  "private": false,
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "repository": "gohypergiant/standard-toolkit",
+  "scripts": {
+    "build": "pnpm tsc && pnpm license && pnpm format",
+    "constellation-tracker": "constellation-tracker",
+    "format": "pnpm biome format . --write",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint",
+    "postinstall": "pnpm run build",
+    "test": "pnpm vitest --dir=test"
+  },
+  "sideEffects": false,
+  "subPath": "tooling/smeegl",
+  "title": "Smeegl",
+  "type": "module"
 }

@@ -1,15 +1,36 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/developer-toolkit",
-  "author": "https://hypergiant.com",
   "version": "0.0.0",
-  "private": true,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/prettier-config": "workspace:*",
+    "@babel/parser": "^7.28.5",
+    "@biomejs/biome": "^2.3.8",
+    "@changesets/changelog-git": "^0.2.1",
+    "@changesets/cli": "^2.29.8",
+    "@ls-lint/ls-lint": "^2.3.1",
+    "@swc/core": "^1.15.3",
+    "lefthook": "^2.0.11",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "rimraf": "^6.1.2",
+    "syncpack": "^14.0.0-alpha.32",
+    "taze": "^19.9.2",
+    "tsx": "^4.21.0",
+    "turbo": "^2.6.3",
+    "zx": "^8.8.5"
   },
-  "type": "module",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.25.0",
+  "private": true,
+  "repository": "gohypergiant/standard-toolkit",
   "scripts": {
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
@@ -35,34 +56,10 @@
     "indexer": "turbo index",
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
-    "lint:fs": "pnpm ls-lint",
     "lint:deps": "pnpm syncpack lint",
+    "lint:fs": "pnpm ls-lint",
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
-  "devDependencies": {
-    "@accelint/biome-config": "workspace:*",
-    "@accelint/prettier-config": "workspace:*",
-    "@babel/parser": "^7.28.5",
-    "@biomejs/biome": "^2.3.8",
-    "@changesets/changelog-git": "^0.2.1",
-    "@changesets/cli": "^2.29.8",
-    "@ls-lint/ls-lint": "^2.3.1",
-    "@swc/core": "^1.15.3",
-    "lefthook": "^2.0.11",
-    "prettier": "^3.7.4",
-    "prettier-plugin-tailwindcss": "^0.7.2",
-    "rimraf": "^6.1.2",
-    "syncpack": "^14.0.0-alpha.32",
-    "taze": "^19.9.2",
-    "tsx": "^4.21.0",
-    "turbo": "^2.6.3",
-    "zx": "^8.8.5"
-  },
-  "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "packageManager": "pnpm@10.25.0"
+  "type": "module"
 }

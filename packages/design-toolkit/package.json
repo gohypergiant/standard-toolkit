@@ -1,87 +1,9 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/design-toolkit",
-  "title": "Design Toolkit",
   "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "design-tk",
-    "tooling",
-    "ui"
-  ],
-  "subPath": "packages/design-toolkit",
   "version": "8.1.2",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml"
-  ],
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "import": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.js"
-      },
-      "default": "./dist/*.js"
-    },
-    "./hooks/*": {
-      "import": {
-        "types": "./dist/hooks/*.d.ts",
-        "default": "./dist/hooks/*.js"
-      },
-      "default": "./dist/hooks/*.js"
-    },
-    "./lib/*": {
-      "import": {
-        "types": "./dist/lib/*.d.ts",
-        "default": "./dist/lib/*.js"
-      },
-      "default": "./dist/lib/*.js"
-    },
-    "./providers/*": {
-      "import": {
-        "types": "./dist/providers/*.d.ts",
-        "default": "./dist/providers/*.js"
-      },
-      "default": "./dist/providers/*.js"
-    },
-    "./styles": {
-      "import": {
-        "default": "./dist/index.module.css"
-      },
-      "default": "./dist/index.module.css"
-    }
-  },
-  "scripts": {
-    "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm format && tsup",
-    "build-storybook": "pnpm storybook build",
-    "constellation-tracker": "constellation-tracker",
-    "dev": "pnpm tsc --watch",
-    "format": "pnpm biome format . --write",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
-    "lint": "pnpm biome lint",
-    "preview": "pnpm storybook dev -p 6006",
-    "preview:docs": "pnpm storybook dev --docs -p 6006",
-    "test": "pnpm vitest --dir=src",
-    "test:watch": "pnpm vitest --dir=src --watch",
-    "typecheck": "tsc --noEmit"
-  },
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
@@ -148,6 +70,60 @@
     "vitest": "^4.0.15",
     "zod": "^4.1.12"
   },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.js"
+      },
+      "default": "./dist/*.js"
+    },
+    "./hooks/*": {
+      "import": {
+        "types": "./dist/hooks/*.d.ts",
+        "default": "./dist/hooks/*.js"
+      },
+      "default": "./dist/hooks/*.js"
+    },
+    "./lib/*": {
+      "import": {
+        "types": "./dist/lib/*.d.ts",
+        "default": "./dist/lib/*.js"
+      },
+      "default": "./dist/lib/*.js"
+    },
+    "./providers/*": {
+      "import": {
+        "types": "./dist/providers/*.d.ts",
+        "default": "./dist/providers/*.js"
+      },
+      "default": "./dist/providers/*.js"
+    },
+    "./styles": {
+      "import": {
+        "default": "./dist/index.module.css"
+      },
+      "default": "./dist/index.module.css"
+    }
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml"
+  ],
+  "keywords": [
+    "design-tk",
+    "tooling",
+    "ui"
+  ],
+  "license": "Apache-2.0",
+  "owner": "default/pathfinder",
   "peerDependencies": {
     "@accelint/bus": "workspace:*",
     "@accelint/core": "workspace:*",
@@ -182,7 +158,28 @@
     "uuid": "^11.1.0",
     "zod": "^4.1.12"
   },
+  "private": false,
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "repository": "gohypergiant/standard-toolkit",
+  "scripts": {
+    "bench": "pnpm vitest bench --run --dir src",
+    "build": "pnpm format && tsup",
+    "build-storybook": "pnpm storybook build",
+    "constellation-tracker": "constellation-tracker",
+    "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
+    "lint": "pnpm biome lint",
+    "preview": "pnpm storybook dev -p 6006",
+    "preview:docs": "pnpm storybook dev --docs -p 6006",
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "subPath": "packages/design-toolkit",
+  "title": "Design Toolkit",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

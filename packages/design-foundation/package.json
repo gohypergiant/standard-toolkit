@@ -1,59 +1,9 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/design-foundation",
-  "title": "Design Foundation",
   "description": "An open-source design library to serve as part of the entire ecosystem of UX for Accelint.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "design-foundation",
-    "tooling",
-    "ui"
-  ],
-  "subPath": "packages/design-foundation",
   "version": "1.0.2",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml"
-  ],
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "./*": {
-      "import": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.js"
-      },
-      "default": "./dist/*.js"
-    },
-    "./styles": {
-      "import": {
-        "default": "./dist/index.css"
-      },
-      "default": "./dist/index.css"
-    }
-  },
-  "scripts": {
-    "build": "pnpm generate && pnpm license && pnpm format && tsup",
-    "constellation-tracker": "constellation-tracker",
-    "dev": "pnpm tsc --watch",
-    "format": "pnpm biome format . --write",
-    "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
-    "gen:variants": "node scripts/generate-variants.mjs",
-    "generate": "pnpm gen:tokens && pnpm gen:variants",
-    "license": "pnpm license:tokens && pnpm license:variants",
-    "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
-    "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
-    "lint": "pnpm biome lint",
-    "test": "pnpm vitest --dir=src",
-    "test:watch": "pnpm vitest --dir=src --watch"
-  },
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
   "dependencies": {
     "string-hash": "^1.1.3"
   },
@@ -83,17 +33,64 @@
     "vitest": "^4.0.15",
     "webpack": "^5.103.0"
   },
+  "exports": {
+    "./*": {
+      "import": {
+        "types": "./dist/*.d.ts",
+        "default": "./dist/*.js"
+      },
+      "default": "./dist/*.js"
+    },
+    "./styles": {
+      "import": {
+        "default": "./dist/index.css"
+      },
+      "default": "./dist/index.css"
+    }
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml"
+  ],
+  "keywords": [
+    "design-foundation",
+    "tooling",
+    "ui"
+  ],
+  "license": "Apache-2.0",
+  "optionalDependencies": {
+    "vite": "^7.2.7",
+    "webpack": "^5.103.0"
+  },
+  "owner": "default/pathfinder",
   "peerDependencies": {
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",
     "clsx": "^2.1.1",
     "tailwindcss": "^4.1.18"
   },
-  "optionalDependencies": {
-    "vite": "^7.2.7",
-    "webpack": "^5.103.0"
-  },
+  "private": false,
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "repository": "gohypergiant/standard-toolkit",
+  "scripts": {
+    "build": "pnpm generate && pnpm license && pnpm format && tsup",
+    "constellation-tracker": "constellation-tracker",
+    "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write",
+    "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
+    "gen:variants": "node scripts/generate-variants.mjs",
+    "generate": "pnpm gen:tokens && pnpm gen:variants",
+    "license": "pnpm license:tokens && pnpm license:variants",
+    "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
+    "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
+    "lint": "pnpm biome lint",
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
+  },
+  "subPath": "packages/design-foundation",
+  "title": "Design Foundation",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

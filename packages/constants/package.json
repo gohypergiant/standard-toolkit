@@ -1,46 +1,9 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/constants",
-  "title": "Accelint Constants",
   "description": "A collection of commonly used constant values for Accelint projects.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "packages/constants",
   "version": "0.1.8",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md"
-  ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./coordinates": "./dist/coordinates/index.js",
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "bench": "pnpm vitest bench --run --dir src",
-    "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
-    "dev": "pnpm tsc --watch",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/constants",
-    "lint": "pnpm biome lint"
-  },
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
     "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
@@ -53,8 +16,42 @@
     "node": ">=22",
     "pnpm": ">=10"
   },
+  "exports": {
+    ".": "./dist/index.js",
+    "./coordinates": "./dist/coordinates/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "owner": "default/pathfinder",
+  "private": false,
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false
+  "repository": "gohypergiant/standard-toolkit",
+  "scripts": {
+    "bench": "pnpm vitest bench --run --dir src",
+    "build": "pnpm tsdown",
+    "constellation-tracker": "constellation-tracker",
+    "dev": "pnpm tsc --watch",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/constants",
+    "lint": "pnpm biome lint"
+  },
+  "sideEffects": false,
+  "subPath": "packages/constants",
+  "title": "Accelint Constants",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

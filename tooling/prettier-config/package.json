@@ -1,23 +1,16 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/prettier-config",
-  "title": "Prettier Configuration",
   "description": "The shared Prettier configuration used across Accelint projects.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "tooling/prettier-config",
   "version": "0.2.0",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "dependencies": {
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   },
-  "type": "module",
+  "exports": {
+    "./config": "./prettier.config.js"
+  },
   "files": [
     "./catalog-info.yaml",
     "./CHANGELOG.md",
@@ -25,19 +18,23 @@
     "./prettier.config.js",
     "./README.md"
   ],
-  "exports": {
-    "./config": "./prettier.config.js"
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "owner": "default/pathfinder",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   },
+  "repository": "gohypergiant/standard-toolkit",
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "dependencies": {
-    "prettier": "^3.7.4",
-    "prettier-plugin-tailwindcss": "^0.7.2"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "tooling/prettier-config",
+  "title": "Prettier Configuration",
+  "type": "module"
 }
