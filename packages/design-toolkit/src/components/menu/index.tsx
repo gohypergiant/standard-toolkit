@@ -31,6 +31,10 @@ import type { MenuProps } from './types';
  * multiple selection modes. Includes sections, separators, and submenu support
  * with comprehensive keyboard navigation and ARIA compliance.
  *
+ * IMPORTANT: Menu includes its own internal Popover. Do NOT wrap Menu in a
+ * Popover component. Use the `popoverProps` prop to configure placement and
+ * other popover settings.
+ *
  * @example
  * // Basic menu with trigger
  * <MenuTrigger>
@@ -39,6 +43,26 @@ import type { MenuProps } from './types';
  *     <MenuItem>Edit</MenuItem>
  *     <MenuItem>Copy</MenuItem>
  *     <MenuItem>Delete</MenuItem>
+ *   </Menu>
+ * </MenuTrigger>
+ *
+ * @example
+ * // Menu with custom placement
+ * <MenuTrigger>
+ *   <Button>Open Menu</Button>
+ *   <Menu popoverProps={{ placement: 'top end' }}>
+ *     <MenuItem>Edit</MenuItem>
+ *     <MenuItem>Copy</MenuItem>
+ *   </Menu>
+ * </MenuTrigger>
+ *
+ * @example
+ * // Menu with action handler
+ * <MenuTrigger>
+ *   <Button>Actions</Button>
+ *   <Menu onAction={(key) => console.log(key)}>
+ *     <MenuItem id="edit">Edit</MenuItem>
+ *     <MenuItem id="delete">Delete</MenuItem>
  *   </Menu>
  * </MenuTrigger>
  *

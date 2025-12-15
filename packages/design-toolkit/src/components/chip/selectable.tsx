@@ -25,7 +25,7 @@ import type { SelectableChipProps } from './types';
 export function SelectableChip({ ref, ...props }: SelectableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
 
-  const { className, size = 'medium', ...rest } = props;
+  const { className, color, size = 'medium', ...rest } = props;
 
   return (
     <AriaTag
@@ -34,6 +34,7 @@ export function SelectableChip({ ref, ...props }: SelectableChipProps) {
       className={composeRenderProps(className, (className) =>
         clsx('group/chip', styles.chip, styles.selectable, className),
       )}
+      data-color={color}
       data-size={size}
     />
   );

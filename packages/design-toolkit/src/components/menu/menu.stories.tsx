@@ -446,3 +446,370 @@ export const DynamicMenuHeader: Story = {
     );
   },
 };
+
+/**
+ * Demonstrates using `popoverProps` to customize menu placement.
+ * The menu will appear above the trigger button instead of below.
+ */
+export const CustomPlacement: Story = {
+  render: (args) => (
+    <div className='flex h-[300px] items-end gap-xl p-xl'>
+      <MenuTrigger>
+        <Button>Top Start</Button>
+        <Menu {...args} popoverProps={{ placement: 'top start' }}>
+          <MenuItem id='edit'>
+            <MenuItemLabel>Edit</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='copy'>
+            <MenuItemLabel>Copy</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='delete'>
+            <MenuItemLabel>Delete</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+
+      <MenuTrigger>
+        <Button>Top End</Button>
+        <Menu {...args} popoverProps={{ placement: 'top end' }}>
+          <MenuItem id='edit'>
+            <MenuItemLabel>Edit</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='copy'>
+            <MenuItemLabel>Copy</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='delete'>
+            <MenuItemLabel>Delete</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+
+      <MenuTrigger>
+        <Button>Bottom Start</Button>
+        <Menu {...args} popoverProps={{ placement: 'bottom start' }}>
+          <MenuItem id='edit'>
+            <MenuItemLabel>Edit</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='copy'>
+            <MenuItemLabel>Copy</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='delete'>
+            <MenuItemLabel>Delete</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+
+      <MenuTrigger>
+        <Button>Bottom End</Button>
+        <Menu {...args} popoverProps={{ placement: 'bottom end' }}>
+          <MenuItem id='edit'>
+            <MenuItemLabel>Edit</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='copy'>
+            <MenuItemLabel>Copy</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='delete'>
+            <MenuItemLabel>Delete</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+    </div>
+  ),
+};
+
+/**
+ * Demonstrates using `onAction` to handle menu item selection.
+ * Open the browser console to see the selected item key logged.
+ */
+export const WithActionHandler: Story = {
+  render: (args) => {
+    const [lastAction, setLastAction] = useState<string | null>(null);
+
+    return (
+      <div className='flex flex-col gap-m'>
+        <MenuTrigger>
+          <Button>Actions Menu</Button>
+          <Menu
+            {...args}
+            onAction={(key) => {
+              console.log('Selected:', key);
+              setLastAction(String(key));
+            }}
+          >
+            <MenuItem id='new-file'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>New File</MenuItemLabel>
+              <Hotkey variant='flat'>⌘N</Hotkey>
+            </MenuItem>
+            <MenuItem id='open-file'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Open File</MenuItemLabel>
+              <Hotkey variant='flat'>⌘O</Hotkey>
+            </MenuItem>
+            <MenuSeparator />
+            <MenuItem id='save'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Save</MenuItemLabel>
+              <Hotkey variant='flat'>⌘S</Hotkey>
+            </MenuItem>
+            <MenuItem id='save-as'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Save As...</MenuItemLabel>
+              <Hotkey variant='flat'>⇧⌘S</Hotkey>
+            </MenuItem>
+            <MenuSeparator />
+            <MenuItem id='delete' color='critical'>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              <MenuItemLabel>Delete</MenuItemLabel>
+              <Hotkey variant='flat'>⌘⌫</Hotkey>
+            </MenuItem>
+          </Menu>
+        </MenuTrigger>
+
+        {lastAction && (
+          <div className='fg-primary-bold text-body-m'>
+            Last action:{' '}
+            <code className='rounded bg-surface-raised p-xs'>{lastAction}</code>
+          </div>
+        )}
+      </div>
+    );
+  },
+};
+
+/**
+ * Demonstrates multi-select functionality with `selectionMode='multiple'`.
+ */
+export const MultipleSelection: Story = {
+  render: () => {
+    const [selectedKeys, setSelectedKeys] = useState<Set<string>>(
+      new Set(['bold']),
+    );
+
+    return (
+      <div className='flex flex-col gap-m'>
+        <MenuTrigger>
+          <Button>Text Formatting</Button>
+          <Menu
+            selectionMode='multiple'
+            selectedKeys={selectedKeys}
+            onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}
+          >
+            <MenuItem id='bold'>
+              <MenuItemLabel>Bold</MenuItemLabel>
+              <Hotkey variant='flat'>⌘B</Hotkey>
+            </MenuItem>
+            <MenuItem id='italic'>
+              <MenuItemLabel>Italic</MenuItemLabel>
+              <Hotkey variant='flat'>⌘I</Hotkey>
+            </MenuItem>
+            <MenuItem id='underline'>
+              <MenuItemLabel>Underline</MenuItemLabel>
+              <Hotkey variant='flat'>⌘U</Hotkey>
+            </MenuItem>
+            <MenuItem id='strikethrough'>
+              <MenuItemLabel>Strikethrough</MenuItemLabel>
+              <Hotkey variant='flat'>⇧⌘X</Hotkey>
+            </MenuItem>
+          </Menu>
+        </MenuTrigger>
+
+        <div className='fg-primary-bold text-body-m'>
+          Selected:{' '}
+          <code className='rounded bg-surface-raised p-xs'>
+            {Array.from(selectedKeys).join(', ') || 'none'}
+          </code>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Demonstrates single-select functionality with `selectionMode='single'`.
+ */
+export const SingleSelection: Story = {
+  render: () => {
+    const [selectedKey, setSelectedKey] = useState<Set<string>>(
+      new Set(['medium']),
+    );
+
+    return (
+      <div className='flex flex-col gap-m'>
+        <MenuTrigger>
+          <Button>Font Size</Button>
+          <Menu
+            selectionMode='single'
+            selectedKeys={selectedKey}
+            onSelectionChange={(keys) => setSelectedKey(keys as Set<string>)}
+          >
+            <MenuItem id='small'>
+              <MenuItemLabel>Small</MenuItemLabel>
+            </MenuItem>
+            <MenuItem id='medium'>
+              <MenuItemLabel>Medium</MenuItemLabel>
+            </MenuItem>
+            <MenuItem id='large'>
+              <MenuItemLabel>Large</MenuItemLabel>
+            </MenuItem>
+            <MenuItem id='extra-large'>
+              <MenuItemLabel>Extra Large</MenuItemLabel>
+            </MenuItem>
+          </Menu>
+        </MenuTrigger>
+
+        <div className='fg-primary-bold text-body-m'>
+          Selected:{' '}
+          <code className='rounded bg-surface-raised p-xs'>
+            {Array.from(selectedKey)[0] || 'none'}
+          </code>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Demonstrates disabled menu items.
+ */
+export const DisabledItems: Story = {
+  render: (args) => (
+    <MenuTrigger>
+      <Button>Menu with Disabled Items</Button>
+      <Menu {...args}>
+        <MenuItem id='available'>
+          <MenuItemLabel>Available Action</MenuItemLabel>
+        </MenuItem>
+        <MenuItem id='disabled-1' isDisabled>
+          <MenuItemLabel>Disabled Action</MenuItemLabel>
+          <MenuItemDescription>
+            This action is not available
+          </MenuItemDescription>
+        </MenuItem>
+        <MenuItem id='another-available'>
+          <MenuItemLabel>Another Available Action</MenuItemLabel>
+        </MenuItem>
+        <MenuSeparator />
+        <MenuItem id='disabled-2' isDisabled>
+          <MenuItemLabel>Also Disabled</MenuItemLabel>
+        </MenuItem>
+        <MenuItem id='delete' color='critical'>
+          <MenuItemLabel>Delete (Available)</MenuItemLabel>
+        </MenuItem>
+      </Menu>
+    </MenuTrigger>
+  ),
+};
+
+/**
+ * Demonstrates all color variants for menu items.
+ */
+export const ColorVariants: Story = {
+  render: (args) => (
+    <MenuTrigger>
+      <Button>Color Variants</Button>
+      <Menu {...args}>
+        <MenuItem id='info' color='info'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <MenuItemLabel>Info (Default)</MenuItemLabel>
+          <MenuItemDescription>Standard menu item</MenuItemDescription>
+        </MenuItem>
+        <MenuItem id='serious' color='serious'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <MenuItemLabel>Serious</MenuItemLabel>
+          <MenuItemDescription>Warning or important action</MenuItemDescription>
+        </MenuItem>
+        <MenuItem id='critical' color='critical'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <MenuItemLabel>Critical</MenuItemLabel>
+          <MenuItemDescription>
+            Destructive or dangerous action
+          </MenuItemDescription>
+        </MenuItem>
+      </Menu>
+    </MenuTrigger>
+  ),
+};
+
+/**
+ * Demonstrates a simple menu without icons or descriptions.
+ */
+export const SimpleMenu: Story = {
+  render: (args) => (
+    <MenuTrigger>
+      <Button>Simple Menu</Button>
+      <Menu {...args}>
+        <MenuItem id='cut'>
+          <MenuItemLabel>Cut</MenuItemLabel>
+        </MenuItem>
+        <MenuItem id='copy'>
+          <MenuItemLabel>Copy</MenuItemLabel>
+        </MenuItem>
+        <MenuItem id='paste'>
+          <MenuItemLabel>Paste</MenuItemLabel>
+        </MenuItem>
+      </Menu>
+    </MenuTrigger>
+  ),
+};
+
+/**
+ * Demonstrates using popoverProps with offset to add spacing between trigger and menu.
+ */
+export const WithOffset: Story = {
+  render: (args) => (
+    <div className='flex gap-xl'>
+      <MenuTrigger>
+        <Button>No Offset</Button>
+        <Menu {...args} popoverProps={{ placement: 'bottom', offset: 0 }}>
+          <MenuItem id='item-1'>
+            <MenuItemLabel>Menu Item 1</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='item-2'>
+            <MenuItemLabel>Menu Item 2</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+
+      <MenuTrigger>
+        <Button>8px Offset</Button>
+        <Menu {...args} popoverProps={{ placement: 'bottom', offset: 8 }}>
+          <MenuItem id='item-1'>
+            <MenuItemLabel>Menu Item 1</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='item-2'>
+            <MenuItemLabel>Menu Item 2</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+
+      <MenuTrigger>
+        <Button>16px Offset</Button>
+        <Menu {...args} popoverProps={{ placement: 'bottom', offset: 16 }}>
+          <MenuItem id='item-1'>
+            <MenuItemLabel>Menu Item 1</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='item-2'>
+            <MenuItemLabel>Menu Item 2</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+    </div>
+  ),
+};
