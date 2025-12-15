@@ -74,6 +74,7 @@ export function Accordion({ ref, ...props }: AccordionProps) {
     defaultExpanded,
     isDisabled,
     isExpanded,
+    onExpandedChange,
     ...rest
   } = props;
 
@@ -91,8 +92,9 @@ export function Accordion({ ref, ...props }: AccordionProps) {
         className={composeRenderProps(className, (className) =>
           clsx('group/accordion', styles.accordion, className),
         )}
-        isExpanded={defaultExpanded || isExpanded}
         isDisabled={isDisabled}
+        isExpanded={isExpanded}
+        onExpandedChange={onExpandedChange}
       >
         {children}
       </Disclosure>
