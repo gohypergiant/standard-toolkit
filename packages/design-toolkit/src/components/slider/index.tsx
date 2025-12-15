@@ -13,7 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Fragment, useMemo, useState } from 'react';
+import { useControlledState } from '@react-stately/utils';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Slider as AriaSlider,
   SliderTrack as AriaSliderTrack,
@@ -27,6 +28,92 @@ import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import styles from './styles.module.css';
 import type { SliderMarker, SliderMarkersConfig, SliderProps } from './types';
+
+const DEBOUNCE_MS = 500;
+
+/**
+ * SliderInput - Internal component for debounced numeric input
+ */
+function SliderInput({
+  className,
+  value,
+  min,
+  max,
+  disabled,
+  onChange,
+}: {
+  className?: string;
+  value: number;
+  min: number;
+  max: number;
+  disabled?: boolean;
+  onChange: (value: number) => void;
+}) {
+  const [localValue, setLocalValue] = useState(String(value));
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Sync local value when external value changes (e.g., from slider drag)
+  useEffect(() => {
+    setLocalValue(String(value));
+  }, [value]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const commitValue = (inputValue: string) => {
+    const parsed = Number.parseFloat(inputValue);
+    if (Number.isNaN(parsed)) {
+      // Reset to min if invalid
+      setLocalValue(String(min));
+      onChange(min);
+    } else {
+      // Clamp to valid range
+      const clamped = Math.min(Math.max(parsed, min), max);
+      setLocalValue(String(clamped));
+      onChange(clamped);
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setLocalValue(newValue);
+
+    // Clear existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    // Debounce the commit
+    timeoutRef.current = setTimeout(() => {
+      commitValue(newValue);
+    }, DEBOUNCE_MS);
+  };
+
+  const handleBlur = () => {
+    // Clear pending timeout and commit immediately
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    commitValue(localValue);
+  };
+
+  return (
+    <Input
+      className={className}
+      value={localValue}
+      disabled={disabled}
+      data-disabled={disabled || undefined}
+      onChange={handleChange}
+      onBlur={handleBlur}
+    />
+  );
+}
 
 /**
  * Normalizes the markers configuration into a consistent sorted array format
@@ -102,6 +189,18 @@ function hasLabeledMarkerAtValue(
 }
 
 /**
+ * Normalizes value to array format
+ */
+function normalizeValue(
+  value: number | number[] | undefined,
+): number[] | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  return Array.isArray(value) ? value : [value];
+}
+
+/**
  * Slider - An interactive range input component for numeric value selection
  *
  * Provides accessible slider functionality with optional input field integration,
@@ -144,8 +243,8 @@ export function Slider({
   markers: markersProp,
   maxValue: maxValueProp = 100,
   minValue: minValueProp = 0,
-  onChange: onChangeProp,
-  onChangeEnd: onChangeEndProp,
+  onChange,
+  onChangeEnd,
   orientation = 'horizontal',
   showInput,
   showLabel = true,
@@ -161,40 +260,23 @@ export function Slider({
     [markersProp, minValueProp, maxValueProp],
   );
 
-  const shouldUseSnappedValues = snapToMarkers && normalizedMarkers.length > 0;
+  const shouldSnap = snapToMarkers && normalizedMarkers.length > 0;
 
-  // Internal state for controlled snapping behavior
-  const [internalValue, setInternalValue] = useState<number[] | undefined>(
-    () => {
-      if (shouldUseSnappedValues && defaultValue !== undefined) {
-        const values = Array.isArray(defaultValue)
-          ? defaultValue
-          : [defaultValue];
-        return values.map(snapToNearestMarker(normalizedMarkers));
-      }
-      return undefined;
-    },
+  // Normalize default value, applying snap if needed
+  const normalizedDefaultValue = useMemo(() => {
+    const normalized = normalizeValue(defaultValue);
+    if (shouldSnap && normalized) {
+      return normalized.map(snapToNearestMarker(normalizedMarkers));
+    }
+    return normalized ?? [minValueProp];
+  }, [defaultValue, shouldSnap, normalizedMarkers, minValueProp]);
+
+  // Use controlled state for value management
+  const [value, setValue] = useControlledState(
+    normalizeValue(valueProp),
+    normalizedDefaultValue,
+    onChange,
   );
-
-  // Determine if we're in controlled mode
-  const isControlled = valueProp !== undefined;
-
-  // When snapToMarkers is enabled and uncontrolled, use internal state
-  const shouldUseInternalState = shouldUseSnappedValues && !isControlled;
-
-  // Normalize value props to arrays for AriaSlider
-  const normalizedValueProp =
-    valueProp !== undefined
-      ? Array.isArray(valueProp)
-        ? valueProp
-        : [valueProp]
-      : undefined;
-  const normalizedDefaultValue =
-    defaultValue !== undefined
-      ? Array.isArray(defaultValue)
-        ? defaultValue
-        : [defaultValue]
-      : undefined;
 
   // Memoize marker percent calculations
   const markerPercents = useMemo(() => {
@@ -218,33 +300,21 @@ export function Slider({
 
   // Handle onChange - snap values when snapToMarkers is enabled
   const handleChange = (values: number[]) => {
-    const updatedValues = shouldUseSnappedValues
-      ? values.map(snapToNearestMarker(normalizedMarkers))
-      : values;
-
-    onChangeProp?.(updatedValues);
-
-    if (shouldUseInternalState) {
-      setInternalValue(updatedValues);
+    if (shouldSnap) {
+      setValue(values.map(snapToNearestMarker(normalizedMarkers)));
+    } else {
+      setValue(values);
     }
   };
 
   // Handle onChangeEnd
   const handleChangeEnd = (values: number[]) => {
-    const updatedValues = shouldUseSnappedValues
-      ? values.map(snapToNearestMarker(normalizedMarkers))
-      : values;
-
-    onChangeEndProp?.(updatedValues);
+    if (shouldSnap) {
+      onChangeEnd?.(values.map(snapToNearestMarker(normalizedMarkers)));
+    } else {
+      onChangeEnd?.(values);
+    }
   };
-
-  // Determine the value prop to pass to AriaSlider
-  const sliderValue = shouldUseInternalState
-    ? internalValue
-    : normalizedValueProp;
-  const sliderDefaultValue = shouldUseInternalState
-    ? undefined
-    : normalizedDefaultValue;
 
   return (
     <AriaSlider
@@ -252,14 +322,13 @@ export function Slider({
       className={composeRenderProps(classNames?.slider, (className) =>
         clsx('group/slider', styles.slider, className),
       )}
-      defaultValue={sliderDefaultValue}
       maxValue={maxValueProp}
       minValue={minValueProp}
       onChange={handleChange}
       onChangeEnd={handleChangeEnd}
       orientation={orientation}
       step={stepProp}
-      value={sliderValue}
+      value={value}
       aria-label={showLabel ? undefined : labelProp}
       data-layout={layout}
     >
@@ -272,22 +341,15 @@ export function Slider({
           )}
           {showInput && (
             <div className={clsx(styles.inputs, classNames?.inputs)}>
-              {state.values.map((value, index) => (
-                <Input
+              {state.values.map((val, index) => (
+                <SliderInput
                   key={`number-field-${index === 0 ? 'min' : 'max'}`}
-                  className={composeRenderProps(
-                    classNames?.input,
-                    (className) => clsx(styles.input, className),
-                  )}
-                  value={value}
+                  className={clsx(styles.input, classNames?.input)}
+                  value={val}
+                  min={minValueProp}
+                  max={maxValueProp}
                   disabled={state.isDisabled}
-                  data-disabled={state.isDisabled || undefined}
-                  onChange={(event) =>
-                    state.setThumbValue(
-                      index,
-                      Number.parseFloat(event.target.value),
-                    )
-                  }
+                  onChange={(newValue) => state.setThumbValue(index, newValue)}
                 />
               ))}
             </div>

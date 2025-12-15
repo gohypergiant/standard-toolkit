@@ -11,7 +11,6 @@
  */
 import type {
   SliderProps as AriaSliderProps,
-  InputProps,
   LabelProps,
   SliderThumbProps,
   SliderTrackProps,
@@ -32,7 +31,7 @@ export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
     slider?: AriaSliderProps['className'];
     label?: LabelProps['className'];
     inputs?: string;
-    input?: InputProps['className'];
+    input?: string;
     track?: SliderTrackProps['className'];
     trackBackground?: string;
     trackValue?: string;
