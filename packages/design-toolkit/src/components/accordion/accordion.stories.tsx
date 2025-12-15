@@ -30,6 +30,8 @@ const meta = {
   component: Accordion,
   args: {
     isDisabled: false,
+    defaultExpanded: false,
+    isExpanded: false,
     variant: 'cozy',
   },
   argTypes: {
