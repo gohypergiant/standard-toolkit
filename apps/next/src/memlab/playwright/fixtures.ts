@@ -11,7 +11,7 @@
  */
 
 import * as path from 'node:path';
-import { test as base, expect, type Page } from '@playwright/test';
+import { test as base, type Page } from '@playwright/test';
 import { analyzeSnapshots } from '../lib/analyzer';
 import { getCachedConfig } from '../lib/config';
 import { HeapSnapshotCollector } from '../lib/heap-snapshot';
@@ -81,7 +81,7 @@ export const test = base.extend<MemlabTestFixtures>({
   },
 });
 
-export { expect };
+export { expect } from '@playwright/test';
 
 /**
  * Helper to force garbage collection in the browser
