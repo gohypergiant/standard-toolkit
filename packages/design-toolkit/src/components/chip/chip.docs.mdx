@@ -20,15 +20,15 @@ It is composed of the following components:
 // Basic chip with default styling
 <Chip>Tag</Chip>
 
-// Chip with different variants
-<Chip variant="info">Information</Chip>
-<Chip variant="advisory">Warning</Chip>
-<Chip variant="normal">Success</Chip>
-<Chip variant="serious">Caution</Chip>
-<Chip variant="critical">Error</Chip>
+// Chip with different colors
+<Chip color="info">Information</Chip>
+<Chip color="advisory">Warning</Chip>
+<Chip color="normal">Success</Chip>
+<Chip color="serious">Caution</Chip>
+<Chip color="critical">Error</Chip>
 
 // Chip with icon
-<Chip variant="info">
+<Chip color="info">
   <Icon><Placeholder /></Icon>
   With Icon
 </Chip>
@@ -39,9 +39,9 @@ It is composed of the following components:
 
 // Chip list for grouping
 <ChipList>
-  <Chip variant="info">Tag 1</Chip>
-  <Chip variant="advisory">Tag 2</Chip>
-  <Chip variant="normal">Tag 3</Chip>
+  <Chip color="info">Tag 1</Chip>
+  <Chip color="advisory">Tag 2</Chip>
+  <Chip color="normal">Tag 3</Chip>
 </ChipList>
 
 // Selectable chips for filtering
@@ -62,7 +62,7 @@ It is composed of the following components:
 </ChipList>
 
 // Using context provider for default props
-<ChipProvider size="small" variant="info">
+<ChipProvider size="small" color="info">
   <Chip>Chip 1</Chip>
   <Chip>Chip 2</Chip>
 </ChipProvider>
@@ -70,14 +70,14 @@ It is composed of the following components:
 // Chip with custom styling
 <Chip
   className="custom-chip-class"
-  variant="info"
+  color="info"
   size="medium"
 >
   Custom Chip
 </Chip>
 ```
 
-## Variants
+## Colors
 
 * **info** - Blue styling for informational content (default)
 * **advisory** - Yellow styling for advisory/warning content
@@ -87,21 +87,22 @@ It is composed of the following components:
 
 ## Sizes
 
-* **medium** - Standard size with larger text and padding (default)
-* **small** - Compact size with smaller text and padding for space-constrained layouts
+* **medium** - Standard size with larger text and padding (default for Chip)
+* **small** - Compact size with smaller text and padding for space-constrained layouts (default for ChipList)
 
 <Canvas of={ChipStories.Default} />
 
 ## Props
 
 ### Chip Props
-* **`variant`** - Visual style variant: `'info'` (default) | `'advisory'` | `'normal'` | `'serious'` | `'critical'`
+* **`color`** - Visual style color: `'info'` (default) | `'advisory'` | `'normal'` | `'serious'` | `'critical'`
 * **`size`** - Size variant: `'medium'` (default) | `'small'`
 * **`children`** - Content to display in the chip (text, icons, etc.)
 * **`className`** - Additional CSS classes for custom styling
 
 ### ChipList Props
-* **`size`** - Global size for all child chips
+* **`size`** - Global size for all child chips: `'small'` (default) | `'medium'`
+* **`color`** - Global color for all child chips
 * **`items`** - Array of items to render (for controlled rendering)
 * **`dependencies`** - Dependencies for re-rendering when they change
 * **`renderEmptyState`** - Function to render when no items exist
@@ -114,14 +115,13 @@ It is composed of the following components:
 
 ### SelectableChip Props
 * **`id`** - Unique identifier for the chip
+* **`color`** - Visual style color (inherits from context if not specified)
 * **`size`** - Size variant (inherits from context if not specified)
-* **`isSelected`** - Controls the selected state
-* **`defaultSelected`** - Initial selected state
-* **`onSelectionChange`** - Callback when selection changes
 * **`className`** - Additional CSS classes for custom styling
 
 ### DeletableChip Props
 * **`id`** - Unique identifier for the chip
+* **`color`** - Visual style color (inherits from context if not specified)
 * **`size`** - Size variant (inherits from context if not specified)
 * **`textValue`** - Text value for accessibility (auto-generated from children if not provided)
 * **`classNames`** - Custom class names for styling:
@@ -154,11 +154,11 @@ The component automatically handles accessibility features including:
 
 The component includes sophisticated state management that handles:
 - Visual feedback for hover, focus, and selected states
-- Proper contrast ratios for all variant combinations
+- Proper contrast ratios for all color combinations
 - Responsive sizing and spacing
 - Icon integration with automatic sizing
 
-The chip automatically adapts its appearance based on the selected variant and size, with appropriate color combinations that maintain accessibility standards. All variants use semantic color combinations that provide clear visual hierarchy for different types of information.
+The chip automatically adapts its appearance based on the selected color and size, with appropriate color combinations that maintain accessibility standards. All colors use semantic color combinations that provide clear visual hierarchy for different types of information.
 
 The component integrates seamlessly with the Icon component, automatically providing appropriate icon sizing and spacing. The selectable and deletable variants provide interactive functionality while maintaining the visual consistency of the basic chip component. The list container provides flexible layout options with automatic spacing and responsive behavior.
 
