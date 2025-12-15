@@ -217,6 +217,19 @@ export function compareWithBaseline(
 }
 
 /**
+ * Get trend icon based on delta value
+ */
+function getDeltaIcon(delta: number): string {
+  if (delta > 0) {
+    return '📈';
+  }
+  if (delta < 0) {
+    return '📉';
+  }
+  return '➡️';
+}
+
+/**
  * Format baseline comparison for console output
  */
 export function formatBaselineComparison(
@@ -224,24 +237,12 @@ export function formatBaselineComparison(
 ): string {
   const lines: string[] = [];
 
-  const leakIcon =
-    comparison.leakCountDelta > 0
-      ? '📈'
-      : comparison.leakCountDelta < 0
-        ? '📉'
-        : '➡️';
-  const sizeIcon =
-    comparison.retainedSizeDelta > 0
-      ? '📈'
-      : comparison.retainedSizeDelta < 0
-        ? '📉'
-        : '➡️';
+  const leakIcon = getDeltaIcon(comparison.leakCountDelta);
+  const sizeIcon = getDeltaIcon(comparison.retainedSizeDelta);
 
-  lines.push(`\n📊 Baseline Comparison for ${comparison.component}:`);
   lines.push(
+    `\n📊 Baseline Comparison for ${comparison.component}:`,
     `   ${leakIcon} Leaks: ${comparison.currentLeakCount} (baseline: ${comparison.baselineLeakCount}, delta: ${comparison.leakCountDelta >= 0 ? '+' : ''}${comparison.leakCountDelta})`,
-  );
-  lines.push(
     `   ${sizeIcon} Retained: ${formatBytes(comparison.currentRetainedSize)} (baseline: ${formatBytes(comparison.baselineRetainedSize)}, delta: ${comparison.retainedSizeDelta >= 0 ? '+' : ''}${formatBytes(Math.abs(comparison.retainedSizeDelta))})`,
   );
 
@@ -264,9 +265,11 @@ export function generateBaselineReport(
 ): string {
   const lines: string[] = [];
 
-  lines.push(`\n${'='.repeat(60)}`);
-  lines.push('📊 BASELINE COMPARISON REPORT');
-  lines.push('='.repeat(60));
+  lines.push(
+    `\n${'='.repeat(60)}`,
+    '📊 BASELINE COMPARISON REPORT',
+    '='.repeat(60),
+  );
 
   const regressions = comparisons.filter((c) => c.isRegression);
   const improvements = comparisons.filter((c) => c.isImprovement);
