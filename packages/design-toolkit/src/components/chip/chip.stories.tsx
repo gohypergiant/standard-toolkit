@@ -130,6 +130,61 @@ export const SelectableChipList: StoryObj<
   ),
 };
 
+const coloredSelectableData = [
+  {
+    id: 'up',
+    label: '5 UP',
+    color: 'normal' as const,
+  },
+  {
+    id: 'down',
+    label: '2 DOWN',
+    color: 'critical' as const,
+  },
+  {
+    id: 'all',
+    label: '7 Total',
+    color: 'info' as const,
+  },
+];
+
+export const SelectableChipListWithColors: StoryObj<
+  FC<ChipListProps<unknown> & { isDisabled?: boolean }>
+> = {
+  args: {
+    disallowEmptySelection: false,
+    selectionMode: 'single',
+    isDisabled: false,
+  },
+  argTypes: {
+    selectionMode: {
+      control: 'select',
+      options: ['none', 'single', 'multiple'],
+    },
+  },
+  parameters: {
+    controls: {
+      exclude: ['children'],
+    },
+  },
+  render: ({ children, id, className, style, size, isDisabled, ...rest }) => (
+    <ChipList
+      {...rest}
+      disabledKeys={
+        isDisabled ? coloredSelectableData.map(({ id }) => id) : undefined
+      }
+      items={coloredSelectableData}
+      size={size}
+    >
+      {({ id, label, color }) => (
+        <SelectableChip id={id} color={color}>
+          {label}
+        </SelectableChip>
+      )}
+    </ChipList>
+  ),
+};
+
 const deletableChips = new Set([
   'Deletable chip 1',
   'Deletable chip 2',

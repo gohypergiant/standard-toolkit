@@ -15,19 +15,19 @@ It is composed of the following components:
 ## Example usage
 ```tsx
 // Basic search field
-<SearchField placeholder="Search..." />
+<SearchField inputProps={{ placeholder: 'Search...' }} />
 
 // With event handlers
 <SearchField
-  placeholder="Type to search"
+  inputProps={{ placeholder: 'Type to search' }}
   onSubmit={(value) => console.log('Search:', value)}
   onChange={(value) => setQuery(value)}
 />
 
 // Using context provider for default props
 <SearchFieldProvider variant="filled">
-  <SearchField placeholder="Search 1" />
-  <SearchField placeholder="Search 2" />
+  <SearchField inputProps={{ placeholder: 'Search 1' }} />
+  <SearchField inputProps={{ placeholder: 'Search 2' }} />
 </SearchFieldProvider>
 ```
 
@@ -42,7 +42,6 @@ The variant can be controlled via the `variant` prop or set globally using the `
 
 ## Props
 
-* **`placeholder`** - Placeholder text displayed when the input is empty
 * **`variant`** - Visual style: `'outline'` (default) or `'filled'`
 * **`isLoading`** - Displays a loading spinner instead of the clear button
 * **`isDisabled`** - Disables the search field
@@ -51,7 +50,7 @@ The variant can be controlled via the `variant` prop or set globally using the `
 * **`onChange`** - Callback when the input value changes
 * **`onSubmit`** - Callback when the search is submitted (Enter key or search button)
 * **`onClear`** - Callback when the clear button is clicked
-* **`inputProps`** - Additional props passed to the underlying input element
+* **`inputProps`** - Props passed to the underlying input element (e.g., `placeholder`, `autoFocus`, `maxLength`)
 * **`classNames`** - Custom class names for styling:
   * `field` - Applied to the search field container
   * `input` - Applied to the input element

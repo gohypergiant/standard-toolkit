@@ -1,5 +1,10 @@
 # @accelint/math
 
+## 0.1.8
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+
 ## 0.1.7
 
 ### Patch Changes

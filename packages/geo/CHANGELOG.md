@@ -1,5 +1,10 @@
 # @accelint/geo
 
+## 0.4.1
+### Patch Changes
+
+- 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.
+
 ## 0.4.0
 ### Minor Changes
 

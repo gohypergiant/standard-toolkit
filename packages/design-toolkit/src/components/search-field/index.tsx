@@ -35,13 +35,13 @@ import type { SearchFieldProps } from './types';
  *
  * @example
  * // Basic search field
- * <SearchField placeholder="Search..." />
+ * <SearchField inputProps={{ placeholder: 'Search...' }} />
  *
  * @example
  * // Filled variant with custom styling
  * <SearchField
  *   variant="filled"
- *   placeholder="Search products"
+ *   inputProps={{ placeholder: 'Search...' }}
  *   classNames={{
  *     input: "bg-info-bold",
  *     searchIcon: "fg-accent-primary-bold"
@@ -51,7 +51,9 @@ import type { SearchFieldProps } from './types';
  * @example
  * // With event handlers
  * <SearchField
- *   placeholder="Type to search"
+ *   inputProps: {
+ *     placeholder: 'Search...',
+ *   },
  *   onSubmit={(value) => console.log('Search:', value)}
  *   onChange={(value) => setQuery(value)}
  * />

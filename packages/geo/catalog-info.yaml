@@ -16,7 +16,7 @@ metadata:
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/geo/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.4.0
+    package/version: 0.4.1
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/geo
