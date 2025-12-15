@@ -1,23 +1,20 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/vitest-config",
-  "title": "Vitest Configuration",
   "description": "The shared Vitest configuration used across Accelint projects.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "tooling/vitest-config",
   "version": "0.1.5",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.2",
+    "@vitest/coverage-istanbul": "^4.0.8",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.15"
   },
-  "type": "module",
+  "exports": {
+    "./dom": "./dom.js",
+    "./no-dom": "./no-dom.js",
+    "./mocks/broadcast-channel": "./mocks/broadcast-channel.js"
+  },
   "files": [
     "./catalog-info.yaml",
     "./CHANGELOG.md",
@@ -27,23 +24,23 @@
     "./package.json",
     "./README.md"
   ],
-  "exports": {
-    "./dom": "./dom.js",
-    "./no-dom": "./no-dom.js",
-    "./mocks/broadcast-channel": "./mocks/broadcast-channel.js"
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "owner": "default/pathfinder",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   },
+  "repository": "gohypergiant/standard-toolkit",
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "dependencies": {
-    "@vitejs/plugin-react": "^4.3.2",
-    "@vitest/coverage-istanbul": "^4.0.8",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.8"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "tooling/vitest-config",
+  "title": "Vitest Configuration",
+  "type": "module"
 }

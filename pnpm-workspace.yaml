@@ -1,17 +1,13 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'tooling/*'
+  - apps/*
+  - packages/*
+  - tooling/*
+
+enablePrePostScripts: true
+
 onlyBuiltDependencies:
-  - '@biomejs/biome'
   - '@parcel/watcher'
   - '@swc/core'
-  - '@tailwindcss/oxide'
-  - 'core-js'
-  - 'core-js-pure'
-  - 'es5-ext'
-  - 'esbuild'
-  - 'lefthook'
-  - 'msw'
-  - 'sharp'
-enablePrePostScripts: true
+  - esbuild
+  - lefthook
+  - sharp

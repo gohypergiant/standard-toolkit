@@ -1,35 +1,32 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/eslint-config",
-  "title": "Eslint Configuration",
   "description": "The shared eslint configuration used across Accelint projects.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "tooling/eslint-config",
   "version": "0.1.4",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "type": "module",
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
   "files": [
     "./catalog-info.yaml",
     "./CHANGELOG.md",
     "./package.json",
     "./README.md"
   ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "owner": "default/pathfinder",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "gohypergiant/standard-toolkit",
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "tooling/eslint-config",
+  "title": "Eslint Configuration",
+  "type": "module"
 }
