@@ -120,7 +120,7 @@ Markers can be combined with range sliders.
 
 ## Snap to Markers
 
-When you need discrete selection where users can only choose from predefined values, use the `snapToMarkers` prop. This automatically calculates the appropriate step value to ensure the slider snaps to marker positions.
+When you need discrete selection where users can only choose from predefined values, use the `snapToMarkers` prop. The slider will snap to the nearest marker value as you drag.
 
 ### Basic Snap to Markers
 The slider will only stop at marker values.
@@ -133,7 +133,7 @@ Combine `snapToMarkers` with `showMarkerLabels` for clear discrete options.
 <Canvas of={SliderStories.SnapToLabeledMarkers} />
 
 ### Custom Intervals
-Works with any marker configuration, even unevenly spaced values.
+Works with any marker configuration, even unevenly spaced values. The slider finds the nearest marker regardless of spacing.
 
 <Canvas of={SliderStories.SnapToUnevenMarkers} />
 
@@ -151,10 +151,12 @@ Combine `snapToMarkers` with range sliders for discrete range selection.
 * **`minValue`** - Minimum allowed value (default: 0)
 * **`maxValue`** - Maximum allowed value (default: 100)
 * **`showLabel`** - Whether to display the label (default: true)
+* **`showValueLabels`** - Whether to display min/max value labels (default: true)
 * **`showInput`** - Whether to display numeric input fields (default: false)
 * **`value`** - Controlled value (single number or `[min, max]` for range)
 * **`defaultValue`** - Initial value (single number or `[min, max]` for range)
 * **`onChange`** - Callback when value changes
+* **`onChangeEnd`** - Callback when value change is complete (e.g., on drag end)
 * **`step`** - Step increment for the slider
 
 ### Marker Props
@@ -163,20 +165,20 @@ Combine `snapToMarkers` with range sliders for discrete range selection.
   * `number[]` - Array of specific values to mark (e.g., `[0, 25, 50, 75, 100]`)
   * `SliderMarker[]` - Array of objects with `value` and optional `label` (e.g., `[{ value: 0, label: 'Low' }]`)
 * **`showMarkerLabels`** - Whether to display labels on markers (default: false). Only applies when markers have labels defined. When enabled, the default min/max value display is automatically hidden only if a labeled marker exists at that position (to prevent overlap).
-* **`snapToMarkers`** - When true, the slider can only be set to marker values (default: false). Requires markers to be defined. The component automatically calculates the appropriate step value based on marker intervals.
+* **`snapToMarkers`** - When true, the slider snaps to the nearest marker value (default: false). Requires markers to be defined. Works with any marker configuration including unevenly spaced values.
 
 ### classNames
 * **`classNames`** - Additional CSS classes for custom styling
   * `slider` - Applied to the main slider container
   * `track` - Applied to the slider track
-  * `trackValue` - Applied to the slider track value
+  * `trackValue` - Applied to the slider track value (the filled portion)
   * `trackBackground` - Applied to the slider track background
   * `thumb` - Applied to the slider thumb
   * `inputs` - Applied to the input fields wrapper div
   * `input` - Applied to the input field
   * `label` - Applied to the label
-  * `minValue` - Applied to the minimum value
-  * `maxValue` - Applied to the maximum value
+  * `minValue` - Applied to the minimum value display
+  * `maxValue` - Applied to the maximum value display
   * `markers` - Applied to the markers container
   * `marker` - Applied to individual marker elements
   * `markerDot` - Applied to the marker dot/tick
@@ -206,5 +208,7 @@ The component automatically handles accessibility features including:
 - Value announcements
 - Tooltip display for current values (hidden when input fields are shown)
 - Markers are rendered with `aria-hidden="true"` as they are purely visual indicators
+
+Marker positioning uses CSS custom properties via data attributes (`data-percent`), making styles overridable and avoiding inline styles.
 
 The component integrates with the Tooltip system to show current values on hover and provides flexible layout options through CSS Grid-based positioning.

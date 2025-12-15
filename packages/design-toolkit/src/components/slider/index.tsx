@@ -29,7 +29,7 @@ import styles from './styles.module.css';
 import type { SliderMarker, SliderMarkersConfig, SliderProps } from './types';
 
 /**
- * Normalizes the markers configuration into a consistent array format
+ * Normalizes the markers configuration into a consistent sorted array format
  */
 function normalizeMarkers(
   markersConfig: SliderMarkersConfig | undefined,
@@ -51,41 +51,39 @@ function normalizeMarkers(
     }));
   }
 
-  // Array of numbers or marker objects
-  if (Array.isArray(markersConfig)) {
-    return markersConfig.map((item) =>
-      typeof item === 'number' ? { value: item } : item,
-    );
-  }
-
-  return [];
+  // Array of numbers or marker objects - sort by value
+  return markersConfig
+    .map((item) => (typeof item === 'number' ? { value: item } : item))
+    .sort((a, b) => a.value - b.value);
 }
 
 /**
- * Snaps a value to the nearest marker
+ * Snaps a value to the nearest marker (curried for use with map)
+ * Assumes markers are sorted by value for early exit optimization
  */
-function snapToNearestMarker(value: number, markers: SliderMarker[]): number {
-  if (markers.length === 0) {
-    return value;
-  }
-
-  const firstMarker = markers[0];
-  if (firstMarker === undefined) {
-    return value;
-  }
-
-  let nearestValue = firstMarker.value;
-  let minDistance = Math.abs(value - nearestValue);
-
-  for (const marker of markers) {
-    const distance = Math.abs(value - marker.value);
-    if (distance < minDistance) {
-      minDistance = distance;
-      nearestValue = marker.value;
+function snapToNearestMarker(markers: SliderMarker[]) {
+  return (value: number): number => {
+    const firstMarker = markers[0];
+    if (!firstMarker) {
+      return value;
     }
-  }
 
-  return nearestValue;
+    let nearestValue = firstMarker.value;
+    let minDistance = Number.POSITIVE_INFINITY;
+
+    for (const marker of markers) {
+      const distance = Math.abs(value - marker.value);
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestValue = marker.value;
+      } else {
+        // Since markers are sorted, if distance increases we've passed the nearest
+        break;
+      }
+    }
+
+    return nearestValue;
+  };
 }
 
 /**
@@ -117,14 +115,6 @@ function hasLabeledMarkerAtValue(
  * @example
  * // Slider with input field
  * <Slider label="Opacity" defaultValue={50} showInput />
- *
- * @example
- * // Slider with evenly spaced markers
- * <Slider label="Progress" markers={5} />
- *
- * @example
- * // Slider with specific marker values
- * <Slider label="Temperature" markers={[0, 25, 50, 75, 100]} />
  *
  * @example
  * // Slider with labeled markers
@@ -160,6 +150,7 @@ export function Slider({
   showInput,
   showLabel = true,
   showMarkerLabels = false,
+  showValueLabels = true,
   snapToMarkers = false,
   step: stepProp,
   value: valueProp,
@@ -170,18 +161,16 @@ export function Slider({
     [markersProp, minValueProp, maxValueProp],
   );
 
+  const shouldUseSnappedValues = snapToMarkers && normalizedMarkers.length > 0;
+
   // Internal state for controlled snapping behavior
   const [internalValue, setInternalValue] = useState<number[] | undefined>(
     () => {
-      if (
-        snapToMarkers &&
-        normalizedMarkers.length > 0 &&
-        defaultValue !== undefined
-      ) {
+      if (shouldUseSnappedValues && defaultValue !== undefined) {
         const values = Array.isArray(defaultValue)
           ? defaultValue
           : [defaultValue];
-        return values.map((v) => snapToNearestMarker(v, normalizedMarkers));
+        return values.map(snapToNearestMarker(normalizedMarkers));
       }
       return undefined;
     },
@@ -191,8 +180,7 @@ export function Slider({
   const isControlled = valueProp !== undefined;
 
   // When snapToMarkers is enabled and uncontrolled, use internal state
-  const shouldUseInternalState =
-    snapToMarkers && !isControlled && normalizedMarkers.length > 0;
+  const shouldUseInternalState = shouldUseSnappedValues && !isControlled;
 
   // Normalize value props to arrays for AriaSlider
   const normalizedValueProp =
@@ -208,43 +196,46 @@ export function Slider({
         : [defaultValue]
       : undefined;
 
-  // Determine if min/max labels should be hidden (only when labeled markers exist at those values)
-  const hideMinValue =
-    showMarkerLabels &&
-    hasLabeledMarkerAtValue(normalizedMarkers, minValueProp);
-  const hideMaxValue =
-    showMarkerLabels &&
-    hasLabeledMarkerAtValue(normalizedMarkers, maxValueProp);
+  // Memoize marker percent calculations
+  const markerPercents = useMemo(() => {
+    const percents = new Map<number, number>();
+    const range = maxValueProp - minValueProp;
+    for (const marker of normalizedMarkers) {
+      percents.set(marker.value, ((marker.value - minValueProp) / range) * 100);
+    }
+    return percents;
+  }, [normalizedMarkers, minValueProp, maxValueProp]);
 
-  const getMarkerPercent = (value: number) => {
-    return ((value - minValueProp) / (maxValueProp - minValueProp)) * 100;
-  };
+  // Determine if min/max labels should be hidden
+  const hideMinValue =
+    !showValueLabels ||
+    (showMarkerLabels &&
+      hasLabeledMarkerAtValue(normalizedMarkers, minValueProp));
+  const hideMaxValue =
+    !showValueLabels ||
+    (showMarkerLabels &&
+      hasLabeledMarkerAtValue(normalizedMarkers, maxValueProp));
 
   // Handle onChange - snap values when snapToMarkers is enabled
   const handleChange = (values: number[]) => {
-    if (snapToMarkers && normalizedMarkers.length > 0) {
-      const snappedValues = values.map((v) =>
-        snapToNearestMarker(v, normalizedMarkers),
-      );
-      if (shouldUseInternalState) {
-        setInternalValue(snappedValues);
-      }
-      onChangeProp?.(snappedValues);
-    } else {
-      onChangeProp?.(values);
+    const updatedValues = shouldUseSnappedValues
+      ? values.map(snapToNearestMarker(normalizedMarkers))
+      : values;
+
+    onChangeProp?.(updatedValues);
+
+    if (shouldUseInternalState) {
+      setInternalValue(updatedValues);
     }
   };
 
   // Handle onChangeEnd
   const handleChangeEnd = (values: number[]) => {
-    if (snapToMarkers && normalizedMarkers.length > 0) {
-      const snappedValues = values.map((v) =>
-        snapToNearestMarker(v, normalizedMarkers),
-      );
-      onChangeEndProp?.(snappedValues);
-    } else {
-      onChangeEndProp?.(values);
-    }
+    const updatedValues = shouldUseSnappedValues
+      ? values.map(snapToNearestMarker(normalizedMarkers))
+      : values;
+
+    onChangeEndProp?.(updatedValues);
   };
 
   // Determine the value prop to pass to AriaSlider
@@ -315,39 +306,28 @@ export function Slider({
             {/* Markers */}
             {normalizedMarkers.length > 0 && (
               <div className={clsx(styles.markers, classNames?.markers)}>
-                {normalizedMarkers.map((marker) => {
-                  const percent = getMarkerPercent(marker.value);
-                  const positionStyle =
-                    orientation === 'horizontal'
-                      ? { left: `${percent}%` }
-                      : { bottom: `${percent}%` };
-
-                  return (
+                {normalizedMarkers.map((marker) => (
+                  <div
+                    key={`marker-${marker.value}`}
+                    className={clsx(styles.marker, classNames?.marker)}
+                    data-percent={markerPercents.get(marker.value)}
+                    aria-hidden='true'
+                  >
                     <div
-                      key={`marker-${marker.value}`}
-                      className={clsx(styles.marker, classNames?.marker)}
-                      style={positionStyle}
-                      aria-hidden='true'
-                    >
-                      <div
+                      className={clsx(styles.markerDot, classNames?.markerDot)}
+                    />
+                    {showMarkerLabels && marker.label && (
+                      <span
                         className={clsx(
-                          styles.markerDot,
-                          classNames?.markerDot,
+                          styles.markerLabel,
+                          classNames?.markerLabel,
                         )}
-                      />
-                      {showMarkerLabels && marker.label && (
-                        <span
-                          className={clsx(
-                            styles.markerLabel,
-                            classNames?.markerLabel,
-                          )}
-                        >
-                          {marker.label}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
+                      >
+                        {marker.label}
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
             {state.values.map((_, index) => (

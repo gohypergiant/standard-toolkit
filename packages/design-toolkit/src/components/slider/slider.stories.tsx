@@ -25,6 +25,7 @@ const meta = {
     orientation: 'horizontal',
     showInput: false,
     showLabel: true,
+    showValueLabels: true,
     isDisabled: false,
   },
   argTypes: {
@@ -51,6 +52,10 @@ const meta = {
     showInput: {
       control: 'boolean',
       description: 'Whether to display numeric input fields',
+    },
+    showValueLabels: {
+      control: 'boolean',
+      description: 'Whether to display min/max value labels',
     },
   },
 } satisfies Meta<typeof Slider>;
@@ -111,6 +116,36 @@ export const RangeWithInput: Story = {
   },
 };
 
+export const WithEvenlySpacedMarkers: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Volume',
+    markers: 5,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const WithSpecificMarkerValues: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Temperature (°F)',
+    markers: [0, 32, 72, 100],
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
 export const WithLabeledMarkers: Story = {
   args: {
     defaultValue: 50,
@@ -131,11 +166,70 @@ export const WithLabeledMarkers: Story = {
   },
 };
 
+export const WithDetailedLabeledMarkers: Story = {
+  args: {
+    defaultValue: 25,
+    label: 'Video Quality',
+    markers: [
+      { value: 0, label: '480p' },
+      { value: 25, label: '720p' },
+      { value: 50, label: '1080p' },
+      { value: 75, label: '1440p' },
+      { value: 100, label: '4K' },
+    ],
+    showMarkerLabels: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const VerticalWithMarkers: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Brightness',
+    orientation: 'vertical',
+    markers: [
+      { value: 0, label: 'Min' },
+      { value: 50, label: '50%' },
+      { value: 100, label: 'Max' },
+    ],
+    showMarkerLabels: true,
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='h-[300px] w-[200px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
 export const RangeWithMarkers: Story = {
   args: {
     defaultValue: [25, 75],
     label: 'Price Range',
     markers: [0, 25, 50, 75, 100],
+  },
+  render: ({ ...args }) => {
+    return (
+      <div className='size-[400px]'>
+        <Slider {...args} />
+      </div>
+    );
+  },
+};
+
+export const DisabledWithMarkers: Story = {
+  args: {
+    defaultValue: 50,
+    label: 'Disabled Slider',
+    isDisabled: true,
+    markers: 5,
   },
   render: ({ ...args }) => {
     return (

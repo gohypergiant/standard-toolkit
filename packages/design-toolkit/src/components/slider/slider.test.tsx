@@ -317,15 +317,15 @@ describe('Slider', () => {
         />,
       );
 
-      // Get all marker elements (direct children of the markers container that have aria-hidden)
+      // Get all marker elements with data-percent attribute
       const markerElements = container.querySelectorAll(
-        '[aria-hidden="true"][style]',
+        '[aria-hidden="true"][data-percent]',
       );
 
       expect(markerElements).toHaveLength(3);
-      expect(markerElements[0]).toHaveAttribute('style', 'left: 0%;');
-      expect(markerElements[1]).toHaveAttribute('style', 'left: 50%;');
-      expect(markerElements[2]).toHaveAttribute('style', 'left: 100%;');
+      expect(markerElements[0]).toHaveAttribute('data-percent', '0');
+      expect(markerElements[1]).toHaveAttribute('data-percent', '50');
+      expect(markerElements[2]).toHaveAttribute('data-percent', '100');
     });
   });
 

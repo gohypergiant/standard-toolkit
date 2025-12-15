@@ -63,6 +63,10 @@ export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
    */
   showMarkerLabels?: boolean;
   /**
+   * Whether to show the min/max value labels (default: true)
+   */
+  showValueLabels?: boolean;
+  /**
    * When true, the slider can only be set to marker values.
    * Requires markers to be defined. The slider will snap to the nearest marker.
    */
