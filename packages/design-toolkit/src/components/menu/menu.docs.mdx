@@ -22,6 +22,8 @@ It is composed of the following components:
 
 Additionally, you can compose in a `Hotkey` component or `Icon` components within menu items.
 
+> **Important:** The `Menu` component includes its own internal `Popover`. Do not wrap `Menu` in a `Popover` component—this will cause click handlers to not fire properly. Use the `popoverProps` prop to configure placement and other popover behavior.
+
 ## Static
 You can construct a static menu by using the components directly.
 <Canvas of={MenuStories.Basic} />
@@ -34,50 +36,86 @@ For a dynamic menu, the `items` prop is passed in.
 You can build a static menu with a flat list of options to select.
 
 ### Simplest Version
-```
+```tsx
 <MenuTrigger>
   <Button>Open Menu</Button>
-    <Menu>
-      <MenuItem>
-        <MenuItemLabel>Item</MenuItemLabel>
-      </MenuItem>
-      <MenuSeparator />
-      <MenuItem>
-        <MenuItemLabel>Item</MenuItemLabel>
-      </MenuItem>
-    </Menu>
+  <Menu>
+    <MenuItem>
+      <MenuItemLabel>Item</MenuItemLabel>
+    </MenuItem>
+    <MenuSeparator />
+    <MenuItem>
+      <MenuItemLabel>Item</MenuItemLabel>
+    </MenuItem>
+  </Menu>
+</MenuTrigger>
+```
+
+### With Custom Placement
+You can customize the menu placement using `popoverProps`.
+```tsx
+<MenuTrigger>
+  <Button>Open Menu</Button>
+  <Menu popoverProps={{ placement: 'top end' }}>
+    <MenuItem>
+      <MenuItemLabel>Item 1</MenuItemLabel>
+    </MenuItem>
+    <MenuItem>
+      <MenuItemLabel>Item 2</MenuItemLabel>
+    </MenuItem>
+  </Menu>
+</MenuTrigger>
+```
+
+Available placements include: `'bottom'`, `'bottom start'`, `'bottom end'`, `'top'`, `'top start'`, `'top end'`, `'left'`, `'right'`, etc.
+
+### With Action Handler
+You can handle menu item selection using the `onAction` prop.
+```tsx
+<MenuTrigger>
+  <Button>Actions</Button>
+  <Menu onAction={(key) => console.log('Selected:', key)}>
+    <MenuItem id="edit">
+      <MenuItemLabel>Edit</MenuItemLabel>
+    </MenuItem>
+    <MenuItem id="copy">
+      <MenuItemLabel>Copy</MenuItemLabel>
+    </MenuItem>
+    <MenuItem id="delete">
+      <MenuItemLabel>Delete</MenuItemLabel>
+    </MenuItem>
+  </Menu>
 </MenuTrigger>
 ```
 
 ### With Section
 You can add an optional section area.
-```
+```tsx
 <MenuTrigger>
   <Button>Open Menu</Button>
-    <Menu>
+  <Menu>
+    <MenuItem>
+      <MenuItemLabel>Item</MenuItemLabel>
+    </MenuItem>
+    <MenuSection title='Additional Notable Species'>
       <MenuItem>
-        <MenuItemLabel>Item</MenuItemLabel>
+        <MenuItemLabel>Mallard</MenuItemLabel>
+        <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
+        <Hotkey variant='flat'>⌘V</Hotkey>
       </MenuItem>
-      <MenuSection title='Additional Notable Species'>
-        <MenuItem>
-          <MenuItemLabel>Mallard</MenuItemLabel>
-          <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>
-          <Hotkey variant='flat'>⌘V</Hotkey>
-        </MenuItem>
-        <MenuItem>
-          <MenuItemLabel>Chimney swift</MenuItemLabel>
-          <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
-          <Hotkey variant='flat'>⌘V</Hotkey>
-        </MenuItem>
-      </MenuSection>
-    </Menu>
+      <MenuItem>
+        <MenuItemLabel>Chimney swift</MenuItemLabel>
+        <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
+        <Hotkey variant='flat'>⌘V</Hotkey>
+      </MenuItem>
+    </MenuSection>
+  </Menu>
 </MenuTrigger>
 ```
 
 ### With Submenu
 You can add in optional, nested Submenus
-
-```
+```tsx
 <MenuTrigger>
   <Button>Open Menu</Button>
   <Menu>
@@ -88,12 +126,12 @@ You can add in optional, nested Submenus
       <MenuItem>
         <MenuItemLabel>Item With Children</MenuItemLabel>
       </MenuItem>
-        <Menu>
-          <MenuItem>
-            <MenuItemLabel>Blue Jay</MenuItemLabel>
-          </MenuItem>
-        </Menu>
-      </MenuSubmenu>
+      <Menu>
+        <MenuItem>
+          <MenuItemLabel>Blue Jay</MenuItemLabel>
+        </MenuItem>
+      </Menu>
+    </MenuSubmenu>
   </Menu>
 </MenuTrigger>
 ```
@@ -103,11 +141,13 @@ The Menu supports all the [props from `react-aria-components` Menu](https://reac
 
 ### Menu Props
 - **`selectionMode`** - Selection behavior: `'single'` (default) | `'multiple'` | `'none'`
-- **`variant`** - Visual variant for styling
+- **`variant`** - Visual variant for styling: `'cozy'` (default) | `'compact'`
 - **`classNames`** - Custom class names for different parts:
   - `menu` - Applied to the menu container
   - `popover` - Applied to the popover wrapper
-- **`popoverProps`** - Props passed to the underlying Popover component
+- **`popoverProps`** - Props passed to the underlying Popover component. Use this to set `placement`, `offset`, `isOpen`, etc. See [Popover props](https://react-spectrum.adobe.com/react-aria/Popover.html#props) for all options.
+- **`onAction`** - Handler called when a menu item is selected. Receives the item's `id` as argument.
+- **`onClose`** - Handler called when the menu is closed.
 
 ### MenuItem Props
 - **`color`** - Color variant: `'info'` (default) | `'serious'` | `'critical'`
@@ -125,10 +165,10 @@ The Menu supports all the [props from `react-aria-components` Menu](https://reac
   - `header` - Applied to the section header
 
 ### MenuTrigger Props
-The MenuTrigger component supports all the [props from `react-aria-components` MenuTrigger](https://react-spectrum.adobe.com/react-area/Men.#menutrigger).
+The MenuTrigger component supports all the [props from `react-aria-components` MenuTrigger](https://react-spectrum.adobe.com/react-aria/Menu.html#menutrigger).
 
 ### MenuSubmenu Props
-The MenuTrigger component supports all the [props from `react-aria-components` Submenu](https://react-spectrum.adobe.com/react-area/Menu.html#submenu).
+The MenuSubmenu component supports all the [props from `react-aria-components` Submenu](https://react-spectrum.adobe.com/react-aria/Menu.html#submenu).
 
 ### MenuItemLabel Props
 - **`children`** - Label text content
@@ -141,6 +181,31 @@ The MenuTrigger component supports all the [props from `react-aria-components` S
 ### MenuSeparator Props
 - **`className`** - Custom CSS class name for styling
 
+## Common Mistakes
+
+### ❌ Don't wrap Menu in Popover
+```tsx
+// WRONG - This will cause click handlers to not fire
+<MenuTrigger>
+  <Button>Open Menu</Button>
+  <Popover placement="top end">
+    <Menu onAction={handleAction}>
+      <MenuItem id="edit">Edit</MenuItem>
+    </Menu>
+  </Popover>
+</MenuTrigger>
+```
+
+### ✅ Use popoverProps instead
+```tsx
+// CORRECT - Use popoverProps for placement
+<MenuTrigger>
+  <Button>Open Menu</Button>
+  <Menu popoverProps={{ placement: 'top end' }} onAction={handleAction}>
+    <MenuItem id="edit">Edit</MenuItem>
+  </Menu>
+</MenuTrigger>
+```
 
 ## Implementation Notes
 
