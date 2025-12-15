@@ -12,80 +12,66 @@
 
 'use client';
 
-import { DASH_ARRAYS, DEFAULT_COLORS } from '../../shared/constants';
+import {
+  BASE_FILL_OPACITY,
+  DASH_ARRAYS,
+  DEFAULT_COLORS,
+} from '../../shared/constants';
 import type { Color } from '@deck.gl/core';
 import type { StyledFeature } from '../../shared/types';
 
 /**
- * Convert hex color string to RGB array
- */
-function hexToRgb(hex: string): [number, number, number] {
-  // Remove # if present
-  const cleanHex = hex.replace('#', '');
-
-  // Parse hex values
-  const r = Number.parseInt(cleanHex.substring(0, 2), 16);
-  const g = Number.parseInt(cleanHex.substring(2, 4), 16);
-  const b = Number.parseInt(cleanHex.substring(4, 6), 16);
-
-  return [r, g, b];
-}
-
-/**
- * Create a color accessor function with opacity support
- *
- * @param colorKey Style property key for color (e.g., 'fillColor')
- * @param opacityKey Style property key for opacity (e.g., 'fillOpacity')
- * @param baseOpacity Base opacity multiplier (0-1)
- * @param fallbackColor Fallback RGB color if property not found
- * @returns Color accessor function
- */
-function createColorAccessor(
-  colorKey: 'fillColor' | 'strokeColor',
-  opacityKey: 'fillOpacity' | 'strokeOpacity',
-  baseOpacity: number,
-  fallbackColor: [number, number, number],
-): (feature: StyledFeature) => Color {
-  return (feature: StyledFeature): Color => {
-    const styleProps = feature.properties?.styleProperties;
-
-    if (!styleProps) {
-      return [...fallbackColor, Math.round(baseOpacity * 255)];
-    }
-
-    // Get color
-    const hexColor = styleProps[colorKey];
-    const rgb = hexColor ? hexToRgb(hexColor) : fallbackColor;
-
-    // Get opacity (0-100 percentage)
-    const userOpacity = styleProps[opacityKey] ?? 100;
-
-    // Calculate final opacity: (user% / 100) * baseOpacity * 255
-    const finalOpacity = Math.round((userOpacity / 100) * baseOpacity * 255);
-
-    return [...rgb, finalOpacity] as Color;
-  };
-}
-
-/**
  * Get fill color for a feature
+ * Colors are passed through as-is unless applyBaseOpacity is true
+ *
+ * @param feature - The styled feature
+ * @param applyBaseOpacity - When true, multiplies alpha by BASE_FILL_OPACITY (0.6)
+ * @returns RGBA color array
  */
-export const getFillColor = createColorAccessor(
-  'fillColor',
-  'fillOpacity',
-  0.59, // Base fill opacity from ngc2
-  DEFAULT_COLORS.fill,
-);
+export function getFillColor(
+  feature: StyledFeature,
+  applyBaseOpacity = false,
+): Color {
+  const styleProps = feature.properties?.styleProperties;
+  const color = styleProps?.fillColor ?? DEFAULT_COLORS.fill;
+
+  // Normalize to 4-element array
+  const rgba = normalizeColor(color);
+
+  if (applyBaseOpacity) {
+    // Apply base opacity multiplier to alpha channel
+    return [rgba[0], rgba[1], rgba[2], Math.round(rgba[3] * BASE_FILL_OPACITY)];
+  }
+
+  return rgba;
+}
 
 /**
  * Get stroke color for a feature
+ * Strokes are always rendered at their literal alpha value
+ *
+ * @param feature - The styled feature
+ * @returns RGBA color array
  */
-export const getStrokeColor = createColorAccessor(
-  'strokeColor',
-  'strokeOpacity',
-  1.0, // Full stroke opacity
-  DEFAULT_COLORS.stroke,
-);
+export function getStrokeColor(feature: StyledFeature): Color {
+  const styleProps = feature.properties?.styleProperties;
+  const color = styleProps?.strokeColor ?? DEFAULT_COLORS.stroke;
+
+  return normalizeColor(color);
+}
+
+/**
+ * Normalize a Color to a 4-element RGBA array
+ * Handles RGB arrays (adds alpha 255), RGBA arrays, and typed arrays
+ */
+function normalizeColor(color: Color): [number, number, number, number] {
+  if (color instanceof Uint8Array || color instanceof Uint8ClampedArray) {
+    return [color[0] ?? 0, color[1] ?? 0, color[2] ?? 0, color[3] ?? 255];
+  }
+
+  // Handle RGB (3-element) or RGBA (4-element) arrays
+  return [color[0], color[1], color[2], color[3] ?? 255];
+}
 
 /**
  * Get line width for a feature
@@ -123,16 +109,18 @@ export function getHoverLineWidth(
 
 /**
  * Get selection highlight color
+ * Returns the default highlight color or allows custom opacity override
  */
 export function getHighlightColor(
-  opacity = 0.39,
+  opacity?: number,
 ): [number, number, number, number] {
-  return [...DEFAULT_COLORS.highlight, Math.round(opacity * 255)] as [
-    number,
-    number,
-    number,
-    number,
-  ];
+  const rgba = normalizeColor(DEFAULT_COLORS.highlight);
+
+  if (opacity !== undefined) {
+    return [rgba[0], rgba[1], rgba[2], Math.round(opacity * 255)];
+  }
+
+  return rgba;
 }
 
 /**

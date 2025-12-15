@@ -22,6 +22,7 @@ import {
   interpolatePoint,
   type LabelPositionOptions,
 } from './labels';
+import type { Color } from '@deck.gl/core';
 import type { EditableShape } from '../../shared/types';
 
 describe('Label Positioning Utilities', () => {
@@ -228,7 +229,7 @@ describe('Label Positioning Utilities', () => {
   });
 
   describe('getLabelFillColor', () => {
-    it('converts hex color to RGBA with moderate opacity', () => {
+    it('extracts RGB from RGBA and applies fixed label opacity', () => {
       const shape: EditableShape = {
         id: '1',
         name: 'Test',
@@ -238,7 +239,10 @@ describe('Label Positioning Utilities', () => {
           type: 'Feature',
           properties: {
             styleProperties: {
-              fillColor: '#62a6ff',
+              fillColor: [98, 166, 255, 150] as Color,
+              strokeColor: [0, 0, 0, 255] as Color,
+              strokeWidth: 2,
+              strokePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -247,6 +251,7 @@ describe('Label Positioning Utilities', () => {
 
       const result = getLabelFillColor(shape);
 
+      // RGB from fillColor with fixed label opacity (200)
       expect(result).toEqual([98, 166, 255, 200]);
     });
 
@@ -258,28 +263,12 @@ describe('Label Positioning Utilities', () => {
         locked: false,
         feature: {
           type: 'Feature',
-          properties: { styleProperties: {} },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelFillColor(shape);
-
-      // Default: #62a6ff
-      expect(result).toEqual([98, 166, 255, 200]);
-    });
-
-    it('handles different hex colors correctly', () => {
-      const shape: EditableShape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
           properties: {
             styleProperties: {
-              fillColor: '#ff0000',
+              fillColor: undefined as unknown as Color,
+              strokeColor: [0, 0, 0, 255] as Color,
+              strokeWidth: 2,
+              strokePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -288,12 +277,11 @@ describe('Label Positioning Utilities', () => {
 
       const result = getLabelFillColor(shape);
 
-      expect(result).toEqual([255, 0, 0, 200]);
+      // Default: [98, 166, 255] with label opacity 200
+      expect(result).toEqual([98, 166, 255, 200]);
     });
-  });
 
-  describe('getLabelBorderColor', () => {
-    it('converts hex color to RGBA with full opacity', () => {
+    it('handles different RGBA colors correctly', () => {
       const shape: EditableShape = {
         id: '1',
         name: 'Test',
@@ -303,7 +291,38 @@ describe('Label Positioning Utilities', () => {
           type: 'Feature',
           properties: {
             styleProperties: {
-              strokeColor: '#62a6ff',
+              fillColor: [255, 0, 0, 100] as Color,
+              strokeColor: [0, 0, 0, 255] as Color,
+              strokeWidth: 2,
+              strokePattern: 'solid',
+            },
+          },
+          geometry: { type: 'Point', coordinates: [0, 0] },
+        },
+      };
+
+      const result = getLabelFillColor(shape);
+
+      // RGB extracted, fixed label opacity applied (200)
+      expect(result).toEqual([255, 0, 0, 200]);
+    });
+  });
+
+  describe('getLabelBorderColor', () => {
+    it('extracts RGB from RGBA and applies full opacity', () => {
+      const shape: EditableShape = {
+        id: '1',
+        name: 'Test',
+        shapeType: 'Point',
+        locked: false,
+        feature: {
+          type: 'Feature',
+          properties: {
+            styleProperties: {
+              fillColor: [0, 0, 0, 255] as Color,
+              strokeColor: [98, 166, 255, 150] as Color,
+              strokeWidth: 2,
+              strokePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -312,6 +331,7 @@ describe('Label Positioning Utilities', () => {
 
       const result = getLabelBorderColor(shape);
 
+      // RGB from strokeColor with full opacity (255)
       expect(result).toEqual([98, 166, 255, 255]);
     });
 
@@ -323,14 +343,21 @@ describe('Label Positioning Utilities', () => {
         locked: false,
         feature: {
           type: 'Feature',
-          properties: { styleProperties: {} },
+          properties: {
+            styleProperties: {
+              fillColor: [0, 0, 0, 255] as Color,
+              strokeColor: undefined as unknown as Color,
+              strokeWidth: 2,
+              strokePattern: 'solid',
+            },
+          },
           geometry: { type: 'Point', coordinates: [0, 0] },
         },
       };
 
       const result = getLabelBorderColor(shape);
 
-      // Default: #62a6ff
+      // Default: [98, 166, 255] with full opacity 255
       expect(result).toEqual([98, 166, 255, 255]);
     });
   });

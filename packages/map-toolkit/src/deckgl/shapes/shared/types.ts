@@ -13,6 +13,7 @@
 'use client';
 
 import type { UniqueId } from '@accelint/core';
+import type { Color } from '@deck.gl/core';
 import type { Feature, LineString, Point, Polygon } from 'geojson';
 
 /**
@@ -48,16 +49,12 @@ export type StrokePattern = 'solid' | 'dashed' | 'dotted';
  * Style properties for rendering shapes
  */
 export interface StyleProperties {
-  /** Fill color as hex string (e.g., "#62a6ff") */
-  fillColor: string;
-  /** Stroke color as hex string (e.g., "#62a6ff") */
-  strokeColor: string;
+  /** Fill color as RGBA array [r, g, b, a] where each value is 0-255 */
+  fillColor: Color;
+  /** Stroke color as RGBA array [r, g, b, a] where each value is 0-255 */
+  strokeColor: Color;
   /** Stroke width in pixels */
   strokeWidth: StrokeWidth;
-  /** Fill opacity percentage (0-100) */
-  fillOpacity: number;
-  /** Stroke opacity percentage (0-100) */
-  strokeOpacity: number;
   /** Stroke pattern */
   strokePattern: StrokePattern;
   /** Optional icon properties for Point geometries */

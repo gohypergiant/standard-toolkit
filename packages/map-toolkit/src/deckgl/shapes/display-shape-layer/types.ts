@@ -112,4 +112,17 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
    * ```
    */
   highlightColor?: [number, number, number, number];
+
+  /**
+   * When true, applies 60% opacity multiplier to fill colors for standard semi-transparent look.
+   * This is a convenience prop for achieving the standard map shape appearance.
+   * When false (default), colors are rendered exactly as specified in styleProperties.
+   * @default false
+   * @example Standard semi-transparent fills
+   * ```tsx
+   * <DisplayShapeLayer data={shapes} applyBaseOpacity />
+   * // Shape with fillColor [98, 166, 255, 255] renders at alpha 153
+   * ```
+   */
+  applyBaseOpacity?: boolean;
 }

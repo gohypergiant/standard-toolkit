@@ -11,7 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_COLORS } from '../../shared/constants';
+import { BASE_FILL_OPACITY } from '../../shared/constants';
 import {
   getDashArray,
   getFillColor,
@@ -22,6 +22,7 @@ import {
   getStrokeColor,
   getStrokeWidth,
 } from './display-style';
+import type { Color } from '@deck.gl/core';
 import type { StyledFeature } from '../../shared/types';
 
 describe('Display Style Utilities', () => {
@@ -29,24 +30,25 @@ describe('Display Style Utilities', () => {
     it('uses default color when no style properties provided', () => {
       const feature: StyledFeature = {
         type: 'Feature',
-        properties: {},
+        properties: {} as StyledFeature['properties'],
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
       const result = getFillColor(feature);
 
-      // Default fill: DEFAULT_COLORS.fill with 0.59 base opacity
-      const expectedOpacity = Math.round(0.59 * 255);
-      expect(result).toEqual([...DEFAULT_COLORS.fill, expectedOpacity]);
+      // Default fill: DEFAULT_COLORS.fill passed through
+      expect(result).toEqual([98, 166, 255, 255]);
     });
 
-    it('converts hex color to RGBA with base opacity', () => {
+    it('passes through RGBA color as-is when applyBaseOpacity is false', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
           styleProperties: {
-            fillColor: '#ff0000',
-            fillOpacity: 100,
+            fillColor: [255, 0, 0, 200] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -54,36 +56,61 @@ describe('Display Style Utilities', () => {
 
       const result = getFillColor(feature);
 
-      // Red at 100% user opacity with 0.59 base opacity
-      const expectedOpacity = Math.round((100 / 100) * 0.59 * 255);
+      // Color passed through exactly as provided
+      expect(result).toEqual([255, 0, 0, 200]);
+    });
+
+    it('applies BASE_FILL_OPACITY when applyBaseOpacity is true', () => {
+      const feature: StyledFeature = {
+        type: 'Feature',
+        properties: {
+          styleProperties: {
+            fillColor: [255, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
+            strokePattern: 'solid',
+          },
+        },
+        geometry: { type: 'Point', coordinates: [0, 0] },
+      };
+
+      const result = getFillColor(feature, true);
+
+      // Red with alpha multiplied by BASE_FILL_OPACITY (0.6)
+      const expectedOpacity = Math.round(255 * BASE_FILL_OPACITY);
       expect(result).toEqual([255, 0, 0, expectedOpacity]);
     });
 
-    it('applies user opacity correctly', () => {
+    it('applies BASE_FILL_OPACITY to custom alpha value', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
           styleProperties: {
-            fillColor: '#00ff00',
-            fillOpacity: 50,
+            fillColor: [0, 255, 0, 200] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
-      const result = getFillColor(feature);
+      const result = getFillColor(feature, true);
 
-      // Green at 50% user opacity with 0.59 base opacity
-      const expectedOpacity = Math.round((50 / 100) * 0.59 * 255);
+      // Green with alpha 200 multiplied by BASE_FILL_OPACITY
+      const expectedOpacity = Math.round(200 * BASE_FILL_OPACITY);
       expect(result).toEqual([0, 255, 0, expectedOpacity]);
     });
 
-    it('uses default opacity when not provided', () => {
+    it('handles RGB array (3 elements) by adding default alpha', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
           styleProperties: {
-            fillColor: '#0000ff',
+            fillColor: [0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -91,18 +118,19 @@ describe('Display Style Utilities', () => {
 
       const result = getFillColor(feature);
 
-      // Blue with default 100% user opacity and 0.59 base opacity
-      const expectedOpacity = Math.round((100 / 100) * 0.59 * 255);
-      expect(result).toEqual([0, 0, 255, expectedOpacity]);
+      // Blue with default alpha 255
+      expect(result).toEqual([0, 0, 255, 255]);
     });
 
-    it('handles zero opacity', () => {
+    it('handles zero alpha correctly', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
           styleProperties: {
-            fillColor: '#ffffff',
-            fillOpacity: 0,
+            fillColor: [255, 255, 255, 0] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -118,23 +146,25 @@ describe('Display Style Utilities', () => {
     it('uses default color when no style properties provided', () => {
       const feature: StyledFeature = {
         type: 'Feature',
-        properties: {},
+        properties: {} as StyledFeature['properties'],
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
       const result = getStrokeColor(feature);
 
-      // Default stroke: DEFAULT_COLORS.stroke with full opacity
-      expect(result).toEqual([...DEFAULT_COLORS.stroke, 255]);
+      // Default stroke: DEFAULT_COLORS.stroke passed through
+      expect(result).toEqual([98, 166, 255, 255]);
     });
 
-    it('converts hex color to RGBA with full base opacity', () => {
+    it('passes through RGBA color exactly as provided', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
           styleProperties: {
-            strokeColor: '#ff0000',
-            strokeOpacity: 100,
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [255, 0, 0, 200] as Color,
+            strokeWidth: 2,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -142,17 +172,19 @@ describe('Display Style Utilities', () => {
 
       const result = getStrokeColor(feature);
 
-      // Red at 100% user opacity with 1.0 base opacity
-      expect(result).toEqual([255, 0, 0, 255]);
+      // Color passed through exactly as provided
+      expect(result).toEqual([255, 0, 0, 200]);
     });
 
-    it('applies user opacity correctly', () => {
+    it('handles RGB array (3 elements) by adding default alpha', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
           styleProperties: {
-            strokeColor: '#00ff00',
-            strokeOpacity: 50,
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 255, 0] as Color,
+            strokeWidth: 2,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -160,26 +192,8 @@ describe('Display Style Utilities', () => {
 
       const result = getStrokeColor(feature);
 
-      // Green at 50% user opacity with 1.0 base opacity
-      const expectedOpacity = Math.round((50 / 100) * 1.0 * 255);
-      expect(result).toEqual([0, 255, 0, expectedOpacity]);
-    });
-
-    it('uses default opacity when not provided', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            strokeColor: '#0000ff',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
-
-      const result = getStrokeColor(feature);
-
-      // Blue with default 100% user opacity and 1.0 base opacity
-      expect(result).toEqual([0, 0, 255, 255]);
+      // Green with default alpha 255
+      expect(result).toEqual([0, 255, 0, 255]);
     });
   });
 
@@ -187,7 +201,7 @@ describe('Display Style Utilities', () => {
     it('returns default width when no style properties provided', () => {
       const feature: StyledFeature = {
         type: 'Feature',
-        properties: {},
+        properties: {} as StyledFeature['properties'],
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
@@ -201,7 +215,10 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
             strokeWidth: 8,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -213,14 +230,17 @@ describe('Display Style Utilities', () => {
     });
 
     it('handles different stroke widths', () => {
-      const widths = [1, 2, 4, 8];
+      const widths = [1, 2, 4, 8] as const;
 
       for (const width of widths) {
         const feature: StyledFeature = {
           type: 'Feature',
           properties: {
             styleProperties: {
+              fillColor: [0, 0, 0, 255] as Color,
+              strokeColor: [0, 0, 0, 255] as Color,
               strokeWidth: width,
+              strokePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -237,7 +257,10 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
             strokeWidth: 8,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -253,6 +276,9 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
             strokePattern: 'solid',
           },
         },
@@ -269,6 +295,9 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
             strokePattern: 'dashed',
           },
         },
@@ -285,6 +314,9 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
             strokePattern: 'dotted',
           },
         },
@@ -299,7 +331,7 @@ describe('Display Style Utilities', () => {
     it('uses default solid pattern when not provided', () => {
       const feature: StyledFeature = {
         type: 'Feature',
-        properties: {},
+        properties: {} as StyledFeature['properties'],
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
@@ -313,6 +345,10 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
+            strokeWidth: 2,
+            // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
             strokePattern: 'unknown' as any,
           },
         },
@@ -331,7 +367,10 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
             strokeWidth: 4,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -347,7 +386,10 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
             strokeWidth: 4,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -359,14 +401,17 @@ describe('Display Style Utilities', () => {
     });
 
     it('works with different base widths', () => {
-      const widths = [1, 2, 4, 8];
+      const widths = [1, 2, 4, 8] as const;
 
       for (const width of widths) {
         const feature: StyledFeature = {
           type: 'Feature',
           properties: {
             styleProperties: {
+              fillColor: [0, 0, 0, 255] as Color,
+              strokeColor: [0, 0, 0, 255] as Color,
               strokeWidth: width,
+              strokePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -379,50 +424,30 @@ describe('Display Style Utilities', () => {
   });
 
   describe('getHighlightColor', () => {
-    it('returns default highlight color with default opacity', () => {
+    it('returns default highlight color from DEFAULT_COLORS when no opacity provided', () => {
       const result = getHighlightColor();
 
-      const expectedOpacity = Math.round(0.39 * 255);
-      expect(result).toEqual([...DEFAULT_COLORS.highlight, expectedOpacity] as [
-        number,
-        number,
-        number,
-        number,
-      ]);
+      // DEFAULT_COLORS.highlight is [40, 245, 190, 100]
+      expect(result).toEqual([40, 245, 190, 100]);
     });
 
-    it('applies custom opacity', () => {
+    it('applies custom opacity override', () => {
       const result = getHighlightColor(0.5);
 
       const expectedOpacity = Math.round(0.5 * 255);
-      expect(result).toEqual([...DEFAULT_COLORS.highlight, expectedOpacity] as [
-        number,
-        number,
-        number,
-        number,
-      ]);
+      expect(result).toEqual([40, 245, 190, expectedOpacity]);
     });
 
     it('handles full opacity', () => {
       const result = getHighlightColor(1.0);
 
-      expect(result).toEqual([...DEFAULT_COLORS.highlight, 255] as [
-        number,
-        number,
-        number,
-        number,
-      ]);
+      expect(result).toEqual([40, 245, 190, 255]);
     });
 
     it('handles zero opacity', () => {
       const result = getHighlightColor(0);
 
-      expect(result).toEqual([...DEFAULT_COLORS.highlight, 0] as [
-        number,
-        number,
-        number,
-        number,
-      ]);
+      expect(result).toEqual([40, 245, 190, 0]);
     });
   });
 
@@ -432,7 +457,10 @@ describe('Display Style Utilities', () => {
         type: 'Feature',
         properties: {
           styleProperties: {
+            fillColor: [0, 0, 0, 255] as Color,
+            strokeColor: [0, 0, 0, 255] as Color,
             strokeWidth: 4,
+            strokePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -444,14 +472,17 @@ describe('Display Style Utilities', () => {
     });
 
     it('works with different base widths', () => {
-      const widths = [1, 2, 4, 8];
+      const widths = [1, 2, 4, 8] as const;
 
       for (const width of widths) {
         const feature: StyledFeature = {
           type: 'Feature',
           properties: {
             styleProperties: {
+              fillColor: [0, 0, 0, 255] as Color,
+              strokeColor: [0, 0, 0, 255] as Color,
               strokeWidth: width,
+              strokePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -464,7 +495,7 @@ describe('Display Style Utilities', () => {
     it('uses default width when not provided', () => {
       const feature: StyledFeature = {
         type: 'Feature',
-        properties: {},
+        properties: {} as StyledFeature['properties'],
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 

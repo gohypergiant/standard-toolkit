@@ -51,6 +51,7 @@ export const BasicDisplayAndEvents: Story = {
   args: {
     showLabels: true,
     pickable: true,
+    applyBaseOpacity: false,
     highlightColorR: 40,
     highlightColorG: 245,
     highlightColorB: 190,
@@ -64,6 +65,11 @@ export const BasicDisplayAndEvents: Story = {
     pickable: {
       control: { type: 'boolean' },
       description: 'Enable/disable shape clicking and hovering',
+    },
+    applyBaseOpacity: {
+      control: { type: 'boolean' },
+      description:
+        'Apply 60% opacity multiplier to fill colors for semi-transparent look',
     },
     highlightColorR: {
       control: { type: 'number', min: 0, max: 255, step: 1 },
@@ -162,6 +168,7 @@ export const BasicDisplayAndEvents: Story = {
             selectedShapeId={selectedId}
             showLabels={args.showLabels}
             pickable={args.pickable}
+            applyBaseOpacity={args.applyBaseOpacity}
             highlightColor={[
               args.highlightColorR,
               args.highlightColorG,
@@ -424,6 +431,7 @@ export const LabelPositioning: Story = {
             selectedShapeId={selectedId}
             showLabels={true}
             pickable={true}
+            applyBaseOpacity={true}
             labelOptions={labelOptions}
           />
         </BaseMap>
@@ -480,6 +488,7 @@ export const WithPointIcons: Story = {
             selectedShapeId={selectedId}
             showLabels={true}
             pickable={true}
+            applyBaseOpacity={true}
           />
         </BaseMap>
 

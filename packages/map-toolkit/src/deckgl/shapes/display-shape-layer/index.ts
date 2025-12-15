@@ -411,7 +411,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Render main shapes layer
    */
   private renderMainLayer(features: EditableShape['feature'][]): GeoJsonLayer {
-    const { pickable } = this.props;
+    const { pickable, applyBaseOpacity } = this.props;
 
     // Single-pass icon config extraction (O(1) best case with early return)
     const {
@@ -428,7 +428,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Styling
       filled: true,
       stroked: true,
-      getFillColor,
+      getFillColor: (d: EditableShape['feature']) =>
+        getFillColor(d, applyBaseOpacity),
       getLineColor: getStrokeColor,
       getLineWidth: (d, info) => {
         const isHovered = info?.index === this.state?.hoverIndex;
@@ -487,7 +488,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Update triggers
       updateTriggers: {
-        getFillColor: [features],
+        getFillColor: [features, applyBaseOpacity],
         getLineColor: [features],
         getLineWidth: [features, this.state?.hoverIndex],
         getDashArray: [features],

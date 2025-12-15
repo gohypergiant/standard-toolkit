@@ -19,8 +19,8 @@
  * ## Label Styling
  *
  * Labels are automatically styled to match their shapes:
- * - **Background fill**: Uses the shape's `fillColor` with `fillOpacity`
- * - **Border**: Uses the shape's `strokeColor` at full opacity with 2px width
+ * - **Background fill**: Uses the shape's `fillColor` RGB with fixed label opacity (200)
+ * - **Border**: Uses the shape's `strokeColor` RGB at full opacity with 2px width
  * - **Padding**: 8px on all sides (top, right, bottom, left)
  * - **Text**: Black (rgba(0, 0, 0, 255)) with bold Roboto Mono font at 10px
  *
@@ -237,8 +237,8 @@ export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
  * ## Label Appearance
  *
  * Labels automatically inherit styling from their shapes:
- * - **Background**: Shape's `fillColor` with `fillOpacity`
- * - **Border**: Shape's `strokeColor` at full opacity (2px width)
+ * - **Background**: Shape's `fillColor` RGB with fixed label opacity (200)
+ * - **Border**: Shape's `strokeColor` RGB at full opacity (2px width)
  * - **Padding**: 8px on all sides
  * - **Text**: Black, bold, Roboto Mono, 10px
  *
@@ -764,38 +764,36 @@ export function getLabelText(shape: EditableShape): string {
 }
 
 /**
- * Get label background color (matches shape fill color)
+ * Get label background color (uses RGB from shape fill color with fixed label opacity)
  */
 export function getLabelFillColor(
   shape: EditableShape,
 ): [number, number, number, number] {
   const styleProps = shape.feature.properties?.styleProperties;
-  const fillColor = styleProps?.fillColor ?? '#62a6ff';
+  const fillColor = styleProps?.fillColor ?? [98, 166, 255, 255];
 
-  // Parse hex color
-  const hex = fillColor.replace('#', '');
-  const r = Number.parseInt(hex.substring(0, 2), 16);
-  const g = Number.parseInt(hex.substring(2, 4), 16);
-  const b = Number.parseInt(hex.substring(4, 6), 16);
+  // Extract RGB, use fixed opacity for label background
+  const r = fillColor[0] ?? 98;
+  const g = fillColor[1] ?? 166;
+  const b = fillColor[2] ?? 255;
 
-  // Use moderate opacity for label background
+  // Use moderate opacity for label background (200)
   return [r, g, b, 200];
 }
 
 /**
- * Get label border color (matches shape stroke color)
+ * Get label border color (uses RGB from shape stroke color with full opacity)
  */
 export function getLabelBorderColor(
   shape: EditableShape,
 ): [number, number, number, number] {
   const styleProps = shape.feature.properties?.styleProperties;
-  const strokeColor = styleProps?.strokeColor ?? '#62a6ff';
+  const strokeColor = styleProps?.strokeColor ?? [98, 166, 255, 255];
 
-  // Parse hex color
-  const hex = strokeColor.replace('#', '');
-  const r = Number.parseInt(hex.substring(0, 2), 16);
-  const g = Number.parseInt(hex.substring(2, 4), 16);
-  const b = Number.parseInt(hex.substring(4, 6), 16);
+  // Extract RGB, use full opacity for border
+  const r = strokeColor[0] ?? 98;
+  const g = strokeColor[1] ?? 166;
+  const b = strokeColor[2] ?? 255;
 
   // Full opacity for border
   return [r, g, b, 255];

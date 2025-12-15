@@ -69,11 +69,9 @@ function MapWithShapes() {
         type: 'Feature',
         properties: {
           styleProperties: {
-            fillColor: '#62a6ff',
-            strokeColor: '#62a6ff',
+            fillColor: [98, 166, 255, 150], // RGBA: blue at ~60% opacity
+            strokeColor: [98, 166, 255, 255], // RGBA: blue at full opacity
             strokeWidth: 4,
-            fillOpacity: 100,
-            strokeOpacity: 100,
             strokePattern: 'solid',
           },
         },
@@ -200,20 +198,18 @@ interface EditableShape {
 
 ### Style Properties
 
-Control the visual appearance of each shape:
+Control the visual appearance of each shape. Colors use deck.gl's `Color` type (RGBA arrays where each value is 0-255):
 
 ```typescript
+import type { Color } from '@deck.gl/core';
+
 interface StyleProperties {
-  /** Fill color as hex string (e.g., "#62a6ff") */
-  fillColor: string;
-  /** Stroke color as hex string */
-  strokeColor: string;
+  /** Fill color as RGBA array [r, g, b, a] where each value is 0-255 */
+  fillColor: Color;
+  /** Stroke color as RGBA array [r, g, b, a] where each value is 0-255 */
+  strokeColor: Color;
   /** Stroke width in pixels (1 | 2 | 4 | 8) */
   strokeWidth: StrokeWidth;
-  /** Fill opacity percentage (0-100) */
-  fillOpacity: number;
-  /** Stroke opacity percentage (0-100) */
-  strokeOpacity: number;
   /** Stroke pattern: 'solid' | 'dashed' | 'dotted' */
   strokePattern: StrokePattern;
   /** Optional icon properties for Point geometries */
@@ -230,6 +226,8 @@ interface StyleProperties {
   labelCoordinateAnchor?: 'start' | 'middle' | 'end' | 'top' | 'right' | 'bottom' | 'left';
 }
 ```
+
+**Note**: Colors are rendered exactly as specified. Use the `applyBaseOpacity` prop on the layer to apply a 60% opacity multiplier to fill colors for the standard semi-transparent look.
 
 ## Custom Icons for Points
 
@@ -248,11 +246,9 @@ const pointWithIcon = {
     type: 'Feature',
     properties: {
       styleProperties: {
-        fillColor: '#62a6ff',
-        strokeColor: '#62a6ff',
+        fillColor: [98, 166, 255, 255], // RGBA
+        strokeColor: [98, 166, 255, 255], // RGBA
         strokeWidth: 4,
-        fillOpacity: 100,
-        strokeOpacity: 100,
         strokePattern: 'solid',
         icon: {
           atlas: ATLAS_PNG,
@@ -535,6 +531,7 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `showLabels` | `boolean` | `true` | Whether to show labels |
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
 | `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
+| `applyBaseOpacity` | `boolean` | `false` | Apply 60% opacity multiplier to fill colors for semi-transparent look |
 
 ### LabelPositionOptions
 
@@ -570,6 +567,6 @@ The hook automatically:
 
 See the Storybook stories for interactive examples:
 
-- **BasicDisplayAndEvents**: Interactive shape display with event logging
+- **BasicDisplayAndEvents**: Interactive shape display with event logging and `applyBaseOpacity` toggle
 - **LabelPositioning**: Comprehensive label positioning controls
 - **WithPointIcons**: Custom icon atlas demo

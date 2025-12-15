@@ -12,6 +12,7 @@
 
 'use client';
 
+import type { Color } from '@deck.gl/core';
 import type { StyleProperties } from './types';
 
 /**
@@ -27,27 +28,30 @@ export const SHAPE_LAYER_IDS = {
 } as const;
 
 /**
+ * Base fill opacity multiplier (60%) for standard semi-transparent look
+ */
+export const BASE_FILL_OPACITY = 0.6;
+
+/**
  * Default style properties for new shapes
  */
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
-  fillColor: '#62a6ff',
-  strokeColor: '#62a6ff',
+  fillColor: [98, 166, 255, 255] as Color,
+  strokeColor: [98, 166, 255, 255] as Color,
   strokeWidth: 2,
-  fillOpacity: 59,
-  strokeOpacity: 100,
   strokePattern: 'solid',
 };
 
 /**
- * Default colors as RGB arrays for DeckGL layers
+ * Default colors as RGBA arrays for DeckGL layers
  */
 export const DEFAULT_COLORS = {
-  /** Default fill/stroke color */
-  fill: [98, 166, 255] as [number, number, number],
-  /** Default stroke color */
-  stroke: [98, 166, 255] as [number, number, number],
-  /** Highlight/selection color (turquoise) */
-  highlight: [40, 245, 190] as [number, number, number],
+  /** Default fill color (blue at full alpha) */
+  fill: [98, 166, 255, 255] as Color,
+  /** Default stroke color (blue at full alpha) */
+  stroke: [98, 166, 255, 255] as Color,
+  /** Highlight/selection color (turquoise at ~39% alpha) */
+  highlight: [40, 245, 190, 100] as Color,
 } as const;
 
 /**

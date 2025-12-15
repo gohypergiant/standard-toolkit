@@ -33,11 +33,9 @@ export const mockShapesWithIcons: EditableShape[] = [
       type: 'Feature',
       properties: {
         styleProperties: {
-          fillColor: '#62a6ff',
-          strokeColor: '#62a6ff',
+          fillColor: [98, 166, 255, 255],
+          strokeColor: [98, 166, 255, 255],
           strokeWidth: 4,
-          fillOpacity: 100,
-          strokeOpacity: 100,
           strokePattern: 'solid',
           icon: {
             atlas: ATLAS_PNG,
@@ -70,11 +68,9 @@ export const mockShapesWithIcons: EditableShape[] = [
       type: 'Feature',
       properties: {
         styleProperties: {
-          fillColor: '#30D27E',
-          strokeColor: '#30D27E',
+          fillColor: [48, 210, 126, 255],
+          strokeColor: [48, 210, 126, 255],
           strokeWidth: 4,
-          fillOpacity: 100,
-          strokeOpacity: 100,
           strokePattern: 'solid',
           icon: {
             atlas: ATLAS_PNG,
@@ -107,11 +103,9 @@ export const mockShapesWithIcons: EditableShape[] = [
       type: 'Feature',
       properties: {
         styleProperties: {
-          fillColor: '#62a6ff',
-          strokeColor: '#D4231D',
+          fillColor: [98, 166, 255, 255],
+          strokeColor: [212, 35, 29, 255],
           strokeWidth: 4,
-          fillOpacity: 100,
-          strokeOpacity: 100,
           strokePattern: 'dashed',
           // Custom label positioning to avoid collision with the line
           labelVerticalAnchor: 'bottom',
