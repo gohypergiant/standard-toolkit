@@ -34,7 +34,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "repository": "gohypergiant/standard-toolkit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
