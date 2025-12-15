@@ -14,6 +14,7 @@
 
 // Display Shape Layer exports
 export { DisplayShapeLayer } from './display-shape-layer/index';
+export { useShapeSelection } from './display-shape-layer/use-shape-selection';
 // Constant exports
 export {
   DASH_ARRAYS,
@@ -39,6 +40,7 @@ export type {
   StyledFeature,
   StyledFeatureProperties,
 } from './display-shape-layer/types';
+export type { UseShapeSelectionReturn } from './display-shape-layer/use-shape-selection';
 export type {
   EditShapeMode,
   ShapeEventHandler,

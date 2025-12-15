@@ -10,11 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEmit, useOn } from '@accelint/bus/react';
+import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useMemo, useState } from 'react';
 import { useMapCursor } from '../../../map-cursor/use-map-cursor';
-import { MapEvents } from '../../base-map/events';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
@@ -25,9 +24,8 @@ import {
   type ShapeSelectedEvent,
 } from '../shared/events';
 import './fiber';
+import { useShapeSelection } from './use-shape-selection';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { MapClickEvent } from '../../base-map/types';
-import type { ShapeId } from '../shared/types';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Display Shape Layer',
@@ -85,47 +83,38 @@ export const BasicDisplayAndEvents: Story = {
     },
   },
   render: (args) => {
-    const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
-    const [selectedName, setSelectedName] = useState<string | undefined>();
+    // useShapeSelection handles selection, deselection, and click-away deselection
+    const { selectedId } = useShapeSelection(DISPLAY_MAP_ID);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
     >([]);
-    const emitDeselected = useEmit<ShapeDeselectedEvent>(
-      ShapeEvents.deselected,
-    );
     const { requestCursorChange, clearCursor } = useMapCursor(DISPLAY_MAP_ID);
 
-    // Listen to shape selection events emitted automatically by DisplayShapeLayer
+    // Derive selected name from selectedId
+    const selectedName = selectedId
+      ? mockShapes.find((s) => s.id === selectedId)?.name
+      : undefined;
+
+    // Log selection events for demonstration purposes
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
-      // Filter by map instance ID
       if (event.payload.mapId !== DISPLAY_MAP_ID) {
         return;
       }
-
-      const shapeId = event.payload.shapeId;
-      const shape = mockShapes.find((s) => s.id === shapeId);
-      const shapeName = shape?.name || 'Unknown';
-
-      setSelectedId(shapeId);
-      setSelectedName(shapeName);
+      const shape = mockShapes.find((s) => s.id === event.payload.shapeId);
       setEventLog((log) => [
         ...log.slice(-4),
         {
-          id: `${Date.now()}-${shapeId}`,
-          message: `shapes:selected - "${shapeName}" (${shapeId.substring(0, 8)}...)`,
+          id: `${Date.now()}-selected-${event.payload.shapeId}`,
+          message: `shapes:selected - "${shape?.name || 'Unknown'}"`,
         },
       ]);
     });
 
-    // Listen to shape deselection events
+    // Log deselection events
     useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, (event) => {
-      // Filter by map instance ID
       if (event.payload.mapId !== DISPLAY_MAP_ID) {
         return;
       }
-
-      setSelectedId(undefined);
-      setSelectedName(undefined);
       setEventLog((log) => [
         ...log.slice(-4),
         {
@@ -135,30 +124,31 @@ export const BasicDisplayAndEvents: Story = {
       ]);
     });
 
-    // Listen to shape hover events for cursor changes
+    // Handle hover events for cursor changes and logging
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
-      // Filter by map instance ID
       if (event.payload.mapId !== DISPLAY_MAP_ID) {
         return;
       }
 
       if (event.payload.shapeId) {
         requestCursorChange('pointer', 'display-shapes');
+        const shape = mockShapes.find((s) => s.id === event.payload.shapeId);
+        setEventLog((log) => [
+          ...log.slice(-4),
+          {
+            id: `${Date.now()}-hovered-${event.payload.shapeId}`,
+            message: `shapes:hovered - "${shape?.name || 'Unknown'}"`,
+          },
+        ]);
       } else {
         clearCursor('display-shapes');
-      }
-    });
-
-    // Listen to map clicks to detect clicks on empty space
-    useOn<MapClickEvent>(MapEvents.click, (event) => {
-      // Only emit deselect if we have a selection and clicked on empty space
-      // index is -1 when nothing is picked
-      if (
-        selectedId &&
-        event.payload.id === DISPLAY_MAP_ID &&
-        event.payload.info.index === -1
-      ) {
-        emitDeselected({ mapId: DISPLAY_MAP_ID });
+        setEventLog((log) => [
+          ...log.slice(-4),
+          {
+            id: `${Date.now()}-hover-end`,
+            message: 'shapes:hovered - null (hover ended)',
+          },
+        ]);
       }
     });
 
@@ -234,10 +224,10 @@ const LABEL_POSITIONS_MAP_ID = uuid();
 export const LabelPositioning: Story = {
   args: {
     // Point controls
-    pointLabelVerticalAnchor: 'top',
+    pointLabelVerticalAnchor: 'bottom',
     pointLabelHorizontalAnchor: 'center',
     pointLabelOffsetX: 0,
-    pointLabelOffsetY: -27,
+    pointLabelOffsetY: -13,
     // LineString controls
     lineStringLabelCoordinateAnchor: 'start',
     lineStringLabelVerticalAnchor: 'middle',
@@ -352,29 +342,11 @@ export const LabelPositioning: Story = {
     },
   },
   render: (args) => {
-    const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
-    const emitDeselected = useEmit<ShapeDeselectedEvent>(
-      ShapeEvents.deselected,
-    );
+    // useShapeSelection handles selection, deselection, and click-away deselection
+    const { selectedId } = useShapeSelection(LABEL_POSITIONS_MAP_ID);
     const { requestCursorChange, clearCursor } = useMapCursor(
       LABEL_POSITIONS_MAP_ID,
     );
-
-    // Listen to shape selection events
-    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
-      if (event.payload.mapId !== LABEL_POSITIONS_MAP_ID) {
-        return;
-      }
-      setSelectedId(event.payload.shapeId);
-    });
-
-    // Listen to shape deselection events
-    useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, (event) => {
-      if (event.payload.mapId !== LABEL_POSITIONS_MAP_ID) {
-        return;
-      }
-      setSelectedId(undefined);
-    });
 
     // Listen to shape hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
@@ -385,17 +357,6 @@ export const LabelPositioning: Story = {
         requestCursorChange('pointer', 'display-shapes');
       } else {
         clearCursor('display-shapes');
-      }
-    });
-
-    // Listen to map clicks to detect clicks on empty space
-    useOn<MapClickEvent>(MapEvents.click, (event) => {
-      if (
-        selectedId &&
-        event.payload.id === LABEL_POSITIONS_MAP_ID &&
-        event.payload.info.index === -1
-      ) {
-        emitDeselected({ mapId: LABEL_POSITIONS_MAP_ID });
       }
     });
 
@@ -492,28 +453,10 @@ export const LabelPositioning: Story = {
  */
 export const WithPointIcons: Story = {
   render: () => {
-    const [selectedId, setSelectedId] = useState<ShapeId | undefined>();
-    const emitDeselected = useEmit<ShapeDeselectedEvent>(
-      ShapeEvents.deselected,
-    );
+    // useShapeSelection handles selection, deselection, and click-away deselection
+    const { selectedId } = useShapeSelection(WITH_ICONS_MAP_ID);
     const { requestCursorChange, clearCursor } =
       useMapCursor(WITH_ICONS_MAP_ID);
-
-    // Listen to shape selection events
-    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
-      if (event.payload.mapId !== WITH_ICONS_MAP_ID) {
-        return;
-      }
-      setSelectedId(event.payload.shapeId);
-    });
-
-    // Listen to shape deselection events
-    useOn<ShapeDeselectedEvent>(ShapeEvents.deselected, (event) => {
-      if (event.payload.mapId !== WITH_ICONS_MAP_ID) {
-        return;
-      }
-      setSelectedId(undefined);
-    });
 
     // Listen to shape hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
@@ -524,17 +467,6 @@ export const WithPointIcons: Story = {
         requestCursorChange('pointer', 'display-shapes');
       } else {
         clearCursor('display-shapes');
-      }
-    });
-
-    // Listen to map clicks to detect clicks on empty space
-    useOn<MapClickEvent>(MapEvents.click, (event) => {
-      if (
-        selectedId &&
-        event.payload.id === WITH_ICONS_MAP_ID &&
-        event.payload.info.index === -1
-      ) {
-        emitDeselected({ mapId: WITH_ICONS_MAP_ID });
       }
     });
 

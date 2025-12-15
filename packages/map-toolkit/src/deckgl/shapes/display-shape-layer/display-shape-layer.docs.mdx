@@ -44,21 +44,21 @@ pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.
 
 ## Basic Usage
 
-### With Fiber Renderer
+### With Fiber Renderer (Recommended)
+
+The easiest way to use DisplayShapeLayer is with the `useShapeSelection` hook, which handles selection state and auto-deselection when clicking empty space:
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
-import { useOn } from '@accelint/bus/react';
-import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
+import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
 import { uuid } from '@accelint/core';
-import { useState } from 'react';
 
 // Stable map ID for event isolation
 const MAP_ID = uuid();
 
 function MapWithShapes() {
-  const [selectedId, setSelectedId] = useState<string>();
+  const { selectedId } = useShapeSelection(MAP_ID);
   const shapes = [
     {
       id: '1',
@@ -85,13 +85,6 @@ function MapWithShapes() {
     },
   ];
 
-  // Listen to shape selection events from the event bus
-  useOn(ShapeEvents.selected, (event) => {
-    // Filter by map instance ID for multi-map scenarios
-    if (event.payload.mapId !== MAP_ID) return;
-    setSelectedId(event.payload.shapeId);
-  });
-
   return (
     <BaseMap id={MAP_ID}>
       <displayShapeLayer
@@ -107,14 +100,56 @@ function MapWithShapes() {
 }
 ```
 
+### Manual Event Handling
+
+If you need more control over selection behavior, you can handle events manually.
+
+> **Note**: The `useShapeSelection` hook is recommended over manual event handling because it uses a store pattern that properly handles listener cleanup during development (HMR). If you use `useOn` directly, you may encounter duplicate events during hot reloads.
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
+import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+import { useOn } from '@accelint/bus/react';
+import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
+import { uuid } from '@accelint/core';
+import { useState } from 'react';
+
+const MAP_ID = uuid();
+
+function MapWithShapes() {
+  const [selectedId, setSelectedId] = useState<string>();
+
+  // Listen to shape selection events from the event bus
+  useOn(ShapeEvents.selected, (event) => {
+    if (event.payload.mapId !== MAP_ID) return;
+    setSelectedId(event.payload.shapeId);
+  });
+
+  return (
+    <BaseMap id={MAP_ID}>
+      <displayShapeLayer
+        id="my-shapes"
+        mapId={MAP_ID}
+        data={shapes}
+        selectedShapeId={selectedId}
+      />
+    </BaseMap>
+  );
+}
+```
+
 ### Direct Layer Usage
 
 ```tsx
 import { Deck } from '@deck.gl/core';
 import { DisplayShapeLayer } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
 
 const layer = new DisplayShapeLayer({
   id: 'shapes',
+  mapId: MAP_ID,
   data: shapes,
   pickable: true,
   showLabels: true,
@@ -140,8 +175,8 @@ Each shape must follow the `EditableShape` interface:
 
 ```typescript
 interface EditableShape {
-  /** Unique identifier */
-  id: string;
+  /** Unique identifier (use uuid() from @accelint/core) */
+  id: UniqueId;
   /** Full shape name used internally and in UI */
   name: string;
   /** Optional short display label shown on the map */
@@ -265,9 +300,9 @@ Apply positioning to all shapes of a given type:
     lineStringLabelOffset: [0, -15],
 
     // Point labels above with center alignment
-    pointLabelVerticalAnchor: 'top',
+    pointLabelVerticalAnchor: 'bottom',
     pointLabelHorizontalAnchor: 'center',
-    pointLabelOffset: [0, -27],
+    pointLabelOffset: [0, -13],
   }}
 />
 ```
@@ -502,6 +537,32 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 ### LabelPositionOptions
 
 See the [Label Positioning](#label-positioning) section for detailed documentation on available options for each geometry type.
+
+### useShapeSelection Hook
+
+A companion hook that manages selection state and auto-deselection using a store pattern with `useSyncExternalStore`:
+
+```tsx
+import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
+
+const { selectedId, setSelectedId, clearSelection } = useShapeSelection(mapId);
+```
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| `selectedId` | `ShapeId \| undefined` | Currently selected shape ID |
+| `setSelectedId` | `(id: ShapeId \| undefined) => void` | Manually set selection (emits events) |
+| `clearSelection` | `() => void` | Clear selection (emits deselected event) |
+
+The hook automatically:
+- Listens to `shapes:selected` events and updates state
+- Listens to `shapes:deselected` events and clears state
+- Emits `shapes:deselected` when clicking empty space on the map
+
+**Architecture**: The hook uses a store pattern similar to `useMapCursor` and `useMapMode`. This ensures:
+- Only one bus listener per map instance (regardless of how many components subscribe)
+- Proper cleanup during HMR (Hot Module Replacement) in development
+- Referentially stable function returns to prevent unnecessary re-renders
 
 ## Examples
 

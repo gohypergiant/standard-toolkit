@@ -97,40 +97,19 @@ interface DisplayShapeLayerState {
  * - `shapes:selected` - Emitted when a shape is clicked (includes mapId)
  * - `shapes:hovered` - Emitted when hovering over a shape or when hover ends (includes mapId)
  *
- * **Note on deselection:** The layer emits `shapes:selected` automatically, but deselection
- * requires consumer-side wiring. Listen to `MapEvents.click` and emit `shapes:deselected`
- * when clicking empty space (`info.index === -1`). See the example below.
+ * For selection with auto-deselection, use the companion `useShapeSelection` hook which handles
+ * all the event wiring automatically. See the example below.
  *
- * @example Basic usage with selection and deselection
+ * @example Basic usage with useShapeSelection hook (recommended)
  * ```tsx
  * import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
- * import { useEmit, useOn } from '@accelint/bus/react';
+ * import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
  * import { uuid } from '@accelint/core';
  *
  * const MAP_ID = uuid();
  *
  * function MapWithShapes() {
- *   const [selectedId, setSelectedId] = useState<string>();
- *   const emitDeselected = useEmit(ShapeEvents.deselected);
- *
- *   // Listen to shape selection events (automatic from layer)
- *   useOn(ShapeEvents.selected, (event) => {
- *     if (event.payload.mapId !== MAP_ID) return;
- *     setSelectedId(event.payload.shapeId);
- *   });
- *
- *   // Listen to deselection events
- *   useOn(ShapeEvents.deselected, (event) => {
- *     if (event.payload.mapId !== MAP_ID) return;
- *     setSelectedId(undefined);
- *   });
- *
- *   // Handle deselection when clicking empty space (consumer-side wiring)
- *   useOn(MapEvents.click, (event) => {
- *     if (selectedId && event.payload.id === MAP_ID && event.payload.info.index === -1) {
- *       emitDeselected({ mapId: MAP_ID });
- *     }
- *   });
+ *   const { selectedId } = useShapeSelection(MAP_ID);
  *
  *   return (
  *     <BaseMap id={MAP_ID}>

@@ -374,7 +374,7 @@ describe('Label Positioning Utilities', () => {
         };
 
         const options: LabelPositionOptions = {
-          pointLabelVerticalAnchor: 'top',
+          pointLabelVerticalAnchor: 'bottom',
           pointLabelHorizontalAnchor: 'left',
           pointLabelOffset: [10, 10],
         };
@@ -384,7 +384,7 @@ describe('Label Positioning Utilities', () => {
         expect(result).toEqual({
           coordinates: [-122.4, 37.8],
           textAnchor: 'start',
-          alignmentBaseline: 'top',
+          alignmentBaseline: 'bottom',
           pixelOffset: [10, 10],
         });
       });
@@ -409,7 +409,7 @@ describe('Label Positioning Utilities', () => {
         };
 
         const options: LabelPositionOptions = {
-          pointLabelVerticalAnchor: 'top',
+          pointLabelVerticalAnchor: 'bottom',
           pointLabelHorizontalAnchor: 'left',
           pointLabelOffset: [10, 10],
         };

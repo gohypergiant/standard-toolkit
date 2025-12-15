@@ -283,11 +283,11 @@ export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
  */
 export interface LabelPositionOptions {
   // Point geometry options
-  /** Vertical anchor for Point labels @default 'top' */
+  /** Vertical anchor for Point labels @default 'bottom' */
   pointLabelVerticalAnchor?: LabelVerticalPosition;
   /** Horizontal anchor for Point labels @default 'center' */
   pointLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Pixel offset for Point labels [x, y] @default [0, -27] */
+  /** Pixel offset for Point labels [x, y] @default [0, -13] */
   pointLabelOffset?: [number, number];
 
   // LineString geometry options
