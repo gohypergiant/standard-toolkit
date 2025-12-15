@@ -11,21 +11,21 @@
  */
 
 import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
+import { Badge } from '@accelint/design-toolkit/components/badge';
 import { BentoItem } from '~/components/bento';
 import type { BadgeProps } from '@accelint/design-toolkit/components/badge/types';
 
 const PROP_COMBOS: BadgeProps[] = [
-  { variant: 'advisory' },
-  { variant: 'critical' },
-  { variant: 'info' },
-  { variant: 'normal' },
-  { variant: 'serious' },
-  { variant: 'advisory', children: '99+' },
-  { variant: 'critical', children: '99+' },
-  { variant: 'info', children: '99+' },
-  { variant: 'normal', children: '99+' },
-  { variant: 'serious', children: '99+' },
+  { color: 'advisory' },
+  { color: 'critical' },
+  { color: 'info' },
+  { color: 'normal' },
+  { color: 'serious' },
+  { color: 'advisory', children: '99+' },
+  { color: 'critical', children: '99+' },
+  { color: 'info', children: '99+' },
+  { color: 'normal', children: '99+' },
+  { color: 'serious', children: '99+' },
 ];
 
 function PropCombos() {

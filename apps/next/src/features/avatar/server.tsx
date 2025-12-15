@@ -11,9 +11,9 @@
  */
 
 import 'server-only';
-import { Avatar } from '@accelint/design-toolkit/components/avatar/index';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { Icon } from '@accelint/design-toolkit/components/icon/index';
+import { Avatar } from '@accelint/design-toolkit/components/avatar';
+import { Badge } from '@accelint/design-toolkit/components/badge';
+import { Icon } from '@accelint/design-toolkit/components/icon';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
 import type { AvatarProps } from '@accelint/design-toolkit/components/avatar/types';
@@ -30,12 +30,12 @@ const PROP_COMBOS: AvatarProps[] = [
   {
     size: 'small',
     imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-    children: <Badge variant='critical'>99+</Badge>,
+    children: <Badge color='critical'>99+</Badge>,
   },
   {
     size: 'medium',
     imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-    children: <Badge variant='critical'>99+</Badge>,
+    children: <Badge color='critical'>99+</Badge>,
   },
   {
     size: 'small',
