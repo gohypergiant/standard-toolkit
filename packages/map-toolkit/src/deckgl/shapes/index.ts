@@ -43,6 +43,14 @@ export type {
 } from './display-shape-layer/types';
 export type { UseShapeSelectionReturn } from './display-shape-layer/use-shape-selection';
 export type {
+  CircleLabelCoordinateAnchor,
+  LabelCoordinateAnchor,
+  LabelHorizontalPosition,
+  LabelPosition2d,
+  LabelPositionOptions,
+  LabelVerticalPosition,
+} from './display-shape-layer/utils/labels';
+export type {
   EditShapeMode,
   ShapeEventHandler,
   ShapeEventPayload,

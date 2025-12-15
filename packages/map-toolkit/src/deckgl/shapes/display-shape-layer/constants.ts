@@ -27,7 +27,6 @@ export const MAP_INTERACTION = {
  */
 export const SELECTION_HIGHLIGHT = {
   COLOR: [40, 245, 190, 100] as [number, number, number, number], // Turquoise/cyan at ~39% opacity
-  WIDTH_INCREASE: 10, // Additional pixels added to base stroke width
   ICON_SIZE_INCREASE: 8, // Additional pixels for highlight icon
 } as const;
 
