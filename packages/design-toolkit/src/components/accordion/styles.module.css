@@ -52,11 +52,7 @@
 
 @layer components.l2 {
   .trigger {
-    @apply w-full cursor-pointer justify-start px-0;
-
-    @variant disabled {
-      @apply cursor-not-allowed;
-    }
+    @apply w-full justify-start px-0;
 
     &.cozy {
       @apply gap-s text-header-m;
