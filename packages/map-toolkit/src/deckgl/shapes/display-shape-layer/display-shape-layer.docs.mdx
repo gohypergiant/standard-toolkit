@@ -512,9 +512,11 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 
 ## Performance Considerations
 
-- The layer uses deck.gl's `updateTriggers` to minimize re-renders
-- Label positioning is calculated once per shape unless options change
-- Icon atlases are shared across all Point geometries for efficiency
+- **Feature caching**: Transformed features are cached and reused when the `data` array reference hasn't changed
+- **Label position caching**: Label positions are computed once per shape using a WeakMap cache
+- **Hover event deduplication**: The `shapes:hovered` event only emits when the hovered shape actually changes
+- **Update triggers**: The layer uses deck.gl's `updateTriggers` to minimize re-renders
+- **Icon atlas sharing**: Icon atlases are shared across all Point geometries for efficiency
 - Use `pickable={false}` to disable interaction and improve performance for static displays
 
 ## API Reference

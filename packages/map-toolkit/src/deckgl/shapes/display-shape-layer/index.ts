@@ -33,7 +33,7 @@ import {
   getStrokeColor,
 } from './utils/display-style';
 import type { Layer, PickingInfo } from '@deck.gl/core';
-import type { EditableShape } from '../shared/types';
+import type { EditableShape, ShapeId } from '../shared/types';
 import type { DisplayShapeLayerProps } from './types';
 
 /**
@@ -43,26 +43,25 @@ import type { DisplayShapeLayerProps } from './types';
 const shapeBus = Broadcast.getInstance<ShapeEvent>();
 
 /**
- * Type guard to validate that an object is an EditableShape
- */
-function isEditableShape(obj: unknown): obj is EditableShape {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'id' in obj &&
-    'feature' in obj &&
-    'shapeType' in obj
-  );
-}
-
-/**
  * State interface for DisplayShapeLayer
  */
 interface DisplayShapeLayerState {
   /** Index of currently hovered shape, undefined when not hovering */
   hoverIndex?: number;
+  /** ID of the last hovered shape for event deduplication */
+  lastHoveredId?: ShapeId | null;
   /** Allow additional properties from base layer state */
   [key: string]: unknown;
+}
+
+/**
+ * Cache for transformed features to avoid recreating objects on every render.
+ */
+interface FeaturesCache {
+  /** Reference to the original data array for identity comparison */
+  data: EditableShape[];
+  /** Transformed features with shapeId added to properties */
+  features: EditableShape['feature'][];
 }
 
 /**
@@ -95,7 +94,7 @@ interface DisplayShapeLayerState {
  * ## Event Bus Integration
  * Automatically emits shape events that can be consumed anywhere in your app:
  * - `shapes:selected` - Emitted when a shape is clicked (includes mapId)
- * - `shapes:hovered` - Emitted when hovering over a shape or when hover ends (includes mapId)
+ * - `shapes:hovered` - Emitted when the hovered shape changes (deduplicated, includes mapId)
  *
  * For selection with auto-deselection, use the companion `useShapeSelection` hook which handles
  * all the event wiring automatically. See the example below.
@@ -147,6 +146,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   // State is typed via DisplayShapeLayerState but deck.gl doesn't support generic state
   declare state: DisplayShapeLayerState;
 
+  /** Cache for transformed features to avoid recreating objects on every render */
+  private featuresCache: FeaturesCache | null = null;
+
   static override layerName = 'DisplayShapeLayer';
 
   static override defaultProps = {
@@ -154,13 +156,15 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   };
 
   /**
-   * Clean up state when layer is destroyed
+   * Clean up state and caches when layer is destroyed
    */
   override finalizeState(): void {
     // Clear hover state to prevent stale references
     if (this.state?.hoverIndex !== undefined) {
-      this.setState({ hoverIndex: undefined });
+      this.setState({ hoverIndex: undefined, lastHoveredId: undefined });
     }
+    // Clear features cache
+    this.featuresCache = null;
   }
 
   /**
@@ -205,19 +209,36 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Convert shapes to GeoJSON features with shapeId in properties
+   * Convert shapes to GeoJSON features with shapeId in properties.
+   * Uses caching to avoid recreating objects on every render cycle.
    */
   private getFeaturesWithId(): EditableShape['feature'][] {
     const { data } = this.props;
-    return data.map((shape) => ({
+
+    // Return cached features if data hasn't changed (identity check)
+    if (this.featuresCache?.data === data) {
+      return this.featuresCache.features;
+    }
+
+    // Transform features and cache the result
+    const features = data.map((shape) => ({
       ...shape.feature,
       properties: {
         ...shape.feature.properties,
         shapeId: shape.id,
-        // biome-ignore lint/style/useNamingConvention: Using underscore prefix to indicate internal property
-        _shape: shape, // Store full shape for callbacks
       },
     }));
+
+    this.featuresCache = { data, features };
+    return features;
+  }
+
+  /**
+   * Look up a shape by ID from the data prop.
+   * Used by event handlers to get full shape without storing in feature properties.
+   */
+  private getShapeById(shapeId: ShapeId): EditableShape | undefined {
+    return this.props.data.find((shape) => shape.id === shapeId);
   }
 
   /**
@@ -230,10 +251,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return;
     }
 
-    const shape = info.object.properties?._shape;
+    // Look up shape from data prop using shapeId stored in feature properties
+    const shapeId = info.object.properties?.shapeId as ShapeId | undefined;
+    if (!shapeId) {
+      return;
+    }
 
-    // Validate shape structure before using
-    if (!isEditableShape(shape)) {
+    const shape = this.getShapeById(shapeId);
+    if (!shape) {
       return;
     }
 
@@ -252,17 +277,23 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private handleShapeHover = (info: PickingInfo): void => {
     const { onShapeHover, mapId } = this.props;
 
-    // Extract and validate shape from info if present
-    const rawShape = info.object?.properties?._shape;
-    const shape = isEditableShape(rawShape) ? rawShape : null;
+    // Look up shape from data prop using shapeId stored in feature properties
+    const shapeId =
+      (info.object?.properties?.shapeId as ShapeId | undefined) ?? null;
+    const shape = shapeId ? (this.getShapeById(shapeId) ?? null) : null;
 
-    // Emit shape hovered event via bus (include mapId for multi-map isolation)
-    shapeBus.emit(ShapeEvents.hovered, {
-      shapeId: shape?.id ?? null,
-      mapId,
-    });
+    // Dedupe hover events - only emit if hovered shape changed
+    if (shapeId !== this.state?.lastHoveredId) {
+      this.setState({ lastHoveredId: shapeId });
 
-    // Call callback if provided
+      // Emit shape hovered event via bus (include mapId for multi-map isolation)
+      shapeBus.emit(ShapeEvents.hovered, {
+        shapeId,
+        mapId,
+      });
+    }
+
+    // Always call callback if provided (for local state updates)
     if (onShapeHover) {
       onShapeHover(shape);
     }

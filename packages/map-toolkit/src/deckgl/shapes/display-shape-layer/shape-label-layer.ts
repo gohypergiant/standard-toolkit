@@ -19,9 +19,29 @@ import {
   getLabelFillColor,
   getLabelPosition2d,
   getLabelText,
+  type LabelPosition2d,
   type LabelPositionOptions,
 } from './utils/labels';
 import type { EditableShape } from '../shared/types';
+
+/**
+ * Creates a cached label position getter to avoid computing position multiple times per shape.
+ * Uses WeakMap so positions are garbage collected when shapes are removed.
+ */
+function createCachedPositionGetter(
+  labelOptions: LabelPositionOptions | undefined,
+) {
+  const cache = new WeakMap<EditableShape, LabelPosition2d>();
+
+  return (shape: EditableShape): LabelPosition2d => {
+    let position = cache.get(shape);
+    if (!position) {
+      position = getLabelPosition2d(shape, labelOptions);
+      cache.set(shape, position);
+    }
+    return position;
+  };
+}
 
 /**
  * Props for creating a shape label layer
@@ -47,6 +67,7 @@ export interface ShapeLabelLayerProps {
  * - **Coordinate anchoring**: Position labels at start/middle/end (or edge positions for circles)
  * - **Pixel-based offsets**: Consistent label placement at all zoom levels
  * - **Styled backgrounds**: Color-matched backgrounds with borders using shape colors
+ * - **Position caching**: Label positions are computed once per shape using a WeakMap cache
  *
  * ## Label Positioning Priority
  * 1. Per-shape `styleProperties` (highest priority)
@@ -73,6 +94,9 @@ export function createShapeLabelLayer(
 ): TextLayer<EditableShape> {
   const { id = SHAPE_LAYER_IDS.DISPLAY_LABELS, data, labelOptions } = props;
 
+  // Create cached position getter to avoid computing position 4x per shape
+  const getCachedPosition = createCachedPositionGetter(labelOptions);
+
   return new TextLayer<EditableShape>({
     id,
     data,
@@ -80,15 +104,12 @@ export function createShapeLabelLayer(
     // Text content
     getText: getLabelText,
 
-    // Position - use pixel-based offsets for consistent positioning
-    getPosition: (d: EditableShape) =>
-      getLabelPosition2d(d, labelOptions).coordinates,
-    getPixelOffset: (d: EditableShape) =>
-      getLabelPosition2d(d, labelOptions).pixelOffset,
-    getTextAnchor: (d: EditableShape) =>
-      getLabelPosition2d(d, labelOptions).textAnchor,
+    // Position - use cached getter for all position-related properties
+    getPosition: (d: EditableShape) => getCachedPosition(d).coordinates,
+    getPixelOffset: (d: EditableShape) => getCachedPosition(d).pixelOffset,
+    getTextAnchor: (d: EditableShape) => getCachedPosition(d).textAnchor,
     getAlignmentBaseline: (d: EditableShape) =>
-      getLabelPosition2d(d, labelOptions).alignmentBaseline,
+      getCachedPosition(d).alignmentBaseline,
 
     // Styling
     getColor: [0, 0, 0, 255], // Black text
