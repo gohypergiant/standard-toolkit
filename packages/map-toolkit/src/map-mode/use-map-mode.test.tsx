@@ -35,7 +35,6 @@ describe('useMapMode', () => {
   afterEach(() => {
     // Clean up the store after each test
     clearMapModeState(testid);
-    vi.restoreAllMocks();
   });
 
   describe('Hook Behavior', () => {

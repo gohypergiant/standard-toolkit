@@ -16,6 +16,9 @@ import {
   BASE_FILL_OPACITY,
   DASH_ARRAYS,
   DEFAULT_COLORS,
+  DEFAULT_STROKE_WIDTH,
+  HIGHLIGHT_WIDTH_INCREASE,
+  HOVER_WIDTH_INCREASE,
 } from '../../shared/constants';
 import type { Color } from '@deck.gl/core';
 import type { StyledFeature } from '../../shared/types';
@@ -78,7 +81,7 @@ function normalizeColor(color: Color): [number, number, number, number] {
  */
 export function getLineWidth(feature: StyledFeature): number {
   const styleProps = feature.properties?.styleProperties;
-  return styleProps?.strokeWidth ?? 4;
+  return styleProps?.strokeWidth ?? DEFAULT_STROKE_WIDTH;
 }
 
 /**
@@ -104,7 +107,7 @@ export function getHoverLineWidth(
   isHovered: boolean,
 ): number {
   const baseWidth = getLineWidth(feature);
-  return isHovered ? baseWidth + 2 : baseWidth;
+  return isHovered ? baseWidth + HOVER_WIDTH_INCREASE : baseWidth;
 }
 
 /**
@@ -128,5 +131,5 @@ export function getHighlightColor(
  */
 export function getHighlightLineWidth(feature: StyledFeature): number {
   const baseWidth = getLineWidth(feature);
-  return baseWidth + 10;
+  return baseWidth + HIGHLIGHT_WIDTH_INCREASE;
 }

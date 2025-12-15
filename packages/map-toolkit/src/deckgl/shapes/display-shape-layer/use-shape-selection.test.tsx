@@ -13,7 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapEvents } from '../../base-map/events';
 import {
   type ShapeDeselectedEvent,
@@ -51,10 +51,6 @@ describe('useShapeSelection', () => {
     shapeId2 = uuid();
     shapeBus = Broadcast.getInstance();
     mapBus = Broadcast.getInstance();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   describe('initial state', () => {

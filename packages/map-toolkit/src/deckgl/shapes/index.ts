@@ -17,6 +17,7 @@ export { DisplayShapeLayer } from './display-shape-layer/index';
 export { useShapeSelection } from './display-shape-layer/use-shape-selection';
 // Constant exports
 export {
+  BASE_FILL_OPACITY,
   DASH_ARRAYS,
   DEFAULT_COLORS,
   DEFAULT_STYLE_PROPERTIES,

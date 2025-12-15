@@ -56,6 +56,10 @@
 
 'use client';
 
+import {
+  LABEL_BACKGROUND_OPACITY,
+  LABEL_BORDER_OPACITY,
+} from '../../shared/constants';
 import type { LineString, Point, Polygon } from 'geojson';
 import type { EditableShape } from '../../shared/types';
 
@@ -777,8 +781,7 @@ export function getLabelFillColor(
   const g = fillColor[1] ?? 166;
   const b = fillColor[2] ?? 255;
 
-  // Use moderate opacity for label background (200)
-  return [r, g, b, 200];
+  return [r, g, b, LABEL_BACKGROUND_OPACITY];
 }
 
 /**
@@ -795,6 +798,5 @@ export function getLabelBorderColor(
   const g = strokeColor[1] ?? 166;
   const b = strokeColor[2] ?? 255;
 
-  // Full opacity for border
-  return [r, g, b, 255];
+  return [r, g, b, LABEL_BORDER_OPACITY];
 }

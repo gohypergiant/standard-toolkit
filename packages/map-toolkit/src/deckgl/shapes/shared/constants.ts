@@ -33,6 +33,31 @@ export const SHAPE_LAYER_IDS = {
 export const BASE_FILL_OPACITY = 0.6;
 
 /**
+ * Default stroke width in pixels when not specified in styleProperties
+ */
+export const DEFAULT_STROKE_WIDTH = 4;
+
+/**
+ * Additional pixels added to stroke width on hover
+ */
+export const HOVER_WIDTH_INCREASE = 2;
+
+/**
+ * Additional pixels added to stroke width for selection highlight
+ */
+export const HIGHLIGHT_WIDTH_INCREASE = 10;
+
+/**
+ * Fixed opacity for label background (0-255)
+ */
+export const LABEL_BACKGROUND_OPACITY = 200;
+
+/**
+ * Fixed opacity for label border (0-255)
+ */
+export const LABEL_BORDER_OPACITY = 255;
+
+/**
  * Default style properties for new shapes
  */
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
