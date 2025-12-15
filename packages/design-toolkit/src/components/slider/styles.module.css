@@ -56,7 +56,7 @@
       @apply col-start-1;
 
       @variant group-orientation-vertical/slider {
-        @apply col-span-2;
+        @apply col-span-3;
       }
     }
 
@@ -129,21 +129,21 @@
   }
 
   .trackValue {
-    --track-value-start: attr(data-start %);
-    --track-value-end: attr(data-end %);
+    --track-value-start: attr(data-start type(<number>), 0);
+    --track-value-end: attr(data-end type(<number>), 0);
 
     @apply bg-accent-primary-bold absolute rounded-full;
 
     @variant group-orientation-horizontal/slider {
       @apply h-xxs top-1/2 -translate-y-1/2;
-      right: calc(100% - var(--track-value-end) * 100);
-      left: calc(var(--track-value-start) * 100);
+      left: calc(var(--track-value-start) * 100%);
+      right: calc(100% - var(--track-value-end) * 100%);
     }
 
     @variant group-orientation-vertical/slider {
       @apply w-xxs left-1/2 -translate-x-1/2;
-      top: calc(100% - var(--track-value-start) * 100);
-      bottom: calc(var(--track-value-end) * 100);
+      bottom: calc(var(--track-value-start) * 100%);
+      top: calc(100% - var(--track-value-end) * 100%);
     }
   }
 
@@ -211,6 +211,67 @@
       @variant group-layout-grid/slider {
         @apply col-start-3 row-start-3 justify-self-end;
       }
+    }
+
+    @variant group-disabled/slider {
+      @apply fg-disabled;
+    }
+  }
+
+  .markers {
+    @apply pointer-events-none absolute;
+
+    @variant group-orientation-horizontal/slider {
+      @apply top-1/2 right-0 left-0 h-0;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply top-0 bottom-0 left-1/2 w-0;
+    }
+  }
+
+  .marker {
+    --marker-percent: attr(data-percent type(<number>), 0);
+
+    @apply absolute flex flex-col items-center;
+
+    @variant group-orientation-horizontal/slider {
+      @apply -translate-x-1/2;
+      left: calc(var(--marker-percent) * 1%);
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply -translate-y-1/2 flex-row;
+      bottom: calc(var(--marker-percent) * 1%);
+    }
+  }
+
+  .markerDot {
+    @apply bg-surface-overlay rounded-full;
+    @apply h-xs w-xs;
+
+    @variant group-orientation-horizontal/slider {
+      @apply -translate-y-1/2;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply -translate-x-1/2;
+    }
+
+    @variant group-disabled/slider {
+      @apply bg-surface-muted;
+    }
+  }
+
+  .markerLabel {
+    @apply fg-primary-muted font-display text-body-xs whitespace-nowrap;
+
+    @variant group-orientation-horizontal/slider {
+      @apply mt-m;
+    }
+
+    @variant group-orientation-vertical/slider {
+      @apply ml-m;
     }
 
     @variant group-disabled/slider {

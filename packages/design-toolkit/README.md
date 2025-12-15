@@ -20,6 +20,7 @@ If you run into errors, try running
 
 ```bash
 pnpm --filter=@accelint/design-toolkit run build
+pnpm --filter @accelint/postcss-tailwind-css-modules build
 ```
 
 ## Run local example app
