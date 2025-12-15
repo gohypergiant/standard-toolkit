@@ -16,10 +16,9 @@ import { template } from './catalog-info-template.js';
 
 function generateUrls(repository: { url: string }, subPath: string) {
   const projectSlug = trim(new URL(repository?.url).pathname, '/');
-  const isGithub = repository.url?.includes('github');
 
-  const packageUrl = `${repository?.url}${isGithub ? `/tree/main/${subPath}` : `/-/tree/${subPath}`}`;
-  const editUrl = `${repository?.url}${isGithub ? `/blob/main/${subPath}/catalog-info.yaml` : `/${subPath}/-/edit/main/catalog-info.yaml`}`;
+  const packageUrl = `${repository?.url}/tree/main/${subPath}`;
+  const editUrl = `${repository?.url}/blob/main/${subPath}/catalog-info.yaml`;
 
   return {
     editUrl,
@@ -33,7 +32,6 @@ export function generateCatalogInfo(packagePath: string) {
   const packageJson = JSON.parse(packageJsonContent);
 
   const catalogInfo = Object.assign({}, template);
-  const isGithub = packageJson.repository.url?.includes('github.com');
 
   // Backstage limits us to alphanumeric, -, and _ characters
   // so we need to purge invalid characters from the package
@@ -51,9 +49,7 @@ export function generateCatalogInfo(packagePath: string) {
 
   catalogInfo.metadata.annotations['package/version'] = packageJson.version;
   catalogInfo.metadata.annotations['backstage.io/edit-url'] = editUrl;
-  catalogInfo.metadata.annotations[
-    `${isGithub ? 'github' : 'gitlab'}.com/project-slug`
-  ] = projectSlug;
+  catalogInfo.metadata.annotations['github.com/project-slug'] = projectSlug;
 
   catalogInfo.metadata.links.push({
     url: packageUrl,

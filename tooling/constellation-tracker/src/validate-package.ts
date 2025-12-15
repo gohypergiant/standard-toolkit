@@ -17,7 +17,7 @@ export function validatePackage(packagePath: string) {
   const packageJsonContent = fs.readFileSync(packagePath, 'utf-8');
   const packageJson = JSON.parse(packageJsonContent);
 
-  if (!packageJson.repository?.url) {
+  if (!packageJson.repository) {
     console.error(
       ansis.red(`Error: Your package.json must contain 'repository.url'`),
     );
