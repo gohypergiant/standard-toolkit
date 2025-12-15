@@ -32,8 +32,49 @@ You can construct a static menu by using the components directly.
 For a dynamic menu, the `items` prop is passed in.
 <Canvas of={MenuStories.Dynamic} />
 
+## Simple Menu
+A minimal menu without icons or descriptions.
+<Canvas of={MenuStories.SimpleMenu} />
+
+## Custom Placement
+Use `popoverProps` to customize the menu position relative to the trigger.
+<Canvas of={MenuStories.CustomPlacement} />
+
+## With Offset
+Use `popoverProps.offset` to control spacing between the trigger and menu.
+<Canvas of={MenuStories.WithOffset} />
+
+## With Action Handler
+Use `onAction` to handle menu item selection. Each `MenuItem` should have an `id` prop.
+<Canvas of={MenuStories.WithActionHandler} />
+
+## Selection Modes
+
+### Single Selection
+Use `selectionMode='single'` to allow selecting one item at a time.
+<Canvas of={MenuStories.SingleSelection} />
+
+### Multiple Selection
+Use `selectionMode='multiple'` to allow selecting multiple items.
+<Canvas of={MenuStories.MultipleSelection} />
+
+## Color Variants
+Menu items support three color variants: `info` (default), `serious`, and `critical`.
+<Canvas of={MenuStories.ColorVariants} />
+
+## Disabled Items
+Use `isDisabled` on individual menu items to prevent interaction.
+<Canvas of={MenuStories.DisabledItems} />
+
+## Context Menu
+A custom context menu triggered by right-click, using `popoverProps` for controlled positioning.
+<Canvas of={MenuStories.ContextMenu} />
+
+## Dynamic Section Header
+Section titles can be strings or React elements for custom formatting.
+<Canvas of={MenuStories.DynamicMenuHeader} />
+
 ## Example Usage
-You can build a static menu with a flat list of options to select.
 
 ### Simplest Version
 ```tsx
@@ -52,7 +93,6 @@ You can build a static menu with a flat list of options to select.
 ```
 
 ### With Custom Placement
-You can customize the menu placement using `popoverProps`.
 ```tsx
 <MenuTrigger>
   <Button>Open Menu</Button>
@@ -69,8 +109,19 @@ You can customize the menu placement using `popoverProps`.
 
 Available placements include: `'bottom'`, `'bottom start'`, `'bottom end'`, `'top'`, `'top start'`, `'top end'`, `'left'`, `'right'`, etc.
 
+### With Offset
+```tsx
+<MenuTrigger>
+  <Button>Open Menu</Button>
+  <Menu popoverProps={{ placement: 'bottom', offset: 8 }}>
+    <MenuItem>
+      <MenuItemLabel>Item</MenuItemLabel>
+    </MenuItem>
+  </Menu>
+</MenuTrigger>
+```
+
 ### With Action Handler
-You can handle menu item selection using the `onAction` prop.
 ```tsx
 <MenuTrigger>
   <Button>Actions</Button>
@@ -88,8 +139,28 @@ You can handle menu item selection using the `onAction` prop.
 </MenuTrigger>
 ```
 
+### With Selection
+```tsx
+const [selectedKeys, setSelectedKeys] = useState(new Set(['item-1']));
+
+<MenuTrigger>
+  <Button>Select Items</Button>
+  <Menu
+    selectionMode="multiple"
+    selectedKeys={selectedKeys}
+    onSelectionChange={setSelectedKeys}
+  >
+    <MenuItem id="item-1">
+      <MenuItemLabel>Item 1</MenuItemLabel>
+    </MenuItem>
+    <MenuItem id="item-2">
+      <MenuItemLabel>Item 2</MenuItemLabel>
+    </MenuItem>
+  </Menu>
+</MenuTrigger>
+```
+
 ### With Section
-You can add an optional section area.
 ```tsx
 <MenuTrigger>
   <Button>Open Menu</Button>
@@ -106,7 +177,6 @@ You can add an optional section area.
       <MenuItem>
         <MenuItemLabel>Chimney swift</MenuItemLabel>
         <MenuItemDescription>Chaetura pelagica</MenuItemDescription>
-        <Hotkey variant='flat'>⌘V</Hotkey>
       </MenuItem>
     </MenuSection>
   </Menu>
@@ -114,7 +184,6 @@ You can add an optional section area.
 ```
 
 ### With Submenu
-You can add in optional, nested Submenus
 ```tsx
 <MenuTrigger>
   <Button>Open Menu</Button>
