@@ -199,8 +199,8 @@ export function testLeakPattern(
 export function matchLeakPattern(
   pattern: LeakPatternName,
   text: string,
-): RegExpMatchArray | null {
-  return text.match(LEAK_PATTERNS[pattern]);
+): RegExpExecArray | null {
+  return LEAK_PATTERNS[pattern].exec(text);
 }
 
 // =============================================================================
