@@ -47,6 +47,10 @@
 
   .panel {
     @apply p-s;
+
+    @variant aria-hidden {
+      @apply hidden;
+    }
   }
 }
 
