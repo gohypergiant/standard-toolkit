@@ -11,6 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
+import { useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
@@ -51,26 +52,36 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: ({ children, ...args }) => (
-    <div className='w-[280px]'>
-      <Accordion {...args}>
-        <AccordionHeader>
-          <AccordionTrigger>
-            <Icon>
-              <Placeholder />
-            </Icon>
-            Accordion title
-          </AccordionTrigger>
-        </AccordionHeader>
-        <AccordionPanel>
-          <p className='fg-primary-muted text-body-s'>
-            This is a placeholder content for an accordion. Please replace with
-            an actual content instance.
-          </p>
-        </AccordionPanel>
-      </Accordion>
-    </div>
-  ),
+  render: ({ children, ...args }) => {
+    const [isExpanded, setIsExpanded] = useState(
+      args.isExpanded || args.defaultExpanded,
+    );
+
+    return (
+      <div className='w-[280px]'>
+        <Accordion
+          {...args}
+          isExpanded={isExpanded}
+          onExpandedChange={setIsExpanded}
+        >
+          <AccordionHeader>
+            <AccordionTrigger>
+              <Icon>
+                <Placeholder />
+              </Icon>
+              Accordion title
+            </AccordionTrigger>
+          </AccordionHeader>
+          <AccordionPanel>
+            <p className='fg-primary-muted text-body-s'>
+              This is a placeholder content for an accordion. Please replace
+              with an actual content instance.
+            </p>
+          </AccordionPanel>
+        </Accordion>
+      </div>
+    );
+  },
 };
 
 export const WithMenu: Story = {
