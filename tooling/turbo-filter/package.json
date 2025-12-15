@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@accelint/turbo-filter",
+  "title": "Turbo Filter",
+  "description": "Utility for filtering tasks by package in a turborepo",
+  "author": "https://hypergiant.com",
+  "owner": "default/pathfinder",
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "subPath": "tooling/turbo-filter",
+  "version": "0.0.1",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "type": "module",
+  "bin": {
+    "turbo-filter": "./index.mjs"
+  },
+  "devDependencies": {
+    "@types/prompts": "^2.4.9",
+    "prompts": "^2.4.2",
+    "turbo": "^2.6.3",
+    "yaml": "^2.8.1",
+    "zx": "^8.8.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}
