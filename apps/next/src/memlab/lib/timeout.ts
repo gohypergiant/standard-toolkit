@@ -34,17 +34,17 @@ export async function withTimeout<T>(
   timeoutMs: number,
   operation: string,
 ): Promise<T> {
-  let timeoutId: NodeJS.Timeout;
-
+  let timeoutId: NodeJS.Timeout | undefined;
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => {
       reject(new TimeoutError(operation, timeoutMs));
     }, timeoutMs);
   });
-
   try {
     return await Promise.race([promise, timeoutPromise]);
   } finally {
-    clearTimeout(timeoutId!);
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
   }
 }
