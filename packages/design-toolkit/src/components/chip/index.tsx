@@ -33,19 +33,37 @@ import type { ChipProps } from './types';
  * <Chip>JavaScript</Chip>
  *
  * @example
+ * // Chip with color variants
+ * <Chip color="info">Information</Chip>
+ * <Chip color="advisory">Warning</Chip>
+ * <Chip color="normal">Success</Chip>
+ * <Chip color="serious">Caution</Chip>
+ * <Chip color="critical">Error</Chip>
+ *
+ * @example
+ * // Chip with icon
+ * <Chip color="info">
+ *   <Icon><Placeholder /></Icon>
+ *   With Icon
+ * </Chip>
+ *
+ * @example
+ * // Chip with size variants
+ * <Chip size="medium">Medium Chip</Chip>
+ * <Chip size="small">Small Chip</Chip>
+ *
+ * @example
  * // Chip list with multiple items
  * <ChipList>
- *   <Chip>React</Chip>
- *   <Chip>TypeScript</Chip>
- *   <Chip>Node.js</Chip>
+ *   <Chip color="info">React</Chip>
+ *   <Chip color="advisory">TypeScript</Chip>
+ *   <Chip color="normal">Node.js</Chip>
  * </ChipList>
  *
  * @example
  * // Deletable chips
- * <ChipList onRemove={() => console.log('removed')}>
- *   <DeletableChip>
- *     Removable Tag
- *   </DeletableChip>
+ * <ChipList onRemove={(keys) => console.log('removed', keys)}>
+ *   <DeletableChip id="tag1">Removable Tag</DeletableChip>
  * </ChipList>
  *
  * @example
