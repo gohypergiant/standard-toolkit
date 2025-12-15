@@ -49,7 +49,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "repository": "gohypergiant/standard-toolkit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "build": "pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
