@@ -886,24 +886,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
-      '@deck.gl-community/editable-layers':
-        specifier: ~9.1
-        version: 9.1.1(368405cf6699b50fe211c6c64d5b0de5)
-      '@deck.gl/geo-layers':
-        specifier: ~9.1
-        version: 9.1.14(@deck.gl/core@9.1.14)(@deck.gl/extensions@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
-      '@deck.gl/mapbox':
-        specifier: ~9.1
-        version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)
-      '@deck.gl/mesh-layers':
-        specifier: ~9.1
-        version: 9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
-      '@deck.gl/widgets':
-        specifier: ~9.1
-        version: 9.1.14(@deck.gl/core@9.1.14)
-      '@deckgl-fiber-renderer/shared':
-        specifier: ^1.4.0
-        version: 1.4.0(@deck.gl/core@9.1.14)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       '@storybook/addon-docs':
         specifier: ^9.1.16
         version: 9.1.16(@types/react@19.2.7)(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.7.4)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)))
@@ -977,18 +959,36 @@ importers:
         specifier: ^4.0.15
         version: 4.0.15(@types/node@22.19.3)(happy-dom@20.0.11)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
     optionalDependencies:
+      '@deck.gl-community/editable-layers':
+        specifier: ~9.1
+        version: 9.1.1(368405cf6699b50fe211c6c64d5b0de5)
       '@deck.gl/core':
         specifier: 9.1.14
         version: 9.1.14
       '@deck.gl/extensions':
         specifier: 9.1.14
         version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
+      '@deck.gl/geo-layers':
+        specifier: 9.1.14
+        version: 9.1.14(@deck.gl/core@9.1.14)(@deck.gl/extensions@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
       '@deck.gl/layers':
         specifier: 9.1.14
         version: 9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
+      '@deck.gl/mapbox':
+        specifier: 9.1.14
+        version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)
+      '@deck.gl/mesh-layers':
+        specifier: 9.1.14
+        version: 9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
+      '@deck.gl/widgets':
+        specifier: 9.1.14
+        version: 9.1.14(@deck.gl/core@9.1.14)
       '@deckgl-fiber-renderer/dom':
         specifier: 1.4.0
         version: 1.4.0(82c6e27a9d8ba726733c2f73ee66f20e)
+      '@deckgl-fiber-renderer/shared':
+        specifier: ^1.4.0
+        version: 1.4.0(@deck.gl/core@9.1.14)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       '@deckgl-fiber-renderer/types':
         specifier: ^1.4.0
         version: 1.4.0(8ae2bdbec150e3c0178ea91a6c326667)
@@ -7456,6 +7456,7 @@ snapshots:
       lodash.throttle: 4.1.1
       uuid: 9.0.0
       viewport-mercator-project: 7.0.4
+    optional: true
 
   '@deck.gl-community/layers@9.1.1(@deck.gl/widgets@9.1.14(@deck.gl/core@9.1.14))(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
@@ -7481,6 +7482,7 @@ snapshots:
       - '@luma.gl/shadertools'
       - react
       - react-dom
+    optional: true
 
   '@deck.gl/core@9.1.14':
     dependencies:
@@ -7501,6 +7503,7 @@ snapshots:
       '@types/offscreencanvas': 2019.7.3
       gl-matrix: 3.4.4
       mjolnir.js: 3.0.0
+    optional: true
 
   '@deck.gl/extensions@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))':
     dependencies:
@@ -7510,6 +7513,7 @@ snapshots:
       '@luma.gl/engine': 9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.1.10)
       '@math.gl/core': 4.1.0
+    optional: true
 
   '@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.1.14)(@deck.gl/extensions@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))':
     dependencies:
@@ -7536,6 +7540,7 @@ snapshots:
       '@types/geojson': 7946.0.16
       h3-js: 4.4.0
       long: 3.2.0
+    optional: true
 
   '@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))':
     dependencies:
@@ -7551,6 +7556,7 @@ snapshots:
       '@math.gl/polygon': 4.1.0
       '@math.gl/web-mercator': 4.1.0
       earcut: 2.2.4
+    optional: true
 
   '@deck.gl/mapbox@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)':
     dependencies:
@@ -7558,6 +7564,7 @@ snapshots:
       '@luma.gl/constants': 9.1.10
       '@luma.gl/core': 9.1.10
       '@math.gl/web-mercator': 4.1.0
+    optional: true
 
   '@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))':
     dependencies:
@@ -7569,6 +7576,7 @@ snapshots:
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.1.10)
     transitivePeerDependencies:
       - '@loaders.gl/core'
+    optional: true
 
   '@deck.gl/react@9.2.5(@deck.gl/core@9.1.14)(@deck.gl/widgets@9.1.14(@deck.gl/core@9.1.14))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
@@ -7576,11 +7584,13 @@ snapshots:
       '@deck.gl/widgets': 9.1.14(@deck.gl/core@9.1.14)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
+    optional: true
 
   '@deck.gl/widgets@9.1.14(@deck.gl/core@9.1.14)':
     dependencies:
       '@deck.gl/core': 9.1.14
       preact: 10.28.0
+    optional: true
 
   '@deckgl-fiber-renderer/dom@1.4.0(82c6e27a9d8ba726733c2f73ee66f20e)':
     dependencies:
@@ -7633,6 +7643,7 @@ snapshots:
       - immer
       - react
       - use-sync-external-store
+    optional: true
 
   '@deckgl-fiber-renderer/types@1.4.0(8ae2bdbec150e3c0178ea91a6c326667)':
     dependencies:
@@ -8179,6 +8190,7 @@ snapshots:
       '@math.gl/geospatial': 4.1.0
       '@probe.gl/log': 4.1.0
       long: 5.3.2
+    optional: true
 
   '@loaders.gl/compression@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8195,6 +8207,7 @@ snapshots:
       brotli: 1.3.3
       lz4js: 0.2.0
       zstd-codec: 0.1.5
+    optional: true
 
   '@loaders.gl/core@4.3.4':
     dependencies:
@@ -8202,6 +8215,7 @@ snapshots:
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/worker-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@probe.gl/log': 4.1.0
+    optional: true
 
   '@loaders.gl/crypto@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8209,6 +8223,7 @@ snapshots:
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/worker-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@types/crypto-js': 4.2.2
+    optional: true
 
   '@loaders.gl/draco@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8217,6 +8232,7 @@ snapshots:
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/worker-utils': 4.3.4(@loaders.gl/core@4.3.4)
       draco3d: 1.5.7
+    optional: true
 
   '@loaders.gl/gis@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8226,6 +8242,7 @@ snapshots:
       '@mapbox/vector-tile': 1.3.1
       '@math.gl/polygon': 4.1.0
       pbf: 3.3.0
+    optional: true
 
   '@loaders.gl/gltf@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8236,6 +8253,7 @@ snapshots:
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/textures': 4.3.4(@loaders.gl/core@4.3.4)
       '@math.gl/core': 4.1.0
+    optional: true
 
   '@loaders.gl/i3s@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8253,11 +8271,13 @@ snapshots:
       '@math.gl/core': 4.1.0
       '@math.gl/culling': 4.1.0
       '@math.gl/geospatial': 4.1.0
+    optional: true
 
   '@loaders.gl/images@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
       '@loaders.gl/core': 4.3.4
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
+    optional: true
 
   '@loaders.gl/loader-utils@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8266,6 +8286,7 @@ snapshots:
       '@loaders.gl/worker-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@probe.gl/log': 4.1.0
       '@probe.gl/stats': 4.1.0
+    optional: true
 
   '@loaders.gl/math@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8273,6 +8294,7 @@ snapshots:
       '@loaders.gl/images': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@math.gl/core': 4.1.0
+    optional: true
 
   '@loaders.gl/mvt@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8284,11 +8306,13 @@ snapshots:
       '@math.gl/polygon': 4.1.0
       '@probe.gl/stats': 4.1.0
       pbf: 3.3.0
+    optional: true
 
   '@loaders.gl/schema@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
       '@loaders.gl/core': 4.3.4
       '@types/geojson': 7946.0.16
+    optional: true
 
   '@loaders.gl/terrain@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8297,6 +8321,7 @@ snapshots:
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       '@mapbox/martini': 0.2.0
+    optional: true
 
   '@loaders.gl/textures@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8308,6 +8333,7 @@ snapshots:
       '@math.gl/types': 4.1.0
       ktx-parse: 0.7.1
       texture-compressor: 1.0.2
+    optional: true
 
   '@loaders.gl/tiles@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8319,6 +8345,7 @@ snapshots:
       '@math.gl/geospatial': 4.1.0
       '@math.gl/web-mercator': 4.1.0
       '@probe.gl/stats': 4.1.0
+    optional: true
 
   '@loaders.gl/wms@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8329,10 +8356,12 @@ snapshots:
       '@loaders.gl/xml': 4.3.4(@loaders.gl/core@4.3.4)
       '@turf/rewind': 5.1.5
       deep-strict-equal: 0.2.0
+    optional: true
 
   '@loaders.gl/worker-utils@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
       '@loaders.gl/core': 4.3.4
+    optional: true
 
   '@loaders.gl/xml@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8340,6 +8369,7 @@ snapshots:
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       fast-xml-parser: 4.5.3
+    optional: true
 
   '@loaders.gl/zip@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -8349,6 +8379,7 @@ snapshots:
       '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
       jszip: 3.10.1
       md5: 2.3.0
+    optional: true
 
   '@loglayer/context-manager@1.1.6':
     dependencies:
@@ -8382,7 +8413,8 @@ snapshots:
 
   '@ls-lint/ls-lint@2.3.1': {}
 
-  '@luma.gl/constants@9.1.10': {}
+  '@luma.gl/constants@9.1.10':
+    optional: true
 
   '@luma.gl/core@9.1.10':
     dependencies:
@@ -8391,6 +8423,7 @@ snapshots:
       '@probe.gl/log': 4.1.0
       '@probe.gl/stats': 4.1.0
       '@types/offscreencanvas': 2019.7.3
+    optional: true
 
   '@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))':
     dependencies:
@@ -8400,6 +8433,7 @@ snapshots:
       '@math.gl/types': 4.1.0
       '@probe.gl/log': 4.1.0
       '@probe.gl/stats': 4.1.0
+    optional: true
 
   '@luma.gl/gltf@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))':
     dependencies:
@@ -8409,6 +8443,7 @@ snapshots:
       '@luma.gl/engine': 9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.1.10)
       '@math.gl/core': 4.1.0
+    optional: true
 
   '@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)':
     dependencies:
@@ -8416,6 +8451,7 @@ snapshots:
       '@math.gl/core': 4.1.0
       '@math.gl/types': 4.1.0
       wgsl_reflect: 1.2.3
+    optional: true
 
   '@luma.gl/webgl@9.1.10(@luma.gl/core@9.1.10)':
     dependencies:
@@ -8423,6 +8459,7 @@ snapshots:
       '@luma.gl/core': 9.1.10
       '@math.gl/types': 4.1.0
       '@probe.gl/env': 4.1.0
+    optional: true
 
   '@manypkg/find-root@1.1.0':
     dependencies:
@@ -8449,14 +8486,17 @@ snapshots:
   '@mapbox/jsonlint-lines-primitives@2.0.2':
     optional: true
 
-  '@mapbox/martini@0.2.0': {}
+  '@mapbox/martini@0.2.0':
+    optional: true
 
-  '@mapbox/point-geometry@0.1.0': {}
+  '@mapbox/point-geometry@0.1.0':
+    optional: true
 
   '@mapbox/point-geometry@1.1.0':
     optional: true
 
-  '@mapbox/tiny-sdf@2.0.7': {}
+  '@mapbox/tiny-sdf@2.0.7':
+    optional: true
 
   '@mapbox/unitbezier@0.0.1':
     optional: true
@@ -8464,6 +8504,7 @@ snapshots:
   '@mapbox/vector-tile@1.3.1':
     dependencies:
       '@mapbox/point-geometry': 0.1.0
+    optional: true
 
   '@mapbox/vector-tile@2.0.4':
     dependencies:
@@ -8505,33 +8546,41 @@ snapshots:
   '@math.gl/core@4.1.0':
     dependencies:
       '@math.gl/types': 4.1.0
+    optional: true
 
   '@math.gl/culling@4.1.0':
     dependencies:
       '@math.gl/core': 4.1.0
       '@math.gl/types': 4.1.0
+    optional: true
 
   '@math.gl/geospatial@4.1.0':
     dependencies:
       '@math.gl/core': 4.1.0
       '@math.gl/types': 4.1.0
+    optional: true
 
   '@math.gl/polygon@4.1.0':
     dependencies:
       '@math.gl/core': 4.1.0
+    optional: true
 
-  '@math.gl/sun@4.1.0': {}
+  '@math.gl/sun@4.1.0':
+    optional: true
 
-  '@math.gl/types@4.1.0': {}
+  '@math.gl/types@4.1.0':
+    optional: true
 
   '@math.gl/web-mercator@3.6.3':
     dependencies:
       '@babel/runtime': 7.28.4
       gl-matrix: 3.4.4
+    optional: true
 
   '@math.gl/web-mercator@4.1.0':
     dependencies:
       '@math.gl/core': 4.1.0
+    optional: true
 
   '@mdx-js/react@3.1.1(@types/react@19.2.7)(react@19.2.3)':
     dependencies:
@@ -8649,13 +8698,16 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@probe.gl/env@4.1.0': {}
+  '@probe.gl/env@4.1.0':
+    optional: true
 
   '@probe.gl/log@4.1.0':
     dependencies:
       '@probe.gl/env': 4.1.0
+    optional: true
 
-  '@probe.gl/stats@4.1.0': {}
+  '@probe.gl/stats@4.1.0':
+    optional: true
 
   '@quansync/fs@1.0.0':
     dependencies:
@@ -10342,40 +10394,48 @@ snapshots:
       '@turf/distance': 6.5.0
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/area@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/meta': 6.5.0
+    optional: true
 
   '@turf/bbox-polygon@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
+    optional: true
 
   '@turf/bbox@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/meta': 6.5.0
+    optional: true
 
   '@turf/bearing@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/boolean-clockwise@5.1.5':
     dependencies:
       '@turf/helpers': 5.1.5
       '@turf/invariant': 5.2.0
+    optional: true
 
   '@turf/boolean-clockwise@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/boolean-point-in-polygon@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/buffer@6.5.0':
     dependencies:
@@ -10386,45 +10446,54 @@ snapshots:
       '@turf/projection': 6.5.0
       d3-geo: 1.7.1
       turf-jsts: 1.2.3
+    optional: true
 
   '@turf/center@6.5.0':
     dependencies:
       '@turf/bbox': 6.5.0
       '@turf/helpers': 6.5.0
+    optional: true
 
   '@turf/centroid@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/meta': 6.5.0
+    optional: true
 
   '@turf/circle@6.5.0':
     dependencies:
       '@turf/destination': 6.5.0
       '@turf/helpers': 6.5.0
+    optional: true
 
   '@turf/clone@5.1.5':
     dependencies:
       '@turf/helpers': 5.1.5
+    optional: true
 
   '@turf/clone@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
+    optional: true
 
   '@turf/destination@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/difference@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
       polygon-clipping: 0.15.7
+    optional: true
 
   '@turf/distance@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/ellipse@6.5.0':
     dependencies:
@@ -10432,24 +10501,30 @@ snapshots:
       '@turf/invariant': 6.5.0
       '@turf/rhumb-destination': 6.5.0
       '@turf/transform-rotate': 6.5.0
+    optional: true
 
-  '@turf/helpers@5.1.5': {}
+  '@turf/helpers@5.1.5':
+    optional: true
 
-  '@turf/helpers@6.5.0': {}
+  '@turf/helpers@6.5.0':
+    optional: true
 
   '@turf/intersect@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
       polygon-clipping: 0.15.7
+    optional: true
 
   '@turf/invariant@5.2.0':
     dependencies:
       '@turf/helpers': 5.1.5
+    optional: true
 
   '@turf/invariant@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
+    optional: true
 
   '@turf/line-intersect@6.5.0':
     dependencies:
@@ -10458,20 +10533,24 @@ snapshots:
       '@turf/line-segment': 6.5.0
       '@turf/meta': 6.5.0
       geojson-rbush: 3.2.0
+    optional: true
 
   '@turf/line-segment@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
       '@turf/meta': 6.5.0
+    optional: true
 
   '@turf/meta@5.2.0':
     dependencies:
       '@turf/helpers': 5.1.5
+    optional: true
 
   '@turf/meta@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
+    optional: true
 
   '@turf/midpoint@6.5.0':
     dependencies:
@@ -10479,6 +10558,7 @@ snapshots:
       '@turf/destination': 6.5.0
       '@turf/distance': 6.5.0
       '@turf/helpers': 6.5.0
+    optional: true
 
   '@turf/nearest-point-on-line@6.5.0':
     dependencies:
@@ -10489,6 +10569,7 @@ snapshots:
       '@turf/invariant': 6.5.0
       '@turf/line-intersect': 6.5.0
       '@turf/meta': 6.5.0
+    optional: true
 
   '@turf/point-to-line-distance@6.5.0':
     dependencies:
@@ -10500,17 +10581,20 @@ snapshots:
       '@turf/projection': 6.5.0
       '@turf/rhumb-bearing': 6.5.0
       '@turf/rhumb-distance': 6.5.0
+    optional: true
 
   '@turf/polygon-to-line@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/projection@6.5.0':
     dependencies:
       '@turf/clone': 6.5.0
       '@turf/helpers': 6.5.0
       '@turf/meta': 6.5.0
+    optional: true
 
   '@turf/rewind@5.1.5':
     dependencies:
@@ -10519,6 +10603,7 @@ snapshots:
       '@turf/helpers': 5.1.5
       '@turf/invariant': 5.2.0
       '@turf/meta': 5.2.0
+    optional: true
 
   '@turf/rewind@6.5.0':
     dependencies:
@@ -10527,21 +10612,25 @@ snapshots:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
       '@turf/meta': 6.5.0
+    optional: true
 
   '@turf/rhumb-bearing@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/rhumb-destination@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/rhumb-distance@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
+    optional: true
 
   '@turf/transform-rotate@6.5.0':
     dependencies:
@@ -10553,6 +10642,7 @@ snapshots:
       '@turf/rhumb-bearing': 6.5.0
       '@turf/rhumb-destination': 6.5.0
       '@turf/rhumb-distance': 6.5.0
+    optional: true
 
   '@turf/transform-scale@6.5.0':
     dependencies:
@@ -10566,6 +10656,7 @@ snapshots:
       '@turf/rhumb-bearing': 6.5.0
       '@turf/rhumb-destination': 6.5.0
       '@turf/rhumb-distance': 6.5.0
+    optional: true
 
   '@turf/transform-translate@6.5.0':
     dependencies:
@@ -10574,12 +10665,14 @@ snapshots:
       '@turf/invariant': 6.5.0
       '@turf/meta': 6.5.0
       '@turf/rhumb-destination': 6.5.0
+    optional: true
 
   '@turf/union@6.5.0':
     dependencies:
       '@turf/helpers': 6.5.0
       '@turf/invariant': 6.5.0
       polygon-clipping: 0.15.7
+    optional: true
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
@@ -10612,13 +10705,15 @@ snapshots:
   '@types/brotli@1.3.4':
     dependencies:
       '@types/node': 22.19.3
+    optional: true
 
   '@types/chai@5.2.3':
     dependencies:
       '@types/deep-eql': 4.0.2
       assertion-error: 2.0.1
 
-  '@types/crypto-js@4.2.2': {}
+  '@types/crypto-js@4.2.2':
+    optional: true
 
   '@types/css-modules@1.0.5': {}
 
@@ -10649,7 +10744,8 @@ snapshots:
 
   '@types/geojson@7946.0.16': {}
 
-  '@types/geojson@7946.0.8': {}
+  '@types/geojson@7946.0.8':
+    optional: true
 
   '@types/json-schema@7.0.15':
     optional: true
@@ -10668,9 +10764,11 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/offscreencanvas@2019.7.3': {}
+  '@types/offscreencanvas@2019.7.3':
+    optional: true
 
-  '@types/pako@1.0.7': {}
+  '@types/pako@1.0.7':
+    optional: true
 
   '@types/react-dom@19.2.3(@types/react@19.2.7)':
     dependencies:
@@ -10901,6 +10999,7 @@ snapshots:
   a5-js@0.1.4:
     dependencies:
       gl-matrix: 3.4.4
+    optional: true
 
   acorn-import-phases@1.0.4(acorn@8.15.0):
     dependencies:
@@ -11028,7 +11127,8 @@ snapshots:
       node-releases: 2.0.27
       update-browserslist-db: 1.2.2(browserslist@4.28.1)
 
-  buf-compare@1.0.1: {}
+  buf-compare@1.0.1:
+    optional: true
 
   buffer-from@1.1.2:
     optional: true
@@ -11072,7 +11172,8 @@ snapshots:
 
   chardet@2.1.1: {}
 
-  charenc@0.0.2: {}
+  charenc@0.0.2:
+    optional: true
 
   check-error@2.1.1: {}
 
@@ -11128,8 +11229,10 @@ snapshots:
     dependencies:
       buf-compare: 1.0.1
       is-error: 2.2.2
+    optional: true
 
-  core-util-is@1.0.3: {}
+  core-util-is@1.0.3:
+    optional: true
 
   cosmiconfig@8.3.6(typescript@5.9.3):
     dependencies:
@@ -11150,7 +11253,8 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  crypt@0.0.2: {}
+  crypt@0.0.2:
+    optional: true
 
   css-select@5.2.2:
     dependencies:
@@ -11187,13 +11291,16 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  cubic-hermite-spline@1.0.1: {}
+  cubic-hermite-spline@1.0.1:
+    optional: true
 
-  d3-array@1.2.4: {}
+  d3-array@1.2.4:
+    optional: true
 
   d3-geo@1.7.1:
     dependencies:
       d3-array: 1.2.4
+    optional: true
 
   dashify@2.0.0: {}
 
@@ -11215,6 +11322,7 @@ snapshots:
   deep-strict-equal@0.2.0:
     dependencies:
       core-assert: 0.2.1
+    optional: true
 
   deepmerge@4.3.1: {}
 
@@ -11269,7 +11377,8 @@ snapshots:
       no-case: 3.0.4
       tslib: 2.8.1
 
-  draco3d@1.5.7: {}
+  draco3d@1.5.7:
+    optional: true
 
   dts-resolver@2.1.3: {}
 
@@ -11279,7 +11388,8 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
-  earcut@2.2.4: {}
+  earcut@2.2.4:
+    optional: true
 
   earcut@3.0.2:
     optional: true
@@ -11429,7 +11539,8 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  eventemitter3@5.0.1: {}
+  eventemitter3@5.0.1:
+    optional: true
 
   events@3.3.0:
     optional: true
@@ -11459,6 +11570,7 @@ snapshots:
   fast-xml-parser@4.5.3:
     dependencies:
       strnum: 1.1.2
+    optional: true
 
   fastq@1.19.1:
     dependencies:
@@ -11468,7 +11580,8 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.3
 
-  fflate@0.7.4: {}
+  fflate@0.7.4:
+    optional: true
 
   fill-range@7.1.1:
     dependencies:
@@ -11540,6 +11653,7 @@ snapshots:
       '@turf/meta': 6.5.0
       '@types/geojson': 7946.0.8
       rbush: 3.0.1
+    optional: true
 
   geojson-vt@4.0.2:
     optional: true
@@ -11571,7 +11685,8 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  gl-matrix@3.4.4: {}
+  gl-matrix@3.4.4:
+    optional: true
 
   glob-parent@5.1.2:
     dependencies:
@@ -11627,7 +11742,8 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  h3-js@4.4.0: {}
+  h3-js@4.4.0:
+    optional: true
 
   happy-dom@20.0.11:
     dependencies:
@@ -11679,15 +11795,18 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  ieee754@1.2.1: {}
+  ieee754@1.2.1:
+    optional: true
 
   ignore@5.3.2: {}
 
   ignore@7.0.5: {}
 
-  image-size@0.7.5: {}
+  image-size@0.7.5:
+    optional: true
 
-  immediate@3.0.6: {}
+  immediate@3.0.6:
+    optional: true
 
   immer@10.2.0: {}
 
@@ -11730,7 +11849,8 @@ snapshots:
 
   is-arrayish@0.2.1: {}
 
-  is-buffer@1.1.6: {}
+  is-buffer@1.1.6:
+    optional: true
 
   is-core-module@2.16.1:
     dependencies:
@@ -11738,7 +11858,8 @@ snapshots:
 
   is-docker@2.2.1: {}
 
-  is-error@2.2.2: {}
+  is-error@2.2.2:
+    optional: true
 
   is-extglob@2.1.1: {}
 
@@ -11768,7 +11889,8 @@ snapshots:
     dependencies:
       is-docker: 2.2.1
 
-  isarray@1.0.0: {}
+  isarray@1.0.0:
+    optional: true
 
   isexe@2.0.0: {}
 
@@ -11889,11 +12011,13 @@ snapshots:
       pako: 1.0.11
       readable-stream: 2.3.8
       setimmediate: 1.0.5
+    optional: true
 
   kdbush@4.0.2:
     optional: true
 
-  ktx-parse@0.7.1: {}
+  ktx-parse@0.7.1:
+    optional: true
 
   lefthook-darwin-arm64@2.0.12:
     optional: true
@@ -11941,6 +12065,7 @@ snapshots:
   lie@3.3.0:
     dependencies:
       immediate: 3.0.6
+    optional: true
 
   lightningcss-android-arm64@1.30.2:
     optional: true
@@ -12008,11 +12133,13 @@ snapshots:
     dependencies:
       p-locate: 6.0.0
 
-  lodash.omit@4.5.0: {}
+  lodash.omit@4.5.0:
+    optional: true
 
   lodash.startcase@4.4.0: {}
 
-  lodash.throttle@4.1.1: {}
+  lodash.throttle@4.1.1:
+    optional: true
 
   lodash@4.17.21: {}
 
@@ -12028,9 +12155,11 @@ snapshots:
       '@loglayer/shared': 2.5.3
       '@loglayer/transport': 2.3.4
 
-  long@3.2.0: {}
+  long@3.2.0:
+    optional: true
 
-  long@5.3.2: {}
+  long@5.3.2:
+    optional: true
 
   loupe@3.2.1: {}
 
@@ -12051,7 +12180,8 @@ snapshots:
   lz4js@0.2.0:
     optional: true
 
-  lzo-wasm@0.0.4: {}
+  lzo-wasm@0.0.4:
+    optional: true
 
   magic-string@0.30.21:
     dependencies:
@@ -12101,6 +12231,7 @@ snapshots:
       charenc: 0.0.2
       crypt: 0.0.2
       is-buffer: 1.1.6
+    optional: true
 
   mdn-data@2.0.28: {}
 
@@ -12147,7 +12278,8 @@ snapshots:
 
   mitt@3.0.1: {}
 
-  mjolnir.js@3.0.0: {}
+  mjolnir.js@3.0.0:
+    optional: true
 
   mlly@1.8.0:
     dependencies:
@@ -12295,7 +12427,8 @@ snapshots:
 
   package-manager-detector@1.6.0: {}
 
-  pako@1.0.11: {}
+  pako@1.0.11:
+    optional: true
 
   parent-module@1.0.1:
     dependencies:
@@ -12342,6 +12475,7 @@ snapshots:
     dependencies:
       ieee754: 1.2.1
       resolve-protobuf-schema: 2.1.0
+    optional: true
 
   pbf@4.0.1:
     dependencies:
@@ -12372,6 +12506,7 @@ snapshots:
     dependencies:
       robust-predicates: 3.0.2
       splaytree: 3.1.2
+    optional: true
 
   postcss-load-config@6.0.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(yaml@2.8.2):
     dependencies:
@@ -12404,7 +12539,8 @@ snapshots:
   potpack@2.1.0:
     optional: true
 
-  preact@10.28.0: {}
+  preact@10.28.0:
+    optional: true
 
   prettier-plugin-tailwindcss@0.7.2(prettier@3.7.4):
     dependencies:
@@ -12420,9 +12556,11 @@ snapshots:
       ansi-styles: 5.2.0
       react-is: 17.0.2
 
-  process-nextick-args@2.0.1: {}
+  process-nextick-args@2.0.1:
+    optional: true
 
-  protocol-buffers-schema@3.6.0: {}
+  protocol-buffers-schema@3.6.0:
+    optional: true
 
   punycode@2.3.1: {}
 
@@ -12434,7 +12572,8 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  quickselect@2.0.0: {}
+  quickselect@2.0.0:
+    optional: true
 
   quickselect@3.0.0:
     optional: true
@@ -12451,6 +12590,7 @@ snapshots:
   rbush@3.0.1:
     dependencies:
       quickselect: 2.0.0
+    optional: true
 
   react-aria-components@1.12.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
@@ -12641,6 +12781,7 @@ snapshots:
       safe-buffer: 5.1.2
       string_decoder: 1.1.1
       util-deprecate: 1.0.2
+    optional: true
 
   readdirp@4.1.2: {}
 
@@ -12677,6 +12818,7 @@ snapshots:
   resolve-protobuf-schema@2.1.0:
     dependencies:
       protocol-buffers-schema: 3.6.0
+    optional: true
 
   resolve@1.22.11:
     dependencies:
@@ -12696,7 +12838,8 @@ snapshots:
       glob: 13.0.0
       package-json-from-dist: 1.0.1
 
-  robust-predicates@3.0.2: {}
+  robust-predicates@3.0.2:
+    optional: true
 
   rolldown-plugin-dts@0.18.3(rolldown@1.0.0-beta.53)(typescript@5.9.3):
     dependencies:
@@ -12779,7 +12922,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  safe-buffer@5.1.2: {}
+  safe-buffer@5.1.2:
+    optional: true
 
   safe-buffer@5.2.1:
     optional: true
@@ -12818,7 +12962,8 @@ snapshots:
 
   server-only@0.0.1: {}
 
-  setimmediate@1.0.5: {}
+  setimmediate@1.0.5:
+    optional: true
 
   sharp@0.34.5:
     dependencies:
@@ -12871,7 +13016,8 @@ snapshots:
       dot-case: 3.0.4
       tslib: 2.8.1
 
-  snappyjs@0.6.1: {}
+  snappyjs@0.6.1:
+    optional: true
 
   source-map-js@1.2.1: {}
 
@@ -12890,7 +13036,8 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
-  splaytree@3.1.2: {}
+  splaytree@3.1.2:
+    optional: true
 
   sprintf-js@1.0.3: {}
 
@@ -12947,6 +13094,7 @@ snapshots:
   string_decoder@1.1.1:
     dependencies:
       safe-buffer: 5.1.2
+    optional: true
 
   strip-ansi@6.0.1:
     dependencies:
@@ -12964,7 +13112,8 @@ snapshots:
 
   strip-indent@4.1.1: {}
 
-  strnum@1.1.2: {}
+  strnum@1.1.2:
+    optional: true
 
   styled-jsx@5.1.6(react@19.2.3):
     dependencies:
@@ -13096,6 +13245,7 @@ snapshots:
     dependencies:
       argparse: 1.0.10
       image-size: 0.7.5
+    optional: true
 
   thenify-all@1.6.0:
     dependencies:
@@ -13256,7 +13406,8 @@ snapshots:
       turbo-windows-64: 2.6.3
       turbo-windows-arm64: 2.6.3
 
-  turf-jsts@1.2.3: {}
+  turf-jsts@1.2.3:
+    optional: true
 
   type-fest@4.41.0: {}
 
@@ -13312,11 +13463,13 @@ snapshots:
 
   uuid@11.1.0: {}
 
-  uuid@9.0.0: {}
+  uuid@9.0.0:
+    optional: true
 
   viewport-mercator-project@7.0.4:
     dependencies:
       '@math.gl/web-mercator': 3.6.3
+    optional: true
 
   vite-tsconfig-paths@5.1.4(typescript@5.9.3)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)):
     dependencies:
@@ -13437,7 +13590,8 @@ snapshots:
       - uglify-js
     optional: true
 
-  wgsl_reflect@1.2.3: {}
+  wgsl_reflect@1.2.3:
+    optional: true
 
   whatwg-encoding@3.1.1:
     dependencies:
@@ -13518,5 +13672,6 @@ snapshots:
       immer: 11.0.1
       react: 19.2.3
       use-sync-external-store: 1.6.0(react@19.2.3)
+    optional: true
 
   zx@8.8.5: {}

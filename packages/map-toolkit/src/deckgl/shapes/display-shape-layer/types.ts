@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
 import type { UniqueId } from '@accelint/core';
 import type { CompositeLayerProps } from '@deck.gl/core';
 import type {
