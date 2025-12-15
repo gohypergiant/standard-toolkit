@@ -177,9 +177,7 @@ let cachedConfig: MemLabConfig | null = null;
  * Get cached configuration (avoids re-reading env vars)
  */
 export function getCachedConfig(): MemLabConfig {
-  if (!cachedConfig) {
-    cachedConfig = getConfig();
-  }
+  cachedConfig ??= getConfig();
   return cachedConfig;
 }
 
