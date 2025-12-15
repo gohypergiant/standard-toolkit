@@ -94,6 +94,38 @@ export interface BaselineComparisonResult {
 }
 
 /**
+ * A single step in the retainer path from GC root to leaked object
+ */
+export interface RetainerPathItem {
+  /** Node name, e.g., "Window", "Detached HTMLImageElement" */
+  nodeName: string;
+  /** Heap object type, e.g., "object", "closure", "array" */
+  nodeType: string;
+  /** Unique node ID in heap snapshot */
+  nodeId: number;
+  /** Retained size of this node in bytes */
+  retainedSize?: number;
+  /** Edge/property name connecting to next node, e.g., "fiber", "child" */
+  edgeName?: string;
+  /** Edge type, e.g., "property", "element", "context" */
+  edgeType?: string;
+  /** Bytes retained through this edge */
+  edgeRetainSize?: number;
+}
+
+/**
+ * Allocation location information (when available from heap snapshot)
+ */
+export interface AllocationLocation {
+  /** Script ID from V8 */
+  scriptId?: number;
+  /** Line number in source */
+  line?: number;
+  /** Column number in source */
+  column?: number;
+}
+
+/**
  * Information about a detected memory leak
  */
 export interface LeakInfo {
@@ -103,6 +135,12 @@ export interface LeakInfo {
   retainedSize?: number;
   /** Type of heap object */
   type?: string;
+  /** Full retainer path from GC root to this leaked object */
+  retainerPath?: RetainerPathItem[];
+  /** ID of the dominator node (removing it would free this leak) */
+  dominatorId?: number;
+  /** Source location where object was allocated (if available) */
+  allocationLocation?: AllocationLocation;
 }
 
 /**

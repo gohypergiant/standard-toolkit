@@ -143,6 +143,31 @@ export const LEAK_PATTERNS = {
    * Matches React context indicators
    */
   reactContext: /(?:Context\.Provider|Context\.Consumer|useContext)/,
+
+  /**
+   * Matches trace path step index
+   * Example: "0: [Window](object) @1234"
+   * Captures: [1] step index
+   */
+  traceStepIndex: /^(\d+):/,
+
+  /**
+   * Matches edge in trace path (the arrow connecting nodes)
+   * Example: "  --fiber (property)---> " or "  --fiber (property)(retaining bytes: 12345)--->"
+   * Captures: [1] edge name, [2] edge type, [3] optional retaining bytes
+   */
+  traceEdge: /--([^\s(]+)\s*\(([^)]+)\)(?:\(retaining bytes:\s*(\d+)\))?--->/,
+
+  /**
+   * Matches dominator ID in serialized info
+   * Example: "dominator id (extra)": "@12345"
+   */
+  dominatorId: /@(\d+)/,
+
+  /**
+   * Matches allocation location key
+   */
+  allocationLocationKey: /allocation location \(extra\)/,
 } as const;
 
 /**

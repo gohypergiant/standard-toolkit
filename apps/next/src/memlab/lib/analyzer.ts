@@ -27,11 +27,13 @@ import { formatBytes } from './heap-snapshot';
 import { validateThresholdJson } from './threshold-validator';
 import { TimeoutError, withTimeout } from './timeout';
 import type {
+  AllocationLocation,
   AnalysisOptions,
   AnalysisResult,
   ComponentThreshold,
   LeakInfo,
   MemlabReport,
+  RetainerPathItem,
   ThresholdConfig,
 } from './types';
 
@@ -179,10 +181,205 @@ function parseLeakTags(
 }
 
 /**
+ * Parse node info from a trace step key
+ * Example: "[Window](object) @1234 $retained-size:5678"
+ */
+function parseNodeFromKey(
+  key: string,
+): Omit<RetainerPathItem, 'edgeName' | 'edgeType' | 'edgeRetainSize'> | null {
+  const objectMatch = key.match(LEAK_PATTERNS.object);
+  if (!objectMatch) {
+    return null;
+  }
+
+  const nodeName = objectMatch[1];
+  const nodeType = objectMatch[2];
+  const nodeIdStr = objectMatch[3];
+
+  // Ensure all required fields are present
+  if (!(nodeName && nodeType && nodeIdStr)) {
+    return null;
+  }
+
+  const nodeId = Number.parseInt(nodeIdStr, 10);
+
+  // Extract retained size if present
+  const retainedMatch = key.match(LEAK_PATTERNS.retainedSize);
+  const retainedSize = retainedMatch?.[1]
+    ? Number.parseInt(retainedMatch[1], 10)
+    : undefined;
+
+  return {
+    nodeName,
+    nodeType,
+    nodeId,
+    retainedSize,
+  };
+}
+
+/**
+ * Parse edge info from a trace step key
+ * Example: "  --fiber (property)(retaining bytes: 12345)--->"
+ */
+function parseEdgeFromKey(
+  key: string,
+): { edgeName: string; edgeType: string; edgeRetainSize?: number } | null {
+  const edgeMatch = key.match(LEAK_PATTERNS.traceEdge);
+  if (!edgeMatch) {
+    return null;
+  }
+
+  const edgeName = edgeMatch[1];
+  const edgeType = edgeMatch[2];
+  const edgeRetainSizeStr = edgeMatch[3];
+
+  // Ensure required fields are present
+  if (!(edgeName && edgeType)) {
+    return null;
+  }
+
+  const edgeRetainSize = edgeRetainSizeStr
+    ? Number.parseInt(edgeRetainSizeStr, 10)
+    : undefined;
+
+  return { edgeName, edgeType, edgeRetainSize };
+}
+
+/**
+ * Parse numeric properties from a location object
+ */
+function parseLocationProperties(
+  loc: Record<string, unknown>,
+): AllocationLocation {
+  return {
+    scriptId: typeof loc.script_id === 'number' ? loc.script_id : undefined,
+    line: typeof loc.line === 'number' ? loc.line : undefined,
+    column: typeof loc.column === 'number' ? loc.column : undefined,
+  };
+}
+
+/**
+ * Extract allocation location from nested leak value
+ */
+function extractAllocationLocation(
+  value: unknown,
+): AllocationLocation | undefined {
+  if (!value || typeof value !== 'object') {
+    return undefined;
+  }
+
+  const obj = value as Record<string, unknown>;
+  const locationKey = Object.keys(obj).find((key) =>
+    LEAK_PATTERNS.allocationLocationKey.test(key),
+  );
+
+  if (!locationKey) {
+    return undefined;
+  }
+
+  const loc = obj[locationKey];
+  if (!loc || typeof loc !== 'object') {
+    return undefined;
+  }
+
+  return parseLocationProperties(loc as Record<string, unknown>);
+}
+
+/**
+ * Extract dominator ID from nested leak value
+ */
+function extractDominatorId(value: unknown): number | undefined {
+  if (!value || typeof value !== 'object') {
+    return undefined;
+  }
+
+  const obj = value as Record<string, unknown>;
+
+  // Look for "dominator id (extra)" key
+  const dominatorValue = obj['dominator id (extra)'];
+  if (typeof dominatorValue === 'string') {
+    const match = dominatorValue.match(LEAK_PATTERNS.dominatorId);
+    if (match?.[1]) {
+      return Number.parseInt(match[1], 10);
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * Parse the retainer path from a raw MemLab leak object
+ *
+ * MemLab serializes leak traces with numbered keys like:
+ * - "0: [Window](object) @1 $retained-size:1000" -> first node
+ * - "1:   --fiber (property)(retaining bytes: 500)--->  [FiberNode](object) @2" -> edge + node
+ */
+function parseRetainerPath(leak: Record<string, unknown>): RetainerPathItem[] {
+  const path: RetainerPathItem[] = [];
+
+  // Get all keys that start with a number (trace steps)
+  const traceKeys = Object.keys(leak)
+    .filter((key) => LEAK_PATTERNS.traceStepIndex.test(key))
+    .sort((a, b) => {
+      const aIdx = Number.parseInt(
+        a.match(LEAK_PATTERNS.traceStepIndex)?.[1] ?? '0',
+        10,
+      );
+      const bIdx = Number.parseInt(
+        b.match(LEAK_PATTERNS.traceStepIndex)?.[1] ?? '0',
+        10,
+      );
+      return aIdx - bIdx;
+    });
+
+  for (const key of traceKeys) {
+    // Parse node info from the key
+    const nodeInfo = parseNodeFromKey(key);
+    if (!nodeInfo) {
+      continue;
+    }
+
+    // Parse edge info if present (all but first step have edges)
+    const edgeInfo = parseEdgeFromKey(key);
+
+    // Extract additional info from the value (allocation location, dominator)
+    const value = leak[key];
+    const allocationLocation = extractAllocationLocation(value);
+    const dominatorId = extractDominatorId(value);
+
+    const pathItem: RetainerPathItem = {
+      ...nodeInfo,
+      ...(edgeInfo && {
+        edgeName: edgeInfo.edgeName,
+        edgeType: edgeInfo.edgeType,
+        edgeRetainSize: edgeInfo.edgeRetainSize,
+      }),
+    };
+
+    path.push(pathItem);
+
+    // Store allocation location and dominator on first item (the leaked node)
+    if (path.length === 1) {
+      // These will be moved to LeakInfo level
+      (
+        pathItem as RetainerPathItem & {
+          _allocationLocation?: AllocationLocation;
+          _dominatorId?: number;
+        }
+      )._allocationLocation = allocationLocation;
+      (pathItem as RetainerPathItem & { _dominatorId?: number })._dominatorId =
+        dominatorId;
+    }
+  }
+
+  return path;
+}
+
+/**
  * Parse a raw leak object from MemLab into our LeakInfo type
  *
  * @param leak - Raw leak object from MemLab with descriptive keys
- * @returns Parsed LeakInfo with name, retainedSize, and type
+ * @returns Parsed LeakInfo with name, retainedSize, type, and retainer path
  */
 function parseLeakInfo(leak: Record<string, unknown>): LeakInfo {
   let description = 'Unknown';
@@ -201,7 +398,33 @@ function parseLeakInfo(leak: Record<string, unknown>): LeakInfo {
     type = tagResult.type;
   }
 
-  return { name: description, retainedSize, type };
+  // Parse the full retainer path
+  const retainerPath = parseRetainerPath(leak);
+
+  // Extract allocation location and dominator from first path item if available
+  let allocationLocation: AllocationLocation | undefined;
+  let dominatorId: number | undefined;
+
+  if (retainerPath.length > 0) {
+    const firstItem = retainerPath[0] as RetainerPathItem & {
+      _allocationLocation?: AllocationLocation;
+      _dominatorId?: number;
+    };
+    allocationLocation = firstItem._allocationLocation;
+    dominatorId = firstItem._dominatorId;
+    // Clean up temporary properties
+    delete firstItem._allocationLocation;
+    delete firstItem._dominatorId;
+  }
+
+  return {
+    name: description,
+    retainedSize,
+    type,
+    retainerPath: retainerPath.length > 0 ? retainerPath : undefined,
+    allocationLocation,
+    dominatorId,
+  };
 }
 
 // =============================================================================
