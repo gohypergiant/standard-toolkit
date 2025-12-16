@@ -123,23 +123,23 @@ importers:
         specifier: ~3.30.0
         version: 3.30.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-stately/color':
-        specifier: ^3.9.0
+        specifier: ~3.9.0
         version: 3.9.2(react@19.2.3)
       '@react-stately/data':
-        specifier: ^3.13.2
-        version: 3.14.1(react@19.2.3)
+        specifier: ~3.13.2
+        version: 3.13.2(react@19.2.3)
       '@react-stately/datepicker':
-        specifier: ^3.15.2
+        specifier: ~3.15.2
         version: 3.15.2(react@19.2.3)
       '@react-stately/utils':
-        specifier: ^3.10.8
+        specifier: ~3.10.8
         version: 3.10.8(react@19.2.3)
       '@react-types/overlays':
-        specifier: ^3.9.0
+        specifier: ~3.9.0
         version: 3.9.2(react@19.2.3)
       '@react-types/shared':
-        specifier: ^3.31.0
-        version: 3.32.1(react@19.2.3)
+        specifier: ~3.31.0
+        version: 3.31.0(react@19.2.3)
       '@tailwindcss/postcss':
         specifier: ^4.1.17
         version: 4.1.18
@@ -473,8 +473,8 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(react@19.2.3)
       '@react-stately/data':
-        specifier: ^3.13.2
-        version: 3.14.1(react@19.2.3)
+        specifier: ~3.13.2
+        version: 3.13.2(react@19.2.3)
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -524,9 +524,15 @@ importers:
       '@react-aria/dnd':
         specifier: ~3.10.1
         version: 3.10.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@react-aria/i18n':
+        specifier: ~3.12.13
+        version: 3.12.13(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/interactions':
         specifier: ~3.25.3
         version: 3.25.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@react-aria/landmark':
+        specifier: ~3.0.7
+        version: 3.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/overlays':
         specifier: ~3.29.1
         version: 3.29.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -540,23 +546,23 @@ importers:
         specifier: ~3.30.0
         version: 3.30.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-stately/color':
-        specifier: ^3.9.0
+        specifier: ~3.9.0
         version: 3.9.2(react@19.2.3)
       '@react-stately/datepicker':
-        specifier: ^3.15.2
+        specifier: ~3.15.2
         version: 3.15.2(react@19.2.3)
       '@react-stately/toast':
-        specifier: ^3.1.2
+        specifier: ~3.1.2
         version: 3.1.2(react@19.2.3)
       '@react-stately/utils':
-        specifier: ^3.10.8
+        specifier: ~3.10.8
         version: 3.10.8(react@19.2.3)
       '@react-types/overlays':
-        specifier: ^3.9.0
+        specifier: ~3.9.0
         version: 3.9.2(react@19.2.3)
       '@react-types/shared':
-        specifier: ^3.31.0
-        version: 3.32.1(react@19.2.3)
+        specifier: ~3.31.0
+        version: 3.31.0(react@19.2.3)
       '@storybook/addon-docs':
         specifier: ^9.1.16
         version: 9.1.16(@types/react@19.2.7)(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.7.4)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)))
@@ -3174,6 +3180,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
+  '@react-stately/data@3.13.2':
+    resolution: {integrity: sha512-xdCqR8dJ3cnvO8EdCeuQ335dOuBqEV4z/3LnpxmR11gyn8dWwtY5O794g5+AS0KqCgd9W0v7iBrRywq5UT2pCA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+
   '@react-stately/data@3.14.1':
     resolution: {integrity: sha512-lDNc4gZ6kVZcrABeeQZPTTnP+1ykNylSvFzAC/Hq1fs8+s54xLRvoENWIyG+yK19N9TIGEoA0AOFG8PoAun43g==}
     peerDependencies:
@@ -3401,6 +3412,11 @@ packages:
 
   '@react-types/select@3.11.0':
     resolution: {integrity: sha512-SzIsMFVPCbXE1Z1TLfpdfiwJ1xnIkcL1/CjGilmUKkNk5uT7rYX1xCJqWCjXI0vAU1xM4Qn+T3n8de4fw6HRBg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+
+  '@react-types/shared@3.31.0':
+    resolution: {integrity: sha512-ua5U6V66gDcbLZe4P2QeyNgPp4YWD1ymGA6j3n+s8CGExtrCPe64v+g4mvpT8Bnb985R96e4zFT61+m0YCwqMg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -8730,7 +8746,7 @@ snapshots:
       '@react-stately/collections': 3.12.8(react@19.2.3)
       '@react-stately/dnd': 3.7.1(react@19.2.3)
       '@react-types/button': 3.14.1(react@19.2.3)
-      '@react-types/shared': 3.32.1(react@19.2.3)
+      '@react-types/shared': 3.31.0(react@19.2.3)
       '@swc/helpers': 0.5.17
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
@@ -9299,6 +9315,12 @@ snapshots:
       '@swc/helpers': 0.5.17
       react: 19.2.3
 
+  '@react-stately/data@3.13.2(react@19.2.3)':
+    dependencies:
+      '@react-types/shared': 3.31.0(react@19.2.3)
+      '@swc/helpers': 0.5.17
+      react: 19.2.3
+
   '@react-stately/data@3.14.1(react@19.2.3)':
     dependencies:
       '@react-types/shared': 3.32.1(react@19.2.3)
@@ -9615,6 +9637,10 @@ snapshots:
   '@react-types/select@3.11.0(react@19.2.3)':
     dependencies:
       '@react-types/shared': 3.32.1(react@19.2.3)
+      react: 19.2.3
+
+  '@react-types/shared@3.31.0(react@19.2.3)':
+    dependencies:
       react: 19.2.3
 
   '@react-types/shared@3.32.1(react@19.2.3)':

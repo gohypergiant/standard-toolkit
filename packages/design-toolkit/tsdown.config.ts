@@ -34,8 +34,6 @@ export default defineConfig({
   external: [
     // we just copy css files manually
     /\.css$/,
-    /^@react-aria\//,
-    /^@react-stately\//,
   ],
   plugins: [
     copy({
