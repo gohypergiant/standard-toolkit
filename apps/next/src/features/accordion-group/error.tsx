@@ -12,12 +12,22 @@
 
 'use client';
 import 'client-only';
+import { getLogger } from '@accelint/logger';
 import { ErrorBoundary } from 'react-error-boundary';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'error',
+  prefix: '[AccordionGroup]',
+  pretty: true,
+});
+
 function onError(err: Error, info: ErrorInfo) {
-  console.error(err);
-  console.error(info.componentStack);
+  logger
+    .withContext({ componentStack: info.componentStack })
+    .withError(err)
+    .error('Error boundary caught error');
 }
 
 function Fallback() {

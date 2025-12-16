@@ -16,74 +16,31 @@ import { Badge } from '@accelint/design-toolkit/components/badge';
 import { Icon } from '@accelint/design-toolkit/components/icon';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
-import type { AvatarProps } from '@accelint/design-toolkit/components/avatar/types';
-
-const PROP_COMBOS: AvatarProps[] = [
-  {
-    size: 'small',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-  },
-  {
-    size: 'medium',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-  },
-  {
-    size: 'small',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-    children: <Badge color='critical'>99+</Badge>,
-  },
-  {
-    size: 'medium',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-    children: <Badge color='critical'>99+</Badge>,
-  },
-  {
-    size: 'small',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-    children: <div>DOG</div>,
-  },
-  {
-    size: 'medium',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
-    children: <div>DOG</div>,
-  },
-  {
-    size: 'small',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
-  },
-  {
-    size: 'medium',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
-  },
-  {
-    size: 'small',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
-    fallbackProps: {
-      children: (
-        <Icon>
-          <PlaceholderIcon />
-        </Icon>
-      ),
-    },
-  },
-  {
-    size: 'medium',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
-    fallbackProps: {
-      children: (
-        <Icon>
-          <PlaceholderIcon />
-        </Icon>
-      ),
-    },
-  },
-];
+import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
+  return PROP_COMBOS.map((variant, k) => {
+    const { hasBadge, hasLabel, hasFallback, ...props } = variant;
+
     return (
       <BentoItem key={k}>
-        <Avatar {...props} />
+        <Avatar
+          {...props}
+          fallbackProps={
+            hasFallback
+              ? {
+                  children: (
+                    <Icon>
+                      <PlaceholderIcon />
+                    </Icon>
+                  ),
+                }
+              : undefined
+          }
+        >
+          {hasBadge && <Badge color='critical'>99+</Badge>}
+          {hasLabel && <div>DOG</div>}
+        </Avatar>
       </BentoItem>
     );
   });

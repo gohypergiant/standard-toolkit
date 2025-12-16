@@ -22,20 +22,9 @@ import { MenuItem } from '@accelint/design-toolkit/components/menu/item';
 import { MenuTrigger } from '@accelint/design-toolkit/components/menu/trigger';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
-import type { AccordionProps } from '@accelint/design-toolkit/components/accordion/types';
+import { PROP_COMBOS } from './variants';
 
-const PROP_COMBOS: AccordionProps[] = [
-  { variant: 'cozy' },
-  { variant: 'compact' },
-  { variant: 'cozy', isDisabled: true },
-  { variant: 'compact', isDisabled: true },
-  { variant: 'cozy', isExpanded: true },
-  { variant: 'compact', isExpanded: true },
-  { variant: 'cozy', isExpanded: true, isDisabled: true },
-  { variant: 'compact', isExpanded: true, isDisabled: true },
-];
-
-function PropExamples() {
+function PropCombos() {
   return PROP_COMBOS.map((props, k) => {
     return (
       <BentoItem key={k}>
@@ -87,7 +76,7 @@ function MenuExample() {
 export function AccordionExampleServer() {
   return (
     <>
-      <PropExamples />
+      <PropCombos />
       <MenuExample />
     </>
   );

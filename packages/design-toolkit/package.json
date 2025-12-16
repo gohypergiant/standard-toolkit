@@ -360,6 +360,8 @@
     "ui"
   ],
   "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "owner": "default/pathfinder",
   "peerDependencies": {
     "@accelint/bus": "workspace:*",
@@ -413,7 +415,9 @@
     "build-storybook": "pnpm storybook build",
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
-    "format": "pnpm biome format . --write",
+    "format": "pnpm format:biome && pnpm format:prettier",
+    "format:biome": "pnpm biome format . --write --verbose",
+    "format:prettier": "prettier --write .",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
     "lint": "pnpm biome lint",
     "preview": "pnpm storybook dev -p 6006",
@@ -425,7 +429,5 @@
   "subPath": "packages/design-toolkit",
   "title": "Design Toolkit",
   "type": "module",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js"
+  "types": "./dist/index.d.ts"
 }

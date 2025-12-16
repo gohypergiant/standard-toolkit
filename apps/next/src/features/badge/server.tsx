@@ -13,20 +13,7 @@
 import 'server-only';
 import { Badge } from '@accelint/design-toolkit/components/badge';
 import { BentoItem } from '~/components/bento';
-import type { BadgeProps } from '@accelint/design-toolkit/components/badge/types';
-
-const PROP_COMBOS: BadgeProps[] = [
-  { color: 'advisory' },
-  { color: 'critical' },
-  { color: 'info' },
-  { color: 'normal' },
-  { color: 'serious' },
-  { color: 'advisory', children: '99+' },
-  { color: 'critical', children: '99+' },
-  { color: 'info', children: '99+' },
-  { color: 'normal', children: '99+' },
-  { color: 'serious', children: '99+' },
-];
+import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => {

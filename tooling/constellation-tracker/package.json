@@ -57,7 +57,7 @@
   "scripts": {
     "build": "pnpm tsc && pnpm license && pnpm format",
     "constellation-tracker": "node ./dist/main.js",
-    "format": "pnpm biome format . --write",
+    "format": "pnpm biome format . --write --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint",
     "postinstall": "pnpm run build",
