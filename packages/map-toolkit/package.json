@@ -144,7 +144,7 @@
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "lint": "pnpm biome lint",
-    "preview": "pnpm storybook dev -p 6006",
+    "preview": "pnpm storybook dev -p 6007",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
