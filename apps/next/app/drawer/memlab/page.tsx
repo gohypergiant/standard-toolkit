@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { ButtonExample } from '~/features/button/client';
+import { DrawerExample } from '~/features/drawer/memlab';
 
 export default function Page() {
-  return <ButtonExample />;
+  return <DrawerExample />;
 }

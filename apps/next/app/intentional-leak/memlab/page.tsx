@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { ActionBarExample } from '~/features/action-bar/client';
+import { IntentionalLeakExample } from '~/features/intentional-leak/memlab';
 
 export default function Page() {
-  return <ActionBarExample />;
+  return <IntentionalLeakExample />;
 }

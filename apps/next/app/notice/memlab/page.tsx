@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { NoticeExample } from '~/features/notice/client';
+import { NoticeExample } from '~/features/notice/memlab';
 
 export default function Page() {
   return <NoticeExample />;

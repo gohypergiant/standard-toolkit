@@ -42,7 +42,7 @@ test.describe('Intentional Leak Detection Tests', () => {
     analyzeResult,
   }) => {
     // Navigate to the intentional leak test page
-    await page.goto('/intentional-leak/client');
+    await page.goto('/intentional-leak/memlab');
     await page.waitForSelector('[data-testid="memlab-intentional-leak-test"]');
 
     // Force GC and wait for stable baseline
@@ -95,7 +95,7 @@ test.describe('Intentional Leak Detection Tests', () => {
     collector,
     analyzeResult,
   }) => {
-    await page.goto('/intentional-leak/client');
+    await page.goto('/intentional-leak/memlab');
     await page.waitForSelector('[data-testid="memlab-intentional-leak-test"]');
 
     await forceGC(page);
@@ -146,7 +146,7 @@ test.describe('Intentional Leak Detection Tests', () => {
     collector,
     analyzeResult,
   }) => {
-    await page.goto('/intentional-leak/client');
+    await page.goto('/intentional-leak/memlab');
     await page.waitForSelector('[data-testid="memlab-intentional-leak-test"]');
 
     await forceGC(page);
@@ -194,7 +194,7 @@ test.describe('Intentional Leak Detection Tests', () => {
     collector,
     analyzeResult,
   }) => {
-    await page.goto('/intentional-leak/client');
+    await page.goto('/intentional-leak/memlab');
     await page.waitForSelector('[data-testid="memlab-intentional-leak-test"]');
 
     await forceGC(page);

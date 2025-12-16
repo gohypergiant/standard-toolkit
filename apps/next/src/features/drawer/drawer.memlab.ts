@@ -21,7 +21,7 @@ import { createComponentTests } from '~/memlab/playwright/test-builder';
 // Factory-based tests for simple scenarios
 createComponentTests({
   componentName: 'Drawer',
-  testPagePath: '/drawer/client',
+  testPagePath: '/drawer/memlab',
   testSelector: '[data-testid="memlab-drawer-test"]',
   scenarios: [
     {
@@ -88,7 +88,7 @@ test.describe('Drawer Navigation Tests', () => {
     collector,
     analyzeResult,
   }) => {
-    await page.goto('/drawer/client');
+    await page.goto('/drawer/memlab');
     await page.waitForSelector('[data-testid="memlab-drawer-test"]');
 
     await forceGC(page);

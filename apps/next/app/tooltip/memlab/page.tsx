@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { TooltipExample } from '~/features/tooltip/client';
+import { TooltipExample } from '~/features/tooltip/memlab';
 
 export default function Page() {
   return <TooltipExample />;

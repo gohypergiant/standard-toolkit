@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer/client';
+import { AccordionExample } from '~/features/accordion/memlab';
 
 export default function Page() {
-  return <DrawerExample />;
+  return <AccordionExample />;
 }

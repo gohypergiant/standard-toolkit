@@ -14,7 +14,7 @@ import { createComponentTests } from '~/memlab/playwright/test-builder';
 
 createComponentTests({
   componentName: 'Badge',
-  testPagePath: '/badge/client',
+  testPagePath: '/badge/memlab',
   testSelector: '[data-testid="memlab-badge-test"]',
   scenarios: [
     {

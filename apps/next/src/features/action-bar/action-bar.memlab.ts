@@ -14,7 +14,7 @@ import { createComponentTests } from '~/memlab/playwright/test-builder';
 
 createComponentTests({
   componentName: 'ActionBar',
-  testPagePath: '/action-bar/client',
+  testPagePath: '/action-bar/memlab',
   testSelector: '[data-testid="memlab-action-bar-test"]',
   scenarios: [
     {

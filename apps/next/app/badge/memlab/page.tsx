@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { AvatarExample } from '~/features/avatar/client';
+import { BadgeExample } from '~/features/badge/memlab';
 
 export default function Page() {
-  return <AvatarExample />;
+  return <BadgeExample />;
 }

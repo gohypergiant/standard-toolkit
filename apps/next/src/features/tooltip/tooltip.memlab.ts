@@ -14,7 +14,7 @@ import { createComponentTests } from '~/memlab/playwright/test-builder';
 
 createComponentTests({
   componentName: 'Tooltip',
-  testPagePath: '/tooltip/client',
+  testPagePath: '/tooltip/memlab',
   testSelector: '[data-testid="memlab-tooltip-test"]',
   scenarios: [
     {

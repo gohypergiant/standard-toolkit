@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { BadgeExample } from '~/features/badge/client';
+import { ActionBarExample } from '~/features/action-bar/memlab';
 
 export default function Page() {
-  return <BadgeExample />;
+  return <ActionBarExample />;
 }

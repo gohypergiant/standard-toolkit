@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { DialogExample } from '~/features/dialog/client';
+import { DialogExample } from '~/features/dialog/memlab';
 
 export default function Page() {
   return <DialogExample />;

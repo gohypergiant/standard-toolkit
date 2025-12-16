@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { AccordionGroupExample } from '~/features/accordion-group/client';
+import { ButtonExample } from '~/features/button/memlab';
 
 export default function Page() {
-  return <AccordionGroupExample />;
+  return <ButtonExample />;
 }

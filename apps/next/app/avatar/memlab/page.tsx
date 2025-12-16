@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { AccordionExample } from '~/features/accordion/client';
+import { AvatarExample } from '~/features/avatar/memlab';
 
 export default function Page() {
-  return <AccordionExample />;
+  return <AvatarExample />;
 }

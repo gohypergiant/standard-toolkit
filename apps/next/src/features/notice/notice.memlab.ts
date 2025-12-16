@@ -21,7 +21,7 @@ import { createComponentTests } from '~/memlab/playwright/test-builder';
 // Factory-based tests for simpler scenarios
 createComponentTests({
   componentName: 'Notice',
-  testPagePath: '/notice/client',
+  testPagePath: '/notice/memlab',
   testSelector: '[data-testid="memlab-notice-test"]',
   scenarios: [
     {
@@ -67,7 +67,7 @@ test.describe('Notice Timing Tests', () => {
     collector,
     analyzeResult,
   }) => {
-    await page.goto('/notice/client');
+    await page.goto('/notice/memlab');
     await page.waitForSelector('[data-testid="memlab-notice-test"]');
 
     await forceGC(page);
@@ -106,7 +106,7 @@ test.describe('Notice Timing Tests', () => {
     collector,
     analyzeResult,
   }) => {
-    await page.goto('/notice/client');
+    await page.goto('/notice/memlab');
     await page.waitForSelector('[data-testid="memlab-notice-test"]');
 
     await forceGC(page);

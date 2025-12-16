@@ -21,7 +21,7 @@ import { createComponentTests } from '~/memlab/playwright/test-builder';
 // Factory-based tests for simpler scenarios
 createComponentTests({
   componentName: 'Dialog',
-  testPagePath: '/dialog/client',
+  testPagePath: '/dialog/memlab',
   testSelector: '[data-testid="memlab-dialog-test"]',
   scenarios: [
     {
@@ -66,7 +66,7 @@ test.describe('Dialog Portal Tests', () => {
     collector,
     analyzeResult,
   }) => {
-    await page.goto('/dialog/client');
+    await page.goto('/dialog/memlab');
     await page.waitForSelector('[data-testid="memlab-dialog-test"]');
 
     await forceGC(page);

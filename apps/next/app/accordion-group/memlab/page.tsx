@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { IntentionalLeakExample } from '~/features/intentional-leak/client';
+import { AccordionGroupExample } from '~/features/accordion-group/memlab';
 
 export default function Page() {
-  return <IntentionalLeakExample />;
+  return <AccordionGroupExample />;
 }
