@@ -27,6 +27,8 @@ export default defineConfig({
     '!**/__*__',
     '!storybook-static',
     '!src/test',
+    '!src/icons',
+    '!src/foundation',
   ],
   tsconfig: './tsconfig.dist.json',
   clean: true,
