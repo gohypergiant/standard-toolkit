@@ -432,15 +432,18 @@ importers:
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
+      rollup-plugin-copy:
+        specifier: ^3.5.0
+        version: 3.5.0
       tailwindcss:
         specifier: ^4.1.18
         version: 4.1.18
       tinyglobby:
         specifier: ^0.2.15
         version: 0.2.15
-      tsup:
-        specifier: ^8.5.0
-        version: 8.5.1(@swc/core@1.15.5(@swc/helpers@0.5.17))(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      tsdown:
+        specifier: ^0.18.0
+        version: 0.18.0(typescript@5.9.3)(unplugin-lightningcss@0.4.3)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -459,7 +462,7 @@ importers:
         version: 7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
       webpack:
         specifier: ^5.103.0
-        version: 5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))(esbuild@0.27.1)
+        version: 5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))
 
   packages/design-toolkit:
     dependencies:
@@ -12787,17 +12790,16 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  terser-webpack-plugin@5.3.16(@swc/core@1.15.5(@swc/helpers@0.5.17))(esbuild@0.27.1)(webpack@5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))(esbuild@0.27.1)):
+  terser-webpack-plugin@5.3.16(@swc/core@1.15.5(@swc/helpers@0.5.17))(webpack@5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.44.1
-      webpack: 5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))(esbuild@0.27.1)
+      webpack: 5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))
     optionalDependencies:
       '@swc/core': 1.15.5(@swc/helpers@0.5.17)
-      esbuild: 0.27.1
     optional: true
 
   terser@5.44.1:
@@ -13129,7 +13131,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.2: {}
 
-  webpack@5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))(esbuild@0.27.1):
+  webpack@5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17)):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -13153,7 +13155,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.0
-      terser-webpack-plugin: 5.3.16(@swc/core@1.15.5(@swc/helpers@0.5.17))(esbuild@0.27.1)(webpack@5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17))(esbuild@0.27.1))
+      terser-webpack-plugin: 5.3.16(@swc/core@1.15.5(@swc/helpers@0.5.17))(webpack@5.103.0(@swc/core@1.15.5(@swc/helpers@0.5.17)))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
     transitivePeerDependencies:
