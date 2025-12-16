@@ -28,6 +28,11 @@
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
+  "scripts": {
+    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
+    "format": "pnpm biome format . --write --verbose",
+    "lint": "pnpm biome lint"
+  },
   "sideEffects": false,
   "subPath": "tooling/turbo-filter",
   "title": "Turbo Filter",
