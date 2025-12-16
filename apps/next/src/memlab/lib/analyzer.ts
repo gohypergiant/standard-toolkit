@@ -97,8 +97,8 @@ function getCachedThresholds(thresholdFile: string): ThresholdConfig {
       }
     }
 
-    const parsed: ThresholdConfig = JSON.parse(content);
-    cachedThresholds = parsed;
+    // Use the already-parsed thresholds from validation result
+    cachedThresholds = validation.thresholds as ThresholdConfig;
     cachedThresholdsPath = thresholdFile;
     return cachedThresholds;
   } catch (error) {

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLogger } from '@accelint/logger';
 import type { IHeapEdge, IHeapNode, IHeapSnapshot } from '@memlab/core';
 
 /**
@@ -34,6 +35,15 @@ const MIN_BROADCAST_RETAINED_SIZE = 5000;
 
 /** Minimum retained size to flag Context objects with consumer references */
 const MIN_CONTEXT_RETAINED_SIZE = 10000;
+
+/**
+ * Logger for filter debug output
+ */
+const logger = getLogger({
+  enabled: !!process.env.DEBUG_MEMLAB,
+  level: 'debug',
+  prefix: '[MemLab:Filters]',
+});
 
 /**
  * Custom leak filter interface matching MemLab's ILeakFilter
@@ -69,7 +79,7 @@ export interface CustomLeakFilter {
  */
 export const fiberNodeFilter: CustomLeakFilter = {
   beforeLeakFilter: (_snapshot, leakedNodeIds) => {
-    console.log(
+    logger.debug(
       `🔍 Analyzing ${leakedNodeIds.size} potential leaks for Fiber nodes`,
     );
   },
@@ -128,7 +138,7 @@ export const fiberNodeFilter: CustomLeakFilter = {
  */
 export const busSubscriptionFilter: CustomLeakFilter = {
   beforeLeakFilter: (_snapshot, leakedNodeIds) => {
-    console.log(
+    logger.debug(
       `🔍 Analyzing ${leakedNodeIds.size} potential leaks for bus subscriptions`,
     );
   },
@@ -260,7 +270,7 @@ export const portalLeakFilter: CustomLeakFilter = {
  */
 export const designToolkitFilter: CustomLeakFilter = {
   beforeLeakFilter: (_snapshot, leakedNodeIds) => {
-    console.log(
+    logger.debug(
       `🔍 [design-toolkit] Analyzing ${leakedNodeIds.size} potential leaks`,
     );
   },
