@@ -171,7 +171,7 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm format && tsup",
     "build-storybook": "pnpm storybook build",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm format:biome && pnpm format:prettier",
     "format:biome": "pnpm biome format . --write --verbose",

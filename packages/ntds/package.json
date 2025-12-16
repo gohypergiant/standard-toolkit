@@ -104,9 +104,9 @@
   },
   "scripts": {
     "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run copy",
-    "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
-    "build:icons:masked": "smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
-    "constellation-tracker": "constellation-tracker",
+    "build:icons:color": "pnpm exec smeegl --in ./icons/core --out ./src/core --target REACT",
+    "build:icons:masked": "pnpm exec smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "copy": "pnpm copy:spritesheets",
     "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
     "dev": "pnpm tsc --watch",

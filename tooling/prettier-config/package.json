@@ -33,7 +33,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
     "lint": "pnpm biome lint"
   },

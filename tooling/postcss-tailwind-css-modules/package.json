@@ -47,7 +47,7 @@
   },
   "scripts": {
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
     "lint": "pnpm biome lint"
   },

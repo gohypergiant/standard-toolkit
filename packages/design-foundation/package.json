@@ -82,7 +82,7 @@
   },
   "scripts": {
     "build": "pnpm generate && pnpm license && pnpm format && tsup",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm format:biome && pnpm format:prettier",
     "format:biome": "pnpm biome format . --write --verbose",

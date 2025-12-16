@@ -140,7 +140,7 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
     "build-storybook": "pnpm storybook build",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "lint": "pnpm biome lint",
