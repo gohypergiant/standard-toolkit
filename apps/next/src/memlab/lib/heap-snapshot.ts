@@ -46,8 +46,9 @@ export class HeapSnapshotCollector {
    */
   async initialize(page: Page): Promise<void> {
     // Create a timeout promise for connection
+    let timeoutId: NodeJS.Timeout;
     const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(
+      timeoutId = setTimeout(
         () =>
           reject(
             new Error(
@@ -64,6 +65,9 @@ export class HeapSnapshotCollector {
         page.context().newCDPSession(page),
         timeoutPromise,
       ]);
+
+      // Clear the timeout since connection succeeded
+      clearTimeout(timeoutId!);
 
       if (!this.cdpSession) {
         throw new Error('CDP session returned null');
