@@ -124,12 +124,15 @@ export function updateBaseline(
 ): BaselineData {
   const now = new Date().toISOString();
 
-  const baseline: BaselineData = existingBaseline || {
-    version: BASELINE_VERSION,
-    lastUpdated: now,
-    components: {},
-    history: [],
-  };
+  // Clone existing baseline to avoid mutating the input parameter
+  const baseline: BaselineData = existingBaseline
+    ? structuredClone(existingBaseline)
+    : {
+        version: BASELINE_VERSION,
+        lastUpdated: now,
+        components: {},
+        history: [],
+      };
 
   // Update component entry
   baseline.components[report.component] = {
