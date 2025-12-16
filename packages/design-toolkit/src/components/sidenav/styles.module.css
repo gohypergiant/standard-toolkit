@@ -217,6 +217,14 @@
     }
   }
 
+  .triggerChevron {
+    @apply transform;
+
+    @variant group-expanded/menu {
+      @apply rotate-180;
+    }
+  }
+
   .panel {
     @apply fg-primary-bold rounded-medium bg-surface-raised outline-static outline;
 

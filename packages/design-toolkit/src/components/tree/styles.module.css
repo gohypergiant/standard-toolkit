@@ -180,4 +180,8 @@
       }
     }
   }
+
+  .dropIndicator {
+    @apply h-xxs bg-(--outline-accent-primary-hover);
+  }
 }

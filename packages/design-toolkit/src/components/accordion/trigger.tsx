@@ -46,7 +46,7 @@ export function AccordionTrigger({
           value={{ size: variant === 'compact' ? 'small' : 'medium' }}
         >
           <Icon>
-            <ChevronDown className='transform group-expanded/accordion:rotate-180' />
+            <ChevronDown className={styles.triggerChevron} />
           </Icon>
           {children}
         </IconContext.Provider>

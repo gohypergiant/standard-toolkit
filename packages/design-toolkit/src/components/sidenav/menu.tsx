@@ -62,7 +62,7 @@ export function SidenavMenu({
         {icon}
         <Heading slot='menu'>{title}</Heading>
         <Icon className={clsx(styles.transient, classNames?.icon)}>
-          <ChevronDown className='transform group-expanded/menu:rotate-180' />
+          <ChevronDown className={styles.triggerChevron} />
         </Icon>
       </Button>
       <DisclosurePanel

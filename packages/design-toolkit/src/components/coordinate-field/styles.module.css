@@ -45,6 +45,10 @@
     @apply gap-xs flex flex-1 items-center;
   }
 
+  .literal {
+    @apply fg-primary-muted;
+  }
+
   .segment {
     @apply shrink-0 text-right transition-[width] duration-150 ease-in-out outline-none;
 

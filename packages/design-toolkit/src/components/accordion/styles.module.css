@@ -52,6 +52,14 @@
       @apply hidden;
     }
   }
+
+  .triggerChevron {
+    @apply transform;
+
+    @variant group-expanded/accordion {
+      @apply rotate-180;
+    }
+  }
 }
 
 @layer components.l2 {
