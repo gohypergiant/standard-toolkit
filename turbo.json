@@ -29,6 +29,7 @@
       "dependsOn": ["build", "^constellation-tracker"]
     },
     "lint": {},
+    "format": {},
     "bench": {
       "dependsOn": ["^build"]
     }

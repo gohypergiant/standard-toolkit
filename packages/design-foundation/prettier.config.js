@@ -10,32 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import baseConfig from '@accelint/prettier-config/config';
 
-import type { SVGProps } from 'react';
-interface SVGRProps {
-  title?: string;
-  titleId?: string;
-}
-const SvgArrowRight = ({
-  title,
-  titleId,
-  ...props
-}: SVGProps<SVGSVGElement> & SVGRProps) => (
-  <svg
-    xmlns='http://www.w3.org/2000/svg'
-    fill='none'
-    viewBox='0 0 24 24'
-    aria-labelledby={titleId}
-    {...props}
-  >
-    {title ? <title id={titleId}>{title}</title> : null}
-    <path
-      fill='currentColor'
-      d='m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.59 5.58L12 20l8-8z'
-    />
-  </svg>
-);
-export default SvgArrowRight;
+/**
+ * @type {import("prettier").Config & import('prettier-plugin-tailwindcss').PluginOptions}}
+ */
+export default {
+  ...baseConfig,
+  tailwindAttributes: ['className', 'classNames', '@apply'],
+  tailwindFunctions: ['clsx'],
+};
