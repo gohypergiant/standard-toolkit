@@ -372,7 +372,9 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
       subscriptionCache,
       snapshotCache,
       fallbackCache,
-    ].map((map) => map.delete(instanceId));
+    ].forEach((map) => {
+      map.delete(instanceId);
+    });
   }
 }
 
@@ -579,9 +581,13 @@ export function clearCameraState(instanceId: UniqueId): void {
   }
 
   // Clear all state
-  cameraStore.delete(instanceId);
-  componentSubscribers.delete(instanceId);
-  subscriptionCache.delete(instanceId);
-  snapshotCache.delete(instanceId);
-  fallbackCache.delete(instanceId);
+  [
+    cameraStore,
+    componentSubscribers,
+    subscriptionCache,
+    snapshotCache,
+    fallbackCache,
+  ].forEach((map) => {
+    map.delete(instanceId);
+  });
 }
