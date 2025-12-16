@@ -1,26 +1,16 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/postcss-tailwind-css-modules",
-  "title": "Postcss tailwind css modules plugin",
   "description": "Postcss plugin for resolving some problems that occur when using tailwind with css modules",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "tooling/postcss-tailwind-css-modules",
   "version": "1.0.0",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {
+    "@accelint/typescript-config": "workspace:*",
+    "@types/node": "^22",
+    "postcss": "^8.5.6",
+    "postcss-selector-parser": "^7.1.1",
+    "tsup": "^8.5.0"
   },
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -28,27 +18,37 @@
       "require": "./dist/index.cjs"
     }
   },
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "optionalDependencies": {
+    "@tailwindcss/postcss": "^4.1.17"
+  },
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "postcss": "^8.5.6",
+    "postcss-selector-parser": "^7.1.1"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "build": "tsup",
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "devDependencies": {
-    "@accelint/typescript-config": "workspace:*",
-    "@types/node": "^24.9.0",
-    "postcss": "^8.5.6",
-    "postcss-selector-parser": "^7.1.1",
-    "tsup": "8.5.0"
-  },
-  "peerDependencies": {
-    "postcss": "^8.5.6",
-    "postcss-selector-parser": "^7.1.1"
-  },
-  "optionalDependencies": {
-    "@tailwindcss/postcss": "^4.1.17"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "tooling/postcss-tailwind-css-modules",
+  "title": "Postcss tailwind css modules plugin",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

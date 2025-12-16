@@ -1,23 +1,14 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/biome-config",
-  "title": "Biome Configuration",
   "description": "The shared Biome configuration used across Accelint projects.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "tooling/biome-config",
   "version": "1.0.2",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "exports": {
+    "./analyzer": "./analyzer.json",
+    "./formatter": "./formatter.json",
+    "./linter": "./linter.json"
   },
-  "type": "module",
   "files": [
     "./analyzer.json",
     "./catalog-info.yaml",
@@ -27,17 +18,26 @@
     "./package.json",
     "./README.md"
   ],
-  "exports": {
-    "./analyzer": "./analyzer.json",
-    "./formatter": "./formatter.json",
-    "./linter": "./linter.json"
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "owner": "default/pathfinder",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "tooling/biome-config",
+  "title": "Biome Configuration",
+  "type": "module"
 }

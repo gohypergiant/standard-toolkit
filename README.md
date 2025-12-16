@@ -2,11 +2,14 @@
 
 # Development Toolkit (DevTK)
 
-A "standard library" for web applications in the [Accelint] family of systems.
+A "standard library" for web applications in the [Accelint](https://accelint.com) family of systems.
 
 ## 📦 Libraries
 
-Libraries are exposed via individual packages. Refer to the [documentation site][docs] for detailed information.
+- [Design Toolkit Storybook](https://design-toolkit.accelint.io/)
+- [Map Toolkit Storybook](https://map-toolkit.accelint.io/)
+
+You can see our list of published libraries [here](https://www.npmjs.com/search?q=%40accelint). 
 
 ## 💡 Contributing
 
@@ -29,18 +32,8 @@ Given a version number MAJOR.MINOR.PATCH, the meanings of each number changing f
 
 ## 🔍 License
 
-Licensed under [Apache License v2.0]. Read the [license instructions](LICENSE) if you are interested in contributing or using any of the packages.
-
-## 🚀 Attributions
-
-Development Toolkit (DevTK) is sponsored by: [Hypergiant] ([GitHub @gohypergiant]) an [Accelint] company.
+Licensed under [Apache License v2.0](https://www.apache.org/licenses/LICENSE-2.0). Read the [license instructions](LICENSE) if you are interested in contributing or using any of the packages.
 
 ## 🔔 Disclaimer
 
 Standard Toolkit is currently only intended for usage within the Accelint family of systems. Contributions are more than welcome but please consider that this project may not fit your needs.
-
-[Accelint]: https://accelint.com
-[Apache License v2.0]: https://www.apache.org/licenses/LICENSE-2.0
-[Docs]: https://standard-toolkit.accelint.dev/
-[Github @gohypergiant]: https://github.com/gohypergiant
-[Hypergiant]: https://hypergiant.com

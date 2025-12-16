@@ -1,88 +1,68 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/developer-toolkit",
-  "author": "https://hypergiant.com",
   "version": "0.0.0",
-  "private": true,
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/prettier-config": "workspace:*",
+    "@babel/parser": "^7.28.5",
+    "@biomejs/biome": "^2.3.8",
+    "@changesets/changelog-git": "^0.2.1",
+    "@changesets/cli": "^2.29.8",
+    "@ls-lint/ls-lint": "^2.3.1",
+    "@swc/core": "^1.15.3",
+    "lefthook": "^2.0.11",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "rimraf": "^6.1.2",
+    "syncpack": "^14.0.0-alpha.32",
+    "taze": "^19.9.2",
+    "tsx": "^4.21.0",
+    "turbo": "^2.6.3",
+    "zx": "^8.8.5"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "license": "Apache-2.0",
+  "packageManager": "pnpm@10.25.0",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
-  "type": "module",
   "scripts": {
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "turbo bench",
     "build": "turbo build",
     "build:design-toolkit": "turbo run build --filter=@accelint/design-toolkit",
-    "build:docs": "turbo run build --filter=@accelint/docs",
     "build:map-toolkit": "turbo run build --filter=@accelint/map-toolkit",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version && pnpm run constellation-tracker",
-    "clean": "pnpm run clean:dist && pnpm run clean:buildinfo && pnpm run clean:turbo && pnpm run clean:pnpm && pnpm run clean:cov && pnpm run clean:deps",
+    "clean": "pnpm run clean:dist && pnpm run clean:buildinfo && pnpm run clean:turbo && pnpm run clean:cov && pnpm run clean:deps",
     "clean:buildinfo": "pnpm exec find . -name 'tsconfig.tsbuildinfo' -delete",
     "clean:cov": "pnpm -r exec rimraf coverage && exec pnpm rimraf coverage",
     "clean:deps": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
     "clean:dist": "pnpm -r exec rimraf dist",
-    "clean:pnpm": "pnpm rimraf pnpm-lock.yaml",
     "clean:turbo": "pnpm -r exec  rimraf .turbo && exec pnpm rimraf .turbo",
     "constellation-tracker": "turbo constellation-tracker -- --regenerate",
-    "deps:format-packages": "pnpm syncpack format",
-    "deps:mismatch-fix": "pnpm syncpack fix-mismatches",
-    "deps:postinstall": "pnpm run deps:mismatch-fix && pnpm run deps:format-packages",
     "deps:version-major": "pnpm taze major -r",
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",
     "dev": "turbo dev",
     "format": "pnpm biome check --linter-enabled=false . --write && pnpm prettier . --write",
+    "format:deps": "pnpm syncpack format",
     "indexer": "turbo index",
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
+    "lint:deps": "pnpm syncpack lint",
     "lint:fs": "pnpm ls-lint",
-    "postinstall": "pnpm run deps:postinstall",
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
-  "devDependencies": {
-    "@accelint/biome-config": "workspace:*",
-    "@accelint/prettier-config": "workspace:*",
-    "@babel/parser": "^7.25.8",
-    "@biomejs/biome": "^2.3.5",
-    "@changesets/changelog-git": "^0.2.0",
-    "@changesets/cli": "^2.27.9",
-    "@ls-lint/ls-lint": "^2.3.1",
-    "@swc/core": "^1.7.36",
-    "lefthook": "^1.9.3",
-    "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.7.1",
-    "rimraf": "^6.1.2",
-    "syncpack": "^13.0.4",
-    "taze": "^0.17.2",
-    "tsx": "^4.20.5",
-    "turbo": "^2.5.8",
-    "zx": "^8.1.9"
-  },
-  "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "packageManager": "pnpm@10.9.0",
-  "pnpm": {
-    "overrides": {
-      "@loglayer/plugin": "2.2.1",
-      "@loglayer/shared": "2.5.3"
-    },
-    "overridesReason": {
-      "@loglayer/plugin": "multiple versions installed creating conflicting types issue",
-      "@loglayer/shared": "multiple versions installed creating conflicting types issue"
-    },
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "react": "^19",
-        "react-dom": "^19"
-      }
-    }
-  }
+  "type": "module"
 }
