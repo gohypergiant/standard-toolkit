@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -26,32 +27,21 @@ export const SvgLandHostile = ({
   ...props
 }: SVGProps<SVGSVGElement> & Props) => {
   const { fill } = props;
-  const fillColor = fill ?? '#FF69B4';
+  const fillColor = fill ?? '#FF69B4'
   const hasTitle = typeof title === 'string' && Boolean(title.trim());
 
   return (
-    <svg
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-      aria-labelledby={hasTitle ? titleId : undefined}
-      {...props}
-    >
-      {hasTitle && <title id={titleId}>{title}</title>}
-      <path d='M13 23H11V19H12H13V23Z' fill={fillColor} />
-      <path d='M14 12L12 14L10 12L12 10L14 12Z' fill={fillColor} />
-      <path
-        fillRule='evenodd'
-        clipRule='evenodd'
-        d='M18 12L12 18L6 12L12 6L18 12ZM8 12L12 16L16 12L12 8L8 12Z'
-        fill={fillColor}
-      />
-      <path d='M23 11V13H19V12V11H23Z' fill={fillColor} />
-      <path d='M5 12V13H1V11H5V12Z' fill={fillColor} />
-      <path d='M13 5H12H11V1H13V5Z' fill={fillColor} />
-      <path d='M12 10L14 12L12 14L10 12L12 10Z' fill={fillColor} />
-    </svg>
-  );
-};
+
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby={hasTitle ? titleId : undefined} {...props}> 
+     {hasTitle && <title id={titleId}>{title}</title>}
+<path d="M13 23H11V19H12H13V23Z" fill={fillColor}/>
+<path d="M14 12L12 14L10 12L12 10L14 12Z" fill={fillColor}/>
+<path fillRule="evenodd" clipRule="evenodd" d="M18 12L12 18L6 12L12 6L18 12ZM8 12L12 16L16 12L12 8L8 12Z" fill={fillColor}/>
+<path d="M23 11V13H19V12V11H23Z" fill={fillColor}/>
+<path d="M5 12V13H1V11H5V12Z" fill={fillColor}/>
+<path d="M13 5H12H11V1H13V5Z" fill={fillColor}/>
+<path d="M12 10L14 12L12 14L10 12L12 10Z" fill={fillColor}/>
+</svg>
+
+
+)};
