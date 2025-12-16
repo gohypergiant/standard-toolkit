@@ -448,7 +448,11 @@ export type {
 export { Skeleton } from './components/skeleton';
 export type { SkeletonProps } from './components/skeleton/types';
 export { Slider } from './components/slider';
-export type { SliderProps } from './components/slider/types';
+export type {
+  SliderMarker,
+  SliderMarkersConfig,
+  SliderProps,
+} from './components/slider/types';
 export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch/types';

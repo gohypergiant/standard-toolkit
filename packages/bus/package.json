@@ -1,33 +1,31 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/bus",
-  "title": "Accelint Bus",
   "description": "An open-source event bus library.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "packages/bus",
   "version": "3.0.1",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "dependencies": {
+    "type-fest": "^5.3.1"
   },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md"
-  ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/core": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19",
+    "react": "^19",
+    "tsdown": "^0.18.0",
+    "type-fest": "^5.3.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./broadcast": "./dist/broadcast/index.js",
@@ -36,6 +34,35 @@
     "./react": "./dist/react/index.js",
     "./react/ponyfill": "./dist/react/ponyfill.js",
     "./package.json": "./package.json"
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "optionalDependencies": {
+    "react": "^19"
+  },
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "@accelint/core": "workspace:*"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
@@ -47,36 +74,9 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
-  "dependencies": {
-    "type-fest": "^4.41.0"
-  },
-  "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
-    "@accelint/core": "workspace:*",
-    "@accelint/typescript-config": "workspace:*",
-    "@accelint/vitest-config": "workspace:*",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.6.4",
-    "@testing-library/react": "^16.3.0",
-    "@types/react": "19.1.13",
-    "react": "19.0.0",
-    "tsdown": "^0.17.2",
-    "type-fest": "^4.41.0",
-    "typescript": "5.8.3",
-    "vitest": "^4.0.8"
-  },
-  "peerDependencies": {
-    "@accelint/core": "workspace:*"
-  },
-  "optionalDependencies": {
-    "react": "19.0.0"
-  },
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "packages/bus",
+  "title": "Accelint Bus",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

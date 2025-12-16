@@ -30,4 +30,52 @@ describe('Chip', () => {
 
     expect(screen.getByText(`${children}`)).toBeInTheDocument();
   });
+
+  it('should render with default color and size', () => {
+    setup();
+
+    const chip = screen.getByText('Foo').closest('[data-color]');
+
+    expect(chip).toHaveAttribute('data-color', 'info');
+    expect(chip).toHaveAttribute('data-size', 'medium');
+  });
+
+  it.each([
+    'info',
+    'advisory',
+    'normal',
+    'serious',
+    'critical',
+  ] as const)('should render with color="%s"', (color) => {
+    setup({ color });
+
+    const chip = screen.getByText('Foo').closest('[data-color]');
+
+    expect(chip).toHaveAttribute('data-color', color);
+  });
+
+  it.each([
+    'medium',
+    'small',
+  ] as const)('should render with size="%s"', (size) => {
+    setup({ size });
+
+    const chip = screen.getByText('Foo').closest('[data-size]');
+
+    expect(chip).toHaveAttribute('data-size', size);
+  });
+
+  it('should apply custom className', () => {
+    setup({ className: 'custom-class' });
+
+    const chip = screen.getByText('Foo').closest('.custom-class');
+
+    expect(chip).toBeInTheDocument();
+  });
+
+  it('should render children content', () => {
+    setup({ children: 'Custom Content' });
+
+    expect(screen.getByText('Custom Content')).toBeInTheDocument();
+  });
 });

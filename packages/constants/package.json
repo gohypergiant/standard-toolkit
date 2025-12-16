@@ -1,23 +1,26 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/constants",
-  "title": "Accelint Constants",
   "description": "A collection of commonly used constant values for Accelint projects.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "packages/constants",
   "version": "0.1.8",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "tsdown": "^0.18.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
   },
-  "type": "module",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./coordinates": "./dist/coordinates/index.js",
+    "./package.json": "./package.json"
+  },
   "files": [
     "./dist/**",
     "./catalog-info.yaml",
@@ -25,13 +28,21 @@
     "./package.json",
     "./README.md"
   ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./coordinates": "./dist/coordinates/index.js",
-    "./package.json": "./package.json"
+  "owner": "default/pathfinder",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
@@ -41,20 +52,9 @@
     "index": "pnpm zx ../../scripts/indexer.mjs packages/constants",
     "lint": "pnpm biome lint"
   },
-  "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
-    "@accelint/typescript-config": "workspace:*",
-    "@accelint/vitest-config": "workspace:*",
-    "tsdown": "^0.17.2",
-    "typescript": "5.8.3",
-    "vitest": "^4.0.8"
-  },
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "packages/constants",
+  "title": "Accelint Constants",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

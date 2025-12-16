@@ -1,33 +1,24 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/predicates",
-  "title": "Accelint Predicates",
   "description": "A collection of useful predicate functions for JavaScript.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "packages/predicates",
   "version": "0.4.4",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {
+    "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/core": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@vitest/web-worker": "^4.0.8",
+    "fast-check": "^4.1.1",
+    "tsdown": "^0.18.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
   },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md"
-  ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./does-end-with": "./dist/does-end-with/index.js",
@@ -57,6 +48,32 @@
     "./is-worker": "./dist/is-worker/index.js",
     "./package.json": "./package.json"
   },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "@accelint/core": "workspace:*"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
@@ -66,26 +83,9 @@
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
-  "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
-    "@accelint/core": "workspace:*",
-    "@accelint/typescript-config": "workspace:*",
-    "@accelint/vitest-config": "workspace:*",
-    "@vitest/web-worker": "^4.0.8",
-    "fast-check": "^4.1.1",
-    "tsdown": "^0.17.2",
-    "typescript": "5.8.3",
-    "vitest": "^4.0.8"
-  },
-  "peerDependencies": {
-    "@accelint/core": "workspace:*"
-  },
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "packages/predicates",
+  "title": "Accelint Predicates",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }

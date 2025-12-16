@@ -1,31 +1,9 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/typescript-config",
-  "title": "TypeScript Configuration",
   "description": "The shared TypeScript configuration used across Accelint projects.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "dev-tk",
-    "tooling"
-  ],
-  "subPath": "tooling/typescript-config",
   "version": "0.1.4",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
-  },
-  "type": "module",
-  "files": [
-    "./tsc/**",
-    "./bundler/**",
-    "./catalog-info.yaml",
-    "./CHANGELOG.md",
-    "./package.json",
-    "./README.md"
-  ],
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
   "exports": {
     "./tsc": "./tsc/dom/app.json",
     "./tsc/dom": "./tsc/dom/app.json",
@@ -46,12 +24,34 @@
     "./bundler/no-dom/library": "./bundler/no-dom.json",
     "./bundler/no-dom/library-monorepo": "./bundler/no-dom.json"
   },
+  "files": [
+    "./tsc/**",
+    "./bundler/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "owner": "default/pathfinder",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "lint": "pnpm biome lint"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  "sideEffects": false,
+  "subPath": "tooling/typescript-config",
+  "title": "TypeScript Configuration",
+  "type": "module"
 }

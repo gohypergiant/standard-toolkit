@@ -1,31 +1,24 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "@accelint/icons",
-  "title": "Accelint Icons",
   "description": "An open-source icon library to serve as part of the entire ecosystem of UX for Accelint.",
-  "author": "https://hypergiant.com",
-  "owner": "default/pathfinder",
-  "keywords": [
-    "design-tk",
-    "icons",
-    "ui"
-  ],
-  "subPath": "packages/icons",
   "version": "2.1.1",
-  "private": false,
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gohypergiant/standard-toolkit"
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "dependencies": {},
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@svgr/cli": "^8.1.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsdown": "^0.18.0"
   },
-  "type": "module",
-  "files": [
-    "./dist/**",
-    "./catalog-info.yaml"
-  ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "exports": {
     ".": "./dist/index.js",
     "./add": "./dist/add.js",
@@ -259,6 +252,34 @@
     "./zoom-to": "./dist/zoom-to.js",
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "design-tk",
+    "icons",
+    "ui"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
   "scripts": {
     "build": "pnpm generate:icons && pnpm license && pnpm format && pnpm tsdown",
     "constellation-tracker": "constellation-tracker",
@@ -266,26 +287,8 @@
     "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
     "license": "pnpm zx ../../scripts/license.mjs --files src/icons"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "@accelint/biome-config": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
-    "@accelint/typescript-config": "workspace:*",
-    "@accelint/vitest-config": "workspace:*",
-    "@svgr/cli": "^8.1.0",
-    "@types/react": "19.1.13",
-    "@types/react-dom": "19.1.11",
-    "tsdown": "^0.17.2"
-  },
-  "peerDependencies": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
-  },
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+  "subPath": "packages/icons",
+  "title": "Accelint Icons",
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }
