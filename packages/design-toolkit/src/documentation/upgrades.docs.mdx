@@ -19,44 +19,66 @@ These guides explain how to migrate from Design Toolkit prior versions. If you a
 
 ## Improvements
 
-We are now using [tsdown](https://tsdown.dev/) instead of [tsup](https://tsup.egoist.dev/) for our build tool, which significantly improves build time.
+We've migrated from [tsup](https://tsup.egoist.dev/) to [tsdown](https://tsdown.dev/) for our build tooling, which significantly improves build times.
 
-## Breaking change
+## Breaking Change: Explicit Package Exports
 
-We are leveraging the [auto export](https://tsdown.dev/options/package-exports#auto-generating-package-exports) feature of tsdown.
-By using auto export, all exports for the packages are added explicitly to `"exports"` in our package.json.
+We now use tsdown's [auto-generated exports](https://tsdown.dev/options/package-exports#auto-generating-package-exports) feature, which explicitly defines all package exports in `package.json` instead of using wildcard patterns.
 
-example export:
+### What Changed
+
+**Before (v8):** Wildcard exports
+```json
+"./*": {
+  "import": {
+    "types": "./dist/*.d.ts",
+    "default": "./dist/*.js"
+  },
+  "default": "./dist/*.js"
+},
 ```
+
+**After (v9):** Explicit exports
+```json
 "./components/accordion": "./dist/components/accordion/index.js",
+"./components/accordion/context": "./dist/components/accordion/context.js",
+"./components/accordion/group": "./dist/components/accordion/group.js",
+etc...
 ```
 
-you'll notice that this export is pointing to an index.js file. We previously were using wildcards for exports in package.json, and the way packages are resolved in node necessitated explicit `/index` suffixes when importing from directory indexes.
+### Why This Breaks Imports
 
-from the [node docs on module resolution](https://nodejs.org/api/packages.html#module-resolution-and-loading):
-> When a module is requested via static import statements (only available in ES Modules) or import() expressions (available in both CommonJS and ES Modules)... directory indexes (e.g. './startup/index.js') must be fully specified.
+The explicit export path **already includes** the `/index.js` file in its resolution target. When you import with an `/index` suffix:
+```typescript
+import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
+```
 
-With the explicit exports we get from tsdown, the `/index` suffix has been removed, and the imports will break if you still use it.
+Node attempts to resolve `./dist/components/accordion/index.js/index`, which doesn't exist.
 
-## Migration steps
+Previously, wildcard exports required explicit `/index` suffixes per [Node's module resolution rules](https://nodejs.org/api/packages.html#module-resolution-and-loading):
+> directory indexes (e.g. './startup/index.js') must be fully specified.
 
-### 1. Fix any imports from design-toolkit or design-foundation that had the `/index` suffix
+Now that the export explicitly points to `index.js`, the `/index` suffix causes resolution to fail.
 
-Remove the index suffix anywhere that it was used
+## Migration
+
+Remove any `/index` suffixes from imports:
 
 **❌ Before:**
-
 ```typescript
 import { designTokens } from '@accelint/design-foundation/tokens/index';
 import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
 ```
 
 **✅ After:**
-
 ```typescript
 import { designTokens } from '@accelint/design-foundation/tokens';
 import { Accordion } from '@accelint/design-toolkit/components/accordion';
 ```
+
+### Affected Packages
+- `@accelint/design-foundation`
+- `@accelint/design-toolkit`
 
 <hr />
 <a id="v8"></a>
