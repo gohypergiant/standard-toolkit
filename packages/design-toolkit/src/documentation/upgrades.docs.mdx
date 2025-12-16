@@ -5,6 +5,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ### All Release Notes
 [All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
 
+* [Upgrade to v9](#v9)
 * [Upgrade to v8](#v8)
 * [Upgrade to v7](#v7)
 * [Upgrade to v6](#v6)
@@ -12,7 +13,50 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
 
-[Go directly to migration steps for v8](#migration).
+<hr />
+<a id="v6"></a>
+# Upgrade to v9
+
+# Improvements
+
+We are now using [tsdown](https://tsdown.dev/) instead of [tsup](https://tsup.egoist.dev/) for our build tool, which significantly improves build time.
+
+# Breaking change
+
+We are leveraging the [auto export](https://tsdown.dev/options/package-exports#auto-generating-package-exports) feature of tsdown.
+By using auto export, all exports for the packages are added explicitly to `"exports"` in our package.json.
+
+example export:
+```
+"./components/accordion": "./dist/components/accordion/index.js",
+```
+
+you'll notice that this export is pointing to an index.js file. We previously were using wildcards for exports in package.json, and the way packages are resolved in node necessitated explicit `/index` suffixes when importing from directory indexes.
+
+from the [node docs on module resolution](https://nodejs.org/api/packages.html#module-resolution-and-loading):
+> When a module is requested via static import statements (only available in ES Modules) or import() expressions (available in both CommonJS and ES Modules)... directory indexes (e.g. './startup/index.js') must be fully specified.
+
+With the explicit exports we get from tsdown, the `/index` suffix has been removed, and the imports will break if you still use it.
+
+## Migration steps
+
+### 1. Fix any imports from design-toolkit or design-foundation that had the `/index` suffix
+
+Remove the index suffix anywhere that it was used
+
+**❌ Before:**
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens/index';
+import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
+```
+
+**✅ After:**
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+import { Accordion } from '@accelint/design-toolkit/components/accordion';
+```
 
 <hr />
 <a id="v8"></a>
@@ -113,7 +157,6 @@ With the new design:
 ### Action Bar
 Added a size prop to simplify usage in different UI contexts.
 
-<a id="migration"></a>
 ## Migration steps
 
 ### 1. Enable compiling CSS Modules _(only if necessary)_
