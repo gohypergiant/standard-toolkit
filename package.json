@@ -6,6 +6,7 @@
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
+    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/prettier-config": "workspace:*",
     "@accelint/turbo-filter": "workspace:*",
     "@babel/parser": "^7.28.5",

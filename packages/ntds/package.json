@@ -103,7 +103,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run format && pnpm run license && pnpm tsdown && pnpm copy",
+    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run copy",
     "build:icons:color": "smeegl --in ./icons/core --out ./src/core --target REACT",
     "build:icons:masked": "smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
     "constellation-tracker": "constellation-tracker",
