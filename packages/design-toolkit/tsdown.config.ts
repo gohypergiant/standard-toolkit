@@ -10,12 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { readFile, writeFile } from 'node:fs/promises';
 import copy from 'rollup-plugin-copy';
-import { glob } from 'tinyglobby';
 import { defineConfig } from 'tsdown';
-
-const CHECK = /client-only/;
 
 export default defineConfig({
   entry: [
@@ -42,24 +38,6 @@ export default defineConfig({
     /^@react-stately\//,
   ],
   plugins: [
-    {
-      name: 'use-client-directive',
-      async writeBundle() {
-        const jsFiles = await glob([
-          'dist/**/*.js',
-          'dist/**/*.mjs',
-          '!dist/**/*.map',
-        ]);
-
-        for (const file of jsFiles) {
-          const content = await readFile(file, 'utf-8');
-
-          if (CHECK.test(content)) {
-            await writeFile(file, `'use client';\n\n${content}`);
-          }
-        }
-      },
-    },
     copy({
       targets: [{ src: 'src/**/*.css', dest: 'dist' }],
       flatten: false,
