@@ -30,7 +30,7 @@ createComponentTests({
         // Open the drawer panel
         await page.click('[data-testid="open-drawer"]');
         // Wait for drawer animation to complete
-        await page.waitForTimeout(500);
+        await waitForCleanup(page, 500);
         // The drawer content may not become visible immediately due to animation
         await page
           .waitForSelector('[data-testid="drawer-content"]', {
@@ -66,10 +66,10 @@ createComponentTests({
         for (let i = 0; i < 5; i++) {
           // Unmount drawer
           await page.click('[data-testid="toggle-drawer"]');
-          await page.waitForTimeout(100);
+          await waitForCleanup(page, 100);
           // Remount drawer
           await page.click('[data-testid="toggle-drawer"]');
-          await page.waitForTimeout(100);
+          await waitForCleanup(page, 100);
         }
       },
       expectedLeaks: 5, // Stress tests may have slightly higher tolerance
@@ -104,8 +104,7 @@ test.describe('Drawer Navigation Tests', () => {
       .locator('text=A')
       .first();
     await menuItemA.click();
-    await page.waitForTimeout(500);
-    await waitForCleanup(page);
+    await waitForCleanup(page, 500);
 
     // Try to navigate to View B if the panel is open
     const navigateBtn = page.locator('[data-testid="navigate-to-b"]');
@@ -118,8 +117,7 @@ test.describe('Drawer Navigation Tests', () => {
 
     // FINAL: Close drawer using Escape key or clicking menu item again
     await page.keyboard.press('Escape');
-    await page.waitForTimeout(500);
-    await waitForCleanup(page, 1000);
+    await waitForCleanup(page, 1500);
 
     await forceGC(page);
     await waitForCleanup(page);
