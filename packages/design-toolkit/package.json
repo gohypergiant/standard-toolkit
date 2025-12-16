@@ -174,7 +174,7 @@
     "constellation-tracker": "constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm format:biome && pnpm format:prettier",
-    "format:biome": "pnpm biome format . --write",
+    "format:biome": "pnpm biome format . --write --verbose",
     "format:prettier": "prettier --write .",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
     "lint": "pnpm biome lint",

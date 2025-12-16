@@ -54,7 +54,7 @@
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",
     "dev": "turbo dev",
-    "format": "pnpm biome check --linter-enabled=false . --write && pnpm prettier . --write",
+    "format": "turbo format && pnpm run format:deps",
     "format:deps": "pnpm syncpack format",
     "indexer": "turbo index",
     "license": "pnpm zx scripts/license.mjs",

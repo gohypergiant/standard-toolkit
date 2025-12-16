@@ -9,6 +9,7 @@
     },
     "lint": {},
     "bench": {},
+    "format": {},
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage"]
