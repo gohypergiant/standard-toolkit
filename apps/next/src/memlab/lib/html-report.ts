@@ -821,11 +821,17 @@ export function loadReportsFromDirectory(reportsDir: string): MemlabReport[] {
   const reports: MemlabReport[] = [];
 
   for (const file of files) {
+    let content: string;
     try {
-      const content = fs.readFileSync(path.join(reportsDir, file), 'utf-8');
+      content = fs.readFileSync(path.join(reportsDir, file), 'utf-8');
+    } catch {
+      console.warn(`⚠️ Failed to read report file: ${file}`);
+      continue;
+    }
+    try {
       reports.push(JSON.parse(content));
     } catch {
-      console.warn(`⚠️ Failed to load report: ${file}`);
+      console.warn(`⚠️ Failed to parse report JSON: ${file}`);
     }
   }
 
