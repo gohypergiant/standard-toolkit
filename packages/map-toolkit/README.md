@@ -50,6 +50,9 @@ import { /* components */ } from '@accelint/map-toolkit/maplibre';
 
 // React/Fiber components
 import { /* components */ } from '@accelint/map-toolkit/deckgl/fiber';
+
+// React util function
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
 ```
 
 For detailed examples and interactive demos, see the [Storybook documentation](https://map-toolkit.accelint.io/?path=/docs/deckgl-symbol-layer--docs).
