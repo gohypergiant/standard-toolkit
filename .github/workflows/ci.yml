@@ -15,32 +15,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 2
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: 'package.json'
-          # NOTE: this is presently causing some issues
-          # cache: 'pnpm'
-          # cache-dependency-path: 'pnpm-lock.yaml'
-
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
         with:
           run_install: false
 
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: 'package.json'
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+
       - name: Install Dependencies
         run: pnpm install
+
+      - name: Store Prune
+        run: pnpm store prune
 
       - name: Build Packages
         run: pnpm run build
