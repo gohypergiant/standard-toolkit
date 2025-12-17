@@ -6,11 +6,10 @@
       "outputs": ["src/index.ts"]
     },
     "pre-build": {
-      "dependsOn": ["license"],
       "outputs": ["dist/**", "build/**"]
     },
     "build": {
-      "dependsOn": ["license", "^build"],
+      "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"]
     },
     "dev": {

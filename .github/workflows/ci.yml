@@ -39,10 +39,7 @@ jobs:
           cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install Dependencies
-        run: pnpm install
-
-      - name: Store Prune
-        run: pnpm store prune
+        run: pnpm install # note this runs pre-build
 
       - name: Build Packages
         run: pnpm run build
