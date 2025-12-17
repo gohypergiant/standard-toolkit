@@ -14,7 +14,14 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useControlledState } from '@react-stately/utils';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  Fragment,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Slider as AriaSlider,
   SliderTrack as AriaSliderTrack,
@@ -396,12 +403,17 @@ export function Slider({
               <Fragment key={`slider-${index === 0 ? 'min' : 'max'}`}>
                 <div
                   className={clsx(styles.trackValue, classNames?.trackValue)}
-                  data-start={
-                    state.values.length === 1 ? 0 : state.getThumbPercent(0)
+                  style={
+                    {
+                      '--track-value-start':
+                        state.values.length === 1
+                          ? 0
+                          : state.getThumbPercent(0),
+                      '--track-value-end': state.getThumbPercent(
+                        state.values.length === 1 ? 0 : 1,
+                      ),
+                    } as CSSProperties
                   }
-                  data-end={state.getThumbPercent(
-                    state.values.length === 1 ? 0 : 1,
-                  )}
                 />
                 <TooltipTrigger
                   isDisabled={showInput || state.isThumbDragging(index)}
