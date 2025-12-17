@@ -65,7 +65,6 @@
     "react-querybuilder": "~8.10.0",
     "rollup-plugin-copy": "^3.5.0",
     "storybook": "^9.1.16",
-    "tinyglobby": "^0.2.15",
     "tsdown": "^0.18.0",
     "type-fest": "^5.3.1",
     "typescript": "^5.9.3",
