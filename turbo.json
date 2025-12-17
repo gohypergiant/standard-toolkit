@@ -3,10 +3,11 @@
   "ui": "tui",
   "tasks": {
     "index": {
-      "outputs": ["src/index.ts"]
+      "outputs": ["src/index.ts"],
+      "cache": false
     },
     "build": {
-      "dependsOn": ["^index", "^build"],
+      "dependsOn": ["license", "^build"],
       "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"]
     },
     "dev": {
@@ -26,13 +27,16 @@
     "constellation-tracker": {
       "cache": false
     },
-    "lint": {},
-    "license": {
+    "lint": {
       "cache": false
+    },
+    "license": {
+      "cache": false,
+      "dependsOn": ["index"]
     },
     "format": {
       "cache": false,
-      "dependsOn": ["index", "license"]
+      "dependsOn": ["license"]
     },
     "bench": {
       "dependsOn": ["^build"]
