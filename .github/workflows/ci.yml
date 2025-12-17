@@ -14,30 +14,39 @@ jobs:
     name: Install, Build, Lint, and Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Fetch Repo
+        uses: actions/checkout@v5
         with:
           fetch-depth: 2
 
-      - uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: .turbo
+      #     key: ${{ runner.os }}-turbo-${{ github.sha }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-turbo-
 
-      - uses: pnpm/action-setup@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
         with:
           run_install: false
 
-      - uses: actions/setup-node@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
         with:
-          cache: 'pnpm'
+          # cache: 'pnpm'
           node-version-file: 'package.json'
 
-      - run: pnpm install
-      - run: pnpm run build
-      - run: pnpm run format
-      - name: Enforce formatting
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build Packages
+        run: pnpm run build
+
+      - name: Format Packages
+        run: pnpm run format
+
+      - name: Enforce Formatting
         run: |
           if [[ -n $(git status --porcelain) ]]; then
             echo "::error::Formatting issues detected. Please run 'pnpm run format' locally and commit the changes."
@@ -45,7 +54,10 @@ jobs:
             exit 1
           fi
 
-      - run: pnpm run lint
+      - name: Lint Packages
+        run: pnpm run lint
       - run: pnpm run lint:fs
       - run: pnpm run lint:deps
-      - run: pnpm run test
+
+      - name: Test Packages
+        run: pnpm run test
