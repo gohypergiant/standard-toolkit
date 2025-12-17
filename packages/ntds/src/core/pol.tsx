@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -27,15 +26,26 @@ export const SvgPol = ({
   ...props
 }: SVGProps<SVGSVGElement> & Props) => {
   const { fill } = props;
-  const fillColor = fill ?? '#FF69B4'
+  const fillColor = fill ?? '#FF69B4';
   const hasTitle = typeof title === 'string' && Boolean(title.trim());
 
   return (
-
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby={hasTitle ? titleId : undefined} {...props}> 
-     {hasTitle && <title id={titleId}>{title}</title>}
-<path fillRule="evenodd" clipRule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4.72754C7.98338 4.72754 4.72754 7.98338 4.72754 12C4.72754 15.6773 7.45674 18.7148 11 19.2021V11.7998L7 7H17L13 11.7998V19.2021C16.5433 18.7148 19.2725 15.6773 19.2725 12C19.2725 7.98338 16.0166 4.72754 12 4.72754ZM12 10L12.833 9H11.167L12 10Z" fill={fillColor}/>
-</svg>
-
-
-)};
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      aria-labelledby={hasTitle ? titleId : undefined}
+      {...props}
+    >
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path
+        fillRule='evenodd'
+        clipRule='evenodd'
+        d='M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4.72754C7.98338 4.72754 4.72754 7.98338 4.72754 12C4.72754 15.6773 7.45674 18.7148 11 19.2021V11.7998L7 7H17L13 11.7998V19.2021C16.5433 18.7148 19.2725 15.6773 19.2725 12C19.2725 7.98338 16.0166 4.72754 12 4.72754ZM12 10L12.833 9H11.167L12 10Z'
+        fill={fillColor}
+      />
+    </svg>
+  );
+};

@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -27,16 +26,28 @@ export const SvgSubGroupHostile = ({
   ...props
 }: SVGProps<SVGSVGElement> & Props) => {
   const { fill } = props;
-  const fillColor = fill ?? '#FF69B4'
+  const fillColor = fill ?? '#FF69B4';
   const hasTitle = typeof title === 'string' && Boolean(title.trim());
 
   return (
-
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby={hasTitle ? titleId : undefined} {...props}> 
-     {hasTitle && <title id={titleId}>{title}</title>}
-<path d="M12 18.667L18.667 12H22L12 22L2 12H5.33301L12 18.667Z" fill={fillColor}/>
-<path d="M10.333 12L12 13.667L13.667 12H17L12 17L7 12H10.333Z" fill={fillColor}/>
-</svg>
-
-
-)};
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      aria-labelledby={hasTitle ? titleId : undefined}
+      {...props}
+    >
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path
+        d='M12 18.667L18.667 12H22L12 22L2 12H5.33301L12 18.667Z'
+        fill={fillColor}
+      />
+      <path
+        d='M10.333 12L12 13.667L13.667 12H17L12 17L7 12H10.333Z'
+        fill={fillColor}
+      />
+    </svg>
+  );
+};

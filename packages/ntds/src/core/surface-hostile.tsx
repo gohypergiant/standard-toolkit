@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -27,16 +26,27 @@ export const SvgSurfaceHostile = ({
   ...props
 }: SVGProps<SVGSVGElement> & Props) => {
   const { fill } = props;
-  const fillColor = fill ?? '#FF69B4'
+  const fillColor = fill ?? '#FF69B4';
   const hasTitle = typeof title === 'string' && Boolean(title.trim());
 
   return (
-
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby={hasTitle ? titleId : undefined} {...props}> 
-     {hasTitle && <title id={titleId}>{title}</title>}
-<path fillRule="evenodd" clipRule="evenodd" d="M12 3L21 12L12 21L3 12L12 3ZM12 6L18 12L12 18L6 12L12 6Z" fill={fillColor}/>
-<path d="M12 10L14 12L12 14L10 12L12 10Z" fill={fillColor}/>
-</svg>
-
-
-)};
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      aria-labelledby={hasTitle ? titleId : undefined}
+      {...props}
+    >
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path
+        fillRule='evenodd'
+        clipRule='evenodd'
+        d='M12 3L21 12L12 21L3 12L12 3ZM12 6L18 12L12 18L6 12L12 6Z'
+        fill={fillColor}
+      />
+      <path d='M12 10L14 12L12 14L10 12L12 10Z' fill={fillColor} />
+    </svg>
+  );
+};

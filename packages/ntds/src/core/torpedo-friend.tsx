@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -27,16 +26,28 @@ export const SvgTorpedoFriend = ({
   ...props
 }: SVGProps<SVGSVGElement> & Props) => {
   const { fill } = props;
-  const fillColor = fill ?? '#FF69B4'
+  const fillColor = fill ?? '#FF69B4';
   const hasTitle = typeof title === 'string' && Boolean(title.trim());
 
   return (
-
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby={hasTitle ? titleId : undefined} {...props}> 
-     {hasTitle && <title id={titleId}>{title}</title>}
-<path d="M12.7515 5.50519V13H11.2124V5.50519H12.7515ZM15.0576 5.50519V6.71486H8.94236V5.50519H15.0576Z" fill={fillColor}/>
-<path d="M12 21C17.5228 21 22 16.5229 22 11H19.2727C19.2727 15.0166 16.0166 18.2727 12 18.2727C7.98338 18.2727 4.72727 15.0166 4.72727 11H2C2 16.5229 6.47715 21 12 21Z" fill={fillColor}/>
-</svg>
-
-
-)};
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      aria-labelledby={hasTitle ? titleId : undefined}
+      {...props}
+    >
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path
+        d='M12.7515 5.50519V13H11.2124V5.50519H12.7515ZM15.0576 5.50519V6.71486H8.94236V5.50519H15.0576Z'
+        fill={fillColor}
+      />
+      <path
+        d='M12 21C17.5228 21 22 16.5229 22 11H19.2727C19.2727 15.0166 16.0166 18.2727 12 18.2727C7.98338 18.2727 4.72727 15.0166 4.72727 11H2C2 16.5229 6.47715 21 12 21Z'
+        fill={fillColor}
+      />
+    </svg>
+  );
+};

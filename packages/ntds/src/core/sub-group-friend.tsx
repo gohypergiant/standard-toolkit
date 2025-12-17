@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-
 /**
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
@@ -27,16 +26,28 @@ export const SvgSubGroupFriend = ({
   ...props
 }: SVGProps<SVGSVGElement> & Props) => {
   const { fill } = props;
-  const fillColor = fill ?? '#FF69B4'
+  const fillColor = fill ?? '#FF69B4';
   const hasTitle = typeof title === 'string' && Boolean(title.trim());
 
   return (
-
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby={hasTitle ? titleId : undefined} {...props}> 
-     {hasTitle && <title id={titleId}>{title}</title>}
-<path d="M4.72754 12C4.72754 16.0166 7.98338 19.2725 12 19.2725C16.0166 19.2725 19.2725 16.0166 19.2725 12H22C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12H4.72754Z" fill={fillColor}/>
-<path d="M9.27246 11.9463C9.27266 13.4524 10.4939 14.6738 12 14.6738C13.5061 14.6738 14.7273 13.4524 14.7275 11.9463H17.4541C17.4539 14.9586 15.0123 17.4004 12 17.4004C8.98766 17.4004 6.5461 14.9586 6.5459 11.9463H9.27246Z" fill={fillColor}/>
-</svg>
-
-
-)};
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      aria-labelledby={hasTitle ? titleId : undefined}
+      {...props}
+    >
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path
+        d='M4.72754 12C4.72754 16.0166 7.98338 19.2725 12 19.2725C16.0166 19.2725 19.2725 16.0166 19.2725 12H22C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12H4.72754Z'
+        fill={fillColor}
+      />
+      <path
+        d='M9.27246 11.9463C9.27266 13.4524 10.4939 14.6738 12 14.6738C13.5061 14.6738 14.7273 13.4524 14.7275 11.9463H17.4541C17.4539 14.9586 15.0123 17.4004 12 17.4004C8.98766 17.4004 6.5461 14.9586 6.5459 11.9463H9.27246Z'
+        fill={fillColor}
+      />
+    </svg>
+  );
+};
