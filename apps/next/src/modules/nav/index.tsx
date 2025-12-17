@@ -16,7 +16,7 @@ const LINKS = [
   { path: '/', label: 'All' },
   { path: '/accordion', label: 'Accordion' },
   { path: '/accordion-group', label: 'Accordion Group' },
-  { path: '/action-bar/client', label: 'Action Bar' },
+  { path: '/action-bar', label: 'Action Bar' },
   { path: '/avatar', label: 'Avatar' },
   { path: '/badge', label: 'Badge' },
   { path: '/button', label: 'Button' },
