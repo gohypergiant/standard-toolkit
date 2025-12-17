@@ -8,7 +8,6 @@
     "mitt": "^3.0.1"
   },
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "tsdown": "^0.18.0",

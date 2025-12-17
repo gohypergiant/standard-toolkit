@@ -19,7 +19,6 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/lodash": "^4.17.20",
@@ -75,6 +74,7 @@
     "format": "pnpm biome format . --write --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
+    "prepare": "pnpm run build",
     "test": "pnpm vitest --dir=test"
   },
   "sideEffects": false,

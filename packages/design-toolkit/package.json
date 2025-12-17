@@ -7,7 +7,6 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/design-foundation": "workspace:*",
     "@accelint/geo": "workspace:*",

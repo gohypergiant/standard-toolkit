@@ -5,7 +5,6 @@
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",

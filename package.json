@@ -7,7 +7,7 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
-    "@accelint/prettier-config": "workspace:*",
+    "@accelint/smeegl": "workspace:*",
     "@accelint/turbo-filter": "workspace:*",
     "@babel/parser": "^7.28.5",
     "@biomejs/biome": "^2.3.8",

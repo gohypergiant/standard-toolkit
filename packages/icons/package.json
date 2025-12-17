@@ -7,7 +7,6 @@
   "dependencies": {},
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@svgr/cli": "^8.1.0",

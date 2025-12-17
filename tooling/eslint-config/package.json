@@ -4,6 +4,7 @@
   "version": "0.1.4",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {},
   "files": [
     "./catalog-info.yaml",
     "./CHANGELOG.md",

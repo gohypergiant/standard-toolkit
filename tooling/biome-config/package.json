@@ -4,6 +4,7 @@
   "version": "1.0.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {},
   "exports": {
     "./analyzer": "./analyzer.json",
     "./formatter": "./formatter.json",

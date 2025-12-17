@@ -9,7 +9,6 @@
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/prettier-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
