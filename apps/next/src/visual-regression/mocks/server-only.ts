@@ -10,23 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Notice } from '@accelint/design-toolkit/components/notice';
-import { MEDIUM_VARIANTS, SMALL_VARIANTS } from './variants';
-
-export function NoticeExampleServer() {
-  return (
-    <>
-      <div className='flex flex-row flex-wrap gap-m'>
-        {MEDIUM_VARIANTS.map((props, k) => (
-          <Notice key={k} message='This is a notice message' {...props} />
-        ))}
-      </div>
-      <div className='flex flex-row flex-wrap gap-m'>
-        {SMALL_VARIANTS.map((props, k) => (
-          <Notice key={k} message='This is a notice message' {...props} />
-        ))}
-      </div>
-    </>
-  );
-}
+/**
+ * Mock for 'server-only' package.
+ * In visual regression tests, we want to import server components directly
+ * without triggering the runtime error that 'server-only' throws.
+ */
+export {};
