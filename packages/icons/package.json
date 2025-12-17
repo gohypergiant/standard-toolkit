@@ -285,7 +285,8 @@
     "constellation-tracker": "constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
     "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
-    "license": "pnpm zx ../../scripts/license.mjs --files src/icons"
+    "license": "pnpm zx ../../scripts/license.mjs --files src/icons",
+    "lint": "pnpm biome lint . --verbose"
   },
   "subPath": "packages/icons",
   "title": "Accelint Icons",

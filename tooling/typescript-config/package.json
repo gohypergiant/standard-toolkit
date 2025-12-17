@@ -49,7 +49,7 @@
   "scripts": {
     "constellation-tracker": "node ../constellation-tracker/dist/main.js",
     "format": "pnpm biome format . --write --verbose",
-    "lint": "pnpm biome lint"
+    "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,
   "subPath": "tooling/typescript-config",
