@@ -243,6 +243,12 @@ Event names for map interactions:
 
 - `MapEvents.click`: `'map:click'`
 - `MapEvents.hover`: `'map:hover'`
+- `MapEvents.viewport`: `'map:viewport'`
+- `MapEvents.enablePan`: `'map:enablePan'`
+- `MapEvents.disablePan`: `'map:disablePan'`
+- `MapEvents.enableZoom`: `'map:enableZoom'`
+- `MapEvents.disableZoom`: `'map:disableZoom'`
+- `MapEvents.centerOn`: `'map:centerOn'`
 
 ## Children Components
 
@@ -314,3 +320,92 @@ The picking info is modified for serialization through the event bus:
 - `sourceLayerId?: string` - The ID of the source layer if applicable (extracted from `sourceLayer.id`)
 
 This transformation allows you to identify which layer was interacted with while maintaining compatibility with the structured clone algorithm required by the event bus.
+
+## Map Control Events
+
+BaseMap listens for control events that allow you to programmatically control map behavior. Emit these events using `useEmit` from `@accelint/bus/react`:
+
+### Controlling Pan and Zoom
+
+```typescript
+import { useEmit } from '@accelint/bus/react';
+import { MapEvents } from '@accelint/map-toolkit/deckgl';
+import type { MapDisablePanEvent, MapEnablePanEvent } from '@accelint/map-toolkit/deckgl';
+
+const MAIN_MAP_ID = uuid();
+
+function DrawingToolbar() {
+  const emitDisablePan = useEmit<MapDisablePanEvent>(MapEvents.disablePan);
+  const emitEnablePan = useEmit<MapEnablePanEvent>(MapEvents.enablePan);
+
+  const handleEnterDrawMode = () => {
+    // Disable panning while drawing
+    emitDisablePan({ id: MAIN_MAP_ID });
+  };
+
+  const handleExitDrawMode = () => {
+    // Re-enable panning when done
+    emitEnablePan({ id: MAIN_MAP_ID });
+  };
+
+  return (
+    <button onClick={handleEnterDrawMode}>Draw</button>
+  );
+}
+```
+
+### Centering the Map
+
+```typescript
+import { useEmit } from '@accelint/bus/react';
+import { MapEvents } from '@accelint/map-toolkit/deckgl';
+import type { MapCenterOnEvent } from '@accelint/map-toolkit/deckgl';
+
+function FeatureList({ features }) {
+  const emitCenterOn = useEmit<MapCenterOnEvent>(MapEvents.centerOn);
+
+  const handleFeatureClick = (feature) => {
+    emitCenterOn({
+      id: MAIN_MAP_ID,
+      longitude: feature.coordinates[0],
+      latitude: feature.coordinates[1],
+      zoom: 15, // optional
+    });
+  };
+
+  return (
+    <ul>
+      {features.map((f) => (
+        <li key={f.id} onClick={() => handleFeatureClick(f)}>
+          {f.name}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### Control Event Payloads
+
+#### `MapControlPayload`
+
+Used by `enablePan`, `disablePan`, `enableZoom`, and `disableZoom` events:
+
+```typescript
+type MapControlPayload = {
+  id: UniqueId; // The map instance to control
+};
+```
+
+#### `MapCenterOnPayload`
+
+Used by the `centerOn` event:
+
+```typescript
+type MapCenterOnPayload = {
+  id: UniqueId;       // The map instance to center
+  longitude: number;  // Longitude to center on
+  latitude: number;   // Latitude to center on
+  zoom?: number;      // Optional zoom level
+};
+```

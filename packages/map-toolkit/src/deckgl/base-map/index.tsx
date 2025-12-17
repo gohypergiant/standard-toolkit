@@ -20,6 +20,7 @@ import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
+import { Controls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
@@ -229,7 +230,11 @@ export function BaseMap({
   );
 
   // Use the custom hook to handle MapLibre
-  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
+  const mapLibreInstance = useMapLibre(
+    deckglInstance as IControl,
+    BASE_MAP_STYLE,
+    mapOptions,
+  );
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -315,6 +320,7 @@ export function BaseMap({
 
   return (
     <div id={container} className={className}>
+      <Controls id={id} map={mapLibreInstance} />
       <MapProvider id={id}>
         <Deckgl
           {...rest}
