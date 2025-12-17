@@ -60,24 +60,27 @@ Previously, wildcard exports required explicit `/index` suffixes per [Node's mod
 
 Now that the export explicitly points to `index.js`, the `/index` suffix causes resolution to fail.
 
+## Breaking Change: /styles export removed from design-Toolkit
+
+because all component styles are in css modules and global classes live in design-foundation, there is no longer anything global for the design toolkit to export
+
 ## Migration
 
-Remove any `/index` suffixes from imports:
+Remove the design-toolkit styles import from your global css. You should also remove the @source (though leaving it in doesn't technically break anything)
 
 **❌ Before:**
-```typescript
-import { designTokens } from '@accelint/design-foundation/tokens/index';
-import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
+```css
+@import "@accelint/design-foundation/styles";
+@import "@accelint/design-toolkit/styles";
+@source '../node_modules/@accelint/design-toolkit';
 ```
 
 **✅ After:**
-```typescript
-import { designTokens } from '@accelint/design-foundation/tokens';
-import { Accordion } from '@accelint/design-toolkit/components/accordion';
+```css
+@import "@accelint/design-foundation/styles";
 ```
 
 ### Affected Packages
-- `@accelint/design-foundation`
 - `@accelint/design-toolkit`
 
 <hr />
