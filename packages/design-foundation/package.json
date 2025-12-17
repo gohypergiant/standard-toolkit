@@ -85,9 +85,7 @@
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
     "generate": "pnpm gen:tokens && pnpm gen:variants",
-    "license": "pnpm license:tokens && pnpm license:variants",
-    "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
-    "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
+    "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"

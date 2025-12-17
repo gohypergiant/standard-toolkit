@@ -63,12 +63,11 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm tsdown",
     "constellation-tracker": "node ./dist/main.mjs",
     "format": "pnpm biome format . --write --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
-    "prepare": "pnpm run build",
+    "pre-build": "pnpm tsdown",
     "test": "pnpm vitest --dir=test",
     "test:coverage": "pnpm vitest --dir=test --coverage"
   },

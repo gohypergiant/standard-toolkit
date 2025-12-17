@@ -106,6 +106,7 @@
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/core",
+    "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src"
   },

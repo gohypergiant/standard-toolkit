@@ -142,6 +142,7 @@
     "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "preview": "pnpm storybook dev -p 6007",
     "test": "pnpm vitest --dir=src",

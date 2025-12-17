@@ -49,6 +49,7 @@
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/websocket",
+    "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,

@@ -46,10 +46,11 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm tsdown",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
-    "lint": "pnpm biome lint . --verbose"
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
+    "pre-build": "pnpm tsdown"
   },
   "sideEffects": false,
   "subPath": "tooling/postcss-tailwind-css-modules",

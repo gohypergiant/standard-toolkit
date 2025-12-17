@@ -92,6 +92,7 @@
     "build": "pnpm tsdown",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
