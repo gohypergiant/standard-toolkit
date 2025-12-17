@@ -49,7 +49,7 @@
     "clean:deps": "pnpm -r exec rimraf node_modules && pnpm exec rimraf node_modules",
     "clean:dist": "pnpm -r exec rimraf dist",
     "clean:turbo": "pnpm -r exec  rimraf .turbo && exec pnpm rimraf .turbo",
-    "constellation-tracker": "turbo constellation-tracker -- --regenerate",
+    "constellation-tracker": "pnpm run build && turbo constellation-tracker -- --regenerate",
     "deps:version-major": "pnpm taze major -r",
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",

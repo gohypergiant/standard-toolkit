@@ -24,12 +24,15 @@
       "outputs": ["coverage/**"]
     },
     "constellation-tracker": {
-      "cache": false,
-      "dependsOn": ["build", "^constellation-tracker"]
+      "cache": false
     },
     "lint": {},
-    "format": {
+    "license": {
       "cache": false
+    },
+    "format": {
+      "cache": false,
+      "dependsOn": ["index", "license"]
     },
     "bench": {
       "dependsOn": ["^build"]

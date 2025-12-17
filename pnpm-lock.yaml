@@ -1016,9 +1016,6 @@ importers:
       '@accelint/biome-config':
         specifier: workspace:*
         version: link:../../tooling/biome-config
-      '@accelint/smeegl':
-        specifier: workspace:*
-        version: link:../../tooling/smeegl
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config

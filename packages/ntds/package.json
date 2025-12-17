@@ -6,7 +6,6 @@
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
-    "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@types/node": "^22",
     "@types/react": "^19",
