@@ -167,11 +167,6 @@ export type MapDisableZoomEvent = Payload<
   MapControlPayload
 >;
 
-export type MapCenterOnEvent = Payload<
-  typeof MapEvents.centerOn,
-  MapCenterOnPayload
->;
-
 export type MapEventType =
   | MapClickEvent
   | MapHoverEvent
@@ -179,5 +174,4 @@ export type MapEventType =
   | MapEnablePanEvent
   | MapDisablePanEvent
   | MapEnableZoomEvent
-  | MapDisableZoomEvent
-  | MapCenterOnEvent;
+  | MapDisableZoomEvent;

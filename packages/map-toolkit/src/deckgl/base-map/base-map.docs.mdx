@@ -354,37 +354,6 @@ function DrawingToolbar() {
 }
 ```
 
-### Centering the Map
-
-```typescript
-import { useEmit } from '@accelint/bus/react';
-import { MapEvents } from '@accelint/map-toolkit/deckgl';
-import type { MapCenterOnEvent } from '@accelint/map-toolkit/deckgl';
-
-function FeatureList({ features }) {
-  const emitCenterOn = useEmit<MapCenterOnEvent>(MapEvents.centerOn);
-
-  const handleFeatureClick = (feature) => {
-    emitCenterOn({
-      id: MAIN_MAP_ID,
-      longitude: feature.coordinates[0],
-      latitude: feature.coordinates[1],
-      zoom: 15, // optional
-    });
-  };
-
-  return (
-    <ul>
-      {features.map((f) => (
-        <li key={f.id} onClick={() => handleFeatureClick(f)}>
-          {f.name}
-        </li>
-      ))}
-    </ul>
-  );
-}
-```
-
 ### Control Event Payloads
 
 #### `MapControlPayload`

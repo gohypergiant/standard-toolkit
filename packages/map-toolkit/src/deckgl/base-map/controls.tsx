@@ -17,8 +17,8 @@ import { useOn } from '@accelint/bus/react';
 import { MapEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { Map as MapLibre } from 'maplibre-gl';
+import type { RefObject } from 'react';
 import type {
-  MapCenterOnEvent,
   MapDisablePanEvent,
   MapDisableZoomEvent,
   MapEnablePanEvent,
@@ -27,43 +27,33 @@ import type {
 
 type ControlsProps = {
   id: UniqueId;
-  map: MapLibre | null;
+  mapRef: RefObject<MapLibre | null>;
 };
 
-export function Controls({ id, map }: ControlsProps) {
+export function Controls({ id, mapRef }: ControlsProps) {
   useOn<MapEnablePanEvent>(MapEvents.enablePan, (event) => {
     if (event.payload.id === id) {
-      map?.dragPan.enable();
+      mapRef.current?.dragPan.enable();
     }
   });
 
   useOn<MapDisablePanEvent>(MapEvents.disablePan, (event) => {
     if (event.payload.id === id) {
-      map?.dragPan.disable();
+      mapRef.current?.dragPan.disable();
     }
   });
 
   useOn<MapEnableZoomEvent>(MapEvents.enableZoom, (event) => {
     if (event.payload.id === id) {
-      map?.scrollZoom.enable();
-      map?.doubleClickZoom.enable();
+      mapRef.current?.scrollZoom.enable();
+      mapRef.current?.doubleClickZoom.enable();
     }
   });
 
   useOn<MapDisableZoomEvent>(MapEvents.disableZoom, (event) => {
     if (event.payload.id === id) {
-      map?.scrollZoom.disable();
-      map?.doubleClickZoom.disable();
-    }
-  });
-
-  useOn<MapCenterOnEvent>(MapEvents.centerOn, (event) => {
-    if (event.payload.id === id) {
-      const { longitude, latitude, zoom } = event.payload;
-      map?.flyTo({
-        center: [longitude, latitude],
-        ...(zoom !== undefined && { zoom }),
-      });
+      mapRef.current?.scrollZoom.disable();
+      mapRef.current?.doubleClickZoom.disable();
     }
   });
 

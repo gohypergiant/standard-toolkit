@@ -230,7 +230,7 @@ export function BaseMap({
   );
 
   // Use the custom hook to handle MapLibre
-  const mapLibreInstance = useMapLibre(
+  const mapLibreRef = useMapLibre(
     deckglInstance as IControl,
     BASE_MAP_STYLE,
     mapOptions,
@@ -320,7 +320,7 @@ export function BaseMap({
 
   return (
     <div id={container} className={className}>
-      <Controls id={id} map={mapLibreInstance} />
+      <Controls id={id} mapRef={mapLibreRef} />
       <MapProvider id={id}>
         <Deckgl
           {...rest}

@@ -15,7 +15,6 @@ export { BASE_MAP_STYLE, PARAMETERS } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
-  MapCenterOnEvent,
   MapCenterOnPayload,
   MapClickEvent,
   MapClickPayload,
