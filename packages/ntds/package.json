@@ -113,7 +113,7 @@
     "format": "pnpm biome format . --write --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
     "license": "pnpm zx ../../scripts/license.mjs --files src",
-    "lint": "pnpm biome lint"
+    "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,
   "subPath": "packages/ntds",

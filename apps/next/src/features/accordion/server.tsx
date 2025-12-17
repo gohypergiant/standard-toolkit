@@ -11,13 +11,13 @@
  */
 
 import 'server-only';
+import { Accordion } from '@accelint/design-toolkit/components/accordion';
 import { AccordionHeader } from '@accelint/design-toolkit/components/accordion/header';
-import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
 import { AccordionPanel } from '@accelint/design-toolkit/components/accordion/panel';
 import { AccordionTrigger } from '@accelint/design-toolkit/components/accordion/trigger';
-import { Button } from '@accelint/design-toolkit/components/button/index';
-import { Icon } from '@accelint/design-toolkit/components/icon/index';
-import { Menu } from '@accelint/design-toolkit/components/menu/index';
+import { Button } from '@accelint/design-toolkit/components/button';
+import { Icon } from '@accelint/design-toolkit/components/icon';
+import { Menu } from '@accelint/design-toolkit/components/menu';
 import { MenuItem } from '@accelint/design-toolkit/components/menu/item';
 import { MenuTrigger } from '@accelint/design-toolkit/components/menu/trigger';
 import PlaceholderIcon from '@accelint/icons/placeholder';

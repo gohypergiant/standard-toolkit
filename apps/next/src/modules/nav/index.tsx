@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Link } from '@accelint/design-toolkit/components/link/index';
+import { Link } from '@accelint/design-toolkit/components/link';
 
 const LINKS = [
   { path: '/', label: 'All' },

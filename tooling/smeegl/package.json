@@ -74,7 +74,7 @@
     "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
-    "lint": "pnpm biome lint",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=test"
   },
   "sideEffects": false,

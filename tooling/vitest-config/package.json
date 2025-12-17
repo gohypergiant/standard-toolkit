@@ -41,7 +41,7 @@
   "scripts": {
     "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
-    "lint": "pnpm biome lint"
+    "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,
   "subPath": "tooling/vitest-config",

@@ -11,8 +11,8 @@
  */
 
 import 'server-only';
-import { Button } from '@accelint/design-toolkit/components/button/index';
-import { Tooltip } from '@accelint/design-toolkit/components/tooltip/index';
+import { Button } from '@accelint/design-toolkit/components/button';
+import { Tooltip } from '@accelint/design-toolkit/components/tooltip';
 import { TooltipTrigger } from '@accelint/design-toolkit/components/tooltip/trigger';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';

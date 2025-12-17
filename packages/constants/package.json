@@ -51,7 +51,7 @@
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/constants",
-    "lint": "pnpm biome lint"
+    "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,
   "subPath": "packages/constants",

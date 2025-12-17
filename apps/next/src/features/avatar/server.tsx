@@ -11,9 +11,9 @@
  */
 
 import 'server-only';
-import { Avatar } from '@accelint/design-toolkit/components/avatar/index';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
-import { Icon } from '@accelint/design-toolkit/components/icon/index';
+import { Avatar } from '@accelint/design-toolkit/components/avatar';
+import { Badge } from '@accelint/design-toolkit/components/badge';
+import { Icon } from '@accelint/design-toolkit/components/icon';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';

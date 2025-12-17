@@ -67,7 +67,7 @@
     "constellation-tracker": "pnpm run build && node ./dist/main.js",
     "format": "pnpm biome format . --write --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
-    "lint": "pnpm biome lint",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=test",
     "test:coverage": "pnpm vitest --dir=test --coverage"
   },
