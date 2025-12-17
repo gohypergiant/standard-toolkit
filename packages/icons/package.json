@@ -281,7 +281,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm generate:icons && pnpm license && pnpm format && pnpm tsdown",
+    "build": "pnpm generate:icons && pnpm tsdown",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
     "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
