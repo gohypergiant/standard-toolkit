@@ -68,6 +68,7 @@
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "pre-build": "pnpm tsdown",
+    "prepare": "pnpm run pre-build",
     "test": "pnpm vitest --dir=test",
     "test:coverage": "pnpm vitest --dir=test --coverage"
   },

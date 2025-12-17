@@ -62,7 +62,6 @@
     "lint": "pnpm turbo lint",
     "lint:deps": "pnpm syncpack lint",
     "lint:fs": "pnpm ls-lint",
-    "postinstall": "pnpm run pre-build",
     "pre-build": "pnpm turbo pre-build",
     "preview": "pnpm turbo preview",
     "preview:filter": "pnpm turbo-filter preview",

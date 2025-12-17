@@ -50,7 +50,8 @@
     "format": "pnpm biome format . --write --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
-    "pre-build": "pnpm tsdown"
+    "pre-build": "pnpm tsdown",
+    "prepare": "pnpm run pre-build"
   },
   "sideEffects": false,
   "subPath": "tooling/postcss-tailwind-css-modules",
