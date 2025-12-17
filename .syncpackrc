@@ -8,6 +8,8 @@
         "**",
         "!@deck.gl/**",
         "!@react-aria/**",
+        "!@react-stately/**",
+        "!@react-types/**",
         "!react-aria-components",
         "!react-querybuilder"
       ],
@@ -21,6 +23,8 @@
       "dependencies": [
         "@deck.gl/**",
         "@react-aria/**",
+        "@react-stately/**",
+        "@react-types/**",
         "react-aria-components",
         "react-querybuilder"
       ],
@@ -53,7 +57,12 @@
       "pinVersion": "~9.1"
     },
     {
-      "dependencies": ["@react-aria/**", "react-aria-components"],
+      "dependencies": [
+        "@react-aria/**",
+        "@react-stately/**",
+        "@react-types/**",
+        "react-aria-components"
+      ],
       "label": "Ensure RAC packages are within the same range across project",
       "policy": "sameRange"
     },

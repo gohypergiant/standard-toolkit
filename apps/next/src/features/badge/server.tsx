@@ -11,7 +11,7 @@
  */
 
 import 'server-only';
-import { Badge } from '@accelint/design-toolkit/components/badge/index';
+import { Badge } from '@accelint/design-toolkit/components/badge';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
