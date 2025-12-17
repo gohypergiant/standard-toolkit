@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { designTokens } from '@accelint/design-foundation/tokens/index';
+import { designTokens } from '@accelint/design-foundation/tokens';
 import { assign } from 'radashi';
 import {
   createContext,

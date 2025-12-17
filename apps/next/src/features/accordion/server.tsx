@@ -11,31 +11,20 @@
  */
 
 import 'server-only';
+import { Accordion } from '@accelint/design-toolkit/components/accordion';
 import { AccordionHeader } from '@accelint/design-toolkit/components/accordion/header';
-import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
 import { AccordionPanel } from '@accelint/design-toolkit/components/accordion/panel';
 import { AccordionTrigger } from '@accelint/design-toolkit/components/accordion/trigger';
-import { Button } from '@accelint/design-toolkit/components/button/index';
-import { Icon } from '@accelint/design-toolkit/components/icon/index';
-import { Menu } from '@accelint/design-toolkit/components/menu/index';
+import { Button } from '@accelint/design-toolkit/components/button';
+import { Icon } from '@accelint/design-toolkit/components/icon';
+import { Menu } from '@accelint/design-toolkit/components/menu';
 import { MenuItem } from '@accelint/design-toolkit/components/menu/item';
 import { MenuTrigger } from '@accelint/design-toolkit/components/menu/trigger';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
-import type { AccordionProps } from '@accelint/design-toolkit/components/accordion/types';
+import { PROP_COMBOS } from './variants';
 
-const PROP_COMBOS: AccordionProps[] = [
-  { variant: 'cozy' },
-  { variant: 'compact' },
-  { variant: 'cozy', isDisabled: true },
-  { variant: 'compact', isDisabled: true },
-  { variant: 'cozy', isExpanded: true },
-  { variant: 'compact', isExpanded: true },
-  { variant: 'cozy', isExpanded: true, isDisabled: true },
-  { variant: 'compact', isExpanded: true, isDisabled: true },
-];
-
-function PropExamples() {
+function PropCombos() {
   return PROP_COMBOS.map((props, k) => {
     return (
       <BentoItem key={k}>
@@ -87,7 +76,7 @@ function MenuExample() {
 export function AccordionExampleServer() {
   return (
     <>
-      <PropExamples />
+      <PropCombos />
       <MenuExample />
     </>
   );

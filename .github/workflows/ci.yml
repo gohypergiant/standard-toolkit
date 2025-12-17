@@ -36,6 +36,15 @@ jobs:
 
       - run: pnpm install
       - run: pnpm run build
+      - run: pnpm run format
+      - name: Enforce formatting
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "::error::Formatting issues detected. Please run 'pnpm run format' locally and commit the changes."
+            git diff --name-only
+            exit 1
+          fi
+
       - run: pnpm run lint
       - run: pnpm run lint:fs
       - run: pnpm run lint:deps

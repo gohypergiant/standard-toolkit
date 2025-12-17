@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+@layer theme, base, components, components.l1, components.l2, components.l3, components.l4, components.l5, utilities;
+
 /* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'); */
 @import '@fontsource-variable/roboto-flex';
 @import '@fontsource-variable/roboto-mono';
-
-@layer theme, base, components, components.l1, components.l2, components.l3, components.l4, components.l5, utilities;
 
 @import 'tailwindcss';
 
