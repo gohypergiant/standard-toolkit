@@ -10,11 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
+import pluginBabel from '@rollup/plugin-babel';
 import copy from 'rollup-plugin-copy';
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
   plugins: [
+    pluginBabel({
+      babelHelpers: 'bundled',
+      parserOpts: {
+        sourceType: 'module',
+        plugins: ['jsx', 'typescript'],
+      },
+      plugins: ['babel-plugin-react-compiler'],
+      extensions: ['.ts', '.tsx'],
+    }),
     copy({
       targets: [{ src: 'src/**/*.css', dest: 'dist' }],
       flatten: false,
