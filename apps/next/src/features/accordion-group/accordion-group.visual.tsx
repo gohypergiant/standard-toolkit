@@ -10,23 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { Notice } from '@accelint/design-toolkit/components/notice';
-import { MEDIUM_VARIANTS, SMALL_VARIANTS } from './variants';
+import { BentoGroup } from '~/components/bento';
+import { createVisualTests } from '~/visual-regression/vitest';
+import { AccordionGroupExampleServer } from './server';
 
-export function NoticeExampleServer() {
+function AccordionGroupVariants() {
   return (
-    <>
-      <div className='flex flex-row flex-wrap gap-m'>
-        {MEDIUM_VARIANTS.map((props, k) => (
-          <Notice key={k} message='This is a notice message' {...props} />
-        ))}
-      </div>
-      <div className='flex flex-row flex-wrap gap-m'>
-        {SMALL_VARIANTS.map((props, k) => (
-          <Notice key={k} message='This is a notice message' {...props} />
-        ))}
-      </div>
-    </>
+    <BentoGroup>
+      <AccordionGroupExampleServer />
+    </BentoGroup>
   );
 }
+
+createVisualTests({
+  componentName: 'AccordionGroup',
+  variantsComponent: AccordionGroupVariants,
+});

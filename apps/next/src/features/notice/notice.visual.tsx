@@ -10,23 +10,27 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
 import { Notice } from '@accelint/design-toolkit/components/notice';
-import { MEDIUM_VARIANTS, SMALL_VARIANTS } from './variants';
+import type { NoticeColor } from '@accelint/design-toolkit/components/notice/types';
+import { createVisualTestScenarios } from '~/visual-regression/vitest';
+import { COLORS, VARIANTS_BY_COLOR } from './variants';
 
-export function NoticeExampleServer() {
+function NoticeColorVariants({ color }: { color: NoticeColor }) {
+  const variants = VARIANTS_BY_COLOR[color];
   return (
-    <>
-      <div className='flex flex-row flex-wrap gap-m'>
-        {MEDIUM_VARIANTS.map((props, k) => (
-          <Notice key={k} message='This is a notice message' {...props} />
-        ))}
-      </div>
-      <div className='flex flex-row flex-wrap gap-m'>
-        {SMALL_VARIANTS.map((props, k) => (
-          <Notice key={k} message='This is a notice message' {...props} />
-        ))}
-      </div>
-    </>
+    <div className='flex flex-col gap-m p-l'>
+      {variants.map((props, k) => (
+        <Notice key={k} message='This is a notice message' {...props} />
+      ))}
+    </div>
   );
 }
+
+createVisualTestScenarios(
+  'Notice',
+  COLORS.map((color) => ({
+    name: `${color} variants`,
+    render: () => <NoticeColorVariants color={color} />,
+    screenshotName: `notice-${color}.png`,
+  })),
+);
