@@ -26,16 +26,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
 
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          # cache: 'pnpm'
+          node-version-file: 'package.json'
+
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
         with:
           run_install: false
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          cache: 'pnpm'
-          node-version-file: 'package.json'
 
       - name: Install Dependencies
         run: pnpm install
