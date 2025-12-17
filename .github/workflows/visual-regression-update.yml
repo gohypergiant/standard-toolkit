@@ -1,0 +1,129 @@
+# Visual Regression Snapshot Update Workflow
+#
+# This workflow manually updates visual regression test baselines on feature branches.
+# It regenerates all screenshots and commits them back to the branch.
+#
+# Usage:
+# 1. Go to Actions tab in GitHub
+# 2. Select "Update Visual Regression Snapshots"
+# 3. Click "Run workflow" and select your branch
+#
+# Safety: This workflow cannot run on the main branch.
+
+name: Update Visual Regression Snapshots
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update-snapshots:
+    name: Update Snapshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check branch
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "::error::Cannot update snapshots on main branch"
+          exit 1
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-visual-update-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-visual-update-
+            ${{ runner.os }}-turbo-visual-
+            ${{ runner.os }}-turbo-
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'pnpm'
+          node-version-file: 'package.json'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm run build
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+        working-directory: apps/next
+
+      - name: Update visual regression snapshots
+        run: pnpm visual:update
+        working-directory: apps/next
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet -- '*.png'; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No screenshot changes detected"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Screenshot changes detected:"
+            git diff --name-only -- '*.png'
+          fi
+
+      - name: Configure git
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git add '*.png'
+          git commit -m "chore: update visual regression snapshots
+
+          Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+          git push
+
+      - name: Generate summary
+        run: |
+          echo "## 🖼️ Visual Regression Snapshot Update" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+            echo "✅ **Snapshots updated and pushed**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Updated files:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            git log -1 --name-only --pretty=format: -- '*.png' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ **No changes detected**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "All snapshots are already up to date." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "<sub>Triggered by @${{ github.actor }}</sub>" >> $GITHUB_STEP_SUMMARY
