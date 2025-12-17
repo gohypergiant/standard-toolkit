@@ -419,7 +419,7 @@
     "format:biome": "pnpm biome format . --write --verbose",
     "format:prettier": "prettier --write .",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
-    "lint": "pnpm biome lint",
+    "lint": "pnpm biome lint . --verbose",
     "preview": "pnpm storybook dev -p 6006",
     "preview:docs": "pnpm storybook dev --docs -p 6006",
     "test": "pnpm vitest --dir=src",
