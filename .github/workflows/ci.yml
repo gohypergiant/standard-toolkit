@@ -41,6 +41,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install # note this runs pre-build
 
+      - name: Prebuild Bin Executables
+        run: pnpm run pre-build
+
       - name: Build Packages
         run: pnpm run build
 
