@@ -7,8 +7,7 @@
     },
     "build": {
       "dependsOn": ["index", "^build"],
-      "outputs": ["dist", "build", ".next"],
-      "outputLogs": "new-only"
+      "outputs": ["dist", "build", ".next"]
     },
     "dev": {
       "dependsOn": ["^build"],
