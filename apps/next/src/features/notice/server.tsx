@@ -11,7 +11,7 @@
  */
 
 import 'server-only';
-import { Notice } from '@accelint/design-toolkit/components/notice/index';
+import { Notice } from '@accelint/design-toolkit/components/notice';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 

@@ -11,12 +11,12 @@
  */
 
 import 'server-only';
+import { Accordion } from '@accelint/design-toolkit/components/accordion';
 import { AccordionGroup } from '@accelint/design-toolkit/components/accordion/group';
 import { AccordionHeader } from '@accelint/design-toolkit/components/accordion/header';
-import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
 import { AccordionPanel } from '@accelint/design-toolkit/components/accordion/panel';
 import { AccordionTrigger } from '@accelint/design-toolkit/components/accordion/trigger';
-import { Icon } from '@accelint/design-toolkit/components/icon/index';
+import { Icon } from '@accelint/design-toolkit/components/icon';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
