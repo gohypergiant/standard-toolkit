@@ -1,10 +1,11 @@
 pre-commit:
   commands:
     format:
+      # NOTE: this also will license and index
       run: pnpm run format && pnpm run format:deps
       stage_fixed: true
-      priority: 1
+
+pre-push:
+  commands:
     validate-docblocks:
       run: pnpm run audit:docblocks || true
-      priority: 2
-
