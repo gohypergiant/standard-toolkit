@@ -153,7 +153,7 @@ const useSavedViewportHotkey = createSavedViewport({
   key: DIGIT_KEYS as NonEmptyArray<KeyCombination>,
 });
 
-export function ViewportsToolbar() {
+function ViewportsToolbar() {
   useSavedViewportHotkey();
   const [savedViewports, setSavedViewports] = useState<
     Record<string, MapViewState>
