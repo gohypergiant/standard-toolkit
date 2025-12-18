@@ -88,7 +88,7 @@
     "license": "pnpm license:tokens && pnpm license:variants",
     "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
     "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
-    "lint": "pnpm biome lint",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
