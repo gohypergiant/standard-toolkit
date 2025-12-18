@@ -23,7 +23,6 @@
 "@accelint/ntds": patch
 "@accelint/bus": patch
 "@accelint/geo": patch
-"@apps/next": patch
 ---
 
 Ensure dependencies all follow the same semver range across devtk, maptk, and designtk.
