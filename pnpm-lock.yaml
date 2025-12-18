@@ -540,8 +540,8 @@ importers:
         specifier: 3.9.10
         version: 3.9.10(react@19.2.3)
       '@react-aria/toast':
-        specifier: 3.0.7
-        version: 3.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: 3.0.8
+        version: 3.0.8(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/utils':
         specifier: 3.30.0
         version: 3.30.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -3081,8 +3081,8 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@react-aria/toast@3.0.7':
-    resolution: {integrity: sha512-nuxPQ7wcSTg9UNMhXl9Uwyc5you/D1RfwymI3VDa5OGTZdJOmV2j94nyjBfMO2168EYMZjw+wEovvOZphs2Pbw==}
+  '@react-aria/toast@3.0.8':
+    resolution: {integrity: sha512-rfJIms6AkMyQ7ZgKrMZgGfPwGcB/t1JoEwbc1PAmXcAvFI/hzF6YF7ZFDXiq38ucFsP9PnHmbXIzM9w4ccl18A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
@@ -9784,7 +9784,7 @@ snapshots:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
-  '@react-aria/toast@3.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@react-aria/toast@3.0.8(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@react-aria/i18n': 3.12.13(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/interactions': 3.26.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
