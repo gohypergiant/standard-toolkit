@@ -13,7 +13,7 @@
 export { BaseMap, type BaseMapProps } from './base-map';
 export { BASE_MAP_STYLE, PARAMETERS } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
-// Display Shape Layer exports
+export { createSavedViewport } from './saved-viewports';
 export {
   DASH_ARRAYS,
   DEFAULT_COLORS,
@@ -26,7 +26,6 @@ export {
   STROKE_PATTERNS,
   STROKE_WIDTHS,
 } from './shapes';
-export { createSavedViewport } from './saved-viewports';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
   MapClickEvent,
@@ -35,6 +34,7 @@ export type {
   MapHoverEvent,
   MapHoverPayload,
 } from './base-map/types';
+export type { SavedViewportOptions } from './saved-viewports';
 export type {
   CircleProperties,
   CircleRadius,
@@ -52,4 +52,3 @@ export type {
   StyledFeatureProperties,
   StyleProperties,
 } from './shapes';
-export type { SavedViewportOptions } from './saved-viewports';
