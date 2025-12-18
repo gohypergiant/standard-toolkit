@@ -36,9 +36,9 @@ export const mockShapes: EditableShape[] = [
           center: [-82.16095, 41.459647],
         },
         styleProperties: {
-          fillColor: [98, 166, 255, 255],
-          strokeColor: [98, 166, 255, 255],
-          strokeWidth: 4,
+          fillColor: [255, 255, 255, 255],
+          strokeColor: [136, 138, 143, 255],
+          strokeWidth: 2,
           strokePattern: 'solid',
         },
         shapeId: uuid(),
@@ -163,10 +163,10 @@ export const mockShapes: EditableShape[] = [
       type: 'Feature',
       properties: {
         styleProperties: {
-          fillColor: [98, 166, 255, 255],
-          strokeColor: [48, 210, 126, 255],
-          strokeWidth: 4,
-          strokePattern: 'dashed',
+          fillColor: [255, 255, 255, 255],
+          strokeColor: [136, 138, 143, 255],
+          strokeWidth: 2,
+          strokePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -194,9 +194,9 @@ export const mockShapes: EditableShape[] = [
       type: 'Feature',
       properties: {
         styleProperties: {
-          fillColor: [98, 166, 255, 255],
-          strokeColor: [98, 166, 255, 255],
-          strokeWidth: 4,
+          fillColor: [255, 255, 255, 255],
+          strokeColor: [136, 138, 143, 255],
+          strokeWidth: 2,
           strokePattern: 'solid',
         },
         shapeId: uuid(),
@@ -219,10 +219,10 @@ export const mockShapes: EditableShape[] = [
       type: 'Feature',
       properties: {
         styleProperties: {
-          fillColor: [212, 35, 29, 255],
-          strokeColor: [98, 166, 255, 255],
-          strokeWidth: 4,
-          strokePattern: 'dotted',
+          fillColor: [255, 255, 255, 255],
+          strokeColor: [136, 138, 143, 255],
+          strokeWidth: 2,
+          strokePattern: 'solid',
         },
         shapeId: uuid(),
       },

@@ -30,12 +30,12 @@ export const SHAPE_LAYER_IDS = {
 /**
  * Base fill opacity multiplier (60%) for standard semi-transparent look
  */
-export const BASE_FILL_OPACITY = 0.6;
+export const BASE_FILL_OPACITY = 0.2;
 
 /**
  * Default stroke width in pixels when not specified in styleProperties
  */
-export const DEFAULT_STROKE_WIDTH = 4;
+export const DEFAULT_STROKE_WIDTH = 2;
 
 /**
  * Additional pixels added to stroke width on hover
@@ -45,7 +45,7 @@ export const HOVER_WIDTH_INCREASE = 2;
 /**
  * Additional pixels added to stroke width for selection highlight
  */
-export const HIGHLIGHT_WIDTH_INCREASE = 10;
+export const HIGHLIGHT_WIDTH_INCREASE = 5;
 
 /**
  * Fixed opacity for label background (0-255)
@@ -61,8 +61,8 @@ export const LABEL_BORDER_OPACITY = 255;
  * Default style properties for new shapes
  */
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
-  fillColor: [98, 166, 255, 255] as Color,
-  strokeColor: [98, 166, 255, 255] as Color,
+  fillColor: [255, 255, 255, 255] as Color,
+  strokeColor: [136, 138, 143, 255] as Color,
   strokeWidth: 2,
   strokePattern: 'solid',
 };
@@ -71,10 +71,10 @@ export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
  * Default colors as RGBA arrays for DeckGL layers
  */
 export const DEFAULT_COLORS = {
-  /** Default fill color (blue at full alpha) */
-  fill: [98, 166, 255, 255] as Color,
-  /** Default stroke color (blue at full alpha) */
-  stroke: [98, 166, 255, 255] as Color,
+  /** Default fill color (background-surface-muted gray at full alpha) */
+  fill: [255, 255, 255, 255] as Color,
+  /** Default stroke color (outline-interactive-hover gray at full alpha) */
+  stroke: [136, 138, 143, 255] as Color,
   /** Highlight/selection color (turquoise at ~39% alpha) */
   highlight: [40, 245, 190, 100] as Color,
 } as const;
