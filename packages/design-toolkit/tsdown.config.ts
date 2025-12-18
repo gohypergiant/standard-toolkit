@@ -39,13 +39,7 @@ export default defineConfig({
   treeshake: true,
   platform: 'neutral',
   minify: false,
-  exports: {
-    customExports(pkg) {
-      // pkg already contains all the js exports. we only need to manually add the ./styles export
-      pkg['./styles'] = './dist/index.module.css';
-      return pkg;
-    },
-  },
+  exports: true,
   external: [
     // we just copy css files manually
     /\.css$/,

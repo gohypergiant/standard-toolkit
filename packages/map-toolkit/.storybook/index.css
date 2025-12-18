@@ -12,7 +12,6 @@
 
 @import '@accelint/design-foundation/styles';
 
-
 /* Hide overflow for map stories (not docs pages) */
 html:has(#storybook-root) {
   overflow: hidden;
