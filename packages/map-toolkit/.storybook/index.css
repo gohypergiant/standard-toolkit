@@ -11,9 +11,7 @@
  */
 
 @import '@accelint/design-foundation/styles';
-@source '../node_modules/@accelint/design-foundation';
-@import '@accelint/design-toolkit/styles';
-@source '../node_modules/@accelint/design-toolkit';
+
 
 /* Hide overflow for map stories (not docs pages) */
 html:has(#storybook-root) {

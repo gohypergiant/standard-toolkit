@@ -10,8 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
+export { CameraEventNamespace, CameraEventTypes } from './events';
 export {
   type CameraState,
   type UseCameraStateProps,
   useCameraState,
 } from './use-camera-state';
+export type {
+  CameraFitBoundsEvent,
+  CameraResetEvent,
+  CameraSetCenterEvent,
+  CameraSetPitchEvent,
+  CameraSetProjectionEvent,
+  CameraSetRotationEvent,
+  CameraSetViewEvent,
+  CameraSetZoomEvent,
+  ProjectionType,
+  ViewType,
+} from './types';

@@ -12,10 +12,10 @@
 
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { Button } from '@accelint/design-toolkit/components/button/index';
+import { Button } from '@accelint/design-toolkit/components/button';
 import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
-import { SelectField } from '@accelint/design-toolkit/components/select-field/index';
-import { Slider } from '@accelint/design-toolkit/components/slider/index';
+import { SelectField } from '@accelint/design-toolkit/components/select-field';
+import { Slider } from '@accelint/design-toolkit/components/slider';
 import { BaseMap } from '../deckgl/base-map';
 import { CameraEventTypes } from './events';
 import { useCameraState } from './use-camera-state';
@@ -58,11 +58,15 @@ function CameraToolbar() {
           maxValue={22}
           layout='stack'
           onChange={(value) => {
-            typeof value === 'number' &&
-              bus.emit(CameraEventTypes.setZoom, {
-                id: CAMERA_STORY_ID,
-                zoom: value,
-              });
+            typeof value === 'number'
+              ? bus.emit(CameraEventTypes.setZoom, {
+                  id: CAMERA_STORY_ID,
+                  zoom: value,
+                })
+              : bus.emit(CameraEventTypes.setZoom, {
+                  id: CAMERA_STORY_ID,
+                  zoom: value[0] ?? 0,
+                });
           }}
         />
 
@@ -76,11 +80,15 @@ function CameraToolbar() {
           maxValue={65}
           layout='stack'
           onChange={(value) => {
-            typeof value === 'number' &&
-              bus.emit(CameraEventTypes.setPitch, {
-                id: CAMERA_STORY_ID,
-                pitch: value,
-              });
+            typeof value === 'number'
+              ? bus.emit(CameraEventTypes.setPitch, {
+                  id: CAMERA_STORY_ID,
+                  pitch: value,
+                })
+              : bus.emit(CameraEventTypes.setPitch, {
+                  id: CAMERA_STORY_ID,
+                  pitch: value[0] ?? 0,
+                });
           }}
         />
         <Slider
@@ -92,11 +100,15 @@ function CameraToolbar() {
           maxValue={360}
           layout='stack'
           onChange={(value) => {
-            typeof value === 'number' &&
-              bus.emit(CameraEventTypes.setRotation, {
-                id: CAMERA_STORY_ID,
-                rotation: value,
-              });
+            typeof value === 'number'
+              ? bus.emit(CameraEventTypes.setRotation, {
+                  id: CAMERA_STORY_ID,
+                  rotation: value,
+                })
+              : bus.emit(CameraEventTypes.setRotation, {
+                  id: CAMERA_STORY_ID,
+                  rotation: value[0] ?? 0,
+                });
           }}
         />
         <SelectField

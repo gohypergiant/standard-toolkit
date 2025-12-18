@@ -37,7 +37,7 @@ type CameraState3D = {
   latitude: number;
   longitude: number;
   zoom: number;
-  pitch: number;
+  pitch: 0;
   rotation: number;
   projection: 'globe';
   view: '3D';
