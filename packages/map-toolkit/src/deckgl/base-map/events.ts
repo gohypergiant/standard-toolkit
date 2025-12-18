@@ -21,5 +21,4 @@ export const MapEvents = {
   disablePan: `${MapEventsNamespace}:disablePan`,
   enableZoom: `${MapEventsNamespace}:enableZoom`,
   disableZoom: `${MapEventsNamespace}:disableZoom`,
-  centerOn: `${MapEventsNamespace}:centerOn`,
 } as const;
