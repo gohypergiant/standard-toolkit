@@ -1,7 +1,7 @@
 {
   "name": "@accelint/constellation-tracker",
   "description": "A tool used to keep a project's catalog-info.yaml file up to date for use in Constellation.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "bin": {
