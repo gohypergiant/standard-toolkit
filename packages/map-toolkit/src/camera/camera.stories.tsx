@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Broadcast } from '@accelint/bus';
+import { useEmit } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit/components/button';
 import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
@@ -20,7 +20,16 @@ import { BaseMap } from '../deckgl/base-map';
 import { CameraEventTypes } from './events';
 import { useCameraState } from './use-camera-state';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CameraEvent, ProjectionType, ViewType } from './types';
+import type {
+  CameraResetEvent,
+  CameraSetPitchEvent,
+  CameraSetProjectionEvent,
+  CameraSetRotationEvent,
+  CameraSetViewEvent,
+  CameraSetZoomEvent,
+  ProjectionType,
+  ViewType,
+} from './types';
 
 const CAMERA_STORY_ID = uuid();
 
@@ -32,7 +41,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 function CameraToolbar() {
-  const bus = Broadcast.getInstance<CameraEvent>();
+  const setZoom = useEmit<CameraSetZoomEvent>(CameraEventTypes.setZoom);
+  const setPitch = useEmit<CameraSetPitchEvent>(CameraEventTypes.setPitch);
+  const setRotation = useEmit<CameraSetRotationEvent>(
+    CameraEventTypes.setRotation,
+  );
+  const setProjection = useEmit<CameraSetProjectionEvent>(
+    CameraEventTypes.setProjection,
+  );
+  const resetCamera = useEmit<CameraResetEvent>(CameraEventTypes.reset);
+  const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
   const { cameraState } = useCameraState({ instanceId: CAMERA_STORY_ID });
   return (
     <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
@@ -41,9 +59,7 @@ function CameraToolbar() {
         <Button
           variant='filled'
           color='mono-muted'
-          onPress={() =>
-            bus.emit(CameraEventTypes.reset, { id: CAMERA_STORY_ID })
-          }
+          onPress={() => resetCamera({ id: CAMERA_STORY_ID })}
           className='w-full'
         >
           Reset Camera
@@ -59,11 +75,11 @@ function CameraToolbar() {
           layout='stack'
           onChange={(value) => {
             typeof value === 'number'
-              ? bus.emit(CameraEventTypes.setZoom, {
+              ? setZoom({
                   id: CAMERA_STORY_ID,
                   zoom: value,
                 })
-              : bus.emit(CameraEventTypes.setZoom, {
+              : setZoom({
                   id: CAMERA_STORY_ID,
                   zoom: value[0] ?? 0,
                 });
@@ -81,11 +97,11 @@ function CameraToolbar() {
           layout='stack'
           onChange={(value) => {
             typeof value === 'number'
-              ? bus.emit(CameraEventTypes.setPitch, {
+              ? setPitch({
                   id: CAMERA_STORY_ID,
                   pitch: value,
                 })
-              : bus.emit(CameraEventTypes.setPitch, {
+              : setPitch({
                   id: CAMERA_STORY_ID,
                   pitch: value[0] ?? 0,
                 });
@@ -101,11 +117,11 @@ function CameraToolbar() {
           layout='stack'
           onChange={(value) => {
             typeof value === 'number'
-              ? bus.emit(CameraEventTypes.setRotation, {
+              ? setRotation({
                   id: CAMERA_STORY_ID,
                   rotation: value,
                 })
-              : bus.emit(CameraEventTypes.setRotation, {
+              : setRotation({
                   id: CAMERA_STORY_ID,
                   rotation: value[0] ?? 0,
                 });
@@ -115,7 +131,7 @@ function CameraToolbar() {
           label='Projection'
           value={cameraState.projection}
           onChange={(value) => {
-            bus.emit(CameraEventTypes.setProjection, {
+            setProjection({
               id: CAMERA_STORY_ID,
               projection: value as ProjectionType,
             });
@@ -128,7 +144,7 @@ function CameraToolbar() {
           label='View'
           value={cameraState.view}
           onChange={(value) => {
-            bus.emit(CameraEventTypes.setView, {
+            setView({
               id: CAMERA_STORY_ID,
               view: value as ViewType,
             });

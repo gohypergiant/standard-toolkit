@@ -15,13 +15,13 @@
 import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { type PropsWithChildren, useCallback, useId, useMemo } from 'react';
+import { useCallback, useId, useMemo } from 'react';
 import {
   Map as MapLibre,
   useControl,
   type ViewState,
 } from 'react-map-gl/maplibre';
-import { useCameraState, type ViewType } from '../../camera';
+import { useCameraState } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
 import { MapEvents } from './events';
