@@ -1,7 +1,7 @@
 {
   "name": "@accelint/postcss-tailwind-css-modules",
   "description": "Postcss plugin for resolving some problems that occur when using tailwind with css modules",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {

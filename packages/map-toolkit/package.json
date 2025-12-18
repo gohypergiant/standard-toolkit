@@ -1,7 +1,7 @@
 {
   "name": "@accelint/map-toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {

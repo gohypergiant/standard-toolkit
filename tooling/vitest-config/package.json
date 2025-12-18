@@ -1,7 +1,7 @@
 {
   "name": "@accelint/vitest-config",
   "description": "The shared Vitest configuration used across Accelint projects.",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {

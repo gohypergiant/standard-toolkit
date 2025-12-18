@@ -1,7 +1,7 @@
 {
   "name": "@accelint/websocket",
   "description": "A library to simplify working with websockets.",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {

@@ -1,7 +1,7 @@
 {
   "name": "@accelint/constants",
   "description": "A collection of commonly used constant values for Accelint projects.",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
