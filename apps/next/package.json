@@ -65,8 +65,8 @@
   },
   "private": true,
   "scripts": {
-    "build": "NODE_ENV=production next build --turbo",
-    "dev": "NODE_ENV=development next dev --turbo",
+    "build": "NODE_ENV=production next build",
+    "dev": "NODE_ENV=development next dev",
     "memlab": "playwright test --config=src/memlab/config/playwright.config.ts",
     "memlab:baseline": "UPDATE_BASELINE=true playwright test --config=src/memlab/config/playwright.config.ts",
     "memlab:ci": "playwright test --config=src/memlab/config/playwright.config.ts --reporter=json",
