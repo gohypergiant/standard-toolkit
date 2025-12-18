@@ -11,12 +11,12 @@ metadata:
 
     Dependencies:
 
-    accelint_constants@0.1.8, accelint_typescript-config@0.1.4,
-    accelint_vitest-config@0.1.5
+    accelint_constants@0.1.9, accelint_typescript-config@0.1.4,
+    accelint_vitest-config@0.1.6
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/converters/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.3.5
+    package/version: 0.3.6
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/converters

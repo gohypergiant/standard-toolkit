@@ -1,6 +1,13 @@
 # @accelint/ntds
 
+## 0.2.4
+
+### Patch Changes
+
+- bb73a1e: Ensure dependencies all follow the same semver range across devtk, maptk, and designtk.
+
 ## 0.2.3
+
 ### Patch Changes
 
 - 34c42a0: Swap bundling to tsdown and auto generate exports entries in package.json.

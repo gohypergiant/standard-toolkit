@@ -1,5 +1,11 @@
 # @accelint/constellation-tracker
 
+## 1.0.2
+
+### Patch Changes
+
+- bb73a1e: Ensure dependencies all follow the same semver range across devtk, maptk, and designtk.
+
 ## 1.0.1
 
 ### Patch Changes

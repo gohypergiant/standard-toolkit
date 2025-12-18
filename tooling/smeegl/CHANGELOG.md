@@ -1,5 +1,11 @@
 # @accelint/smeegl
 
+## 0.3.4
+
+### Patch Changes
+
+- bb73a1e: Ensure dependencies all follow the same semver range across devtk, maptk, and designtk.
+
 ## 0.3.3
 
 ### Patch Changes
