@@ -17,6 +17,7 @@ export {
   useCameraState,
 } from './use-camera-state';
 export type {
+  CameraEvent,
   CameraFitBoundsEvent,
   CameraResetEvent,
   CameraSetCenterEvent,

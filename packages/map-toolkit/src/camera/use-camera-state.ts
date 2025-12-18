@@ -314,8 +314,8 @@ function ensureBusListener(
   const unsubSetRotation = cameraBus.on(
     CameraEventTypes.setRotation,
     ({ payload }) => {
-      if (instanceId === payload.id) {
-        const state = getOrCreateState(instanceId, initialCameraState);
+      const state = getOrCreateState(instanceId, initialCameraState);
+      if (instanceId === payload.id && state.view !== '3D') {
         const newState = { ...state };
         newState.rotation = payload.rotation;
         cameraStore.set(instanceId, newState);

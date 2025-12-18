@@ -212,7 +212,6 @@ export function BaseMap({
   id,
   className,
   children,
-  controller = true,
   interleaved = true,
   parameters = {},
   useDevicePixels = false,
