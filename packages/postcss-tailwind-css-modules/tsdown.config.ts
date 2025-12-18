@@ -27,7 +27,16 @@ export default defineConfig({
   treeshake: true,
   platform: 'neutral',
   minify: false,
-  exports: true,
+  exports: {
+    customExports(pkg) {
+      pkg['.'] = {
+        // ensure the order matches syncpack for consistent ordering
+        import: pkg['.'].import,
+        require: pkg['.'].require,
+      };
+      return pkg;
+    },
+  },
   // NOTE: our license header is currently not formatted correctly to support https://rolldown.rs/options/output#legalcomments
   outputOptions: {
     banner: `/*
