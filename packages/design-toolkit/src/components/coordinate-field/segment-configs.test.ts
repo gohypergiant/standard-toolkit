@@ -69,8 +69,8 @@ describe('Segment Configurations', () => {
     it('should have degree and minute symbols', () => {
       const literals = ddmSegmentConfigs.filter((c) => c.type === 'literal');
       const values = literals.map((l) => l.value);
-      expect(values).toContain('° ');
-      expect(values).toContain("' ");
+      expect(values).toContain('°');
+      expect(values).toContain("'");
     });
   });
 
@@ -98,9 +98,9 @@ describe('Segment Configurations', () => {
     it('should have degree, minute, and second symbols', () => {
       const literals = dmsSegmentConfigs.filter((c) => c.type === 'literal');
       const values = literals.map((l) => l.value);
-      expect(values).toContain('° ');
-      expect(values).toContain("' ");
-      expect(values).toContain('" ');
+      expect(values).toContain('°');
+      expect(values).toContain("'");
+      expect(values).toContain('"');
     });
   });
 

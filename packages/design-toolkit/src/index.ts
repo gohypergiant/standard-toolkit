@@ -130,6 +130,7 @@ export type { CoordinateFormatResult } from './components/coordinate-field/coord
 export { CoordinateField } from './components/coordinate-field';
 export {
   EXPECTED_SEGMENT_COUNTS,
+  GROUP_SEPARATOR,
   ddSegmentConfigs,
   ddmSegmentConfigs,
   dmsSegmentConfigs,
@@ -161,7 +162,7 @@ export {
   FORMAT_BUTTON_WIDTH,
   INPUT_BUTTON_GAP,
   SEGMENT_GAP_WIDTH,
-  calculateMaxControlWidth,
+  calculateMinControlWidth,
 } from './components/coordinate-field/width-utils';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field/types';
