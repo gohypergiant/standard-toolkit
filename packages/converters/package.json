@@ -1,7 +1,7 @@
 {
   "name": "@accelint/converters",
   "description": "A lightweight JavaScript utility for converting between various value types, including numbers, strings, booleans, dates, and more.",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
