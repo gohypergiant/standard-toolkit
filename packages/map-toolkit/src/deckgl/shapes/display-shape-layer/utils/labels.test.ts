@@ -382,8 +382,8 @@ describe('Label Positioning Utilities', () => {
         expect(result).toEqual({
           coordinates: [-122.4, 37.8],
           textAnchor: 'middle',
-          alignmentBaseline: 'top',
-          pixelOffset: [0, -27],
+          alignmentBaseline: 'bottom',
+          pixelOffset: [0, -13],
         });
       });
 
