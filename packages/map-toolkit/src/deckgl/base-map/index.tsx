@@ -20,7 +20,7 @@ import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
-import { MapControls } from '../../map-controls';
+import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
