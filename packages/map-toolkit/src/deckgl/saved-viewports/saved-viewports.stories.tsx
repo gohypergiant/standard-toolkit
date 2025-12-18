@@ -15,6 +15,7 @@ import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import {
   globalBind,
+  type KeyCombination,
   Keycode,
   keyToId,
   keyToString,
@@ -24,7 +25,6 @@ import { BaseMap as BaseMapComponent } from '../base-map';
 import { MapEvents } from '../base-map/events';
 import { createSavedViewport } from '../saved-viewports';
 import { STORAGE_ID } from '../saved-viewports/storage';
-import type { KeyCombination } from '@accelint/hotkey-manager';
 import type { MapViewState } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { MapViewportEvent, MapViewportPayload } from '../base-map/types';
@@ -153,6 +153,21 @@ const useSavedViewportHotkey = createSavedViewport({
   key: DIGIT_KEYS as NonEmptyArray<KeyCombination>,
 });
 
+const getSlotIndex = (e: KeyboardEvent) => {
+  const matchKey: KeyCombination = {
+    id: e.key,
+    code: e.code as Keycode,
+    ctrl: e.ctrlKey,
+    alt: e.altKey,
+    shift: e.shiftKey,
+    meta: e.metaKey,
+    autoMacStyle: false,
+  };
+  return DIGIT_KEYS.findIndex((key) => {
+    return keyToString(key) === keyToString(matchKey);
+  });
+};
+
 function ViewportsToolbar() {
   useSavedViewportHotkey();
   const [savedViewports, setSavedViewports] = useState<
@@ -163,21 +178,6 @@ function ViewportsToolbar() {
   const getViewPort = (key: KeyCombination) => {
     const storageKey = keyToId(key);
     return savedViewports[storageKey];
-  };
-
-  const getSlotIndex = (e: KeyboardEvent) => {
-    const matchKey: KeyCombination = {
-      id: e.key,
-      code: e.code as Keycode,
-      ctrl: e.ctrlKey,
-      alt: e.altKey,
-      shift: e.shiftKey,
-      meta: e.metaKey,
-      autoMacStyle: false,
-    };
-    return DIGIT_KEYS.findIndex((key) => {
-      return keyToString(key) === keyToString(matchKey);
-    });
   };
 
   // Listen for viewport changes to clear active slot indicator
