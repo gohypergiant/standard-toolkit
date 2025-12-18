@@ -18,7 +18,7 @@
   }
 
   .control {
-    @apply fg-primary-bold gap-m rounded-medium px-s py-xs font-display outline-interactive flex w-fit items-center outline;
+    @apply fg-primary-bold gap-m rounded-medium px-s py-xs font-display outline-interactive flex w-full items-center outline;
 
     @variant group-size-medium/coordinate-field {
       @apply text-body-m;
