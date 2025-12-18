@@ -1,18 +1,11 @@
 pre-commit:
   commands:
-    index-files:
-      run: pnpm run indexer
-      stage_fixed: true
-      priority: 1
-    generate-license:
-      run: pnpm run license "--files={staged_files}"
-      stage_fixed: true
-      priority: 2
     format:
-      run: pnpm run format
+      # NOTE: this also will license and index
+      run: pnpm run format && pnpm run format:deps
       stage_fixed: true
-      priority: 3
+
+pre-push:
+  commands:
     validate-docblocks:
       run: pnpm run audit:docblocks || true
-      priority: 4
-

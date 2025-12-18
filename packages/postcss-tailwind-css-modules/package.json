@@ -9,14 +9,18 @@
     "@types/node": "^22",
     "postcss": "^8.5.6",
     "postcss-selector-parser": "^7.1.1",
-    "tsup": "^8.5.0"
+    "tsdown": "^0.18.0"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "keywords": [
     "dev-tk",
@@ -42,14 +46,16 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "tsup",
-    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
+    "build": "pnpm tsdown",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
-    "lint": "pnpm biome lint"
+    "format:check": "pnpm biome format . --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,
-  "subPath": "tooling/postcss-tailwind-css-modules",
+  "subPath": "packages/postcss-tailwind-css-modules",
   "title": "Postcss tailwind css modules plugin",
   "type": "module",
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.cts"
 }
