@@ -40,7 +40,7 @@ type PersistOptions = RequireAllOrNone<{
   ) => void;
 }>;
 
-type SavedViewportOptions = Partial<HotkeyOptions> &
+export type SavedViewportOptions = Partial<HotkeyOptions> &
   BaseOptions &
   PersistOptions;
 
