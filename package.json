@@ -40,7 +40,7 @@
     "build": "pnpm turbo run build",
     "build:design-toolkit": "pnpm turbo run build --filter=@accelint/design-toolkit",
     "build:map-toolkit": "pnpm turbo run build --filter=@accelint/map-toolkit",
-    "changeset": "pnpm changeset",
+    "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm changeset publish",
     "changeset:version": "pnpm changeset version && pnpm run constellation-tracker",
     "clean": "pnpm run clean:dist && pnpm run clean:buildinfo && pnpm run clean:turbo && pnpm run clean:cov && pnpm run clean:deps",
