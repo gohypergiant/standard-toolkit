@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Key } from '@react-types/shared';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Button } from '../button';
 import { Label } from '../label';
@@ -22,8 +24,6 @@ import {
   type CoordinateSystem,
   type CoordinateValue,
 } from './types';
-import type { Key } from '@react-types/shared';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * CoordinateField Storybook Stories
@@ -60,8 +60,10 @@ const meta = {
     errorMessage: '',
     format: 'dd',
     size: 'medium',
+    variant: 'inline',
     isDisabled: false,
     isInvalid: false,
+    isReadOnly: false,
     isRequired: false,
   },
   argTypes: {
@@ -81,6 +83,15 @@ const meta = {
       table: {
         type: { summary: 'small | medium' },
         defaultValue: { summary: 'medium' },
+      },
+    },
+    variant: {
+      control: 'radio',
+      options: ['inline', 'stacked'],
+      description: 'The variant of the field',
+      table: {
+        type: { summary: 'inline | stacked' },
+        defaultValue: { summary: 'inline' },
       },
     },
     showFormatButton: {
@@ -124,6 +135,14 @@ const meta = {
     isRequired: {
       control: 'boolean',
       description: 'Whether the field is required',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    isReadOnly: {
+      control: 'boolean',
+      description: 'Whether the field is read-only',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'false' },

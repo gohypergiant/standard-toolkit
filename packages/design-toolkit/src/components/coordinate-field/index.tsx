@@ -12,13 +12,13 @@
 
 'use client';
 
-import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
 import { filterDOMProps } from '@react-aria/utils';
-import { useCallback, useMemo, useState } from 'react';
+import 'client-only';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
 import {
   Text as AriaText,
   composeRenderProps,
@@ -51,16 +51,16 @@ import {
   getAllCoordinateFormats,
 } from './coordinate-utils';
 import { CoordinateSegment } from './segment';
-import { getSegmentLabel } from './segment-configs';
+import { getSegmentLabel, GROUP_SEPARATOR } from './segment-configs';
 import styles from './styles.module.css';
+import type { CoordinateFieldProps } from './types';
 import {
   COORDINATE_FORMAT_LABELS,
   COORDINATE_FORMAT_NAMES,
   COORDINATE_SYSTEMS,
   type CoordinateSystem,
 } from './types';
-import { calculateMaxControlWidth } from './width-utils';
-import type { CoordinateFieldProps } from './types';
+import { calculateMinControlWidth } from './width-utils';
 
 /**
  * CoordinateField - A comprehensive coordinate input component with multiple format support
@@ -129,6 +129,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     label: labelProp,
     format = 'dd',
     size = 'medium',
+    variant = 'inline',
     showFormatButton = true,
     isDisabled = false,
     isInvalid: isInvalidProp = false,
@@ -174,6 +175,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     isInvalid,
     isRequired,
     size,
+    variant,
     registerTimeout,
   };
 
@@ -192,11 +194,11 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     [state.currentValue],
   );
 
-  // Calculate the maximum width needed for the control container
+  // Calculate the minimum width needed for the control container
   // This keeps the outlined container at a fixed width while segments animate
-  const maxControlWidth = useMemo(
+  const minControlWidth = useMemo(
     () =>
-      calculateMaxControlWidth(
+      calculateMinControlWidth(
         state.editableSegmentConfigs,
         state.segmentConfigs,
         showFormatButton,
@@ -248,61 +250,94 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
 
         <div
           className={clsx(styles.control, classNames?.control)}
-          style={{ width: maxControlWidth }}
+          style={{
+            minWidth: variant === 'stacked' ? undefined : minControlWidth,
+          }}
         >
           <div
-            className={clsx(styles.input, classNames?.input)}
+            className={clsx(styles.input, styles[variant], classNames?.input)}
             onPasteCapture={paste.handleInputPaste}
             data-input-container
           >
-            {state.segmentConfigs.map((config, configIndex) => {
-              if (config.type === 'literal') {
-                return (
-                  <span
-                    key={`${format}-literal-${configIndex}-${config.value}`}
-                    className={styles.literal}
-                  >
-                    {config.value}
-                  </span>
-                );
-              }
+            {state.segmentConfigs
+              .reduce<ReactNode[][]>(
+                (acc, config, configIndex) => {
+                  if (
+                    config.value === GROUP_SEPARATOR &&
+                    variant === 'stacked'
+                  ) {
+                    acc.push([]);
 
-              const editableIndex = state.segmentConfigs
-                .slice(0, configIndex)
-                .filter((c) => c.type !== 'literal').length;
+                    return acc;
+                  }
 
-              return (
-                <CoordinateSegment
-                  key={`${format}-segment-${editableIndex}`}
-                  value={state.segmentValues[editableIndex] || ''}
-                  onChange={(newValue) =>
-                    state.handleSegmentChange(editableIndex, newValue)
+                  if (config.type === 'literal') {
+                    acc[acc.length - 1]?.push(
+                      <span
+                        key={`${format}-literal-${configIndex}-${config.value}`}
+                        className={styles.literal}
+                      >
+                        {config.value}
+                      </span>,
+                    );
+
+                    return acc;
                   }
-                  onFocus={() => focus.setFocusedSegmentIndex(editableIndex)}
-                  onBlur={() => {
-                    focus.setFocusedSegmentIndex(-1);
-                    state.flushPendingValidation();
-                  }}
-                  onKeyDown={(e) =>
-                    focus.handleSegmentKeyDown(editableIndex, e)
-                  }
-                  onAutoAdvance={() => focus.focusNextSegment(editableIndex)}
-                  onAutoRetreat={() =>
-                    focus.focusPreviousSegment(editableIndex)
-                  }
-                  placeholder={config.placeholder}
-                  maxLength={config.maxLength}
-                  pad={config.pad}
-                  className={clsx(styles.segment, classNames?.segment)}
-                  isDisabled={isDisabled}
-                  allowedChars={config.allowedChars}
-                  segmentRef={focus.segmentRefs[editableIndex]}
-                  segmentIndex={editableIndex}
-                  totalSegments={state.editableSegmentConfigs.length}
-                  ariaLabel={getSegmentLabel(format, editableIndex)}
-                />
-              );
-            })}
+
+                  const editableIndex = state.segmentConfigs
+                    .slice(0, configIndex)
+                    .filter((c) => c.type !== 'literal').length;
+
+                  acc[acc.length - 1]?.push(
+                    <CoordinateSegment
+                      key={`${format}-segment-${editableIndex}`}
+                      value={state.segmentValues[editableIndex] || ''}
+                      onChange={(newValue) =>
+                        state.handleSegmentChange(editableIndex, newValue)
+                      }
+                      onFocus={() =>
+                        focus.setFocusedSegmentIndex(editableIndex)
+                      }
+                      onBlur={() => {
+                        focus.setFocusedSegmentIndex(-1);
+                        state.flushPendingValidation();
+                      }}
+                      onKeyDown={(e) =>
+                        focus.handleSegmentKeyDown(editableIndex, e)
+                      }
+                      onAutoAdvance={() =>
+                        focus.focusNextSegment(editableIndex)
+                      }
+                      onAutoRetreat={() =>
+                        focus.focusPreviousSegment(editableIndex)
+                      }
+                      placeholder={config.placeholder}
+                      maxLength={config.maxLength}
+                      pad={config.pad}
+                      className={clsx(styles.segment, classNames?.segment)}
+                      isDisabled={isDisabled}
+                      allowedChars={config.allowedChars}
+                      segmentRef={focus.segmentRefs[editableIndex]}
+                      segmentIndex={editableIndex}
+                      totalSegments={state.editableSegmentConfigs.length}
+                      ariaLabel={getSegmentLabel(format, editableIndex)}
+                    />,
+                  );
+
+                  return acc;
+                },
+                [[]],
+              )
+              .map((group, groupIndex) => (
+                <div
+                  key={`group-${
+                    // biome-ignore lint/suspicious/noArrayIndexKey: intentional
+                    groupIndex
+                  }`}
+                >
+                  {group}
+                </div>
+              ))}
           </div>
 
           {showFormatButton && (

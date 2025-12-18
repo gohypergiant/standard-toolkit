@@ -128,6 +128,8 @@ export type CoordinateFieldState = {
   isRequired: boolean;
   /** Size variant of the field */
   size: CoordinateFieldProps['size'];
+  /** Whether or not the logical coordinate fields are inlined or stacked */
+  variant: CoordinateFieldProps['variant'];
   /** Function to register timeouts for cleanup on unmount */
   registerTimeout: (timeoutId: NodeJS.Timeout) => void;
 };
@@ -244,6 +246,12 @@ export type CoordinateFieldProps = Omit<
      * - CoordinateValue: controlled mode with valid value
      */
     value?: CoordinateValue | null;
+
+    /**
+     * Whether or not the input is stacked or linline
+     * @default 'inline'
+     */
+    variant?: 'inline' | 'stacked';
 
     /**
      * Default uncontrolled value in Decimal Degrees format

@@ -31,7 +31,7 @@ export const FORMAT_BUTTON_WIDTH = 3.5;
 export const INPUT_BUTTON_GAP = 1.5;
 
 /**
- * Calculates the maximum width needed for the coordinate field control container.
+ * Calculates the minimum width needed for the coordinate field control container.
  * This keeps the outlined container at a fixed width while segments animate.
  *
  * @param editableSegmentConfigs - Array of editable segment configurations
@@ -39,7 +39,7 @@ export const INPUT_BUTTON_GAP = 1.5;
  * @param showFormatButton - Whether the format button is displayed
  * @returns The calculated width as a CSS string (e.g., "25ch")
  */
-export function calculateMaxControlWidth(
+export function calculateMinControlWidth(
   editableSegmentConfigs: SegmentConfig[],
   segmentConfigs: SegmentConfig[],
   showFormatButton: boolean,
@@ -53,6 +53,7 @@ export function calculateMaxControlWidth(
 
   // Calculate width of literal characters (colons, spaces, etc.)
   const literalWidth = segmentConfigs
+    .flat()
     .filter((c) => c.type === 'literal')
     .reduce((sum, c) => sum + (c.value?.length || 0), 0);
 

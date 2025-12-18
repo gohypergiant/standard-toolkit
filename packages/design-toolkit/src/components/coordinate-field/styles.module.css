@@ -42,11 +42,27 @@
   }
 
   .input {
-    @apply gap-xs flex flex-1 items-center;
+    @apply flex items-center;
+
+    div {
+      @apply w-full;
+    }
+
+    &.inline {
+      @apply w-full flex-row;
+    }
+
+    &.stacked {
+      @apply w-full flex-col items-end;
+
+      div {
+        @apply w-full text-right;
+      }
+    }
   }
 
   .literal {
-    @apply fg-primary-muted;
+    @apply fg-primary-muted pr-xs;
   }
 
   .segment {
