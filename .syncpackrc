@@ -22,10 +22,6 @@
     {
       "dependencies": [
         "@deck.gl/**",
-        "@react-aria/**",
-        "@react-stately/**",
-        "@react-types/**",
-        "react-aria-components",
         "react-querybuilder"
       ],
       "label": "Packages that require patch semver range due to issues",
@@ -33,6 +29,19 @@
         "**"
       ],
       "range": "~"
+    },
+    {
+      "dependencies": [
+        "@react-aria/**",
+        "@react-stately/**",
+        "@react-types/**",
+        "react-aria-components"
+      ],
+      "label": "Packages that require exact version pinning due to severe issues",
+      "packages": [
+        "**"
+      ],
+      "range": ""
     }
   ],
   "versionGroups": [

@@ -11,8 +11,7 @@ metadata:
 
     Dependencies:
 
-    accelint_biome-config@1.0.2, accelint_bus@3.0.1,
-    accelint_constellation-tracker@1.0.1, accelint_core@0.5.1,
+    accelint_biome-config@1.0.2, accelint_bus@3.0.1, accelint_core@0.5.1,
     accelint_design-foundation@1.0.2, accelint_geo@0.4.1, accelint_icons@2.1.1,
     accelint_logger@0.1.3, accelint_postcss-tailwind-css-modules@1.0.0,
     accelint_prettier-config@0.2.0, accelint_temporal@0.1.3,
@@ -38,7 +37,6 @@ spec:
   dependsOn:
     - component:accelint_biome-config
     - component:accelint_bus
-    - component:accelint_constellation-tracker
     - component:accelint_core
     - component:accelint_design-foundation
     - component:accelint_geo

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '../../index.module.css';
+@reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
   .sidenav {
@@ -214,6 +214,14 @@
 
     @variant group-closed/sidenav {
       @apply max-w-fit;
+    }
+  }
+
+  .triggerChevron {
+    @apply transform;
+
+    @variant group-expanded/menu {
+      @apply rotate-180;
     }
   }
 

@@ -10,40 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import copy from 'rollup-plugin-copy';
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  plugins: [
-    copy({
-      targets: [{ src: 'src/**/*.css', dest: 'dist' }],
-      flatten: false,
-      hook: 'writeBundle',
-    }),
-  ],
+  plugins: [],
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
-    '!**/__*__',
-    '!storybook-static',
-    '!src/test',
-    '!src/icons',
-    '!src/foundation',
+    '!**/__fixtures__',
   ],
-  tsconfig: './tsconfig.dist.json',
   clean: true,
   dts: true,
   format: 'esm',
   sourcemap: true,
   unbundle: true,
   treeshake: true,
-  platform: 'neutral',
+  platform: 'node',
   minify: false,
   exports: true,
-  external: [
-    // we just copy css files manually
-    /\.css$/,
-  ],
+  // NOTE: our license header is currently not formatted correctly to support https://rolldown.rs/options/output#legalcomments
   outputOptions: {
     banner: `/*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
