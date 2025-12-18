@@ -411,7 +411,7 @@
   },
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
-    "build": "tsdown",
+    "build": "pnpm tsdown",
     "build-storybook": "pnpm storybook build",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
