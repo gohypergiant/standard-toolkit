@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
   "extends": [
     "@accelint/biome-config/analyzer",
     "@accelint/biome-config/formatter",
@@ -15,9 +15,6 @@
     "useIgnoreFile": true
   },
   "overrides": [
-    {
-      "includes": ["**/apps/docs/**", "!**/.docusaurus"]
-    },
     {
       "includes": ["**/apps/next/**", "!**/.next"]
     }

@@ -13,12 +13,12 @@ metadata:
 
     accelint_typescript-config@0.1.4
   annotations:
-    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/tooling/postcss-tailwind-css-modules/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/postcss-tailwind-css-modules/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
     package/version: 1.0.0
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
-    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/postcss-tailwind-css-modules
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/postcss-tailwind-css-modules
       title: Documentation
       icon: docs
       type: documentation

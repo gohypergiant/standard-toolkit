@@ -29,9 +29,11 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
-    "lint": "pnpm biome lint"
+    "format:check": "pnpm biome format . --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,
   "subPath": "tooling/turbo-filter",

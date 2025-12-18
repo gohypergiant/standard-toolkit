@@ -4,6 +4,7 @@
   "version": "0.1.4",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {},
   "files": [
     "./catalog-info.yaml",
     "./CHANGELOG.md",
@@ -25,9 +26,11 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
-    "lint": "pnpm biome lint"
+    "format:check": "pnpm biome format . --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,
   "subPath": "tooling/eslint-config",

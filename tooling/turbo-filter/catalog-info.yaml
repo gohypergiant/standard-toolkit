@@ -1,0 +1,24 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: accelint_turbo-filter
+  title: Turbo Filter
+  description: Utility for filtering tasks by package in a turborepo
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/tooling/turbo-filter/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 0.0.1
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/turbo-filter
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder

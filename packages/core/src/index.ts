@@ -79,6 +79,7 @@ export {
 export { getSafeEnumValues } from './safe-enum/get-safe-enum-values';
 export type { IsLiteralEnum } from './safe-enum/is-literal-enum';
 export type { SafeEnum } from './safe-enum/safe-enum';
+export type { ValidEnumStructures } from './safe-enum/valid-enum-structures';
 export type {
   Accumulator,
   ArrayElementType,
