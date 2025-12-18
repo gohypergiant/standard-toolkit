@@ -1,7 +1,7 @@
 {
   "name": "@accelint/geo",
   "description": "A collection of JavaScript functions for working with coordinates and geospatial data.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {

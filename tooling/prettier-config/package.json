@@ -1,7 +1,7 @@
 {
   "name": "@accelint/prettier-config",
   "description": "The shared Prettier configuration used across Accelint projects.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {

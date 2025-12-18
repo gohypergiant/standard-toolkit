@@ -1,7 +1,7 @@
 {
   "name": "@accelint/formatters",
   "description": "A set of useful formatting functions for enhancing readability and consistency in your applications.",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {

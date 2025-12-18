@@ -1,5 +1,44 @@
 # @accelint/design-toolkit
 
+## 9.0.0
+### Major Changes
+
+- 6bc3a0b: Remove /styles export. Convert utility class usage in src to css modules.
+  
+  Breaking Changes:
+  * `/styles` export has been removed
+    * because all component styles are in css modules and global classes live in design-foundation, there is no longer anything global for the design toolkit to export
+  
+  Migration Guide:
+  * [Visit the v9 migration guide](https://design-toolkit.accelint.io/?path=/docs/upgrade-guides--playground) for detailed information about migration
+- 16d23c4: Build with tsdown
+  
+  Breaking Changes:
+  * `/index` has been removed from the end of deep import paths
+    * e.g. `import { designTokens } from '@accelint/design-foundation/tokens/index';` is now `import { designTokens } from '@accelint/design-foundation/tokens'`;
+  
+  Migration Guide:
+  * [Visit the v9 migration guide](https://design-toolkit.accelint.io/?path=/docs/upgrade-guides--playground) for detailed information about migration
+
+### Patch Changes
+
+- 4af2d58: Fixed accordion where the trigger disabled cursor was incorrect (pointer -> not-allowed)
+- a851031: fix: chip component bug where color prop was not supported by selectableChip
+- 471d963: Pin RAC dependencies to exact versions to prevent breaking changes.
+- bb73a1e: Ensure dependencies all follow the same semver range across devtk, maptk, and designtk.
+- 55ce09a: Fixed accordion where the collapsed disclosure component takes up space
+- 2f6d9b3: Add use client directive to dialog trigger
+- 77fa9d0: Ensure slider track value css vars are set
+- Updated dependencies [16d23c4]
+- Updated dependencies [bb73a1e]
+  - @accelint/design-foundation@2.0.0
+  - @accelint/temporal@0.1.4
+  - @accelint/logger@0.1.4
+  - @accelint/icons@2.1.2
+  - @accelint/core@0.5.2
+  - @accelint/bus@3.0.2
+  - @accelint/geo@0.4.2
+
 ## 8.1.2
 ### Patch Changes
 

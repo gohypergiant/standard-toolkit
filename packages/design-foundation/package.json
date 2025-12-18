@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-foundation",
   "description": "An open-source design library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
