@@ -10,12 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
-import { uuid } from '@accelint/core';
+import { useEmit, useOn } from '@accelint/bus/react';
+import { type UniqueId, uuid } from '@accelint/core';
+import { Button } from '@accelint/design-toolkit/components/button';
+import { useState } from 'react';
 import { MapEvents } from './events';
 import { BaseMap as BaseMapComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { MapClickEvent, MapHoverEvent } from '../base-map/types';
+import type {
+  MapClickEvent,
+  MapDisablePanEvent,
+  MapDisableZoomEvent,
+  MapEnablePanEvent,
+  MapEnableZoomEvent,
+  MapHoverEvent,
+} from '../base-map/types';
 
 const meta: Meta = {
   title: 'DeckGL/Base Map',
@@ -38,5 +47,70 @@ export const BaseMap: Story = {
     });
 
     return <BaseMapComponent className='h-dvh w-dvw' id={BASE_MAP_STORY_ID} />;
+  },
+};
+
+const CONTROLS_STORY_ID = uuid();
+
+function ControlsToolbar({ mapId }: { mapId: UniqueId }) {
+  const [panEnabled, setPanEnabled] = useState(true);
+  const [zoomEnabled, setZoomEnabled] = useState(true);
+
+  const emitEnablePan = useEmit<MapEnablePanEvent>(MapEvents.enablePan);
+  const emitDisablePan = useEmit<MapDisablePanEvent>(MapEvents.disablePan);
+  const emitEnableZoom = useEmit<MapEnableZoomEvent>(MapEvents.enableZoom);
+  const emitDisableZoom = useEmit<MapDisableZoomEvent>(MapEvents.disableZoom);
+
+  const togglePan = () => {
+    if (panEnabled) {
+      emitDisablePan({ id: mapId });
+    } else {
+      emitEnablePan({ id: mapId });
+    }
+    setPanEnabled(!panEnabled);
+  };
+
+  const toggleZoom = () => {
+    if (zoomEnabled) {
+      emitDisableZoom({ id: mapId });
+    } else {
+      emitEnableZoom({ id: mapId });
+    }
+    setZoomEnabled(!zoomEnabled);
+  };
+
+  return (
+    <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <p className='font-bold text-header-l'>Map Controls</p>
+      <div className='flex flex-col gap-s'>
+        <Button
+          variant={zoomEnabled ? 'filled' : 'outline'}
+          color={zoomEnabled ? 'accent' : 'mono-muted'}
+          onPress={toggleZoom}
+          className='w-full'
+        >
+          Zoom: {zoomEnabled ? 'ON' : 'OFF'}
+        </Button>
+        <Button
+          variant={panEnabled ? 'filled' : 'outline'}
+          color={panEnabled ? 'accent' : 'mono-muted'}
+          onPress={togglePan}
+          className='w-full'
+        >
+          Pan: {panEnabled ? 'ON' : 'OFF'}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export const WithControls: Story = {
+  render: () => {
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMapComponent className='h-full w-full' id={CONTROLS_STORY_ID} />
+        <ControlsToolbar mapId={CONTROLS_STORY_ID} />
+      </div>
+    );
   },
 };

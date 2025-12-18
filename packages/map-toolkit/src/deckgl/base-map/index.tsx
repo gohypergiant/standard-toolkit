@@ -20,6 +20,7 @@ import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
+import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
@@ -108,6 +109,12 @@ function serializeMjolnirEvent(
 export type BaseMapProps = DeckglProps & {
   /** Optional CSS class name to apply to the map container element */
   className?: string;
+  /**
+   * Whether to enable listening for map control events (pan/zoom enable/disable).
+   * When true, the map will respond to control events emitted via the event bus.
+   * @default true
+   */
+  enableControlEvents?: boolean;
   /**
    * Unique identifier for this map instance (required).
    *
@@ -198,6 +205,7 @@ export function BaseMap({
   className,
   children,
   controller = true,
+  enableControlEvents = true,
   interleaved = true,
   parameters = {},
   useDevicePixels = false,
@@ -229,7 +237,11 @@ export function BaseMap({
   );
 
   // Use the custom hook to handle MapLibre
-  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
+  const mapLibreRef = useMapLibre(
+    deckglInstance as IControl,
+    BASE_MAP_STYLE,
+    mapOptions,
+  );
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -315,6 +327,7 @@ export function BaseMap({
 
   return (
     <div id={container} className={className}>
+      {enableControlEvents && <MapControls id={id} mapRef={mapLibreRef} />}
       <MapProvider id={id}>
         <Deckgl
           {...rest}
