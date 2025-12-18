@@ -16,7 +16,6 @@ export { MapEvents, MapEventsNamespace } from './base-map/events';
 export { createSavedViewport } from './saved-viewports';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
-  MapCenterOnPayload,
   MapClickEvent,
   MapClickPayload,
   MapControlPayload,

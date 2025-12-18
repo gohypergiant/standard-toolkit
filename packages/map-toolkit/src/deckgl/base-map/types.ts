@@ -133,20 +133,6 @@ export type MapControlPayload = {
   id: UniqueId;
 };
 
-/**
- * Payload for centerOn events to pan/zoom the map to a specific location.
- */
-export type MapCenterOnPayload = {
-  /** The map instance to center */
-  id: UniqueId;
-  /** Longitude to center on */
-  longitude: number;
-  /** Latitude to center on */
-  latitude: number;
-  /** Optional zoom level */
-  zoom?: number;
-};
-
 export type MapEnablePanEvent = Payload<
   typeof MapEvents.enablePan,
   MapControlPayload

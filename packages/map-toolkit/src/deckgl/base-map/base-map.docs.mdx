@@ -205,6 +205,18 @@ function MapView() {
 
 Optional CSS class name to apply to the map container element.
 
+#### `enableControlEvents?: boolean`
+
+Whether to enable listening for map control events (pan/zoom enable/disable). When `true`, the map will respond to control events emitted via the event bus. Defaults to `true`.
+
+Set to `false` if you don't need programmatic control over pan/zoom and want to skip the event listener setup:
+
+```tsx
+<BaseMap id={mapId} enableControlEvents={false}>
+  <View id="main" controller />
+</BaseMap>
+```
+
 #### `onClick?: (info: PickingInfo, event: MjolnirGestureEvent) => void`
 
 Callback function triggered when the map is clicked. Receives the full picking info and gesture event.
@@ -248,7 +260,6 @@ Event names for map interactions:
 - `MapEvents.disablePan`: `'map:disablePan'`
 - `MapEvents.enableZoom`: `'map:enableZoom'`
 - `MapEvents.disableZoom`: `'map:disableZoom'`
-- `MapEvents.centerOn`: `'map:centerOn'`
 
 ## Children Components
 
@@ -363,18 +374,5 @@ Used by `enablePan`, `disablePan`, `enableZoom`, and `disableZoom` events:
 ```typescript
 type MapControlPayload = {
   id: UniqueId; // The map instance to control
-};
-```
-
-#### `MapCenterOnPayload`
-
-Used by the `centerOn` event:
-
-```typescript
-type MapCenterOnPayload = {
-  id: UniqueId;       // The map instance to center
-  longitude: number;  // Longitude to center on
-  latitude: number;   // Latitude to center on
-  zoom?: number;      // Optional zoom level
 };
 ```
