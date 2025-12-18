@@ -26,6 +26,7 @@ export {
   STROKE_PATTERNS,
   STROKE_WIDTHS,
 } from './shapes';
+export { createSavedViewport } from './saved-viewports';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
   MapClickEvent,
@@ -51,3 +52,4 @@ export type {
   StyledFeatureProperties,
   StyleProperties,
 } from './shapes';
+export type { SavedViewportOptions } from './saved-viewports';

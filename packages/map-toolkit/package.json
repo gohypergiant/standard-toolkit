@@ -61,6 +61,8 @@
     "./deckgl/base-map/events": "./dist/deckgl/base-map/events.js",
     "./deckgl/base-map/provider": "./dist/deckgl/base-map/provider.js",
     "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
+    "./deckgl/saved-viewports": "./dist/deckgl/saved-viewports/index.js",
+    "./deckgl/saved-viewports/storage": "./dist/deckgl/saved-viewports/storage.js",
     "./deckgl/shapes": "./dist/deckgl/shapes/index.js",
     "./deckgl/shapes/display-shape-layer": "./dist/deckgl/shapes/display-shape-layer/index.js",
     "./deckgl/shapes/display-shape-layer/constants": "./dist/deckgl/shapes/display-shape-layer/constants.js",
@@ -117,6 +119,7 @@
   ],
   "license": "Apache-2.0",
   "optionalDependencies": {
+    "@accelint/hotkey-manager": "workspace:*",
     "@deck.gl/core": "~9.1",
     "@deck.gl/extensions": "~9.1",
     "@deck.gl/layers": "~9.1",
