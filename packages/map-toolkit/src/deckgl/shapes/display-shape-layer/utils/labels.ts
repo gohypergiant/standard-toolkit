@@ -401,8 +401,8 @@ function getPointPosition(
   shapeHorizontal: string | undefined,
   options?: LabelPositionOptions,
 ): LabelPosition2d {
-  const defaultOffset: [number, number] = [0, -27];
-  const defaultVertical: LabelVerticalPosition = 'top';
+  const defaultOffset: [number, number] = [0, -13];
+  const defaultVertical: LabelVerticalPosition = 'bottom';
   const defaultHorizontal: LabelHorizontalPosition = 'center';
 
   const resolved = resolveLabelProperties(
