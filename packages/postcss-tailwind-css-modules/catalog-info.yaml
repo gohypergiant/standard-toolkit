@@ -15,7 +15,7 @@ metadata:
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/postcss-tailwind-css-modules/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 1.0.0
+    package/version: 1.0.1
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/postcss-tailwind-css-modules
