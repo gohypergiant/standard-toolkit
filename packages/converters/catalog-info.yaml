@@ -11,8 +11,8 @@ metadata:
 
     Dependencies:
 
-    accelint_constants@0.1.8, accelint_constellation-tracker@1.0.1,
-    accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.5
+    accelint_constants@0.1.8, accelint_typescript-config@0.1.4,
+    accelint_vitest-config@0.1.5
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/converters/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
@@ -32,6 +32,5 @@ spec:
   owner: group:default/pathfinder
   dependsOn:
     - component:accelint_constants
-    - component:accelint_constellation-tracker
     - component:accelint_typescript-config
     - component:accelint_vitest-config

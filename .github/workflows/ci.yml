@@ -39,24 +39,16 @@ jobs:
           cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install # note this runs pre-build
 
-      - name: Store Prune
-        run: pnpm store prune
+      - name: Prebuild Bin Executables
+        run: pnpm run pre-build
 
       - name: Build Packages
         run: pnpm run build
 
-      - name: Format Packages
-        run: pnpm run format
-
-      - name: Enforce Formatting
-        run: |
-          if [[ -n $(git status --porcelain) ]]; then
-            echo "::error::Formatting issues detected. Please run 'pnpm run format' locally and commit the changes."
-            git diff --name-only
-            exit 1
-          fi
+      - name: Check For Formatting Issues
+        run: pnpm run format:check
 
       - name: Lint Packages
         run: pnpm run lint

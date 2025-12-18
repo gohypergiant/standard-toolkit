@@ -3,11 +3,15 @@
   "ui": "tui",
   "tasks": {
     "index": {
+      "cache": false,
       "outputs": ["src/index.ts"]
     },
+    "pre-build": {
+      "outputs": ["dist/**", "build/**"]
+    },
     "build": {
-      "dependsOn": ["index", "^build"],
-      "outputs": ["dist", "build", ".next"]
+      "dependsOn": ["^index", "^build"],
+      "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"]
     },
     "dev": {
       "dependsOn": ["^build"],
@@ -21,14 +25,24 @@
     },
     "test": {
       "dependsOn": ["^build"],
-      "outputs": ["coverage"]
+      "outputs": ["coverage/**"]
     },
     "constellation-tracker": {
-      "cache": false,
-      "dependsOn": ["build", "^constellation-tracker"]
+      "cache": false
     },
     "lint": {},
-    "format": {},
+    "license": {
+      "cache": false,
+      "dependsOn": ["index"]
+    },
+    "format": {
+      "cache": false,
+      "dependsOn": ["license"]
+    },
+    "format:check": {
+      "cache": false,
+      "dependsOn": ["license"]
+    },
     "bench": {
       "dependsOn": ["^build"]
     }

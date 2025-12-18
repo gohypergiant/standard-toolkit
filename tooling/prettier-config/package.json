@@ -8,6 +8,7 @@
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2"
   },
+  "devDependencies": {},
   "exports": {
     "./config": "./prettier.config.js"
   },
@@ -33,8 +34,10 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "constellation-tracker": "node ../constellation-tracker/dist/main.js",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose"
   },
   "sideEffects": false,

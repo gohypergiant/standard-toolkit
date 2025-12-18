@@ -10,4 +10,6 @@ onlyBuiltDependencies:
   - '@swc/core'
   - esbuild
   - lefthook
+  - puppeteer
   - sharp
+  - sleep
