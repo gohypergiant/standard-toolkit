@@ -3,13 +3,14 @@
   "ui": "tui",
   "tasks": {
     "index": {
+      "cache": false,
       "outputs": ["src/index.ts"]
     },
     "pre-build": {
       "outputs": ["dist/**", "build/**"]
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^index", "^build"],
       "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"]
     },
     "dev": {
