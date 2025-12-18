@@ -262,6 +262,8 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
             {state.segmentConfigs
               .reduce<ReactNode[][]>(
                 (acc, config, configIndex) => {
+                  const currentGroupIndex = acc.length - 1;
+
                   if (
                     config.value === GROUP_SEPARATOR &&
                     variant === 'stacked'
@@ -272,7 +274,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                   }
 
                   if (config.type === 'literal') {
-                    acc[acc.length - 1]?.push(
+                    acc[currentGroupIndex]?.push(
                       <span
                         key={`${format}-literal-${configIndex}-${config.value}`}
                         className={styles.literal}
@@ -288,7 +290,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                     .slice(0, configIndex)
                     .filter((c) => c.type !== 'literal').length;
 
-                  acc[acc.length - 1]?.push(
+                  acc[currentGroupIndex]?.push(
                     <CoordinateSegment
                       key={`${format}-segment-${editableIndex}`}
                       value={state.segmentValues[editableIndex] || ''}

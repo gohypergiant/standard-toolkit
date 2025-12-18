@@ -248,7 +248,7 @@ export type CoordinateFieldProps = Omit<
     value?: CoordinateValue | null;
 
     /**
-     * Whether or not the input is stacked or linline
+     * Whether or not the input is stacked or inline
      * @default 'inline'
      */
     variant?: 'inline' | 'stacked';
