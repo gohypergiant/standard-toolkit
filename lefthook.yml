@@ -1,7 +1,7 @@
 pre-commit:
   commands:
     format:
-      run: pnpm run format
+      run: pnpm run format && pnpm run format:deps
       stage_fixed: true
       priority: 1
     validate-docblocks:

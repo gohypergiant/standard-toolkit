@@ -55,7 +55,7 @@
     "deps:version-patch": "pnpm taze patch -r",
     "dev": "pnpm turbo dev",
     "dev:filter": "pnpm turbo-filter dev",
-    "format": "pnpm turbo format && pnpm run format:deps",
+    "format": "pnpm turbo format",
     "format:deps": "pnpm syncpack format",
     "indexer": "pnpm turbo index",
     "license": "pnpm turbo license",

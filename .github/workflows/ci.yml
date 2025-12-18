@@ -50,7 +50,10 @@ jobs:
       - name: Format Packages
         run: pnpm run format
 
-      - name: Enforce Formatting
+      - name: Format package.json
+        run: pnpm run format:deps
+
+      - name: Dirty Check For Formatting
         run: |
           if [[ -n $(git status --porcelain) ]]; then
             echo "::error::Formatting issues detected. Please run 'pnpm run format' locally and commit the changes."
