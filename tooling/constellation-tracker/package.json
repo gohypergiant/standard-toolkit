@@ -65,6 +65,7 @@
   "scripts": {
     "constellation-tracker": "node ./dist/main.mjs",
     "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "pre-build": "pnpm tsdown",

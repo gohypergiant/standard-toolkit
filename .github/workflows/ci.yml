@@ -47,19 +47,8 @@ jobs:
       - name: Build Packages
         run: pnpm run build
 
-      - name: Format Packages
-        run: pnpm run format
-
-      - name: Format package.json
-        run: pnpm run format:deps
-
-      - name: Dirty Check For Formatting
-        run: |
-          if [[ -n $(git status --porcelain) ]]; then
-            echo "::error::Formatting issues detected. Please run 'pnpm run format' locally and commit the changes."
-            git diff --name-only
-            exit 1
-          fi
+      - name: Check For Formatting Issues
+        run: pnpm run format:check
 
       - name: Lint Packages
         run: pnpm run lint

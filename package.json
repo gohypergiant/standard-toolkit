@@ -56,6 +56,7 @@
     "dev": "pnpm turbo run dev",
     "dev:filter": "pnpm turbo-filter dev",
     "format": "pnpm turbo run format",
+    "format:check": "pnpm turbo run format:check",
     "format:deps": "pnpm syncpack format",
     "indexer": "pnpm turbo run index",
     "license": "pnpm turbo run license",

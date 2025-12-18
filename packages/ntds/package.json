@@ -110,6 +110,7 @@
     "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose"
