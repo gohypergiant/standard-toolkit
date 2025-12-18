@@ -807,6 +807,9 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.2.3(@types/react@19.2.7)
+      prettier:
+        specifier: ^3.7.4
+        version: 3.7.4
       tsdown:
         specifier: ^0.18.0
         version: 0.18.1(typescript@5.9.3)
