@@ -347,8 +347,7 @@
     "./lib/utils": "./dist/lib/utils.js",
     "./providers/portal": "./dist/providers/portal.js",
     "./providers/theme-provider": "./dist/providers/theme-provider.js",
-    "./package.json": "./package.json",
-    "./styles": "./dist/index.module.css"
+    "./package.json": "./package.json"
   },
   "files": [
     "./dist/**",

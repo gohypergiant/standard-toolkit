@@ -28,7 +28,7 @@ import styles from './styles.module.css';
 import type { TreeProps } from './types';
 
 const defaultRenderDropIndicator = (target: DropTarget) => (
-  <DropIndicator target={target} className='border border-highlight-hover' />
+  <DropIndicator target={target} className={styles.dropIndicator} />
 );
 
 /**
