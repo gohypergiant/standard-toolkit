@@ -11,24 +11,23 @@
  */
 
 import { uuid } from '@accelint/core';
-import type { EditableShape } from '../shared/types';
+import type { DisplayShape } from '../shared/types';
 
 /**
  * Mock shapes for Storybook examples
  * Centered around the East Coast of the United States for better visibility
  */
-export const mockShapes: EditableShape[] = [
+export const mockShapes: DisplayShape[] = [
   // Circle shape
   {
     id: uuid(),
     name: 'New Circle',
     label: 'Circle',
-    locked: false,
     shapeType: 'Circle',
     feature: {
       type: 'Feature',
       properties: {
-        editProperties: {
+        circleProperties: {
           radius: {
             value: 250,
             units: 'kilometers',
@@ -157,7 +156,6 @@ export const mockShapes: EditableShape[] = [
     id: uuid(),
     name: 'New LineString',
     label: 'LineString',
-    locked: false,
     shapeType: 'LineString',
     feature: {
       type: 'Feature',
@@ -188,7 +186,6 @@ export const mockShapes: EditableShape[] = [
     id: uuid(),
     name: 'New Point',
     label: 'Point',
-    locked: false,
     shapeType: 'Point',
     feature: {
       type: 'Feature',
@@ -213,7 +210,6 @@ export const mockShapes: EditableShape[] = [
     id: uuid(),
     name: 'New Polygon',
     label: 'Polygon',
-    locked: false,
     shapeType: 'Polygon',
     feature: {
       type: 'Feature',

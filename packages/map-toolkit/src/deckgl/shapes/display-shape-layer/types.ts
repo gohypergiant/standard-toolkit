@@ -101,6 +101,13 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
   labelOptions?: LabelPositionOptions;
 
   /**
+   * Whether to show the highlight layer around selected shapes
+   * When false, no highlight effect is rendered even when a shape is selected
+   * @default false
+   */
+  showHighlight?: boolean;
+
+  /**
    * Custom highlight color for selected shapes [r, g, b, a]
    * Each channel is 0-255
    * @default [40, 245, 190, 100] - Turquoise at ~39% opacity
@@ -112,10 +119,10 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
   highlightColor?: [number, number, number, number];
 
   /**
-   * When true, applies 60% opacity multiplier to fill colors for standard semi-transparent look.
+   * When true (default), applies 60% opacity multiplier to fill colors for standard semi-transparent look.
    * This is a convenience prop for achieving the standard map shape appearance.
-   * When false (default), colors are rendered exactly as specified in styleProperties.
-   * @default false
+   * When false, colors are rendered exactly as specified in styleProperties.
+   * @default true
    * @example Standard semi-transparent fills
    * ```tsx
    * <DisplayShapeLayer data={shapes} applyBaseOpacity />

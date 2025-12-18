@@ -168,13 +168,14 @@ describe('DisplayShapeLayer', () => {
       expect(mainLayer.id).toBe(`test-layer-${SHAPE_LAYER_IDS.DISPLAY}`);
     });
 
-    it('renders highlight layer when selectedShapeId is provided', () => {
+    it('renders highlight layer when selectedShapeId is provided and showHighlight is true', () => {
       const shape = createMockShape();
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
         mapId,
         data: [shape],
         selectedShapeId: shape.id,
+        showHighlight: true,
         showLabels: false,
       });
 

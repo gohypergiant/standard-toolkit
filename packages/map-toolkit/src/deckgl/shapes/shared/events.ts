@@ -14,102 +14,25 @@
 
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
-import type { EditMode, ShapeId } from './types';
+import type { ShapeId } from './types';
 
 /**
- * Shape lifecycle and interaction events
+ * Shape interaction events for DisplayShapeLayer
  */
 export const ShapeEvents = {
-  /** Started drawing new shape */
-  drawing: 'shapes:drawing',
-  /** Finished drawing (temporary, not saved) */
-  drawn: 'shapes:drawn',
-  /** Started editing existing shape */
-  editing: 'shapes:editing',
-  /** Updated shape (temporary, not saved) */
-  updated: 'shapes:updated',
-  /** Cancelled draw/edit operation */
-  cancelled: 'shapes:cancelled',
-  /** Shape committed/saved */
-  saved: 'shapes:saved',
-  /** Shape deleted */
-  deleted: 'shapes:deleted',
   /** Shape selected */
   selected: 'shapes:selected',
   /** Selection cleared */
   deselected: 'shapes:deselected',
   /** Shape hovered (for cursor changes) */
   hovered: 'shapes:hovered',
-  /** Validation error (consumer integrates with NoticeList) */
-  validationError: 'shapes:validation-error',
-  /** Mode changed (for map interaction coordination) */
-  modeChanged: 'shapes:mode-changed',
 } as const;
 
 export type ShapeEventType = (typeof ShapeEvents)[keyof typeof ShapeEvents];
 
 /**
- * Shape modes for map-mode integration
- */
-export const ShapeModes = {
-  DRAW_CIRCLE: 'shapes:draw:circle',
-  DRAW_POLYGON: 'shapes:draw:polygon',
-  DRAW_LINE: 'shapes:draw:line',
-  DRAW_POINT: 'shapes:draw:point',
-  EDIT_MODIFY: 'shapes:edit:modify',
-  EDIT_TRANSLATE: 'shapes:edit:translate',
-  // Future: Rectangle, Multi* shapes
-} as const;
-
-export type ShapeMode = (typeof ShapeModes)[keyof typeof ShapeModes];
-
-/**
  * Event payload types (all payloads are serializable)
  */
-
-export type ShapeDrawingEvent = Payload<
-  'shapes:drawing',
-  {
-    mode: EditMode;
-  }
->;
-
-export type ShapeDrawnEvent = Payload<
-  'shapes:drawn',
-  {
-    shapeId: ShapeId;
-  }
->;
-
-export type ShapeEditingEvent = Payload<
-  'shapes:editing',
-  {
-    shapeId: ShapeId;
-  }
->;
-
-export type ShapeUpdatedEvent = Payload<
-  'shapes:updated',
-  {
-    shapeId: ShapeId;
-  }
->;
-
-export type ShapeCancelledEvent = Payload<'shapes:cancelled', null>;
-
-export type ShapeSavedEvent = Payload<
-  'shapes:saved',
-  {
-    shapeId: ShapeId;
-  }
->;
-
-export type ShapeDeletedEvent = Payload<
-  'shapes:deleted',
-  {
-    shapeId: ShapeId;
-  }
->;
 
 export type ShapeSelectedEvent = Payload<
   'shapes:selected',
@@ -138,54 +61,18 @@ export type ShapeHoveredEvent = Payload<
   }
 >;
 
-export type ShapeValidationErrorEvent = Payload<
-  'shapes:validation-error',
-  {
-    errors: string[];
-    warnings?: string[];
-  }
->;
-
-export type ShapeModeChangedEvent = Payload<
-  'shapes:mode-changed',
-  {
-    mode: EditShapeMode;
-  }
->;
-
 /**
  * Union of all shape event types
  */
 export type ShapeEvent =
-  | ShapeDrawingEvent
-  | ShapeDrawnEvent
-  | ShapeEditingEvent
-  | ShapeUpdatedEvent
-  | ShapeCancelledEvent
-  | ShapeSavedEvent
-  | ShapeDeletedEvent
   | ShapeSelectedEvent
   | ShapeDeselectedEvent
-  | ShapeHoveredEvent
-  | ShapeValidationErrorEvent
-  | ShapeModeChangedEvent;
-
-/**
- * Edit shape modes for EditableShapeLayer
- */
-export type EditShapeMode =
-  | 'view'
-  | 'drawCircle'
-  | 'drawPolygon'
-  | 'drawLine'
-  | 'drawPoint'
-  | 'modify';
+  | ShapeHoveredEvent;
 
 /**
  * Aliases for backward compatibility
  */
 export const SHAPE_EVENTS = ShapeEvents;
-export const SHAPE_MODES = ShapeModes;
 export type ShapeEventPayload = ShapeEvent;
 export type ShapeEventHandler<T extends ShapeEventType = ShapeEventType> = (
   event: Extract<ShapeEvent, { type: T }>,

@@ -227,7 +227,7 @@ interface StyleProperties {
 }
 ```
 
-**Note**: Colors are rendered exactly as specified. Use the `applyBaseOpacity` prop on the layer to apply a 60% opacity multiplier to fill colors for the standard semi-transparent look.
+**Note**: By default, fill colors have a 60% opacity multiplier applied for the standard semi-transparent look. Set `applyBaseOpacity={false}` to render colors exactly as specified.
 
 ## Custom Icons for Points
 
@@ -372,11 +372,35 @@ Each geometry type has sensible defaults:
 
 ### Visual Feedback
 
-When a shape is selected via `selectedShapeId`, the layer renders a highlight layer underneath with:
+When a shape is selected via `selectedShapeId`, the layer provides two visual indicators:
 
-- Increased line width (+10 pixels)
-- Custom highlight color (default: turquoise at ~39% opacity)
-- Icon size increase (+8 pixels for Point geometries with icons)
+1. **Dotted border**: The selected shape's stroke pattern changes to dotted (`[2, 4]` dash array)
+2. **Highlight** (optional): A highlight layer underneath with:
+   - Increased line width (+5 pixels)
+   - Custom highlight color (default: turquoise at ~39% opacity)
+   - Icon size increase (+8 pixels for Point geometries with icons)
+
+### Controlling the Highlight Effect when Selecting Shapes
+
+The highlight effect can be toggled with the `showHighlight` prop:
+
+```tsx
+// To show the highlight effect in addition to dotted border:
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  showHighlight={true}  // enables the highlight layer
+/>
+
+// Default behavior (no highlight, just dotted border):
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  // showHighlight={false} is the default - only dotted border shows on selection
+/>
+```
 
 ### Custom Highlight Color
 
@@ -529,9 +553,10 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `onShapeHover` | `(shape: EditableShape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
 | `showLabels` | `boolean` | `true` | Whether to show labels |
+| `showHighlight` | `boolean` | `false` | Whether to show highlight around selected shapes (dotted border always shows) |
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
 | `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
-| `applyBaseOpacity` | `boolean` | `false` | Apply 60% opacity multiplier to fill colors for semi-transparent look |
+| `applyBaseOpacity` | `boolean` | `true` | Apply 60% opacity multiplier to fill colors for semi-transparent look |
 
 ### LabelPositionOptions
 

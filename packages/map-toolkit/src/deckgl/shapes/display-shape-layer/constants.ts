@@ -36,5 +36,7 @@ export const SELECTION_HIGHLIGHT = {
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
   showLabels: true,
+  showHighlight: false,
+  applyBaseOpacity: true,
   highlightColor: SELECTION_HIGHLIGHT.COLOR,
 };

@@ -13,13 +13,12 @@
 'use client';
 
 import 'client-only';
-import { useEffectEvent, useEmit, useOn } from '@accelint/bus/react';
+import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { useCallback, useId, useMemo } from 'react';
 import { getCursor } from '../../map-cursor/store';
 import { INITIAL_VIEW_STATE } from '../../maplibre/constants';
 import { useMapLibre } from '../../maplibre/hooks/use-maplibre';
-import { ShapeEvents } from '../shapes/shared/events';
 import { BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
@@ -28,7 +27,6 @@ import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { ShapeModeChangedEvent } from '../shapes/shared/events';
 import type {
   MapClickEvent,
   MapHoverEvent,
@@ -237,25 +235,8 @@ export function BaseMap({
     [container],
   );
 
-  // Use the custom hook to handle MapLibre
-  const mapLibreInstance = useMapLibre(
-    deckglInstance as IControl,
-    BASE_MAP_STYLE,
-    mapOptions,
-  );
-
-  // Listen for shape mode changes and disable map panning during modify mode
-  // This prevents map panning from interfering with edit handle dragging
-  useOn<ShapeModeChangedEvent>(ShapeEvents.modeChanged, (event) => {
-    if (mapLibreInstance) {
-      const shouldDisablePanning = event.payload.mode === 'modify';
-      if (shouldDisablePanning) {
-        mapLibreInstance.dragPan.disable();
-      } else {
-        mapLibreInstance.dragPan.enable();
-      }
-    }
-  });
+  // Use the custom hook to handle MapLibre integration
+  useMapLibre(deckglInstance as IControl, BASE_MAP_STYLE, mapOptions);
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);

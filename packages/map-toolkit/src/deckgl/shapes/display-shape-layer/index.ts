@@ -16,7 +16,7 @@ import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer } from '@deck.gl/layers';
-import { SHAPE_LAYER_IDS } from '../shared/constants';
+import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import {
   DEFAULT_DISPLAY_PROPS,
@@ -73,16 +73,21 @@ interface FeaturesCache {
  * ## Features
  * - **Multiple geometry types**: Point, LineString, Polygon, and Circle
  * - **Icon support**: Custom icons for Point geometries via icon atlases
- * - **Interactive selection**: Click handling with visual highlight feedback
+ * - **Interactive selection**: Click handling with dotted border and optional highlight
  * - **Hover effects**: Line width increases on hover for better UX
  * - **Customizable labels**: Flexible label positioning with per-shape or global options
  * - **Style properties**: Full control over colors, stroke patterns, and opacity
  * - **Event bus integration**: Automatically emits shape events via @accelint/bus
  * - **Multi-map support**: Events include map instance ID for isolation
  *
+ * ## Selection Visual Feedback
+ * When a shape is selected via `selectedShapeId`:
+ * - The shape's stroke pattern changes to dotted
+ * - An optional highlight renders underneath (controlled by `showHighlight` prop)
+ *
  * ## Layer Structure
- * Renders three sublayers (in order):
- * 1. **Highlight layer**: Selection glow effect (rendered below main layer)
+ * Renders up to three sublayers (in order):
+ * 1. **Highlight layer**: Selection highlight effect (if showHighlight=true, rendered below main layer)
  * 2. **Main GeoJsonLayer**: Shape geometries with styling and interaction
  * 3. **Label layer**: Text labels (if showLabels enabled)
  *
@@ -305,9 +310,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private renderHighlightLayer(
     features: EditableShape['feature'][],
   ): GeoJsonLayer | null {
-    const { selectedShapeId, highlightColor } = this.props;
+    const { selectedShapeId, showHighlight, highlightColor } = this.props;
 
-    if (!selectedShapeId) {
+    if (!selectedShapeId || showHighlight === false) {
       return null;
     }
 
@@ -411,7 +416,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Render main shapes layer
    */
   private renderMainLayer(features: EditableShape['feature'][]): GeoJsonLayer {
-    const { pickable, applyBaseOpacity } = this.props;
+    const { pickable, applyBaseOpacity, selectedShapeId } = this.props;
 
     // Single-pass icon config extraction (O(1) best case with early return)
     const {
@@ -477,9 +482,15 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           }
         : {}),
 
-      // Dash pattern support
+      // Dash pattern support - selected shapes get dotted border
       extensions: [new PathStyleExtension({ dash: true })],
-      getDashArray,
+      getDashArray: (d: EditableShape['feature']) => {
+        const isSelected = d.properties?.shapeId === selectedShapeId;
+        if (isSelected) {
+          return DASH_ARRAYS.dotted;
+        }
+        return getDashArray(d);
+      },
 
       // Behavior
       pickable,
@@ -491,7 +502,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         getFillColor: [features, applyBaseOpacity],
         getLineColor: [features],
         getLineWidth: [features, this.state?.hoverIndex],
-        getDashArray: [features],
+        getDashArray: [features, selectedShapeId],
         getPointRadius: [features],
         ...(hasIcons
           ? {

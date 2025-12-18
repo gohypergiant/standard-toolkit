@@ -17,8 +17,7 @@ import type { Color } from '@deck.gl/core';
 import type { Feature, LineString, Point, Polygon } from 'geojson';
 
 /**
- * Supported shape types in v1 (NGC2 implemented only)
- * Future: Rectangle, MultiLineString, MultiPolygon, MultiPoint
+ * Supported shape types
  */
 export const ShapeFeatureType = {
   Circle: 'Circle',
@@ -89,10 +88,10 @@ export interface StyleProperties {
 }
 
 /**
- * Circle-specific edit properties
- * Stored alongside the polygon approximation for precise editing
+ * Circle-specific properties for precise rendering
+ * Stored alongside the polygon approximation
  */
-export interface CircleEditProperties {
+export interface CircleProperties {
   /** Center point as [longitude, latitude] */
   center: [number, number];
   /** Radius with value and units */
@@ -105,7 +104,7 @@ export interface CircleEditProperties {
 }
 
 /**
- * Custom geometry types supported in v1
+ * Custom geometry types supported
  */
 export type CustomGeometry = Point | LineString | Polygon;
 
@@ -116,17 +115,17 @@ export interface StyledFeature extends Feature {
   properties: {
     /** Style properties for rendering */
     styleProperties: StyleProperties;
-    /** Circle edit properties (only for Circle type shapes) */
-    editProperties?: CircleEditProperties;
+    /** Circle properties (only for Circle type shapes) */
+    circleProperties?: CircleProperties;
     /** Shape ID for correlation */
     shapeId?: ShapeId;
   };
 }
 
 /**
- * Editable shape data structure
+ * Shape data structure for DisplayShapeLayer
  */
-export interface EditableShape {
+export interface DisplayShape {
   /** Unique identifier */
   id: ShapeId;
   /** Full shape name used internally and in UI */
@@ -141,11 +140,15 @@ export interface EditableShape {
   shapeType: ShapeFeatureTypeValues;
   /** GeoJSON feature with geometry and style properties */
   feature: ShapeFeature;
-  /** Whether shape is locked from editing */
-  locked: boolean;
   /** UTC timestamp (only set when saved) */
   lastUpdated?: number;
 }
+
+/**
+ * Alias for backward compatibility
+ * @deprecated Use DisplayShape instead
+ */
+export type EditableShape = DisplayShape;
 
 /**
  * Alias for ShapeFeatureType values
@@ -165,30 +168,9 @@ export type ShapeFeatureProperties = StyledFeature['properties'];
 /**
  * Circle radius type
  */
-export type CircleRadius = CircleEditProperties['radius'];
+export type CircleRadius = CircleProperties['radius'];
 
 /**
  * Coordinate as [longitude, latitude]
  */
 export type Coordinate = [number, number];
-
-/**
- * Edit modes for shapes
- */
-export type EditMode =
-  | 'ViewMode'
-  | 'DrawCircleFromCenterMode'
-  | 'DrawLineStringMode'
-  | 'DrawPolygonMode'
-  | 'DrawPointMode'
-  | 'ModifyMode'
-  | 'TranslateMode';
-
-/**
- * Validation result
- */
-export interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-  warnings?: string[];
-}

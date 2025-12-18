@@ -51,7 +51,8 @@ export const BasicDisplayAndEvents: Story = {
   args: {
     showLabels: true,
     pickable: true,
-    applyBaseOpacity: false,
+    applyBaseOpacity: true,
+    showHighlight: false,
     highlightColorR: 40,
     highlightColorG: 245,
     highlightColorB: 190,
@@ -70,6 +71,11 @@ export const BasicDisplayAndEvents: Story = {
       control: { type: 'boolean' },
       description:
         'Apply 60% opacity multiplier to fill colors for semi-transparent look',
+    },
+    showHighlight: {
+      control: { type: 'boolean' },
+      description:
+        'Show/hide highlight effect around selected shapes (dotted border always shows)',
     },
     highlightColorR: {
       control: { type: 'number', min: 0, max: 255, step: 1 },
@@ -169,6 +175,7 @@ export const BasicDisplayAndEvents: Story = {
             showLabels={args.showLabels}
             pickable={args.pickable}
             applyBaseOpacity={args.applyBaseOpacity}
+            showHighlight={args.showHighlight}
             highlightColor={[
               args.highlightColorR,
               args.highlightColorG,

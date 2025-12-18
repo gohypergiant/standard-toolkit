@@ -21,20 +21,12 @@ export {
   DASH_ARRAYS,
   DEFAULT_COLORS,
   DEFAULT_STYLE_PROPERTIES,
-  ERROR_MESSAGES,
   SHAPE_LAYER_IDS,
   STROKE_PATTERNS,
   STROKE_WIDTHS,
 } from './shared/constants';
 // Event exports
-// Note: emitShapeEvent, onShapeEvent, offShapeEvent are deprecated.
-// Use useEmit and useOn from '@accelint/bus/react' directly instead.
-export {
-  SHAPE_EVENTS,
-  SHAPE_MODES,
-  ShapeEvents,
-  ShapeModes,
-} from './shared/events';
+export { SHAPE_EVENTS, ShapeEvents } from './shared/events';
 export { ShapeFeatureType } from './shared/types';
 export type {
   DisplayShapeLayerProps,
@@ -51,15 +43,15 @@ export type {
   LabelVerticalPosition,
 } from './display-shape-layer/utils/labels';
 export type {
-  EditShapeMode,
   ShapeEventHandler,
   ShapeEventPayload,
   ShapeEventType,
 } from './shared/events';
 // Shared type exports
 export type {
-  CircleEditProperties,
+  CircleProperties,
   CircleRadius,
+  DisplayShape,
   EditableShape,
   ShapeFeature,
   ShapeFeatureProperties,

@@ -15,19 +15,18 @@ import { MAP_INTERACTION } from '../display-shape-layer/constants';
 import { MARKER } from './atlas';
 import ATLAS_JSON from './atlas.json';
 import ATLAS_PNG from './atlas.png';
-import type { EditableShape } from '../shared/types';
+import type { DisplayShape } from '../shared/types';
 
 /**
  * Mock shapes with icon configuration for Storybook examples
  * Demonstrates how to use icon atlases for Point geometries
  */
-export const mockShapesWithIcons: EditableShape[] = [
+export const mockShapesWithIcons: DisplayShape[] = [
   // Point with icon
   {
     id: uuid(),
     name: 'Location Marker',
     label: 'Marker 1',
-    locked: false,
     shapeType: 'Point',
     feature: {
       type: 'Feature',
@@ -62,7 +61,6 @@ export const mockShapesWithIcons: EditableShape[] = [
     id: uuid(),
     name: 'Second Marker',
     label: 'Marker 2',
-    locked: false,
     shapeType: 'Point',
     feature: {
       type: 'Feature',
@@ -97,7 +95,6 @@ export const mockShapesWithIcons: EditableShape[] = [
     id: uuid(),
     name: 'Connection Line',
     label: 'Route',
-    locked: false,
     shapeType: 'LineString',
     feature: {
       type: 'Feature',

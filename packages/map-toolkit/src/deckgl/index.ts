@@ -19,13 +19,10 @@ export {
   DEFAULT_COLORS,
   DEFAULT_STYLE_PROPERTIES,
   DisplayShapeLayer,
-  ERROR_MESSAGES,
   SHAPE_EVENTS,
   SHAPE_LAYER_IDS,
-  SHAPE_MODES,
   ShapeEvents,
   ShapeFeatureType,
-  ShapeModes,
   STROKE_PATTERNS,
   STROKE_WIDTHS,
 } from './shapes';
@@ -38,11 +35,11 @@ export type {
   MapHoverPayload,
 } from './base-map/types';
 export type {
-  CircleEditProperties,
+  CircleProperties,
   CircleRadius,
+  DisplayShape,
   DisplayShapeLayerProps,
   EditableShape,
-  EditShapeMode,
   ShapeEventHandler,
   ShapeEventPayload,
   ShapeEventType,

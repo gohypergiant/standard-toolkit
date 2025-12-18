@@ -36,8 +36,8 @@ describe('Display Style Utilities', () => {
 
       const result = getFillColor(feature);
 
-      // Default fill: DEFAULT_COLORS.fill passed through
-      expect(result).toEqual([98, 166, 255, 255]);
+      // Default fill: DEFAULT_COLORS.fill passed through (white)
+      expect(result).toEqual([255, 255, 255, 255]);
     });
 
     it('passes through RGBA color as-is when applyBaseOpacity is false', () => {
@@ -152,8 +152,8 @@ describe('Display Style Utilities', () => {
 
       const result = getStrokeColor(feature);
 
-      // Default stroke: DEFAULT_COLORS.stroke passed through
-      expect(result).toEqual([98, 166, 255, 255]);
+      // Default stroke: DEFAULT_COLORS.stroke passed through (gray)
+      expect(result).toEqual([136, 138, 143, 255]);
     });
 
     it('passes through RGBA color exactly as provided', () => {
@@ -207,7 +207,8 @@ describe('Display Style Utilities', () => {
 
       const result = getLineWidth(feature);
 
-      expect(result).toBe(4);
+      // DEFAULT_STROKE_WIDTH is 2
+      expect(result).toBe(2);
     });
 
     it('returns strokeWidth from style properties', () => {
@@ -452,7 +453,7 @@ describe('Display Style Utilities', () => {
   });
 
   describe('getHighlightLineWidth', () => {
-    it('increases base width by 10', () => {
+    it('increases base width by HIGHLIGHT_WIDTH_INCREASE (5)', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
@@ -468,7 +469,8 @@ describe('Display Style Utilities', () => {
 
       const result = getHighlightLineWidth(feature);
 
-      expect(result).toBe(14);
+      // strokeWidth (4) + HIGHLIGHT_WIDTH_INCREASE (5) = 9
+      expect(result).toBe(9);
     });
 
     it('works with different base widths', () => {
@@ -488,7 +490,8 @@ describe('Display Style Utilities', () => {
           geometry: { type: 'Point', coordinates: [0, 0] },
         };
 
-        expect(getHighlightLineWidth(feature)).toBe(width + 10);
+        // HIGHLIGHT_WIDTH_INCREASE is 5
+        expect(getHighlightLineWidth(feature)).toBe(width + 5);
       }
     });
 
@@ -501,8 +504,8 @@ describe('Display Style Utilities', () => {
 
       const result = getHighlightLineWidth(feature);
 
-      // Default width (4) + 10
-      expect(result).toBe(14);
+      // DEFAULT_STROKE_WIDTH (2) + HIGHLIGHT_WIDTH_INCREASE (5) = 7
+      expect(result).toBe(7);
     });
   });
 });
