@@ -1,11 +1,11 @@
 {
   "name": "@accelint/constellation-tracker",
   "description": "A tool used to keep a project's catalog-info.yaml file up to date for use in Constellation.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "bin": {
-    "constellation-tracker": "./dist/main.js"
+    "constellation-tracker": "./dist/main.mjs"
   },
   "dependencies": {
     "ansis": "^4.0.0",
@@ -21,17 +21,25 @@
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/node": "^22",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.18.0",
     "vitest": "^4.0.15"
   },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/lib.d.ts",
-        "default": "./dist/lib.js"
-      },
-      "default": "./dist/lib.js"
-    }
+    "./collect-dependencies": "./dist/collect-dependencies.mjs",
+    "./get-catalog-info": "./dist/get-catalog-info.mjs",
+    "./log-messages": "./dist/log-messages.mjs",
+    "./main": "./dist/main.mjs",
+    "./utils/catalog-info-template": "./dist/utils/catalog-info-template.mjs",
+    "./utils/generate-catalog-info": "./dist/utils/generate-catalog-info.mjs",
+    "./utils/save-catalog-info": "./dist/utils/save-catalog-info.mjs",
+    "./utils/types": "./dist/utils/types.mjs",
+    "./validate-input": "./dist/validate-input.mjs",
+    "./validate-package": "./dist/validate-package.mjs",
+    "./package.json": "./package.json"
   },
   "files": [
     "./dist/**",
@@ -55,12 +63,13 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm tsc && pnpm license && pnpm format",
-    "constellation-tracker": "node ./dist/main.js",
-    "format": "pnpm biome format . --write",
+    "constellation-tracker": "node ./dist/main.mjs",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
-    "lint": "pnpm biome lint",
-    "postinstall": "pnpm run build",
+    "lint": "pnpm biome lint . --verbose",
+    "pre-build": "pnpm tsdown",
+    "prepare": "pnpm run pre-build",
     "test": "pnpm vitest --dir=test",
     "test:coverage": "pnpm vitest --dir=test --coverage"
   },

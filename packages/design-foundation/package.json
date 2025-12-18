@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-foundation",
   "description": "An open-source design library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
+    "@accelint/prettier-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@fontsource-variable/roboto-flex": "^5.2.8",
@@ -23,9 +23,12 @@
     "clsx": "^2.1.1",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "postcss": "^8.5.6",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "rollup-plugin-copy": "^3.5.0",
     "tailwindcss": "^4.1.18",
     "tinyglobby": "^0.2.15",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.18.0",
     "typescript": "^5.9.3",
     "uuid": "^11.1.0",
     "vite": "^7.2.7",
@@ -34,19 +37,14 @@
     "webpack": "^5.103.0"
   },
   "exports": {
-    "./*": {
-      "import": {
-        "types": "./dist/*.d.ts",
-        "default": "./dist/*.js"
-      },
-      "default": "./dist/*.js"
-    },
-    "./styles": {
-      "import": {
-        "default": "./dist/index.css"
-      },
-      "default": "./dist/index.css"
-    }
+    "./lib/css": "./dist/lib/css.js",
+    "./lib/utils": "./dist/lib/utils.js",
+    "./lib/vite": "./dist/lib/vite.js",
+    "./lib/webpack": "./dist/lib/webpack.js",
+    "./tokens": "./dist/tokens/index.js",
+    "./tokens/types": "./dist/tokens/types.js",
+    "./package.json": "./package.json",
+    "./styles": "./dist/index.css"
   },
   "files": [
     "./dist/**",
@@ -78,17 +76,20 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm generate && pnpm license && pnpm format && tsup",
-    "constellation-tracker": "constellation-tracker",
+    "build": "pnpm generate && pnpm tsdown",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
-    "format": "pnpm biome format . --write",
+    "format": "pnpm format:biome && pnpm format:prettier",
+    "format:biome": "pnpm biome format . --write --verbose",
+    "format:biome:check": "pnpm biome format . --verbose",
+    "format:check": "pnpm format:biome:check && pnpm format:prettier:check",
+    "format:prettier": "pnpm prettier --write './**/*.css'",
+    "format:prettier:check": "pnpm prettier --check './**/*.css'",
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
-    "generate": "pnpm gen:tokens && pnpm gen:variants",
-    "license": "pnpm license:tokens && pnpm license:variants",
-    "license:tokens": "pnpm zx ../../scripts/license.mjs --files ./src/tokens",
-    "license:variants": "pnpm zx ../../scripts/license.mjs --files ./src/variants",
-    "lint": "pnpm biome lint",
+    "generate": "pnpm gen:tokens && pnpm gen:variants && pnpm run license && pnpm run format",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },

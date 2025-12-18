@@ -1,0 +1,61 @@
+{
+  "name": "@accelint/postcss-tailwind-css-modules",
+  "description": "Postcss plugin for resolving some problems that occur when using tailwind with css modules",
+  "version": "1.0.1",
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {
+    "@accelint/typescript-config": "workspace:*",
+    "@types/node": "^22",
+    "postcss": "^8.5.6",
+    "postcss-selector-parser": "^7.1.1",
+    "tsdown": "^0.18.0"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "optionalDependencies": {
+    "@tailwindcss/postcss": "^4.1.17"
+  },
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "postcss": "^8.5.6",
+    "postcss-selector-parser": "^7.1.1"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "scripts": {
+    "build": "pnpm tsdown",
+    "constellation-tracker": "pnpm exec constellation-tracker",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose"
+  },
+  "sideEffects": false,
+  "subPath": "packages/postcss-tailwind-css-modules",
+  "title": "Postcss tailwind css modules plugin",
+  "type": "module",
+  "types": "./dist/index.d.cts"
+}

@@ -11,34 +11,17 @@
  */
 
 import 'server-only';
+import { Accordion } from '@accelint/design-toolkit/components/accordion';
 import { AccordionGroup } from '@accelint/design-toolkit/components/accordion/group';
 import { AccordionHeader } from '@accelint/design-toolkit/components/accordion/header';
-import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
 import { AccordionPanel } from '@accelint/design-toolkit/components/accordion/panel';
 import { AccordionTrigger } from '@accelint/design-toolkit/components/accordion/trigger';
-import { Icon } from '@accelint/design-toolkit/components/icon/index';
+import { Icon } from '@accelint/design-toolkit/components/icon';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
-import type { AccordionGroupProps } from '@accelint/design-toolkit/components/accordion/types';
+import { PROP_COMBOS } from './variants';
 
-const PROP_COMBOS: AccordionGroupProps[] = [
-  { variant: 'cozy' },
-  { variant: 'compact' },
-  { variant: 'cozy', isDisabled: true },
-  { variant: 'compact', isDisabled: true },
-  {
-    variant: 'cozy',
-    allowsMultipleExpanded: true,
-    defaultExpandedKeys: ['a', 'b'],
-  },
-  {
-    variant: 'compact',
-    allowsMultipleExpanded: false,
-    defaultExpandedKeys: ['a', 'b'],
-  },
-];
-
-function PropExamples() {
+function PropCombos() {
   return PROP_COMBOS.map((props, k) => {
     return (
       <BentoItem key={k}>
@@ -80,7 +63,7 @@ function PropExamples() {
 export function AccordionGroupExampleServer() {
   return (
     <>
-      <PropExamples />
+      <PropCombos />
     </>
   );
 }

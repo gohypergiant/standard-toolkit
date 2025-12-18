@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '../../index.module.css';
+@reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
   .field {
@@ -62,7 +62,6 @@
   .input {
     @apply font-display text-body-s block w-full outline-none;
 
-    /* TODO: hide-cancel utility class is missing */
     &::-webkit-search-cancel-button {
       @apply hidden;
     }

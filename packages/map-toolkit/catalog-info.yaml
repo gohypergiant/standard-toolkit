@@ -11,15 +11,14 @@ metadata:
 
     Dependencies:
 
-    accelint_biome-config@1.0.2, accelint_bus@3.0.1,
-    accelint_constellation-tracker@1.0.1, accelint_core@0.5.1,
-    accelint_design-foundation@1.0.2, accelint_design-toolkit@8.1.2,
+    accelint_biome-config@1.0.2, accelint_bus@3.0.2, accelint_core@0.5.2,
+    accelint_design-foundation@2.0.0, accelint_design-toolkit@9.0.0,
     accelint_geo@0.4.1, accelint_typescript-config@0.1.4,
-    accelint_vitest-config@0.1.5
+    accelint_vitest-config@0.1.6
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/map-toolkit/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.4.0
+    package/version: 0.4.1
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/map-toolkit
@@ -38,7 +37,6 @@ spec:
   dependsOn:
     - component:accelint_biome-config
     - component:accelint_bus
-    - component:accelint_constellation-tracker
     - component:accelint_core
     - component:accelint_design-foundation
     - component:accelint_design-toolkit

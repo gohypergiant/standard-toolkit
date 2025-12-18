@@ -1,6 +1,15 @@
 # @accelint/dataset
 
+## 0.1.2
+
+### Patch Changes
+
+- bb73a1e: Ensure dependencies all follow the same semver range across devtk, maptk, and designtk.
+- Updated dependencies [bb73a1e]
+  - @accelint/core@0.5.2
+
 ## 0.1.1
+
 ### Patch Changes
 
 - cd5bf55: Fixed some validation issues. Made the available fields types more constrained. Added additional unit tests. Updated package readme.
@@ -9,6 +18,7 @@
   - @accelint/core@0.5.1
 
 ## 0.1.0
+
 ### Minor Changes
 
 - 8d7e14d: Add the dataset spec, validation and lenses package to the repo

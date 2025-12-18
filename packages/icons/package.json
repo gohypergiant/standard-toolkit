@@ -1,18 +1,18 @@
 {
   "name": "@accelint/icons",
   "description": "An open-source icon library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {},
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@svgr/cli": "^8.1.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "prettier": "^3.7.4",
     "tsdown": "^0.18.0"
   },
   "engines": {
@@ -281,11 +281,13 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm generate:icons && pnpm license && pnpm format && pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
-    "format": "pnpm biome check --linter-enabled=false . --write",
-    "generate:icons": "svgr --config-file svgr.config.mjs -- src/svg",
-    "license": "pnpm zx ../../scripts/license.mjs --files src/icons"
+    "build": "pnpm generate:icons && pnpm tsdown && pnpm run license && pnpm run format",
+    "constellation-tracker": "pnpm exec constellation-tracker",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "generate:icons": "svgr --no-prettier --config-file svgr.config.mjs -- src/svg",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose"
   },
   "subPath": "packages/icons",
   "title": "Accelint Icons",

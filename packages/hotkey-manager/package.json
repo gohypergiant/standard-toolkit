@@ -1,6 +1,6 @@
 {
   "name": "@accelint/hotkey-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
@@ -91,7 +91,10 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
     "dev": "pnpm tsc --watch",
-    "lint": "pnpm biome lint",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },

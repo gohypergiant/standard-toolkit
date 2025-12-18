@@ -1,14 +1,13 @@
 {
   "name": "@accelint/bus",
   "description": "An open-source event bus library.",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
     "type-fest": "^5.3.1"
   },
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
@@ -67,10 +66,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/bus",
-    "lint": "pnpm biome lint",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },

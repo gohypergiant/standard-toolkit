@@ -1,7 +1,7 @@
 {
   "name": "@accelint/logger",
   "description": "A flexible and extensible logging utility with callsite tracking and environment-aware capabilities.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
@@ -12,7 +12,6 @@
     "serialize-error": "^12.0.0"
   },
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@testing-library/dom": "^10.4.1",
@@ -63,10 +62,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/logger",
-    "lint": "pnpm biome lint",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },

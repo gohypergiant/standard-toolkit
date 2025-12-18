@@ -1,0 +1,33 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: accelint_postcss-tailwind-css-modules
+  title: Postcss tailwind css modules plugin
+  description: >-
+    Postcss plugin for resolving some problems that occur when using tailwind
+    with css modules
+
+
+    Dependencies:
+
+    accelint_typescript-config@0.1.4
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/postcss-tailwind-css-modules/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 1.0.1
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/postcss-tailwind-css-modules
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:accelint_typescript-config

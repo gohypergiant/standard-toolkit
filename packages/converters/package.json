@@ -1,12 +1,11 @@
 {
   "name": "@accelint/converters",
   "description": "A lightweight JavaScript utility for converting between various value types, including numbers, strings, booleans, dates, and more.",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
     "@accelint/constants": "workspace:*",
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "tsdown": "^0.18.0",
@@ -54,10 +53,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/converters",
-    "lint": "pnpm biome lint",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src"
   },
   "sideEffects": false,

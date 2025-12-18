@@ -2,27 +2,49 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
-    "dev": {
-      "cache": false,
-      "persistent": true,
-      "dependsOn": ["index"]
-    },
-    "lint": {},
-    "bench": {},
-    "test": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage"]
-    },
     "index": {
+      "cache": false,
       "outputs": ["src/index.ts"]
     },
+    "pre-build": {
+      "outputs": ["dist/**", "build/**"]
+    },
     "build": {
-      "dependsOn": ["index", "^build"],
-      "outputs": ["dist", "build"]
+      "dependsOn": ["^index", "^build"],
+      "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "preview": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "constellation-tracker": {
+      "cache": false
+    },
+    "lint": {},
+    "license": {
       "cache": false,
-      "dependsOn": ["build", "^constellation-tracker"]
+      "dependsOn": ["index"]
+    },
+    "format": {
+      "cache": false,
+      "dependsOn": ["license"]
+    },
+    "format:check": {
+      "cache": false,
+      "dependsOn": ["license"]
+    },
+    "bench": {
+      "dependsOn": ["^build"]
     }
   }
 }

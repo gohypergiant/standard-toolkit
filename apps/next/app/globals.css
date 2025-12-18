@@ -14,9 +14,6 @@
  */
 
 @import '@accelint/design-foundation/styles';
-@source '../node_modules/@accelint/design-foundation';
-@import '@accelint/design-toolkit/styles';
-@source '../node_modules/@accelint/design-toolkit';
 
 @layer theme {
   :root {

@@ -10,4 +10,11 @@ onlyBuiltDependencies:
   - '@swc/core'
   - esbuild
   - lefthook
+  - puppeteer
   - sharp
+  - sleep
+
+# https://pnpm.io/settings#publichoistpattern
+publicHoistPattern:
+  - "*@vitest/coverage-istanbul*"
+  - "*prettier-plugin-tailwindcss*"

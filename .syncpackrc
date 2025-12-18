@@ -8,6 +8,8 @@
         "**",
         "!@deck.gl/**",
         "!@react-aria/**",
+        "!@react-stately/**",
+        "!@react-types/**",
         "!react-aria-components",
         "!react-querybuilder"
       ],
@@ -21,8 +23,6 @@
       "dependencies": [
         "@deck.gl/**",
         "@deck.gl-community/**",
-        "@react-aria/**",
-        "react-aria-components",
         "react-querybuilder"
       ],
       "label": "Packages that require patch semver range due to issues",
@@ -30,6 +30,19 @@
         "**"
       ],
       "range": "~"
+    },
+    {
+      "dependencies": [
+        "@react-aria/**",
+        "@react-stately/**",
+        "@react-types/**",
+        "react-aria-components"
+      ],
+      "label": "Packages that require exact version pinning due to severe issues",
+      "packages": [
+        "**"
+      ],
+      "range": ""
     }
   ],
   "versionGroups": [
@@ -54,7 +67,12 @@
       "pinVersion": "~9.1"
     },
     {
-      "dependencies": ["@react-aria/**", "react-aria-components"],
+      "dependencies": [
+        "@react-aria/**",
+        "@react-stately/**",
+        "@react-types/**",
+        "react-aria-components"
+      ],
       "label": "Ensure RAC packages are within the same range across project",
       "policy": "sameRange"
     },

@@ -1,11 +1,10 @@
 {
   "name": "@accelint/temporal",
   "description": "A lightweight JavaScript library offering a collection of simple temporal functions for parsing, formatting, manipulating dates and times, and specialty timers.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "tsdown": "^0.18.0",
@@ -48,10 +47,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/temporal",
-    "lint": "pnpm biome lint",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src"
   },
   "sideEffects": false,

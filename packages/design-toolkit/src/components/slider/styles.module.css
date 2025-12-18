@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '../../index.module.css';
+@reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
   .slider {
@@ -129,9 +129,6 @@
   }
 
   .trackValue {
-    --track-value-start: attr(data-start type(<number>), 0);
-    --track-value-end: attr(data-end type(<number>), 0);
-
     @apply bg-accent-primary-bold absolute rounded-full;
 
     @variant group-orientation-horizontal/slider {

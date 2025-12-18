@@ -10,14 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { Link } from '@accelint/design-toolkit/components/link/index';
+import { Link } from '@accelint/design-toolkit/components/link';
 
 const LINKS = [
   { path: '/', label: 'All' },
   { path: '/accordion', label: 'Accordion' },
   { path: '/accordion-group', label: 'Accordion Group' },
+  { path: '/action-bar/client', label: 'Action Bar' },
   { path: '/avatar', label: 'Avatar' },
   { path: '/badge', label: 'Badge' },
+  { path: '/button', label: 'Button' },
+  { path: '/dialog/client', label: 'Dialog' },
+  { path: '/drawer/client', label: 'Drawer' },
+  { path: '/notice', label: 'Notice' },
+  { path: '/tooltip', label: 'Tooltip' },
 ];
 
 export function Nav() {

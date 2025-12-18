@@ -11,8 +11,8 @@
  */
 
 import 'server-only';
-import { ActionBar } from '@accelint/design-toolkit/components/action-bar/index';
-import { Icon } from '@accelint/design-toolkit/components/icon/index';
+import { ActionBar } from '@accelint/design-toolkit/components/action-bar';
+import { Icon } from '@accelint/design-toolkit/components/icon';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
 

@@ -1,7 +1,7 @@
 {
   "name": "@accelint/geo",
   "description": "A collection of JavaScript functions for working with coordinates and geospatial data.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
@@ -9,7 +9,6 @@
     "geodesy": "^2.4.0"
   },
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "tsdown": "^0.18.0",
@@ -84,10 +83,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/geo",
-    "lint": "pnpm biome lint",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src"
   },
   "sideEffects": false,

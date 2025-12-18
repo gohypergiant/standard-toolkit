@@ -1,11 +1,10 @@
 {
   "name": "@accelint/predicates",
   "description": "A collection of useful predicate functions for JavaScript.",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
@@ -77,10 +76,13 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/predicates",
-    "lint": "pnpm biome lint",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src"
   },
   "sideEffects": false,

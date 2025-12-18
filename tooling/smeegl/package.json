@@ -1,17 +1,16 @@
 {
   "name": "@accelint/smeegl",
   "description": "A small, spreet-based spritesheet/texture package for use with Deck.gl.",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "bin": {
-    "smeegl": "./dist/main.js"
+    "smeegl": "./dist/main.mjs"
   },
   "dependencies": {
     "ansis": "^4.0.0",
     "commander": "^14.0.0",
     "crc32-universal": "^1.0.1",
-    "esbuild-plugin-file-path-extensions": "^2.1.3",
     "globby": "^14.1.0",
     "inquirer": "^12.6.1",
     "lodash": "^4.17.21",
@@ -20,22 +19,33 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@types/lodash": "^4.17.20",
     "@types/node": "^22",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.18.0",
     "vitest": "^4.0.15"
   },
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/lib.d.ts",
-        "default": "./dist/lib.js"
-      },
-      "default": "./dist/lib.js"
-    }
+    "./build-react-files": "./dist/build-react-files.mjs",
+    "./build-spritesheet": "./dist/build-spritesheet.mjs",
+    "./lib": "./dist/lib.mjs",
+    "./log-messages": "./dist/log-messages.mjs",
+    "./main": "./dist/main.mjs",
+    "./utils/clean-up-temp-directory": "./dist/utils/clean-up-temp-directory.mjs",
+    "./utils/copy-sprites-to-temp-directory": "./dist/utils/copy-sprites-to-temp-directory.mjs",
+    "./utils/duplicate-file": "./dist/utils/duplicate-file.mjs",
+    "./utils/find-common-base-path": "./dist/utils/find-common-base-path.mjs",
+    "./utils/find-sprites": "./dist/utils/find-sprites.mjs",
+    "./utils/generate-constants-file": "./dist/utils/generate-constants-file.mjs",
+    "./utils/generate-sprites": "./dist/utils/generate-sprites.mjs",
+    "./utils/make-temp-directory": "./dist/utils/make-temp-directory.mjs",
+    "./utils/merge-svg-into-react-template": "./dist/utils/merge-svg-into-react-template.mjs",
+    "./utils/pascal-case": "./dist/utils/pascal-case.mjs",
+    "./utils/read-svg-files-from-input-directory": "./dist/utils/read-svg-files-from-input-directory.mjs",
+    "./utils/types": "./dist/utils/types.mjs",
+    "./validate-input": "./dist/validate-input.mjs",
+    "./package.json": "./package.json"
   },
   "files": [
     "./dist/**",
@@ -59,12 +69,13 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm tsc && pnpm license && pnpm format",
-    "constellation-tracker": "constellation-tracker",
-    "format": "pnpm biome format . --write",
+    "constellation-tracker": "pnpm exec constellation-tracker",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
-    "lint": "pnpm biome lint",
-    "postinstall": "pnpm run build",
+    "lint": "pnpm biome lint . --verbose",
+    "pre-build": "pnpm tsdown",
+    "prepare": "pnpm run pre-build",
     "test": "pnpm vitest --dir=test"
   },
   "sideEffects": false,

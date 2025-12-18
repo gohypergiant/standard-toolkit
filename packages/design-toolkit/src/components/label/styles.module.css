@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '../../index.module.css';
+@reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
   .label {

@@ -260,7 +260,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                 return (
                   <span
                     key={`${format}-literal-${configIndex}-${config.value}`}
-                    className='fg-primary-muted'
+                    className={styles.literal}
                   >
                     {config.value}
                   </span>

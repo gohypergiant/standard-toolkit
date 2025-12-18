@@ -1,11 +1,10 @@
 {
   "name": "@accelint/dataset",
   "description": "A simple, consistent representation of data.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
-    "@accelint/constellation-tracker": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
@@ -55,10 +54,13 @@
   },
   "scripts": {
     "build": "pnpm tsdown",
-    "constellation-tracker": "constellation-tracker",
+    "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/dataset",
-    "lint": "pnpm biome lint",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
     "test": "pnpm vitest --dir=src"
   },
   "sideEffects": false,

@@ -5,6 +5,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ### All Release Notes
 [All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
 
+* [Upgrade to v9](#v9)
 * [Upgrade to v8](#v8)
 * [Upgrade to v7](#v7)
 * [Upgrade to v6](#v6)
@@ -12,7 +13,75 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
 
-[Go directly to migration steps for v8](#migration).
+<hr />
+<a id="v9"></a>
+# Upgrade to v9
+
+## Improvements
+
+We've migrated from [tsup](https://tsup.egoist.dev/) to [tsdown](https://tsdown.dev/) for our build tooling, which significantly improves build times.
+
+## Breaking Change: Explicit Package Exports
+
+We now use tsdown's [auto-generated exports](https://tsdown.dev/options/package-exports#auto-generating-package-exports) feature, which explicitly defines all package exports in `package.json` instead of using wildcard patterns.
+
+### What Changed
+
+**Before (v8):** Wildcard exports
+```json
+"./*": {
+  "import": {
+    "types": "./dist/*.d.ts",
+    "default": "./dist/*.js"
+  },
+  "default": "./dist/*.js"
+},
+```
+
+**After (v9):** Explicit exports
+```json
+"./components/accordion": "./dist/components/accordion/index.js",
+"./components/accordion/context": "./dist/components/accordion/context.js",
+"./components/accordion/group": "./dist/components/accordion/group.js",
+etc...
+```
+
+### Why This Breaks Imports
+
+The explicit export path **already includes** the `/index.js` file in its resolution target. When you import with an `/index` suffix:
+```typescript
+import { Accordion } from '@accelint/design-toolkit/components/accordion/index';
+```
+
+Node attempts to resolve `./dist/components/accordion/index.js/index`, which doesn't exist.
+
+Previously, wildcard exports required explicit `/index` suffixes per [Node's module resolution rules](https://nodejs.org/api/packages.html#module-resolution-and-loading):
+> directory indexes (e.g. './startup/index.js') must be fully specified.
+
+Now that the export explicitly points to `index.js`, the `/index` suffix causes resolution to fail.
+
+## Breaking Change: /styles export removed from design-Toolkit
+
+because all component styles are in css modules and global classes live in design-foundation, there is no longer anything global for the design toolkit to export
+
+## Migration
+
+Remove the design-toolkit styles import from your global css. You should also remove the @source (though leaving it in doesn't technically break anything)
+
+**❌ Before:**
+```css
+@import "@accelint/design-foundation/styles";
+@import "@accelint/design-toolkit/styles";
+@source '../node_modules/@accelint/design-toolkit';
+```
+
+**✅ After:**
+```css
+@import "@accelint/design-foundation/styles";
+```
+
+### Affected Packages
+- `@accelint/design-toolkit`
 
 <hr />
 <a id="v8"></a>
@@ -113,7 +182,6 @@ With the new design:
 ### Action Bar
 Added a size prop to simplify usage in different UI contexts.
 
-<a id="migration"></a>
 ## Migration steps
 
 ### 1. Enable compiling CSS Modules _(only if necessary)_
