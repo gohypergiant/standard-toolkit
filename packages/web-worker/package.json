@@ -1,7 +1,7 @@
 {
   "name": "@accelint/worker",
   "description": "A lightweight JavaScript library that simplifies working with Web Workers.",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {

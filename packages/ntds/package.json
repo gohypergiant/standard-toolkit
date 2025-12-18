@@ -1,7 +1,7 @@
 {
   "name": "@accelint/ntds",
   "description": "An NTDS-compliant offering of a set of SVG Icon Components with fill color inputs for general usage, and a spritesheet for icons to be used in the COP.",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
