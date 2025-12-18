@@ -12,6 +12,7 @@
     "@svgr/cli": "^8.1.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "prettier": "^3.7.4",
     "tsdown": "^0.18.0"
   },
   "engines": {
