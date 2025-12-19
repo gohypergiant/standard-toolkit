@@ -109,6 +109,7 @@
     "index": "pnpm zx ../../scripts/indexer.mjs packages/core",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
     "test": "pnpm vitest --dir=src"
   },
   "sideEffects": false,
