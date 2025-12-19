@@ -34,10 +34,10 @@ function useColorValues(utilityClassGroup: Record<PropertyKey, string[]>) {
     const computeColorValues = () => {
       const newColorValues = new Map<string, string>();
       for (const utilityClass of Object.values(utilityClassGroup).flat()) {
-        const val = getComputedStyle(root)
+        const computedStyle = getComputedStyle(root)
           .getPropertyValue(`--${utilityClass}`)
           .trim();
-        newColorValues.set(utilityClass, val);
+        newColorValues.set(utilityClass, computedStyle);
       }
       setColorValues(newColorValues);
     };
@@ -57,11 +57,11 @@ function useColorValues(utilityClassGroup: Record<PropertyKey, string[]>) {
 }
 
 const ColorDisplay = ({
-  displayType,
+  type,
   utilityClass,
   value,
 }: {
-  displayType: 'swatch' | 'outline';
+  type: 'swatch' | 'outline';
   utilityClass: string;
   value?: string;
 }) => {
@@ -70,10 +70,10 @@ const ColorDisplay = ({
       <div
         className={clsx(
           'h-[90px] w-[120px] rounded-large',
-          displayType === 'outline' && 'outline',
+          type === 'outline' && 'outline',
         )}
         style={
-          displayType === 'outline'
+          type === 'outline'
             ? { outlineColor: value }
             : { backgroundColor: value }
         }
@@ -105,7 +105,7 @@ export const Background: Story = {
           {tokens.bg.base.map((utilityClass) => (
             <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
-              displayType='swatch'
+              type='swatch'
               utilityClass={utilityClass}
               value={bgColorValues.get(utilityClass)}
             />
@@ -115,7 +115,7 @@ export const Background: Story = {
           {tokens.bg.utility.map((utilityClass) => (
             <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
-              displayType='swatch'
+              type='swatch'
               utilityClass={utilityClass}
               value={bgColorValues.get(utilityClass)}
             />
@@ -144,7 +144,7 @@ export const Foreground: Story = {
           {tokens.fg.base.map((utilityClass) => (
             <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
-              displayType='swatch'
+              type='swatch'
               utilityClass={utilityClass}
               value={fgColorValues.get(utilityClass)}
             />
@@ -154,7 +154,7 @@ export const Foreground: Story = {
           {tokens.fg.utility.map((utilityClass) => (
             <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
-              displayType='swatch'
+              type='swatch'
               utilityClass={utilityClass}
               value={fgColorValues.get(utilityClass)}
             />
@@ -164,7 +164,7 @@ export const Foreground: Story = {
           {tokens.fg.a11y.map((utilityClass) => (
             <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
-              displayType='swatch'
+              type='swatch'
               utilityClass={utilityClass}
               value={fgColorValues.get(utilityClass)}
             />
@@ -191,7 +191,7 @@ export const Outline: Story = {
           {tokens.outline.base.map((utilityClass) => (
             <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
-              displayType='outline'
+              type='outline'
               utilityClass={utilityClass}
               value={outlineColorValues.get(utilityClass)}
             />
@@ -201,7 +201,7 @@ export const Outline: Story = {
           {tokens.outline.utility.map((utilityClass) => (
             <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
-              displayType='outline'
+              type='outline'
               utilityClass={utilityClass}
               value={outlineColorValues.get(utilityClass)}
             />
