@@ -113,7 +113,8 @@
     "format:check": "pnpm biome format . --verbose",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/ntds",
     "license": "pnpm zx ../../scripts/license.mjs",
-    "lint": "pnpm biome lint . --verbose"
+    "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint"
   },
   "sideEffects": false,
   "subPath": "packages/ntds",
