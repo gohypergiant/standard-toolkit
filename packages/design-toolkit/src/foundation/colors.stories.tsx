@@ -23,18 +23,27 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 function useColorValue(color: string) {
-  const [colorValue, setColorValue] = useState<string>('');
-  useEffect(
-    function deriveColorValue() {
-      setTimeout(() => {
-        // timeout to defer this to after initial render
-        const root = document.querySelector('html') as HTMLHtmlElement;
-        const val = getComputedStyle(root).getPropertyValue(`--${color}`);
-        setColorValue(val);
-      }, 1);
-    },
-    [color],
-  );
+  const [colorValue, setColorValue] = useState('');
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const read = () => {
+      const val = getComputedStyle(root).getPropertyValue(`--${color}`).trim();
+      setColorValue(val);
+    };
+
+    read();
+
+    const observer = new MutationObserver(read);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ['class', 'style'],
+    });
+
+    return () => observer.disconnect();
+  }, [color]);
+
   return colorValue;
 }
 
