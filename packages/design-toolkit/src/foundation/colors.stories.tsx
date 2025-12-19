@@ -59,11 +59,11 @@ function useColorValues(utilityClassGroup: Record<PropertyKey, string[]>) {
 const ColorDisplay = ({
   type,
   utilityClass,
-  value,
+  colorValue,
 }: {
   type: 'swatch' | 'outline';
   utilityClass: string;
-  value?: string;
+  colorValue?: string;
 }) => {
   return (
     <div className='flex items-center gap-l'>
@@ -74,13 +74,13 @@ const ColorDisplay = ({
         )}
         style={
           type === 'outline'
-            ? { outlineColor: value }
-            : { backgroundColor: value }
+            ? { outlineColor: colorValue }
+            : { backgroundColor: colorValue }
         }
       />
       <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
         <span>{utilityClass}</span>
-        <span className='fg-primary-muted'>{value}</span>
+        <span className='fg-primary-muted'>{colorValue}</span>
       </div>
     </div>
   );
@@ -107,7 +107,7 @@ export const Background: Story = {
               key={`${globals.theme}-${utilityClass}`}
               type='swatch'
               utilityClass={utilityClass}
-              value={bgColorValues.get(utilityClass)}
+              colorValue={bgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -117,7 +117,7 @@ export const Background: Story = {
               key={`${globals.theme}-${utilityClass}`}
               type='swatch'
               utilityClass={utilityClass}
-              value={bgColorValues.get(utilityClass)}
+              colorValue={bgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -146,7 +146,7 @@ export const Foreground: Story = {
               key={`${globals.theme}-${utilityClass}`}
               type='swatch'
               utilityClass={utilityClass}
-              value={fgColorValues.get(utilityClass)}
+              colorValue={fgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -156,7 +156,7 @@ export const Foreground: Story = {
               key={`${globals.theme}-${utilityClass}`}
               type='swatch'
               utilityClass={utilityClass}
-              value={fgColorValues.get(utilityClass)}
+              colorValue={fgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -166,7 +166,7 @@ export const Foreground: Story = {
               key={`${globals.theme}-${utilityClass}`}
               type='swatch'
               utilityClass={utilityClass}
-              value={fgColorValues.get(utilityClass)}
+              colorValue={fgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -193,7 +193,7 @@ export const Outline: Story = {
               key={`${globals.theme}-${utilityClass}`}
               type='outline'
               utilityClass={utilityClass}
-              value={outlineColorValues.get(utilityClass)}
+              colorValue={outlineColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -203,7 +203,7 @@ export const Outline: Story = {
               key={`${globals.theme}-${utilityClass}`}
               type='outline'
               utilityClass={utilityClass}
-              value={outlineColorValues.get(utilityClass)}
+              colorValue={outlineColorValues.get(utilityClass)}
             />
           ))}
         </div>
