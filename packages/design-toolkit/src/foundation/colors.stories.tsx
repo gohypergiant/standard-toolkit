@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useState } from 'react';
 import { tokens } from './token-data';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -55,60 +56,27 @@ function useColorValues(utilityClassGroup: Record<PropertyKey, string[]>) {
   return colorValues;
 }
 
-const BackgroundColorDisplay = ({
+const ColorDisplay = ({
+  displayType,
   utilityClass,
   value,
 }: {
-  utilityClass: string;
-  value?: string;
-}) => {
-  return (
-    <div className='flex items-start gap-l'>
-      <div
-        className='h-[90px] w-[120px] rounded-large'
-        style={{ backgroundColor: value }}
-      />
-      <div className='fg-primary-bold flex flex-col gap-s py-l font-display text-body-xs'>
-        <span>{utilityClass}</span>
-        <span className='fg-primary-muted'>{value}</span>
-      </div>
-    </div>
-  );
-};
-
-const ForegroundColorDisplay = ({
-  utilityClass,
-  value,
-}: {
+  displayType: 'swatch' | 'outline';
   utilityClass: string;
   value?: string;
 }) => {
   return (
     <div className='flex items-center gap-l'>
       <div
-        className='h-[90px] w-[120px] rounded-large'
-        style={{ backgroundColor: value }}
-      />
-      <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
-        <span>{utilityClass}</span>
-        <span className='fg-primary-muted'>{value}</span>
-      </div>
-    </div>
-  );
-};
-
-const OutlineColorDisplay = ({
-  utilityClass,
-  value,
-}: {
-  utilityClass: string;
-  value?: string;
-}) => {
-  return (
-    <div className='flex items-center gap-l'>
-      <div
-        className='h-[90px] w-[120px] rounded-large outline'
-        style={{ outlineColor: value }}
+        className={clsx(
+          'h-[90px] w-[120px] rounded-large',
+          displayType === 'outline' && 'outline',
+        )}
+        style={
+          displayType === 'outline'
+            ? { outlineColor: value }
+            : { backgroundColor: value }
+        }
       />
       <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
         <span>{utilityClass}</span>
@@ -135,8 +103,9 @@ export const Background: Story = {
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
           {tokens.bg.base.map((utilityClass) => (
-            <BackgroundColorDisplay
+            <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
+              displayType='swatch'
               utilityClass={utilityClass}
               value={bgColorValues.get(utilityClass)}
             />
@@ -144,8 +113,9 @@ export const Background: Story = {
         </div>
         <div className='mt-oversized grid grid-cols-4 gap-x-l gap-y-xl'>
           {tokens.bg.utility.map((utilityClass) => (
-            <BackgroundColorDisplay
+            <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
+              displayType='swatch'
               utilityClass={utilityClass}
               value={bgColorValues.get(utilityClass)}
             />
@@ -172,8 +142,9 @@ export const Foreground: Story = {
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
           {tokens.fg.base.map((utilityClass) => (
-            <ForegroundColorDisplay
+            <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
+              displayType='swatch'
               utilityClass={utilityClass}
               value={fgColorValues.get(utilityClass)}
             />
@@ -181,8 +152,9 @@ export const Foreground: Story = {
         </div>
         <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
           {tokens.fg.utility.map((utilityClass) => (
-            <ForegroundColorDisplay
+            <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
+              displayType='swatch'
               utilityClass={utilityClass}
               value={fgColorValues.get(utilityClass)}
             />
@@ -190,8 +162,9 @@ export const Foreground: Story = {
         </div>
         <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
           {tokens.fg.a11y.map((utilityClass) => (
-            <ForegroundColorDisplay
+            <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
+              displayType='swatch'
               utilityClass={utilityClass}
               value={fgColorValues.get(utilityClass)}
             />
@@ -216,8 +189,9 @@ export const Outline: Story = {
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
           {tokens.outline.base.map((utilityClass) => (
-            <OutlineColorDisplay
+            <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
+              displayType='outline'
               utilityClass={utilityClass}
               value={outlineColorValues.get(utilityClass)}
             />
@@ -225,8 +199,9 @@ export const Outline: Story = {
         </div>
         <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
           {tokens.outline.utility.map((utilityClass) => (
-            <OutlineColorDisplay
+            <ColorDisplay
               key={`${globals.theme}-${utilityClass}`}
+              displayType='outline'
               utilityClass={utilityClass}
               value={outlineColorValues.get(utilityClass)}
             />
