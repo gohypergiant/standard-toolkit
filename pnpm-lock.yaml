@@ -894,12 +894,12 @@ importers:
       '@accelint/geo':
         specifier: workspace:*
         version: link:../geo
-      '@accelint/smeegl':
-        specifier: workspace:*
-        version: link:../../tooling/smeegl
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules
+      '@accelint/smeegl':
+        specifier: workspace:*
+        version: link:../../tooling/smeegl
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -992,8 +992,8 @@ importers:
         specifier: ~9.1
         version: 9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
       '@deckgl-fiber-renderer/dom':
-        specifier: 1.4.0
-        version: 1.4.0(d6e3b88718dcbcbf2319532e371fc09c)
+        specifier: ^1.4.0
+        version: 1.4.0(82c6e27a9d8ba726733c2f73ee66f20e)
       '@deckgl-fiber-renderer/shared':
         specifier: ^1.4.0
         version: 1.4.0(@deck.gl/core@9.1.14)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
@@ -7956,12 +7956,6 @@ snapshots:
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.1.10)
     transitivePeerDependencies:
       - '@loaders.gl/core'
-    optional: true
-
-  '@deck.gl/widgets@9.1.14(@deck.gl/core@9.1.14)':
-    dependencies:
-      '@deck.gl/core': 9.1.14
-      preact: 10.28.0
     optional: true
 
   '@deckgl-fiber-renderer/dom@1.4.0(82c6e27a9d8ba726733c2f73ee66f20e)':

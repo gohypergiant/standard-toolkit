@@ -55,16 +55,6 @@ export const LABEL_BACKGROUND_OPACITY = 200;
 export const LABEL_BORDER_OPACITY = 255;
 
 /**
- * Default style properties for new shapes
- */
-export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
-  fillColor: [255, 255, 255, 255] as Color,
-  strokeColor: [136, 138, 143, 255] as Color,
-  strokeWidth: 2,
-  strokePattern: 'solid',
-};
-
-/**
  * Default colors as RGBA arrays for DeckGL layers
  */
 export const DEFAULT_COLORS = {
@@ -75,6 +65,16 @@ export const DEFAULT_COLORS = {
   /** Highlight/selection color (turquoise at ~39% alpha) */
   highlight: [40, 245, 190, 100] as Color,
 } as const;
+
+/**
+ * Default style properties for new shapes
+ */
+export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
+  fillColor: DEFAULT_COLORS.fill,
+  strokeColor: DEFAULT_COLORS.stroke,
+  strokeWidth: 2,
+  strokePattern: 'solid',
+};
 
 /**
  * Stroke width options
