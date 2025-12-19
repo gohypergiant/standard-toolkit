@@ -18,7 +18,13 @@ import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
 import { filterDOMProps } from '@react-aria/utils';
 import 'client-only';
-import { type ReactNode, useCallback, useMemo, useState } from 'react';
+import {
+  type CSSProperties,
+  type ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Text as AriaText,
   composeRenderProps,
@@ -249,10 +255,12 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
         )}
 
         <div
+          style={
+            {
+              '--min-width': variant === 'stacked' ? 'unset' : minControlWidth,
+            } as CSSProperties
+          }
           className={clsx(styles.control, classNames?.control)}
-          style={{
-            minWidth: variant === 'stacked' ? undefined : minControlWidth,
-          }}
         >
           <div
             className={clsx(styles.input, styles[variant], classNames?.input)}
