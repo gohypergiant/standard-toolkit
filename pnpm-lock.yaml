@@ -883,6 +883,9 @@ importers:
       '@accelint/geo':
         specifier: workspace:*
         version: link:../geo
+      '@accelint/postcss-tailwind-css-modules':
+        specifier: workspace:*
+        version: link:../postcss-tailwind-css-modules
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config

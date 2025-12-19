@@ -11,6 +11,7 @@
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/geo": "workspace:*",
+    "@accelint/postcss-tailwind-css-modules": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@deck.gl/core": "~9.1",
