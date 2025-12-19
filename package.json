@@ -4,6 +4,9 @@
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "bugs": "https://github.com/gohypergiant/standard-toolkit/issues",
+  "dependencies": {
+    "publint": "^0.3.16"
+  },
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/constellation-tracker": "workspace:*",
@@ -63,6 +66,7 @@
     "lint": "pnpm turbo run lint",
     "lint:deps": "pnpm syncpack lint",
     "lint:fs": "pnpm ls-lint",
+    "lint:package": "pnpm turbo run lint:package",
     "pre-build": "pnpm turbo run pre-build",
     "preview": "pnpm turbo run preview",
     "preview:filter": "pnpm turbo-filter preview",

@@ -73,6 +73,7 @@
     "index": "pnpm zx ../../scripts/indexer.mjs packages/bus",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },

@@ -60,6 +60,7 @@
     "./deckgl": "./dist/deckgl/index.js",
     "./deckgl/base-map": "./dist/deckgl/base-map/index.js",
     "./deckgl/base-map/constants": "./dist/deckgl/base-map/constants.js",
+    "./deckgl/base-map/controls": "./dist/deckgl/base-map/controls.js",
     "./deckgl/base-map/events": "./dist/deckgl/base-map/events.js",
     "./deckgl/base-map/provider": "./dist/deckgl/base-map/provider.js",
     "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
@@ -148,6 +149,7 @@
     "format:check": "pnpm biome format . --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
     "preview": "pnpm storybook dev -p 6007",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
@@ -155,6 +157,5 @@
   "sideEffects": false,
   "subPath": "packages/map-toolkit",
   "title": "Accelint Map Toolkit",
-  "type": "module",
-  "types": "./dist/index.d.ts"
+  "type": "module"
 }
