@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -31,15 +32,16 @@ export const FORMAT_BUTTON_WIDTH = 3.5;
 export const INPUT_BUTTON_GAP = 1.5;
 
 /**
- * Calculates the maximum width needed for the coordinate field control container.
+ * Calculates the minimum width needed for the coordinate field control container.
  * This keeps the outlined container at a fixed width while segments animate.
  *
+ * @private
  * @param editableSegmentConfigs - Array of editable segment configurations
  * @param segmentConfigs - Array of all segment configurations (including literals)
  * @param showFormatButton - Whether the format button is displayed
  * @returns The calculated width as a CSS string (e.g., "25ch")
  */
-export function calculateMaxControlWidth(
+export function calculateMinControlWidth(
   editableSegmentConfigs: SegmentConfig[],
   segmentConfigs: SegmentConfig[],
   showFormatButton: boolean,
