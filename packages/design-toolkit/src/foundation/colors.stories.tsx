@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function useColorValues(utilityClasses: string[]) {
+function useColorValues(utilityClassGroup: Record<PropertyKey, string[]>) {
   const [colorValues, setColorValues] = useState<Map<string, string>>(
     new Map(),
   );
@@ -32,7 +32,7 @@ function useColorValues(utilityClasses: string[]) {
 
     const computeColorValues = () => {
       const newColorValues = new Map<string, string>();
-      for (const utilityClass of utilityClasses) {
+      for (const utilityClass of Object.values(utilityClassGroup).flat()) {
         const val = getComputedStyle(root)
           .getPropertyValue(`--${utilityClass}`)
           .trim();
@@ -50,7 +50,7 @@ function useColorValues(utilityClasses: string[]) {
     });
 
     return () => observer.disconnect();
-  }, [utilityClasses]);
+  }, [utilityClassGroup]);
 
   return colorValues;
 }
@@ -120,8 +120,7 @@ const OutlineColorDisplay = ({
 
 export const Background: Story = {
   render: (_, { globals }) => {
-    const baseColorValues = useColorValues(tokens.bg.base);
-    const utilityColorValues = useColorValues(tokens.bg.utility);
+    const bgColorValues = useColorValues(tokens.bg);
     return (
       <div className='flex flex-col gap-xl'>
         <div className='flex flex-col gap-m'>
@@ -139,7 +138,7 @@ export const Background: Story = {
             <BackgroundColorDisplay
               key={`${globals.theme}-${utilityClass}`}
               utilityClass={utilityClass}
-              value={baseColorValues.get(utilityClass)}
+              value={bgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -148,7 +147,7 @@ export const Background: Story = {
             <BackgroundColorDisplay
               key={`${globals.theme}-${utilityClass}`}
               utilityClass={utilityClass}
-              value={utilityColorValues.get(utilityClass)}
+              value={bgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -159,9 +158,7 @@ export const Background: Story = {
 
 export const Foreground: Story = {
   render: (_, { globals }) => {
-    const baseColorValues = useColorValues(tokens.fg.base);
-    const utilityColorValues = useColorValues(tokens.fg.utility);
-    const a11yColorValues = useColorValues(tokens.fg.a11y);
+    const fgColorValues = useColorValues(tokens.fg);
     return (
       <div className='flex flex-col gap-xl'>
         <div className='flex flex-col gap-m'>
@@ -178,7 +175,7 @@ export const Foreground: Story = {
             <ForegroundColorDisplay
               key={`${globals.theme}-${utilityClass}`}
               utilityClass={utilityClass}
-              value={baseColorValues.get(utilityClass)}
+              value={fgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -187,7 +184,7 @@ export const Foreground: Story = {
             <ForegroundColorDisplay
               key={`${globals.theme}-${utilityClass}`}
               utilityClass={utilityClass}
-              value={utilityColorValues.get(utilityClass)}
+              value={fgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -196,7 +193,7 @@ export const Foreground: Story = {
             <ForegroundColorDisplay
               key={`${globals.theme}-${utilityClass}`}
               utilityClass={utilityClass}
-              value={a11yColorValues.get(utilityClass)}
+              value={fgColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -207,8 +204,7 @@ export const Foreground: Story = {
 
 export const Outline: Story = {
   render: (_, { globals }) => {
-    const baseColorValues = useColorValues(tokens.outline.base);
-    const utilityColorValues = useColorValues(tokens.outline.utility);
+    const outlineColorValues = useColorValues(tokens.outline);
     return (
       <div className='flex flex-col gap-xl'>
         <div className='flex flex-col gap-m'>
@@ -223,7 +219,7 @@ export const Outline: Story = {
             <OutlineColorDisplay
               key={`${globals.theme}-${utilityClass}`}
               utilityClass={utilityClass}
-              value={baseColorValues.get(utilityClass)}
+              value={outlineColorValues.get(utilityClass)}
             />
           ))}
         </div>
@@ -232,7 +228,7 @@ export const Outline: Story = {
             <OutlineColorDisplay
               key={`${globals.theme}-${utilityClass}`}
               utilityClass={utilityClass}
-              value={utilityColorValues.get(utilityClass)}
+              value={outlineColorValues.get(utilityClass)}
             />
           ))}
         </div>
