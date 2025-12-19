@@ -31,6 +31,7 @@
       "cache": false
     },
     "lint": {},
+    "lint:package": {},
     "license": {
       "cache": false,
       "dependsOn": ["index"]

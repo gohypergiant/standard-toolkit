@@ -16,6 +16,8 @@ export { registerHotkey } from '@/actions/register-hotkey';
 export { unregisterHotkey } from '@/actions/unregister-hotkey';
 export { Keycode } from '@/enums/keycode';
 export { isMac } from '@/lib/is-mac';
+export { keyToId } from '@/lib/key-to-id';
+export { keyToString } from '@/lib/key-to-string';
 export type { CleanupFunction } from '@/types/cleanup-function';
 export type { HotkeyAction } from '@/types/hotkey-action';
 export type { HotkeyConfig } from '@/types/hotkey-config';

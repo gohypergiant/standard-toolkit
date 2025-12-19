@@ -16,4 +16,9 @@ export const MapEvents = {
   click: `${MapEventsNamespace}:click`,
   hover: `${MapEventsNamespace}:hover`,
   viewport: `${MapEventsNamespace}:viewport`,
+  // Control events
+  enablePan: `${MapEventsNamespace}:enablePan`,
+  disablePan: `${MapEventsNamespace}:disablePan`,
+  enableZoom: `${MapEventsNamespace}:enableZoom`,
+  disableZoom: `${MapEventsNamespace}:disableZoom`,
 } as const;

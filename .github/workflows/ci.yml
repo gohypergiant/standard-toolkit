@@ -55,6 +55,7 @@ jobs:
       - run: pnpm run lint:fs
       - run: pnpm run lint:deps
       - run: pnpm run lint:rac
+      - run: pnpm run lint:package
 
       - name: Test Packages
         run: pnpm run test

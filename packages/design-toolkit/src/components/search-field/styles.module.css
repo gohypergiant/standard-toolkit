@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .field {
-    @apply fg-primary-bold gap-s rounded-round p-s flex items-center outline;
+    @apply fg-primary-bold gap-s rounded-round p-s h-content flex items-center outline;
 
     &.filled {
       @apply bg-surface-raised outline-static;
