@@ -11,7 +11,8 @@
         "!@react-stately/**",
         "!@react-types/**",
         "!react-aria-components",
-        "!react-querybuilder"
+        "!react-querybuilder",
+        "!@internationalized/date"
       ],
       "label": "By default all packages have minor semver range",
       "packages": [
@@ -35,7 +36,8 @@
         "@react-aria/**",
         "@react-stately/**",
         "@react-types/**",
-        "react-aria-components"
+        "react-aria-components",
+        "@internationalized/date"
       ],
       "label": "Packages that require exact version pinning due to severe issues",
       "packages": [
@@ -70,7 +72,8 @@
         "@react-aria/**",
         "@react-stately/**",
         "@react-types/**",
-        "react-aria-components"
+        "react-aria-components",
+        "@internationalized/date"
       ],
       "label": "Ensure RAC packages are within the same range across project",
       "policy": "sameRange"
