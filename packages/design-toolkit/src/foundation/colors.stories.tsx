@@ -47,7 +47,7 @@ function useColorValues(utilityClassGroup: Record<PropertyKey, string[]>) {
     const observer = new MutationObserver(computeColorValues);
     observer.observe(root, {
       attributes: true,
-      attributeFilter: ['class', 'style'],
+      attributeFilter: ['class'],
     });
 
     return () => observer.disconnect();
