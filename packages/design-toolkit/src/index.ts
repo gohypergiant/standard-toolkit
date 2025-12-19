@@ -157,13 +157,6 @@ export type {
   SegmentConfig,
   SegmentType,
 } from './components/coordinate-field/types';
-export {
-  CONTAINER_PADDING_WIDTH,
-  FORMAT_BUTTON_WIDTH,
-  INPUT_BUTTON_GAP,
-  SEGMENT_GAP_WIDTH,
-  calculateMinControlWidth,
-} from './components/coordinate-field/width-utils';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field/types';
 export {
