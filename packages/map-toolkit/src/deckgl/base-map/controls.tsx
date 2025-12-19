@@ -39,27 +39,27 @@ type MapControlsProps = {
 export function MapControls({ id, mapRef }: MapControlsProps) {
   useOn<MapEnablePanEvent>(MapEvents.enablePan, (event) => {
     if (event.payload.id === id) {
-      mapRef.current?.dragPan.enable();
+      mapRef.current?.getMap().dragPan.enable();
     }
   });
 
   useOn<MapDisablePanEvent>(MapEvents.disablePan, (event) => {
     if (event.payload.id === id) {
-      mapRef.current?.dragPan.disable();
+      mapRef.current?.getMap().dragPan.disable();
     }
   });
 
   useOn<MapEnableZoomEvent>(MapEvents.enableZoom, (event) => {
     if (event.payload.id === id) {
-      mapRef.current?.scrollZoom.enable();
-      mapRef.current?.doubleClickZoom.enable();
+      mapRef.current?.getMap().scrollZoom.enable();
+      mapRef.current?.getMap().doubleClickZoom.enable();
     }
   });
 
   useOn<MapDisableZoomEvent>(MapEvents.disableZoom, (event) => {
     if (event.payload.id === id) {
-      mapRef.current?.scrollZoom.disable();
-      mapRef.current?.doubleClickZoom.disable();
+      mapRef.current?.getMap().scrollZoom.disable();
+      mapRef.current?.getMap().doubleClickZoom.disable();
     }
   });
 
