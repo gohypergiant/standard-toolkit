@@ -53,7 +53,6 @@ export function calculateMinControlWidth(
 
   // Calculate width of literal characters (colons, spaces, etc.)
   const literalWidth = segmentConfigs
-    .flat()
     .filter((c) => c.type === 'literal')
     .reduce((sum, c) => sum + (c.value?.length || 0), 0);
 
