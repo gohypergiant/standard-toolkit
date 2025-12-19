@@ -33,7 +33,6 @@
   "pnpm": {
     "overrides": {
       "@internationalized/date": "~3.9.0",
-      "@radix-ui/react-avatar": "^1.1.10",
       "@react-aria/dnd": "~3.11.2",
       "@react-aria/interactions": "~3.25.5",
       "@react-aria/overlays": "~3.29.1",

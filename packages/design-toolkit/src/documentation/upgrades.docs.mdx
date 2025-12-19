@@ -5,6 +5,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ### All Release Notes
 [All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
 
+* [Upgrade to v9.1](#v9_1)
 * [Upgrade to v9](#v9)
 * [Upgrade to v8](#v8)
 * [Upgrade to v7](#v7)
@@ -12,6 +13,44 @@ import { Meta } from '@storybook/addon-docs/blocks';
 * [Upgrade to v5](#v5)
 
 These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
+
+<hr />
+<a id="v9_1"></a>
+# Upgrade to v9.1
+
+### What Changed
+
+We have documented the problem in [this PR](https://github.com/gohypergiant/standard-toolkit/pull/703) but broadly speaking an issue can occur when multiple versions of React Aria libraries are insalled within a project. The only guaranteed way of rectifying this issue is by specifying the version in your `package.json` `overrides` section. When upgrading to v9.1 of `@accelint/design-toolkit` ensure the following is added to your root `package.json`:
+
+```
+"overrides": {
+  "@internationalized/date": "~3.9.0",
+  "@react-aria/dnd": "~3.11.2",
+  "@react-aria/interactions": "~3.25.5",
+  "@react-aria/overlays": "~3.29.1",
+  "@react-aria/ssr": "~3.9.10",
+  "@react-aria/toast": "~3.0.7",
+  "@react-aria/toolbar": "~3.0.0-beta.22",
+  "@react-aria/utils": "~3.30.1",
+  "@react-stately/color": "~3.9.1",
+  "@react-stately/data": "~3.13.2",
+  "@react-stately/toast": "~3.1.2",
+  "@react-stately/utils": "~3.10.8",
+  "@react-types/overlays": "~3.9.0",
+  "@react-types/shared": "~3.32.0",
+  "react-aria-components": "~1.12.1"
+}
+```
+
+Note that if you are using `pnpm` you need to wrap `overrides` e.g.
+
+```
+{
+  "pnpm": {
+    "overrides": {}
+  }
+}
+```
 
 <hr />
 <a id="v9"></a>
