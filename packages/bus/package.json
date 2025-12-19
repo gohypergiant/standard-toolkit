@@ -1,7 +1,7 @@
 {
   "name": "@accelint/bus",
   "description": "An open-source event bus library.",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {

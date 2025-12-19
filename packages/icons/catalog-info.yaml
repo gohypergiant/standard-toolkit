@@ -12,11 +12,11 @@ metadata:
     Dependencies:
 
     accelint_biome-config@1.0.2, accelint_typescript-config@0.1.4,
-    accelint_vitest-config@0.1.5
+    accelint_vitest-config@0.1.6
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/icons/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 2.1.1
+    package/version: 2.1.2
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/icons

@@ -1,7 +1,7 @@
 {
   "name": "@accelint/core",
   "description": "A set of utility functions for manipulating arrays, objects, logic, and function composition in JavaScript.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {

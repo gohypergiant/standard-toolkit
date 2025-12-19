@@ -1,7 +1,7 @@
 {
   "name": "@accelint/icons",
   "description": "An open-source icon library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {},

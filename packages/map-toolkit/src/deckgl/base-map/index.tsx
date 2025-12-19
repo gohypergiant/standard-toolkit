@@ -15,15 +15,17 @@
 import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useId, useMemo } from 'react';
+import { useCallback, useId, useMemo, useRef } from 'react';
 import {
   Map as MapLibre,
+  type MapRef,
   useControl,
   type ViewState,
 } from 'react-map-gl/maplibre';
 import { useCameraState } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
 import { BASE_MAP_STYLE, PARAMETERS } from './constants';
+import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
 import type { UniqueId } from '@accelint/core';
@@ -112,6 +114,12 @@ function serializeMjolnirEvent(
 export type BaseMapProps = DeckglProps & {
   /** Optional CSS class name to apply to the map container element */
   className?: string;
+  /**
+   * Whether to enable listening for map control events (pan/zoom enable/disable).
+   * When true, the map will respond to control events emitted via the event bus.
+   * @default true
+   */
+  enableControlEvents?: boolean;
   /**
    * Unique identifier for this map instance (required).
    *
@@ -212,6 +220,8 @@ export function BaseMap({
   id,
   className,
   children,
+  controller = true,
+  enableControlEvents = true,
   interleaved = true,
   parameters = {},
   useDevicePixels = false,
@@ -224,6 +234,7 @@ export function BaseMap({
 }: BaseMapProps) {
   const deckglInstance = useDeckgl();
   const container = useId();
+  const mapRef = useRef<MapRef>(null);
 
   const { cameraState, setCameraState } = useCameraState({
     instanceId: id,
@@ -348,10 +359,12 @@ export function BaseMap({
 
   return (
     <div id={container} className={className}>
+      {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
       <MapProvider id={id}>
         <MapLibre
           onMove={(evt) => setCameraState(id, evt.viewState)}
           mapStyle={BASE_MAP_STYLE}
+          ref={mapRef}
           {...mapOptions}
         >
           <Deckgl

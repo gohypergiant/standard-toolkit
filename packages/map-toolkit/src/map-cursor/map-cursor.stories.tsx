@@ -209,7 +209,7 @@ function WithModeOwnerStory() {
     const { mode } = useMapMode(WITH_MODE_OWNER_MAP_ID);
 
     return (
-      <div className='absolute top-l left-1/2 w-[400px] -translate-x-1/2 rounded-lg bg-surface-accent-subtle p-l shadow-elevation-overlay'>
+      <div className='-translate-x-1/2 absolute top-l left-1/2 w-[400px] rounded-lg bg-surface-accent-subtle p-l shadow-elevation-overlay'>
         <p className='mb-s font-bold text-content-accent text-header-m'>
           Cursor Priority Rules
         </p>
