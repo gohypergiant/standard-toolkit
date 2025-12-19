@@ -22,174 +22,221 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function useColorValue(color: string) {
-  const [colorValue, setColorValue] = useState('');
+function useColorValues(utilityClasses: string[]) {
+  const [colorValues, setColorValues] = useState<Map<string, string>>(
+    new Map(),
+  );
 
   useEffect(() => {
     const root = document.documentElement;
 
-    const read = () => {
-      const val = getComputedStyle(root).getPropertyValue(`--${color}`).trim();
-      setColorValue(val);
+    const computeColorValues = () => {
+      const newColorValues = new Map<string, string>();
+      for (const utilityClass of utilityClasses) {
+        const val = getComputedStyle(root)
+          .getPropertyValue(`--${utilityClass}`)
+          .trim();
+        newColorValues.set(utilityClass, val);
+      }
+      setColorValues(newColorValues);
     };
 
-    read();
+    computeColorValues();
 
-    const observer = new MutationObserver(read);
+    const observer = new MutationObserver(computeColorValues);
     observer.observe(root, {
       attributes: true,
       attributeFilter: ['class', 'style'],
     });
 
     return () => observer.disconnect();
-  }, [color]);
+  }, [utilityClasses]);
 
-  return colorValue;
+  return colorValues;
 }
 
-const BackgroundColorDisplay = ({ color }: { color: string }) => {
-  const colorValue = useColorValue(color);
+const BackgroundColorDisplay = ({
+  utilityClass,
+  value,
+}: {
+  utilityClass: string;
+  value?: string;
+}) => {
   return (
     <div className='flex items-start gap-l'>
       <div
         className='h-[90px] w-[120px] rounded-large'
-        style={{ backgroundColor: colorValue }}
+        style={{ backgroundColor: value }}
       />
       <div className='fg-primary-bold flex flex-col gap-s py-l font-display text-body-xs'>
-        <span>{color}</span>
-        <span className='fg-primary-muted'>{colorValue}</span>
+        <span>{utilityClass}</span>
+        <span className='fg-primary-muted'>{value}</span>
       </div>
     </div>
   );
 };
 
-const ForegroundColorDisplay = ({ color }: { color: string }) => {
-  const colorValue = useColorValue(color);
+const ForegroundColorDisplay = ({
+  utilityClass,
+  value,
+}: {
+  utilityClass: string;
+  value?: string;
+}) => {
   return (
     <div className='flex items-center gap-l'>
       <div
         className='h-[90px] w-[120px] rounded-large'
-        style={{ backgroundColor: colorValue }}
+        style={{ backgroundColor: value }}
       />
       <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
-        <span>{color}</span>
-        <span className='fg-primary-muted'>{colorValue}</span>
+        <span>{utilityClass}</span>
+        <span className='fg-primary-muted'>{value}</span>
       </div>
     </div>
   );
 };
 
-const OutlineColorDisplay = ({ color }: { color: string }) => {
-  const colorValue = useColorValue(color);
+const OutlineColorDisplay = ({
+  utilityClass,
+  value,
+}: {
+  utilityClass: string;
+  value?: string;
+}) => {
   return (
     <div className='flex items-center gap-l'>
       <div
         className='h-[90px] w-[120px] rounded-large outline'
-        style={{ outlineColor: colorValue }}
+        style={{ outlineColor: value }}
       />
       <div className='fg-primary-bold flex flex-col gap-s font-display text-body-xs'>
-        <span>{color}</span>
-        <span className='fg-primary-muted'>{colorValue}</span>
+        <span>{utilityClass}</span>
+        <span className='fg-primary-muted'>{value}</span>
       </div>
     </div>
   );
 };
 
 export const Background: Story = {
-  render: (_, { globals }) => (
-    <div className='flex flex-col gap-xl'>
-      <div className='flex flex-col gap-m'>
-        <h1 className='fg-primary-bold text-header-xl'>Semantic Background</h1>
-        <p className='fg-primary-muted text-body-s'>
-          These are tokens primarily used as backgrounds for any element or
-          component that contains content such as containers, sections, headers,
-          buttons, etc.
-        </p>
+  render: (_, { globals }) => {
+    const baseColorValues = useColorValues(tokens.bg.base);
+    const utilityColorValues = useColorValues(tokens.bg.utility);
+    return (
+      <div className='flex flex-col gap-xl'>
+        <div className='flex flex-col gap-m'>
+          <h1 className='fg-primary-bold text-header-xl'>
+            Semantic Background
+          </h1>
+          <p className='fg-primary-muted text-body-s'>
+            These are tokens primarily used as backgrounds for any element or
+            component that contains content such as containers, sections,
+            headers, buttons, etc.
+          </p>
+        </div>
+        <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
+          {tokens.bg.base.map((utilityClass) => (
+            <BackgroundColorDisplay
+              key={`${globals.theme}-${utilityClass}`}
+              utilityClass={utilityClass}
+              value={baseColorValues.get(utilityClass)}
+            />
+          ))}
+        </div>
+        <div className='mt-oversized grid grid-cols-4 gap-x-l gap-y-xl'>
+          {tokens.bg.utility.map((utilityClass) => (
+            <BackgroundColorDisplay
+              key={`${globals.theme}-${utilityClass}`}
+              utilityClass={utilityClass}
+              value={utilityColorValues.get(utilityClass)}
+            />
+          ))}
+        </div>
       </div>
-      <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-        {tokens.bg.base.map((color) => (
-          <BackgroundColorDisplay
-            key={`${globals.theme}-${color}`}
-            color={color}
-          />
-        ))}
-      </div>
-      <div className='mt-oversized grid grid-cols-4 gap-x-l gap-y-xl'>
-        {tokens.bg.utility.map((color) => (
-          <BackgroundColorDisplay
-            key={`${globals.theme}-${color}`}
-            color={color}
-          />
-        ))}
-      </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const Foreground: Story = {
-  render: (_, { globals }) => (
-    <div className='flex flex-col gap-xl'>
-      <div className='flex flex-col gap-m'>
-        <h1 className='fg-primary-bold text-header-xl'>Semantic Foreground</h1>
-        <p className='fg-primary-muted text-body-s'>
-          These are tokens primarily used as fill for elements like text, icons,
-          vectors, and other things that sit above a background.
-        </p>
+  render: (_, { globals }) => {
+    const baseColorValues = useColorValues(tokens.fg.base);
+    const utilityColorValues = useColorValues(tokens.fg.utility);
+    const a11yColorValues = useColorValues(tokens.fg.a11y);
+    return (
+      <div className='flex flex-col gap-xl'>
+        <div className='flex flex-col gap-m'>
+          <h1 className='fg-primary-bold text-header-xl'>
+            Semantic Foreground
+          </h1>
+          <p className='fg-primary-muted text-body-s'>
+            These are tokens primarily used as fill for elements like text,
+            icons, vectors, and other things that sit above a background.
+          </p>
+        </div>
+        <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
+          {tokens.fg.base.map((utilityClass) => (
+            <ForegroundColorDisplay
+              key={`${globals.theme}-${utilityClass}`}
+              utilityClass={utilityClass}
+              value={baseColorValues.get(utilityClass)}
+            />
+          ))}
+        </div>
+        <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+          {tokens.fg.utility.map((utilityClass) => (
+            <ForegroundColorDisplay
+              key={`${globals.theme}-${utilityClass}`}
+              utilityClass={utilityClass}
+              value={utilityColorValues.get(utilityClass)}
+            />
+          ))}
+        </div>
+        <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+          {tokens.fg.a11y.map((utilityClass) => (
+            <ForegroundColorDisplay
+              key={`${globals.theme}-${utilityClass}`}
+              utilityClass={utilityClass}
+              value={a11yColorValues.get(utilityClass)}
+            />
+          ))}
+        </div>
       </div>
-      <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-        {tokens.fg.base.map((color) => (
-          <ForegroundColorDisplay
-            key={`${globals.theme}-${color}`}
-            color={color}
-          />
-        ))}
-      </div>
-      <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-        {tokens.fg.utility.map((color) => (
-          <ForegroundColorDisplay
-            key={`${globals.theme}-${color}`}
-            color={color}
-          />
-        ))}
-      </div>
-      <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-        {tokens.fg.a11y.map((color) => (
-          <ForegroundColorDisplay
-            key={`${globals.theme}-${color}`}
-            color={color}
-          />
-        ))}
-      </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const Outline: Story = {
-  render: (_, { globals }) => (
-    <div className='flex flex-col gap-xl'>
-      <div className='flex flex-col gap-m'>
-        <h1 className='fg-primary-bold text-header-xl'>Semantic Outline</h1>
-        <p className='fg-primary-muted text-body-s'>
-          These are tokens primarily used as stroke colors for components and
-          elements.
-        </p>
+  render: (_, { globals }) => {
+    const baseColorValues = useColorValues(tokens.outline.base);
+    const utilityColorValues = useColorValues(tokens.outline.utility);
+    return (
+      <div className='flex flex-col gap-xl'>
+        <div className='flex flex-col gap-m'>
+          <h1 className='fg-primary-bold text-header-xl'>Semantic Outline</h1>
+          <p className='fg-primary-muted text-body-s'>
+            These are tokens primarily used as stroke colors for components and
+            elements.
+          </p>
+        </div>
+        <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
+          {tokens.outline.base.map((utilityClass) => (
+            <OutlineColorDisplay
+              key={`${globals.theme}-${utilityClass}`}
+              utilityClass={utilityClass}
+              value={baseColorValues.get(utilityClass)}
+            />
+          ))}
+        </div>
+        <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
+          {tokens.outline.utility.map((utilityClass) => (
+            <OutlineColorDisplay
+              key={`${globals.theme}-${utilityClass}`}
+              utilityClass={utilityClass}
+              value={utilityColorValues.get(utilityClass)}
+            />
+          ))}
+        </div>
       </div>
-      <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
-        {tokens.outline.base.map((color) => (
-          <OutlineColorDisplay
-            key={`${globals.theme}-${color}`}
-            color={color}
-          />
-        ))}
-      </div>
-      <div className='mt-oversized grid grid-cols-3 gap-x-l gap-y-xl'>
-        {tokens.outline.utility.map((color) => (
-          <OutlineColorDisplay
-            key={`${globals.theme}-${color}`}
-            color={color}
-          />
-        ))}
-      </div>
-    </div>
-  ),
+    );
+  },
 };
