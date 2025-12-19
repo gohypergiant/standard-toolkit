@@ -30,6 +30,11 @@ export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
   MapClickEvent,
   MapClickPayload,
+  MapControlPayload,
+  MapDisablePanEvent,
+  MapDisableZoomEvent,
+  MapEnablePanEvent,
+  MapEnableZoomEvent,
   MapEventType,
   MapHoverEvent,
   MapHoverPayload,
