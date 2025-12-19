@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      publint:
-        specifier: ^0.3.16
-        version: 0.3.16
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -45,6 +41,9 @@ importers:
       lefthook:
         specifier: ^2.0.11
         version: 2.0.12
+      publint:
+        specifier: ^0.3.16
+        version: 0.3.16
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
