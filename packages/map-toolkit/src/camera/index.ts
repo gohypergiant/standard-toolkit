@@ -13,6 +13,7 @@
 export { CameraEventNamespace, CameraEventTypes } from './events';
 export {
   type CameraState,
+  clearCameraState,
   type UseCameraStateProps,
   useCameraState,
 } from './use-camera-state';
