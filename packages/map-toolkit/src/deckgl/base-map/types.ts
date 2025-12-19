@@ -124,4 +124,40 @@ export type MapViewportEvent = Payload<
   MapViewportPayload
 >;
 
-export type MapEventType = MapClickEvent | MapHoverEvent | MapViewportEvent;
+/**
+ * Payload for map control events that target a specific map instance.
+ * Used for enablePan, disablePan, enableZoom, disableZoom events.
+ */
+export type MapControlPayload = {
+  /** The map instance to apply the control change to */
+  id: UniqueId;
+};
+
+export type MapEnablePanEvent = Payload<
+  typeof MapEvents.enablePan,
+  MapControlPayload
+>;
+
+export type MapDisablePanEvent = Payload<
+  typeof MapEvents.disablePan,
+  MapControlPayload
+>;
+
+export type MapEnableZoomEvent = Payload<
+  typeof MapEvents.enableZoom,
+  MapControlPayload
+>;
+
+export type MapDisableZoomEvent = Payload<
+  typeof MapEvents.disableZoom,
+  MapControlPayload
+>;
+
+export type MapEventType =
+  | MapClickEvent
+  | MapHoverEvent
+  | MapViewportEvent
+  | MapEnablePanEvent
+  | MapDisablePanEvent
+  | MapEnableZoomEvent
+  | MapDisableZoomEvent;

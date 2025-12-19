@@ -23,7 +23,7 @@ import { useEffect, useRef } from 'react';
  * @param deck - The Deck.gl IControl instance to add to the map
  * @param styleUrl - The MapLibre style URL to use for the map
  * @param options - MapLibre map options (container, center, zoom, etc.)
- * @returns The MapLibre map instance, or null if not yet initialized
+ * @returns A ref containing the MapLibre map instance (ref.current may be null before initialization)
  *
  * @example
  * ```tsx
@@ -89,5 +89,5 @@ export function useMapLibre(
     }
   }, [styleUrl]);
 
-  return mapRef.current;
+  return mapRef;
 }
