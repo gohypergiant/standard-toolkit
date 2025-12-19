@@ -90,11 +90,11 @@
     "generate": "pnpm gen:tokens && pnpm gen:variants && pnpm run license && pnpm run format",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "subPath": "packages/design-foundation",
   "title": "Design Foundation",
-  "type": "module",
-  "types": "./dist/index.d.ts"
+  "type": "module"
 }

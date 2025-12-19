@@ -13,14 +13,14 @@
   "exports": {
     "./dom": "./dom.js",
     "./no-dom": "./no-dom.js",
-    "./mocks/broadcast-channel": "./mocks/broadcast-channel.js"
+    "./mocks/broadcast-channel": "./mocks/broadcast-channel.ts"
   },
   "files": [
     "./catalog-info.yaml",
     "./CHANGELOG.md",
     "./dom.js",
     "./no-dom.js",
-    "./mocks",
+    "./mocks/**",
     "./package.json",
     "./README.md"
   ],
@@ -43,7 +43,8 @@
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
-    "lint": "pnpm biome lint . --verbose"
+    "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint"
   },
   "sideEffects": false,
   "subPath": "tooling/vitest-config",
