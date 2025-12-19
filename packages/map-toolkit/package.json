@@ -11,6 +11,7 @@
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/geo": "workspace:*",
+    "@accelint/postcss-tailwind-css-modules": "workspace:*",
     "@accelint/smeegl": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
@@ -53,11 +54,16 @@
     "pnpm": ">=10"
   },
   "exports": {
+    "./camera": "./dist/camera/index.js",
+    "./camera/events": "./dist/camera/events.js",
+    "./camera/types": "./dist/camera/types.js",
+    "./camera/use-camera-state": "./dist/camera/use-camera-state.js",
     "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
     "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",
     "./deckgl": "./dist/deckgl/index.js",
     "./deckgl/base-map": "./dist/deckgl/base-map/index.js",
     "./deckgl/base-map/constants": "./dist/deckgl/base-map/constants.js",
+    "./deckgl/base-map/controls": "./dist/deckgl/base-map/controls.js",
     "./deckgl/base-map/events": "./dist/deckgl/base-map/events.js",
     "./deckgl/base-map/provider": "./dist/deckgl/base-map/provider.js",
     "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
@@ -126,9 +132,11 @@
     "@deckgl-fiber-renderer/dom": "^1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",
+    "@math.gl/web-mercator": "^4.1.0",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "^3.0.2",
-    "mjolnir.js": "^3.0.0"
+    "mjolnir.js": "^3.0.0",
+    "react-map-gl": "^8.1.0"
   },
   "owner": "default/pathfinder",
   "peerDependencies": {
@@ -157,6 +165,7 @@
     "format:check": "pnpm biome format . --verbose",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
     "preview": "pnpm storybook dev -p 6007",
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
@@ -164,6 +173,5 @@
   "sideEffects": false,
   "subPath": "packages/map-toolkit",
   "title": "Accelint Map Toolkit",
-  "type": "module",
-  "types": "./dist/index.d.ts"
+  "type": "module"
 }
