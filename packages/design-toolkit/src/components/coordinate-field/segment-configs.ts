@@ -40,6 +40,9 @@ const NUMERIC_PAD = 0.25;
 /** Larger padding for final segment to account for container edge (0.5ch ≈ half character) */
 const LAST_PAD = 0.5;
 
+/** The separator used for the logical field groups. */
+export const GROUP_SEPARATOR = ', ';
+
 /**
  * DD (Decimal Degrees) Segment Configuration
  *
@@ -62,7 +65,7 @@ export const ddSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: ', ',
+    value: GROUP_SEPARATOR,
   },
   {
     type: 'numeric',
@@ -100,7 +103,7 @@ export const ddmSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: '° ',
+    value: '°',
   },
   // Latitude minutes (decimal minutes)
   {
@@ -112,7 +115,7 @@ export const ddmSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: "' ",
+    value: "'",
   },
   // Latitude direction
   {
@@ -124,7 +127,7 @@ export const ddmSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: ', ',
+    value: GROUP_SEPARATOR,
   },
   // Longitude degrees
   {
@@ -136,7 +139,7 @@ export const ddmSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: '° ',
+    value: '°',
   },
   // Longitude minutes (decimal minutes)
   {
@@ -148,7 +151,7 @@ export const ddmSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: "' ",
+    value: "'",
   },
   // Longitude direction
   {
@@ -189,7 +192,7 @@ export const dmsSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: '° ',
+    value: '°',
   },
   // Latitude minutes (whole number)
   {
@@ -201,7 +204,7 @@ export const dmsSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: "' ",
+    value: "'",
   },
   // Latitude seconds (decimal seconds)
   {
@@ -213,7 +216,7 @@ export const dmsSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: '" ',
+    value: '"',
   },
   // Latitude direction
   {
@@ -225,7 +228,7 @@ export const dmsSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: ', ',
+    value: GROUP_SEPARATOR,
   },
   // Longitude degrees
   {
@@ -237,7 +240,7 @@ export const dmsSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: '° ',
+    value: '°',
   },
   // Longitude minutes (whole number)
   {
@@ -249,7 +252,7 @@ export const dmsSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: "' ",
+    value: "'",
   },
   // Longitude seconds (decimal seconds)
   {
@@ -261,7 +264,7 @@ export const dmsSegmentConfigs: SegmentConfig[] = [
   },
   {
     type: 'literal',
-    value: '" ',
+    value: '"',
   },
   // Longitude direction
   {
