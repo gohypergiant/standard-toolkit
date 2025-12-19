@@ -11,7 +11,8 @@
         "!@react-stately/**",
         "!@react-types/**",
         "!react-aria-components",
-        "!react-querybuilder"
+        "!react-querybuilder",
+        "!@internationalized/date"
       ],
       "label": "By default all packages have minor semver range",
       "packages": [
@@ -22,7 +23,12 @@
     {
       "dependencies": [
         "@deck.gl/**",
-        "react-querybuilder"
+        "react-querybuilder",
+        "@react-aria/**",
+        "@react-stately/**",
+        "@react-types/**",
+        "react-aria-components",
+        "@internationalized/date"
       ],
       "label": "Packages that require patch semver range due to issues",
       "packages": [
@@ -31,12 +37,7 @@
       "range": "~"
     },
     {
-      "dependencies": [
-        "@react-aria/**",
-        "@react-stately/**",
-        "@react-types/**",
-        "react-aria-components"
-      ],
+      "dependencies": [],
       "label": "Packages that require exact version pinning due to severe issues",
       "packages": [
         "**"
@@ -70,7 +71,8 @@
         "@react-aria/**",
         "@react-stately/**",
         "@react-types/**",
-        "react-aria-components"
+        "react-aria-components",
+        "@internationalized/date"
       ],
       "label": "Ensure RAC packages are within the same range across project",
       "policy": "sameRange"
