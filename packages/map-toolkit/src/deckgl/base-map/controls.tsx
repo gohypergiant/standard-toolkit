@@ -16,8 +16,8 @@ import 'client-only';
 import { useOn } from '@accelint/bus/react';
 import { MapEvents } from './events';
 import type { UniqueId } from '@accelint/core';
-import type { Map as MapLibre } from 'maplibre-gl';
 import type { RefObject } from 'react';
+import type { MapRef } from 'react-map-gl/maplibre';
 import type {
   MapDisablePanEvent,
   MapDisableZoomEvent,
@@ -27,7 +27,7 @@ import type {
 
 type MapControlsProps = {
   id: UniqueId;
-  mapRef: RefObject<MapLibre | null>;
+  mapRef: RefObject<MapRef | null>;
 };
 
 /**
