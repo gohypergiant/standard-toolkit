@@ -44,10 +44,6 @@
   .input {
     @apply flex items-center;
 
-    div {
-      @apply w-full;
-    }
-
     &.inline {
       @apply w-full flex-row;
     }
@@ -56,7 +52,6 @@
       @apply w-full flex-col items-end;
 
       div {
-        @apply w-full text-right;
       }
     }
   }
@@ -78,6 +73,14 @@
 
     @variant selection {
       @apply fg-a11y-on-accent bg-accent-primary-bold;
+    }
+  }
+
+  .segmentGroup {
+    @apply w-full;
+
+    &.stacked {
+      @apply w-full text-right;
     }
   }
 

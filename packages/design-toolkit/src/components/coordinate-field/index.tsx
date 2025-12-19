@@ -332,7 +332,8 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
               )
               .map((group, groupIndex) => (
                 <div
-                  key={`group-${
+                  className={clsx(styles.segmentGroup, styles[variant])}
+                  key={`${format}-group-${
                     // biome-ignore lint/suspicious/noArrayIndexKey: intentional
                     groupIndex
                   }`}

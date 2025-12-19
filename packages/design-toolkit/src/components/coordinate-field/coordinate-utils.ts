@@ -878,7 +878,9 @@ export function getAllCoordinateFormats(
 
   try {
     const create = createCoordinate(coordinateSystems.dd, 'LATLON');
-    const coord = create(`${validValue.lat} / ${validValue.lon}`);
+    const coord = create(
+      `${validValue.lat.toFixed(6)} / ${validValue.lon.toFixed(6)}`,
+    );
 
     if (!coord.valid) {
       return invalidResult;
