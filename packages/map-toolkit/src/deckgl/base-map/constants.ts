@@ -27,3 +27,9 @@ export const PARAMETERS = {
   blendColorOperation: 'add',
   blendAlphaOperation: 'add',
 };
+
+export const DEFAULT_VIEW_STATE = {
+  longitude: -77.0369,
+  latitude: 38.9072,
+  zoom: 4,
+};

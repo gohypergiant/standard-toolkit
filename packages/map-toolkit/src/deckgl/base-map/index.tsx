@@ -24,7 +24,7 @@ import {
 } from 'react-map-gl/maplibre';
 import { useCameraState } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
-import { BASE_MAP_STYLE, PARAMETERS } from './constants';
+import { BASE_MAP_STYLE, DEFAULT_VIEW_STATE, PARAMETERS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
@@ -227,6 +227,7 @@ export function BaseMap({
   useDevicePixels = false,
   widgets: widgetsProp = [],
   defaultView = '2D',
+  initialViewState,
   onClick,
   onHover,
   onViewStateChange,
@@ -238,7 +239,12 @@ export function BaseMap({
 
   const { cameraState, setCameraState } = useCameraState({
     instanceId: id,
-    initialCameraState: { view: defaultView },
+    initialCameraState: {
+      view: defaultView,
+      zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
+      latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
+      longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
+    },
   });
 
   const viewState = useMemo<ViewState>(
@@ -369,6 +375,7 @@ export function BaseMap({
         >
           <Deckgl
             {...rest}
+            initialViewState={initialViewState}
             interleaved={interleaved}
             getCursor={handleGetCursor}
             useDevicePixels={useDevicePixels}
