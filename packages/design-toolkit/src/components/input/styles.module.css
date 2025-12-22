@@ -15,8 +15,9 @@
 @layer components.l1 {
   .container {
     --length: attr(data-length type(<number>), 0);
-    @apply gap-xs rounded-medium px-s py-xs font-display outline-interactive grid items-center outline;
+    @apply gap-m rounded-medium px-s py-xs font-display outline-interactive grid items-center outline;
     grid-template-areas: 'input clear';
+    grid-template-columns: 1fr min-content;
 
     @variant size-medium {
       @apply text-body-s;
@@ -48,27 +49,33 @@
 
     &.hasPrefix {
       grid-template-areas: 'prefix input';
+      grid-template-columns: min-content 1fr;
     }
 
     &.hasSuffix {
       grid-template-areas: 'input suffix';
+      grid-template-columns: 1fr min-content;
     }
 
     &.hasPrefix.hasSuffix {
       grid-template-areas: 'prefix input suffix';
+      grid-template-columns: min-content 1fr min-content;
     }
 
     &.isClearable {
       &.hasPrefix {
         grid-template-areas: 'prefix input clear';
+        grid-template-columns: min-content 1fr min-content;
       }
 
       &.hasSuffix {
         grid-template-areas: 'input suffix-1 suffix-2';
+        grid-template-columns: 1fr min-content min-content;
       }
 
       &.hasPrefix.hasSuffix {
         grid-template-areas: 'prefix input suffix-1 suffix-2';
+        grid-template-columns: min-content 1fr min-content min-content;
       }
     }
   }
