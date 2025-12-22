@@ -11,13 +11,6 @@ Read the [AI Assistant Guide](.agents/0.outline.md) and all linked pages before 
 > Simplicity is the prerequisite for reliability.  
 > — Edsger W. Dijkstra
 
-## Conversation Style
-
-- Answer questions directly without editing code
-- Criticize ideas constructively; ask clarifying questions
-- No compliments, apologies, or filler phrases ("You're right", "Let me explain")
-- Get to the point immediately
-
 ## Workflow: Research → Plan → Implement
 
 Follow this sequence for every task:
