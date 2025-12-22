@@ -11,7 +11,7 @@ metadata:
 
     Dependencies:
 
-    accelint_biome-config@1.0.2, accelint_prettier-config@0.2.0,
+    accelint_biome-config@1.0.2, accelint_prettier-config@0.2.1,
     accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.6
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/catalog-info.yaml
