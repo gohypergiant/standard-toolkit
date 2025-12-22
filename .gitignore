@@ -37,3 +37,11 @@ apps/next/src/memlab/reports/*.json
 apps/next/src/memlab/reports/html
 apps/next/src/memlab/reports/memlab-report.html
 apps/next/test-results/
+
+# LogicStamp context & security files
+context.json
+context_*.json
+*.uif.json
+logicstamp.manifest.json
+.logicstamp/
+stamp_security_report.json
