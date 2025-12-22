@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-export { BaseMap, type BaseMapProps } from './base-map';
+export { BaseMap } from './base-map';
 export { BASE_MAP_STYLE, PARAMETERS } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
 export { createSavedViewport } from './saved-viewports';
@@ -28,6 +28,7 @@ export {
 } from './shapes';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
+  BaseMapProps,
   MapClickEvent,
   MapClickPayload,
   MapControlPayload,

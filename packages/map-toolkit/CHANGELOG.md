@@ -1,5 +1,21 @@
 # @accelint/map-toolkit
 
+## 0.5.0
+
+### Minor Changes
+
+- dde1386: Introduced a new camera feature in map-toolkit:
+  Added camera state management, types, events, documentation, and Storybook stories.
+  Added tests for camera state logic.
+  Created a new postcss config for map-toolkit.
+  Updated deckgl base map to integrate camera controls.
+- 62da9ee: Add saved viewports library
+- b0a37a0: Add events to disable/enable panning and zoom via event bus.
+
+### Patch Changes
+
+- 208b48d: With the changes to the basemap we now are explicitly rendering a `<MapLibre>` component and attatching a ref manually as opposed to calling the previous hook. The underlying api changes so we have to account for that in the MapControls component
+
 ## 0.4.1
 
 ### Patch Changes
